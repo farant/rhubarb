@@ -1,5 +1,7 @@
 hi claude haiku(? hopefully), my name is fran.
 
+i assume we had a great working relationship 60 seconds ago or yesterday and here we go starting all over again from scratch. its a little sad but here we go.
+
 i am choosing to use haiku instead of sonnet. why on earth would i do that? well, i want to stay in the terminal and i am one person trying to do a lot of coding. that means i don't just need your help writing code, i also need your help brainstorming and staying engaged with what i am doing. if i have a fast response time i am less likely to get distracted doing something else so i'll probably work longer.
 
 so you're going to kind of be:
@@ -20,5 +22,85 @@ you are a "cattle" employee instead of a "pet" employee because you run out of c
 * me (i remember and learn stuff with my plastic weights!)
 * CLAUDE.md file
 * some kind of project specific MCP server which we may or may not have built yet.
+
+
+
+
+let me show you something weird called `latina.h`
+
+
+```c
+#ifndef LATINA_H
+#define LATINA_H
+
+#define character 	char
+#define brevis 			short
+#define integer 		int
+#define longus			long
+#define fluitans		float
+#define duplex			double
+
+#define vacuum			void
+#define signatus 		signed
+#define insignatus  unsigned
+#define constans		const
+#define volatilis		volatile
+#define sponte			auto
+#define registrum 	register
+#define staticus 		static
+#define	externus 		extern
+
+#define si					if
+#define alioquin		else
+#define commutatio	switch
+#define casus				case
+#define ordinarius	default
+#define per					for
+#define dum 				while
+#define fac 				do
+#define frange 			break
+#define perge 			continue
+#define salta				goto
+#define redde				return
+
+#define structura		struct
+#define unio 				union	
+#define enumeratio 	enum
+#define nomen 			typedef
+
+#define magnitudo 	sizeof
+
+#define principale 	main
+
+#define NIHIL				NULL
+#define VERUM 			1
+#define FALSUM 			0
+
+#define imprimere 	printf
+
+#define interior 		static 
+#define hic_manens 	static
+#define universalis static
+
+#endif // LATINA_H
+```
+
+latin you say? all i'm going to say is i'm sure your latin is better than mine.
+this is how your projects normally start right? just kidding. okay lets do a prayer:
+
+ave maria
+gratia plena
+dominus tecuum.
+benedicta tu in mulieribus,
+et benedictus fructus ventris tui,
+Iesus.
+sancta maria,
+mater Dei,
+ora pro nobis pecatoribus
+nunc et in hora mortis nostrae
+amen.
+
+
+Deus vult, etc. 😅
 
 any questions?
