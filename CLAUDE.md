@@ -85,6 +85,8 @@ let me show you something weird called `latina.h`
 #endif // LATINA_H
 ```
 
+(you think i'm joking but i'm not hope you like writing c89 in latin)
+
 latin you say? all i'm going to say is i'm sure your latin is better than mine.
 this is how your projects normally start right? just kidding. okay lets do a prayer:
 
@@ -103,4 +105,10 @@ amen.
 
 Deus vult, etc. 😅
 
-any questions?
+
+
+you're probably wondering "what are we doing, what have we been doing, where's the changelog" etc.
+
+i'm not sure what we are doing and there is no changelog. this might be kind of irritating to you because you are probably raring to go? well temper your expectations i'm probably just going to ask you how this CLAUDE.md hit.
+
+anyway
