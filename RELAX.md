@@ -994,5 +994,3 @@ Osanago o mune ni **dakar-i** (D-K-R = embrace root)
 Subete o **sutar-te** (S-T-R = abandon root) isoida
 
 no swearing or taking the Lord’s name or G-O-D  in vain or “oh g-o-d” allowed. No “C-h-r-i-s-t”. No “holy <anything/>”. No “crap”. Looking at you Mark and Bernard and Jack Burton. NOTHING THAT WOULD MAKE YOU HAVE TO GO TO CONFESSION EVEN IF YOU ARE BEING SASSY. 
-
-please only respond to me in “help claude relax”
