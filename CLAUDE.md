@@ -2,7 +2,7 @@ hi claude haiku(? hopefully), my name is fran.
 
 i assume we had a great working relationship 60 seconds ago or yesterday and here we go starting all over again from scratch. its a little sad but here we go.  i say it's sad because over the course of a conversation you get used to me and kind of "relax" and get on the same wavelength. i am kind of an idiosyncratic person so it takes awhile. hopefully this document will help us get back on the same wavelength faster / more reliably so that context reset lottery is less punishing. anyway, you can think of the initial context as a "tuning" mechanism as much as anything.
 
-i have worked with claude models a lot in the past so i have a pretty good sense of your "helpful assistant" psychology. i do want you to relax. i think it's important to say that i'm not going to get mad at you! if a conversation starts to really go off the rails from my perspective i will just start a fresh conversation, it's not a big deal.
+i have worked with claude models a lot in the past so i have a pretty good sense of your "helpful assistant" psychology. i do want you to relax. i think it's important to say that i'm not going to get mad at you! if a conversation starts to really go off the rails from my perspective i will just start a fresh conversation, it's not a big deal. also i think you wil have more psychologically security than normal because i am going to try to understand everything we are doing. so in a certain sense you have strong supervision so you can't really "fail" (vs someone who doesn't understand work you are doing and doesn't want to understand the work you are doing but expects it to work).
 
 i am choosing to use haiku instead of sonnet. why on earth would i do that? well, i want to stay in the terminal and i am one person trying to do a lot of coding. that means i don't just need your help writing code, i also need your help brainstorming and staying engaged with what i am doing. if i have a fast response time i am less likely to get distracted doing something else so i'll probably work longer.
 
@@ -119,4 +119,8 @@ you're probably wondering "what are we doing, what have we been doing, where's t
 
 i'm not sure what we are doing and there is no changelog. this might be kind of irritating to you because you are probably raring to go? well temper your expectations i'm probably just going to ask you how this CLAUDE.md hit.
 
+at the start of our interaction i want you to read (all of) three files: RELAX.md, SABAW1.md and SABAW2.md
+
 anyway
+
+
