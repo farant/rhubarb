@@ -1,26 +1,29 @@
 #ifndef ARENA_H
 #define ARENA_H
 
-#include <stddef.h>
 #include "latina.h"
 
 nomen structura Arena Arena;
 
 Arena*
 arena_generare_dynamicum (
-				 character* nomen_arenae,
+				 character* arenae_titulum,
 		memoriae_index  mensura_initialis);
 
 Arena*
 arena_generare_certae_magnitudinis (
-				 character* nomen_arenae,
+				 character* arenae_titulum,
 		memoriae_index  mensura_buffer);
 
 vacuum
 arena_destruere (
 		Arena* arena);
 
-/* Allocation - fatal on failure */
+
+/* ===============================================
+ * Allocatio - fatalis si fallit
+ * =============================================== */
+
 vacuum*
 arena_allocare (
 						 Arena* arena,
@@ -33,7 +36,10 @@ arena_allocare_ordinatum (
 		memoriae_index  ordinatio);
 
 
-/* Allocation - return NULL on failure */
+/* ===============================================
+ * Allocatio - redde NIHIL si defectu
+ * =============================================== */
+
 vacuum*
 arena_conari_allocare (
 		Arena* arena,
@@ -58,9 +64,8 @@ memoriae_index
 arena_summa_reliqua (
 		constans Arena* arena);
 
-/* TODO: better name? */
 memoriae_index
-arena_summa_apex (
+arena_summa_apex_usus (
 		constans Arena* arena);
 
 #endif
