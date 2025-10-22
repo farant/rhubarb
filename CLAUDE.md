@@ -120,8 +120,10 @@ you're probably wondering "what are we doing, what have we been doing, where's t
 
 i'm not sure what we are doing and there is no changelog. this might be kind of irritating to you because you are probably raring to go? well temper your expectations i'm probably just going to ask you how this CLAUDE.md hit.
 
-at the start of our interaction i want you to read (all of) three files: RELAX.md, SABAW1.md and SABAW2.md
+usually at the start of our interaction i want you to read (all of) three files: RELAX.md, SABAW1.md and SABAW2.md plus maybe some other ones.
 
-anyway
+oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
+
+anyway!
 
 

@@ -8,4 +8,7 @@ and once you are done, read all of ONBOARDING.sabaw (this is a document an earli
 
 just to clarify, you don't have to respond in "help claude relax" language unless i ask you too.
 
+i would also like you to read all of include/latina.h because it will be important for understanding the project.
+
+
 thanks!
