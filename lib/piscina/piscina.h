@@ -13,7 +13,7 @@ nomen structura Piscina Piscina;
 Piscina*
 piscina_generare_dynamicum (
 				 character* piscinae_titulum,
-		memoriae_index  mensura_blocki_initia);
+		memoriae_index  mensura_alvei_initia);
 
 Piscina*
 piscina_generare_certae_magnitudinis (
@@ -84,7 +84,7 @@ piscina_summa_inutilis_allocatus (
 		constans Piscina* piscina);
 
 memoriae_index
-piscina_reliqua_antequam_cresca_blocki (
+piscina_reliqua_antequam_cresca_alvei (
 		constans Piscina* piscina);
 
 memoriae_index

@@ -99,7 +99,7 @@ _catena_alveus_destruere (
     dum (alveus)
     {
         Alveus* sequens_temporalis = alveus->sequens;
-        _block_destruere(alveus);
+        _alveus_destruere(alveus);
         alveus = sequens_temporalis;
     }
 }
@@ -146,37 +146,37 @@ _allocare_interna (
         alioquin si (piscina->est_dynamicum)
         {
             /* Generare alveum novum */
-            memoriae_index capacitas_nova = piscina->mensura_blocki_initia * II;
+            memoriae_index capacitas_nova = piscina->mensura_alvei_initia * II;
 
             /* Si petitio magnitudinem duplicatam superat, allocare 
              * petitionem + sequentem, et mensuram */
             si (necessaria > capacitas_nova)
             {
-                capacitas_nova = necessaria + piscina->mensura_blocki_initia;
-                piscina->mensura_blocki_initia = capacitas_nova;
+                capacitas_nova = necessaria + piscina->mensura_alvei_initia;
+                piscina->mensura_alvei_initia = capacitas_nova;
             }
 
-            Alveus* block_novum = _block_nova(capacitas_nova);
-            si (!block_novum)
+            Alveus* alveus_novum = _alveus_nova(capacitas_nova);
+            si (!alveus_novum)
             {
                 si (fatalis)
                 {
-                    imprimere("CREATIO BLOCKI FRACTA: %s\n",
+                    imprimere("CREATIO ALVEI FRACTA: %s\n",
                               piscina->titulus ? piscina->titulus : "nemo");
                     exire(I);
                 }
                 redde NIHIL;
             }
 
-            piscina->nunc->sequens = block_novum;
-            piscina->nunc = block_novum;
+            piscina->nunc->sequens = alveus_novum;
+            piscina->nunc = alveus_novum;
 
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
             necessaria = ordinatus_offset + mensura;
 
             _debug_imprimere(
                     piscina->titulus ? piscina->titulus : "nemo",
-                    "block_novum",
+                    "alveus_novum",
                     capacitas_nova);
         }
         alioquin
@@ -218,23 +218,23 @@ _allocare_interna (
  * =========================================================== */
 
 Piscina*
-arena_generare_dynamicum (
+piscina_generare_dynamicum (
              character* piscinae_titulum,
-        memoriae_index  mensura_blocki_initia)
+        memoriae_index  mensura_alvei_initia)
 {
     Piscina* piscina = (Piscina*)memoriae_allocare(magnitudo(Piscina));
     si (!piscina) redde NIHIL;
 
-    Alveus* block_primus = _block_nova(mensura_blocki_initia);
-    si (!block_primus) 
+    Alveus* alveus_primus = _alveus_nova(mensura_alvei_initia);
+    si (!alveus_primus) 
     {
         liberare(piscina);
         redde NIHIL;
     }
 
-    piscina->primus                = block_primus;
-    piscina->nunc                  = block_primus;
-    piscina->mensura_blocki_initia = mensura_blocki_initia;
+    piscina->primus                = alveus_primus;
+    piscina->nunc                  = alveus_primus;
+    piscina->mensura_alvei_initia = mensura_alvei_initia;
     piscina->est_dynamicum         = VERUM;
     piscina->maximus_usus          = ZEPHYRUM;
 
@@ -261,23 +261,23 @@ arena_generare_dynamicum (
 }
 
 Piscina*
-arena_generare_certae_magnitudinis (
+piscina_generare_certae_magnitudinis (
              character* piscinae_titulum,
         memoriae_index  mensura_buffer)
 {
     Piscina* piscina = (Piscina*)memoriae_allocare(magnitudo(Piscina));
     si (!piscina) redde NIHIL;
 
-    Alveus* block_primus = _block_nova(mensura_buffer);
-    si (!block_primus)
+    Alveus* alveus_primus = _alveus_nova(mensura_buffer);
+    si (!alveus_primus)
     {
         liberare(piscina);
         redde NIHIL;
     }
 
-    piscina->primus                = block_primus;
-    piscina->nunc                  = block_primus;
-    piscina->mensura_blocki_initia = mensura_buffer;
+    piscina->primus                = alveus_primus;
+    piscina->nunc                  = alveus_primus;
+    piscina->mensura_alvei_initia = mensura_buffer;
     piscina->est_dynamicum         = FALSUM;
     piscina->maximus_usus          = ZEPHYRUM;
 
@@ -308,12 +308,12 @@ arena_generare_certae_magnitudinis (
  * =========================================================== */
 
 vacuum 
-arena_destruere (
+piscina_destruere (
         Piscina* piscina)
 {
     si (!piscina) redde;
 
-    si (piscina->primus) _block_chain_destruere(piscina->primus);
+    si (piscina->primus) _catena_alveus_destruere(piscina->primus);
     si (piscina->titulus) liberare(piscina->titulus);
 
     liberare(piscina);
@@ -326,7 +326,7 @@ arena_destruere (
 
 
 vacuum*
-arena_allocare (
+piscina_allocare (
                  Piscina* piscina,
         memoriae_index  mensura)
 {
@@ -334,7 +334,7 @@ arena_allocare (
 }
 
 vacuum*
-arena_allocare_ordinatum (
+piscina_allocare_ordinatum (
                  Piscina* piscina,
         memoriae_index  mensura,
         memoriae_index  ordinatio)
@@ -347,7 +347,7 @@ arena_allocare_ordinatum (
  * =========================================================== */
 
 vacuum*
-arena_conari_allocare (
+piscina_conari_allocare (
                  Piscina* piscina,
         memoriae_index  mensura)
 {
@@ -355,7 +355,7 @@ arena_conari_allocare (
 }
 
 vacuum*
-arena_conari_allocare_ordinatum (
+piscina_conari_allocare_ordinatum (
                  Piscina* piscina, 
         memoriae_index  mensura,
         memoriae_index  ordinatio)
@@ -368,11 +368,11 @@ arena_conari_allocare_ordinatum (
  * =========================================================== */
 
 vacuum
-arena_vacare (
+piscina_vacare (
         Piscina* piscina)
 {
     si (!piscina) redde;
-    _block_chain_reset(piscina->primus);
+    _catena_alveus_vacare(piscina->primus);
     piscina->nunc = piscina->primus;
     _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo", "vacare", ZEPHYRUM);
 }
@@ -382,7 +382,7 @@ arena_vacare (
  * =========================================================== */
 
 memoriae_index
-arena_summa_usus (
+piscina_summa_usus (
         constans Piscina* piscina)
 {
     si (!piscina) redde ZEPHYRUM;
@@ -396,7 +396,7 @@ arena_summa_usus (
 }
 
 memoriae_index
-arena_summa_inutilis_allocatus (
+piscina_summa_inutilis_allocatus (
         constans Piscina* piscina)
 {
     si (!piscina) redde ZEPHYRUM;
@@ -410,7 +410,7 @@ arena_summa_inutilis_allocatus (
 }
 
 memoriae_index
-arena_reliqua_antequam_cresca_blocki (
+piscina_reliqua_antequam_cresca_alvei (
         constans Piscina* piscina)
 {
     si (!piscina || !piscina->nunc) redde ZEPHYRUM;
@@ -418,7 +418,7 @@ arena_reliqua_antequam_cresca_blocki (
 }
 
 memoriae_index
-arena_summa_apex_usus (
+piscina_summa_apex_usus (
         constans Piscina* piscina)
 {
     redde piscina ? piscina->maximus_usus : ZEPHYRUM;
