@@ -127,11 +127,16 @@ _allocare_interna (
         memoriae_index  ordinatio,
                    b32  fatalis)
 {
+    memoriae_index  ordinatus_offset;
+    memoriae_index  necessaria;
+    memoriae_index  summa_nunc; 
+            Alveus* b;
+            vacuum* ptr;
+
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
-    memoriae_index ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, 
-                                                         ordinatio);
-    memoriae_index necessaria = ordinatus_offset + mensura;
+    ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
+    necessaria       = ordinatus_offset + mensura;
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -145,6 +150,8 @@ _allocare_interna (
         }
         alioquin si (piscina->est_dynamicum)
         {
+            Alveus* alveus_novum;
+
             /* Generare alveum novum */
             memoriae_index capacitas_nova = piscina->mensura_alvei_initia * II;
 
@@ -156,7 +163,7 @@ _allocare_interna (
                 piscina->mensura_alvei_initia = capacitas_nova;
             }
 
-            Alveus* alveus_novum = _alveus_nova(capacitas_nova);
+            alveus_novum = _alveus_nova(capacitas_nova);
             si (!alveus_novum)
             {
                 si (fatalis)
@@ -193,13 +200,14 @@ _allocare_interna (
         }
     }
 
+
     /* Allocare ex alveo nunc */
-    vacuum* ptr = (character*)(piscina->nunc->buffer) + ordinatus_offset;
+    ptr = (character*)(piscina->nunc->buffer) + ordinatus_offset;
     piscina->nunc->offset = necessaria;
 
     /* Sequi apex usus per omnes alvei */
-    memoriae_index summa_nunc = ZEPHYRUM;
-    per (Alveus* b = piscina->primus; b; b = b->sequens)
+    summa_nunc = ZEPHYRUM;
+    per (b = piscina->primus; b; b = b->sequens)
     {
         summa_nunc += b->offset;
     }
@@ -222,10 +230,12 @@ piscina_generare_dynamicum (
              character* piscinae_titulum,
         memoriae_index  mensura_alvei_initia)
 {
+    Alveus* alveus_primus;
+
     Piscina* piscina = (Piscina*)memoriae_allocare(magnitudo(Piscina));
     si (!piscina) redde NIHIL;
 
-    Alveus* alveus_primus = _alveus_nova(mensura_alvei_initia);
+    alveus_primus = _alveus_nova(mensura_alvei_initia);
     si (!alveus_primus) 
     {
         liberare(piscina);
@@ -265,10 +275,12 @@ piscina_generare_certae_magnitudinis (
              character* piscinae_titulum,
         memoriae_index  mensura_buffer)
 {
+    Alveus* alveus_primus;
+
     Piscina* piscina = (Piscina*)memoriae_allocare(magnitudo(Piscina));
     si (!piscina) redde NIHIL;
 
-    Alveus* alveus_primus = _alveus_nova(mensura_buffer);
+    alveus_primus = _alveus_nova(mensura_buffer);
     si (!alveus_primus)
     {
         liberare(piscina);
@@ -385,10 +397,13 @@ memoriae_index
 piscina_summa_usus (
         constans Piscina* piscina)
 {
+    constans Alveus* b;
+     memoriae_index  summa;
+
     si (!piscina) redde ZEPHYRUM;
 
-    memoriae_index summa = ZEPHYRUM;
-    per (constans Alveus* b = piscina->primus; b; b = b->sequens)
+    summa = ZEPHYRUM;
+    per (b = piscina->primus; b; b = b->sequens)
     {
         summa += b->offset;
     }
@@ -399,10 +414,13 @@ memoriae_index
 piscina_summa_inutilis_allocatus (
         constans Piscina* piscina)
 {
+    constans Alveus* b;
+     memoriae_index  reliqua;
+
     si (!piscina) redde ZEPHYRUM;
 
-    memoriae_index reliqua = ZEPHYRUM;
-    per (constans Alveus* b = piscina->primus; b; b = b->sequens)
+    reliqua = ZEPHYRUM;
+    per (b = piscina->primus; b; b = b->sequens)
     {
         reliqua += (b->capacitas - b->offset);
     }
