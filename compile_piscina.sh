@@ -1,6 +1,27 @@
 #!/bin/bash
 
-COMPILE_CMD="gcc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c lib/piscina/piscina.c -o /tmp/piscina.o"
+# Compiler flags
+declare -a GCC_FLAGS=(
+    "-std=c89"
+    "-pedantic"
+    "-Wall"
+    "-Wextra"
+    "-Werror"
+		"-Wconversion"
+		"-Wsign-conversion"
+		"-Wcast-qual"
+		"-Wstrict-prototypes"
+		"-Wmissing-prototypes"
+		"-Wwrite-strings"
+)
+
+# Include paths
+declare -a INCLUDE_FLAGS=(
+    "-Iinclude"
+)
+
+# Build the compile command
+COMPILE_CMD="gcc ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} -c lib/piscina/piscina.c -o /tmp/piscina.o"
 
 do_compile() {
     echo -e "\033[34m======================="
