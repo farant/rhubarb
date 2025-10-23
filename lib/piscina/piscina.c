@@ -9,7 +9,7 @@
  * Structura Alvei - allocatio singularis
  * =========================================================== */
 
-nomen structura {
+nomen structura Alveus {
               vacuum* buffer;
       memoriae_index  capacitas;
       memoriae_index  offset;
@@ -21,14 +21,14 @@ nomen structura {
  * Structura Piscinae - regit alveos multiples
  * =========================================================== */
 
-nomen structura {
+structura Piscina {
             Alveus* primus;
             Alveus* nunc;
     memoriae_index  mensura_alvei_initia;
          character* titulus;
                b32  est_dynamicum;
     memoriae_index  maximus_usus;
-} Piscina;
+};
 
 
 /* ===========================================================

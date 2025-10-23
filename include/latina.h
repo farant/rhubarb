@@ -103,5 +103,5 @@ nomen integer            		b32;
 
 nomen size_t 								memoriae_index;
 
-#endif // LATINA_H
+#endif /* LATINA_H */
 
