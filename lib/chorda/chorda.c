@@ -562,9 +562,3 @@ chorda_friare (
 
     redde friatum;
 }
-
-
-
-
-
-
