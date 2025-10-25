@@ -1,10 +1,11 @@
 #include "chorda.h"
+#include "piscina.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 
-#define CHORDA_HASH_OFFSET  2166136261U
-#define CHORDA_HASH_PRIME   16777619U
+#define CHORDA_FRIATUM_OFFSET  2166136261U
+#define CHORDA_FRIATUM_PRIMUS    16777619U
 
 
 /* ==================================================
@@ -12,35 +13,42 @@
  * ================================================== */
 
 chorda
-chorda_ex_literas (
-    constans i8* cstr)
+chorda_ex_literis (
+    character* cstr)
 {
+    chorda fructus;
+
     si (!cstr)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
     }
 
-    redde (chorda){
-        strlen(cstr),
-        (i8*)cstr
-    }
+    fructus.mensura = strlen(cstr);
+    fructus.datum   = (i8*)(void*)cstr;
+    redde fructus;
 }
 
 
 chorda
 chorda_ex_buffer (
-       constans i8* buffer,
-    memoriae_index  len)
+                i8* buffer,
+    memoriae_index  mensura)
 {
+    chorda fructus;
+
     si (!buffer)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
     }
 
-    redde (chorda){
-        len,
-        (i8*)buffer
-    }
+    fructus.mensura = mensura;
+    fructus.datum   = buffer;
+
+    redde fructus;
 }
 
 
@@ -50,15 +58,19 @@ chorda_sectio (
     memoriae_index initium, 
     memoriae_index finis)
 {
-    si (!s.data || initium > finis || finis > s.len)
+    chorda fructus;
+
+    si (!s.datum || initium > finis || finis > s.mensura)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
     }
 
-    redde (chorda){
-        finis - initium,
-        s.data + initium
-    }
+    fructus.mensura = finis - initium;
+    fructus.datum   = s.datum + initium;
+    
+    redde fructus;
 }
 
 chorda
@@ -66,24 +78,31 @@ chorda_transcribere (
      chorda  s,
     Piscina* piscina)
 {
-    si (!piscina || !s.data || s.len == ZEPHYRUM)
+    chorda  fructus;
+        i8* allocatus;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
     }
 
-    i8* allocatus = (i8*)piscina_allocare(piscina, s.len + I);
+    allocatus = (i8*)piscina_allocare(piscina, s.mensura + I);
     si (!allocatus)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
     }
 
-    memcpy(allocatus, s.data, s.len);
-    allocatus[s.len] = '\0';
+    memcpy(allocatus, s.datum, s.mensura);
+    allocatus[s.mensura] = '\0';
 
-    redde (chorda){
-        s.len,
-        allocatus
-    };
+    fructus.mensura = s.mensura;
+    fructus.datum   = allocatus;
+
+    redde fructus;
 }
 
 /* ==================================================
@@ -96,17 +115,17 @@ chorda_aequalis (
     chorda a,
     chorda b)
 {
-    si (a.len != b.len)
+    si (a.mensura != b.mensura)
     {
         redde FALSUM;
     }
 
-    si (a.data == b.data)
+    si (a.datum == b.datum)
     {
         redde VERUM;
     }
 
-    redde memcmp(a.data, b.data, a.len) == ZEPHYRUM;
+    redde memcmp(a.datum, b.datum, a.mensura) == ZEPHYRUM;
 }
  
 b32
@@ -114,14 +133,16 @@ chorda_aequalis_case_insensitivus (
     chorda a,
     chorda b)
 {
-    si (a.len != b.len)
+    memoriae_index i;
+
+    si (a.mensura != b.mensura)
     {
         redde FALSUM;
     }
 
-    per (memoriae_index i = ZEPHYRUM; i < a.len; i++)
+    per (i = ZEPHYRUM; i < a.mensura; i++)
     {
-        si (tolower((i8)a.data[i]) != tolower((i8)b.data[i]))
+        si (tolower((character)a.datum[i]) != tolower((character)b.datum[i]))
         {
             redde FALSUM;
         }
@@ -135,16 +156,19 @@ chorda_comparare (
     chorda a,
     chorda b)
 {
-    memoriae_index min_len = a.len < b.len ? a.len : b.len;
-    s32 cmp_result = memcmp(a.data, b.data, min_len);
+    memoriae_index minima_mensura; 
+               s32 cmp_result;
+
+    minima_mensura  = a.mensura < b.mensura ? a.mensura : b.mensura;
+    cmp_result      = memcmp(a.datum, b.datum, minima_mensura);
 
     si (cmp_result != ZEPHYRUM)
     {
         redde cmp_result;
     }
 
-    si (a.len < b.len) redde -I;
-    si (a.len > b.len) redde I;
+    si (a.mensura < b.mensura) redde -I;
+    si (a.mensura > b.mensura) redde I;
 
     redde ZEPHYRUM;
 }
@@ -155,22 +179,24 @@ chorda_comparare (
 
 b32
 chorda_continet (
-    chorda hay,
-    chorda needle)
+    chorda fenum,
+    chorda acus)
 {
-    si (!hay.data || !needle.data || needle.len > hay.len)
+    memoriae_index i;
+
+    si (!fenum.datum || !acus.datum || acus.mensura > fenum.mensura)
     {
         redde FALSUM;
     }
 
-    si (needle.len == ZEPHYRUM)
+    si (acus.mensura == ZEPHYRUM)
     {
         redde VERUM;
     }
 
-    per (memoriae_index i = ZEPHYRUM; i <= hay.len - needle.len; i++)
+    per (i = ZEPHYRUM; i <= fenum.mensura - acus.mensura; i++)
     {
-        si (memcmp(hay.data + i, needle.data, needle.len) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum, acus.mensura) == ZEPHYRUM)
         {
             redde VERUM;
         }
@@ -185,17 +211,17 @@ chorda_incipit (
     chorda s,
     chorda prefixum)
 {
-    si (!s.data || !prefixum.data || prefixum.len > s.len)
+    si (!s.datum || !prefixum.datum || prefixum.mensura > s.mensura)
     {
         redde FALSUM;
     }
 
-    si (prefixum.len == ZEPHYRUM)
+    si (prefixum.mensura == ZEPHYRUM)
     {
         redde VERUM;
     }
 
-    redde memcmp(s.data, prefixum.data, prefixum.len) == ZEPHYRUM;
+    redde memcmp(s.datum, prefixum.datum, prefixum.mensura) == ZEPHYRUM;
 }
 
 
@@ -205,67 +231,83 @@ chorda_terminatur (
     chorda s,
     chorda suffixum)
 {
-    si (!s.data || !suffixum.data || suffixum.len > s.len)
+    memoriae_index offset;
+
+    si (!s.datum || !suffixum.datum || suffixum.mensura > s.mensura)
     {
         redde FALSUM;
     }
 
-    si (suffixum.len == ZEPHYRUM)
+    si (suffixum.mensura == ZEPHYRUM)
     {
         redde VERUM;
     }
 
-    memoriae_index offset = s.len - suffixum.len;
-    redde memcmp(s.data + offset, suffixum.data, suffixum.len) == ZEPHYRUM;
+    offset = s.mensura - suffixum.mensura;
+    redde memcmp(s.datum + offset, suffixum.datum, suffixum.mensura) == ZEPHYRUM;
 }
    
 
-i8*
+chorda
 chorda_invenire (
-    chorda hay,
-    chorda needle)
+    chorda fenum,
+    chorda acus)
 {
-    si (!hay.data || !needle.data || needle.len > hay.len)
+    memoriae_index i;
+            chorda fructus;
+
+    si (!fenum.datum || !acus.datum || acus.mensura > fenum.mensura)
     {
-        redde NIHIL;
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+
+        redde fructus;
     }
 
-    si (needle.len == ZEPHYRUM)
+    si (acus.mensura == ZEPHYRUM)
     {
-        redde hay.data;
+        redde fenum;
     }
 
-    per (memoriae_index i = ZEPHYRUM; i <= hay.len - needle.len; i++)
+    per (i = ZEPHYRUM; i <= fenum.mensura - acus.mensura; i++)
     {
-        si (memcmp(hay.data + i, needle.data, needle.len) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus.datum, acus.mensura) == ZEPHYRUM)
         {
-            redde hay.data + i;
+            fructus.mensura = acus.mensura;
+            fructus.datum = fenum.datum + i;
+            redde fructus;
         }
     }
 
-    redde NIHIL;
+    fructus.mensura = ZEPHYRUM;
+    fructus.datum   = NIHIL;
+
+    redde fructus;
 }
 
 
 memoriae_index
-chorda_numerare_occurentia (
-    chorda hay,
-    chorda needle)
+chorda_numerare_occurrentia (
+    chorda fenum,
+    chorda acus)
 {
-    si (!hay.data || !needle.data || needle.len > hay.len || needle.len == ZEPHYRUM)
+    memoriae_index count;
+    memoriae_index positus;
+
+    si (!fenum.datum || !acus.datum || acus.mensura > fenum.mensura || acus.mensura == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
 
-    memoriae_index count    = ZEPHYRUM;
-    memoriae_index positus  = ZEPHYRUM;
+    count   = ZEPHYRUM;
+    positus = ZEPHYRUM;
 
-    dum (positus <= hay.len - needle.len)
+    dum (positus <= fenum.mensura - acus.mensura)
     {
-        si (memcmp(hay.data + positus, needle.data, needle.len) == ZEPHYRUM)
+        si (memcmp(fenum.datum + positus, acus.datum, acus.mensura) == ZEPHYRUM)
         {
             count++;
-            positus += needle.len;
+            positus += acus.mensura;
         }
         alioquin
         {
@@ -285,22 +327,24 @@ chorda
 chorda_praecidere (
     chorda s)
 {
-    si (!s.data || s.len == ZEPHYRUM)
+    memoriae_index initium;
+    memoriae_index finis;
+    si (!s.datum || s.mensura == ZEPHYRUM)
     {
         redde s;
     }
 
-    memoriae_index initium = ZEPHYRUM;
-    memoriae_index finis = s.len;
+    initium = ZEPHYRUM;
+    finis   = s.mensura;
 
-    /* Trim start */
-    dum (initium < s.len && isspace((i8)s.data[initium]))
+    /* Praecidere initium */
+    dum (initium < s.mensura && isspace((character)s.datum[initium]))
     {
         initium++;
     }
 
-    /* Trim end */
-    dum (finis > initium && isspace((i8)s.data[finis - I]))
+    /* Praecidere finis */
+    dum (finis > initium && isspace((character)s.datum[finis - I]))
     {
         finis--;
     }
@@ -314,27 +358,37 @@ chorda_minuscula (
      chorda  s,
     Piscina* piscina)
 {
-    si (!piscina || !s.data || s.len == ZEPHYRUM)
+            chorda  fructus;
+         character* allocatus;
+    memoriae_index  i;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+
+        redde fructus;
     }
 
-    i8* allocatus = (i8*)piscina_allocare(piscina, s.len + I);
+    allocatus = (character*)piscina_allocare(piscina, s.mensura + I);
     si (!allocatus)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+
+        redde fructus;
     }
 
-    per (memoriae_index i = ZEPHYRUM; i < s.len; i++)
+    per (i = ZEPHYRUM; i < s.mensura; i++)
     {
-        allocatus[i] = (i8)tolower((i8)s.data[i]);
+        allocatus[i] = (character)tolower((character)s.datum[i]);
     }
-    allocatus[s.len] = '\0';
+    allocatus[s.mensura] = '\0';
 
-    redde (chorda){
-        s.len,
-        allocatus
-    };
+    fructus.mensura = s.mensura;
+    fructus.datum   = (i8*)(void*)allocatus;
+
+    redde fructus;
 }
 
 
@@ -343,27 +397,37 @@ chorda_maiuscula (
      chorda  s,
     Piscina* piscina)
 {
-    si (!piscina || !s.data || s.len == ZEPHYRUM)
+            chorda  fructus;
+         character* allocatus;
+    memoriae_index  i;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+
+        redde fructus;
     }
 
-    i8* allocatus = (i8*)piscina_allocare(piscina, s.len + I);
+    allocatus = (character*)piscina_allocare(piscina, s.mensura + I);
     si (!allocatus)
     {
-        redde (chorda){ ZEPHYRUM, NIHIL };
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+
+        redde fructus;
     }
 
-    per (memoriae_index i = ZEPHYRUM; i < s.len; i++)
+    per (i = ZEPHYRUM; i < s.mensura; i++)
     {
-        allocatus[i] = toupper((i8)s.data[i]);
+        allocatus[i] = (character)toupper((character)s.datum[i]);
     }
-    allocatus[s.len] = '\0';
+    allocatus[s.mensura] = '\0';
 
-    redde (chorda){
-        s.len,
-        allocatus
-    };
+    fructus.mensura = s.mensura;
+    fructus.datum   = (i8*)(void*)allocatus;
+
+    redde fructus;
 }
 
 /* ==================================================
@@ -371,30 +435,32 @@ chorda_maiuscula (
  * ================================================== */
 
 
-i8*
+character*
 chorda_ut_cstr (
      chorda  s,
     Piscina* piscina)
 {
-    si (!s.data)
+    character* allocatus;
+
+    si (!s.datum)
     {
         redde NIHIL;
     }
 
-    /* Check if already null-terminated */
-    si (s.len > ZEPHYRUM && s.data[s.len] == '\0')
+    /* Confer si iam nulla-terminatum */
+    si (s.mensura > ZEPHYRUM && s.datum[s.mensura] == '\0')
     {
-        redde s.data;
+        redde (character*)(void*)s.datum;
     }
 
-    i8* allocatus = (i8*)piscina_allocare(piscina, s.len + I);
+    allocatus = (character*)piscina_allocare(piscina, s.mensura + I);
     si (!allocatus)
     {
         redde NIHIL;
     }
 
-    memcpy(allocatus, s.data, s.len);
-    allocatus[s.len] = '\0';
+    memcpy(allocatus, s.datum, s.mensura);
+    allocatus[s.mensura] = '\0';
 
     redde allocatus;
 }
@@ -402,30 +468,33 @@ chorda_ut_cstr (
 b32
 chorda_ut_integer (
     chorda  s,
-       s32* output)
+       s32* fructus)
 {
-    si (!s.data || !output || s.len == ZEPHYRUM)
+          character* cstr_temporalis;
+          character* terminus;
+    signatus longus  longus_valor;
+
+    si (!s.datum || !fructus || s.mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
 
-    i8* cstr_temporalis = (i8*)memoriae_allocare(s.len + I);
+    cstr_temporalis = (character*)memoriae_allocare(s.mensura + I);
     si (!cstr_temporalis)
     {
         redde FALSUM;
     }
 
-    memcpy(cstr_temporalis, s.data, s.len);
-    cstr_temporalis[s.len] = '\0';
+    memcpy(cstr_temporalis, s.datum, s.mensura);
+    cstr_temporalis[s.mensura] = '\0';
 
-    i8* terminus;
-    s32 valor = strtol(cstr_temporalis, &terminus, X);
+    longus_valor = strtol(cstr_temporalis, &terminus, X);
 
     liberare(cstr_temporalis);
 
     si (terminus != cstr_temporalis && *terminus == '\0')
     {
-        *output = valor;
+        *fructus = (s32)longus_valor;
         redde VERUM;
     }
 
@@ -436,31 +505,34 @@ chorda_ut_integer (
 b32
 chorda_ut_size (
             chorda  s,
-    memoriae_index* output)
+    memoriae_index* fructus)
 {
-    si (!s.data || !output || s.len == ZEPHYRUM)
+            character* cstr_temporalis;
+            character* terminus;
+    insignatus longus  valor;
+
+    si (!s.datum || !fructus || s.mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
 
-    i8* cstr_temporalis = (i8*)memoriae_allocare(s.len + I);
+    cstr_temporalis = (character*)memoriae_allocare(s.mensura + I);
     si (!cstr_temporalis)
     {
         redde FALSUM;
     }
 
-    memcpy(cstr_temporalis, s.data, s.len);
-    cstr_temporalis[s.len] = '\0';
+    memcpy(cstr_temporalis, s.datum, s.mensura);
+    cstr_temporalis[s.mensura] = '\0';
 
-    i8* terminus;
-    memoriae_index valor = strtoul(cstr_temporalis, &terminus, X);
+    valor = strtoul(cstr_temporalis, &terminus, X);
 
     liberare(cstr_temporalis);
 
-    /* Check if entire string was parsed */
+    /* Confer si tota chorda parata est */
     si (terminus != cstr_temporalis && *terminus == '\0')
     {
-        *output = valor;
+        *fructus = valor;
         redde VERUM;
     }
 
@@ -469,23 +541,26 @@ chorda_ut_size (
 
 
 /* ==================================================
- * HASHING
+ * FRIATIO
  * ================================================== */
 
 memoriae_index 
-chorda_hash (
+chorda_friare (
     chorda s)
 {
-    /* FNV-1a hash algorithm */
-    memoriae_index hash = CHORDA_HASH_OFFSET;
+    /* Algoritmus FNV-1a friationis */
+    memoriae_index friatum;
+    memoriae_index i;
 
-    per (memoriae_index i = ZEPHYRUM; i < s.len; i++)
+    friatum = CHORDA_FRIATUM_OFFSET;
+
+    per (i = ZEPHYRUM; i < s.mensura; i++)
     {
-        hash ^= (i8)s.data[i];
-        hash *= CHORDA_HASH_PRIME;
+        friatum ^= (i8)s.datum[i];
+        friatum *= CHORDA_FRIATUM_PRIMUS;
     }
 
-    redde hash;
+    redde friatum;
 }
 
 

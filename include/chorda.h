@@ -2,19 +2,17 @@
 #define CHORDA_H
 
 #include "latina.h"
+#include "piscina.h"
 
 /* ==================================================
  * Creatio
  * ================================================== */
 
 nomen structura chorda {
-	memoriae_index  len;
-	    				i8* data;
+	memoriae_index  mensura;
+	    				i8* datum;
 } chorda;
 
-/* Literal constructor - compile-time length calculation */
-#define CHORDA(string_literal) \
-	(chorda){ magnitudo(string_literal) - I, (i8*)(string_literal) }
 
 /* ==================================================
  * Constructores
@@ -22,12 +20,12 @@ nomen structura chorda {
 
 chorda
 chorda_ex_literis (
-		constans i8* cstr);
+		character* cstr);
 
 chorda
 chorda_ex_buffer (
-		 constans i8* buffer,
-	memoriae_index  len);
+		 					i8* buffer,
+	memoriae_index  mensura);
 
 chorda
 chorda_sectio (
@@ -38,7 +36,7 @@ chorda_sectio (
 chorda
 chorda_transcribere (
 		 chorda  s,
-		Piscina* arena);
+		Piscina* piscina);
 
 
 /* ==================================================
@@ -67,8 +65,8 @@ chorda_comparare (
 
 b32
 chorda_continet (
-		chorda hay,
-		chorda needle);
+		chorda fenum,
+		chorda acus);
 
 b32
 chorda_incipit (
@@ -80,15 +78,15 @@ chorda_terminatur (
 		chorda s,
 		chorda suffixum);
 
-character*
+chorda
 chorda_invenire (
-		chorda hay,
-		chorda needle);
+		chorda fenum,
+		chorda acus);
 
 memoriae_index
 chorda_numerare_occurrentia (
-		chorda hay,
-		chorda needle);
+		chorda fenum,
+		chorda acus);
 
 
 /* ==================================================
@@ -102,12 +100,12 @@ chorda_praecidere (
 chorda
 chorda_minuscula (
 		 chorda  s,
-		Piscina* arena);
+		Piscina* piscina);
 
 chorda 
 chorda_maiuscula (
 		 chorda  s,
-		Piscina* arena)
+		Piscina* piscina);
 
 
 /* ==================================================
@@ -117,17 +115,17 @@ chorda_maiuscula (
 character*
 chorda_ut_cstr (
 		 chorda  s,
-		Piscina* arena);
+		Piscina* piscina);
 
 b32
 chorda_ut_integer (
 		 chorda  s,
-		integer* output);
+		integer* fructus);
 
 b32
 chorda_ut_size (
 						chorda  s,
-		memoriae_index* output);
+		memoriae_index* fructus);
 
 
 /* ==================================================
@@ -135,7 +133,7 @@ chorda_ut_size (
  * ================================================= */
 
 memoriae_index
-chorda_hash (
+chorda_friare (
 		chorda s);
 
 #endif /* CHORDA_H */
