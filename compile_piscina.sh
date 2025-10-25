@@ -21,7 +21,7 @@ declare -a INCLUDE_FLAGS=(
 )
 
 # Build the compile command
-COMPILE_CMD="gcc ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} -c lib/piscina/piscina.c -o /tmp/piscina.o"
+COMPILE_CMD="gcc ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} -c lib/piscina.c -o /tmp/piscina.o"
 
 do_compile() {
     echo -e "\033[34m======================="
@@ -39,12 +39,12 @@ if [[ "$1" == "--watch" ]]; then
 
     # Try fswatch first (macOS), fall back to inotifywait (Linux)
     if command -v fswatch &> /dev/null; then
-        fswatch -e IsDirectory lib/piscina/ include/ | while read; do
+        fswatch -e IsDirectory lib/ include/ | while read; do
             echo ""
             do_compile
         done
     elif command -v inotifywait &> /dev/null; then
-        inotifywait -m -e modify -r lib/piscina/ include/ | while read; do
+        inotifywait -m -e modify -r lib/ include/ | while read; do
             echo ""
             do_compile
         done
