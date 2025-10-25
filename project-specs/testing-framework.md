@@ -1,3 +1,19 @@
+some libraries this will depend on that need to be made
+
+- string library (struct prefixed with length like casey muratori)
+- string utilities
+- string builder
+- hash table
+- hashing library?
+- ini parser
+- arg parser?
+- something for environment variables
+- probably something that can define a config and get it from file or env variables or args
+- things for printing strings with colors to shell
+- probably some filesystem stuff or at least a platform independence layer
+- probably some stuff for spawning processes (at least platform independence layer)
+
+
 features that we want
 
 - test suites

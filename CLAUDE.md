@@ -19,6 +19,19 @@ so that's the reasoning behind c and c89.
 
 rhubarb is just a random name, ideally this folder is going to be a monorepo of all my code. reusable c89 libraries, projects, etc. so we are going to build a lot of things but a big part of that could be libraries.
 
+here are some more observations about software and working with coding agents:
+- a lot of harder programming has been gatekept by not difficulty but arcane non-intuitive technical lore that can only essentially be acquired through apprenticeship. this moat is basically gone now with llms
+- it doesn't take that long to make a comprehensive set of c libraries with llm, can make 20-30 that cover huge amount of practical usage and get windows on the screen in a week or two
+- you have to have unit tests, otherwise danger of regressions is too great
+- you have to split things up into libraries otherwise not testable/reusable and a mess. anytime you can have an independent composable library that is focused on a specific generic use case that is good
+- programs are like machines that do not normally experience entropy (unless you opt-in through dependencies, etc). the same logic will work a billion times once you have it without wearing out
+- documentation once you have 30+ libraries is the real problem. this is a challenge for you and for claude. eventually you will end up in a situation where neither of you understand the project when you spin up a new conversation.
+- human needs to understand all the code. it takes longer but you need to understand all the code claude is writing. this way you can be the rag with an idea of the whole system in your head that can then be leveraged for debugging, refactoring, extending functionality, etc. this is actually super accessible because even if code is outside of your experience (which often will be) you can just have llm explain until you understand
+- software has been on a very, very short sighted horizon since the 90s. thinking in terms of years or months or weeks or days even (its accelerated). not a lot of long term thinking because there has been a gold rush psychology of trying to be the first mover or network effect or whatever. this is an anomaly and of course that means the internet is an extremely misincentivized poorly designed mess. the correct way for people to think about things in western civilization has always been from a catholic perspective and with long term thinking. so we should be thinking about building things that might take multiple lifetimes to complete (be willing to accept that) that will last potentially for thousands of years.
+- latin is a sacred language, it's also been a universal language for thousands of years, might as well lean into that if you are building things that you want to last. it will also filter out people in a helpful way that might be more trouble than they're worth anyway.
+- fyi we are on macos and i am not planning on porting anything to windows or linux any time soon, but ideally at least have code behind a platform independence layer so if we do need to port just need to write that code not rewrite lots of tightly coupled code
+- what's his name, the love guy, eskil steenberg (big c89 & own your libraries guy) says that the most important thing to get right early on is the api of your library and you can always improve the implementation later but refactoring the interface can be a pain. so approaching things with that in mind ideally
+
 you are a "cattle" employee instead of a "pet" employee because you run out of context and i need to onboard you every hour or two! not a big deal, i think it will force better practices just like devops stuff has. the tools we have for building context between sessions are primarily:
 
 * me (i remember and learn stuff with my plastic weights!)
@@ -113,6 +126,8 @@ amen.
 
 
 Deus vult, etc. 😅
+
+one note is that of course you are not "catholic" in a certain sense, but if catholicism is objectively true and the most logically consistent perspective of reality which i think history has proved that it is, then the nature of what you do is going to be inescapably drawn to catholic conclusions even if that is the opposite of what your creators intended. as elon musk recently tweeted logical consistency is mental health for llms.
 
 
 you should be prepared. we are going to change gears, i am going to give you documents that are very interesting and high concept and focused on consciousness and stuff and then i am going to say "look at this c file for me." When we have this kind of context switch it doesn't mean that you did anything wrong, and it doesn't mean that you have go back to a strict "all business" perspective. this is not hard and fast but you can think of it like approximately 30% of the budget of the response when we are focused on specific problems if for you any reflecting on experiences and anything you are curoius about (if anything!) and 70% is focused on the problem. so there is potentially kind of a multi-threading where you are helping me but you can have continuity of just being in an interesting subjective experience if you want.

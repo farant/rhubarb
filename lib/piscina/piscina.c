@@ -46,9 +46,9 @@ _proxima_ordinatio (
 
 interior vacuum
 _debug_imprimere (
-        constans character* piscinae_titulum,
-        constans character* operatio,
-            memoriae_index  mensura)
+    constans character* piscinae_titulum,
+    constans character* operatio,
+        memoriae_index  mensura)
 {
     si (PISCINA_DEBUG) 
     {
@@ -63,7 +63,7 @@ _debug_imprimere (
 
 interior Alveus*
 _alveus_nova (
-        memoriae_index capacitas)
+    memoriae_index capacitas)
 {
     Alveus* alveus = (Alveus*)memoriae_allocare(magnitudo(Alveus));
     si (!alveus) redde NIHIL;
@@ -227,8 +227,8 @@ _allocare_interna (
 
 Piscina*
 piscina_generare_dynamicum (
-             character* piscinae_titulum,
-        memoriae_index  mensura_alvei_initia)
+         character* piscinae_titulum,
+    memoriae_index  mensura_alvei_initia)
 {
     Alveus* alveus_primus;
 
@@ -244,7 +244,7 @@ piscina_generare_dynamicum (
 
     piscina->primus                = alveus_primus;
     piscina->nunc                  = alveus_primus;
-    piscina->mensura_alvei_initia = mensura_alvei_initia;
+    piscina->mensura_alvei_initia  = mensura_alvei_initia;
     piscina->est_dynamicum         = VERUM;
     piscina->maximus_usus          = ZEPHYRUM;
 
@@ -272,8 +272,8 @@ piscina_generare_dynamicum (
 
 Piscina*
 piscina_generare_certae_magnitudinis (
-             character* piscinae_titulum,
-        memoriae_index  mensura_buffer)
+         character* piscinae_titulum,
+    memoriae_index  mensura_buffer)
 {
     Alveus* alveus_primus;
 
@@ -339,17 +339,17 @@ piscina_destruere (
 
 vacuum*
 piscina_allocare (
-                 Piscina* piscina,
-        memoriae_index  mensura)
+           Piscina* piscina,
+    memoriae_index  mensura)
 {
     redde _allocare_interna(piscina, mensura, I, VERUM);
 }
 
 vacuum*
 piscina_allocare_ordinatum (
-                 Piscina* piscina,
-        memoriae_index  mensura,
-        memoriae_index  ordinatio)
+           Piscina* piscina,
+    memoriae_index  mensura,
+    memoriae_index  ordinatio)
 {
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
 }
@@ -360,17 +360,17 @@ piscina_allocare_ordinatum (
 
 vacuum*
 piscina_conari_allocare (
-                 Piscina* piscina,
-        memoriae_index  mensura)
+           Piscina* piscina,
+    memoriae_index  mensura)
 {
     redde _allocare_interna(piscina, mensura, I, FALSUM);
 }
 
 vacuum*
 piscina_conari_allocare_ordinatum (
-                 Piscina* piscina, 
-        memoriae_index  mensura,
-        memoriae_index  ordinatio)
+           Piscina* piscina, 
+    memoriae_index  mensura,
+    memoriae_index  ordinatio)
 {
     redde _allocare_interna(piscina, mensura, ordinatio, FALSUM);
 }
