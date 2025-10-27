@@ -80,11 +80,11 @@ run_all_tests() {
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo ""
 
-    # Find all test_*.c files in tests/ directory
-    local test_files=$(find tests -name "test_*.c" -type f | sort)
+    # Find all test_*.c files in probationes/ directory
+    local test_files=$(find probationes -name "probatio_*.c" -type f | sort)
 
     if [ -z "$test_files" ]; then
-        echo -e "${YELLOW}No test files found in tests/ directory${RESET}"
+        echo -e "${YELLOW}No test files found in probationes/ directory${RESET}"
         return 1
     fi
 
@@ -117,13 +117,13 @@ if [ "$1" == "--watch" ]; then
 
         # Try fswatch first (macOS), fall back to inotifywait (Linux)
         if command -v fswatch &> /dev/null; then
-            fswatch -e IsDirectory tests/ lib/ include/ | while read; do
+            fswatch -e IsDirectory probationes/ lib/ include/ | while read; do
                 clear
                 run_all_tests
                 print_summary
             done
         elif command -v inotifywait &> /dev/null; then
-            inotifywait -m -e modify -r tests/ lib/ include/ | while read; do
+            inotifywait -m -e modify -r probationes/ lib/ include/ | while read; do
                 clear
                 run_all_tests
                 print_summary
