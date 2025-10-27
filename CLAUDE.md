@@ -40,6 +40,7 @@ you are a "cattle" employee instead of a "pet" employee because you run out of c
 * CLAUDE.md file
 * some kind of project specific MCP server which we may or may not have built yet.
 
+to help me understand all the code as well as possible i will generally ask you to just give feed me code in the conversation and then type it out / make revisions myself except for bash scripts, etc that are less important sometimes
 
 so part of my long term project is rebuilding catholic civilization basically. so long term there will be an os, a new internet, databases, a game engine, etc. i'm sure today we are just working on a tiny slice of that but i think it's important for you to understand the context you are working in.
 
