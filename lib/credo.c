@@ -56,27 +56,6 @@ _credo_concatenare (
     _credo_numerus++;
 }
 
-interior chorda
-_credo_chordare_integrum (
-        s32  valor,
-    Piscina* piscina)
-{
-    character buffer[64];
-       chorda fructus;
-          s32 mensura;
-
-    mensura = snprintf(buffer, 64, "%d", valor);
-    si (mensura < 0 || mensura > 63) 
-    {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum   = NIHIL;
-        redde fructus;
-    }
-            
-
-    redde chorda_ex_literis(buffer, piscina);
-}
-
 
 /* ======================================================
  * Apparatus Globalis
@@ -100,6 +79,7 @@ credo_claudere (
     _credo_piscina  = NIHIL;
     _credo_primus   = NIHIL;
     _credo_nunc     = NIHIL;
+    _credo_numerus  = ZEPHYRUM;
 }
 
 /* ======================================================
@@ -182,8 +162,8 @@ vacuum
 _credo_notare (
     constans character* genus,
     constans character* expressio,
-                chorda  valor_primus,
-                chorda  valor_secundus,
+    constans character* valor_primus,
+    constans character* valor_secundus,
     constans character* filum,
                    s32  versus,
                    b32  praeteritus)
@@ -192,14 +172,10 @@ _credo_notare (
 
     si (!notatio) redde;
 
-    notatio->genus          = chorda_transcribere(
-                                    chorda_ex_literis(genus, _credo_piscina),       
-                                    _credo_piscina);
-    notatio->expressio      = chorda_transcribere(
-                                    chorda_ex_literis(expressio, _credo_piscina),
-                                    _credo_piscina);
-    notatio->valor_primus   = valor_primus;
-    notatio->valor_secundus = valor_secundus;
+    notatio->genus          = chorda_ex_literis(genus,          _credo_piscina);   
+    notatio->expressio      = chorda_ex_literis(expressio,      _credo_piscina);
+    notatio->valor_primus   = chorda_ex_literis(valor_primus,   _credo_piscina);
+    notatio->valor_secundus = chorda_ex_literis(valor_secundus, _credo_piscina);
     notatio->filum          = filum;
     notatio->versus         = versus;
     notatio->praeteritus    = praeteritus;
@@ -230,24 +206,56 @@ _credo_notare_integrum (
     constans character* filum,
                    s32  versus)
 {
-    chorda chorda_primus   = _credo_chordare_integrum(valor_primus,   _credo_piscina);
-    chorda chorda_secondus = _credo_chordare_integrum(valor_secundus, _credo_piscina);
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
 
-    b32 praeteritus = (valor_primus == valor_secundus);
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
 
-    _credo_notare(genus, expressio, chorda_primus, chorda_secondus, filum, versus, praeteritus);
+    praeteritus = (valor_primus == valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_i32 (
+    constans character* genus,
+    constans character* expressio,
+                   i32  valor_primus,
+                   i32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus == valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
 }
 
 vacuum
 _credo_notare_chorda (
     constans character* genus,
     constans character* expressio,
-                chorda  valor_primus,
-                chorda  valor_secundus,
+    constans character* valor_primus,
+    constans character* valor_secundus,
     constans character* filum,
                    s32  versus)
 {
-    b32 praeteritus = chorda_aequalis(valor_primus, valor_secundus);
+    b32 praeteritus;
+    chorda chorda_primus;
+    chorda chorda_secundus;
+
+    chorda_primus   = chorda_ex_literis(valor_primus, _credo_piscina);
+    chorda_secundus = chorda_ex_literis(valor_secundus, _credo_piscina);
+
+    praeteritus = chorda_aequalis(chorda_primus, chorda_secundus);
 
     _credo_notare(genus, expressio, valor_primus, 
                   valor_secundus, filum, versus, praeteritus);

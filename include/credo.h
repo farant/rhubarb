@@ -74,8 +74,8 @@ credo_invenire_fractos (
 	_credo_notare( \
 			"credo_verum", \
 			#x, \
-			chorda_ex_literis(#x), \
-			chorda_ex_literis(""), \
+			#x, \
+			"", \
 			__FILE__, \
 			__LINE__, \
 			(x) != FALSUM \
@@ -85,8 +85,8 @@ credo_invenire_fractos (
 	_credo_notare( \
 			"credo_falsum", \
 			#x, \
-			chorda_ex_literis(#x), \
-			chorda_ex_literis(""), \
+			#x, \
+			"", \
 			__FILE__, \
 			__LINE__, \
 			(x) == FALSUM \
@@ -96,8 +96,8 @@ credo_invenire_fractos (
 	_credo_notare( \
 			"credo_non_nihil", \
 			#p, \
-			chorda_ex_literis(#p), \
-			chorda_ex_literis(""), \
+			#p, \
+			"", \
 			__FILE__, \
 			__LINE__, \
 			(p) != NIHIL \
@@ -107,8 +107,8 @@ credo_invenire_fractos (
 	_credo_notare( \
 			"credo_nihil", \
 			#p, \
-			chorda_ex_literis(#p), \
-			chorda_ex_literis(""), \
+			#p, \
+			"", \
 			__FILE__, \
 			__LINE__, \
 			(p) == NIHIL \
@@ -118,8 +118,18 @@ credo_invenire_fractos (
 	_credo_notare_integrum( \
 			"credo_aequalis", \
 			#a " == " #b, \
-			(s32)(a), \
-			(s32)(b), \
+			(a), \
+			(b), \
+			__FILE__, \
+			__LINE__ \
+	)
+
+#define CREDO_AEQUALIS_I32(a, b) \
+	_credo_notare_integrum_i32( \
+			"credo_aequalis", \
+			#a " == " #b, \
+			(a), \
+			(b), \
 			__FILE__, \
 			__LINE__ \
 	)
@@ -152,8 +162,8 @@ vacuum
 _credo_notare (
 		constans character* genus,
 		constans character* expressio,
-							  chorda  valor_primus,
-							  chorda  valor_secundus,
+		constans character* valor_primus,
+		constans character* valor_secundus,
 		constans character* filum,
 									 s32  versus,
 									 b32  praeteritus);
@@ -169,11 +179,20 @@ _credo_notare_integrum (
 									 s32  versus);
 
 vacuum
+_credo_notare_integrum_i32 (
+		constans character* genus,
+		constans character* expressio,
+									 i32  valor_primus,
+									 i32  valor_secundus,
+		constans character* filum,
+									 s32  versus);
+
+vacuum
 _credo_notare_chorda (
 		constans character* genus,
 		constans character* expressio,
-							  chorda  valor_primus,
-							  chorda  valor_secundus,
+		constans character* valor_primus,
+		constans character* valor_secundus,
 		constans character* filum,
 									 s32  versus);
 
