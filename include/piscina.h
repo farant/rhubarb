@@ -12,13 +12,13 @@ nomen structura Piscina Piscina;
 
 Piscina*
 piscina_generare_dynamicum (
-				 character* piscinae_titulum,
-		memoriae_index  mensura_alvei_initia);
+		constans character* piscinae_titulum,
+			  memoriae_index  mensura_alvei_initia);
 
 Piscina*
 piscina_generare_certae_magnitudinis (
-				 character* piscinae_titulum,
-		memoriae_index  mensura_buffer);
+		constans character* piscinae_titulum,
+		    memoriae_index  mensura_buffer);
 
 
 /* ===============================================

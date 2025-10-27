@@ -14,27 +14,41 @@
 
 chorda
 chorda_ex_literis (
-    character* cstr)
+    constans character* cstr,
+    Piscina* piscina)
 {
-    chorda fructus;
+    chorda  fructus;
+       i32  mensura;
+        i8* allocatus;
 
-    si (!cstr)
+    si (!cstr || !piscina)
     {
         fructus.mensura = ZEPHYRUM;
         fructus.datum   = NIHIL;
         redde fructus;
     }
 
-    fructus.mensura = strlen(cstr);
-    fructus.datum   = (i8*)(void*)cstr;
+      mensura = (i32)strlen(cstr);
+    allocatus = (i8*)piscina_allocare(piscina, mensura);
+
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    memcpy(allocatus, cstr, mensura);
+    fructus.mensura = mensura;
+    fructus.datum   = allocatus;
     redde fructus;
 }
 
 
 chorda
 chorda_ex_buffer (
-                i8* buffer,
-    memoriae_index  mensura)
+     i8* buffer,
+    i32  mensura)
 {
     chorda fructus;
 
@@ -54,9 +68,9 @@ chorda_ex_buffer (
 
 chorda
 chorda_sectio (
-            chorda s,
-    memoriae_index initium, 
-    memoriae_index finis)
+    chorda s,
+       i32 initium, 
+       i32 finis)
 {
     chorda fructus;
 
@@ -88,7 +102,7 @@ chorda_transcribere (
         redde fructus;
     }
 
-    allocatus = (i8*)piscina_allocare(piscina, s.mensura + I);
+    allocatus = (i8*)piscina_allocare(piscina, s.mensura);
     si (!allocatus)
     {
         fructus.mensura = ZEPHYRUM;
@@ -97,7 +111,6 @@ chorda_transcribere (
     }
 
     memcpy(allocatus, s.datum, s.mensura);
-    allocatus[s.mensura] = '\0';
 
     fructus.mensura = s.mensura;
     fructus.datum   = allocatus;
@@ -327,8 +340,8 @@ chorda
 chorda_praecidere (
     chorda s)
 {
-    memoriae_index initium;
-    memoriae_index finis;
+    i32 initium;
+    i32 finis;
     si (!s.datum || s.mensura == ZEPHYRUM)
     {
         redde s;
@@ -370,7 +383,7 @@ chorda_minuscula (
         redde fructus;
     }
 
-    allocatus = (character*)piscina_allocare(piscina, s.mensura + I);
+    allocatus = (character*)piscina_allocare(piscina, s.mensura);
     si (!allocatus)
     {
         fructus.mensura = ZEPHYRUM;
@@ -383,7 +396,6 @@ chorda_minuscula (
     {
         allocatus[i] = (character)tolower((character)s.datum[i]);
     }
-    allocatus[s.mensura] = '\0';
 
     fructus.mensura = s.mensura;
     fructus.datum   = (i8*)(void*)allocatus;
@@ -409,7 +421,7 @@ chorda_maiuscula (
         redde fructus;
     }
 
-    allocatus = (character*)piscina_allocare(piscina, s.mensura + I);
+    allocatus = (character*)piscina_allocare(piscina, s.mensura);
     si (!allocatus)
     {
         fructus.mensura = ZEPHYRUM;
@@ -422,7 +434,6 @@ chorda_maiuscula (
     {
         allocatus[i] = (character)toupper((character)s.datum[i]);
     }
-    allocatus[s.mensura] = '\0';
 
     fructus.mensura = s.mensura;
     fructus.datum   = (i8*)(void*)allocatus;

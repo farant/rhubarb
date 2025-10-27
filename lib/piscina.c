@@ -227,8 +227,8 @@ _allocare_interna (
 
 Piscina*
 piscina_generare_dynamicum (
-         character* piscinae_titulum,
-    memoriae_index  mensura_alvei_initia)
+    constans character* piscinae_titulum,
+        memoriae_index  mensura_alvei_initia)
 {
     Alveus* alveus_primus;
 
@@ -272,8 +272,8 @@ piscina_generare_dynamicum (
 
 Piscina*
 piscina_generare_certae_magnitudinis (
-         character* piscinae_titulum,
-    memoriae_index  mensura_buffer)
+    constans character* piscinae_titulum,
+        memoriae_index  mensura_buffer)
 {
     Alveus* alveus_primus;
 

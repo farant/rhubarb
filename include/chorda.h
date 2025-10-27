@@ -9,8 +9,8 @@
  * ================================================== */
 
 nomen structura chorda {
-	memoriae_index  mensura;
-	    				i8* datum;
+	i32  mensura;
+	 i8* datum;
 } chorda;
 
 
@@ -20,18 +20,19 @@ nomen structura chorda {
 
 chorda
 chorda_ex_literis (
-		character* cstr);
+		constans character* cstr,
+							 Piscina* piscina);
 
 chorda
 chorda_ex_buffer (
-		 					i8* buffer,
-	memoriae_index  mensura);
+	 i8* buffer,
+	i32  mensura);
 
 chorda
 chorda_sectio (
-						chorda s,
-		memoriae_index initium,
-		memoriae_index finis);
+		chorda s,
+			 i32 initium,
+			 i32 finis);
 
 chorda
 chorda_transcribere (

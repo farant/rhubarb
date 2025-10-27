@@ -6,16 +6,20 @@
 #include <stdio.h>
 
 s32 principale (vacuum) {
-    Piscina* picina;
+    Piscina* piscina;
      chorda  s1;
      chorda  s2;
      chorda  s3;
+        b32  praeteritus;
+
+     /*
      chorda  a;
      chorda  b;
      chorda  c;
+     */
 
     /* Initialize credo and piscina */
-    picina = piscina_generare_dynamicum("test_chorda", 4096);
+    piscina = piscina_generare_dynamicum("test_chorda", 4096);
     si (!piscina) 
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -29,14 +33,14 @@ s32 principale (vacuum) {
 
     imprimere("\n--- Testing chorda_ex_literis ---\n");
 
-    s1 = chorda_ex_literis("hello");
-    CREDO_AEQUALIS(s1.mensura, V);
+    s1 = chorda_ex_literis("hello", piscina);
+    CREDO_AEQUALIS_S32(s1.mensura, V);
 
-    s2 = chorda_ex_literis("");
-    CREDO_AEQUALIS(s2.mensura, ZEPHYRUM);
+    s2 = chorda_ex_literis("", piscina);
+    CREDO_AEQUALIS_S32(s2.mensura, ZEPHYRUM);
 
-    s3 = chorda_ex_literis(NIHIL);
-    CREDO_AEQUALIS(s3.mensura, ZEPHYRUM);
+    s3 = chorda_ex_literis(NIHIL, piscina);
+    CREDO_AEQUALIS_S32(s3.mensura, ZEPHYRUM);
 
     /* ================================================= 
      * Summary
@@ -45,11 +49,13 @@ s32 principale (vacuum) {
     imprimere("\n");
     credo_imprimere_compendium();
 
+    praeteritus = credo_omnia_praeterierunt();
+
     /* Cleanup */
     credo_claudere();
     piscina_destruere(piscina);
 
-    si (credo_omnia_praeterierunt())
+    si (praeteritus)
     {
         redde ZEPHYRUM;
     }

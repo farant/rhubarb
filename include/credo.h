@@ -15,7 +15,8 @@ nomen structura CredoNotatio {
 									chorda  expressio;
 		 							chorda  valor_primus;
 		 						  chorda  valor_secundus;
-							 character* filum;
+									/* TODO: This should probably be a chorda instead */
+			 constans character* filum;
 			  						 s32  versus;
 										 b32  praeteritus;
 				  memoriae_index  ordo;
@@ -113,12 +114,12 @@ credo_invenire_fractos (
 			(p) == NIHIL \
 	)
 
-#define CREDO_AEQUALIS(a, b) \
+#define CREDO_AEQUALIS_S32(a, b) \
 	_credo_notare_integrum( \
 			"credo_aequalis", \
 			#a " == " #b, \
-			(a), \
-			(b), \
+			(s32)(a), \
+			(s32)(b), \
 			__FILE__, \
 			__LINE__ \
 	)
@@ -149,31 +150,31 @@ credo_invenire_fractos (
 
 vacuum 
 _credo_notare (
-		character* genus,
-		character* expressio,
-			 chorda  valor_primus,
-			 chorda  valor_secundus,
-		character* filum,
-					s32  versus,
-					b32  praeteritus);
+		constans character* genus,
+		constans character* expressio,
+							  chorda  valor_primus,
+							  chorda  valor_secundus,
+		constans character* filum,
+									 s32  versus,
+									 b32  praeteritus);
 
 
 vacuum
 _credo_notare_integrum (
-		character* genus,
-		character* expressio,
-					s32  valor_primus,
-					s32  valor_secundus,
-		character* filum,
-					s32  versus);
+		constans character* genus,
+		constans character* expressio,
+									 s32  valor_primus,
+									 s32  valor_secundus,
+		constans character* filum,
+									 s32  versus);
 
 vacuum
 _credo_notare_chorda (
-		character* genus,
-		character* expressio,
-			 chorda  valor_primus,
-			 chorda  valor_secundus,
-		character* filum,
-					s32  versus);
+		constans character* genus,
+		constans character* expressio,
+							  chorda  valor_primus,
+							  chorda  valor_secundus,
+		constans character* filum,
+									 s32  versus);
 
 #endif /* CREDO_H */
