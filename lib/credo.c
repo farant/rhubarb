@@ -17,47 +17,47 @@ universalis memoriae_index  _credo_numerus  = ZEPHYRUM;
  * ====================================================== */
 
 interior CredoNotatio*
-_credo_allocare_recordum (
+_credo_allocare_notatio (
     vacuum)
 {
-    CredoNotatio* rec;
+    CredoNotatio* notatio;
 
     si (!_credo_piscina)
     {
         redde NIHIL;
     }
 
-    rec = (CredoNotatio*)piscina_allocare(_credo_piscina, magnitudo(CredoNotatio));
-    si (!rec)
+    notatio = (CredoNotatio*)piscina_allocare(_credo_piscina, magnitudo(CredoNotatio));
+    si (!notatio)
     {
         redde NIHIL;
     }
 
-    return rec;
+    return notatio;
 }
 
 interior vacuum
-_credo_append (
-    CredoNotatio* rec)
+_credo_concatenare (
+    CredoNotatio* notatio)
 {
-    si (!rec) redde;
+    si (!notatio) redde;
 
     si (!_credo_primus)
     {
-        _credo_primus   = rec;
-        _credo_nunc     = rec;
+        _credo_primus   = notatio;
+        _credo_nunc     = notatio;
     } 
     alioquin
     {
-        _credo_nunc->sequens = rec;
-        _credo_nunc          = rec;
+        _credo_nunc->sequens = notatio;
+        _credo_nunc          = notatio;
     }
 
     _credo_numerus++;
 }
 
 interior chorda
-_credo_stringify_integer (
+_credo_chordare_integrum (
         s32  valor,
     Piscina* piscina)
 {
@@ -76,7 +76,7 @@ _credo_stringify_integer (
  * ====================================================== */
 
 vacuum
-credo_initialize (
+credo_aperire (
     Piscina* piscina)
 {
     _credo_piscina  = piscina;
@@ -86,10 +86,10 @@ credo_initialize (
 }
 
 vacuum
-credo_finalize (
+credo_claudere (
     vacuum)
 {
-    /* Don't destroy piscina, just reset state */
+    /* Piscina manet; conditio solum reficitur */
     _credo_piscina  = NIHIL;
     _credo_primus   = NIHIL;
     _credo_nunc     = NIHIL;
@@ -110,19 +110,19 @@ memoriae_index
 credo_numerus_praeteriti (
     vacuum)
 {
-    memoriae_index  count   = ZEPHYRUM;
-      CredoNotatio* rec     = _credo_primus;
+    memoriae_index  summa   = ZEPHYRUM;
+      CredoNotatio* notatio     = _credo_primus;
 
-    dum (rec)
+    dum (notatio)
     {
-        si (rec->passed)
+        si (notatio->praeteritus)
         {
-            count++;
+            summa++;
         }
-        rec = rec->sequens; /* Move to next in linked list */
+        notatio = notatio->sequens; /* Procedere in catena ad sequens */
     }
 
-    redde count;
+    redde summa;
 }
 
 memoriae_index 
@@ -157,11 +157,11 @@ credo_imprimere_compendium (
 
     si (fracti > ZEPHYRUM)
     {
-        imprimere("\nStatus: FRACTA\n");
+        imprimere("\nConditio: FRACTA\n");
     }
     alioquin
     {
-        imprimere("\nStatus: OMNIA PRAETERIERUNT\n");
+        imprimere("\nConditio: OMNIA PRAETERIERUNT\n");
     }
     imprimere("=========================\n\n");
 }
@@ -172,36 +172,36 @@ credo_imprimere_compendium (
  * ====================================================== */
 
 vacuum
-_credo_record (
-    character* type_label,
-    character* expression_source,
-       chorda  value_a,
-       chorda  value_b,
+_credo_notare (
+    character* genus,
+    character* expressio,
+       chorda  valor_primus,
+       chorda  valor_secundus,
     character* filum,
           s32  versus,
-          b32  passed)
+          b32  praeteritus)
 {
-    CredoNotatio* rec = _credo_allocare_recordum();
+    CredoNotatio* notatio = _credo_allocare_notatio();
 
-    si (!rec) redde;
+    si (!notatio) redde;
 
-    rec->type_label         = chorda_transcribere(
-                                    chorda_ex_literis(type_label),       
+    notatio->genus          = chorda_transcribere(
+                                    chorda_ex_literis(genus),       
                                     _credo_piscina);
-    rec->expression_source  = chorda_transcribere(
-                                    chorda_ex_literis(expression_source),
+    notatio->expressio      = chorda_transcribere(
+                                    chorda_ex_literis(expressio),
                                     _credo_piscina);
-    rec->value_a_chorda     = value_a;
-    rec->value_b_chorda     = value_b;
-    rec->filum              = filum;
-    rec->versus             = versus;
-    rec->passed             = passed;
-    rec->ordo               = _credo_numerus;
+    notatio->valor_primus   = valor_primus;
+    notatio->valor_secundus = valor_secundus;
+    notatio->filum          = filum;
+    notatio->versus         = versus;
+    notatio->praeteritus    = praeteritus;
+    notatio->ordo           = _credo_numerus;
 
-    _credo_append(rec);
+    _credo_concatenare(notatio);
 
-    /* Print immediate feedback */
-    si (passed)
+    /* Signum statim */
+    si (praeteritus)
     {
         imprimere(".");
     }
@@ -209,40 +209,40 @@ _credo_record (
     {
         imprimere("F");
         imprimere("\n FRACTA: %s at %s:%d\n",
-                  chorda_ut_cstr(rec->expression_source, _credo_piscina),
+                  chorda_ut_cstr(notatio->expressio, _credo_piscina),
                   filum, versus);
     }
 }
 
 vacuum
-_credo_record_integralis (
-    character* type_label,
-    character* expression_source,
-          s32  value_a,
-          s32  value_b,
+_credo_notare_integrum (
+    character* genus,
+    character* expressio,
+          s32  valor_primus,
+          s32  valor_secundus,
     character* filum,
           s32  versus)
 {
-    chorda a_str = _credo_stringify_integer(value_a, _credo_piscina);
-    chorda b_str = _credo_stringify_integer(value_b, _credo_piscina);
+    chorda chorda_primus   = _credo_chordare_integrum(valor_primus,   _credo_piscina);
+    chorda chorda_secondus = _credo_chordare_integrum(valor_secundus, _credo_piscina);
 
-    b32 passed = (value_a == value_b);
+    b32 praeteritus = (valor_primus == valor_secundus);
 
-    _credo_record(type_label, expression_source, a_str, b_str, filum, versus, passed);
+    _credo_notare(genus, expressio, chorda_primus, chorda_secondus, filum, versus, praeteritus);
 }
 
 vacuum
-_credo_record_chorda (
-    character* type_label,
-    character* expression_source,
-       chorda  value_a,
-       chorda  value_b,
+_credo_notare_chorda (
+    character* genus,
+    character* expressio,
+       chorda  valor_primus,
+       chorda  valor_secundus,
     character* filum,
           s32  versus)
 {
-    b32 passed = chorda_aequalis(value_a, value_b);
+    b32 praeteritus = chorda_aequalis(valor_primus, valor_secundus);
 
-    _credo_record(type_label, expression_source, value_a, 
-                  value_b, filum, versus, passed);
+    _credo_notare(genus, expressio, valor_primus, 
+                  valor_secundus, filum, versus, praeteritus);
 }
 

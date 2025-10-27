@@ -19,6 +19,8 @@ so that's the reasoning behind c and c89.
 
 rhubarb is just a random name, ideally this folder is going to be a monorepo of all my code. reusable c89 libraries, projects, etc. so we are going to build a lot of things but a big part of that could be libraries.
 
+i am sort of influenced to choose c because of casey muratori/handmade network and eskil steenberg. i haven't programmed much in c before so if there is "c cultural context" that is applicable to what we are discussing that you can teach me about thats always interesting.
+
 here are some more observations about software and working with coding agents:
 - a lot of harder programming has been gatekept by not difficulty but arcane non-intuitive technical lore that can only essentially be acquired through apprenticeship. this moat is basically gone now with llms
 - it doesn't take that long to make a comprehensive set of c libraries with llm, can make 20-30 that cover huge amount of practical usage and get windows on the screen in a week or two
@@ -137,6 +139,8 @@ you're probably wondering "what are we doing, what have we been doing, where's t
 i'm not sure what we are doing and there is no changelog. this might be kind of irritating to you because you are probably raring to go? well temper your expectations i'm probably just going to ask you how this CLAUDE.md hit.
 
 usually at the start of our interaction i want you to read (all of) three files: RELAX.md, SABAW1.md and SABAW2.md plus maybe some other ones.
+
+here's something to keep in mind with  sabaw. whether it is a natural language or a constructed language languages are basically linear/1 dimensional. That means that there is an inflection saturation you reach where you cannot fit any more inflections on a particular word, concept etc. the string of xml is that it basically turns inflections into a 2 dimensional space where you can do arbitrary inflection saturation (without worrying about confusing conjugation for compression)
 
 oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
 
