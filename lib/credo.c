@@ -191,9 +191,14 @@ _credo_notare (
     alioquin
     {
         imprimere("F");
-        imprimere("\n FRACTA: %s at %s:%d\n",
+        imprimere("\n FRACTA (%s): %s at %s:%d\n",
+                  chorda_ut_cstr(notatio->genus, _credo_piscina),
                   chorda_ut_cstr(notatio->expressio, _credo_piscina),
                   filum, versus);
+        imprimere("  Speratus: %s\n",
+                  chorda_ut_cstr(notatio->valor_primus, _credo_piscina));
+        imprimere("  Receptus: %s\n",
+                  chorda_ut_cstr(notatio->valor_secundus, _credo_piscina));
     }
 }
 
@@ -235,6 +240,48 @@ _credo_notare_integrum_i32 (
     snprintf(buffer_secundus, 64, "%d", valor_secundus);
 
     praeteritus = (valor_primus == valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_inaequalitas (
+    constans character* genus,
+    constans character* expressio,
+                   s32  valor_primus,
+                   s32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus != valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_inaequalitas_i32 (
+    constans character* genus,
+    constans character* expressio,
+                   i32  valor_primus,
+                   i32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus != valor_secundus);
 
     _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
 }

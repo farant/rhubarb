@@ -134,8 +134,18 @@ credo_invenire_fractos (
 			__LINE__ \
 	)
 
-#define CREDO_INAEQUALITAS(a, b) \
-	_credo_notare_integrum( \
+#define CREDO_INAEQUALITAS_S32(a, b) \
+	_credo_notare_integrum_inaequalitas( \
+			"credo_inaequalitas", \
+			#a " != " #b, \
+			(a), \
+			(b), \
+			__FILE__, \
+			__LINE__ \
+	)
+
+#define CREDO_INAEQUALITAS_I32(a, b) \
+	_credo_notare_integrum_inaequalitas_i32( \
 			"credo_inaequalitas", \
 			#a " != " #b, \
 			(a), \
@@ -180,6 +190,24 @@ _credo_notare_integrum (
 
 vacuum
 _credo_notare_integrum_i32 (
+		constans character* genus,
+		constans character* expressio,
+									 i32  valor_primus,
+									 i32  valor_secundus,
+		constans character* filum,
+									 s32  versus);
+
+vacuum
+_credo_notare_integrum_inaequalitas (
+		constans character* genus,
+		constans character* expressio,
+									 s32  valor_primus,
+									 s32  valor_secundus,
+		constans character* filum,
+									 s32  versus);
+
+vacuum
+_credo_notare_integrum_inaequalitas_i32 (
 		constans character* genus,
 		constans character* expressio,
 									 i32  valor_primus,

@@ -84,7 +84,7 @@ chorda_invenire (
 		chorda fenum,
 		chorda acus);
 
-memoriae_index
+i32
 chorda_numerare_occurrentia (
 		chorda fenum,
 		chorda acus);
@@ -119,21 +119,21 @@ chorda_ut_cstr (
 		Piscina* piscina);
 
 b32
-chorda_ut_integer (
-		 chorda  s,
-		integer* fructus);
+chorda_ut_s32 (
+		chorda  s,
+		   s32* fructus);
 
 b32
-chorda_ut_size (
-						chorda  s,
-		memoriae_index* fructus);
+chorda_ut_i32 (
+		chorda  s,
+			 i32* fructus);
 
 
 /* ==================================================
  * Friatio
  * ================================================= */
 
-memoriae_index
+i32
 chorda_friare (
 		chorda s);
 

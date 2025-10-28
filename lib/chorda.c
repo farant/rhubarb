@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define CHORDA_FRIATUM_OFFSET  2166136261U
 #define CHORDA_FRIATUM_PRIMUS    16777619U
@@ -299,13 +300,13 @@ chorda_invenire (
 }
 
 
-memoriae_index
+i32
 chorda_numerare_occurrentia (
     chorda fenum,
     chorda acus)
 {
-    memoriae_index count;
-    memoriae_index positus;
+    i32 count;
+    i32 positus;
 
     si (!fenum.datum || !acus.datum || acus.mensura > fenum.mensura || acus.mensura == ZEPHYRUM)
     {
@@ -458,12 +459,6 @@ chorda_ut_cstr (
         redde NIHIL;
     }
 
-    /* Confer si iam nulla-terminatum */
-    si (s.mensura > ZEPHYRUM && s.datum[s.mensura] == '\0')
-    {
-        redde (character*)(void*)s.datum;
-    }
-
     allocatus = (character*)piscina_allocare(piscina, s.mensura + I);
     si (!allocatus)
     {
@@ -477,7 +472,7 @@ chorda_ut_cstr (
 }
 
 b32
-chorda_ut_integer (
+chorda_ut_s32 (
     chorda  s,
        s32* fructus)
 {
@@ -501,22 +496,22 @@ chorda_ut_integer (
 
     longus_valor = strtol(cstr_temporalis, &terminus, X);
 
-    liberare(cstr_temporalis);
-
     si (terminus != cstr_temporalis && *terminus == '\0')
     {
         *fructus = (s32)longus_valor;
+        liberare(cstr_temporalis);
         redde VERUM;
     }
 
+    liberare(cstr_temporalis);
     redde FALSUM;
 }
 
 
 b32
-chorda_ut_size (
-            chorda  s,
-    memoriae_index* fructus)
+chorda_ut_i32 (
+    chorda  s,
+       i32* fructus)
 {
             character* cstr_temporalis;
             character* terminus;
@@ -538,15 +533,16 @@ chorda_ut_size (
 
     valor = strtoul(cstr_temporalis, &terminus, X);
 
-    liberare(cstr_temporalis);
 
     /* Confer si tota chorda parata est */
     si (terminus != cstr_temporalis && *terminus == '\0')
     {
-        *fructus = valor;
+        *fructus = (i32)valor;
+        liberare(cstr_temporalis);
         redde VERUM;
     }
 
+    liberare(cstr_temporalis);
     redde FALSUM;
 }
 
@@ -555,13 +551,13 @@ chorda_ut_size (
  * FRIATIO
  * ================================================== */
 
-memoriae_index 
+i32 
 chorda_friare (
     chorda s)
 {
     /* Algoritmus FNV-1a friationis */
-    memoriae_index friatum;
-    memoriae_index i;
+    i32 friatum;
+    i32 i;
 
     friatum = CHORDA_FRIATUM_OFFSET;
 
