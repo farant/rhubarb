@@ -22,6 +22,44 @@ tabula_friare_fnv1a(chorda clavis)
 }
 
 /* ==================================================
+ * Helper: Next Power of 2
+ * "Proxima potentia binaria"
+ * ================================================== */
+
+interior i32
+_proxima_potentia_2(i32 n)
+{
+    n--;
+    n |= n >> I;
+    n |= n >> II;
+    n |= n >> IV;
+    n |= n >> VIII;
+    n |= n >> XVI;
+    n++;
+    redde n;
+}
+
+/* ==================================================
+ * Hash Functions
+ * ================================================== */
+
+i32
+tabula_friare_multiplicatio(chorda clavis)
+{
+    i32 friatio = 5381U;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < clavis.mensura; i++) 
+    {
+        friatio = ((friatio << V) + friatio) + (i8)clavis.datum[i]; 
+    }
+
+    redde friatio;
+}
+
+
+
+/* ==================================================
  * Helper: Find Slot
  * Returns slot index, sets *inventum flag
  * ================================================== */
@@ -29,8 +67,8 @@ tabula_friare_fnv1a(chorda clavis)
 interior i32
 _invenire_slotum (
     TabulaDispersa* tabula,
-            chorda  clavis
-               i32  hash
+            chorda  clavis,
+               i32  hash,
                b32* inventum)
 {
     i32 index;
@@ -42,7 +80,7 @@ _invenire_slotum (
     distantia            = ZEPHYRUM;
     index_primus_deletum = (i32)-I;
 
-    dum (tabula->slot[index].status != SLOT_VACUUM)
+    dum (tabula->sloti[index].status != SLOT_VACUUM)
     {
         si (tabula->sloti[index].status == SLOT_OCCUPATUM)
         {
@@ -105,7 +143,7 @@ _tabula_dispersa_crescere(TabulaDispersa* tabula)
 
     tabula->sloti = (Slotus*)piscina_allocare(
         tabula->piscina,
-        tabula->capacitqas * magnitudo(Slotus));
+        tabula->capacitas * magnitudo(Slotus));
 
     si (!tabula->sloti)
     {
@@ -187,6 +225,7 @@ tabula_dispersa_creare(
     tabula->numerus_deletorum        = ZEPHYRUM;
     tabula->piscina                  = piscina;
     tabula->comparatio               = comparatio;
+    tabula->friatio                  = friatio;
     tabula->factor_maximus           = 0.75f;
     tabula->factor_deletorum_maximus = 0.25f;
     tabula->collisiones_totales      = ZEPHYRUM;
@@ -205,7 +244,7 @@ tabula_dispersa_creare_chorda(
         piscina,
         capacitas_initialis,
         tabula_friare_fnv1a,
-        _comparatio_chorda);
+        (TabulaComparatio)chorda_comparare);
 }
 
 
@@ -446,12 +485,12 @@ tabula_dispersa_status_imprimere(TabulaDispersa* tabula)
     }
 
     imprimere("Tabula Dispersa Status:\n");
-    imprimere("  Capacitas: %zu\n", tabula->capacitas);
-    imprimere("  Numerus: %zu\n", tabula->numerus);
-    imprimere("  Numerus deletorum: %zu\n", tabula->numerus_deletorum);
+    imprimere("  Capacitas: %u\n", tabula->capacitas);
+    imprimere("  Numerus: %u\n", tabula->numerus);
+    imprimere("  Numerus deletorum: %u\n", tabula->numerus_deletorum);
     imprimere("  Factor oneris: %.2f%%\n", tabula_dispersa_factor_oneris(tabula) * C);
     imprimere("  Factor deletorum: %.2f%%\n", 
                 tabula_dispersa_factor_deletorum(tabula) * C);
-    imprimere("  Collisiones totales: %zu\n", tabula->collisiones_totales);
-    imprimere("  Distantia maxima: %zu\n", tabula->distantia_maxima);
+    imprimere("  Collisiones totales: %u\n", tabula->collisiones_totales);
+    imprimere("  Distantia maxima: %u\n", tabula->distantia_maxima);
 }

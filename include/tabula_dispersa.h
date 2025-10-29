@@ -13,9 +13,9 @@
 /* Status of each slot in the table
  * "Status sloti" */
 nomen enumeratio {
-    SLOT_VACUUM     = 0, /* Empty slot */
-    SLOT_OCCUPATION = 1, /* Contains a key-value pair */
-    SLOT_DELETUM    = 2  /* Deleted (tombstone) */
+    SLOT_VACUUM    = 0, /* Empty slot */
+    SLOT_OCCUPATUM = 1, /* Contains a key-value pair */
+    SLOT_DELETUM   = 2  /* Deleted (tombstone) */
 } SlotusStatus;
 
 
@@ -42,14 +42,14 @@ nomen structura {
                  i32  capacitas_mask;
                  i32  numerus;
                  i32  numerus_deletorum;
-             Piscina* picina;
+             Piscina* piscina;
        TabulaFriatio  friatio;
     TabulaComparatio  comparatio;
                  f32  factor_maximus;
                  f32  factor_deletorum_maximus;
                  i32  collisiones_totales;
                  i32  distantia_maxima;
-}
+} TabulaDispersa;
 
 /* Iterator for walking all entries */
 nomen structura {
@@ -133,8 +133,8 @@ TabulaIterator
 tabula_dispersa_iterator_initium (
     TabulaDispersa* tabula);
 
-/* Get next entry in iteratio
- * Returns VERUM and fills *clavis_out and *valour_it if entry found
+/* Get next entry in iter
+ * Returns VERUM and fills *clavis_out and *valor_out if entry found
  * Returns FALSUM at end of iteration */
 
 b32
@@ -152,7 +152,7 @@ tabula_dispersa_factor_oneris (
     TabulaDispersa* tabula);
 
 f32
-tabula_dispera_factor_deletorum (
+tabula_dispersa_factor_deletorum (
     TabulaDispersa* tabula);
 
 i32
