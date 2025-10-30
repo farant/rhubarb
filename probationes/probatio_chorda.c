@@ -12,8 +12,6 @@ s32 principale (vacuum)
         b32  praeteritus;
 
 
-    /* NOTA: Oportet facere ut credo exeat si sine credo_aperire initializatione */
-
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("test_chorda", 4096);
     si (!piscina) 

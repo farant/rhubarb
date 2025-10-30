@@ -24,7 +24,8 @@ _credo_allocare_notatio (
 
     si (!_credo_piscina)
     {
-        redde NIHIL;
+        imprimere("FATALE: credo nunquam aperitum! Vocate credo_aperire primum.\n");
+        exit(I);
     }
 
     notatio = (CredoNotatio*)piscina_allocare(_credo_piscina, magnitudo(CredoNotatio));
@@ -172,11 +173,11 @@ _credo_notare (
 
     si (!notatio) redde;
 
-    notatio->genus          = chorda_ex_literis(genus,          _credo_piscina);   
+    notatio->genus          = chorda_ex_literis(genus,          _credo_piscina);
     notatio->expressio      = chorda_ex_literis(expressio,      _credo_piscina);
     notatio->valor_primus   = chorda_ex_literis(valor_primus,   _credo_piscina);
     notatio->valor_secundus = chorda_ex_literis(valor_secundus, _credo_piscina);
-    notatio->filum          = filum;
+    notatio->filum          = chorda_ex_literis(filum,          _credo_piscina);
     notatio->versus         = versus;
     notatio->praeteritus    = praeteritus;
     notatio->ordo           = _credo_numerus;
@@ -194,7 +195,7 @@ _credo_notare (
         imprimere("\n FRACTA (%s): %s at %s:%d\n",
                   chorda_ut_cstr(notatio->genus, _credo_piscina),
                   chorda_ut_cstr(notatio->expressio, _credo_piscina),
-                  filum, versus);
+                  chorda_ut_cstr(notatio->filum, _credo_piscina), versus);
         imprimere("  Speratus: %s\n",
                   chorda_ut_cstr(notatio->valor_secundus, _credo_piscina));
         imprimere("  Receptus: %s\n",
