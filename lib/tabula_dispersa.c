@@ -3,27 +3,26 @@
 #include <string.h>
 
 /* ==================================================
- * Hash functions
+ * Functiones Friationis
  * ================================================== */
 
 i32
 tabula_friare_fnv1a(chorda clavis)
 {
-    i32 hash = 2166136261U;
+    i32 friatum = 2166136261U;
     i32 i;
 
-    per (i = ZEPHYRUM; i < clavis.mensura; i++) 
+    per (i = ZEPHYRUM; i < clavis.mensura; i++)
     {
-        hash ^= (i8)clavis.datum[i];
-        hash *= 16777619U;
+        friatum ^= (i8)clavis.datum[i];
+        friatum *= 16777619U;
     }
 
-    redde hash;
+    redde friatum;
 }
 
 /* ==================================================
- * Helper: Next Power of 2
- * "Proxima potentia binaria"
+ * Adiutor: Proxima Potentia Binaria
  * ================================================== */
 
 interior i32
@@ -40,68 +39,68 @@ _proxima_potentia_2(i32 n)
 }
 
 /* ==================================================
- * Hash Functions
+ * Functiones Friationis
  * ================================================== */
 
 i32
 tabula_friare_multiplicatio(chorda clavis)
 {
-    i32 friatio = 5381U;
+    i32 friatum = 5381U;
     i32 i;
 
-    per (i = ZEPHYRUM; i < clavis.mensura; i++) 
+    per (i = ZEPHYRUM; i < clavis.mensura; i++)
     {
-        friatio = ((friatio << V) + friatio) + (i8)clavis.datum[i]; 
+        friatum = ((friatum << V) + friatum) + (i8)clavis.datum[i];
     }
 
-    redde friatio;
+    redde friatum;
 }
 
 
 
 /* ==================================================
- * Helper: Find Slot
- * Returns slot index, sets *inventum flag
+ * Adiutor: Invenire Slotum
+ * Redde positus sloti, statuit vexillum *inventum
  * ================================================== */
 
 interior i32
 _invenire_slotum (
     TabulaDispersa* tabula,
             chorda  clavis,
-               i32  hash,
+               i32  friatum,
                b32* inventum)
 {
-    i32 index;
+    i32 positus;
     i32 distantia;
-    i32 index_primus_deletum;
+    i32 positus_primus_deletum;
 
-    *inventum            = FALSUM;
-    index                = hash & tabula->capacitas_mask;
-    distantia            = ZEPHYRUM;
-    index_primus_deletum = (i32)-I;
+    *inventum              = FALSUM;
+    positus                = friatum & tabula->capacitas_mask;
+    distantia              = ZEPHYRUM;
+    positus_primus_deletum = (i32)-I;
 
-    dum (tabula->sloti[index].status != SLOT_VACUUM)
+    dum (tabula->sloti[positus].status != SLOT_VACUUM)
     {
-        si (tabula->sloti[index].status == SLOT_OCCUPATUM)
+        si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
-            si (tabula->sloti[index].hash_cachatum == hash &&
+            si (tabula->sloti[positus].hash_cachatum == friatum &&
                 tabula->comparatio(
-                    tabula->sloti[index].clavis, clavis) == ZEPHYRUM)
+                    tabula->sloti[positus].clavis, clavis) == ZEPHYRUM)
             {
                 *inventum = VERUM;
-                redde index;
+                redde positus;
             }
             tabula->collisiones_totales++;
         }
-        alioquin si (tabula->sloti[index].status == SLOT_DELETUM)
+        alioquin si (tabula->sloti[positus].status == SLOT_DELETUM)
         {
-            si (index_primus_deletum == (i32)-I)
+            si (positus_primus_deletum == (i32)-I)
             {
-                index_primus_deletum = index;
+                positus_primus_deletum = positus;
             }
         }
 
-        index = (index + I) & tabula->capacitas_mask;
+        positus = (positus + I) & tabula->capacitas_mask;
         distantia++;
 
         si (distantia > tabula->distantia_maxima)
@@ -115,17 +114,17 @@ _invenire_slotum (
         }
     }
 
-    si (index_primus_deletum != (i32)-I)
+    si (positus_primus_deletum != (i32)-I)
     {
-        redde index_primus_deletum;
+        redde positus_primus_deletum;
     }
 
-    redde index;
+    redde positus;
 }
 
 
 /* ==================================================
- * Resizing
+ * Crescentia
  * ================================================== */
 
 interior b32
@@ -178,7 +177,7 @@ _tabula_dispersa_crescere(TabulaDispersa* tabula)
 }
 
 /* ==================================================
- * Creation
+ * Creatio
  * ================================================== */
 
 TabulaDispersa*
@@ -249,7 +248,7 @@ tabula_dispersa_creare_chorda(
 
 
 /* ==================================================
- * Insertion
+ * Insertio
  * ================================================== */
 
 b32
@@ -258,8 +257,8 @@ tabula_dispersa_inserere(
             chorda  clavis,
             vacuum* valor)
 {
-    i32 hash;
-    i32 index;
+    i32 friatum;
+    i32 positus;
     b32 inventum;
 
     si (!tabula || clavis.mensura == ZEPHYRUM)
@@ -267,7 +266,7 @@ tabula_dispersa_inserere(
         redde FALSUM;
     }
 
-    /* Check load factors */
+    /* Confer factores oneris */
     si (tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus ||
         tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
     {
@@ -277,26 +276,26 @@ tabula_dispersa_inserere(
         }
     }
 
-    hash = tabula->friatio(clavis);
-    index = _invenire_slotum(tabula, clavis, hash, &inventum);
+    friatum = tabula->friatio(clavis);
+    positus = _invenire_slotum(tabula, clavis, friatum, &inventum);
 
     si (inventum)
     {
-        /* Update existing */
-        tabula->sloti[index].valor = valor;
+        /* Renovatio existentis */
+        tabula->sloti[positus].valor = valor;
         redde VERUM;
     }
 
-    /* Insert new */
-    si (tabula->sloti[index].status == SLOT_DELETUM)
+    /* Insertio nova */
+    si (tabula->sloti[positus].status == SLOT_DELETUM)
     {
         tabula->numerus_deletorum--;
     }
 
-    tabula->sloti[index].clavis          = clavis;
-    tabula->sloti[index].valor           = valor;
-    tabula->sloti[index].hash_cachatum   = hash;
-    tabula->sloti[index].status          = SLOT_OCCUPATUM;
+    tabula->sloti[positus].clavis          = clavis;
+    tabula->sloti[positus].valor           = valor;
+    tabula->sloti[positus].hash_cachatum   = friatum;
+    tabula->sloti[positus].status          = SLOT_OCCUPATUM;
     tabula->numerus++;
 
     redde VERUM;
@@ -304,7 +303,7 @@ tabula_dispersa_inserere(
 
 
 /* ==================================================
- * Lookup
+ * Quaestio
  * ================================================== */
 
 b32
@@ -313,8 +312,8 @@ tabula_dispersa_invenire(
             chorda   clavis,
             vacuum** valor_out)
 {
-    i32 hash;
-    i32 index;
+    i32 friatum;
+    i32 positus;
     b32 inventum;
 
     si (!tabula || clavis.mensura == ZEPHYRUM)
@@ -322,14 +321,14 @@ tabula_dispersa_invenire(
         redde FALSUM;
     }
 
-    hash  = tabula->friatio(clavis);
-    index = _invenire_slotum(tabula, clavis, hash, &inventum);
+    friatum = tabula->friatio(clavis);
+    positus = _invenire_slotum(tabula, clavis, friatum, &inventum);
 
     si (inventum)
     {
         si (valor_out)
         {
-            *valor_out = tabula->sloti[index].valor;
+            *valor_out = tabula->sloti[positus].valor;
         }
         redde VERUM;
     }
@@ -346,7 +345,7 @@ tabula_dispersa_continet(
 }
 
 /* ==================================================
- * Deletion
+ * Deletio
  * ================================================== */
 
 b32
@@ -354,8 +353,8 @@ tabula_dispersa_delere(
     TabulaDispersa* tabula,
             chorda  clavis)
 {
-    i32 hash;
-    i32 index;
+    i32 friatum;
+    i32 positus;
     b32 inventum;
 
     si (!tabula || clavis.mensura == ZEPHYRUM)
@@ -363,12 +362,12 @@ tabula_dispersa_delere(
         redde FALSUM;
     }
 
-    hash  = tabula->friatio(clavis);
-    index = _invenire_slotum(tabula, clavis, hash, &inventum);
+    friatum = tabula->friatio(clavis);
+    positus = _invenire_slotum(tabula, clavis, friatum, &inventum);
 
     si (inventum)
     {
-        tabula->sloti[index].status = SLOT_DELETUM;
+        tabula->sloti[positus].status = SLOT_DELETUM;
         tabula->numerus--;
         tabula->numerus_deletorum++;
         redde VERUM;
@@ -379,7 +378,7 @@ tabula_dispersa_delere(
 
 
 /* ==================================================
- * Lifecycle
+ * Cyclus Vitae
  * ================================================== */
 
 vacuum
@@ -445,8 +444,9 @@ tabula_dispersa_iterator_proximum(
     redde FALSUM;
 }
 
+
 /* ==================================================
- * Statistics
+ * Statisticae
  * ================================================== */
 
 f32
