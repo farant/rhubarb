@@ -26,7 +26,7 @@ declare -a SOURCE_FILES=(
     "lib/chorda.c"
     "lib/credo.c"
 		"lib/tabula_dispersa.c"
-	"lib/chorda_builder.c"
+	"lib/chorda_aedificator.c"
 )
 
 # Color codes

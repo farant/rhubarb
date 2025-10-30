@@ -1,18 +1,18 @@
-#include "chorda_builder.h"
+#include "chorda_aedificator.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
 /* ==================================================
- * Structura ChordaBuilder - Interna
+ * Structura ChordaAedificator - Interna
  * ================================================== */
 
-structura ChordaBuilder {
+structura ChordaAedificator {
 	           i8*  buffer;
 	memoriae_index  capacitas;
 	memoriae_index  offset;
-	Piscina*  piscina;
-	i32 indentatio_level;
+	       Piscina* piscina;
+	           i32  indentatio_gradus;
 };
 
 
@@ -23,61 +23,61 @@ structura ChordaBuilder {
 interior memoriae_index
 _proxima_capacitas(memoriae_index nunc)
 {
-	/* Double capacity until we have enough */
+	/* Duplica capacitatem donec satis habeamus */
 	redde nunc > ZEPHYRUM ? nunc * II : XVI;
 }
 
 interior b32
-_crescere(ChordaBuilder* builder, memoriae_index necessaria)
+_crescere(ChordaAedificator* aedificator, memoriae_index necessaria)
 {
 	memoriae_index capacitas_nova;
 	i8* buffer_novum;
 
-	capacitas_nova = builder->capacitas;
+	capacitas_nova = aedificator->capacitas;
 	dum (capacitas_nova < necessaria)
 	{
 		capacitas_nova = _proxima_capacitas(capacitas_nova);
 	}
 
-	buffer_novum = (i8*)piscina_allocare(builder->piscina, capacitas_nova);
+	buffer_novum = (i8*)piscina_allocare(aedificator->piscina, capacitas_nova);
 	si (!buffer_novum)
 		redde FALSUM;
 
-	si (builder->buffer && builder->offset > ZEPHYRUM)
+	si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
 	{
-		memcpy(buffer_novum, builder->buffer, builder->offset);
+		memcpy(buffer_novum, aedificator->buffer, aedificator->offset);
 	}
 
-	builder->buffer = buffer_novum;
-	builder->capacitas = capacitas_nova;
+	aedificator->buffer = buffer_novum;
+	aedificator->capacitas = capacitas_nova;
 
 	redde VERUM;
 }
 
 interior b32
-_appendere_interna(ChordaBuilder* builder, constans i8* datum, memoriae_index mensura)
+_appendere_interna(ChordaAedificator* aedificator, constans i8* datum, memoriae_index mensura)
 {
 	memoriae_index necessaria;
 
-	si (!builder || !datum || mensura == ZEPHYRUM)
-		redde mensura == ZEPHYRUM; /* Empty append is OK */
+	si (!aedificator || !datum || mensura == ZEPHYRUM)
+		redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
 
-	necessaria = builder->offset + mensura;
+	necessaria = aedificator->offset + mensura;
 
-	si (necessaria > builder->capacitas)
+	si (necessaria > aedificator->capacitas)
 	{
-		si (!_crescere(builder, necessaria))
+		si (!_crescere(aedificator, necessaria))
 			redde FALSUM;
 	}
 
-	memcpy(builder->buffer + builder->offset, datum, mensura);
-	builder->offset += mensura;
+	memcpy(aedificator->buffer + aedificator->offset, datum, mensura);
+	aedificator->offset += mensura;
 
 	redde VERUM;
 }
 
-/* Format signed integer to buffer
- * Caller provides buffer, must be >= 32 bytes (safe for s32) */
+/* Formata integrum signatum ad buffer
+ * Vocans praebet buffer, debet esse >= 32 bytes (tutus pro s32) */
 interior memoriae_index
 _format_integer_s32(s32 n, i8* buffer, memoriae_index capacitas)
 {
@@ -138,11 +138,11 @@ _format_duplex(f64 n, i32 decimales, i8* buffer, memoriae_index capacitas)
 	redde mensura;
 }
 
-/* JSON string escaping
- * Handles: quote, backslash, control characters
- * Caller provides buffer */
+/* Effugium chordae JSON
+ * Tractat: citationem, virgulam inversam, characteres imperantes
+ * Vocans praebet buffer */
 interior memoriae_index
-_escape_json(constans i8* input, memoriae_index mensura, i8* output, memoriae_index capacitas_output)
+_evadere_json(constans i8* input, memoriae_index mensura, i8* output, memoriae_index capacitas_output)
 {
 	memoriae_index index_input;
 	memoriae_index index_output;
@@ -195,7 +195,7 @@ _escape_json(constans i8* input, memoriae_index mensura, i8* output, memoriae_in
 		}
 		alioquin si (iscntrl((signatus character)c))
 		{
-			/* Other control characters as \uXXXX */
+			/* Alii characteres imperantes ut \uXXXX */
 			hex_len_signed = snprintf(hex_buffer, VII, "\\u%04x", (signatus character)c);
 			si (hex_len_signed < ZEPHYRUM)
 				redde ZEPHYRUM;
@@ -223,30 +223,30 @@ _escape_json(constans i8* input, memoriae_index mensura, i8* output, memoriae_in
  * Creatio
  * ================================================== */
 
-ChordaBuilder*
-chorda_builder_creare(Piscina* piscina, memoriae_index capacitas_initialis)
+ChordaAedificator*
+chorda_aedificator_creare(Piscina* piscina, memoriae_index capacitas_initialis)
 {
-	ChordaBuilder* builder;
+	ChordaAedificator* aedificator;
 	i8* buffer;
 
 	si (!piscina || capacitas_initialis == ZEPHYRUM)
 		redde NIHIL;
 
-	builder = (ChordaBuilder*)piscina_allocare(piscina, magnitudo(ChordaBuilder));
-	si (!builder)
+	aedificator = (ChordaAedificator*)piscina_allocare(piscina, magnitudo(ChordaAedificator));
+	si (!aedificator)
 		redde NIHIL;
 
 	buffer = (i8*)piscina_allocare(piscina, capacitas_initialis);
 	si (!buffer)
 		redde NIHIL;
 
-	builder->buffer = buffer;
-	builder->capacitas = capacitas_initialis;
-	builder->offset = ZEPHYRUM;
-	builder->piscina = piscina;
-	builder->indentatio_level = ZEPHYRUM;
+	aedificator->buffer = buffer;
+	aedificator->capacitas = capacitas_initialis;
+	aedificator->offset = ZEPHYRUM;
+	aedificator->piscina = piscina;
+	aedificator->indentatio_gradus = ZEPHYRUM;
 
-	redde builder;
+	redde aedificator;
 }
 
 
@@ -255,13 +255,13 @@ chorda_builder_creare(Piscina* piscina, memoriae_index capacitas_initialis)
  * ================================================== */
 
 vacuum
-chorda_builder_destruere(ChordaBuilder* builder)
+chorda_aedificator_destruere(ChordaAedificator* aedificator)
 {
-	/* Piscina owns the memory; we just release the struct */
-	si (builder)
+	/* Piscina possidet memoriam; solum liberamus structuram */
+	si (aedificator)
 	{
-		/* Note: buffer is also allocated from piscina,
-		 * so it will be freed when piscina is destroyed */
+		/* Nota: buffer etiam allocatus ex piscina,
+		 * ergo liberabitur quando piscina destruitur */
 	}
 }
 
@@ -271,108 +271,108 @@ chorda_builder_destruere(ChordaBuilder* builder)
  * ================================================== */
 
 b32
-chorda_builder_appendere_character(ChordaBuilder* builder, character c)
+chorda_aedificator_appendere_character(ChordaAedificator* aedificator, character c)
 {
 	i8 ch = (i8)c;
-	redde _appendere_interna(builder, &ch, I);
+	redde _appendere_interna(aedificator, &ch, I);
 }
 
 
 /* ==================================================
- * Appendere - Strings
+ * Appendere - Chordae
  * ================================================== */
 
 b32
-chorda_builder_appendere_literis(ChordaBuilder* builder, constans character* cstr)
+chorda_aedificator_appendere_literis(ChordaAedificator* aedificator, constans character* cstr)
 {
 	memoriae_index mensura;
 
-	si (!builder || !cstr)
+	si (!aedificator || !cstr)
 		redde FALSUM;
 
 	mensura = strlen(cstr);
-	redde _appendere_interna(builder, (constans i8*)cstr, mensura);
+	redde _appendere_interna(aedificator, (constans i8*)cstr, mensura);
 }
 
 b32
-chorda_builder_appendere_chorda(ChordaBuilder* builder, chorda s)
+chorda_aedificator_appendere_chorda(ChordaAedificator* aedificator, chorda s)
 {
-	si (!builder || !s.datum)
+	si (!aedificator || !s.datum)
 		redde FALSUM;
 
-	redde _appendere_interna(builder, s.datum, s.mensura);
+	redde _appendere_interna(aedificator, s.datum, s.mensura);
 }
 
 
 /* ==================================================
- * Appendere - Numbers
+ * Appendere - Numeri
  * ================================================== */
 
 b32
-chorda_builder_appendere_integer(ChordaBuilder* builder, s32 n)
+chorda_aedificator_appendere_integer(ChordaAedificator* aedificator, s32 n)
 {
 	i8 buffer[CXXXII];
 	memoriae_index mensura;
 
-	si (!builder)
+	si (!aedificator)
 		redde FALSUM;
 
 	mensura = _format_integer_s32(n, buffer, magnitudo(buffer));
 	si (mensura == ZEPHYRUM)
 		redde FALSUM;
 
-	redde _appendere_interna(builder, buffer, mensura);
+	redde _appendere_interna(aedificator, buffer, mensura);
 }
 
 b32
-chorda_builder_appendere_i32(ChordaBuilder* builder, i32 n)
+chorda_aedificator_appendere_i32(ChordaAedificator* aedificator, i32 n)
 {
 	i8 buffer[CXXXII];
 	memoriae_index mensura;
 
-	si (!builder)
+	si (!aedificator)
 		redde FALSUM;
 
 	mensura = _format_integer_i32(n, buffer, magnitudo(buffer));
 	si (mensura == ZEPHYRUM)
 		redde FALSUM;
 
-	redde _appendere_interna(builder, buffer, mensura);
+	redde _appendere_interna(aedificator, buffer, mensura);
 }
 
 b32
-chorda_builder_appendere_duplex(ChordaBuilder* builder, f64 n, i32 decimales)
+chorda_aedificator_appendere_duplex(ChordaAedificator* aedificator, f64 n, i32 decimales)
 {
 	i8 buffer[CXXXII];
 	memoriae_index mensura;
 
-	si (!builder || decimales < ZEPHYRUM || decimales > XXX)
+	si (!aedificator || decimales < ZEPHYRUM || decimales > XXX)
 		redde FALSUM;
 
 	mensura = _format_duplex(n, decimales, buffer, magnitudo(buffer));
 	si (mensura == ZEPHYRUM)
 		redde FALSUM;
 
-	redde _appendere_interna(builder, buffer, mensura);
+	redde _appendere_interna(aedificator, buffer, mensura);
 }
 
 
 /* ==================================================
- * Appendere - Escaped
+ * Appendere - Evasus
  * ================================================== */
 
 b32
-chorda_builder_appendere_escaped_json(ChordaBuilder* builder, chorda s)
+chorda_aedificator_appendere_evasus_json(ChordaAedificator* aedificator, chorda s)
 {
-	i8 buffer[D];  /* Stack buffer for small escapes */
+	i8 buffer[D];  /* Buffer in acervo pro effugiis parvis */
 	i8* output_buffer;
-	memoriae_index mensura_escapatus;
+	memoriae_index mensura_evasus;
 	memoriae_index necessaria;
 
-	si (!builder || !s.datum)
+	si (!aedificator || !s.datum)
 		redde FALSUM;
 
-	/* Worst case: every char becomes \uXXXX (6 bytes) */
+	/* Pessimus casus: omnis character fit \uXXXX (6 bytes) */
 	necessaria = s.mensura * VI;
 
 	si (necessaria <= magnitudo(buffer))
@@ -381,33 +381,33 @@ chorda_builder_appendere_escaped_json(ChordaBuilder* builder, chorda s)
 	}
 	alioquin
 	{
-		output_buffer = (i8*)piscina_allocare(builder->piscina, necessaria);
+		output_buffer = (i8*)piscina_allocare(aedificator->piscina, necessaria);
 		si (!output_buffer)
 			redde FALSUM;
 	}
 
-	mensura_escapatus = _escape_json(s.datum, s.mensura, output_buffer, necessaria);
-	si (mensura_escapatus == ZEPHYRUM)
+	mensura_evasus = _evadere_json(s.datum, s.mensura, output_buffer, necessaria);
+	si (mensura_evasus == ZEPHYRUM)
 	{
 		redde FALSUM;
 	}
 
-	redde _appendere_interna(builder, output_buffer, mensura_escapatus);
+	redde _appendere_interna(aedificator, output_buffer, mensura_evasus);
 }
 
 b32
-chorda_builder_appendere_literis_escaped_json(ChordaBuilder* builder, constans character* cstr)
+chorda_aedificator_appendere_literis_evasus_json(ChordaAedificator* aedificator, constans character* cstr)
 {
 	memoriae_index mensura;
 	i8* buffer_temporalis;
 	chorda s;
 	b32 result;
 
-	si (!cstr || !builder)
+	si (!cstr || !aedificator)
 		redde FALSUM;
 
 	mensura = strlen(cstr);
-	buffer_temporalis = (i8*)piscina_allocare(builder->piscina, mensura);
+	buffer_temporalis = (i8*)piscina_allocare(aedificator->piscina, mensura);
 	si (!buffer_temporalis)
 		redde FALSUM;
 
@@ -415,38 +415,38 @@ chorda_builder_appendere_literis_escaped_json(ChordaBuilder* builder, constans c
 	s.datum = buffer_temporalis;
 	s.mensura = (i32)mensura;
 
-	result = chorda_builder_appendere_escaped_json(builder, s);
+	result = chorda_aedificator_appendere_evasus_json(aedificator, s);
 	redde result;
 }
 
 
 /* ==================================================
- * Appendere - Whitespace/Structure
+ * Appendere - Spatium Album/Structura
  * ================================================== */
 
 b32
-chorda_builder_appendere_newline(ChordaBuilder* builder)
+chorda_aedificator_appendere_lineam_novam(ChordaAedificator* aedificator)
 {
-	si (!builder)
+	si (!aedificator)
 		redde FALSUM;
 
-	redde chorda_builder_appendere_character(builder, '\n');
+	redde chorda_aedificator_appendere_character(aedificator, '\n');
 }
 
 b32
-chorda_builder_appendere_indentation(ChordaBuilder* builder, i32 level)
+chorda_aedificator_appendere_indentationem(ChordaAedificator* aedificator, i32 gradus)
 {
 	i32 i;
 	i32 spatia;
 
-	si (!builder || level < ZEPHYRUM)
+	si (!aedificator || gradus < ZEPHYRUM)
 		redde FALSUM;
 
-	spatia = level * CHORDA_BUILDER_INDENTATIO_SPATIA;
+	spatia = gradus * CHORDA_AEDIFICATOR_INDENTATIO_SPATIA;
 
 	per (i = ZEPHYRUM; i < spatia; i++)
 	{
-		si (!chorda_builder_appendere_character(builder, ' '))
+		si (!chorda_aedificator_appendere_character(aedificator, ' '))
 			redde FALSUM;
 	}
 
@@ -455,31 +455,31 @@ chorda_builder_appendere_indentation(ChordaBuilder* builder, i32 level)
 
 
 /* ==================================================
- * Indentation Tracking
+ * Indentationis Observatio
  * ================================================== */
 
 vacuum
-chorda_builder_push_indentation(ChordaBuilder* builder)
+chorda_aedificator_push_indentationem(ChordaAedificator* aedificator)
 {
-	si (builder && builder->indentatio_level < M)
+	si (aedificator && aedificator->indentatio_gradus < M)
 	{
-		builder->indentatio_level++;
+		aedificator->indentatio_gradus++;
 	}
 }
 
 vacuum
-chorda_builder_pop_indentation(ChordaBuilder* builder)
+chorda_aedificator_pop_indentationem(ChordaAedificator* aedificator)
 {
-	si (builder && builder->indentatio_level > ZEPHYRUM)
+	si (aedificator && aedificator->indentatio_gradus > ZEPHYRUM)
 	{
-		builder->indentatio_level--;
+		aedificator->indentatio_gradus--;
 	}
 }
 
 i32
-chorda_builder_indentation_level(ChordaBuilder* builder)
+chorda_aedificator_indentatio_gradus(ChordaAedificator* aedificator)
 {
-	redde builder ? builder->indentatio_level : ZEPHYRUM;
+	redde aedificator ? aedificator->indentatio_gradus : ZEPHYRUM;
 }
 
 
@@ -488,25 +488,25 @@ chorda_builder_indentation_level(ChordaBuilder* builder)
  * ================================================== */
 
 memoriae_index
-chorda_builder_longitudo(ChordaBuilder* builder)
+chorda_aedificator_longitudo(ChordaAedificator* aedificator)
 {
-	redde builder ? builder->offset : ZEPHYRUM;
+	redde aedificator ? aedificator->offset : ZEPHYRUM;
 }
 
 chorda
-chorda_builder_spectare(ChordaBuilder* builder)
+chorda_aedificator_spectare(ChordaAedificator* aedificator)
 {
 	chorda result;
 
-	si (!builder || !builder->buffer)
+	si (!aedificator || !aedificator->buffer)
 	{
 		result.mensura = ZEPHYRUM;
 		result.datum = NIHIL;
 	}
 	alioquin
 	{
-		result.mensura = (i32)builder->offset;
-		result.datum = builder->buffer;
+		result.mensura = (i32)aedificator->offset;
+		result.datum = aedificator->buffer;
 	}
 
 	redde result;
@@ -518,29 +518,29 @@ chorda_builder_spectare(ChordaBuilder* builder)
  * ================================================== */
 
 vacuum
-chorda_builder_reset(ChordaBuilder* builder)
+chorda_aedificator_reset(ChordaAedificator* aedificator)
 {
-	si (!builder)
+	si (!aedificator)
 		redde;
 
-	builder->offset = ZEPHYRUM;
-	builder->indentatio_level = ZEPHYRUM;
+	aedificator->offset = ZEPHYRUM;
+	aedificator->indentatio_gradus = ZEPHYRUM;
 }
 
 chorda
-chorda_builder_finire(ChordaBuilder* builder)
+chorda_aedificator_finire(ChordaAedificator* aedificator)
 {
 	chorda result;
 
-	si (!builder)
+	si (!aedificator)
 	{
 		result.mensura = ZEPHYRUM;
 		result.datum = NIHIL;
 		redde result;
 	}
 
-	result.mensura = (i32)builder->offset;
-	result.datum = builder->buffer;
+	result.mensura = (i32)aedificator->offset;
+	result.datum = aedificator->buffer;
 
 	redde result;
 }
