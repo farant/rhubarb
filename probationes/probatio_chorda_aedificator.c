@@ -185,7 +185,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "linea2"));
 
 		result = chorda_aedificator_finire(aedificator);
-		/* Should have newline in middle */
+		/* Debet habere lineam novam in medio */
 		CREDO_VERUM(result.mensura > XII);
 	}
 
@@ -201,12 +201,12 @@ s32 principale (vacuum)
 		imprimere("\n--- Probans chorda_aedificator_appendere_indentation ---\n");
 
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
-		/* Level 0: no indent */
+		/* Gradus 0: nullum indentationem */
 		CREDO_VERUM(chorda_aedificator_appendere_indentationem(aedificator, ZEPHYRUM));
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "no_indent"));
 
 		CREDO_VERUM(chorda_aedificator_appendere_lineam_novam(aedificator));
-		/* Level 1: 2 spaces */
+		/* Gradus 1: duo spatia */
 		CREDO_VERUM(chorda_aedificator_appendere_indentationem(aedificator, I));
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "indented"));
 
@@ -266,7 +266,7 @@ s32 principale (vacuum)
 		view = chorda_aedificator_spectare(aedificator);
 		CREDO_AEQUALIS_I32((i32)view.mensura, IV);
 
-		/* Spectare shouldn't finalize, aedificator still valid */
+		/* Spectare non debet finire, aedificator adhuc validus */
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "123"));
 		CREDO_AEQUALIS_I32((i32)chorda_aedificator_longitudo(aedificator), VII);
 
@@ -292,7 +292,7 @@ s32 principale (vacuum)
 		result1 = chorda_aedificator_finire(aedificator);
 		CREDO_AEQUALIS_I32(result1.mensura, XII);
 
-		/* Can't reset after finire, but can create new aedificator */
+		/* Non potest reficere post finire, sed potest creare aedificatorem novum */
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "second"));
 		CREDO_AEQUALIS_I32((i32)chorda_aedificator_longitudo(aedificator), VI);
@@ -322,7 +322,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_character(aedificator, '"'));
 
 		result = chorda_aedificator_finire(aedificator);
-		/* Should have escaped the internal quote */
+		/* Debet habere citationem internam evasam */
 		CREDO_VERUM(result.mensura > XII);
 	}
 
@@ -346,7 +346,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_character(aedificator, '"'));
 
 		result = chorda_aedificator_finire(aedificator);
-		/* Should have escaped the backslash */
+		/* Debet habere virgulam inversam evasam */
 		CREDO_VERUM(result.mensura > VI);
 	}
 
@@ -365,7 +365,7 @@ s32 principale (vacuum)
 
 		aedificator = chorda_aedificator_creare(piscina, XVI);  /* Start small */
 
-		/* Append enough to force growth */
+		/* Appendere satis ut crescentiam cogat */
 		per (i = ZEPHYRUM; i < XX; i++)
 		{
 			snprintf(buffer, VII, "k%d,", i);
@@ -373,7 +373,7 @@ s32 principale (vacuum)
 		}
 
 		result = chorda_aedificator_finire(aedificator);
-		/* Should have accumulated all entries (XX × ~3-4 bytes) */
+		/* Debet accumulavisse omnes introitus (XX × ~3-4 bytes) */
 		CREDO_VERUM(result.mensura > XXXII);
 	}
 
@@ -416,7 +416,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "}"));
 
 		result = chorda_aedificator_finire(aedificator);
-		/* Simple JSON object: ~40 bytes */
+		/* Obiectum JSON simplex: ~40 bytes */
 		CREDO_VERUM(result.mensura > XXX);
 	}
 
@@ -432,7 +432,7 @@ s32 principale (vacuum)
 
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
 
-		/* appendere_literis with NULL cstr should be safe */
+		/* appendere_literis cum cstr NIHIL debet esse tutum */
 		CREDO_FALSUM(chorda_aedificator_appendere_literis(aedificator, NIHIL));
 
 		chorda_aedificator_destruere(aedificator);
@@ -452,7 +452,7 @@ s32 principale (vacuum)
 
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
 
-		/* Append 256 times to build large string */
+		/* Appendere CCLVI tempora ad aedificandam chordam magnam */
 		per (i = ZEPHYRUM; i < CCLVI; i++)
 		{
 			CREDO_VERUM(chorda_aedificator_appendere_character(aedificator, 'x'));
