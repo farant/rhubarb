@@ -247,14 +247,25 @@ chorda_fissio (
 		{
 			si (numerus >= capacitas)
 			{
+				chorda* elementa_nova;
+				    i32 j;
+
 				capacitas *= II;
-				elementa = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
-				si (!elementa)
+				elementa_nova = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
+				si (!elementa_nova)
 				{
 					fructus.elementa = NIHIL;
 					fructus.numerus  = ZEPHYRUM;
 					redde fructus;
 				}
+
+				/* Transcribere elementa veteres ad array novum */
+				per (j = ZEPHYRUM; j < numerus; j++)
+				{
+					elementa_nova[j] = elementa[j];
+				}
+
+				elementa = elementa_nova;
 			}
 
 			elementa[numerus] = chorda_sectio(s, initium, i);

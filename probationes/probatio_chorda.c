@@ -396,6 +396,52 @@ s32 principale (vacuum)
     }
 
     /* =================================================
+     * Probare chorda_fissio cum multa elementa (>16)
+     * Probat crescentiam array - debet exponere defectum
+     * ================================================== */
+
+    {
+        chorda original;
+        chorda_fissio_fructus fructus;
+        chorda speratus;
+        i32 i;
+
+        imprimere("\n--- Probans chorda_fissio cum multa elementa ---\n");
+
+        /* Crea chordam cum 20 elementa - initial capacitas XVI
+         * Crescentia necessaria ad 16->32 */
+        original = chorda_ex_literis("a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t", piscina);
+        fructus = chorda_fissio(original, ',', piscina);
+
+        /* Debet habere XX elementa */
+        CREDO_AEQUALIS_I32 (fructus.numerus, XX);
+
+        /* Probare primum elementum (ante crescentiam) */
+        speratus = chorda_ex_literis("a", piscina);
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[ZEPHYRUM], speratus));
+
+        /* Probare decimum sextum elementum (ubi crescentia occurrit) */
+        speratus = chorda_ex_literis("p", piscina);
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[XV], speratus));
+
+        /* Probare decimum septimum elementum (post crescentiam) */
+        speratus = chorda_ex_literis("q", piscina);
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[XVI], speratus));
+
+        /* Probare ultimum elementum */
+        speratus = chorda_ex_literis("t", piscina);
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[XIX], speratus));
+
+        /* Probare omnia elementa systematice */
+        per (i = ZEPHYRUM; i < fructus.numerus; i++)
+        {
+            /* Omnia elementa debent habere mensuram > 0 */
+            CREDO_VERUM (fructus.elementa[i].mensura > ZEPHYRUM);
+            CREDO_NON_NIHIL (fructus.elementa[i].datum);
+        }
+    }
+
+    /* =================================================
      * Probare chorda_friare
      * ================================================== */
 
