@@ -15,7 +15,7 @@ nomen structura CredoNotatio {
 									chorda  expressio;
 		 							chorda  valor_primus;
 		 						  chorda  valor_secundus;
-									/* TODO: This should probably be a chorda instead */
+									/* NOTA: Fortasse oportet chorda esse */
 			 constans character* filum;
 			  						 s32  versus;
 										 b32  praeteritus;

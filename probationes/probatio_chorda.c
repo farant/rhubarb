@@ -1,4 +1,4 @@
-/* tests/test_chorda.c */
+/* probatio_chorda.c - Probationes Chordae */
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"
@@ -12,8 +12,7 @@ s32 principale (vacuum)
         b32  praeteritus;
 
 
-    /* TODO: make it so that credo exits if you try to use it
-     * without initializing with credo_aperire first */
+    /* NOTA: Oportet facere ut credo exeat si sine credo_aperire initializatione */
 
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("test_chorda", 4096);
@@ -133,8 +132,8 @@ s32 principale (vacuum)
     }
 
 
-    /* ================================================= 
-     * Probare chorda_terminatur
+    /* =================================================
+     * Probare chorda_sectio
      * ================================================== */
 
     {
@@ -151,7 +150,7 @@ s32 principale (vacuum)
         CREDO_VERUM (chorda_aequalis(sectio, speratus));
     }
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_ex_buffer
      * ================================================== */
 
@@ -165,7 +164,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL    (from_buffer.datum);
     }
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_aequalis_case_insensitivus
      * ================================================== */
     
@@ -186,7 +185,7 @@ s32 principale (vacuum)
         CREDO_FALSUM (chorda_aequalis_case_insensitivus(lower, different));
     }
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_comparare
      * ================================================== */
 
@@ -203,10 +202,10 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (chorda_comparare(a, b), ZEPHYRUM);
         CREDO_FALSUM       (chorda_comparare(a, c) > ZEPHYRUM); /* a < c */
         CREDO_VERUM        (chorda_comparare(c, a) > ZEPHYRUM); /* c > a */
-        CREDO_VERUM        (chorda_comparare(a, d) > ZEPHYRUM); /* c > d (longer) */
+        CREDO_VERUM        (chorda_comparare(a, d) > ZEPHYRUM); /* a < d (longior) */
     }
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_numerare_occurrentia
      * ================================================== */
 
@@ -227,7 +226,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (chorda_numerare_occurrentia(fenum, empty), ZEPHYRUM);
     }
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_minuscula
      * ================================================== */
 
@@ -245,7 +244,7 @@ s32 principale (vacuum)
     }
 
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_maiuscula
      * ================================================== */
 
@@ -325,8 +324,8 @@ s32 principale (vacuum)
     }
 
     /* =================================================
-    * Probare chorda_friare
-    * ================================================== */
+     * Probare chorda_friare
+     * ================================================== */
 
     {
         chorda s1, s2, s3;

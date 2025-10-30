@@ -54,7 +54,7 @@ chorda_aequalis_case_insensitivus (
 		chorda a,
 		chorda b);
 
-integer
+s32
 chorda_comparare (
 		chorda a,
 		chorda b);
