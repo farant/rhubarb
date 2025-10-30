@@ -25,6 +25,7 @@ declare -a SOURCE_FILES=(
     "lib/piscina.c"
     "lib/chorda.c"
     "lib/credo.c"
+		"lib/tabula_dispersa.c"
 )
 
 # Color codes

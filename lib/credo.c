@@ -196,9 +196,9 @@ _credo_notare (
                   chorda_ut_cstr(notatio->expressio, _credo_piscina),
                   filum, versus);
         imprimere("  Speratus: %s\n",
-                  chorda_ut_cstr(notatio->valor_primus, _credo_piscina));
-        imprimere("  Receptus: %s\n",
                   chorda_ut_cstr(notatio->valor_secundus, _credo_piscina));
+        imprimere("  Receptus: %s\n",
+                  chorda_ut_cstr(notatio->valor_primus, _credo_piscina));
     }
 }
 
