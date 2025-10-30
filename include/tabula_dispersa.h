@@ -6,26 +6,26 @@
 #include "piscina.h"
 
 /* ===================================================
- * Tabula Dispersa - Hash Table via Open Addressing
- * "Tabula: flat array, randomly indexed by hash"
+ * Tabula Dispersa - Tabula Friationis per Addressing Apertum
+ * "Tabula: series plana, per friationes indexata"
  * ================================================== */
 
-/* Status of each slot in the table
+/* Status cuiusque sloti in tabula
  * "Status sloti" */
 nomen enumeratio {
-    SLOT_VACUUM    = 0, /* Empty slot */
-    SLOT_OCCUPATUM = 1, /* Contains a key-value pair */
-    SLOT_DELETUM   = 2  /* Deleted (tombstone) */
+    SLOT_VACUUM    = 0, /* Slotus vacuus */
+    SLOT_OCCUPATUM = 1, /* Clavis-valor par continens */
+    SLOT_DELETUM   = 2  /* Deletum (tumulus) */
 } SlotusStatus;
 
 
-/* Hash function type
- * Takes a chorda key, returns i32 hash */
+/* Genus functionis friationis
+ * Clavis chordae capit, friationes i32 reddit */
 nomen i32 (*TabulaFriatio)(chorda clavis);
 
 
-/* Comparison function type
- * Returns 0 if equal, <0 if a<b, >0 if a>b */
+/* Genus functionis comparationis
+ * 0 reddit si aequalis, <0 si a<b, >0 si a>b */
 nomen s32 (*TabulaComparatio)(chorda a, chorda b);
 
 nomen structura {
@@ -35,7 +35,7 @@ nomen structura {
              i32  hash_cachatum;
 } Slotus;
 
-/* The hash table itself */
+/* Ipsa tabula friationis */
 nomen structura {
               Slotus* sloti;
                  i32  capacitas;
@@ -51,15 +51,15 @@ nomen structura {
                  i32  distantia_maxima;
 } TabulaDispersa;
 
-/* Iterator for walking all entries */
+/* Iterator ad omnes introitus ambulandos */
 nomen structura {
     TabulaDispersa* tabula;
-               i32  index_currens;
+               i32  positus_currens;
 } TabulaIterator;
 
 
 /* ==================================================
- * Creation
+ * Creatio
  * ================================================== */
 
 TabulaDispersa*
@@ -69,19 +69,19 @@ tabula_dispersa_creare (
        TabulaFriatio  friatio,
     TabulaComparatio  comparatio);
 
-/* Convenience: create with chorda comparison (standard) */
+/* Commoditas: crea cum comparatione chordae (signum) */
 TabulaDispersa*
 tabula_dispersa_creare_chorda (
     Piscina* piscina,
         i32  capacitas_initialis);
 
 /* ==================================================
- * Insertion / Lookup / Deletion
+ * Insertio / Quaestio / Deletio
  * ================================================== */
 
-/* Insert key-value pair
- * Returns VERUM on success, FALSUM on allocation failure
- * Updates existing value if key already exists */
+/* Clavis-valor par inserere
+ * VERUM reddit in successu, FALSUM in allocationis fractura
+ * Valor existens renovat si clavis iam existit */
 
 b32
 tabula_dispersa_inserere (
@@ -90,23 +90,23 @@ tabula_dispersa_inserere (
             vacuum* valor);
 
 
-/* Lookup by key
- * Returns VERUM and sets *valor_out if found
- * Returns FALSUM if not found */
+/* Clavis per quaestio
+ * VERUM reddit et *valor_exitus statuit si inventum
+ * FALSUM reddit si non inventum */
 b32
 tabula_dispersa_invenire (
     TabulaDispersa*  tabula,
             chorda   clavis,
             vacuum** valor_out);
 
-/* Quick existence check */
-b32 
+/* Celeris existentiae verificatio */
+b32
 tabula_dispersa_continet (
     TabulaDispersa* tabula,
             chorda  clavis);
 
-/* Delete entry by key
- * Returns VERUM if found and deleted, FALSUM otherwise */
+/* Introitum delere per clavis
+ * VERUM reddit si inventum et deletum, FALSUM alioquin */
 b32
 tabula_dispersa_delere (
     TabulaDispersa* tabula,
@@ -114,12 +114,12 @@ tabula_dispersa_delere (
 
 
 /* ==================================================
- * Lifecycle
+ * Cyclus Vitae
  * ================================================== */
 
-/* Clear table without deallocating (arena-friendly)
- * Resets all slots to VACUUM, counts to zero
- * piscina reset will clean up actual memory */
+/* Tabulam vaccare sine deallocatione (arena-amica)
+ * Omnes sloti ad VACUUM reficit, computationes ad nihil
+ * piscina refectio memoriam veram purificabit */
 vacuum
 tabula_dispersa_vacare (
     TabulaDispersa* tabula);
@@ -133,9 +133,9 @@ TabulaIterator
 tabula_dispersa_iterator_initium (
     TabulaDispersa* tabula);
 
-/* Get next entry in iter
- * Returns VERUM and fills *clavis_out and *valor_out if entry found
- * Returns FALSUM at end of iteration */
+/* Sequens introitum in iteratore capere
+ * VERUM reddit et *clavis_exitus et *valor_exitus implet si introitus inventus
+ * FALSUM reddit in fine iterationis */
 
 b32
 tabula_dispersa_iterator_proximum (
@@ -144,7 +144,7 @@ tabula_dispersa_iterator_proximum (
             vacuum** valor_out);
 
 /* =================================================
- * Statistics / Diagnostics
+ * Statisticae / Diagnostica
  * ================================================== */
 
 f32
@@ -165,7 +165,7 @@ tabula_dispersa_status_imprimere(
 
 
 /* =================================================
- * Hash Functions (in separate library ideally)
+ * Functiones Friationis (in bibliotheca separata ideale)
  * ================================================== */
 
 i32

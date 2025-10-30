@@ -411,7 +411,7 @@ tabula_dispersa_iterator_initium(TabulaDispersa* tabula)
 {
     TabulaIterator iter;
     iter.tabula        = tabula;
-    iter.index_currens = ZEPHYRUM;
+    iter.positus_currens = ZEPHYRUM;
     redde iter;
 }
 
@@ -423,22 +423,22 @@ tabula_dispersa_iterator_proximum(
 {
     si (!iter || !iter->tabula) redde FALSUM;
 
-    dum (iter->index_currens < iter->tabula->capacitas)
+    dum (iter->positus_currens < iter->tabula->capacitas)
     {
-        si (iter->tabula->sloti[iter->index_currens].status == SLOT_OCCUPATUM)
+        si (iter->tabula->sloti[iter->positus_currens].status == SLOT_OCCUPATUM)
         {
             si (clavis_out)
             {
-                *clavis_out = iter->tabula->sloti[iter->index_currens].clavis;
+                *clavis_out = iter->tabula->sloti[iter->positus_currens].clavis;
             }
             si (valor_out)
             {
-                *valor_out  = iter->tabula->sloti[iter->index_currens].valor;
+                *valor_out  = iter->tabula->sloti[iter->positus_currens].valor;
             }
-            iter->index_currens++;
+            iter->positus_currens++;
             redde VERUM;
         }
-        iter->index_currens++;
+        iter->positus_currens++;
     }
 
     redde FALSUM;
@@ -484,12 +484,12 @@ tabula_dispersa_status_imprimere(TabulaDispersa* tabula)
         redde;
     }
 
-    imprimere("Tabula Dispersa Status:\n");
+    imprimere("Status Tabulae Dispersae:\n");
     imprimere("  Capacitas: %u\n", tabula->capacitas);
     imprimere("  Numerus: %u\n", tabula->numerus);
     imprimere("  Numerus deletorum: %u\n", tabula->numerus_deletorum);
     imprimere("  Factor oneris: %.2f%%\n", tabula_dispersa_factor_oneris(tabula) * C);
-    imprimere("  Factor deletorum: %.2f%%\n", 
+    imprimere("  Factor deletorum: %.2f%%\n",
                 tabula_dispersa_factor_deletorum(tabula) * C);
     imprimere("  Collisiones totales: %u\n", tabula->collisiones_totales);
     imprimere("  Distantia maxima: %u\n", tabula->distantia_maxima);
