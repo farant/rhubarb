@@ -39,6 +39,33 @@ chorda_transcribere (
 		 chorda  s,
 		Piscina* piscina);
 
+chorda
+chorda_concatenare (
+		chorda  a,
+		chorda  b,
+		Piscina* piscina);
+
+chorda
+chorda_praecidi_laterale (
+		 chorda  s,
+		Piscina* piscina);
+
+
+/* ==================================================
+ * Divisio
+ * ================================================= */
+
+nomen structura {
+	chorda* elementa;
+	i32     numerus;
+} chorda_fissio_fructus;
+
+chorda_fissio_fructus
+chorda_fissio (
+		chorda  s,
+		character delim,
+		Piscina* piscina);
+
 
 /* ==================================================
  * Comparatio

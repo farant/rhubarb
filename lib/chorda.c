@@ -119,6 +119,155 @@ chorda_transcribere (
     redde fructus;
 }
 
+chorda
+chorda_concatenare (
+	chorda  a,
+	chorda  b,
+	Piscina* piscina)
+{
+	chorda   fructus;
+	    i8*  allocatus;
+	   i32   mensura_totalis;
+
+	si (!piscina || !a.datum || !b.datum)
+	{
+		fructus.mensura = ZEPHYRUM;
+		fructus.datum   = NIHIL;
+		redde fructus;
+	}
+
+	mensura_totalis = a.mensura + b.mensura;
+	allocatus = (i8*)piscina_allocare(piscina, mensura_totalis);
+	si (!allocatus)
+	{
+		fructus.mensura = ZEPHYRUM;
+		fructus.datum   = NIHIL;
+		redde fructus;
+	}
+
+	memcpy(allocatus,                 a.datum, a.mensura);
+	memcpy(allocatus + a.mensura, b.datum, b.mensura);
+
+	fructus.mensura = mensura_totalis;
+	fructus.datum   = allocatus;
+
+	redde fructus;
+}
+
+chorda
+chorda_praecidi_laterale (
+	 chorda  s,
+	Piscina* piscina)
+{
+	chorda  fructus;
+	   i32  initium;
+	   i32  finis;
+	   i32  i;
+
+	si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+	{
+		fructus.mensura = ZEPHYRUM;
+		fructus.datum   = NIHIL;
+		redde fructus;
+	}
+
+	initium = ZEPHYRUM;
+	finis   = s.mensura;
+
+	per (i = ZEPHYRUM; i < s.mensura; i++)
+	{
+		si (!isspace((i8)s.datum[i]))
+		{
+			initium = i;
+			frange;
+		}
+	}
+
+	per (i = s.mensura - I; i >= ZEPHYRUM; i--)
+	{
+		si (!isspace((i8)s.datum[i]))
+		{
+			finis = i + I;
+			frange;
+		}
+	}
+
+	si (initium >= finis)
+	{
+		fructus.mensura = ZEPHYRUM;
+		fructus.datum   = NIHIL;
+		redde fructus;
+	}
+
+	redde chorda_sectio(s, initium, finis);
+}
+
+/* ==================================================
+ * Divisio
+ * ================================================== */
+
+chorda_fissio_fructus
+chorda_fissio (
+		chorda  s,
+		character delim,
+		Piscina* piscina)
+{
+	chorda_fissio_fructus fructus;
+	                chorda* elementa;
+	                   i32  capacitas;
+	                   i32  numerus;
+	                   i32  initium;
+	                   i32  i;
+
+	si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+	{
+		fructus.elementa = NIHIL;
+		fructus.numerus  = ZEPHYRUM;
+		redde fructus;
+	}
+
+	capacitas = XVI;
+	elementa = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
+	si (!elementa)
+	{
+		fructus.elementa = NIHIL;
+		fructus.numerus  = ZEPHYRUM;
+		redde fructus;
+	}
+
+	numerus = ZEPHYRUM;
+	initium = ZEPHYRUM;
+
+	per (i = ZEPHYRUM; i <= s.mensura; i++)
+	{
+		b32 est_delim = (i < s.mensura && s.datum[i] == delim);
+		b32 est_finis = (i == s.mensura);
+
+		si (est_delim || est_finis)
+		{
+			si (numerus >= capacitas)
+			{
+				capacitas *= II;
+				elementa = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
+				si (!elementa)
+				{
+					fructus.elementa = NIHIL;
+					fructus.numerus  = ZEPHYRUM;
+					redde fructus;
+				}
+			}
+
+			elementa[numerus] = chorda_sectio(s, initium, i);
+			numerus++;
+			initium = i + I;
+		}
+	}
+
+	fructus.elementa = elementa;
+	fructus.numerus  = numerus;
+	redde fructus;
+}
+
 /* ==================================================
  * Comparatio
  * ================================================== */

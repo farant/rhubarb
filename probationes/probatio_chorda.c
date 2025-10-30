@@ -322,6 +322,80 @@ s32 principale (vacuum)
     }
 
     /* =================================================
+     * Probare chorda_concatenare
+     * ================================================== */
+
+    {
+        chorda s1, s2, concatenatus, speratus;
+
+        imprimere("\n--- Probans chorda_concatenare ---\n");
+
+        s1 = chorda_ex_literis("salve", piscina);
+        s2 = chorda_ex_literis("munde", piscina);
+        concatenatus = chorda_concatenare(s1, s2, piscina);
+        speratus = chorda_ex_literis("salvemunde", piscina);
+
+        CREDO_AEQUALIS_I32 (concatenatus.mensura, X);
+        CREDO_VERUM (chorda_aequalis(concatenatus, speratus));
+    }
+
+    /* =================================================
+     * Probare chorda_praecidi_laterale
+     * ================================================== */
+
+    {
+        chorda original, praecisus, speratus;
+
+        imprimere("\n--- Probans chorda_praecidi_laterale ---\n");
+
+        original = chorda_ex_literis("  salve munde  ", piscina);
+        praecisus = chorda_praecidi_laterale(original, piscina);
+        speratus = chorda_ex_literis("salve munde", piscina);
+
+        CREDO_VERUM (chorda_aequalis(praecisus, speratus));
+
+        /* Probare cum solis spatia */
+        original = chorda_ex_literis("   ", piscina);
+        praecisus = chorda_praecidi_laterale(original, piscina);
+        CREDO_AEQUALIS_I32 (praecisus.mensura, ZEPHYRUM);
+    }
+
+    /* =================================================
+     * Probare chorda_fissio
+     * ================================================== */
+
+    {
+        chorda original;
+        chorda_fissio_fructus fructus;
+        chorda speratus1, speratus2, speratus3;
+
+        imprimere("\n--- Probans chorda_fissio ---\n");
+
+        original = chorda_ex_literis("alice,bob,charlie", piscina);
+        fructus = chorda_fissio(original, ',', piscina);
+
+        CREDO_AEQUALIS_I32 (fructus.numerus, III);
+
+        speratus1 = chorda_ex_literis("alice", piscina);
+        speratus2 = chorda_ex_literis("bob", piscina);
+        speratus3 = chorda_ex_literis("charlie", piscina);
+
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[ZEPHYRUM], speratus1));
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[I], speratus2));
+        CREDO_VERUM (chorda_aequalis(fructus.elementa[II], speratus3));
+
+        /* Probare cum delimitore finale */
+        original = chorda_ex_literis("a,b,", piscina);
+        fructus = chorda_fissio(original, ',', piscina);
+        CREDO_AEQUALIS_I32 (fructus.numerus, III);
+
+        /* Probare sine delimitore */
+        original = chorda_ex_literis("nodelim", piscina);
+        fructus = chorda_fissio(original, ',', piscina);
+        CREDO_AEQUALIS_I32 (fructus.numerus, I);
+    }
+
+    /* =================================================
      * Probare chorda_friare
      * ================================================== */
 
@@ -338,7 +412,7 @@ s32 principale (vacuum)
         friatum1 = chorda_friare(s1);
         friatum2 = chorda_friare(s2);
         friatum3 = chorda_friare(s3);
-        
+
         CREDO_AEQUALIS_I32     (friatum1, friatum2);
         CREDO_INAEQUALITAS_I32 (friatum1, friatum3);
         CREDO_INAEQUALITAS_I32 (friatum1, ZEPHYRUM);
