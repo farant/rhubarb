@@ -10,7 +10,7 @@
 s32 principale (vacuum)
 {
 	Piscina* piscina;
-	b32  praeteritus;
+	    b32  praeteritus;
 
 	/* Aperire piscinam et credonem */
 	piscina = piscina_generare_dynamicum("probatio_chorda_aedificator", MM);
@@ -47,7 +47,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
+		           chorda  result;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_character ---\n");
 
@@ -68,7 +68,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result, speratus;
+		           chorda  result, speratus;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_literis ---\n");
 
@@ -77,7 +77,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, " "));
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "munde"));
 
-		result = chorda_aedificator_finire(aedificator);
+		result   = chorda_aedificator_finire(aedificator);
 		speratus = chorda_ex_literis("salve munde", piscina);
 
 		CREDO_VERUM(chorda_aequalis(result, speratus));
@@ -90,18 +90,18 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda s1, s2, result, speratus;
+		           chorda  s1, s2, result, speratus;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_chorda ---\n");
 
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
-		s1 = chorda_ex_literis("prefix", piscina);
-		s2 = chorda_ex_literis("suffix", piscina);
+		s1          = chorda_ex_literis("prefix", piscina);
+		s2          = chorda_ex_literis("suffix", piscina);
 
 		CREDO_VERUM(chorda_aedificator_appendere_chorda(aedificator, s1));
 		CREDO_VERUM(chorda_aedificator_appendere_chorda(aedificator, s2));
 
-		result = chorda_aedificator_finire(aedificator);
+		result   = chorda_aedificator_finire(aedificator);
 		speratus = chorda_ex_literis("prefixsuffix", piscina);
 
 		CREDO_VERUM(chorda_aequalis(result, speratus));
@@ -114,7 +114,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result, speratus;
+		           chorda  result, speratus;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_integer ---\n");
 
@@ -122,7 +122,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "answer="));
 		CREDO_VERUM(chorda_aedificator_appendere_integer(aedificator, XLII));
 
-		result = chorda_aedificator_finire(aedificator);
+		result   = chorda_aedificator_finire(aedificator);
 		speratus = chorda_ex_literis("answer=42", piscina);
 
 		CREDO_VERUM(chorda_aequalis(result, speratus));
@@ -135,7 +135,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result, speratus;
+		           chorda  result, speratus;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_i32 ---\n");
 
@@ -143,7 +143,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "count="));
 		CREDO_VERUM(chorda_aedificator_appendere_i32(aedificator, CCLVI));
 
-		result = chorda_aedificator_finire(aedificator);
+		result   = chorda_aedificator_finire(aedificator);
 		speratus = chorda_ex_literis("count=256", piscina);
 
 		CREDO_VERUM(chorda_aequalis(result, speratus));
@@ -156,7 +156,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
+		           chorda  result;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_duplex ---\n");
 
@@ -175,7 +175,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
+		           chorda  result;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_lineam_novam ---\n");
 
@@ -196,7 +196,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
+		           chorda  result;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_indentation ---\n");
 
@@ -221,7 +221,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		i32 level1, level2, level3;
+		              i32  level1, level2, level3;
 
 		imprimere("\n--- Probans chorda_aedificator_push/pop_indentation ---\n");
 
@@ -256,7 +256,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda view;
+		           chorda  view;
 
 		imprimere("\n--- Probans chorda_aedificator_spectare ---\n");
 
@@ -280,7 +280,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result1, result2, speratus2;
+		           chorda  result1, result2, speratus2;
 
 		imprimere("\n--- Probans chorda_aedificator_reset ---\n");
 
@@ -297,7 +297,7 @@ s32 principale (vacuum)
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "second"));
 		CREDO_AEQUALIS_I32((i32)chorda_aedificator_longitudo(aedificator), VI);
 
-		result2 = chorda_aedificator_finire(aedificator);
+		result2   = chorda_aedificator_finire(aedificator);
 		speratus2 = chorda_ex_literis("second", piscina);
 		CREDO_VERUM(chorda_aequalis(result2, speratus2));
 	}
@@ -309,7 +309,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda input, result;
+		           chorda  input, result;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_evasus_json ---\n");
 
@@ -333,7 +333,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
+		           chorda  result;
 
 		imprimere("\n--- Probans chorda_aedificator_appendere_literis_evasus_json ---\n");
 
@@ -357,9 +357,9 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
-		i32 i;
-		character buffer[VII];
+		           chorda  result;
+		              i32  i;
+		        character  buffer[VII];
 
 		imprimere("\n--- Probans capacity_crescentia ---\n");
 
@@ -384,7 +384,7 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
+		           chorda  result;
 
 		imprimere("\n--- Probans combined_operations (JSON pattern) ---\n");
 
@@ -445,8 +445,8 @@ s32 principale (vacuum)
 
 	{
 		ChordaAedificator* aedificator;
-		chorda result;
-		i32 i;
+		           chorda  result;
+		              i32  i;
 
 		imprimere("\n--- Probans large_strings ---\n");
 
