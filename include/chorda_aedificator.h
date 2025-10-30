@@ -67,13 +67,13 @@ chorda_aedificator_appendere_character (
 
 b32
 chorda_aedificator_appendere_literis (
-	ChordaAedificator* aedificator,
-	  constans character* cstr);
+	 ChordaAedificator* aedificator,
+	constans character* cstr);
 
 b32
 chorda_aedificator_appendere_chorda (
 	ChordaAedificator* aedificator,
-	            chorda  s);
+	           chorda  s);
 
 
 /* ==================================================
@@ -83,7 +83,7 @@ chorda_aedificator_appendere_chorda (
 b32
 chorda_aedificator_appendere_integer (
 	ChordaAedificator* aedificator,
-	               s32  n);
+	              s32  n);
 
 b32
 chorda_aedificator_appendere_i32 (
@@ -100,8 +100,8 @@ chorda_aedificator_appendere_i32 (
 b32
 chorda_aedificator_appendere_duplex (
 	ChordaAedificator* aedificator,
-	               f64  n,
-	               i32  decimales);
+	              f64  n,
+	              i32  decimales);
 
 
 /* ==================================================
@@ -115,12 +115,12 @@ chorda_aedificator_appendere_duplex (
 b32
 chorda_aedificator_appendere_evasus_json (
 	ChordaAedificator* aedificator,
-	             chorda  s);
+	           chorda  s);
 
 b32
 chorda_aedificator_appendere_literis_evasus_json (
-	ChordaAedificator* aedificator,
-	  constans character* cstr);
+	 ChordaAedificator* aedificator,
+	constans character* cstr);
 
 
 /* ==================================================
@@ -138,7 +138,7 @@ chorda_aedificator_appendere_lineam_novam (
 b32
 chorda_aedificator_appendere_indentationem (
 	ChordaAedificator* aedificator,
-	               i32  gradus);
+	              i32  gradus);
 
 
 /* ==================================================
