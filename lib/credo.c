@@ -2,6 +2,7 @@
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 /* ======================================================
  * Globalis Status
@@ -305,7 +306,199 @@ _credo_notare_chorda (
 
     praeteritus = chorda_aequalis(chorda_primus, chorda_secundus);
 
-    _credo_notare(genus, expressio, valor_primus, 
+    _credo_notare(genus, expressio, valor_primus,
                   valor_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_maior (
+    constans character* genus,
+    constans character* expressio,
+                   s32  valor_primus,
+                   s32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus > valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_maior_i32 (
+    constans character* genus,
+    constans character* expressio,
+                   i32  valor_primus,
+                   i32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%u", valor_primus);
+    snprintf(buffer_secundus, 64, "%u", valor_secundus);
+
+    praeteritus = (valor_primus > valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_minor (
+    constans character* genus,
+    constans character* expressio,
+                   s32  valor_primus,
+                   s32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus < valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_minor_i32 (
+    constans character* genus,
+    constans character* expressio,
+                   i32  valor_primus,
+                   i32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%u", valor_primus);
+    snprintf(buffer_secundus, 64, "%u", valor_secundus);
+
+    praeteritus = (valor_primus < valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_maior_aut_aequalis (
+    constans character* genus,
+    constans character* expressio,
+                   s32  valor_primus,
+                   s32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus >= valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_maior_aut_aequalis_i32 (
+    constans character* genus,
+    constans character* expressio,
+                   i32  valor_primus,
+                   i32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%u", valor_primus);
+    snprintf(buffer_secundus, 64, "%u", valor_secundus);
+
+    praeteritus = (valor_primus >= valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_minor_aut_aequalis (
+    constans character* genus,
+    constans character* expressio,
+                   s32  valor_primus,
+                   s32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%d", valor_primus);
+    snprintf(buffer_secundus, 64, "%d", valor_secundus);
+
+    praeteritus = (valor_primus <= valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_integrum_minor_aut_aequalis_i32 (
+    constans character* genus,
+    constans character* expressio,
+                   i32  valor_primus,
+                   i32  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%u", valor_primus);
+    snprintf(buffer_secundus, 64, "%u", valor_secundus);
+
+    praeteritus = (valor_primus <= valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_f64_proximus (
+    constans character* genus,
+    constans character* expressio,
+                   f64  valor_primus,
+                   f64  valor_secundus,
+                   f64  epsilon,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+          f64 differentia;
+
+    snprintf(buffer_primus,   64, "%.10f", valor_primus);
+    snprintf(buffer_secundus, 64, "%.10f (ε=%.10f)", valor_secundus, epsilon);
+
+    differentia = fabs(valor_primus - valor_secundus);
+    praeteritus = (differentia <= epsilon);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
 }
 

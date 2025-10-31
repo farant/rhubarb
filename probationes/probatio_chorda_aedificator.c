@@ -109,18 +109,18 @@ s32 principale (vacuum)
 
 
 	/* ==================================================
-	 * Probare chorda_aedificator_appendere_integer
+	 * Probare chorda_aedificator_appendere_s32
 	 * ================================================== */
 
 	{
 		ChordaAedificator* aedificator;
 		           chorda  result, speratus;
 
-		imprimere("\n--- Probans chorda_aedificator_appendere_integer ---\n");
+		imprimere("\n--- Probans chorda_aedificator_appendere_s32 ---\n");
 
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "answer="));
-		CREDO_VERUM(chorda_aedificator_appendere_integer(aedificator, XLII));
+		CREDO_VERUM(chorda_aedificator_appendere_s32(aedificator, XLII));
 
 		result   = chorda_aedificator_finire(aedificator);
 		speratus = chorda_ex_literis("answer=42", piscina);
@@ -151,18 +151,18 @@ s32 principale (vacuum)
 
 
 	/* ==================================================
-	 * Probare chorda_aedificator_appendere_duplex
+	 * Probare chorda_aedificator_appendere_f64
 	 * ================================================== */
 
 	{
 		ChordaAedificator* aedificator;
 		           chorda  result;
 
-		imprimere("\n--- Probans chorda_aedificator_appendere_duplex ---\n");
+		imprimere("\n--- Probans chorda_aedificator_appendere_f64 ---\n");
 
 		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "pi="));
-		CREDO_VERUM(chorda_aedificator_appendere_duplex(aedificator, 3.14159, II));
+		CREDO_VERUM(chorda_aedificator_appendere_f64(aedificator, 3.14159, II));
 
 		result = chorda_aedificator_finire(aedificator);
 		CREDO_AEQUALIS_I32(result.mensura > VI, VERUM);  /* At least "pi=3.14" */
@@ -409,7 +409,7 @@ s32 principale (vacuum)
 			chorda_aedificator_indentatio_gradus(aedificator)));
 		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "\"value\":"));
 		CREDO_VERUM(chorda_aedificator_appendere_character(aedificator, ' '));
-		CREDO_VERUM(chorda_aedificator_appendere_integer(aedificator, XLII));
+		CREDO_VERUM(chorda_aedificator_appendere_s32(aedificator, XLII));
 		CREDO_VERUM(chorda_aedificator_appendere_lineam_novam(aedificator));
 
 		chorda_aedificator_pop_indentationem(aedificator);

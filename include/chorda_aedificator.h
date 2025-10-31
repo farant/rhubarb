@@ -15,7 +15,7 @@
  * - Generatio texti ex structuris datorum
  *
  * EXEMPLUM:
- *   Piscina* p = piscina_generare_dynamicum("probatio", 4096);
+ *   				   Piscina* p = piscina_generare_dynamicum("probatio", 4096);
  *   ChordaAedificator* a = chorda_aedificator_creare(p, 256);
  *
  *   chorda_aedificator_appendere_literis(a, "nomen");
@@ -58,7 +58,7 @@ chorda_aedificator_destruere (
 b32
 chorda_aedificator_appendere_character (
 	ChordaAedificator* aedificator,
-	         character  c);
+	        character  c);
 
 
 /* ==================================================
@@ -81,7 +81,7 @@ chorda_aedificator_appendere_chorda (
  * ================================================== */
 
 b32
-chorda_aedificator_appendere_integer (
+chorda_aedificator_appendere_s32 (
 	ChordaAedificator* aedificator,
 	              s32  n);
 
@@ -98,7 +98,7 @@ chorda_aedificator_appendere_i32 (
  * ================================================== */
 
 b32
-chorda_aedificator_appendere_duplex (
+chorda_aedificator_appendere_f64 (
 	ChordaAedificator* aedificator,
 	              f64  n,
 	              i32  decimales);

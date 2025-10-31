@@ -339,7 +339,7 @@ chorda_aedificator_appendere_chorda(
  * ================================================== */
 
 b32
-chorda_aedificator_appendere_integer(
+chorda_aedificator_appendere_s32(
     ChordaAedificator* aedificator, 
                   s32  n)
 {
@@ -375,7 +375,7 @@ chorda_aedificator_appendere_i32(
 }
 
 b32
-chorda_aedificator_appendere_duplex(
+chorda_aedificator_appendere_f64(
     ChordaAedificator* aedificator, 
                   f64  n, 
                   i32  decimales)
