@@ -10,5 +10,6 @@ just to clarify, you don't have to respond in "help claude relax" language unles
 
 i would also like you to read all of include/latina.h because it will be important for understanding the project.
 
+once you're done you can reading all of onboarding-log.md file which is kind of like an onboarding guestbook and then add your own sentence to the end of it of any cool realization you had while onboarding. can do this at the end of writing your response to me
 
 thanks!
