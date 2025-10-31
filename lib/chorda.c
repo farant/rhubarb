@@ -129,11 +129,23 @@ chorda_concatenare (
 	    i8*  allocatus;
 	   i32   mensura_totalis;
 
-	si (!piscina || !a.datum || !b.datum)
+	si (!piscina)
 	{
 		fructus.mensura = ZEPHYRUM;
 		fructus.datum   = NIHIL;
 		redde fructus;
+	}
+
+	/* Si a vacuus est, redde transcriptionem b */
+	si (a.mensura == ZEPHYRUM || !a.datum)
+	{
+		redde chorda_transcribere(b, piscina);
+	}
+
+	/* Si b vacuus est, redde transcriptionem a */
+	si (b.mensura == ZEPHYRUM || !b.datum)
+	{
+		redde chorda_transcribere(a, piscina);
 	}
 
 	mensura_totalis = a.mensura + b.mensura;
@@ -145,8 +157,8 @@ chorda_concatenare (
 		redde fructus;
 	}
 
-	memcpy(allocatus,                 a.datum, a.mensura);
-	memcpy(allocatus + a.mensura, b.datum, b.mensura);
+	memcpy(allocatus,             a.datum, (memoriae_index)a.mensura);
+	memcpy(allocatus + a.mensura, b.datum, (memoriae_index)b.mensura);
 
 	fructus.mensura = mensura_totalis;
 	fructus.datum   = allocatus;

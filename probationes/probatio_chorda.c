@@ -42,7 +42,7 @@ s32 principale (vacuum)
     }
 
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_aequalis
      * ================================================== */
 
@@ -50,17 +50,17 @@ s32 principale (vacuum)
         chorda a, b, c;
 
         imprimere("\n--- Probans chorda_aequalis ---\n");
-        
+
         a = chorda_ex_literis("probatio", piscina);
         b = chorda_ex_literis("probatio", piscina);
         c = chorda_ex_literis("altera", piscina);
 
-        CREDO_VERUM  (chorda_aequalis(a, b));
-        CREDO_FALSUM (chorda_aequalis(a, c));
+        CREDO_CHORDA_AEQUALIS(a, b);
+        CREDO_FALSUM(chorda_aequalis(a, c));
     }
 
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_transcribere
      * ================================================== */
 
@@ -72,12 +72,12 @@ s32 principale (vacuum)
         originalis   = chorda_ex_literis("transcriptio", piscina);
         transcriptus = chorda_transcribere(originalis, piscina);
 
-        CREDO_AEQUALIS_I32 (transcriptus.mensura, originalis.mensura);
-        CREDO_VERUM        (chorda_aequalis(transcriptus, originalis));
+        CREDO_AEQUALIS_I32(transcriptus.mensura, originalis.mensura);
+        CREDO_CHORDA_AEQUALIS(transcriptus, originalis);
     }
 
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_continet
      * ================================================== */
 
@@ -90,12 +90,12 @@ s32 principale (vacuum)
         acus_inventa     = chorda_ex_literis("munde",       piscina);
         acus_non_inventa = chorda_ex_literis("xyz",         piscina);
 
-        CREDO_VERUM  (chorda_continet(fenum, acus_inventa));
-        CREDO_FALSUM (chorda_continet(fenum, acus_non_inventa));
+        CREDO_CHORDA_CONTINET(fenum, acus_inventa);
+        CREDO_FALSUM(chorda_continet(fenum, acus_non_inventa));
     }
 
 
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_incipit
      * ================================================== */
 
@@ -108,11 +108,11 @@ s32 principale (vacuum)
         praefixum     = chorda_ex_literis("praefixum",          piscina);
         non_praefixum = chorda_ex_literis("suffixum",           piscina);
 
-        CREDO_VERUM  (chorda_incipit(ch, praefixum));
-        CREDO_FALSUM (chorda_incipit(ch, non_praefixum));
+        CREDO_CHORDA_INCIPIT(ch, praefixum);
+        CREDO_FALSUM(chorda_incipit(ch, non_praefixum));
     }
  
-    /* ================================================= 
+    /* =================================================
      * Probare chorda_terminatur
      * ================================================== */
 
@@ -125,8 +125,8 @@ s32 principale (vacuum)
         suffixum     = chorda_ex_literis("suffixum",           piscina);
         non_suffixum = chorda_ex_literis("praefixum",          piscina);
 
-        CREDO_VERUM  (chorda_terminatur(ch2, suffixum));
-        CREDO_FALSUM (chorda_terminatur(ch2, non_suffixum));
+        CREDO_CHORDA_TERMINATUR(ch2, suffixum);
+        CREDO_FALSUM(chorda_terminatur(ch2, non_suffixum));
     }
 
 
@@ -142,10 +142,10 @@ s32 principale (vacuum)
         plenus = chorda_ex_literis("abcdef", piscina);
         sectio = chorda_sectio(plenus, II, V);
 
-        CREDO_AEQUALIS_I32 (sectio.mensura, III);
+        CREDO_AEQUALIS_I32(sectio.mensura, III);
 
         speratus = chorda_ex_literis("cde", piscina);
-        CREDO_VERUM (chorda_aequalis(sectio, speratus));
+        CREDO_CHORDA_AEQUALIS(sectio, speratus);
     }
 
     /* =================================================
@@ -197,10 +197,10 @@ s32 principale (vacuum)
         c = chorda_ex_literis("abd", piscina);
         d = chorda_ex_literis("ab",  piscina);
 
-        CREDO_AEQUALIS_S32 (chorda_comparare(a, b), ZEPHYRUM);
-        CREDO_FALSUM       (chorda_comparare(a, c) > ZEPHYRUM); /* a < c */
-        CREDO_VERUM        (chorda_comparare(c, a) > ZEPHYRUM); /* c > a */
-        CREDO_VERUM        (chorda_comparare(a, d) > ZEPHYRUM); /* a < d (longior) */
+        CREDO_AEQUALIS_S32(chorda_comparare(a, b), ZEPHYRUM);
+        CREDO_MINOR_S32(chorda_comparare(a, c), ZEPHYRUM);    /* a < c */
+        CREDO_MAIOR_S32(chorda_comparare(c, a), ZEPHYRUM);    /* c > a */
+        CREDO_MAIOR_S32(chorda_comparare(a, d), ZEPHYRUM);    /* a > d (longior) */
     }
 
     /* =================================================
@@ -237,8 +237,8 @@ s32 principale (vacuum)
         lowered  = chorda_minuscula(original, piscina);
         expected = chorda_ex_literis("salve munde", piscina);
 
-        CREDO_AEQUALIS_I32 (lowered.mensura, original.mensura);
-        CREDO_VERUM        (chorda_aequalis(lowered, expected));
+        CREDO_AEQUALIS_I32(lowered.mensura, original.mensura);
+        CREDO_CHORDA_AEQUALIS(lowered, expected);
     }
 
 
@@ -255,8 +255,8 @@ s32 principale (vacuum)
         uppercased = chorda_maiuscula(original, piscina);
         expected   = chorda_ex_literis("SALVE MUNDE", piscina);
 
-        CREDO_AEQUALIS_I32 (uppercased.mensura, original.mensura);
-        CREDO_VERUM        (chorda_aequalis(uppercased, expected));
+        CREDO_AEQUALIS_I32(uppercased.mensura, original.mensura);
+        CREDO_CHORDA_AEQUALIS(uppercased, expected);
     }
 
     /* =================================================
@@ -335,8 +335,8 @@ s32 principale (vacuum)
         concatenatus = chorda_concatenare(s1, s2, piscina);
         speratus = chorda_ex_literis("salvemunde", piscina);
 
-        CREDO_AEQUALIS_I32 (concatenatus.mensura, X);
-        CREDO_VERUM (chorda_aequalis(concatenatus, speratus));
+        CREDO_AEQUALIS_I32(concatenatus.mensura, X);
+        CREDO_CHORDA_AEQUALIS(concatenatus, speratus);
     }
 
     /* =================================================
@@ -352,12 +352,12 @@ s32 principale (vacuum)
         praecisus = chorda_praecidi_laterale(original, piscina);
         speratus = chorda_ex_literis("salve munde", piscina);
 
-        CREDO_VERUM (chorda_aequalis(praecisus, speratus));
+        CREDO_CHORDA_AEQUALIS(praecisus, speratus);
 
         /* Probare cum solis spatia */
         original = chorda_ex_literis("   ", piscina);
         praecisus = chorda_praecidi_laterale(original, piscina);
-        CREDO_AEQUALIS_I32 (praecisus.mensura, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(praecisus.mensura, ZEPHYRUM);
     }
 
     /* =================================================
@@ -380,9 +380,9 @@ s32 principale (vacuum)
         speratus2 = chorda_ex_literis("bob", piscina);
         speratus3 = chorda_ex_literis("charlie", piscina);
 
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[ZEPHYRUM], speratus1));
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[I], speratus2));
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[II], speratus3));
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[ZEPHYRUM], speratus1);
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[I], speratus2);
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[II], speratus3);
 
         /* Probare cum delimitore finale */
         original = chorda_ex_literis("a,b,", piscina);
@@ -418,19 +418,19 @@ s32 principale (vacuum)
 
         /* Probare primum elementum (ante crescentiam) */
         speratus = chorda_ex_literis("a", piscina);
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[ZEPHYRUM], speratus));
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[ZEPHYRUM], speratus);
 
         /* Probare decimum sextum elementum (ubi crescentia occurrit) */
         speratus = chorda_ex_literis("p", piscina);
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[XV], speratus));
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[XV], speratus);
 
         /* Probare decimum septimum elementum (post crescentiam) */
         speratus = chorda_ex_literis("q", piscina);
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[XVI], speratus));
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[XVI], speratus);
 
         /* Probare ultimum elementum */
         speratus = chorda_ex_literis("t", piscina);
-        CREDO_VERUM (chorda_aequalis(fructus.elementa[XIX], speratus));
+        CREDO_CHORDA_AEQUALIS(fructus.elementa[XIX], speratus);
 
         /* Probare omnia elementa systematice */
         per (i = ZEPHYRUM; i < fructus.numerus; i++)
@@ -464,7 +464,141 @@ s32 principale (vacuum)
         CREDO_INAEQUALITAS_I32 (friatum1, ZEPHYRUM);
     }
 
-    /* ================================================= 
+
+    /* =================================================
+     * Probare chorda_ut_s32 cum numeri negativi
+     * ================================================== */
+
+    {
+        chorda neg_string, zero_string;
+           s32 result;
+           b32 success;
+
+        imprimere("\n--- Probans chorda_ut_s32_numeri_negativi ---\n");
+
+        neg_string  = chorda_ex_literis("-12345", piscina);
+        zero_string = chorda_ex_literis("0", piscina);
+
+        success = chorda_ut_s32(neg_string, &result);
+        CREDO_VERUM(success);
+        CREDO_AEQUALIS_S32(result, -12345);
+
+        success = chorda_ut_s32(zero_string, &result);
+        CREDO_VERUM(success);
+        CREDO_AEQUALIS_S32(result, ZEPHYRUM);
+    }
+
+
+    /* =================================================
+     * Probare chorda_sectio limites
+     * ================================================== */
+
+    {
+        chorda original, sectio, speratus;
+
+        imprimere("\n--- Probans chorda_sectio_limites ---\n");
+
+        original = chorda_ex_literis("abcdef", piscina);
+
+        /* Sectio ab initio */
+        sectio = chorda_sectio(original, ZEPHYRUM, III);
+        speratus = chorda_ex_literis("abc", piscina);
+        CREDO_CHORDA_AEQUALIS(sectio, speratus);
+
+        /* Sectio ad finem */
+        sectio = chorda_sectio(original, III, VI);
+        speratus = chorda_ex_literis("def", piscina);
+        CREDO_CHORDA_AEQUALIS(sectio, speratus);
+
+        /* Sectio totum */
+        sectio = chorda_sectio(original, ZEPHYRUM, VI);
+        CREDO_CHORDA_AEQUALIS(sectio, original);
+    }
+
+
+    /* =================================================
+     * Probare chorda_concatenare cum chordis vacuis
+     * ================================================== */
+
+    {
+        chorda s1, s2, empty, result;
+
+        imprimere("\n--- Probans chorda_concatenare_vacuus ---\n");
+
+        s1    = chorda_ex_literis("hello", piscina);
+        s2    = chorda_ex_literis("world", piscina);
+        empty = chorda_ex_literis("", piscina);
+
+        /* Concatenare cum vacuo secundo - debet habere s1 */
+        result = chorda_concatenare(s1, empty, piscina);
+        CREDO_AEQUALIS_I32(result.mensura, s1.mensura);
+        CREDO_CHORDA_AEQUALIS(result, s1);
+
+        /* Concatenare cum vacuo primo - debet habere s2 */
+        result = chorda_concatenare(empty, s2, piscina);
+        CREDO_AEQUALIS_I32(result.mensura, s2.mensura);
+        CREDO_CHORDA_AEQUALIS(result, s2);
+
+        /* Concatenare duo vacua */
+        result = chorda_concatenare(empty, empty, piscina);
+        CREDO_AEQUALIS_I32(result.mensura, ZEPHYRUM);
+    }
+
+
+    /* =================================================
+     * Probare chorda_invenire
+     * ================================================== */
+
+    {
+        chorda fenum, acus, non_inventa;
+        chorda result;
+
+        imprimere("\n--- Probans chorda_invenire ---\n");
+
+        fenum       = chorda_ex_literis("salve munde orbis", piscina);
+        acus        = chorda_ex_literis("munde", piscina);
+        non_inventa = chorda_ex_literis("xyz", piscina);
+
+        /* Invenire acum quae exsistit */
+        result = chorda_invenire(fenum, acus);
+        CREDO_INAEQUALITAS_I32(result.mensura, ZEPHYRUM);
+        CREDO_CHORDA_INCIPIT(result, acus);
+
+        /* Invenire acum quae non exsistit */
+        result = chorda_invenire(fenum, non_inventa);
+        CREDO_AEQUALIS_I32(result.mensura, ZEPHYRUM);
+        CREDO_NIHIL(result.datum);
+    }
+
+
+    /* =================================================
+     * Probare chorda_praecidere
+     * ================================================== */
+
+    {
+        chorda original, praecisus, speratus;
+
+        imprimere("\n--- Probans chorda_praecidere ---\n");
+
+        /* Praecidere cum spatia lateralia */
+        original  = chorda_ex_literis("  test  ", piscina);
+        praecisus = chorda_praecidere(original);
+        speratus  = chorda_ex_literis("test", piscina);
+        CREDO_CHORDA_AEQUALIS(praecisus, speratus);
+
+        /* Praecidere cum tabs et spatia */
+        original  = chorda_ex_literis("\t\n  test  \n\t", piscina);
+        praecisus = chorda_praecidere(original);
+        CREDO_CHORDA_AEQUALIS(praecisus, speratus);
+
+        /* Praecidere sine spatia lateralia */
+        original  = chorda_ex_literis("test", piscina);
+        praecisus = chorda_praecidere(original);
+        CREDO_CHORDA_AEQUALIS(praecisus, speratus);
+    }
+
+
+    /* =================================================
      * Compendium
      * ================================================== */
 
