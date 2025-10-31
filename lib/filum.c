@@ -290,6 +290,14 @@ filum_lector_lineam_proximam(
 			longitudo--;
 		}
 
+		/* Si linea vacua (longitudo == 0), redde chordam vacuam */
+		si (longitudo == ZEPHYRUM)
+		{
+			linea_out->mensura = ZEPHYRUM;
+			linea_out->datum   = NIHIL;
+			redde VERUM;
+		}
+
 		/* Allocare ex piscina */
 		buffer_allocatus = (i8*)piscina_allocare(lector->piscina, longitudo);
 		si (!buffer_allocatus)
