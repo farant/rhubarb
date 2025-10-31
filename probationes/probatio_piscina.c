@@ -325,7 +325,7 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
-     * PROBARE: NULL input handling
+     * PROBARE: NIHIL input handling
      * ======================================================== */
 
     {

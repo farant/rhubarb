@@ -206,6 +206,7 @@ s32 principale (vacuum)
 
         tabula = tabula_dispersa_creare_chorda(piscina, XVI);
         capacitas_initialis = tabula->capacitas;
+        CREDO_AEQUALIS_I32(capacitas_initialis, XVI);
 
         /* Insertiones antequam crescentia */
         per (i = ZEPHYRUM; i < XIV; i++)
@@ -221,7 +222,7 @@ s32 principale (vacuum)
         CREDO_VERUM(tabula->capacitas > capacitas_initialis);
 
         /* Omnes introitus adhuc accessibiles */
-        per (i = ZEPHYRUM; i < XII; i++)
+        per (i = ZEPHYRUM; i < XIV; i++)
         {
             chorda  clavis;
             vacuum *valor;
@@ -354,19 +355,19 @@ s32 principale (vacuum)
         }
 
         /* Aliquae collisiones debent accidisse */
-        CREDO_VERUM(tabula->collisiones_totales >= ZEPHYRUM);
+        CREDO_VERUM(tabula->collisiones_totales > ZEPHYRUM);
     }
 
 
     /* =================================================
-     * Probare NULL key handling
+     * Probare NIHIL key handling
      * ================================================= */
 
     {
         TabulaDispersa* tabula;
                 chorda  clavis_vacua;
 
-        imprimere("\n--- Probans NULL key handling ---\n");
+        imprimere("\n--- Probans NIHIL key handling ---\n");
 
         tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
         clavis_vacua.mensura = ZEPHYRUM;
@@ -430,6 +431,246 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32((i32)(longus)valor1, i);
             CREDO_AEQUALIS_I32((i32)(longus)valor2, i);
         }
+    }
+
+
+    /* =================================================
+     * Probare factor_deletorum et crescentia
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+               chorda   clavis;
+                  i32   i;
+            character   buffer[VI];
+                  i32   capacitas_initialis;
+
+        imprimere("\n--- Probans factor_deletorum et crescentia ---\n");
+
+        tabula = tabula_dispersa_creare_chorda(piscina, LXIV);
+        capacitas_initialis = tabula->capacitas;
+
+        /* Implere ad plus quam 25% */
+        per (i = ZEPHYRUM; i < XVII; i++)
+        {
+            snprintf(buffer, VI, "k%d", i);
+            clavis = chorda_ex_literis(buffer, piscina);
+            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+        }
+
+        /* Delere omnes */
+        per (i = ZEPHYRUM; i < XVII; i++)
+        {
+            snprintf(buffer, VI, "k%d", i);
+            clavis = chorda_ex_literis(buffer, piscina);
+            tabula_dispersa_delere(tabula, clavis);
+        }
+
+        /* Verificare factorem deletorum altum */
+        CREDO_VERUM(tabula_dispersa_factor_deletorum(tabula) > 0.20f);
+        CREDO_AEQUALIS_I32((i32)tabula->numerus, ZEPHYRUM);
+        CREDO_VERUM(tabula->numerus_deletorum > ZEPHYRUM);
+
+        /* Insertio una magis - oportet crescere propter factorem deletorum */
+        clavis = chorda_ex_literis("trigger", piscina);
+        tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)XCIX);
+
+        /* Capacitas crevisse debet, numerus deletorum refectus */
+        CREDO_VERUM(tabula->capacitas > capacitas_initialis);
+        CREDO_AEQUALIS_I32((i32)tabula->numerus_deletorum, ZEPHYRUM);
+    }
+
+
+    /* =================================================
+     * Probare iterator cum tabula vacua
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+         TabulaIterator iter;
+                 chorda clavis_iter;
+                vacuum* valor_iter;
+                    i32 count;
+
+        imprimere("\n--- Probans iterator cum tabula vacua ---\n");
+
+        tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+
+        /* Ambulare tabulam vacuam */
+        iter = tabula_dispersa_iterator_initium(tabula);
+        count = ZEPHYRUM;
+
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis_iter, &valor_iter))
+        {
+            count++;
+        }
+
+        CREDO_AEQUALIS_I32(count, ZEPHYRUM);
+    }
+
+
+    /* =================================================
+     * Probare iterator cum outputis NIHIL
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+         TabulaIterator iter;
+                 chorda clavis1, clavis2, clavis3;
+                    i32 count;
+
+        imprimere("\n--- Probans iterator cum outputis NIHIL ---\n");
+
+        tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+
+        clavis1 = chorda_ex_literis("alpha", piscina);
+        clavis2 = chorda_ex_literis("beta", piscina);
+        clavis3 = chorda_ex_literis("gamma", piscina);
+
+        tabula_dispersa_inserere(tabula, clavis1, (vacuum*)(longus)I);
+        tabula_dispersa_inserere(tabula, clavis2, (vacuum*)(longus)II);
+        tabula_dispersa_inserere(tabula, clavis3, (vacuum*)(longus)III);
+
+        /* Ambulare cum NIHIL outputis */
+        iter = tabula_dispersa_iterator_initium(tabula);
+        count = ZEPHYRUM;
+
+        dum (tabula_dispersa_iterator_proximum(&iter, NIHIL, NIHIL))
+        {
+            count++;
+        }
+
+        CREDO_AEQUALIS_I32(count, III);
+    }
+
+
+    /* =================================================
+     * Probare deletio post crescentiam
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+                    i32 i;
+              character buffer[VI];
+                 chorda clavis;
+                vacuum* valor;
+
+        imprimere("\n--- Probans deletio post crescentiam ---\n");
+
+        tabula = tabula_dispersa_creare_chorda(piscina, XVI);
+
+        /* Insertiones ad coactiones crescentiae */
+        per (i = ZEPHYRUM; i < XIV; i++)
+        {
+            snprintf(buffer, VI, "k%d", i);
+            clavis = chorda_ex_literis(buffer, piscina);
+            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+        }
+
+        /* Deletio post crescentiam */
+        snprintf(buffer, VI, "k%d", II);
+        clavis = chorda_ex_literis(buffer, piscina);
+        CREDO_VERUM(tabula_dispersa_delere(tabula, clavis));
+        CREDO_FALSUM(tabula_dispersa_invenire(tabula, clavis, &valor));
+
+        /* Alia deletio */
+        snprintf(buffer, VI, "k%d", V);
+        clavis = chorda_ex_literis(buffer, piscina);
+        CREDO_VERUM(tabula_dispersa_delere(tabula, clavis));
+        CREDO_FALSUM(tabula_dispersa_invenire(tabula, clavis, &valor));
+
+        /* Ceterae adhuc praesentes */
+        snprintf(buffer, VI, "k%d", ZEPHYRUM);
+        clavis = chorda_ex_literis(buffer, piscina);
+        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis, &valor));
+    }
+
+
+    /* =================================================
+     * Probare distantia_maxima tracking
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+                    i32 i;
+              character buffer[VI];
+
+        imprimere("\n--- Probans distantia_maxima tracking ---\n");
+
+        /* Tabula parva coactiones longas distantias probationis */
+        tabula = tabula_dispersa_creare_chorda(piscina, XVI);
+
+        per (i = ZEPHYRUM; i < XII; i++)
+        {
+            chorda clavis;
+
+            snprintf(buffer, VI, "k%d", i);
+            clavis = chorda_ex_literis(buffer, piscina);
+            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+        }
+
+        /* Distantia aliqua probationis habere debet */
+        CREDO_VERUM(tabula->distantia_maxima >= ZEPHYRUM);
+    }
+
+
+    /* =================================================
+     * Probare capacitas minima
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula_parva;
+        TabulaDispersa* tabula_nulla;
+
+        imprimere("\n--- Probans capacitas minima ---\n");
+
+        /* Capacitas I petita, XVI obtenta */
+        tabula_parva = tabula_dispersa_creare_chorda(piscina, I);
+        CREDO_NON_NIHIL(tabula_parva);
+        CREDO_AEQUALIS_I32((i32)tabula_parva->capacitas, XVI);
+
+        /* Capacitas V petita, XVI obtenta */
+        tabula_nulla = tabula_dispersa_creare_chorda(piscina, V);
+        CREDO_NON_NIHIL(tabula_nulla);
+        CREDO_AEQUALIS_I32((i32)tabula_nulla->capacitas, XVI);
+
+        /* Capacitas XV petita, XVI obtenta */
+        tabula_nulla = tabula_dispersa_creare_chorda(piscina, XV);
+        CREDO_NON_NIHIL(tabula_nulla);
+        CREDO_AEQUALIS_I32((i32)tabula_nulla->capacitas, XVI);
+
+        /* Capacitas XVI petita, XVI obtenta */
+        tabula_nulla = tabula_dispersa_creare_chorda(piscina, XVI);
+        CREDO_NON_NIHIL(tabula_nulla);
+        CREDO_AEQUALIS_I32((i32)tabula_nulla->capacitas, XVI);
+
+        /* Capacitas XVII petita, XXXII obtenta */
+        tabula_nulla = tabula_dispersa_creare_chorda(piscina, XVII);
+        CREDO_NON_NIHIL(tabula_nulla);
+        CREDO_AEQUALIS_I32((i32)tabula_nulla->capacitas, XXXII);
+    }
+
+
+    /* =================================================
+     * Probare NIHIL piscina et functiones
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula_nulla;
+
+        imprimere("\n--- Probans NIHIL piscina ---\n");
+
+        /* Creatio cum piscina NIHIL */
+        tabula_nulla = tabula_dispersa_creare_chorda(NIHIL, CXXVIII);
+        CREDO_NIHIL(tabula_nulla);
+
+        /* Creatio cum friatio NIHIL */
+        tabula_nulla = tabula_dispersa_creare(piscina, CXXVIII, NIHIL, (TabulaComparatio)chorda_comparare);
+        CREDO_NIHIL(tabula_nulla);
+
+        /* Creatio cum comparatio NIHIL */
+        tabula_nulla = tabula_dispersa_creare(piscina, CXXVIII, tabula_friare_fnv1a, NIHIL);
+        CREDO_NIHIL(tabula_nulla);
     }
 
 

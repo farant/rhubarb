@@ -429,7 +429,7 @@ s32 principale (vacuum)
 
 
 	/* ==================================================
-	 * Probare NULL input handling
+	 * Probare NIHIL input handling
 	 * ================================================== */
 
 	{
