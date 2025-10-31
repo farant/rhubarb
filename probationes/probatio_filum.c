@@ -300,6 +300,129 @@ s32 principale (vacuum)
 	}
 
 
+	/* ==================================================
+	 * Probare line length limits - 4096 byte buffer
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_long_lines.txt";
+		       FilumLector* lector;
+		            chorda  linea;
+		               i32  i;
+		         character* buffer_longus;
+
+		imprimere("\n--- Probans line length limits (4096 buffer) ---\n");
+
+		/* Genera lineam 4095 bytes longam (sine newline) - ex piscina */
+		buffer_longus = (character*)piscina_allocare(piscina, 5001);
+		si (!buffer_longus)
+		{
+			imprimere("FRACTA: piscina_allocare\n");
+			redde I;
+		}
+
+		/* Test 1: Line 4095 bytes (should fit exactly with null terminator) */
+		imprimere("\n  Test: 4095 byte line\n");
+		per (i = ZEPHYRUM; i < 4095; i++)
+		{
+			buffer_longus[i] = 'A';
+		}
+		buffer_longus[4095] = '\0';
+
+		filum_scribere_literis(test_via, buffer_longus);
+		lector = filum_lector_aperire(test_via, piscina);
+		CREDO_NON_NIHIL(lector);
+
+		/* Debet legere totam lineam semel */
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		CREDO_AEQUALIS_I32(linea.mensura, 4095);
+
+		/* Debet esse EOF */
+		CREDO_FALSUM(filum_lector_lineam_proximam(lector, &linea));
+		CREDO_VERUM(filum_lector_finis(lector));
+
+		filum_lector_claudere(lector);
+
+
+		/* Test 2: Line 5000 bytes - dynamic growth handles transparently */
+		imprimere("  Test: 5000 byte line (dynamic growth)\n");
+		per (i = ZEPHYRUM; i < 5000; i++)
+		{
+			buffer_longus[i] = 'B';
+		}
+		buffer_longus[5000] = '\0';
+
+		filum_scribere_literis(test_via, buffer_longus);
+		lector = filum_lector_aperire(test_via, piscina);
+		CREDO_NON_NIHIL(lector);
+
+		/* Debet legere totam lineam semel (5000 bytes) */
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		imprimere("    Linea legere: %d bytes\n", linea.mensura);
+		CREDO_AEQUALIS_I32(linea.mensura, 5000);
+
+		/* Debet esse EOF */
+		CREDO_FALSUM(filum_lector_lineam_proximam(lector, &linea));
+
+		filum_lector_claudere(lector);
+
+
+		/* Test 3: Multiple lines with newlines, one long */
+		imprimere("  Test: Mixed line lengths with newlines\n");
+		{
+			FILUM* f = fopen(test_via, "w");
+			si (!f)
+			{
+				imprimere("FRACTA: fopen\n");
+				redde I;
+			}
+
+			/* Prima linea: brevis */
+			fprintf(f, "short line\n");
+
+			/* Secunda linea: 5000 bytes */
+			per (i = ZEPHYRUM; i < 5000; i++)
+			{
+				fputc('C', f);
+			}
+			fprintf(f, "\n");
+
+			/* Tertia linea: brevis */
+			fprintf(f, "another short line\n");
+
+			fclose(f);
+		}
+
+		lector = filum_lector_aperire(test_via, piscina);
+		CREDO_NON_NIHIL(lector);
+
+		/* Prima linea: brevis */
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		imprimere("    Linea 1: %d bytes\n", linea.mensura);
+		CREDO_AEQUALIS_I32(linea.mensura, X); /* "short line" */
+
+		/* Secunda linea: 5000 bytes (longa, sed transparenter tractata) */
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		imprimere("    Linea 2: %d bytes\n", linea.mensura);
+		CREDO_AEQUALIS_I32(linea.mensura, 5000);
+
+		/* Tertia linea: brevis */
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		imprimere("    Linea 3: %d bytes\n", linea.mensura);
+		CREDO_AEQUALIS_I32(linea.mensura, XVIII); /* "another short line" */
+
+		/* EOF */
+		CREDO_FALSUM(filum_lector_lineam_proximam(lector, &linea));
+
+		filum_lector_claudere(lector);
+		filum_delere(test_via);
+
+		imprimere("\n  NOTA: Lineae > 4095 bytes transparenter tractantur\n");
+		imprimere("        ChordaAedificator crescit dynamice pro lineis longis\n");
+		imprimere("        (buffer_longus ex piscina, liberabitur cum piscina_destruere)\n");
+	}
+
+
 	/* =================================================
 	 * Compendium
 	 * ================================================== */

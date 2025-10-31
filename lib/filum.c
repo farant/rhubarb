@@ -1,4 +1,5 @@
 #include "filum.h"
+#include "chorda_aedificator.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +23,7 @@ structura FilumLector {
            i32  numerus_versus;
            b32  est_finis;
        Piscina* piscina;
-     character  buffer[CDXII]; /* 4096 byte buffer pro legere */
+     character  buffer[MMMMXCVI]; /* 4096 byte buffer pro legere */
 };
 
 
@@ -233,9 +234,12 @@ filum_lector_lineam_proximam(
     FilumLector* lector,
          chorda* linea_out)
 {
-	     character* result;
-	memoriae_index  longitudo;
-	            i8* buffer_allocatus;
+	             character* result;
+	        memoriae_index  longitudo;
+	                    i8* buffer_allocatus;
+	                   b32  habet_newline;
+	    ChordaAedificator* aedificator;
+	        memoriae_index  i;
 
 	si (!lector || !linea_out)
 	{
@@ -249,7 +253,8 @@ filum_lector_lineam_proximam(
 		redde FALSUM;
 	}
 
-	result = fgets(lector->buffer, CDXII, lector->descriptum);
+	/* Prima lectio */
+	result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
 	si (!result)
 	{
 		/* EOF vel error */
@@ -261,32 +266,120 @@ filum_lector_lineam_proximam(
 
 	lector->numerus_versus++;
 
-	/* Removere newline characteres ad finem */
 	longitudo = strlen(lector->buffer);
-	dum (longitudo > ZEPHYRUM &&
-	     (lector->buffer[longitudo - I] == '\n' ||
-	      lector->buffer[longitudo - I] == '\r'))
+
+	/* Verificare si habet newline ad finem */
+	habet_newline = FALSUM;
+	si (longitudo > ZEPHYRUM &&
+	    (lector->buffer[longitudo - I] == '\n' ||
+	     lector->buffer[longitudo - I] == '\r'))
 	{
-		lector->buffer[longitudo - I] = '\0';
-		longitudo--;
+		habet_newline = VERUM;
 	}
 
-	/* Allocare chordam ex piscina */
-	buffer_allocatus = (i8*)piscina_allocare(lector->piscina, longitudo);
-	si (!buffer_allocatus)
+	/* Si linea completa (habet newline VEL non implevit buffer),
+	 * processare directe */
+	si (habet_newline || longitudo < (MMMMXCVI - I))
 	{
-		_filum_error_ponere("piscina_allocare fracta in lineam_proximam");
+		/* Removere newline characteres */
+		dum (longitudo > ZEPHYRUM &&
+		     (lector->buffer[longitudo - I] == '\n' ||
+		      lector->buffer[longitudo - I] == '\r'))
+		{
+			lector->buffer[longitudo - I] = '\0';
+			longitudo--;
+		}
+
+		/* Allocare ex piscina */
+		buffer_allocatus = (i8*)piscina_allocare(lector->piscina, longitudo);
+		si (!buffer_allocatus)
+		{
+			_filum_error_ponere("piscina_allocare fracta");
+			linea_out->mensura = ZEPHYRUM;
+			linea_out->datum   = NIHIL;
+			redde FALSUM;
+		}
+
+		memcpy(buffer_allocatus, lector->buffer, longitudo);
+		linea_out->mensura = (i32)longitudo;
+		linea_out->datum   = buffer_allocatus;
+
+		redde VERUM;
+	}
+
+	/* Linea continuat - usare ChordaAedificator pro crescentia dynamica */
+	aedificator = chorda_aedificator_creare(lector->piscina, MMMMXCVI * II);
+	si (!aedificator)
+	{
+		_filum_error_ponere("chorda_aedificator_creare fracta");
 		linea_out->mensura = ZEPHYRUM;
 		linea_out->datum   = NIHIL;
 		redde FALSUM;
 	}
 
-	memcpy(buffer_allocatus, lector->buffer, longitudo);
+	/* Appendere primum fragmentum */
+	per (i = ZEPHYRUM; i < longitudo; i++)
+	{
+		si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
+		{
+			_filum_error_ponere("chorda_aedificator_appendere fracta");
+			linea_out->mensura = ZEPHYRUM;
+			linea_out->datum   = NIHIL;
+			redde FALSUM;
+		}
+	}
 
-	linea_out->mensura = (i32)longitudo;
-	linea_out->datum   = buffer_allocatus;
+	/* Legere fragmenta reliqua usque ad newline vel EOF */
+	dum (VERUM)
+	{
+		result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
+		si (!result)
+		{
+			/* EOF - finire lineam */
+			lector->est_finis = VERUM;
+			*linea_out = chorda_aedificator_finire(aedificator);
+			redde VERUM;
+		}
 
-	redde VERUM;
+		longitudo = strlen(lector->buffer);
+
+		/* Verificare newline */
+		habet_newline = FALSUM;
+		si (longitudo > ZEPHYRUM &&
+		    (lector->buffer[longitudo - I] == '\n' ||
+		     lector->buffer[longitudo - I] == '\r'))
+		{
+			habet_newline = VERUM;
+		}
+
+		/* Removere newline si existit */
+		dum (longitudo > ZEPHYRUM &&
+		     (lector->buffer[longitudo - I] == '\n' ||
+		      lector->buffer[longitudo - I] == '\r'))
+		{
+			lector->buffer[longitudo - I] = '\0';
+			longitudo--;
+		}
+
+		/* Appendere fragmentum */
+		per (i = ZEPHYRUM; i < longitudo; i++)
+		{
+			si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
+			{
+				_filum_error_ponere("chorda_aedificator_appendere fracta");
+				linea_out->mensura = ZEPHYRUM;
+				linea_out->datum   = NIHIL;
+				redde FALSUM;
+			}
+		}
+
+		si (habet_newline || longitudo < (MMMMXCVI - I))
+		{
+			/* Linea completa */
+			*linea_out = chorda_aedificator_finire(aedificator);
+			redde VERUM;
+		}
+	}
 }
 
 i32
@@ -523,7 +616,7 @@ filum_copiare(
 {
 	         FILUM* fons;
 	         FILUM* dest;
-	     character  buffer[CDXII];
+	     character  buffer[MMMMXCVI];
 	memoriae_index  legere_bytes;
 	memoriae_index  scriptus_bytes;
 
@@ -551,7 +644,7 @@ filum_copiare(
 	}
 
 	/* Copiare per buffer */
-	dum ((legere_bytes = fread(buffer, I, CDXII, fons)) > ZEPHYRUM)
+	dum ((legere_bytes = fread(buffer, I, MMMMXCVI, fons)) > ZEPHYRUM)
 	{
 		scriptus_bytes = fwrite(buffer, I, legere_bytes, dest);
 		si (scriptus_bytes != legere_bytes)

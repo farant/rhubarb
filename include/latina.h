@@ -216,6 +216,8 @@
 #define M						1000
 #define MM					2000
 #define MMM					3000
+#define MMMM				4000
+#define MMMMXCVI		4096
 
 #define imprimere 	printf
 #define liberare 		free
