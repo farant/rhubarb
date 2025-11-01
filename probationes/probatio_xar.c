@@ -1,4 +1,4 @@
-/* probatio_xar.c - Probationes Xar (Exponential Array Tests) */
+/* probatio_xar.c - Probationes Tabulae Exponentialis */
 #include "latina.h"
 #include "xar.h"
 #include "piscina.h"
@@ -52,7 +52,7 @@ s32 principale(vacuum)
 	{
 		Xar* xar;
 		i32* elem;
-		i32* retrieved;
+		i32* receptus;
 
 		imprimere("\n--- Probans xar_addere et xar_obtinere ---\n");
 
@@ -66,16 +66,16 @@ s32 principale(vacuum)
 		CREDO_AEQUALIS_I32((i32)xar_numerus(xar), I);
 
 		/* Recuperare elementum */
-		retrieved = (i32*)xar_obtinere(xar, ZEPHYRUM);
-		CREDO_NON_NIHIL(retrieved);
-		CREDO_AEQUALIS_I32(*retrieved, XLII);
+		receptus = (i32*)xar_obtinere(xar, ZEPHYRUM);
+		CREDO_NON_NIHIL(receptus);
+		CREDO_AEQUALIS_I32(*receptus, XLII);
 
 		/* Addere secundum elementum */
 		elem = (i32*)xar_addere(xar);
 		*elem = XCIX;
 
-		retrieved = (i32*)xar_obtinere(xar, I);
-		CREDO_AEQUALIS_I32(*retrieved, XCIX);
+		receptus = (i32*)xar_obtinere(xar, I);
+		CREDO_AEQUALIS_I32(*receptus, XCIX);
 	}
 
 	/* ==================================================
@@ -144,7 +144,7 @@ s32 principale(vacuum)
 	}
 
 	/* ==================================================
-	 * Probare xar_obtinere_vel_creare (sparse)
+	 * Probare xar_obtinere_vel_creare (dispersus)
 	 * ================================================== */
 
 	{
@@ -176,7 +176,7 @@ s32 principale(vacuum)
 	{
 		Xar* xar;
 		i32  valor;
-		i32* retrieved;
+		i32* receptus;
 
 		imprimere("\n--- Probans xar_ponere ---\n");
 
@@ -185,9 +185,9 @@ s32 principale(vacuum)
 		valor = CXXIII;
 		CREDO_VERUM(xar_ponere(xar, X, &valor));
 
-		retrieved = (i32*)xar_obtinere(xar, X);
-		CREDO_NON_NIHIL(retrieved);
-		CREDO_AEQUALIS_I32(*retrieved, CXXIII);
+		receptus = (i32*)xar_obtinere(xar, X);
+		CREDO_NON_NIHIL(receptus);
+		CREDO_AEQUALIS_I32(*receptus, CXXIII);
 	}
 
 	/* ==================================================
@@ -198,7 +198,7 @@ s32 principale(vacuum)
 		Xar* xar;
 		i32  numeri[X];
 		i32  i;
-		i32* retrieved;
+		i32* receptus;
 		i32  additi;
 
 		imprimere("\n--- Probans xar_addere_multos ---\n");
@@ -206,7 +206,7 @@ s32 principale(vacuum)
 		xar = xar_creare(piscina, sizeof(i32));
 
 		/* Parare tabulam numerorum */
-		per (i = ZEPHYRUM; i < X; i++) 
+		per (i = ZEPHYRUM; i < X; i++)
         {
 			numeri[i] = i * II;
 		}
@@ -217,11 +217,11 @@ s32 principale(vacuum)
 		CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X);
 
 		/* Verificare omnes */
-		per (i = ZEPHYRUM; i < X; i++) 
+		per (i = ZEPHYRUM; i < X; i++)
         {
-			retrieved = (i32*)xar_obtinere(xar, (i32)i);
-			CREDO_NON_NIHIL(retrieved);
-			CREDO_AEQUALIS_I32(*retrieved, i * II);
+			receptus = (i32*)xar_obtinere(xar, (i32)i);
+			CREDO_NON_NIHIL(receptus);
+			CREDO_AEQUALIS_I32(*receptus, i * II);
 		}
 	}
 
@@ -233,7 +233,7 @@ s32 principale(vacuum)
 		Xar* xar;
 		i32  numeri[XXXII];
 		i32  i;
-		i32* retrieved;
+		i32* receptus;
 		i32  additi;
 
 		imprimere("\n--- Probans xar_addere_multos trans segmenta ---\n");
@@ -241,7 +241,7 @@ s32 principale(vacuum)
 		xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
 
 		/* Parare XXXII numeros */
-		per (i = ZEPHYRUM; i < XXXII; i++) 
+		per (i = ZEPHYRUM; i < XXXII; i++)
         {
 			numeri[i] = i + C;
 		}
@@ -250,11 +250,11 @@ s32 principale(vacuum)
 		additi = xar_addere_multos(xar, numeri, XXXII);
 		CREDO_AEQUALIS_I32((i32)additi, XXXII);
 
-		/* Verificare omnes correcti */
-		per (i = ZEPHYRUM; i < XXXII; i++) 
+		/* Verificare omnia correcta */
+		per (i = ZEPHYRUM; i < XXXII; i++)
         {
-			retrieved = (i32*)xar_obtinere(xar, (i32)i);
-			CREDO_AEQUALIS_I32(*retrieved, i + C);
+			receptus = (i32*)xar_obtinere(xar, (i32)i);
+			CREDO_AEQUALIS_I32(*receptus, i + C);
 		}
 	}
 
@@ -266,35 +266,35 @@ s32 principale(vacuum)
 		        Xar* xar;
 		XarIterator  iter;
 		        i32* elem;
-		        i32  count;
-		        i32  sum;
+		        i32  numeratio;
+		        i32  summa;
 
 		imprimere("\n--- Probans iterator ---\n");
 
 		xar = xar_creare(piscina, sizeof(i32));
 
 		/* Addere elementa */
-		per (count = ZEPHYRUM; count < X; count++) 
+		per (numeratio = ZEPHYRUM; numeratio < X; numeratio++)
         {
 			elem = (i32*)xar_addere(xar);
-			*elem = count;
+			*elem = numeratio;
 		}
 
 		/* Iterare et summare */
-		iter  = xar_iterator_initium(xar);
-		sum   = ZEPHYRUM;
-		count = ZEPHYRUM;
+		iter      = xar_iterator_initium(xar);
+		summa     = ZEPHYRUM;
+		numeratio = ZEPHYRUM;
 
-		dum (!xar_iterator_finis(&iter)) 
+		dum (!xar_iterator_finis(&iter))
         {
 			elem = (i32*)xar_iterator_proximum(&iter);
 			CREDO_NON_NIHIL(elem);
-			sum += *elem;
-			count++;
+			summa += *elem;
+			numeratio++;
 		}
 
-		CREDO_AEQUALIS_I32(count, X);
-		CREDO_AEQUALIS_I32(sum, XLV);  /* 0+1+2+...+9 = 45 */
+		CREDO_AEQUALIS_I32(numeratio, X);
+		CREDO_AEQUALIS_I32(summa, XLV);  /* 0+1+2+...+9 = 45 */
 	}
 
 	/* ==================================================
@@ -305,32 +305,32 @@ s32 principale(vacuum)
 		        Xar* xar;
 		XarIterator  iter;
 		       i32*  elem;
-		       i32   count;
+		       i32   numeratio;
 
 		imprimere("\n--- Probans iterator trans segmenta ---\n");
 
 		xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
 
 		/* Addere L elementa - transit per segmenta multa */
-		per (count = ZEPHYRUM; count < L; count++) 
+		per (numeratio = ZEPHYRUM; numeratio < L; numeratio++)
         {
 			elem = (i32*)xar_addere(xar);
-			*elem = count * III;
+			*elem = numeratio * III;
 		}
 
 		/* Iterare et verificare */
-		iter  = xar_iterator_initium(xar);
-		count = ZEPHYRUM;
+		iter      = xar_iterator_initium(xar);
+		numeratio = ZEPHYRUM;
 
-		dum (!xar_iterator_finis(&iter)) 
+		dum (!xar_iterator_finis(&iter))
         {
 			elem = (i32*)xar_iterator_proximum(&iter);
 			CREDO_NON_NIHIL(elem);
-			CREDO_AEQUALIS_I32(*elem, count * III);
-			count++;
+			CREDO_AEQUALIS_I32(*elem, numeratio * III);
+			numeratio++;
 		}
 
-		CREDO_AEQUALIS_I32(count, L);
+		CREDO_AEQUALIS_I32(numeratio, L);
 	}
 
 	/* ==================================================
