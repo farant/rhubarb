@@ -1,4 +1,4 @@
-/* xar.c - "Codex Tabulae Exponentialis" - Implementation
+/* xar.c - "Codex Tabulae Exponentialis" - Implementatio
  *
  * Tabula crescens sine reallocatio
  */
@@ -8,26 +8,26 @@
 #include <string.h>
 
 /* ========================================================================
- * FUNCTIONES AUXILIARES - Helper Functions
+ * FUNCTIONES AUXILIARES
  * ======================================================================== */
 
 /* Computare Magnitudinem Segmenti
- * "Calculate segment size using cached pattern"
+ * "Computare magnitudinem segmenti usans formam conservatam"
  *
- * Key insight: first two segments same size, then double
- * "Regula duplicandi" - Doubling rule
+ * Notitia clavis: duo prima segmenta eadem magnitudo, deinde duplicatio
+ * "Regula duplicandi"
  */
-interior i32 
+interior i32
 computare_magnitudinem_segmenti(
-    Xar* xar, 
+    Xar* xar,
     i32  index_segmenti)
 {
-	si (index_segmenti <= I) 
+	si (index_segmenti <= I)
     {
 		/* Duo prima segmenta: eadem magnitudo */
 		redde xar->magnitudo_primi;
-	} 
-    alioquin 
+	}
+    alioquin
     {
 		/* Segmenta sequentia: duplicant */
 		redde xar->magnitudo_primi << (index_segmenti - I);
@@ -35,25 +35,25 @@ computare_magnitudinem_segmenti(
 }
 
 /* Allocare Segmentum
- * "Partem allocare" - Allocate a segment
+ * "Partem allocare"
  *
- * Returns: VERUM si successus, FALSUM si error
+ * Redde: VERUM si successus, FALSUM si error
  */
-interior b32 
+interior b32
 allocare_segmentum(
-    Xar* xar, 
+    Xar* xar,
     i32  index_segmenti)
 {
 	           i32  magnitudo_segmenti;
 	memoriae_index  magnitudo_memoriae;
 	        vacuum* memoria;
 
-	si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM) 
+	si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
     {
 		redde FALSUM;  /* Nimis multa segmenta! */
 	}
 
-	si (xar->segmenta[index_segmenti]) 
+	si (xar->segmenta[index_segmenti])
     {
 		redde VERUM;  /* Iam allocatus */
 	}
@@ -64,20 +64,20 @@ allocare_segmentum(
 
 	/* Allocare ex piscina */
 	memoria = piscina_allocare(xar->piscina, magnitudo_memoriae);
-	si (!memoria) 
+	si (!memoria)
     {
 		redde FALSUM;  /* Allocatio fracta */
 	}
 
 	/* Zephyrum memoriam si vexillum non ponit */
-	si (!(xar->vexilla & XAR_VEXILLUM_SINE_ZEPHYRUM)) 
+	si (!(xar->vexilla & XAR_VEXILLUM_SINE_ZEPHYRUM))
     {
 		memset(memoria, ZEPHYRUM, magnitudo_memoriae);
 	}
 
 	/* Renovare statum xar */
 	xar->segmenta[index_segmenti] = memoria;
-	si (index_segmenti >= xar->numerus_segmentorum) 
+	si (index_segmenti >= xar->numerus_segmentorum)
     {
 		xar->numerus_segmentorum = index_segmenti + I;
 	}
@@ -88,13 +88,13 @@ allocare_segmentum(
 }
 
 /* ========================================================================
- * FUNCTIONES CREATIONIS - Creation Functions
+ * FUNCTIONES CREATIONIS
  * ======================================================================== */
 
 /* Xar Creare */
-Xar* 
+Xar*
 xar_creare(
-    Piscina* piscina, 
+    Piscina* piscina,
         i32  magnitudo_elementi)
 {
 	redde xar_creare_cum_vexillis(piscina,
@@ -104,7 +104,7 @@ xar_creare(
 }
 
 /* Xar Creare Cum Magnitudine */
-Xar* 
+Xar*
 xar_creare_cum_magnitudine(
     Piscina* piscina,
         i32  magnitudo_elementi,
@@ -119,7 +119,7 @@ xar_creare_cum_magnitudine(
 /* Xar Creare Cum Vexillis
  * "Genesis tabulae exponentialis - cum omnibus optionibus"
  */
-Xar* 
+Xar*
 xar_creare_cum_vexillis(
     Piscina* piscina,
         i32  magnitudo_elementi,
@@ -129,7 +129,7 @@ xar_creare_cum_vexillis(
 	Xar* xar;
 	i32  i;
 
-	si (!piscina || magnitudo_elementi == ZEPHYRUM) 
+	si (!piscina || magnitudo_elementi == ZEPHYRUM)
     {
 		redde NIHIL;
 	}
@@ -142,7 +142,7 @@ xar_creare_cum_vexillis(
 	}
 
 	/* Initializare metadatum
-	 * "Initium notitiae" - Beginning of knowledge
+	 * "Initium notitiae"
 	 */
 	xar->numerus_elementorum = ZEPHYRUM;
 	xar->magnitudo_elementi  = magnitudo_elementi;
@@ -155,7 +155,7 @@ xar_creare_cum_vexillis(
 	/* Vacuare segmenta
 	 * "Vacuare omnes indices segmentorum"
 	 */
-	per (i = ZEPHYRUM; i < XAR_MAXIMUS_SEGMENTORUM; i++) 
+	per (i = ZEPHYRUM; i < XAR_MAXIMUS_SEGMENTORUM; i++)
     {
 		xar->segmenta[i] = NIHIL;
 	}
@@ -167,67 +167,65 @@ xar_creare_cum_vexillis(
 }
 
 /* Xar Destruere */
-vacuum 
+vacuum
 xar_destruere(
     Xar* xar)
 {
 	/* Cum piscina, nihil agendum!
-	 * "With pool, nothing to do!"
 	 */
 	(vacuum)xar;
 }
 
 /* Xar Ponere Vexilla */
-vacuum 
+vacuum
 xar_ponere_vexilla(
-    Xar* xar, 
+    Xar* xar,
     i32  vexilla)
 {
-	si (xar) 
+	si (xar)
     {
 		xar->vexilla = vexilla;
 	}
 }
 
 /* ========================================================================
- * LOCATIO ET ACCESSUS - Location and Access
+ * LOCATIO ET ACCESSUS
  * ======================================================================== */
 
-/* Xar Locare - O(1) algorithm!
- * "Invenire locum indicis" - Find place of index
+/* Xar Locare - Algorithmus O(1)!
+ * "Invenire locum indicis"
  *
  * ALGORITHMUS:
  * 1. Via rapida pro primis duobus segmentis (computatio directa)
  * 2. Quaestio exponentia pro ceteris (sine circulatio per omnia segmenta)
  */
-b32 
+b32
 xar_locare(
-           Xar* xar, 
-           i32  index, 
+           Xar* xar,
+           i32  index,
     XarLocatio* locatio)
 {
 	i32 index_segmenti;
 	i32 magnitudo_segmenti;
 	i32 index_adiustus;
 
-	si (!xar || !locatio) 
+	si (!xar || !locatio)
     {
 		redde FALSUM;
 	}
 
 	/* Via rapida pro primis duobus segmentis (eadem magnitudo)
-	 * "Fast path for first two segments"
 	 */
-	si (index < xar->magnitudo_primi * II) 
+	si (index < xar->magnitudo_primi * II)
     {
-		si (index < xar->magnitudo_primi) 
+		si (index < xar->magnitudo_primi)
         {
 			/* Segmentum primum */
 			locatio->index_segmenti     = ZEPHYRUM;
 			locatio->offset_in_segmento = index;
 			locatio->magnitudo_segmenti = xar->magnitudo_primi;
-		} 
-        alioquin 
+		}
+        alioquin
         {
 			/* Segmentum secundum */
 			locatio->index_segmenti     = I;
@@ -239,7 +237,6 @@ xar_locare(
 	}
 
 	/* Computatio directa pro segmentis exponentialibus
-	 * "Direct calculation for exponential segments"
 	 *
 	 * Usans manipulationem bitorum pro quaestio exponentia
 	 */
@@ -248,7 +245,6 @@ xar_locare(
 	magnitudo_segmenti = xar->magnitudo_primi * II;  /* Magnitudo segmenti 2 */
 
 	/* Invenire segmentum usans formam crescentiae exponentialem
-	 * "Find segment using exponential growth pattern"
 	 */
 	dum (index_adiustus >= magnitudo_segmenti &&
          index_segmenti < XAR_MAXIMUS_SEGMENTORUM)
@@ -258,7 +254,7 @@ xar_locare(
 		index_segmenti++;
 	}
 
-	si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM) 
+	si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
     {
 		redde FALSUM;  /* Index nimis magnus */
 	}
@@ -272,69 +268,67 @@ xar_locare(
 }
 
 /* Xar Obtinere
- * "Obtinere elementum" - Get element
+ * "Obtinere elementum"
  */
-vacuum* 
+vacuum*
 xar_obtinere(
-    Xar* xar, 
+    Xar* xar,
     i32 index)
 {
 	XarLocatio  locatio;
 	        i8* basis;
 
-	si (!xar || index >= xar->numerus_elementorum) 
+	si (!xar || index >= xar->numerus_elementorum)
     {
 		redde NIHIL;
 	}
 
-	si (!xar_locare(xar, index, &locatio)) 
+	si (!xar_locare(xar, index, &locatio))
     {
 		redde NIHIL;
 	}
 
-	si (!locatio.basis_segmenti) 
+	si (!locatio.basis_segmenti)
     {
 		redde NIHIL;  /* Segmentum non allocatus */
 	}
 
 	/* Computare locum elementi
-	 * "Calculate element address"
 	 */
 	basis = (i8*)locatio.basis_segmenti;
 	redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
 }
 
 /* Xar Obtinere Vel Creare
- * "Useful for sparse arrays - tabulis dispersis"
+ * "Utile pro tabulis dispersis"
  */
-vacuum* 
+vacuum*
 xar_obtinere_vel_creare(
-    Xar* xar, 
+    Xar* xar,
     i32  index)
 {
 	XarLocatio  locatio;
 	        i8* basis;
 	       i32  i;
 
-	si (!xar) 
+	si (!xar)
     {
 		redde NIHIL;
 	}
 
 	/* Invenire locatio */
-	si (!xar_locare(xar, index, &locatio)) 
+	si (!xar_locare(xar, index, &locatio))
     {
 		redde NIHIL;
 	}
 
 	/* Assecurare omnia segmenta usque ad hoc existunt
-	 * "Ensure all segments up to this one exist"
 	 */
-	per (i = ZEPHYRUM; i <= locatio.index_segmenti; i++) 
+	per (i = ZEPHYRUM; i <= locatio.index_segmenti; i++)
     {
-		si (!xar->segmenta[i]) 
+		si (!xar->segmenta[i])
         {
-			si (!allocare_segmentum(xar, i)) 
+			si (!allocare_segmentum(xar, i))
             {
 				redde NIHIL;
 			}
@@ -342,7 +336,7 @@ xar_obtinere_vel_creare(
 	}
 
 	/* Renovare numerum si necessarium */
-	si (index >= xar->numerus_elementorum) 
+	si (index >= xar->numerus_elementorum)
     {
 		xar->numerus_elementorum = index + I;
 	}
@@ -353,16 +347,16 @@ xar_obtinere_vel_creare(
 }
 
 /* Xar Ponere */
-b32 
+b32
 xar_ponere(
-                Xar* xar, 
-                i32  index, 
+                Xar* xar,
+                i32  index,
     constans vacuum* elementum)
 {
 	vacuum* destinatio;
 
 	destinatio = xar_obtinere_vel_creare(xar, index);
-	si (!destinatio) 
+	si (!destinatio)
     {
 		redde FALSUM;
 	}
@@ -372,13 +366,13 @@ xar_ponere(
 }
 
 /* ========================================================================
- * ADDITIO - Addition
+ * ADDITIO
  * ======================================================================== */
 
 /* Xar Addere
- * "Addere ad finem" - Add to end
+ * "Addere ad finem"
  */
-vacuum* 
+vacuum*
 xar_addere(
     Xar* xar)
 {
@@ -386,7 +380,7 @@ xar_addere(
 	       i32  index_novus;
 	        i8* basis;
 
-	si (!xar) 
+	si (!xar)
     {
 		redde NIHIL;
 	}
@@ -394,15 +388,15 @@ xar_addere(
 	index_novus = xar->numerus_elementorum;
 
 	/* Invenire ubi elementum novum ibit */
-	si (!xar_locare(xar, index_novus, &locatio)) 
+	si (!xar_locare(xar, index_novus, &locatio))
     {
 		redde NIHIL;
 	}
 
 	/* Assecurare segmentum existit */
-	si (!xar->segmenta[locatio.index_segmenti]) 
+	si (!xar->segmenta[locatio.index_segmenti])
     {
-		si (!allocare_segmentum(xar, locatio.index_segmenti)) 
+		si (!allocare_segmentum(xar, locatio.index_segmenti))
         {
 			redde NIHIL;  /* Allocatio fracta */
 		}
@@ -420,12 +414,11 @@ xar_addere(
 
 /* Xar Addere Multos
  * "Addere elementa multa - optimizatum pro operationibus magnis"
- * "Add many elements - optimized for bulk operations"
  */
-i32 
+i32
 xar_addere_multos(
-                Xar* xar, 
-    constans vacuum* elementa, 
+                Xar* xar,
+    constans vacuum* elementa,
                 i32  numerus)
 {
 	constans i8* src;
@@ -438,7 +431,7 @@ xar_addere_multos(
 	         i8* destinatio_ptr;
 	        i32  ad_copiam;
 
-	si (!xar || !elementa || numerus == ZEPHYRUM) 
+	si (!xar || !elementa || numerus == ZEPHYRUM)
     {
 		redde ZEPHYRUM;
 	}
@@ -448,19 +441,18 @@ xar_addere_multos(
 	index_finalis   = index_initialis + numerus - I;
 
 	/* Praeallocare omnia segmenta necessaria
-	 * "Pre-allocate all required segments"
 	 */
-	si (!xar_locare(xar, index_finalis, &locatio)) 
+	si (!xar_locare(xar, index_finalis, &locatio))
     {
 		redde ZEPHYRUM;  /* Index nimis magnus */
 	}
 
 	/* Assecurare omnia segmenta ab initio usque ad finem allocata sunt */
-	per (i = ZEPHYRUM; i <= locatio.index_segmenti; i++) 
+	per (i = ZEPHYRUM; i <= locatio.index_segmenti; i++)
     {
-		si (!xar->segmenta[i]) 
+		si (!xar->segmenta[i])
         {
-			si (!allocare_segmentum(xar, i)) 
+			si (!allocare_segmentum(xar, i))
             {
 				i32 index_ultimus;
 
@@ -469,15 +461,15 @@ xar_addere_multos(
 
 				/* Computare quot elementa re vera addere possumus */
 				index_ultimus = ZEPHYRUM;
-				per (j = ZEPHYRUM; j < i; j++) 
+				per (j = ZEPHYRUM; j < i; j++)
                 {
 					index_ultimus += computare_magnitudinem_segmenti(xar, j);
 				}
-				si (index_ultimus > index_initialis) 
+				si (index_ultimus > index_initialis)
                 {
 					numerus = index_ultimus - index_initialis;
 				}
-                alioquin 
+                alioquin
                 {
 					redde ZEPHYRUM;
 				}
@@ -490,13 +482,12 @@ xar_addere_multos(
 	xar->numerus_elementorum = index_initialis + numerus;
 
 	/* Nunc facere copias efficientes per segmentum
-	 * "Now do efficient block copies per segment"
 	 */
 	xar_locare(xar, index_initialis, &locatio);
 	i = ZEPHYRUM;
 	elementa_copiata = ZEPHYRUM;
 
-	dum (i < numerus) 
+	dum (i < numerus)
     {
 		/* Computare quot elementa in segmento currenti cabent */
 		residuum_segmenti = locatio.magnitudo_segmenti - locatio.offset_in_segmento;
@@ -514,12 +505,12 @@ xar_addere_multos(
 		elementa_copiata += ad_copiam;
 
 		/* Movere ad segmentum proximum si necessarium */
-		si (i < numerus) 
+		si (i < numerus)
         {
 			locatio.index_segmenti++;
 			locatio.offset_in_segmento = ZEPHYRUM;
 			locatio.magnitudo_segmenti = computare_magnitudinem_segmenti(
-                                            xar, 
+                                            xar,
                                             locatio.index_segmenti);
 		}
 	}
@@ -528,13 +519,13 @@ xar_addere_multos(
 }
 
 /* ========================================================================
- * ITERATIO - Iteration
+ * ITERATIO
  * ======================================================================== */
 
 /* Xar Iterator Initium
  * "Implementatio iteratoris"
  */
-XarIterator 
+XarIterator
 xar_iterator_initium(
     Xar* xar)
 {
@@ -545,7 +536,7 @@ xar_iterator_initium(
 	iter.index_segmenti     = ZEPHYRUM;
 	iter.offset_in_segmento = ZEPHYRUM;
 
-	si (xar && xar->numerus_segmentorum > ZEPHYRUM) 
+	si (xar && xar->numerus_segmentorum > ZEPHYRUM)
     {
 		iter.basis_segmenti = xar->segmenta[ZEPHYRUM];
 		iter.finis_segmenti = computare_magnitudinem_segmenti(xar, ZEPHYRUM);
@@ -557,25 +548,25 @@ xar_iterator_initium(
 /* Xar Iterator Proximum
  * "Obtinere elementum proximum"
  */
-vacuum* 
+vacuum*
 xar_iterator_proximum(
     XarIterator* iter)
 {
 	vacuum* elementum;
 	    i8* basis;
 
-	si (!iter || !iter->xar || iter->index_currens >= iter->xar->numerus_elementorum) 
+	si (!iter || !iter->xar || iter->index_currens >= iter->xar->numerus_elementorum)
     {
 		redde NIHIL;
 	}
 
 	/* Verificare si oportet movere ad segmentum proximum */
-	si (iter->offset_in_segmento >= iter->finis_segmenti) 
+	si (iter->offset_in_segmento >= iter->finis_segmenti)
     {
 		iter->index_segmenti++;
 		iter->offset_in_segmento = ZEPHYRUM;
 
-		si (iter->index_segmenti < iter->xar->numerus_segmentorum) 
+		si (iter->index_segmenti < iter->xar->numerus_segmentorum)
         {
 			iter->basis_segmenti = iter->xar->segmenta[iter->index_segmenti];
 			iter->finis_segmenti = computare_magnitudinem_segmenti(
@@ -596,7 +587,7 @@ xar_iterator_proximum(
 }
 
 /* Xar Iterator Finis */
-b32 
+b32
 xar_iterator_finis(
     XarIterator* iter)
 {
@@ -604,25 +595,25 @@ xar_iterator_finis(
 }
 
 /* ========================================================================
- * QUAESTIO - Searching
+ * QUAESTIO
  * ======================================================================== */
 
 /* Xar Invenire
  * "Quaestio linearis"
  */
-s32 
+s32
 xar_invenire(
-                Xar* xar, 
-    constans vacuum* clavis, 
+                Xar* xar,
+    constans vacuum* clavis,
       XarComparator  comparator)
 {
 	   i32  i;
 	vacuum* elementum;
 
-	per (i = ZEPHYRUM; i < xar->numerus_elementorum; i++) 
+	per (i = ZEPHYRUM; i < xar->numerus_elementorum; i++)
     {
 		elementum = xar_obtinere(xar, i);
-		si (elementum && comparator(clavis, elementum) == ZEPHYRUM) 
+		si (elementum && comparator(clavis, elementum) == ZEPHYRUM)
         {
 			redde (s32)i;
 		}
@@ -634,10 +625,10 @@ xar_invenire(
 /* Xar Quaerere Binarie
  * "Quaestio binaria - assumit tabulam ordinatam"
  */
-vacuum* 
+vacuum*
 xar_quaerere_binarie(
-                Xar* xar, 
-    constans vacuum* clavis, 
+                Xar* xar,
+    constans vacuum* clavis,
       XarComparator  comparator)
 {
 	    i32  sinister;
@@ -649,28 +640,28 @@ xar_quaerere_binarie(
 	sinister = ZEPHYRUM;
 	dexter   = xar->numerus_elementorum - I;
 
-	dum (sinister <= dexter) 
+	dum (sinister <= dexter)
     {
 		medius = sinister + (dexter - sinister) / II;
 
 		elementum = xar_obtinere(xar, medius);
-		si (!elementum) 
+		si (!elementum)
         {
 			redde NIHIL;
 		}
 
 		cmp = comparator(clavis, elementum);
 
-		si (cmp == ZEPHYRUM) 
+		si (cmp == ZEPHYRUM)
         {
 			redde elementum;  /* Inventus! */
-		} 
-        alioquin si (cmp < ZEPHYRUM) 
+		}
+        alioquin si (cmp < ZEPHYRUM)
         {
 			si (medius == ZEPHYRUM) frange;
 			dexter = medius - I;
-		} 
-        alioquin 
+		}
+        alioquin
         {
 			sinister = medius + I;
 		}
@@ -680,11 +671,11 @@ xar_quaerere_binarie(
 }
 
 /* ========================================================================
- * UTILITAS - Utility Functions
+ * UTILITAS
  * ======================================================================== */
 
 /* Xar Numerus */
-i32 
+i32
 xar_numerus(
     Xar* xar)
 {
@@ -692,7 +683,7 @@ xar_numerus(
 }
 
 /* Xar Capacitas */
-i32 
+i32
 xar_capacitas(
     Xar* xar)
 {
@@ -700,7 +691,7 @@ xar_capacitas(
 }
 
 /* Xar Vacuum Est */
-b32 
+b32
 xar_vacuum_est(
     Xar* xar)
 {
@@ -708,11 +699,11 @@ xar_vacuum_est(
 }
 
 /* Xar Vacare */
-vacuum 
+vacuum
 xar_vacare(
     Xar* xar)
 {
-	si (xar) 
+	si (xar)
     {
 		xar->numerus_elementorum = ZEPHYRUM;
 		/* Nota: segmenta manent allocata cum piscina */
@@ -720,21 +711,21 @@ xar_vacare(
 }
 
 /* Xar Truncare */
-vacuum 
+vacuum
 xar_truncare(Xar* xar, i32 numerus_novus)
 {
-	si (xar && numerus_novus < xar->numerus_elementorum) 
+	si (xar && numerus_novus < xar->numerus_elementorum)
     {
 		xar->numerus_elementorum = numerus_novus;
 	}
 }
 
 /* Xar Copiare Ad Tabulam */
-i32 
+i32
 xar_copiare_ad_tabulam(
-       Xar* xar, 
-    vacuum* destinatio, 
-       i32  initium, 
+       Xar* xar,
+    vacuum* destinatio,
+       i32  initium,
        i32  numerus)
 {
 	    i8* destinatio_bytes;
@@ -743,16 +734,16 @@ xar_copiare_ad_tabulam(
 
 	destinatio_bytes = (i8*)destinatio;
 
-	per (i = ZEPHYRUM; i < numerus; i++) 
+	per (i = ZEPHYRUM; i < numerus; i++)
     {
 		src = xar_obtinere(xar, initium + i);
-		si (!src) 
+		si (!src)
         {
 			redde i;  /* Reddere numerum copiatum cum successu */
 		}
 		memcpy(
-            destinatio_bytes + (i * xar->magnitudo_elementi), 
-            src, 
+            destinatio_bytes + (i * xar->magnitudo_elementi),
+            src,
             xar->magnitudo_elementi);
 	}
 
@@ -762,7 +753,7 @@ xar_copiare_ad_tabulam(
 /* Xar Status Imprimere
  * "Imprimere statisticas pro depuratione"
  */
-vacuum 
+vacuum
 xar_status_imprimere(
     Xar* xar)
 {
@@ -771,7 +762,7 @@ xar_status_imprimere(
 	i32 usus;
 	i32 allocatus;
 
-	si (!xar) 
+	si (!xar)
     {
 		imprimere("Xar: NIHIL\n");
 		redde;
@@ -785,14 +776,14 @@ xar_status_imprimere(
 
 	imprimere("\n  Segmenta:\n");
 	allocatus = ZEPHYRUM;
-	per (i = ZEPHYRUM; i < xar->numerus_segmentorum; i++) 
+	per (i = ZEPHYRUM; i < xar->numerus_segmentorum; i++)
     {
 		mensura = computare_magnitudinem_segmenti(xar, i);
 		imprimere("    [%u]: %u elementa (%u bytes) - %s\n",
 		          i, mensura, mensura * xar->magnitudo_elementi,
 		          xar->segmenta[i] ? "ALLOCATUS" : "NULLUS");
 
-		si (xar->segmenta[i]) 
+		si (xar->segmenta[i])
         {
 			allocatus += mensura;
 		}
@@ -800,7 +791,7 @@ xar_status_imprimere(
 
 	/* Computare usum */
 	usus = ZEPHYRUM;
-	per (i = ZEPHYRUM; i < xar->numerus_segmentorum && usus < xar->numerus_elementorum; i++) 
+	per (i = ZEPHYRUM; i < xar->numerus_segmentorum && usus < xar->numerus_elementorum; i++)
     {
 		mensura = computare_magnitudinem_segmenti(xar, i);
 		usus += (xar->numerus_elementorum - usus > mensura) ?
