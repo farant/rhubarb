@@ -28,6 +28,7 @@ declare -a SOURCE_FILES=(
 		"lib/tabula_dispersa.c"
 	"lib/chorda_aedificator.c"
 	"lib/filum.c"
+	"lib/xar.c"
 )
 
 # Color codes
