@@ -83,7 +83,7 @@ s32 principale(vacuum)
 	 * ================================================== */
 
 	{
-		Xar*        xar;
+		       Xar* xar;
 		XarLocatio  loc;
 
 		imprimere("\n--- Probans xar_locare ---\n");
@@ -304,8 +304,8 @@ s32 principale(vacuum)
 	{
 		        Xar* xar;
 		XarIterator  iter;
-		       i32*  elem;
-		       i32   numeratio;
+		        i32* elem;
+		        i32  numeratio;
 
 		imprimere("\n--- Probans iterator trans segmenta ---\n");
 
@@ -314,7 +314,7 @@ s32 principale(vacuum)
 		/* Addere L elementa - transit per segmenta multa */
 		per (numeratio = ZEPHYRUM; numeratio < L; numeratio++)
         {
-			elem = (i32*)xar_addere(xar);
+			elem  = (i32*)xar_addere(xar);
 			*elem = numeratio * III;
 		}
 
@@ -351,7 +351,7 @@ s32 principale(vacuum)
 		/* Addere elementa */
 		per (i = ZEPHYRUM; i < X; i++) 
         {
-			elem = (i32*)xar_addere(xar);
+			elem  = (i32*)xar_addere(xar);
 			*elem = i * V;
 		}
 
@@ -414,7 +414,7 @@ s32 principale(vacuum)
 		/* Addere elementa */
 		per (i = ZEPHYRUM; i < XX; i++) 
         {
-			elem = (i32*)xar_addere(xar);
+			elem  = (i32*)xar_addere(xar);
 			*elem = i;
 		}
 
@@ -451,7 +451,7 @@ s32 principale(vacuum)
 		/* Addere elementa */
 		per (i = ZEPHYRUM; i < XX; i++) 
         {
-			elem = (i32*)xar_addere(xar);
+			elem  = (i32*)xar_addere(xar);
 			*elem = i * II;
 		}
 

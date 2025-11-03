@@ -6,6 +6,7 @@
 #include "xar.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 /* ========================================================================
  * FUNCTIONES AUXILIARES
@@ -22,16 +23,30 @@ computare_magnitudinem_segmenti(
     Xar* xar,
     i32  index_segmenti)
 {
+	i32 shift_amount;
+
 	si (index_segmenti <= I)
     {
 		/* Duo prima segmenta: eadem magnitudo */
 		redde xar->magnitudo_primi;
 	}
-    alioquin
+
+	shift_amount = index_segmenti - I;
+
+	/* Impossibilis cum indices i32 validi
+	 * Cum magnitudo_primi = XVI et indices i32 (max ~2^31),
+	 * numquam opus est plus quam ~27-30 segmenta.
+	 * Si hic pervenis, corruptio structurae vel error gravis.
+	 */
+	si (shift_amount >= XXX)
     {
-		/* Segmenta sequentia: duplicant */
-		redde xar->magnitudo_primi << (index_segmenti - I);
+		imprimere("FRACTA: xar segmentum nimis altum: %d\n", index_segmenti);
+		imprimere("        (impossibilis cum indices i32 - corruptio?)\n");
+		exire(I);
 	}
+
+	/* Segmenta sequentia: duplicant */
+	redde xar->magnitudo_primi << shift_amount;
 }
 
 /* Allocare Segmentum
@@ -249,7 +264,19 @@ xar_locare(
 	dum (index_adiustus >= magnitudo_segmenti &&
          index_segmenti < XAR_MAXIMUS_SEGMENTORUM)
     {
-		index_adiustus     -= magnitudo_segmenti;
+		index_adiustus -= magnitudo_segmenti;
+
+		/* Verificare overflow ante duplicatio
+		 * Si magnitudo_segmenti > 2^30, duplicatio overflow facit
+		 */
+		si (magnitudo_segmenti > (0x7FFFFFFF >> I))
+        {
+			imprimere("FRACTA: xar magnitudo segmenti overflow: %d\n",
+			          magnitudo_segmenti);
+			imprimere("        (impossibilis cum indices i32)\n");
+			exire(I);
+		}
+
 		magnitudo_segmenti <<= I;  /* Duplicare pro segmento proximo */
 		index_segmenti++;
 	}
