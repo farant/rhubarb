@@ -79,39 +79,6 @@ s32 principale(vacuum)
 	}
 
 	/* ==================================================
-	 * Probare xar_locare
-	 * ================================================== */
-
-	{
-		       Xar* xar;
-		XarLocatio  loc;
-
-		imprimere("\n--- Probans xar_locare ---\n");
-
-		xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), XVI);
-
-		/* Locare in primo segmento (0-15) */
-		CREDO_VERUM(xar_locare(xar, V, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.index_segmenti, ZEPHYRUM);
-		CREDO_AEQUALIS_I32((i32)loc.offset_in_segmento, V);
-
-		/* Locare in secundo segmento (16-31) */
-		CREDO_VERUM(xar_locare(xar, XX, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.index_segmenti, I);
-		CREDO_AEQUALIS_I32((i32)loc.offset_in_segmento, IV);
-
-		/* Locare in tertio segmento (32-63) - duplicat */
-		CREDO_VERUM(xar_locare(xar, XL, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.index_segmenti, II);
-		CREDO_AEQUALIS_I32((i32)loc.offset_in_segmento, VIII);
-
-		/* Locare in quarto segmento (64-127) */
-		CREDO_VERUM(xar_locare(xar, LXIV, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.index_segmenti, III);
-		CREDO_AEQUALIS_I32((i32)loc.offset_in_segmento, ZEPHYRUM);
-	}
-
-	/* ==================================================
 	 * Probare crescentia automatica
 	 * ================================================== */
 
@@ -356,15 +323,15 @@ s32 principale(vacuum)
 	}
 
 	/* ==================================================
-	 * Probare xar_invenire
+	 * Probare xar_invenire (reddere indicem ad elementum)
 	 * ================================================== */
 
 	{
 		Xar* xar;
 		i32* elem;
+		i32* resultus;
 		i32  i;
 		i32  clavis;
-		s32  index;
 
 		imprimere("\n--- Probans xar_invenire ---\n");
 
@@ -378,13 +345,47 @@ s32 principale(vacuum)
 		}
 
 		/* Quaerere elementum existens */
+		clavis   = XV;
+		resultus = (i32*)xar_invenire(xar, &clavis, comparare_i32);
+		CREDO_NON_NIHIL(resultus);
+		CREDO_AEQUALIS_I32(*resultus, XV);
+
+		/* Quaerere non existens */
+		clavis   = VII;
+		resultus = (i32*)xar_invenire(xar, &clavis, comparare_i32);
+		CREDO_NIHIL(resultus);
+	}
+
+	/* ==================================================
+	 * Probare xar_invenire_index (reddere indicem)
+	 * ================================================== */
+
+	{
+		Xar* xar;
+		i32* elem;
+		i32  i;
+		i32  clavis;
+		s32  index;
+
+		imprimere("\n--- Probans xar_invenire_index ---\n");
+
+		xar = xar_creare(piscina, sizeof(i32));
+
+		/* Addere elementa */
+		per (i = ZEPHYRUM; i < X; i++)
+        {
+			elem  = (i32*)xar_addere(xar);
+			*elem = i * V;
+		}
+
+		/* Quaerere elementum existens */
 		clavis = XV;
-		index  = xar_invenire(xar, &clavis, comparare_i32);
+		index  = xar_invenire_index(xar, &clavis, comparare_i32);
 		CREDO_AEQUALIS_S32(index, III);  /* 15 = 3 * 5 */
 
 		/* Quaerere non existens */
 		clavis = VII;
-		index  = xar_invenire(xar, &clavis, comparare_i32);
+		index  = xar_invenire_index(xar, &clavis, comparare_i32);
 		CREDO_AEQUALIS_S32(index, -I);
 	}
 
@@ -438,6 +439,55 @@ s32 principale(vacuum)
 		clavis   = X;
 		resultus = (i32*)xar_quaerere_binarie(xar, &clavis, comparare_i32);
 		CREDO_NIHIL(resultus);
+	}
+
+	/* ==================================================
+	 * Probare xar_quaerere_binarie_index
+	 * ================================================== */
+
+	{
+		Xar* xar;
+		i32* elem;
+		i32  i;
+		i32  clavis;
+		s32  index;
+
+		imprimere("\n--- Probans xar_quaerere_binarie_index ---\n");
+
+		xar = xar_creare(piscina, sizeof(i32));
+
+		/* Addere elementa ordinata */
+		per (i = ZEPHYRUM; i < XX; i++)
+        {
+			elem  = (i32*)xar_addere(xar);
+			*elem = i * V;  /* 0, 5, 10, 15, 20, ... 95 */
+		}
+
+		/* Quaerere elementum in medio */
+		clavis = XXX;  /* 30 */
+		index  = xar_quaerere_binarie_index(xar, &clavis, comparare_i32);
+		CREDO_AEQUALIS_S32(index, VI);  /* 30 = index 6 */
+
+		/* Quaerere primum elementum */
+		clavis = ZEPHYRUM;
+		index  = xar_quaerere_binarie_index(xar, &clavis, comparare_i32);
+		CREDO_AEQUALIS_S32(index, ZEPHYRUM);
+
+		/* Quaerere ultimum elementum */
+		clavis = XCV;  /* 95 */
+		index  = xar_quaerere_binarie_index(xar, &clavis, comparare_i32);
+		CREDO_AEQUALIS_S32(index, XIX);  /* index 19 */
+
+		/* Quaerere non existens */
+		clavis = VII;  /* 7, non in tabula */
+		index  = xar_quaerere_binarie_index(xar, &clavis, comparare_i32);
+		CREDO_AEQUALIS_S32(index, -I);
+
+		/* Quaerere in xar vacuo */
+		xar_vacare(xar);
+		clavis = X;
+		index  = xar_quaerere_binarie_index(xar, &clavis, comparare_i32);
+		CREDO_AEQUALIS_S32(index, -I);
 	}
 
 	/* ==================================================
@@ -562,32 +612,6 @@ s32 principale(vacuum)
 		/* Addere debet operari */
 		elem = (i32*)xar_addere(xar);
 		CREDO_NON_NIHIL(elem);
-	}
-
-	/* ==================================================
-	 * Probare limites magnitudinis
-	 * ================================================== */
-
-	{
-		       Xar* xar;
-		XarLocatio  loc;
-
-		imprimere("\n--- Probans limites_magnitudinis ---\n");
-
-		xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), II);
-
-		/* Verificare magnitudines segmentorum */
-		CREDO_VERUM(xar_locare(xar, ZEPHYRUM, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.magnitudo_segmenti, II);
-
-		CREDO_VERUM(xar_locare(xar, II, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.magnitudo_segmenti, II);
-
-		CREDO_VERUM(xar_locare(xar, IV, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.magnitudo_segmenti, IV);
-
-		CREDO_VERUM(xar_locare(xar, VIII, &loc));
-		CREDO_AEQUALIS_I32((i32)loc.magnitudo_segmenti, VIII);
 	}
 
 	/* ==================================================

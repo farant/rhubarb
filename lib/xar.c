@@ -9,6 +9,19 @@
 #include <stdlib.h>
 
 /* ========================================================================
+ * STRUCTURAE INTERNAE
+ * ======================================================================== */
+
+/* XarLocatio - Locatio elementi in structura segmentata (interior)
+ */
+nomen structura XarLocatio {
+		 i32  index_segmenti;         /* Quis segmentum? */
+		 i32  offset_in_segmento;     /* Ubi in segmento? */
+		 i32  magnitudo_segmenti;     /* Quam magnus? */
+	vacuum* basis_segmenti;         /* Initium segmenti */
+} XarLocatio;
+
+/* ========================================================================
  * FUNCTIONES AUXILIARES
  * ======================================================================== */
 
@@ -207,14 +220,14 @@ xar_ponere_vexilla(
  * LOCATIO ET ACCESSUS
  * ======================================================================== */
 
-/* Xar Locare - Algorithmus O(1)!
+/* Xar Locare - Algorithmus O(1)! (interior)
  * "Invenire locum indicis"
  *
  * ALGORITHMUS:
  * 1. Via rapida pro primis duobus segmentis (computatio directa)
  * 2. Quaestio exponentia pro ceteris (sine circulatio per omnia segmenta)
  */
-b32
+interior b32
 xar_locare(
     constans     Xar* xar,
                  i32  index,
@@ -625,11 +638,11 @@ xar_iterator_finis(
  * QUAESTIO
  * ======================================================================== */
 
-/* Xar Invenire
- * "Quaestio linearis"
+/* Xar Invenire Index
+ * "Quaestio linearis - reddere indicem"
  */
 s32
-xar_invenire(
+xar_invenire_index(
     constans         Xar* xar,
     constans      vacuum* clavis,
               XarComparator  comparator)
@@ -647,6 +660,26 @@ xar_invenire(
 	}
 
 	redde -I;  /* Non inventus */
+}
+
+/* Xar Invenire
+ * "Quaestio linearis - reddere indicem ad elementum"
+ */
+vacuum*
+xar_invenire(
+    constans         Xar* xar,
+    constans      vacuum* clavis,
+              XarComparator  comparator)
+{
+	s32 index;
+
+	index = xar_invenire_index(xar, clavis, comparator);
+	si (index < ZEPHYRUM)
+    {
+		redde NIHIL;
+	}
+
+	redde xar_obtinere(xar, (i32)index);
 }
 
 /* Xar Quaerere Binarie
@@ -695,6 +728,54 @@ xar_quaerere_binarie(
 	}
 
 	redde NIHIL;  /* Non inventus */
+}
+
+/* Xar Quaerere Binarie Index
+ * "Quaestio binaria - reddere indicem"
+ */
+s32
+xar_quaerere_binarie_index(
+    constans         Xar* xar,
+    constans      vacuum* clavis,
+              XarComparator  comparator)
+{
+	    i32  sinister;
+	    i32  dexter;
+	    i32  medius;
+	 vacuum* elementum;
+	integer  cmp;
+
+	sinister = ZEPHYRUM;
+	dexter   = xar->numerus_elementorum - I;
+
+	dum (sinister <= dexter)
+    {
+		medius = sinister + (dexter - sinister) / II;
+
+		elementum = xar_obtinere(xar, medius);
+		si (!elementum)
+        {
+			redde -I;
+		}
+
+		cmp = comparator(clavis, elementum);
+
+		si (cmp == ZEPHYRUM)
+        {
+			redde (s32)medius;  /* Inventus! */
+		}
+        alioquin si (cmp < ZEPHYRUM)
+        {
+			si (medius == ZEPHYRUM) frange;
+			dexter = medius - I;
+		}
+        alioquin
+        {
+			sinister = medius + I;
+		}
+	}
+
+	redde -I;  /* Non inventus */
 }
 
 /* ========================================================================

@@ -29,15 +29,6 @@
 #define XAR_VEXILLUM_ORDINARIUS     ZEPHYRUM    /* Ordinarius: memoria ad zephyrum */
 #define XAR_VEXILLUM_SINE_ZEPHYRUM  I           /* Non zephyrum facere memoriam in allocatio */
 
-/* XarLocatio - Locatio elementi in structura segmentata
- */
-nomen structura XarLocatio {
-		 i32  index_segmenti;         /* Quis segmentum? */
-		 i32  offset_in_segmento;     /* Ubi in segmento? */
-		 i32  magnitudo_segmenti;     /* Quam magnus? */
-	vacuum* basis_segmenti;         /* Initium segmenti */
-} XarLocatio;
-
 /* XarIterator - Iterator pro ambulatione omnium elementorum
  */
 nomen structura XarIterator {
@@ -118,17 +109,6 @@ xar_ponere_vexilla(
 /* ========================================================================
  * LOCATIO ET ACCESSUS
  * ======================================================================== */
-
-/* Xar Locare - Locare positio elementi (algorithmus O(1))
- * "Invenire locum indicis - algorithmus O(1)"
- *
- * Redde: VERUM si successus, FALSUM si index nimis magnus
- */
-b32
-xar_locare(
-		constans     Xar* xar,
-		             i32  index,
-		      XarLocatio* locatio);
 
 /* Xar Obtinere - Obtinere elementum ad indicem
  * "Obtinere elementum ad indicem"
@@ -222,10 +202,21 @@ xar_iterator_finis(
 /* Xar Invenire - Quaerere elementum linearie
  * "Quaerere elementum linearie"
  *
+ * Redde: Index ad elementum, vel NIHIL si non inventus
+ */
+vacuum*
+xar_invenire(
+		constans         Xar* xar,
+		constans      vacuum* clavis,
+		          XarComparator  comparator);
+
+/* Xar Invenire Index - Quaerere elementum linearie, reddere indicem
+ * "Quaerere elementum linearie, reddere indicem"
+ *
  * Redde: Index elementi, vel -1 si non inventus
  */
 s32
-xar_invenire(
+xar_invenire_index(
 		constans         Xar* xar,
 		constans      vacuum* clavis,
 		          XarComparator  comparator);
@@ -237,6 +228,17 @@ xar_invenire(
  */
 vacuum*
 xar_quaerere_binarie(
+		constans         Xar* xar,
+		constans      vacuum* clavis,
+		          XarComparator  comparator);
+
+/* Xar Quaerere Binarie Index - Quaerere binarie, reddere indicem
+ * "Quaerere binarie, reddere indicem"
+ *
+ * Redde: Index elementi, vel -1 si non inventus
+ */
+s32
+xar_quaerere_binarie_index(
 		constans         Xar* xar,
 		constans      vacuum* clavis,
 		          XarComparator  comparator);
