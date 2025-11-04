@@ -371,7 +371,7 @@ s32 principale(vacuum)
 		xar = xar_creare(piscina, sizeof(i32));
 
 		/* Addere elementa */
-		per (i = ZEPHYRUM; i < X; i++) 
+		per (i = ZEPHYRUM; i < X; i++)
         {
 			elem  = (i32*)xar_addere(xar);
 			*elem = i * V;
@@ -386,6 +386,58 @@ s32 principale(vacuum)
 		clavis = VII;
 		index  = xar_invenire(xar, &clavis, comparare_i32);
 		CREDO_AEQUALIS_S32(index, -I);
+	}
+
+	/* ==================================================
+	 * Probare xar_quaerere_binarie
+	 * ================================================== */
+
+	{
+		Xar* xar;
+		i32* elem;
+		i32* resultus;
+		i32  i;
+		i32  clavis;
+
+		imprimere("\n--- Probans xar_quaerere_binarie ---\n");
+
+		xar = xar_creare(piscina, sizeof(i32));
+
+		/* Addere elementa ordinata */
+		per (i = ZEPHYRUM; i < XX; i++)
+        {
+			elem  = (i32*)xar_addere(xar);
+			*elem = i * V;  /* 0, 5, 10, 15, 20, ... 95 */
+		}
+
+		/* Quaerere elementum in medio */
+		clavis   = XXX;  /* 30 */
+		resultus = (i32*)xar_quaerere_binarie(xar, &clavis, comparare_i32);
+		CREDO_NON_NIHIL(resultus);
+		CREDO_AEQUALIS_I32(*resultus, XXX);
+
+		/* Quaerere primum elementum */
+		clavis   = ZEPHYRUM;
+		resultus = (i32*)xar_quaerere_binarie(xar, &clavis, comparare_i32);
+		CREDO_NON_NIHIL(resultus);
+		CREDO_AEQUALIS_I32(*resultus, ZEPHYRUM);
+
+		/* Quaerere ultimum elementum */
+		clavis   = XCV;  /* 95 */
+		resultus = (i32*)xar_quaerere_binarie(xar, &clavis, comparare_i32);
+		CREDO_NON_NIHIL(resultus);
+		CREDO_AEQUALIS_I32(*resultus, XCV);
+
+		/* Quaerere non existens */
+		clavis   = VII;  /* 7, non in tabula */
+		resultus = (i32*)xar_quaerere_binarie(xar, &clavis, comparare_i32);
+		CREDO_NIHIL(resultus);
+
+		/* Quaerere in xar vacuo */
+		xar_vacare(xar);
+		clavis   = X;
+		resultus = (i32*)xar_quaerere_binarie(xar, &clavis, comparare_i32);
+		CREDO_NIHIL(resultus);
 	}
 
 	/* ==================================================
