@@ -43,7 +43,7 @@ nomen structura XarIterator {
 /* XarComparator - Index functionis pro comparationibus
  * Redde: -1 si a < b, 0 si a == b, +1 si a > b
  */
-nomen integer (*XarComparator)(constans vacuum* a, constans vacuum* b);
+nomen s32 (*XarComparator)(constans vacuum* a, constans vacuum* b);
 
 /* Xar - Structura principalis
  * "Tabula Exponentialis"

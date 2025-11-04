@@ -22,6 +22,13 @@ nomen structura XarLocatio {
 } XarLocatio;
 
 /* ========================================================================
+ * CONSTANTAE INTERNAE
+ * ======================================================================== */
+
+/* Factor duplicandi pro crescentia segmentorum */
+#define XAR_FACTOR_DUPLICANDI  II
+
+/* ========================================================================
  * FUNCTIONES AUXILIARES
  * ======================================================================== */
 
@@ -695,7 +702,7 @@ xar_quaerere_binarie(
 	    i32  dexter;
 	    i32  medius;
 	 vacuum* elementum;
-	integer  cmp;
+	    s32  cmp;
 
 	sinister = ZEPHYRUM;
 	dexter   = xar->numerus_elementorum - I;
@@ -743,7 +750,7 @@ xar_quaerere_binarie_index(
 	    i32  dexter;
 	    i32  medius;
 	 vacuum* elementum;
-	integer  cmp;
+	    s32  cmp;
 
 	sinister = ZEPHYRUM;
 	dexter   = xar->numerus_elementorum - I;
