@@ -226,6 +226,111 @@ s32 principale(vacuum)
 	}
 
 	/* ==================================================
+	 * Probare xar_addere_multos cum xar partim pleno
+	 * ================================================== */
+
+	{
+		Xar* xar;
+		i32  numeri[L];
+		i32* elem;
+		i32* receptus;
+		i32  i;
+		i32  additi;
+
+		imprimere("\n--- Probans xar_addere_multos cum xar partim pleno ---\n");
+
+		xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+		/* Primo, addere X elementa individue ad partim plenum facere */
+		per (i = ZEPHYRUM; i < X; i++)
+        {
+			elem  = (i32*)xar_addere(xar);
+			*elem = i;
+		}
+
+		CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X);
+
+		/* Nunc parare L numeros pro addere_multos */
+		per (i = ZEPHYRUM; i < L; i++)
+        {
+			numeri[i] = i + C;
+		}
+
+		/* Addere multos ad xar iam partim plenum */
+		additi = xar_addere_multos(xar, numeri, L);
+		CREDO_AEQUALIS_I32((i32)additi, L);
+		CREDO_AEQUALIS_I32((i32)xar_numerus(xar), X + L);
+
+		/* Verificare elementa originalia */
+		per (i = ZEPHYRUM; i < X; i++)
+        {
+			receptus = (i32*)xar_obtinere(xar, (i32)i);
+			CREDO_NON_NIHIL(receptus);
+			CREDO_AEQUALIS_I32(*receptus, i);
+		}
+
+		/* Verificare elementa nova */
+		per (i = ZEPHYRUM; i < L; i++)
+        {
+			receptus = (i32*)xar_obtinere(xar, (i32)(X + i));
+			CREDO_NON_NIHIL(receptus);
+			CREDO_AEQUALIS_I32(*receptus, i + C);
+		}
+	}
+
+	/* ==================================================
+	 * Probare xar_addere_multos magnum numerum
+	 * ================================================== */
+
+	{
+		Xar* xar;
+		i32  numeri[CC];  /* 200 */
+		i32* elem;
+		i32* receptus;
+		i32  i;
+		i32  additi;
+
+		imprimere("\n--- Probans xar_addere_multos magnum numerum ---\n");
+
+		xar = xar_creare_cum_magnitudine(piscina, sizeof(i32), VIII);
+
+		/* Addere V elementa primo */
+		per (i = ZEPHYRUM; i < V; i++)
+        {
+			elem  = (i32*)xar_addere(xar);
+			*elem = i * II;
+		}
+
+		/* Parare CC (200) numeros */
+		per (i = ZEPHYRUM; i < CC; i++)
+        {
+			numeri[i] = i + M;  /* 1000, 1001, 1002, ... */
+		}
+
+		/* Addere CC elementa - transit per segmenta multa */
+		additi = xar_addere_multos(xar, numeri, CC);
+		CREDO_AEQUALIS_I32((i32)additi, CC);
+		CREDO_AEQUALIS_I32((i32)xar_numerus(xar), V + CC);
+
+		/* Verificare elementa originalia */
+		per (i = ZEPHYRUM; i < V; i++)
+        {
+			receptus = (i32*)xar_obtinere(xar, (i32)i);
+			CREDO_AEQUALIS_I32(*receptus, i * II);
+		}
+
+		/* Verificare elementa nova (tantum aliqua, non omnia) */
+		receptus = (i32*)xar_obtinere(xar, V);  /* Primum novum */
+		CREDO_AEQUALIS_I32(*receptus, M);
+
+		receptus = (i32*)xar_obtinere(xar, V + L);  /* Medium */
+		CREDO_AEQUALIS_I32(*receptus, M + L);
+
+		receptus = (i32*)xar_obtinere(xar, V + CC - I);  /* Ultimum */
+		CREDO_AEQUALIS_I32(*receptus, M + CC - I);
+	}
+
+	/* ==================================================
 	 * Probare iterator cum xar vacuo
 	 * ================================================== */
 
