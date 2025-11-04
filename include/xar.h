@@ -41,12 +41,12 @@ nomen structura XarLocatio {
 /* XarIterator - Iterator pro ambulatione omnium elementorum
  */
 nomen structura XarIterator {
-	structura  Xar* xar;              /* Tabula iterata */
-			  i32  index_currens;         /* Index currens */
-				i32  index_segmenti;        /* Segmentum currens */
-			  i32  offset_in_segmento;    /* Offset in segmento */
-		 vacuum* basis_segmenti;        /* Basis segmenti currentis */
-			  i32  finis_segmenti;        /* Finis segmenti currentis */
+	constans structura Xar* xar;     /* Tabula iterata */
+			               i32  index_currens;         /* Index currens */
+				             i32  index_segmenti;        /* Segmentum currens */
+			               i32  offset_in_segmento;    /* Offset in segmento */
+		            vacuum* basis_segmenti;        /* Basis segmenti currentis */
+			               i32  finis_segmenti;        /* Finis segmenti currentis */
 } XarIterator;
 
 /* XarComparator - Index functionis pro comparationibus
@@ -126,9 +126,9 @@ xar_ponere_vexilla(
  */
 b32
 xar_locare(
-					 Xar* xar,
-		       i32  index,
-		XarLocatio* locatio);
+		constans     Xar* xar,
+		             i32  index,
+		      XarLocatio* locatio);
 
 /* Xar Obtinere - Obtinere elementum ad indicem
  * "Obtinere elementum ad indicem"
@@ -137,8 +137,8 @@ xar_locare(
  */
 vacuum*
 xar_obtinere(
-		Xar* xar,
-		i32  index);
+		constans Xar* xar,
+		         i32  index);
 
 /* Xar Obtinere Vel Creare - Obtinere elementum vel creare si necessarium
  * "Obtinere elementum vel creare si necessarium"
@@ -195,7 +195,7 @@ xar_addere_multos(
  */
 XarIterator
 xar_iterator_initium(
-		Xar* xar);
+		constans Xar* xar);
 
 /* Xar Iterator Proximum - Obtinere elementum proximum
  * "Obtinere elementum proximum"
@@ -226,9 +226,9 @@ xar_iterator_finis(
  */
 s32
 xar_invenire(
-								Xar* xar,
-		constans vacuum* clavis,
-		  XarComparator  comparator);
+		constans         Xar* xar,
+		constans      vacuum* clavis,
+		          XarComparator  comparator);
 
 /* Xar Quaerere Binarie - Quaerere binarie (assumit ordinatum)
  * "Quaerere binarie - assumit ordinatum"
@@ -237,9 +237,9 @@ xar_invenire(
  */
 vacuum*
 xar_quaerere_binarie(
-		 						Xar* xar,
-		constans vacuum* clavis,
-		  XarComparator  comparator);
+		constans         Xar* xar,
+		constans      vacuum* clavis,
+		          XarComparator  comparator);
 
 /* ========================================================================
  * UTILITAS
@@ -250,21 +250,21 @@ xar_quaerere_binarie(
  */
 i32
 xar_numerus(
-		Xar* xar);
+		constans Xar* xar);
 
 /* Xar Capacitas - Obtinere capacitatem totalem
  * "Obtinere capacitatem totalem"
  */
 i32
 xar_capacitas(
-		Xar* xar);
+		constans Xar* xar);
 
 /* Xar Vacuum Est - Verificare si vacua
  * "Verificare si vacua"
  */
 b32
 xar_vacuum_est(
-		Xar* xar);
+		constans Xar* xar);
 
 /* Xar Vacare - Vacuare omnia elementa
  * "Vacuare omnia elementa (segmenta manent allocata)"
@@ -288,16 +288,16 @@ xar_truncare(
  */
 i32
 xar_copiare_ad_tabulam(
-		   Xar* xar,
-		vacuum* destinatio,
-		   i32  initium,
-		   i32  numerus);
+		constans Xar* xar,
+		      vacuum* destinatio,
+		         i32  initium,
+		         i32  numerus);
 
 /* Xar Status Imprimere - Imprimere statisticas pro depuratione
  * "Imprimere statisticas pro depuratione"
  */
 vacuum
 xar_status_imprimere(
-		Xar* xar);
+		constans Xar* xar);
 
 #endif /* XAR_H */

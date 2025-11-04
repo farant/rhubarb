@@ -20,8 +20,8 @@
  */
 interior i32
 computare_magnitudinem_segmenti(
-    Xar* xar,
-    i32  index_segmenti)
+    constans Xar* xar,
+             i32  index_segmenti)
 {
 	i32 shift_amount;
 
@@ -216,9 +216,9 @@ xar_ponere_vexilla(
  */
 b32
 xar_locare(
-           Xar* xar,
-           i32  index,
-    XarLocatio* locatio)
+    constans     Xar* xar,
+                 i32  index,
+          XarLocatio* locatio)
 {
 	i32 index_segmenti;
 	i32 magnitudo_segmenti;
@@ -299,8 +299,8 @@ xar_locare(
  */
 vacuum*
 xar_obtinere(
-    Xar* xar,
-    i32 index)
+    constans Xar* xar,
+             i32  index)
 {
 	XarLocatio  locatio;
 	        i8* basis;
@@ -554,7 +554,7 @@ xar_addere_multos(
  */
 XarIterator
 xar_iterator_initium(
-    Xar* xar)
+    constans Xar* xar)
 {
 	XarIterator iter = {ZEPHYRUM};
 
@@ -630,9 +630,9 @@ xar_iterator_finis(
  */
 s32
 xar_invenire(
-                Xar* xar,
-    constans vacuum* clavis,
-      XarComparator  comparator)
+    constans         Xar* xar,
+    constans      vacuum* clavis,
+              XarComparator  comparator)
 {
 	   i32  i;
 	vacuum* elementum;
@@ -654,9 +654,9 @@ xar_invenire(
  */
 vacuum*
 xar_quaerere_binarie(
-                Xar* xar,
-    constans vacuum* clavis,
-      XarComparator  comparator)
+    constans         Xar* xar,
+    constans      vacuum* clavis,
+              XarComparator  comparator)
 {
 	    i32  sinister;
 	    i32  dexter;
@@ -704,7 +704,7 @@ xar_quaerere_binarie(
 /* Xar Numerus */
 i32
 xar_numerus(
-    Xar* xar)
+    constans Xar* xar)
 {
 	redde xar ? xar->numerus_elementorum : ZEPHYRUM;
 }
@@ -712,7 +712,7 @@ xar_numerus(
 /* Xar Capacitas */
 i32
 xar_capacitas(
-    Xar* xar)
+    constans Xar* xar)
 {
 	redde xar ? xar->capacitas_totalis : ZEPHYRUM;
 }
@@ -720,7 +720,7 @@ xar_capacitas(
 /* Xar Vacuum Est */
 b32
 xar_vacuum_est(
-    Xar* xar)
+    constans Xar* xar)
 {
 	redde !xar || xar->numerus_elementorum == ZEPHYRUM;
 }
@@ -750,10 +750,10 @@ xar_truncare(Xar* xar, i32 numerus_novus)
 /* Xar Copiare Ad Tabulam */
 i32
 xar_copiare_ad_tabulam(
-       Xar* xar,
-    vacuum* destinatio,
-       i32  initium,
-       i32  numerus)
+    constans Xar* xar,
+          vacuum* destinatio,
+             i32  initium,
+             i32  numerus)
 {
 	    i8* destinatio_bytes;
 	   i32  i;
@@ -782,7 +782,7 @@ xar_copiare_ad_tabulam(
  */
 vacuum
 xar_status_imprimere(
-    Xar* xar)
+    constans Xar* xar)
 {
 	i32 i;
 	i32 mensura;
