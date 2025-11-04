@@ -259,6 +259,28 @@ s32 principale(vacuum)
 	}
 
 	/* ==================================================
+	 * Probare iterator cum xar vacuo
+	 * ================================================== */
+
+	{
+		        Xar* xar;
+		XarIterator  iter;
+		        i32* elem;
+
+		imprimere("\n--- Probans iterator cum xar vacuo ---\n");
+
+		xar = xar_creare(piscina, sizeof(i32));
+
+		/* Iterator debet esse finis immediate */
+		iter = xar_iterator_initium(xar);
+		CREDO_VERUM(xar_iterator_finis(&iter));
+
+		/* Proximum debet reddere NIHIL */
+		elem = (i32*)xar_iterator_proximum(&iter);
+		CREDO_NIHIL(elem);
+	}
+
+	/* ==================================================
 	 * Probare iterator
 	 * ================================================== */
 
