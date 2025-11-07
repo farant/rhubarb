@@ -16,7 +16,7 @@
 chorda
 chorda_ex_literis (
     constans character* cstr,
-    Piscina* piscina)
+               Piscina* piscina)
 {
     chorda  fructus;
        i32  mensura;
@@ -121,13 +121,13 @@ chorda_transcribere (
 
 chorda
 chorda_concatenare (
-	chorda  a,
-	chorda  b,
+	 chorda  a,
+	 chorda  b,
 	Piscina* piscina)
 {
-	chorda   fructus;
-	    i8*  allocatus;
-	   i32   mensura_totalis;
+	chorda  fructus;
+	    i8* allocatus;
+	   i32  mensura_totalis;
 
 	si (!piscina)
 	{
@@ -220,16 +220,16 @@ chorda_praecidi_laterale (
 
 chorda_fissio_fructus
 chorda_fissio (
-		chorda  s,
-		character delim,
-		Piscina* piscina)
+	   chorda  s,
+	character  delim,
+	  Piscina* piscina)
 {
-	chorda_fissio_fructus fructus;
-	                chorda* elementa;
-	                   i32  capacitas;
-	                   i32  numerus;
-	                   i32  initium;
-	                   i32  i;
+	chorda_fissio_fructus  fructus;
+	               chorda* elementa;
+	                  i32  capacitas;
+	                  i32  numerus;
+	                  i32  initium;
+	                  i32  i;
 
 	si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
 	{

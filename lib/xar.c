@@ -15,10 +15,10 @@
 /* XarLocatio - Locatio elementi in structura segmentata (interior)
  */
 nomen structura XarLocatio {
-		 i32  index_segmenti;         /* Quis segmentum? */
-		 i32  offset_in_segmento;     /* Ubi in segmento? */
-		 i32  magnitudo_segmenti;     /* Quam magnus? */
-	vacuum* basis_segmenti;         /* Initium segmenti */
+       i32  index_segmenti;         /* Quis segmentum? */
+       i32  offset_in_segmento;     /* Ubi in segmento? */
+       i32  magnitudo_segmenti;     /* Quam magnus? */
+    vacuum* basis_segmenti;         /* Initium segmenti */
 } XarLocatio;
 
 /* ========================================================================

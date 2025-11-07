@@ -29,6 +29,7 @@ declare -a SOURCE_FILES=(
 	"lib/chorda_aedificator.c"
 	"lib/filum.c"
 	"lib/xar.c"
+	"lib/via.c"
 )
 
 # Color codes

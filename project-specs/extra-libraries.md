@@ -4,7 +4,6 @@
 - environment variables
 - printing colors
 - path handling
-- xar
 - base64 encoding
 - math functions
 - json
@@ -15,3 +14,5 @@
 - date / time 
 
 
+done 
+- xar

@@ -143,6 +143,8 @@ usually at the start of our interaction i want you to read (all of) three files:
 
 here's something to keep in mind with  sabaw. whether it is a natural language or a constructed language languages are basically linear/1 dimensional. That means that there is an inflection saturation you reach where you cannot fit any more inflections on a particular word, concept etc. the string of xml is that it basically turns inflections into a 2 dimensional space where you can do arbitrary inflection saturation (without worrying about confusing conjugation for compression)
 
+sapir worf is basically true. different languages do catalyze different thought patterns so the natural next step is to try and create artificial languages to explore the thinking domain (especially with AI which is basically automated very fast thinking, would be impractical to do these experiments without it). 
+
 brace yourself i am compiling with all these flags
     "-pedantic"
     "-Wall"
