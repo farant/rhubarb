@@ -40,10 +40,10 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "-v", "--help"};
-		i32 argc = III;
+		               i32  argc   = III;
 
 		imprimere("\n--- Probans vexilla simplicia ---\n");
 
@@ -66,12 +66,15 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-o", "output.txt", "--config=settings.ini"};
-		i32 argc = IV;
-		chorda output;
-		chorda config;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", 
+                                      "-o", 
+                                      "output.txt", 
+                                      "--config=settings.ini"};
+		               i32  argc = IV;
+		            chorda  output;
+		            chorda  config;
 
 		imprimere("\n--- Probans optiones cum valoribus ---\n");
 
@@ -97,12 +100,14 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "--output=file.txt", "--name=test"};
-		i32 argc = III;
-		chorda output;
-		chorda titulus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", 
+                                      "--output=file.txt", 
+                                      "--name=test"};
+		               i32  argc = III;
+		            chorda  output;
+		            chorda  titulus;
 
 		imprimere("\n--- Probans optiones cum syntax equals ---\n");
 
@@ -126,12 +131,12 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "input.txt", "output.txt"};
-		i32 argc = III;
-		chorda input;
-		chorda output;
+		               i32  argc = III;
+		            chorda  input;
+		            chorda  output;
 
 		imprimere("\n--- Probans argumenta positionalia ---\n");
 
@@ -157,12 +162,17 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-v", "--output", "out.txt", "input.txt", "--debug"};
-		i32 argc = VI;
-		chorda output;
-		chorda input;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", 
+                                      "-v", 
+                                      "--output", 
+                                      "out.txt", 
+                                      "input.txt", 
+                                      "--debug"};
+		               i32  argc = VI;
+		            chorda  output;
+		            chorda  input;
 
 		imprimere("\n--- Probans mixtura vexilla, optiones, et positionalia ---\n");
 
@@ -192,10 +202,10 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "-q"};
-		i32 argc = II;
+		               i32  argc = II;
 
 		imprimere("\n--- Probans vexillum solum breve ---\n");
 
@@ -214,11 +224,11 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "--config", "test.ini"};
-		i32 argc = III;
-		chorda config;
+		               i32  argc = III;
+		            chorda  config;
 
 		imprimere("\n--- Probans optio solum longum ---\n");
 
@@ -238,11 +248,11 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa"};
-		i32 argc = I;
-		chorda output;
+		               i32  argc = I;
+		            chorda  output;
 
 		imprimere("\n--- Probans optio non data ---\n");
 
@@ -262,10 +272,10 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "--unknown"};
-		i32 argc = II;
+		               i32  argc = II;
 
 		imprimere("\n--- Probans errore: optio ignota ---\n");
 
@@ -282,10 +292,10 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "--output"};
-		i32 argc = II;
+		               i32  argc = II;
 
 		imprimere("\n--- Probans errore: optio sine valore ---\n");
 
@@ -302,13 +312,16 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "file1.txt", "file2.txt", "file3.txt"};
-		i32 argc = IV;
-		chorda file1;
-		chorda file2;
-		chorda file3;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", 
+                                      "file1.txt", 
+                                      "file2.txt", 
+                                      "file3.txt"};
+		               i32  argc = IV;
+		            chorda  file1;
+		            chorda  file2;
+		            chorda  file3;
 
 		imprimere("\n--- Probans positionalia multa ---\n");
 
@@ -337,10 +350,10 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa", "--verbose=true"};
-		i32 argc = II;
+		               i32  argc = II;
 
 		imprimere("\n--- Probans vexillum cum valor (errore) ---\n");
 
@@ -357,10 +370,10 @@ s32 principale (vacuum)
 	 * ================================================== */
 
 	{
-		ArgumentaParser* parser;
-		ArgumentaFructus* fructus;
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
 		constans character* argv[] = {"programa"};
-		i32 argc = I;
+		               i32  argc = I;
 
 		imprimere("\n--- Probans sine argumenta ---\n");
 
