@@ -22,14 +22,15 @@ declare -a INCLUDE_FLAGS=(
 
 # Source files to link
 declare -a SOURCE_FILES=(
-    "lib/piscina.c"
-    "lib/chorda.c"
-    "lib/credo.c"
-		"lib/tabula_dispersa.c"
+  "lib/piscina.c"
+  "lib/chorda.c"
+  "lib/credo.c"
+	"lib/tabula_dispersa.c"
 	"lib/chorda_aedificator.c"
 	"lib/filum.c"
 	"lib/xar.c"
 	"lib/via.c"
+	"lib/argumenta.c"
 )
 
 # Color codes

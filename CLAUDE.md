@@ -157,6 +157,8 @@ brace yourself i am compiling with all these flags
     "-Wmissing-prototypes"
     "-Wwrite-strings"
 
+just a reminder, don't ever use "nomen" as a variable name. it is a macro that expands to "typedef". Often I use something like "titulis" instead.
+
 oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
 
 anyway!

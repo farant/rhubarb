@@ -31,12 +31,12 @@
  *
  *   ArgumentaFructus* fructus = argumenta_parsere(parser, argc, argv);
  *
- *   b32 verbose = argumenta_habet_vexillum(fructus, "--verbose");
+ *   b32 verbose 	 = argumenta_habet_vexillum(fructus, "--verbose");
  *   chorda output = argumenta_obtinere_optionem(fructus, "--output", piscina);
- *   chorda input = argumenta_obtinere_positionalem(fructus, ZEPHYRUM, piscina);
+ *   chorda input  = argumenta_obtinere_positionalem(fructus, ZEPHYRUM, piscina);
  *
  * SYNTAX SUSTENTA:
- *   --verbose                    (vexillum longum)
+ *   --verbose                   (vexillum longum)
  *   -v                          (vexillum breve)
  *   --output=file.txt           (optio cum valore, equals)
  *   --output file.txt           (optio cum valore, spatium)
@@ -92,10 +92,10 @@ argumenta_creare (
  */
 vacuum
 argumenta_addere_vexillum (
-	        ArgumentaParser* parser,
-	constans     character* nomen_brevis,
-	constans     character* nomen_longus,
-	constans     character* descriptio);
+	   ArgumentaParser* parser,
+	constans character* nomen_brevis,
+	constans character* nomen_longus,
+	constans character* descriptio);
 
 
 /* ==================================================
@@ -122,10 +122,10 @@ argumenta_addere_vexillum (
  */
 vacuum
 argumenta_addere_optionem (
-	        ArgumentaParser* parser,
-	constans     character* nomen_brevis,
-	constans     character* nomen_longus,
-	constans     character* descriptio);
+	   ArgumentaParser* parser,
+	constans character* nomen_brevis,
+	constans character* nomen_longus,
+	constans character* descriptio);
 
 
 /* ==================================================
@@ -138,7 +138,7 @@ argumenta_addere_optionem (
  * (e.g., input file, output file).
  *
  * parser:      parser ad quem addere
- * nomen:       nomen pro auxilio et errores
+ * titulus:     titulus pro auxilio et errores
  * descriptio:  descriptio pro auxilio
  * necessarius: VERUM si necessarius, FALSUM si optionalis
  *
@@ -150,10 +150,10 @@ argumenta_addere_optionem (
  */
 vacuum
 argumenta_addere_positionalem (
-	        ArgumentaParser* parser,
-	constans     character* nomen,
-	constans     character* descriptio,
-	                   b32  necessarius);
+	   ArgumentaParser* parser,
+	constans character* titulus,
+	constans character* descriptio,
+	               b32  necessarius);
 
 
 /* ==================================================
@@ -173,8 +173,8 @@ argumenta_addere_positionalem (
  */
 vacuum
 argumenta_ponere_descriptionem (
-	        ArgumentaParser* parser,
-	constans     character* descriptio);
+	   ArgumentaParser* parser,
+	constans character* descriptio);
 
 /* Addere exemplum usu
  *
@@ -190,8 +190,8 @@ argumenta_ponere_descriptionem (
  */
 vacuum
 argumenta_addere_exemplum (
-	        ArgumentaParser* parser,
-	constans     character* exemplum);
+	   ArgumentaParser* parser,
+	constans character* exemplum);
 
 
 /* ==================================================
@@ -214,9 +214,9 @@ argumenta_addere_exemplum (
  */
 ArgumentaFructus*
 argumenta_parsere (
-	ArgumentaParser* parser,
-	             i32  argc,
-	      character** argv);
+	    			   ArgumentaParser* parser,
+	                         i32  argc,
+	constans character* constans* argv);
 
 /* Parsere argumenta (reddit NIHIL si errore)
  *
@@ -231,16 +231,17 @@ argumenta_parsere (
  *
  * EXEMPLUM:
  *   ArgumentaFructus* f = argumenta_conari_parsere(p, argc, argv);
- *   si (!f) {
+ *   si (!f) 
+ *   {
  *       argumenta_imprimere_errorem(p);
  *       redde I;
  *   }
  */
 ArgumentaFructus*
 argumenta_conari_parsere (
-	ArgumentaParser* parser,
-	             i32  argc,
-	      character** argv);
+	             ArgumentaParser* parser,
+	                         i32  argc,
+	constans character* constans* argv);
 
 
 /* ==================================================
@@ -250,7 +251,7 @@ argumenta_conari_parsere (
 /* Verificare si vexillum praesens est
  *
  * fructus: fructus parsitionis
- * nomen:   nomen vexilli (brevis vel longus)
+ * titulus: titulus vexilli (brevis vel longus)
  *
  * Reddit: VERUM si vexillum datum, FALSUM alioquin
  *
@@ -263,7 +264,7 @@ argumenta_conari_parsere (
 b32
 argumenta_habet_vexillum (
 	constans ArgumentaFructus* fructus,
-	constans        character* nomen);
+	       constans character* titulus);
 
 
 /* ==================================================
@@ -273,7 +274,7 @@ argumenta_habet_vexillum (
 /* Obtinere valorem optionis
  *
  * fructus: fructus parsitionis
- * nomen:   nomen optionis (brevis vel longus)
+ * titulus: titulus optionis (brevis vel longus)
  * piscina: piscina pro allocare chordam
  *
  * Reddit: chordam cum valore, vel chordam vacuum (mensura=0)
@@ -281,7 +282,8 @@ argumenta_habet_vexillum (
  *
  * EXEMPLA:
  *   chorda output = argumenta_obtinere_optionem(f, "--output", p);
- *   si (output.mensura > ZEPHYRUM) {
+ *   si (output.mensura > ZEPHYRUM) 
+ *   {
  *       // optio data
  *   }
  *
@@ -290,8 +292,8 @@ argumenta_habet_vexillum (
 chorda
 argumenta_obtinere_optionem (
 	constans ArgumentaFructus* fructus,
-	constans        character* nomen,
-	                 Piscina* piscina);
+	       constans character* titulus,
+	                  Piscina* piscina);
 
 
 /* ==================================================
@@ -307,7 +309,7 @@ argumenta_obtinere_optionem (
  * Reddit: chordam cum valore, vel chordam vacuum si index invalidus
  *
  * EXEMPLUM:
- *   chorda input = argumenta_obtinere_positionalem(f, ZEPHYRUM, p);
+ *   chorda input  = argumenta_obtinere_positionalem(f, ZEPHYRUM, p);
  *   chorda output = argumenta_obtinere_positionalem(f, I, p);
  */
 chorda
@@ -324,7 +326,8 @@ argumenta_obtinere_positionalem (
  *
  * EXEMPLUM:
  *   i32 numerus = argumenta_numerus_positionalium(f);
- *   per (i32 i = ZEPHYRUM; i < numerus; i++) {
+ *   per (i32 i = ZEPHYRUM; i < numerus; i++) 
+ *   {
  *       chorda arg = argumenta_obtinere_positionalem(f, i, p);
  *       // ...
  *   }
@@ -346,7 +349,8 @@ argumenta_numerus_positionalium (
  * parser: parser cum definitionibus
  *
  * EXEMPLUM:
- *   si (argumenta_habet_vexillum(f, "--help")) {
+ *   si (argumenta_habet_vexillum(f, "--help")) 
+ *   {
  *       argumenta_imprimere_auxilium(parser);
  *       exire(ZEPHYRUM);
  *   }
@@ -364,7 +368,8 @@ argumenta_imprimere_auxilium (
  *
  * EXEMPLUM:
  *   ArgumentaFructus* f = argumenta_conari_parsere(p, argc, argv);
- *   si (!f) {
+ *   si (!f) 
+ *   {
  *       argumenta_imprimere_errorem(p);
  *       redde I;
  *   }

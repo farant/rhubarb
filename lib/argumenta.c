@@ -25,17 +25,17 @@ nomen enumeratio {
 
 /* Definitio singularis (vexillum, optio, vel positionalis) */
 nomen structura {
-	ArgumentaGenus  genus;
-	   character*  nomen_brevis;
-	   character*  nomen_longus;
-	   character*  nomen;          /* Pro positionalia */
-	   character*  descriptio;
-	          b32  necessarius;    /* Pro positionalia */
+  ArgumentaGenus  genus;
+	   character* nomen_brevis;
+	   character* nomen_longus;
+	   character* titulus;        /* Pro positionalia */
+	   character* descriptio;
+	         b32  necessarius;    /* Pro positionalia */
 } ArgumentaDefinitio;
 
 /* Parser cum omnibus definitionibus */
 structura ArgumentaParser {
-	                Piscina* piscina;
+	           Piscina* piscina;
 	ArgumentaDefinitio  definitiones[ARGUMENTA_MAXIMUS_DEFINITIONES];
 	               i32  numerus_definitionum;
 	         character* descriptio_programmi;
@@ -46,17 +46,17 @@ structura ArgumentaParser {
 
 /* Valor datus (vexillum vel optio) */
 nomen structura {
-	character* nomen;
+	character* titulus;
 	character* valor;  /* NIHIL pro vexilla */
 } ArgumentaValor;
 
 /* Fructus parsitionis */
 structura ArgumentaFructus {
-	          Piscina* piscina;
-	   ArgumentaValor  valores[ARGUMENTA_MAXIMUS_VALORES];
-	              i32  numerus_valorum;
-	        character* positionalia[ARGUMENTA_MAXIMUS_VALORES];
-	              i32  numerus_positionalium;
+           Piscina* piscina;
+    ArgumentaValor  valores[ARGUMENTA_MAXIMUS_VALORES];
+               i32  numerus_valorum;
+         character* positionalia[ARGUMENTA_MAXIMUS_VALORES];
+               i32  numerus_positionalium;
 };
 
 
@@ -68,15 +68,15 @@ structura ArgumentaFructus {
 interior character*
 _duplicare_cstr (
 	constans character* str,
-	         Piscina* piscina)
+	           Piscina* piscina)
 {
-	memoriae_index mensura;
-	      character* novum;
+	memoriae_index  mensura;
+	     character* novum;
 
 	si (!str) redde NIHIL;
 
 	mensura = strlen(str);
-	novum = (character*)piscina_allocare(piscina, mensura + I);
+	novum   = (character*)piscina_allocare(piscina, mensura + I);
 	si (!novum) redde NIHIL;
 
 	strcpy(novum, str);
@@ -116,8 +116,8 @@ _aequalis_cstr (
 /* Invenire definitionem per nomen (breve vel longum) */
 interior ArgumentaDefinitio*
 _invenire_definitionem (
-	ArgumentaParser* parser,
-	constans character* nomen)
+	   ArgumentaParser* parser,
+	constans character* titulus)
 {
 	i32 i;
 
@@ -125,24 +125,24 @@ _invenire_definitionem (
 	{
 		ArgumentaDefinitio* def = &parser->definitiones[i];
 
-		si (_aequalis_cstr(def->nomen_brevis, nomen)) redde def;
-		si (_aequalis_cstr(def->nomen_longus, nomen)) redde def;
+		si (_aequalis_cstr(def->nomen_brevis, titulus)) redde def;
+		si (_aequalis_cstr(def->nomen_longus, titulus)) redde def;
 	}
 
 	redde NIHIL;
 }
 
 /* Invenire valorem in fructu per nomen */
-interior ArgumentaValor*
+interior constans ArgumentaValor*
 _invenire_valorem (
-	ArgumentaFructus* fructus,
-	constans character* nomen)
+	constans ArgumentaFructus* fructus,
+	       constans character* titulus)
 {
 	i32 i;
 
 	per (i = ZEPHYRUM; i < fructus->numerus_valorum; i++)
 	{
-		si (_aequalis_cstr(fructus->valores[i].nomen, nomen))
+		si (_aequalis_cstr(fructus->valores[i].titulus, titulus))
 		{
 			redde &fructus->valores[i];
 		}
@@ -180,25 +180,32 @@ argumenta_creare (
 
 vacuum
 argumenta_addere_vexillum (
-	        ArgumentaParser* parser,
-	constans     character* nomen_brevis,
-	constans     character* nomen_longus,
-	constans     character* descriptio)
+	   ArgumentaParser* parser,
+	constans character* nomen_brevis,
+	constans character* nomen_longus,
+	constans character* descriptio)
 {
 	ArgumentaDefinitio* def;
 
 	si (!parser) redde;
 	si (!nomen_brevis && !nomen_longus) redde;
-	si (parser->numerus_definitionum >= ARGUMENTA_MAXIMUS_DEFINITIONES) redde;
+
+	si (parser->numerus_definitionum >= ARGUMENTA_MAXIMUS_DEFINITIONES)
+	{
+		fprintf(stderr, "FATALIS: Nimis multae definitiones (max: %d)\n",
+		        ARGUMENTA_MAXIMUS_DEFINITIONES);
+		fprintf(stderr, "Considera augere ARGUMENTA_MAXIMUS_DEFINITIONES vel usa xar\n");
+		exit(I);
+	}
 
 	def = &parser->definitiones[parser->numerus_definitionum];
 	parser->numerus_definitionum++;
 
-	def->genus = ARGUMENTA_GENUS_VEXILLUM;
+	def->genus        = ARGUMENTA_GENUS_VEXILLUM;
 	def->nomen_brevis = _duplicare_cstr(nomen_brevis, parser->piscina);
 	def->nomen_longus = _duplicare_cstr(nomen_longus, parser->piscina);
-	def->descriptio = _duplicare_cstr(descriptio, parser->piscina);
-	def->necessarius = FALSUM;
+	def->descriptio   = _duplicare_cstr(descriptio, parser->piscina);
+	def->necessarius  = FALSUM;
 }
 
 
@@ -208,25 +215,32 @@ argumenta_addere_vexillum (
 
 vacuum
 argumenta_addere_optionem (
-	        ArgumentaParser* parser,
-	constans     character* nomen_brevis,
-	constans     character* nomen_longus,
-	constans     character* descriptio)
+	   ArgumentaParser* parser,
+	constans character* nomen_brevis,
+	constans character* nomen_longus,
+	constans character* descriptio)
 {
 	ArgumentaDefinitio* def;
 
 	si (!parser) redde;
 	si (!nomen_brevis && !nomen_longus) redde;
-	si (parser->numerus_definitionum >= ARGUMENTA_MAXIMUS_DEFINITIONES) redde;
+
+	si (parser->numerus_definitionum >= ARGUMENTA_MAXIMUS_DEFINITIONES)
+	{
+		fprintf(stderr, "FATALIS: Nimis multae definitiones (max: %d)\n",
+		        ARGUMENTA_MAXIMUS_DEFINITIONES);
+		fprintf(stderr, "Considera augere ARGUMENTA_MAXIMUS_DEFINITIONES vel usa xar\n");
+		exit(I);
+	}
 
 	def = &parser->definitiones[parser->numerus_definitionum];
 	parser->numerus_definitionum++;
 
-	def->genus = ARGUMENTA_GENUS_OPTIO;
+	def->genus        = ARGUMENTA_GENUS_OPTIO;
 	def->nomen_brevis = _duplicare_cstr(nomen_brevis, parser->piscina);
 	def->nomen_longus = _duplicare_cstr(nomen_longus, parser->piscina);
-	def->descriptio = _duplicare_cstr(descriptio, parser->piscina);
-	def->necessarius = FALSUM;
+	def->descriptio   = _duplicare_cstr(descriptio, parser->piscina);
+	def->necessarius  = FALSUM;
 }
 
 
@@ -236,23 +250,30 @@ argumenta_addere_optionem (
 
 vacuum
 argumenta_addere_positionalem (
-	        ArgumentaParser* parser,
-	constans     character* nomen,
-	constans     character* descriptio,
-	                   b32  necessarius)
+	   ArgumentaParser* parser,
+	constans character* titulus,
+	constans character* descriptio,
+	               b32  necessarius)
 {
 	ArgumentaDefinitio* def;
 
 	si (!parser) redde;
-	si (!nomen) redde;
-	si (parser->numerus_definitionum >= ARGUMENTA_MAXIMUS_DEFINITIONES) redde;
+	si (!titulus) redde;
+
+	si (parser->numerus_definitionum >= ARGUMENTA_MAXIMUS_DEFINITIONES)
+	{
+		fprintf(stderr, "FATALIS: Nimis multae definitiones (max: %d)\n",
+		        ARGUMENTA_MAXIMUS_DEFINITIONES);
+		fprintf(stderr, "Considera augere ARGUMENTA_MAXIMUS_DEFINITIONES vel usa xar\n");
+		exit(I);
+	}
 
 	def = &parser->definitiones[parser->numerus_definitionum];
 	parser->numerus_definitionum++;
 
-	def->genus = ARGUMENTA_GENUS_POSITIONALIS;
-	def->nomen = _duplicare_cstr(nomen, parser->piscina);
-	def->descriptio = _duplicare_cstr(descriptio, parser->piscina);
+	def->genus       = ARGUMENTA_GENUS_POSITIONALIS;
+	def->titulus     = _duplicare_cstr(titulus, parser->piscina);
+	def->descriptio  = _duplicare_cstr(descriptio, parser->piscina);
 	def->necessarius = necessarius;
 }
 
@@ -263,8 +284,8 @@ argumenta_addere_positionalem (
 
 vacuum
 argumenta_ponere_descriptionem (
-	        ArgumentaParser* parser,
-	constans     character* descriptio)
+	   ArgumentaParser* parser,
+	constans character* descriptio)
 {
 	si (!parser) redde;
 
@@ -273,11 +294,18 @@ argumenta_ponere_descriptionem (
 
 vacuum
 argumenta_addere_exemplum (
-	        ArgumentaParser* parser,
-	constans     character* exemplum)
+	   ArgumentaParser* parser,
+	constans character* exemplum)
 {
 	si (!parser) redde;
-	si (parser->numerus_exemplorum >= ARGUMENTA_MAXIMUS_EXEMPLA) redde;
+
+	si (parser->numerus_exemplorum >= ARGUMENTA_MAXIMUS_EXEMPLA)
+	{
+		fprintf(stderr, "FATALIS: Nimis multa exempla (max: %d)\n",
+		        ARGUMENTA_MAXIMUS_EXEMPLA);
+		fprintf(stderr, "Considera augere ARGUMENTA_MAXIMUS_EXEMPLA\n");
+		exit(I);
+	}
 
 	parser->exempla[parser->numerus_exemplorum] =
 		_duplicare_cstr(exemplum, parser->piscina);
@@ -290,59 +318,62 @@ argumenta_addere_exemplum (
  * =========================================================== */
 
 /* Addere valorem ad fructum */
-interior b32
+interior vacuum
 _addere_valorem (
-	ArgumentaFructus* fructus,
-	constans character* nomen,
+	  ArgumentaFructus* fructus,
+	constans character* titulus,
 	constans character* valor)
 {
 	ArgumentaValor* v;
 
 	si (fructus->numerus_valorum >= ARGUMENTA_MAXIMUS_VALORES)
 	{
-		redde FALSUM;
+		fprintf(stderr, "FATALIS: Nimis multi valores (max: %d)\n",
+		        ARGUMENTA_MAXIMUS_VALORES);
+		fprintf(stderr, "Considera augere ARGUMENTA_MAXIMUS_VALORES vel usa xar\n");
+		exit(I);
 	}
 
 	v = &fructus->valores[fructus->numerus_valorum];
 	fructus->numerus_valorum++;
 
-	v->nomen = _duplicare_cstr(nomen, fructus->piscina);
-	v->valor = _duplicare_cstr(valor, fructus->piscina);
-
-	redde VERUM;
+	v->titulus = _duplicare_cstr(titulus, fructus->piscina);
+	v->valor   = _duplicare_cstr(valor, fructus->piscina);
 }
 
 /* Addere positionale ad fructum */
-interior b32
+interior vacuum
 _addere_positionale (
-	ArgumentaFructus* fructus,
+	  ArgumentaFructus* fructus,
 	constans character* valor)
 {
 	si (fructus->numerus_positionalium >= ARGUMENTA_MAXIMUS_VALORES)
 	{
-		redde FALSUM;
+		fprintf(stderr, "FATALIS: Nimis multa positionalia (max: %d)\n",
+		        ARGUMENTA_MAXIMUS_VALORES);
+		fprintf(stderr, "Considera augere ARGUMENTA_MAXIMUS_VALORES vel usa xar\n");
+		exit(I);
 	}
 
 	fructus->positionalia[fructus->numerus_positionalium] =
 		_duplicare_cstr(valor, fructus->piscina);
 	fructus->numerus_positionalium++;
-
-	redde VERUM;
 }
 
 /* Parsere argumentum cum "--" (longum) */
 interior b32
 _parsere_longum (
-	ArgumentaParser* parser,
-	ArgumentaFructus* fructus,
+	   ArgumentaParser* parser,
+	  ArgumentaFructus* fructus,
 	constans character* arg,
 	constans character* arg_sequens,
-	i32* salti)
+	               i32* salti)
 {
-	character  buffer[CCLVI];
-	character* nomen;
-	character* valor;
-	character* equals;
+	         character  buffer[CCLVI];
+	         character  nomen_completum[CCLVI];
+	constans character* titulus;
+	constans character* valor;
+	         character* equals;
 	ArgumentaDefinitio* def;
 
 	/* Copiare ad buffer pro manipulatione */
@@ -353,20 +384,19 @@ _parsere_longum (
 	equals = strchr(buffer, '=');
 	si (equals)
 	{
-		/* --nomen=valor */
+		/* --titulus=valor */
 		*equals = '\0';
-		nomen = buffer;
-		valor = equals + I;
+		titulus = buffer;
+		valor   = equals + I;
 	}
 	alioquin
 	{
-		nomen = buffer;
-		valor = NIHIL;
+		titulus = buffer;
+		valor   = NIHIL;
 	}
 
 	/* Construere nomen completum cum "--" */
-	character nomen_completum[CCLVI];
-	snprintf(nomen_completum, CCLVI, "--%s", nomen);
+	snprintf(nomen_completum, CCLVI, "--%s", titulus);
 
 	/* Invenire definitionem */
 	def = _invenire_definitionem(parser, nomen_completum);
@@ -386,7 +416,17 @@ _parsere_longum (
 			parser->nuntius_erroris = _duplicare_cstr(buffer, parser->piscina);
 			redde FALSUM;
 		}
-		redde _addere_valorem(fructus, nomen_completum, NIHIL);
+		/* Addere sub forma brevis */
+		si (def->nomen_brevis)
+		{
+			_addere_valorem(fructus, def->nomen_brevis, NIHIL);
+		}
+		/* Addere sub forma longus etiam */
+		si (def->nomen_longus)
+		{
+			_addere_valorem(fructus, def->nomen_longus, NIHIL);
+		}
+		redde VERUM;
 	}
 
 	/* Si optio, accipere valorem */
@@ -399,25 +439,35 @@ _parsere_longum (
 			parser->nuntius_erroris = _duplicare_cstr(buffer, parser->piscina);
 			redde FALSUM;
 		}
-		valor = (character*)arg_sequens;
+		valor  = arg_sequens;
 		*salti = I;
 	}
 
-	redde _addere_valorem(fructus, nomen_completum, valor);
+	/* Addere sub forma brevis */
+	si (def->nomen_brevis)
+	{
+		_addere_valorem(fructus, def->nomen_brevis, valor);
+	}
+	/* Addere sub forma longus etiam */
+	si (def->nomen_longus)
+	{
+		_addere_valorem(fructus, def->nomen_longus, valor);
+	}
+	redde VERUM;
 }
 
 /* Parsere argumentum cum "-" (breve) */
 interior b32
 _parsere_breve (
-	ArgumentaParser* parser,
-	ArgumentaFructus* fructus,
+	   ArgumentaParser* parser,
+	  ArgumentaFructus* fructus,
 	constans character* arg,
 	constans character* arg_sequens,
-	i32* salti)
+	               i32* salti)
 {
-	character  buffer[CCLVI];
-	character  nomen_completum[III];
-	character* valor;
+	         character  buffer[CCLVI];
+	         character  nomen_completum[III];
+	constans character* valor;
 	ArgumentaDefinitio* def;
 
 	/* Nomen est duo charactera: "-X" */
@@ -430,8 +480,8 @@ _parsere_breve (
 
 	/* Construere nomen "-X" */
 	nomen_completum[ZEPHYRUM] = '-';
-	nomen_completum[I] = arg[I];
-	nomen_completum[II] = '\0';
+	nomen_completum[I]        = arg[I];
+	nomen_completum[II]       = '\0';
 
 	/* Invenire definitionem */
 	def = _invenire_definitionem(parser, nomen_completum);
@@ -445,7 +495,17 @@ _parsere_breve (
 	/* Si vexillum, addere sine valore */
 	si (def->genus == ARGUMENTA_GENUS_VEXILLUM)
 	{
-		redde _addere_valorem(fructus, nomen_completum, NIHIL);
+		/* Addere sub forma brevis */
+		si (def->nomen_brevis)
+		{
+			_addere_valorem(fructus, def->nomen_brevis, NIHIL);
+		}
+		/* Addere sub forma longus etiam */
+		si (def->nomen_longus)
+		{
+			_addere_valorem(fructus, def->nomen_longus, NIHIL);
+		}
+		redde VERUM;
 	}
 
 	/* Si optio, accipere valorem ex sequente */
@@ -456,10 +516,20 @@ _parsere_breve (
 		redde FALSUM;
 	}
 
-	valor = (character*)arg_sequens;
+	valor  = arg_sequens;
 	*salti = I;
 
-	redde _addere_valorem(fructus, nomen_completum, valor);
+	/* Addere sub forma brevis */
+	si (def->nomen_brevis)
+	{
+		_addere_valorem(fructus, def->nomen_brevis, valor);
+	}
+	/* Addere sub forma longus etiam */
+	si (def->nomen_longus)
+	{
+		_addere_valorem(fructus, def->nomen_longus, valor);
+	}
+	redde VERUM;
 }
 
 
@@ -469,13 +539,13 @@ _parsere_breve (
 
 ArgumentaFructus*
 argumenta_conari_parsere (
-	ArgumentaParser* parser,
-	             i32  argc,
-	      character** argv)
+	             ArgumentaParser* parser,
+	                         i32  argc,
+	constans character* constans* argv)
 {
 	ArgumentaFructus* fructus;
-	              i32  i;
-	              i32  numerus_positionalium_necessariorum;
+	             i32  i;
+	             i32  numerus_positionalium_necessariorum;
 
 	si (!parser || !argv) redde NIHIL;
 
@@ -493,7 +563,7 @@ argumenta_conari_parsere (
 	{
 		constans character* arg = argv[i];
 		constans character* arg_sequens = (i + I < argc) ? argv[i + I] : NIHIL;
-		i32 salti = ZEPHYRUM;
+		               i32  salti = ZEPHYRUM;
 
 		si (_incipit_cum(arg, "--"))
 		{
@@ -516,13 +586,7 @@ argumenta_conari_parsere (
 		alioquin
 		{
 			/* Argumentum positionale */
-			si (!_addere_positionale(fructus, arg))
-			{
-				character buffer[CCLVI];
-				snprintf(buffer, CCLVI, "Nimis multa argumenta positionalia");
-				parser->nuntius_erroris = _duplicare_cstr(buffer, parser->piscina);
-				redde NIHIL;
-			}
+			_addere_positionale(fructus, arg);
 		}
 	}
 
@@ -550,9 +614,9 @@ argumenta_conari_parsere (
 
 ArgumentaFructus*
 argumenta_parsere (
-	ArgumentaParser* parser,
-	             i32  argc,
-	      character** argv)
+	             ArgumentaParser* parser,
+	                         i32  argc,
+	constans character* constans* argv)
 {
 	ArgumentaFructus* fructus;
 
@@ -574,13 +638,13 @@ argumenta_parsere (
 b32
 argumenta_habet_vexillum (
 	constans ArgumentaFructus* fructus,
-	constans        character* nomen)
+	       constans character* titulus)
 {
-	ArgumentaValor* v;
+	constans ArgumentaValor* v;
 
-	si (!fructus || !nomen) redde FALSUM;
+	si (!fructus || !titulus) redde FALSUM;
 
-	v = _invenire_valorem((ArgumentaFructus*)fructus, nomen);
+	v = _invenire_valorem(fructus, titulus);
 	redde v != NIHIL;
 }
 
@@ -592,23 +656,23 @@ argumenta_habet_vexillum (
 chorda
 argumenta_obtinere_optionem (
 	constans ArgumentaFructus* fructus,
-	constans        character* nomen,
-	                 Piscina* piscina)
+	       constans character* titulus,
+	                  Piscina* piscina)
 {
-	ArgumentaValor* v;
-	        chorda  vacua;
+	constans ArgumentaValor* v;
+	                 chorda  vacua;
 
-	si (!fructus || !nomen || !piscina)
+	si (!fructus || !titulus || !piscina)
 	{
-		vacua.datum = NIHIL;
+		vacua.datum   = NIHIL;
 		vacua.mensura = ZEPHYRUM;
 		redde vacua;
 	}
 
-	v = _invenire_valorem((ArgumentaFructus*)fructus, nomen);
+	v = _invenire_valorem(fructus, titulus);
 	si (!v || !v->valor)
 	{
-		vacua.datum = NIHIL;
+		vacua.datum   = NIHIL;
 		vacua.mensura = ZEPHYRUM;
 		redde vacua;
 	}
@@ -624,7 +688,7 @@ argumenta_obtinere_optionem (
 chorda
 argumenta_obtinere_positionalem (
 	constans ArgumentaFructus* fructus,
-	                       i32  index,
+	                      i32  index,
 	                  Piscina* piscina)
 {
 	chorda vacua;
@@ -633,7 +697,7 @@ argumenta_obtinere_positionalem (
 	    index < ZEPHYRUM ||
 	    index >= fructus->numerus_positionalium)
 	{
-		vacua.datum = NIHIL;
+		vacua.datum   = NIHIL;
 		vacua.mensura = ZEPHYRUM;
 		redde vacua;
 	}
@@ -686,11 +750,11 @@ argumenta_imprimere_auxilium (
 		{
 			si (parser->definitiones[i].necessarius)
 			{
-				imprimere("<%s> ", parser->definitiones[i].nomen);
+				imprimere("<%s> ", parser->definitiones[i].titulus);
 			}
 			alioquin
 			{
-				imprimere("[%s] ", parser->definitiones[i].nomen);
+				imprimere("[%s] ", parser->definitiones[i].titulus);
 			}
 			numerus_positionalium++;
 		}
@@ -701,7 +765,7 @@ argumenta_imprimere_auxilium (
 	imprimere("OPTIONES:\n");
 	per (i = ZEPHYRUM; i < parser->numerus_definitionum; i++)
 	{
-		ArgumentaDefinitio* def = &parser->definitiones[i];
+		constans ArgumentaDefinitio* def = &parser->definitiones[i];
 
 		si (def->genus == ARGUMENTA_GENUS_POSITIONALIS) perge;
 
@@ -744,11 +808,11 @@ argumenta_imprimere_auxilium (
 		imprimere("ARGUMENTA:\n");
 		per (i = ZEPHYRUM; i < parser->numerus_definitionum; i++)
 		{
-			ArgumentaDefinitio* def = &parser->definitiones[i];
+			constans ArgumentaDefinitio* def = &parser->definitiones[i];
 
 			si (def->genus != ARGUMENTA_GENUS_POSITIONALIS) perge;
 
-			imprimere("    <%s>", def->nomen);
+			imprimere("    <%s>", def->titulus);
 			si (!def->necessarius)
 			{
 				imprimere(" (optionalis)");
