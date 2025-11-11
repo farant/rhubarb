@@ -27,9 +27,9 @@ s32 principale(vacuum)
 
 	{
 		constans character* via = "probationes/fixa/simplex";
-		            MachO* macho;
-		              i32  genus_cpu;
-		              i32  numerus_mandatorum;
+		             MachO* macho;
+		               i32  genus_cpu;
+		               i32  numerus_mandatorum;
 
 		imprimere("\n--- Probans macho_aperire (simplex) ---\n");
 
@@ -61,8 +61,8 @@ s32 principale(vacuum)
 
 	{
 		constans character* via = "probationes/fixa/cum_functione";
-		            MachO* macho;
-		              i32  numerus_mandatorum;
+		             MachO* macho;
+		               i32  numerus_mandatorum;
 
 		imprimere("\n--- Probans macho_aperire (cum_functione) ---\n");
 
@@ -87,14 +87,14 @@ s32 principale(vacuum)
 	 * ================================================== */
 
 	{
-		constans character* via = "probationes/fixa/simplex";
-		            MachO* macho;
-		MachoIteratorMandatum iter;
-		   MandatumOnustum* cmd;
-		               i32 numerus_iteratus;
-		               b32 invenit_segment_64;
-		               b32 invenit_symtab;
-		               b32 invenit_dysymtab;
+		   constans character* via = "probationes/fixa/simplex";
+		                MachO* macho;
+		MachoIteratorMandatum  iter;
+		      MandatumOnustum* cmd;
+		                  i32  numerus_iteratus;
+		                  b32  invenit_segment_64;
+		                  b32  invenit_symtab;
+		                  b32  invenit_dysymtab;
 
 		imprimere("\n--- Probans iterationem mandatorum oneris ---\n");
 
@@ -109,7 +109,7 @@ s32 principale(vacuum)
 		iter = macho_iterator_mandatorum_initium(macho);
 		dum ((cmd = macho_iterator_mandatorum_proximum(&iter)) != NIHIL)
 		{
-			i32 genus = mandatum_genus(cmd);
+			           i32 genus   = mandatum_genus(cmd);
 			memoriae_index mensura = mandatum_magnitudo(cmd);
 
 			imprimere("  [%d] genus=0x%x mensura=%zu\n",
@@ -119,8 +119,8 @@ s32 principale(vacuum)
 
 			/* Verificare genus mandati */
 			si (genus == MACHO_LC_SEGMENT_64) invenit_segment_64 = VERUM;
-			si (genus == MACHO_LC_SYMTAB) invenit_symtab = VERUM;
-			si (genus == MACHO_LC_DYSYMTAB) invenit_dysymtab = VERUM;
+			si (genus == MACHO_LC_SYMTAB) invenit_symtab         = VERUM;
+			si (genus == MACHO_LC_DYSYMTAB) invenit_dysymtab     = VERUM;
 
 			/* Verificare mensura rationabilis */
 			CREDO_VERUM(mensura >= VIII);  /* Minimum load command size */
@@ -148,10 +148,10 @@ s32 principale(vacuum)
 	 * ================================================== */
 
 	{
-		constans character* via = "probationes/fixa/simplex";
-		            MachO* macho;
-		MachoIteratorMandatum iter;
-		   MandatumOnustum* cmd;
+		   constans character* via = "probationes/fixa/simplex";
+		                MachO* macho;
+		MachoIteratorMandatum  iter;
+		      MandatumOnustum* cmd;
 
 		imprimere("\n--- Probans macho_iterator_mandatorum_finis ---\n");
 
@@ -184,11 +184,11 @@ s32 principale(vacuum)
 
 	{
 		constans character* via = "probationes/fixa/simplex";
-		       MachoFilum* filum;
-		            MachO* imago;
-		              i32 numerus;
-		              i32 genus_cpu;
-		              i32 subgenus_cpu;
+		        MachoFilum* filum;
+		             MachO* imago;
+		               i32  numerus;
+		               i32  genus_cpu;
+		               i32  subgenus_cpu;
 
 		imprimere("\n--- Probans macho_filum_aperire ---\n");
 
@@ -224,7 +224,7 @@ s32 principale(vacuum)
 	 * ================================================== */
 
 	{
-		MachO* macho;
+		     MachO* macho;
 		MachoFilum* filum;
 
 		imprimere("\n--- Probans NIHIL handling ---\n");
@@ -254,7 +254,7 @@ s32 principale(vacuum)
 
 	{
 		constans character* via = "probationes/fixa/non_existens";
-		            MachO* macho;
+		             MachO* macho;
 		constans character* error;
 
 		imprimere("\n--- Probans filum non existens ---\n");
@@ -275,8 +275,8 @@ s32 principale(vacuum)
 	{
 		MachO* simplex;
 		MachO* cum_functione;
-		i32 num_simplex;
-		i32 num_functione;
+		  i32  num_simplex;
+		  i32  num_functione;
 
 		imprimere("\n--- Comparans ambos fixtures ---\n");
 

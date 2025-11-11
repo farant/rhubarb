@@ -59,33 +59,33 @@ nomen structura {
 
 /* MachoFilum - container */
 structura MachoFilum {
-	constans i8* datum;              /* Datum crudum fili */
-	memoriae_index  mensura;            /* Mensura totalis */
-	          b32   est_crassus;       /* Fat binary? */
-	          i32   numerus_imago;     /* Numerus imaginum */
-	       MachO**  imagines;          /* Tabula imaginum */
-	      Piscina*  piscina;
+	   constans i8*  datum;              /* Datum crudum fili */
+	memoriae_index   mensura;            /* Mensura totalis */
+	           b32   est_crassus;       /* Fat binary? */
+	           i32   numerus_imago;     /* Numerus imaginum */
+	         MachO** imagines;          /* Tabula imaginum */
+	       Piscina*  piscina;
 };
 
 /* MachO - imago singula */
 structura MachO {
-	constans i8* datum;              /* Datum crudum imaginis */
+	   constans i8* datum;              /* Datum crudum imaginis */
 	memoriae_index  mensura;            /* Mensura imaginis */
-	          b32   est_64bit;         /* 64-bit? */
-	          i32   genus_processoris;
-	          i32   subgenus_processoris;
-	          i32   genus_filum;
-	          i32   numerus_mandatorum;
-	          i32   mensura_mandatorum;
+	           b32  est_64bit;         /* 64-bit? */
+	           i32  genus_processoris;
+	           i32  subgenus_processoris;
+	           i32  genus_filum;
+	           i32  numerus_mandatorum;
+	           i32  mensura_mandatorum;
 	memoriae_index  offset_mandatorum;  /* Offset ad prima mandatum */
-	      Piscina*  piscina;
+	       Piscina* piscina;
 };
 
 /* MandatumOnustum - mandatum oneris */
 structura MandatumOnustum {
-	constans i8* datum;  /* Index ad datum mandati */
-	          i32 genus;
-	memoriae_index mensura;
+	   constans i8* datum;  /* Index ad datum mandati */
+	           i32  genus;
+	memoriae_index  mensura;
 };
 
 
@@ -102,14 +102,14 @@ _macho_error_ponere(
 {
 	strncpy(_macho_error_buffer, message, CCLV);
 	_macho_error_buffer[CCLV] = '\0';
-	_macho_error_est = VERUM;
+	_macho_error_est          = VERUM;
 }
 
 interior vacuum
 _macho_error_purgare(
 	vacuum)
 {
-	_macho_error_est = FALSUM;
+	_macho_error_est              = FALSUM;
 	_macho_error_buffer[ZEPHYRUM] = '\0';
 }
 
@@ -152,12 +152,12 @@ _macho_verificare_magicam(
 
 interior MachO*
 _macho_parsere_imaginem(
-	constans i8* datum,
-	memoriae_index mensura,
-	Piscina* piscina)
+	   constans i8* datum,
+	memoriae_index  mensura,
+	       Piscina* piscina)
 {
-	               MachO* macho;
-	                  i32 magica;
+	                  MachO* macho;
+	                    i32  magica;
 	constans _MachoHeader64* header64;
 	constans _MachoHeader32* header32;
 
@@ -254,17 +254,17 @@ _macho_parsere_imaginem(
 
 MachoFilum*
 macho_filum_ex_memoria(
-	constans i8* datum,
-	memoriae_index mensura,
-	Piscina* piscina)
+	   constans i8* datum,
+	memoriae_index  mensura,
+	       Piscina* piscina)
 {
-	                   MachoFilum* filum;
-	                           i32 magica;
-	  constans _MachoHeaderCrassus* header_crassus;
+	                       MachoFilum* filum;
+	                              i32  magica;
+	     constans _MachoHeaderCrassus* header_crassus;
 	constans _MachoArchitecturaCrassa* arch;
-	                  i32 i;
-	         constans i8* imago_datum;
-	         memoriae_index imago_mensura;
+	                              i32  i;
+	                      constans i8* imago_datum;
+	                   memoriae_index  imago_mensura;
 
 	si (!datum || !piscina)
 	{
@@ -391,9 +391,9 @@ macho_filum_ex_memoria(
 MachoFilum*
 macho_filum_aperire(
 	constans character* via,
-	Piscina* piscina)
+	           Piscina* piscina)
 {
-	chorda contentum;
+	    chorda  contentum;
 	MachoFilum* filum;
 
 	si (!via || !piscina)
@@ -442,7 +442,7 @@ macho_filum_numerus_imago(
 MachO*
 macho_filum_imago(
 	constans MachoFilum* filum,
-	i32 index)
+	                i32  index)
 {
 	si (!filum) redde NIHIL;
 	si (index < ZEPHYRUM || index >= filum->numerus_imago) redde NIHIL;
@@ -452,7 +452,7 @@ macho_filum_imago(
 i32
 macho_filum_genus_processoris(
 	constans MachoFilum* filum,
-	i32 index)
+	                i32  index)
 {
 	MachO* imago;
 
@@ -468,7 +468,7 @@ macho_filum_genus_processoris(
 i32
 macho_filum_subgenus_processoris(
 	constans MachoFilum* filum,
-	i32 index)
+	                i32  index)
 {
 	MachO* imago;
 
@@ -488,12 +488,12 @@ macho_filum_subgenus_processoris(
 
 MachO*
 macho_ex_memoria(
-	constans i8* datum,
-	memoriae_index mensura,
-	Piscina* piscina)
+	   constans i8* datum,
+	memoriae_index  mensura,
+	       Piscina* piscina)
 {
 	MachoFilum* filum;
-	MachO* macho;
+	     MachO* macho;
 
 	filum = macho_filum_ex_memoria(datum, mensura, piscina);
 	si (!filum) redde NIHIL;
@@ -512,10 +512,10 @@ macho_ex_memoria(
 MachO*
 macho_aperire(
 	constans character* via,
-	Piscina* piscina)
+	           Piscina* piscina)
 {
 	MachoFilum* filum;
-	MachO* macho;
+	     MachO* macho;
 
 	filum = macho_filum_aperire(via, piscina);
 	si (!filum) redde NIHIL;
@@ -598,10 +598,10 @@ MandatumOnustum*
 macho_iterator_mandatorum_proximum(
 	MachoIteratorMandatum* iter)
 {
-	                 MandatumOnustum* mandatum;
+	                MandatumOnustum* mandatum;
 	constans _MandatumOnustumHeader* header;
-	                 constans i8* mandatum_datum;
-	                memoriae_index  offset_absolutus;
+	                    constans i8* mandatum_datum;
+	                 memoriae_index  offset_absolutus;
 
 	si (!iter || !iter->macho) redde NIHIL;
 
