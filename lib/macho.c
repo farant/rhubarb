@@ -1,6 +1,7 @@
 #include "macho.h"
 #include "filum.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* ==================================================
@@ -58,7 +59,7 @@ nomen structura {
 
 /* MachoFilum - container */
 structura MachoFilum {
-	           i8* datum;              /* Datum crudum fili */
+	constans i8* datum;              /* Datum crudum fili */
 	memoriae_index  mensura;            /* Mensura totalis */
 	          b32   est_crassus;       /* Fat binary? */
 	          i32   numerus_imago;     /* Numerus imaginum */
@@ -68,7 +69,7 @@ structura MachoFilum {
 
 /* MachO - imago singula */
 structura MachO {
-	           i8* datum;              /* Datum crudum imaginis */
+	constans i8* datum;              /* Datum crudum imaginis */
 	memoriae_index  mensura;            /* Mensura imaginis */
 	          b32   est_64bit;         /* 64-bit? */
 	          i32   genus_processoris;
@@ -151,14 +152,14 @@ _macho_verificare_magicam(
 
 interior MachO*
 _macho_parsere_imaginem(
-	i8* datum,
+	constans i8* datum,
 	memoriae_index mensura,
 	Piscina* piscina)
 {
-	     MachO* macho;
-	        i32 magica;
-	_MachoHeader64* header64;
-	_MachoHeader32* header32;
+	               MachO* macho;
+	                  i32 magica;
+	constans _MachoHeader64* header64;
+	constans _MachoHeader32* header32;
 
 	si (!datum || !piscina)
 	{
@@ -173,7 +174,7 @@ _macho_parsere_imaginem(
 	}
 
 	/* Legere magicam */
-	magica = *(i32*)datum;
+	magica = *(constans i32*)datum;
 
 	si (!_macho_verificare_magicam(magica))
 	{
@@ -208,7 +209,7 @@ _macho_parsere_imaginem(
 			redde NIHIL;
 		}
 
-		header64 = (_MachoHeader64*)datum;
+		header64 = (constans _MachoHeader64*)datum;
 
 		macho->est_64bit            = VERUM;
 		macho->genus_processoris    = header64->genus_processoris;
@@ -220,7 +221,7 @@ _macho_parsere_imaginem(
 	}
 	alioquin si (magica == MACHO_MAGICA_32)
 	{
-		header32 = (_MachoHeader32*)datum;
+		header32 = (constans _MachoHeader32*)datum;
 
 		macho->est_64bit            = FALSUM;
 		macho->genus_processoris    = header32->genus_processoris;
@@ -257,12 +258,12 @@ macho_filum_ex_memoria(
 	memoriae_index mensura,
 	Piscina* piscina)
 {
-	          MachoFilum* filum;
-	                  i32 magica;
-	  _MachoHeaderCrassus* header_crassus;
-	_MachoArchitecturaCrassa* arch;
+	                   MachoFilum* filum;
+	                           i32 magica;
+	  constans _MachoHeaderCrassus* header_crassus;
+	constans _MachoArchitecturaCrassa* arch;
 	                  i32 i;
-	                   i8* imago_datum;
+	         constans i8* imago_datum;
 	         memoriae_index imago_mensura;
 
 	si (!datum || !piscina)
@@ -287,12 +288,12 @@ macho_filum_ex_memoria(
 		redde NIHIL;
 	}
 
-	filum->datum   = (i8*)datum;
+	filum->datum   = datum;
 	filum->mensura = mensura;
 	filum->piscina = piscina;
 
 	/* Legere magicam */
-	magica = *(i32*)datum;
+	magica = *(constans i32*)datum;
 
 	si (!_macho_verificare_magicam(magica))
 	{
@@ -309,7 +310,7 @@ macho_filum_ex_memoria(
 			redde NIHIL;
 		}
 
-		header_crassus = (_MachoHeaderCrassus*)datum;
+		header_crassus = (constans _MachoHeaderCrassus*)datum;
 
 		filum->est_crassus    = VERUM;
 		filum->numerus_imago  = header_crassus->numerus_architecturae;
@@ -334,7 +335,7 @@ macho_filum_ex_memoria(
 		}
 
 		/* Parsere omnes architecturas */
-		arch = (_MachoArchitecturaCrassa*)(datum + magnitudo(_MachoHeaderCrassus));
+		arch = (constans _MachoArchitecturaCrassa*)(datum + magnitudo(_MachoHeaderCrassus));
 
 		per (i = ZEPHYRUM; i < filum->numerus_imago; i++)
 		{
@@ -374,7 +375,7 @@ macho_filum_ex_memoria(
 
 		/* Parsere imaginem singulam */
 		filum->imagines[ZEPHYRUM] = _macho_parsere_imaginem(
-			(i8*)datum,
+			datum,
 			mensura,
 			piscina);
 
@@ -597,10 +598,10 @@ MandatumOnustum*
 macho_iterator_mandatorum_proximum(
 	MachoIteratorMandatum* iter)
 {
-	            MandatumOnustum* mandatum;
-	_MandatumOnustumHeader* header;
-	                     i8* mandatum_datum;
-	         memoriae_index  offset_absolutus;
+	                 MandatumOnustum* mandatum;
+	constans _MandatumOnustumHeader* header;
+	                 constans i8* mandatum_datum;
+	                memoriae_index  offset_absolutus;
 
 	si (!iter || !iter->macho) redde NIHIL;
 
@@ -622,7 +623,7 @@ macho_iterator_mandatorum_proximum(
 	}
 
 	mandatum_datum = iter->macho->datum + offset_absolutus;
-	header = (_MandatumOnustumHeader*)mandatum_datum;
+	header = (constans _MandatumOnustumHeader*)mandatum_datum;
 
 	/* Verificare mensuram mandati */
 	si (header->mensura < magnitudo(_MandatumOnustumHeader))
