@@ -179,6 +179,41 @@ s32 principale(vacuum)
 
 
 	/* ==================================================
+	 * Probare concordantiam mandatum_datum
+	 * ================================================== */
+
+	{
+		constans character* via = "probationes/fixa/simplex";
+		             MachO* macho;
+		MachoIteratorMandatum  iter;
+		      MandatumOnustum* cmd;
+		                  i32  numerus_verificatus;
+
+		imprimere("\n--- Probans concordantiam mandatum_datum ---\n");
+
+		macho = macho_aperire(via, piscina);
+		CREDO_NON_NIHIL(macho);
+
+		numerus_verificatus = ZEPHYRUM;
+		iter = macho_iterator_mandatorum_initium(macho);
+
+		dum ((cmd = macho_iterator_mandatorum_proximum(&iter)) != NIHIL)
+		{
+			constans i32* raw = (constans i32*)mandatum_datum(cmd);
+
+			/* Prima duo i32 in raw data debent esse genus, mensura */
+			CREDO_AEQUALIS_I32(raw[0], mandatum_genus(cmd));
+			CREDO_AEQUALIS_I32(raw[1], (i32)mandatum_magnitudo(cmd));
+
+			numerus_verificatus++;
+		}
+
+		imprimere("  Verificatus: %d mandata\n", numerus_verificatus);
+		CREDO_VERUM(numerus_verificatus > ZEPHYRUM);
+	}
+
+
+	/* ==================================================
 	 * Probare macho_filum_aperire
 	 * ================================================== */
 
