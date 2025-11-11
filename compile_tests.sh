@@ -31,6 +31,7 @@ declare -a SOURCE_FILES=(
 	"lib/xar.c"
 	"lib/via.c"
 	"lib/argumenta.c"
+	"lib/macho.c"
 )
 
 # Color codes

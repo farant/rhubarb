@@ -1,6 +1,5 @@
 - hashing library
 - ini
-- args 
 - environment variables
 - printing colors
 - path handling
@@ -15,4 +14,5 @@
 
 
 done 
+- args 
 - xar
