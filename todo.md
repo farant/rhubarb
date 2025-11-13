@@ -4,4 +4,7 @@
 * The library should have functions for converting strings to PascalCase, snake_case, kebab-case, etc.
 * I might want some kind of simple regex library idk
 * do something like text/template for better string generation
+* make sure that argumenta properly handles arguments with spaces in them that are surrounded by double quotes (does bash do that?)
+* make sure via handles spaces in path sections too with '\ ' (bash does it?)
+
 
