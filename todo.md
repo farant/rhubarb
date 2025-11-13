@@ -3,3 +3,5 @@
 * Do I need an isalpha and isalphanum function so i don't use c library?
 * The library should have functions for converting strings to PascalCase, snake_case, kebab-case, etc.
 * I might want some kind of simple regex library idk
+* do something like text/template for better string generation
+
