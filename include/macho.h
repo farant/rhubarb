@@ -122,10 +122,12 @@ nomen enumeratio {
 #define MACHO_LC_ID_DYLIB           	0xd   /* Identitas dylib */
 #define MACHO_LC_LOAD_DYLINKER      	0xe   /* Onerare dynamic linker */
 #define MACHO_LC_ID_DYLINKER        	0xf   /* Identitas dynamic linker */
+#define MACHO_LC_LOAD_WEAK_DYLIB    	0x18  /* Onerare dylib debilis */
 #define MACHO_LC_SEGMENT_64         	0x19  /* Segmentum 64-bit */
 #define MACHO_LC_UUID               	0x1b  /* UUID */
 #define MACHO_LC_CODE_SIGNATURE     	0x1d  /* Signatura codicis */
 #define MACHO_LC_SEGMENT_SPLIT_INFO 	0x1e  /* Info fissionis segmenti */
+#define MACHO_LC_REEXPORT_DYLIB     	(0x1f | 0x80000000)  /* Re-exportare dylib */
 #define MACHO_LC_ENCRYPTION_INFO    	0x21  /* Info encryptionis */
 #define MACHO_LC_DYLD_INFO          	0x22  /* Info dyld */
 #define MACHO_LC_DYLD_INFO_ONLY     	0x22 | 0x80000000
@@ -343,6 +345,79 @@ macho_datum (
 memoriae_index
 macho_mensura (
 	constans MachO* macho);
+
+
+/* ==================================================
+ * Interrogatio - Dependentiae et Metadatum
+ * ================================================== */
+
+/* Obtinere bibliothecas dynamicas onerandas
+ *
+ * Extrahit vias omnium bibliothecarum quas Mach-O onerat.
+ * Includit LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB.
+ *
+ * macho:   imago Mach-O
+ * numerus: exitus - numerus bibliothecarum inventarum
+ * piscina: piscina pro allocationibus
+ *
+ * Reddit: tabulam chordarum (viae bibliothecarum), vel NIHIL si error
+ *
+ * EXEMPLUM:
+ *   i32 numerus;
+ *   chorda* dylibs = macho_obtinere_dylibs(macho, &numerus, p);
+ *   per (i32 i = ZEPHYRUM; i < numerus; i++)
+ *   {
+ *       imprimere("  %.*s\n", dylibs[i].mensura, dylibs[i].datum);
+ *   }
+ */
+chorda*
+macho_obtinere_dylibs (
+	constans MachO* macho,
+	           i32* numerus,
+	       Piscina* piscina);
+
+/* Obtinere punctum ingressus (entry point)
+ *
+ * Extrahit offsetum fili ad principale() ex LC_MAIN mandato.
+ *
+ * macho:  imago Mach-O
+ * offset: exitus - offset ad principale() (ex __TEXT)
+ *
+ * Reddit: VERUM si LC_MAIN inventum, FALSUM alioquin
+ *
+ * NOTA: Filos veteres utuntur LC_UNIXTHREAD loco LC_MAIN.
+ *       Hoc mandatum non sustinet LC_UNIXTHREAD.
+ */
+b32
+macho_obtinere_entry_point (
+	constans MachO* macho,
+	memoriae_index* offset);
+
+/* Obtinere UUID
+ *
+ * Extrahit UUID ex LC_UUID mandato.
+ *
+ * macho: imago Mach-O
+ * uuid:  exitus - buffer pro XVI bytes UUID
+ *
+ * Reddit: VERUM si LC_UUID inventum, FALSUM alioquin
+ *
+ * EXEMPLUM:
+ *   i8 uuid[XVI];
+ *   si (macho_obtinere_uuid(macho, uuid))
+ *   {
+ *       imprimere("UUID: ");
+ *       per (i32 i = ZEPHYRUM; i < XVI; i++)
+ *       {
+ *           imprimere("%02x", (insignatus character)uuid[i]);
+ *       }
+ *       imprimere("\n");
+ *   }
+ */
+b32
+macho_obtinere_uuid (
+	constans MachO* macho,
+	            i8  uuid[XVI]);
 
 
 /* ==================================================

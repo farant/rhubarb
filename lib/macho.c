@@ -52,6 +52,35 @@ nomen structura {
 	i32 ordinatio;
 } _MachoArchitecturaCrassa;
 
+/* LC_LOAD_DYLIB command */
+nomen structura {
+	i32 offset_nominis;    /* Offset ad nomen (ex initio mandati) */
+	i32 timestamp;
+	i32 versio_currens;
+	i32 versio_compatibilis;
+} _DylibInfo;
+
+nomen structura {
+	i32 cmd;
+	i32 cmdsize;
+	_DylibInfo dylib;
+} _DylibCommand;
+
+/* LC_MAIN command */
+nomen structura {
+	i32 cmd;
+	i32 cmdsize;
+	memoriae_index entryoff;    /* File offset ad principale() */
+	memoriae_index stacksize;
+} _EntryPointCommand;
+
+/* LC_UUID command */
+nomen structura {
+	i32 cmd;
+	i32 cmdsize;
+	i8 uuid[XVI];
+} _UUIDCommand;
+
 
 /* ==================================================
  * Structurae Opacae - Implementatio
@@ -598,6 +627,147 @@ macho_mensura(
 {
 	si (!macho) redde ZEPHYRUM;
 	redde macho->mensura;
+}
+
+
+/* ==================================================
+ * Interrogatio - Dependentiae et Metadatum
+ * ================================================== */
+
+chorda*
+macho_obtinere_dylibs(
+	constans MachO* macho,
+	           i32* numerus,
+	       Piscina* piscina)
+{
+	MachoIteratorMandatum iter;
+	MandatumOnustum* mandatum;
+	i32 genus;
+	i32 numerus_dylibs;
+	chorda* dylibs;
+	i32 index;
+	constans _DylibCommand* dylib_cmd;
+	constans character* via;
+
+	si (!macho || !numerus || !piscina)
+	{
+		si (numerus) *numerus = ZEPHYRUM;
+		redde NIHIL;
+	}
+
+	/* Prima ambulatio: numerare dylibs */
+	numerus_dylibs = ZEPHYRUM;
+	iter = macho_iterator_mandatorum_initium(macho);
+
+	dum ((mandatum = macho_iterator_mandatorum_proximum(&iter)) != NIHIL)
+	{
+		genus = mandatum_genus(mandatum);
+		si (genus == MACHO_LC_LOAD_DYLIB ||
+		    genus == MACHO_LC_LOAD_WEAK_DYLIB ||
+		    genus == MACHO_LC_REEXPORT_DYLIB)
+		{
+			numerus_dylibs++;
+		}
+	}
+
+	si (numerus_dylibs == ZEPHYRUM)
+	{
+		*numerus = ZEPHYRUM;
+		redde NIHIL;
+	}
+
+	/* Allocare tabulam */
+	dylibs = (chorda*)piscina_allocare(piscina,
+	                                    (memoriae_index)numerus_dylibs * magnitudo(chorda));
+	si (!dylibs)
+	{
+		*numerus = ZEPHYRUM;
+		redde NIHIL;
+	}
+
+	/* Secunda ambulatio: colligere vias */
+	index = ZEPHYRUM;
+	iter = macho_iterator_mandatorum_initium(macho);
+
+	dum ((mandatum = macho_iterator_mandatorum_proximum(&iter)) != NIHIL)
+	{
+		genus = mandatum_genus(mandatum);
+		si (genus == MACHO_LC_LOAD_DYLIB ||
+		    genus == MACHO_LC_LOAD_WEAK_DYLIB ||
+		    genus == MACHO_LC_REEXPORT_DYLIB)
+		{
+			dylib_cmd = (constans _DylibCommand*)mandatum_datum(mandatum);
+			via = (constans character*)mandatum_datum(mandatum) + dylib_cmd->dylib.offset_nominis;
+
+			dylibs[index] = chorda_ex_literis(via, piscina);
+			index++;
+		}
+	}
+
+	*numerus = numerus_dylibs;
+	redde dylibs;
+}
+
+b32
+macho_obtinere_entry_point(
+	constans MachO* macho,
+	memoriae_index* offset)
+{
+	MachoIteratorMandatum iter;
+	MandatumOnustum* mandatum;
+	constans _EntryPointCommand* entry_cmd;
+
+	si (!macho || !offset)
+	{
+		redde FALSUM;
+	}
+
+	iter = macho_iterator_mandatorum_initium(macho);
+
+	dum ((mandatum = macho_iterator_mandatorum_proximum(&iter)) != NIHIL)
+	{
+		si (mandatum_genus(mandatum) == MACHO_LC_MAIN)
+		{
+			entry_cmd = (constans _EntryPointCommand*)mandatum_datum(mandatum);
+			*offset = entry_cmd->entryoff;
+			redde VERUM;
+		}
+	}
+
+	redde FALSUM;
+}
+
+b32
+macho_obtinere_uuid(
+	constans MachO* macho,
+	            i8  uuid[XVI])
+{
+	MachoIteratorMandatum iter;
+	MandatumOnustum* mandatum;
+	constans _UUIDCommand* uuid_cmd;
+	i32 i;
+
+	si (!macho || !uuid)
+	{
+		redde FALSUM;
+	}
+
+	iter = macho_iterator_mandatorum_initium(macho);
+
+	dum ((mandatum = macho_iterator_mandatorum_proximum(&iter)) != NIHIL)
+	{
+		si (mandatum_genus(mandatum) == MACHO_LC_UUID)
+		{
+			uuid_cmd = (constans _UUIDCommand*)mandatum_datum(mandatum);
+			per (i = ZEPHYRUM; i < XVI; i++)
+			{
+				uuid[i] = uuid_cmd->uuid[i];
+			}
+			redde VERUM;
+		}
+	}
+
+	redde FALSUM;
 }
 
 
