@@ -334,6 +334,16 @@ constans i8*
 macho_datum (
 	constans MachO* macho);
 
+/* Obtinere mensuram datum Mach-O
+ *
+ * Reddit: mensuram buffer in bytes
+ *
+ * NOTA: Utile pro validatione limitum sectionum et offsetorum
+ */
+memoriae_index
+macho_mensura (
+	constans MachO* macho);
+
 
 /* ==================================================
  * Iteratio - Mandata Oneris (Load Commands)

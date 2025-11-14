@@ -59,10 +59,11 @@ nomen structura Sectio Sectio;
 /* Iterator pro ambulatione omnium sectionum in omnibus segmentis */
 nomen structura SectioIterator {
 	constans MachO* macho;
-	           i32  mandatum_index;       /* Current load command */
-	           i32  sectio_index;         /* Current section in segment */
-	           i32  sectio_numerus;       /* Number of sections in current segment */
-	memoriae_index  offset_currens;       /* Offset to current section header */
+	MachoIteratorMandatum mandatum_iter;     /* Persistent load command iterator */
+	constans vacuum* segment_currens;        /* Current segment (opaque) */
+	constans vacuum* sectiones;              /* Section array (opaque) */
+	           i32  sectio_index;            /* Current section in segment */
+	           i32  sectio_numerus;          /* Number of sections in current segment */
 } SectioIterator;
 
 /* Initializare iteratorem
@@ -93,16 +94,6 @@ sectio_iterator_initium(
  */
 Sectio*
 sectio_iterator_proximum(
-	SectioIterator* iter);
-
-/* Verificare si iteratio completa
- *
- * iter: iterator
- *
- * Reddit: VERUM si finis, FALSUM alioquin
- */
-b32
-sectio_iterator_finis(
 	SectioIterator* iter);
 
 

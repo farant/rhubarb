@@ -592,6 +592,14 @@ macho_datum(
 	redde macho->datum;
 }
 
+memoriae_index
+macho_mensura(
+	constans MachO* macho)
+{
+	si (!macho) redde ZEPHYRUM;
+	redde macho->mensura;
+}
+
 
 /* ==================================================
  * Iteratio - Mandata Oneris

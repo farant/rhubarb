@@ -193,10 +193,11 @@ sectio_iterator_initium(
 	SectioIterator iter;
 
 	iter.macho            = macho;
-	iter.mandatum_index   = ZEPHYRUM;
+	iter.mandatum_iter    = macho_iterator_mandatorum_initium(macho);
+	iter.segment_currens  = NIHIL;
+	iter.sectiones        = NIHIL;
 	iter.sectio_index     = ZEPHYRUM;
 	iter.sectio_numerus   = ZEPHYRUM;
-	iter.offset_currens   = ZEPHYRUM;
 
 	redde iter;
 }
@@ -205,46 +206,20 @@ Sectio*
 sectio_iterator_proximum(
 	SectioIterator* iter)
 {
-	MachoIteratorMandatum mandatum_iter;
 	MandatumOnustum* mandatum;
 	constans _SegmentCommand64* segment;
 	constans _Section64* sections;
 	constans _Section64* section;
-	i32 mandatum_index_currens;
 
 	si (!iter || !iter->macho)
 	{
 		redde NIHIL;
 	}
 
-	/* Initializare iterator mandatorum */
-	mandatum_iter = macho_iterator_mandatorum_initium(iter->macho);
-	mandatum_index_currens = ZEPHYRUM;
-
 	/* Si in medio segmenti, reddere sectionem proximam ex segmento currenti */
-	si (iter->sectio_index > ZEPHYRUM && iter->sectio_index < iter->sectio_numerus)
+	si (iter->sectio_index < iter->sectio_numerus)
 	{
-		/* Saltare ad mandatum currentem */
-		dum (mandatum_index_currens < iter->mandatum_index)
-		{
-			mandatum = macho_iterator_mandatorum_proximum(&mandatum_iter);
-			si (!mandatum)
-			{
-				redde NIHIL;
-			}
-			mandatum_index_currens++;
-		}
-
-		/* Obtinere mandatum currens (nunc sumus ad index correctus) */
-		mandatum = macho_iterator_mandatorum_proximum(&mandatum_iter);
-		si (!mandatum || mandatum_genus(mandatum) != MACHO_LC_SEGMENT_64)
-		{
-			redde NIHIL;
-		}
-
-		segment = (constans _SegmentCommand64*)mandatum_datum(mandatum);
-		sections = (constans _Section64*)((constans i8*)segment +
-		           magnitudo(_SegmentCommand64));
+		sections = (constans _Section64*)iter->sectiones;
 		section = &sections[iter->sectio_index];
 		iter->sectio_index++;
 
@@ -254,19 +229,8 @@ sectio_iterator_proximum(
 			macho_piscina(iter->macho));
 	}
 
-	/* Saltare ad mandatum post ultimum processum */
-	dum (mandatum_index_currens <= iter->mandatum_index)
-	{
-		mandatum = macho_iterator_mandatorum_proximum(&mandatum_iter);
-		si (!mandatum)
-		{
-			redde NIHIL;
-		}
-		mandatum_index_currens++;
-	}
-
-	/* Iterare usque inveniamus LC_SEGMENT_64 cum sectionibus */
-	dum ((mandatum = macho_iterator_mandatorum_proximum(&mandatum_iter)) != NIHIL)
+	/* Quaerere segmentum proximum cum sectionibus */
+	dum ((mandatum = macho_iterator_mandatorum_proximum(&iter->mandatum_iter)) != NIHIL)
 	{
 		si (mandatum_genus(mandatum) == MACHO_LC_SEGMENT_64)
 		{
@@ -275,13 +239,13 @@ sectio_iterator_proximum(
 			si (segment->nsects > ZEPHYRUM)
 			{
 				/* Invenit segmentum cum sectionibus */
-				iter->mandatum_index = mandatum_index_currens;
-				iter->sectio_index   = I;  /* Proxima sectio ad legere */
+				iter->segment_currens = segment;
+				iter->sectiones = (constans i8*)segment + magnitudo(_SegmentCommand64);
+				iter->sectio_index = I;  /* Proxima sectio ad legere */
 				iter->sectio_numerus = segment->nsects;
 
 				/* Reddere primam sectionem */
-				sections = (constans _Section64*)((constans i8*)segment +
-				           magnitudo(_SegmentCommand64));
+				sections = (constans _Section64*)iter->sectiones;
 				section = &sections[ZEPHYRUM];
 
 				redde _sectio_creare_ex_section64(
@@ -290,31 +254,10 @@ sectio_iterator_proximum(
 					macho_piscina(iter->macho));
 			}
 		}
-		mandatum_index_currens++;
 	}
 
 	/* Nullum segmentum cum sectionibus inventum */
 	redde NIHIL;
-}
-
-b32
-sectio_iterator_finis(
-	SectioIterator* iter)
-{
-	si (!iter || !iter->macho)
-	{
-		redde VERUM;
-	}
-
-	/* Verificare si plures sectiones in segmento currenti */
-	si (iter->sectio_index < iter->sectio_numerus)
-	{
-		redde FALSUM;
-	}
-
-	/* Verificare si plura segmenta */
-	/* TODO: Implementare verificatio */
-	redde FALSUM;
 }
 
 
@@ -422,6 +365,7 @@ sectio_datum(
 	constans Sectio* sectio)
 {
 	constans i8* datum;
+	memoriae_index macho_size;
 	unio {
 		constans i8* constans_ptr;
 		i8* mutable_ptr;
@@ -439,6 +383,17 @@ sectio_datum(
 	si (!datum)
 	{
 		chorda vacuum_str;
+		vacuum_str.datum   = NIHIL;
+		vacuum_str.mensura = ZEPHYRUM;
+		redde vacuum_str;
+	}
+
+	/* Validate section bounds */
+	macho_size = macho_mensura(sectio->macho);
+	si (sectio->offset + sectio->mensura > macho_size)
+	{
+		chorda vacuum_str;
+		_sectio_error_ponere("Section data exceeds file bounds");
 		vacuum_str.datum   = NIHIL;
 		vacuum_str.mensura = ZEPHYRUM;
 		redde vacuum_str;
