@@ -312,6 +312,28 @@ b32
 macho_est_64bit (
 	constans MachO* macho);
 
+/* Obtinere piscinam Mach-O
+ *
+ * Reddit: piscinam usatam pro allocationibus
+ *
+ * NOTA: Utile pro bibliothecis dependentibus (sectio, symbola)
+ *       quae debent allocare ex eadem piscina
+ */
+Piscina*
+macho_piscina (
+	constans MachO* macho);
+
+/* Obtinere datum crudum Mach-O
+ *
+ * Reddit: indicem ad buffer datum
+ *
+ * NOTA: Utile pro zero-copy accessu ad sectiones et symbola
+ *       Buffer possessus a piscina
+ */
+constans i8*
+macho_datum (
+	constans MachO* macho);
+
 
 /* ==================================================
  * Iteratio - Mandata Oneris (Load Commands)

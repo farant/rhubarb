@@ -32,6 +32,7 @@ declare -a SOURCE_FILES=(
 	"lib/via.c"
 	"lib/argumenta.c"
 	"lib/macho.c"
+	"lib/sectio.c"
 )
 
 # Color codes

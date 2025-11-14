@@ -576,6 +576,22 @@ macho_est_64bit(
 	redde macho->est_64bit;
 }
 
+Piscina*
+macho_piscina(
+	constans MachO* macho)
+{
+	si (!macho) redde NIHIL;
+	redde macho->piscina;
+}
+
+constans i8*
+macho_datum(
+	constans MachO* macho)
+{
+	si (!macho) redde NIHIL;
+	redde macho->datum;
+}
+
 
 /* ==================================================
  * Iteratio - Mandata Oneris
