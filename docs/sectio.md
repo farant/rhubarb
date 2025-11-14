@@ -434,14 +434,17 @@ Iterator for walking all sections in a Mach-O file. Create with `sectio_iterator
 ```c
 nomen structura SectioIterator {
     constans MachO* macho;
-    i32 mandatum_index;        /* Current load command */
-    i32 sectio_index;          /* Current section in segment */
-    i32 sectio_numerus;        /* Number of sections in current segment */
-    memoriae_index offset_currens;  /* Offset to current section header */
+    MachoIteratorMandatum mandatum_iter;  /* Persistent load command iterator */
+    constans vacuum* segment_currens;     /* Current segment (opaque) */
+    constans vacuum* sectiones;           /* Section array (opaque) */
+    i32 sectio_index;                     /* Current section in segment */
+    i32 sectio_numerus;                   /* Number of sections in current segment */
 } SectioIterator;
 ```
 
 You can read these fields if you're debugging, but don't modify them. The iterator manages its own state.
+
+**Note:** The iterator stores pointers to the current segment and section array, which means it's O(n) instead of O(n²). Each call to `sectio_iterator_proximum()` either returns the next section from the current segment (fast path) or advances the macho iterator to find the next segment with sections.
 
 ## Functions - Iteration
 
@@ -492,26 +495,6 @@ Get the next section from the iterator.
 - The Sectio is allocated from the macho's piscina
 - Returns NIHIL at end of iteration
 - Safe to call multiple times after reaching the end (keeps returning NIHIL)
-
-### `sectio_iterator_finis`
-
-```c
-b32 sectio_iterator_finis(SectioIterator* iter);
-```
-
-Check if iteration is complete.
-
-**Parameters:**
-- `iter` - Pointer to the iterator
-
-**Returns:**
-- VERUM if done, FALSUM if more sections remain
-
-**Latin:** `finis` = end
-
-**Notes:**
-- Usually you just check for NIHIL from `proximum` instead of calling this
-- Provided for completeness
 
 ## Functions - Finding Sections
 
@@ -616,6 +599,7 @@ Get the raw data for this section (ZERO-COPY).
 - Do NOT modify the data - it's read-only
 - The data is valid only as long as the piscina lives
 - To keep the data longer, use `chorda_transcribere(data, other_piscina)`
+- Bounds are validated - if section offset+size exceeds file size, returns empty chorda and sets error
 
 **Example:**
 ```c
@@ -849,17 +833,18 @@ memoriae_index size = sectio_mensura(text);
 
 Use `sectio_datum()` when you want the actual data. Use `sectio_mensura()` when you just need to know how big it is.
 
-## Why does the iterator track mandatum_index and sectio_index?
+## How does the iterator work internally?
 
-Because Mach-O structure is weird. Sections don't live in a nice flat array. They're grouped into segments, and each segment is a separate load command.
+Mach-O structure is weird. Sections don't live in a nice flat array. They're grouped into segments, and each segment is a separate load command.
 
-So the iterator has to:
-1. Walk load commands (mandatum_index)
-2. Skip non-segment commands
-3. For each segment, walk its sections (sectio_index)
-4. Jump to the next segment when done with current one
+The iterator stores:
+1. A persistent macho iterator (`mandatum_iter`) that walks load commands
+2. Pointers to the current segment and its section array
+3. An index (`sectio_index`) tracking which section we're at in the current segment
 
-That's why there are two indices. The implementation handles this complexity so you don't have to.
+When you call `sectio_iterator_proximum()`, it either returns the next section from the current segment (fast path), or advances the macho iterator to find the next segment with sections. This is O(n) where n = total sections, instead of O(n²) like it would be if we re-walked from the beginning each time.
+
+The implementation handles this complexity so you don't have to.
 
 ## Can I modify section data?
 
@@ -886,20 +871,6 @@ Zero-copy is faster, uses less memory, and has less code. The only "safety" you 
 It's a typedef for size_t. "memoriae" is the genitive case of "memoria" (memory), so "memoriae_index" literally means "index of memory" or "memory index".
 
 Why not just use size_t? Because we're writing in Latin. Pay attention.
-
-## Do I need to call sectio_iterator_finis()?
-
-No. Just check if `sectio_iterator_proximum()` returns NIHIL. That's the idiomatic way.
-
-```c
-dum ((sectio = sectio_iterator_proximum(&iter)) != NIHIL)
-{
-    /* Do stuff */
-}
-/* Now you're done - no cleanup needed */
-```
-
-The `finis` function exists for completeness, but you'll probably never use it.
 
 ## Why doesn't sectio_invenire() take a combined name like "__TEXT.__text"?
 
@@ -951,6 +922,18 @@ Adding 32-bit support would mean doubling the code (handling both `LC_SEGMENT` a
 Technically yes, if you have Mach-O files on those platforms (which happens - you might be analyzing iOS app bundles on a Linux server).
 
 But the library doesn't do any endian swapping, so it only works with little-endian Mach-O files. Apple hasn't shipped big-endian hardware since the PowerPC days, so this is fine.
+
+## Does this library protect against malicious Mach-O files?
+
+Partially. As of the recent refactor, `sectio_datum()` validates that the section's offset and size don't exceed the Mach-O file buffer. If a malicious file claims a section is at offset 0xFFFFFFFF, you'll get back an empty chorda and an error instead of a garbage pointer.
+
+However, the library doesn't validate EVERYTHING. It assumes the Mach-O header and load command structure are well-formed (those are validated by macho.h when you first open the file). If you're analyzing untrusted binaries, you should:
+
+1. Use the library on well-formed Mach-O files only
+2. Check return values - NIHIL means something's wrong
+3. Don't pass the data to code that assumes it's valid without checking
+
+This is a parser for binaries from your own system or trusted sources. It's not a fuzzer-resistant hardened parser for analyzing malware. If you need that, add more validation or use a sandboxed environment.
 
 ## What's the performance cost of calling sectio_nomen() repeatedly?
 
