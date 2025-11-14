@@ -33,6 +33,7 @@ declare -a SOURCE_FILES=(
 	"lib/argumenta.c"
 	"lib/macho.c"
 	"lib/sectio.c"
+	"lib/symbola.c"
 )
 
 # Color codes
