@@ -36,6 +36,12 @@ declare -a SOURCE_FILES=(
 	"lib/symbola.c"
 )
 
+# GUI app source files (fenestra - requires Objective-C and Cocoa)
+declare -a GUI_SOURCE_FILES=(
+  "lib/fenestra_textus.c"
+  "lib/fenestra_macos.m"
+)
+
 # Color codes
 RED="\033[31m"
 GREEN="\033[32m"
@@ -47,6 +53,38 @@ RESET="\033[0m"
 TESTS_TOTAL=0
 TESTS_PASSED=0
 TESTS_FAILED=0
+
+# GUI app results
+GUI_APPS_BUILT=0
+GUI_APPS_FAILED=0
+
+compile_gui_app() {
+    local app_file="$1"
+    local app_name=$(basename "$app_file" .c)
+    local output_binary="bin/$app_name"
+
+    echo -e "${BLUE}────────────────────────────────────────${RESET}"
+    echo -e "${BLUE}Building GUI: $app_name${RESET}"
+    echo -e "${BLUE}────────────────────────────────────────${RESET}"
+
+    # Create bin directory if it doesn't exist
+    mkdir -p bin
+
+    # Compile with clang (for Objective-C) and Cocoa framework
+    COMPILE_CMD="clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} $app_file ${GUI_SOURCE_FILES[@]} -framework Cocoa -o $output_binary"
+
+    if ! eval $COMPILE_CMD 2>&1; then
+        echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
+        GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
+        echo ""
+        return 1
+    fi
+
+    echo -e "${GREEN}✓ GUI APP BUILT: $app_name (run with: ./$output_binary)${RESET}"
+    GUI_APPS_BUILT=$((GUI_APPS_BUILT + 1))
+    echo ""
+    return 0
+}
 
 compile_and_run_test() {
     local test_file="$1"
@@ -89,27 +127,71 @@ run_all_tests() {
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo ""
 
-    # Find all test_*.c files in probationes/ directory
-    local test_files=$(find probationes -name "probatio_*.c" -type f | sort)
+    # Find all probatio_*.c files, separating GUI apps from regular tests
+    local all_files=$(find probatio probationes -name "probatio_*.c" -type f 2>/dev/null | sort)
 
-    if [ -z "$test_files" ]; then
-        echo -e "${YELLOW}No test files found in probationes/ directory${RESET}"
+    if [ -z "$all_files" ]; then
+        echo -e "${YELLOW}No test files found${RESET}"
         return 1
     fi
 
-    # Compile and run each test
-    while IFS= read -r test_file; do
-        compile_and_run_test "$test_file"
-    done <<< "$test_files"
+    # Separate GUI apps from regular tests
+    local gui_apps=""
+    local test_files=""
+
+    while IFS= read -r file; do
+        if [[ "$file" == *"probatio_fenestra.c"* ]]; then
+            gui_apps="$gui_apps$file"$'\n'
+        else
+            test_files="$test_files$file"$'\n'
+        fi
+    done <<< "$all_files"
+
+    # Compile and run regular tests
+    if [ -n "$test_files" ]; then
+        while IFS= read -r test_file; do
+            [ -z "$test_file" ] && continue
+            compile_and_run_test "$test_file"
+        done <<< "$test_files"
+    fi
+
+    # Build GUI apps (but don't run them)
+    if [ -n "$gui_apps" ]; then
+        echo -e "${BLUE}═══════════════════════════════════════${RESET}"
+        echo -e "${BLUE}BUILDING GUI APPS${RESET}"
+        echo -e "${BLUE}═══════════════════════════════════════${RESET}"
+        echo ""
+
+        while IFS= read -r gui_file; do
+            [ -z "$gui_file" ] && continue
+            compile_gui_app "$gui_file"
+        done <<< "$gui_apps"
+    fi
 }
 
 print_summary() {
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
-    echo -e "${BLUE}TEST SUMMARY${RESET}"
+    echo -e "${BLUE}SUMMARY${RESET}"
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
-    echo "Total:  $TESTS_TOTAL"
-    echo -e "Passed: ${GREEN}$TESTS_PASSED${RESET}"
-    echo -e "Failed: ${RED}$TESTS_FAILED${RESET}"
+
+    if [ $TESTS_TOTAL -gt 0 ]; then
+        echo "Tests Total:  $TESTS_TOTAL"
+        echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${RESET}"
+        echo -e "Tests Failed: ${RED}$TESTS_FAILED${RESET}"
+    fi
+
+    if [ $((GUI_APPS_BUILT + GUI_APPS_FAILED)) -gt 0 ]; then
+        echo ""
+        echo -e "GUI Apps Built: ${GREEN}$GUI_APPS_BUILT${RESET}"
+        if [ $GUI_APPS_FAILED -gt 0 ]; then
+            echo -e "GUI Apps Failed: ${RED}$GUI_APPS_FAILED${RESET}"
+        fi
+
+        if [ $GUI_APPS_BUILT -gt 0 ]; then
+            echo -e "${YELLOW}Run GUI apps manually from bin/ directory${RESET}"
+        fi
+    fi
+
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo ""
 }
