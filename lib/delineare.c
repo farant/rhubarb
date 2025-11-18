@@ -626,40 +626,40 @@ delineare_ellipsin (
     i32                  radius_y,
     i32                  color)
 {
-    i32 x;
-    i32 y;
-    i32 rx2;
-    i32 ry2;
-    i32 tworx2;
-    i32 twory2;
-    i32 p;
-    i32 px;
-    i32 py;
+    s32 x;
+    s32 y;
+    s32 rx2;
+    s32 ry2;
+    s32 tworx2;
+    s32 twory2;
+    s32 p;
+    s32 px;
+    s32 py;
 
     si (!ctx || radius_x < ZEPHYRUM || radius_y < ZEPHYRUM) redde;
 
-    x = ZEPHYRUM;
-    y = radius_y;
-    rx2 = radius_x * radius_x;
-    ry2 = radius_y * radius_y;
-    tworx2 = II * rx2;
-    twory2 = II * ry2;
-    px = ZEPHYRUM;
+    x = 0;
+    y = (s32)radius_y;
+    rx2 = (s32)radius_x * (s32)radius_x;
+    ry2 = (s32)radius_y * (s32)radius_y;
+    tworx2 = 2 * rx2;
+    twory2 = 2 * ry2;
+    px = 0;
     py = tworx2 * y;
 
     /* Delineare puncta initialia in extremis */
-    ponere_pixelum_internum(ctx, centrum_x + radius_x, centrum_y, color);
-    ponere_pixelum_internum(ctx, centrum_x - radius_x, centrum_y, color);
-    ponere_pixelum_internum(ctx, centrum_x, centrum_y + radius_y, color);
-    ponere_pixelum_internum(ctx, centrum_x, centrum_y - radius_y, color);
+    ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + (s32)radius_x), centrum_y, color);
+    ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - (s32)radius_x), centrum_y, color);
+    ponere_pixelum_internum(ctx, centrum_x, (i32)((s32)centrum_y + (s32)radius_y), color);
+    ponere_pixelum_internum(ctx, centrum_x, (i32)((s32)centrum_y - (s32)radius_y), color);
 
     /* Regio 1 */
-    p = (i32)(ry2 - (rx2 * radius_y) + (rx2 / IV));
+    p = ry2 - (rx2 * (s32)radius_y) + (rx2 / 4);
     dum (px < py)
     {
         x++;
         px += twory2;
-        si (p < ZEPHYRUM)
+        si (p < 0)
         {
             p += ry2 + px;
         }
@@ -670,19 +670,19 @@ delineare_ellipsin (
             p += ry2 + px - py;
         }
 
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y + y, color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y + y, color);
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y - y, color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y - y, color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), color);
     }
 
     /* Regio 2 */
-    p = (i32)(ry2 * (x * x + x) + rx2 * ((y - I) * (y - I)) - rx2 * ry2);
-    dum (y > ZEPHYRUM)
+    p = ry2 * (x * x + x) + rx2 * ((y - 1) * (y - 1)) - rx2 * ry2;
+    dum (y > 0)
     {
         y--;
         py -= tworx2;
-        si (p > ZEPHYRUM)
+        si (p > 0)
         {
             p += rx2 - py;
         }
@@ -693,10 +693,10 @@ delineare_ellipsin (
             p += rx2 - py + px;
         }
 
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y + y, color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y + y, color);
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y - y, color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y - y, color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), color);
     }
 }
 
@@ -710,37 +710,37 @@ delineare_ellipsin_plenam (
     i32                  radius_y,
     i32                  color)
 {
-    i32 x;
-    i32 y;
-    i32 rx2;
-    i32 ry2;
-    i32 tworx2;
-    i32 twory2;
-    i32 p;
-    i32 px;
-    i32 py;
+    s32 x;
+    s32 y;
+    s32 rx2;
+    s32 ry2;
+    s32 tworx2;
+    s32 twory2;
+    s32 p;
+    s32 px;
+    s32 py;
 
     si (!ctx || radius_x < ZEPHYRUM || radius_y < ZEPHYRUM) redde;
 
-    x = ZEPHYRUM;
-    y = radius_y;
-    rx2 = radius_x * radius_x;
-    ry2 = radius_y * radius_y;
-    tworx2 = II * rx2;
-    twory2 = II * ry2;
-    px = ZEPHYRUM;
+    x = 0;
+    y = (s32)radius_y;
+    rx2 = (s32)radius_x * (s32)radius_x;
+    ry2 = (s32)radius_y * (s32)radius_y;
+    tworx2 = 2 * rx2;
+    twory2 = 2 * ry2;
+    px = 0;
     py = tworx2 * y;
 
     /* Delineare lineam horizontalem initialem */
-    delineare_lineam_horizontalem(ctx, centrum_x - radius_x, centrum_x + radius_x, centrum_y, color);
+    delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - (s32)radius_x), (i32)((s32)centrum_x + (s32)radius_x), centrum_y, color);
 
     /* Regio 1 */
-    p = (i32)(ry2 - (rx2 * radius_y) + (rx2 / IV));
+    p = ry2 - (rx2 * (s32)radius_y) + (rx2 / 4);
     dum (px < py)
     {
         x++;
         px += twory2;
-        si (p < ZEPHYRUM)
+        si (p < 0)
         {
             p += ry2 + px;
         }
@@ -751,17 +751,17 @@ delineare_ellipsin_plenam (
             p += ry2 + px - py;
         }
 
-        delineare_lineam_horizontalem(ctx, centrum_x - x, centrum_x + x, centrum_y + y, color);
-        delineare_lineam_horizontalem(ctx, centrum_x - x, centrum_x + x, centrum_y - y, color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
     }
 
     /* Regio 2 */
-    p = (i32)(ry2 * (x * x + x) + rx2 * ((y - I) * (y - I)) - rx2 * ry2);
-    dum (y > ZEPHYRUM)
+    p = ry2 * (x * x + x) + rx2 * ((y - 1) * (y - 1)) - rx2 * ry2;
+    dum (y > 0)
     {
         y--;
         py -= tworx2;
-        si (p > ZEPHYRUM)
+        si (p > 0)
         {
             p += rx2 - py;
         }
@@ -772,8 +772,8 @@ delineare_ellipsin_plenam (
             p += rx2 - py + px;
         }
 
-        delineare_lineam_horizontalem(ctx, centrum_x - x, centrum_x + x, centrum_y + y, color);
-        delineare_lineam_horizontalem(ctx, centrum_x - x, centrum_x + x, centrum_y - y, color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
+        delineare_lineam_horizontalem(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
     }
 }
 
@@ -806,28 +806,28 @@ delineare_polygonum_plenum (
     i32                  numerus_punctorum,
     i32                  color)
 {
-    i32 min_y;
-    i32 max_y;
-    i32 y;
-    i32 intersectiones[CCLVI];
-    i32 numerus_intersectionum;
-    i32 i;
-    i32 j;
-    i32 y0;
-    i32 y1;
-    i32 x0;
-    i32 x1;
-    i32 x;
-    i32 temp;
+    s32 min_y;
+    s32 max_y;
+    s32 y;
+    s32 intersectiones[256];
+    s32 numerus_intersectionum;
+    s32 i;
+    s32 j;
+    s32 y0;
+    s32 y1;
+    s32 x0;
+    s32 x1;
+    s32 x;
+    s32 temp;
 
     si (!ctx || !puncta || numerus_punctorum < III) redde;
 
     /* Invenire valores y minimos/maximos */
-    min_y = puncta[I];
-    max_y = puncta[I];
-    per (i = I; i < numerus_punctorum; i++)
+    min_y = (s32)puncta[1];
+    max_y = (s32)puncta[1];
+    per (i = 1; i < (s32)numerus_punctorum; i++)
     {
-        y = puncta[i * II + I];
+        y = (s32)puncta[i * 2 + 1];
         si (y < min_y) min_y = y;
         si (y > max_y) max_y = y;
     }
@@ -835,22 +835,22 @@ delineare_polygonum_plenum (
     /* Implere scanline */
     per (y = min_y; y <= max_y; y++)
     {
-        numerus_intersectionum = ZEPHYRUM;
+        numerus_intersectionum = 0;
 
         /* Invenire omnes intersectiones cum scanline */
-        per (i = ZEPHYRUM; i < numerus_punctorum; i++)
+        per (i = 0; i < (s32)numerus_punctorum; i++)
         {
-            j = (i + I) % numerus_punctorum;
-            y0 = puncta[i * II + I];
-            y1 = puncta[j * II + I];
+            j = (i + 1) % (s32)numerus_punctorum;
+            y0 = (s32)puncta[i * 2 + 1];
+            y1 = (s32)puncta[j * 2 + 1];
 
             si ((y0 <= y && y1 > y) || (y1 <= y && y0 > y))
             {
-                x0 = puncta[i * II];
-                x1 = puncta[j * II];
+                x0 = (s32)puncta[i * 2];
+                x1 = (s32)puncta[j * 2];
                 x = x0 + (x1 - x0) * (y - y0) / (y1 - y0);
 
-                si (numerus_intersectionum < CCLVI)
+                si (numerus_intersectionum < 256)
                 {
                     intersectiones[numerus_intersectionum++] = x;
                 }
@@ -858,9 +858,9 @@ delineare_polygonum_plenum (
         }
 
         /* Ordinare intersectiones */
-        per (i = ZEPHYRUM; i < numerus_intersectionum - I; i++)
+        per (i = 0; i < numerus_intersectionum - 1; i++)
         {
-            per (j = i + I; j < numerus_intersectionum; j++)
+            per (j = i + 1; j < numerus_intersectionum; j++)
             {
                 si (intersectiones[i] > intersectiones[j])
                 {
@@ -872,11 +872,11 @@ delineare_polygonum_plenum (
         }
 
         /* Delineare lineas horizontales inter paria intersectionum */
-        per (i = ZEPHYRUM; i < numerus_intersectionum; i += II)
+        per (i = 0; i < numerus_intersectionum; i += 2)
         {
-            si (i + I < numerus_intersectionum)
+            si (i + 1 < numerus_intersectionum)
             {
-                delineare_lineam_horizontalem(ctx, intersectiones[i], intersectiones[i + I], y, color);
+                delineare_lineam_horizontalem(ctx, (i32)intersectiones[i], (i32)intersectiones[i + 1], (i32)y, color);
             }
         }
     }
