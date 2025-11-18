@@ -273,10 +273,12 @@
 nomen insignatus character	i8;
 nomen insignatus brevis 		i16;
 nomen insignatus integer   	i32;
+nomen insignatus longus longus	i64;
 
 nomen signatus character    s8;
 nomen signatus brevis   	 	s16;
 nomen signatus integer     	s32;
+nomen signatus longus longus	s64;
 
 nomen fluitans          		f32;
 nomen duplex         				f64;

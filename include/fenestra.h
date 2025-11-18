@@ -687,4 +687,33 @@ i32
 fons_altitudo_chordae (
     i32 scala);
 
+
+/* ==================================================
+ * Functiones Temporis Platformae
+ * ================================================== */
+
+/* Obtinere pulsus temporis ad altam praecisionem
+ *
+ * Reddit: numerus pulsuum ex tempore arbitrario
+ */
+i64
+fenestra_tempus_obtinere_pulsus (
+    vacuum);
+
+/* Obtinere frequentiam horologii
+ *
+ * Reddit: pulsus per secundum
+ */
+f64
+fenestra_tempus_obtinere_frequentiam (
+    vacuum);
+
+/* Dormire pro microsecundis datis
+ *
+ * microsecundae: numerus microsecundarum dormire
+ */
+vacuum
+fenestra_dormire (
+    i32 microsecundae);
+
 #endif /* FENESTRA_H */

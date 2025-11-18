@@ -13,6 +13,7 @@ declare -a GCC_FLAGS=(
     "-Wstrict-prototypes"
     "-Wmissing-prototypes"
     "-Wwrite-strings"
+    "-Wno-long-long"
 )
 
 # Include paths
@@ -43,6 +44,7 @@ declare -a GUI_SOURCE_FILES=(
   "lib/fenestra_textus.c"
   "lib/fenestra_macos.m"
   "lib/delineare.c"
+  "lib/tempus.c"
 )
 
 # Color codes
@@ -143,7 +145,7 @@ run_all_tests() {
     local test_files=""
 
     while IFS= read -r file; do
-        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]]; then
+        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'

@@ -2,8 +2,10 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <objc/runtime.h>
+#import <mach/mach_time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "fenestra.h"
 
 @interface FenestraDelegatus : NSObject <NSWindowDelegate>
@@ -794,5 +796,37 @@ fenestra_praesentare_pixela (
         CGImageRelease(imago);
         CGContextRelease(contextus_bitmap);
         CGColorSpaceRelease(spatium_coloris);
+    }
+}
+
+
+/* ==================================================
+ * Functiones Temporis pro Tempus Bibliotheca
+ * ================================================== */
+
+i64
+fenestra_tempus_obtinere_pulsus (
+    vacuum)
+{
+    redde (i64)mach_absolute_time();
+}
+
+f64
+fenestra_tempus_obtinere_frequentiam (
+    vacuum)
+{
+    mach_timebase_info_data_t informatio;
+
+    mach_timebase_info(&informatio);
+    redde 1e9 * (f64)informatio.denom / (f64)informatio.numer;
+}
+
+vacuum
+fenestra_dormire (
+    i32 microsecundae)
+{
+    si (microsecundae > ZEPHYRUM)
+    {
+        usleep((unsigned int)microsecundae);
     }
 }
