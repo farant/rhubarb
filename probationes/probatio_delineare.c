@@ -179,6 +179,11 @@ main (
         tabula_pixelorum_pingere_chordam(tabula, X, X, textus,
             RGB(CCXXXVIII, CCXXXVIII, CCXXXVIII));
 
+        /* Pingere textum scalatum (magnum titulum) */
+        textus = chorda_ex_literis("DELINEARE", piscina);
+        tabula_pixelorum_pingere_chordam_scalatam(tabula, CCC, CD, textus,
+            RGB(CCLV, C, CCLV), IV);
+
         /* Praesentare pixela ad fenestram */
         fenestra_praesentare_pixela(fenestra, tabula);
     }
