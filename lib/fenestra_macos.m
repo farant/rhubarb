@@ -75,7 +75,8 @@
     /* Verificare si habemus imaginem pixelorum pingere */
     imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(self, "imagoPixelorum");
 
-    si (imago_pixelorum) {
+    si (imago_pixelorum)
+    {
         /* Obtinere contextum graphicum currentem */
         contextus = [[NSGraphicsContext currentContext] CGContext];
 
@@ -85,7 +86,9 @@
         /* Pingere imaginem scalatam ad implendum visum */
         limites = NSRectToCGRect(self.bounds);
         CGContextDrawImage(contextus, limites, imago_pixelorum);
-    } alioquin {
+    }
+    alioquin
+    {
         /* Fundum nigrum ordinarium */
         [[NSColor blackColor] setFill];
         NSRectFill(dirtyRect);
@@ -109,7 +112,8 @@ interior clavis_t
 convertere_clavem (
     insignatus brevis codex_clavis)
 {
-    commutatio (codex_clavis) {
+    commutatio (codex_clavis)
+    {
         /* Claves speciales */
         casus LIII: redde CLAVIS_EFFUGIUM;
         casus XXXVI: redde CLAVIS_REDITUS;
@@ -218,7 +222,8 @@ impellere_eventum (
     Fenestra* fenestra,
     constans Eventus* eventus)
 {
-    si (fenestra->eventus_numerus >= MAXIMUS_EVENTUUM) {
+    si (fenestra->eventus_numerus >= MAXIMUS_EVENTUUM)
+    {
         redde; /* Cauda eventuum plena */
     }
 
@@ -232,7 +237,8 @@ extrahere_eventum (
     Fenestra* fenestra,
     Eventus* eventus)
 {
-    si (fenestra->eventus_numerus == ZEPHYRUM) {
+    si (fenestra->eventus_numerus == ZEPHYRUM)
+    {
         redde FALSUM;
     }
 
@@ -253,7 +259,8 @@ fenestra_creare (
 
     @autoreleasepool {
         /* Initializare NSApplication si necessarium */
-        si (!NSApp) {
+        si (!NSApp)
+        {
             /* Disablere objecta zombie in modo liberationis */
             setenv("NSZombieEnabled", "NO", 1);
 
@@ -271,13 +278,16 @@ fenestra_creare (
 
         /* Creare masquam styli fenestrae */
         mamma_styli = 0;
-        si (configuratio->vexilla & FENESTRA_CLAUDIBILIS) {
+        si (configuratio->vexilla & FENESTRA_CLAUDIBILIS)
+        {
             mamma_styli |= NSWindowStyleMaskClosable;
         }
-        si (configuratio->vexilla & FENESTRA_MINUIBILIS) {
+        si (configuratio->vexilla & FENESTRA_MINUIBILIS)
+        {
             mamma_styli |= NSWindowStyleMaskMiniaturizable;
         }
-        si (configuratio->vexilla & FENESTRA_MUTABILIS) {
+        si (configuratio->vexilla & FENESTRA_MUTABILIS)
+        {
             mamma_styli |= NSWindowStyleMaskResizable;
         }
         mamma_styli |= NSWindowStyleMaskTitled;
@@ -291,7 +301,8 @@ fenestra_creare (
                                                                 defer:NO];
 
         /* Ponere titulum fenestrae */
-        si (configuratio->titulus) {
+        si (configuratio->titulus)
+        {
             [fenestra->fenestra_ns setTitle:[NSString stringWithUTF8String:configuratio->titulus]];
         }
 
@@ -311,7 +322,8 @@ fenestra_creare (
         [fenestra->fenestra_ns setReleasedWhenClosed:NO];
 
         /* Centrare si petitum */
-        si (configuratio->vexilla & FENESTRA_CENTRATA) {
+        si (configuratio->vexilla & FENESTRA_CENTRATA)
+        {
             [fenestra->fenestra_ns center];
         }
 
@@ -322,7 +334,8 @@ fenestra_creare (
         [NSApp activateIgnoringOtherApps:YES];
 
         /* Intrare plenam visionem si petitum */
-        si (configuratio->vexilla & FENESTRA_PLENA_VISIO) {
+        si (configuratio->vexilla & FENESTRA_PLENA_VISIO)
+        {
             [fenestra->fenestra_ns toggleFullScreen:nil];
         }
 
@@ -366,11 +379,13 @@ fenestra_perscrutari_eventus (
         dum ((eventus_ns = [NSApp nextEventMatchingMask:NSEventMaskAny
                                                untilDate:[NSDate distantPast]
                                                   inMode:NSDefaultRunLoopMode
-                                                 dequeue:YES])) {
+                                                 dequeue:YES]))
+        {
 
             Eventus eventus = {ZEPHYRUM};
 
-            commutatio ([eventus_ns type]) {
+            commutatio ([eventus_ns type])
+            {
                 ordinarius:
                     frange;
 
@@ -444,7 +459,8 @@ fenestra_perscrutari_eventus (
         }
 
         /* Verificare pro claudendo fenestrae */
-        si (fenestra->delegatus.debet_claudere) {
+        si (fenestra->delegatus.debet_claudere)
+        {
             Eventus eventus_claudendi = {ZEPHYRUM};
             eventus_claudendi.genus = EVENTUS_CLAUDERE;
             impellere_eventum(fenestra, &eventus_claudendi);
@@ -453,7 +469,8 @@ fenestra_perscrutari_eventus (
         /* Verificare pro mutatione magnitudinis */
         magnitudo_currens = [fenestra->fenestra_ns frame].size;
         si (magnitudo_currens.width != magnitudo_ultima.width ||
-            magnitudo_currens.height != magnitudo_ultima.height) {
+            magnitudo_currens.height != magnitudo_ultima.height)
+        {
             Eventus eventus_mutationis = {ZEPHYRUM};
             eventus_mutationis.genus = EVENTUS_MUTARE_MAGNITUDINEM;
             eventus_mutationis.datum.mutare_magnitudinem.latitudo = (i32)magnitudo_currens.width;
@@ -685,7 +702,8 @@ fenestra_creare_tabulam_pixelorum (
 
     /* Allocare tabulam pixelorum */
     tabula->pixela = calloc(tabula->latitudo * tabula->altitudo, magnitudo(i32));
-    si (!tabula->pixela) {
+    si (!tabula->pixela)
+    {
         liberare(tabula);
         redde NIHIL;
     }
@@ -713,7 +731,8 @@ tabula_pixelorum_vacare (
     si (!tabula || !tabula->pixela) redde;
 
     pixela_totalia = tabula->latitudo * tabula->altitudo;
-    per (i = ZEPHYRUM; i < pixela_totalia; i++) {
+    per (i = ZEPHYRUM; i < pixela_totalia; i++)
+    {
         tabula->pixela[i] = color;
     }
 }
