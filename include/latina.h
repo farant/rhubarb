@@ -181,6 +181,7 @@
 #define CLV 				155
 #define CLVI 				156
 #define CLX					160
+#define CLXV				165
 #define CLXX				170
 #define CLXXX				180
 #define CXC					190
