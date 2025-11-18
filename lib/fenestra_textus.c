@@ -82,25 +82,28 @@ tabula_pixelorum_pingere_chordam (
     TabulaPixelorum* tabula,
                 i32  x,
                 i32  y,
-    constans character* chorda,
+             chorda  textus,
                 i32  color)
 {
     i32 initium_x;
+    i32 idx;
 
     initium_x = x;
-    dum (*chorda)
+    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
     {
-        si (*chorda == '\n')
+        character c;
+        c = (character)textus.datum[idx];
+
+        si (c == '\n')
         {
             y += FONS_ALTITUDO;
             x = initium_x;
         }
         alioquin
         {
-            tabula_pixelorum_pingere_characterem(tabula, x, y, *chorda, color);
+            tabula_pixelorum_pingere_characterem(tabula, x, y, c, color);
             x += FONS_LATITUDO;
         }
-        chorda++;
     }
 }
 
@@ -152,26 +155,29 @@ tabula_pixelorum_pingere_chordam_scalatam (
     TabulaPixelorum* tabula,
                 i32  x,
                 i32  y,
-    constans character* chorda,
+             chorda  textus,
                 i32  color,
                 i32  scala)
 {
     i32 initium_x;
+    i32 idx;
 
     initium_x = x;
-    dum (*chorda)
+    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
     {
-        si (*chorda == '\n')
+        character c;
+        c = (character)textus.datum[idx];
+
+        si (c == '\n')
         {
             y += FONS_ALTITUDO * scala;
             x = initium_x;
         }
         alioquin
         {
-            tabula_pixelorum_pingere_characterem_scalatum(tabula, x, y, *chorda, color, scala);
+            tabula_pixelorum_pingere_characterem_scalatum(tabula, x, y, c, color, scala);
             x += FONS_LATITUDO * scala;
         }
-        chorda++;
     }
 }
 
@@ -181,7 +187,7 @@ tabula_pixelorum_pingere_chordam_praecisum (
     TabulaPixelorum* tabula,
                 i32  x,
                 i32  y,
-    constans character* chorda,
+             chorda  textus,
                 i32  color,
                 i32  praecisio_x,
                 i32  praecisio_y,
@@ -189,11 +195,15 @@ tabula_pixelorum_pingere_chordam_praecisum (
                 i32  praecisio_altitudo)
 {
     i32 initium_x;
+    i32 idx;
 
     initium_x = x;
-    dum (*chorda)
+    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
     {
-        si (*chorda == '\n')
+        character c;
+        c = (character)textus.datum[idx];
+
+        si (c == '\n')
         {
             y += FONS_ALTITUDO;
             x = initium_x;
@@ -207,31 +217,34 @@ tabula_pixelorum_pingere_chordam_praecisum (
             /* Solum pingere si character saltem partim visibilis */
             si (x + FONS_LATITUDO >= praecisio_x && y + FONS_ALTITUDO >= praecisio_y)
             {
-                pingere_characterem_praecisum(tabula, x, y, *chorda, color,
+                pingere_characterem_praecisum(tabula, x, y, c, color,
                                                praecisio_x, praecisio_y,
                                                praecisio_latitudo, praecisio_altitudo);
             }
             x += FONS_LATITUDO;
         }
-        chorda++;
     }
 }
 
 
 i32
 fons_latitudo_chordae (
-    constans character* chorda,
-                  i32  scala)
+             chorda  textus,
+                i32  scala)
 {
     i32 latitudo;
     i32 latitudo_maxima;
+    i32 idx;
 
     latitudo = ZEPHYRUM;
     latitudo_maxima = ZEPHYRUM;
 
-    dum (*chorda)
+    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
     {
-        si (*chorda == '\n')
+        character c;
+        c = (character)textus.datum[idx];
+
+        si (c == '\n')
         {
             si (latitudo > latitudo_maxima) latitudo_maxima = latitudo;
             latitudo = ZEPHYRUM;
@@ -240,7 +253,6 @@ fons_latitudo_chordae (
         {
             latitudo += FONS_LATITUDO * scala;
         }
-        chorda++;
     }
 
     redde latitudo > latitudo_maxima ? latitudo : latitudo_maxima;

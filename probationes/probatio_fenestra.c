@@ -1,6 +1,7 @@
 /* Probatio pro fenestra et tabula pixelorum */
 #include "latina.h"
 #include "fenestra.h"
+#include "chorda.h"
 #include <stdio.h>
 
 int
@@ -13,6 +14,7 @@ main (
     TabulaPixelorum* tabula;
     Eventus eventus;
     b32 currens;
+    chorda textus;
 
     /* Creare piscinam */
     piscina = piscina_generare_dynamicum("fenestra", M * M);
@@ -77,8 +79,8 @@ main (
         tabula_pixelorum_vacare(tabula, RGB(XXVI, XXVI, XLVI));
 
         /* Pingere textum */
-        tabula_pixelorum_pingere_chordam(tabula, X, X,
-            "Salve Mundi!\n\nPremere EFFUGIUM ut claudas.",
+        textus = chorda_ex_literis("Salve Mundi!\n\nPremere EFFUGIUM ut claudas.", piscina);
+        tabula_pixelorum_pingere_chordam(tabula, X, X, textus,
             RGB(CCXXXVIII, CCXXXVIII, CCXXXVIII));
 
         /* Praesentare pixela ad fenestram */

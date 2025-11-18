@@ -3,6 +3,7 @@
 
 #include "latina.h"
 #include "piscina.h"
+#include "chorda.h"
 
 /* ==================================================
  * FENESTRA - Creatio et Gestio Fenestrarum
@@ -38,7 +39,8 @@
  *       }
  *
  *       tabula_pixelorum_vacare(tabula, RGB(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM));
- *       tabula_pixelorum_pingere_chordam(tabula, X, X, "Salve!", RGB(CCLV, CCLV, CCLV));
+ *       chorda textus = chorda_ex_literis("Salve!", piscina);
+ *       tabula_pixelorum_pingere_chordam(tabula, X, X, textus, RGB(CCLV, CCLV, CCLV));
  *       fenestra_praesentare_pixela(fenestra, tabula);
  *   }
  *
@@ -595,7 +597,7 @@ tabula_pixelorum_pingere_chordam (
     TabulaPixelorum* tabula,
                 i32  x,
                 i32  y,
-    constans character* chorda,
+             chorda  textus,
                 i32  color);
 
 /* Pingere characterem scalatum
@@ -630,7 +632,7 @@ tabula_pixelorum_pingere_chordam_scalatam (
     TabulaPixelorum* tabula,
                 i32  x,
                 i32  y,
-    constans character* chorda,
+             chorda  textus,
                 i32  color,
                 i32  scala);
 
@@ -651,7 +653,7 @@ tabula_pixelorum_pingere_chordam_praecisum (
     TabulaPixelorum* tabula,
                 i32  x,
                 i32  y,
-    constans character* chorda,
+             chorda  textus,
                 i32  color,
                 i32  praecisio_x,
                 i32  praecisio_y,
@@ -672,8 +674,8 @@ tabula_pixelorum_pingere_chordam_praecisum (
  */
 i32
 fons_latitudo_chordae (
-    constans character* chorda,
-                  i32  scala);
+             chorda  textus,
+                i32  scala);
 
 /* Obtinere altitudinem chordae
  *

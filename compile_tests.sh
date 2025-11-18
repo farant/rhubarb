@@ -39,6 +39,7 @@ declare -a SOURCE_FILES=(
 # GUI app source files (fenestra - requires Objective-C and Cocoa)
 declare -a GUI_SOURCE_FILES=(
   "lib/piscina.c"
+  "lib/chorda.c"
   "lib/fenestra_textus.c"
   "lib/fenestra_macos.m"
   "lib/delineare.c"

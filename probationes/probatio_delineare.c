@@ -2,6 +2,7 @@
 #include "latina.h"
 #include "fenestra.h"
 #include "delineare.h"
+#include "chorda.h"
 #include <stdio.h>
 
 int
@@ -17,6 +18,7 @@ main (
     b32 currens;
     i32 puncta_trianguli[VI];
     i32 puncta_polygoni[VIII];
+    chorda textus;
 
     /* Creare piscinam */
     piscina = piscina_generare_dynamicum("delineare", M * M);
@@ -173,8 +175,8 @@ main (
         delineare_cratem(ctx, L, RGB(LXIV, LXIV, LXIV));
 
         /* Pingere textum */
-        tabula_pixelorum_pingere_chordam(tabula, X, X,
-            "Probatio Delineare\n\nPremere EFFUGIUM ut claudas.",
+        textus = chorda_ex_literis("Probatio Delineare\n\nPremere EFFUGIUM ut claudas.", piscina);
+        tabula_pixelorum_pingere_chordam(tabula, X, X, textus,
             RGB(CCXXXVIII, CCXXXVIII, CCXXXVIII));
 
         /* Praesentare pixela ad fenestram */
