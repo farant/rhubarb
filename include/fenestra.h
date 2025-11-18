@@ -2,6 +2,7 @@
 #define FENESTRA_H
 
 #include "latina.h"
+#include "piscina.h"
 
 /* ==================================================
  * FENESTRA - Creatio et Gestio Fenestrarum
@@ -17,14 +18,16 @@
  * - Texti integrati (fons 6x8)
  *
  * EXEMPLUM:
+ *   Piscina* piscina = piscina_generare_dynamicum("fenestra", M * M);
+ *
  *   FenestraConfiguratio config = {
  *       .titulus = "Salve Munde",
  *       .x = C, .y = C,
  *       .latitudo = DCCC, .altitudo = DCCC,
  *       .vexilla = FENESTRA_ORDINARIA
  *   };
- *   Fenestra* fenestra = fenestra_creare(&config);
- *   TabulaPixelorum* tabula = fenestra_creare_tabulam_pixelorum(fenestra, CDLXXX);
+ *   Fenestra* fenestra = fenestra_creare(piscina, &config);
+ *   TabulaPixelorum* tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CDLXXX);
  *
  *   dum (!fenestra_debet_claudere(fenestra)) {
  *       fenestra_perscrutari_eventus(fenestra);
@@ -39,8 +42,8 @@
  *       fenestra_praesentare_pixela(fenestra, tabula);
  *   }
  *
- *   fenestra_destruere_tabulam_pixelorum(tabula);
  *   fenestra_destruere(fenestra);
+ *   piscina_destruere(piscina);
  *
  * ================================================== */
 
@@ -240,15 +243,20 @@ nomen structura Fenestra Fenestra;
 
 /* Creare fenestram novam
  *
+ * piscina: piscina pro allocando memoriam
  * configuratio: configuratio fenestrae
  *
  * Reddit: fenestram novam vel NIHIL si error
  */
 Fenestra*
 fenestra_creare (
+    Piscina*                       piscina,
     constans FenestraConfiguratio* configuratio);
 
 /* Destruere fenestram
+ *
+ * Liberat solum objecta systematis nativi (NSWindow, etc.).
+ * Memoria allocata ex piscina liberabitur cum piscina_destruere().
  *
  * fenestra: fenestra destruenda
  */
@@ -473,6 +481,7 @@ fenestra_obtinere_tractationem_nativam (
  * Creat tabulam pixelorum cum altitudine fixa et latitudine
  * calculata ex ratione aspectus fenestrae.
  *
+ * piscina: piscina pro allocando memoriam
  * fenestra: fenestra
  * altitudo_fixa: altitudo tabulae in pixelis
  *
@@ -480,16 +489,9 @@ fenestra_obtinere_tractationem_nativam (
  */
 TabulaPixelorum*
 fenestra_creare_tabulam_pixelorum (
+    Piscina*  piscina,
     Fenestra* fenestra,
          i32  altitudo_fixa);
-
-/* Destruere tabulam pixelorum
- *
- * tabula: tabula pixelorum destruenda
- */
-vacuum
-fenestra_destruere_tabulam_pixelorum (
-    TabulaPixelorum* tabula);
 
 /* Praesentare pixela ad fenestram
  *

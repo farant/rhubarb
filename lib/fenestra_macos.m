@@ -99,6 +99,7 @@
 #define MAXIMUS_EVENTUUM CCLVI
 
 structura Fenestra {
+    Piscina* piscina;
     NSWindow *fenestra_ns;
     FenestraVisus *visus;
     FenestraDelegatus *delegatus;
@@ -250,6 +251,7 @@ extrahere_eventum (
 
 Fenestra*
 fenestra_creare (
+    Piscina*                       piscina,
     constans FenestraConfiguratio* configuratio)
 {
     Fenestra *fenestra;
@@ -273,8 +275,10 @@ fenestra_creare (
             TransformProcessType(&psn, kProcessTransformToForegroundApplication);
         }
 
-        fenestra = calloc(1, magnitudo(Fenestra));
+        fenestra = piscina_allocare(piscina, magnitudo(Fenestra));
         si (!fenestra) redde NIHIL;
+
+        fenestra->piscina = piscina;
 
         /* Creare masquam styli fenestrae */
         mamma_styli = 0;
@@ -354,7 +358,7 @@ fenestra_destruere (
         [fenestra->delegatus release];
         [fenestra->visus release];
         [fenestra->fenestra_ns release];
-        liberare(fenestra);
+        /* Non liberare(fenestra) - piscina possidet memoriam */
     }
 }
 
@@ -679,6 +683,7 @@ fenestra_obtinere_tractationem_nativam (
 
 TabulaPixelorum*
 fenestra_creare_tabulam_pixelorum (
+    Piscina*  piscina,
     Fenestra* fenestra,
     i32 altitudo_fixa)
 {
@@ -687,7 +692,7 @@ fenestra_creare_tabulam_pixelorum (
 
     si (!fenestra || altitudo_fixa <= ZEPHYRUM) redde NIHIL;
 
-    tabula = calloc(I, magnitudo(TabulaPixelorum));
+    tabula = piscina_allocare(piscina, magnitudo(TabulaPixelorum));
     si (!tabula) redde NIHIL;
 
     /* Obtinere dimensiones fenestrae */
@@ -701,23 +706,14 @@ fenestra_creare_tabulam_pixelorum (
     tabula->latitudo = (i32)(tabula->fenestra_latitudo / tabula->scala);
 
     /* Allocare tabulam pixelorum */
-    tabula->pixela = calloc(tabula->latitudo * tabula->altitudo, magnitudo(i32));
+    tabula->pixela = piscina_allocare(piscina, tabula->latitudo * tabula->altitudo * magnitudo(i32));
     si (!tabula->pixela)
     {
-        liberare(tabula);
+        /* Piscina possidet memoriam - non liberare */
         redde NIHIL;
     }
 
     redde tabula;
-}
-
-vacuum
-fenestra_destruere_tabulam_pixelorum (
-    TabulaPixelorum* tabula)
-{
-    si (!tabula) redde;
-    si (tabula->pixela) liberare(tabula->pixela);
-    liberare(tabula);
 }
 
 vacuum

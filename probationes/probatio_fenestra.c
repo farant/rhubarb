@@ -7,11 +7,19 @@ int
 main (
     void)
 {
+    Piscina* piscina;
     FenestraConfiguratio configuratio;
     Fenestra* fenestra;
     TabulaPixelorum* tabula;
     Eventus eventus;
     b32 currens;
+
+    /* Creare piscinam */
+    piscina = piscina_generare_dynamicum("fenestra", M * M);
+    si (piscina == NIHIL) {
+        imprimere("Errore: non possum creare piscinam\n");
+        return 1;
+    }
 
     /* Configurare fenestram */
     configuratio.titulus = "Probatio Fenestrae";
@@ -22,17 +30,19 @@ main (
     configuratio.vexilla = FENESTRA_ORDINARIA;
 
     /* Creare fenestram */
-    fenestra = fenestra_creare(&configuratio);
+    fenestra = fenestra_creare(piscina, &configuratio);
     si (fenestra == NIHIL) {
         imprimere("Errore: non possum creare fenestram\n");
+        piscina_destruere(piscina);
         return 1;
     }
 
     /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(fenestra, CDLXXX);
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CDLXXX);
     si (tabula == NIHIL) {
         imprimere("Errore: non possum creare tabulam pixelorum\n");
         fenestra_destruere(fenestra);
+        piscina_destruere(piscina);
         return 1;
     }
 
@@ -75,9 +85,9 @@ main (
         fenestra_praesentare_pixela(fenestra, tabula);
     }
 
-    /* Delere tabulam pixelorum et fenestram */
-    fenestra_destruere_tabulam_pixelorum(tabula);
+    /* Delere fenestram et piscinam */
     fenestra_destruere(fenestra);
+    piscina_destruere(piscina);
 
     redde ZEPHYRUM;
 }
