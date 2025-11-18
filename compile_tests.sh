@@ -45,6 +45,7 @@ declare -a GUI_SOURCE_FILES=(
   "lib/fenestra_macos.m"
   "lib/delineare.c"
   "lib/tempus.c"
+  "lib/pagina.c"
 )
 
 # Color codes
@@ -145,7 +146,7 @@ run_all_tests() {
     local test_files=""
 
     while IFS= read -r file; do
-        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]]; then
+        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'
