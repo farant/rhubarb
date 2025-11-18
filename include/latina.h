@@ -250,6 +250,7 @@
 #define DXII 				512
 #define DC					600
 #define DCC					700
+#define DCCL				750
 #define DCCC				800
 #define CM					900
 #define M						1000

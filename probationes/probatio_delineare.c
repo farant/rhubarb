@@ -144,8 +144,30 @@ main (
         /* Ellipsis aurantius */
         delineare_ellipsin(ctx, CD, CD, LX, XL, RGB(CCLV, CLXV, ZEPHYRUM));
 
+        /* Ellipsis plena purpurea */
+        delineare_ellipsin_plenam(ctx, DC, CD, XL, XXX, RGB(CXXX, L, CXXX));
+
         /* Polygonum albus */
         delineare_polygonum(ctx, puncta_polygoni, IV, RGB(CCLV, CCLV, CCLV));
+
+        /* Polygonum plenum viridis obscurus */
+        delineare_polygonum_plenum(ctx, puncta_polygoni, IV, RGB(ZEPHYRUM, C, ZEPHYRUM));
+
+        /* Rectangulum cum exemplar - tessellatum */
+        delineare_ponere_modum(ctx, MODUS_EXEMPLAR);
+        delineare_ponere_exemplar_internum(ctx, EXEMPLAR_TESSELLATUM);
+        delineare_rectangulum_plenum(ctx, DC, CDXX, LX, L, RGB(CCLV, CCLV, ZEPHYRUM));
+        delineare_ponere_modum(ctx, MODUS_SOLIDUS);
+
+        /* Pixela singularia rubra */
+        delineare_pixelum(ctx, X, X, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
+        delineare_pixelum(ctx, XII, X, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
+        delineare_pixelum(ctx, X, XII, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
+        delineare_pixelum(ctx, XII, XII, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
+
+        /* Lineae horizontalis et verticalis */
+        delineare_lineam_horizontalem(ctx, DCC, DCCL, XXX, RGB(ZEPHYRUM, CCLV, CCLV));
+        delineare_lineam_verticalem(ctx, DCCL, XXX, LXX, RGB(CCLV, ZEPHYRUM, CCLV));
 
         /* Crates griseus */
         delineare_cratem(ctx, L, RGB(LXIV, LXIV, LXIV));
