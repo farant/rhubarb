@@ -59,16 +59,111 @@ invenire_finem_lineae (
     constans Pagina* pagina,
     i32 offset)
 {
-    i32 i;
+    s32 i;
 
     /* Scandere ad newline vel finem */
-    per (i = offset; i < pagina->longitudo; i++) {
-        si (pagina->buffer[i] == '\n') {
-            redde i;
+    per (i = (s32)offset; i < (s32)pagina->longitudo; i++) {
+        si (pagina->buffer[(i32)i] == '\n') {
+            redde (i32)i;
         }
     }
 
-    redde pagina->longitudo;
+    redde (i32)pagina->longitudo;
+}
+
+/* Public wrappers pro utilitas linearum */
+i32
+pagina_invenire_initium_lineae (
+    constans Pagina* pagina,
+    i32 offset)
+{
+    redde invenire_initium_lineae(pagina, offset);
+}
+
+i32
+pagina_invenire_finem_lineae (
+    constans Pagina* pagina,
+    i32 offset)
+{
+    redde invenire_finem_lineae(pagina, offset);
+}
+
+/* Verificare si character est alphanumericus vel underscore */
+interior b32
+est_character_verbi (
+    character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           (c == '_');
+}
+
+/* Movere ad initium verbi proximi (w) */
+vacuum
+pagina_movere_ad_verbum_proximum (
+    Pagina* pagina)
+{
+    s32 i;
+    b32 in_verbo;
+
+    si (pagina->cursor >= pagina->longitudo) {
+        redde;
+    }
+
+    i = (s32)pagina->cursor;
+
+    /* Saltare verbum currens */
+    in_verbo = est_character_verbi(pagina->buffer[i]);
+    dum (i < (s32)pagina->longitudo &&
+         est_character_verbi(pagina->buffer[i]) == in_verbo &&
+         pagina->buffer[i] != ' ' &&
+         pagina->buffer[i] != '\t' &&
+         pagina->buffer[i] != '\n') {
+        i++;
+    }
+
+    /* Saltare spatia */
+    dum (i < (s32)pagina->longitudo &&
+         (pagina->buffer[i] == ' ' ||
+          pagina->buffer[i] == '\t' ||
+          pagina->buffer[i] == '\n')) {
+        i++;
+    }
+
+    pagina->cursor = (i32)i;
+}
+
+/* Movere ad initium verbi praecedentis (b) */
+vacuum
+pagina_movere_ad_verbum_praecedens (
+    Pagina* pagina)
+{
+    s32 i;
+
+    si (pagina->cursor == ZEPHYRUM) {
+        redde;
+    }
+
+    i = (s32)pagina->cursor - I;
+
+    /* Saltare spatia retro */
+    dum (i > ZEPHYRUM &&
+         (pagina->buffer[i] == ' ' ||
+          pagina->buffer[i] == '\t' ||
+          pagina->buffer[i] == '\n')) {
+        i--;
+    }
+
+    /* Saltare ad initium verbi */
+    dum (i > ZEPHYRUM &&
+         pagina->buffer[i - I] != ' ' &&
+         pagina->buffer[i - I] != '\t' &&
+         pagina->buffer[i - I] != '\n') {
+        i--;
+    }
+
+    pagina->cursor = (i32)i;
 }
 
 
@@ -477,6 +572,53 @@ pagina_habet_selectionem (
     redde (pagina->selectio_initium >= ZEPHYRUM &&
            pagina->selectio_finis >= ZEPHYRUM &&
            pagina->selectio_initium != pagina->selectio_finis);
+}
+
+
+/* ==================================================
+ * Indentatio
+ * ================================================== */
+
+i32
+pagina_obtinere_indentationem_lineae (
+    constans Pagina* pagina,
+    character* exitus,
+    i32 maxima_longitudo)
+{
+    i32 initium_lineae;
+    s32 i;
+    i32 longitudo;
+
+    /* Invenire initium lineae currentis */
+    initium_lineae = invenire_initium_lineae(pagina, pagina->cursor);
+
+    /* Computare longitudinem indentationis */
+    longitudo = ZEPHYRUM;
+    per (i = (s32)initium_lineae; i < (s32)pagina->longitudo; i++) {
+        character c;
+
+        c = pagina->buffer[(i32)i];
+
+        /* Si non spatium vel tab, finis indentationis */
+        si (c != ' ' && c != '\t') {
+            frange;
+        }
+
+        /* Copiere si spatium in buffer */
+        si (longitudo < (i32)maxima_longitudo - I) {
+            exitus[longitudo] = c;
+            longitudo++;
+        }
+    }
+
+    /* Terminare chordam */
+    si (longitudo < (i32)maxima_longitudo) {
+        exitus[longitudo] = '\0';
+    } alioquin {
+        exitus[(i32)maxima_longitudo - I] = '\0';
+    }
+
+    redde longitudo;
 }
 
 

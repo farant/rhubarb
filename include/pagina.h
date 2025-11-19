@@ -285,6 +285,72 @@ pagina_habet_selectionem (
 
 
 /* ==================================================
+ * Indentatio
+ * ================================================== */
+
+/* Obtinere indentationem lineae currentis
+ *
+ * Copiat spatia et tabs initiales lineae currentis ad buffer.
+ *
+ * pagina: pagina
+ * exitus: buffer pro indentation (debet esse magnitudo sufficiens)
+ * maxima_longitudo: magnitudo maxima buffer exitus
+ *
+ * Reddit: longitudo indentationis
+ */
+i32
+pagina_obtinere_indentationem_lineae (
+    constans Pagina* pagina,
+    character* exitus,
+    i32 maxima_longitudo);
+
+
+/* ==================================================
+ * Utilitas Linearum
+ * ================================================== */
+
+/* Invenire initium lineae currentis
+ *
+ * pagina: pagina
+ * offset: positio in textu
+ *
+ * Reddit: offset initii lineae
+ */
+i32
+pagina_invenire_initium_lineae (
+    constans Pagina* pagina,
+    i32 offset);
+
+/* Invenire finem lineae currentis
+ *
+ * pagina: pagina
+ * offset: positio in textu
+ *
+ * Reddit: offset finis lineae (ante newline, vel finis textus)
+ */
+i32
+pagina_invenire_finem_lineae (
+    constans Pagina* pagina,
+    i32 offset);
+
+/* Movere ad initium verbi proximi (w)
+ *
+ * pagina: pagina
+ */
+vacuum
+pagina_movere_ad_verbum_proximum (
+    Pagina* pagina);
+
+/* Movere ad initium verbi praecedentis (b)
+ *
+ * pagina: pagina
+ */
+vacuum
+pagina_movere_ad_verbum_praecedens (
+    Pagina* pagina);
+
+
+/* ==================================================
  * Interrogationes
  * ================================================== */
 
