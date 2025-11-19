@@ -553,6 +553,12 @@ pagina_reddere (
             perge;
         }
 
+        /* Tractare tab - reddere ut duo spatia */
+        si (c == '\t') {
+            current_x += II;  /* Avanzare duo spatia */
+            perge;
+        }
+
         /* Verificare si extra limites */
         si (current_y >= altitudo) {
             frange;

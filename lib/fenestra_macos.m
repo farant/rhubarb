@@ -395,19 +395,43 @@ fenestra_perscrutari_eventus (
                 ordinarius:
                     frange;
 
-                casus NSEventTypeKeyDown:
+                casus NSEventTypeKeyDown: {
+                    NSString* characteres;
+
                     eventus.genus = EVENTUS_CLAVIS_DEPRESSUS;
                     eventus.datum.clavis.clavis = convertere_clavem([eventus_ns keyCode]);
                     eventus.datum.clavis.modificantes = (i32)[eventus_ns modifierFlags];
+
+                    /* Extrahere characterem typatum ex NSEvent */
+                    characteres = [eventus_ns characters];
+                    si ([characteres length] > ZEPHYRUM) {
+                        eventus.datum.clavis.typus = (character)[characteres characterAtIndex:ZEPHYRUM];
+                    } alioquin {
+                        eventus.datum.clavis.typus = '\0';
+                    }
+
                     impellere_eventum(fenestra, &eventus);
                     frange;
+                }
 
-                casus NSEventTypeKeyUp:
+                casus NSEventTypeKeyUp: {
+                    NSString* characteres;
+
                     eventus.genus = EVENTUS_CLAVIS_LIBERATUS;
                     eventus.datum.clavis.clavis = convertere_clavem([eventus_ns keyCode]);
                     eventus.datum.clavis.modificantes = (i32)[eventus_ns modifierFlags];
+
+                    /* Extrahere characterem typatum ex NSEvent */
+                    characteres = [eventus_ns characters];
+                    si ([characteres length] > ZEPHYRUM) {
+                        eventus.datum.clavis.typus = (character)[characteres characterAtIndex:ZEPHYRUM];
+                    } alioquin {
+                        eventus.datum.clavis.typus = '\0';
+                    }
+
                     impellere_eventum(fenestra, &eventus);
                     frange;
+                }
 
                 casus NSEventTypeLeftMouseDown:
                 casus NSEventTypeRightMouseDown:

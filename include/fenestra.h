@@ -184,8 +184,9 @@ nomen structura {
             i32 altitudo;
         } mutare_magnitudinem;
         structura {
-            clavis_t clavis;
-            i32      modificantes;
+            clavis_t  clavis;
+            character typus;          /* Character typed (0 if none/special key) */
+            i32       modificantes;
         } clavis;
         structura {
             i32          x;

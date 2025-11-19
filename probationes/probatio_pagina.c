@@ -88,11 +88,12 @@ main (
                 casus EVENTUS_CLAVIS_DEPRESSUS:
                 {
                     clavis_t clavis;
-                    i32 modificantes;
+                    character c;
 
                     clavis = eventus.datum.clavis.clavis;
-                    modificantes = eventus.datum.clavis.modificantes;
+                    c = eventus.datum.clavis.typus;
 
+                    /* Tractare claves speciales */
                     si (clavis == CLAVIS_EFFUGIUM)
                     {
                         currens = FALSUM;
@@ -129,54 +130,19 @@ main (
                     {
                         pagina_movere_cursor_finis(&pagina);
                     }
-                    alioquin si (clavis == CLAVIS_REDITUS)
+                    alioquin si (c == '\n' || c == '\r')
                     {
+                        /* Enter/Return - inserere newline */
                         pagina_inserere_characterem(&pagina, '\n');
                     }
-                    alioquin si (clavis >= XXXII && clavis <= CXXVI)
+                    alioquin si (c == '\t')
                     {
-                        character c;
-
-                        c = (character)clavis;
-
-                        /* Claves litterarum semper veniunt ut maiusculae, convertere si necesse */
-                        si (c >= 'A' && c <= 'Z')
-                        {
-                            si (!(modificantes & MOD_SHIFT))
-                            {
-                                c = (character)(c + XXXII);  /* Convertere ad minusculam */
-                            }
-                        }
-                        /* Numerorum et punctuationis cum shift */
-                        alioquin si (modificantes & MOD_SHIFT)
-                        {
-                            commutatio (c)
-                            {
-                                casus '1': c = '!'; frange;
-                                casus '2': c = '@'; frange;
-                                casus '3': c = '#'; frange;
-                                casus '4': c = '$'; frange;
-                                casus '5': c = '%'; frange;
-                                casus '6': c = '^'; frange;
-                                casus '7': c = '&'; frange;
-                                casus '8': c = '*'; frange;
-                                casus '9': c = '('; frange;
-                                casus '0': c = ')'; frange;
-                                casus '-': c = '_'; frange;
-                                casus '=': c = '+'; frange;
-                                casus '[': c = '{'; frange;
-                                casus ']': c = '}'; frange;
-                                casus '\\': c = '|'; frange;
-                                casus ';': c = ':'; frange;
-                                casus '\'': c = '"'; frange;
-                                casus ',': c = '<'; frange;
-                                casus '.': c = '>'; frange;
-                                casus '/': c = '?'; frange;
-                                casus '`': c = '~'; frange;
-                                ordinarius: frange;
-                            }
-                        }
-
+                        /* Tab - servare ut tab character */
+                        pagina_inserere_characterem(&pagina, '\t');
+                    }
+                    /* Characteres imprimibiles - usare characterem ex NSEvent */
+                    alioquin si (c != '\0' && c >= XXXII && c <= CXXVI)
+                    {
                         pagina_inserere_characterem(&pagina, c);
                     }
 
