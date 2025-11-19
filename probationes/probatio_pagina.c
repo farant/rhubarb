@@ -3,6 +3,7 @@
 #include "fenestra.h"
 #include "pagina.h"
 #include "piscina.h"
+#include "tempus.h"
 #include <stdio.h>
 
 /* Modi editoris (vim-style) */
@@ -24,6 +25,8 @@ main (
                   Pagina  pagina;
              ModoEditor  modo;
                     character clavis_praecedens;
+                     b32  esperans_fd;
+                     f64  tempus_f;
 
     /* Creare piscinam */
     piscina = piscina_generare_dynamicum("pagina", M * M);
@@ -66,6 +69,8 @@ main (
     /* Initiare modum vim */
     modo = MODO_NORMAL;
     clavis_praecedens = '\0';
+    esperans_fd = FALSUM;
+    tempus_f = 0.0;
 
     /* Inserere textum initialem */
     pagina_inserere_chordam(&pagina, "Salve! Hoc est probatio paginae.\n");
@@ -114,10 +119,12 @@ main (
                             /* ESC vel Ctrl-[ - redire ad modum normalem */
                             modo = MODO_NORMAL;
                             clavis_praecedens = '\0';
+                            esperans_fd = FALSUM;
                         }
                         alioquin si (clavis == CLAVIS_RETRORSUM)
                         {
                             pagina_delere_characterem(&pagina);
+                            esperans_fd = FALSUM;
                         }
                         alioquin si (clavis == CLAVIS_DELERE)
                         {
@@ -144,7 +151,45 @@ main (
                         }
                         alioquin si (c != '\0' && c >= XXXII && c <= CXXVI)
                         {
-                            pagina_inserere_characterem(&pagina, c);
+                            /* Verificare si esperamus 'd' post 'f' */
+                            si (esperans_fd)
+                            {
+                                f64 tempus_elapsum;
+
+                                tempus_elapsum = tempus_nunc() - tempus_f;
+
+                                si (c == 'd' && tempus_elapsum < 0.5)
+                                {
+                                    /* fd intra tempus - delere 'f' et exire */
+                                    pagina_delere_characterem(&pagina);
+                                    modo = MODO_NORMAL;
+                                    clavis_praecedens = '\0';
+                                    esperans_fd = FALSUM;
+                                }
+                                alioquin
+                                {
+                                    /* Timeout vel character differens - inserere normaliter */
+                                    esperans_fd = FALSUM;
+                                    pagina_inserere_characterem(&pagina, c);
+
+                                    si (c == 'f')
+                                    {
+                                        esperans_fd = VERUM;
+                                        tempus_f = tempus_nunc();
+                                    }
+                                }
+                            }
+                            alioquin
+                            {
+                                pagina_inserere_characterem(&pagina, c);
+
+                                /* Si 'f' typatum, initiare sequentiam */
+                                si (c == 'f')
+                                {
+                                    esperans_fd = VERUM;
+                                    tempus_f = tempus_nunc();
+                                }
+                            }
                         }
                     }
                     alioquin si (modo == MODO_NORMAL)
@@ -191,12 +236,14 @@ main (
                         {
                             modo = MODO_INSERT;
                             clavis_praecedens = '\0';
+                            esperans_fd = FALSUM;
                         }
                         alioquin si (c == 'a')
                         {
                             pagina_movere_cursor_dextram(&pagina);
                             modo = MODO_INSERT;
                             clavis_praecedens = '\0';
+                            esperans_fd = FALSUM;
                         }
                         /* Commandos multi-clavis */
                         alioquin si (c == 'd')
@@ -306,6 +353,7 @@ main (
 
                             modo = MODO_INSERT;
                             clavis_praecedens = '\0';
+                            esperans_fd = FALSUM;
                         }
                         alioquin si (c == 'O')
                         {
@@ -328,6 +376,7 @@ main (
 
                             modo = MODO_INSERT;
                             clavis_praecedens = '\0';
+                            esperans_fd = FALSUM;
                         }
                         alioquin
                         {
