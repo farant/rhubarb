@@ -38,6 +38,7 @@ declare -a SOURCE_FILES=(
 	"lib/symbola.c"
 	"lib/entitas.c"
 	"lib/uuid.c"
+	"lib/graphus_entitatum.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)
