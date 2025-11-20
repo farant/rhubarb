@@ -1,5 +1,8 @@
 #include "pagina.h"
 #include "chorda.h"
+#include "tempus.h"
+#include "delineare.h"
+#include "thema.h"
 #include <string.h>
 
 /* ==================================================
@@ -187,6 +190,12 @@ pagina_initiare (
     pagina->cursor = ZEPHYRUM;
     pagina->selectio_initium = -I;
     pagina->selectio_finis = -I;
+
+    /* Initiare vim state */
+    pagina->modo = MODO_NORMAL;
+    pagina->clavis_praecedens = '\0';
+    pagina->esperans_fd = FALSUM;
+    pagina->tempus_f = 0.0;
 
     /* Copiere identificator */
     per (i = ZEPHYRUM; i < PAGINA_IDENTIFICATOR_LONGITUDO - I; i++) {
@@ -726,7 +735,7 @@ pagina_reddere (
             pixel_x,
             pixel_y,
             c,
-            RGB(CCLV, CCLV, CCLV));
+            thema_color(COLOR_TEXT));
 
         current_x++;
     }
@@ -755,7 +764,424 @@ pagina_reddere (
                 tabula,
                 cursor_pixel_x,
                 cursor_pixel_y + j,
-                RGB(CCLV, CCLV, ZEPHYRUM));
+                thema_color(COLOR_CURSOR));
         }
     }
+}
+
+
+/* ==================================================
+ * Tractare Eventus (Vim Mode)
+ * ================================================== */
+
+b32
+pagina_tractare_eventum (
+    Pagina* pagina,
+    constans Eventus* eventus)
+{
+    clavis_t clavis;
+    character c;
+
+    si (eventus->genus != EVENTUS_CLAVIS_DEPRESSUS) {
+        redde VERUM;  /* Ignorare eventus non-clavis */
+    }
+
+    clavis = eventus->datum.clavis.clavis;
+    c = eventus->datum.clavis.typus;
+
+    si (pagina->modo == MODO_INSERT)
+    {
+        /* Modo Insert - tractare ut editor textus normalis */
+        si (clavis == CLAVIS_EFFUGIUM || c == XXVII)
+        {
+            /* ESC vel Ctrl-[ - redire ad modum normalem */
+            pagina->modo = MODO_NORMAL;
+            pagina->clavis_praecedens = '\0';
+            pagina->esperans_fd = FALSUM;
+        }
+        alioquin si (clavis == CLAVIS_RETRORSUM)
+        {
+            pagina_delere_characterem(pagina);
+            pagina->esperans_fd = FALSUM;
+        }
+        alioquin si (clavis == CLAVIS_DELERE)
+        {
+            pagina_delere_characterem_ante(pagina);
+        }
+        alioquin si (c == '\n' || c == '\r')
+        {
+            character indentatio[C];
+            i32 longitudo_indentationis;
+            i32 i;
+
+            longitudo_indentationis = pagina_obtinere_indentationem_lineae(
+                pagina, indentatio, C);
+
+            pagina_inserere_characterem(pagina, '\n');
+
+            per (i = ZEPHYRUM; i < longitudo_indentationis; i++) {
+                pagina_inserere_characterem(pagina, indentatio[i]);
+            }
+        }
+        alioquin si (c == '\t')
+        {
+            pagina_inserere_characterem(pagina, '\t');
+        }
+        alioquin si (c != '\0' && c >= XXXII && c <= CXXVI)
+        {
+            /* Verificare si esperamus 'd' post 'f' */
+            si (pagina->esperans_fd)
+            {
+                f64 tempus_elapsum;
+
+                tempus_elapsum = tempus_nunc() - pagina->tempus_f;
+
+                si (c == 'd' && tempus_elapsum < 0.5)
+                {
+                    /* fd intra tempus - delere 'f' et exire */
+                    pagina_delere_characterem(pagina);
+                    pagina->modo = MODO_NORMAL;
+                    pagina->clavis_praecedens = '\0';
+                    pagina->esperans_fd = FALSUM;
+                }
+                alioquin
+                {
+                    /* Timeout vel character differens - inserere normaliter */
+                    pagina->esperans_fd = FALSUM;
+                    pagina_inserere_characterem(pagina, c);
+
+                    si (c == 'f')
+                    {
+                        pagina->esperans_fd = VERUM;
+                        pagina->tempus_f = tempus_nunc();
+                    }
+                }
+            }
+            alioquin
+            {
+                pagina_inserere_characterem(pagina, c);
+
+                /* Si 'f' typatum, initiare sequentiam */
+                si (c == 'f')
+                {
+                    pagina->esperans_fd = VERUM;
+                    pagina->tempus_f = tempus_nunc();
+                }
+            }
+        }
+    }
+    alioquin si (pagina->modo == MODO_NORMAL)
+    {
+        /* Modo Normal - tractare vim commands */
+        si (clavis == CLAVIS_EFFUGIUM)
+        {
+            redde FALSUM;  /* Signal quit */
+        }
+        /* Movimento hjkl */
+        alioquin si (c == 'h')
+        {
+            pagina_movere_cursor_sinistram(pagina);
+            pagina->clavis_praecedens = '\0';
+        }
+        alioquin si (c == 'j')
+        {
+            pagina_movere_cursor_deorsum(pagina);
+            pagina->clavis_praecedens = '\0';
+        }
+        alioquin si (c == 'k')
+        {
+            pagina_movere_cursor_sursum(pagina);
+            pagina->clavis_praecedens = '\0';
+        }
+        alioquin si (c == 'l')
+        {
+            pagina_movere_cursor_dextram(pagina);
+            pagina->clavis_praecedens = '\0';
+        }
+        /* Navigatio verbi */
+        alioquin si (c == 'w')
+        {
+            pagina_movere_ad_verbum_proximum(pagina);
+            pagina->clavis_praecedens = '\0';
+        }
+        alioquin si (c == 'b')
+        {
+            pagina_movere_ad_verbum_praecedens(pagina);
+            pagina->clavis_praecedens = '\0';
+        }
+        /* Intrare modum insert */
+        alioquin si (c == 'i')
+        {
+            pagina->modo = MODO_INSERT;
+            pagina->clavis_praecedens = '\0';
+            pagina->esperans_fd = FALSUM;
+        }
+        alioquin si (c == 'a')
+        {
+            pagina_movere_cursor_dextram(pagina);
+            pagina->modo = MODO_INSERT;
+            pagina->clavis_praecedens = '\0';
+            pagina->esperans_fd = FALSUM;
+        }
+        /* Commandos multi-clavis */
+        alioquin si (c == 'd')
+        {
+            si (pagina->clavis_praecedens == 'd')
+            {
+                /* dd - delere lineam */
+                i32 initium;
+                i32 finis;
+
+                initium = pagina_invenire_initium_lineae(pagina, (i32)pagina->cursor);
+                finis = pagina_invenire_finem_lineae(pagina, (i32)pagina->cursor);
+
+                /* Si non ultima linea, includere newline */
+                si (finis < pagina->longitudo) {
+                    finis++;
+                }
+
+                pagina_ponere_selectionem(pagina, initium, finis);
+                pagina_delere_selectionem(pagina);
+                pagina->clavis_praecedens = '\0';
+            }
+            alioquin si (pagina->clavis_praecedens == '\0')
+            {
+                pagina->clavis_praecedens = 'd';
+            }
+        }
+        alioquin si (c == 'G')
+        {
+            si (pagina->clavis_praecedens == 'd')
+            {
+                /* dG - delere ad finem */
+                pagina_ponere_selectionem(pagina, pagina->cursor, pagina->longitudo);
+                pagina_delere_selectionem(pagina);
+                pagina->clavis_praecedens = '\0';
+            }
+            alioquin
+            {
+                /* G - saltare ad finem */
+                pagina_ponere_cursor(pagina, pagina->longitudo);
+                pagina->clavis_praecedens = '\0';
+            }
+        }
+        alioquin si (c == '$')
+        {
+            si (pagina->clavis_praecedens == 'd')
+            {
+                /* d$ - delere ad finem lineae */
+                i32 finis;
+
+                finis = pagina_invenire_finem_lineae(pagina, (i32)pagina->cursor);
+                pagina_ponere_selectionem(pagina, pagina->cursor, (i32)finis);
+                pagina_delere_selectionem(pagina);
+                pagina->clavis_praecedens = '\0';
+            }
+            alioquin
+            {
+                /* $ - movere ad finem lineae */
+                pagina_movere_cursor_finis(pagina);
+                pagina->clavis_praecedens = '\0';
+            }
+        }
+        alioquin si (c == 'g')
+        {
+            /* g - saltare ad initium */
+            pagina_ponere_cursor(pagina, ZEPHYRUM);
+            pagina->clavis_praecedens = '\0';
+        }
+        alioquin si (c == '^')
+        {
+            /* ^ - saltare ad primum characterem non-spatium lineae */
+            i32 initium;
+            s32 i;
+
+            initium = pagina_invenire_initium_lineae(pagina, (i32)pagina->cursor);
+
+            /* Invenire primum characterem non-spatium */
+            per (i = (s32)initium; i < (s32)pagina->longitudo; i++) {
+                character c_temp;
+
+                c_temp = pagina->buffer[(i32)i];
+                si (c_temp != ' ' && c_temp != '\t') {
+                    frange;
+                }
+            }
+
+            pagina_ponere_cursor(pagina, (i32)i);
+            pagina->clavis_praecedens = '\0';
+        }
+        alioquin si (c == 'o')
+        {
+            /* o - nova linea post */
+            character indentatio[C];
+            i32 longitudo_indentationis;
+            i32 i;
+
+            pagina_movere_cursor_finis(pagina);
+
+            longitudo_indentationis = pagina_obtinere_indentationem_lineae(
+                pagina, indentatio, C);
+
+            pagina_inserere_characterem(pagina, '\n');
+
+            per (i = ZEPHYRUM; i < longitudo_indentationis; i++) {
+                pagina_inserere_characterem(pagina, indentatio[i]);
+            }
+
+            pagina->modo = MODO_INSERT;
+            pagina->clavis_praecedens = '\0';
+            pagina->esperans_fd = FALSUM;
+        }
+        alioquin si (c == 'O')
+        {
+            /* O - nova linea ante */
+            character indentatio[C];
+            i32 longitudo_indentationis;
+            i32 i;
+
+            pagina_movere_cursor_domus(pagina);
+
+            longitudo_indentationis = pagina_obtinere_indentationem_lineae(
+                pagina, indentatio, C);
+
+            pagina_inserere_characterem(pagina, '\n');
+            pagina_movere_cursor_sinistram(pagina);
+
+            per (i = ZEPHYRUM; i < longitudo_indentationis; i++) {
+                pagina_inserere_characterem(pagina, indentatio[i]);
+            }
+
+            pagina->modo = MODO_INSERT;
+            pagina->clavis_praecedens = '\0';
+            pagina->esperans_fd = FALSUM;
+        }
+        alioquin
+        {
+            /* Clavis non recognita - vacare clavis praecedens */
+            pagina->clavis_praecedens = '\0';
+        }
+    }
+
+    redde VERUM;  /* Eventus tractatus */
+}
+
+
+/* ==================================================
+ * Reddere Cum Margine
+ * ================================================== */
+
+vacuum
+pagina_reddere_cum_margine (
+    Piscina* piscina,
+    TabulaPixelorum* tabula,
+    constans Pagina* pagina,
+    i32 x,
+    i32 y,
+    i32 latitudo,
+    i32 altitudo,
+    i32 scala)
+{
+    ContextusDelineandi* ctx;
+    i32 character_latitudo;
+    i32 character_altitudo;
+    i32 box_x0, box_y0, box_x1, box_y1;
+    i32 textus_latitudo;
+    i32 textus_altitudo;
+    i32 color_border;
+    chorda titulo;
+    chorda modo_textus;
+    constans character* modo_str;
+
+    character_latitudo = VI * scala;
+    character_altitudo = VIII * scala;
+
+    /* Computare dimensiones areae textus (minus border) */
+    textus_latitudo = latitudo - II;
+    textus_altitudo = altitudo - II;
+
+    /* Computare coordinatas pixelorum pro box (with padding from edges) */
+    box_x0 = x * character_latitudo + II;  /* 2px padding from left */
+    box_y0 = y * character_altitudo + II;  /* 2px padding from top */
+    box_x1 = (x + latitudo) * character_latitudo - I - II;  /* 2px padding from right */
+    box_y1 = (y + altitudo) * character_altitudo - I - II;  /* 2px padding from bottom */
+
+    color_border = thema_color(COLOR_BORDER);
+
+    /* Creare contextum delineandi */
+    ctx = delineare_creare_contextum(piscina, tabula);
+
+    /* ==================================================
+     * Computare positiones textus (centered)
+     * ================================================== */
+
+    titulo = chorda_ex_literis(pagina->identificator, piscina);
+    modo_str = (pagina->modo == MODO_INSERT) ? "INSERT" : "NORMAL";
+    modo_textus = chorda_ex_literis(modo_str, piscina);
+
+    /* Computare latitudinem textus in pixels */
+    {
+        i32 titulo_pixel_width;
+        i32 modo_pixel_width;
+        i32 titulo_x, titulo_y;
+        i32 modo_x, modo_y;
+        i32 gap_padding;
+
+        gap_padding = character_latitudo;  /* Space around text */
+
+        titulo_pixel_width = titulo.mensura * character_latitudo;
+        modo_pixel_width = modo_textus.mensura * character_latitudo;
+
+        /* Center titulo on top line */
+        titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
+        titulo_y = box_y0 - (character_altitudo / II) + III;  /* +3px to avoid clipping */
+
+        /* Center modo on bottom line */
+        modo_x = box_x0 + ((box_x1 - box_x0) - modo_pixel_width) / II;
+        modo_y = box_y1 - (character_altitudo / II) + II;  /* +2px positioning */
+
+        /* ==================================================
+         * Pingere Double Border (line-gap-line style)
+         * ================================================== */
+
+        /* Top line - left segment (outer and inner with gap) */
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0 + II, color_border);
+
+        /* Top line - right segment */
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0 + II, color_border);
+
+        /* Bottom line - left segment */
+        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1 - II, color_border);
+
+        /* Bottom line - right segment */
+        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1, color_border);
+        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1 - II, color_border);
+
+        /* Left line (outer and inner with gap) */
+        delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1, color_border);
+
+        /* Right line (outer and inner with gap) */
+        delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border);
+
+        /* ==================================================
+         * Pingere Textum (centered on lines)
+         * ================================================== */
+
+        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_border);
+        tabula_pixelorum_pingere_chordam(tabula, modo_x, modo_y, modo_textus,
+                                          (pagina->modo == MODO_INSERT) ?
+                                              thema_color(COLOR_STATUS_INSERT) :
+                                              thema_color(COLOR_STATUS_NORMAL));
+    }
+
+    /* ==================================================
+     * Reddere Textum Paginae (interior)
+     * ================================================== */
+
+    pagina_reddere(tabula, pagina, x + I, y + I, textus_latitudo, textus_altitudo, scala);
 }

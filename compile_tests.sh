@@ -50,6 +50,7 @@ declare -a GUI_SOURCE_FILES=(
   "lib/delineare.c"
   "lib/tempus.c"
   "lib/pagina.c"
+  "lib/thema.c"
 )
 
 # Color codes

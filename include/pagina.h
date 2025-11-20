@@ -44,6 +44,12 @@
  * Typi
  * ================================================== */
 
+/* Modi editoris (vim-style) */
+nomen enumeratio {
+    MODO_NORMAL = ZEPHYRUM,
+    MODO_INSERT
+} ModoEditor;
+
 /* Pagina textus */
 nomen structura {
     character buffer[PAGINA_CAPACITAS];                     /* Text buffer */
@@ -52,6 +58,12 @@ nomen structura {
     s32 selectio_initium;                                   /* Selection start (-1 if none) */
     s32 selectio_finis;                                     /* Selection end */
     character identificator[PAGINA_IDENTIFICATOR_LONGITUDO]; /* "page:5" or "page:repl" */
+
+    /* Vim state */
+    ModoEditor modo;                                        /* Normal or Insert mode */
+    character clavis_praecedens;                            /* For dd, dG, d$ commands */
+    b32 esperans_fd;                                        /* fd escape sequence */
+    f64 tempus_f;                                           /* Timing for fd */
 } Pagina;
 
 
@@ -401,5 +413,50 @@ pagina_reddere (
     i32 latitudo,
     i32 altitudo,
     i32 scala);
+
+/* Reddere paginam cum margine (border et status)
+ *
+ * Pingit paginam cum border, titulo (identificator) in summo,
+ * et indicatore modi (NORMAL/INSERT) in imo.
+ *
+ * piscina: piscina pro allocare contextum delineandi
+ * tabula: tabula pixelorum
+ * pagina: pagina reddenda
+ * x: columna originis (in grid coordinates)
+ * y: linea originis (in grid coordinates)
+ * latitudo: latitudo totalis in characteribus (includens border)
+ * altitudo: altitudo totalis in lineis (includens border)
+ * scala: factor scalae fontis (1 = 6x8, 2 = 12x16)
+ */
+vacuum
+pagina_reddere_cum_margine (
+    Piscina* piscina,
+    TabulaPixelorum* tabula,
+    constans Pagina* pagina,
+    i32 x,
+    i32 y,
+    i32 latitudo,
+    i32 altitudo,
+    i32 scala);
+
+
+/* ==================================================
+ * Tractare Eventus (Vim Mode)
+ * ================================================== */
+
+/* Tractare eventum clavis (vim mode)
+ *
+ * Tractat eventus clavis in modo vim (normal et insert).
+ * Includit omnia commandos vim: hjkl, dd, dG, d$, o/O, etc.
+ *
+ * pagina: pagina
+ * eventus: eventus tractandus
+ *
+ * Reddit: VERUM si eventus tractatus, FALSUM si debet claudere (ESC in normal)
+ */
+b32
+pagina_tractare_eventum (
+    Pagina* pagina,
+    constans Eventus* eventus);
 
 #endif /* PAGINA_H */
