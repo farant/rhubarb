@@ -6,6 +6,7 @@
 #include "entitas_providor.h"
 #include "piscina.h"
 #include "fenestra.h"
+#include "xar.h"
 
 /* ==================================================
  * Structurae
@@ -18,6 +19,14 @@ nomen enumeratio {
     ITEM_RELATIO,      /* Relatio ad alias entitates */
     ITEM_PROPRIETAS    /* Proprietas (clavis-valor) */
 } GenusItem;
+
+/* Item historiae navigationis
+ * "History item for navigation path"
+ */
+nomen structura {
+    chorda* entitas_id;  /* ID entitatis */
+    i32     selectio;    /* Index selecti ad hanc entitatem */
+} ItemHistoriae;
 
 /* Item ad reddendum in columna media
  * "Item to render in center column"
@@ -36,8 +45,7 @@ nomen structura {
     Piscina*         piscina;
 
     /* Via navigationis (historia) */
-    chorda* via[XXXII];      /* Stack de entity IDs */
-    i32     profunditas_viae;
+    Xar* via;  /* Xar de ItemHistoriae - dynamic path stack */
 
     /* Entitas currens */
     Entitas* entitas_currens;

@@ -1,16 +1,44 @@
 #include "navigator_entitatum.h"
 #include "thema.h"
+#include "xar.h"
 #include <string.h>
 
 /* ==================================================
  * Functiones Interiores
  * ================================================== */
 
+/* Calcular altitudinem necessariam pro texto
+ * "Calculate height needed for text wrapping"
+ */
+interior i32
+_calcular_altitudinem_textus(
+    i32 mensura,
+    i32 latitudo_columnae)
+{
+    i32 lineae;
+
+    si (mensura == ZEPHYRUM || latitudo_columnae == ZEPHYRUM)
+    {
+        redde I;
+    }
+
+    /* Calcular quot lineae necessariae pro mensura data */
+    lineae = mensura / latitudo_columnae;
+    si (mensura % latitudo_columnae != ZEPHYRUM)
+    {
+        lineae++;
+    }
+
+    redde lineae;
+}
+
 /* Construere items array ex entitate currente
  * Addit omnes relationes, deinde omnes proprietates
  */
 interior vacuum
-_construere_items(NavigatorEntitatum* nav)
+_construere_items(
+    NavigatorEntitatum* nav,
+    i32                 latitudo_columnae)
 {
     Entitas*     ent;
     Relatio*     rel;
@@ -18,6 +46,7 @@ _construere_items(NavigatorEntitatum* nav)
     ItemNavigatoris* item;
     i32          i;
     i32          numerus;
+    i32          longitudo_totalis;
 
     si (!nav || !nav->entitas_currens)
     {
@@ -59,9 +88,22 @@ _construere_items(NavigatorEntitatum* nav)
         item->genus = ITEM_PROPRIETAS;
 
         /* Calcular altitudo basatus in mensura valoris */
-        /* Pro nunc, proprietates breves = 1 linea */
-        /* TODO: detectare proprietates longas, computare altitudo */
-        item->altitudo = I;
+        /* longitudo totalis = clavis + ": " + valor */
+        longitudo_totalis = ZEPHYRUM;
+        si (prop->clavis)
+        {
+            longitudo_totalis += prop->clavis->mensura;
+        }
+        longitudo_totalis += II;  /* ": " */
+        si (prop->valor)
+        {
+            longitudo_totalis += prop->valor->mensura;
+        }
+
+        item->altitudo = _calcular_altitudinem_textus(
+            longitudo_totalis,
+            latitudo_columnae);
+
         item->datum = prop;
 
         nav->numerus_itemorum++;
@@ -115,12 +157,18 @@ navigator_entitatum_creare(
     /* Initiare campos */
     nav->providor           = providor;
     nav->piscina            = piscina;
-    nav->profunditas_viae   = ZEPHYRUM;
     nav->entitas_currens    = NIHIL;
     nav->numerus_itemorum   = ZEPHYRUM;
     nav->selectio           = ZEPHYRUM;
     nav->pagina_currens     = ZEPHYRUM;
     nav->items_per_pagina   = XXX;  /* Valor initiarius */
+
+    /* Creare Xar pro via navigationis */
+    nav->via = xar_creare(piscina, magnitudo(ItemHistoriae));
+    si (!nav->via)
+    {
+        redde NIHIL;
+    }
 
     /* Tentare navigare ad primam radicem */
     radices = providor->capere_radices(providor->datum);
@@ -130,7 +178,8 @@ navigator_entitatum_creare(
         si (radix_slot && *radix_slot)
         {
             nav->entitas_currens = *radix_slot;
-            _construere_items(nav);
+            /* Construere items cum latitudo assumpta - actualizabitur in reddere */
+            _construere_items(nav, XL);  /* ~40 chars assumptum */
         }
     }
 
@@ -147,7 +196,8 @@ navigator_entitatum_navigare_ad(
     NavigatorEntitatum* nav,
     chorda*             entitas_id)
 {
-    Entitas* nova_entitas;
+    Entitas*        nova_entitas;
+    ItemHistoriae*  item_historiae;
 
     si (!nav || !entitas_id)
     {
@@ -164,17 +214,21 @@ navigator_entitatum_navigare_ad(
     }
 
     /* Addere currens ad via (si existit) */
-    si (nav->entitas_currens && nav->profunditas_viae < XXXII)
+    si (nav->entitas_currens)
     {
-        nav->via[nav->profunditas_viae] = nav->entitas_currens->id;
-        nav->profunditas_viae++;
+        item_historiae = (ItemHistoriae*)xar_addere(nav->via);
+        si (item_historiae)
+        {
+            item_historiae->entitas_id = nav->entitas_currens->id;
+            item_historiae->selectio = nav->selectio;
+        }
     }
 
     /* Ponere novam entitatem currens */
     nav->entitas_currens = nova_entitas;
 
-    /* Reconstruere items */
-    _construere_items(nav);
+    /* Reconstruere items - latitudo actualizabitur in proximo reddere */
+    _construere_items(nav, XL);
 
     /* Reset selectio et pagina */
     nav->selectio = ZEPHYRUM;
@@ -187,22 +241,32 @@ b32
 navigator_entitatum_retro(
     NavigatorEntitatum* nav)
 {
-    chorda*  id_praecedens;
-    Entitas* entitas_praecedens;
+    ItemHistoriae*  item_historiae;
+    Entitas*        entitas_praecedens;
+    i32             numerus_items;
 
-    si (!nav || nav->profunditas_viae == ZEPHYRUM)
+    si (!nav)
+    {
+        redde FALSUM;
+    }
+
+    numerus_items = xar_numerus(nav->via);
+    si (numerus_items == ZEPHYRUM)
     {
         redde FALSUM;  /* Via vacua */
     }
 
-    /* Pop ex via */
-    nav->profunditas_viae--;
-    id_praecedens = nav->via[nav->profunditas_viae];
+    /* Obtinere item historiae */
+    item_historiae = (ItemHistoriae*)xar_obtinere(nav->via, numerus_items - I);
+    si (!item_historiae)
+    {
+        redde FALSUM;
+    }
 
     /* Capere entitatem */
     entitas_praecedens = nav->providor->capere_entitatem(
         nav->providor->datum,
-        id_praecedens);
+        item_historiae->entitas_id);
     si (!entitas_praecedens)
     {
         redde FALSUM;  /* Non inventa (non deberet accidere) */
@@ -211,12 +275,15 @@ navigator_entitatum_retro(
     /* Ponere currens */
     nav->entitas_currens = entitas_praecedens;
 
-    /* Reconstruere items */
-    _construere_items(nav);
+    /* Reconstruere items - latitudo actualizabitur in proximo reddere */
+    _construere_items(nav, XL);
 
-    /* Reset selectio et pagina */
-    nav->selectio = ZEPHYRUM;
-    nav->pagina_currens = ZEPHYRUM;
+    /* Restituere selectionem et paginam */
+    nav->selectio = item_historiae->selectio;
+    nav->pagina_currens = nav->selectio / nav->items_per_pagina;
+
+    /* Pop ex via */
+    xar_truncare(nav->via, numerus_items - I);
 
     redde VERUM;
 }
@@ -357,6 +424,9 @@ navigator_entitatum_reddere(
     /* Pro nunc, solum columna media reddita */
     x_media = x + latitudo_columnae;
 
+    /* Reconstruere items si latitudo columnae mutata */
+    _construere_items(nav, latitudo_columnae);
+
     /* Calcular items per pagina */
     _calcular_items_per_pagina(nav, altitudo);
 
@@ -442,6 +512,11 @@ navigator_entitatum_reddere(
         }
         alioquin si (item->genus == ITEM_PROPRIETAS)
         {
+            i32 offset_textus;
+            i32 linea_currens;
+            i32 caracteres_in_linea;
+            i32 j;
+
             prop = (Proprietas*)item->datum;
 
             /* Format: "clavis: valor" */
@@ -459,7 +534,7 @@ navigator_entitatum_reddere(
             buffer[buffer_mensura++] = ':';
             buffer[buffer_mensura++] = ' ';
 
-            /* Copiar valor (truncatum si necessarium) */
+            /* Copiar valor */
             si (prop->valor && prop->valor->mensura < CCLVI - buffer_mensura)
             {
                 memcpy(buffer + buffer_mensura,
@@ -470,15 +545,34 @@ navigator_entitatum_reddere(
 
             buffer[buffer_mensura] = '\0';
 
-            textus.datum = (i8*)buffer;
-            textus.mensura = buffer_mensura;
+            /* Reddere cum wrapping */
+            offset_textus = ZEPHYRUM;
+            linea_currens = ZEPHYRUM;
 
-            tabula_pixelorum_pingere_chordam(
-                tabula,
-                x_media * character_latitudo,
-                y_currens * character_altitudo,
-                textus,
-                color_textus);
+            dum (offset_textus < buffer_mensura)
+            {
+                caracteres_in_linea = ZEPHYRUM;
+
+                /* Copiar caracteres pro hac linea */
+                per (j = ZEPHYRUM; j < latitudo_columnae && offset_textus + j < buffer_mensura; j++)
+                {
+                    caracteres_in_linea++;
+                }
+
+                /* Reddere hanc lineam */
+                textus.datum = (i8*)(buffer + offset_textus);
+                textus.mensura = caracteres_in_linea;
+
+                tabula_pixelorum_pingere_chordam(
+                    tabula,
+                    x_media * character_latitudo,
+                    (y_currens + linea_currens) * character_altitudo,
+                    textus,
+                    color_textus);
+
+                offset_textus += caracteres_in_linea;
+                linea_currens++;
+            }
         }
 
         y_currens += item->altitudo;
