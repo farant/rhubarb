@@ -90,14 +90,20 @@ _construere_items(
         /* Calcular altitudo basatus in mensura valoris */
         /* longitudo totalis = clavis + ": " + valor */
         longitudo_totalis = ZEPHYRUM;
-        si (prop->clavis)
+        si (prop->clavis && prop->clavis->datum)
         {
             longitudo_totalis += prop->clavis->mensura;
         }
         longitudo_totalis += II;  /* ": " */
-        si (prop->valor)
+        si (prop->valor && prop->valor->datum)
         {
             longitudo_totalis += prop->valor->mensura;
+        }
+
+        /* Verificare longitudo minima */
+        si (longitudo_totalis == ZEPHYRUM)
+        {
+            longitudo_totalis = I;
         }
 
         item->altitudo = _calcular_altitudinem_textus(
@@ -445,6 +451,17 @@ navigator_entitatum_reddere(
     {
         item = &nav->items[i];
 
+        /* Addere spatium inter relationes et proprietates */
+        si (i > ZEPHYRUM && item->genus == ITEM_PROPRIETAS)
+        {
+            ItemNavigatoris* item_praecedens;
+            item_praecedens = &nav->items[i - I];
+            si (item_praecedens->genus == ITEM_RELATIO)
+            {
+                y_currens++;  /* Linea vacua inter sectiones */
+            }
+        }
+
         /* Determinare colores */
         si (i == nav->selectio)
         {
@@ -479,17 +496,36 @@ navigator_entitatum_reddere(
         /* Reddere textum item */
         si (item->genus == ITEM_RELATIO)
         {
-            rel = (Relatio*)item->datum;
+            chorda arrow_textus;
+            i32 color_cyan;
+            character arrow_buffer[III];
 
-            /* Format: "→ genus/ (count)" */
-            buffer[ZEPHYRUM] = (character)0xE2;  /* UTF-8 → */
-            buffer[I] = (character)0x86;
-            buffer[II] = (character)0x92;
-            buffer[III] = ' ';
-            buffer_mensura = IV;
+            rel = (Relatio*)item->datum;
+            si (!rel)
+            {
+                y_currens += item->altitudo;
+                perge;
+            }
+
+            /* Reddere "> " in cyan */
+            color_cyan = thema_color(COLOR_ACCENT_PRIMARY);
+            arrow_buffer[ZEPHYRUM] = '>';
+            arrow_buffer[I] = ' ';
+            arrow_textus.datum = (i8*)arrow_buffer;
+            arrow_textus.mensura = II;
+            tabula_pixelorum_pingere_chordam(
+                tabula,
+                x_media * character_latitudo,
+                y_currens * character_altitudo,
+                arrow_textus,
+                color_cyan);
+
+            /* Format: "genus/" */
+            buffer_mensura = ZEPHYRUM;
 
             /* Copiar genus */
-            si (rel->genus && rel->genus->mensura < CCLVI - buffer_mensura - X)
+            si (rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM &&
+                rel->genus->mensura < CCLVI - buffer_mensura - X)
             {
                 memcpy(buffer + buffer_mensura,
                        rel->genus->datum,
@@ -503,9 +539,10 @@ navigator_entitatum_reddere(
             textus.datum = (i8*)buffer;
             textus.mensura = buffer_mensura;
 
+            /* Reddere genus/ ad dextram de arrow */
             tabula_pixelorum_pingere_chordam(
                 tabula,
-                x_media * character_latitudo,
+                x_media * character_latitudo + (II * character_latitudo),
                 y_currens * character_altitudo,
                 textus,
                 color_textus);
@@ -518,12 +555,18 @@ navigator_entitatum_reddere(
             i32 j;
 
             prop = (Proprietas*)item->datum;
+            si (!prop)
+            {
+                y_currens += item->altitudo;
+                perge;
+            }
 
             /* Format: "clavis: valor" */
             buffer_mensura = ZEPHYRUM;
 
             /* Copiar clavis */
-            si (prop->clavis && prop->clavis->mensura < CCLVI - X)
+            si (prop->clavis && prop->clavis->datum && prop->clavis->mensura > ZEPHYRUM &&
+                prop->clavis->mensura < CCLVI - X)
             {
                 memcpy(buffer + buffer_mensura,
                        prop->clavis->datum,
@@ -535,7 +578,8 @@ navigator_entitatum_reddere(
             buffer[buffer_mensura++] = ' ';
 
             /* Copiar valor */
-            si (prop->valor && prop->valor->mensura < CCLVI - buffer_mensura)
+            si (prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM &&
+                prop->valor->mensura < CCLVI - buffer_mensura)
             {
                 memcpy(buffer + buffer_mensura,
                        prop->valor->datum,
