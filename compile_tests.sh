@@ -51,6 +51,12 @@ declare -a GUI_SOURCE_FILES=(
   "lib/tempus.c"
   "lib/pagina.c"
   "lib/thema.c"
+  "lib/tabula_dispersa.c"
+  "lib/internamentum.c"
+  "lib/xar.c"
+  "lib/entitas.c"
+  "lib/graphus_entitatum.c"
+  "lib/navigator_entitatum.c"
 )
 
 # Color codes
@@ -151,7 +157,7 @@ run_all_tests() {
     local test_files=""
 
     while IFS= read -r file; do
-        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]]; then
+        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'
