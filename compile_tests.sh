@@ -36,6 +36,7 @@ declare -a SOURCE_FILES=(
 	"lib/macho.c"
 	"lib/sectio.c"
 	"lib/symbola.c"
+	"lib/entitas.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)

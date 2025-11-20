@@ -113,6 +113,17 @@ credo_invenire_fractos (
 			(p) == NIHIL \
 	)
 
+#define CREDO_AEQUALIS_PTR(a, b) \
+	_credo_notare( \
+			"credo_aequalis_ptr", \
+			#a " == " #b, \
+			#a, \
+			#b, \
+			__FILE__, \
+			__LINE__, \
+			(a) == (b) \
+	)
+
 #define CREDO_AEQUALIS_S32(a, b) \
 	_credo_notare_integrum( \
 			"credo_aequalis", \
