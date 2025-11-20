@@ -21,6 +21,48 @@ tabula_friare_fnv1a(chorda clavis)
     redde friatum;
 }
 
+/* Friare literis C directe (pro evitare const cast) */
+interior i32
+_friare_literis(constans character* cstr)
+{
+    i32 friatum = 2166136261U;
+    constans character* p = cstr;
+
+    dum (*p)
+    {
+        friatum ^= (i8)*p;
+        friatum *= 16777619U;
+        p++;
+    }
+
+    redde friatum;
+}
+
+/* Comparare literis C cum chorda */
+interior b32
+_aequalis_literis_chorda(constans character* cstr, chorda clavis)
+{
+    i32 mensura_cstr;
+    i32 i;
+
+    mensura_cstr = (i32)strlen(cstr);
+
+    si (mensura_cstr != clavis.mensura)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < mensura_cstr; i++)
+    {
+        si (cstr[i] != (character)clavis.datum[i])
+        {
+            redde FALSUM;
+        }
+    }
+
+    redde VERUM;
+}
+
 /* ==================================================
  * Adiutor: Proxima Potentia Binaria
  * ================================================== */
@@ -86,6 +128,65 @@ _invenire_slotum (
             si (tabula->sloti[positus].hash_cachatum == friatum &&
                 tabula->comparatio(
                     tabula->sloti[positus].clavis, clavis) == ZEPHYRUM)
+            {
+                *inventum = VERUM;
+                redde positus;
+            }
+            tabula->collisiones_totales++;
+        }
+        alioquin si (tabula->sloti[positus].status == SLOT_DELETUM)
+        {
+            si (positus_primus_deletum == (i32)-I)
+            {
+                positus_primus_deletum = positus;
+            }
+        }
+
+        positus = (positus + I) & tabula->capacitas_mask;
+        distantia++;
+
+        si (distantia > tabula->distantia_maxima)
+        {
+            tabula->distantia_maxima = distantia;
+        }
+
+        si (distantia > tabula->capacitas)
+        {
+            frange;
+        }
+    }
+
+    si (positus_primus_deletum != (i32)-I)
+    {
+        redde positus_primus_deletum;
+    }
+
+    redde positus;
+}
+
+/* Invenire slotum pro literis C (evitare const cast) */
+interior i32
+_invenire_slotum_literis (
+    TabulaDispersa*     tabula,
+    constans character* cstr,
+               i32      friatum,
+               b32*     inventum)
+{
+    i32 positus;
+    i32 distantia;
+    i32 positus_primus_deletum;
+
+    *inventum              = FALSUM;
+    positus                = friatum & tabula->capacitas_mask;
+    distantia              = ZEPHYRUM;
+    positus_primus_deletum = (i32)-I;
+
+    dum (tabula->sloti[positus].status != SLOT_VACUUM)
+    {
+        si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
+        {
+            si (tabula->sloti[positus].hash_cachatum == friatum &&
+                _aequalis_literis_chorda(cstr, tabula->sloti[positus].clavis))
             {
                 *inventum = VERUM;
                 redde positus;
@@ -342,6 +443,47 @@ tabula_dispersa_continet(
             chorda  clavis)
 {
     redde tabula_dispersa_invenire(tabula, clavis, NIHIL);
+}
+
+b32
+tabula_dispersa_invenire_literis(
+    TabulaDispersa*        tabula,
+    constans character*    cstr,
+            vacuum**       valor_out)
+{
+    i32 friatum;
+    i32 positus;
+    b32 inventum;
+
+    si (!tabula || !cstr)
+    {
+        redde FALSUM;
+    }
+
+    /* Friare literis directe */
+    friatum = _friare_literis(cstr);
+
+    /* Invenire slotum (comparare literis directe) */
+    positus = _invenire_slotum_literis(tabula, cstr, friatum, &inventum);
+
+    si (inventum)
+    {
+        si (valor_out)
+        {
+            *valor_out = tabula->sloti[positus].valor;
+        }
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+b32
+tabula_dispersa_continet_literis(
+    TabulaDispersa*     tabula,
+    constans character* cstr)
+{
+    redde tabula_dispersa_invenire_literis(tabula, cstr, NIHIL);
 }
 
 /* ==================================================

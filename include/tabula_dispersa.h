@@ -105,6 +105,21 @@ tabula_dispersa_continet (
     TabulaDispersa* tabula,
             chorda  clavis);
 
+/* Convenientia: quaestio per literis C directe
+ * VERUM reddit et *valor_exitus statuit si inventum
+ * FALSUM reddit si non inventum */
+b32
+tabula_dispersa_invenire_literis (
+    TabulaDispersa*        tabula,
+    constans character*    cstr,
+            vacuum**       valor_out);
+
+/* Convenientia: verificatio existentiae per literis C */
+b32
+tabula_dispersa_continet_literis (
+    TabulaDispersa*     tabula,
+    constans character* cstr);
+
 /* Introitum delere per clavis
  * VERUM reddit si inventum et deletum, FALSUM alioquin */
 b32

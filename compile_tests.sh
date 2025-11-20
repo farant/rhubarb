@@ -27,6 +27,7 @@ declare -a SOURCE_FILES=(
   "lib/chorda.c"
   "lib/credo.c"
 	"lib/tabula_dispersa.c"
+	"lib/internamentum.c"
 	"lib/chorda_aedificator.c"
 	"lib/filum.c"
 	"lib/xar.c"

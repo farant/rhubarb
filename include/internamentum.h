@@ -1,0 +1,72 @@
+#ifndef INTERNAMENTUM_H
+#define INTERNAMENTUM_H
+
+#include "latina.h"
+#include "chorda.h"
+#include "piscina.h"
+#include "tabula_dispersa.h"
+
+/* ==================================================
+ * Internamentum Chordae - String Interning
+ * "Conservare unicam copiam cuiusque chordae"
+ * ================================================== */
+
+/* Tabula internamenti globalis */
+nomen structura {
+    TabulaDispersa* tabula;  /* chorda -> chorda* (canonica) */
+    Piscina* piscina;        /* Omnes chordae internatae hic allocantur */
+} InternamentumChorda;
+
+
+/* ==================================================
+ * Creatio
+ * ================================================== */
+
+InternamentumChorda*
+internamentum_creare(
+    Piscina* piscina);
+
+
+/* ==================================================
+ * Internatio
+ * ================================================== */
+
+/* Internare chordam - redde pointer ad copiam canonicam */
+chorda*
+chorda_internare(
+    InternamentumChorda* intern,
+    chorda s);
+
+/* Convenientia: internare ex literis C */
+chorda*
+chorda_internare_ex_literis(
+    InternamentumChorda* intern,
+    constans character* cstr);
+
+
+/* ==================================================
+ * Quaestio
+ * ================================================== */
+
+/* Verificare si chorda iam internata est */
+b32
+chorda_est_internata(
+    InternamentumChorda* intern,
+    chorda s);
+
+
+/* ==================================================
+ * Statisticae
+ * ================================================== */
+
+/* Numerum chordaram internatarum obtinere */
+i32
+internamentum_numerus(
+    InternamentumChorda* intern);
+
+/* Vacare omnes chordas internatas (reset tabula) */
+vacuum
+internamentum_vacare(
+    InternamentumChorda* intern);
+
+#endif /* INTERNAMENTUM_H */

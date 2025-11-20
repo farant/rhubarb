@@ -652,6 +652,75 @@ s32 principale (vacuum)
 
 
     /* =================================================
+     * Probare tabula_dispersa_invenire_literis
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+        vacuum* valor_recuperatus;
+        i32 valor1 = XLII;
+        i32 valor2 = XCIX;
+
+        imprimere("\n--- Probans tabula_dispersa_invenire_literis ---\n");
+
+        tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+
+        /* Insertio cum chorda */
+        {
+            chorda clavis;
+            clavis = chorda_ex_literis("test_key", piscina);
+            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)valor1);
+        }
+
+        /* Quaestio cum literis */
+        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "test_key", &valor_recuperatus));
+        CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor1);
+
+        /* Quaestio clavis non existentis */
+        CREDO_FALSUM(tabula_dispersa_invenire_literis(tabula, "nonexistent", &valor_recuperatus));
+
+        /* Insertio alterius */
+        {
+            chorda clavis2;
+            clavis2 = chorda_ex_literis("another_key", piscina);
+            tabula_dispersa_inserere(tabula, clavis2, (vacuum*)(longus)valor2);
+        }
+
+        /* Verificare ambas claves */
+        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "test_key", &valor_recuperatus));
+        CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor1);
+
+        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "another_key", &valor_recuperatus));
+        CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor2);
+    }
+
+
+    /* =================================================
+     * Probare tabula_dispersa_continet_literis
+     * ================================================= */
+
+    {
+        TabulaDispersa* tabula;
+        chorda clavis;
+
+        imprimere("\n--- Probans tabula_dispersa_continet_literis ---\n");
+
+        tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+
+        /* Verificare clavis non existens */
+        CREDO_FALSUM(tabula_dispersa_continet_literis(tabula, "missing"));
+
+        /* Inserere */
+        clavis = chorda_ex_literis("present", piscina);
+        tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)CXXIII);
+
+        /* Verificare existit */
+        CREDO_VERUM(tabula_dispersa_continet_literis(tabula, "present"));
+        CREDO_FALSUM(tabula_dispersa_continet_literis(tabula, "absent"));
+    }
+
+
+    /* =================================================
      * Probare NIHIL piscina et functiones
      * ================================================= */
 
