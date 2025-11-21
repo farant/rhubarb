@@ -6,16 +6,11 @@
 #include "thema.h"
 #include "internamentum.h"
 #include "tempus.h"
+#include "widget.h"
 #include <stdio.h>
 
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
-
-/* Enum pro focus widget */
-nomen enumeratio {
-    FOCUS_PAGINA = ZEPHYRUM,
-    FOCUS_NAVIGATOR
-} FocusWidget;
 
 /* Creare graphum probationis cum aliquot entitates */
 interior vacuum
@@ -154,6 +149,112 @@ creare_graphum_probationis(
     imprimere("  Radix: %d entitates\n", graphus_entitatum_numerus(graphus));
 }
 
+/* ==================================================
+ * Widget Wrapper Functions
+ * ================================================== */
+
+/* Datum pro widget pagina */
+nomen structura {
+    Pagina*  pagina;
+    Piscina* piscina;
+} DatumWidgetPagina;
+
+/* Datum pro widget navigator */
+nomen structura {
+    NavigatorEntitatum* navigator;
+    Piscina*            piscina;
+} DatumWidgetNavigator;
+
+/* Wrapper pro reddere paginam (REVISED) */
+interior vacuum
+widget_pagina_reddere_revised(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    DatumWidgetPagina* datum;
+
+    datum = (DatumWidgetPagina*)widget->datum;
+
+    pagina_reddere_cum_margine(
+        datum->piscina,
+        tabula,
+        datum->pagina,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+/* Wrapper pro tractare eventum paginae */
+interior b32
+widget_pagina_tractare_eventum(
+    Widget*          widget,
+    constans Eventus* eventus)
+{
+    DatumWidgetPagina* datum;
+    b32 consumptus;
+
+    datum = (DatumWidgetPagina*)widget->datum;
+
+    consumptus = pagina_tractare_eventum(datum->pagina, eventus);
+
+    /* Si pagina reddidit FALSUM (ESC in normal mode), non consumere */
+    /* Hoc permittet application tractare quit */
+    redde consumptus;
+}
+
+/* Wrapper pro reddere navigator */
+interior vacuum
+widget_navigator_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    DatumWidgetNavigator* datum;
+
+    datum = (DatumWidgetNavigator*)widget->datum;
+
+    navigator_entitatum_reddere(
+        datum->navigator,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+/* Wrapper pro tractare eventum navigator */
+interior b32
+widget_navigator_tractare_eventum(
+    Widget*          widget,
+    constans Eventus* eventus)
+{
+    DatumWidgetNavigator* datum;
+    b32 consumptus;
+
+    datum = (DatumWidgetNavigator*)widget->datum;
+
+    consumptus = navigator_entitatum_tractare_eventum(datum->navigator, eventus);
+
+    /* Passare consumptionem ad manager */
+    redde consumptus;
+}
+
 int
 main(void)
 {
@@ -167,7 +268,9 @@ main(void)
     FenestraConfiguratio configuratio;
     Eventus              eventus;
     b32                  currens;
-    FocusWidget          focus;
+    ManagerWidget*       manager;
+    DatumWidgetPagina*   datum_pagina;
+    DatumWidgetNavigator* datum_navigator;
 
     /* Initiare thema */
     thema_initiare();
@@ -212,14 +315,53 @@ main(void)
 
     /* Initiare paginam */
     pagina_initiare(&pagina, "page:demo");
-    pagina_inserere_chordam(&pagina, "Tabulator + TAB = switch focus\n\n");
+    pagina_inserere_chordam(&pagina, "TAB = switch focus (not in insert mode)\n\n");
+    pagina_inserere_chordam(&pagina, "Click widgets to focus them\n\n");
     pagina_inserere_chordam(&pagina, "Navigator on right ->\n\n");
     pagina_inserere_chordam(&pagina, "Press 'i' to enter insert mode\n");
     pagina_inserere_chordam(&pagina, "Press ESC to return to normal mode\n");
     pagina_inserere_chordam(&pagina, "Use hjkl to navigate\n");
 
+    /* Creare widget manager */
+    manager = manager_widget_creare(piscina);
+    si (!manager)
+    {
+        imprimere("Fractura: non potest creare widget manager\n");
+        redde I;
+    }
+
+    /* Creare datum structuras pro widgets */
+    datum_pagina = piscina_allocare(piscina, magnitudo(DatumWidgetPagina));
+    datum_pagina->pagina = &pagina;
+    datum_pagina->piscina = piscina;
+
+    datum_navigator = piscina_allocare(piscina, magnitudo(DatumWidgetNavigator));
+    datum_navigator->navigator = navigator;
+    datum_navigator->piscina = piscina;
+
+    /* Registrare widgets */
+    manager_widget_registrare(
+        manager,
+        datum_pagina,
+        widget_pagina_reddere_revised,
+        widget_pagina_tractare_eventum,
+        ZEPHYRUM,  /* x */
+        ZEPHYRUM,  /* y */
+        LXXI,      /* latitudo (71 chars) */
+        LX);       /* altitudo (60 lines) */
+
+    manager_widget_registrare(
+        manager,
+        datum_navigator,
+        widget_navigator_reddere,
+        widget_navigator_tractare_eventum,
+        LXXI,      /* x (71 chars offset) */
+        ZEPHYRUM,  /* y */
+        LXXI,      /* latitudo (71 chars) */
+        LX);       /* altitudo (60 lines) */
+
     /* Configurare fenestram */
-    configuratio.titulus = "Pagina + Navigator - Probatio Combinado";
+    configuratio.titulus = "Pagina + Navigator - Widget Manager Demo";
     configuratio.x = C;
     configuratio.y = C;
     configuratio.latitudo = LATITUDO_FENESTRA;
@@ -246,9 +388,6 @@ main(void)
     /* Monstrare fenestram */
     fenestra_monstrare(fenestra);
 
-    /* Initium focus ad paginam */
-    focus = FOCUS_PAGINA;
-
     /* Cyclus principalis */
     currens = VERUM;
 
@@ -267,62 +406,19 @@ main(void)
             {
                 currens = FALSUM;
             }
-            alioquin si (eventus.genus == EVENTUS_MUS_DEPRESSUS)
+            alioquin
             {
-                /* Click on widget to focus it */
-                i32 character_latitudo;
-                i32 click_x_char;
+                b32 tractatus;
 
-                character_latitudo = VI;  /* 6 pixels per character */
-                click_x_char = eventus.datum.mus.x / character_latitudo;
+                /* Manager tractat omnes eventus (focus, routing, etc) */
+                tractatus = manager_widget_tractare_eventum(manager, &eventus);
 
-                /* Determine which widget was clicked */
-                si (click_x_char < LXXI)
+                /* Si pagina reddidit FALSUM (ESC in normal mode), exire */
+                si (!tractatus && eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
                 {
-                    focus = FOCUS_PAGINA;
-                }
-                alioquin
-                {
-                    focus = FOCUS_NAVIGATOR;
-                }
-            }
-            alioquin si (eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
-            {
-                /* TAB - switch focus (except in pagina insert mode) */
-                si (eventus.datum.clavis.clavis == CLAVIS_TABULA)
-                {
-                    si (focus == FOCUS_PAGINA && pagina.modo == MODO_INSERT)
+                    si (eventus.datum.clavis.clavis == CLAVIS_EFFUGIUM)
                     {
-                        /* In insert mode, let pagina handle tab (insert tab character) */
-                        b32 eventus_tractatus;
-                        eventus_tractatus = pagina_tractare_eventum(&pagina, &eventus);
-                        si (!eventus_tractatus)
-                        {
-                            currens = FALSUM;
-                        }
-                    }
-                    alioquin
-                    {
-                        /* In normal mode or navigator focused: switch focus */
-                        focus = (focus == FOCUS_PAGINA) ? FOCUS_NAVIGATOR : FOCUS_PAGINA;
-                    }
-                }
-                alioquin
-                {
-                    /* Passare eventum ad widget cum focus */
-                    si (focus == FOCUS_PAGINA)
-                    {
-                        b32 eventus_tractatus;
-                        eventus_tractatus = pagina_tractare_eventum(&pagina, &eventus);
-                        si (!eventus_tractatus)
-                        {
-                            /* ESC in normal mode - exire */
-                            currens = FALSUM;
-                        }
-                    }
-                    alioquin si (focus == FOCUS_NAVIGATOR)
-                    {
-                        navigator_entitatum_tractare_eventum(navigator, &eventus);
+                        currens = FALSUM;
                     }
                 }
             }
@@ -331,29 +427,8 @@ main(void)
         /* Vacare fondum */
         tabula_pixelorum_vacare(tabula, thema_color(COLOR_BACKGROUND));
 
-        /* Reddere ambo widgets - 50/50 split */
-        /* Pagina sinistram: 0 -> ~71 chars */
-        pagina_reddere_cum_margine(
-            piscina,
-            tabula,
-            &pagina,
-            ZEPHYRUM,      /* x */
-            ZEPHYRUM,      /* y */
-            LXXI,          /* latitudo (71 chars) */
-            LX,            /* altitudo (60 lines) */
-            I,             /* scala */
-            focus == FOCUS_PAGINA);  /* focused */
-
-        /* Navigator dextram: ~71 -> 142 chars */
-        navigator_entitatum_reddere(
-            navigator,
-            tabula,
-            LXXI,          /* x (71 chars offset) */
-            ZEPHYRUM,      /* y */
-            LXXI,          /* latitudo (71 chars) */
-            LX,            /* altitudo (60 lines) */
-            I,             /* scala */
-            focus == FOCUS_NAVIGATOR);  /* focused */
+        /* Manager reddit omnes widgets */
+        manager_widget_reddere(manager, tabula, I);
 
         /* Praesentare pixela */
         fenestra_praesentare_pixela(fenestra, tabula);

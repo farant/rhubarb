@@ -436,11 +436,37 @@ fenestra_perscrutari_eventus (
                 casus NSEventTypeLeftMouseDown:
                 casus NSEventTypeRightMouseDown:
                 casus NSEventTypeOtherMouseDown: {
-                    NSRect rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
+                    NSRect rectangulum_contenti;
+                    CGImageRef imago_pixelorum;
+                    f64 window_x, window_y;
+                    f64 bitmap_latitudo, bitmap_altitudo;
+                    f64 scala_x, scala_y;
+
+                    rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
                     eventus.genus = EVENTUS_MUS_DEPRESSUS;
-                    eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
-                    /* Invertere coordinatam Y: Cocoa utitur origine infero-sinistro */
-                    eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
+
+                    /* Obtinere imaginem bitmap ad computandum scalam */
+                    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(fenestra->visus, "imagoPixelorum");
+
+                    si (imago_pixelorum) {
+                        /* Computare scalam inter fenestram et bitmap */
+                        bitmap_latitudo = (f64)CGImageGetWidth(imago_pixelorum);
+                        bitmap_altitudo = (f64)CGImageGetHeight(imago_pixelorum);
+                        scala_x = bitmap_latitudo / rectangulum_contenti.size.width;
+                        scala_y = bitmap_altitudo / rectangulum_contenti.size.height;
+
+                        /* Convertere coordinatas fenestrae ad coordinatas bitmap */
+                        window_x = [eventus_ns locationInWindow].x;
+                        window_y = rectangulum_contenti.size.height - [eventus_ns locationInWindow].y;
+
+                        eventus.datum.mus.x = (i32)(window_x * scala_x);
+                        eventus.datum.mus.y = (i32)(window_y * scala_y);
+                    } alioquin {
+                        /* Fallback si nullum bitmap */
+                        eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
+                        eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
+                    }
+
                     eventus.datum.mus.botton = ([eventus_ns type] == NSEventTypeLeftMouseDown) ? MUS_SINISTER :
                                                ([eventus_ns type] == NSEventTypeRightMouseDown) ? MUS_DEXTER :
                                                MUS_MEDIUS;
@@ -452,10 +478,32 @@ fenestra_perscrutari_eventus (
                 casus NSEventTypeLeftMouseUp:
                 casus NSEventTypeRightMouseUp:
                 casus NSEventTypeOtherMouseUp: {
-                    NSRect rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
+                    NSRect rectangulum_contenti;
+                    CGImageRef imago_pixelorum;
+                    f64 window_x, window_y;
+                    f64 bitmap_latitudo, bitmap_altitudo;
+                    f64 scala_x, scala_y;
+
+                    rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
                     eventus.genus = EVENTUS_MUS_LIBERATUS;
-                    eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
-                    eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
+
+                    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(fenestra->visus, "imagoPixelorum");
+                    si (imago_pixelorum) {
+                        bitmap_latitudo = (f64)CGImageGetWidth(imago_pixelorum);
+                        bitmap_altitudo = (f64)CGImageGetHeight(imago_pixelorum);
+                        scala_x = bitmap_latitudo / rectangulum_contenti.size.width;
+                        scala_y = bitmap_altitudo / rectangulum_contenti.size.height;
+
+                        window_x = [eventus_ns locationInWindow].x;
+                        window_y = rectangulum_contenti.size.height - [eventus_ns locationInWindow].y;
+
+                        eventus.datum.mus.x = (i32)(window_x * scala_x);
+                        eventus.datum.mus.y = (i32)(window_y * scala_y);
+                    } alioquin {
+                        eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
+                        eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
+                    }
+
                     eventus.datum.mus.botton = ([eventus_ns type] == NSEventTypeLeftMouseUp) ? MUS_SINISTER :
                                                ([eventus_ns type] == NSEventTypeRightMouseUp) ? MUS_DEXTER :
                                                MUS_MEDIUS;
@@ -468,10 +516,32 @@ fenestra_perscrutari_eventus (
                 casus NSEventTypeLeftMouseDragged:
                 casus NSEventTypeRightMouseDragged:
                 casus NSEventTypeOtherMouseDragged: {
-                    NSRect rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
+                    NSRect rectangulum_contenti;
+                    CGImageRef imago_pixelorum;
+                    f64 window_x, window_y;
+                    f64 bitmap_latitudo, bitmap_altitudo;
+                    f64 scala_x, scala_y;
+
+                    rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
                     eventus.genus = EVENTUS_MUS_MOTUS;
-                    eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
-                    eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
+
+                    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(fenestra->visus, "imagoPixelorum");
+                    si (imago_pixelorum) {
+                        bitmap_latitudo = (f64)CGImageGetWidth(imago_pixelorum);
+                        bitmap_altitudo = (f64)CGImageGetHeight(imago_pixelorum);
+                        scala_x = bitmap_latitudo / rectangulum_contenti.size.width;
+                        scala_y = bitmap_altitudo / rectangulum_contenti.size.height;
+
+                        window_x = [eventus_ns locationInWindow].x;
+                        window_y = rectangulum_contenti.size.height - [eventus_ns locationInWindow].y;
+
+                        eventus.datum.mus.x = (i32)(window_x * scala_x);
+                        eventus.datum.mus.y = (i32)(window_y * scala_y);
+                    } alioquin {
+                        eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
+                        eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
+                    }
+
                     eventus.datum.mus.modificantes = (i32)[eventus_ns modifierFlags];
                     impellere_eventum(fenestra, &eventus);
                     frange;

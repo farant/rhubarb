@@ -899,6 +899,11 @@ pagina_tractare_eventum (
         {
             redde FALSUM;  /* Signal quit */
         }
+        /* TAB - non consumere, permittere manager tractare focus */
+        alioquin si (clavis == CLAVIS_TABULA)
+        {
+            redde FALSUM;  /* Permittere focus switching */
+        }
         /* Movimento hjkl */
         alioquin si (c == 'h')
         {
