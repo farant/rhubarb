@@ -1,6 +1,7 @@
 #include "navigator_entitatum.h"
 #include "thema.h"
 #include "xar.h"
+#include "delineare.h"
 #include <string.h>
 
 /* ==================================================
@@ -907,6 +908,33 @@ navigator_entitatum_reddere(
             (i32)(-I),   /* Nulla selectio per index */
             NIHIL,       /* Nulla selectio per ID */
             VERUM);    /* Dimmed */
+    }
+
+    /* === REDDERE DIVISORES === */
+    {
+        ContextusDelineandi* ctx;
+        i32 color_border;
+        i32 divider_1_x;
+        i32 divider_2_x;
+        i32 box_y0;
+        i32 box_y1;
+
+        ctx = delineare_creare_contextum(nav->piscina, tabula);
+        color_border = thema_color(COLOR_BORDER);
+
+        /* Coordinatas pixelorum pro divisores */
+        divider_1_x = x_media * character_latitudo - II;  /* 2px ad sinistram */
+        divider_2_x = x_dextra * character_latitudo - II;  /* 2px ad sinistram */
+        box_y0 = y * character_altitudo;
+        box_y1 = (y + altitudo) * character_altitudo;
+
+        /* Divider inter columnam sinistram et mediam (double line cum gap) */
+        delineare_lineam_verticalem(ctx, divider_1_x - II, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, divider_1_x, box_y0, box_y1, color_border);
+
+        /* Divider inter columnam mediam et dextram */
+        delineare_lineam_verticalem(ctx, divider_2_x - II, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, divider_2_x, box_y0, box_y1, color_border);
     }
 
     /* TODO: Indicatores paginationis */
