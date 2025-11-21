@@ -58,6 +58,7 @@ declare -a GUI_SOURCE_FILES=(
   "lib/graphus_entitatum.c"
   "lib/navigator_entitatum.c"
   "lib/widget.c"
+  "lib/registrum_commandi.c"
 )
 
 # Color codes

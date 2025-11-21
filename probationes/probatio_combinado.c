@@ -7,7 +7,10 @@
 #include "internamentum.h"
 #include "tempus.h"
 #include "widget.h"
+#include "registrum_commandi.h"
 #include <stdio.h>
+#include <time.h>
+#include <string.h>
 
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
@@ -150,6 +153,37 @@ creare_graphum_probationis(
 }
 
 /* ==================================================
+ * Commands
+ * ================================================== */
+
+/* $date command - insert current date */
+interior b32
+command_date(
+    ContextusCommandi* ctx)
+{
+    character resultado[XXXII];
+    time_t tempus_nunc;
+    structura tm* tempus_info;
+
+    /* Get current time */
+    tempus_nunc = time(NIHIL);
+    tempus_info = localtime(&tempus_nunc);
+
+    /* Format: MM/DD/YYYY */
+    sprintf(resultado, " %02d/%02d/%04d",
+            tempus_info->tm_mon + I,
+            tempus_info->tm_mday,
+            tempus_info->tm_year + MCMX);  /* 1900 */
+
+    /* Insert result after tag */
+    pagina_ponere_cursor(ctx->pagina, ctx->positio);
+    pagina_inserere_chordam(ctx->pagina, resultado);
+
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Widget Wrapper Functions
  * ================================================== */
 
@@ -157,6 +191,7 @@ creare_graphum_probationis(
 nomen structura {
     Pagina*  pagina;
     Piscina* piscina;
+    RegistrumCommandi* reg_commandi;
 } DatumWidgetPagina;
 
 /* Datum pro widget navigator */
@@ -203,6 +238,44 @@ widget_pagina_tractare_eventum(
     b32 consumptus;
 
     datum = (DatumWidgetPagina*)widget->datum;
+
+    /* Handle mouse clicks for tag detection */
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        RegioClicca regio;
+        i32 click_x;
+        i32 click_y;
+        i32 character_latitudo;
+        i32 character_altitudo;
+
+        character_latitudo = VI;  /* 6 pixels per character */
+        character_altitudo = VIII;
+
+        /* Convert pixel to character coordinates */
+        /* Account for widget position and border */
+        click_x = (eventus->datum.mus.x / character_latitudo) - widget->x - I;
+        click_y = (eventus->datum.mus.y / character_altitudo) - widget->y - I;
+
+        /* Try to detect tag at click position */
+        si (pagina_obtinere_regio_ad_punctum(datum->pagina, click_x, click_y, &regio))
+        {
+            /* Tag detected! */
+            si (strcmp(regio.genus, "command") == ZEPHYRUM)
+            {
+                ContextusCommandi ctx;
+
+                ctx.pagina = datum->pagina;
+                ctx.positio = regio.finis;
+                ctx.piscina = datum->piscina;
+                ctx.datum_custom = NIHIL;
+
+                /* Execute command through registry */
+                registrum_commandi_executare(datum->reg_commandi, regio.datum, &ctx);
+
+                redde VERUM;  /* Consumed click */
+            }
+        }
+    }
 
     consumptus = pagina_tractare_eventum(datum->pagina, eventus);
 
@@ -271,6 +344,7 @@ main(void)
     ManagerWidget*       manager;
     DatumWidgetPagina*   datum_pagina;
     DatumWidgetNavigator* datum_navigator;
+    RegistrumCommandi*   registrum_commandi;
 
     /* Initiare thema */
     thema_initiare();
@@ -320,7 +394,19 @@ main(void)
     pagina_inserere_chordam(&pagina, "Navigator on right ->\n\n");
     pagina_inserere_chordam(&pagina, "Press 'i' to enter insert mode\n");
     pagina_inserere_chordam(&pagina, "Press ESC to return to normal mode\n");
-    pagina_inserere_chordam(&pagina, "Use hjkl to navigate\n");
+    pagina_inserere_chordam(&pagina, "Use hjkl to navigate\n\n");
+    pagina_inserere_chordam(&pagina, "Try clicking on: $date\n");
+
+    /* Create command registry */
+    registrum_commandi = registrum_commandi_creare(piscina);
+    si (!registrum_commandi)
+    {
+        imprimere("Fractura: non potest creare registrum commandi\n");
+        redde I;
+    }
+
+    /* Register commands */
+    registrum_commandi_registrare(registrum_commandi, "date", command_date, NIHIL);
 
     /* Creare widget manager */
     manager = manager_widget_creare(piscina);
@@ -334,6 +420,7 @@ main(void)
     datum_pagina = piscina_allocare(piscina, magnitudo(DatumWidgetPagina));
     datum_pagina->pagina = &pagina;
     datum_pagina->piscina = piscina;
+    datum_pagina->reg_commandi = registrum_commandi;
 
     datum_navigator = piscina_allocare(piscina, magnitudo(DatumWidgetNavigator));
     datum_navigator->navigator = navigator;

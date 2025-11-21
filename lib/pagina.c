@@ -1083,6 +1083,107 @@ pagina_tractare_eventum (
             pagina->clavis_praecedens = '\0';
             pagina->esperans_fd = FALSUM;
         }
+        alioquin si (c == '>')
+        {
+            si (pagina->clavis_praecedens == '>')
+            {
+                /* >> - indent current line */
+                i32 initium;
+                i32 cursor_salvatus;
+
+                initium = pagina_invenire_initium_lineae(pagina, (i32)pagina->cursor);
+                cursor_salvatus = pagina->cursor;
+
+                /* Move to start of line and insert tab */
+                pagina_ponere_cursor(pagina, initium);
+                pagina_inserere_characterem(pagina, '\t');
+
+                /* Restore cursor position (adjusted for inserted tab) */
+                si (cursor_salvatus >= initium) {
+                    pagina_ponere_cursor(pagina, cursor_salvatus + I);
+                }
+
+                pagina->clavis_praecedens = '\0';
+            }
+            alioquin si (pagina->clavis_praecedens == '\0')
+            {
+                pagina->clavis_praecedens = '>';
+            }
+        }
+        alioquin si (c == '<')
+        {
+            si (pagina->clavis_praecedens == '<')
+            {
+                /* << - dedent current line */
+                i32 initium;
+                i32 cursor_salvatus;
+
+                initium = pagina_invenire_initium_lineae(pagina, (i32)pagina->cursor);
+                cursor_salvatus = pagina->cursor;
+
+                /* Check if line starts with tab or spaces */
+                si (initium < pagina->longitudo)
+                {
+                    character c_initium;
+
+                    c_initium = pagina->buffer[initium];
+
+                    /* Remove tab */
+                    si (c_initium == '\t')
+                    {
+                        pagina_ponere_cursor(pagina, initium);
+                        pagina_delere_characterem_ante(pagina);
+
+                        /* Restore cursor position (adjusted for deleted tab) */
+                        si (cursor_salvatus > initium) {
+                            pagina_ponere_cursor(pagina, cursor_salvatus - I);
+                        } alioquin {
+                            pagina_ponere_cursor(pagina, initium);
+                        }
+                    }
+                    /* Or remove up to 2 spaces */
+                    alioquin si (c_initium == ' ')
+                    {
+                        s32 numerus_deletorum;
+                        s32 i;
+
+                        numerus_deletorum = ZEPHYRUM;
+                        per (i = (s32)initium; i < (s32)pagina->longitudo && numerus_deletorum < II; i++)
+                        {
+                            si (pagina->buffer[(i32)i] != ' ') {
+                                frange;
+                            }
+                            numerus_deletorum++;
+                        }
+
+                        /* Delete the spaces */
+                        pagina_ponere_cursor(pagina, initium);
+                        per (i = ZEPHYRUM; i < numerus_deletorum; i++) {
+                            pagina_delere_characterem_ante(pagina);
+                        }
+
+                        /* Restore cursor position */
+                        si (cursor_salvatus > initium) {
+                            i32 nova_positio;
+
+                            nova_positio = cursor_salvatus - (i32)numerus_deletorum;
+                            si (nova_positio < initium) {
+                                nova_positio = initium;
+                            }
+                            pagina_ponere_cursor(pagina, nova_positio);
+                        } alioquin {
+                            pagina_ponere_cursor(pagina, initium);
+                        }
+                    }
+                }
+
+                pagina->clavis_praecedens = '\0';
+            }
+            alioquin si (pagina->clavis_praecedens == '\0')
+            {
+                pagina->clavis_praecedens = '<';
+            }
+        }
         alioquin
         {
             /* Clavis non recognita - vacare clavis praecedens */
@@ -1214,4 +1315,197 @@ pagina_reddere_cum_margine (
      * ================================================== */
 
     pagina_reddere(tabula, pagina, x + I, y + I, textus_latitudo, textus_altitudo, scala);
+}
+
+
+/* ==================================================
+ * Tag Detection
+ * ================================================== */
+
+/* Convertere coordinatas characterum ad index buffer */
+interior s32
+pagina_index_ad_punctum(
+    constans Pagina* pagina,
+    i32 x_target,
+    i32 y_target)
+{
+    s32 i;
+    i32 current_x;
+    i32 current_y;
+
+    current_x = ZEPHYRUM;
+    current_y = ZEPHYRUM;
+
+    /* Walk buffer, track visual position */
+    per (i = ZEPHYRUM; i < (s32)pagina->longitudo; i++)
+    {
+        character c;
+
+        /* If we've reached target position, return this index */
+        si (current_y == y_target && current_x == x_target)
+        {
+            redde i;
+        }
+
+        c = pagina->buffer[(i32)i];
+
+        /* Handle newline */
+        si (c == '\n')
+        {
+            /* If clicking past end of line, return newline position */
+            si (current_y == y_target && x_target > current_x)
+            {
+                redde i;
+            }
+
+            current_x = ZEPHYRUM;
+            current_y++;
+            perge;
+        }
+
+        /* Handle tab */
+        si (c == '\t')
+        {
+            current_x += II;
+            perge;
+        }
+
+        /* Handle line wrap - NOTE: need latitudo parameter for this */
+        /* For now, assume no wrapping (lines end with \n) */
+
+        current_x++;
+    }
+
+    /* If clicking at end of text */
+    si (current_y == y_target && current_x <= x_target)
+    {
+        redde (s32)pagina->longitudo;
+    }
+
+    redde -I;  /* Not found */
+}
+
+/* Detectare $command tag ad index */
+interior b32
+pagina_detectare_command(
+    constans Pagina* pagina,
+    i32 index,
+    RegioClicca* regio)
+{
+    s32 i;
+    s32 initium;
+    s32 finis;
+    s32 longitudo;
+
+    /* Scan backwards to find $ */
+    initium = -I;
+    per (i = (s32)index; i >= ZEPHYRUM; i--)
+    {
+        character c;
+
+        c = pagina->buffer[(i32)i];
+
+        si (c == '$')
+        {
+            initium = i;
+            frange;
+        }
+
+        /* Stop at whitespace or newline */
+        si (c == ' ' || c == '\t' || c == '\n')
+        {
+            redde FALSUM;
+        }
+    }
+
+    si (initium == -I)
+    {
+        redde FALSUM;
+    }
+
+    /* Scan forwards to find end (whitespace, newline, or punctuation) */
+    finis = initium + I;  /* Start after $ */
+    per (i = finis; i < (s32)pagina->longitudo; i++)
+    {
+        character c;
+
+        c = pagina->buffer[(i32)i];
+
+        /* Stop at whitespace, newline, or non-alphanumeric */
+        si (c == ' ' || c == '\t' || c == '\n' ||
+            !est_character_verbi(c))
+        {
+            finis = i;
+            frange;
+        }
+    }
+
+    /* If reached end of buffer without stopping */
+    si (finis == initium + I)
+    {
+        finis = (s32)pagina->longitudo;
+    }
+
+    /* Extract command name (after $) */
+    longitudo = finis - (initium + I);
+    si (longitudo >= LXIV)
+    {
+        longitudo = LXIV - I;
+    }
+
+    si (longitudo > ZEPHYRUM)
+    {
+        per (i = ZEPHYRUM; i < longitudo; i++)
+        {
+            regio->datum[i] = pagina->buffer[(i32)(initium + I + i)];
+        }
+        regio->datum[longitudo] = '\0';
+
+        /* Fill in region info */
+        regio->initium = (i32)initium;
+        regio->finis = (i32)finis;
+
+        /* Copy "command" to genus */
+        regio->genus[0] = 'c';
+        regio->genus[1] = 'o';
+        regio->genus[2] = 'm';
+        regio->genus[3] = 'm';
+        regio->genus[4] = 'a';
+        regio->genus[5] = 'n';
+        regio->genus[6] = 'd';
+        regio->genus[7] = '\0';
+
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+/* Public API */
+b32
+pagina_obtinere_regio_ad_punctum(
+    constans Pagina* pagina,
+    i32 x_char,
+    i32 y_char,
+    RegioClicca* regio)
+{
+    s32 index;
+
+    /* Convert coordinates to buffer index */
+    index = pagina_index_ad_punctum(pagina, x_char, y_char);
+
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Try to detect $command */
+    si (pagina_detectare_command(pagina, (i32)index, regio))
+    {
+        redde VERUM;
+    }
+
+    /* TODO: Try other tag types (#link, <$block>) */
+
+    redde FALSUM;
 }

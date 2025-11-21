@@ -256,6 +256,7 @@
 #define DCCCLIII		853
 #define CM					900
 #define M						1000
+#define MCMX 			  1900
 #define MM					2000
 #define MMM					3000
 #define MMMM				4000

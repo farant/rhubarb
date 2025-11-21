@@ -72,6 +72,19 @@ nomen structura {
 
 
 /* ==================================================
+ * RegioClicca - Clickable Tag Region
+ * ================================================== */
+
+/* Regio clickable in textu (tag, command, link) */
+nomen structura RegioClicca {
+    i32 initium;             /* Start index in buffer */
+    i32 finis;               /* End index in buffer */
+    character genus[XVI];    /* Tag type: "command", "link", "block" */
+    character datum[LXIV];   /* Command/link name or content */
+} RegioClicca;
+
+
+/* ==================================================
  * Creatio / Initiatio
  * ================================================== */
 
@@ -464,5 +477,28 @@ b32
 pagina_tractare_eventum (
     Pagina* pagina,
     constans Eventus* eventus);
+
+
+/* ==================================================
+ * Tag Detection
+ * ================================================== */
+
+/* Obtinere regio clickable ad coordinatas characterum
+ *
+ * Detectat tags ad coordinatas datae ($command, #link, <$block>).
+ * Coordinatae sunt relative ad aream textus (non originem widget).
+ *
+ * pagina: pagina
+ * x_char, y_char: coordinatae characterum (relative to text area)
+ * regio: exitus - regio detecta
+ *
+ * Reddit: VERUM si regio inventa, FALSUM si non
+ */
+b32
+pagina_obtinere_regio_ad_punctum(
+    constans Pagina* pagina,
+    i32 x_char,
+    i32 y_char,
+    RegioClicca* regio);
 
 #endif /* PAGINA_H */

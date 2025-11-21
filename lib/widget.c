@@ -181,7 +181,7 @@ manager_widget_tractare_eventum(
         redde FALSUM;
     }
 
-    /* Click-to-focus */
+    /* Click-to-focus (but still pass event to widget) */
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
     {
         i32 character_latitudo;
@@ -193,7 +193,7 @@ manager_widget_tractare_eventum(
         click_y_char = eventus->datum.mus.y / (VIII);  /* 8 pixels per character height */
 
         manager_widget_focus_ad_punctum(manager, click_x_char, click_y_char);
-        redde VERUM;  /* Consumere click eventum */
+        /* Don't return - let widget handle the click too */
     }
 
     /* Passare eventum ad widget cum focus */
