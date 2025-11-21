@@ -4,6 +4,7 @@
 #include "pagina.h"
 #include "piscina.h"
 #include "thema.h"
+#include "tempus.h"
 #include <stdio.h>
 
 int
@@ -20,6 +21,9 @@ main (
 
     /* Initiare thema */
     thema_initiare();
+
+    /* Initiare tempus */
+    tempus_initiare();
 
     /* Creare piscinam */
     piscina = piscina_generare_dynamicum("pagina", M * M);
@@ -78,6 +82,9 @@ main (
     currens = VERUM;
     dum (currens && !fenestra_debet_claudere(fenestra))
     {
+        /* Actualizare tempus */
+        tempus_quadrum();
+
         /* Perscrutari eventus ex systemate */
         fenestra_perscrutari_eventus(fenestra);
 

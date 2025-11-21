@@ -5,6 +5,7 @@
 #include "fenestra.h"
 #include "thema.h"
 #include "internamentum.h"
+#include "tempus.h"
 #include <stdio.h>
 
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
@@ -171,6 +172,9 @@ main(void)
     /* Initiare thema */
     thema_initiare();
 
+    /* Initiare tempus */
+    tempus_initiare();
+
     /* Creare piscinam */
     piscina = piscina_generare_dynamicum("combinado", M * M * II);  /* 2MB */
     si (!piscina)
@@ -250,6 +254,9 @@ main(void)
 
     dum (currens && !fenestra_debet_claudere(fenestra))
     {
+        /* Actualizare tempus */
+        tempus_quadrum();
+
         /* Perscrutari eventus */
         fenestra_perscrutari_eventus(fenestra);
 
@@ -259,6 +266,25 @@ main(void)
             si (eventus.genus == EVENTUS_CLAUDERE)
             {
                 currens = FALSUM;
+            }
+            alioquin si (eventus.genus == EVENTUS_MUS_DEPRESSUS)
+            {
+                /* Click on widget to focus it */
+                i32 character_latitudo;
+                i32 click_x_char;
+
+                character_latitudo = VI;  /* 6 pixels per character */
+                click_x_char = eventus.datum.mus.x / character_latitudo;
+
+                /* Determine which widget was clicked */
+                si (click_x_char < LXXI)
+                {
+                    focus = FOCUS_PAGINA;
+                }
+                alioquin
+                {
+                    focus = FOCUS_NAVIGATOR;
+                }
             }
             alioquin si (eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
             {

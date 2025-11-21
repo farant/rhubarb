@@ -197,6 +197,10 @@ pagina_initiare (
     pagina->esperans_fd = FALSUM;
     pagina->tempus_f = 0.0;
 
+    /* Initiare cursor blink state */
+    pagina->tempus_cursor_ultimus = 0.0;
+    pagina->cursor_visibilis = VERUM;
+
     /* Copiere identificator */
     per (i = ZEPHYRUM; i < PAGINA_IDENTIFICATOR_LONGITUDO - I; i++) {
         si (identificator[i] == '\0') {
@@ -657,7 +661,7 @@ pagina_est_vacua (
 vacuum
 pagina_reddere (
     TabulaPixelorum* tabula,
-    constans Pagina* pagina,
+    Pagina* pagina,
     i32 x,
     i32 y,
     i32 latitudo,
@@ -747,24 +751,38 @@ pagina_reddere (
         cursor_inventus = VERUM;
     }
 
-    /* Pingere cursorem */
+    /* Pingere cursorem (cum blinking) */
     si (cursor_inventus) {
         i32 j;
         i32 cursor_pixel_x;
         i32 cursor_pixel_y;
+        f64 tempus_currens;
+        f64 delta_tempus;
 
         cursor_pixel_x = x * character_latitudo + cursor_x * character_latitudo;
         cursor_pixel_y = y * character_altitudo + cursor_y * character_altitudo;
 
+        /* Update blink state */
+        tempus_currens = tempus_nunc();
+        delta_tempus = tempus_currens - pagina->tempus_cursor_ultimus;
+
+        /* Blink every 0.5 seconds */
+        si (delta_tempus >= 0.5) {
+            pagina->cursor_visibilis = !pagina->cursor_visibilis;
+            pagina->tempus_cursor_ultimus = tempus_currens;
+        }
+
         /* Pingere rectangulum pro cursore (linea verticalis) */
         /* TODO: Hic debemus usare delineare_rectangulum_plenum vel ponere pixela directe */
         /* Pro nunc, pingere lineam verticalem simplicem */
-        per (j = ZEPHYRUM; j < character_altitudo; j++) {
-            tabula_pixelorum_ponere_pixelum(
-                tabula,
-                cursor_pixel_x,
-                cursor_pixel_y + j,
-                thema_color(COLOR_CURSOR));
+        si (pagina->cursor_visibilis) {
+            per (j = ZEPHYRUM; j < character_altitudo; j++) {
+                tabula_pixelorum_ponere_pixelum(
+                    tabula,
+                    cursor_pixel_x,
+                    cursor_pixel_y + j,
+                    thema_color(COLOR_CURSOR));
+            }
         }
     }
 }
@@ -788,6 +806,10 @@ pagina_tractare_eventum (
 
     clavis = eventus->datum.clavis.clavis;
     c = eventus->datum.clavis.typus;
+
+    /* Reset cursor blink on keypress (make cursor visible) */
+    pagina->cursor_visibilis = VERUM;
+    pagina->tempus_cursor_ultimus = tempus_nunc();
 
     si (pagina->modo == MODO_INSERT)
     {
@@ -1075,7 +1097,7 @@ vacuum
 pagina_reddere_cum_margine (
     Piscina* piscina,
     TabulaPixelorum* tabula,
-    constans Pagina* pagina,
+    Pagina* pagina,
     i32 x,
     i32 y,
     i32 latitudo,

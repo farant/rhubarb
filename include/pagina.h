@@ -64,6 +64,10 @@ nomen structura {
     character clavis_praecedens;                            /* For dd, dG, d$ commands */
     b32 esperans_fd;                                        /* fd escape sequence */
     f64 tempus_f;                                           /* Timing for fd */
+
+    /* Cursor blink state */
+    f64 tempus_cursor_ultimus;                              /* Last cursor blink time */
+    b32 cursor_visibilis;                                   /* Cursor visibility state */
 } Pagina;
 
 
@@ -407,7 +411,7 @@ pagina_est_vacua (
 vacuum
 pagina_reddere (
     TabulaPixelorum* tabula,
-    constans Pagina* pagina,
+    Pagina* pagina,
     i32 x,
     i32 y,
     i32 latitudo,
@@ -433,7 +437,7 @@ vacuum
 pagina_reddere_cum_margine (
     Piscina* piscina,
     TabulaPixelorum* tabula,
-    constans Pagina* pagina,
+    Pagina* pagina,
     i32 x,
     i32 y,
     i32 latitudo,
