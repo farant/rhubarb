@@ -1,13 +1,20 @@
 #include "piscina.h"
 #include "graphus_entitatum.h"
 #include "navigator_entitatum.h"
+#include "pagina.h"
 #include "fenestra.h"
 #include "thema.h"
 #include "internamentum.h"
 #include <stdio.h>
 
-#define LATITUDO_FENESTRA  853
-#define ALTITUDO_FENESTRA  480
+#define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
+#define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
+
+/* Enum pro focus widget */
+nomen enumeratio {
+    FOCUS_PAGINA = ZEPHYRUM,
+    FOCUS_NAVIGATOR
+} FocusWidget;
 
 /* Creare graphum probationis cum aliquot entitates */
 interior vacuum
@@ -153,17 +160,19 @@ main(void)
     GraphusEntitatum*    graphus;
     EntitasProvidor*     providor;
     NavigatorEntitatum*  navigator;
+    Pagina               pagina;
     Fenestra*            fenestra;
     TabulaPixelorum*     tabula;
     FenestraConfiguratio configuratio;
     Eventus              eventus;
     b32                  currens;
+    FocusWidget          focus;
 
     /* Initiare thema */
     thema_initiare();
 
     /* Creare piscinam */
-    piscina = piscina_generare_dynamicum("navigator", M * M);  /* 1MB */
+    piscina = piscina_generare_dynamicum("combinado", M * M * II);  /* 2MB */
     si (!piscina)
     {
         imprimere("Fractura: non potest creare piscinam\n");
@@ -197,8 +206,16 @@ main(void)
         redde I;
     }
 
+    /* Initiare paginam */
+    pagina_initiare(&pagina, "page:demo");
+    pagina_inserere_chordam(&pagina, "Tabulator + TAB = switch focus\n\n");
+    pagina_inserere_chordam(&pagina, "Navigator on right ->\n\n");
+    pagina_inserere_chordam(&pagina, "Press 'i' to enter insert mode\n");
+    pagina_inserere_chordam(&pagina, "Press ESC to return to normal mode\n");
+    pagina_inserere_chordam(&pagina, "Use hjkl to navigate\n");
+
     /* Configurare fenestram */
-    configuratio.titulus = "Navigator Entitatum - Probatio";
+    configuratio.titulus = "Pagina + Navigator - Probatio Combinado";
     configuratio.x = C;
     configuratio.y = C;
     configuratio.latitudo = LATITUDO_FENESTRA;
@@ -225,6 +242,9 @@ main(void)
     /* Monstrare fenestram */
     fenestra_monstrare(fenestra);
 
+    /* Initium focus ad paginam */
+    focus = FOCUS_PAGINA;
+
     /* Cyclus principalis */
     currens = VERUM;
 
@@ -242,15 +262,42 @@ main(void)
             }
             alioquin si (eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
             {
-                /* ESC vel q = exire */
-                si (eventus.datum.clavis.typus == '\x1B' || eventus.datum.clavis.typus == 'q')
+                /* TAB - switch focus (except in pagina insert mode) */
+                si (eventus.datum.clavis.clavis == CLAVIS_TABULA)
                 {
-                    currens = FALSUM;
+                    si (focus == FOCUS_PAGINA && pagina.modo == MODO_INSERT)
+                    {
+                        /* In insert mode, let pagina handle tab (insert tab character) */
+                        b32 eventus_tractatus;
+                        eventus_tractatus = pagina_tractare_eventum(&pagina, &eventus);
+                        si (!eventus_tractatus)
+                        {
+                            currens = FALSUM;
+                        }
+                    }
+                    alioquin
+                    {
+                        /* In normal mode or navigator focused: switch focus */
+                        focus = (focus == FOCUS_PAGINA) ? FOCUS_NAVIGATOR : FOCUS_PAGINA;
+                    }
                 }
                 alioquin
                 {
-                    /* Passare ad navigator */
-                    navigator_entitatum_tractare_eventum(navigator, &eventus);
+                    /* Passare eventum ad widget cum focus */
+                    si (focus == FOCUS_PAGINA)
+                    {
+                        b32 eventus_tractatus;
+                        eventus_tractatus = pagina_tractare_eventum(&pagina, &eventus);
+                        si (!eventus_tractatus)
+                        {
+                            /* ESC in normal mode - exire */
+                            currens = FALSUM;
+                        }
+                    }
+                    alioquin si (focus == FOCUS_NAVIGATOR)
+                    {
+                        navigator_entitatum_tractare_eventum(navigator, &eventus);
+                    }
                 }
             }
         }
@@ -258,16 +305,29 @@ main(void)
         /* Vacare fondum */
         tabula_pixelorum_vacare(tabula, thema_color(COLOR_BACKGROUND));
 
-        /* Reddere navigator */
+        /* Reddere ambo widgets - 50/50 split */
+        /* Pagina sinistram: 0 -> ~71 chars */
+        pagina_reddere_cum_margine(
+            piscina,
+            tabula,
+            &pagina,
+            ZEPHYRUM,      /* x */
+            ZEPHYRUM,      /* y */
+            LXXI,          /* latitudo (71 chars) */
+            LX,            /* altitudo (60 lines) */
+            I,             /* scala */
+            focus == FOCUS_PAGINA);  /* focused */
+
+        /* Navigator dextram: ~71 -> 142 chars */
         navigator_entitatum_reddere(
             navigator,
             tabula,
-            ZEPHYRUM,      /* x */
+            LXXI,          /* x (71 chars offset) */
             ZEPHYRUM,      /* y */
-            CXLII,         /* latitudo (142 chars) */
+            LXXI,          /* latitudo (71 chars) */
             LX,            /* altitudo (60 lines) */
             I,             /* scala */
-            VERUM);        /* focused */
+            focus == FOCUS_NAVIGATOR);  /* focused */
 
         /* Praesentare pixela */
         fenestra_praesentare_pixela(fenestra, tabula);

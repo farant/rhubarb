@@ -1080,7 +1080,8 @@ pagina_reddere_cum_margine (
     i32 y,
     i32 latitudo,
     i32 altitudo,
-    i32 scala)
+    i32 scala,
+    b32 focused)
 {
     ContextusDelineandi* ctx;
     i32 character_latitudo;
@@ -1089,6 +1090,7 @@ pagina_reddere_cum_margine (
     i32 textus_latitudo;
     i32 textus_altitudo;
     i32 color_border;
+    i32 color_border_inner;
     chorda titulo;
     chorda modo_textus;
     constans character* modo_str;
@@ -1107,6 +1109,7 @@ pagina_reddere_cum_margine (
     box_y1 = (y + altitudo) * character_altitudo - I - II;  /* 2px padding from bottom */
 
     color_border = thema_color(COLOR_BORDER);
+    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -1146,27 +1149,27 @@ pagina_reddere_cum_margine (
 
         /* Top line - left segment (outer and inner with gap) */
         delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0, color_border);
-        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0 + II, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0 + II, color_border_inner);
 
         /* Top line - right segment */
         delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0, color_border);
-        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0 + II, color_border);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0 + II, color_border_inner);
 
         /* Bottom line - left segment */
         delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1, color_border);
-        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1 - II, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1 - II, color_border_inner);
 
         /* Bottom line - right segment */
         delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1, color_border);
-        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1 - II, color_border);
+        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1 - II, color_border_inner);
 
         /* Left line (outer and inner with gap) */
         delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1, color_border_inner);
 
         /* Right line (outer and inner with gap) */
         delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border_inner);
 
         /* ==================================================
          * Pingere Textum (centered on lines)

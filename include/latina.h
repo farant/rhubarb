@@ -112,6 +112,7 @@
 #define LXIII				63
 #define LXIV				64
 #define LXX					70
+#define LXXI				71
 #define LXXX				80
 #define XC					90
 #define XCI					91
@@ -252,6 +253,7 @@
 #define DCC					700
 #define DCCL				750
 #define DCCC				800
+#define DCCCLIII		853
 #define CM					900
 #define M						1000
 #define MM					2000

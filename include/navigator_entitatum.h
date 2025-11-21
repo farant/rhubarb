@@ -125,6 +125,7 @@ navigator_entitatum_tractare_eventum(
  * Columna sinistra: entitas parens
  * Columna media: entitas currens (cum selectione)
  * Columna dextra: praeviso item selecti
+ * focused: VERUM si widget habet focus (mutat colorem border)
  */
 vacuum
 navigator_entitatum_reddere(
@@ -134,6 +135,7 @@ navigator_entitatum_reddere(
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  scala);
+    i32                  scala,
+    b32                  focused);
 
 #endif /* NAVIGATOR_ENTITATUM_H */

@@ -102,7 +102,7 @@ main (
         tabula_pixelorum_vacare(tabula, thema_color(COLOR_BACKGROUND));
 
         /* Reddere paginam cum margine (border + status) */
-        pagina_reddere_cum_margine(piscina, tabula, &pagina, ZEPHYRUM, ZEPHYRUM, LXX, XL, I);
+        pagina_reddere_cum_margine(piscina, tabula, &pagina, ZEPHYRUM, ZEPHYRUM, LXX, XL, I, VERUM);
 
         /* Praesentare pixela ad fenestram */
         fenestra_praesentare_pixela(fenestra, tabula);

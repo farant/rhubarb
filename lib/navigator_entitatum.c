@@ -789,20 +789,26 @@ navigator_entitatum_reddere(
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  scala)
+    i32                  scala,
+    b32                  focused)
 {
     i32              latitudo_columnae;
+    i32              latitudo_sinistra;
+    i32              latitudo_media;
     i32              x_sinistra;
     i32              x_media;
-    i32              x_dextra;
     i32              character_latitudo;
     i32              character_altitudo;
+    i32              box_x0, box_y0, box_x1, box_y1;
+    i32              textus_latitudo;
+    i32              textus_altitudo;
+    i32              color_border;
+    i32              color_border_inner;
     Entitas*         entitas_parens;
-    Entitas*         entitas_praeviso;
-    ItemNavigatoris* item_selectus;
-    Relatio*         rel;
     ItemHistoriae*   item_historiae;
     i32              numerus_items_via;
+    ContextusDelineandi* ctx;
+    chorda           titulo;
 
     si (!nav || !tabula)
     {
@@ -812,17 +818,90 @@ navigator_entitatum_reddere(
     character_latitudo = VI * scala;
     character_altitudo = VIII * scala;
 
-    /* Tres columnae aequales */
-    latitudo_columnae = latitudo / III;
-    x_sinistra = x;
-    x_media = x + latitudo_columnae;
-    x_dextra = x + (latitudo_columnae * II);
+    /* Computare dimensiones areae textus (minus border) */
+    textus_latitudo = latitudo - II;
+    textus_altitudo = altitudo - II;
+
+    /* Computare coordinatas pixelorum pro box (with padding from edges) */
+    box_x0 = x * character_latitudo + II;
+    box_y0 = y * character_altitudo + II;
+    box_x1 = (x + latitudo) * character_latitudo - I - II;
+    box_y1 = (y + altitudo) * character_altitudo - I - II;
+
+    color_border = thema_color(COLOR_BORDER);
+    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
+
+    /* === REDDERE BORDER === */
+    ctx = delineare_creare_contextum(nav->piscina, tabula);
+
+    /* Titulo pro border */
+    si (nav->entitas_currens && nav->entitas_currens->id && nav->entitas_currens->id->datum)
+    {
+        titulo = *nav->entitas_currens->id;
+    }
+    alioquin
+    {
+        character buffer_titulo[XVI];
+        i32 i;
+        constans character* texto = "Navigator";
+        per (i = ZEPHYRUM; texto[i] != '\0' && i < XV; i++)
+        {
+            buffer_titulo[i] = texto[i];
+        }
+        buffer_titulo[i] = '\0';
+        titulo.datum = (i8*)buffer_titulo;
+        titulo.mensura = i;
+    }
+
+    /* Computare positiones textus (centered on top line) */
+    {
+        i32 titulo_pixel_width;
+        i32 titulo_x, titulo_y;
+        i32 gap_padding;
+
+        gap_padding = character_latitudo;
+
+        titulo_pixel_width = titulo.mensura * character_latitudo;
+        titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
+        titulo_y = box_y0 - (character_altitudo / II) + III;
+
+        /* Top line - left segment (double line with gap) */
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0 + II, color_border_inner);
+
+        /* Top line - right segment */
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0 + II, color_border_inner);
+
+        /* Bottom line (full double line) */
+        delineare_lineam_horizontalem(ctx, box_x0, box_x1, box_y1, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, box_x1, box_y1 - II, color_border_inner);
+
+        /* Left line (double with gap) */
+        delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1, color_border_inner);
+
+        /* Right line (double with gap) */
+        delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border_inner);
+
+        /* Pingere titulo */
+        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_border);
+    }
+
+    /* Calcular latitudines columnarum - solum duo columnae (30/70 split) */
+    latitudo_sinistra = (textus_latitudo * III) / X;  /* 30% */
+    latitudo_media = textus_latitudo - latitudo_sinistra;  /* 70% */
+    latitudo_columnae = latitudo_media;
+
+    x_sinistra = x + I;  /* +1 pro border */
+    x_media = x_sinistra + latitudo_sinistra;
 
     /* Reconstruere items si latitudo columnae mutata */
     _construere_items(nav, latitudo_columnae);
 
     /* Calcular items per pagina */
-    _calcular_items_per_pagina(nav, altitudo);
+    _calcular_items_per_pagina(nav, textus_altitudo);
 
     /* === COLUMNA SINISTRA: Entitas parens === */
     entitas_parens = NIHIL;
@@ -846,9 +925,9 @@ navigator_entitatum_reddere(
             tabula,
             entitas_parens,
             x_sinistra,
-            y,
-            latitudo_columnae,
-            altitudo,
+            y + I,  /* +1 pro border */
+            latitudo_sinistra - I,  /* -1 pro spatio divider */
+            textus_altitudo,
             character_latitudo,
             character_altitudo,
             (i32)(-I),   /* Non usare index */
@@ -863,9 +942,9 @@ navigator_entitatum_reddere(
             tabula,
             nav->entitas_currens,
             x_media,
-            y,
-            latitudo_columnae,
-            altitudo,
+            y + I,  /* +1 pro border */
+            latitudo_media,
+            textus_altitudo,
             character_latitudo,
             character_altitudo,
             nav->selectio,   /* Usare index pro columna activa */
@@ -873,69 +952,19 @@ navigator_entitatum_reddere(
             FALSUM);   /* Non dimmed */
     }
 
-    /* === COLUMNA DEXTRA: Praeviso item selecti === */
-    entitas_praeviso = NIHIL;
-
-    si (nav->selectio >= ZEPHYRUM && nav->selectio < nav->numerus_itemorum)
+    /* === REDDERE DIVIDER INTER COLUMNAS === */
     {
-        item_selectus = &nav->items[nav->selectio];
+        i32 divider_x;
+        i32 divider_y0;
+        i32 divider_y1;
 
-        /* Si item selectus est relatio, monstrare entitatem destinationis */
-        si (item_selectus->genus == ITEM_RELATIO)
-        {
-            rel = (Relatio*)item_selectus->datum;
-            si (rel && rel->destinatio_id)
-            {
-                entitas_praeviso = nav->providor->capere_entitatem(
-                    nav->providor->datum,
-                    rel->destinatio_id);
-            }
-        }
-        /* Si proprietas, pro nunc nihil (in futuro possumus monstrare valorem plenum) */
-    }
-
-    si (entitas_praeviso)
-    {
-        _reddere_columnam_entitatis(
-            tabula,
-            entitas_praeviso,
-            x_dextra,
-            y,
-            latitudo_columnae,
-            altitudo,
-            character_latitudo,
-            character_altitudo,
-            (i32)(-I),   /* Nulla selectio per index */
-            NIHIL,       /* Nulla selectio per ID */
-            VERUM);    /* Dimmed */
-    }
-
-    /* === REDDERE DIVISORES === */
-    {
-        ContextusDelineandi* ctx;
-        i32 color_border;
-        i32 divider_1_x;
-        i32 divider_2_x;
-        i32 box_y0;
-        i32 box_y1;
-
-        ctx = delineare_creare_contextum(nav->piscina, tabula);
-        color_border = thema_color(COLOR_BORDER);
-
-        /* Coordinatas pixelorum pro divisores */
-        divider_1_x = x_media * character_latitudo - II;  /* 2px ad sinistram */
-        divider_2_x = x_dextra * character_latitudo - II;  /* 2px ad sinistram */
-        box_y0 = y * character_altitudo;
-        box_y1 = (y + altitudo) * character_altitudo;
+        /* Coordinatas pixelorum pro divider */
+        divider_x = x_media * character_latitudo - II;  /* 2px ad sinistram */
+        divider_y0 = box_y0 + II;  /* Start at top border edge */
+        divider_y1 = box_y1 - II;  /* End inside border */
 
         /* Divider inter columnam sinistram et mediam (double line cum gap) */
-        delineare_lineam_verticalem(ctx, divider_1_x - II, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, divider_1_x, box_y0, box_y1, color_border);
-
-        /* Divider inter columnam mediam et dextram */
-        delineare_lineam_verticalem(ctx, divider_2_x - II, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, divider_2_x, box_y0, box_y1, color_border);
+        delineare_lineam_verticalem(ctx, divider_x - II, divider_y0, divider_y1, color_border);
+        delineare_lineam_verticalem(ctx, divider_x, divider_y0, divider_y1, color_border);
     }
-
-    /* TODO: Indicatores paginationis */
 }

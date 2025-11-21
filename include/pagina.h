@@ -427,6 +427,7 @@ pagina_reddere (
  * latitudo: latitudo totalis in characteribus (includens border)
  * altitudo: altitudo totalis in lineis (includens border)
  * scala: factor scalae fontis (1 = 6x8, 2 = 12x16)
+ * focused: VERUM si widget habet focus (mutat colorem border)
  */
 vacuum
 pagina_reddere_cum_margine (
@@ -437,7 +438,8 @@ pagina_reddere_cum_margine (
     i32 y,
     i32 latitudo,
     i32 altitudo,
-    i32 scala);
+    i32 scala,
+    b32 focused);
 
 
 /* ==================================================

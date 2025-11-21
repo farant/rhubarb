@@ -67,7 +67,7 @@ thema_initiare(vacuum)
     mappa_semantica[COLOR_SELECTION]        = PALETTE_MEDIUM_DARK_GRAY;
 
     mappa_semantica[COLOR_BORDER]           = PALETTE_MEDIUM_DARK_GRAY;
-    mappa_semantica[COLOR_BORDER_ACTIVE]    = PALETTE_BRIGHT_CYAN;
+    mappa_semantica[COLOR_BORDER_ACTIVE]    = PALETTE_DARK_CYAN;
 
     mappa_semantica[COLOR_STATUS_NORMAL]    = PALETTE_MEDIUM_GRAY;
     mappa_semantica[COLOR_STATUS_INSERT]    = PALETTE_BRIGHT_GOLD;
