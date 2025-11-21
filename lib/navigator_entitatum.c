@@ -32,6 +32,64 @@ _calcular_altitudinem_textus(
     redde lineae;
 }
 
+/* Sortare relationes alphabetice per genus
+ * "Sort relationships alphabetically by genus"
+ */
+interior vacuum
+_sortare_relationes(
+    ItemNavigatoris* items,
+    i32              numerus_relationum)
+{
+    i32 i;
+    i32 j;
+    i32 k;
+    ItemNavigatoris temp;
+    Relatio* rel_i;
+    Relatio* rel_j;
+    b32 debet_movere;
+
+    /* Insertion sort */
+    per (i = I; i < numerus_relationum; i++)
+    {
+        temp = items[i];
+        rel_i = (Relatio*)temp.datum;
+
+        /* Invenire positio pro insertione */
+        k = i;
+        per (j = ZEPHYRUM; j < i; j++)
+        {
+            rel_j = (Relatio*)items[j].datum;
+
+            debet_movere = FALSUM;
+
+            /* Comparare genera */
+            si (rel_i && rel_i->genus && rel_j && rel_j->genus)
+            {
+                si (chorda_comparare(*rel_i->genus, *rel_j->genus) < ZEPHYRUM)
+                {
+                    debet_movere = VERUM;
+                }
+            }
+
+            si (debet_movere)
+            {
+                k = j;
+                frange;
+            }
+        }
+
+        /* Movere items ad dextram */
+        si (k < i)
+        {
+            per (j = i; j > k; j--)
+            {
+                items[j] = items[j - I];
+            }
+            items[k] = temp;
+        }
+    }
+}
+
 /* Construere items array ex entitate currente
  * Addit omnes relationes, deinde omnes proprietates
  */
@@ -72,6 +130,12 @@ _construere_items(
         item->datum = rel;
 
         nav->numerus_itemorum++;
+    }
+
+    /* Sortare relationes alphabetice */
+    si (nav->numerus_itemorum > I)
+    {
+        _sortare_relationes(nav->items, nav->numerus_itemorum);
     }
 
     /* Addere proprietates */
@@ -226,7 +290,7 @@ navigator_entitatum_navigare_ad(
         si (item_historiae)
         {
             item_historiae->entitas_id = nav->entitas_currens->id;
-            item_historiae->selectio = nav->selectio;
+            item_historiae->entitas_id_destinatio = entitas_id;
         }
     }
 
@@ -284,8 +348,29 @@ navigator_entitatum_retro(
     /* Reconstruere items - latitudo actualizabitur in proximo reddere */
     _construere_items(nav, XL);
 
-    /* Restituere selectionem et paginam */
-    nav->selectio = item_historiae->selectio;
+    /* Invenire selectionem: qua relatio ducit ad entitatem destinationis? */
+    nav->selectio = ZEPHYRUM;
+    si (item_historiae->entitas_id_destinatio)
+    {
+        i32 i;
+        per (i = ZEPHYRUM; i < nav->numerus_itemorum; i++)
+        {
+            ItemNavigatoris* item;
+            Relatio* rel;
+
+            item = &nav->items[i];
+            si (item->genus == ITEM_RELATIO)
+            {
+                rel = (Relatio*)item->datum;
+                si (rel && rel->destinatio_id == item_historiae->entitas_id_destinatio)
+                {
+                    nav->selectio = i;
+                    frange;
+                }
+            }
+        }
+    }
+
     nav->pagina_currens = nav->selectio / nav->items_per_pagina;
 
     /* Pop ex via */
@@ -386,88 +471,169 @@ navigator_entitatum_tractare_eventum(
  * Redditionis
  * ================================================== */
 
-vacuum
-navigator_entitatum_reddere(
-    NavigatorEntitatum*  nav,
+/* Reddere entitatem in columna
+ * "Render entity in a column"
+ */
+interior vacuum
+_reddere_columnam_entitatis(
     TabulaPixelorum*     tabula,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    i32                  scala)
+    Entitas*             entitas,
+    i32                  x_columna,
+    i32                  y_initium,
+    i32                  latitudo_columnae,
+    i32                  altitudo_maxima,
+    i32                  character_latitudo,
+    i32                  character_altitudo,
+    i32                  selectio_index,           /* Index item selecti, vel -1 */
+    chorda*              selectio_destinatio_id,  /* ID destinationis pro highlight, vel NIHIL */
+    b32                  dimmed)            /* VERUM pro colores obscuriores */
 {
-    i32              latitudo_columnae;
-    i32              x_media;
-    i32              character_latitudo;
-    i32              character_altitudo;
-    i32              primus_item;
-    i32              ultimus_item;
-    i32              i;
-    i32              y_currens;
+    ItemNavigatoris items_temp[CXXVIII];
+    i32             numerus_items;
+    i32             i;
+    i32             y_currens;
     ItemNavigatoris* item;
-    Relatio*         rel;
-    Proprietas*      prop;
-    character        buffer[CCLVI];
-    i32              buffer_mensura;
-    chorda           textus;
-    i32              color_textus;
-    i32              color_fons;
-    i32              pixel_x;
-    i32              pixel_y;
-    i32              altitudo_item_pixels;
+    Relatio*        rel;
+    Proprietas*     prop;
+    character       buffer[CCLVI];
+    i32             buffer_mensura;
+    chorda          textus;
+    i32             color_textus;
+    i32             color_fons;
+    i32             pixel_x;
+    i32             pixel_y;
+    i32             altitudo_item_pixels;
+    i32             numerus;
+    i32             j;
+    b32             est_selectus;
 
-    si (!nav || !tabula)
+    si (!tabula || !entitas)
     {
         redde;
     }
 
-    character_latitudo = VI * scala;
-    character_altitudo = VIII * scala;
+    /* Construere items pro hac entitate */
+    numerus_items = ZEPHYRUM;
 
-    /* Tres columnae aequales */
-    latitudo_columnae = latitudo / III;
-
-    /* Pro nunc, solum columna media reddita */
-    x_media = x + latitudo_columnae;
-
-    /* Reconstruere items si latitudo columnae mutata */
-    _construere_items(nav, latitudo_columnae);
-
-    /* Calcular items per pagina */
-    _calcular_items_per_pagina(nav, altitudo);
-
-    /* Calcular quales items reddere (paginatio) */
-    primus_item = nav->pagina_currens * nav->items_per_pagina;
-    ultimus_item = primus_item + nav->items_per_pagina;
-    si (ultimus_item > nav->numerus_itemorum)
+    /* Addere relationes */
+    numerus = xar_numerus(entitas->relationes);
+    per (i = ZEPHYRUM; i < numerus && numerus_items < CXXVIII; i++)
     {
-        ultimus_item = nav->numerus_itemorum;
+        rel = (Relatio*)xar_obtinere(entitas->relationes, i);
+        si (!rel)
+        {
+            perge;
+        }
+
+        item = &items_temp[numerus_items];
+        item->genus = ITEM_RELATIO;
+        item->altitudo = I;
+        item->datum = rel;
+        numerus_items++;
     }
 
-    /* Reddere columnam mediam (entitas currens) */
-    y_currens = y;
-
-    per (i = primus_item; i < ultimus_item; i++)
+    /* Sortare relationes alphabetice */
+    si (numerus_items > I)
     {
-        item = &nav->items[i];
+        _sortare_relationes(items_temp, numerus_items);
+    }
+
+    /* Addere proprietates */
+    numerus = xar_numerus(entitas->proprietates);
+    per (i = ZEPHYRUM; i < numerus && numerus_items < CXXVIII; i++)
+    {
+        prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+        si (!prop)
+        {
+            perge;
+        }
+
+        item = &items_temp[numerus_items];
+        item->genus = ITEM_PROPRIETAS;
+
+        /* Calcular altitudo */
+        {
+            i32 longitudo_totalis;
+            longitudo_totalis = ZEPHYRUM;
+            si (prop->clavis && prop->clavis->datum)
+            {
+                longitudo_totalis += prop->clavis->mensura;
+            }
+            longitudo_totalis += II;  /* ": " */
+            si (prop->valor && prop->valor->datum)
+            {
+                longitudo_totalis += prop->valor->mensura;
+            }
+            si (longitudo_totalis == ZEPHYRUM)
+            {
+                longitudo_totalis = I;
+            }
+
+            item->altitudo = _calcular_altitudinem_textus(
+                longitudo_totalis,
+                latitudo_columnae);
+        }
+        item->datum = prop;
+        numerus_items++;
+    }
+
+    /* Reddere items */
+    y_currens = y_initium;
+
+    per (i = ZEPHYRUM; i < numerus_items && y_currens < y_initium + altitudo_maxima; i++)
+    {
+        item = &items_temp[i];
 
         /* Addere spatium inter relationes et proprietates */
         si (i > ZEPHYRUM && item->genus == ITEM_PROPRIETAS)
         {
             ItemNavigatoris* item_praecedens;
-            item_praecedens = &nav->items[i - I];
+            item_praecedens = &items_temp[i - I];
             si (item_praecedens->genus == ITEM_RELATIO)
             {
-                y_currens++;  /* Linea vacua inter sectiones */
+                y_currens++;
+            }
+        }
+
+        /* Determinare si hoc item debet esse selectus */
+        est_selectus = FALSUM;
+
+        /* Verificare si selectus per index */
+        si (selectio_index >= ZEPHYRUM && i == selectio_index)
+        {
+            est_selectus = VERUM;
+        }
+        /* Verificare si selectus per destinatio ID */
+        alioquin si (selectio_destinatio_id && item->genus == ITEM_RELATIO)
+        {
+            rel = (Relatio*)item->datum;
+            si (rel && rel->destinatio_id == selectio_destinatio_id)
+            {
+                est_selectus = VERUM;
             }
         }
 
         /* Determinare colores */
-        si (i == nav->selectio)
+        si (est_selectus)
         {
-            /* Item selectus - invertere colores */
-            color_textus = thema_color(COLOR_BACKGROUND);
-            color_fons   = thema_color(COLOR_TEXT);
+            si (dimmed)
+            {
+                /* Item selectus in columna dimmed - usare TEXT_DIM pro fondum */
+                color_textus = thema_color(COLOR_BACKGROUND);
+                color_fons   = thema_color(COLOR_TEXT_DIM);
+            }
+            alioquin
+            {
+                /* Item selectus in columna activa - invertere colores */
+                color_textus = thema_color(COLOR_BACKGROUND);
+                color_fons   = thema_color(COLOR_TEXT);
+            }
+        }
+        alioquin si (dimmed)
+        {
+            /* Columna non-activa - usare colores obscuriores */
+            color_textus = thema_color(COLOR_TEXT_DIM);
+            color_fons   = thema_color(COLOR_BACKGROUND);
         }
         alioquin
         {
@@ -476,14 +642,13 @@ navigator_entitatum_reddere(
         }
 
         /* Reddere fondum si selectus */
-        si (i == nav->selectio)
+        si (est_selectus)
         {
             i32 px, py;
-            pixel_x = x_media * character_latitudo;
+            pixel_x = x_columna * character_latitudo;
             pixel_y = y_currens * character_altitudo;
             altitudo_item_pixels = item->altitudo * character_altitudo;
 
-            /* Pingere rectangulum pixel per pixel */
             per (py = pixel_y; py < pixel_y + altitudo_item_pixels; py++)
             {
                 per (px = pixel_x; px < pixel_x + (latitudo_columnae * character_latitudo); px++)
@@ -497,7 +662,7 @@ navigator_entitatum_reddere(
         si (item->genus == ITEM_RELATIO)
         {
             chorda arrow_textus;
-            i32 color_cyan;
+            i32 color_arrow;
             character arrow_buffer[III];
 
             rel = (Relatio*)item->datum;
@@ -507,23 +672,21 @@ navigator_entitatum_reddere(
                 perge;
             }
 
-            /* Reddere "> " in cyan */
-            color_cyan = thema_color(COLOR_ACCENT_PRIMARY);
+            /* Reddere "> " */
+            color_arrow = dimmed ? thema_color(COLOR_TEXT_DIM) : thema_color(COLOR_ACCENT_PRIMARY);
             arrow_buffer[ZEPHYRUM] = '>';
             arrow_buffer[I] = ' ';
             arrow_textus.datum = (i8*)arrow_buffer;
             arrow_textus.mensura = II;
             tabula_pixelorum_pingere_chordam(
                 tabula,
-                x_media * character_latitudo,
+                x_columna * character_latitudo,
                 y_currens * character_altitudo,
                 arrow_textus,
-                color_cyan);
+                color_arrow);
 
             /* Format: "genus/" */
             buffer_mensura = ZEPHYRUM;
-
-            /* Copiar genus */
             si (rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM &&
                 rel->genus->mensura < CCLVI - buffer_mensura - X)
             {
@@ -539,10 +702,9 @@ navigator_entitatum_reddere(
             textus.datum = (i8*)buffer;
             textus.mensura = buffer_mensura;
 
-            /* Reddere genus/ ad dextram de arrow */
             tabula_pixelorum_pingere_chordam(
                 tabula,
-                x_media * character_latitudo + (II * character_latitudo),
+                x_columna * character_latitudo + (II * character_latitudo),
                 y_currens * character_altitudo,
                 textus,
                 color_textus);
@@ -552,7 +714,6 @@ navigator_entitatum_reddere(
             i32 offset_textus;
             i32 linea_currens;
             i32 caracteres_in_linea;
-            i32 j;
 
             prop = (Proprietas*)item->datum;
             si (!prop)
@@ -564,7 +725,6 @@ navigator_entitatum_reddere(
             /* Format: "clavis: valor" */
             buffer_mensura = ZEPHYRUM;
 
-            /* Copiar clavis */
             si (prop->clavis && prop->clavis->datum && prop->clavis->mensura > ZEPHYRUM &&
                 prop->clavis->mensura < CCLVI - X)
             {
@@ -577,7 +737,6 @@ navigator_entitatum_reddere(
             buffer[buffer_mensura++] = ':';
             buffer[buffer_mensura++] = ' ';
 
-            /* Copiar valor */
             si (prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM &&
                 prop->valor->mensura < CCLVI - buffer_mensura)
             {
@@ -597,19 +756,17 @@ navigator_entitatum_reddere(
             {
                 caracteres_in_linea = ZEPHYRUM;
 
-                /* Copiar caracteres pro hac linea */
                 per (j = ZEPHYRUM; j < latitudo_columnae && offset_textus + j < buffer_mensura; j++)
                 {
                     caracteres_in_linea++;
                 }
 
-                /* Reddere hanc lineam */
                 textus.datum = (i8*)(buffer + offset_textus);
                 textus.mensura = caracteres_in_linea;
 
                 tabula_pixelorum_pingere_chordam(
                     tabula,
-                    x_media * character_latitudo,
+                    x_columna * character_latitudo,
                     (y_currens + linea_currens) * character_altitudo,
                     textus,
                     color_textus);
@@ -621,8 +778,136 @@ navigator_entitatum_reddere(
 
         y_currens += item->altitudo;
     }
+}
 
-    /* TODO: Reddere columnam sinistram (entitas parens) */
-    /* TODO: Reddere columnam dextram (praeviso) */
+vacuum
+navigator_entitatum_reddere(
+    NavigatorEntitatum*  nav,
+    TabulaPixelorum*     tabula,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  scala)
+{
+    i32              latitudo_columnae;
+    i32              x_sinistra;
+    i32              x_media;
+    i32              x_dextra;
+    i32              character_latitudo;
+    i32              character_altitudo;
+    Entitas*         entitas_parens;
+    Entitas*         entitas_praeviso;
+    ItemNavigatoris* item_selectus;
+    Relatio*         rel;
+    ItemHistoriae*   item_historiae;
+    i32              numerus_items_via;
+
+    si (!nav || !tabula)
+    {
+        redde;
+    }
+
+    character_latitudo = VI * scala;
+    character_altitudo = VIII * scala;
+
+    /* Tres columnae aequales */
+    latitudo_columnae = latitudo / III;
+    x_sinistra = x;
+    x_media = x + latitudo_columnae;
+    x_dextra = x + (latitudo_columnae * II);
+
+    /* Reconstruere items si latitudo columnae mutata */
+    _construere_items(nav, latitudo_columnae);
+
+    /* Calcular items per pagina */
+    _calcular_items_per_pagina(nav, altitudo);
+
+    /* === COLUMNA SINISTRA: Entitas parens === */
+    entitas_parens = NIHIL;
+    item_historiae = NIHIL;
+    numerus_items_via = xar_numerus(nav->via);
+    si (numerus_items_via > ZEPHYRUM)
+    {
+        /* Capere entitatem parens ex via */
+        item_historiae = (ItemHistoriae*)xar_obtinere(nav->via, numerus_items_via - I);
+        si (item_historiae)
+        {
+            entitas_parens = nav->providor->capere_entitatem(
+                nav->providor->datum,
+                item_historiae->entitas_id);
+        }
+    }
+
+    si (entitas_parens)
+    {
+        _reddere_columnam_entitatis(
+            tabula,
+            entitas_parens,
+            x_sinistra,
+            y,
+            latitudo_columnae,
+            altitudo,
+            character_latitudo,
+            character_altitudo,
+            (i32)(-I),   /* Non usare index */
+            nav->entitas_currens ? nav->entitas_currens->id : NIHIL,
+            VERUM);    /* Dimmed */
+    }
+
+    /* === COLUMNA MEDIA: Entitas currens === */
+    si (nav->entitas_currens)
+    {
+        _reddere_columnam_entitatis(
+            tabula,
+            nav->entitas_currens,
+            x_media,
+            y,
+            latitudo_columnae,
+            altitudo,
+            character_latitudo,
+            character_altitudo,
+            nav->selectio,   /* Usare index pro columna activa */
+            NIHIL,           /* Non usare destinatio ID */
+            FALSUM);   /* Non dimmed */
+    }
+
+    /* === COLUMNA DEXTRA: Praeviso item selecti === */
+    entitas_praeviso = NIHIL;
+
+    si (nav->selectio >= ZEPHYRUM && nav->selectio < nav->numerus_itemorum)
+    {
+        item_selectus = &nav->items[nav->selectio];
+
+        /* Si item selectus est relatio, monstrare entitatem destinationis */
+        si (item_selectus->genus == ITEM_RELATIO)
+        {
+            rel = (Relatio*)item_selectus->datum;
+            si (rel && rel->destinatio_id)
+            {
+                entitas_praeviso = nav->providor->capere_entitatem(
+                    nav->providor->datum,
+                    rel->destinatio_id);
+            }
+        }
+        /* Si proprietas, pro nunc nihil (in futuro possumus monstrare valorem plenum) */
+    }
+
+    si (entitas_praeviso)
+    {
+        _reddere_columnam_entitatis(
+            tabula,
+            entitas_praeviso,
+            x_dextra,
+            y,
+            latitudo_columnae,
+            altitudo,
+            character_latitudo,
+            character_altitudo,
+            (i32)(-I),   /* Nulla selectio per index */
+            NIHIL,       /* Nulla selectio per ID */
+            VERUM);    /* Dimmed */
+    }
+
     /* TODO: Indicatores paginationis */
 }

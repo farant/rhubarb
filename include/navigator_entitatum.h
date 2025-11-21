@@ -24,8 +24,8 @@ nomen enumeratio {
  * "History item for navigation path"
  */
 nomen structura {
-    chorda* entitas_id;  /* ID entitatis */
-    i32     selectio;    /* Index selecti ad hanc entitatem */
+    chorda* entitas_id;        /* ID entitatis parentis */
+    chorda* entitas_id_destinatio;  /* ID entitatis quo navigavimus */
 } ItemHistoriae;
 
 /* Item ad reddendum in columna media
