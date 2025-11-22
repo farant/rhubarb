@@ -192,6 +192,7 @@ delineare_creare_contextum (
     si (!ctx) redde NIHIL;
 
     ctx->tabula = tabula;
+    ctx->piscina = piscina;
     ctx->praecisio_x = ZEPHYRUM;
     ctx->praecisio_y = ZEPHYRUM;
     ctx->praecisio_latitudo = tabula->latitudo;
@@ -936,5 +937,829 @@ delineare_cratem (
     per (y = ZEPHYRUM; y < ctx->tabula->altitudo; y += spatium)
     {
         delineare_lineam_horizontalem(ctx, ZEPHYRUM, ctx->tabula->latitudo - I, y, color);
+    }
+}
+
+
+/* ==================================================
+ * Gradientia Dithered - Multi-Algorithm & Palette Support
+ * ================================================== */
+
+/* Bayer matrix 4x4 pro ordered dithering */
+interior constans i8 bayer_matrix_4x4[IV][IV] = {
+    {  0,  8,  2, 10 },
+    { 12,  4, 14,  6 },
+    {  3, 11,  1,  9 },
+    { 15,  7, 13,  5 }
+};
+
+/* Bayer matrix 8x8 pro ordered dithering (smoother) */
+interior constans i8 bayer_matrix_8x8[VIII][VIII] = {
+    {  0, 32,  8, 40,  2, 34, 10, 42 },
+    { 48, 16, 56, 24, 50, 18, 58, 26 },
+    { 12, 44,  4, 36, 14, 46,  6, 38 },
+    { 60, 28, 52, 20, 62, 30, 54, 22 },
+    {  3, 35, 11, 43,  1, 33,  9, 41 },
+    { 51, 19, 59, 27, 49, 17, 57, 25 },
+    { 15, 47,  7, 39, 13, 45,  5, 37 },
+    { 63, 31, 55, 23, 61, 29, 53, 21 }
+};
+
+/* Extrahere componentes RGB ex colore */
+interior vacuum
+extrahere_rgb(
+    i32 color,
+    i32* r,
+    i32* g,
+    i32* b)
+{
+    *r = (color >> XVI) & CCLV;
+    *g = (color >> VIII) & CCLV;
+    *b = color & CCLV;
+}
+
+/* Creare colorem ex componentibus RGB */
+interior i32
+componere_rgb(
+    i32 r,
+    i32 g,
+    i32 b)
+{
+    redde ((i32)CCLV << XXIV) | ((i32)r << XVI) | ((i32)g << VIII) | (i32)b;
+}
+
+/* Cohibere valorem intra limites 0-255 */
+interior i32
+cohibere(
+    i32 valor)
+{
+    si (valor < ZEPHYRUM) redde ZEPHYRUM;
+    si (valor > CCLV) redde CCLV;
+    redde valor;
+}
+
+/* Quantizare componentem ad 0 vel 255 */
+interior i32
+quantizare_component(
+    i32 valor)
+{
+    redde (valor >= CXXVIII) ? CCLV : ZEPHYRUM;
+}
+
+/* Interpolate inter duo valores
+ *
+ * a: valor initialis
+ * b: valor finalis
+ * t: positio (0-256, ubi 0=a, 256=b)
+ */
+interior i32
+interpolate(
+    i32 a,
+    i32 b,
+    i32 t)
+{
+    redde a + ((b - a) * t) / CCLVI;
+}
+
+/* Convertere RGB ad cinereum (grayscale) cum ponderibus luminantiae
+ *
+ * r, g, b: componentes RGB (0-255)
+ *
+ * Reddit: valor cinereus (0-255)
+ *
+ * Ponderes luminantiae ITU-R BT.601:
+ * - R: 30% (XXX/C = 30/100)
+ * - G: 59% (LIX/C = 59/100)
+ * - B: 11% (XI/C = 11/100)
+ */
+interior i32
+ad_cinereum(
+    i32 r,
+    i32 g,
+    i32 b)
+{
+    /* (r * 30 + g * 59 + b * 11) / 100 */
+    redde (r * XXX + g * LIX + b * XI) / C;
+}
+
+/* Invenire colorem proximum in palette per valorem cinereum
+ *
+ * cinereus: valor cinereus quaeritus (0-255)
+ * palette: array colorum (RGBA8888)
+ * numerus_colorum: numerus colorum in palette
+ *
+ * Reddit: color proximus ex palette (per distantiam cineream)
+ */
+interior i32
+invenire_colorem_per_cinereum(
+    i32 cinereus,
+    constans i32* palette,
+    i32 numerus_colorum)
+{
+    i32 i;
+    i32 distantia_minima;
+    i32 color_proximus;
+    i32 pr, pg, pb;
+    i32 cinereus_palette;
+    i32 distantia;
+
+    si (!palette || numerus_colorum <= ZEPHYRUM)
+    {
+        redde componere_rgb(cinereus, cinereus, cinereus);
+    }
+
+    distantia_minima = CCLVI;  /* Maximum distantia possibilis */
+    color_proximus = palette[ZEPHYRUM];
+
+    per (i = ZEPHYRUM; i < numerus_colorum; i++)
+    {
+        /* Extrahere RGB ex palette */
+        extrahere_rgb(palette[i], &pr, &pg, &pb);
+
+        /* Convertere ad cinereum */
+        cinereus_palette = ad_cinereum(pr, pg, pb);
+
+        /* Computare distantiam cineream */
+        distantia = cinereus - cinereus_palette;
+        si (distantia < ZEPHYRUM) distantia = -distantia;  /* Valor absolutus */
+
+        si (distantia < distantia_minima)
+        {
+            distantia_minima = distantia;
+            color_proximus = palette[i];
+        }
+    }
+
+    redde color_proximus;
+}
+
+/* Delineare gradientum linearem cum Floyd-Steinberg dithering */
+vacuum
+delineare_gradientum_linearem_dithered(
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  color_initium,
+    i32                  color_finis,
+    b32                  horizontalis)
+{
+    i32 r0, g0, b0;
+    i32 r1, g1, b1;
+    s32* error_r;
+    s32* error_g;
+    s32* error_b;
+    s32* error_r_next;
+    s32* error_g_next;
+    s32* error_b_next;
+    s32* temp;
+    i32 px, py;
+    i32 dimension;
+
+    si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
+
+    /* Extrahere componentes RGB */
+    extrahere_rgb(color_initium, &r0, &g0, &b0);
+    extrahere_rgb(color_finis, &r1, &g1, &b1);
+
+    /* Determinare dimensionem pro buffers erroris */
+    dimension = MAXIMUM(latitudo, altitudo);
+
+    /* Allocare buffers erroris (duo buffers per component pro scanlines) */
+    error_r = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+    error_g = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+    error_b = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+    error_r_next = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+    error_g_next = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+    error_b_next = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+
+    si (!error_r || !error_g || !error_b || !error_r_next || !error_g_next || !error_b_next)
+    {
+        redde;
+    }
+
+    /* Initiare buffers erroris ad 0 */
+    per (px = ZEPHYRUM; px <= dimension; px++)
+    {
+        error_r[px] = ZEPHYRUM;
+        error_g[px] = ZEPHYRUM;
+        error_b[px] = ZEPHYRUM;
+        error_r_next[px] = ZEPHYRUM;
+        error_g_next[px] = ZEPHYRUM;
+        error_b_next[px] = ZEPHYRUM;
+    }
+
+    /* Implere rectangulum cum gradiente dithered */
+    per (py = ZEPHYRUM; py < altitudo; py++)
+    {
+        per (px = ZEPHYRUM; px < latitudo; px++)
+        {
+            i32 t;
+            i32 r_ideal, g_ideal, b_ideal;
+            i32 r_actual, g_actual, b_actual;
+            i32 r_quant, g_quant, b_quant;
+            s32 error_r_val, error_g_val, error_b_val;
+            i32 color_dithered;
+
+            /* Computare factorem interpolationis (0-256) */
+            si (horizontalis)
+            {
+                t = (px * CCLVI) / MAXIMUM(I, latitudo - I);
+            }
+            alioquin
+            {
+                t = (py * CCLVI) / MAXIMUM(I, altitudo - I);
+            }
+
+            /* Interpolate componentes RGB */
+            r_ideal = interpolate(r0, r1, t);
+            g_ideal = interpolate(g0, g1, t);
+            b_ideal = interpolate(b0, b1, t);
+
+            /* Applicare error ex pixelis praecedentibus */
+            r_actual = cohibere(r_ideal + (i32)error_r[px]);
+            g_actual = cohibere(g_ideal + (i32)error_g[px]);
+            b_actual = cohibere(b_ideal + (i32)error_b[px]);
+
+            /* Quantizare ad 0 vel 255 */
+            r_quant = quantizare_component(r_actual);
+            g_quant = quantizare_component(g_actual);
+            b_quant = quantizare_component(b_actual);
+
+            /* Computare error */
+            error_r_val = (s32)(r_actual - r_quant);
+            error_g_val = (s32)(g_actual - g_quant);
+            error_b_val = (s32)(b_actual - b_quant);
+
+            /* Diffundere error ad pixela vicina (Floyd-Steinberg) */
+            /*        X   7/16
+             *    3/16 5/16 1/16  */
+
+            /* Dextram: 7/16 */
+            si (px + I < latitudo)
+            {
+                error_r[px + I] += (error_r_val * VII) / XVI;
+                error_g[px + I] += (error_g_val * VII) / XVI;
+                error_b[px + I] += (error_b_val * VII) / XVI;
+            }
+
+            /* Deorsum-sinistram: 3/16 */
+            si (py + I < altitudo && px > ZEPHYRUM)
+            {
+                error_r_next[px - I] += (error_r_val * III) / XVI;
+                error_g_next[px - I] += (error_g_val * III) / XVI;
+                error_b_next[px - I] += (error_b_val * III) / XVI;
+            }
+
+            /* Deorsum: 5/16 */
+            si (py + I < altitudo)
+            {
+                error_r_next[px] += (error_r_val * V) / XVI;
+                error_g_next[px] += (error_g_val * V) / XVI;
+                error_b_next[px] += (error_b_val * V) / XVI;
+            }
+
+            /* Deorsum-dextram: 1/16 */
+            si (py + I < altitudo && px + I < latitudo)
+            {
+                error_r_next[px + I] += error_r_val / XVI;
+                error_g_next[px + I] += error_g_val / XVI;
+                error_b_next[px + I] += error_b_val / XVI;
+            }
+
+            /* Componere colorem */
+            color_dithered = componere_rgb(r_quant, g_quant, b_quant);
+
+            /* Delineare pixelum */
+            ponere_pixelum_internum(ctx, x + px, y + py, color_dithered);
+        }
+
+        /* Commutare buffers erroris pro proxima scanline */
+        temp = error_r;
+        error_r = error_r_next;
+        error_r_next = temp;
+
+        temp = error_g;
+        error_g = error_g_next;
+        error_g_next = temp;
+
+        temp = error_b;
+        error_b = error_b_next;
+        error_b_next = temp;
+
+        /* Vacare buffer "next" pro proxima scanline */
+        per (px = ZEPHYRUM; px <= dimension; px++)
+        {
+            error_r_next[px] = ZEPHYRUM;
+            error_g_next[px] = ZEPHYRUM;
+            error_b_next[px] = ZEPHYRUM;
+        }
+    }
+}
+
+/* Delineare gradientum radialem cum Floyd-Steinberg dithering */
+vacuum
+delineare_gradientum_radialem_dithered(
+    ContextusDelineandi* ctx,
+    i32                  centrum_x,
+    i32                  centrum_y,
+    i32                  radius,
+    i32                  color_centrum,
+    i32                  color_peripheria)
+{
+    i32 r0, g0, b0;
+    i32 r1, g1, b1;
+    s32* error_r;
+    s32* error_g;
+    s32* error_b;
+    s32* error_r_next;
+    s32* error_g_next;
+    s32* error_b_next;
+    s32* temp;
+    i32 y_start, y_end;
+    i32 x_start, x_end;
+    i32 diameter;
+    i32 px, py;
+
+    si (!ctx || radius <= ZEPHYRUM) redde;
+
+    /* Extrahere componentes RGB */
+    extrahere_rgb(color_centrum, &r0, &g0, &b0);
+    extrahere_rgb(color_peripheria, &r1, &g1, &b1);
+
+    /* Computare rectangulum quo gradiens contineatur */
+    y_start = centrum_y - radius;
+    y_end = centrum_y + radius;
+    x_start = centrum_x - radius;
+    x_end = centrum_x + radius;
+    diameter = radius * II + I;
+
+    /* Allocare buffers erroris */
+    error_r = (s32*)piscina_allocare(ctx->piscina, diameter * magnitudo(s32));
+    error_g = (s32*)piscina_allocare(ctx->piscina, diameter * magnitudo(s32));
+    error_b = (s32*)piscina_allocare(ctx->piscina, diameter * magnitudo(s32));
+    error_r_next = (s32*)piscina_allocare(ctx->piscina, diameter * magnitudo(s32));
+    error_g_next = (s32*)piscina_allocare(ctx->piscina, diameter * magnitudo(s32));
+    error_b_next = (s32*)piscina_allocare(ctx->piscina, diameter * magnitudo(s32));
+
+    si (!error_r || !error_g || !error_b || !error_r_next || !error_g_next || !error_b_next)
+    {
+        redde;
+    }
+
+    /* Initiare buffers erroris */
+    per (px = ZEPHYRUM; px < diameter; px++)
+    {
+        error_r[px] = ZEPHYRUM;
+        error_g[px] = ZEPHYRUM;
+        error_b[px] = ZEPHYRUM;
+        error_r_next[px] = ZEPHYRUM;
+        error_g_next[px] = ZEPHYRUM;
+        error_b_next[px] = ZEPHYRUM;
+    }
+
+    /* Implere circulum cum gradiente dithered */
+    per (py = y_start; py <= y_end; py++)
+    {
+        i32 x_rel;
+
+        x_rel = ZEPHYRUM;
+        per (px = x_start; px <= x_end; px++)
+        {
+            i32 dx, dy;
+            i32 distance_sq;
+            i32 radius_sq;
+            i32 distance;
+            i32 t;
+            i32 r_ideal, g_ideal, b_ideal;
+            i32 r_actual, g_actual, b_actual;
+            i32 r_quant, g_quant, b_quant;
+            s32 error_r_val, error_g_val, error_b_val;
+            i32 color_dithered;
+
+            /* Computare distantiam a centro */
+            dx = px - centrum_x;
+            dy = py - centrum_y;
+            distance_sq = dx * dx + dy * dy;
+            radius_sq = radius * radius;
+
+            /* Si extra circulum, saltare */
+            si (distance_sq > radius_sq)
+            {
+                x_rel++;
+                perge;
+            }
+
+            /* Computare distantiam linearem */
+            distance = ZEPHYRUM;
+            {
+                s32 i;
+                s32 temp_dist;
+
+                temp_dist = (s32)distance_sq;
+                per (i = ZEPHYRUM; i < XVI && temp_dist > ZEPHYRUM; i++)
+                {
+                    temp_dist = temp_dist / II;
+                    distance++;
+                }
+            }
+
+            /* Computare factorem interpolationis (0-256) */
+            si (radius == ZEPHYRUM)
+            {
+                t = ZEPHYRUM;
+            }
+            alioquin
+            {
+                t = (distance * CCLVI) / (radius / II);
+                si (t > CCLVI) t = CCLVI;
+            }
+
+            /* Interpolate componentes RGB */
+            r_ideal = interpolate(r0, r1, t);
+            g_ideal = interpolate(g0, g1, t);
+            b_ideal = interpolate(b0, b1, t);
+
+            /* Applicare error */
+            r_actual = cohibere(r_ideal + (i32)error_r[x_rel]);
+            g_actual = cohibere(g_ideal + (i32)error_g[x_rel]);
+            b_actual = cohibere(b_ideal + (i32)error_b[x_rel]);
+
+            /* Quantizare */
+            r_quant = quantizare_component(r_actual);
+            g_quant = quantizare_component(g_actual);
+            b_quant = quantizare_component(b_actual);
+
+            /* Computare error */
+            error_r_val = (s32)(r_actual - r_quant);
+            error_g_val = (s32)(g_actual - g_quant);
+            error_b_val = (s32)(b_actual - b_quant);
+
+            /* Diffundere error (Floyd-Steinberg) */
+            si (x_rel + I < diameter)
+            {
+                error_r[x_rel + I] += (error_r_val * VII) / XVI;
+                error_g[x_rel + I] += (error_g_val * VII) / XVI;
+                error_b[x_rel + I] += (error_b_val * VII) / XVI;
+            }
+
+            si (x_rel > ZEPHYRUM)
+            {
+                error_r_next[x_rel - I] += (error_r_val * III) / XVI;
+                error_g_next[x_rel - I] += (error_g_val * III) / XVI;
+                error_b_next[x_rel - I] += (error_b_val * III) / XVI;
+            }
+
+            error_r_next[x_rel] += (error_r_val * V) / XVI;
+            error_g_next[x_rel] += (error_g_val * V) / XVI;
+            error_b_next[x_rel] += (error_b_val * V) / XVI;
+
+            si (x_rel + I < diameter)
+            {
+                error_r_next[x_rel + I] += error_r_val / XVI;
+                error_g_next[x_rel + I] += error_g_val / XVI;
+                error_b_next[x_rel + I] += error_b_val / XVI;
+            }
+
+            /* Componere et delineare */
+            color_dithered = componere_rgb(r_quant, g_quant, b_quant);
+            ponere_pixelum_internum(ctx, px, py, color_dithered);
+
+            x_rel++;
+        }
+
+        /* Commutare buffers erroris */
+        temp = error_r;
+        error_r = error_r_next;
+        error_r_next = temp;
+
+        temp = error_g;
+        error_g = error_g_next;
+        error_g_next = temp;
+
+        temp = error_b;
+        error_b = error_b_next;
+        error_b_next = temp;
+
+        /* Vacare next buffer */
+        per (px = ZEPHYRUM; px < diameter; px++)
+        {
+            error_r_next[px] = ZEPHYRUM;
+            error_g_next[px] = ZEPHYRUM;
+            error_b_next[px] = ZEPHYRUM;
+        }
+    }
+}
+
+
+/* ==================================================
+ * Gradientia cum Palette et Multi-Algorithmus
+ * ================================================== */
+
+/* Delineare gradientum linearem cum palette et algorithmo (grayscale-based) */
+vacuum
+delineare_gradientum_linearem_dithered_cum_palette(
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  color_initium,
+    i32                  color_finis,
+    b32                  horizontalis,
+    AlgorithusDithering  algorithmus,
+    constans i32*        palette,
+    i32                  numerus_colorum)
+{
+    i32 r0, g0, b0, r1, g1, b1;
+    i32 gray0, gray1;
+    i32 px, py;
+    i32 dimension;
+
+    si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
+
+    extrahere_rgb(color_initium, &r0, &g0, &b0);
+    extrahere_rgb(color_finis, &r1, &g1, &b1);
+
+    /* Convertere endpoints ad cinereum */
+    gray0 = ad_cinereum(r0, g0, b0);
+    gray1 = ad_cinereum(r1, g1, b1);
+
+    dimension = MAXIMUM(latitudo, altitudo);
+
+    /* Bayer dithering (simpler, no error accumulation) */
+    si (algorithmus == DITHERING_BAYER_4X4 || algorithmus == DITHERING_BAYER_8X8)
+    {
+        per (py = ZEPHYRUM; py < altitudo; py++)
+        {
+            per (px = ZEPHYRUM; px < latitudo; px++)
+            {
+                i32 t, gray_ideal, color_final;
+                i32 actual_x, actual_y;
+                i32 threshold, bayer_x, bayer_y;
+
+                si (horizontalis)
+                    t = (px * CCLVI) / MAXIMUM(I, latitudo - I);
+                alioquin
+                    t = (py * CCLVI) / MAXIMUM(I, altitudo - I);
+
+                gray_ideal = interpolate(gray0, gray1, t);
+
+                actual_x = x + px;
+                actual_y = y + py;
+
+                /* Get Bayer threshold and add to grayscale */
+                si (algorithmus == DITHERING_BAYER_4X4)
+                {
+                    bayer_x = actual_x & III;
+                    bayer_y = actual_y & III;
+                    threshold = (bayer_matrix_4x4[bayer_y][bayer_x] * XVI) - CXXVIII;
+                }
+                alioquin  /* DITHERING_BAYER_8X8 */
+                {
+                    bayer_x = actual_x & VII;
+                    bayer_y = actual_y & VII;
+                    threshold = (bayer_matrix_8x8[bayer_y][bayer_x] * IV) - CXXVIII;
+                }
+
+                /* Apply threshold dithering, then find nearest palette color */
+                gray_ideal = cohibere(gray_ideal + threshold);
+
+                /* Map grayscale to nearest palette color */
+                si (palette && numerus_colorum > ZEPHYRUM)
+                    color_final = invenire_colorem_per_cinereum(gray_ideal, palette, numerus_colorum);
+                alioquin
+                {
+                    i32 gray_quant = quantizare_component(gray_ideal);
+                    color_final = componere_rgb(gray_quant, gray_quant, gray_quant);
+                }
+
+                ponere_pixelum_internum(ctx, actual_x, actual_y, color_final);
+            }
+        }
+        redde;
+    }
+
+    /* Error diffusion (Floyd-Steinberg or Atkinson) */
+    {
+        s32 *error, *error_next, *temp;
+        s32 offsets_x[VI], offsets_y[VI];
+        i32 offsets_count, q;
+
+        /* Allocare buffers erroris pro cinereum */
+        error = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+        error_next = (s32*)piscina_allocare(ctx->piscina, (i32)(dimension + I) * magnitudo(s32));
+
+        si (!error || !error_next) redde;
+
+        /* Initiare */
+        per (px = ZEPHYRUM; px <= dimension; px++)
+        {
+            error[px] = ZEPHYRUM;
+            error_next[px] = ZEPHYRUM;
+        }
+
+        /* Configurare error diffusion pattern */
+        si (algorithmus == DITHERING_ATKINSON)
+        {
+            /* Atkinson: distributes error to 6 neighbors, 1/8 each */
+            offsets_count = VI;
+            offsets_x[ZEPHYRUM] = I; offsets_y[ZEPHYRUM] = ZEPHYRUM;  /* [1, 0] */
+            offsets_x[I] = II; offsets_y[I] = ZEPHYRUM;  /* [2, 0] */
+            offsets_x[II] = -I; offsets_y[II] = I;  /* [-1, 1] */
+            offsets_x[III] = ZEPHYRUM; offsets_y[III] = I;  /* [0, 1] */
+            offsets_x[IV] = I; offsets_y[IV] = I;  /* [1, 1] */
+            offsets_x[V] = ZEPHYRUM; offsets_y[V] = II;  /* [0, 2] */
+        }
+        alioquin  /* DITHERING_FLOYD_STEINBERG */
+        {
+            offsets_count = III;
+            /* Floyd-Steinberg handled inline below */
+        }
+
+        /* Process pixels */
+        per (py = ZEPHYRUM; py < altitudo; py++)
+        {
+            per (px = ZEPHYRUM; px < latitudo; px++)
+            {
+                i32 t, gray_ideal, gray_actual, color_final;
+                i32 gray_chosen, pr, pg, pb;
+                s32 err;
+
+                si (horizontalis)
+                    t = (px * CCLVI) / MAXIMUM(I, latitudo - I);
+                alioquin
+                    t = (py * CCLVI) / MAXIMUM(I, altitudo - I);
+
+                gray_ideal = interpolate(gray0, gray1, t);
+                gray_actual = cohibere(gray_ideal + (i32)error[px]);
+
+                /* Find nearest palette color by grayscale */
+                si (palette && numerus_colorum > ZEPHYRUM)
+                {
+                    color_final = invenire_colorem_per_cinereum(gray_actual, palette, numerus_colorum);
+                    /* Get actual grayscale of chosen color for error calculation */
+                    extrahere_rgb(color_final, &pr, &pg, &pb);
+                    gray_chosen = ad_cinereum(pr, pg, pb);
+                }
+                alioquin
+                {
+                    gray_chosen = quantizare_component(gray_actual);
+                    color_final = componere_rgb(gray_chosen, gray_chosen, gray_chosen);
+                }
+
+                /* Compute error between ideal and actual grayscale */
+                err = (s32)(gray_actual - gray_chosen);
+
+                /* Diffundere error */
+                si (algorithmus == DITHERING_ATKINSON)
+                {
+                    /* Atkinson: divide by 8 */
+                    per (q = ZEPHYRUM; q < offsets_count; q++)
+                    {
+                        s32 nx = (s32)px + offsets_x[q];
+                        s32 ny = offsets_y[q];
+                        si (nx >= ZEPHYRUM && nx < (s32)latitudo)
+                        {
+                            si (ny == ZEPHYRUM)
+                                error[nx] += err / VIII;
+                            alioquin si (ny == I && py + I < altitudo)
+                                error_next[nx] += err / VIII;
+                        }
+                    }
+                }
+                alioquin  /* Floyd-Steinberg */
+                {
+                    /* Right: 7/16 */
+                    si (px + I < latitudo)
+                        error[px + I] += (err * VII) / XVI;
+                    /* Down-left: 3/16 */
+                    si (py + I < altitudo && px > ZEPHYRUM)
+                        error_next[px - I] += (err * III) / XVI;
+                    /* Down: 5/16 */
+                    si (py + I < altitudo)
+                        error_next[px] += (err * V) / XVI;
+                    /* Down-right: 1/16 */
+                    si (py + I < altitudo && px + I < latitudo)
+                        error_next[px + I] += err / XVI;
+                }
+
+                ponere_pixelum_internum(ctx, x + px, y + py, color_final);
+            }
+
+            /* Swap error buffers */
+            temp = error;
+            error = error_next;
+            error_next = temp;
+
+            /* Clear next buffer */
+            per (px = ZEPHYRUM; px <= dimension; px++)
+                error_next[px] = ZEPHYRUM;
+        }
+    }
+}
+
+/* Delineare gradientum radialem cum palette et algorithmo (grayscale-based) */
+vacuum
+delineare_gradientum_radialem_dithered_cum_palette(
+    ContextusDelineandi* ctx,
+    i32                  centrum_x,
+    i32                  centrum_y,
+    i32                  radius,
+    i32                  color_centrum,
+    i32                  color_peripheria,
+    AlgorithusDithering  algorithmus,
+    constans i32*        palette,
+    i32                  numerus_colorum)
+{
+    i32 r0, g0, b0, r1, g1, b1;
+    i32 gray0, gray1;
+    i32 x_start, x_end, y_start, y_end;
+    i32 px, py;
+
+    si (!ctx || radius <= ZEPHYRUM) redde;
+
+    extrahere_rgb(color_centrum, &r0, &g0, &b0);
+    extrahere_rgb(color_peripheria, &r1, &g1, &b1);
+
+    /* Convertere ad cinereum */
+    gray0 = ad_cinereum(r0, g0, b0);
+    gray1 = ad_cinereum(r1, g1, b1);
+
+    /* Radial gradients work best with Bayer (error diffusion less effective) */
+    y_start = centrum_y - radius;
+    y_end = centrum_y + radius;
+    x_start = centrum_x - radius;
+    x_end = centrum_x + radius;
+
+    per (py = y_start; py <= y_end; py++)
+    {
+        per (px = x_start; px <= x_end; px++)
+        {
+            i32 dx, dy, distance_sq, radius_sq;
+            i32 distance, t, gray_ideal, gray_dithered, color_final;
+            s32 i, temp_dist;
+
+            dx = px - centrum_x;
+            dy = py - centrum_y;
+            distance_sq = dx * dx + dy * dy;
+            radius_sq = radius * radius;
+
+            si (distance_sq > radius_sq) perge;
+
+            /* Compute linear distance approximation */
+            distance = ZEPHYRUM;
+            temp_dist = (s32)distance_sq;
+            per (i = ZEPHYRUM; i < XVI && temp_dist > ZEPHYRUM; i++)
+            {
+                temp_dist = temp_dist / II;
+                distance++;
+            }
+
+            /* Compute interpolation factor */
+            si (radius == ZEPHYRUM)
+                t = ZEPHYRUM;
+            alioquin
+            {
+                t = (distance * CCLVI) / (radius / II);
+                si (t > CCLVI) t = CCLVI;
+            }
+
+            /* Interpolate grayscale */
+            gray_ideal = interpolate(gray0, gray1, t);
+
+            /* Apply Bayer threshold dithering */
+            si (algorithmus == DITHERING_BAYER_4X4 || algorithmus == DITHERING_BAYER_8X8)
+            {
+                i32 threshold, bayer_x, bayer_y;
+
+                si (algorithmus == DITHERING_BAYER_4X4)
+                {
+                    bayer_x = px & III;
+                    bayer_y = py & III;
+                    threshold = (bayer_matrix_4x4[bayer_y][bayer_x] * XVI) - CXXVIII;
+                }
+                alioquin
+                {
+                    bayer_x = px & VII;
+                    bayer_y = py & VII;
+                    threshold = (bayer_matrix_8x8[bayer_y][bayer_x] * IV) - CXXVIII;
+                }
+
+                gray_ideal = cohibere(gray_ideal + threshold);
+            }
+
+            /* Map grayscale to palette */
+            si (palette && numerus_colorum > ZEPHYRUM)
+                color_final = invenire_colorem_per_cinereum(gray_ideal, palette, numerus_colorum);
+            alioquin
+            {
+                gray_dithered = quantizare_component(gray_ideal);
+                color_final = componere_rgb(gray_dithered, gray_dithered, gray_dithered);
+            }
+
+            ponere_pixelum_internum(ctx, px, py, color_final);
+        }
     }
 }

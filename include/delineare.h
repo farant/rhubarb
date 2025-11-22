@@ -56,6 +56,7 @@ nomen enumeratio {
 /* Contextus delineandi pro gestione status */
 nomen structura {
     TabulaPixelorum* tabula;
+    Piscina* piscina;
 
     /* Rectangulum praecisionis */
     i32 praecisio_x;
@@ -481,6 +482,111 @@ delineare_cratem (
     ContextusDelineandi* ctx,
     i32                  spatium,
     i32                  color);
+
+
+/* ==================================================
+ * Functiones Primitivae - Gradientia Dithered
+ * ================================================== */
+
+/* Algorithmi dithering */
+nomen enumeratio {
+    DITHERING_FLOYD_STEINBERG = ZEPHYRUM,
+    DITHERING_ATKINSON,
+    DITHERING_BAYER_4X4,
+    DITHERING_BAYER_8X8
+} AlgorithusDithering;
+
+/* Delineare gradientum linearem cum Floyd-Steinberg dithering (backwards compatibility)
+ *
+ * ctx: contextus delineandi
+ * x: coordinata x originis
+ * y: coordinata y originis
+ * latitudo: latitudo rectanguli
+ * altitudo: altitudo rectanguli
+ * color_initium: color initialis (RGBA8888)
+ * color_finis: color finalis (RGBA8888)
+ * horizontalis: VERUM pro gradiente horizontali, FALSUM pro verticali
+ */
+vacuum
+delineare_gradientum_linearem_dithered(
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  color_initium,
+    i32                  color_finis,
+    b32                  horizontalis);
+
+/* Delineare gradientum radialem cum Floyd-Steinberg dithering (backwards compatibility)
+ *
+ * ctx: contextus delineandi
+ * centrum_x: coordinata x centri
+ * centrum_y: coordinata y centri
+ * radius: radius gradienti
+ * color_centrum: color centri (RGBA8888)
+ * color_peripheria: color peripheriae (RGBA8888)
+ */
+vacuum
+delineare_gradientum_radialem_dithered(
+    ContextusDelineandi* ctx,
+    i32                  centrum_x,
+    i32                  centrum_y,
+    i32                  radius,
+    i32                  color_centrum,
+    i32                  color_peripheria);
+
+/* Delineare gradientum linearem cum dithering algorithmum et palette
+ *
+ * ctx: contextus delineandi
+ * x: coordinata x originis
+ * y: coordinata y originis
+ * latitudo: latitudo rectanguli
+ * altitudo: altitudo rectanguli
+ * color_initium: color initialis (RGBA8888)
+ * color_finis: color finalis (RGBA8888)
+ * horizontalis: VERUM pro gradiente horizontali, FALSUM pro verticali
+ * algorithmus: algorithmus dithering (Floyd-Steinberg, Bayer, etc)
+ * palette: array colorum palette (RGBA8888), vel NIHIL pro dithering binario
+ * numerus_colorum: numerus colorum in palette (ignoratur si palette == NIHIL)
+ */
+vacuum
+delineare_gradientum_linearem_dithered_cum_palette(
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  color_initium,
+    i32                  color_finis,
+    b32                  horizontalis,
+    AlgorithusDithering  algorithmus,
+    constans i32*        palette,
+    i32                  numerus_colorum);
+
+/* Delineare gradientum radialem cum dithering algorithmum et palette
+ *
+ * ctx: contextus delineandi
+ * centrum_x: coordinata x centri
+ * centrum_y: coordinata y centri
+ * radius: radius gradienti
+ * color_centrum: color centri (RGBA8888)
+ * color_peripheria: color peripheriae (RGBA8888)
+ * algorithmus: algorithmus dithering (Floyd-Steinberg, Bayer, etc)
+ * palette: array colorum palette (RGBA8888), vel NIHIL pro dithering binario
+ * numerus_colorum: numerus colorum in palette (ignoratur si palette == NIHIL)
+ */
+vacuum
+delineare_gradientum_radialem_dithered_cum_palette(
+    ContextusDelineandi* ctx,
+    i32                  centrum_x,
+    i32                  centrum_y,
+    i32                  radius,
+    i32                  color_centrum,
+    i32                  color_peripheria,
+    AlgorithusDithering  algorithmus,
+    constans i32*        palette,
+    i32                  numerus_colorum);
 
 
 /* ==================================================

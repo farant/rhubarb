@@ -182,6 +182,7 @@
 #define CLV 				155
 #define CLVI 				156
 #define CLX					160
+#define CLXIV				164
 #define CLXV				165
 #define CLXX				170
 #define CLXXX				180
@@ -190,6 +191,8 @@
 #define CXCII 			192
 #define CC					200
 #define CCX					210
+#define CCXIII			213
+#define CCXIV			  214
 #define CCXX				220
 #define CCXXX				230
 #define CCXXXI			231
@@ -212,12 +215,15 @@
 #define CCLX				260
 #define CCLXX				270
 #define CCLXXX			280
+#define CCLXXXIV		284
+#define CCLXXXV		  285
 #define CCXC				290
 #define CCC				  300
 #define CCCX				310
 #define CCCXX				320
 #define CCCXXX			330
 #define CCCXL				340
+#define CCCLX 			360
 #define CD					400
 #define CDX					410
 #define CDXI					411
@@ -230,6 +236,7 @@
 #define CDXVIII			418
 #define CDXIX				419
 #define CDXX 				420
+#define CDXXVI 				426
 #define CDXXX 			430
 #define CDXL 				440
 #define CDL 				450
@@ -249,7 +256,10 @@
 #define DX 					510
 #define DXI 				511
 #define DXII 				512
+#define DLXVIII			568
+#define DLXXV				575
 #define DC					600
+#define DCXXXIX			639
 #define DCC					700
 #define DCCL				750
 #define DCCC				800
