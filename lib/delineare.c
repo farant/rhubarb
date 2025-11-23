@@ -998,6 +998,29 @@ cohibere(
     redde valor;
 }
 
+/* Integer square root using Newton's method */
+interior i32
+isqrt(i32 n)
+{
+    i32 x, y;
+
+    si (n <= ZEPHYRUM) redde ZEPHYRUM;
+    si (n == I) redde I;
+
+    /* Initial guess */
+    x = n;
+    y = (x + I) / II;
+
+    /* Iterate until convergence */
+    dum (y < x)
+    {
+        x = y;
+        y = (x + n / x) / II;
+    }
+
+    redde x;
+}
+
 /* Quantizare componentem ad 0 vel 255 */
 interior i32
 quantizare_component(
@@ -1351,19 +1374,8 @@ delineare_gradientum_radialem_dithered(
                 perge;
             }
 
-            /* Computare distantiam linearem */
-            distance = ZEPHYRUM;
-            {
-                s32 i;
-                s32 temp_dist;
-
-                temp_dist = (s32)distance_sq;
-                per (i = ZEPHYRUM; i < XVI && temp_dist > ZEPHYRUM; i++)
-                {
-                    temp_dist = temp_dist / II;
-                    distance++;
-                }
-            }
+            /* Computare distantiam linearem using integer square root */
+            distance = isqrt(distance_sq);
 
             /* Computare factorem interpolationis (0-256) */
             si (radius == ZEPHYRUM)
@@ -1372,7 +1384,7 @@ delineare_gradientum_radialem_dithered(
             }
             alioquin
             {
-                t = (distance * CCLVI) / (radius / II);
+                t = (distance * CCLVI) / radius;
                 si (t > CCLVI) t = CCLVI;
             }
 
@@ -1699,7 +1711,6 @@ delineare_gradientum_radialem_dithered_cum_palette(
         {
             i32 dx, dy, distance_sq, radius_sq;
             i32 distance, t, gray_ideal, gray_dithered, color_final;
-            s32 i, temp_dist;
 
             dx = px - centrum_x;
             dy = py - centrum_y;
@@ -1708,43 +1719,37 @@ delineare_gradientum_radialem_dithered_cum_palette(
 
             si (distance_sq > radius_sq) perge;
 
-            /* Compute linear distance approximation */
-            distance = ZEPHYRUM;
-            temp_dist = (s32)distance_sq;
-            per (i = ZEPHYRUM; i < XVI && temp_dist > ZEPHYRUM; i++)
-            {
-                temp_dist = temp_dist / II;
-                distance++;
-            }
+            /* Compute actual distance using integer square root */
+            distance = isqrt(distance_sq);
 
-            /* Compute interpolation factor */
+            /* Compute interpolation factor (0-256) */
             si (radius == ZEPHYRUM)
                 t = ZEPHYRUM;
             alioquin
             {
-                t = (distance * CCLVI) / (radius / II);
+                t = (distance * CCLVI) / radius;
                 si (t > CCLVI) t = CCLVI;
             }
 
             /* Interpolate grayscale */
             gray_ideal = interpolate(gray0, gray1, t);
 
-            /* Apply Bayer threshold dithering */
-            si (algorithmus == DITHERING_BAYER_4X4 || algorithmus == DITHERING_BAYER_8X8)
+            /* Apply Bayer threshold dithering
+             * Note: Radial gradients always use Bayer (error diffusion doesn't work well) */
             {
                 i32 threshold, bayer_x, bayer_y;
 
-                si (algorithmus == DITHERING_BAYER_4X4)
-                {
-                    bayer_x = px & III;
-                    bayer_y = py & III;
-                    threshold = (bayer_matrix_4x4[bayer_y][bayer_x] * XVI) - CXXVIII;
-                }
-                alioquin
+                si (algorithmus == DITHERING_BAYER_8X8)
                 {
                     bayer_x = px & VII;
                     bayer_y = py & VII;
                     threshold = (bayer_matrix_8x8[bayer_y][bayer_x] * IV) - CXXVIII;
+                }
+                alioquin  /* Default to Bayer 4x4 for all other algorithms */
+                {
+                    bayer_x = px & III;
+                    bayer_y = py & III;
+                    threshold = (bayer_matrix_4x4[bayer_y][bayer_x] * XVI) - CXXVIII;
                 }
 
                 gray_ideal = cohibere(gray_ideal + threshold);

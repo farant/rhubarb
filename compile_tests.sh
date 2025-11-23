@@ -39,6 +39,8 @@ declare -a SOURCE_FILES=(
 	"lib/entitas.c"
 	"lib/uuid.c"
 	"lib/graphus_entitatum.c"
+	"lib/color.c"
+	"lib/thema.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)
@@ -59,6 +61,7 @@ declare -a GUI_SOURCE_FILES=(
   "lib/navigator_entitatum.c"
   "lib/widget.c"
   "lib/registrum_commandi.c"
+  "lib/color.c"
 )
 
 # Color codes

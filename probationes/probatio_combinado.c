@@ -3,6 +3,7 @@
 #include "navigator_entitatum.h"
 #include "pagina.h"
 #include "fenestra.h"
+#include "delineare.h"
 #include "thema.h"
 #include "internamentum.h"
 #include "tempus.h"
@@ -328,6 +329,55 @@ widget_navigator_tractare_eventum(
     redde consumptus;
 }
 
+/* Helper: obtinere colorem ex palette index */
+interior i32
+palette_ad_rgb(i32 palette_index)
+{
+    i32 r, g, b;
+    constans i8* pal = thema_palette_aquinas();
+    i32 offset = palette_index * III;
+
+    /* Palette uses 6-bit values (0x00-0x3F), scale to 8-bit (0x00-0xFF) */
+    r = ((i32)pal[offset + ZEPHYRUM] * CCLV) / LXIII;
+    g = ((i32)pal[offset + I] * CCLV) / LXIII;
+    b = ((i32)pal[offset + II] * CCLV) / LXIII;
+
+    /* Pack as ARGB (gradient functions expect this, componere_rgb converts to ABGR) */
+    redde ((i32)CCLV << XXIV) | ((i32)r << XVI) | ((i32)g << VIII) | (i32)b;
+}
+
+/* Vacare fondum cum gradiente dithered */
+interior vacuum
+vacare_fondum_gradiente(
+    ContextusDelineandi* ctx,
+    i32                  color1,
+    i32                  color2)
+{
+    i32 palette[II];
+    i32 radius;
+
+    /* Creare palette simplicem cum duobus coloribus */
+    palette[ZEPHYRUM] = color1;
+    palette[I] = color2;
+
+    /* Computare radius pro tegere totam tabulam ex angulo inferiore sinistro
+     * radius = sqrt(latitudo^2 + altitudo^2)
+     * Pro 853x480: sqrt(727609 + 230400) ≈ 979 */
+    radius = CMLXXIX;  /* 979 */
+
+    /* Delineare gradientum radialem ex angulo inferiore sinistro */
+    delineare_gradientum_radialem_dithered_cum_palette(
+        ctx,
+        ZEPHYRUM,                    /* centrum_x (left edge) */
+        ctx->tabula->altitudo,       /* centrum_y (bottom edge) */
+        radius,                      /* radius */
+        color1,                      /* color_centrum */
+        color2,                      /* color_peripheria */
+        DITHERING_BAYER_4X4,         /* algorithmus (Bayer works better for radial) */
+        palette,                     /* palette */
+        II);                         /* numerus_colorum */
+}
+
 int
 main(void)
 {
@@ -338,6 +388,7 @@ main(void)
     Pagina               pagina;
     Fenestra*            fenestra;
     TabulaPixelorum*     tabula;
+    ContextusDelineandi* ctx;
     FenestraConfiguratio configuratio;
     Eventus              eventus;
     b32                  currens;
@@ -472,6 +523,15 @@ main(void)
         redde I;
     }
 
+    /* Creare contextum delineandi */
+    ctx = delineare_creare_contextum(piscina, tabula);
+    si (!ctx)
+    {
+        imprimere("Fractura: non potest creare contextum\n");
+        fenestra_destruere(fenestra);
+        redde I;
+    }
+
     /* Monstrare fenestram */
     fenestra_monstrare(fenestra);
 
@@ -511,8 +571,10 @@ main(void)
             }
         }
 
-        /* Vacare fondum */
-        tabula_pixelorum_vacare(tabula, thema_color(COLOR_BACKGROUND));
+        /* Vacare fondum cum gradiente dithered (bottom to top) */
+        vacare_fondum_gradiente(ctx,
+            palette_ad_rgb(ZEPHYRUM),  /* Black (bottom) - for testing */
+            palette_ad_rgb(V));        /* White (top) - for testing */
 
         /* Manager reddit omnes widgets */
         manager_widget_reddere(manager, tabula, I);
