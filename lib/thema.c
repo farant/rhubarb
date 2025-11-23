@@ -1,5 +1,4 @@
 #include "thema.h"
-#include "fenestra.h"
 
 /* ==================================================
  * Palette Aquinas (Ordinaria)
@@ -86,28 +85,16 @@ thema_initiare(vacuum)
  * Obtinere Colores
  * ================================================== */
 
-i32
+Color
 thema_color(ColorThema color)
 {
     i32 palette_index;
-    i32 offset;
-    i32 r, g, b;
 
     /* Lookup semantic -> palette index */
     palette_index = mappa_semantica[color];
 
-    /* Lookup palette index -> RGB */
-    offset = palette_index * III;
-    r = (i32)palette_currens[offset];
-    g = (i32)palette_currens[offset + I];
-    b = (i32)palette_currens[offset + II];
-
-    /* Convert to RGB macro format (assuming 0-63 range, scale to 0-255) */
-    r = (r * CCLV) / 0x3F;
-    g = (g * CCLV) / 0x3F;
-    b = (b * CCLV) / 0x3F;
-
-    redde RGB(r, g, b);
+    /* Use color library to convert palette index to Color */
+    redde color_ex_palette(palette_index);
 }
 
 i32

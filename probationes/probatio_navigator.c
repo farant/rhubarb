@@ -256,7 +256,7 @@ main(void)
         }
 
         /* Vacare fondum */
-        tabula_pixelorum_vacare(tabula, thema_color(COLOR_BACKGROUND));
+        tabula_pixelorum_vacare(tabula, color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
         /* Reddere navigator */
         navigator_entitatum_reddere(

@@ -106,7 +106,7 @@ main (
         }
 
         /* Purgare tabulam pixelorum */
-        tabula_pixelorum_vacare(tabula, thema_color(COLOR_BACKGROUND));
+        tabula_pixelorum_vacare(tabula, color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
         /* Reddere paginam cum margine (border + status) */
         pagina_reddere_cum_margine(piscina, tabula, &pagina, ZEPHYRUM, ZEPHYRUM, LXX, XL, I, VERUM);

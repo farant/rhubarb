@@ -2,6 +2,7 @@
 #define THEMA_H
 
 #include "latina.h"
+#include "color.h"
 
 /* ==================================================
  * THEMA - 16-Color Palette Theme System
@@ -96,13 +97,13 @@ thema_initiare(vacuum);
 
 /* Obtinere colorem RGB ex themate currente
  *
- * Lookup: semantic color -> palette index -> RGB value
+ * Lookup: semantic color -> palette index -> Color
  *
  * color: color semanticus ex enumeratione ColorThema
  *
- * Reddit: valor RGB (i32)
+ * Reddit: Color structura
  */
-i32
+Color
 thema_color(ColorThema color);
 
 /* Obtinere indicem palette pro colore semantico

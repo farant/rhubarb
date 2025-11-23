@@ -739,7 +739,7 @@ pagina_reddere (
             pixel_x,
             pixel_y,
             c,
-            thema_color(COLOR_TEXT));
+            color_ad_pixelum(thema_color(COLOR_TEXT)));
 
         current_x++;
     }
@@ -781,7 +781,7 @@ pagina_reddere (
                     tabula,
                     cursor_pixel_x,
                     cursor_pixel_y + j,
-                    thema_color(COLOR_CURSOR));
+                    color_ad_pixelum(thema_color(COLOR_CURSOR)));
             }
         }
     }
@@ -1236,8 +1236,8 @@ pagina_reddere_cum_margine (
     box_x1 = (x + latitudo) * character_latitudo - I - II;  /* 2px padding from right */
     box_y1 = (y + altitudo) * character_altitudo - I - II;  /* 2px padding from bottom */
 
-    color_border = thema_color(COLOR_BORDER);
-    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
+    color_border = color_ad_pixelum(thema_color(COLOR_BORDER));
+    color_border_inner = focused ? color_ad_pixelum(thema_color(COLOR_BORDER_ACTIVE)) : color_border;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -1306,8 +1306,8 @@ pagina_reddere_cum_margine (
         tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_border);
         tabula_pixelorum_pingere_chordam(tabula, modo_x, modo_y, modo_textus,
                                           (pagina->modo == MODO_INSERT) ?
-                                              thema_color(COLOR_STATUS_INSERT) :
-                                              thema_color(COLOR_STATUS_NORMAL));
+                                              color_ad_pixelum(thema_color(COLOR_STATUS_INSERT)) :
+                                              color_ad_pixelum(thema_color(COLOR_STATUS_NORMAL)));
     }
 
     /* ==================================================

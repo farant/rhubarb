@@ -620,26 +620,26 @@ _reddere_columnam_entitatis(
             si (dimmed)
             {
                 /* Item selectus in columna dimmed - usare TEXT_DIM pro fondum */
-                color_textus = thema_color(COLOR_BACKGROUND);
-                color_fons   = thema_color(COLOR_TEXT_DIM);
+                color_textus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+                color_fons   = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
             }
             alioquin
             {
                 /* Item selectus in columna activa - invertere colores */
-                color_textus = thema_color(COLOR_BACKGROUND);
-                color_fons   = thema_color(COLOR_TEXT);
+                color_textus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+                color_fons   = color_ad_pixelum(thema_color(COLOR_TEXT));
             }
         }
         alioquin si (dimmed)
         {
             /* Columna non-activa - usare colores obscuriores */
-            color_textus = thema_color(COLOR_TEXT_DIM);
-            color_fons   = thema_color(COLOR_BACKGROUND);
+            color_textus = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+            color_fons   = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
         }
         alioquin
         {
-            color_textus = thema_color(COLOR_TEXT);
-            color_fons   = thema_color(COLOR_BACKGROUND);
+            color_textus = color_ad_pixelum(thema_color(COLOR_TEXT));
+            color_fons   = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
         }
 
         /* Reddere fondum si selectus */
@@ -674,7 +674,7 @@ _reddere_columnam_entitatis(
             }
 
             /* Reddere "> " */
-            color_arrow = dimmed ? thema_color(COLOR_TEXT_DIM) : thema_color(COLOR_ACCENT_PRIMARY);
+            color_arrow = dimmed ? color_ad_pixelum(thema_color(COLOR_TEXT_DIM)) : color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
             arrow_buffer[ZEPHYRUM] = '>';
             arrow_buffer[I] = ' ';
             arrow_textus.datum = (i8*)arrow_buffer;
@@ -828,8 +828,8 @@ navigator_entitatum_reddere(
     box_x1 = (x + latitudo) * character_latitudo - I - II;
     box_y1 = (y + altitudo) * character_altitudo - I - II;
 
-    color_border = thema_color(COLOR_BORDER);
-    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
+    color_border = color_ad_pixelum(thema_color(COLOR_BORDER));
+    color_border_inner = focused ? color_ad_pixelum(thema_color(COLOR_BORDER_ACTIVE)) : color_border;
 
     /* === REDDERE BORDER === */
     ctx = delineare_creare_contextum(nav->piscina, tabula);
