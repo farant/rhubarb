@@ -2,6 +2,7 @@
 #include "latina.h"
 #include "fenestra.h"
 #include "delineare.h"
+#include "color.h"
 #include "chorda.h"
 #include <stdio.h>
 
@@ -114,75 +115,75 @@ main (
         }
 
         /* Purgare tabulam pixelorum (color caeruleus obscurus) */
-        delineare_vacare(ctx, RGB(XXVI, XXVI, XLVI));
+        delineare_vacare(ctx, color_ex_rgb((i8)XXVI, (i8)XXVI, (i8)XLVI));
 
         /* Delineare formas varias */
 
         /* Circulus ruber */
-        delineare_circulum(ctx, C, C, XL, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
+        delineare_circulum(ctx, C, C, XL, color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM));
 
         /* Circulus plenus viridis */
-        delineare_circulum_plenum(ctx, CC, C, XXX, RGB(ZEPHYRUM, CCLV, ZEPHYRUM));
+        delineare_circulum_plenum(ctx, CC, C, XXX, color_ex_rgb((i8)ZEPHYRUM, (i8)CCLV, (i8)ZEPHYRUM));
 
         /* Rectangulum caeruleus */
-        delineare_rectangulum(ctx, CCC, L, C, LXX, RGB(ZEPHYRUM, ZEPHYRUM, CCLV));
+        delineare_rectangulum(ctx, CCC, L, C, LXX, color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM, (i8)CCLV));
 
         /* Rectangulum plenum flavus */
-        delineare_rectangulum_plenum(ctx, CDLXXX, L, LXXX, LX, RGB(CCLV, CCLV, ZEPHYRUM));
+        delineare_rectangulum_plenum(ctx, CDLXXX, L, LXXX, LX, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)ZEPHYRUM));
 
         /* Linea alba */
-        delineare_lineam(ctx, L, CC, DC, CCC, RGB(CCLV, CCLV, CCLV));
+        delineare_lineam(ctx, L, CC, DC, CCC, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
 
         /* Triangulum magenta */
         delineare_triangulum(ctx, puncta_trianguli[ZEPHYRUM], puncta_trianguli[I],
                                    puncta_trianguli[II], puncta_trianguli[III],
                                    puncta_trianguli[IV], puncta_trianguli[V],
-                                   RGB(CCLV, ZEPHYRUM, CCLV));
+                                   color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)CCLV));
 
         /* Triangulum plenum cyaneus */
         delineare_triangulum_plenum(ctx, CCC, CCC, CD, CCC, CCC, CDXX,
-                                          RGB(ZEPHYRUM, CCLV, CCLV));
+                                          color_ex_rgb((i8)ZEPHYRUM, (i8)CCLV, (i8)CCLV));
 
         /* Ellipsis aurantius */
-        delineare_ellipsin(ctx, CD, CD, LX, XL, RGB(CCLV, CLXV, ZEPHYRUM));
+        delineare_ellipsin(ctx, CD, CD, LX, XL, color_ex_rgb((i8)CCLV, (i8)CLXV, (i8)ZEPHYRUM));
 
         /* Ellipsis plena purpurea */
-        delineare_ellipsin_plenam(ctx, DC, CD, XL, XXX, RGB(CXXX, L, CXXX));
+        delineare_ellipsin_plenam(ctx, DC, CD, XL, XXX, color_ex_rgb((i8)CXXX, (i8)L, (i8)CXXX));
 
         /* Polygonum albus */
-        delineare_polygonum(ctx, puncta_polygoni, IV, RGB(CCLV, CCLV, CCLV));
+        delineare_polygonum(ctx, puncta_polygoni, IV, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
 
         /* Polygonum plenum viridis obscurus */
-        delineare_polygonum_plenum(ctx, puncta_polygoni, IV, RGB(ZEPHYRUM, C, ZEPHYRUM));
+        delineare_polygonum_plenum(ctx, puncta_polygoni, IV, color_ex_rgb((i8)ZEPHYRUM, (i8)C, (i8)ZEPHYRUM));
 
         /* Rectangulum cum exemplar - tessellatum */
         delineare_ponere_modum(ctx, MODUS_EXEMPLAR);
         delineare_ponere_exemplar_internum(ctx, EXEMPLAR_TESSELLATUM);
-        delineare_rectangulum_plenum(ctx, DC, CDXX, LX, L, RGB(CCLV, CCLV, ZEPHYRUM));
+        delineare_rectangulum_plenum(ctx, DC, CDXX, LX, L, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)ZEPHYRUM));
         delineare_ponere_modum(ctx, MODUS_SOLIDUS);
 
         /* Pixela singularia rubra */
-        delineare_pixelum(ctx, X, X, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
-        delineare_pixelum(ctx, XII, X, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
-        delineare_pixelum(ctx, X, XII, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
-        delineare_pixelum(ctx, XII, XII, RGB(CCLV, ZEPHYRUM, ZEPHYRUM));
+        delineare_pixelum(ctx, X, X, color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM));
+        delineare_pixelum(ctx, XII, X, color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM));
+        delineare_pixelum(ctx, X, XII, color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM));
+        delineare_pixelum(ctx, XII, XII, color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM));
 
         /* Lineae horizontalis et verticalis */
-        delineare_lineam_horizontalem(ctx, DCC, DCCL, XXX, RGB(ZEPHYRUM, CCLV, CCLV));
-        delineare_lineam_verticalem(ctx, DCCL, XXX, LXX, RGB(CCLV, ZEPHYRUM, CCLV));
+        delineare_lineam_horizontalem(ctx, DCC, DCCL, XXX, color_ex_rgb((i8)ZEPHYRUM, (i8)CCLV, (i8)CCLV));
+        delineare_lineam_verticalem(ctx, DCCL, XXX, LXX, color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)CCLV));
 
         /* Crates griseus */
-        delineare_cratem(ctx, L, RGB(LXIV, LXIV, LXIV));
+        delineare_cratem(ctx, L, color_ex_rgb((i8)LXIV, (i8)LXIV, (i8)LXIV));
 
         /* Pingere textum */
         textus = chorda_ex_literis("Probatio Delineare\n\nPremere EFFUGIUM ut claudas.", piscina);
         tabula_pixelorum_pingere_chordam(tabula, X, X, textus,
-            RGB(CCXXXVIII, CCXXXVIII, CCXXXVIII));
+            color_ad_pixelum(color_ex_rgb((i8)CCXXXVIII, (i8)CCXXXVIII, (i8)CCXXXVIII)));
 
         /* Pingere textum scalatum (magnum titulum) */
         textus = chorda_ex_literis("DELINEARE", piscina);
         tabula_pixelorum_pingere_chordam_scalatam(tabula, CCC, CD, textus,
-            RGB(CCLV, C, CCLV), IV);
+            color_ad_pixelum(color_ex_rgb((i8)CCLV, (i8)C, (i8)CCLV)), IV);
 
         /* Praesentare pixela ad fenestram */
         fenestra_praesentare_pixela(fenestra, tabula);

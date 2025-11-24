@@ -12,31 +12,21 @@
 /* Numerus paginarum */
 #define NUMERUS_PAGINARUM  XI
 
-/* Helper: obtinere colorem RGB directe ex palette */
-interior i32
-palette_ad_rgb(i32 palette_index)
+/* Helper: obtinere colorem Color directe ex palette */
+interior Color
+palette_ad_color(i32 palette_index)
 {
-    i32 r, g, b;
-    constans i8* pal = thema_palette_aquinas();
-    i32 offset = palette_index * III;
-
-    /* Palette uses 6-bit values (0x00-0x3F), scale to 8-bit (0x00-0xFF) */
-    r = ((i32)pal[offset + ZEPHYRUM] * CCLV) / LXIII;
-    g = ((i32)pal[offset + I] * CCLV) / LXIII;
-    b = ((i32)pal[offset + II] * CCLV) / LXIII;
-
-    /* Pack as ABGR for macOS pixel format */
-    redde ((i32)CCLV << XXIV) | ((i32)b << XVI) | ((i32)g << VIII) | (i32)r;
+    redde color_ex_palette(palette_index);
 }
 
 /* Construere palette integram (omnes XVI colores Aquinas) */
 interior vacuum
-construere_palette_integram(i32* palette)
+construere_palette_integram(Color* palette)
 {
     i32 i;
     per (i = ZEPHYRUM; i < XVI; i++)
     {
-        palette[i] = palette_ad_rgb(i);
+        palette[i] = palette_ad_color(i);
     }
 }
 
@@ -45,7 +35,7 @@ interior vacuum
 pingere_titulum(TabulaPixelorum* tabula, Piscina* piscina, constans character* text)
 {
     chorda titulus = chorda_ex_literis(text, piscina);
-    tabula_pixelorum_pingere_chordam_scalatam(tabula, X, V, titulus, palette_ad_rgb(V), I);
+    tabula_pixelorum_pingere_chordam_scalatam(tabula, X, V, titulus, color_ad_pixelum(palette_ad_color(V)), I);
 }
 
 interior vacuum
@@ -54,7 +44,7 @@ reddere_paginam(
     TabulaPixelorum*     tabula,
     Piscina*             piscina,
     i32                  pagina,
-    constans i32*        palette)
+    constans Color*      palette)
 {
     commutatio (pagina)
     {
@@ -64,37 +54,37 @@ reddere_paginam(
 
             /* Horizontal gradients through all grays */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, L,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(I), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(I), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, LXX, CCC, L,
-                palette_ad_rgb(I), palette_ad_rgb(II), VERUM,
+                palette_ad_color(I), palette_ad_color(II), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CXL, CCC, L,
-                palette_ad_rgb(II), palette_ad_rgb(III), VERUM,
+                palette_ad_color(II), palette_ad_color(III), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCX, CCC, L,
-                palette_ad_rgb(III), palette_ad_rgb(IV), VERUM,
+                palette_ad_color(III), palette_ad_color(IV), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCLXXX, CCC, L,
-                palette_ad_rgb(IV), palette_ad_rgb(V), VERUM,
+                palette_ad_color(IV), palette_ad_color(V), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Vertical: full spectrum */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), FALSUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), FALSUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Radial gradients */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(V), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(V), palette_ad_color(ZEPHYRUM),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V),
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
             frange;
         }
@@ -105,31 +95,31 @@ reddere_paginam(
 
             /* Dark red -> Medium red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, C,
-                palette_ad_rgb(VI), palette_ad_rgb(VII), VERUM,
+                palette_ad_color(VI), palette_ad_color(VII), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Medium red -> Bright red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CLX, CCC, C,
-                palette_ad_rgb(VII), palette_ad_rgb(VIII), VERUM,
+                palette_ad_color(VII), palette_ad_color(VIII), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Black -> Bright red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCCXX, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(VIII), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(VIII), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Vertical: full red range */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(VI), palette_ad_rgb(VIII), FALSUM,
+                palette_ad_color(VI), palette_ad_color(VIII), FALSUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Radial: red variations */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(VIII), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(VIII), palette_ad_color(ZEPHYRUM),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(VI),
+                palette_ad_color(ZEPHYRUM), palette_ad_color(VI),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
             frange;
         }
@@ -140,31 +130,31 @@ reddere_paginam(
 
             /* Dark gold -> Medium gold */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, C,
-                palette_ad_rgb(IX), palette_ad_rgb(X), VERUM,
+                palette_ad_color(IX), palette_ad_color(X), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Medium gold -> Bright gold */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CLX, CCC, C,
-                palette_ad_rgb(X), palette_ad_rgb(XI), VERUM,
+                palette_ad_color(X), palette_ad_color(XI), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Black -> Bright gold */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCCXX, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(XI), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(XI), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Vertical: full gold range */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(IX), palette_ad_rgb(XI), FALSUM,
+                palette_ad_color(IX), palette_ad_color(XI), FALSUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Radial: gold variations */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(XI), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(XI), palette_ad_color(ZEPHYRUM),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(IX), palette_ad_rgb(V),
+                palette_ad_color(IX), palette_ad_color(V),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
             frange;
         }
@@ -175,31 +165,31 @@ reddere_paginam(
 
             /* Dark cyan -> Medium cyan */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, C,
-                palette_ad_rgb(XII), palette_ad_rgb(XIII), VERUM,
+                palette_ad_color(XII), palette_ad_color(XIII), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Medium cyan -> Bright cyan */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CLX, CCC, C,
-                palette_ad_rgb(XIII), palette_ad_rgb(XIV), VERUM,
+                palette_ad_color(XIII), palette_ad_color(XIV), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Black -> Bright cyan */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCCXX, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(XIV), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(XIV), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Vertical: full cyan range */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(XII), palette_ad_rgb(XIV), FALSUM,
+                palette_ad_color(XII), palette_ad_color(XIV), FALSUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Radial: cyan variations */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(XIV), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(XIV), palette_ad_color(ZEPHYRUM),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(XII),
+                palette_ad_color(ZEPHYRUM), palette_ad_color(XII),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
             frange;
         }
@@ -210,36 +200,36 @@ reddere_paginam(
 
             /* Red -> Gold */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, L,
-                palette_ad_rgb(VIII), palette_ad_rgb(XI), VERUM,
+                palette_ad_color(VIII), palette_ad_color(XI), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Gold -> Cyan */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, LXX, CCC, L,
-                palette_ad_rgb(XI), palette_ad_rgb(XIV), VERUM,
+                palette_ad_color(XI), palette_ad_color(XIV), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Cyan -> Red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CXL, CCC, L,
-                palette_ad_rgb(XIV), palette_ad_rgb(VIII), VERUM,
+                palette_ad_color(XIV), palette_ad_color(VIII), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* White -> Warm gray */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCX, CCC, L,
-                palette_ad_rgb(V), palette_ad_rgb(XV), VERUM,
+                palette_ad_color(V), palette_ad_color(XV), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* All colors vertical */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(VIII), palette_ad_rgb(XIV), FALSUM,
+                palette_ad_color(VIII), palette_ad_color(XIV), FALSUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Radial: complementary colors */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(XI), palette_ad_rgb(XIV),
+                palette_ad_color(XI), palette_ad_color(XIV),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(VIII), palette_ad_rgb(XII),
+                palette_ad_color(VIII), palette_ad_color(XII),
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
             frange;
         }
@@ -250,37 +240,37 @@ reddere_paginam(
 
             /* Horizontal gradients through all grays */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, L,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(I), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(I), VERUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, LXX, CCC, L,
-                palette_ad_rgb(I), palette_ad_rgb(II), VERUM,
+                palette_ad_color(I), palette_ad_color(II), VERUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CXL, CCC, L,
-                palette_ad_rgb(II), palette_ad_rgb(III), VERUM,
+                palette_ad_color(II), palette_ad_color(III), VERUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCX, CCC, L,
-                palette_ad_rgb(III), palette_ad_rgb(IV), VERUM,
+                palette_ad_color(III), palette_ad_color(IV), VERUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCLXXX, CCC, L,
-                palette_ad_rgb(IV), palette_ad_rgb(V), VERUM,
+                palette_ad_color(IV), palette_ad_color(V), VERUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             /* Vertical: full spectrum */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), FALSUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), FALSUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             /* Radial gradients */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(V), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(V), palette_ad_color(ZEPHYRUM),
                 DITHERING_BAYER_4X4, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V),
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V),
                 DITHERING_BAYER_4X4, palette, XVI);
             frange;
         }
@@ -291,37 +281,37 @@ reddere_paginam(
 
             /* Horizontal gradients through all grays */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, L,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(I), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(I), VERUM,
                 DITHERING_BAYER_8X8, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, LXX, CCC, L,
-                palette_ad_rgb(I), palette_ad_rgb(II), VERUM,
+                palette_ad_color(I), palette_ad_color(II), VERUM,
                 DITHERING_BAYER_8X8, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CXL, CCC, L,
-                palette_ad_rgb(II), palette_ad_rgb(III), VERUM,
+                palette_ad_color(II), palette_ad_color(III), VERUM,
                 DITHERING_BAYER_8X8, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCX, CCC, L,
-                palette_ad_rgb(III), palette_ad_rgb(IV), VERUM,
+                palette_ad_color(III), palette_ad_color(IV), VERUM,
                 DITHERING_BAYER_8X8, palette, XVI);
 
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCLXXX, CCC, L,
-                palette_ad_rgb(IV), palette_ad_rgb(V), VERUM,
+                palette_ad_color(IV), palette_ad_color(V), VERUM,
                 DITHERING_BAYER_8X8, palette, XVI);
 
             /* Vertical: full spectrum */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), FALSUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), FALSUM,
                 DITHERING_BAYER_8X8, palette, XVI);
 
             /* Radial gradients */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(V), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(V), palette_ad_color(ZEPHYRUM),
                 DITHERING_BAYER_8X8, palette, XVI);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V),
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V),
                 DITHERING_BAYER_8X8, palette, XVI);
             frange;
         }
@@ -332,139 +322,139 @@ reddere_paginam(
 
             /* Floyd-Steinberg: Black -> White (column 1) */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCXIII, CDLXXX,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), VERUM,
                 DITHERING_FLOYD_STEINBERG, palette, XVI);
 
             /* Atkinson: Black -> White (column 2) */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCXIII, L, CCXIII, CDLXXX,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), VERUM,
                 DITHERING_ATKINSON, palette, XVI);
 
             /* Bayer 4x4: Black -> White (column 3) */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CDXXVI, L, CCXIII, CDLXXX,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), VERUM,
                 DITHERING_BAYER_4X4, palette, XVI);
 
             /* Bayer 8x8: Black -> White (column 4) */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, DCXXXIX, L, CCXIV, CDLXXX,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), VERUM,
                 DITHERING_BAYER_8X8, palette, XVI);
             frange;
         }
 
         casus VIII:  /* Page 8: Atkinson with ONLY golds/yellows (9-11) */
         {
-            i32 golds[III];
+            Color golds[III];
 
-            golds[ZEPHYRUM] = palette_ad_rgb(IX);   /* Dark gold */
-            golds[I] = palette_ad_rgb(X);            /* Medium gold */
-            golds[II] = palette_ad_rgb(XI);          /* Bright gold */
+            golds[ZEPHYRUM] = palette_ad_color(IX);   /* Dark gold */
+            golds[I] = palette_ad_color(X);            /* Medium gold */
+            golds[II] = palette_ad_color(XI);          /* Bright gold */
 
             pingere_titulum(tabula, piscina, "Page 8: Atkinson - Gold Colors Only (3 colors)");
 
             /* Black -> Bright gold, constrained to gold palette */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(XI), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(XI), VERUM,
                 DITHERING_ATKINSON, golds, III);
 
             /* Dark gold -> Bright gold */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CLX, CCC, C,
-                palette_ad_rgb(IX), palette_ad_rgb(XI), VERUM,
+                palette_ad_color(IX), palette_ad_color(XI), VERUM,
                 DITHERING_ATKINSON, golds, III);
 
             /* Vertical: full gold range */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(IX), palette_ad_rgb(XI), FALSUM,
+                palette_ad_color(IX), palette_ad_color(XI), FALSUM,
                 DITHERING_ATKINSON, golds, III);
 
             /* Radial: gold variations */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(XI), palette_ad_rgb(IX),
+                palette_ad_color(XI), palette_ad_color(IX),
                 DITHERING_ATKINSON, golds, III);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(IX), palette_ad_rgb(XI),
+                palette_ad_color(IX), palette_ad_color(XI),
                 DITHERING_ATKINSON, golds, III);
             frange;
         }
 
         casus IX:  /* Page 9: Atkinson with ONLY reds (6-8) */
         {
-            i32 reds[III];
+            Color reds[III];
 
-            reds[ZEPHYRUM] = palette_ad_rgb(VI);    /* Dark red */
-            reds[I] = palette_ad_rgb(VII);           /* Medium red */
-            reds[II] = palette_ad_rgb(VIII);         /* Bright red */
+            reds[ZEPHYRUM] = palette_ad_color(VI);    /* Dark red */
+            reds[I] = palette_ad_color(VII);           /* Medium red */
+            reds[II] = palette_ad_color(VIII);         /* Bright red */
 
             pingere_titulum(tabula, piscina, "Page 9: Atkinson - Red Colors Only (3 colors)");
 
             /* Black -> Bright red, constrained to red palette */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(VIII), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(VIII), VERUM,
                 DITHERING_ATKINSON, reds, III);
 
             /* Dark red -> Bright red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CLX, CCC, C,
-                palette_ad_rgb(VI), palette_ad_rgb(VIII), VERUM,
+                palette_ad_color(VI), palette_ad_color(VIII), VERUM,
                 DITHERING_ATKINSON, reds, III);
 
             /* Vertical: full red range */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(VI), palette_ad_rgb(VIII), FALSUM,
+                palette_ad_color(VI), palette_ad_color(VIII), FALSUM,
                 DITHERING_ATKINSON, reds, III);
 
             /* Radial: red variations */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(VIII), palette_ad_rgb(VI),
+                palette_ad_color(VIII), palette_ad_color(VI),
                 DITHERING_ATKINSON, reds, III);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(VI), palette_ad_rgb(VIII),
+                palette_ad_color(VI), palette_ad_color(VIII),
                 DITHERING_ATKINSON, reds, III);
             frange;
         }
 
         casus X:  /* Page 10: Atkinson with ONLY grays + one color accent */
         {
-            i32 grays_plus_red[VII];
+            Color grays_plus_red[VII];
 
-            grays_plus_red[ZEPHYRUM] = palette_ad_rgb(ZEPHYRUM);  /* Black */
-            grays_plus_red[I] = palette_ad_rgb(I);                 /* Dark gray */
-            grays_plus_red[II] = palette_ad_rgb(II);               /* Gray */
-            grays_plus_red[III] = palette_ad_rgb(III);             /* Light gray */
-            grays_plus_red[IV] = palette_ad_rgb(IV);               /* Lighter gray */
-            grays_plus_red[V] = palette_ad_rgb(V);                 /* White */
-            grays_plus_red[VI] = palette_ad_rgb(VIII);             /* Bright red accent */
+            grays_plus_red[ZEPHYRUM] = palette_ad_color(ZEPHYRUM);  /* Black */
+            grays_plus_red[I] = palette_ad_color(I);                 /* Dark gray */
+            grays_plus_red[II] = palette_ad_color(II);               /* Gray */
+            grays_plus_red[III] = palette_ad_color(III);             /* Light gray */
+            grays_plus_red[IV] = palette_ad_color(IV);               /* Lighter gray */
+            grays_plus_red[V] = palette_ad_color(V);                 /* White */
+            grays_plus_red[VI] = palette_ad_color(VIII);             /* Bright red accent */
 
             pingere_titulum(tabula, piscina, "Page 10: Atkinson - Grays + Red Accent (7 colors)");
 
             /* Black -> White with red accent available */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, L, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(V), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(V), VERUM,
                 DITHERING_ATKINSON, grays_plus_red, VII);
 
             /* Black -> Red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CLX, CCC, C,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(VIII), VERUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(VIII), VERUM,
                 DITHERING_ATKINSON, grays_plus_red, VII);
 
             /* Red -> White */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, L, CCCXX, CCC, C,
-                palette_ad_rgb(VIII), palette_ad_rgb(V), VERUM,
+                palette_ad_color(VIII), palette_ad_color(V), VERUM,
                 DITHERING_ATKINSON, grays_plus_red, VII);
 
             /* Vertical: black -> red */
             delineare_gradientum_linearem_dithered_cum_palette(ctx, CCCLX, L, C, CCC,
-                palette_ad_rgb(ZEPHYRUM), palette_ad_rgb(VIII), FALSUM,
+                palette_ad_color(ZEPHYRUM), palette_ad_color(VIII), FALSUM,
                 DITHERING_ATKINSON, grays_plus_red, VII);
 
             /* Radial variations */
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CXX, XC,
-                palette_ad_rgb(VIII), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(VIII), palette_ad_color(ZEPHYRUM),
                 DITHERING_ATKINSON, grays_plus_red, VII);
 
             delineare_gradientum_radialem_dithered_cum_palette(ctx, DLXXV, CCCLX, XC,
-                palette_ad_rgb(V), palette_ad_rgb(ZEPHYRUM),
+                palette_ad_color(V), palette_ad_color(ZEPHYRUM),
                 DITHERING_ATKINSON, grays_plus_red, VII);
             frange;
         }
@@ -482,7 +472,7 @@ main(void)
     Eventus              eventus;
     b32                  currens;
     i32                  pagina_currens;
-    i32                  palette_integra[XVI];
+    Color                palette_integra[XVI];
 
     /* Initiare thema */
     thema_initiare();
@@ -572,7 +562,7 @@ main(void)
         }
 
         /* Vacare fondum */
-        delineare_vacare(ctx, palette_ad_rgb(ZEPHYRUM));
+        delineare_vacare(ctx, palette_ad_color(ZEPHYRUM));
 
         /* Reddere paginam currentem */
         reddere_paginam(ctx, tabula, piscina, pagina_currens, palette_integra);

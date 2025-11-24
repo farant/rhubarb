@@ -802,8 +802,8 @@ navigator_entitatum_reddere(
     i32              box_x0, box_y0, box_x1, box_y1;
     i32              textus_latitudo;
     i32              textus_altitudo;
-    i32              color_border;
-    i32              color_border_inner;
+    Color            color_border;
+    Color            color_border_inner;
     Entitas*         entitas_parens;
     ItemHistoriae*   item_historiae;
     i32              numerus_items_via;
@@ -828,8 +828,8 @@ navigator_entitatum_reddere(
     box_x1 = (x + latitudo) * character_latitudo - I - II;
     box_y1 = (y + altitudo) * character_altitudo - I - II;
 
-    color_border = color_ad_pixelum(thema_color(COLOR_BORDER));
-    color_border_inner = focused ? color_ad_pixelum(thema_color(COLOR_BORDER_ACTIVE)) : color_border;
+    color_border = thema_color(COLOR_BORDER);
+    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
 
     /* === REDDERE BORDER === */
     ctx = delineare_creare_contextum(nav->piscina, tabula);
@@ -886,7 +886,7 @@ navigator_entitatum_reddere(
         delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border_inner);
 
         /* Pingere titulo */
-        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_border);
+        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_ad_pixelum(color_border));
     }
 
     /* Calcular latitudines columnarum - solum duo columnae (30/70 split) */

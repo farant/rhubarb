@@ -2,6 +2,7 @@
 #include "latina.h"
 #include "fenestra.h"
 #include "delineare.h"
+#include "color.h"
 #include "tempus.h"
 #include "chorda.h"
 #include <stdio.h>
@@ -29,7 +30,7 @@ main (
                      i32  x;
                      i32  y;
                      i32  radius;
-                     i32  color;
+                   Color  color;
                     character buffer_textus[LXIV];
 
     /* Creare piscinam */
@@ -121,12 +122,12 @@ main (
         statisticae = tempus_obtinere_statisticas();
 
         /* Purgare tabulam pixelorum */
-        delineare_vacare(ctx, RGB(XX, XX, XXX));
+        delineare_vacare(ctx, color_ex_rgb((i8)XX, (i8)XX, (i8)XXX));
 
         /* Delineare titulum */
         textus = chorda_ex_literis("PROBATIO TEMPUS", piscina);
         tabula_pixelorum_pingere_chordam_scalatam(tabula, X, X, textus,
-            RGB(CCXXXVIII, CCXXXVIII, CCLV), II);
+            color_ad_pixelum(color_ex_rgb((i8)CCXXXVIII, (i8)CCXXXVIII, (i8)CCLV)), II);
 
         /* Delineare FPS */
         sprintf(buffer_textus, "FPS: %.1f (avg: %.1f)",
@@ -134,7 +135,7 @@ main (
                 statisticae->quadra_media_per_secundum);
         textus = chorda_ex_literis(buffer_textus, piscina);
         tabula_pixelorum_pingere_chordam(tabula, X, XXV, textus,
-            RGB(C, CCLV, C));
+            color_ad_pixelum(color_ex_rgb((i8)C, (i8)CCLV, (i8)C)));
 
         /* Sectio I: Functiones Lenitionis - Pilae Resilientes */
         /* Quinque pilae cum lenitionibus variis */
@@ -155,9 +156,9 @@ main (
             radius = XV;
 
             /* Color diversus pro quaque pila */
-            color = RGB(C + i * XXX, CC - i * XX, CL + i * XX);
+            color = color_ex_rgb((i8)(C + i * XXX), (i8)(CC - i * XX), (i8)(CL + i * XX));
             delineare_circulum_plenum(ctx, x, y, radius, color);
-            delineare_circulum(ctx, x, y, radius, RGB(CCLV, CCLV, CCLV));
+            delineare_circulum(ctx, x, y, radius, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio II: Undae Sinusoidales - Circuli Oscillantes */
@@ -173,7 +174,7 @@ main (
             y = CL + (i32)offset_y;
             radius = X + i * III;
 
-            color = RGB(CCLV - i * XL, C + i * L, CCLV - i * XXX);
+            color = color_ex_rgb((i8)(CCLV - i * XL), (i8)(C + i * L), (i8)(CCLV - i * XXX));
             delineare_circulum_plenum(ctx, x, y, radius, color);
         }
 
@@ -186,9 +187,9 @@ main (
             y = CCC;
 
             delineare_rectangulum_plenum(ctx, x - XV, y - XV, XXX, XXX,
-                RGB(CCLV, C, CCLV));
+                color_ex_rgb((i8)CCLV, (i8)C, (i8)CCLV));
             delineare_rectangulum(ctx, x - XV, y - XV, XXX, XXX,
-                RGB(CCLV, CCLV, CCLV));
+                color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio IV: Lenire Elasticum - Effectus Elasticus */
@@ -203,24 +204,26 @@ main (
             y = elasticus_y;
             radius = XX;
 
-            delineare_circulum_plenum(ctx, x, y, radius, RGB(C, CCLV, CCLV));
-            delineare_circulum(ctx, x, y, radius, RGB(CCLV, CCLV, CCLV));
+            delineare_circulum_plenum(ctx, x, y, radius, color_ex_rgb((i8)C, (i8)CCLV, (i8)CCLV));
+            delineare_circulum(ctx, x, y, radius, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio V: Interpolatio Coloris - Transitus Coloris */
         {
             f32 color_t;
-            i32 color_interpolatus;
-            i32 color_initialis;
-            i32 color_finalis;
+            Color color_interpolatus;
+            Color color_initialis;
+            Color color_finalis;
+            i32 t_scaled;
 
             color_t = (unda_sinus(tempus_currens, 0.5f, 1.0f) + 1.0f) / 2.0f;
-            color_initialis = RGB(CCLV, ZEPHYRUM, ZEPHYRUM);
-            color_finalis = RGB(ZEPHYRUM, ZEPHYRUM, CCLV);
-            color_interpolatus = interpolare_colorem(color_initialis, color_finalis, color_t);
+            color_initialis = color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM);
+            color_finalis = color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM, (i8)CCLV);
+            t_scaled = (i32)(color_t * 256.0f);
+            color_interpolatus = color_interpolate(color_initialis, color_finalis, t_scaled);
 
             delineare_rectangulum_plenum(ctx, DC, CCC, LX, XL, color_interpolatus);
-            delineare_rectangulum(ctx, DC, CCC, LX, XL, RGB(CCLV, CCLV, CCLV));
+            delineare_rectangulum(ctx, DC, CCC, LX, XL, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio VI: Linea Rotans - Interpolatio Anguli */
@@ -242,9 +245,9 @@ main (
             x2 = centrum_x - (i32)(cos(angulus) * XL);
             y2 = centrum_y - (i32)(sin(angulus) * XL);
 
-            delineare_lineam(ctx, x1, y1, x2, y2, RGB(CCLV, CC, ZEPHYRUM));
+            delineare_lineam(ctx, x1, y1, x2, y2, color_ex_rgb((i8)CCLV, (i8)CC, (i8)ZEPHYRUM));
             delineare_circulum_plenum(ctx, centrum_x, centrum_y, V,
-                RGB(CCLV, CCLV, ZEPHYRUM));
+                color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)ZEPHYRUM));
         }
 
         /* Sectio VII: Unda Dens Serrae - Motus Linearis Reciprocus */
@@ -256,34 +259,34 @@ main (
             y = CC;
 
             delineare_triangulum_plenum(ctx, x, y - XX, x - XV, y + XV, x + XV, y + XV,
-                RGB(ZEPHYRUM, CCLV, ZEPHYRUM));
+                color_ex_rgb((i8)ZEPHYRUM, (i8)CCLV, (i8)ZEPHYRUM));
         }
 
         /* Delineare instructiones */
         textus = chorda_ex_literis("Premere EFFUGIUM ut claudas", piscina);
         tabula_pixelorum_pingere_chordam(tabula, X, CDLX, textus,
-            RGB(CLXXX, CLXXX, CLXXX));
+            color_ad_pixelum(color_ex_rgb((i8)CLXXX, (i8)CLXXX, (i8)CLXXX)));
 
         /* Descriptiones effectuum */
         textus = chorda_ex_literis("Resiliens", piscina);
         tabula_pixelorum_pingere_chordam(tabula, L, CCCXL, textus,
-            RGB(CC, CC, CC));
+            color_ad_pixelum(color_ex_rgb((i8)CC, (i8)CC, (i8)CC)));
 
         textus = chorda_ex_literis("Sinus", piscina);
         tabula_pixelorum_pingere_chordam(tabula, CD, CCCXL, textus,
-            RGB(CC, CC, CC));
+            color_ad_pixelum(color_ex_rgb((i8)CC, (i8)CC, (i8)CC)));
 
         textus = chorda_ex_literis("Triangulus", piscina);
         tabula_pixelorum_pingere_chordam(tabula, DC, CCCXL, textus,
-            RGB(CC, CC, CC));
+            color_ad_pixelum(color_ex_rgb((i8)CC, (i8)CC, (i8)CC)));
 
         textus = chorda_ex_literis("Elasticus", piscina);
         tabula_pixelorum_pingere_chordam(tabula, C, CCCXL, textus,
-            RGB(CC, CC, CC));
+            color_ad_pixelum(color_ex_rgb((i8)CC, (i8)CC, (i8)CC)));
 
         textus = chorda_ex_literis("Color", piscina);
         tabula_pixelorum_pingere_chordam(tabula, DC, CCCXL, textus,
-            RGB(CC, CC, CC));
+            color_ad_pixelum(color_ex_rgb((i8)CC, (i8)CC, (i8)CC)));
 
         /* Praesentare pixela ad fenestram */
         fenestra_praesentare_pixela(fenestra, tabula);

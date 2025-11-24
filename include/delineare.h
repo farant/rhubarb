@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "fenestra.h"
+#include "color.h"
 
 /* ==================================================
  * DELINEARE - Functiones Graphicae
@@ -191,14 +192,14 @@ delineare_tollere_praecisionem (
  * ctx: contextus delineandi
  * x: coordinata x
  * y: coordinata y
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_pixelum (
     ContextusDelineandi* ctx,
     i32                  x,
     i32                  y,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -212,7 +213,7 @@ delineare_pixelum (
  * y0: coordinata y initialis
  * x1: coordinata x finalis
  * y1: coordinata y finalis
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_lineam (
@@ -221,7 +222,7 @@ delineare_lineam (
     i32                  y0,
     i32                  x1,
     i32                  y1,
-    i32                  color);
+    Color                color);
 
 /* Delineare lineam horizontalem
  *
@@ -229,7 +230,7 @@ delineare_lineam (
  * x0: coordinata x initialis
  * x1: coordinata x finalis
  * y: coordinata y
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_lineam_horizontalem (
@@ -237,7 +238,7 @@ delineare_lineam_horizontalem (
     i32                  x0,
     i32                  x1,
     i32                  y,
-    i32                  color);
+    Color                color);
 
 /* Delineare lineam verticalem
  *
@@ -245,7 +246,7 @@ delineare_lineam_horizontalem (
  * x: coordinata x
  * y0: coordinata y initialis
  * y1: coordinata y finalis
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_lineam_verticalem (
@@ -253,7 +254,7 @@ delineare_lineam_verticalem (
     i32                  x,
     i32                  y0,
     i32                  y1,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -267,7 +268,7 @@ delineare_lineam_verticalem (
  * y: coordinata y
  * latitudo: latitudo rectanguli
  * altitudo: altitudo rectanguli
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_rectangulum (
@@ -276,7 +277,7 @@ delineare_rectangulum (
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color);
+    Color                color);
 
 /* Delineare rectangulum plenum
  *
@@ -285,7 +286,7 @@ delineare_rectangulum (
  * y: coordinata y
  * latitudo: latitudo rectanguli
  * altitudo: altitudo rectanguli
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_rectangulum_plenum (
@@ -294,7 +295,7 @@ delineare_rectangulum_plenum (
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -307,7 +308,7 @@ delineare_rectangulum_plenum (
  * centrum_x: coordinata x centri
  * centrum_y: coordinata y centri
  * radius: radius circuli
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_circulum (
@@ -315,7 +316,7 @@ delineare_circulum (
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color);
+    Color                color);
 
 /* Delineare circulum plenum
  *
@@ -323,7 +324,7 @@ delineare_circulum (
  * centrum_x: coordinata x centri
  * centrum_y: coordinata y centri
  * radius: radius circuli
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_circulum_plenum (
@@ -331,7 +332,7 @@ delineare_circulum_plenum (
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -347,7 +348,7 @@ delineare_circulum_plenum (
  * y1: coordinata y vertice 1
  * x2: coordinata x vertice 2
  * y2: coordinata y vertice 2
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_triangulum (
@@ -358,7 +359,7 @@ delineare_triangulum (
     i32                  y1,
     i32                  x2,
     i32                  y2,
-    i32                  color);
+    Color                color);
 
 /* Delineare triangulum plenum
  *
@@ -369,7 +370,7 @@ delineare_triangulum (
  * y1: coordinata y vertice 1
  * x2: coordinata x vertice 2
  * y2: coordinata y vertice 2
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_triangulum_plenum (
@@ -380,7 +381,7 @@ delineare_triangulum_plenum (
     i32                  y1,
     i32                  x2,
     i32                  y2,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -394,7 +395,7 @@ delineare_triangulum_plenum (
  * centrum_y: coordinata y centri
  * radius_x: radius horizontalis
  * radius_y: radius verticalis
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_ellipsin (
@@ -403,7 +404,7 @@ delineare_ellipsin (
     i32                  centrum_y,
     i32                  radius_x,
     i32                  radius_y,
-    i32                  color);
+    Color                color);
 
 /* Delineare ellipsin plenam
  *
@@ -412,7 +413,7 @@ delineare_ellipsin (
  * centrum_y: coordinata y centri
  * radius_x: radius horizontalis
  * radius_y: radius verticalis
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_ellipsin_plenam (
@@ -421,7 +422,7 @@ delineare_ellipsin_plenam (
     i32                  centrum_y,
     i32                  radius_x,
     i32                  radius_y,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -433,28 +434,28 @@ delineare_ellipsin_plenam (
  * ctx: contextus delineandi
  * puncta: tabula punctorum (x,y paria)
  * numerus_punctorum: numerus punctorum
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_polygonum (
     ContextusDelineandi* ctx,
     constans i32*        puncta,
     i32                  numerus_punctorum,
-    i32                  color);
+    Color                color);
 
 /* Delineare polygonum plenum
  *
  * ctx: contextus delineandi
  * puncta: tabula punctorum (x,y paria)
  * numerus_punctorum: numerus punctorum
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_polygonum_plenum (
     ContextusDelineandi* ctx,
     constans i32*        puncta,
     i32                  numerus_punctorum,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -464,24 +465,24 @@ delineare_polygonum_plenum (
 /* Vacare tabulam (implere cum colore)
  *
  * ctx: contextus delineandi
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_vacare (
     ContextusDelineandi* ctx,
-    i32                  color);
+    Color                color);
 
 /* Delineare cratem (grid)
  *
  * ctx: contextus delineandi
  * spatium: spatium inter lineas
- * color: color (RGBA8888)
+ * color: color
  */
 vacuum
 delineare_cratem (
     ContextusDelineandi* ctx,
     i32                  spatium,
-    i32                  color);
+    Color                color);
 
 
 /* ==================================================
@@ -503,8 +504,8 @@ nomen enumeratio {
  * y: coordinata y originis
  * latitudo: latitudo rectanguli
  * altitudo: altitudo rectanguli
- * color_initium: color initialis (RGBA8888)
- * color_finis: color finalis (RGBA8888)
+ * color_initium: color initialis
+ * color_finis: color finalis
  * horizontalis: VERUM pro gradiente horizontali, FALSUM pro verticali
  */
 vacuum
@@ -514,8 +515,8 @@ delineare_gradientum_linearem_dithered(
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color_initium,
-    i32                  color_finis,
+    Color                color_initium,
+    Color                color_finis,
     b32                  horizontalis);
 
 /* Delineare gradientum radialem cum Floyd-Steinberg dithering (backwards compatibility)
@@ -524,8 +525,8 @@ delineare_gradientum_linearem_dithered(
  * centrum_x: coordinata x centri
  * centrum_y: coordinata y centri
  * radius: radius gradienti
- * color_centrum: color centri (RGBA8888)
- * color_peripheria: color peripheriae (RGBA8888)
+ * color_centrum: color centri
+ * color_peripheria: color peripheriae
  */
 vacuum
 delineare_gradientum_radialem_dithered(
@@ -533,8 +534,8 @@ delineare_gradientum_radialem_dithered(
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color_centrum,
-    i32                  color_peripheria);
+    Color                color_centrum,
+    Color                color_peripheria);
 
 /* Delineare gradientum linearem cum dithering algorithmum et palette
  *
@@ -543,11 +544,11 @@ delineare_gradientum_radialem_dithered(
  * y: coordinata y originis
  * latitudo: latitudo rectanguli
  * altitudo: altitudo rectanguli
- * color_initium: color initialis (RGBA8888)
- * color_finis: color finalis (RGBA8888)
+ * color_initium: color initialis
+ * color_finis: color finalis
  * horizontalis: VERUM pro gradiente horizontali, FALSUM pro verticali
  * algorithmus: algorithmus dithering (Floyd-Steinberg, Bayer, etc)
- * palette: array colorum palette (RGBA8888), vel NIHIL pro dithering binario
+ * palette: array colorum palette, vel NIHIL pro dithering binario
  * numerus_colorum: numerus colorum in palette (ignoratur si palette == NIHIL)
  */
 vacuum
@@ -557,11 +558,11 @@ delineare_gradientum_linearem_dithered_cum_palette(
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color_initium,
-    i32                  color_finis,
+    Color                color_initium,
+    Color                color_finis,
     b32                  horizontalis,
     AlgorithusDithering  algorithmus,
-    constans i32*        palette,
+    constans Color*      palette,
     i32                  numerus_colorum);
 
 /* Delineare gradientum radialem cum dithering algorithmum et palette
@@ -570,10 +571,10 @@ delineare_gradientum_linearem_dithered_cum_palette(
  * centrum_x: coordinata x centri
  * centrum_y: coordinata y centri
  * radius: radius gradienti
- * color_centrum: color centri (RGBA8888)
- * color_peripheria: color peripheriae (RGBA8888)
+ * color_centrum: color centri
+ * color_peripheria: color peripheriae
  * algorithmus: algorithmus dithering (Floyd-Steinberg, Bayer, etc)
- * palette: array colorum palette (RGBA8888), vel NIHIL pro dithering binario
+ * palette: array colorum palette, vel NIHIL pro dithering binario
  * numerus_colorum: numerus colorum in palette (ignoratur si palette == NIHIL)
  */
 vacuum
@@ -582,10 +583,10 @@ delineare_gradientum_radialem_dithered_cum_palette(
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color_centrum,
-    i32                  color_peripheria,
+    Color                color_centrum,
+    Color                color_peripheria,
     AlgorithusDithering  algorithmus,
-    constans i32*        palette,
+    constans Color*      palette,
     i32                  numerus_colorum);
 
 

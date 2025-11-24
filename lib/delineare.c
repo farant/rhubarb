@@ -301,9 +301,9 @@ delineare_pixelum (
     ContextusDelineandi* ctx,
     i32                  x,
     i32                  y,
-    i32                  color)
+    Color                color)
 {
-    ponere_pixelum_internum(ctx, x, y, color);
+    ponere_pixelum_internum(ctx, x, y, color_ad_pixelum(color));
 }
 
 /* Linea horizontalis - optimizata */
@@ -313,18 +313,21 @@ delineare_lineam_horizontalem (
     i32                  x0,
     i32                  x1,
     i32                  y,
-    i32                  color)
+    Color                color)
 {
     i32 x;
+    i32 pixel_color;
 
     si (!ctx) redde;
 
     /* Assecurare x0 <= x1 */
     si (x0 > x1) COMMUTARE(x0, x1);
 
+    pixel_color = color_ad_pixelum(color);
+
     per (x = x0; x <= x1; x++)
     {
-        ponere_pixelum_internum(ctx, x, y, color);
+        ponere_pixelum_internum(ctx, x, y, pixel_color);
     }
 }
 
@@ -335,18 +338,21 @@ delineare_lineam_verticalem (
     i32                  x,
     i32                  y0,
     i32                  y1,
-    i32                  color)
+    Color                color)
 {
     i32 y;
+    i32 pixel_color;
 
     si (!ctx) redde;
 
     /* Assecurare y0 <= y1 */
     si (y0 > y1) COMMUTARE(y0, y1);
 
+    pixel_color = color_ad_pixelum(color);
+
     per (y = y0; y <= y1; y++)
     {
-        ponere_pixelum_internum(ctx, x, y, color);
+        ponere_pixelum_internum(ctx, x, y, pixel_color);
     }
 }
 
@@ -358,7 +364,7 @@ delineare_lineam (
     i32                  y0,
     i32                  x1,
     i32                  y1,
-    i32                  color)
+    Color                color)
 {
     s32 dx;
     s32 dy;
@@ -368,6 +374,7 @@ delineare_lineam (
     s32 e2;
     s32 cx;
     s32 cy;
+    i32 pixel_color;
 
     si (!ctx) redde;
 
@@ -381,9 +388,11 @@ delineare_lineam (
     sy = y0 < y1 ? 1 : -1;
     error = dx - dy;
 
+    pixel_color = color_ad_pixelum(color);
+
     dum (I)
     {
-        ponere_pixelum_internum(ctx, (i32)cx, (i32)cy, color);
+        ponere_pixelum_internum(ctx, (i32)cx, (i32)cy, pixel_color);
 
         si (cx == (s32)x1 && cy == (s32)y1) frange;
 
@@ -409,7 +418,7 @@ delineare_rectangulum (
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color)
+    Color                color)
 {
     si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
 
@@ -427,18 +436,21 @@ delineare_rectangulum_plenum (
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color)
+    Color                color)
 {
     i32 py;
     i32 px;
+    i32 pixel_color;
 
     si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
+
+    pixel_color = color_ad_pixelum(color);
 
     per (py = y; py < y + altitudo; py++)
     {
         per (px = x; px < x + latitudo; px++)
         {
-            ponere_pixelum_internum(ctx, px, py, color);
+            ponere_pixelum_internum(ctx, px, py, pixel_color);
         }
     }
 }
@@ -450,11 +462,12 @@ delineare_circulum (
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color)
+    Color                color)
 {
     i32 x;
     i32 y;
     i32 error;
+    i32 pixel_color;
 
     si (!ctx || radius < ZEPHYRUM) redde;
 
@@ -462,16 +475,18 @@ delineare_circulum (
     y = ZEPHYRUM;
     error = ZEPHYRUM;
 
+    pixel_color = color_ad_pixelum(color);
+
     dum (x >= y)
     {
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y + y, color);
-        ponere_pixelum_internum(ctx, centrum_x + y, centrum_y + x, color);
-        ponere_pixelum_internum(ctx, centrum_x - y, centrum_y + x, color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y + y, color);
-        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y - y, color);
-        ponere_pixelum_internum(ctx, centrum_x - y, centrum_y - x, color);
-        ponere_pixelum_internum(ctx, centrum_x + y, centrum_y - x, color);
-        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y - y, color);
+        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y + y, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x + y, centrum_y + x, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x - y, centrum_y + x, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y + y, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x - x, centrum_y - y, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x - y, centrum_y - x, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x + y, centrum_y - x, pixel_color);
+        ponere_pixelum_internum(ctx, centrum_x + x, centrum_y - y, pixel_color);
 
         si (error <= ZEPHYRUM)
         {
@@ -493,7 +508,7 @@ delineare_circulum_plenum (
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color)
+    Color                color)
 {
     i32 x;
     i32 y;
@@ -535,7 +550,7 @@ delineare_triangulum (
     i32                  y1,
     i32                  x2,
     i32                  y2,
-    i32                  color)
+    Color                color)
 {
     si (!ctx) redde;
 
@@ -554,7 +569,7 @@ delineare_triangulum_plenum (
     i32                  y1,
     i32                  x2,
     i32                  y2,
-    i32                  color)
+    Color                color)
 {
     s32 sx0, sy0, sx1, sy1, sx2, sy2;
     s32 y;
@@ -625,7 +640,7 @@ delineare_ellipsin (
     i32                  centrum_y,
     i32                  radius_x,
     i32                  radius_y,
-    i32                  color)
+    Color                color)
 {
     s32 x;
     s32 y;
@@ -636,6 +651,7 @@ delineare_ellipsin (
     s32 p;
     s32 px;
     s32 py;
+    i32 pixel_color;
 
     si (!ctx || radius_x < ZEPHYRUM || radius_y < ZEPHYRUM) redde;
 
@@ -648,11 +664,13 @@ delineare_ellipsin (
     px = 0;
     py = tworx2 * y;
 
+    pixel_color = color_ad_pixelum(color);
+
     /* Delineare puncta initialia in extremis */
-    ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + (s32)radius_x), centrum_y, color);
-    ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - (s32)radius_x), centrum_y, color);
-    ponere_pixelum_internum(ctx, centrum_x, (i32)((s32)centrum_y + (s32)radius_y), color);
-    ponere_pixelum_internum(ctx, centrum_x, (i32)((s32)centrum_y - (s32)radius_y), color);
+    ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + (s32)radius_x), centrum_y, pixel_color);
+    ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - (s32)radius_x), centrum_y, pixel_color);
+    ponere_pixelum_internum(ctx, centrum_x, (i32)((s32)centrum_y + (s32)radius_y), pixel_color);
+    ponere_pixelum_internum(ctx, centrum_x, (i32)((s32)centrum_y - (s32)radius_y), pixel_color);
 
     /* Regio 1 */
     p = ry2 - (rx2 * (s32)radius_y) + (rx2 / 4);
@@ -671,10 +689,10 @@ delineare_ellipsin (
             p += ry2 + px - py;
         }
 
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), color);
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), pixel_color);
     }
 
     /* Regio 2 */
@@ -694,10 +712,10 @@ delineare_ellipsin (
             p += rx2 - py + px;
         }
 
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), color);
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), color);
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), color);
-        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y + y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y + y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x + x), (i32)((s32)centrum_y - y), pixel_color);
+        ponere_pixelum_internum(ctx, (i32)((s32)centrum_x - x), (i32)((s32)centrum_y - y), pixel_color);
     }
 }
 
@@ -709,7 +727,7 @@ delineare_ellipsin_plenam (
     i32                  centrum_y,
     i32                  radius_x,
     i32                  radius_y,
-    i32                  color)
+    Color                color)
 {
     s32 x;
     s32 y;
@@ -784,7 +802,7 @@ delineare_polygonum (
     ContextusDelineandi* ctx,
     constans i32*        puncta,
     i32                  numerus_punctorum,
-    i32                  color)
+    Color                color)
 {
     i32 i;
     i32 j;
@@ -805,7 +823,7 @@ delineare_polygonum_plenum (
     ContextusDelineandi* ctx,
     constans i32*        puncta,
     i32                  numerus_punctorum,
-    i32                  color)
+    Color                color)
 {
     s32 min_y;
     s32 max_y;
@@ -887,7 +905,7 @@ delineare_polygonum_plenum (
 vacuum
 delineare_vacare (
     ContextusDelineandi* ctx,
-    i32                  color)
+    Color                color)
 {
     i32 conservare_x;
     i32 conservare_y;
@@ -920,7 +938,7 @@ vacuum
 delineare_cratem (
     ContextusDelineandi* ctx,
     i32                  spatium,
-    i32                  color)
+    Color                color)
 {
     i32 x;
     i32 y;
@@ -964,29 +982,6 @@ interior constans i8 bayer_matrix_8x8[VIII][VIII] = {
     { 15, 47,  7, 39, 13, 45,  5, 37 },
     { 63, 31, 55, 23, 61, 29, 53, 21 }
 };
-
-/* Extrahere componentes RGB ex colore */
-interior vacuum
-extrahere_rgb(
-    i32 color,
-    i32* r,
-    i32* g,
-    i32* b)
-{
-    *r = (color >> XVI) & CCLV;
-    *g = (color >> VIII) & CCLV;
-    *b = color & CCLV;
-}
-
-/* Creare colorem ex componentibus RGB */
-interior i32
-componere_rgb(
-    i32 r,
-    i32 g,
-    i32 b)
-{
-    redde ((i32)CCLV << XXIV) | ((i32)r << XVI) | ((i32)g << VIII) | (i32)b;
-}
 
 /* Cohibere valorem intra limites 0-255 */
 interior i32
@@ -1068,7 +1063,7 @@ ad_cinereum(
 /* Invenire colorem proximum in palette per valorem cinereum
  *
  * cinereus: valor cinereus quaeritus (0-255)
- * palette: array colorum (RGBA8888)
+ * palette: array colorum Color
  * numerus_colorum: numerus colorum in palette
  *
  * Reddit: color proximus ex palette (per distantiam cineream)
@@ -1076,7 +1071,7 @@ ad_cinereum(
 interior i32
 invenire_colorem_per_cinereum(
     i32 cinereus,
-    constans i32* palette,
+    constans Color* palette,
     i32 numerus_colorum)
 {
     i32 i;
@@ -1088,16 +1083,18 @@ invenire_colorem_per_cinereum(
 
     si (!palette || numerus_colorum <= ZEPHYRUM)
     {
-        redde componere_rgb(cinereus, cinereus, cinereus);
+        redde color_ad_pixelum(color_ex_rgb((i8)cinereus, (i8)cinereus, (i8)cinereus));
     }
 
     distantia_minima = CCLVI;  /* Maximum distantia possibilis */
-    color_proximus = palette[ZEPHYRUM];
+    color_proximus = color_ad_pixelum(palette[ZEPHYRUM]);
 
     per (i = ZEPHYRUM; i < numerus_colorum; i++)
     {
-        /* Extrahere RGB ex palette */
-        extrahere_rgb(palette[i], &pr, &pg, &pb);
+        /* Extrahere RGB ex palette Color struct */
+        pr = palette[i].r;
+        pg = palette[i].g;
+        pb = palette[i].b;
 
         /* Convertere ad cinereum */
         cinereus_palette = ad_cinereum(pr, pg, pb);
@@ -1109,7 +1106,7 @@ invenire_colorem_per_cinereum(
         si (distantia < distantia_minima)
         {
             distantia_minima = distantia;
-            color_proximus = palette[i];
+            color_proximus = color_ad_pixelum(palette[i]);
         }
     }
 
@@ -1124,8 +1121,8 @@ delineare_gradientum_linearem_dithered(
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color_initium,
-    i32                  color_finis,
+    Color                color_initium,
+    Color                color_finis,
     b32                  horizontalis)
 {
     i32 r0, g0, b0;
@@ -1142,9 +1139,13 @@ delineare_gradientum_linearem_dithered(
 
     si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
 
-    /* Extrahere componentes RGB */
-    extrahere_rgb(color_initium, &r0, &g0, &b0);
-    extrahere_rgb(color_finis, &r1, &g1, &b1);
+    /* Extrahere componentes RGB ex structura Color */
+    r0 = color_initium.r;
+    g0 = color_initium.g;
+    b0 = color_initium.b;
+    r1 = color_finis.r;
+    g1 = color_finis.g;
+    b1 = color_finis.b;
 
     /* Determinare dimensionem pro buffers erroris */
     dimension = MAXIMUM(latitudo, altitudo);
@@ -1252,7 +1253,7 @@ delineare_gradientum_linearem_dithered(
             }
 
             /* Componere colorem */
-            color_dithered = componere_rgb(r_quant, g_quant, b_quant);
+            color_dithered = color_ad_pixelum(color_ex_rgb((i8)r_quant, (i8)g_quant, (i8)b_quant));
 
             /* Delineare pixelum */
             ponere_pixelum_internum(ctx, x + px, y + py, color_dithered);
@@ -1288,8 +1289,8 @@ delineare_gradientum_radialem_dithered(
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color_centrum,
-    i32                  color_peripheria)
+    Color                color_centrum,
+    Color                color_peripheria)
 {
     i32 r0, g0, b0;
     i32 r1, g1, b1;
@@ -1307,9 +1308,13 @@ delineare_gradientum_radialem_dithered(
 
     si (!ctx || radius <= ZEPHYRUM) redde;
 
-    /* Extrahere componentes RGB */
-    extrahere_rgb(color_centrum, &r0, &g0, &b0);
-    extrahere_rgb(color_peripheria, &r1, &g1, &b1);
+    /* Extrahere componentes RGB ex structura Color */
+    r0 = color_centrum.r;
+    g0 = color_centrum.g;
+    b0 = color_centrum.b;
+    r1 = color_peripheria.r;
+    g1 = color_peripheria.g;
+    b1 = color_peripheria.b;
 
     /* Computare rectangulum quo gradiens contineatur */
     y_start = centrum_y - radius;
@@ -1435,7 +1440,7 @@ delineare_gradientum_radialem_dithered(
             }
 
             /* Componere et delineare */
-            color_dithered = componere_rgb(r_quant, g_quant, b_quant);
+            color_dithered = color_ad_pixelum(color_ex_rgb((i8)r_quant, (i8)g_quant, (i8)b_quant));
             ponere_pixelum_internum(ctx, px, py, color_dithered);
 
             x_rel++;
@@ -1477,11 +1482,11 @@ delineare_gradientum_linearem_dithered_cum_palette(
     i32                  y,
     i32                  latitudo,
     i32                  altitudo,
-    i32                  color_initium,
-    i32                  color_finis,
+    Color                color_initium,
+    Color                color_finis,
     b32                  horizontalis,
     AlgorithusDithering  algorithmus,
-    constans i32*        palette,
+    constans Color*      palette,
     i32                  numerus_colorum)
 {
     i32 r0, g0, b0, r1, g1, b1;
@@ -1491,8 +1496,12 @@ delineare_gradientum_linearem_dithered_cum_palette(
 
     si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
 
-    extrahere_rgb(color_initium, &r0, &g0, &b0);
-    extrahere_rgb(color_finis, &r1, &g1, &b1);
+    r0 = color_initium.r;
+    g0 = color_initium.g;
+    b0 = color_initium.b;
+    r1 = color_finis.r;
+    g1 = color_finis.g;
+    b1 = color_finis.b;
 
     /* Convertere endpoints ad cinereum */
     gray0 = ad_cinereum(r0, g0, b0);
@@ -1544,7 +1553,7 @@ delineare_gradientum_linearem_dithered_cum_palette(
                 alioquin
                 {
                     i32 gray_quant = quantizare_component(gray_ideal);
-                    color_final = componere_rgb(gray_quant, gray_quant, gray_quant);
+                    color_final = color_ad_pixelum(color_ex_rgb((i8)gray_quant, (i8)gray_quant, (i8)gray_quant));
                 }
 
                 ponere_pixelum_internum(ctx, actual_x, actual_y, color_final);
@@ -1610,15 +1619,19 @@ delineare_gradientum_linearem_dithered_cum_palette(
                 /* Find nearest palette color by grayscale */
                 si (palette && numerus_colorum > ZEPHYRUM)
                 {
+                    Color color_chosen;
                     color_final = invenire_colorem_per_cinereum(gray_actual, palette, numerus_colorum);
                     /* Get actual grayscale of chosen color for error calculation */
-                    extrahere_rgb(color_final, &pr, &pg, &pb);
+                    color_chosen = color_ex_pixelum(color_final);
+                    pr = color_chosen.r;
+                    pg = color_chosen.g;
+                    pb = color_chosen.b;
                     gray_chosen = ad_cinereum(pr, pg, pb);
                 }
                 alioquin
                 {
                     gray_chosen = quantizare_component(gray_actual);
-                    color_final = componere_rgb(gray_chosen, gray_chosen, gray_chosen);
+                    color_final = color_ad_pixelum(color_ex_rgb((i8)gray_chosen, (i8)gray_chosen, (i8)gray_chosen));
                 }
 
                 /* Compute error between ideal and actual grayscale */
@@ -1679,10 +1692,10 @@ delineare_gradientum_radialem_dithered_cum_palette(
     i32                  centrum_x,
     i32                  centrum_y,
     i32                  radius,
-    i32                  color_centrum,
-    i32                  color_peripheria,
+    Color                color_centrum,
+    Color                color_peripheria,
     AlgorithusDithering  algorithmus,
-    constans i32*        palette,
+    constans Color*      palette,
     i32                  numerus_colorum)
 {
     i32 r0, g0, b0, r1, g1, b1;
@@ -1692,8 +1705,12 @@ delineare_gradientum_radialem_dithered_cum_palette(
 
     si (!ctx || radius <= ZEPHYRUM) redde;
 
-    extrahere_rgb(color_centrum, &r0, &g0, &b0);
-    extrahere_rgb(color_peripheria, &r1, &g1, &b1);
+    r0 = color_centrum.r;
+    g0 = color_centrum.g;
+    b0 = color_centrum.b;
+    r1 = color_peripheria.r;
+    g1 = color_peripheria.g;
+    b1 = color_peripheria.b;
 
     /* Convertere ad cinereum */
     gray0 = ad_cinereum(r0, g0, b0);
@@ -1761,7 +1778,7 @@ delineare_gradientum_radialem_dithered_cum_palette(
             alioquin
             {
                 gray_dithered = quantizare_component(gray_ideal);
-                color_final = componere_rgb(gray_dithered, gray_dithered, gray_dithered);
+                color_final = color_ad_pixelum(color_ex_rgb((i8)gray_dithered, (i8)gray_dithered, (i8)gray_dithered));
             }
 
             ponere_pixelum_internum(ctx, px, py, color_final);

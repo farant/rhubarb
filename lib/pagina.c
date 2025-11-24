@@ -1217,8 +1217,8 @@ pagina_reddere_cum_margine (
     i32 box_x0, box_y0, box_x1, box_y1;
     i32 textus_latitudo;
     i32 textus_altitudo;
-    i32 color_border;
-    i32 color_border_inner;
+    Color color_border;
+    Color color_border_inner;
     chorda titulo;
     chorda modo_textus;
     constans character* modo_str;
@@ -1236,8 +1236,8 @@ pagina_reddere_cum_margine (
     box_x1 = (x + latitudo) * character_latitudo - I - II;  /* 2px padding from right */
     box_y1 = (y + altitudo) * character_altitudo - I - II;  /* 2px padding from bottom */
 
-    color_border = color_ad_pixelum(thema_color(COLOR_BORDER));
-    color_border_inner = focused ? color_ad_pixelum(thema_color(COLOR_BORDER_ACTIVE)) : color_border;
+    color_border = thema_color(COLOR_BORDER);
+    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -1303,7 +1303,7 @@ pagina_reddere_cum_margine (
          * Pingere Textum (centered on lines)
          * ================================================== */
 
-        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_border);
+        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_ad_pixelum(color_border));
         tabula_pixelorum_pingere_chordam(tabula, modo_x, modo_y, modo_textus,
                                           (pagina->modo == MODO_INSERT) ?
                                               color_ad_pixelum(thema_color(COLOR_STATUS_INSERT)) :
