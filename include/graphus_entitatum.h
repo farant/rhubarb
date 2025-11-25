@@ -17,6 +17,7 @@
 
 nomen structura {
     TabulaDispersa*      entitates;  /* id -> Entitas* */
+    TabulaDispersa*      relationes; /* relatio_id -> Relatio* (index secundarius) */
     InternamentumChorda* intern;     /* Internatio chordarum */
     Piscina*             piscina;    /* Arena memoriae */
 } GraphusEntitatum;
@@ -48,6 +49,31 @@ b32
 graphus_entitatum_addere_entitatem(
     GraphusEntitatum* graphus,
     Entitas*          entitas);
+
+
+/* ==================================================
+ * Additio Relationum (Index)
+ * ================================================== */
+
+/* Registrare relationem in indice graphi
+ * Vocatur post entitas_relatio_addere pro indexatione
+ *
+ * Redde: VERUM si successus, FALSUM si fractura
+ */
+b32
+graphus_entitatum_registrare_relatio(
+    GraphusEntitatum* graphus,
+    Relatio*          relatio);
+
+/* Deregistrare relationem ex indice graphi
+ * Vocatur ante entitas_relatio_delere
+ *
+ * Redde: VERUM si successus, FALSUM si non inventum
+ */
+b32
+graphus_entitatum_deregistrare_relatio(
+    GraphusEntitatum* graphus,
+    chorda*           relatio_id);
 
 
 /* ==================================================

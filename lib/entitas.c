@@ -180,29 +180,77 @@ entitas_proprietas_delere(
  * Relationes
  * ================================================== */
 
-b32
+Relatio*
 entitas_relatio_addere(
-    Entitas* entitas,
-    chorda*  genus,
-    chorda*  destinatio_id)
+    Entitas*             entitas,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    chorda*              genus,
+    chorda*              destinatio_id)
 {
     Relatio* relatio;
+    chorda   id_chorda;
+    chorda*  id_interned;
 
-    si (!entitas || !genus || !destinatio_id)
+    si (!entitas || !piscina || !intern || !genus || !destinatio_id)
     {
-        redde FALSUM;
+        redde NIHIL;
     }
 
+    /* Generare UUIDv7 pro ID relationis */
+    id_chorda = uuidv7_creare(piscina);
+    si (id_chorda.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    /* Internare ID */
+    id_interned = chorda_internare(intern, id_chorda);
+    si (!id_interned)
+    {
+        redde NIHIL;
+    }
+
+    /* Addere relationem */
     relatio = (Relatio*)xar_addere(entitas->relationes);
     si (!relatio)
     {
-        redde FALSUM;
+        redde NIHIL;
     }
 
+    relatio->id            = id_interned;
+    relatio->origo_id      = entitas->id;
     relatio->genus         = genus;
     relatio->destinatio_id = destinatio_id;
 
-    redde VERUM;
+    redde relatio;
+}
+
+Relatio*
+entitas_relatio_capere(
+    Entitas* entitas,
+    chorda*  relatio_id)
+{
+    Relatio* relatio;
+    i32      i;
+    i32      numerus;
+
+    si (!entitas || !relatio_id)
+    {
+        redde NIHIL;
+    }
+
+    numerus = xar_numerus(entitas->relationes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        relatio = (Relatio*)xar_obtinere(entitas->relationes, i);
+        si (relatio && relatio->id == relatio_id)  /* Aequalitas indicis */
+        {
+            redde relatio;
+        }
+    }
+
+    redde NIHIL;  /* Non inventum */
 }
 
 Xar*
@@ -251,45 +299,43 @@ entitas_relationes_generis_capere(
 b32
 entitas_relatio_delere(
     Entitas* entitas,
-    i32      index)
+    chorda*  relatio_id)
 {
     Relatio* relatio;
     Relatio* ultima;
+    i32      i;
     i32      numerus;
 
-    si (!entitas)
+    si (!entitas || !relatio_id)
     {
         redde FALSUM;
     }
 
     numerus = xar_numerus(entitas->relationes);
 
-    /* Verificare index */
-    si (index < ZEPHYRUM || index >= numerus)
+    /* Quaerere relationem per ID */
+    per (i = ZEPHYRUM; i < numerus; i++)
     {
-        redde FALSUM;  /* Index invalidus */
-    }
-
-    relatio = (Relatio*)xar_obtinere(entitas->relationes, index);
-    si (!relatio)
-    {
-        redde FALSUM;
-    }
-
-    /* Swap-and-pop */
-    si (index < numerus - I)
-    {
-        /* Non ultima - swap cum ultima */
-        ultima = (Relatio*)xar_obtinere(entitas->relationes, numerus - I);
-        si (ultima)
+        relatio = (Relatio*)xar_obtinere(entitas->relationes, i);
+        si (relatio && relatio->id == relatio_id)  /* Aequalitas indicis */
         {
-            *relatio = *ultima;
+            /* Inventum! Swap-and-pop */
+            si (i < numerus - I)
+            {
+                /* Non ultima - swap cum ultima */
+                ultima = (Relatio*)xar_obtinere(entitas->relationes, numerus - I);
+                si (ultima)
+                {
+                    *relatio = *ultima;
+                }
+            }
+            /* Truncare */
+            xar_truncare(entitas->relationes, numerus - I);
+            redde VERUM;
         }
     }
 
-    /* Truncare */
-    xar_truncare(entitas->relationes, numerus - I);
-    redde VERUM;
+    redde FALSUM;  /* Non inventum */
 }
 
 
@@ -530,7 +576,8 @@ entitas_imprimere(
         relatio = (Relatio*)xar_obtinere(entitas->relationes, i);
         si (relatio)
         {
-            imprimere("    -[%.*s]-> %.*s\n",
+            imprimere("    [%.*s] -[%.*s]-> %.*s\n",
+                      relatio->id->mensura, relatio->id->datum,
                       relatio->genus->mensura, relatio->genus->datum,
                       relatio->destinatio_id->mensura, relatio->destinatio_id->datum);
         }

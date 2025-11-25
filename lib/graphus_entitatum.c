@@ -305,6 +305,91 @@ _impl_capere_radices(
     redde _impl_quaerere_cum_nota(datum, nota_root);
 }
 
+interior Relatio*
+_impl_capere_relatio(
+    vacuum* datum,
+    chorda* relatio_id)
+{
+    GraphusEntitatum* graphus;
+    vacuum*           valor;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !relatio_id)
+    {
+        redde NIHIL;
+    }
+
+    /* Quaerere in tabula dispersa relationum */
+    si (tabula_dispersa_invenire(graphus->relationes, *relatio_id, &valor))
+    {
+        redde (Relatio*)valor;
+    }
+
+    redde NIHIL;
+}
+
+interior Xar*
+_impl_capere_relationes_ad(
+    vacuum* datum,
+    chorda* entitas_id)
+{
+    GraphusEntitatum* graphus;
+    Xar*              resultus;
+    TabulaIterator    iter;
+    chorda            clavis;
+    vacuum*           valor;
+    Entitas*          entitas;
+    Relatio*          relatio;
+    Relatio**         slot;
+    i32               i;
+    i32               numerus;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !entitas_id)
+    {
+        redde NIHIL;
+    }
+
+    /* Creare Xar pro resultis */
+    resultus = xar_creare(graphus->piscina, magnitudo(Relatio*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    /* Iterare per omnes entitates et quaerere relationes ad entitas_id */
+    iter = tabula_dispersa_iterator_initium(graphus->entitates);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        entitas = (Entitas*)valor;
+
+        /* Iterare per relationes huius entitatis */
+        numerus = xar_numerus(entitas->relationes);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            relatio = (Relatio*)xar_obtinere(entitas->relationes, i);
+            si (!relatio)
+            {
+                perge;
+            }
+
+            /* Verificare si destinatio est entitas_id */
+            si (relatio->destinatio_id == entitas_id)  /* Aequalitas indicis */
+            {
+                slot = (Relatio**)xar_addere(resultus);
+                si (slot)
+                {
+                    *slot = relatio;
+                }
+            }
+        }
+    }
+
+    redde resultus;
+}
+
 
 /* ==================================================
  * Creatio
@@ -344,6 +429,13 @@ graphus_entitatum_creare(
         redde NIHIL;
     }
 
+    /* Creare tabulam dispersam pro relationes (index secundarius) */
+    graphus->relationes = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    si (!graphus->relationes)
+    {
+        redde NIHIL;
+    }
+
     redde graphus;
 }
 
@@ -370,6 +462,45 @@ graphus_entitatum_addere_entitatem(
 
     /* Inserere in tabulam */
     redde tabula_dispersa_inserere(graphus->entitates, *entitas->id, entitas);
+}
+
+
+/* ==================================================
+ * Additio Relationum (Index)
+ * ================================================== */
+
+b32
+graphus_entitatum_registrare_relatio(
+    GraphusEntitatum* graphus,
+    Relatio*          relatio)
+{
+    si (!graphus || !relatio || !relatio->id)
+    {
+        redde FALSUM;
+    }
+
+    /* Verificare si ID iam existit */
+    si (tabula_dispersa_continet(graphus->relationes, *relatio->id))
+    {
+        redde FALSUM;  /* ID iam existit */
+    }
+
+    /* Inserere in tabulam */
+    redde tabula_dispersa_inserere(graphus->relationes, *relatio->id, relatio);
+}
+
+b32
+graphus_entitatum_deregistrare_relatio(
+    GraphusEntitatum* graphus,
+    chorda*           relatio_id)
+{
+    si (!graphus || !relatio_id)
+    {
+        redde FALSUM;
+    }
+
+    /* Delere ex tabula */
+    redde tabula_dispersa_delere(graphus->relationes, *relatio_id);
 }
 
 
@@ -407,6 +538,10 @@ graphus_entitatum_providor_creare(
     providor->quaerere_cum_praefixo_notae  = _impl_quaerere_cum_praefixo_notae;
     providor->quaerere_textum              = _impl_quaerere_textum;
     providor->capere_radices               = _impl_capere_radices;
+
+    /* Functiones relationum */
+    providor->capere_relatio               = _impl_capere_relatio;
+    providor->capere_relationes_ad         = _impl_capere_relationes_ad;
 
     redde providor;
 }

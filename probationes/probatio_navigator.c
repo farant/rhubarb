@@ -15,6 +15,7 @@ creare_graphum_probationis(
     GraphusEntitatum* graphus)
 {
     InternamentumChorda* intern;
+    Piscina*             piscina;
     Entitas*             radix;
     Entitas*             pagina_1;
     Entitas*             pagina_2;
@@ -28,6 +29,7 @@ creare_graphum_probationis(
     chorda*              nota_root;
 
     intern = graphus_entitatum_internamentum(graphus);
+    piscina = intern->piscina;
 
     /* === Entitas Radix === */
     id = chorda_internare_ex_literis(intern, "root");
@@ -116,31 +118,31 @@ creare_graphum_probationis(
     /* === Relationes === */
     /* Radix -> Paginae */
     rel_genus = chorda_internare_ex_literis(intern, "pages");
-    entitas_relatio_addere(radix, rel_genus, pagina_1->id);
-    entitas_relatio_addere(radix, rel_genus, pagina_2->id);
-    entitas_relatio_addere(radix, rel_genus, pagina_3->id);
+    entitas_relatio_addere(radix, piscina, intern, rel_genus, pagina_1->id);
+    entitas_relatio_addere(radix, piscina, intern, rel_genus, pagina_2->id);
+    entitas_relatio_addere(radix, piscina, intern, rel_genus, pagina_3->id);
 
     /* Radix -> Notae */
     rel_genus = chorda_internare_ex_literis(intern, "notes");
-    entitas_relatio_addere(radix, rel_genus, nota->id);
+    entitas_relatio_addere(radix, piscina, intern, rel_genus, nota->id);
 
     /* Pagina 1 -> Pagina 2 */
     rel_genus = chorda_internare_ex_literis(intern, "next");
-    entitas_relatio_addere(pagina_1, rel_genus, pagina_2->id);
+    entitas_relatio_addere(pagina_1, piscina, intern, rel_genus, pagina_2->id);
 
     /* Pagina 2 -> Pagina 1, Pagina 3 */
     rel_genus = chorda_internare_ex_literis(intern, "prev");
-    entitas_relatio_addere(pagina_2, rel_genus, pagina_1->id);
+    entitas_relatio_addere(pagina_2, piscina, intern, rel_genus, pagina_1->id);
     rel_genus = chorda_internare_ex_literis(intern, "next");
-    entitas_relatio_addere(pagina_2, rel_genus, pagina_3->id);
+    entitas_relatio_addere(pagina_2, piscina, intern, rel_genus, pagina_3->id);
 
     /* Pagina 3 -> Pagina 2 */
     rel_genus = chorda_internare_ex_literis(intern, "prev");
-    entitas_relatio_addere(pagina_3, rel_genus, pagina_2->id);
+    entitas_relatio_addere(pagina_3, piscina, intern, rel_genus, pagina_2->id);
 
     /* Pagina 1 -> Nota */
     rel_genus = chorda_internare_ex_literis(intern, "references");
-    entitas_relatio_addere(pagina_1, rel_genus, nota->id);
+    entitas_relatio_addere(pagina_1, piscina, intern, rel_genus, nota->id);
 
     imprimere("Graphus probationis creatus:\n");
     imprimere("  Radix: %d entitates\n", graphus_entitatum_numerus(graphus));

@@ -132,8 +132,8 @@ s32 principale(vacuum)
 
         /* Addere relationes */
         genus_relatio = chorda_internare_ex_literis(intern, "contains");
-        entitas_relatio_addere(parens, genus_relatio, id_filius1);
-        entitas_relatio_addere(parens, genus_relatio, id_filius2);
+        entitas_relatio_addere(parens, piscina, intern, genus_relatio, id_filius1);
+        entitas_relatio_addere(parens, piscina, intern, genus_relatio, id_filius2);
 
         /* Capere entitates relatas */
         providor = graphus_entitatum_providor_creare(graphus);
@@ -312,6 +312,147 @@ s32 principale(vacuum)
 
         CREDO_NON_NIHIL(radices);
         CREDO_AEQUALIS_I32(xar_numerus(radices), II);
+    }
+
+    /* ==================================================
+     * Probare registrare/deregistrare relatio
+     * ================================================== */
+
+    {
+        Entitas*         ent_a;
+        Entitas*         ent_b;
+        Relatio*         relatio;
+        chorda*          genus_rel;
+
+        imprimere("\n--- Probans registrare/deregistrare relatio ---\n");
+
+        /* Creare duas entitates */
+        ent_a = entitas_creare(piscina,
+                               chorda_internare_ex_literis(intern, "node-a"),
+                               chorda_internare_ex_literis(intern, "node"));
+        ent_b = entitas_creare(piscina,
+                               chorda_internare_ex_literis(intern, "node-b"),
+                               chorda_internare_ex_literis(intern, "node"));
+
+        graphus_entitatum_addere_entitatem(graphus, ent_a);
+        graphus_entitatum_addere_entitatem(graphus, ent_b);
+
+        /* Addere relationem */
+        genus_rel = chorda_internare_ex_literis(intern, "links_to");
+        relatio = entitas_relatio_addere(ent_a, piscina, intern, genus_rel, ent_b->id);
+        CREDO_NON_NIHIL(relatio);
+        CREDO_NON_NIHIL(relatio->id);
+
+        /* Registrare in indice graphi */
+        CREDO_VERUM(graphus_entitatum_registrare_relatio(graphus, relatio));
+
+        /* Non potest registrare duplicatum */
+        CREDO_FALSUM(graphus_entitatum_registrare_relatio(graphus, relatio));
+
+        /* Deregistrare */
+        CREDO_VERUM(graphus_entitatum_deregistrare_relatio(graphus, relatio->id));
+
+        /* Non potest deregistrare iterum */
+        CREDO_FALSUM(graphus_entitatum_deregistrare_relatio(graphus, relatio->id));
+    }
+
+    /* ==================================================
+     * Probare providor capere_relatio
+     * ================================================== */
+
+    {
+        EntitasProvidor* providor;
+        Entitas*         ent_x;
+        Entitas*         ent_y;
+        Relatio*         relatio;
+        Relatio*         relatio_found;
+        chorda*          genus_rel;
+
+        imprimere("\n--- Probans providor capere_relatio ---\n");
+
+        /* Creare entitates et relationem */
+        ent_x = entitas_creare(piscina,
+                               chorda_internare_ex_literis(intern, "node-x"),
+                               chorda_internare_ex_literis(intern, "node"));
+        ent_y = entitas_creare(piscina,
+                               chorda_internare_ex_literis(intern, "node-y"),
+                               chorda_internare_ex_literis(intern, "node"));
+
+        graphus_entitatum_addere_entitatem(graphus, ent_x);
+        graphus_entitatum_addere_entitatem(graphus, ent_y);
+
+        genus_rel = chorda_internare_ex_literis(intern, "connects");
+        relatio = entitas_relatio_addere(ent_x, piscina, intern, genus_rel, ent_y->id);
+        CREDO_NON_NIHIL(relatio);
+
+        /* Registrare in indice */
+        graphus_entitatum_registrare_relatio(graphus, relatio);
+
+        /* Capere per providor */
+        providor = graphus_entitatum_providor_creare(graphus);
+        relatio_found = providor->capere_relatio(providor->datum, relatio->id);
+
+        CREDO_NON_NIHIL(relatio_found);
+        CREDO_AEQUALIS_PTR(relatio_found, relatio);
+        CREDO_AEQUALIS_PTR(relatio_found->origo_id, ent_x->id);
+        CREDO_AEQUALIS_PTR(relatio_found->destinatio_id, ent_y->id);
+
+        /* Capere non existentem */
+        relatio_found = providor->capere_relatio(
+            providor->datum,
+            chorda_internare_ex_literis(intern, "non-existent-rel"));
+        CREDO_NIHIL(relatio_found);
+    }
+
+    /* ==================================================
+     * Probare providor capere_relationes_ad
+     * ================================================== */
+
+    {
+        EntitasProvidor* providor;
+        Entitas*         target;
+        Entitas*         src1;
+        Entitas*         src2;
+        Relatio*         rel1;
+        Relatio*         rel2;
+        chorda*          genus_rel;
+        Xar*             relationes_ad;
+
+        imprimere("\n--- Probans providor capere_relationes_ad ---\n");
+
+        /* Creare target et duas fontes */
+        target = entitas_creare(piscina,
+                                chorda_internare_ex_literis(intern, "target-node"),
+                                chorda_internare_ex_literis(intern, "node"));
+        src1 = entitas_creare(piscina,
+                              chorda_internare_ex_literis(intern, "source-1"),
+                              chorda_internare_ex_literis(intern, "node"));
+        src2 = entitas_creare(piscina,
+                              chorda_internare_ex_literis(intern, "source-2"),
+                              chorda_internare_ex_literis(intern, "node"));
+
+        graphus_entitatum_addere_entitatem(graphus, target);
+        graphus_entitatum_addere_entitatem(graphus, src1);
+        graphus_entitatum_addere_entitatem(graphus, src2);
+
+        /* Addere relationes AD target */
+        genus_rel = chorda_internare_ex_literis(intern, "points_to");
+        rel1 = entitas_relatio_addere(src1, piscina, intern, genus_rel, target->id);
+        rel2 = entitas_relatio_addere(src2, piscina, intern, genus_rel, target->id);
+
+        CREDO_NON_NIHIL(rel1);
+        CREDO_NON_NIHIL(rel2);
+
+        /* Registrare in indice */
+        graphus_entitatum_registrare_relatio(graphus, rel1);
+        graphus_entitatum_registrare_relatio(graphus, rel2);
+
+        /* Capere relationes AD target */
+        providor = graphus_entitatum_providor_creare(graphus);
+        relationes_ad = providor->capere_relationes_ad(providor->datum, target->id);
+
+        CREDO_NON_NIHIL(relationes_ad);
+        CREDO_AEQUALIS_I32(xar_numerus(relationes_ad), II);
     }
 
     /* ==================================================

@@ -74,6 +74,27 @@ nomen structura EntitasProvidor {
     Xar* (*capere_radices)(
         vacuum* datum);
 
+    /* ==================================================
+     * Quaestiones Relationum
+     * ================================================== */
+
+    /* Capere relationem per ID
+     *
+     * Redde: Relatio* si inventum, NIHIL si non inventum
+     */
+    Relatio* (*capere_relatio)(
+        vacuum* datum,
+        chorda* relatio_id);
+
+    /* Capere omnes relationes AD entitatem (back-references)
+     * Invenit relationes ubi destinatio_id == entitas_id
+     *
+     * Redde: Xar de Relatio*, vel NIHIL si nullae
+     */
+    Xar* (*capere_relationes_ad)(
+        vacuum* datum,
+        chorda* entitas_id);
+
 } EntitasProvidor;
 
 #endif /* ENTITAS_PROVIDOR_H */

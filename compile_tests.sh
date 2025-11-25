@@ -62,6 +62,7 @@ declare -a GUI_SOURCE_FILES=(
   "lib/widget.c"
   "lib/registrum_commandi.c"
   "lib/color.c"
+	"lib/uuid.c"
 )
 
 # Color codes

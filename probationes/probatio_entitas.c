@@ -167,9 +167,9 @@ s32 principale(vacuum)
         dest3 = chorda_internare_ex_literis(intern, "doc-1");
 
         /* Addere relationes */
-        CREDO_VERUM(entitas_relatio_addere(entitas, genus_continet, dest1));
-        CREDO_VERUM(entitas_relatio_addere(entitas, genus_continet, dest2));
-        CREDO_VERUM(entitas_relatio_addere(entitas, genus_referit, dest3));
+        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest1));
+        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest2));
+        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern, genus_referit, dest3));
 
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), III);
     }
@@ -202,9 +202,9 @@ s32 principale(vacuum)
         dest2 = chorda_internare_ex_literis(intern, "file-2");
         dest3 = chorda_internare_ex_literis(intern, "doc-1");
 
-        entitas_relatio_addere(entitas, genus_continet, dest1);
-        entitas_relatio_addere(entitas, genus_continet, dest2);
-        entitas_relatio_addere(entitas, genus_referit, dest3);
+        entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest1);
+        entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest2);
+        entitas_relatio_addere(entitas, piscina, intern, genus_referit, dest3);
 
         /* Filtrare per genus "contains" */
         filtratae = entitas_relationes_generis_capere(entitas, genus_continet, piscina);
@@ -354,6 +354,8 @@ s32 principale(vacuum)
 
         entitas_relatio_addere(
             entitas,
+            piscina,
+            intern,
             chorda_internare_ex_literis(intern, "contains"),
             chorda_internare_ex_literis(intern, "child-1"));
 
@@ -405,8 +407,10 @@ s32 principale(vacuum)
         per (i = ZEPHYRUM; i < V; i++)
         {
             sprintf(buffer, "rel-%d", i);
-            CREDO_VERUM(entitas_relatio_addere(
+            CREDO_NON_NIHIL(entitas_relatio_addere(
                 entitas,
+                piscina,
+                intern,
                 chorda_internare_ex_literis(intern, "link"),
                 chorda_internare_ex_literis(intern, buffer)));
         }
@@ -483,7 +487,12 @@ s32 principale(vacuum)
 
     {
         Entitas* entitas;
-        Relatio* relatio;
+        Relatio* relatio1;
+        Relatio* relatio2;
+        Relatio* relatio3;
+        chorda*  id1;
+        chorda*  id2;
+        chorda*  id3;
 
         imprimere("\n--- Probans delere relationes ---\n");
 
@@ -493,41 +502,59 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "test"));
 
         /* Addere tres relationes */
-        entitas_relatio_addere(
+        relatio1 = entitas_relatio_addere(
             entitas,
+            piscina,
+            intern,
             chorda_internare_ex_literis(intern, "link"),
             chorda_internare_ex_literis(intern, "dest1"));
+        CREDO_NON_NIHIL(relatio1);
 
-        entitas_relatio_addere(
+        relatio2 = entitas_relatio_addere(
             entitas,
+            piscina,
+            intern,
             chorda_internare_ex_literis(intern, "link"),
             chorda_internare_ex_literis(intern, "dest2"));
+        CREDO_NON_NIHIL(relatio2);
 
-        entitas_relatio_addere(
+        relatio3 = entitas_relatio_addere(
             entitas,
+            piscina,
+            intern,
             chorda_internare_ex_literis(intern, "link"),
             chorda_internare_ex_literis(intern, "dest3"));
+        CREDO_NON_NIHIL(relatio3);
+
+        /* Salvare IDs ante swap-and-pop (quod potest superscribere structuras) */
+        id1 = relatio1->id;
+        id2 = relatio2->id;
+        id3 = relatio3->id;
 
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), III);
 
-        /* Delere mediam (index 1) */
-        CREDO_VERUM(entitas_relatio_delere(entitas, I));
+        /* Delere secundam per ID */
+        CREDO_VERUM(entitas_relatio_delere(entitas, id2));
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), II);
 
-        /* Verificare quod ultima movit ad locum medium */
-        relatio = (Relatio*)xar_obtinere(entitas->relationes, I);
-        CREDO_NON_NIHIL(relatio);
-        /* Debet esse dest3 (erat ultima, nunc in loco I) */
+        /* Verificare quod relatio2 non amplius invenitur */
+        CREDO_NIHIL(entitas_relatio_capere(entitas, id2));
 
-        /* Delere index invalidum (nimis magnus) */
-        CREDO_FALSUM(entitas_relatio_delere(entitas, X));
+        /* Prima et tertia adhuc existunt */
+        CREDO_NON_NIHIL(entitas_relatio_capere(entitas, id1));
+        CREDO_NON_NIHIL(entitas_relatio_capere(entitas, id3));
+
+        /* Delere ID non existens */
+        CREDO_FALSUM(entitas_relatio_delere(
+            entitas,
+            chorda_internare_ex_literis(intern, "nonexistent-id")));
 
         /* Delere primam */
-        CREDO_VERUM(entitas_relatio_delere(entitas, ZEPHYRUM));
+        CREDO_VERUM(entitas_relatio_delere(entitas, id1));
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), I);
 
         /* Delere ultimam */
-        CREDO_VERUM(entitas_relatio_delere(entitas, ZEPHYRUM));
+        CREDO_VERUM(entitas_relatio_delere(entitas, id3));
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), ZEPHYRUM);
     }
 

@@ -5,6 +5,8 @@
 #include "chorda.h"
 #include "xar.h"
 #include "piscina.h"
+#include "uuid.h"
+#include "internamentum.h"
 
 /* ==================================================
  * Structurae
@@ -20,8 +22,11 @@ nomen structura {
 
 /* Relatio - Arcus directus ad aliam entitatem
  * "Relationship: directed edge to another entity"
+ * Habet ID proprium (UUIDv7) pro quaestionibus et deletionibus
  */
 nomen structura {
+    chorda* id;            /* ID relationis (UUIDv7, internatum) */
+    chorda* origo_id;      /* ID entitatis originis (internatum) */
     chorda* genus;         /* Genus relationis (internatum) */
     chorda* destinatio_id; /* ID entitatis destinationis (internatum) */
 } Relatio;
@@ -104,14 +109,26 @@ entitas_proprietas_delere(
  * ================================================== */
 
 /* Addere relationem ad aliam entitatem
+ * Generat UUIDv7 pro ID relationis
  *
- * Redde: VERUM si successus, FALSUM si fractura
+ * Redde: Relatio* si successus, NIHIL si fractura
  */
-b32
+Relatio*
 entitas_relatio_addere(
+    Entitas*             entitas,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    chorda*              genus,
+    chorda*              destinatio_id);
+
+/* Capere relationem per ID
+ *
+ * Redde: Relatio* si inventum, NIHIL si non inventum
+ */
+Relatio*
+entitas_relatio_capere(
     Entitas* entitas,
-    chorda*  genus,
-    chorda*  destinatio_id);
+    chorda*  relatio_id);
 
 /* Capere omnes relationes generis specificati
  * Allocat novum Xar cum relationibus generis
@@ -124,15 +141,15 @@ entitas_relationes_generis_capere(
     chorda*  genus,
     Piscina* piscina);
 
-/* Delere relationem per indicem
+/* Delere relationem per ID
  * Usus swap-and-pop: relatio ultima movetur ad locum deletum
  *
- * Redde: VERUM si deletum, FALSUM si index invalidus
+ * Redde: VERUM si deletum, FALSUM si non inventum
  */
 b32
 entitas_relatio_delere(
     Entitas* entitas,
-    i32      index);
+    chorda*  relatio_id);
 
 
 /* ==================================================
