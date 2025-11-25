@@ -631,6 +631,320 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare errores: malformed tags
+     * ================================================== */
+
+    imprimere("\n--- Probans errores malformed tags ---\n");
+
+    {
+        StmlResultus res;
+
+        /* Mismatched tags */
+        res = stml_legere_ex_literis("<div>content</span>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32(res.status, STML_ERROR_TAG_IMPROPRIE);
+        imprimere("  Mismatched tags detectum: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Overlapping tags (invalid nesting) */
+        res = stml_legere_ex_literis("<b><i>text</b></i>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32(res.status, STML_ERROR_TAG_IMPROPRIE);
+        imprimere("  Overlapping tags detectum: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Unclosed tag at EOF */
+        res = stml_legere_ex_literis("<div>unclosed content", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32(res.status, STML_ERROR_TAG_NON_CLAUSUM);
+        imprimere("  Unclosed tag detectum: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Closing tag without opening */
+        res = stml_legere_ex_literis("</div>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        imprimere("  Closing without opening detectum: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Multiple closing tags */
+        res = stml_legere_ex_literis("<div>content</div></div>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        imprimere("  Multiple closing tags detectum: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare errores: edge cases
+     * ================================================== */
+
+    imprimere("\n--- Probans errores edge cases ---\n");
+
+    {
+        StmlResultus res;
+
+        /* Whitespace only - valid but no elements */
+        res = stml_legere_ex_literis("   \n\t  ", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        CREDO_NIHIL(res.elementum_radix);  /* No elements */
+        imprimere("  Whitespace only detectum: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Only comment - should succeed */
+        res = stml_legere_ex_literis("<!-- only comment -->", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        /* No root element */
+        CREDO_NIHIL(res.elementum_radix);
+        imprimere("  Only comment: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Multiple root elements - should succeed */
+        res = stml_legere_ex_literis("<root1>a</root1><root2>b</root2>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        /* First element is rootElement */
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "root1"));
+        imprimere("  Multiple roots: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   nodus;
+        i32          depth;
+
+        /* Deeply nested structure */
+        res = stml_legere_ex_literis(
+            "<a><b><c><d><e><f><g><h><i><j>"
+            "deep"
+            "</j></i></h></g></f></e></d></c></b></a>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        /* Count nesting depth */
+        depth = ZEPHYRUM;
+        nodus = res.elementum_radix;
+        dum (nodus && stml_numerus_liberorum(nodus) > ZEPHYRUM)
+        {
+            nodus = stml_liberum_ad_indicem(nodus, ZEPHYRUM);
+            si (nodus && nodus->genus == STML_NODUS_ELEMENTUM)
+            {
+                depth++;
+            }
+        }
+        CREDO_AEQUALIS_I32(depth, IX);  /* 9 nested elements (b through j) */
+        imprimere("  Deeply nested (%d levels): VERUM\n", depth + I);
+    }
+
+    {
+        StmlResultus res;
+
+        /* Many siblings */
+        res = stml_legere_ex_literis(
+            "<root>"
+            "<i/><i/><i/><i/><i/><i/><i/><i/><i/><i/>"
+            "<i/><i/><i/><i/><i/><i/><i/><i/><i/><i/>"
+            "</root>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), XX);
+        imprimere("  Many siblings (20): VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare capture edge cases
+     * ================================================== */
+
+    imprimere("\n--- Probans capture edge cases ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus*   outer;
+        StmlNodus*   inner;
+
+        /* Nested captures: <outer (> captures <inner /> */
+        res = stml_legere_ex_literis("<root><outer (><inner/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        outer = stml_invenire_liberum(res.elementum_radix, "outer");
+        CREDO_NON_NIHIL(outer);
+
+        /* Inner should be captured by outer */
+        inner = stml_invenire_liberum(outer, "inner");
+        CREDO_NON_NIHIL(inner);
+
+        imprimere("  Nested captures: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   wrapper;
+
+        /* Comments should be transparent to capture */
+        res = stml_legere_ex_literis(
+            "<root><!-- comment --><wrapper (><!-- comment2 --><item/></root>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
+        CREDO_NON_NIHIL(wrapper);
+
+        /* Item should be captured (comments are transparent) */
+        CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "item"));
+        imprimere("  Comments transparent to capture: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   wrapper;
+        chorda       textus;
+
+        /* Text nodes with captures */
+        res = stml_legere_ex_literis("<root><wrapper (>captured text</root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
+        CREDO_NON_NIHIL(wrapper);
+
+        textus = stml_textus_internus(wrapper, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "captured text");
+        imprimere("  Text capture: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare PI and DOCTYPE
+     * ================================================== */
+
+    imprimere("\n--- Probans PI et DOCTYPE ---\n");
+
+    {
+        StmlResultus res;
+
+        /* Processing instruction */
+        res = stml_legere_ex_literis("<?xml version=\"1.0\"?><root/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "root"));
+        imprimere("  Processing instruction: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* DOCTYPE */
+        res = stml_legere_ex_literis("<!DOCTYPE html><html/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "html"));
+        imprimere("  DOCTYPE: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare raw content edge cases
+     * ================================================== */
+
+    imprimere("\n--- Probans raw content edge cases ---\n");
+
+    {
+        StmlResultus res;
+        chorda       textus;
+
+        /* Raw content preserves special chars */
+        res = stml_legere_ex_literis("<code!>< > & \" '</code>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.elementum_radix->crudus);
+
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "< > & \" '");
+        imprimere("  Raw special chars: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda       textus;
+
+        /* Raw content preserves nested tag-like content */
+        res = stml_legere_ex_literis("<template!><div class=\"test\"><span>inner</span></div></template>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<div class=\"test\"><span>inner</span></div>");
+        imprimere("  Raw nested tags: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Empty raw content */
+        res = stml_legere_ex_literis("<code!></code>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.elementum_radix->crudus);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), ZEPHYRUM);
+        imprimere("  Empty raw content: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare serialization edge cases
+     * ================================================== */
+
+    imprimere("\n--- Probans serialization edge cases ---\n");
+
+    {
+        StmlResultus res;
+        chorda       output;
+
+        /* Pretty print with indentation */
+        res = stml_legere_ex_literis("<root><child><inner/></child></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        output = stml_scribere(res.elementum_radix, piscina, VERUM);
+        CREDO_CHORDA_NON_VACUA(output);
+
+        /* Should contain newlines and indentation */
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("\n", piscina)));
+        imprimere("  Pretty print: VERUM\n");
+    }
+
+    {
+        StmlNodus* nodus;
+        chorda     output;
+
+        /* Multiple attributes */
+        nodus = stml_elementum_creare(piscina, intern, "el");
+        stml_attributum_addere(nodus, piscina, intern, "a", "1");
+        stml_attributum_addere(nodus, piscina, intern, "b", "2");
+        stml_attributum_addere(nodus, piscina, intern, "c", "3");
+
+        output = stml_scribere(nodus, piscina, FALSUM);
+        CREDO_CHORDA_NON_VACUA(output);
+
+        /* Should contain all attributes */
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("a=\"1\"", piscina)));
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("b=\"2\"", piscina)));
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("c=\"3\"", piscina)));
+        imprimere("  Multiple attributes: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

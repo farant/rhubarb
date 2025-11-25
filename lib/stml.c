@@ -899,6 +899,13 @@ _parser_legere_elementum(StmlParserContext* ctx)
         }
         _parser_progredi(ctx);  /* Consume close tag */
     }
+    alioquin si (ctx->current.genus == STML_TOKEN_FINIS)
+    {
+        /* Unclosed tag at EOF */
+        ctx->status = STML_ERROR_TAG_NON_CLAUSUM;
+        ctx->linea_erroris = ctx->current.linea;
+        ctx->columna_erroris = ctx->current.columna;
+    }
 
     redde nodus;
 }
@@ -1172,6 +1179,14 @@ _parser_legere_nodus(StmlParserContext* ctx)
 
         casus STML_TOKEN_DOCTYPE:
             redde _parser_legere_doctype(ctx);
+
+        casus STML_TOKEN_CLAUDERE:
+            /* Orphan closing tag - no matching open tag */
+            ctx->status = STML_ERROR_TAG_IMPROPRIE;
+            ctx->linea_erroris = ctx->current.linea;
+            ctx->columna_erroris = ctx->current.columna;
+            _parser_progredi(ctx);  /* Consume to avoid infinite loop */
+            redde NIHIL;
 
         ordinarius:
             redde NIHIL;
