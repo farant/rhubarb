@@ -107,6 +107,20 @@ nomen structura EntitasRepositorium {
 		vacuum*             datum,
 		constans character* genus);
 
+	/* Scaffoldare entitatem - creare si non existit, aliter redde existentem
+	 * Utitur UUIDv5 deterministicum ex genere et titulo
+	 * Idempotens: potest vocare multiple sine effectu
+	 *
+	 * genus:   Genus entitatis (e.g., "Page", "Folder")
+	 * titulus: Titulus unicus intra genus (e.g., "root", "home")
+	 *
+	 * Redde: Entitas* (nova vel existens), NIHIL si error
+	 */
+	Entitas* (*entitas_scaffoldare)(
+		vacuum*             datum,
+		constans character* genus,
+		constans character* titulus);
+
 	/* Delere entitatem per ID
 	 *
 	 * Redde: VERUM si successus, FALSUM si error

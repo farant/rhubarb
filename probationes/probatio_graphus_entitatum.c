@@ -511,6 +511,63 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare repositorium entitas_scaffoldare
+     * ================================================== */
+
+    {
+        Entitas* ent1;
+        Entitas* ent2;
+        Entitas* ent3;
+        Entitas* ent4;
+
+        imprimere("\n--- Probans repositorium entitas_scaffoldare ---\n");
+
+        /* Scaffoldare novam entitatem */
+        ent1 = repo->entitas_scaffoldare(repo->datum, "Page", "root");
+        CREDO_NON_NIHIL(ent1);
+        CREDO_NON_NIHIL(ent1->id);
+
+        /* Scaffoldare eandem entitatem - debet reddere existentem */
+        ent2 = repo->entitas_scaffoldare(repo->datum, "Page", "root");
+        CREDO_NON_NIHIL(ent2);
+        CREDO_AEQUALIS_PTR(ent1, ent2);  /* Same pointer */
+        CREDO_AEQUALIS_PTR(ent1->id, ent2->id);  /* Same ID */
+
+        /* Scaffoldare diversum titulum - nova entitas */
+        ent3 = repo->entitas_scaffoldare(repo->datum, "Page", "home");
+        CREDO_NON_NIHIL(ent3);
+        CREDO_VERUM(ent3 != ent1);  /* Different entity */
+        CREDO_VERUM(ent3->id != ent1->id);  /* Different ID */
+
+        /* Scaffoldare diversum genus, idem titulus - nova entitas */
+        ent4 = repo->entitas_scaffoldare(repo->datum, "Folder", "root");
+        CREDO_NON_NIHIL(ent4);
+        CREDO_VERUM(ent4 != ent1);  /* Different entity */
+        CREDO_VERUM(ent4->id != ent1->id);  /* Different ID */
+
+        imprimere("Page:root ID:   %.*s\n", ent1->id->mensura, ent1->id->datum);
+        imprimere("Page:home ID:   %.*s\n", ent3->id->mensura, ent3->id->datum);
+        imprimere("Folder:root ID: %.*s\n", ent4->id->mensura, ent4->id->datum);
+    }
+
+    /* ==================================================
+     * Probare entitas_scaffoldare ID est UUIDv5
+     * ================================================== */
+
+    {
+        Entitas* ent;
+
+        imprimere("\n--- Probans scaffoldare ID est UUIDv5 ---\n");
+
+        ent = repo->entitas_scaffoldare(repo->datum, "Test", "uuidv5check");
+        CREDO_NON_NIHIL(ent);
+
+        /* ID debet esse UUIDv5 (version digit = 5) */
+        CREDO_VERUM(uuid_est_v5(*ent->id));
+        CREDO_FALSUM(uuid_est_v7(*ent->id));
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

@@ -563,6 +563,70 @@ _impl_entitas_creare(
     redde entitas;
 }
 
+interior Entitas*
+_impl_entitas_scaffoldare(
+    vacuum*             datum,
+    constans character* genus,
+    constans character* titulus)
+{
+    GraphusEntitatum* graphus;
+    chorda            uuid_chorda;
+    chorda*           id_internatum;
+    chorda*           genus_internatum;
+    Entitas*          entitas_existens;
+    Entitas*          entitas;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !genus || !titulus)
+    {
+        redde NIHIL;
+    }
+
+    /* Generate deterministic UUIDv5 from genus + titulus */
+    uuid_chorda = uuidv5_ex_genere_et_titulo(graphus->piscina, genus, titulus);
+    si (!uuid_chorda.datum)
+    {
+        redde NIHIL;
+    }
+
+    /* Intern the ID */
+    id_internatum = chorda_internare(graphus->intern, uuid_chorda);
+    si (!id_internatum)
+    {
+        redde NIHIL;
+    }
+
+    /* Check if entity already exists */
+    entitas_existens = _impl_capere_entitatem(graphus, id_internatum);
+    si (entitas_existens)
+    {
+        /* Already exists - return existing entity */
+        redde entitas_existens;
+    }
+
+    /* Entity doesn't exist - create new one */
+    genus_internatum = chorda_internare_ex_literis(graphus->intern, genus);
+    si (!genus_internatum)
+    {
+        redde NIHIL;
+    }
+
+    entitas = entitas_creare(graphus->piscina, id_internatum, genus_internatum);
+    si (!entitas)
+    {
+        redde NIHIL;
+    }
+
+    /* Add to graph */
+    si (!graphus_entitatum_addere_entitatem(graphus, entitas))
+    {
+        redde NIHIL;
+    }
+
+    redde entitas;
+}
+
 interior b32
 _impl_entitas_delere(
     vacuum* datum,
@@ -812,6 +876,7 @@ graphus_entitatum_repositorium_creare(
 
     /* Ponere indices functionum - Scriptio */
     repositorium->entitas_creare               = _impl_entitas_creare;
+    repositorium->entitas_scaffoldare          = _impl_entitas_scaffoldare;
     repositorium->entitas_delere               = _impl_entitas_delere;
     repositorium->proprietas_ponere            = _impl_proprietas_ponere;
     repositorium->proprietas_delere            = _impl_proprietas_delere;

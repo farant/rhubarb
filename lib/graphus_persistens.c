@@ -922,6 +922,7 @@ interior Xar* _gp_capere_radices(vacuum* datum);
 interior Relatio* _gp_capere_relatio(vacuum* datum, chorda* relatio_id);
 interior Xar* _gp_capere_relationes_ad(vacuum* datum, chorda* entitas_id);
 interior Entitas* _gp_entitas_creare(vacuum* datum, constans character* genus);
+interior Entitas* _gp_entitas_scaffoldare(vacuum* datum, constans character* genus, constans character* titulus);
 interior b32 _gp_entitas_delere(vacuum* datum, chorda* id);
 interior b32 _gp_proprietas_ponere(vacuum* datum, Entitas* entitas, constans character* clavis, constans character* valor);
 interior b32 _gp_proprietas_delere(vacuum* datum, Entitas* entitas, constans character* clavis);
@@ -1048,6 +1049,86 @@ _gp_entitas_creare(
 		redde NIHIL;
 	}
 
+	genus_internatum = chorda_internare_ex_literis(intern, genus);
+	si (!genus_internatum)
+	{
+		redde NIHIL;
+	}
+
+	entitas = entitas_creare(gp->piscina, id_internatum, genus_internatum);
+	si (!entitas)
+	{
+		redde NIHIL;
+	}
+
+	si (!graphus_entitatum_addere_entitatem(gp->graphus, entitas))
+	{
+		redde NIHIL;
+	}
+
+	redde entitas;
+}
+
+interior Entitas*
+_gp_entitas_scaffoldare(
+	vacuum*             datum,
+	constans character* genus,
+	constans character* titulus)
+{
+	GraphusPersistens*   gp = (GraphusPersistens*)datum;
+	InternamentumChorda* intern;
+	chorda               entitas_id;
+	chorda*              id_internatum;
+	chorda*              genus_internatum;
+	chorda               genus_chorda;
+	Entitas*             entitas_existens;
+	Entitas*             entitas;
+
+	si (!gp || !genus || !titulus)
+	{
+		redde NIHIL;
+	}
+
+	intern = graphus_entitatum_internamentum(gp->graphus);
+
+	/* Generate deterministic UUIDv5 from genus + titulus */
+	entitas_id = uuidv5_ex_genere_et_titulo(gp->piscina, genus, titulus);
+	si (!entitas_id.datum)
+	{
+		redde NIHIL;
+	}
+
+	/* Intern the ID */
+	id_internatum = chorda_internare(intern, entitas_id);
+	si (!id_internatum)
+	{
+		redde NIHIL;
+	}
+
+	/* Check if entity already exists */
+	entitas_existens = gp->repositorium->capere_entitatem(gp->graphus, id_internatum);
+	si (entitas_existens)
+	{
+		/* Already exists - return existing entity (no logging needed) */
+		redde entitas_existens;
+	}
+
+	/* Entity doesn't exist - create new one */
+
+	/* Create genus chorda for logging */
+	genus_chorda = chorda_ex_literis(genus, gp->piscina);
+	si (!genus_chorda.datum)
+	{
+		redde NIHIL;
+	}
+
+	/* Log the event first (using the deterministic ID) */
+	si (!_scribere_eventum_creare_entitas(gp, entitas_id, genus_chorda))
+	{
+		redde NIHIL;
+	}
+
+	/* Now apply to in-memory graph */
 	genus_internatum = chorda_internare_ex_literis(intern, genus);
 	si (!genus_internatum)
 	{
@@ -1354,6 +1435,7 @@ _creare_gp_repositorium(
 
 	/* Write operations */
 	repo->entitas_creare              = _gp_entitas_creare;
+	repo->entitas_scaffoldare         = _gp_entitas_scaffoldare;
 	repo->entitas_delere              = _gp_entitas_delere;
 	repo->proprietas_ponere           = _gp_proprietas_ponere;
 	repo->proprietas_delere           = _gp_proprietas_delere;
