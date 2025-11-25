@@ -69,6 +69,51 @@ filum_lector_claudere (
  * Scriptio
  * ================================================== */
 
+/* Modus aperire pro FilumScriptor */
+nomen enumeratio {
+	FILUM_MODUS_CREARE,   /* Creare/superscribere filum */
+	FILUM_MODUS_APPENDERE /* Appendere ad filum existens */
+} FilumModus;
+
+nomen structura FilumScriptor FilumScriptor;
+
+/* Aperire filum pro scriptione continua
+ * Reddit NIHIL si defectu */
+FilumScriptor*
+filum_scriptor_aperire (
+	constans character* via,
+	         FilumModus modus,
+	           Piscina* piscina);
+
+/* Scribere chordam ad filum apertum */
+b32
+filum_scriptor_scribere (
+	FilumScriptor* scriptor,
+	        chorda contentum);
+
+/* Scribere literas C ad filum apertum */
+b32
+filum_scriptor_scribere_literis (
+	     FilumScriptor* scriptor,
+	constans character* contentum);
+
+/* Scribere lineam cum newline ad finem */
+b32
+filum_scriptor_lineam_scribere (
+	     FilumScriptor* scriptor,
+	constans character* linea);
+
+/* Sync ad discum (fflush) */
+b32
+filum_scriptor_sync (
+	FilumScriptor* scriptor);
+
+/* Claudere scriptorem et liberare res */
+vacuum
+filum_scriptor_claudere (
+	FilumScriptor* scriptor);
+
+
 /* Scribere chordam ad filum (creare/superscribere)
  * Reddit VERUM in successu */
 b32

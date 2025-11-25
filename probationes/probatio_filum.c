@@ -716,6 +716,239 @@ s32 principale (vacuum)
 	}
 
 
+	/* ==================================================
+	 * Probare FilumScriptor - scriptio continua
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_scriptor.txt";
+		      FilumScriptor* scriptor;
+		              chorda contentum;
+		              chorda speratus;
+
+		imprimere("\n--- Probans FilumScriptor basicum ---\n");
+
+		/* Aperire in modus creare */
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+
+		/* Scribere literis */
+		CREDO_VERUM(filum_scriptor_scribere_literis(scriptor, "prima "));
+		CREDO_VERUM(filum_scriptor_scribere_literis(scriptor, "secunda"));
+
+		/* Claudere */
+		filum_scriptor_claudere(scriptor);
+
+		/* Verificare */
+		contentum = filum_legere_totum(test_via, piscina);
+		speratus  = chorda_ex_literis("prima secunda", piscina);
+		CREDO_VERUM(chorda_aequalis(contentum, speratus));
+
+		filum_delere(test_via);
+	}
+
+
+	/* ==================================================
+	 * Probare FilumScriptor - modus appendere
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_scriptor_append.txt";
+		      FilumScriptor* scriptor;
+		              chorda contentum;
+		              chorda speratus;
+
+		imprimere("\n--- Probans FilumScriptor modus appendere ---\n");
+
+		/* Prima scriptio - creare */
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+		CREDO_VERUM(filum_scriptor_scribere_literis(scriptor, "prima"));
+		filum_scriptor_claudere(scriptor);
+
+		/* Secunda scriptio - appendere */
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_APPENDERE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+		CREDO_VERUM(filum_scriptor_scribere_literis(scriptor, " secunda"));
+		filum_scriptor_claudere(scriptor);
+
+		/* Verificare */
+		contentum = filum_legere_totum(test_via, piscina);
+		speratus  = chorda_ex_literis("prima secunda", piscina);
+		CREDO_VERUM(chorda_aequalis(contentum, speratus));
+
+		filum_delere(test_via);
+	}
+
+
+	/* ==================================================
+	 * Probare FilumScriptor - lineam_scribere
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_scriptor_lineas.txt";
+		      FilumScriptor* scriptor;
+		        FilumLector* lector;
+		              chorda linea;
+		              chorda speratus1, speratus2, speratus3;
+
+		imprimere("\n--- Probans FilumScriptor lineam_scribere ---\n");
+
+		/* Scribere tres lineas */
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+
+		CREDO_VERUM(filum_scriptor_lineam_scribere(scriptor, "linea prima"));
+		CREDO_VERUM(filum_scriptor_lineam_scribere(scriptor, "linea secunda"));
+		CREDO_VERUM(filum_scriptor_lineam_scribere(scriptor, "linea tertia"));
+
+		filum_scriptor_claudere(scriptor);
+
+		/* Legere et verificare */
+		lector = filum_lector_aperire(test_via, piscina);
+		CREDO_NON_NIHIL(lector);
+
+		speratus1 = chorda_ex_literis("linea prima", piscina);
+		speratus2 = chorda_ex_literis("linea secunda", piscina);
+		speratus3 = chorda_ex_literis("linea tertia", piscina);
+
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		CREDO_VERUM(chorda_aequalis(linea, speratus1));
+
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		CREDO_VERUM(chorda_aequalis(linea, speratus2));
+
+		CREDO_VERUM(filum_lector_lineam_proximam(lector, &linea));
+		CREDO_VERUM(chorda_aequalis(linea, speratus3));
+
+		CREDO_FALSUM(filum_lector_lineam_proximam(lector, &linea));
+
+		filum_lector_claudere(lector);
+		filum_delere(test_via);
+	}
+
+
+	/* ==================================================
+	 * Probare FilumScriptor - scribere chorda
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_scriptor_chorda.txt";
+		      FilumScriptor* scriptor;
+		              chorda contentum1, contentum2;
+		              chorda legere;
+		              chorda speratus;
+
+		imprimere("\n--- Probans FilumScriptor scribere chorda ---\n");
+
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+
+		contentum1 = chorda_ex_literis("chorda ", piscina);
+		contentum2 = chorda_ex_literis("probatio", piscina);
+
+		CREDO_VERUM(filum_scriptor_scribere(scriptor, contentum1));
+		CREDO_VERUM(filum_scriptor_scribere(scriptor, contentum2));
+
+		filum_scriptor_claudere(scriptor);
+
+		legere   = filum_legere_totum(test_via, piscina);
+		speratus = chorda_ex_literis("chorda probatio", piscina);
+		CREDO_VERUM(chorda_aequalis(legere, speratus));
+
+		filum_delere(test_via);
+	}
+
+
+	/* ==================================================
+	 * Probare FilumScriptor - sync
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_scriptor_sync.txt";
+		      FilumScriptor* scriptor;
+
+		imprimere("\n--- Probans FilumScriptor sync ---\n");
+
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+
+		CREDO_VERUM(filum_scriptor_scribere_literis(scriptor, "ante sync"));
+		CREDO_VERUM(filum_scriptor_sync(scriptor));
+		CREDO_VERUM(filum_scriptor_scribere_literis(scriptor, " post sync"));
+
+		filum_scriptor_claudere(scriptor);
+		filum_delere(test_via);
+	}
+
+
+	/* ==================================================
+	 * Probare FilumScriptor - NIHIL handling
+	 * ================================================== */
+
+	{
+		FilumScriptor* scriptor;
+
+		imprimere("\n--- Probans FilumScriptor NIHIL handling ---\n");
+
+		/* Aperire cum NIHIL via */
+		scriptor = filum_scriptor_aperire(NIHIL, FILUM_MODUS_CREARE, piscina);
+		CREDO_NIHIL(scriptor);
+
+		/* Scribere ad NIHIL scriptor */
+		CREDO_FALSUM(filum_scriptor_scribere_literis(NIHIL, "test"));
+		CREDO_FALSUM(filum_scriptor_lineam_scribere(NIHIL, "test"));
+		CREDO_FALSUM(filum_scriptor_sync(NIHIL));
+
+		/* Claudere NIHIL debet esse tutum */
+		filum_scriptor_claudere(NIHIL);
+	}
+
+
+	/* ==================================================
+	 * Probare FilumScriptor - multas lineas (event log simulation)
+	 * ================================================== */
+
+	{
+		constans character* test_via = "/tmp/test_rhubarb_scriptor_eventlog.txt";
+		      FilumScriptor* scriptor;
+		        FilumLector* lector;
+		              chorda linea;
+		                 i32 i;
+		                 i32 numerus_lineas;
+
+		imprimere("\n--- Probans FilumScriptor event log simulation ---\n");
+
+		scriptor = filum_scriptor_aperire(test_via, FILUM_MODUS_CREARE, piscina);
+		CREDO_NON_NIHIL(scriptor);
+
+		/* Scribere 100 eventus */
+		per (i = ZEPHYRUM; i < C; i++)
+		{
+			character buffer[LXIV];
+			sprintf(buffer, "E|entity_%03d|Page", i);
+			CREDO_VERUM(filum_scriptor_lineam_scribere(scriptor, buffer));
+		}
+
+		filum_scriptor_claudere(scriptor);
+
+		/* Legere et computare lineas */
+		lector = filum_lector_aperire(test_via, piscina);
+		CREDO_NON_NIHIL(lector);
+
+		numerus_lineas = ZEPHYRUM;
+		dum (filum_lector_lineam_proximam(lector, &linea))
+		{
+			numerus_lineas++;
+		}
+
+		CREDO_AEQUALIS_I32(numerus_lineas, C);
+
+		filum_lector_claudere(lector);
+		filum_delere(test_via);
+	}
+
+
 	/* =================================================
 	 * Compendium
 	 * ================================================== */

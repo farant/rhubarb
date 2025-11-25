@@ -41,6 +41,7 @@ declare -a SOURCE_FILES=(
 	"lib/graphus_entitatum.c"
 	"lib/color.c"
 	"lib/thema.c"
+	"lib/nuntium.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)

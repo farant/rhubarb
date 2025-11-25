@@ -26,6 +26,11 @@ structura FilumLector {
      character  buffer[MMMMXCVI]; /* 4096 byte buffer pro legere */
 };
 
+structura FilumScriptor {
+     FILUM* descriptum;
+   Piscina* piscina;
+};
+
 
 /* ==================================================
  * Error Tracking - Thread-unsafe but simple
@@ -417,6 +422,205 @@ filum_lector_claudere(
 	}
 
 	/* Nota: FilumLector ipsa allocata ex piscina,
+	 * ergo non liberatur manualiter */
+}
+
+
+/* ==================================================
+ * FilumScriptor - Scriptio Continua
+ * ================================================== */
+
+FilumScriptor*
+filum_scriptor_aperire(
+	constans character* via,
+	         FilumModus modus,
+	           Piscina* piscina)
+{
+	FilumScriptor*      scriptor;
+	constans character* modus_str;
+
+	si (!via || !piscina)
+	{
+		_filum_error_ponere("via vel piscina est NIHIL");
+		redde NIHIL;
+	}
+
+	_filum_error_purgare();
+
+	scriptor = (FilumScriptor*)piscina_allocare(piscina, magnitudo(FilumScriptor));
+	si (!scriptor)
+	{
+		_filum_error_ponere("piscina_allocare fracta");
+		redde NIHIL;
+	}
+
+	/* Determinare modus string */
+	si (modus == FILUM_MODUS_APPENDERE)
+	{
+		modus_str = "ab";
+	}
+	alioquin
+	{
+		modus_str = "wb";
+	}
+
+	scriptor->descriptum = fopen(via, modus_str);
+	si (!scriptor->descriptum)
+	{
+		_filum_error_ponere("fopen fracta");
+		redde NIHIL;
+	}
+
+	scriptor->piscina = piscina;
+
+	redde scriptor;
+}
+
+b32
+filum_scriptor_scribere(
+	FilumScriptor* scriptor,
+	        chorda contentum)
+{
+	memoriae_index scriptus;
+
+	si (!scriptor || !scriptor->descriptum)
+	{
+		_filum_error_ponere("scriptor invalidus");
+		redde FALSUM;
+	}
+
+	si (!contentum.datum || contentum.mensura == ZEPHYRUM)
+	{
+		/* Nihil scribere - successus */
+		redde VERUM;
+	}
+
+	_filum_error_purgare();
+
+	scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura,
+	                  scriptor->descriptum);
+
+	si (scriptus != (memoriae_index)contentum.mensura)
+	{
+		_filum_error_ponere("fwrite fracta");
+		redde FALSUM;
+	}
+
+	redde VERUM;
+}
+
+b32
+filum_scriptor_scribere_literis(
+	     FilumScriptor* scriptor,
+	constans character* contentum)
+{
+	memoriae_index longitudo;
+	memoriae_index scriptus;
+
+	si (!scriptor || !scriptor->descriptum)
+	{
+		_filum_error_ponere("scriptor invalidus");
+		redde FALSUM;
+	}
+
+	si (!contentum)
+	{
+		/* Nihil scribere - successus */
+		redde VERUM;
+	}
+
+	_filum_error_purgare();
+
+	longitudo = strlen(contentum);
+	si (longitudo == ZEPHYRUM)
+	{
+		redde VERUM;
+	}
+
+	scriptus = fwrite(contentum, I, longitudo, scriptor->descriptum);
+
+	si (scriptus != longitudo)
+	{
+		_filum_error_ponere("fwrite fracta");
+		redde FALSUM;
+	}
+
+	redde VERUM;
+}
+
+b32
+filum_scriptor_lineam_scribere(
+	     FilumScriptor* scriptor,
+	constans character* linea)
+{
+	si (!scriptor || !scriptor->descriptum)
+	{
+		_filum_error_ponere("scriptor invalidus");
+		redde FALSUM;
+	}
+
+	_filum_error_purgare();
+
+	/* Scribere lineam */
+	si (linea)
+	{
+		memoriae_index longitudo = strlen(linea);
+		si (longitudo > ZEPHYRUM)
+		{
+			memoriae_index scriptus = fwrite(linea, I, longitudo,
+			                                 scriptor->descriptum);
+			si (scriptus != longitudo)
+			{
+				_filum_error_ponere("fwrite fracta");
+				redde FALSUM;
+			}
+		}
+	}
+
+	/* Scribere newline */
+	si (fputc('\n', scriptor->descriptum) == EOF)
+	{
+		_filum_error_ponere("fputc fracta");
+		redde FALSUM;
+	}
+
+	redde VERUM;
+}
+
+b32
+filum_scriptor_sync(
+	FilumScriptor* scriptor)
+{
+	si (!scriptor || !scriptor->descriptum)
+	{
+		_filum_error_ponere("scriptor invalidus");
+		redde FALSUM;
+	}
+
+	_filum_error_purgare();
+
+	si (fflush(scriptor->descriptum) != ZEPHYRUM)
+	{
+		_filum_error_ponere("fflush fracta");
+		redde FALSUM;
+	}
+
+	redde VERUM;
+}
+
+vacuum
+filum_scriptor_claudere(
+	FilumScriptor* scriptor)
+{
+	si (!scriptor) redde;
+
+	si (scriptor->descriptum)
+	{
+		fclose(scriptor->descriptum);
+		scriptor->descriptum = NIHIL;
+	}
+
+	/* Nota: FilumScriptor ipsa allocata ex piscina,
 	 * ergo non liberatur manualiter */
 }
 
