@@ -175,6 +175,57 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare entitas_relatio_addere_cum_id
+     * ================================================== */
+
+    {
+        Entitas* entitas;
+        Relatio* relatio;
+         chorda* relatio_id;
+         chorda* genus;
+         chorda* dest_id;
+
+        imprimere("\n--- Probans entitas_relatio_addere_cum_id ---\n");
+
+        entitas = entitas_creare(
+            piscina,
+            chorda_internare_ex_literis(intern, "folder-cum-id"),
+            chorda_internare_ex_literis(intern, "folder"));
+
+        /* Creare ID specificum pro relatione (simulans replay) */
+        relatio_id = chorda_internare_ex_literis(intern, "relatio-id-12345");
+        genus      = chorda_internare_ex_literis(intern, "contains");
+        dest_id    = chorda_internare_ex_literis(intern, "file-xyz");
+
+        /* Addere relationem cum ID specifico */
+        relatio = entitas_relatio_addere_cum_id(
+            entitas, piscina, intern, relatio_id, genus, dest_id);
+
+        CREDO_NON_NIHIL(relatio);
+        CREDO_AEQUALIS_PTR(relatio->id, relatio_id);
+        CREDO_AEQUALIS_PTR(relatio->genus, genus);
+        CREDO_AEQUALIS_PTR(relatio->destinatio_id, dest_id);
+        CREDO_AEQUALIS_PTR(relatio->origo_id, entitas->id);
+
+        CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), I);
+
+        /* Verificare quod relatio invenitur per ID */
+        CREDO_NON_NIHIL(entitas_relatio_capere(entitas, relatio_id));
+
+        /* Addere secundam relationem cum alio ID specifico */
+        relatio = entitas_relatio_addere_cum_id(
+            entitas,
+            piscina,
+            intern,
+            chorda_internare_ex_literis(intern, "relatio-id-67890"),
+            genus,
+            chorda_internare_ex_literis(intern, "file-abc"));
+
+        CREDO_NON_NIHIL(relatio);
+        CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), II);
+    }
+
+    /* ==================================================
      * Probare relationes_generis_capere
      * ================================================== */
 

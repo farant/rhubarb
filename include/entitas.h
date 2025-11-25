@@ -121,6 +121,20 @@ entitas_relatio_addere(
     chorda*              genus,
     chorda*              destinatio_id);
 
+/* Addere relationem cum ID specifico (pro replay eventuum)
+ * Non generat UUIDv7 - usare ID provisum
+ *
+ * Redde: Relatio* si successus, NIHIL si fractura
+ */
+Relatio*
+entitas_relatio_addere_cum_id(
+    Entitas*             entitas,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    chorda*              relatio_id,
+    chorda*              genus,
+    chorda*              destinatio_id);
+
 /* Capere relationem per ID
  *
  * Redde: Relatio* si inventum, NIHIL si non inventum

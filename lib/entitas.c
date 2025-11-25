@@ -188,7 +188,6 @@ entitas_relatio_addere(
     chorda*              genus,
     chorda*              destinatio_id)
 {
-    Relatio* relatio;
     chorda   id_chorda;
     chorda*  id_interned;
 
@@ -211,6 +210,30 @@ entitas_relatio_addere(
         redde NIHIL;
     }
 
+    /* Delegare ad entitas_relatio_addere_cum_id */
+    redde entitas_relatio_addere_cum_id(entitas, piscina, intern,
+                                         id_interned, genus, destinatio_id);
+}
+
+Relatio*
+entitas_relatio_addere_cum_id(
+    Entitas*             entitas,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    chorda*              relatio_id,
+    chorda*              genus,
+    chorda*              destinatio_id)
+{
+    Relatio* relatio;
+
+    (vacuum)piscina;  /* Non usatum */
+    (vacuum)intern;   /* Non usatum */
+
+    si (!entitas || !relatio_id || !genus || !destinatio_id)
+    {
+        redde NIHIL;
+    }
+
     /* Addere relationem */
     relatio = (Relatio*)xar_addere(entitas->relationes);
     si (!relatio)
@@ -218,7 +241,7 @@ entitas_relatio_addere(
         redde NIHIL;
     }
 
-    relatio->id            = id_interned;
+    relatio->id            = relatio_id;
     relatio->origo_id      = entitas->id;
     relatio->genus         = genus;
     relatio->destinatio_id = destinatio_id;
