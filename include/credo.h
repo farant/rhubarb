@@ -124,6 +124,17 @@ credo_invenire_fractos (
 			(a) == (b) \
 	)
 
+#define CREDO_INAEQUALITAS_PTR(a, b) \
+	_credo_notare( \
+			"credo_inaequalitas_ptr", \
+			#a " != " #b, \
+			#a, \
+			#b, \
+			__FILE__, \
+			__LINE__, \
+			(a) != (b) \
+	)
+
 #define CREDO_AEQUALIS_S32(a, b) \
 	_credo_notare_integrum( \
 			"credo_aequalis", \
@@ -190,6 +201,38 @@ credo_invenire_fractos (
 
 #define CREDO_CHORDA_TERMINATUR(s, suffixum) \
 	CREDO_VERUM(chorda_terminatur((s), (suffixum)))
+
+#define CREDO_CHORDA_AEQUALIS_LITERIS(s, literis) \
+	_credo_notare_chorda_literis( \
+			"credo_chorda_aequalis_literis", \
+			#s " == " #literis, \
+			(s), \
+			(literis), \
+			__FILE__, \
+			__LINE__ \
+	)
+
+#define CREDO_CHORDA_VACUA(s) \
+	_credo_notare( \
+			"credo_chorda_vacua", \
+			#s ".mensura == 0", \
+			#s, \
+			"", \
+			__FILE__, \
+			__LINE__, \
+			(s).mensura == ZEPHYRUM \
+	)
+
+#define CREDO_CHORDA_NON_VACUA(s) \
+	_credo_notare( \
+			"credo_chorda_non_vacua", \
+			#s ".mensura > 0", \
+			#s, \
+			"", \
+			__FILE__, \
+			__LINE__, \
+			(s).mensura > ZEPHYRUM \
+	)
 
 
 /* ============================================
@@ -349,6 +392,15 @@ _credo_notare_chorda (
 		constans character* genus,
 		constans character* expressio,
 		constans character* valor_primus,
+		constans character* valor_secundus,
+		constans character* filum,
+									 s32  versus);
+
+vacuum
+_credo_notare_chorda_literis (
+		constans character* genus,
+		constans character* expressio,
+		chorda              valor_primus,
 		constans character* valor_secundus,
 		constans character* filum,
 									 s32  versus);

@@ -296,7 +296,7 @@ chorda_fissio (
  * ================================================== */
 
 
-b32 
+b32
 chorda_aequalis (
     chorda a,
     chorda b)
@@ -313,7 +313,43 @@ chorda_aequalis (
 
     redde memcmp(a.datum, b.datum, a.mensura) == ZEPHYRUM;
 }
- 
+
+b32
+chorda_aequalis_literis (
+    chorda              s,
+    constans character* cstr)
+{
+    i32 len;
+    i32 i;
+
+    si (!cstr)
+    {
+        redde FALSUM;
+    }
+
+    /* Mensura literarum */
+    len = ZEPHYRUM;
+    dum (cstr[len] != '\0')
+    {
+        len++;
+    }
+
+    si (s.mensura != len)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < len; i++)
+    {
+        si ((character)s.datum[i] != cstr[i])
+        {
+            redde FALSUM;
+        }
+    }
+
+    redde VERUM;
+}
+
 b32
 chorda_aequalis_case_insensitivus (
     chorda a,

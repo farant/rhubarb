@@ -2,6 +2,7 @@
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 /* ======================================================
@@ -307,6 +308,38 @@ _credo_notare_chorda (
     praeteritus = chorda_aequalis(chorda_primus, chorda_secundus);
 
     _credo_notare(genus, expressio, valor_primus,
+                  valor_secundus, filum, versus, praeteritus);
+}
+
+vacuum
+_credo_notare_chorda_literis (
+    constans character* genus,
+    constans character* expressio,
+    chorda              valor_primus,
+    constans character* valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[256];
+          b32 praeteritus;
+          i32 len_to_copy;
+
+    /* Transcribere chorda ad buffer pro imprimere */
+    len_to_copy = valor_primus.mensura;
+    si (len_to_copy > 255)
+    {
+        len_to_copy = 255;
+    }
+
+    si (valor_primus.datum && len_to_copy > ZEPHYRUM)
+    {
+        memcpy(buffer_primus, valor_primus.datum, (memoriae_index)len_to_copy);
+    }
+    buffer_primus[len_to_copy] = '\0';
+
+    praeteritus = chorda_aequalis_literis(valor_primus, valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus,
                   valor_secundus, filum, versus, praeteritus);
 }
 

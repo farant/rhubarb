@@ -23,39 +23,15 @@ _est_nomen_character(character c)
            c == '_' || c == '-' || c == ':' || c == '.';
 }
 
-/* Comparare chorda cum literis C */
+/* Comparare chorda* cum literis C (adiutor pro nullable pointers) */
 interior b32
-_chorda_aequalis_literis(chorda* ch, constans character* cstr)
+_chorda_ptr_aequalis_literis(chorda* ch, constans character* cstr)
 {
-    i32 len;
-    i32 i;
-
-    si (!ch || !cstr)
+    si (!ch)
     {
         redde FALSUM;
     }
-
-    /* Mensura literarum */
-    len = ZEPHYRUM;
-    dum (cstr[len] != '\0')
-    {
-        len++;
-    }
-
-    si (ch->mensura != len)
-    {
-        redde FALSUM;
-    }
-
-    per (i = ZEPHYRUM; i < len; i++)
-    {
-        si ((character)ch->datum[i] != cstr[i])
-        {
-            redde FALSUM;
-        }
-    }
-
-    redde VERUM;
+    redde chorda_aequalis_literis(*ch, cstr);
 }
 
 /* Praeterire spatium album */
@@ -404,7 +380,7 @@ xml_invenire_liberum(
         si (liberum && liberum->genus == XML_NODUS_ELEMENTUM && liberum->titulus)
         {
             /* Comparare nomina (interned, ergo pointer comparatio) */
-            si (_chorda_aequalis_literis(liberum->titulus, titulus))
+            si (_chorda_ptr_aequalis_literis(liberum->titulus, titulus))
             {
                 redde liberum;
             }
@@ -444,7 +420,7 @@ xml_invenire_omnes_liberos(
         liberum = xml_liberum_ad_indicem(nodus, i);
         si (liberum && liberum->genus == XML_NODUS_ELEMENTUM && liberum->titulus)
         {
-            si (_chorda_aequalis_literis(liberum->titulus, titulus))
+            si (_chorda_ptr_aequalis_literis(liberum->titulus, titulus))
             {
                 slot = xar_addere(resultus);
                 si (slot)
@@ -479,7 +455,7 @@ xml_attributum_capere(
         attr = xar_obtinere(nodus->attributa, i);
         si (attr && attr->titulus)
         {
-            si (_chorda_aequalis_literis(attr->titulus, titulus))
+            si (_chorda_ptr_aequalis_literis(attr->titulus, titulus))
             {
                 redde attr->valor;
             }

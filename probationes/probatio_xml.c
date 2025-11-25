@@ -8,49 +8,15 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Adiutor: comparare chorda cum literis C */
-interior b32
-_chorda_eq_lit(chorda ch, constans character* cstr)
-{
-    i32 len;
-    i32 i;
-
-    si (!cstr)
-    {
-        redde FALSUM;
-    }
-
-    len = ZEPHYRUM;
-    dum (cstr[len] != '\0')
-    {
-        len++;
-    }
-
-    si (ch.mensura != len)
-    {
-        redde FALSUM;
-    }
-
-    per (i = ZEPHYRUM; i < len; i++)
-    {
-        si ((character)ch.datum[i] != cstr[i])
-        {
-            redde FALSUM;
-        }
-    }
-
-    redde VERUM;
-}
-
 /* Adiutor: comparare chorda* cum literis C */
 interior b32
-_chorda_eq_literis(chorda* ch, constans character* cstr)
+_chorda_ptr_eq_literis(chorda* ch, constans character* cstr)
 {
     si (!ch)
     {
         redde FALSUM;
     }
-    redde _chorda_eq_lit(*ch, cstr);
+    redde chorda_aequalis_literis(*ch, cstr);
 }
 
 s32 principale(vacuum)
@@ -90,7 +56,7 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nodus);
         CREDO_AEQUALIS_I32(nodus->genus, XML_NODUS_ELEMENTUM);
         CREDO_NON_NIHIL(nodus->titulus);
-        CREDO_VERUM(_chorda_eq_literis(nodus->titulus, "root"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(nodus->titulus, "root"));
 
         imprimere("  Elementum 'root' creatum: VERUM\n");
     }
@@ -108,7 +74,7 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nodus);
         CREDO_AEQUALIS_I32(nodus->genus, XML_NODUS_TEXTUS);
         CREDO_NON_NIHIL(nodus->valor);
-        CREDO_VERUM(_chorda_eq_literis(nodus->valor, "Hello World"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(nodus->valor, "Hello World"));
 
         imprimere("  Textus 'Hello World' creatum: VERUM\n");
     }
@@ -131,11 +97,11 @@ s32 principale(vacuum)
 
         valor = xml_attributum_capere(nodus, "id");
         CREDO_NON_NIHIL(valor);
-        CREDO_VERUM(_chorda_eq_literis(valor, "123"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(valor, "123"));
 
         valor = xml_attributum_capere(nodus, "class");
         CREDO_NON_NIHIL(valor);
-        CREDO_VERUM(_chorda_eq_literis(valor, "main"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(valor, "main"));
 
         imprimere("  Attributa addita et obtenta: VERUM\n");
     }
@@ -205,10 +171,10 @@ s32 principale(vacuum)
         nodus = xml_elementum_creare(piscina, intern, "empty");
 
         output = xml_scribere(nodus, piscina, FALSUM);
-        CREDO_NON_NIHIL(output.datum);
+        CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_VERUM(_chorda_eq_lit(output, "<empty/>"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<empty/>");
     }
 
     /* ==================================================
@@ -225,10 +191,10 @@ s32 principale(vacuum)
         xml_attributum_addere(nodus, piscina, intern, "id", "42");
 
         output = xml_scribere(nodus, piscina, FALSUM);
-        CREDO_NON_NIHIL(output.datum);
+        CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_VERUM(_chorda_eq_lit(output, "<item id=\"42\"/>"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<item id=\"42\"/>");
     }
 
     /* ==================================================
@@ -247,10 +213,10 @@ s32 principale(vacuum)
         xml_liberum_addere(parens, liberum);
 
         output = xml_scribere(parens, piscina, FALSUM);
-        CREDO_NON_NIHIL(output.datum);
+        CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_VERUM(_chorda_eq_lit(output, "<parent><child/></parent>"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<parent><child/></parent>");
     }
 
     /* ==================================================
@@ -267,10 +233,10 @@ s32 principale(vacuum)
         xml_textum_addere(nodus, piscina, intern, "Hello");
 
         output = xml_scribere(nodus, piscina, FALSUM);
-        CREDO_NON_NIHIL(output.datum);
+        CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_VERUM(_chorda_eq_lit(output, "<greeting>Hello</greeting>"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<greeting>Hello</greeting>");
     }
 
     /* ==================================================
@@ -287,10 +253,10 @@ s32 principale(vacuum)
         xml_textum_addere(nodus, piscina, intern, "<>&");
 
         output = xml_scribere(nodus, piscina, FALSUM);
-        CREDO_NON_NIHIL(output.datum);
+        CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_VERUM(_chorda_eq_lit(output, "<data>&lt;&gt;&amp;</data>"));
+        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<data>&lt;&gt;&amp;</data>");
     }
 
     /* ==================================================
@@ -316,7 +282,7 @@ s32 principale(vacuum)
         xml_liberum_addere(radix, lib2);
 
         output = xml_scribere(radix, piscina, VERUM);
-        CREDO_NON_NIHIL(output.datum);
+        CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output:\n%.*s", output.mensura, output.datum);
     }
@@ -334,7 +300,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
         CREDO_AEQUALIS_I32(res.radix->genus, XML_NODUS_ELEMENTUM);
-        CREDO_VERUM(_chorda_eq_literis(res.radix->titulus, "root"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.radix->titulus, "root"));
 
         imprimere("  Parsatio '<root/>': VERUM\n");
     }
@@ -355,11 +321,11 @@ s32 principale(vacuum)
 
         val = xml_attributum_capere(res.radix, "id");
         CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_eq_literis(val, "42"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "42"));
 
         val = xml_attributum_capere(res.radix, "name");
         CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_eq_literis(val, "test"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "test"));
 
         imprimere("  Parsatio attributa: VERUM\n");
     }
@@ -400,8 +366,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
 
         textus = xml_textus_internus(res.radix, piscina);
-        CREDO_NON_NIHIL(textus.datum);
-        CREDO_VERUM(_chorda_eq_lit(textus, "Hello World"));
+        CREDO_CHORDA_NON_VACUA(textus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "Hello World");
 
         imprimere("  Parsatio textus: VERUM\n");
     }
@@ -421,10 +387,10 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
 
         textus = xml_textus_internus(res.radix, piscina);
-        CREDO_NON_NIHIL(textus.datum);
+        CREDO_CHORDA_NON_VACUA(textus);
 
         imprimere("  Decoded: '%.*s'\n", textus.mensura, textus.datum);
-        CREDO_VERUM(_chorda_eq_lit(textus, "<tag> & \"test\""));
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<tag> & \"test\"");
     }
 
     /* ==================================================
@@ -454,25 +420,25 @@ s32 principale(vacuum)
         /* Verificare radix */
         val = xml_attributum_capere(res.radix, "id");
         CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_eq_literis(val, "abc123"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "abc123"));
 
         val = xml_attributum_capere(res.radix, "genus");
         CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_eq_literis(val, "Pagina"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "Pagina"));
 
         /* Verificare proprietates */
         prop = xml_invenire_liberum(res.radix, "proprietas");
         CREDO_NON_NIHIL(prop);
         val = xml_attributum_capere(prop, "clavis");
         CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_eq_literis(val, "titulus"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "titulus"));
 
         /* Verificare nota */
         nota = xml_invenire_liberum(res.radix, "nota");
         CREDO_NON_NIHIL(nota);
         text = xml_textus_internus(nota, piscina);
-        CREDO_NON_NIHIL(text.datum);
-        CREDO_VERUM(_chorda_eq_lit(text, "#activus"));
+        CREDO_CHORDA_NON_VACUA(text);
+        CREDO_CHORDA_AEQUALIS_LITERIS(text, "#activus");
 
         imprimere("  Parsatio complexa: VERUM\n");
     }
@@ -501,7 +467,7 @@ s32 principale(vacuum)
 
         /* Serialize */
         serialized = xml_scribere(res1.radix, piscina, FALSUM);
-        CREDO_NON_NIHIL(serialized.datum);
+        CREDO_CHORDA_NON_VACUA(serialized);
 
         imprimere("  Serialized: %.*s\n", serialized.mensura, serialized.datum);
 
@@ -564,7 +530,7 @@ s32 principale(vacuum)
             piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
-        CREDO_VERUM(_chorda_eq_literis(res.radix->titulus, "root"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.radix->titulus, "root"));
 
         imprimere("  Declaratio XML saltata: VERUM\n");
     }

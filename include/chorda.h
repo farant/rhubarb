@@ -77,6 +77,11 @@ chorda_aequalis (
 		chorda b);
 
 b32
+chorda_aequalis_literis (
+		chorda              s,
+		constans character* cstr);
+
+b32
 chorda_aequalis_case_insensitivus (
 		chorda a,
 		chorda b);
