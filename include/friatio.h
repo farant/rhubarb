@@ -100,4 +100,89 @@ sha1_friare_chorda(
     chorda clavis,
     i8     digest[SHA1_DIGEST_MENSURA]);
 
+/* ==================================================
+ * SHA-256 (Secure Hash Algorithm 256)
+ *
+ * Cryptographica moderna et secura
+ * Producit 256 bits (32 bytes) digest
+ * Usus: Securitas, integritas, signaturas digitales
+ * ================================================== */
+
+#define SHA256_DIGEST_MENSURA   XXXII  /* 32 bytes */
+#define SHA256_BLOCK_MENSURA    LXIV   /* 64 bytes */
+
+/* Contextus SHA-256 pro hashing incrementale */
+nomen structura {
+    i32 status[VIII];         /* A, B, C, D, E, F, G, H */
+    i32 numerus[II];          /* Bit count (low, high) */
+    i8  buffer[LXIV];         /* Input buffer */
+} SHA256Contextus;
+
+/* Initiare contextum SHA-256 */
+vacuum
+sha256_initiare(
+    SHA256Contextus* ctx);
+
+/* Addere data ad hash (potest vocare multiple) */
+vacuum
+sha256_addere(
+    SHA256Contextus* ctx,
+    constans i8*     data,
+    i32              mensura);
+
+/* Finire et obtinere digest (32 bytes) */
+vacuum
+sha256_finire(
+    SHA256Contextus* ctx,
+    i8               digest[SHA256_DIGEST_MENSURA]);
+
+/* Convenientia: hash data in uno passu */
+vacuum
+sha256_friare(
+    constans i8* data,
+    i32          mensura,
+    i8           digest[SHA256_DIGEST_MENSURA]);
+
+/* Convenientia: hash chorda in uno passu */
+vacuum
+sha256_friare_chorda(
+    chorda clavis,
+    i8     digest[SHA256_DIGEST_MENSURA]);
+
+/* ==================================================
+ * CRC32 (Cyclic Redundancy Check)
+ *
+ * Non-cryptographica, pro integritate datorum
+ * Producit 32 bits checksum
+ * Usus: Verificatio filorum, packets, checksums
+ * Polynomium: 0xEDB88320 (IEEE 802.3)
+ * ================================================== */
+
+/* Calculare CRC32 de data */
+i32
+crc32_calculare(
+    constans i8* data,
+    i32          mensura);
+
+/* Calculare CRC32 de chorda */
+i32
+crc32_calculare_chorda(
+    chorda clavis);
+
+/* CRC32 incrementale - initiare */
+i32
+crc32_initiare(vacuum);
+
+/* CRC32 incrementale - addere data */
+i32
+crc32_addere(
+    i32          crc_currens,
+    constans i8* data,
+    i32          mensura);
+
+/* CRC32 incrementale - finire (invertere bits) */
+i32
+crc32_finire(
+    i32 crc_currens);
+
 #endif /* FRIATIO_H */
