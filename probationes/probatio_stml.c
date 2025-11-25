@@ -945,6 +945,253 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare parser.test.ts equivalents
+     * ================================================== */
+
+    imprimere("\n--- Probans parser features ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus*   p;
+        i32          num_children;
+
+        /* Mixed content: text + elements interleaved */
+        res = stml_legere_ex_literis("<p>Text before <b>bold</b> text after</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        p = res.elementum_radix;
+        CREDO_NON_NIHIL(p);
+
+        /* Should have 3 children: text, element, text */
+        num_children = stml_numerus_liberorum(p);
+        CREDO_AEQUALIS_I32(num_children, III);
+
+        /* First child is text */
+        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, ZEPHYRUM)->genus, STML_NODUS_TEXTUS);
+
+        /* Second child is <b> element */
+        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, I)->genus, STML_NODUS_ELEMENTUM);
+        CREDO_VERUM(_chorda_ptr_eq_literis(stml_liberum_ad_indicem(p, I)->titulus, "b"));
+
+        /* Third child is text */
+        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, II)->genus, STML_NODUS_TEXTUS);
+
+        imprimere("  Mixed content: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   root;
+        chorda*      xmlns_attr;
+
+        /* Namespace attributes */
+        res = stml_legere_ex_literis(
+            "<root xmlns:custom=\"http://example.com\"><custom:element>value</custom:element></root>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        root = res.elementum_radix;
+        CREDO_NON_NIHIL(root);
+
+        /* Check namespace attribute */
+        xmlns_attr = stml_attributum_capere(root, "xmlns:custom");
+        CREDO_NON_NIHIL(xmlns_attr);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*xmlns_attr, "http://example.com");
+
+        /* Check namespaced child element */
+        CREDO_NON_NIHIL(stml_invenire_liberum(root, "custom:element"));
+
+        imprimere("  Namespace attributes: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        Xar*         items;
+
+        /* Recursive getElementsByTagName equivalent */
+        res = stml_legere_ex_literis(
+            "<root><item>1</item><nested><item>2</item></nested></root>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        si (res.successus)
+        {
+            /* stml_invenire_omnes_liberos only finds direct children */
+            items = stml_invenire_omnes_liberos(res.elementum_radix, "item", piscina);
+            CREDO_AEQUALIS_I32(xar_numerus(items), I);  /* Only 1 direct child */
+        }
+
+        imprimere("  Direct children search: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare capture-operators.test.ts equivalents
+     * ================================================== */
+
+    imprimere("\n--- Probans capture operators (extended) ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus*   div;
+        chorda       textus;
+
+        /* Text node capture: <div (>hello world */
+        res = stml_legere_ex_literis("<root><div (>hello world</root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        div = stml_invenire_liberum(res.elementum_radix, "div");
+        CREDO_NON_NIHIL(div);
+
+        /* Text should be captured as child of div */
+        textus = stml_textus_internus(div, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "hello world");
+
+        imprimere("  Text node capture: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   div;
+
+        /* Multiple parens capture multiple nodes: <div (((> captures 3 siblings */
+        res = stml_legere_ex_literis(
+            "<root><div (((><a/><b/><c/><d/></root>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        div = stml_invenire_liberum(res.elementum_radix, "div");
+        CREDO_NON_NIHIL(div);
+
+        /* Should have captured a, b, c (3 nodes) but not d */
+        CREDO_NON_NIHIL(stml_invenire_liberum(div, "a"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(div, "b"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(div, "c"));
+        CREDO_NIHIL(stml_invenire_liberum(div, "d"));
+
+        /* d should still be in root */
+        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix, "d"));
+
+        imprimere("  Multiple parens capture: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   wrapper;
+        chorda       textus;
+
+        /* Backward capture of text: text content <) wrapper> */
+        res = stml_legere_ex_literis("<root>some text<) wrapper></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
+        CREDO_NON_NIHIL(wrapper);
+
+        /* Text should be captured by wrapper */
+        textus = stml_textus_internus(wrapper, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "some text");
+
+        imprimere("  Backward text capture: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   wrapper;
+
+        /* Multiple backward capture: <)) wrapper> captures 2 previous siblings */
+        res = stml_legere_ex_literis("<root><a/><b/><c/><)) wrapper></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
+        CREDO_NON_NIHIL(wrapper);
+
+        /* Should have captured b and c (2 nodes) but not a */
+        CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "b"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "c"));
+        CREDO_NIHIL(stml_invenire_liberum(wrapper, "a"));
+
+        /* a should still be in root */
+        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix, "a"));
+
+        imprimere("  Multiple backward capture: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   forward;
+        StmlNodus*   backward;
+
+        /* Mixed operators: <forward (> <) backward> */
+        res = stml_legere_ex_literis("<root><forward (><) backward></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        forward = stml_invenire_liberum(res.elementum_radix, "forward");
+        CREDO_NON_NIHIL(forward);
+
+        /* backward should be captured by forward */
+        backward = stml_invenire_liberum(forward, "backward");
+        CREDO_NON_NIHIL(backward);
+
+        /* backward has no children (nothing before it to capture) */
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(backward), ZEPHYRUM);
+
+        imprimere("  Mixed operators: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   wrapper;
+
+        /* Simple sandwich with both siblings */
+        res = stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
+        CREDO_NON_NIHIL(wrapper);
+
+        si (wrapper)
+        {
+            /* wrapper should have captured a (before) and b (after) */
+            CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "a"));
+            CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "b"));
+        }
+
+        imprimere("  Sandwich with both siblings: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   wrapper;
+
+        /* Self-closing tag capture */
+        res = stml_legere_ex_literis("<root><wrapper (><img/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
+        CREDO_NON_NIHIL(wrapper);
+
+        CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "img"));
+
+        imprimere("  Self-closing capture: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   div;
+
+        /* Not enough nodes for multiple capture - should capture what's available */
+        res = stml_legere_ex_literis("<root><div (((><only/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        div = stml_invenire_liberum(res.elementum_radix, "div");
+        CREDO_NON_NIHIL(div);
+
+        /* Should have captured the only available node */
+        CREDO_NON_NIHIL(stml_invenire_liberum(div, "only"));
+
+        imprimere("  Partial capture: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
