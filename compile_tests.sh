@@ -44,6 +44,7 @@ declare -a SOURCE_FILES=(
 	"lib/nuntium.c"
 	"lib/graphus_persistens.c"
 	"lib/friatio.c"
+	"lib/xml.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)
