@@ -3,7 +3,7 @@
 
 #include "latina.h"
 #include "entitas.h"
-#include "entitas_providor.h"
+#include "entitas_repositorium.h"
 #include "piscina.h"
 #include "fenestra.h"
 #include "xar.h"
@@ -41,8 +41,8 @@ nomen structura {
  * "Entity navigator - Widget for graph exploration"
  */
 nomen structura {
-    EntitasProvidor* providor;
-    Piscina*         piscina;
+    EntitasRepositorium* repositorium;
+    Piscina*             piscina;
 
     /* Via navigationis (historia) */
     Xar* via;  /* Xar de ItemHistoriae - dynamic path stack */
@@ -66,14 +66,14 @@ nomen structura {
  * ================================================== */
 
 /* Creare navigatorem novum
- * Si providor habet radices, navigat ad primam radicem
+ * Si repositorium habet radices, navigat ad primam radicem
  *
  * Redde: Navigator novus, vel NIHIL si fractura
  */
 NavigatorEntitatum*
 navigator_entitatum_creare(
-    Piscina*         piscina,
-    EntitasProvidor* providor);
+    Piscina*             piscina,
+    EntitasRepositorium* repositorium);
 
 
 /* ==================================================

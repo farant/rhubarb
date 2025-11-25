@@ -336,7 +336,7 @@ main(void)
 {
     Piscina*             piscina;
     GraphusEntitatum*    graphus;
-    EntitasProvidor*     providor;
+    EntitasRepositorium* repositorium;
     NavigatorEntitatum*  navigator;
     Pagina               pagina;
     Fenestra*            fenestra;
@@ -375,16 +375,16 @@ main(void)
     /* Creare entitates probationis */
     creare_graphum_probationis(graphus);
 
-    /* Creare providor */
-    providor = graphus_entitatum_providor_creare(graphus);
-    si (!providor)
+    /* Creare repositorium */
+    repositorium = graphus_entitatum_repositorium_creare(graphus);
+    si (!repositorium)
     {
-        imprimere("Fractura: non potest creare providor\n");
+        imprimere("Fractura: non potest creare repositorium\n");
         redde I;
     }
 
     /* Creare navigator */
-    navigator = navigator_entitatum_creare(piscina, providor);
+    navigator = navigator_entitatum_creare(piscina, repositorium);
     si (!navigator)
     {
         imprimere("Fractura: non potest creare navigator\n");

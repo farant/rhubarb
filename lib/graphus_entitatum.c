@@ -1,8 +1,9 @@
 #include "graphus_entitatum.h"
+#include "uuid.h"
 #include <string.h>
 
 /* ==================================================
- * Functiones Implementationis Providor (Interior)
+ * Functiones Implementationis Repositorium - Lectio (Interior)
  * ================================================== */
 
 interior Entitas*
@@ -505,45 +506,321 @@ graphus_entitatum_deregistrare_relatio(
 
 
 /* ==================================================
- * Providor Interface
+ * Functiones Implementationis Repositorium - Scriptio (Interior)
  * ================================================== */
 
-EntitasProvidor*
-graphus_entitatum_providor_creare(
+interior Entitas*
+_impl_entitas_creare(
+    vacuum*             datum,
+    constans character* genus)
+{
+    GraphusEntitatum* graphus;
+    chorda*           id_internatum;
+    chorda*           genus_internatum;
+    Entitas*          entitas;
+    chorda            uuid_chorda;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !genus)
+    {
+        redde NIHIL;
+    }
+
+    /* Generare UUIDv7 */
+    uuid_chorda = uuidv7_creare(graphus->piscina);
+    si (!uuid_chorda.datum)
+    {
+        redde NIHIL;
+    }
+
+    /* Internare ID et genus */
+    id_internatum = chorda_internare(graphus->intern, uuid_chorda);
+    si (!id_internatum)
+    {
+        redde NIHIL;
+    }
+
+    genus_internatum = chorda_internare_ex_literis(graphus->intern, genus);
+    si (!genus_internatum)
+    {
+        redde NIHIL;
+    }
+
+    /* Creare entitatem */
+    entitas = entitas_creare(graphus->piscina, id_internatum, genus_internatum);
+    si (!entitas)
+    {
+        redde NIHIL;
+    }
+
+    /* Addere ad graphum */
+    si (!graphus_entitatum_addere_entitatem(graphus, entitas))
+    {
+        redde NIHIL;
+    }
+
+    redde entitas;
+}
+
+interior b32
+_impl_entitas_delere(
+    vacuum* datum,
+    chorda* id)
+{
+    GraphusEntitatum* graphus;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !id)
+    {
+        redde FALSUM;
+    }
+
+    /* Delere ex tabula dispersa */
+    redde tabula_dispersa_delere(graphus->entitates, *id);
+}
+
+interior b32
+_impl_proprietas_ponere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* clavis,
+    constans character* valor)
+{
+    GraphusEntitatum* graphus;
+    chorda*           clavis_internata;
+    chorda*           valor_internatus;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !entitas || !clavis || !valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Internare clavis et valor */
+    clavis_internata = chorda_internare_ex_literis(graphus->intern, clavis);
+    si (!clavis_internata)
+    {
+        redde FALSUM;
+    }
+
+    valor_internatus = chorda_internare_ex_literis(graphus->intern, valor);
+    si (!valor_internatus)
+    {
+        redde FALSUM;
+    }
+
+    redde entitas_proprietas_addere(entitas, clavis_internata, valor_internatus);
+}
+
+interior b32
+_impl_proprietas_delere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* clavis)
+{
+    GraphusEntitatum* graphus;
+    chorda*           clavis_internata;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !entitas || !clavis)
+    {
+        redde FALSUM;
+    }
+
+    /* Internare clavis */
+    clavis_internata = chorda_internare_ex_literis(graphus->intern, clavis);
+    si (!clavis_internata)
+    {
+        redde FALSUM;
+    }
+
+    redde entitas_proprietas_delere(entitas, clavis_internata);
+}
+
+interior Relatio*
+_impl_relatio_addere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* genus,
+    chorda*             destinatio_id)
+{
+    GraphusEntitatum* graphus;
+    chorda*           genus_internatum;
+    Relatio*          relatio;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !entitas || !genus || !destinatio_id)
+    {
+        redde NIHIL;
+    }
+
+    /* Internare genus */
+    genus_internatum = chorda_internare_ex_literis(graphus->intern, genus);
+    si (!genus_internatum)
+    {
+        redde NIHIL;
+    }
+
+    /* Addere relationem */
+    relatio = entitas_relatio_addere(
+        entitas,
+        graphus->piscina,
+        graphus->intern,
+        genus_internatum,
+        destinatio_id);
+
+    si (!relatio)
+    {
+        redde NIHIL;
+    }
+
+    /* Registrare in indice */
+    graphus_entitatum_registrare_relatio(graphus, relatio);
+
+    redde relatio;
+}
+
+interior b32
+_impl_relatio_delere(
+    vacuum* datum,
+    chorda* relatio_id)
+{
+    GraphusEntitatum* graphus;
+    TabulaIterator    iter;
+    chorda            clavis;
+    vacuum*           valor;
+    Entitas*          entitas;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !relatio_id)
+    {
+        redde FALSUM;
+    }
+
+    /* Deregistrare ex indice */
+    graphus_entitatum_deregistrare_relatio(graphus, relatio_id);
+
+    /* Quaerere entitatem cum hac relatione et delere */
+    iter = tabula_dispersa_iterator_initium(graphus->entitates);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        entitas = (Entitas*)valor;
+        si (entitas_relatio_delere(entitas, relatio_id))
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
+interior b32
+_impl_nota_addere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* nota)
+{
+    GraphusEntitatum* graphus;
+    chorda*           nota_internata;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !entitas || !nota)
+    {
+        redde FALSUM;
+    }
+
+    /* Internare nota */
+    nota_internata = chorda_internare_ex_literis(graphus->intern, nota);
+    si (!nota_internata)
+    {
+        redde FALSUM;
+    }
+
+    redde entitas_nota_addere(entitas, nota_internata);
+}
+
+interior b32
+_impl_nota_delere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* nota)
+{
+    GraphusEntitatum* graphus;
+    chorda*           nota_internata;
+
+    graphus = (GraphusEntitatum*)datum;
+
+    si (!graphus || !entitas || !nota)
+    {
+        redde FALSUM;
+    }
+
+    /* Internare nota */
+    nota_internata = chorda_internare_ex_literis(graphus->intern, nota);
+    si (!nota_internata)
+    {
+        redde FALSUM;
+    }
+
+    redde entitas_nota_delere(entitas, nota_internata);
+}
+
+
+/* ==================================================
+ * Repositorium Interface
+ * ================================================== */
+
+EntitasRepositorium*
+graphus_entitatum_repositorium_creare(
     GraphusEntitatum* graphus)
 {
-    EntitasProvidor* providor;
+    EntitasRepositorium* repositorium;
 
     si (!graphus)
     {
         redde NIHIL;
     }
 
-    /* Allocare structuram providor */
-    providor = (EntitasProvidor*)piscina_allocare(
+    /* Allocare structuram repositorium */
+    repositorium = (EntitasRepositorium*)piscina_allocare(
         graphus->piscina,
-        magnitudo(EntitasProvidor));
-    si (!providor)
+        magnitudo(EntitasRepositorium));
+    si (!repositorium)
     {
         redde NIHIL;
     }
 
     /* Ponere datum */
-    providor->datum = graphus;
+    repositorium->datum = graphus;
 
-    /* Ponere indices functionum */
-    providor->capere_entitatem             = _impl_capere_entitatem;
-    providor->capere_entitates_relatae     = _impl_capere_entitates_relatae;
-    providor->quaerere_cum_nota            = _impl_quaerere_cum_nota;
-    providor->quaerere_cum_praefixo_notae  = _impl_quaerere_cum_praefixo_notae;
-    providor->quaerere_textum              = _impl_quaerere_textum;
-    providor->capere_radices               = _impl_capere_radices;
+    /* Ponere indices functionum - Lectio */
+    repositorium->capere_entitatem             = _impl_capere_entitatem;
+    repositorium->capere_entitates_relatae     = _impl_capere_entitates_relatae;
+    repositorium->quaerere_cum_nota            = _impl_quaerere_cum_nota;
+    repositorium->quaerere_cum_praefixo_notae  = _impl_quaerere_cum_praefixo_notae;
+    repositorium->quaerere_textum              = _impl_quaerere_textum;
+    repositorium->capere_radices               = _impl_capere_radices;
+    repositorium->capere_relatio               = _impl_capere_relatio;
+    repositorium->capere_relationes_ad         = _impl_capere_relationes_ad;
 
-    /* Functiones relationum */
-    providor->capere_relatio               = _impl_capere_relatio;
-    providor->capere_relationes_ad         = _impl_capere_relationes_ad;
+    /* Ponere indices functionum - Scriptio */
+    repositorium->entitas_creare               = _impl_entitas_creare;
+    repositorium->entitas_delere               = _impl_entitas_delere;
+    repositorium->proprietas_ponere            = _impl_proprietas_ponere;
+    repositorium->proprietas_delere            = _impl_proprietas_delere;
+    repositorium->relatio_addere               = _impl_relatio_addere;
+    repositorium->relatio_delere               = _impl_relatio_delere;
+    repositorium->nota_addere                  = _impl_nota_addere;
+    repositorium->nota_delere                  = _impl_nota_delere;
 
-    redde providor;
+    redde repositorium;
 }
 
 

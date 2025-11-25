@@ -204,14 +204,14 @@ _calcular_items_per_pagina(
 
 NavigatorEntitatum*
 navigator_entitatum_creare(
-    Piscina*         piscina,
-    EntitasProvidor* providor)
+    Piscina*             piscina,
+    EntitasRepositorium* repositorium)
 {
     NavigatorEntitatum* nav;
     Xar*                radices;
     Entitas**           radix_slot;
 
-    si (!piscina || !providor)
+    si (!piscina || !repositorium)
     {
         redde NIHIL;
     }
@@ -226,7 +226,7 @@ navigator_entitatum_creare(
     }
 
     /* Initiare campos */
-    nav->providor           = providor;
+    nav->repositorium       = repositorium;
     nav->piscina            = piscina;
     nav->entitas_currens    = NIHIL;
     nav->numerus_itemorum   = ZEPHYRUM;
@@ -242,7 +242,7 @@ navigator_entitatum_creare(
     }
 
     /* Tentare navigare ad primam radicem */
-    radices = providor->capere_radices(providor->datum);
+    radices = repositorium->capere_radices(repositorium->datum);
     si (radices && xar_numerus(radices) > ZEPHYRUM)
     {
         radix_slot = (Entitas**)xar_obtinere(radices, ZEPHYRUM);
@@ -275,9 +275,9 @@ navigator_entitatum_navigare_ad(
         redde FALSUM;
     }
 
-    /* Capere novam entitatem ex providor */
-    nova_entitas = nav->providor->capere_entitatem(
-        nav->providor->datum,
+    /* Capere novam entitatem ex repositorium */
+    nova_entitas = nav->repositorium->capere_entitatem(
+        nav->repositorium->datum,
         entitas_id);
     si (!nova_entitas)
     {
@@ -335,8 +335,8 @@ navigator_entitatum_retro(
     }
 
     /* Capere entitatem */
-    entitas_praecedens = nav->providor->capere_entitatem(
-        nav->providor->datum,
+    entitas_praecedens = nav->repositorium->capere_entitatem(
+        nav->repositorium->datum,
         item_historiae->entitas_id);
     si (!entitas_praecedens)
     {
@@ -913,8 +913,8 @@ navigator_entitatum_reddere(
         item_historiae = (ItemHistoriae*)xar_obtinere(nav->via, numerus_items_via - I);
         si (item_historiae)
         {
-            entitas_parens = nav->providor->capere_entitatem(
-                nav->providor->datum,
+            entitas_parens = nav->repositorium->capere_entitatem(
+                nav->repositorium->datum,
                 item_historiae->entitas_id);
         }
     }

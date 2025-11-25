@@ -71,47 +71,47 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
-     * Probare providor capere_entitatem
+     * Probare repositorium capere_entitatem
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-                Entitas* ent_found;
-                 chorda* id;
+        EntitasRepositorium* repositorium;
+                    Entitas* ent_found;
+                     chorda* id;
 
-        imprimere("\n--- Probans providor capere_entitatem ---\n");
+        imprimere("\n--- Probans repositorium capere_entitatem ---\n");
 
-        providor = graphus_entitatum_providor_creare(graphus);
-        CREDO_NON_NIHIL(providor);
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        CREDO_NON_NIHIL(repositorium);
 
         /* Capere entitatem existentem */
         id = chorda_internare_ex_literis(intern, "ent-1");
-        ent_found = providor->capere_entitatem(providor->datum, id);
+        ent_found = repositorium->capere_entitatem(repositorium->datum, id);
         CREDO_NON_NIHIL(ent_found);
         CREDO_VERUM(ent_found->id == id);
 
         /* Capere entitatem non existentem */
         id = chorda_internare_ex_literis(intern, "non-existent");
-        ent_found = providor->capere_entitatem(providor->datum, id);
+        ent_found = repositorium->capere_entitatem(repositorium->datum, id);
         CREDO_NIHIL(ent_found);
     }
 
     /* ==================================================
-     * Probare providor capere_entitates_relatae
+     * Probare repositorium capere_entitates_relatae
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         parens;
-        Entitas*         filius1;
-        Entitas*         filius2;
-        chorda*          id_parens;
-        chorda*          id_filius1;
-        chorda*          id_filius2;
-        chorda*          genus_relatio;
-        Xar*             filii;
+        EntitasRepositorium* repositorium;
+        Entitas*             parens;
+        Entitas*             filius1;
+        Entitas*             filius2;
+        chorda*              id_parens;
+        chorda*              id_filius1;
+        chorda*              id_filius2;
+        chorda*              genus_relatio;
+        Xar*                 filii;
 
-        imprimere("\n--- Probans providor capere_entitates_relatae ---\n");
+        imprimere("\n--- Probans repositorium capere_entitates_relatae ---\n");
 
         /* Creare parens cum duobus filiis */
         id_parens  = chorda_internare_ex_literis(intern, "folder-1");
@@ -136,26 +136,26 @@ s32 principale(vacuum)
         entitas_relatio_addere(parens, piscina, intern, genus_relatio, id_filius2);
 
         /* Capere entitates relatas */
-        providor = graphus_entitatum_providor_creare(graphus);
-        filii = providor->capere_entitates_relatae(providor->datum, parens, genus_relatio);
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        filii = repositorium->capere_entitates_relatae(repositorium->datum, parens, genus_relatio);
 
         CREDO_NON_NIHIL(filii);
         CREDO_AEQUALIS_I32(xar_numerus(filii), II);
     }
 
     /* ==================================================
-     * Probare providor quaerere_cum_nota
+     * Probare repositorium quaerere_cum_nota
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         ent1;
-        Entitas*         ent2;
-        Entitas*         ent3;
-        chorda*          nota_urgent;
-        Xar*             resultus;
+        EntitasRepositorium* repositorium;
+        Entitas*             ent1;
+        Entitas*             ent2;
+        Entitas*             ent3;
+        chorda*              nota_urgent;
+        Xar*                 resultus;
 
-        imprimere("\n--- Probans providor quaerere_cum_nota ---\n");
+        imprimere("\n--- Probans repositorium quaerere_cum_nota ---\n");
 
         /* Creare entitates cum notis */
         ent1 = entitas_creare(piscina,
@@ -178,24 +178,24 @@ s32 principale(vacuum)
         graphus_entitatum_addere_entitatem(graphus, ent3);
 
         /* Quaerere cum nota */
-        providor = graphus_entitatum_providor_creare(graphus);
-        resultus = providor->quaerere_cum_nota(providor->datum, nota_urgent);
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        resultus = repositorium->quaerere_cum_nota(repositorium->datum, nota_urgent);
 
         CREDO_NON_NIHIL(resultus);
         CREDO_AEQUALIS_I32(xar_numerus(resultus), II);
     }
 
     /* ==================================================
-     * Probare providor quaerere_cum_praefixo_notae
+     * Probare repositorium quaerere_cum_praefixo_notae
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         ent1;
-        Entitas*         ent2;
-        Xar*             resultus;
+        EntitasRepositorium* repositorium;
+        Entitas*             ent1;
+        Entitas*             ent2;
+        Xar*                 resultus;
 
-        imprimere("\n--- Probans providor quaerere_cum_praefixo_notae ---\n");
+        imprimere("\n--- Probans repositorium quaerere_cum_praefixo_notae ---\n");
 
         /* Creare entitates cum notis namespace */
         ent1 = entitas_creare(piscina,
@@ -214,25 +214,25 @@ s32 principale(vacuum)
         graphus_entitatum_addere_entitatem(graphus, ent2);
 
         /* Quaerere cum praefixo */
-        providor = graphus_entitatum_providor_creare(graphus);
-        resultus = providor->quaerere_cum_praefixo_notae(providor->datum, "#project::");
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        resultus = repositorium->quaerere_cum_praefixo_notae(repositorium->datum, "#project::");
 
         CREDO_NON_NIHIL(resultus);
         CREDO_AEQUALIS_I32(xar_numerus(resultus), II);
     }
 
     /* ==================================================
-     * Probare providor quaerere_textum
+     * Probare repositorium quaerere_textum
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         ent1;
-        Entitas*         ent2;
-        Entitas*         ent3;
-        Xar*             resultus;
+        EntitasRepositorium* repositorium;
+        Entitas*             ent1;
+        Entitas*             ent2;
+        Entitas*             ent3;
+        Xar*                 resultus;
 
-        imprimere("\n--- Probans providor quaerere_textum ---\n");
+        imprimere("\n--- Probans repositorium quaerere_textum ---\n");
 
         /* Creare entitates cum proprietatibus */
         ent1 = entitas_creare(piscina,
@@ -260,32 +260,32 @@ s32 principale(vacuum)
         graphus_entitatum_addere_entitatem(graphus, ent3);
 
         /* Quaerere per ID substring */
-        providor = graphus_entitatum_providor_creare(graphus);
-        resultus = providor->quaerere_textum(providor->datum, "apple");
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        resultus = repositorium->quaerere_textum(repositorium->datum, "apple");
 
         CREDO_NON_NIHIL(resultus);
         CREDO_AEQUALIS_I32(xar_numerus(resultus), I);  /* apple-doc */
 
         /* Quaerere per proprietas valor substring */
-        resultus = providor->quaerere_textum(providor->datum, "bread");
+        resultus = repositorium->quaerere_textum(repositorium->datum, "bread");
 
         CREDO_NON_NIHIL(resultus);
         CREDO_AEQUALIS_I32(xar_numerus(resultus), I);  /* banana-doc */
     }
 
     /* ==================================================
-     * Probare providor capere_radices
+     * Probare repositorium capere_radices
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         root1;
-        Entitas*         root2;
-        Entitas*         non_root;
-        chorda*          nota_root;
-        Xar*             radices;
+        EntitasRepositorium* repositorium;
+        Entitas*             root1;
+        Entitas*             root2;
+        Entitas*             non_root;
+        chorda*              nota_root;
+        Xar*                 radices;
 
-        imprimere("\n--- Probans providor capere_radices ---\n");
+        imprimere("\n--- Probans repositorium capere_radices ---\n");
 
         /* Creare entitates, aliquae cum nota #root */
         root1 = entitas_creare(piscina,
@@ -307,8 +307,8 @@ s32 principale(vacuum)
         graphus_entitatum_addere_entitatem(graphus, non_root);
 
         /* Capere radices */
-        providor = graphus_entitatum_providor_creare(graphus);
-        radices = providor->capere_radices(providor->datum);
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        radices = repositorium->capere_radices(repositorium->datum);
 
         CREDO_NON_NIHIL(radices);
         CREDO_AEQUALIS_I32(xar_numerus(radices), II);
@@ -357,18 +357,18 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
-     * Probare providor capere_relatio
+     * Probare repositorium capere_relatio
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         ent_x;
-        Entitas*         ent_y;
-        Relatio*         relatio;
-        Relatio*         relatio_found;
-        chorda*          genus_rel;
+        EntitasRepositorium* repositorium;
+        Entitas*             ent_x;
+        Entitas*             ent_y;
+        Relatio*             relatio;
+        Relatio*             relatio_found;
+        chorda*              genus_rel;
 
-        imprimere("\n--- Probans providor capere_relatio ---\n");
+        imprimere("\n--- Probans repositorium capere_relatio ---\n");
 
         /* Creare entitates et relationem */
         ent_x = entitas_creare(piscina,
@@ -388,9 +388,9 @@ s32 principale(vacuum)
         /* Registrare in indice */
         graphus_entitatum_registrare_relatio(graphus, relatio);
 
-        /* Capere per providor */
-        providor = graphus_entitatum_providor_creare(graphus);
-        relatio_found = providor->capere_relatio(providor->datum, relatio->id);
+        /* Capere per repositorium */
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        relatio_found = repositorium->capere_relatio(repositorium->datum, relatio->id);
 
         CREDO_NON_NIHIL(relatio_found);
         CREDO_AEQUALIS_PTR(relatio_found, relatio);
@@ -398,27 +398,27 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_PTR(relatio_found->destinatio_id, ent_y->id);
 
         /* Capere non existentem */
-        relatio_found = providor->capere_relatio(
-            providor->datum,
+        relatio_found = repositorium->capere_relatio(
+            repositorium->datum,
             chorda_internare_ex_literis(intern, "non-existent-rel"));
         CREDO_NIHIL(relatio_found);
     }
 
     /* ==================================================
-     * Probare providor capere_relationes_ad
+     * Probare repositorium capere_relationes_ad
      * ================================================== */
 
     {
-        EntitasProvidor* providor;
-        Entitas*         target;
-        Entitas*         src1;
-        Entitas*         src2;
-        Relatio*         rel1;
-        Relatio*         rel2;
-        chorda*          genus_rel;
-        Xar*             relationes_ad;
+        EntitasRepositorium* repositorium;
+        Entitas*             target;
+        Entitas*             src1;
+        Entitas*             src2;
+        Relatio*             rel1;
+        Relatio*             rel2;
+        chorda*              genus_rel;
+        Xar*                 relationes_ad;
 
-        imprimere("\n--- Probans providor capere_relationes_ad ---\n");
+        imprimere("\n--- Probans repositorium capere_relationes_ad ---\n");
 
         /* Creare target et duas fontes */
         target = entitas_creare(piscina,
@@ -448,8 +448,8 @@ s32 principale(vacuum)
         graphus_entitatum_registrare_relatio(graphus, rel2);
 
         /* Capere relationes AD target */
-        providor = graphus_entitatum_providor_creare(graphus);
-        relationes_ad = providor->capere_relationes_ad(providor->datum, target->id);
+        repositorium = graphus_entitatum_repositorium_creare(graphus);
+        relationes_ad = repositorium->capere_relationes_ad(repositorium->datum, target->id);
 
         CREDO_NON_NIHIL(relationes_ad);
         CREDO_AEQUALIS_I32(xar_numerus(relationes_ad), II);

@@ -3,7 +3,7 @@
 
 #include "latina.h"
 #include "entitas.h"
-#include "entitas_providor.h"
+#include "entitas_repositorium.h"
 #include "tabula_dispersa.h"
 #include "internamentum.h"
 #include "piscina.h"
@@ -11,7 +11,7 @@
 /* ==================================================
  * GraphusEntitatum - Repositorium Entitatum Concretum
  *
- * Implementatio concreta EntitasProvidor
+ * Implementatio concreta EntitasRepositorium
  * Entitates in tabula dispersa (hash table) conservat
  * ================================================== */
 
@@ -77,16 +77,16 @@ graphus_entitatum_deregistrare_relatio(
 
 
 /* ==================================================
- * Providor Interface
+ * Repositorium Interface
  * ================================================== */
 
-/* Creare EntitasProvidor ex GraphusEntitatum
+/* Creare EntitasRepositorium ex GraphusEntitatum
  * Reddit interfacem abstractam ad hunc graphum
  *
- * Redde: EntitasProvidor*, vel NIHIL si fractura
+ * Redde: EntitasRepositorium*, vel NIHIL si fractura
  */
-EntitasProvidor*
-graphus_entitatum_providor_creare(
+EntitasRepositorium*
+graphus_entitatum_repositorium_creare(
     GraphusEntitatum* graphus);
 
 
