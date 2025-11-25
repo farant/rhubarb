@@ -1,203 +1,9 @@
 #include "uuid.h"
+#include "friatio.h"
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 #include <stdlib.h>  /* arc4random_buf on macOS */
-
-/* ==================================================
- * SHA-1 Implementation (for UUIDv5)
- * ================================================== */
-
-/* SHA-1 produces 20 bytes (160 bits) hash */
-#define SHA1_DIGEST_SIZE XX
-
-/* SHA-1 context structure */
-nomen structura {
-    i32 state[V];       /* A, B, C, D, E */
-    i32 count[II];      /* Bit count (low, high) */
-    i8  buffer[LXIV];   /* Input buffer */
-} SHA1Context;
-
-/* Left rotate 32-bit value */
-#define SHA1_ROL(value, bits) (((value) << (bits)) | ((value) >> (XXXII - (bits))))
-
-/* SHA-1 round functions */
-#define SHA1_F0(b,c,d) (((b) & (c)) | ((~(b)) & (d)))
-#define SHA1_F1(b,c,d) ((b) ^ (c) ^ (d))
-#define SHA1_F2(b,c,d) (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
-#define SHA1_F3(b,c,d) ((b) ^ (c) ^ (d))
-
-/* SHA-1 constants */
-#define SHA1_K0 0x5A827999UL
-#define SHA1_K1 0x6ED9EBA1UL
-#define SHA1_K2 0x8F1BBCDCUL
-#define SHA1_K3 0xCA62C1D6UL
-
-interior vacuum
-_sha1_transform(i32 state[V], constans i8 buffer[LXIV])
-{
-    i32 a, b, c, d, e;
-    i32 w[LXXX];
-    i32 i;
-
-    /* Copy buffer into 16 32-bit words (big-endian) */
-    per (i = ZEPHYRUM; i < XVI; i++)
-    {
-        w[i] = ((i32)((i8)buffer[i * IV] & 0xFF) << XXIV) |
-               ((i32)((i8)buffer[i * IV + I] & 0xFF) << XVI) |
-               ((i32)((i8)buffer[i * IV + II] & 0xFF) << VIII) |
-               ((i32)((i8)buffer[i * IV + III] & 0xFF));
-    }
-
-    /* Extend the sixteen 32-bit words into eighty 32-bit words */
-    per (i = XVI; i < LXXX; i++)
-    {
-        w[i] = SHA1_ROL(w[i - III] ^ w[i - VIII] ^ w[i - XIV] ^ w[i - XVI], I);
-    }
-
-    /* Initialize working variables */
-    a = state[ZEPHYRUM];
-    b = state[I];
-    c = state[II];
-    d = state[III];
-    e = state[IV];
-
-    /* Main loop */
-    per (i = ZEPHYRUM; i < XX; i++)
-    {
-        i32 temp;
-        temp = SHA1_ROL(a, V) + SHA1_F0(b, c, d) + e + w[i] + SHA1_K0;
-        e = d;
-        d = c;
-        c = SHA1_ROL(b, XXX);
-        b = a;
-        a = temp;
-    }
-
-    per (i = XX; i < XL; i++)
-    {
-        i32 temp;
-        temp = SHA1_ROL(a, V) + SHA1_F1(b, c, d) + e + w[i] + SHA1_K1;
-        e = d;
-        d = c;
-        c = SHA1_ROL(b, XXX);
-        b = a;
-        a = temp;
-    }
-
-    per (i = XL; i < LX; i++)
-    {
-        i32 temp;
-        temp = SHA1_ROL(a, V) + SHA1_F2(b, c, d) + e + w[i] + SHA1_K2;
-        e = d;
-        d = c;
-        c = SHA1_ROL(b, XXX);
-        b = a;
-        a = temp;
-    }
-
-    per (i = LX; i < LXXX; i++)
-    {
-        i32 temp;
-        temp = SHA1_ROL(a, V) + SHA1_F3(b, c, d) + e + w[i] + SHA1_K3;
-        e = d;
-        d = c;
-        c = SHA1_ROL(b, XXX);
-        b = a;
-        a = temp;
-    }
-
-    /* Add to state */
-    state[ZEPHYRUM] += a;
-    state[I] += b;
-    state[II] += c;
-    state[III] += d;
-    state[IV] += e;
-}
-
-interior vacuum
-_sha1_init(SHA1Context* ctx)
-{
-    /* SHA-1 initial hash values */
-    ctx->state[ZEPHYRUM] = (i32)0x67452301UL;
-    ctx->state[I]        = (i32)0xEFCDAB89UL;
-    ctx->state[II]       = (i32)0x98BADCFEUL;
-    ctx->state[III]      = (i32)0x10325476UL;
-    ctx->state[IV]       = (i32)0xC3D2E1F0UL;
-    ctx->count[ZEPHYRUM] = ZEPHYRUM;
-    ctx->count[I]        = ZEPHYRUM;
-}
-
-interior vacuum
-_sha1_update(SHA1Context* ctx, constans i8* data, i32 len)
-{
-    i32 i;
-    i32 j;
-
-    j = (ctx->count[ZEPHYRUM] >> III) & 0x3F;
-
-    /* Update bit count */
-    ctx->count[ZEPHYRUM] += (len << III);
-    si (ctx->count[ZEPHYRUM] < (len << III))
-    {
-        ctx->count[I]++;
-    }
-    ctx->count[I] += (len >> XXIX);
-
-    /* Process data */
-    si ((j + len) > LXIII)
-    {
-        i = LXIV - j;
-        memcpy(&ctx->buffer[j], data, (memoriae_index)i);
-        _sha1_transform(ctx->state, ctx->buffer);
-
-        per (; i + LXIII < len; i += LXIV)
-        {
-            _sha1_transform(ctx->state, &data[i]);
-        }
-        j = ZEPHYRUM;
-    }
-    alioquin
-    {
-        i = ZEPHYRUM;
-    }
-
-    memcpy(&ctx->buffer[j], &data[i], (memoriae_index)(len - i));
-}
-
-interior vacuum
-_sha1_final(SHA1Context* ctx, i8 digest[SHA1_DIGEST_SIZE])
-{
-    i8  finalcount[VIII];
-    i8  c;
-    i32 i;
-
-    /* Store bit count (big-endian) */
-    per (i = ZEPHYRUM; i < VIII; i++)
-    {
-        finalcount[i] = (i8)((ctx->count[(i >= IV ? ZEPHYRUM : I)] >>
-                             ((III - (i & III)) * VIII)) & 0xFF);
-    }
-
-    /* Pad to 56 mod 64 */
-    c = (i8)0x80;
-    _sha1_update(ctx, &c, I);
-    dum ((ctx->count[ZEPHYRUM] & 0x1F8) != 0x1C0)
-    {
-        c = (i8)0x00;
-        _sha1_update(ctx, &c, I);
-    }
-
-    /* Append length */
-    _sha1_update(ctx, finalcount, VIII);
-
-    /* Output hash (big-endian) */
-    per (i = ZEPHYRUM; i < SHA1_DIGEST_SIZE; i++)
-    {
-        digest[i] = (i8)((ctx->state[i >> II] >> ((III - (i & III)) * VIII)) & 0xFF);
-    }
-}
-
 
 /* ==================================================
  * Auxiliares Internae
@@ -313,13 +119,13 @@ uuidv5_creare(
     chorda              namespace_uuid,
     constans character* appellatio)
 {
-    SHA1Context ctx;
-    i8          namespace_bytes[XVI];
-    i8          hash[SHA1_DIGEST_SIZE];
-    i8          uuid_bytes[XVI];
-    chorda      resultus;
-    character*  str;
-    i32         appellatio_len;
+    SHA1Contextus ctx;
+    i8            namespace_bytes[XVI];
+    i8            hash[SHA1_DIGEST_MENSURA];
+    i8            uuid_bytes[XVI];
+    chorda        resultus;
+    character*    str;
+    i32           appellatio_len;
 
     si (!piscina || !appellatio)
     {
@@ -343,11 +149,11 @@ uuidv5_creare(
         appellatio_len++;
     }
 
-    /* Hash namespace + name */
-    _sha1_init(&ctx);
-    _sha1_update(&ctx, namespace_bytes, XVI);
-    _sha1_update(&ctx, (constans i8*)appellatio, appellatio_len);
-    _sha1_final(&ctx, hash);
+    /* Hash namespace + name using friatio SHA-1 */
+    sha1_initiare(&ctx);
+    sha1_addere(&ctx, namespace_bytes, XVI);
+    sha1_addere(&ctx, (constans i8*)appellatio, appellatio_len);
+    sha1_finire(&ctx, hash);
 
     /* Copy first 16 bytes of hash to UUID */
     memcpy(uuid_bytes, hash, XVI);

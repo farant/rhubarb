@@ -1,41 +1,23 @@
 #include "tabula_dispersa.h"
+#include "friatio.h"
 #include <stdio.h>
 #include <string.h>
 
 /* ==================================================
- * Functiones Friationis
+ * Functiones Friationis (wrappers ad friatio.h)
  * ================================================== */
 
 i32
 tabula_friare_fnv1a(chorda clavis)
 {
-    i32 friatum = 2166136261U;
-    i32 i;
-
-    per (i = ZEPHYRUM; i < clavis.mensura; i++)
-    {
-        friatum ^= (i8)clavis.datum[i];
-        friatum *= 16777619U;
-    }
-
-    redde friatum;
+    redde friatio_fnv1a(clavis);
 }
 
 /* Friare literis C directe (pro evitare const cast) */
 interior i32
 _friare_literis(constans character* cstr)
 {
-    i32 friatum = 2166136261U;
-    constans character* p = cstr;
-
-    dum (*p)
-    {
-        friatum ^= (i8)*p;
-        friatum *= 16777619U;
-        p++;
-    }
-
-    redde friatum;
+    redde friatio_fnv1a_literis(cstr, (i32)strlen(cstr));
 }
 
 /* Comparare literis C cum chorda */
@@ -81,21 +63,13 @@ _proxima_potentia_2(i32 n)
 }
 
 /* ==================================================
- * Functiones Friationis
+ * Functiones Friationis (wrappers ad friatio.h)
  * ================================================== */
 
 i32
 tabula_friare_multiplicatio(chorda clavis)
 {
-    i32 friatum = 5381U;
-    i32 i;
-
-    per (i = ZEPHYRUM; i < clavis.mensura; i++)
-    {
-        friatum = ((friatum << V) + friatum) + (i8)clavis.datum[i];
-    }
-
-    redde friatum;
+    redde friatio_djb2(clavis);
 }
 
 

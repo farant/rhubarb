@@ -43,6 +43,7 @@ declare -a SOURCE_FILES=(
 	"lib/thema.c"
 	"lib/nuntium.c"
 	"lib/graphus_persistens.c"
+	"lib/friatio.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)
@@ -64,7 +65,8 @@ declare -a GUI_SOURCE_FILES=(
   "lib/widget.c"
   "lib/registrum_commandi.c"
   "lib/color.c"
-	"lib/uuid.c"
+  "lib/uuid.c"
+  "lib/friatio.c"
 )
 
 # Color codes
