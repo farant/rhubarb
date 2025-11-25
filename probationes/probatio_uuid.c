@@ -256,6 +256,148 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare uuidv5_creare
+     * ================================================== */
+
+    {
+        chorda uuid;
+        chorda namespace_uuid;
+
+        imprimere("\n--- Probans uuidv5_creare ---\n");
+
+        /* Usare namespace cognitus (DNS namespace ex RFC 4122) */
+        namespace_uuid = chorda_ex_literis("6ba7b810-9dad-11d1-80b4-00c04fd430c8", piscina);
+
+        uuid = uuidv5_creare(piscina, namespace_uuid, "example.com");
+        CREDO_NON_NIHIL(uuid.datum);
+        CREDO_AEQUALIS_I32(uuid.mensura, UUID_MENSURA_CHORDAE);
+        CREDO_VERUM(uuid_est_validus(uuid));
+        CREDO_VERUM(uuid_est_v5(uuid));
+
+        imprimere("UUIDv5 generatus: %.*s\n", uuid.mensura, uuid.datum);
+    }
+
+    /* ==================================================
+     * Probare uuidv5 determinismus
+     * ================================================== */
+
+    {
+        chorda uuid1;
+        chorda uuid2;
+        chorda uuid3;
+        chorda namespace_uuid;
+
+        imprimere("\n--- Probans uuidv5 determinismus ---\n");
+
+        namespace_uuid = chorda_ex_literis("6ba7b810-9dad-11d1-80b4-00c04fd430c8", piscina);
+
+        /* Eadem namespace + nomen = idem UUID */
+        uuid1 = uuidv5_creare(piscina, namespace_uuid, "test.example");
+        uuid2 = uuidv5_creare(piscina, namespace_uuid, "test.example");
+
+        CREDO_NON_NIHIL(uuid1.datum);
+        CREDO_NON_NIHIL(uuid2.datum);
+        CREDO_CHORDA_AEQUALIS(uuid1, uuid2);
+
+        imprimere("UUID 1: %.*s\n", uuid1.mensura, uuid1.datum);
+        imprimere("UUID 2: %.*s\n", uuid2.mensura, uuid2.datum);
+        imprimere("Sunt aequales: VERUM\n");
+
+        /* Diversa nomina = diversi UUIDs */
+        uuid3 = uuidv5_creare(piscina, namespace_uuid, "other.example");
+        CREDO_NON_NIHIL(uuid3.datum);
+        CREDO_FALSUM(chorda_aequalis(uuid1, uuid3));
+
+        imprimere("UUID 3: %.*s\n", uuid3.mensura, uuid3.datum);
+        imprimere("UUID 1 != UUID 3: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare uuidv5_ex_genere_et_titulo
+     * ================================================== */
+
+    {
+        chorda uuid1;
+        chorda uuid2;
+        chorda uuid3;
+        chorda uuid4;
+
+        imprimere("\n--- Probans uuidv5_ex_genere_et_titulo ---\n");
+
+        /* Eadem genus + titulus = idem UUID */
+        uuid1 = uuidv5_ex_genere_et_titulo(piscina, "Page", "root");
+        uuid2 = uuidv5_ex_genere_et_titulo(piscina, "Page", "root");
+
+        CREDO_NON_NIHIL(uuid1.datum);
+        CREDO_NON_NIHIL(uuid2.datum);
+        CREDO_VERUM(uuid_est_v5(uuid1));
+        CREDO_CHORDA_AEQUALIS(uuid1, uuid2);
+
+        imprimere("Page:root (1): %.*s\n", uuid1.mensura, uuid1.datum);
+        imprimere("Page:root (2): %.*s\n", uuid2.mensura, uuid2.datum);
+
+        /* Diversum genus, idem titulus = diversus UUID */
+        uuid3 = uuidv5_ex_genere_et_titulo(piscina, "Folder", "root");
+        CREDO_NON_NIHIL(uuid3.datum);
+        CREDO_FALSUM(chorda_aequalis(uuid1, uuid3));
+
+        imprimere("Folder:root:   %.*s\n", uuid3.mensura, uuid3.datum);
+
+        /* Idem genus, diversum titulus = diversus UUID */
+        uuid4 = uuidv5_ex_genere_et_titulo(piscina, "Page", "home");
+        CREDO_NON_NIHIL(uuid4.datum);
+        CREDO_FALSUM(chorda_aequalis(uuid1, uuid4));
+
+        imprimere("Page:home:     %.*s\n", uuid4.mensura, uuid4.datum);
+    }
+
+    /* ==================================================
+     * Probare uuidv5 version bits
+     * ================================================== */
+
+    {
+        chorda uuid;
+        i8     bytes[XVI];
+
+        imprimere("\n--- Probans uuidv5 version bits ---\n");
+
+        uuid = uuidv5_ex_genere_et_titulo(piscina, "Test", "entity");
+        CREDO_VERUM(uuid_ex_chorda(uuid, bytes));
+
+        /* Byte 6 debet habere version bits (alto nibble = 0x5) */
+        CREDO_AEQUALIS_I32(((i32)(bytes[VI] & 0xFF) >> IV) & 0x0F, 0x05);
+
+        /* Byte 8 debet habere variant bits (duo alti bits = 10) */
+        CREDO_AEQUALIS_I32(((i32)(bytes[VIII] & 0xFF) >> VI) & 0x03, 0x02);
+
+        imprimere("Version bits: 5 (correctum)\n");
+        imprimere("Variant bits: 10 (correctum)\n");
+    }
+
+    /* ==================================================
+     * Probare uuid_est_v5
+     * ================================================== */
+
+    {
+        chorda uuid_v5;
+        chorda uuid_v7;
+        chorda uuid_v4;
+
+        imprimere("\n--- Probans uuid_est_v5 ---\n");
+
+        uuid_v5 = uuidv5_ex_genere_et_titulo(piscina, "Test", "v5check");
+        uuid_v7 = uuidv7_creare(piscina);
+        uuid_v4 = chorda_ex_literis("01234567-89ab-4cde-8f01-23456789abcd", piscina);
+
+        CREDO_VERUM(uuid_est_v5(uuid_v5));
+        CREDO_FALSUM(uuid_est_v5(uuid_v7));
+        CREDO_FALSUM(uuid_est_v5(uuid_v4));
+
+        CREDO_FALSUM(uuid_est_v7(uuid_v5));
+        CREDO_VERUM(uuid_est_v7(uuid_v7));
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
