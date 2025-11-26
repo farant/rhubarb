@@ -2055,6 +2055,199 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Fragment Tests
+     * ================================================== */
+
+    imprimere("\n--- Probans Fragmenta ---\n");
+
+    {
+        /* Anonymous fragment parsing */
+        StmlResultus res;
+        StmlNodus* frag;
+
+        res = stml_legere_ex_literis("<root><#>content</#></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        CREDO_VERUM(frag->fragmentum);
+        CREDO_NIHIL(frag->fragmentum_id);
+
+        imprimere("  Anonymous fragment: PRAETERITUM\n");
+    }
+
+    {
+        /* Named fragment parsing */
+        StmlResultus res;
+        StmlNodus* frag;
+
+        res = stml_legere_ex_literis("<root><#header>Title</#></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        CREDO_VERUM(frag->fragmentum);
+        CREDO_NON_NIHIL(frag->fragmentum_id);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*frag->fragmentum_id, "header");
+
+        imprimere("  Named fragment: PRAETERITUM\n");
+    }
+
+    {
+        /* Self-closing fragment */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<root><#placeholder/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><#placeholder/></root>");
+
+        imprimere("  Self-closing fragment: PRAETERITUM\n");
+    }
+
+    {
+        /* Fragment roundtrip */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<doc><#sidebar><item/></#></doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><#sidebar><item/></#></doc>");
+
+        imprimere("  Fragment roundtrip: PRAETERITUM\n");
+    }
+
+    {
+        /* Fragment with attributes */
+        StmlResultus res;
+        StmlNodus* frag;
+        chorda* valor;
+
+        res = stml_legere_ex_literis("<root><#comp visible=\"true\">content</#></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        valor = stml_attributum_capere(frag, "visible");
+        CREDO_NON_NIHIL(valor);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "true");
+
+        imprimere("  Fragment with attributes: PRAETERITUM\n");
+    }
+
+    {
+        /* Anonymous fragment roundtrip */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<doc><#>content</#></doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><#>content</#></doc>");
+
+        imprimere("  Anonymous fragment roundtrip: PRAETERITUM\n");
+    }
+
+    {
+        /* Nested fragments */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<doc><#outer><#inner>text</#></#></doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><#outer><#inner>text</#></#></doc>");
+
+        imprimere("  Nested fragments: PRAETERITUM\n");
+    }
+
+    /* ==================================================
+     * Transclusion Tests
+     * ================================================== */
+
+    imprimere("\n--- Probans Transclusio ---\n");
+
+    {
+        /* Basic transclusion parsing */
+        StmlResultus res;
+        StmlNodus* trans;
+
+        res = stml_legere_ex_literis("<root><<#header>></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
+        CREDO_NON_NIHIL(trans);
+        CREDO_AEQUALIS_I32(trans->genus, STML_NODUS_TRANSCLUSIO);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor, "#header");
+
+        imprimere("  Basic transclusion: PRAETERITUM\n");
+    }
+
+    {
+        /* Transclusion with complex selector */
+        StmlResultus res;
+        StmlNodus* trans;
+
+        res = stml_legere_ex_literis("<root><<article .featured>></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
+        CREDO_NON_NIHIL(trans);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor, "article .featured");
+
+        imprimere("  Complex selector transclusion: PRAETERITUM\n");
+    }
+
+    {
+        /* Transclusion roundtrip */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<doc>Before<<#nav>>After</doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc>Before<<#nav>>After</doc>");
+
+        imprimere("  Transclusion roundtrip: PRAETERITUM\n");
+    }
+
+    {
+        /* Multiple transclusions */
+        StmlResultus res;
+
+        res = stml_legere_ex_literis("<page><<#header>><<#content>><<#footer>></page>",
+                                      piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), III);
+
+        imprimere("  Multiple transclusions: PRAETERITUM\n");
+    }
+
+    {
+        /* Transclusion with whitespace in selector */
+        StmlResultus res;
+        StmlNodus* trans;
+
+        res = stml_legere_ex_literis("<root><<  .item  >></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
+        CREDO_NON_NIHIL(trans);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor, ".item");  /* Trimmed */
+
+        imprimere("  Whitespace trimmed selector: PRAETERITUM\n");
+    }
+
+    {
+        /* Mixed content with transclusion */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<doc><header/><<#nav>><footer/></doc>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><header/><<#nav>><footer/></doc>");
+
+        imprimere("  Mixed content transclusion: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

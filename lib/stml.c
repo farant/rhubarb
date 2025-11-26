@@ -37,6 +37,16 @@ _est_spatium(character c)
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
+/* Character valid for fragment ID: alphanumeric, underscore, hyphen */
+interior b32
+_est_fragmentum_id_character(character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           c == '_' || c == '-';
+}
+
 /* Comparare chorda* cum literis C */
 interior b32
 _chorda_ptr_aequalis_literis(chorda* ch, constans character* cstr)
@@ -148,6 +158,26 @@ _tok_legere_nomen(StmlTokenContext* ctx)
 
     dum (ctx->positus < ctx->input.mensura &&
          _est_nomen_character(_tok_aspicere(ctx, ZEPHYRUM)))
+    {
+        _tok_progredi(ctx, I);
+    }
+
+    result.datum = ctx->input.datum + initium;
+    result.mensura = ctx->positus - initium;
+    redde result;
+}
+
+/* Read fragment ID (alphanumeric, underscore, hyphen) */
+interior chorda
+_tok_legere_fragmentum_id(StmlTokenContext* ctx)
+{
+    chorda result;
+    i32 initium;
+
+    initium = ctx->positus;
+
+    dum (ctx->positus < ctx->input.mensura &&
+         _est_fragmentum_id_character(_tok_aspicere(ctx, ZEPHYRUM)))
     {
         _tok_progredi(ctx, I);
     }
@@ -614,6 +644,179 @@ _tok_legere_tag(StmlTokenContext* ctx)
     redde token;
 }
 
+/* Parse fragment tag <#> or <#id> */
+interior StmlToken
+_tok_legere_fragmentum(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+    chorda fragmentum_id;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+
+    /* Skip < */
+    _tok_progredi(ctx, I);
+
+    /* Skip # */
+    _tok_progredi(ctx, I);
+
+    /* Read optional fragment ID */
+    fragmentum_id = _tok_legere_fragmentum_id(ctx);
+
+    _tok_praeterire_spatium(ctx);
+
+    /* Parse attributes */
+    token.attributa = _tok_legere_attributa(ctx);
+    _tok_praeterire_spatium(ctx);
+
+    /* Check for self-closing <#/> or <#id/> */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '/' &&
+        _tok_aspicere(ctx, I) == '>')
+    {
+        _tok_progredi(ctx, II);
+
+        token.genus = STML_TOKEN_FRAGMENTUM_AUTO;
+        token.valor = fragmentum_id;
+        token.positus_initium = initium;
+        token.positus_finis = ctx->positus;
+        token.linea = initium_linea;
+        token.columna = initium_columna;
+        redde token;
+    }
+
+    /* Expect > */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
+    {
+        _tok_progredi(ctx, I);
+    }
+
+    token.genus = STML_TOKEN_FRAGMENTUM_APERIRE;
+    token.valor = fragmentum_id;
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
+/* Parse fragment closing tag </#> */
+interior StmlToken
+_tok_legere_fragmentum_claudere(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+
+    /* Skip </ */
+    _tok_progredi(ctx, II);
+
+    /* Skip # */
+    _tok_progredi(ctx, I);
+
+    _tok_praeterire_spatium(ctx);
+
+    /* Expect > */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
+    {
+        _tok_progredi(ctx, I);
+    }
+
+    token.genus = STML_TOKEN_FRAGMENTUM_CLAUDERE;
+    token.valor.datum = NIHIL;
+    token.valor.mensura = ZEPHYRUM;
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
+/* Parse transclusion <<selector>> */
+interior StmlToken
+_tok_legere_transclusio(StmlTokenContext* ctx)
+{
+    StmlToken token;
+    i32 initium;
+    i32 initium_linea;
+    i32 initium_columna;
+    i32 selector_initium;
+    i32 selector_finis;
+
+    initium = ctx->positus;
+    initium_linea = ctx->linea;
+    initium_columna = ctx->columna;
+
+    token.attributa = NIHIL;
+    token.captio_numerus = ZEPHYRUM;
+    token.habet_captus = FALSUM;
+    token.captus_contentus.datum = NIHIL;
+    token.captus_contentus.mensura = ZEPHYRUM;
+
+    /* Skip << */
+    _tok_progredi(ctx, II);
+
+    /* Skip leading whitespace */
+    _tok_praeterire_spatium(ctx);
+    selector_initium = ctx->positus;
+
+    /* Read until >> */
+    dum (ctx->positus < ctx->input.mensura)
+    {
+        si (_tok_aspicere(ctx, ZEPHYRUM) == '>' &&
+            _tok_aspicere(ctx, I) == '>')
+        {
+            frange;
+        }
+        _tok_progredi(ctx, I);
+    }
+
+    selector_finis = ctx->positus;
+
+    /* Trim trailing whitespace from selector */
+    dum (selector_finis > selector_initium &&
+         _est_spatium((character)ctx->input.datum[selector_finis - I]))
+    {
+        selector_finis--;
+    }
+
+    /* Skip >> */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '>' &&
+        _tok_aspicere(ctx, I) == '>')
+    {
+        _tok_progredi(ctx, II);
+    }
+
+    token.genus = STML_TOKEN_TRANSCLUSIO;
+    token.valor.datum = ctx->input.datum + selector_initium;
+    token.valor.mensura = selector_finis - selector_initium;
+    token.positus_initium = initium;
+    token.positus_finis = ctx->positus;
+    token.linea = initium_linea;
+    token.columna = initium_columna;
+    redde token;
+}
+
 /* Parse raw content until </tagname> */
 interior StmlToken
 _tok_legere_contentus_crudus(StmlTokenContext* ctx, chorda titulus)
@@ -765,6 +968,12 @@ _tok_proximus(StmlTokenContext* ctx)
 
     si (_tok_aspicere(ctx, ZEPHYRUM) == '<')
     {
+        /* Check for transclusion <<selector>> */
+        si (_tok_aspicere(ctx, I) == '<')
+        {
+            redde _tok_legere_transclusio(ctx);
+        }
+
         /* Check for comment */
         si (_tok_aspicere(ctx, I) == '!' &&
             _tok_aspicere(ctx, II) == '-' &&
@@ -784,6 +993,19 @@ _tok_proximus(StmlTokenContext* ctx)
             _tok_aspicere(ctx, II) == 'D')
         {
             redde _tok_legere_doctype(ctx);
+        }
+
+        /* Check for fragment closing tag </#> */
+        si (_tok_aspicere(ctx, I) == '/' &&
+            _tok_aspicere(ctx, II) == '#')
+        {
+            redde _tok_legere_fragmentum_claudere(ctx);
+        }
+
+        /* Check for fragment opening tag <#> or <#id> */
+        si (_tok_aspicere(ctx, I) == '#')
+        {
+            redde _tok_legere_fragmentum(ctx);
         }
 
         /* Regular tag */
@@ -1409,6 +1631,119 @@ _parser_legere_processio(StmlParserContext* ctx)
     redde nodus;
 }
 
+/* Parse fragment node <#> or <#id> */
+interior StmlNodus*
+_parser_legere_fragmentum(StmlParserContext* ctx)
+{
+    StmlNodus* nodus;
+    chorda* titulus_ptr;
+    chorda* fragmentum_id_ptr;
+    StmlNodus* liberum;
+    StmlNodus** slot;
+
+    nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
+    si (!nodus) redde NIHIL;
+
+    /* Set fragment flag and tag name */
+    nodus->fragmentum = VERUM;
+    titulus_ptr = chorda_internare_ex_literis(ctx->intern, "#");
+    nodus->titulus = titulus_ptr;
+
+    /* Store fragment ID if present */
+    si (ctx->current.valor.mensura > ZEPHYRUM)
+    {
+        fragmentum_id_ptr = chorda_internare(ctx->intern, ctx->current.valor);
+        nodus->fragmentum_id = fragmentum_id_ptr;
+    }
+    alioquin
+    {
+        nodus->fragmentum_id = NIHIL;
+    }
+
+    /* Copy attributes */
+    nodus->attributa = ctx->current.attributa;
+
+    /* Initialize children array */
+    nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
+
+    _parser_progredi(ctx);
+
+    /* Parse children until </#> */
+    dum (ctx->current.genus != STML_TOKEN_FRAGMENTUM_CLAUDERE &&
+         ctx->current.genus != STML_TOKEN_FINIS)
+    {
+        liberum = _parser_legere_nodus(ctx);
+        si (liberum)
+        {
+            liberum->parens = nodus;
+            slot = xar_addere(nodus->liberi);
+            si (slot) *slot = liberum;
+        }
+    }
+
+    /* Consume closing tag </#> */
+    si (ctx->current.genus == STML_TOKEN_FRAGMENTUM_CLAUDERE)
+    {
+        _parser_progredi(ctx);
+    }
+
+    redde nodus;
+}
+
+/* Parse self-closing fragment <#/> or <#id/> */
+interior StmlNodus*
+_parser_legere_fragmentum_auto(StmlParserContext* ctx)
+{
+    StmlNodus* nodus;
+    chorda* titulus_ptr;
+    chorda* fragmentum_id_ptr;
+
+    nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
+    si (!nodus) redde NIHIL;
+
+    /* Set fragment flag and tag name */
+    nodus->fragmentum = VERUM;
+    titulus_ptr = chorda_internare_ex_literis(ctx->intern, "#");
+    nodus->titulus = titulus_ptr;
+
+    /* Store fragment ID if present */
+    si (ctx->current.valor.mensura > ZEPHYRUM)
+    {
+        fragmentum_id_ptr = chorda_internare(ctx->intern, ctx->current.valor);
+        nodus->fragmentum_id = fragmentum_id_ptr;
+    }
+    alioquin
+    {
+        nodus->fragmentum_id = NIHIL;
+    }
+
+    /* Copy attributes */
+    nodus->attributa = ctx->current.attributa;
+
+    _parser_progredi(ctx);
+
+    redde nodus;
+}
+
+/* Parse transclusion <<selector>> */
+interior StmlNodus*
+_parser_legere_transclusio(StmlParserContext* ctx)
+{
+    StmlNodus* nodus;
+    chorda* selector_ptr;
+
+    nodus = _parser_creare_nodus(ctx, STML_NODUS_TRANSCLUSIO);
+    si (!nodus) redde NIHIL;
+
+    /* Store selector in valor field */
+    selector_ptr = chorda_internare(ctx->intern, ctx->current.valor);
+    nodus->valor = selector_ptr;
+
+    _parser_progredi(ctx);
+
+    redde nodus;
+}
+
 /* Parse DOCTYPE node */
 interior StmlNodus*
 _parser_legere_doctype(StmlParserContext* ctx)
@@ -1463,7 +1798,17 @@ _parser_legere_nodus(StmlParserContext* ctx)
         casus STML_TOKEN_DOCTYPE:
             redde _parser_legere_doctype(ctx);
 
+        casus STML_TOKEN_FRAGMENTUM_APERIRE:
+            redde _parser_legere_fragmentum(ctx);
+
+        casus STML_TOKEN_FRAGMENTUM_AUTO:
+            redde _parser_legere_fragmentum_auto(ctx);
+
+        casus STML_TOKEN_TRANSCLUSIO:
+            redde _parser_legere_transclusio(ctx);
+
         casus STML_TOKEN_CLAUDERE:
+        casus STML_TOKEN_FRAGMENTUM_CLAUDERE:
             /* Orphan closing tag - no matching open tag */
             ctx->status = STML_ERROR_TAG_IMPROPRIE;
             ctx->linea_erroris = ctx->current.linea;
@@ -3005,6 +3350,68 @@ stml_scribere_ad_aedificator(
                 _scribere_indentatio(aedificator, indentatio);
             }
 
+            /* Handle fragment elements specially */
+            si (nodus->fragmentum)
+            {
+                /* Opening tag: <# or <#id */
+                chorda_aedificator_appendere_literis(aedificator, "<#");
+
+                /* Fragment ID if present */
+                si (nodus->fragmentum_id && nodus->fragmentum_id->mensura > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_chorda(aedificator, *nodus->fragmentum_id);
+                }
+
+                /* Attributes */
+                si (nodus->attributa)
+                {
+                    num = xar_numerus(nodus->attributa);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                        si (attr && attr->titulus)
+                        {
+                            chorda_aedificator_appendere_character(aedificator, ' ');
+                            chorda_aedificator_appendere_chorda(aedificator, *attr->titulus);
+                            si (attr->valor && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+                            {
+                                chorda_aedificator_appendere_literis(aedificator, "=\"");
+                                chorda_aedificator_appendere_chorda(aedificator, *attr->valor);
+                                chorda_aedificator_appendere_character(aedificator, '"');
+                            }
+                        }
+                    }
+                }
+
+                /* Check if has children (self-closing vs content) */
+                habet_liberos = nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM;
+
+                si (!habet_liberos)
+                {
+                    /* Self-closing fragment: <#/> or <#id/> */
+                    chorda_aedificator_appendere_literis(aedificator, "/>");
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_character(aedificator, '>');
+
+                    /* Serialize children */
+                    num = xar_numerus(nodus->liberi);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        si (liberum)
+                        {
+                            stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                        }
+                    }
+
+                    /* Closing tag: always </#> */
+                    chorda_aedificator_appendere_literis(aedificator, "</#>");
+                }
+                frange;
+            }
+
             /* Handle capture operators specially */
             si (nodus->captio_directio == STML_CAPTIO_RETRO)
             {
@@ -3314,6 +3721,15 @@ stml_scribere_ad_aedificator(
                 chorda_aedificator_appendere_chorda(aedificator, *nodus->valor);
             }
             chorda_aedificator_appendere_character(aedificator, '>');
+            frange;
+
+        casus STML_NODUS_TRANSCLUSIO:
+            chorda_aedificator_appendere_literis(aedificator, "<<");
+            si (nodus->valor)
+            {
+                chorda_aedificator_appendere_chorda(aedificator, *nodus->valor);
+            }
+            chorda_aedificator_appendere_literis(aedificator, ">>");
             frange;
 
         ordinarius:

@@ -33,7 +33,8 @@ nomen enumeratio {
     STML_NODUS_TEXTUS       = III,
     STML_NODUS_COMMENTUM    = IV,
     STML_NODUS_PROCESSIO    = V,    /* <?xml ...?> */
-    STML_NODUS_DOCTYPE      = VI
+    STML_NODUS_DOCTYPE      = VI,
+    STML_NODUS_TRANSCLUSIO  = VII   /* <<selector>> */
 } StmlNodusGenus;
 
 /* ==================================================
@@ -78,7 +79,11 @@ nomen enumeratio {
     STML_TOKEN_CAPTIO_ANTE   = IX,    /* <tag (> */
     STML_TOKEN_CAPTIO_RETRO  = X,     /* <) tag> */
     STML_TOKEN_FARCIMEN      = XI,    /* <= tag => */
-    STML_TOKEN_FINIS         = XII    /* EOF */
+    STML_TOKEN_FINIS         = XII,   /* EOF */
+    STML_TOKEN_FRAGMENTUM_APERIRE   = XIII,  /* <#> or <#id> */
+    STML_TOKEN_FRAGMENTUM_CLAUDERE  = XIV,   /* </#> */
+    STML_TOKEN_FRAGMENTUM_AUTO      = XV,    /* <#/> or <#id/> */
+    STML_TOKEN_TRANSCLUSIO          = XVI    /* <<selector>> */
 } StmlTokenGenus;
 
 /* ==================================================
@@ -100,7 +105,7 @@ nomen structura {
 nomen structura StmlNodus {
     StmlNodusGenus           genus;
     chorda*                  titulus;         /* Tag name for elements */
-    chorda*                  valor;           /* Text/comment/PI content */
+    chorda*                  valor;           /* Text/comment/PI/transclusion content */
     Xar*                     attributa;       /* Xar de StmlAttributum */
     Xar*                     liberi;          /* Xar de StmlNodus* */
     structura StmlNodus*     parens;
@@ -109,6 +114,10 @@ nomen structura StmlNodus {
     b32                      crudus;          /* Raw content tag (! suffix) */
     StmlCaptioDirectio       captio_directio;
     i32                      captio_numerus;  /* Number of capture parens */
+
+    /* Fragment fields */
+    b32                      fragmentum;      /* Is this a fragment? <#> or <#id> */
+    chorda*                  fragmentum_id;   /* Fragment ID (NIHIL for anonymous) */
 } StmlNodus;
 
 /* StmlResultus - Resultus parsationis
