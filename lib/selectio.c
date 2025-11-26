@@ -9,6 +9,76 @@
 #include <stdio.h>
 #include <string.h>
 #include "selectio.h"
+#include "tabula_dispersa.h"
+
+/* ==================================================
+ * Cache Selectorum (Singleton)
+ *
+ * Selectores parsati cachantur ut parsatio repetita
+ * eiusdem selectoris sit O(1) post primam.
+ * ================================================== */
+
+hic_manens Piscina*        _selectio_cache_piscina = NIHIL;
+hic_manens TabulaDispersa* _selectio_cache = NIHIL;
+
+/* Initialisare cache si necesse */
+interior vacuum
+_selectio_cache_initiare(vacuum)
+{
+    si (_selectio_cache == NIHIL)
+    {
+        _selectio_cache_piscina = piscina_generare_dynamicum(
+            "selectio_cache",
+            32768);  /* 32KB */
+
+        si (_selectio_cache_piscina != NIHIL)
+        {
+            _selectio_cache = tabula_dispersa_creare_chorda(
+                _selectio_cache_piscina,
+                LXIV);  /* 64 sloti initiales */
+        }
+    }
+}
+
+/* Quaerere selectorem in cache (per literis C) */
+interior SelectioSequentia*
+_selectio_cache_invenire_literis(constans character* selector)
+{
+    vacuum* valor;
+
+    si (_selectio_cache == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    si (tabula_dispersa_invenire_literis(_selectio_cache, selector, &valor))
+    {
+        redde (SelectioSequentia*)valor;
+    }
+
+    redde NIHIL;
+}
+
+/* Inserere selectorem in cache (per literis C) */
+interior vacuum
+_selectio_cache_inserere_literis(
+    constans character* selector,
+    SelectioSequentia*  selectio)
+{
+    chorda selector_copia;
+
+    si (_selectio_cache == NIHIL || selectio == NIHIL)
+    {
+        redde;
+    }
+
+    /* Copiare selector in cache piscina */
+    selector_copia = chorda_ex_literis(selector, _selectio_cache_piscina);
+    si (selector_copia.datum != NIHIL)
+    {
+        tabula_dispersa_inserere(_selectio_cache, selector_copia, selectio);
+    }
+}
 
 /* ==================================================
  * Status Parsoris Internus
@@ -1221,14 +1291,31 @@ stml_quaerere (
     Piscina*             piscina,
     InternamentumChorda* intern)
 {
-    SelectioResultus resultus;
+    SelectioSequentia* selectio;
+    SelectioResultus   resultus;
 
-    resultus = selectio_legere_ex_literis(selector, piscina, intern);
-    si (!resultus.successus) {
-        redde NIHIL;
+    (vacuum)piscina;  /* Utimur cache piscina */
+
+    /* Initiare cache */
+    _selectio_cache_initiare();
+
+    /* Quaerere in cache */
+    selectio = _selectio_cache_invenire_literis(selector);
+
+    si (selectio == NIHIL)
+    {
+        /* Non in cache - parsare */
+        resultus = selectio_legere_ex_literis(selector, _selectio_cache_piscina, intern);
+        si (!resultus.successus) {
+            redde NIHIL;
+        }
+        selectio = resultus.selectio;
+
+        /* Addere ad cache */
+        _selectio_cache_inserere_literis(selector, selectio);
     }
 
-    redde selectio_invenire_primum(radix, resultus.selectio);
+    redde selectio_invenire_primum(radix, selectio);
 }
 
 Xar*
@@ -1238,12 +1325,27 @@ stml_quaerere_omnes (
     Piscina*             piscina,
     InternamentumChorda* intern)
 {
-    SelectioResultus resultus;
+    SelectioSequentia* selectio;
+    SelectioResultus   resultus;
 
-    resultus = selectio_legere_ex_literis(selector, piscina, intern);
-    si (!resultus.successus) {
-        redde NIHIL;
+    /* Initiare cache */
+    _selectio_cache_initiare();
+
+    /* Quaerere in cache */
+    selectio = _selectio_cache_invenire_literis(selector);
+
+    si (selectio == NIHIL)
+    {
+        /* Non in cache - parsare */
+        resultus = selectio_legere_ex_literis(selector, _selectio_cache_piscina, intern);
+        si (!resultus.successus) {
+            redde NIHIL;
+        }
+        selectio = resultus.selectio;
+
+        /* Addere ad cache */
+        _selectio_cache_inserere_literis(selector, selectio);
     }
 
-    redde selectio_invenire_omnes(radix, resultus.selectio, piscina);
+    redde selectio_invenire_omnes(radix, selectio, piscina);
 }
