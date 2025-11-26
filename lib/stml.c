@@ -7,6 +7,7 @@
  */
 
 #include "stml.h"
+#include "selectio.h"
 #include <string.h>
 
 /* ==================================================
@@ -1966,6 +1967,596 @@ stml_liberum_ad_indicem(StmlNodus* nodus, i32 index)
     }
 
     redde *((StmlNodus**)xar_obtinere(nodus->liberi, index));
+}
+
+/* ==================================================
+ * Public API - Traversal (Navigatio)
+ * ================================================== */
+
+s32
+stml_index_inter_fratres(StmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    StmlNodus* liberum;
+
+    si (!nodus || !nodus->parens || !nodus->parens->liberi)
+    {
+        redde -I;
+    }
+
+    num = xar_numerus(nodus->parens->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = *((StmlNodus**)xar_obtinere(nodus->parens->liberi, i));
+        si (liberum == nodus)
+        {
+            redde (s32)i;
+        }
+    }
+
+    redde -I;
+}
+
+StmlNodus*
+stml_frater_proximus(StmlNodus* nodus)
+{
+    s32 index;
+    i32 num;
+
+    si (!nodus || !nodus->parens || !nodus->parens->liberi)
+    {
+        redde NIHIL;
+    }
+
+    index = stml_index_inter_fratres(nodus);
+    si (index < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    num = xar_numerus(nodus->parens->liberi);
+    si ((i32)(index + I) >= num)
+    {
+        redde NIHIL;  /* Iam ultimus */
+    }
+
+    redde *((StmlNodus**)xar_obtinere(nodus->parens->liberi, (i32)(index + I)));
+}
+
+StmlNodus*
+stml_frater_prior(StmlNodus* nodus)
+{
+    s32 index;
+
+    si (!nodus || !nodus->parens || !nodus->parens->liberi)
+    {
+        redde NIHIL;
+    }
+
+    index = stml_index_inter_fratres(nodus);
+    si (index <= ZEPHYRUM)
+    {
+        redde NIHIL;  /* Iam primus vel non inventus */
+    }
+
+    redde *((StmlNodus**)xar_obtinere(nodus->parens->liberi, (i32)(index - I)));
+}
+
+StmlNodus*
+stml_primus_liberum(StmlNodus* nodus)
+{
+    si (!nodus || !nodus->liberi || xar_numerus(nodus->liberi) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    redde *((StmlNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM));
+}
+
+StmlNodus*
+stml_ultimus_liberum(StmlNodus* nodus)
+{
+    i32 num;
+
+    si (!nodus || !nodus->liberi)
+    {
+        redde NIHIL;
+    }
+
+    num = xar_numerus(nodus->liberi);
+    si (num == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    redde *((StmlNodus**)xar_obtinere(nodus->liberi, num - I));
+}
+
+Xar*
+stml_fratres(StmlNodus* nodus, Piscina* piscina)
+{
+    Xar* result;
+    i32 i;
+    i32 num;
+    StmlNodus* liberum;
+    StmlNodus** slot;
+
+    si (!nodus || !nodus->parens || !nodus->parens->liberi || !piscina)
+    {
+        redde NIHIL;
+    }
+
+    result = xar_creare(piscina, magnitudo(StmlNodus*));
+    si (!result)
+    {
+        redde NIHIL;
+    }
+
+    num = xar_numerus(nodus->parens->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = *((StmlNodus**)xar_obtinere(nodus->parens->liberi, i));
+        si (liberum != nodus)
+        {
+            slot = xar_addere(result);
+            si (slot) *slot = liberum;
+        }
+    }
+
+    redde result;
+}
+
+Xar*
+stml_maiores(StmlNodus* nodus, Piscina* piscina)
+{
+    Xar* result;
+    StmlNodus* currens;
+    StmlNodus** slot;
+
+    si (!nodus || !piscina)
+    {
+        redde NIHIL;
+    }
+
+    result = xar_creare(piscina, magnitudo(StmlNodus*));
+    si (!result)
+    {
+        redde NIHIL;
+    }
+
+    currens = nodus->parens;
+    dum (currens != NIHIL)
+    {
+        slot = xar_addere(result);
+        si (slot) *slot = currens;
+        currens = currens->parens;
+    }
+
+    redde result;
+}
+
+StmlNodus*
+stml_proximus_maior(
+    StmlNodus*           nodus,
+    constans character*  selector,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    StmlNodus* currens;
+    SelectioResultus res;
+
+    si (!nodus || !selector || !piscina || !intern)
+    {
+        redde NIHIL;
+    }
+
+    /* Legere selectorem */
+    res = selectio_legere_ex_literis(selector, piscina, intern);
+    si (!res.successus || !res.selectio)
+    {
+        redde NIHIL;
+    }
+
+    /* Verificare se et omnes maiores */
+    currens = nodus;
+    dum (currens != NIHIL)
+    {
+        si (selectio_congruit(res.selectio, currens))
+        {
+            redde currens;
+        }
+        currens = currens->parens;
+    }
+
+    redde NIHIL;
+}
+
+/* ==================================================
+ * Internal Helpers - Array Manipulation
+ * ================================================== */
+
+/* Remove element at index from liberi array (creates new array) */
+interior Xar*
+_liberi_removere_ad(Xar* liberi, i32 index, Piscina* piscina)
+{
+    Xar* novum;
+    i32 i;
+    i32 num;
+    StmlNodus* liberum;
+    StmlNodus** slot;
+
+    si (!liberi || !piscina)
+    {
+        redde NIHIL;
+    }
+
+    novum = xar_creare(piscina, magnitudo(StmlNodus*));
+    si (!novum)
+    {
+        redde NIHIL;
+    }
+
+    num = xar_numerus(liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        si (i != index)
+        {
+            liberum = *((StmlNodus**)xar_obtinere(liberi, i));
+            slot = xar_addere(novum);
+            si (slot) *slot = liberum;
+        }
+    }
+
+    redde novum;
+}
+
+/* Insert element at index in liberi array (creates new array) */
+interior Xar*
+_liberi_inserere_ad(Xar* liberi, i32 index, StmlNodus* novum_elem, Piscina* piscina)
+{
+    Xar* nova_xar;
+    i32 i;
+    i32 num;
+    StmlNodus* liberum;
+    StmlNodus** slot;
+
+    si (!piscina || !novum_elem)
+    {
+        redde NIHIL;
+    }
+
+    nova_xar = xar_creare(piscina, magnitudo(StmlNodus*));
+    si (!nova_xar)
+    {
+        redde NIHIL;
+    }
+
+    num = liberi ? xar_numerus(liberi) : ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        si (i == index)
+        {
+            slot = xar_addere(nova_xar);
+            si (slot) *slot = novum_elem;
+        }
+        liberum = *((StmlNodus**)xar_obtinere(liberi, i));
+        slot = xar_addere(nova_xar);
+        si (slot) *slot = liberum;
+    }
+
+    /* Si index >= num, addere ad finem */
+    si (index >= num)
+    {
+        slot = xar_addere(nova_xar);
+        si (slot) *slot = novum_elem;
+    }
+
+    redde nova_xar;
+}
+
+/* ==================================================
+ * Public API - Mutation
+ * ================================================== */
+
+b32
+stml_praeponere(StmlNodus* parens, StmlNodus* liberum, Piscina* piscina)
+{
+    Xar* novi_liberi;
+
+    si (!parens || !liberum || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    /* Si parens non habet liberos, creare */
+    si (!parens->liberi)
+    {
+        parens->liberi = xar_creare(piscina, magnitudo(StmlNodus*));
+        si (!parens->liberi)
+        {
+            redde FALSUM;
+        }
+    }
+
+    novi_liberi = _liberi_inserere_ad(parens->liberi, ZEPHYRUM, liberum, piscina);
+    si (!novi_liberi)
+    {
+        redde FALSUM;
+    }
+
+    parens->liberi = novi_liberi;
+    liberum->parens = parens;
+
+    redde VERUM;
+}
+
+b32
+stml_removere(StmlNodus* nodus, Piscina* piscina)
+{
+    s32 index;
+    Xar* novi_liberi;
+    StmlNodus* parens;
+
+    si (!nodus || !nodus->parens || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    parens = nodus->parens;
+    index = stml_index_inter_fratres(nodus);
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    novi_liberi = _liberi_removere_ad(parens->liberi, (i32)index, piscina);
+    si (!novi_liberi)
+    {
+        redde FALSUM;
+    }
+
+    parens->liberi = novi_liberi;
+    nodus->parens = NIHIL;
+
+    redde VERUM;
+}
+
+vacuum
+stml_vacare_liberos(StmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    StmlNodus* liberum;
+
+    si (!nodus || !nodus->liberi)
+    {
+        redde;
+    }
+
+    /* Ponere parens ad NIHIL pro omnibus liberis */
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = *((StmlNodus**)xar_obtinere(nodus->liberi, i));
+        si (liberum)
+        {
+            liberum->parens = NIHIL;
+        }
+    }
+
+    /* Vacare xar (segmenta manent, numerus = 0) */
+    xar_vacare(nodus->liberi);
+}
+
+b32
+stml_inserere_ante(StmlNodus* nodus, StmlNodus* novum, Piscina* piscina)
+{
+    s32 index;
+    Xar* novi_liberi;
+    StmlNodus* parens;
+
+    si (!nodus || !nodus->parens || !novum || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    parens = nodus->parens;
+    index = stml_index_inter_fratres(nodus);
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    novi_liberi = _liberi_inserere_ad(parens->liberi, (i32)index, novum, piscina);
+    si (!novi_liberi)
+    {
+        redde FALSUM;
+    }
+
+    parens->liberi = novi_liberi;
+    novum->parens = parens;
+
+    redde VERUM;
+}
+
+b32
+stml_inserere_post(StmlNodus* nodus, StmlNodus* novum, Piscina* piscina)
+{
+    s32 index;
+    Xar* novi_liberi;
+    StmlNodus* parens;
+
+    si (!nodus || !nodus->parens || !novum || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    parens = nodus->parens;
+    index = stml_index_inter_fratres(nodus);
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    novi_liberi = _liberi_inserere_ad(parens->liberi, (i32)(index + I), novum, piscina);
+    si (!novi_liberi)
+    {
+        redde FALSUM;
+    }
+
+    parens->liberi = novi_liberi;
+    novum->parens = parens;
+
+    redde VERUM;
+}
+
+b32
+stml_substituere(StmlNodus* vetus, StmlNodus* novum, Piscina* piscina)
+{
+    s32 index;
+    StmlNodus* parens;
+    StmlNodus** slot;
+
+    si (!vetus || !vetus->parens || !novum || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    parens = vetus->parens;
+    index = stml_index_inter_fratres(vetus);
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Directe substituere in array */
+    slot = (StmlNodus**)xar_obtinere(parens->liberi, (i32)index);
+    si (!slot)
+    {
+        redde FALSUM;
+    }
+
+    *slot = novum;
+    novum->parens = parens;
+    vetus->parens = NIHIL;
+
+    (vacuum)piscina;  /* Suppressio moniti - piscina non utitur hic */
+
+    redde VERUM;
+}
+
+/* ==================================================
+ * Public API - Cloning
+ * ================================================== */
+
+interior StmlNodus*
+_duplicare_recursivum(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    b32                  profundum)
+{
+    StmlNodus* novum;
+    i32 i;
+    i32 num;
+
+    si (!nodus || !piscina || !intern)
+    {
+        redde NIHIL;
+    }
+
+    novum = (StmlNodus*)piscina_allocare(piscina, magnitudo(StmlNodus));
+    si (!novum)
+    {
+        redde NIHIL;
+    }
+
+    /* Copiare campos basicos */
+    novum->genus = nodus->genus;
+    novum->titulus = nodus->titulus;  /* Iam internatum */
+    novum->valor = nodus->valor;      /* Iam internatum */
+    novum->crudus = nodus->crudus;
+    novum->captio_directio = nodus->captio_directio;
+    novum->captio_numerus = nodus->captio_numerus;
+    novum->parens = NIHIL;  /* Novum non habet parentem */
+
+    /* Copiare attributa */
+    si (nodus->attributa && xar_numerus(nodus->attributa) > ZEPHYRUM)
+    {
+        novum->attributa = xar_creare(piscina, magnitudo(StmlAttributum));
+        si (novum->attributa)
+        {
+            num = xar_numerus(nodus->attributa);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                StmlAttributum* attr_orig;
+                StmlAttributum* attr_new;
+
+                attr_orig = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                attr_new = (StmlAttributum*)xar_addere(novum->attributa);
+                si (attr_new && attr_orig)
+                {
+                    attr_new->titulus = attr_orig->titulus;  /* Internatum */
+                    attr_new->valor = attr_orig->valor;      /* Internatum */
+                }
+            }
+        }
+    }
+    alioquin
+    {
+        novum->attributa = NIHIL;
+    }
+
+    /* Copiare liberos (si profundum) */
+    si (profundum && nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM)
+    {
+        novum->liberi = xar_creare(piscina, magnitudo(StmlNodus*));
+        si (novum->liberi)
+        {
+            num = xar_numerus(nodus->liberi);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                StmlNodus* liberum_orig;
+                StmlNodus* liberum_novum;
+                StmlNodus** slot;
+
+                liberum_orig = *((StmlNodus**)xar_obtinere(nodus->liberi, i));
+                liberum_novum = _duplicare_recursivum(liberum_orig, piscina, intern, VERUM);
+                si (liberum_novum)
+                {
+                    liberum_novum->parens = novum;
+                    slot = xar_addere(novum->liberi);
+                    si (slot) *slot = liberum_novum;
+                }
+            }
+        }
+    }
+    alioquin
+    {
+        novum->liberi = NIHIL;
+    }
+
+    redde novum;
+}
+
+StmlNodus*
+stml_duplicare(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    redde _duplicare_recursivum(nodus, piscina, intern, VERUM);
+}
+
+StmlNodus*
+stml_duplicare_superficialiter(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    redde _duplicare_recursivum(nodus, piscina, intern, FALSUM);
 }
 
 /* ==================================================

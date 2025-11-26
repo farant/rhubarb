@@ -1487,6 +1487,385 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare Navigatio (Traversal)
+     * ================================================== */
+
+    imprimere("\n--- Probans navigatio ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child1;
+        StmlNodus* child2;
+        StmlNodus* child3;
+
+        /* Tree: <div><a/><b/><c/></div> */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/><c/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        div = res.elementum_radix;
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), III);
+
+        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);
+        child2 = stml_liberum_ad_indicem(div, I);
+        child3 = stml_liberum_ad_indicem(div, II);
+
+        CREDO_NON_NIHIL(child1);
+        CREDO_NON_NIHIL(child2);
+        CREDO_NON_NIHIL(child3);
+
+        /* Test stml_index_inter_fratres */
+        CREDO_AEQUALIS_S32(stml_index_inter_fratres(child1), ZEPHYRUM);
+        CREDO_AEQUALIS_S32(stml_index_inter_fratres(child2), I);
+        CREDO_AEQUALIS_S32(stml_index_inter_fratres(child3), II);
+        CREDO_AEQUALIS_S32(stml_index_inter_fratres(div), ZEPHYRUM);  /* div est primus liberum documenti */
+        CREDO_AEQUALIS_S32(stml_index_inter_fratres(res.radix), -I);  /* documentum non habet parentem */
+
+        imprimere("  stml_index_inter_fratres: VERUM\n");
+
+        /* Test stml_frater_proximus */
+        CREDO_VERUM(stml_frater_proximus(child1) == child2);
+        CREDO_VERUM(stml_frater_proximus(child2) == child3);
+        CREDO_NIHIL(stml_frater_proximus(child3));  /* ultimus non habet proximum */
+
+        imprimere("  stml_frater_proximus: VERUM\n");
+
+        /* Test stml_frater_prior */
+        CREDO_NIHIL(stml_frater_prior(child1));  /* primus non habet priorem */
+        CREDO_VERUM(stml_frater_prior(child2) == child1);
+        CREDO_VERUM(stml_frater_prior(child3) == child2);
+
+        imprimere("  stml_frater_prior: VERUM\n");
+
+        /* Test stml_primus_liberum / stml_ultimus_liberum */
+        CREDO_VERUM(stml_primus_liberum(div) == child1);
+        CREDO_VERUM(stml_ultimus_liberum(div) == child3);
+        CREDO_NIHIL(stml_primus_liberum(child1));  /* <a/> vacuum est */
+        CREDO_NIHIL(stml_ultimus_liberum(child1));
+
+        imprimere("  stml_primus_liberum/ultimus_liberum: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child2;
+        Xar* fratres;
+
+        /* Test stml_fratres */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/><c/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        child2 = stml_liberum_ad_indicem(div, I);  /* <b/> */
+
+        fratres = stml_fratres(child2, piscina);
+        CREDO_NON_NIHIL(fratres);
+        CREDO_AEQUALIS_I32(xar_numerus(fratres), II);  /* <a/> et <c/> */
+
+        imprimere("  stml_fratres: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* inner;
+        StmlNodus* deep;
+        Xar* maiores;
+
+        /* Test stml_maiores: <div><inner><deep/></inner></div> */
+        res = stml_legere_ex_literis(
+            "<div><inner><deep/></inner></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        inner = stml_primus_liberum(div);
+        CREDO_NON_NIHIL(inner);
+        deep = stml_primus_liberum(inner);
+        CREDO_NON_NIHIL(deep);
+
+        maiores = stml_maiores(deep, piscina);
+        CREDO_NON_NIHIL(maiores);
+        CREDO_AEQUALIS_I32(xar_numerus(maiores), III);  /* inner, div, documentum */
+
+        /* Verificare ordo: primus est parens directus */
+        CREDO_VERUM(*((StmlNodus**)xar_obtinere(maiores, ZEPHYRUM)) == inner);
+        CREDO_VERUM(*((StmlNodus**)xar_obtinere(maiores, I)) == div);
+
+        imprimere("  stml_maiores: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* inner;
+        StmlNodus* deep;
+        StmlNodus* found;
+
+        /* Test stml_proximus_maior */
+        res = stml_legere_ex_literis(
+            "<div><inner><deep/></inner></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        inner = stml_primus_liberum(div);
+        deep = stml_primus_liberum(inner);
+
+        /* Invenire "div" ex deep */
+        found = stml_proximus_maior(deep, "div", piscina, intern);
+        CREDO_VERUM(found == div);
+
+        /* Invenire "inner" ex deep */
+        found = stml_proximus_maior(deep, "inner", piscina, intern);
+        CREDO_VERUM(found == inner);
+
+        /* Invenire "deep" ex deep (includit se) */
+        found = stml_proximus_maior(deep, "deep", piscina, intern);
+        CREDO_VERUM(found == deep);
+
+        /* Non invenire "nonexistent" */
+        found = stml_proximus_maior(deep, "nonexistent", piscina, intern);
+        CREDO_NIHIL(found);
+
+        imprimere("  stml_proximus_maior: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare Mutatio (Mutation)
+     * ================================================== */
+
+    imprimere("\n--- Probans mutatio ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* novum;
+
+        /* Test stml_praeponere */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), II);
+
+        novum = stml_elementum_creare(piscina, intern, "first");
+        CREDO_NON_NIHIL(novum);
+
+        CREDO_VERUM(stml_praeponere(div, novum, piscina));
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), III);
+        CREDO_VERUM(stml_primus_liberum(div) == novum);
+        CREDO_VERUM(novum->parens == div);
+
+        imprimere("  stml_praeponere: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child2;
+
+        /* Test stml_removere */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/><c/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), III);
+
+        child2 = stml_liberum_ad_indicem(div, I);  /* <b/> */
+        CREDO_NON_NIHIL(child2);
+
+        CREDO_VERUM(stml_removere(child2, piscina));
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), II);
+        CREDO_NIHIL(child2->parens);
+
+        /* Nunc child at index 1 should be <c/> */
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_liberum_ad_indicem(div, I)->titulus, "c"));
+
+        imprimere("  stml_removere: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child1;
+        StmlNodus* child2;
+
+        /* Test stml_vacare_liberos */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);
+        child2 = stml_liberum_ad_indicem(div, I);
+
+        stml_vacare_liberos(div);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), ZEPHYRUM);
+        CREDO_NIHIL(child1->parens);
+        CREDO_NIHIL(child2->parens);
+
+        imprimere("  stml_vacare_liberos: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child1;
+        StmlNodus* novum;
+
+        /* Test stml_inserere_ante */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
+
+        novum = stml_elementum_creare(piscina, intern, "before-a");
+        CREDO_VERUM(stml_inserere_ante(child1, novum, piscina));
+
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), III);
+        CREDO_VERUM(stml_primus_liberum(div) == novum);
+        CREDO_VERUM(stml_frater_proximus(novum) == child1);
+
+        imprimere("  stml_inserere_ante: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child1;
+        StmlNodus* novum;
+
+        /* Test stml_inserere_post */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
+
+        novum = stml_elementum_creare(piscina, intern, "after-a");
+        CREDO_VERUM(stml_inserere_post(child1, novum, piscina));
+
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), III);
+        CREDO_VERUM(stml_frater_proximus(child1) == novum);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_liberum_ad_indicem(div, I)->titulus, "after-a"));
+
+        imprimere("  stml_inserere_post: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* child1;
+        StmlNodus* novum;
+
+        /* Test stml_substituere */
+        res = stml_legere_ex_literis(
+            "<div><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
+
+        novum = stml_elementum_creare(piscina, intern, "replaced");
+        CREDO_VERUM(stml_substituere(child1, novum, piscina));
+
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), II);
+        CREDO_NIHIL(child1->parens);
+        CREDO_VERUM(novum->parens == div);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_primus_liberum(div)->titulus, "replaced"));
+
+        imprimere("  stml_substituere: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare Duplicatio (Cloning)
+     * ================================================== */
+
+    imprimere("\n--- Probans duplicatio ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* clone;
+
+        /* Test stml_duplicare (deep) */
+        res = stml_legere_ex_literis(
+            "<div id=\"orig\"><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+
+        clone = stml_duplicare(div, piscina, intern);
+        CREDO_NON_NIHIL(clone);
+
+        /* Clone should have same structure */
+        CREDO_VERUM(_chorda_ptr_eq_literis(clone->titulus, "div"));
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(clone), II);
+        CREDO_NIHIL(clone->parens);  /* Clone non habet parentem */
+
+        /* Clone children should have clone as parent */
+        CREDO_VERUM(stml_primus_liberum(clone)->parens == clone);
+
+        /* Clone is independent */
+        CREDO_VERUM(clone != div);
+        CREDO_VERUM(stml_primus_liberum(clone) != stml_primus_liberum(div));
+
+        /* Clone should have same attributes */
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_attributum_capere(clone, "id"), "orig"));
+
+        imprimere("  stml_duplicare (profunde): VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* div;
+        StmlNodus* shallow;
+
+        /* Test stml_duplicare_superficialiter */
+        res = stml_legere_ex_literis(
+            "<div id=\"orig\"><a/><b/></div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        div = res.elementum_radix;
+
+        shallow = stml_duplicare_superficialiter(div, piscina, intern);
+        CREDO_NON_NIHIL(shallow);
+
+        /* Shallow clone has same tag and attributes but NO children */
+        CREDO_VERUM(_chorda_ptr_eq_literis(shallow->titulus, "div"));
+        CREDO_NIHIL(shallow->liberi);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            stml_attributum_capere(shallow, "id"), "orig"));
+
+        imprimere("  stml_duplicare_superficialiter: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

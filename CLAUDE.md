@@ -167,6 +167,8 @@ also chorda is a struct / string substitute that includes the length and data is
 - piscina.h is our arena implementation
 - we also have our own version of protobuf basically in nuntium.h
 
+also just write everything in latin. you want to do identifiers, function names, comments, messages, etc. there are a couple technical terms like "offset" that i typically leave untranslated.
+
 oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
 
 anyway!

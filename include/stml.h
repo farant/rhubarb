@@ -210,6 +210,75 @@ stml_liberum_ad_indicem(
     i32        index);
 
 /* ==================================================
+ * Navigatio - Traversal
+ * ================================================== */
+
+/* Capere indicem nodi inter fratres
+ * "Get index of node among siblings"
+ * Redde: -1 si non habet parentem
+ */
+s32
+stml_index_inter_fratres(
+    StmlNodus* nodus);
+
+/* Capere proximum fratrem
+ * "Get next sibling"
+ */
+StmlNodus*
+stml_frater_proximus(
+    StmlNodus* nodus);
+
+/* Capere priorem fratrem
+ * "Get previous sibling"
+ */
+StmlNodus*
+stml_frater_prior(
+    StmlNodus* nodus);
+
+/* Capere primum liberum
+ * "Get first child"
+ */
+StmlNodus*
+stml_primus_liberum(
+    StmlNodus* nodus);
+
+/* Capere ultimum liberum
+ * "Get last child"
+ */
+StmlNodus*
+stml_ultimus_liberum(
+    StmlNodus* nodus);
+
+/* Capere omnes fratres (excludens se)
+ * "Get all siblings (excluding self)"
+ * Redde: Xar de StmlNodus*
+ */
+Xar*
+stml_fratres(
+    StmlNodus* nodus,
+    Piscina*   piscina);
+
+/* Capere omnes maiores (parens, avus, etc.)
+ * "Get all ancestors"
+ * Redde: Xar de StmlNodus* (a parente ad radicem)
+ */
+Xar*
+stml_maiores(
+    StmlNodus* nodus,
+    Piscina*   piscina);
+
+/* Invenire proximum maiorem congruentem cum selectore
+ * "Find closest ancestor matching selector"
+ * Nota: includit se si congruit
+ */
+StmlNodus*
+stml_proximus_maior(
+    StmlNodus*           nodus,
+    constans character*  selector,
+    Piscina*             piscina,
+    InternamentumChorda* intern);
+
+/* ==================================================
  * Constructio - Creare Nodos
  * ================================================== */
 
@@ -395,5 +464,88 @@ stml_titulum_commutare(
     Piscina*             piscina,
     InternamentumChorda* intern,
     constans character*  titulum);
+
+/* ==================================================
+ * Mutatio - Tree Manipulation
+ * ================================================== */
+
+/* Alias pro stml_liberum_addere (appendChild) */
+#define stml_appendere stml_liberum_addere
+
+/* Addere liberum ad initium
+ * "Prepend child"
+ */
+b32
+stml_praeponere(
+    StmlNodus* parens,
+    StmlNodus* liberum,
+    Piscina*   piscina);
+
+/* Inserere ante nodum
+ * "Insert before node"
+ */
+b32
+stml_inserere_ante(
+    StmlNodus* nodus,
+    StmlNodus* novum,
+    Piscina*   piscina);
+
+/* Inserere post nodum
+ * "Insert after node"
+ */
+b32
+stml_inserere_post(
+    StmlNodus* nodus,
+    StmlNodus* novum,
+    Piscina*   piscina);
+
+/* Removere nodum ex parente
+ * "Remove node from parent"
+ * Nodus manet in memoria (piscina), sed non in arbore
+ */
+b32
+stml_removere(
+    StmlNodus* nodus,
+    Piscina*   piscina);
+
+/* Vacare omnes liberos
+ * "Remove all children"
+ */
+vacuum
+stml_vacare_liberos(
+    StmlNodus* nodus);
+
+/* Substituere nodum cum alio
+ * "Replace node with another"
+ */
+b32
+stml_substituere(
+    StmlNodus* vetus,
+    StmlNodus* novum,
+    Piscina*   piscina);
+
+/* ==================================================
+ * Duplicatio - Cloning
+ * ================================================== */
+
+/* Duplicare nodum (profunde)
+ * "Deep clone node"
+ * Includit omnes liberos, attributa, etc.
+ */
+StmlNodus*
+stml_duplicare(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern);
+
+/* Duplicare nodum (superficialiter)
+ * "Shallow clone node"
+ * Non includit liberos
+ */
+StmlNodus*
+stml_duplicare_superficialiter(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern);
 
 #endif /* STML_H */
