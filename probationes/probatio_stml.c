@@ -1984,6 +1984,77 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare Capture Operator Serialization (Roundtrip)
+     * ================================================== */
+
+    imprimere("\n--- Probans Capture Operator Serialization ---\n");
+
+    {
+        StmlResultus res;
+        chorda serialized;
+
+        /* Forward capture roundtrip */
+        res = stml_legere_ex_literis("<root><wrapper (><item/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><wrapper (><item/></root>");
+
+        imprimere("  Forward capture roundtrip: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda serialized;
+
+        /* Multiple forward capture roundtrip */
+        res = stml_legere_ex_literis("<root><wrapper ((><a/><b/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><wrapper ((><a/><b/></root>");
+
+        imprimere("  Multiple forward capture roundtrip: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda serialized;
+
+        /* Backward capture roundtrip */
+        res = stml_legere_ex_literis("<root><item/><) wrapper></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><) wrapper><item/></root>");
+
+        imprimere("  Backward capture roundtrip: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda serialized;
+
+        /* Sandwich capture roundtrip */
+        res = stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><= wrapper =><a/><b/></root>");
+
+        imprimere("  Sandwich capture roundtrip: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda serialized;
+
+        /* Forward capture with text */
+        res = stml_legere_ex_literis("<wrapper (>hello", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<wrapper (>hello");
+
+        imprimere("  Forward capture with text: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

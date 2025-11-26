@@ -3005,61 +3005,142 @@ stml_scribere_ad_aedificator(
                 _scribere_indentatio(aedificator, indentatio);
             }
 
-            chorda_aedificator_appendere_character(aedificator, '<');
-            si (nodus->titulus)
+            /* Handle capture operators specially */
+            si (nodus->captio_directio == STML_CAPTIO_RETRO)
             {
-                chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
-            }
-
-            /* Raw content marker */
-            si (nodus->crudus)
-            {
-                chorda_aedificator_appendere_character(aedificator, '!');
-            }
-
-            /* Attributes */
-            si (nodus->attributa)
-            {
-                num = xar_numerus(nodus->attributa);
-                per (i = ZEPHYRUM; i < num; i++)
+                /* Backward capture: <) tag> or <)) tag> */
+                i32 j;
+                chorda_aedificator_appendere_character(aedificator, '<');
+                per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                 {
-                    attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
-                    si (attr && attr->titulus)
+                    chorda_aedificator_appendere_character(aedificator, ')');
+                }
+                chorda_aedificator_appendere_character(aedificator, ' ');
+                si (nodus->titulus)
+                {
+                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                }
+                /* Attributes */
+                si (nodus->attributa)
+                {
+                    num = xar_numerus(nodus->attributa);
+                    per (i = ZEPHYRUM; i < num; i++)
                     {
-                        chorda_aedificator_appendere_character(aedificator, ' ');
-                        chorda_aedificator_appendere_chorda(aedificator, *attr->titulus);
-
-                        /* Boolean attributes: don't output ="true" */
-                        si (attr->valor && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+                        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                        si (attr && attr->titulus)
                         {
-                            chorda_aedificator_appendere_literis(aedificator, "=\"");
-                            chorda_aedificator_appendere_chorda(aedificator, *attr->valor);
-                            chorda_aedificator_appendere_character(aedificator, '"');
+                            chorda_aedificator_appendere_character(aedificator, ' ');
+                            chorda_aedificator_appendere_chorda(aedificator, *attr->titulus);
+                            si (attr->valor && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+                            {
+                                chorda_aedificator_appendere_literis(aedificator, "=\"");
+                                chorda_aedificator_appendere_chorda(aedificator, *attr->valor);
+                                chorda_aedificator_appendere_character(aedificator, '"');
+                            }
+                        }
+                    }
+                }
+                chorda_aedificator_appendere_character(aedificator, '>');
+                /* Serialize children inline (no closing tag for captures) */
+                si (nodus->liberi)
+                {
+                    num = xar_numerus(nodus->liberi);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        si (liberum)
+                        {
+                            stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
                         }
                     }
                 }
             }
-
-            /* Check if has children */
-            habet_liberos = nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM;
-
-            si (!habet_liberos)
+            alioquin si (nodus->captio_directio == STML_CAPTIO_FARCIMEN)
             {
-                chorda_aedificator_appendere_literis(aedificator, "/>");
-            }
-            alioquin
-            {
-                StmlNodus* first_child;
-                chorda_aedificator_appendere_character(aedificator, '>');
-
-                num = xar_numerus(nodus->liberi);
-                first_child = _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM);
-
-                /* For raw content or single text child, don't add newlines */
-                si (nodus->crudus ||
-                    (num == I && first_child &&
-                     first_child->genus == STML_NODUS_TEXTUS))
+                /* Sandwich capture: <= tag => */
+                chorda_aedificator_appendere_literis(aedificator, "<= ");
+                si (nodus->titulus)
                 {
+                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                }
+                /* Attributes */
+                si (nodus->attributa)
+                {
+                    num = xar_numerus(nodus->attributa);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                        si (attr && attr->titulus)
+                        {
+                            chorda_aedificator_appendere_character(aedificator, ' ');
+                            chorda_aedificator_appendere_chorda(aedificator, *attr->titulus);
+                            si (attr->valor && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+                            {
+                                chorda_aedificator_appendere_literis(aedificator, "=\"");
+                                chorda_aedificator_appendere_chorda(aedificator, *attr->valor);
+                                chorda_aedificator_appendere_character(aedificator, '"');
+                            }
+                        }
+                    }
+                }
+                chorda_aedificator_appendere_literis(aedificator, " =>");
+                /* Serialize children inline (no closing tag for captures) */
+                si (nodus->liberi)
+                {
+                    num = xar_numerus(nodus->liberi);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                        si (liberum)
+                        {
+                            stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                        }
+                    }
+                }
+            }
+            alioquin si (nodus->captio_directio == STML_CAPTIO_ANTE)
+            {
+                /* Forward capture: <tag (> or <tag ((> */
+                i32 j;
+                chorda_aedificator_appendere_character(aedificator, '<');
+                si (nodus->titulus)
+                {
+                    chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                }
+                si (nodus->crudus)
+                {
+                    chorda_aedificator_appendere_character(aedificator, '!');
+                }
+                /* Attributes */
+                si (nodus->attributa)
+                {
+                    num = xar_numerus(nodus->attributa);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                        si (attr && attr->titulus)
+                        {
+                            chorda_aedificator_appendere_character(aedificator, ' ');
+                            chorda_aedificator_appendere_chorda(aedificator, *attr->titulus);
+                            si (attr->valor && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+                            {
+                                chorda_aedificator_appendere_literis(aedificator, "=\"");
+                                chorda_aedificator_appendere_chorda(aedificator, *attr->valor);
+                                chorda_aedificator_appendere_character(aedificator, '"');
+                            }
+                        }
+                    }
+                }
+                chorda_aedificator_appendere_character(aedificator, ' ');
+                per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
+                {
+                    chorda_aedificator_appendere_character(aedificator, '(');
+                }
+                chorda_aedificator_appendere_character(aedificator, '>');
+                /* Serialize children inline (no closing tag for captures) */
+                si (nodus->liberi)
+                {
+                    num = xar_numerus(nodus->liberi);
                     per (i = ZEPHYRUM; i < num; i++)
                     {
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
@@ -3077,38 +3158,115 @@ stml_scribere_ad_aedificator(
                         }
                     }
                 }
-                alioquin
-                {
-                    si (pulchrum)
-                    {
-                        chorda_aedificator_appendere_character(aedificator, '\n');
-                    }
-
-                    per (i = ZEPHYRUM; i < num; i++)
-                    {
-                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
-                        si (liberum)
-                        {
-                            stml_scribere_ad_aedificator(liberum, aedificator, pulchrum, indentatio + I);
-                            si (pulchrum)
-                            {
-                                chorda_aedificator_appendere_character(aedificator, '\n');
-                            }
-                        }
-                    }
-
-                    si (pulchrum)
-                    {
-                        _scribere_indentatio(aedificator, indentatio);
-                    }
-                }
-
-                chorda_aedificator_appendere_literis(aedificator, "</");
+            }
+            alioquin
+            {
+                /* Normal element (no capture) */
+                chorda_aedificator_appendere_character(aedificator, '<');
                 si (nodus->titulus)
                 {
                     chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
                 }
-                chorda_aedificator_appendere_character(aedificator, '>');
+
+                /* Raw content marker */
+                si (nodus->crudus)
+                {
+                    chorda_aedificator_appendere_character(aedificator, '!');
+                }
+
+                /* Attributes */
+                si (nodus->attributa)
+                {
+                    num = xar_numerus(nodus->attributa);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+                        si (attr && attr->titulus)
+                        {
+                            chorda_aedificator_appendere_character(aedificator, ' ');
+                            chorda_aedificator_appendere_chorda(aedificator, *attr->titulus);
+
+                            /* Boolean attributes: don't output ="true" */
+                            si (attr->valor && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+                            {
+                                chorda_aedificator_appendere_literis(aedificator, "=\"");
+                                chorda_aedificator_appendere_chorda(aedificator, *attr->valor);
+                                chorda_aedificator_appendere_character(aedificator, '"');
+                            }
+                        }
+                    }
+                }
+
+                /* Check if has children */
+                habet_liberos = nodus->liberi && xar_numerus(nodus->liberi) > ZEPHYRUM;
+
+                si (!habet_liberos)
+                {
+                    chorda_aedificator_appendere_literis(aedificator, "/>");
+                }
+                alioquin
+                {
+                    StmlNodus* first_child;
+                    chorda_aedificator_appendere_character(aedificator, '>');
+
+                    num = xar_numerus(nodus->liberi);
+                    first_child = _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM);
+
+                    /* For raw content or single text child, don't add newlines */
+                    si (nodus->crudus ||
+                        (num == I && first_child &&
+                         first_child->genus == STML_NODUS_TEXTUS))
+                    {
+                        per (i = ZEPHYRUM; i < num; i++)
+                        {
+                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            si (liberum)
+                            {
+                                si (nodus->crudus && liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
+                                {
+                                    /* Raw content - don't escape */
+                                    chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                }
+                                alioquin
+                                {
+                                    stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                }
+                            }
+                        }
+                    }
+                    alioquin
+                    {
+                        si (pulchrum)
+                        {
+                            chorda_aedificator_appendere_character(aedificator, '\n');
+                        }
+
+                        per (i = ZEPHYRUM; i < num; i++)
+                        {
+                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            si (liberum)
+                            {
+                                stml_scribere_ad_aedificator(liberum, aedificator, pulchrum, indentatio + I);
+                                si (pulchrum)
+                                {
+                                    chorda_aedificator_appendere_character(aedificator, '\n');
+                                }
+                            }
+                        }
+
+                        si (pulchrum)
+                        {
+                            _scribere_indentatio(aedificator, indentatio);
+                        }
+                    }
+
+                    chorda_aedificator_appendere_literis(aedificator, "</");
+                    si (nodus->titulus)
+                    {
+                        chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                    }
+                    chorda_aedificator_appendere_character(aedificator, '>');
+                }
             }
             frange;
 
