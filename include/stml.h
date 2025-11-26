@@ -333,4 +333,67 @@ stml_scribere_ad_aedificator(
     b32                 pulchrum,
     i32                 indentatio);
 
+/* ==================================================
+ * Tituli - Labels (class-like attribute)
+ *
+ * Labels stored in "labels" attribute (or "class" for HTML compat)
+ * as space-separated strings, e.g. labels="foo bar baz"
+ * ================================================== */
+
+/* Verificare si nodus habet titulum
+ * "Check if node has label"
+ */
+b32
+stml_titulum_habet(
+    StmlNodus*          nodus,
+    constans character* titulum);
+
+/* Numerus titulorum
+ * "Number of labels"
+ */
+i32
+stml_titulos_numerus(
+    StmlNodus* nodus);
+
+/* Capere omnes titulos ut Xar de chorda
+ * "Get all labels as array of strings"
+ */
+Xar*
+stml_titulos_capere(
+    StmlNodus* nodus,
+    Piscina*   piscina);
+
+/* Addere titulum ad nodum
+ * "Add label to node"
+ * Redde: VERUM si additum, FALSUM si iam existit
+ */
+b32
+stml_titulum_addere(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    constans character*  titulum);
+
+/* Removere titulum ex nodo
+ * "Remove label from node"
+ * Redde: VERUM si remotum, FALSUM si non inventum
+ */
+b32
+stml_titulum_removere(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    constans character*  titulum);
+
+/* Commutare titulum (toggle)
+ * "Toggle label on node"
+ * Redde: VERUM si nunc habet, FALSUM si nunc non habet
+ */
+b32
+stml_titulum_commutare(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    constans character*  titulum);
+
 #endif /* STML_H */

@@ -46,6 +46,7 @@ declare -a SOURCE_FILES=(
 	"lib/friatio.c"
 	"lib/xml.c"
 	"lib/stml.c"
+	"lib/selectio.c"
 )
 
 # GUI app source files (fenestra - requires Objective-C and Cocoa)
@@ -77,6 +78,9 @@ GREEN="\033[32m"
 BLUE="\033[34m"
 YELLOW="\033[33m"
 RESET="\033[0m"
+
+# Filter pattern (e.g., "stml" to run only probatio_stml.c)
+FILTER=""
 
 # Test results
 TESTS_TOTAL=0
@@ -137,6 +141,14 @@ compile_and_run_test() {
     fi
 
     # Run
+    if [ $DEBUG_MODE -eq 1 ]; then
+        echo -e "${YELLOW}Running in lldb batch mode${RESET}"
+        lldb -b -o "run" -o "bt" -o "quit" $output_binary
+        # In debug mode, don't track pass/fail
+        echo ""
+        return 0
+    fi
+
     if ! $output_binary 2>&1; then
         echo -e "${RED}✗ TEST FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
@@ -157,10 +169,19 @@ run_all_tests() {
     echo ""
 
     # Find all probatio_*.c files, separating GUI apps from regular tests
-    local all_files=$(find probatio probationes -name "probatio_*.c" -type f 2>/dev/null | sort)
+    local all_files
+    if [ -n "$FILTER" ]; then
+        all_files=$(find probatio probationes -name "probatio_*${FILTER}*.c" -type f 2>/dev/null | sort)
+    else
+        all_files=$(find probatio probationes -name "probatio_*.c" -type f 2>/dev/null | sort)
+    fi
 
     if [ -z "$all_files" ]; then
-        echo -e "${YELLOW}No test files found${RESET}"
+        if [ -n "$FILTER" ]; then
+            echo -e "${YELLOW}No test files found matching '$FILTER'${RESET}"
+        else
+            echo -e "${YELLOW}No test files found${RESET}"
+        fi
         return 1
     fi
 
@@ -225,8 +246,26 @@ print_summary() {
     echo ""
 }
 
+# Parse arguments
+WATCH_MODE=0
+DEBUG_MODE=0
+for arg in "$@"; do
+    if [ "$arg" == "--watch" ]; then
+        WATCH_MODE=1
+    elif [ "$arg" == "--debug" ]; then
+        DEBUG_MODE=1
+    else
+        FILTER="$arg"
+    fi
+done
+
+# Add debug symbols if debug mode
+if [ $DEBUG_MODE -eq 1 ]; then
+    GCC_FLAGS+=("-g")
+fi
+
 # Main execution
-if [ "$1" == "--watch" ]; then
+if [ $WATCH_MODE -eq 1 ]; then
     run_all_tests
     print_summary
 

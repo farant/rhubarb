@@ -159,6 +159,8 @@ brace yourself i am compiling with all these flags
 
 just a reminder, don't ever use "nomen" as a variable name. it is a macro that expands to "typedef". Often I use something like "titulis" instead.
 
+also chorda is a struct / string substitute that includes the length and data is NOT null terminated. so if you try to use standard library string functions on chorda data you are going to run into problems
+
 oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
 
 anyway!

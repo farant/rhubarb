@@ -1192,6 +1192,301 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare smart whitespace trimming
+     * ================================================== */
+
+    imprimere("\n--- Probans smart whitespace trimming ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus*   textus;
+
+        /* Simple inline text - should just trim ends */
+        res = stml_legere_ex_literis("<p>  hello world  </p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
+
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_AEQUALIS_I32(textus->genus, STML_NODUS_TEXTUS);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor, "hello world"));
+
+        imprimere("  Simple trim: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   textus;
+
+        /* Multiline with indentation - should normalize */
+        res = stml_legere_ex_literis(
+            "<pre>\n"
+            "    line one\n"
+            "    line two\n"
+            "</pre>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
+
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+
+        /* Should have removed the leading empty line and normalized indentation */
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor, "line one\nline two"));
+
+        imprimere("  Multiline normalization: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   textus;
+
+        /* Raw content should NOT be normalized */
+        res = stml_legere_ex_literis(
+            "<code!>\n"
+            "    preserved indent\n"
+            "</code>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
+
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+
+        /* Raw content preserves original whitespace */
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "\n    preserved indent\n"));
+
+        imprimere("  Raw content preserved: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus*   textus;
+
+        /* Relative indentation should be preserved */
+        res = stml_legere_ex_literis(
+            "<div>\n"
+            "        outer\n"
+            "            inner\n"
+            "        outer again\n"
+            "</div>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+
+        /* 8-space base removed, inner keeps 4-space relative indent */
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "outer\n    inner\nouter again"));
+
+        imprimere("  Relative indentation: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Whitespace-only text nodes should be skipped */
+        res = stml_legere_ex_literis("<root>   \n   \n   </root>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        /* No text children (whitespace-only skipped) */
+        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), ZEPHYRUM);
+
+        imprimere("  Whitespace-only skipped: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare tituli (labels)
+     * ================================================== */
+
+    imprimere("\n--- Probans tituli (labels) ---\n");
+
+    {
+        StmlNodus* nodus;
+
+        /* Create element with labels attribute */
+        nodus = stml_elementum_creare(piscina, intern, "div");
+        CREDO_NON_NIHIL(nodus);
+
+        stml_attributum_addere(nodus, piscina, intern, "labels", "foo bar baz");
+
+        /* Test stml_titulum_habet */
+        CREDO_VERUM(stml_titulum_habet(nodus, "foo"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "bar"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "baz"));
+        CREDO_FALSUM(stml_titulum_habet(nodus, "qux"));
+        CREDO_FALSUM(stml_titulum_habet(nodus, "fo"));   /* Partial match */
+        CREDO_FALSUM(stml_titulum_habet(nodus, "foobar"));
+
+        imprimere("  stml_titulum_habet: VERUM\n");
+    }
+
+    {
+        StmlNodus* nodus;
+
+        /* Test stml_titulos_numerus */
+        nodus = stml_elementum_creare(piscina, intern, "div");
+        CREDO_NON_NIHIL(nodus);
+
+        stml_attributum_addere(nodus, piscina, intern, "labels", "one two three");
+
+        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), III);
+
+        /* Empty labels */
+        nodus = stml_elementum_creare(piscina, intern, "span");
+        CREDO_NON_NIHIL(nodus);
+        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), ZEPHYRUM);
+
+        imprimere("  stml_titulos_numerus: VERUM\n");
+    }
+
+    {
+        StmlNodus* nodus;
+        Xar* tituli;
+        chorda* label;
+
+        /* Test stml_titulos_capere */
+        nodus = stml_elementum_creare(piscina, intern, "div");
+        CREDO_NON_NIHIL(nodus);
+
+        stml_attributum_addere(nodus, piscina, intern, "labels", "alpha beta gamma");
+
+        tituli = stml_titulos_capere(nodus, piscina);
+        CREDO_NON_NIHIL(tituli);
+        CREDO_AEQUALIS_I32(xar_numerus(tituli), III);
+
+        label = (chorda*)xar_obtinere(tituli, ZEPHYRUM);
+        CREDO_NON_NIHIL(label);
+        CREDO_VERUM(chorda_aequalis_literis(*label, "alpha"));
+
+        label = (chorda*)xar_obtinere(tituli, I);
+        CREDO_NON_NIHIL(label);
+        CREDO_VERUM(chorda_aequalis_literis(*label, "beta"));
+
+        label = (chorda*)xar_obtinere(tituli, II);
+        CREDO_NON_NIHIL(label);
+        CREDO_VERUM(chorda_aequalis_literis(*label, "gamma"));
+
+        imprimere("  stml_titulos_capere: VERUM\n");
+    }
+
+    {
+        StmlNodus* nodus;
+
+        /* Test stml_titulum_addere */
+        nodus = stml_elementum_creare(piscina, intern, "div");
+        CREDO_NON_NIHIL(nodus);
+
+        /* Add first label */
+        CREDO_VERUM(stml_titulum_addere(nodus, piscina, intern, "first"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "first"));
+
+        /* Add second label */
+        CREDO_VERUM(stml_titulum_addere(nodus, piscina, intern, "second"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "first"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "second"));
+
+        /* Adding duplicate returns FALSUM */
+        CREDO_FALSUM(stml_titulum_addere(nodus, piscina, intern, "first"));
+
+        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), II);
+
+        imprimere("  stml_titulum_addere: VERUM\n");
+    }
+
+    {
+        StmlNodus* nodus;
+
+        /* Test stml_titulum_removere */
+        nodus = stml_elementum_creare(piscina, intern, "div");
+        CREDO_NON_NIHIL(nodus);
+
+        stml_attributum_addere(nodus, piscina, intern, "labels", "keep remove also");
+
+        /* Remove middle label */
+        CREDO_VERUM(stml_titulum_removere(nodus, piscina, intern, "remove"));
+        CREDO_FALSUM(stml_titulum_habet(nodus, "remove"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "keep"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "also"));
+
+        /* Removing non-existent returns FALSUM */
+        CREDO_FALSUM(stml_titulum_removere(nodus, piscina, intern, "nothere"));
+
+        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), II);
+
+        imprimere("  stml_titulum_removere: VERUM\n");
+    }
+
+    {
+        StmlNodus* nodus;
+
+        /* Test stml_titulum_commutare */
+        nodus = stml_elementum_creare(piscina, intern, "div");
+        CREDO_NON_NIHIL(nodus);
+
+        /* Toggle on (returns VERUM = now has it) */
+        CREDO_VERUM(stml_titulum_commutare(nodus, piscina, intern, "toggle"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "toggle"));
+
+        /* Toggle off (returns FALSUM = now doesn't have it) */
+        CREDO_FALSUM(stml_titulum_commutare(nodus, piscina, intern, "toggle"));
+        CREDO_FALSUM(stml_titulum_habet(nodus, "toggle"));
+
+        /* Toggle back on */
+        CREDO_VERUM(stml_titulum_commutare(nodus, piscina, intern, "toggle"));
+        CREDO_VERUM(stml_titulum_habet(nodus, "toggle"));
+
+        imprimere("  stml_titulum_commutare: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Test labels from parsed content */
+        res = stml_legere_ex_literis(
+            "<div labels=\"parsed one two\"/>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "parsed"));
+        CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "one"));
+        CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "two"));
+        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(res.elementum_radix), III);
+
+        imprimere("  Parsed labels: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+
+        /* Test class attribute (HTML compat) */
+        res = stml_legere_ex_literis(
+            "<div class=\"html style classes\"/>",
+            piscina, intern);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "html"));
+        CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "style"));
+        CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "classes"));
+
+        imprimere("  HTML class compat: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

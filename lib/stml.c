@@ -890,8 +890,7 @@ _parser_legere_elementum(StmlParserContext* ctx)
     /* Verify close tag matches */
     si (ctx->current.genus == STML_TOKEN_CLAUDERE)
     {
-        si (!chorda_aequalis_literis(ctx->current.valor,
-                                     (constans character*)titulus_ptr->datum))
+        si (!chorda_aequalis(ctx->current.valor, *titulus_ptr))
         {
             ctx->status = STML_ERROR_TAG_IMPROPRIE;
             ctx->linea_erroris = ctx->current.linea;
@@ -1051,32 +1050,208 @@ _parser_legere_farcimen(StmlParserContext* ctx)
     redde nodus;
 }
 
+/* ==================================================
+ * Smart Whitespace Normalization
+ * ================================================== */
+
+/* Check if a line is empty (only whitespace) */
+interior b32
+_est_linea_vacua(chorda linea)
+{
+    i32 i;
+    per (i = ZEPHYRUM; i < linea.mensura; i++)
+    {
+        character c = (character)linea.datum[i];
+        si (c != ' ' && c != '\t' && c != '\r')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Count leading whitespace characters in a line */
+interior i32
+_numerare_indentationem(chorda linea)
+{
+    i32 spatia = ZEPHYRUM;
+    i32 i;
+    per (i = ZEPHYRUM; i < linea.mensura; i++)
+    {
+        character c = (character)linea.datum[i];
+        si (c == ' ' || c == '\t')
+        {
+            spatia++;
+        }
+        alioquin
+        {
+            frange;
+        }
+    }
+    redde spatia;
+}
+
+/* Check if string contains a newline */
+interior b32
+_continet_novam_lineam(chorda s)
+{
+    i32 i;
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        si ((character)s.datum[i] == '\n')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Smart whitespace normalization:
+ * - Trim leading/trailing empty lines
+ * - Normalize indentation to least-indented non-empty line
+ * - Preserve relative indentation
+ */
+interior chorda
+_normalizare_spatium_album(chorda textus, Piscina* piscina)
+{
+    chorda_fissio_fructus lineae;
+    ChordaAedificator* aed;
+    i32 initium;
+    i32 finis;
+    i32 min_indent;
+    i32 i;
+    i32 indent;
+    chorda linea;
+    chorda result;
+
+    /* Fast path: no newlines -> simple trim */
+    si (!_continet_novam_lineam(textus))
+    {
+        redde chorda_praecidere(textus);
+    }
+
+    /* Only apply smart trim if starts with newline or whitespace */
+    {
+        character primus = (character)textus.datum[ZEPHYRUM];
+        si (primus != '\n' && primus != ' ' && primus != '\t' && primus != '\r')
+        {
+            /* Inline text - just trim ends */
+            redde chorda_praecidere(textus);
+        }
+    }
+
+    /* Split into lines */
+    lineae = chorda_fissio(textus, '\n', piscina);
+    si (lineae.numerus == ZEPHYRUM || !lineae.elementa)
+    {
+        result.datum = NIHIL;
+        result.mensura = ZEPHYRUM;
+        redde result;
+    }
+
+    /* Find first and last non-empty lines */
+    initium = lineae.numerus;
+    finis = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < lineae.numerus; i++)
+    {
+        si (!_est_linea_vacua(lineae.elementa[i]))
+        {
+            si (initium == lineae.numerus)
+            {
+                initium = i;
+            }
+            finis = i;
+        }
+    }
+
+    /* All empty */
+    si (initium == lineae.numerus)
+    {
+        result.datum = NIHIL;
+        result.mensura = ZEPHYRUM;
+        redde result;
+    }
+
+    /* Find minimum indentation of non-empty lines */
+    min_indent = 9999;
+    per (i = initium; i <= finis; i++)
+    {
+        linea = lineae.elementa[i];
+        si (!_est_linea_vacua(linea))
+        {
+            indent = _numerare_indentationem(linea);
+            si (indent < min_indent)
+            {
+                min_indent = indent;
+            }
+        }
+    }
+
+    si (min_indent == 9999)
+    {
+        min_indent = ZEPHYRUM;
+    }
+
+    /* Build result with dedented lines */
+    aed = chorda_aedificator_creare(piscina, textus.mensura);
+    si (!aed)
+    {
+        result.datum = NIHIL;
+        result.mensura = ZEPHYRUM;
+        redde result;
+    }
+
+    per (i = initium; i <= finis; i++)
+    {
+        linea = lineae.elementa[i];
+
+        /* Add newline between lines (not before first) */
+        si (i > initium)
+        {
+            chorda_aedificator_appendere_character(aed, '\n');
+        }
+
+        /* Empty lines stay empty */
+        si (_est_linea_vacua(linea))
+        {
+            /* Add nothing - just the newline above */
+        }
+        alioquin
+        {
+            /* Remove min_indent characters from start */
+            si (min_indent > ZEPHYRUM && min_indent <= linea.mensura)
+            {
+                chorda dedented = chorda_sectio(linea, min_indent, linea.mensura);
+                chorda_aedificator_appendere_chorda(aed, dedented);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_chorda(aed, linea);
+            }
+        }
+    }
+
+    redde chorda_aedificator_finire(aed);
+}
+
 /* Parse text node */
 interior StmlNodus*
 _parser_legere_textus(StmlParserContext* ctx)
 {
     StmlNodus* nodus;
     chorda contentus;
+    chorda normalizatus;
     chorda* contentus_ptr;
-    i32 i;
-    b32 est_vacuum;
 
     contentus = ctx->current.valor;
 
-    /* Check if entirely whitespace */
-    est_vacuum = VERUM;
-    per (i = ZEPHYRUM; i < contentus.mensura; i++)
-    {
-        si (!_est_spatium((character)contentus.datum[i]))
-        {
-            est_vacuum = FALSUM;
-            frange;
-        }
-    }
+    /* Normalize whitespace (trim indentation, leading/trailing blank lines) */
+    normalizatus = _normalizare_spatium_album(contentus, ctx->piscina);
 
     _parser_progredi(ctx);
 
-    si (est_vacuum)
+    /* If normalized to empty, skip this text node */
+    si (normalizatus.mensura == ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -1084,7 +1259,7 @@ _parser_legere_textus(StmlParserContext* ctx)
     nodus = _parser_creare_nodus(ctx, STML_NODUS_TEXTUS);
     si (!nodus) redde NIHIL;
 
-    contentus_ptr = chorda_internare(ctx->intern, contentus);
+    contentus_ptr = chorda_internare(ctx->intern, normalizatus);
     nodus->valor = contentus_ptr;
 
     redde nodus;
@@ -2318,4 +2493,469 @@ stml_scribere(
     stml_scribere_ad_aedificator(nodus, aed, pulchrum, ZEPHYRUM);
 
     redde chorda_aedificator_finire(aed);
+}
+
+/* ==================================================
+ * Tituli (Labels) Implementation
+ * ================================================== */
+
+/* Helper: get labels attribute value (checks "labels" then "class") */
+interior chorda*
+_stml_titulos_valor(StmlNodus* nodus)
+{
+    chorda* valor;
+
+    valor = stml_attributum_capere(nodus, "labels");
+    si (valor)
+    {
+        redde valor;
+    }
+
+    /* HTML compat: also check "class" */
+    redde stml_attributum_capere(nodus, "class");
+}
+
+/* Helper: find attribute index by name */
+interior s32
+_stml_attributum_index(
+    StmlNodus*          nodus,
+    constans character* titulus)
+{
+    s32 i;
+    s32 num;
+    StmlAttributum* attr;
+
+    si (!nodus || !nodus->attributa)
+    {
+        redde -I;
+    }
+
+    num = (s32)xar_numerus(nodus->attributa);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)i);
+        si (attr && attr->titulus &&
+            chorda_aequalis_literis(*attr->titulus, titulus))
+        {
+            redde i;
+        }
+    }
+
+    redde -I;
+}
+
+b32
+stml_titulum_habet(
+    StmlNodus*          nodus,
+    constans character* titulum)
+{
+    chorda* labels_valor;
+    i32 target_len;
+    i32 i;
+    i32 j;
+    i32 start;
+    i32 end;
+    b32 match;
+
+    si (!nodus || !titulum)
+    {
+        redde FALSUM;
+    }
+
+    labels_valor = _stml_titulos_valor(nodus);
+    si (!labels_valor || labels_valor->mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Get target length */
+    target_len = ZEPHYRUM;
+    dum (titulum[target_len] != '\0')
+    {
+        target_len++;
+    }
+
+    si (target_len == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Scan through labels, comparing each space-separated token */
+    i = ZEPHYRUM;
+    dum (i < labels_valor->mensura)
+    {
+        /* Skip leading spaces */
+        dum (i < labels_valor->mensura &&
+             (labels_valor->datum[i] == ' ' ||
+              labels_valor->datum[i] == '\t'))
+        {
+            i++;
+        }
+
+        si (i >= labels_valor->mensura)
+        {
+            frange;
+        }
+
+        /* Find end of token */
+        start = i;
+        dum (i < labels_valor->mensura &&
+             labels_valor->datum[i] != ' ' &&
+             labels_valor->datum[i] != '\t')
+        {
+            i++;
+        }
+        end = i;
+
+        /* Check if this token matches */
+        si ((end - start) == target_len)
+        {
+            match = VERUM;
+            per (j = ZEPHYRUM; j < target_len; j++)
+            {
+                si ((character)labels_valor->datum[start + j] != titulum[j])
+                {
+                    match = FALSUM;
+                    frange;
+                }
+            }
+
+            si (match)
+            {
+                redde VERUM;
+            }
+        }
+    }
+
+    redde FALSUM;
+}
+
+i32
+stml_titulos_numerus(StmlNodus* nodus)
+{
+    chorda* labels_valor;
+    i32 i;
+    i32 count;
+    b32 in_token;
+
+    si (!nodus)
+    {
+        redde ZEPHYRUM;
+    }
+
+    labels_valor = _stml_titulos_valor(nodus);
+    si (!labels_valor || labels_valor->mensura == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+
+    /* Count non-empty tokens separated by spaces */
+    count = ZEPHYRUM;
+    in_token = FALSUM;
+
+    per (i = ZEPHYRUM; i < labels_valor->mensura; i++)
+    {
+        si (labels_valor->datum[i] == ' ' || labels_valor->datum[i] == '\t')
+        {
+            in_token = FALSUM;
+        }
+        alioquin
+        {
+            si (!in_token)
+            {
+                count++;
+                in_token = VERUM;
+            }
+        }
+    }
+
+    redde count;
+}
+
+Xar*
+stml_titulos_capere(
+    StmlNodus* nodus,
+    Piscina*   piscina)
+{
+    chorda* labels_valor;
+    chorda_fissio_fructus fissio;
+    Xar* result;
+    i32 i;
+    chorda trimmed;
+    chorda* slot;
+
+    si (!nodus || !piscina)
+    {
+        redde NIHIL;
+    }
+
+    labels_valor = _stml_titulos_valor(nodus);
+    si (!labels_valor || labels_valor->mensura == ZEPHYRUM)
+    {
+        /* Return empty array */
+        redde xar_creare(piscina, magnitudo(chorda));
+    }
+
+    /* Split by space */
+    fissio = chorda_fissio(*labels_valor, ' ', piscina);
+    si (!fissio.elementa)
+    {
+        redde xar_creare(piscina, magnitudo(chorda));
+    }
+
+    result = xar_creare(piscina, magnitudo(chorda));
+    si (!result)
+    {
+        redde NIHIL;
+    }
+
+    per (i = ZEPHYRUM; i < fissio.numerus; i++)
+    {
+        trimmed = chorda_praecidere(fissio.elementa[i]);
+        si (trimmed.mensura > ZEPHYRUM)
+        {
+            slot = (chorda*)xar_addere(result);
+            si (slot)
+            {
+                *slot = trimmed;
+            }
+        }
+    }
+
+    redde result;
+}
+
+b32
+stml_titulum_addere(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    constans character*  titulum)
+{
+    chorda* labels_valor;
+    ChordaAedificator* aed;
+    chorda new_valor;
+    chorda* interned;
+    s32 attr_index;
+    StmlAttributum* attr;
+
+    si (!nodus || !piscina || !intern || !titulum)
+    {
+        redde FALSUM;
+    }
+
+    /* Check if already has this label */
+    si (stml_titulum_habet(nodus, titulum))
+    {
+        redde FALSUM;  /* Already exists */
+    }
+
+    labels_valor = _stml_titulos_valor(nodus);
+
+    si (!labels_valor)
+    {
+        /* No labels attribute exists - add a new one */
+        redde stml_attributum_addere(nodus, piscina, intern, "labels", titulum);
+    }
+
+    si (labels_valor->mensura == ZEPHYRUM)
+    {
+        /* Labels attribute exists but is empty - update it */
+        attr_index = _stml_attributum_index(nodus, "labels");
+        si (attr_index < ZEPHYRUM)
+        {
+            attr_index = _stml_attributum_index(nodus, "class");
+        }
+
+        si (attr_index >= ZEPHYRUM)
+        {
+            attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)attr_index);
+            si (attr)
+            {
+                attr->valor = chorda_internare_ex_literis(intern, titulum);
+                redde attr->valor != NIHIL;
+            }
+        }
+        redde FALSUM;
+    }
+
+    /* Append to existing labels */
+    aed = chorda_aedificator_creare(piscina, CXXVIII);
+    si (!aed)
+    {
+        redde FALSUM;
+    }
+
+    chorda_aedificator_appendere_chorda(aed, *labels_valor);
+    chorda_aedificator_appendere_character(aed, ' ');
+    chorda_aedificator_appendere_literis(aed, titulum);
+
+    new_valor = chorda_aedificator_finire(aed);
+    interned = chorda_internare(intern, new_valor);
+    si (!interned)
+    {
+        redde FALSUM;
+    }
+
+    /* Update existing attribute */
+    attr_index = _stml_attributum_index(nodus, "labels");
+    si (attr_index < ZEPHYRUM)
+    {
+        attr_index = _stml_attributum_index(nodus, "class");
+    }
+
+    si (attr_index >= ZEPHYRUM)
+    {
+        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)attr_index);
+        si (attr)
+        {
+            attr->valor = interned;
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
+b32
+stml_titulum_removere(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    constans character*  titulum)
+{
+    chorda* labels_valor;
+    chorda_fissio_fructus fissio;
+    ChordaAedificator* aed;
+    chorda trimmed;
+    chorda new_valor;
+    chorda* interned;
+    i32 i;
+    s32 attr_index;
+    StmlAttributum* attr;
+    b32 found;
+    b32 first;
+
+    si (!nodus || !piscina || !intern || !titulum)
+    {
+        redde FALSUM;
+    }
+
+    labels_valor = _stml_titulos_valor(nodus);
+    si (!labels_valor || labels_valor->mensura == ZEPHYRUM)
+    {
+        redde FALSUM;  /* No labels to remove from */
+    }
+
+    /* Split and rebuild without the target */
+    fissio = chorda_fissio(*labels_valor, ' ', piscina);
+    si (!fissio.elementa)
+    {
+        redde FALSUM;
+    }
+
+    aed = chorda_aedificator_creare(piscina, CXXVIII);
+    si (!aed)
+    {
+        redde FALSUM;
+    }
+
+    found = FALSUM;
+    first = VERUM;
+
+    per (i = ZEPHYRUM; i < fissio.numerus; i++)
+    {
+        trimmed = chorda_praecidere(fissio.elementa[i]);
+        si (trimmed.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+
+        si (chorda_aequalis_literis(trimmed, titulum))
+        {
+            found = VERUM;
+            perge;  /* Skip this one */
+        }
+
+        si (!first)
+        {
+            chorda_aedificator_appendere_character(aed, ' ');
+        }
+        chorda_aedificator_appendere_chorda(aed, trimmed);
+        first = FALSUM;
+    }
+
+    si (!found)
+    {
+        redde FALSUM;  /* Label wasn't present */
+    }
+
+    new_valor = chorda_aedificator_finire(aed);
+
+    /* Find the attribute to update */
+    attr_index = _stml_attributum_index(nodus, "labels");
+    si (attr_index < ZEPHYRUM)
+    {
+        attr_index = _stml_attributum_index(nodus, "class");
+    }
+
+    si (attr_index < ZEPHYRUM)
+    {
+        redde FALSUM;  /* Attribute not found */
+    }
+
+    attr = (StmlAttributum*)xar_obtinere(nodus->attributa, (i32)attr_index);
+    si (!attr)
+    {
+        redde FALSUM;
+    }
+
+    /* Handle empty result (all labels removed) */
+    si (new_valor.mensura == ZEPHYRUM)
+    {
+        /* Create an empty chorda - allocate space for the chorda struct */
+        interned = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        si (!interned)
+        {
+            redde FALSUM;
+        }
+        /* Allocate 1 byte so datum is valid, but mensura is 0 */
+        interned->datum = (i8*)piscina_allocare(piscina, I);
+        interned->mensura = ZEPHYRUM;
+    }
+    alioquin
+    {
+        interned = chorda_internare(intern, new_valor);
+        si (!interned)
+        {
+            redde FALSUM;
+        }
+    }
+
+    attr->valor = interned;
+    redde VERUM;
+}
+
+b32
+stml_titulum_commutare(
+    StmlNodus*           nodus,
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    constans character*  titulum)
+{
+    si (!nodus || !piscina || !intern || !titulum)
+    {
+        redde FALSUM;
+    }
+
+    si (stml_titulum_habet(nodus, titulum))
+    {
+        stml_titulum_removere(nodus, piscina, intern, titulum);
+        redde FALSUM;  /* Now doesn't have it */
+    }
+    alioquin
+    {
+        stml_titulum_addere(nodus, piscina, intern, titulum);
+        redde VERUM;  /* Now has it */
+    }
 }
