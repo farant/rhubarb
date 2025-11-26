@@ -1107,6 +1107,109 @@ _continet_novam_lineam(chorda s)
     redde FALSUM;
 }
 
+/* Check if string at position starts with prefix */
+interior b32
+_starts_with_at(chorda s, i32 pos, constans character* prefix)
+{
+    i32 len;
+    i32 i;
+
+    len = (i32)strlen(prefix);
+    si (pos + len > s.mensura)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < len; i++)
+    {
+        si ((character)s.datum[pos + i] != prefix[i])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Unescape XML entities in text content:
+ * &lt; -> <, &gt; -> >, &amp; -> &, &quot; -> ", &apos; -> '
+ */
+interior chorda
+_unescape_entities(chorda textus, Piscina* piscina)
+{
+    ChordaAedificator* aed;
+    i32 i;
+    b32 has_entity;
+
+    /* Fast path: no ampersand, no entities to unescape */
+    has_entity = FALSUM;
+    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    {
+        si ((character)textus.datum[i] == '&')
+        {
+            has_entity = VERUM;
+            frange;
+        }
+    }
+
+    si (!has_entity)
+    {
+        redde textus;
+    }
+
+    aed = chorda_aedificator_creare(piscina, textus.mensura);
+    si (!aed)
+    {
+        redde textus;
+    }
+
+    i = ZEPHYRUM;
+    dum (i < textus.mensura)
+    {
+        si ((character)textus.datum[i] == '&')
+        {
+            /* Check for known entities */
+            si (_starts_with_at(textus, i, "&lt;"))
+            {
+                chorda_aedificator_appendere_character(aed, '<');
+                i += IV;
+            }
+            alioquin si (_starts_with_at(textus, i, "&gt;"))
+            {
+                chorda_aedificator_appendere_character(aed, '>');
+                i += IV;
+            }
+            alioquin si (_starts_with_at(textus, i, "&amp;"))
+            {
+                chorda_aedificator_appendere_character(aed, '&');
+                i += V;
+            }
+            alioquin si (_starts_with_at(textus, i, "&quot;"))
+            {
+                chorda_aedificator_appendere_character(aed, '"');
+                i += VI;
+            }
+            alioquin si (_starts_with_at(textus, i, "&apos;"))
+            {
+                chorda_aedificator_appendere_character(aed, '\'');
+                i += VI;
+            }
+            alioquin
+            {
+                /* Unknown entity - preserve as-is */
+                chorda_aedificator_appendere_character(aed, '&');
+                i++;
+            }
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(aed, (character)textus.datum[i]);
+            i++;
+        }
+    }
+
+    redde chorda_aedificator_finire(aed);
+}
+
 /* Smart whitespace normalization:
  * - Trim leading/trailing empty lines
  * - Normalize indentation to least-indented non-empty line
@@ -1242,6 +1345,7 @@ _parser_legere_textus(StmlParserContext* ctx)
     StmlNodus* nodus;
     chorda contentus;
     chorda normalizatus;
+    chorda unescaped;
     chorda* contentus_ptr;
 
     contentus = ctx->current.valor;
@@ -1257,10 +1361,13 @@ _parser_legere_textus(StmlParserContext* ctx)
         redde NIHIL;
     }
 
+    /* Unescape XML entities (&lt; -> <, etc.) */
+    unescaped = _unescape_entities(normalizatus, ctx->piscina);
+
     nodus = _parser_creare_nodus(ctx, STML_NODUS_TEXTUS);
     si (!nodus) redde NIHIL;
 
-    contentus_ptr = chorda_internare(ctx->intern, normalizatus);
+    contentus_ptr = chorda_internare(ctx->intern, unescaped);
     nodus->valor = contentus_ptr;
 
     redde nodus;

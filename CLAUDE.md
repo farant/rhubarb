@@ -166,6 +166,7 @@ also chorda is a struct / string substitute that includes the length and data is
 - don't forget we have string/chorda internment in internamentum.h
 - piscina.h is our arena implementation
 - we also have our own version of protobuf basically in nuntium.h
+- you can run individual tests suites using ./compile_tests.sh <arg> and it will match against testfile name, so for example ./compile_tests.sh stml, etc.
 
 also just write everything in latin. you want to do identifiers, function names, comments, messages, etc. there are a couple technical terms like "offset" that i typically leave untranslated.
 

@@ -1866,6 +1866,124 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare Entity Unescaping
+     * ================================================== */
+
+    imprimere("\n--- Probans Entity Unescaping ---\n");
+
+    {
+        StmlResultus res;
+        StmlNodus* p;
+        chorda textus;
+
+        /* Basic entity unescaping: &lt; and &gt; */
+        res = stml_legere_ex_literis("<p>&lt;test&gt;</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        p = res.elementum_radix;
+        CREDO_NON_NIHIL(p);
+        textus = stml_textus_internus(p, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<test>");
+
+        imprimere("  &lt; &gt; unescaping: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda textus;
+
+        /* Ampersand unescaping: &amp; */
+        res = stml_legere_ex_literis("<p>A &amp; B</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "A & B");
+
+        imprimere("  &amp; unescaping: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda textus;
+
+        /* Quote unescaping: &quot; */
+        res = stml_legere_ex_literis("<p>&quot;quoted&quot;</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "\"quoted\"");
+
+        imprimere("  &quot; unescaping: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda textus;
+
+        /* Apostrophe unescaping: &apos; */
+        res = stml_legere_ex_literis("<p>&apos;single&apos;</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "'single'");
+
+        imprimere("  &apos; unescaping: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        StmlNodus* code;
+        chorda textus;
+
+        /* Raw tags preserve entities literally (no unescaping) */
+        res = stml_legere_ex_literis("<code!>&lt;not unescaped&gt;</code>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        code = res.elementum_radix;
+        CREDO_NON_NIHIL(code);
+        textus = stml_textus_internus(code, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "&lt;not unescaped&gt;");
+
+        imprimere("  Raw tags preserve entities: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda serialized;
+
+        /* Roundtrip equality: parse -> serialize -> same as input */
+        res = stml_legere_ex_literis("<p>&lt;hello&gt;</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<p>&lt;hello&gt;</p>");
+
+        imprimere("  Roundtrip equality: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda textus;
+
+        /* Multiple entities in one text node */
+        res = stml_legere_ex_literis("<p>&lt;a&gt; &amp;&amp; &lt;b&gt;</p>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<a> && <b>");
+
+        imprimere("  Multiple entities: VERUM\n");
+    }
+
+    {
+        StmlResultus res;
+        chorda textus;
+
+        /* Unknown entities preserved as-is */
+        res = stml_legere_ex_literis("<p>&foo; stays</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "&foo; stays");
+
+        imprimere("  Unknown entities preserved: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
