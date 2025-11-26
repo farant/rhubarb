@@ -19,9 +19,24 @@ nomen structura {
 
 
 /* ==================================================
+ * Singleton Globale
+ * ================================================== */
+
+/* Obtinere internamentum globale (singleton)
+ * Creatur pigre in primo usu cum piscina propria.
+ * Utile quando omnes bibliothecae debent eandem
+ * tabulam internamenti participare.
+ */
+InternamentumChorda*
+internamentum_globale(vacuum);
+
+/* ==================================================
  * Creatio
  * ================================================== */
 
+/* Creare novum internamentum (pro casibus specialibus)
+ * Plerumque melius est uti internamentum_globale()
+ */
 InternamentumChorda*
 internamentum_creare(
     Piscina* piscina);

@@ -161,6 +161,12 @@ just a reminder, don't ever use "nomen" as a variable name. it is a macro that e
 
 also chorda is a struct / string substitute that includes the length and data is NOT null terminated. so if you try to use standard library string functions on chorda data you are going to run into problems
 
+- don't forget we have a hash table implementation in tabula_dispersa.h
+- don't forget we have a variable length array in xar.h
+- don't forget we have string/chorda internment in internamentum.h
+- piscina.h is our arena implementation
+- we also have our own version of protobuf basically in nuntium.h
+
 oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
 
 anyway!

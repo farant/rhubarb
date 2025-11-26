@@ -787,6 +787,11 @@ _simplex_congruit (
             si (nodus->titulus == NIHIL) {
                 redde FALSUM;
             }
+            /* Velociter: comparatio indicis (si ambo internati) */
+            si (nodus->titulus == simplex->valor) {
+                redde VERUM;
+            }
+            /* Lente: comparatio chordae (defensiva) */
             redde chorda_aequalis(*nodus->titulus, *simplex->valor);
 
         casus SELECTIO_ID:
@@ -795,6 +800,11 @@ _simplex_congruit (
             si (attr_valor == NIHIL) {
                 redde FALSUM;
             }
+            /* Velociter: comparatio indicis (si ambo internati) */
+            si (attr_valor == simplex->valor) {
+                redde VERUM;
+            }
+            /* Lente: comparatio chordae (defensiva) */
             redde chorda_aequalis(*attr_valor, *simplex->valor);
 
         casus SELECTIO_CLASSIS:
@@ -839,6 +849,9 @@ _simplex_congruit (
 
                 casus ATTR_OP_AEQUALIS:
                     si (attr_valor == NIHIL) redde FALSUM;
+                    /* Velociter: comparatio indicis */
+                    si (attr_valor == simplex->attr_valor) redde VERUM;
+                    /* Lente: comparatio chordae */
                     redde chorda_aequalis(*attr_valor, *simplex->attr_valor);
 
                 casus ATTR_OP_INCIPIT:

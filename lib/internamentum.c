@@ -2,6 +2,33 @@
 #include <string.h>
 
 /* ==================================================
+ * Singleton Globale
+ * ================================================== */
+
+/* Piscina et internamentum globale (static) */
+hic_manens Piscina*             _piscina_globalis = NIHIL;
+hic_manens InternamentumChorda* _internamentum_globale = NIHIL;
+
+InternamentumChorda*
+internamentum_globale(vacuum)
+{
+    /* Pigra initialisatio */
+    si (_internamentum_globale == NIHIL)
+    {
+        _piscina_globalis = piscina_generare_dynamicum(
+            "internamentum_globale",
+            65536);  /* 64KB initialis */
+
+        si (_piscina_globalis != NIHIL)
+        {
+            _internamentum_globale = internamentum_creare(_piscina_globalis);
+        }
+    }
+
+    redde _internamentum_globale;
+}
+
+/* ==================================================
  * Creatio
  * ================================================== */
 
