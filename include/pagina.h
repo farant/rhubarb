@@ -3,6 +3,7 @@
 
 #include "latina.h"
 #include "piscina.h"
+#include "chorda.h"
 #include "fenestra.h"
 
 /* ==================================================
@@ -19,7 +20,7 @@
  *
  * EXEMPLUM:
  *   Pagina pagina;
- *   pagina_initiare(&pagina, "page:0");
+ *   pagina_initiare(&pagina, chorda_internare_ex_literis(intern, "page:0"));
  *
  *   pagina_inserere_characterem(&pagina, 'H');
  *   pagina_inserere_characterem(&pagina, 'i');
@@ -37,7 +38,6 @@
 #define PAGINA_LATITUDO_CHARACTERA LXX          /* 70 chars per line */
 #define PAGINA_ALTITUDO_LINEA LV                /* 55 lines per page */
 #define PAGINA_CAPACITAS (LXX * LV)             /* 3,850 total chars */
-#define PAGINA_IDENTIFICATOR_LONGITUDO LXIV    /* 64 chars for id */
 
 
 /* ==================================================
@@ -57,7 +57,7 @@ nomen structura {
     i32 cursor;                                             /* Cursor position */
     s32 selectio_initium;                                   /* Selection start (-1 if none) */
     s32 selectio_finis;                                     /* Selection end */
-    character identificator[PAGINA_IDENTIFICATOR_LONGITUDO]; /* "page:5" or "page:repl" */
+    chorda* identificator; /* "page:5" or "page:repl" - owned by caller's piscina/internamentum */
 
     /* Vim state */
     ModoEditor modo;                                        /* Normal or Insert mode */
@@ -94,11 +94,12 @@ nomen structura RegioClicca {
  *
  * pagina: pagina initianda
  * identificator: identificator paginae (e.g. "page:5", "page:repl")
+ *                debet esse chorda* ex internamento vel piscina - Pagina non copiat
  */
 vacuum
 pagina_initiare (
     Pagina* pagina,
-    constans character* identificator);
+    chorda* identificator);
 
 /* Vacare paginam
  *

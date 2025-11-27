@@ -317,7 +317,7 @@ main(void)
     }
 
     /* Initiare paginam */
-    pagina_initiare(&pagina, "page:demo");
+    pagina_initiare(&pagina, chorda_internare_ex_literis(internamentum_globale(), "page:demo"));
     pagina_inserere_chordam(&pagina, "TAB = switch focus (not in insert mode)\n\n");
     pagina_inserere_chordam(&pagina, "Click widgets to focus them\n\n");
     pagina_inserere_chordam(&pagina, "Navigator on right ->\n\n");

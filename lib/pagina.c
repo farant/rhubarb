@@ -177,7 +177,7 @@ pagina_movere_ad_verbum_praecedens (
 vacuum
 pagina_initiare (
     Pagina* pagina,
-    constans character* identificator)
+    chorda* identificator)
 {
     i32 i;
 
@@ -201,14 +201,8 @@ pagina_initiare (
     pagina->tempus_cursor_ultimus = 0.0;
     pagina->cursor_visibilis = VERUM;
 
-    /* Copiere identificator */
-    per (i = ZEPHYRUM; i < PAGINA_IDENTIFICATOR_LONGITUDO - I; i++) {
-        si (identificator[i] == '\0') {
-            frange;
-        }
-        pagina->identificator[i] = identificator[i];
-    }
-    pagina->identificator[i] = '\0';
+    /* Ponere identificator (non copiat - caller possidet) */
+    pagina->identificator = identificator;
 }
 
 vacuum
@@ -1246,7 +1240,7 @@ pagina_reddere_cum_margine (
      * Computare positiones textus (centered)
      * ================================================== */
 
-    titulo = chorda_ex_literis(pagina->identificator, piscina);
+    titulo = pagina->identificator ? *pagina->identificator : chorda_ex_literis("", piscina);
     modo_str = (pagina->modo == MODO_INSERT) ? "INSERT" : "NORMAL";
     modo_textus = chorda_ex_literis(modo_str, piscina);
 

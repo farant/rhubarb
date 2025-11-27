@@ -136,27 +136,6 @@ _layout_attributum_i32(
     redde defaltum;
 }
 
-/* Legere attributum chorda ex nodo STML ut C string (nulla-terminata)
- * NOTA: Allocat memoriam ex piscina */
-interior constans character*
-_layout_attributum_chorda(
-    StmlNodus*          nodus,
-    constans character* titulus,
-    Piscina*            piscina)
-{
-    chorda* valor;
-
-    valor = stml_attributum_capere(nodus, titulus);
-    si (!valor || !valor->datum)
-    {
-        redde NIHIL;
-    }
-
-    /* Convertere ad C string nulla-terminatam */
-    redde chorda_ut_cstr(*valor, piscina);
-}
-
-
 /* ==================================================
  * Processare Tags
  * ================================================== */
@@ -166,18 +145,17 @@ _layout_processare_pagina(
     LayoutDom* dom,
     StmlNodus* nodus)
 {
-    constans character*   id;
+    chorda*               id_chorda;
     i32                   x, y, latitudo, altitudo;
     Pagina*               pagina;
     LayoutDatumPagina*    datum;
     LayoutWidgetIntroitus* introitus;
-    chorda*               id_chorda;
 
-    /* Legere attributa */
-    id = _layout_attributum_chorda(nodus, "id", dom->piscina);
-    si (!id)
+    /* Legere attributa - id est chorda* ex STML (iam internata) */
+    id_chorda = stml_attributum_capere(nodus, "id");
+    si (!id_chorda)
     {
-        id = "pagina";  /* Defaltum */
+        id_chorda = chorda_internare_ex_literis(dom->intern, "pagina");
     }
 
     x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
@@ -191,7 +169,7 @@ _layout_processare_pagina(
     {
         redde FALSUM;
     }
-    pagina_initiare(pagina, id);
+    pagina_initiare(pagina, id_chorda);
 
     /* Creare datum wrapper */
     datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumPagina));
@@ -222,7 +200,6 @@ _layout_processare_pagina(
     introitus->datum = pagina;
     introitus->genus = LAYOUT_WIDGET_PAGINA;
 
-    id_chorda = chorda_internare_ex_literis(dom->intern, id);
     tabula_dispersa_inserere(dom->widgets, *id_chorda, introitus);
 
     redde VERUM;
@@ -234,12 +211,11 @@ _layout_processare_navigator(
     StmlNodus*           nodus,
     EntitasRepositorium* repositorium)
 {
-    constans character*    id;
+    chorda*                id_chorda;
     i32                    x, y, latitudo, altitudo;
     NavigatorEntitatum*    navigator;
     LayoutDatumNavigator*  datum;
     LayoutWidgetIntroitus* introitus;
-    chorda*                id_chorda;
 
     si (!repositorium)
     {
@@ -247,11 +223,11 @@ _layout_processare_navigator(
         redde FALSUM;
     }
 
-    /* Legere attributa */
-    id = _layout_attributum_chorda(nodus, "id", dom->piscina);
-    si (!id)
+    /* Legere attributa - id est chorda* ex STML (iam internata) */
+    id_chorda = stml_attributum_capere(nodus, "id");
+    si (!id_chorda)
     {
-        id = "navigator";  /* Defaltum */
+        id_chorda = chorda_internare_ex_literis(dom->intern, "navigator");
     }
 
     x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
@@ -295,7 +271,6 @@ _layout_processare_navigator(
     introitus->datum = navigator;
     introitus->genus = LAYOUT_WIDGET_NAVIGATOR;
 
-    id_chorda = chorda_internare_ex_literis(dom->intern, id);
     tabula_dispersa_inserere(dom->widgets, *id_chorda, introitus);
 
     redde VERUM;

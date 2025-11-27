@@ -3,6 +3,7 @@
 #include "fenestra.h"
 #include "pagina.h"
 #include "piscina.h"
+#include "internamentum.h"
 #include "thema.h"
 #include "tempus.h"
 #include <stdio.h>
@@ -61,7 +62,7 @@ main (
     }
 
     /* Initiare paginam */
-    pagina_initiare(&pagina, "Page::Test");
+    pagina_initiare(&pagina, chorda_internare_ex_literis(internamentum_globale(), "Page::Test"));
 
     /* Inserere textum initialem */
     pagina_inserere_chordam(&pagina, "Salve! Hoc est probatio paginae.\n");
