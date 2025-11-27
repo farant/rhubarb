@@ -21,69 +21,47 @@ declare -a INCLUDE_FLAGS=(
     "-Iinclude"
 )
 
-# Source files to link
+# Source files to compile to object files
 declare -a SOURCE_FILES=(
-  "lib/piscina.c"
-  "lib/chorda.c"
-  "lib/credo.c"
-  "lib/tabula_dispersa.c"
-  "lib/internamentum.c"
-  "lib/chorda_aedificator.c"
-  "lib/filum.c"
-  "lib/xar.c"
-  "lib/via.c"
-  "lib/argumenta.c"
-  "lib/macho.c"
-  "lib/sectio.c"
-  "lib/symbola.c"
-  "lib/entitas.c"
-  "lib/uuid.c"
-  "lib/graphus_entitatum.c"
-  "lib/color.c"
-  "lib/thema.c"
-  "lib/nuntium.c"
-  "lib/graphus_persistens.c"
-  "lib/friatio.c"
-  "lib/xml.c"
-  "lib/stml.c"
-  "lib/selectio.c"
-  "lib/widget.c"
-  "lib/pagina.c"
-  "lib/navigator_entitatum.c"
-  "lib/delineare.c"
-  "lib/fenestra_textus.c"
-  "lib/tempus.c"
-  "lib/layout.c"
-  "lib/fenestra_macos.m"
+    "lib/piscina.c"
+    "lib/chorda.c"
+    "lib/credo.c"
+    "lib/tabula_dispersa.c"
+    "lib/internamentum.c"
+    "lib/chorda_aedificator.c"
+    "lib/filum.c"
+    "lib/xar.c"
+    "lib/via.c"
+    "lib/argumenta.c"
+    "lib/macho.c"
+    "lib/sectio.c"
+    "lib/symbola.c"
+    "lib/entitas.c"
+    "lib/uuid.c"
+    "lib/graphus_entitatum.c"
+    "lib/color.c"
+    "lib/thema.c"
+    "lib/nuntium.c"
+    "lib/graphus_persistens.c"
+    "lib/friatio.c"
+    "lib/xml.c"
+    "lib/stml.c"
+    "lib/selectio.c"
+    "lib/widget.c"
+    "lib/pagina.c"
+    "lib/navigator_entitatum.c"
+    "lib/delineare.c"
+    "lib/fenestra_textus.c"
+    "lib/tempus.c"
+    "lib/layout.c"
+    "lib/registrum_commandi.c"
 )
 
-# GUI app source files (fenestra - requires Objective-C and Cocoa)
-declare -a GUI_SOURCE_FILES=(
-  "lib/piscina.c"
-  "lib/chorda.c"
-  "lib/fenestra_textus.c"
-  "lib/fenestra_macos.m"
-  "lib/delineare.c"
-  "lib/tempus.c"
-  "lib/pagina.c"
-  "lib/thema.c"
-  "lib/tabula_dispersa.c"
-  "lib/internamentum.c"
-  "lib/xar.c"
-  "lib/entitas.c"
-  "lib/graphus_entitatum.c"
-  "lib/navigator_entitatum.c"
-  "lib/widget.c"
-  "lib/registrum_commandi.c"
-  "lib/color.c"
-  "lib/uuid.c"
-  "lib/friatio.c"
-  "lib/chorda_aedificator.c"
-  "lib/credo.c"
-  "lib/selectio.c"
-  "lib/stml.c"
-  "lib/layout.c"
-)
+# Objective-C source (compiled separately)
+OBJC_SOURCE="lib/fenestra_macos.m"
+
+# Build directory for object files
+BUILD_DIR="build"
 
 # Color codes
 RED="\033[31m"
@@ -104,10 +82,110 @@ TESTS_FAILED=0
 GUI_APPS_BUILT=0
 GUI_APPS_FAILED=0
 
+# Track if libraries need recompilation
+LIBS_COMPILED=0
+
+# Compile all library source files to object files
+compile_libraries() {
+    local needs_compile=0
+    local src_file
+    local obj_file
+    local obj_name
+
+    # Create build directory
+    mkdir -p "$BUILD_DIR"
+
+    # Check if any source file is newer than its object file
+    for src_file in "${SOURCE_FILES[@]}"; do
+        obj_name=$(basename "$src_file" .c).o
+        obj_file="$BUILD_DIR/$obj_name"
+
+        if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ]; then
+            needs_compile=1
+            break
+        fi
+    done
+
+    # Also check Objective-C file
+    obj_file="$BUILD_DIR/fenestra_macos.o"
+    if [ ! -f "$obj_file" ] || [ "$OBJC_SOURCE" -nt "$obj_file" ]; then
+        needs_compile=1
+    fi
+
+    # Check if any header changed
+    for header in include/*.h; do
+        for src_file in "${SOURCE_FILES[@]}"; do
+            obj_name=$(basename "$src_file" .c).o
+            obj_file="$BUILD_DIR/$obj_name"
+            if [ -f "$obj_file" ] && [ "$header" -nt "$obj_file" ]; then
+                needs_compile=1
+                break 2
+            fi
+        done
+    done
+
+    if [ $needs_compile -eq 0 ] && [ $LIBS_COMPILED -eq 0 ]; then
+        echo -e "${BLUE}Libraries up to date${RESET}"
+        return 0
+    fi
+
+    echo -e "${BLUE}═══════════════════════════════════════${RESET}"
+    echo -e "${BLUE}COMPILING LIBRARIES${RESET}"
+    echo -e "${BLUE}═══════════════════════════════════════${RESET}"
+
+    # Compile C source files
+    for src_file in "${SOURCE_FILES[@]}"; do
+        obj_name=$(basename "$src_file" .c).o
+        obj_file="$BUILD_DIR/$obj_name"
+
+        # Only recompile if source is newer than object
+        if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ]; then
+            echo -e "  Compiling: $src_file"
+            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$src_file" -o "$obj_file" 2>&1; then
+                echo -e "${RED}✗ FAILED: $src_file${RESET}"
+                return 1
+            fi
+        fi
+    done
+
+    # Compile Objective-C file
+    obj_file="$BUILD_DIR/fenestra_macos.o"
+    if [ ! -f "$obj_file" ] || [ "$OBJC_SOURCE" -nt "$obj_file" ]; then
+        echo -e "  Compiling: $OBJC_SOURCE"
+        if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$OBJC_SOURCE" -o "$obj_file" 2>&1; then
+            echo -e "${RED}✗ FAILED: $OBJC_SOURCE${RESET}"
+            return 1
+        fi
+    fi
+
+    echo -e "${GREEN}Libraries compiled${RESET}"
+    echo ""
+    LIBS_COMPILED=1
+    return 0
+}
+
+# Get all object files for linking
+get_object_files() {
+    local obj_files=""
+    local src_file
+    local obj_name
+
+    for src_file in "${SOURCE_FILES[@]}"; do
+        obj_name=$(basename "$src_file" .c).o
+        obj_files="$obj_files $BUILD_DIR/$obj_name"
+    done
+
+    # Add Objective-C object
+    obj_files="$obj_files $BUILD_DIR/fenestra_macos.o"
+
+    echo "$obj_files"
+}
+
 compile_gui_app() {
     local app_file="$1"
     local app_name=$(basename "$app_file" .c)
     local output_binary="bin/$app_name"
+    local obj_files
 
     echo -e "${BLUE}────────────────────────────────────────${RESET}"
     echo -e "${BLUE}Building GUI: $app_name${RESET}"
@@ -116,10 +194,10 @@ compile_gui_app() {
     # Create bin directory if it doesn't exist
     mkdir -p bin
 
-    # Compile with clang (for Objective-C) and Cocoa framework
-    COMPILE_CMD="clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} $app_file ${GUI_SOURCE_FILES[@]} -framework Cocoa -o $output_binary"
+    obj_files=$(get_object_files)
 
-    if ! eval $COMPILE_CMD 2>&1; then
+    # Compile test file and link with object files
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         echo ""
@@ -136,6 +214,7 @@ compile_and_run_test() {
     local test_file="$1"
     local test_name=$(basename "$test_file" .c)
     local output_binary="/tmp/$test_name"
+    local obj_files
 
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
 
@@ -143,10 +222,10 @@ compile_and_run_test() {
     echo -e "${BLUE}Testing: $test_name${RESET}"
     echo -e "${BLUE}────────────────────────────────────────${RESET}"
 
-    # Compile (use clang for Objective-C support)
-    COMPILE_CMD="clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} $test_file ${SOURCE_FILES[@]} -framework Cocoa -o $output_binary"
+    obj_files=$(get_object_files)
 
-    if ! eval $COMPILE_CMD 2>&1; then
+    # Compile test file and link with object files
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         echo ""
@@ -176,6 +255,12 @@ compile_and_run_test() {
 }
 
 run_all_tests() {
+    # Compile libraries first
+    if ! compile_libraries; then
+        echo -e "${RED}Library compilation failed${RESET}"
+        return 1
+    fi
+
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo -e "${BLUE}RUNNING ALL TESTS${RESET}"
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
@@ -262,15 +347,26 @@ print_summary() {
 # Parse arguments
 WATCH_MODE=0
 DEBUG_MODE=0
+CLEAN_MODE=0
 for arg in "$@"; do
     if [ "$arg" == "--watch" ]; then
         WATCH_MODE=1
     elif [ "$arg" == "--debug" ]; then
         DEBUG_MODE=1
+    elif [ "$arg" == "--clean" ]; then
+        CLEAN_MODE=1
     else
         FILTER="$arg"
     fi
 done
+
+# Handle clean mode
+if [ $CLEAN_MODE -eq 1 ]; then
+    echo -e "${BLUE}Cleaning build directory...${RESET}"
+    rm -rf "$BUILD_DIR"
+    echo -e "${GREEN}Done${RESET}"
+    exit 0
+fi
 
 # Add debug symbols if debug mode
 if [ $DEBUG_MODE -eq 1 ]; then
