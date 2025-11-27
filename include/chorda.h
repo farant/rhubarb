@@ -227,6 +227,56 @@ chorda_ut_i32 (
 
 
 /* ==================================================
+ * Conversio Casus
+ * ================================================= */
+
+/* chorda_pascalis - Convertere ad PascalCase
+ * "hello world" → "HelloWorld"
+ * "getElementById" → "GetElementById"
+ */
+chorda
+chorda_pascalis (
+		 chorda  s,
+		Piscina* piscina);
+
+/* chorda_camelus - Convertere ad camelCase
+ * "hello world" → "helloWorld"
+ * "getElementById" → "getElementById"
+ */
+chorda
+chorda_camelus (
+		 chorda  s,
+		Piscina* piscina);
+
+/* chorda_serpens - Convertere ad snake_case
+ * "HelloWorld" → "hello_world"
+ * "getElementById" → "get_element_by_id"
+ */
+chorda
+chorda_serpens (
+		 chorda  s,
+		Piscina* piscina);
+
+/* chorda_kebab - Convertere ad kebab-case
+ * "HelloWorld" → "hello-world"
+ * "getElementById" → "get-element-by-id"
+ */
+chorda
+chorda_kebab (
+		 chorda  s,
+		Piscina* piscina);
+
+/* chorda_pascalis_serpens - Convertere ad Pascal_Snake_Case
+ * "hello world" → "Hello_World"
+ * "getElementById" → "Get_Element_By_Id"
+ */
+chorda
+chorda_pascalis_serpens (
+		 chorda  s,
+		Piscina* piscina);
+
+
+/* ==================================================
  * Friatio
  * ================================================= */
 

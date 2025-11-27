@@ -859,6 +859,292 @@ s32 principale (vacuum)
 
 
     /* =================================================
+     * Probare chorda_pascalis
+     * ================================================== */
+
+    {
+        chorda original, result, speratus;
+
+        imprimere("\n--- Probans chorda_pascalis ---\n");
+
+        /* Spatia verba separant */
+        original = chorda_ex_literis("hello world", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Underscore separatores */
+        original = chorda_ex_literis("hello_world", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Hyphen separatores */
+        original = chorda_ex_literis("hello-world", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* camelCase input */
+        original = chorda_ex_literis("helloWorld", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Iam PascalCase */
+        original = chorda_ex_literis("HelloWorld", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* SCREAMING_CASE */
+        original = chorda_ex_literis("HELLO_WORLD", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Cum numeris */
+        original = chorda_ex_literis("test123abc", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("Test123Abc", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Chorda vacua */
+        original = chorda_ex_literis("", piscina);
+        result   = chorda_pascalis(original, piscina);
+        CREDO_AEQUALIS_I32(result.mensura, ZEPHYRUM);
+
+        /* Unus character */
+        original = chorda_ex_literis("a", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("A", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Cum interpunctione */
+        original = chorda_ex_literis("Hello, World!", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* getElementById */
+        original = chorda_ex_literis("getElementById", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("GetElementById", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+    }
+
+
+    /* =================================================
+     * Probare chorda_camelus
+     * ================================================== */
+
+    {
+        chorda original, result, speratus;
+
+        imprimere("\n--- Probans chorda_camelus ---\n");
+
+        /* Spatia verba separant */
+        original = chorda_ex_literis("hello world", piscina);
+        result   = chorda_camelus(original, piscina);
+        speratus = chorda_ex_literis("helloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* PascalCase ad camelCase */
+        original = chorda_ex_literis("HelloWorld", piscina);
+        result   = chorda_camelus(original, piscina);
+        speratus = chorda_ex_literis("helloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* SCREAMING_CASE */
+        original = chorda_ex_literis("HELLO_WORLD", piscina);
+        result   = chorda_camelus(original, piscina);
+        speratus = chorda_ex_literis("helloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Iam camelCase */
+        original = chorda_ex_literis("helloWorld", piscina);
+        result   = chorda_camelus(original, piscina);
+        speratus = chorda_ex_literis("helloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Unus character */
+        original = chorda_ex_literis("A", piscina);
+        result   = chorda_camelus(original, piscina);
+        speratus = chorda_ex_literis("a", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+    }
+
+
+    /* =================================================
+     * Probare chorda_serpens
+     * ================================================== */
+
+    {
+        chorda original, result, speratus;
+
+        imprimere("\n--- Probans chorda_serpens ---\n");
+
+        /* PascalCase ad snake_case */
+        original = chorda_ex_literis("HelloWorld", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("hello_world", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* camelCase ad snake_case */
+        original = chorda_ex_literis("getElementById", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("get_element_by_id", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Iam snake_case */
+        original = chorda_ex_literis("already_snake", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("already_snake", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Spatia */
+        original = chorda_ex_literis("hello world", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("hello_world", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* XMLParser - acronym */
+        original = chorda_ex_literis("XMLParser", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("xml_parser", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Unus character */
+        original = chorda_ex_literis("A", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("a", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+    }
+
+
+    /* =================================================
+     * Probare chorda_kebab
+     * ================================================== */
+
+    {
+        chorda original, result, speratus;
+
+        imprimere("\n--- Probans chorda_kebab ---\n");
+
+        /* PascalCase ad kebab-case */
+        original = chorda_ex_literis("HelloWorld", piscina);
+        result   = chorda_kebab(original, piscina);
+        speratus = chorda_ex_literis("hello-world", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* camelCase ad kebab-case */
+        original = chorda_ex_literis("getElementById", piscina);
+        result   = chorda_kebab(original, piscina);
+        speratus = chorda_ex_literis("get-element-by-id", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Spatia */
+        original = chorda_ex_literis("hello world", piscina);
+        result   = chorda_kebab(original, piscina);
+        speratus = chorda_ex_literis("hello-world", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* snake_case ad kebab-case */
+        original = chorda_ex_literis("hello_world", piscina);
+        result   = chorda_kebab(original, piscina);
+        speratus = chorda_ex_literis("hello-world", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+    }
+
+
+    /* =================================================
+     * Probare chorda_pascalis_serpens
+     * ================================================== */
+
+    {
+        chorda original, result, speratus;
+
+        imprimere("\n--- Probans chorda_pascalis_serpens ---\n");
+
+        /* Spatia */
+        original = chorda_ex_literis("hello world", piscina);
+        result   = chorda_pascalis_serpens(original, piscina);
+        speratus = chorda_ex_literis("Hello_World", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* camelCase ad Pascal_Snake */
+        original = chorda_ex_literis("getElementById", piscina);
+        result   = chorda_pascalis_serpens(original, piscina);
+        speratus = chorda_ex_literis("Get_Element_By_Id", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* PascalCase ad Pascal_Snake */
+        original = chorda_ex_literis("HelloWorld", piscina);
+        result   = chorda_pascalis_serpens(original, piscina);
+        speratus = chorda_ex_literis("Hello_World", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Unus character */
+        original = chorda_ex_literis("a", piscina);
+        result   = chorda_pascalis_serpens(original, piscina);
+        speratus = chorda_ex_literis("A", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+    }
+
+
+    /* =================================================
+     * Probare conversiones casus - casus limites
+     * ================================================== */
+
+    {
+        chorda original, result, speratus;
+
+        imprimere("\n--- Probans conversiones_casus_limites ---\n");
+
+        /* Omnes maiusculae "ABC" */
+        original = chorda_ex_literis("ABC", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("abc", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Omnes minusculae "abc" */
+        original = chorda_ex_literis("abc", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("Abc", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Numeri solum "123" */
+        original = chorda_ex_literis("123", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("123", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Interpunctio solum - debet reddere vacuum */
+        original = chorda_ex_literis("!!!", piscina);
+        result   = chorda_pascalis(original, piscina);
+        CREDO_AEQUALIS_I32(result.mensura, ZEPHYRUM);
+
+        /* Mixta "Hello, World! 123" */
+        original = chorda_ex_literis("Hello, World! 123", piscina);
+        result   = chorda_kebab(original, piscina);
+        speratus = chorda_ex_literis("hello-world-123", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* Underscores duplices */
+        original = chorda_ex_literis("hello__world", piscina);
+        result   = chorda_pascalis(original, piscina);
+        speratus = chorda_ex_literis("HelloWorld", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+
+        /* HTTPSConnection - acronym in medio */
+        original = chorda_ex_literis("HTTPSConnection", piscina);
+        result   = chorda_serpens(original, piscina);
+        speratus = chorda_ex_literis("https_connection", piscina);
+        CREDO_CHORDA_AEQUALIS(result, speratus);
+    }
+
+
+    /* =================================================
      * Compendium
      * ================================================== */
 

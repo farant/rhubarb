@@ -1083,7 +1083,7 @@ chorda_ut_i32 (
  * FRIATIO
  * ================================================== */
 
-i32 
+i32
 chorda_friare (
     chorda s)
 {
@@ -1100,4 +1100,521 @@ chorda_friare (
     }
 
     redde friatum;
+}
+
+
+/* ==================================================
+ * Conversio Casus
+ * ================================================== */
+
+/* Interior: Extrahere verba ex chorda
+ * Regulae:
+ * - Characteres non-alphanumerici sunt delimitatores (omittuntur)
+ * - Transitio minuscula→maiuscula incipit verbum novum
+ * - Littera post digitum incipit verbum novum
+ * - Maiusculae consecutivae ante minusculam: scinde ante ultimam maiusculam
+ */
+interior chorda_fissio_fructus
+_extrahere_verba (
+       chorda  s,
+      Piscina* piscina)
+{
+    chorda_fissio_fructus  fructus;
+                   chorda* verba;
+                      i32  capacitas;
+                      i32  numerus;
+                      i32  i;
+                      s32  initium_verbi;
+                      b32  in_verbo;
+                character  c_currens;
+                character  c_praecedans;
+
+    fructus.elementa = NIHIL;
+    fructus.numerus  = ZEPHYRUM;
+
+    si (!s.datum || s.mensura == ZEPHYRUM || !piscina)
+    {
+        redde fructus;
+    }
+
+    capacitas = XVI;
+    verba = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+    si (!verba)
+    {
+        redde fructus;
+    }
+
+    numerus       = ZEPHYRUM;
+    initium_verbi = -I;
+    in_verbo      = FALSUM;
+    c_praecedans  = '\0';
+
+    per (i = ZEPHYRUM; i <= s.mensura; i++)
+    {
+        b32 est_finis = (i == s.mensura);
+        b32 est_alpha = FALSUM;
+        b32 est_digitus = FALSUM;
+        b32 est_maiuscula = FALSUM;
+        b32 praec_minuscula = FALSUM;
+        b32 praec_digitus = FALSUM;
+        b32 praec_maiuscula = FALSUM;
+        b32 debet_scindere = FALSUM;
+
+        si (!est_finis)
+        {
+            c_currens = (character)s.datum[i];
+            est_alpha = isalpha((integer)c_currens) != ZEPHYRUM;
+            est_digitus = isdigit((integer)c_currens) != ZEPHYRUM;
+            est_maiuscula = isupper((integer)c_currens) != ZEPHYRUM;
+        }
+
+        si (c_praecedans != '\0')
+        {
+            praec_minuscula = islower((integer)c_praecedans) != ZEPHYRUM;
+            praec_digitus = isdigit((integer)c_praecedans) != ZEPHYRUM;
+            praec_maiuscula = isupper((integer)c_praecedans) != ZEPHYRUM;
+        }
+
+        /* Determinare si debemus scindere */
+        si (in_verbo && !est_finis && (est_alpha || est_digitus))
+        {
+            /* Minuscula ad maiusculam: scinde */
+            si (praec_minuscula && est_maiuscula)
+            {
+                debet_scindere = VERUM;
+            }
+            /* Digitus ad litteram: scinde */
+            alioquin si (praec_digitus && est_alpha)
+            {
+                debet_scindere = VERUM;
+            }
+            /* Maiuscula ante maiusculam, sed proximus est minuscula: scinde ante currens */
+            /* Exemplum: "XMLParser" - quando ad 'P' venimus post 'L', scinde */
+            alioquin si (praec_maiuscula && est_maiuscula && i + I < s.mensura)
+            {
+                character c_proximus = (character)s.datum[i + I];
+                si (islower((integer)c_proximus))
+                {
+                    debet_scindere = VERUM;
+                }
+            }
+        }
+
+        /* Finis verbi */
+        si (in_verbo && (est_finis || (!est_alpha && !est_digitus) || debet_scindere))
+        {
+            /* Verificare capacitatem */
+            si (numerus >= capacitas)
+            {
+                chorda* verba_nova;
+                    i32 j;
+
+                capacitas *= II;
+                verba_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
+                si (!verba_nova)
+                {
+                    fructus.elementa = NIHIL;
+                    fructus.numerus  = ZEPHYRUM;
+                    redde fructus;
+                }
+
+                per (j = ZEPHYRUM; j < numerus; j++)
+                {
+                    verba_nova[j] = verba[j];
+                }
+                verba = verba_nova;
+            }
+
+            verba[numerus] = chorda_sectio(s, (i32)initium_verbi, i);
+            numerus++;
+
+            si (debet_scindere)
+            {
+                /* Initium novi verbi est currens character */
+                initium_verbi = (s32)i;
+                in_verbo = VERUM;
+            }
+            alioquin
+            {
+                in_verbo = FALSUM;
+                initium_verbi = -I;
+            }
+        }
+
+        /* Initium verbi novi */
+        si (!in_verbo && !est_finis && (est_alpha || est_digitus))
+        {
+            initium_verbi = (s32)i;
+            in_verbo = VERUM;
+        }
+
+        si (!est_finis)
+        {
+            c_praecedans = c_currens;
+        }
+    }
+
+    fructus.elementa = verba;
+    fructus.numerus  = numerus;
+    redde fructus;
+}
+
+
+chorda
+chorda_pascalis (
+     chorda  s,
+    Piscina* piscina)
+{
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                      i8*  allocatus;
+                      i32  positus;
+                      i32  i;
+                      i32  j;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    verba = _extrahere_verba(s, piscina);
+
+    si (verba.numerus == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    /* Allocare maximum possibile (originalis mensura) */
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)s.mensura);
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    positus = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        chorda verbum = verba.elementa[i];
+
+        per (j = ZEPHYRUM; j < verbum.mensura; j++)
+        {
+            character c = (character)verbum.datum[j];
+
+            si (j == ZEPHYRUM)
+            {
+                /* Prima littera maiuscula */
+                allocatus[positus++] = (i8)toupper((integer)c);
+            }
+            alioquin
+            {
+                /* Reliquae minusculae */
+                allocatus[positus++] = (i8)tolower((integer)c);
+            }
+        }
+    }
+
+    fructus.mensura = positus;
+    fructus.datum   = allocatus;
+    redde fructus;
+}
+
+
+chorda
+chorda_camelus (
+     chorda  s,
+    Piscina* piscina)
+{
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                      i8*  allocatus;
+                      i32  positus;
+                      i32  i;
+                      i32  j;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    verba = _extrahere_verba(s, piscina);
+
+    si (verba.numerus == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)s.mensura);
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    positus = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        chorda verbum = verba.elementa[i];
+
+        per (j = ZEPHYRUM; j < verbum.mensura; j++)
+        {
+            character c = (character)verbum.datum[j];
+
+            si (i == ZEPHYRUM)
+            {
+                /* Primum verbum totum minusculum */
+                allocatus[positus++] = (i8)tolower((integer)c);
+            }
+            alioquin si (j == ZEPHYRUM)
+            {
+                /* Prima littera verborum subsequentium maiuscula */
+                allocatus[positus++] = (i8)toupper((integer)c);
+            }
+            alioquin
+            {
+                /* Reliquae minusculae */
+                allocatus[positus++] = (i8)tolower((integer)c);
+            }
+        }
+    }
+
+    fructus.mensura = positus;
+    fructus.datum   = allocatus;
+    redde fructus;
+}
+
+
+chorda
+chorda_serpens (
+     chorda  s,
+    Piscina* piscina)
+{
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                      i8*  allocatus;
+                      i32  mensura_nova;
+                      i32  positus;
+                      i32  i;
+                      i32  j;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    verba = _extrahere_verba(s, piscina);
+
+    si (verba.numerus == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    /* Calculare mensuram: verba + separatores */
+    mensura_nova = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        mensura_nova += verba.elementa[i].mensura;
+        si (i > ZEPHYRUM)
+        {
+            mensura_nova += I; /* Pro '_' */
+        }
+    }
+
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    positus = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        chorda verbum = verba.elementa[i];
+
+        si (i > ZEPHYRUM)
+        {
+            allocatus[positus++] = '_';
+        }
+
+        per (j = ZEPHYRUM; j < verbum.mensura; j++)
+        {
+            allocatus[positus++] = (i8)tolower((integer)(character)verbum.datum[j]);
+        }
+    }
+
+    fructus.mensura = positus;
+    fructus.datum   = allocatus;
+    redde fructus;
+}
+
+
+chorda
+chorda_kebab (
+     chorda  s,
+    Piscina* piscina)
+{
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                      i8*  allocatus;
+                      i32  mensura_nova;
+                      i32  positus;
+                      i32  i;
+                      i32  j;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    verba = _extrahere_verba(s, piscina);
+
+    si (verba.numerus == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    /* Calculare mensuram: verba + separatores */
+    mensura_nova = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        mensura_nova += verba.elementa[i].mensura;
+        si (i > ZEPHYRUM)
+        {
+            mensura_nova += I; /* Pro '-' */
+        }
+    }
+
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    positus = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        chorda verbum = verba.elementa[i];
+
+        si (i > ZEPHYRUM)
+        {
+            allocatus[positus++] = '-';
+        }
+
+        per (j = ZEPHYRUM; j < verbum.mensura; j++)
+        {
+            allocatus[positus++] = (i8)tolower((integer)(character)verbum.datum[j]);
+        }
+    }
+
+    fructus.mensura = positus;
+    fructus.datum   = allocatus;
+    redde fructus;
+}
+
+
+chorda
+chorda_pascalis_serpens (
+     chorda  s,
+    Piscina* piscina)
+{
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                      i8*  allocatus;
+                      i32  mensura_nova;
+                      i32  positus;
+                      i32  i;
+                      i32  j;
+
+    si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    verba = _extrahere_verba(s, piscina);
+
+    si (verba.numerus == ZEPHYRUM)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    /* Calculare mensuram: verba + separatores */
+    mensura_nova = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        mensura_nova += verba.elementa[i].mensura;
+        si (i > ZEPHYRUM)
+        {
+            mensura_nova += I; /* Pro '_' */
+        }
+    }
+
+    allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura_nova);
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    positus = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < verba.numerus; i++)
+    {
+        chorda verbum = verba.elementa[i];
+
+        si (i > ZEPHYRUM)
+        {
+            allocatus[positus++] = '_';
+        }
+
+        per (j = ZEPHYRUM; j < verbum.mensura; j++)
+        {
+            character c = (character)verbum.datum[j];
+
+            si (j == ZEPHYRUM)
+            {
+                /* Prima littera maiuscula */
+                allocatus[positus++] = (i8)toupper((integer)c);
+            }
+            alioquin
+            {
+                /* Reliquae minusculae */
+                allocatus[positus++] = (i8)tolower((integer)c);
+            }
+        }
+    }
+
+    fructus.mensura = positus;
+    fructus.datum   = allocatus;
+    redde fructus;
 }
