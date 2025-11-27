@@ -11,9 +11,11 @@ When intelligence reveals a Borg invasion 10-20 years away, a team of Stargate p
 
 The existing digital infrastructure - operating systems, networks, protocols, everything - is compromised. The Borg have been seeding Earth for centuries with dormant technology disguised as ancient artifacts. When these "tablets" contact modern microchips, they activate - instant assimilation of whoever's holding the device. The supply chain attacks, the accumulated vulnerabilities, the technical debt - it was all preparation. When the invasion fleet arrives, they won't need to fight. They'll just activate what's already theirs.
 
-The Stargate network itself is offline. The dialing computers run on compromised systems. They can't trust the gate until they rebuild the software that controls it.
+The Stargate network itself is offline - but not because of software compromise. Somewhere on Earth, the Borg built something: a temporal gate, a prototype that reaches through time as well as space. The side effect broke normal gate physics. Every gate on the planet went dark. The SGC doesn't know why. They've been investigating for months.
 
-The only gate still functioning connects to Nova Roma - a habitable world where a Roman expedition accidentally stepped through a gate two thousand years ago and built a civilization. They've preserved classical knowledge, evolved Latin as a living language, and maintained roughly the technology level they arrived with - Roman engineering, agriculture, crafts. They are uncorrupted by compromised tech, culturally resilient, and humanity's best hope if Earth falls.
+The only gate still functioning is the one the Borg built - hidden in an abandoned Spanish mission in the American Southwest. It connects to Nova Roma, a habitable world where a Roman expedition accidentally stepped through an unstable gate connection long ago. But Nova Roma isn't what it seems. Time flows differently there. What's been two thousand years on Earth has been barely a century and a half for the colony. They've preserved classical knowledge, evolved Latin as a living language, maintained Roman technology - but they're not ancient. They're six generations removed from Rome, not eighty.
+
+The Borg want that gate. They want to understand why time bends around Nova Roma. They want to build more temporal gates. The team captures the mission without knowing any of this - they're just looking for whatever broke their network. What they find changes everything.
 
 The mission: rebuild all foundational software from scratch, in Latin, deployable to a civilization that has never seen a computer. Every library is an episode. Every module is a piece of what the Romans need to eventually stand on their own.
 
@@ -34,13 +36,31 @@ They don't know exactly when the invasion comes. Could be 10 years, could be 20.
 
 ### The Setting
 
-**Earth - SGC:**
-Cheyenne Mountain, but quieter than the old days. Most gate operations suspended until systems can be trusted. The base has become part military installation, part monastery, part software workshop. The urgency is real but the pace is measured.
+**Earth - The Mission:**
+An abandoned Spanish mission in the American Southwest - New Mexico or Arizona. Adobe walls, bell tower, courtyard with a dry fountain. The padres built it in the 1700s around something they didn't understand. They thought it was holy, then cursed. They left in the 1800s. Nobody came back.
+
+What they found wasn't ancient. The Borg *built* it. A temporal Stargate - a prototype designed to reach across time as well as space. They constructed it specifically to reach Midas, whose temporal signature they detected from the future. The gate connects to Nova Roma not because of where it is, but because of *when* - and because Midas is there.
+
+The side effect of building a temporal gate: it broke the existing Stargate network. All of Earth's gates went offline. Not sabotage, not software compromise - *interference*. The Borg's prototype disrupted the normal gate physics. Cheyenne Mountain's gate doesn't work because the mission gate exists.
+
+Casey has known about the mission since 1858. Strange things happened there - temporal anomalies, objects aging wrong, compasses spinning. He and Duncan tracked the pattern for decades before they understood what they were looking at.
+
+The team captures the mission in the pilot. They don't know there's a gate inside - they're investigating the source of the interference that shut down the SGC. Finding the gate is the surprise. Finding it *active*, permanently connected to somewhere, is the bigger surprise.
+
+It becomes their primary base: off-grid, defensible, connected to Nova Roma through the only working gate on Earth. The aesthetic is frontier monastery. Adobe and candlelight. 1980s computers in whitewashed rooms. Casey's old trucks in what used to be a stable. The urgency is real but the pace is measured - part military installation, part scriptorium, part software workshop.
 
 **Nova Roma:**
-A Mediterranean-climate world with a single major continent. The colony began with perhaps a hundred Romans who stumbled through an unstable gate connection. Two thousand years later, the population is several thousand - a small but complete civilization with agriculture, crafts, philosophy, republican governance, and military traditions intact.
+A Mediterranean-climate world with a single major continent - and a temporal anomaly. Time flows differently here. What has been nearly two thousand years on Earth has been only eighty years on Nova Roma. The original colonists are only three generations back.
 
-The gate sits in what they call the Forum Stellarum - the Forum of Stars. For two millennia it was a religious site, the place where ancestors arrived from the heavens. Now it's active again, and strangers are coming through with impossible knowledge.
+**The Founding (120 AD / Year 1):** Rome discovered the gate - or someone showed it to them - and used it to dispose of inconvenient people. Criminals. Political enemies. Anyone they wanted gone without the mess of execution. Two hundred exiles stepped through, expecting death or worse. They found a habitable world instead. Among them: Midas (political enemy, "a misunderstanding about taxation") and Pliny (scholar who asked the wrong questions about the wrong artifacts).
+
+The colony is small: three thousand people. Three generations of growth from those original two hundred. A complete civilization with agriculture, crafts, philosophy, republican governance, and military traditions - but young. The grandchildren of the first exiles are adults now. Rome is living memory, not ancient history.
+
+Why the temporal dilation? Midas. His presence warps time around him. He doesn't know it - he never has. The whole planet runs slower because he's on it. The Borg detected this from the future: a pocket of slow time connected to Earth. If they can understand how it works, they can build more temporal gates. Use Nova Roma as a staging ground where they have centuries to prepare while Earth experiences only years.
+
+The gate sits in what they call the Forum Stellarum - the Forum of Stars. For generations it was a religious site, the place where ancestors arrived from the heavens. Now it's active again, and strangers are coming through with impossible knowledge.
+
+**The Time Cost:** Every day the team spends in Nova Roma, multiple days pass on Earth. The invasion clock ticks faster from their perspective. They can't just stay and build - they have to keep going back and forth. The work in Nova Roma is essential, but it comes at a price.
 
 Early episodes have a frontier feel - a villa converted to a workshop, direct collaboration with local craftsmen, everyone knowing everyone. As the series progresses, population grows from Earth emigrants and natural increase. The frontier becomes a town, then a city, then a civilization.
 
@@ -64,7 +84,11 @@ Early episodes have a frontier feel - a villa converted to a workshop, direct co
 
 *Methos* - 5,000 years old, oldest living Immortal. Was *there* for the original fall of classical civilization. Remembers things everyone else learned from fragments. Lazy, sardonic, surprisingly helpful when it matters. "Oh, you're building a republic? I have notes. Several scrolls' worth, actually. Most of them are warnings."
 
-*Midas* - The Phrygian king of myth, Immortal since the 8th century BC. The golden touch story is garbled history - a comedy of errors that spiraled into legend. After escaping Phrygia he wandered through Greek civilization, watched Rome rise and fall, survived the medieval period, kept moving. Where MacLeod covers the modern era, Midas covers antiquity and the classical world. He's an ideas guy - enthusiastic, prone to tangents, full of "this reminds me of when I was in Athens" stories. He was *there* for the philosophy, the early republicanism, the engineering. "Aristotle was actually very funny in person, people don't realize this." His mistakes are comedy, not tragedy. He's learned from all of them, but he learned by doing things wrong first. The POV character for flashbacks to eras MacLeod never saw.
+*Midas* - The Phrygian king of myth, Immortal since the 8th century BC. The golden touch story is garbled history - but not in the way you'd expect. Young Midas encountered something ancient, something that wasn't supposed to be found. A temporal artifact, maybe Borg-derived, maybe something older. It changed him. The "everything he touches turns to gold" legend is how ancient people described someone who was... temporally unstable. Phasing in and out. Things around him aging wrong, transmuting, becoming other. He learned to control it - or it settled - but the effect never fully stopped. He emits a temporal frequency. A signature. He doesn't know it. He's just been Midas for three thousand years.
+
+After escaping Phrygia he wandered through Greek civilization, watched Rome rise and fall, survived the medieval period, kept moving. Where MacLeod covers the modern era, Midas covers antiquity and the classical world. He's an ideas guy - enthusiastic, prone to tangents, full of "this reminds me of when I was in Athens" stories. He was *there* for the philosophy, the early republicanism, the engineering. "Aristotle was actually very funny in person, people don't realize this." His mistakes are comedy, not tragedy. He's learned from all of them, but he learned by doing things wrong first. The POV character for flashbacks to eras MacLeod never saw.
+
+What Midas doesn't know: he's the reason any of this is happening. The Borg detected his temporal signature from the future. A beacon across time. They traced it to Nova Roma and built a gate specifically to reach him. He's the MacGuffin who thinks he's a supporting character.
 
 *Joe Dawson* - Watcher, historian, bartender. Mortal but essential. Keeps the records. Understands that what they're building isn't just software, it's the foundation of a civilization's memory. "The Watchers have been documenting Immortals for centuries. Someone has to document this."
 
@@ -84,7 +108,7 @@ He and Duncan have been investigating the Borg together for decades - Duncan in 
 
 **From Nova Roma:**
 
-*Gaius Plinius Secundus (Pliny the Elder)* - Immortal. History records his death at Vesuvius in 79 AD, but he survived - his First Death. A century after the initial colonists (legionnaires and escaped slaves) stumbled through the gate, Pliny found it while investigating strange phenomena. He's been in Nova Roma for nearly two thousand years, watching over the colony, preserving knowledge, guiding without ruling. Author of the *Naturalis Historia Nova* - an encyclopedic work documenting everything about their new world. The original polymath, now learning to categorize a universe far stranger than he imagined. "I have spent two millennia organizing what we know. Now you bring knowledge that reorganizes everything."
+*Gaius Plinius Secundus (Pliny)* - One of the original exiles, now old. A scholar in Rome who asked too many questions about strange artifacts - the tablets, the gate, things that powerful people wanted left alone. They sent him through expecting him to die. He's spent eighty years building a civilization instead. Author of the *Naturalis Historia Nova* - forty volumes documenting everything about their new world. The original polymath, meticulous and curious, finally meeting people who might have answers to questions he's carried his whole life. "I have spent my life organizing what we know. Now you bring knowledge that reorganizes everything."
 
 *Marcus Aurelius Ferrarius* - Roman engineer, first native technical lead. Trained as a builder of aqueducts and roads, now learning to build in code. Asks the questions that reveal Earth assumptions. "Why must we do it this way?" Often the answer is: we don't, we just did it wrong before.
 
@@ -113,6 +137,14 @@ He and Duncan have been investigating the Borg together for decades - Duncan in 
 **Why Immortals Matter:** Immortal physiology rejects nanoprobes. The healing factor treats them as foreign bodies and expels them. Immortals cannot be assimilated. This makes them the only beings the Borg can't turn into weapons - and therefore targets for elimination.
 
 **Why Data Matters:** Already artificial. Nothing organic to assimilate. He can interface with Borg systems without being consumed by them. The good version of synthetic intelligence vs the hostile version.
+
+**The Temporal Gate:** The Borg's real objective. They're invading from the future, but time travel is difficult - expensive, violent, limited. The Terminator-style arrivals of Data and Kirk represent the crude method: brute force temporal displacement. But if they could build gates that travel through time as well as space? Invasion becomes trivial. Dial any era. Deploy forces anywhere in history.
+
+They detected Midas's temporal signature from the future - a beacon across time. They traced it to Nova Roma and built a gate specifically to reach him. The mission gate is their prototype: a temporal Stargate. It works, but they don't fully understand *why*. They've been sending tablets through for centuries (Earth time), studying, gathering data.
+
+The side effect of building the temporal gate: it broke the existing Stargate network. All of Earth's gates went offline. Not deliberate sabotage - collateral damage. The Borg's prototype interferes with normal gate physics.
+
+**The Prize:** The gate itself is what the Borg need. Not the Romans, not the tablets - the gate. If they can reverse-engineer what makes it work (Midas's temporal signature, the specific physics, whatever confluence of factors created the time dilation), they can build more. The whole invasion might be about acquiring this one piece of technology. Earth is secondary.
 
 **The Ra Connection:** The Goa'uld were the beta test.
 

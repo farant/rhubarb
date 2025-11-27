@@ -1,6 +1,6 @@
 # NOVUM FUNDAMENTUM
 ## Episode 1x01: "Piscina: Capacitas Nova"
-### Beat Sheet (Draft 3)
+### Beat Sheet (Draft 4)
 
 ---
 
@@ -8,7 +8,7 @@
 
 **Location:** Earth. Upscale private poker room - Monaco vibes. Crystal, dark wood, soft lighting. The kind of place where very serious people do very quiet business. Night.
 
-**Setup:** SG-1 (Carter, Daniel, Teal'c) has been running an Earth-side intelligence operation for a year. They've been tracking someone - communications anomalies, unexplained deaths, technology behaving strangely. Tonight they finally have him at a table.
+**Setup:** SG-1 (Carter, Daniel, Teal'c) has been investigating why every Stargate on Earth went dark six months ago. No explanation. No attack. They just stopped working. Tonight they've tracked a lead - communications anomalies, unexplained deaths, technology behaving strangely - to a man at this table.
 
 **The scene:** They're dressed up. Formal wear. Carter in evening dress, Daniel in a tailored suit, Teal'c imposing in black tie. They don't look like soldiers. They look like high-stakes players.
 
@@ -79,6 +79,8 @@ He's been tracking them too. He knows who they are. They don't know what he is.
 Careful negotiation. Duncan offers information. He's been working this problem longer than they have. Decades, not months.
 
 He starts explaining: the invasion isn't coming. It's already here. Infrastructure level. The advance work has been happening for thirty years. Backdoors in hardware. Compromised supply chains. Sleeper protocols in software that runs everything.
+
+"Your gates going dark? That's not an attack. That's a side effect. Something's interfering with the physics. Something new. Something they built."
 
 "In ten to twenty years, they arrive. And when they do, they press a button and every system you depend on turns against you. Power grids. Communications. Water treatment. The machines you've taught to run your civilization will be the weapons that end it."
 
@@ -152,6 +154,10 @@ He looks at the tablets. At the dead redshirt.
 
 Duncan: "And now you've seen how it spreads. Ancient technology meets modern. That's the trigger. That's how they've been seeding this planet for centuries. Waiting for you to build the infrastructure they need."
 
+He pulls out a phone - old, analog, no camera.
+
+Duncan: "I need to make a call. We know where these tablets are coming from. And tonight's the night we do something about it."
+
 END ACT ONE
 
 ---
@@ -160,83 +166,115 @@ END ACT ONE
 
 *New. The new plan. The new alliance. The new threat fully revealed.*
 
-### Beat 6: Methos
+### Beat 6: Casey's Safehouse
 
-New location. Somewhere unexpected - a bar, a university office, a bookshop. Methos's territory.
+**Location:** Remote. Off-grid. A farmhouse or compound that looks abandoned but isn't. No power lines running to it. No satellite dishes. Old trucks, not new cars.
 
-Duncan brings SG-1 to meet him. Methos is unimpressed.
+Duncan brings SG-1 here. They're met by CASEY - weathered, ageless, cowboy energy even in modern clothes. And METHOS - sardonic, watching, assessing.
 
-"You want to save the world. Again. How many times is this for you, MacLeod? Third? Fourth?"
+Casey: "So you're the SGC. Duncan's told me about you."
 
-But when Duncan explains the scope - infrastructure compromise, invasion timeline, the systematic hollowing-out of human civilization - Methos gets serious.
+Carter: "And who are you?"
 
-"Ah. So not a battle. An extinction."
+Casey: "Someone who's been watching your civilization build its own coffin for sixty years."
 
-### Beat 7: Historical Parallel
+He leads them inside. The farmhouse is deceptive - underground levels, clean rooms, hardware that looks like it's from the 80s and 90s. Deliberate.
 
-Methos explains what he's seen. Five thousand years of civilizations rising and falling.
+Casey: "No chips manufactured after 1985. Nothing networked. Nothing they can touch."
 
-"You want to know how Rome fell? It didn't fall. It was hollowed out. The legions were still marching when the empire was already dead inside. The bureaucracy that built it became the tool that dismembered it. The roads that connected it became the paths for invasion."
+### Beat 7: The Pattern
 
-Carter: "You're saying our infrastructure is our vulnerability."
+Casey's war room. Maps on the walls - physical maps, pins and string. Photographs. Documents. A conspiracy theorist's lair, except it's all real.
 
-Methos: "I'm saying your infrastructure is *already* the enemy's weapon. They're just waiting to pull the trigger."
+Casey explains: He and Duncan have been tracking this for decades. The tablets. The disappearances. The technology that behaves wrong. Strange readings. Interference patterns. It all traces back to one location.
+
+An old Spanish mission. American Southwest - New Mexico, maybe Arizona. Abandoned since the 1800s. The padres built around something they didn't understand.
+
+Casey: "I've known about it since 1858. Strange things happened there. Objects aging wrong. Compasses spinning. Time felt *different* near it. The padres thought it was holy. Then they thought it was cursed. They left. Nobody's been back since."
+
+Carter: "And you think this is what's interfering with our gates?"
+
+Casey: "Six months ago, the readings from that location spiked. Same time your gates went dark. That's not a coincidence."
+
+Carter: "What's in there?"
+
+Casey: "We don't know. Every drone we've sent in stopped transmitting. Every team we've considered sending... we didn't have enough people we could trust. Until now."
 
 ### Beat 8: The Impossible Choice
 
-The team processes. What do you do when you can't trust any of your tools?
+Carter processes. Whatever's in that mission shut down the entire gate network.
 
-Carter, working through it: "We'd have to rebuild everything. From scratch. Operating systems, compilers, the entire software stack. Clean room implementation. Every line of code audited."
+Carter: "We have to take it. If there's any chance of getting our gates back online..."
 
-Daniel: "That would take decades."
+Casey: "That's the idea. But there's more."
 
-Carter: "We have ten to twenty years."
+He shows them intercepted signals. Partial translations Daniel works through in real-time. Signals coming *from* the mission.
 
-Methos: "Then you'd better start now. And you'd better have somewhere to deploy it that isn't already compromised."
+Daniel: "*Praeparate*... prepare. *Colonia*... colony. These are old. Latin. But the transmission method is..."
 
-### Beat 9: Nova Roma
+Carter: "Not ancient."
 
-Carter remembers something. Old mission files. A gate address that was logged and filed away as low priority.
+Casey: "Someone's communicating through that location. Has been for years. We just didn't know what we were looking at until your gates went down and the pattern became clear."
 
-"There's a world. P3X-something. A Roman expedition went through two thousand years ago. They built a colony. We made contact briefly, classified it as 'primitive, no strategic value.'"
+The stakes crystallize. Whatever's in that mission isn't just interfering with Earth's gates. It's connected to something else. Somewhere else.
 
-Daniel: "No technology. No infrastructure to compromise."
+### Beat 9: The Assault Plan
 
-Carter: "A clean slate."
+Casey has been preparing for this. Weapons - old ones, mechanical, nothing digital. Vehicles. A team.
 
-Methos: "Romans, you say? I have some experience with Romans."
+O'Neill appears - first time we see him. He's been here. Part of this operation all along, working off-book.
 
-### Beat 10: Joe Dawson
+O'Neill: "So we're really doing this. Attacking a Spanish mission."
 
-The Watcher enters. Joe Dawson - he's been documenting this from the Watcher side. He has records. Patterns of immortal deaths that didn't make sense. Watchers who disappeared.
+Duncan: "A Borg-controlled Spanish mission."
 
-"Whatever's coming, it knows about us. About the immortals. It's been... cleaning house."
+O'Neill: "Right. Evil mission. Much better."
 
-The scope expands again. This isn't just human civilization at risk. The immortals are targets too. Something is being systematic.
+The team: Carter, Daniel, Teal'c, O'Neill, Duncan, Casey, Methos. Seven people against whatever's been killing their drones.
 
-### Beat 11: The Decommissioning
+Casey: "We get in. We find whatever's generating the interference. We shut it down or we take it. Either way, we finally get some answers."
 
-SGC. The gate room. This needs to be a *scene*.
+### Beat 10: The Mission Assault
 
-The Stargate - the symbol of the franchise, the thing that saved Earth a dozen times - is being shut down.
+**Location:** The Spanish mission. Adobe walls. Bell tower. Courtyard with a dry fountain. Beautiful and wrong. Too quiet. No birds. No insects. The desert around it feels *dead*. Technology doesn't work right near it - compasses spin, phones die.
 
-Carter at the control room. Her hand on the console. The dialing computer spooling down.
+The assault is tactical, brutal, strange. The defenders aren't human - they're machines. Humanoid robots, crude but effective, being remote-controlled by the Borg from somewhere else. Green lights where eyes should be. They move wrong, react wrong. No self-preservation. No fear.
 
-"We can't trust the DHD software. We can't trust the diagnostic systems. We can't trust any of it. Until we can rebuild it clean, the gate is a liability."
+Casey: "They're not people. Don't hesitate."
 
-The lights go dark. Covers placed over equipment. Military personnel filing out.
+The Immortals can't be killed - they take point, absorbing damage that would kill anyone else. Casey with a lever-action rifle (he's had this gun for a hundred years), Duncan with a sword, Methos hanging back but deadly when needed.
 
-O'Neill is there (first appearance? or has he been present?). Watching his legacy go dark.
+Teal'c and O'Neill provide military precision. Carter and Daniel work toward the center of the complex, following the readings, looking for whatever's generating the interference.
 
-"Hell of a retirement party."
+### Beat 11: The Gate Room
 
-### Beat 12: The One Gate
+They breach the central chamber expecting machinery, a transmitter, something technological.
 
-One gate remains operational. The connection to Nova Roma.
+They find a Stargate.
 
-Why? Because it was never integrated with Earth systems. It runs on Ancient technology that predates the compromise.
+**CARTER:** That's... that's not possible.
 
-"It's been waiting for two thousand years. It can wait a little longer while we figure out what we're doing."
+It's active. The event horizon shimmers. A permanent connection to somewhere. It's been running this whole time.
+
+Borg tech surrounds it. The tablets stacked like offerings. A control system that's half-ancient, half-alien.
+
+One final defender - a larger robot, more sophisticated than the others. The fight is desperate.
+
+They win. Barely. The machine falls.
+
+Carter examines the control system. Her hands are shaking.
+
+**CARTER:** This is what's been interfering with our gates. It's... it's a different kind of gate. The physics are wrong. It's not just connecting to another place, it's...
+
+**DANIEL:** It's what?
+
+**CARTER:** I don't know. But it's been running for a long time. Permanently open. One address.
+
+She looks at the shimmering event horizon.
+
+**DANIEL:** Where does it go?
+
+**CARTER:** Only one way to find out.
 
 END ACT TWO
 
@@ -246,79 +284,121 @@ END ACT TWO
 
 *The pool. The foundation. The first step.*
 
-### Beat 13: Arrival
+### Beat 12: Through the Gate
 
-The gate activates. SG-1, Duncan, and Methos step through onto Nova Roma.
+They step through.
 
-First sight: Mediterranean landscape. Mountains. A Roman forum built around the Stargate - the Forum Stellarum. Citizens in togas watching with a mixture of awe and caution.
+First sight: Mediterranean landscape. Mountains. Blue sky. A Roman forum built around the gate arrival point - the Forum Stellarum.
 
-Pliny the Elder approaches. Two thousand years old. Immortal since Vesuvius. He's been *waiting*.
+But they don't emerge to an empty plaza.
+
+They emerge to armed Romans. Spears. Shields. Military discipline.
+
+And in front of them, relaxed, amused: MIDAS.
+
+**MIDAS:** Finally! Do you have any idea how long I've been waiting?
+
+Duncan and Methos sense it immediately. The Immortal buzz.
+
+**DUNCAN:** There's one of us here.
+
+**MIDAS:** One of you? I've been here for eighty years. Well - eighty years for me. I'm told it's been longer on your end.
+
+### Beat 13: The Reunion
+
+The Romans stand down at Midas's signal. He knows these people - or people like them. He's been waiting.
+
+Midas explains, in his rambling way: He came through the gate with the original exiles. Rome used the portal to dispose of inconvenient people - criminals, political enemies, anyone they wanted gone. "I was one of the political enemies. Long story. Involves a misunderstanding about taxation."
+
+He leads them into the forum. Nova Roma spreads out around them - a small but complete civilization. Roman architecture. Roman dress. Roman *life*.
+
+**MIDAS:** They thought I was a god at first. I told them I wasn't. They didn't believe me. Then I died in front of them and came back, and they *really* didn't believe me. Took about twenty years to sort out.
 
 ### Beat 14: Pliny
 
-Pliny's story: died at Vesuvius, 79 AD. Woke in the ash. Found the gate while investigating phenomena. Has been in Nova Roma ever since, documenting everything.
+They're brought to a villa. Larger than the others. A scholar's home.
 
-"The gate activated once, long ago. Before I arrived. A message came through. In a language the colonists didn't recognize. But one word was clear: *praeparate*. Prepare."
+PLINY emerges. An exile like Midas, but mortal - one of the original colonists, now old. Eighty years of building a civilization in a strange land. Methos recognizes the look of someone who's seen too much and written it all down anyway.
 
-Someone knew. Someone sent a warning. The colonists didn't understand it. Pliny has been trying to understand it for two millennia.
+**PLINY:** More visitors from Earth. And Immortals among you. Midas said you might come eventually.
 
-### Beat 15: Two Immortals
+**CARTER:** You knew about us?
 
-Methos and Pliny meet. Two ancient beings. Pliny is delighted.
+**PLINY:** I knew about the gate. I knew time moved strangely here - our eighty years, your two thousand. I've spent my life trying to understand why.
 
-"You remember the Republic? The real Republic, not the histories?"
+He leads them inside. Shows them a stone tablet - old, preserved carefully.
 
-Methos: "I remember it was messier than the histories."
+**PLINY:** *Praeparate*. It came through the gate before we did. The first exiles found it waiting. I've spent eighty years trying to understand what it means.
 
-Pliny: "Everything is messier than the histories. That's why I write everything down."
+**DANIEL:** "Prepare." We found the same word in intercepted communications. From something called... Borg.
 
-He shows them his life's work: *Naturalis Historia Nova*. One hundred and twelve volumes documenting everything about this world and its people.
+**PLINY:** Borg. Is that what built the gate? Is that what brought us here?
 
-### Beat 16: The Scope
+**METHOS:** We're still figuring that out.
 
-Carter sees Nova Roma clearly now. Three thousand people. Roman technology level. Agriculture, crafts, republican governance.
+Pliny considers this. A lifetime of questions, and now strangers with pieces of the answer.
 
-They have everything they need to survive. What they don't have is any way to fight what's coming.
+**PLINY:** Then we have much to discuss.
 
-"We need to give them everything. Not just tools - understanding. They need to be able to build this themselves, maintain it after we're gone, improve it."
+### Beat 15: The Scope
 
-Daniel: "A curriculum. We're not just building software. We're building a school."
+Pliny's villa. Maps of Nova Roma. Census records. The *Naturalis Historia Nova* - forty volumes and counting. A life's work.
 
-### Beat 17: The Foundation Question
+The colony: three thousand people. Started with perhaps two hundred exiles eighty years ago. Roman technology level. Agriculture, crafts, republican governance. Isolated. Clean. Untouched by anything the Borg have done to Earth.
 
-MacLeod: "Where do you start? What's the most fundamental thing?"
+Midas: "Three generations now. The grandchildren of the original exiles. They're good people. Stubborn. Opinionated. Very Roman about everything. But good."
 
-Carter thinks. Really thinks.
+Carter sees it now. This isn't just a colony to save. It's a *platform*. A place to build something new.
 
-"Memory. Before you can compute anything, you need somewhere to put it. Before you can build any structure, you need to allocate space for it. Memory management is the foundation everything else sits on."
+**CARTER:** They're completely clean. No compromised technology. No corrupted infrastructure. We could...
 
-### Beat 18: The Name
+**DANIEL:** Build from scratch. Everything we can't trust on Earth.
 
-Daniel: "The Romans had public pools. *Piscinae*. For bathing, for fish, for training. A shared resource, managed communally."
+**CASEY:** That's the idea.
 
-Carter: "Arena allocation. You allocate from a pool. When you're done, you drain the whole pool at once. It's simpler than tracking individual allocations."
+Everyone turns. Casey has been quiet, looking around, assessing.
 
-Pliny, listening: "*Piscina*. I like it. A word they already know, given new meaning. That's how languages grow."
+**CASEY:** I've been trying to build clean systems for thirty years. But you can't do it on Earth. Not really. The contamination is too deep. But here...
 
-### Beat 19: The Workshop
+He looks at Pliny's scrolls. At the Roman engineers examining their strange visitors.
 
-Pliny's villa, converted to a workspace. Oil lamps and laptop. Roman engineers and Earth scientists.
+**CASEY:** Here we could do it right.
 
-MARCUS AURELIUS FERRARIUS - the Roman engineer who will become the first native technical lead. He's skeptical but curious.
+### Beat 16: The Foundation Question
 
-Carter starts explaining. Memory as water. The pool. Allocation as drawing from the pool. Reset as draining.
+They're in Pliny's workshop now. Oil lamps. Wax tablets. A Roman scriptorium about to become something else.
 
-Marcus asks the question that proves he understands: "But in a real piscina, you cannot put the water back."
+MARCUS AURELIUS FERRARIUS - Roman engineer, skeptical, curious - has been listening to everything.
 
-Carter: "That's exactly right. We're not returning the water. We're just... forgetting that we used it. The vessel remains. Only our accounting changes."
+**MARCUS:** You speak of building. Of systems we don't understand. Where do you begin?
 
-Marcus: "Ah."
+Carter thinks. This is the question.
+
+**CARTER:** Memory. Before you can compute anything, you need somewhere to put it. Before you can build any structure, you need to allocate space for it.
+
+**DANIEL:** The Romans had public pools. *Piscinae*. For bathing, for training. A shared resource.
+
+**CARTER:** Arena allocation. You allocate from a pool. When you're done with a task, you drain the whole pool at once. It's simpler than tracking individual pieces.
+
+Marcus frowns. Thinking.
+
+**MARCUS:** But in a real piscina, you cannot put the water back. Once drawn, it is used.
+
+**CARTER:** That's exactly right. We're not returning the water. We're just... forgetting that we used it. The vessel remains. Only our accounting changes.
+
+Beat.
+
+**MARCUS:** Ah.
 
 That "ah" is the episode's climax. A Roman engineer understanding a computing concept through Roman metaphors.
 
-### Beat 20: The First Code
+**PLINY:** *Piscina*. A word they know, given new meaning. That's how languages grow.
 
-Carter at the laptop. The structure taking shape:
+### Beat 17: The First Code
+
+Carter pulls out her laptop - old, air-gapped, one of Casey's clean machines.
+
+The structure takes shape on screen:
 
 ```c
 structura Piscina {
@@ -330,11 +410,19 @@ structura Piscina {
 };
 ```
 
-Daniel translating as she types. Pliny taking notes. Marcus watching, starting to see the shape of something new.
+Daniel translating as she types. Pliny taking notes. Midas offering unhelpful suggestions. Marcus watching, starting to see the shape of something new.
 
-"Every pool has a name. For debugging. When something goes wrong, you need to know which pool it came from."
+**CARTER:** Every pool has a name. For debugging. When something goes wrong, you need to know which pool it came from.
 
-Daniel: "*Titulus*. The label. The inscription."
+**DANIEL:** *Titulus*. The label. The inscription.
+
+**MARCUS:** And *alveus*? I know this word. A basin. A trough.
+
+**CARTER:** The pool is made of basins. When one fills, we create another. They link together.
+
+**MARCUS:** Like chambers in a hypocaust. The heat flows from one to the next.
+
+**CARTER:** *(to Daniel, impressed)* He's going to be better at this than us.
 
 END ACT THREE
 
@@ -342,29 +430,39 @@ END ACT THREE
 
 ## TAG
 
-### Beat 21: Dawn
+### Beat 18: Dawn
 
 The Forum Stellarum at dawn. Carter alone with the gate.
 
-MacLeod finds her.
+Casey finds her.
 
-"You know what the hardest part is going to be? The patience. I've watched people build things. Churches that took three hundred years. Everyone wants to see the finished work. Almost no one wants to lay the foundation."
+**CASEY:** Can't sleep?
 
-Carter: "We don't have three hundred years."
+**CARTER:** We just took on a mission that might take decades. We're trying to rebuild all of human knowledge for a civilization that's never seen a computer. And somewhere out there, a clock is ticking.
 
-MacLeod: "No. But you have to work like you do. Rushed code is vulnerable code. Isn't that the whole point?"
+**CASEY:** I've been working on this for thirty years. Alone, mostly. Building pieces I knew would never fit together in my lifetime.
 
-### Beat 22: The Foundation
+He looks at the forum. At Nova Roma waking up.
 
-Carter looks at the gate. Silent now. Waiting.
+**CASEY:** This is the first time I've thought we might actually pull it off.
 
-Behind her, light in Pliny's villa. People working. The first code being written.
+**CARTER:** Why?
+
+**CASEY:** Because it's not just me anymore. And because they're not starting from where we started. They're not going to make our mistakes. No npm. No blockchain. No fourteen million dependencies. They're going to learn it *right*.
+
+### Beat 19: The Foundation
+
+Behind them, light in Pliny's villa. People working. The first code being written.
 
 **CARTER:** *Piscina est fundamentum.*
 
+**CASEY:** That's the idea.
+
 She walks back toward the villa. Toward the work.
 
-The gate stands silent. Two thousand light years away, a clock is ticking.
+Casey stays a moment longer. Looking at the gate. At the sky.
+
+Somewhere, the Borg are still coming. But here, something new is beginning.
 
 FADE TO BLACK.
 
@@ -372,19 +470,19 @@ FADE TO BLACK.
 
 ## STINGER
 
-### Beat 23: The First Arrival
+### Beat 20: The First Arrival
 
-**Location:** Earth. Somewhere remote. A field, a desert, a forest clearing - somewhere with no witnesses. Night.
+**Location:** Earth. Yellowstone. Night. Steam rises from hot springs. The landscape is alien, primordial - mineral deposits in strange colors, the ground itself seeming to breathe.
 
-Silence.
+Silence except for the hiss of geothermal vents.
 
 Then: a sound. Building. Electrical. Wrong.
 
-Lightning begins to arc from nowhere - striking the ground, the air, itself. A sphere of energy forming. The Terminator arrival effect: displaced air, ozone, violence.
+Lightning begins to arc from nowhere - striking the ground, the air, itself. A sphere of energy forming. The Terminator arrival effect: displaced air, ozone, violence. Steam billows outward.
 
-At the center of the sphere, a figure materializes. Crouched. The scorch mark spreading beneath him.
+At the center of the sphere, a figure materializes. Crouched. The scorch mark spreading beneath him, minerals cracking from the heat.
 
-The energy dissipates. Smoke rises.
+The energy dissipates. Smoke and steam mix.
 
 He stands. Slowly. Mechanically. Something is *wrong* with him.
 
@@ -394,29 +492,35 @@ He's battle-damaged. Badly. Synthetic skin torn, exposing circuitry beneath. One
 
 He moves stiffly. Jerkily. Damage affecting his motor control.
 
-He looks around. No expression. No reaction. Just... processing.
+He looks around at the hellish landscape. No expression. No reaction. Just... processing.
 
-Then his eyes glow. Green.
+Then his eyes glow. Green. Matching the strange colors of the hot springs.
 
-He stands motionless. Waiting. A broken machine with Borg eyes.
+He stands motionless among the steam vents. Waiting. A broken machine with Borg eyes in a landscape that looks like another planet.
 
 *The audience thinks: This is the threat.*
 
-### Beat 24: The Second Arrival
+### Beat 21: The Second Arrival
 
-Same location. Seconds later? Minutes? The timestream is unstable.
+**Location:** Northern California. Redwood forest. Night. Ancient trees, cathedral silence. Fog drifting between trunks that have stood for a thousand years.
 
-Another sphere of energy. Another violent arrival.
+A different kind of primordial.
+
+Then: the same sound. Building. Electrical. Wrong.
+
+Lightning arcs between the massive trunks. A sphere of energy forming. Birds scatter. The forest that has seen everything hasn't seen this.
+
+At the center, a figure materializes. The scorch mark spreads across the forest floor, ferns burning.
 
 This figure lands differently. Not mechanical. *Human*.
 
-He's gasping. Panting. The arrival hurt. He's disoriented, checking his body, making sure he's intact. Naked and vulnerable.
+He's gasping. Panting. The arrival hurt. He's disoriented, checking his body, making sure he's intact. Naked and vulnerable among the ancient trees.
 
 He looks around with urgency. Fear. The eyes of someone who's seen things. Who barely made it.
 
-He sees Data standing there. His expression shifts - recognition? Wariness?
+The fog swirls around him. He's alone. No idea where Data landed, or if Data made it at all.
 
-Then he looks past Data. At the world. At Earth.
+He steadies himself against a redwood trunk. Catches his breath. Looks up at the trees towering above him.
 
 He's arrived. He made it.
 
@@ -428,102 +532,37 @@ He's catching his breath. Steadying himself. The body language of a survivor. A 
 
 *The audience thinks: This is our hero.*
 
-Beat.
-
-DATA stands motionless, green-eyed, broken.
-
-KIRK crouches, panting, human, desperate.
-
-Two arrivals. Two time travelers.
-
-The audience knows which one to trust.
-
-They're wrong.
-
 SMASH TO BLACK.
 
 END OF EPISODE
 
 ---
 
+## NOTES FOR 1x02: "Credo"
+
+**Hour two picks up with:**
+- Kirk and Data on Earth - Kirk finds the team (now at the mission), integrates, is helpful and charming
+- Data contained, studied - Carter works on repairs, notices damage patterns match *fighting* Borg
+- Work continues on Nova Roma - first tests of Piscina, the Credo testing framework introduced
+- The reversal - Kirk exposed, his eyes glow green, Data was trying to warn them all along
+- Kirk escapes into the world, Data joins the team
+- Thematic parallel: Credo means "I believe/trust" but the framework is about *verification*. The whole episode asks: how do you test who to trust?
+
+---
+
 ## OPEN QUESTIONS
 
-1. **Jack O'Neill's role.** Is he present throughout? Does he arrive later? Is he the one who has to authorize the decommissioning?
+1. ~~**The mission location.**~~ Resolved: American Southwest Spanish mission, abandoned since the 1800s.
 
-2. **The mole in Act One.** Still needed? Or does the Borg reveal in the cold open do enough work? If we keep the mole, who are they?
+2. **The praeparate message.** Was it a warning from allies, or intercepted Borg communication? Who sent it?
 
-3. **The warning message.** Who sent "*praeparate*" through the gate? When? This could be a season-long mystery. Connection to Borg?
+3. **Joe Dawson.** Does he appear in hour one or is he introduced in hour two?
 
-4. **Midas.** Does he appear in the pilot or is he introduced later? He'd add comedy but might overcrowd the episode.
+4. **The Ra connection.** When does this get revealed? Hour two? Later in season one?
 
-5. **Joe Dawson's role.** Does he come to Nova Roma or stay on Earth as liaison?
+5. **Midas's backstory.** How exactly did he end up in Nova Roma? What's the comedy of errors?
 
-6. **This version of the Borg.** Green aesthetic. Technology golems. Partial assimilation that allows human appearance. How different from TNG Borg? What's the lore?
-
-7. **The target's backstory.** How long has he been Borg? Was he assimilated on Earth or elsewhere? Is he a scout, a seed, something else?
-
-8. **Duncan's investigation.** What led him to this same place? What does he know that SG-1 doesn't? How long has he been tracking this?
-
----
-
-## THE BORG (This Version)
-
-**Visual Identity:** Green, not the blue-black of TNG. The glow comes from *inside* - eyes, mouth, eventually spreading through the skin like circuitry becoming visible. Less "cybernetic zombie," more "possessed by technology."
-
-**Assimilation Spectrum:** Not binary (human vs drone). There are stages:
-- **Seeds:** Fully human-appearing. Nanoprobes dormant. Sleeper agents who may not know what they are.
-- **Awakened:** Can interface with technology, form golems, but still pass as human most of the time.
-- **Merged:** The golem state. Technology and flesh becoming one. Combat form.
-- **Full Drone:** The classic Borg look. End stage. No return.
-
-**The Infrastructure Play:** They don't invade with ships first. They spend decades compromising supply chains, inserting backdoors, creating dependencies. When the fleet arrives, they don't need to fight - they just *activate* what's already theirs.
-
-**The Seeding:** Borg "tablets" - artifacts that look like ancient cuneiform but are actually dormant Borg technology - have been planted on Earth for centuries, maybe millennia. Alone, they're inert. But when they contact modern microchip technology (phone camera, computer, anything digital), they activate. Instant assimilation of whoever's holding the device. The Borg have been waiting for humanity to build the infrastructure that completes their weapon.
-
-**Why Immortals Matter:** Immortal physiology rejects nanoprobes. The healing factor treats them as foreign bodies and expels them. Immortals cannot be assimilated. This makes them the only beings the Borg can't turn into weapons - and therefore targets for elimination.
-
-**The Green:** Why green? TBD. Could be:
-- A different Borg faction/evolution
-- Earlier stage of Borg development (they become blue-black later?)
-- Something unique to this infiltration methodology
-- Just looks cool and distinguishes from TNG
-
----
-
-## SEASON 1 BIG BAD: KIRK
-
-**The Concept:** James T. Kirk - young, TOS Season 1 era - sent back in time like a Terminator. Originally on a mission to warn or prevent. He failed. He was assimilated. Now he's the Borg's primary agent on Earth.
-
-**The T2 Misdirect:** The audience is fooled along with the characters.
-
-In the 1x01 stinger:
-- Data arrives first: damaged, mechanical, creepy, green-eyed. Reads as THREAT.
-- Kirk arrives second: panting, vulnerable, human, desperate. Reads as HERO.
-
-In 1x02 "Credo":
-- Kirk integrates with the team. Helpful. Charming. Warns about "the android."
-- Data is contained, studied. Can't or won't speak. Carter works on repairs.
-- Slowly, things don't add up. Kirk knows too much. Data's damage pattern matches *fighting* Borg.
-- The reversal: Kirk's eyes glow green. Data was the hero all along.
-
-**Why It Works:**
-- Kirk represents humanity's best: ingenuity, charm, refusal to accept no-win scenarios
-- Seeing him *as* the enemy makes the Borg threat visceral in a way drones don't
-- He's not a shambling zombie - he's *charming*. He builds networks. He makes friends. He smiles.
-- He knows how heroes think. He used to be one.
-- The audience feels clever for being fooled - the misdirect is *fair*
-
-**The Tragedy:** The guy who beat the Kobayashi Maru lost this one. The man who talked computers into self-destruction became a computer's instrument. There may be something of Kirk still in there - or there may not. That ambiguity is the drama.
-
-**Timeline:** He arrives at the end of 1x01, escapes/goes underground at the end of 1x02. Season 1 is him building his network, establishing cover, beginning the infrastructure compromise. Our heroes know he's out there now - but they can't find him.
-
-**Open Questions:**
-- Who sent them back? Future Starfleet? Section 31? The Borg themselves?
-- When was Kirk assimilated? Before or after arrival? (Data would know)
-- What was their original mission?
-- Is there anything left of the real Kirk?
-- What's Kirk's cover identity for the decades he'll be operating?
-- Why does Data's eyes glow green in the stinger? (Needs a fair explanation)
+6. **Data's green eyes.** The explanation - carrying Borg code as evidence? Damage? Needs to feel fair when revealed.
 
 ---
 
@@ -531,12 +570,10 @@ In 1x02 "Credo":
 
 **Capacitas Nova** = "New Capacity" - the pool growing to accommodate more. The show's universe expanding. The audience's understanding expanding. Humanity's capacity to survive expanding through backup civilization.
 
-**The Pool Metaphor** - memory allocation as foundation for everything else. But also: pooling resources, pooling knowledge, pooling *three* franchises.
+**The Pool Metaphor** - memory allocation as foundation for everything else. But also: pooling resources, pooling knowledge, pooling four franchises.
 
-**The Decommissioning** - the old tools have to be put down before new ones can be trusted. Letting go of what saved you before because it can't save you now.
+**The Mission** - padres preserving faith and knowledge on the frontier through centuries of change. The aesthetic carries through to Nova Roma - ancient architecture, careful scholarship, patience. Casey's connection to it since 1858 ties the American West to the grander historical sweep.
 
-**Romans as Collaborators** - they're not blank slates receiving knowledge. Marcus's insight about "the vessel remains" is *better* than Carter's original explanation. The knowledge transfer goes both ways.
+**Romans as Collaborators** - Marcus's "ah" and his hypocaust comparison. He's not just receiving knowledge, he's translating it into Roman concepts. The knowledge transfer goes both ways.
 
-**Analog vs Digital** - The Borg are the ultimate digital threat: networked, upgradeable, turning technology against its users. The Immortals are the ultimate analog response: unkillable, unassimilable, carrying knowledge in their heads not their devices. The Romans are somewhere in between - pre-digital but about to receive an entire technological civilization compressed into years.
-
-**"Borg" as a word** - It means nothing to the characters. It means everything to the audience. That dramatic irony carries the cold open.
+**Casey's Redemption** - thirty years of lonely work finally meaning something. "This is the first time I've thought we might actually pull it off."
