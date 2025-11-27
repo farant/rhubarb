@@ -1,5 +1,6 @@
 #include "layout.h"
 #include "stml.h"
+#include "registrum_commandi.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -9,8 +10,8 @@
 
 /* Datum internum pro pagina widget */
 nomen structura {
-    Pagina*  pagina;
-    Piscina* piscina;
+    Pagina*    pagina;
+    LayoutDom* dom;  /* Pro accedere registrum et piscina */
 } LayoutDatumPagina;
 
 /* Datum internum pro navigator widget */
@@ -40,7 +41,7 @@ _layout_pagina_reddere(
     datum = (LayoutDatumPagina*)widget->datum;
 
     pagina_reddere_cum_margine(
-        datum->piscina,
+        datum->dom->piscina,
         tabula,
         datum->pagina,
         x,
@@ -59,6 +60,43 @@ _layout_pagina_tractare_eventum(
     LayoutDatumPagina* datum;
 
     datum = (LayoutDatumPagina*)widget->datum;
+
+    /* Tractare mouse clicks pro tag detection */
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->reg_commandi)
+    {
+        RegioClicca regio;
+        i32 click_x;
+        i32 click_y;
+        i32 character_latitudo;
+        i32 character_altitudo;
+
+        character_latitudo = VI;   /* 6 pixels per character */
+        character_altitudo = VIII; /* 8 pixels per character */
+
+        /* Convertere pixel ad character coordinates */
+        /* Account for widget position et border */
+        click_x = (eventus->datum.mus.x / character_latitudo) - widget->x - I;
+        click_y = (eventus->datum.mus.y / character_altitudo) - widget->y - I;
+
+        /* Tentare detegere tag ad click position */
+        si (pagina_obtinere_regio_ad_punctum(datum->pagina, click_x, click_y, &regio))
+        {
+            si (strcmp(regio.genus, "command") == ZEPHYRUM)
+            {
+                ContextusCommandi ctx;
+
+                ctx.pagina = datum->pagina;
+                ctx.positio = regio.finis;
+                ctx.piscina = datum->dom->piscina;
+                ctx.datum_custom = NIHIL;
+
+                /* Executare command per reg_commandi */
+                registrum_commandi_executare(datum->dom->reg_commandi, regio.datum, &ctx);
+
+                redde VERUM;  /* Click consumptus */
+            }
+        }
+    }
 
     redde pagina_tractare_eventum(datum->pagina, eventus);
 }
@@ -178,7 +216,7 @@ _layout_processare_pagina(
         redde FALSUM;
     }
     datum->pagina = pagina;
-    datum->piscina = dom->piscina;
+    datum->dom = dom;
 
     /* Registrare cum manager */
     manager_widget_registrare(
@@ -309,6 +347,7 @@ layout_creare(
 
     dom->piscina = piscina;
     dom->intern = intern;
+    dom->reg_commandi = NIHIL;  /* Potest poni post per layout_ponere_reg_commandi */
 
     /* Creare manager */
     dom->manager = manager_widget_creare(piscina);
@@ -431,4 +470,15 @@ layout_obtinere_navigator(
     }
 
     redde (NavigatorEntitatum*)introitus->datum;
+}
+
+vacuum
+layout_ponere_reg_commandi(
+    LayoutDom*         dom,
+    RegistrumCommandi* reg_commandi)
+{
+    si (dom)
+    {
+        dom->reg_commandi = reg_commandi;
+    }
 }

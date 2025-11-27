@@ -1,21 +1,25 @@
 #include "piscina.h"
 #include "graphus_entitatum.h"
 #include "entitas_repositorium.h"
-#include "navigator_entitatum.h"
-#include "pagina.h"
 #include "fenestra.h"
 #include "delineare.h"
 #include "thema.h"
 #include "internamentum.h"
 #include "tempus.h"
-#include "widget.h"
+#include "layout.h"
 #include "registrum_commandi.h"
 #include <stdio.h>
 #include <time.h>
-#include <string.h>
 
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
+
+/* STML layout definition */
+constans character* LAYOUT_STML =
+    "<layout>"
+    "  <pagina id='editor' x='0' y='0' latitudo='71' altitudo='60'/>"
+    "  <navigator id='nav' x='71' y='0' latitudo='71' altitudo='60'/>"
+    "</layout>";
 
 /* Creare graphum probationis cum aliquot entitates */
 interior vacuum
@@ -111,169 +115,22 @@ command_date(
 }
 
 
-/* ==================================================
- * Widget Wrapper Functions
- * ================================================== */
-
-/* Datum pro widget pagina */
-nomen structura {
-    Pagina*  pagina;
-    Piscina* piscina;
-    RegistrumCommandi* reg_commandi;
-} DatumWidgetPagina;
-
-/* Datum pro widget navigator */
-nomen structura {
-    NavigatorEntitatum* navigator;
-    Piscina*            piscina;
-} DatumWidgetNavigator;
-
-/* Wrapper pro reddere paginam (REVISED) */
-interior vacuum
-widget_pagina_reddere_revised(
-    Widget*          widget,
-    TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
-{
-    DatumWidgetPagina* datum;
-
-    datum = (DatumWidgetPagina*)widget->datum;
-
-    pagina_reddere_cum_margine(
-        datum->piscina,
-        tabula,
-        datum->pagina,
-        x,
-        y,
-        latitudo,
-        altitudo,
-        scala,
-        focused);
-}
-
-/* Wrapper pro tractare eventum paginae */
-interior b32
-widget_pagina_tractare_eventum(
-    Widget*          widget,
-    constans Eventus* eventus)
-{
-    DatumWidgetPagina* datum;
-    b32 consumptus;
-
-    datum = (DatumWidgetPagina*)widget->datum;
-
-    /* Handle mouse clicks for tag detection */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
-    {
-        RegioClicca regio;
-        i32 click_x;
-        i32 click_y;
-        i32 character_latitudo;
-        i32 character_altitudo;
-
-        character_latitudo = VI;  /* 6 pixels per character */
-        character_altitudo = VIII;
-
-        /* Convert pixel to character coordinates */
-        /* Account for widget position and border */
-        click_x = (eventus->datum.mus.x / character_latitudo) - widget->x - I;
-        click_y = (eventus->datum.mus.y / character_altitudo) - widget->y - I;
-
-        /* Try to detect tag at click position */
-        si (pagina_obtinere_regio_ad_punctum(datum->pagina, click_x, click_y, &regio))
-        {
-            /* Tag detected! */
-            si (strcmp(regio.genus, "command") == ZEPHYRUM)
-            {
-                ContextusCommandi ctx;
-
-                ctx.pagina = datum->pagina;
-                ctx.positio = regio.finis;
-                ctx.piscina = datum->piscina;
-                ctx.datum_custom = NIHIL;
-
-                /* Execute command through registry */
-                registrum_commandi_executare(datum->reg_commandi, regio.datum, &ctx);
-
-                redde VERUM;  /* Consumed click */
-            }
-        }
-    }
-
-    consumptus = pagina_tractare_eventum(datum->pagina, eventus);
-
-    /* Si pagina reddidit FALSUM (ESC in normal mode), non consumere */
-    /* Hoc permittet application tractare quit */
-    redde consumptus;
-}
-
-/* Wrapper pro reddere navigator */
-interior vacuum
-widget_navigator_reddere(
-    Widget*          widget,
-    TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
-{
-    DatumWidgetNavigator* datum;
-
-    datum = (DatumWidgetNavigator*)widget->datum;
-
-    navigator_entitatum_reddere(
-        datum->navigator,
-        tabula,
-        x,
-        y,
-        latitudo,
-        altitudo,
-        scala,
-        focused);
-}
-
-/* Wrapper pro tractare eventum navigator */
-interior b32
-widget_navigator_tractare_eventum(
-    Widget*          widget,
-    constans Eventus* eventus)
-{
-    DatumWidgetNavigator* datum;
-    b32 consumptus;
-
-    datum = (DatumWidgetNavigator*)widget->datum;
-
-    consumptus = navigator_entitatum_tractare_eventum(datum->navigator, eventus);
-
-    /* Passare consumptionem ad manager */
-    redde consumptus;
-}
-
 int
 main(void)
 {
     Piscina*             piscina;
+    InternamentumChorda* intern;
     GraphusEntitatum*    graphus;
     EntitasRepositorium* repositorium;
-    NavigatorEntitatum*  navigator;
-    Pagina               pagina;
+    LayoutDom*           dom;
+    Pagina*              pagina;
     Fenestra*            fenestra;
     TabulaPixelorum*     tabula;
     ContextusDelineandi* ctx;
     FenestraConfiguratio configuratio;
     Eventus              eventus;
     b32                  currens;
-    ManagerWidget*       manager;
-    DatumWidgetPagina*   datum_pagina;
-    DatumWidgetNavigator* datum_navigator;
-    RegistrumCommandi*   registrum_commandi;
+    RegistrumCommandi*   reg_commandi;
 
     /* Initiare thema */
     thema_initiare();
@@ -288,6 +145,9 @@ main(void)
         imprimere("Fractura: non potest creare piscinam\n");
         redde I;
     }
+
+    /* Obtinere internamentum */
+    intern = internamentum_globale();
 
     /* Creare graphum */
     graphus = graphus_entitatum_creare(piscina);
@@ -308,76 +168,43 @@ main(void)
     /* Creare entitates probationis */
     creare_graphum_probationis(repositorium);
 
-    /* Creare navigator */
-    navigator = navigator_entitatum_creare(piscina, repositorium);
-    si (!navigator)
+    /* Creare layout ex STML */
+    dom = layout_creare(piscina, intern, LAYOUT_STML, repositorium);
+    si (!dom)
     {
-        imprimere("Fractura: non potest creare navigator\n");
+        imprimere("Fractura: non potest creare layout\n");
         redde I;
     }
 
-    /* Initiare paginam */
-    pagina_initiare(&pagina, chorda_internare_ex_literis(internamentum_globale(), "page:demo"));
-    pagina_inserere_chordam(&pagina, "TAB = switch focus (not in insert mode)\n\n");
-    pagina_inserere_chordam(&pagina, "Click widgets to focus them\n\n");
-    pagina_inserere_chordam(&pagina, "Navigator on right ->\n\n");
-    pagina_inserere_chordam(&pagina, "Press 'i' to enter insert mode\n");
-    pagina_inserere_chordam(&pagina, "Press ESC to return to normal mode\n");
-    pagina_inserere_chordam(&pagina, "Use hjkl to navigate\n\n");
-    pagina_inserere_chordam(&pagina, "Try clicking on: $date\n");
-
-    /* Create command registry */
-    registrum_commandi = registrum_commandi_creare(piscina);
-    si (!registrum_commandi)
+    /* Creare registrum commandi */
+    reg_commandi = registrum_commandi_creare(piscina);
+    si (!reg_commandi)
     {
         imprimere("Fractura: non potest creare registrum commandi\n");
         redde I;
     }
 
-    /* Register commands */
-    registrum_commandi_registrare(registrum_commandi, "date", command_date, NIHIL);
+    /* Registrare commands */
+    registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
 
-    /* Creare widget manager */
-    manager = manager_widget_creare(piscina);
-    si (!manager)
+    /* Ponere registrum in layout */
+    layout_ponere_reg_commandi(dom, reg_commandi);
+
+    /* Obtinere pagina ex layout et inserere textum */
+    pagina = layout_obtinere_pagina(dom, "editor");
+    si (pagina)
     {
-        imprimere("Fractura: non potest creare widget manager\n");
-        redde I;
+        pagina_inserere_chordam(pagina, "TAB = switch focus (not in insert mode)\n\n");
+        pagina_inserere_chordam(pagina, "Click widgets to focus them\n\n");
+        pagina_inserere_chordam(pagina, "Navigator on right ->\n\n");
+        pagina_inserere_chordam(pagina, "Press 'i' to enter insert mode\n");
+        pagina_inserere_chordam(pagina, "Press ESC to return to normal mode\n");
+        pagina_inserere_chordam(pagina, "Use hjkl to navigate\n\n");
+        pagina_inserere_chordam(pagina, "Try clicking on: $date\n");
     }
 
-    /* Creare datum structuras pro widgets */
-    datum_pagina = piscina_allocare(piscina, magnitudo(DatumWidgetPagina));
-    datum_pagina->pagina = &pagina;
-    datum_pagina->piscina = piscina;
-    datum_pagina->reg_commandi = registrum_commandi;
-
-    datum_navigator = piscina_allocare(piscina, magnitudo(DatumWidgetNavigator));
-    datum_navigator->navigator = navigator;
-    datum_navigator->piscina = piscina;
-
-    /* Registrare widgets */
-    manager_widget_registrare(
-        manager,
-        datum_pagina,
-        widget_pagina_reddere_revised,
-        widget_pagina_tractare_eventum,
-        ZEPHYRUM,  /* x */
-        ZEPHYRUM,  /* y */
-        LXXI,      /* latitudo (71 chars) */
-        LX);       /* altitudo (60 lines) */
-
-    manager_widget_registrare(
-        manager,
-        datum_navigator,
-        widget_navigator_reddere,
-        widget_navigator_tractare_eventum,
-        LXXI,      /* x (71 chars offset) */
-        ZEPHYRUM,  /* y */
-        LXXI,      /* latitudo (71 chars) */
-        LX);       /* altitudo (60 lines) */
-
     /* Configurare fenestram */
-    configuratio.titulus = "Pagina + Navigator - Widget Manager Demo";
+    configuratio.titulus = "Pagina + Navigator - Layout Demo";
     configuratio.x = C;
     configuratio.y = C;
     configuratio.latitudo = LATITUDO_FENESTRA;
@@ -436,7 +263,7 @@ main(void)
                 b32 tractatus;
 
                 /* Manager tractat omnes eventus (focus, routing, etc) */
-                tractatus = manager_widget_tractare_eventum(manager, &eventus);
+                tractatus = manager_widget_tractare_eventum(dom->manager, &eventus);
 
                 /* Si pagina reddidit FALSUM (ESC in normal mode), exire */
                 si (!tractatus && eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
@@ -454,7 +281,7 @@ main(void)
             color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
         /* Manager reddit omnes widgets */
-        manager_widget_reddere(manager, tabula, I);
+        manager_widget_reddere(dom->manager, tabula, I);
 
         /* Praesentare pixela */
         fenestra_praesentare_pixela(fenestra, tabula);

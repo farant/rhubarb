@@ -9,6 +9,7 @@
 #include "pagina.h"
 #include "navigator_entitatum.h"
 #include "entitas_repositorium.h"
+#include "registrum_commandi.h"
 
 /* ==================================================
  * LAYOUT - Systema Declarativum pro Widgets
@@ -54,6 +55,7 @@ nomen structura {
     TabulaDispersa*      widgets;  /* id (chorda*) -> LayoutWidgetIntroitus* */
     Piscina*             piscina;
     InternamentumChorda* intern;
+    RegistrumCommandi*   reg_commandi;  /* Registrum commandi pro tag clicks */
 } LayoutDom;
 
 
@@ -120,5 +122,23 @@ NavigatorEntitatum*
 layout_obtinere_navigator(
     LayoutDom*          dom,
     constans character* id);
+
+
+/* ==================================================
+ * Registrum Commandi
+ * ================================================== */
+
+/* Ponere registrum commandi
+ *
+ * Omnes paginae in layout usabunt hoc registrum
+ * pro executando commands ex tag clicks.
+ *
+ * dom: layout dom
+ * reg_commandi: registrum commandi
+ */
+vacuum
+layout_ponere_reg_commandi(
+    LayoutDom*         dom,
+    RegistrumCommandi* reg_commandi);
 
 #endif /* LAYOUT_H */
