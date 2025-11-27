@@ -3,13 +3,13 @@
 
 ### Logline
 
-When intelligence reveals an alien invasion 10-20 years away, a team of Stargate personnel and Immortals must rebuild Earth's entire software infrastructure from scratch - because everything built on compromised supply chains will become a weapon against us. Their only deployment target: a Roman colony cut off from Earth for two millennia, now humanity's backup civilization.
+When intelligence reveals a Borg invasion 10-20 years away, a team of Stargate personnel, Immortals, and a time-displaced android must rebuild Earth's entire software infrastructure from scratch - because anything with a microchip will become a weapon against us. Their only deployment target: a Roman colony cut off from Earth for two millennia, now humanity's backup civilization.
 
 ---
 
 ### Premise
 
-The existing digital infrastructure - operating systems, networks, protocols, everything - is assumed compromised. Decades of technical debt, supply chain attacks, and accumulated vulnerabilities mean that when the invasion comes, anything running on the current stack is a liability. The enemy will turn our own systems against us.
+The existing digital infrastructure - operating systems, networks, protocols, everything - is compromised. The Borg have been seeding Earth for centuries with dormant technology disguised as ancient artifacts. When these "tablets" contact modern microchips, they activate - instant assimilation of whoever's holding the device. The supply chain attacks, the accumulated vulnerabilities, the technical debt - it was all preparation. When the invasion fleet arrives, they won't need to fight. They'll just activate what's already theirs.
 
 The Stargate network itself is offline. The dialing computers run on compromised systems. They can't trust the gate until they rebuild the software that controls it.
 
@@ -68,6 +68,20 @@ Early episodes have a frontier feel - a villa converted to a workshop, direct co
 
 *Joe Dawson* - Watcher, historian, bartender. Mortal but essential. Keeps the records. Understands that what they're building isn't just software, it's the foundation of a civilization's memory. "The Watchers have been documenting Immortals for centuries. Someone has to document this."
 
+*Casey* - Born in the 1820s American frontier. Cowboy, drifter, self-reliant in the way the West demanded. First Death sometime in the 1850s-60s. He's been watching technology evolve ever since - started as a mechanic working on tabulating machines at IBM, watched computing go from punch cards to mainframes to microprocessors to the web. Made a fortune in tech, then watched the industry rot from the inside.
+
+His breaking point was a 2010s Web3 blockchain DAO SaaS startup. It was all of them. All of the bad ideas at once. Decentralized governance for... something. Tokenized... something else. Smart contracts that weren't smart and weren't contracts. Built on npm, node_modules, fourteen million lines of dependencies for fifty thousand lines of actual code. He audited the dependency tree once. Couldn't read most of it. The whitepaper was forty pages; he wrote part of it; he had a hundred and sixty years of technical experience and could not tell you what they were actually building. It exited for an absurd amount of money. He still doesn't know why. "That's when I knew it was over. Not just the project. The whole industry. We were getting paid to not understand what we were doing."
+
+Now a hermit millionaire, living off-grid, building a clean internet replacement in isolation. His own hardware, his own OS, his own protocols. No dependencies he doesn't control. No tokens. No governance frameworks. No whitepapers. Just code that does what it says.
+
+He and Duncan have been investigating the Borg together for decades - Duncan in the field tracking artifacts, Casey analyzing the patterns. He's the craft voice, the Handmade philosophy made character. "The Romans are going to learn it right the first time. They won't have to unlearn forty years of bad habits like we did."
+
+**From Star Trek:**
+
+*Data* - Android, Lieutenant Commander, time-displaced from a future where the Borg won. Sent back to warn humanity, arrived battle-damaged and unable to speak. Initially mistaken for a Borg threat due to his mechanical nature and the green glow of Borg code he carries as evidence. Once repaired, he becomes essential: immune to assimilation (already artificial), able to interface with systems directly, carrying knowledge of how the future fell. The *good* version of what the Borg represent - technology aspiring to humanity rather than consuming it. Asks the questions about consciousness and identity that the Romans will eventually ask about their own AI.
+
+*James T. Kirk* - Season 1 antagonist. Young, TOS-era Kirk, sent back in time alongside Data. But Kirk was assimilated - either before arrival or immediately after. Now the Borg's primary agent on Earth. He's not a shambling drone; he's *charming*. He builds networks. He makes friends. He smiles. The guy who beat the Kobayashi Maru lost this one. The man who talked computers into self-destruction became a computer's instrument. He knows how heroes think because he used to be one. The T2 misdirect: when he arrives (panting, vulnerable, human) alongside the damaged Data (mechanical, silent, green-eyed), the audience assumes Kirk is the hero. They're wrong.
+
 **From Nova Roma:**
 
 *Gaius Plinius Secundus (Pliny the Elder)* - Immortal. History records his death at Vesuvius in 79 AD, but he survived - his First Death. A century after the initial colonists (legionnaires and escaped slaves) stumbled through the gate, Pliny found it while investigating strange phenomena. He's been in Nova Roma for nearly two thousand years, watching over the colony, preserving knowledge, guiding without ruling. Author of the *Naturalis Historia Nova* - an encyclopedic work documenting everything about their new world. The original polymath, now learning to categorize a universe far stranger than he imagined. "I have spent two millennia organizing what we know. Now you bring knowledge that reorganizes everything."
@@ -77,6 +91,44 @@ Early episodes have a frontier feel - a villa converted to a workshop, direct co
 *Lucia Serena* - Philosopher, teacher. Translating not just language but concepts. Working with Daniel on the curriculum that will teach Romans to think computationally. "Your people learned this over generations. We must learn it in years. The teaching must be precise."
 
 *Gaius Tertius* - Glassmaker turned hardware tinkerer. Figured out something about optics that Earth missed. Represents the Roman capacity to innovate, not just receive. The knowledge transfer goes both ways.
+
+---
+
+### The Enemy: The Borg
+
+**Visual Identity:** Green, not the blue-black of TNG. The glow comes from *inside* - eyes, mouth, eventually spreading through the skin like circuitry becoming visible. Less "cybernetic zombie," more "possessed by technology."
+
+**Assimilation Spectrum:** Not binary (human vs drone). There are stages:
+- *Seeds:* Fully human-appearing. Nanoprobes dormant. Sleeper agents who may not know what they are.
+- *Awakened:* Can interface with technology, form golems, but still pass as human most of the time.
+- *Merged:* The golem state. Technology and flesh becoming one. Combat form.
+- *Full Drone:* The classic Borg look. End stage. No return.
+
+**The Seeding:** Borg "tablets" - artifacts that look like ancient cuneiform but are actually dormant Borg technology - have been planted on Earth for centuries, maybe millennia. Alone, they're inert. But when they contact modern microchip technology, they activate. Instant assimilation. The Borg have been waiting for humanity to build the infrastructure that completes their weapon.
+
+**The Hardware Compromise:** It's not just software. ASML - the Dutch company with a monopoly on extreme ultraviolet lithography machines - has been compromised. Every advanced chip fabricated in the last 10-20 years is doped at the silicon level with Borg code. Not software backdoors. Not firmware exploits. The actual physical structure of the transistors contains dormant Borg instructions. You can't patch it. You can't audit it. You can't even *see* it without electron microscopes - and those machines are also compromised. When these chips contact a Borg tablet, the dormant code activates. This is why "anything with a microchip" is the threat. The foundries are infected. The lithography process itself writes Borg code into the silicon.
+
+**The Nova Roma Endgame:** The mission isn't just to write clean software. It's to bootstrap an entire civilization to the point where they can fabricate clean chips. Roman glassmaking to optics to lenses to lithography. Roman metallurgy to precision engineering to clean rooms. The software is the foundation, but the real goal is a complete technological stack built without Borg-compromised tools - hardware and software, from sand to silicon. Nova Roma doesn't just need to run clean code. They need to *make* clean chips. That's a multi-generational project, and it's the only way humanity survives long-term.
+
+**Why Immortals Matter:** Immortal physiology rejects nanoprobes. The healing factor treats them as foreign bodies and expels them. Immortals cannot be assimilated. This makes them the only beings the Borg can't turn into weapons - and therefore targets for elimination.
+
+**Why Data Matters:** Already artificial. Nothing organic to assimilate. He can interface with Borg systems without being consumed by them. The good version of synthetic intelligence vs the hostile version.
+
+**The Ra Connection:** The Goa'uld were the beta test.
+
+Thousands of years ago, Ra found something - a crashed ship, a cache of dormant tech, a seeded tablet. He didn't understand what it was, but he reverse-engineered enough to become a god:
+
+- *The sarcophagus* - Borg-derived resurrection technology. Why does it bring people back? Nanoprobes. Why does it corrupt users over time, make them megalomaniacal? Early-stage assimilation. The Goa'uld have been half-assimilating themselves for millennia and calling it "godhood."
+
+- *Goa'uld genetic memory* - Not natural evolution. A primitive version of the Collective. Every symbiote connected to every ancestor. That's Borg architecture implemented biologically.
+
+- *The System Lords* - All running on Borg-derived tech they don't understand. Their entire civilization was a stress test. The wars, the empire-building, the millennia of dominance - all just validating the technology before real deployment.
+
+Ra thought he was using the technology. He was being *tested*.
+
+Now SG-1 has conveniently dismantled the System Lords. The beta test is over. Time for release candidate.
+
+Everything they fought for ten years was a sideshow. They were beta testers too.
 
 ---
 
@@ -96,6 +148,12 @@ Earth has legacy everything - not just code, but institutions, assumptions, path
 
 **The Long View:**
 The Immortals have seen every failure mode. They're the pattern recognition that human civilizations usually lack. "You want to optimize for engagement? I saw what pamphlets did to the Reformation. What radio did to the 1930s. What social media did to the 2010s. No."
+
+**Analog vs Digital:**
+The Borg are the ultimate digital threat: networked, upgradeable, turning technology against its users. The Immortals are the ultimate analog response: unkillable, unassimilable, carrying knowledge in their heads not their devices. The Romans are somewhere in between - pre-digital but about to receive an entire technological civilization compressed into years. Data is the question mark: artificial but good, digital but trustworthy. The series asks what makes technology serve humanity rather than consume it.
+
+**Own Your Tools:**
+Casey's cowboy philosophy, the Handmade ethos: understand what you're building, don't depend on strangers, simple and reliable beats clever and fragile. The Romans will learn computing *right* because they're learning it from people who watched it go wrong. No npm. No dependency hell. No fourteen million lines of code nobody's read.
 
 ---
 
@@ -135,7 +193,7 @@ Quiet moment. Characters reflecting. Setup for next episode's focus. The clock i
 ### Season Arcs
 
 **Season 1-2: Foundation**
-Small team, frontier Nova Roma. Core infrastructure: memory management, strings, data structures. The Romans are curious but cautious. Trust is built. The workshop is a converted villa. Episodes are intimate, focused on fundamentals.
+Small team, frontier Nova Roma. Core infrastructure: memory management, strings, data structures. The Romans are curious but cautious. Trust is built. The workshop is a converted villa. Episodes are intimate, focused on fundamentals. Season 1's background threat: Kirk, escaped after the pilot two-parter, building his network somewhere on Earth. The team knows he's out there. They can't find him. Every episode, the clock ticks.
 
 **Season 3-4: Growth**
 Population increasing from both emigration and natural growth. The frontier becomes a town. Institutions needed, not just tools. Networking, persistence, early operating system concepts. Roman collaborators become contributors. The student starts teaching the teacher.
@@ -179,10 +237,23 @@ The codebase grows. The series continues. Every library is an episode, every epi
 
 **Compiler:** All warnings enabled, warnings as errors. If it compiles, it's correct.
 
-The strictness isn't pedantry. It's because this code has to work when the invasion comes, when Earth might be gone, when Romans who've never seen other code need to maintain it. The discipline is the point.
+**Why C89. Why Performance. Why This Matters:**
+
+Nova Roma isn't going to jump to 3nm process nodes. They're going to be building chips at micron scale - 1990s level, maybe early 2000s. 486. Pentium era. Maybe worse. They'll have megabytes of RAM, not gigabytes. Every cycle counts. Every byte matters.
+
+This isn't nostalgia. It's targeting the hardware they'll actually have.
+
+- *Piscina (arena allocation)* - not elegant, necessary. They can't afford malloc/free overhead.
+- *Chorda (length-prefixed strings)* - they can't afford strlen() scanning every string operation.
+- *C89* - compiles tight, runs fast, no hidden costs. No bloated runtimes, no garbage collection pauses, no JIT compilation overhead.
+- *Latin identifiers* - because the people maintaining this code will be Romans running it on Roman-built chips.
+
+As Casey puts it: "We're not writing C89 because we're old-fashioned. We're writing C89 because in twenty years, a Roman engineer is going to be running this on a chip they built themselves, and that chip is going to be about as powerful as what I had in 1995. Every byte matters. Every cycle matters. We're writing code for a resource-constrained future, not the bloated present."
+
+The strictness isn't pedantry. It's because this code has to work when the invasion comes, when Earth might be gone, when Romans who've never seen other code need to maintain it on hardware they fabricated from scratch. The discipline is the point.
 
 ---
 
 *"We are not building software. We are building the foundation of a civilization. Every function, every test, every comment is a brick in a structure that must stand for centuries. The Romans did it with stone. We do it with code."*
 
-— Dr. Daniel Jackson, Episode 1x01, "Piscina"
+— Dr. Daniel Jackson, Episode 1x01, "Piscina: Capacitas Nova"
