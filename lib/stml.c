@@ -192,33 +192,55 @@ _tok_legere_valor_attributi(StmlTokenContext* ctx)
 {
     chorda result;
     character quota;
+    character ch;
     i32 initium;
 
-    quota = _tok_aspicere(ctx, ZEPHYRUM);
-    si (quota != '"' && quota != '\'')
+    ch = _tok_aspicere(ctx, ZEPHYRUM);
+
+    /* Valor cum quotis (quoted value) */
+    si (ch == '"' || ch == '\'')
     {
-        result.datum = NIHIL;
-        result.mensura = ZEPHYRUM;
+        quota = ch;
+        _tok_progredi(ctx, I);  /* Skip opening quote */
+        initium = ctx->positus;
+
+        dum (ctx->positus < ctx->input.mensura &&
+             _tok_aspicere(ctx, ZEPHYRUM) != quota)
+        {
+            _tok_progredi(ctx, I);
+        }
+
+        result.datum = ctx->input.datum + initium;
+        result.mensura = ctx->positus - initium;
+
+        si (_tok_aspicere(ctx, ZEPHYRUM) == quota)
+        {
+            _tok_progredi(ctx, I);  /* Skip closing quote */
+        }
+
         redde result;
     }
 
-    _tok_progredi(ctx, I);  /* Skip opening quote */
+    /* Valor nudus (bare value) - alphanumericus, hyphen, underscore */
     initium = ctx->positus;
-
-    dum (ctx->positus < ctx->input.mensura &&
-         _tok_aspicere(ctx, ZEPHYRUM) != quota)
+    dum (ctx->positus < ctx->input.mensura)
     {
-        _tok_progredi(ctx, I);
+        ch = _tok_aspicere(ctx, ZEPHYRUM);
+        si ((ch >= 'a' && ch <= 'z') ||
+            (ch >= 'A' && ch <= 'Z') ||
+            (ch >= '0' && ch <= '9') ||
+            ch == '-' || ch == '_')
+        {
+            _tok_progredi(ctx, I);
+        }
+        alioquin
+        {
+            frange;
+        }
     }
 
     result.datum = ctx->input.datum + initium;
     result.mensura = ctx->positus - initium;
-
-    si (_tok_aspicere(ctx, ZEPHYRUM) == quota)
-    {
-        _tok_progredi(ctx, I);  /* Skip closing quote */
-    }
-
     redde result;
 }
 

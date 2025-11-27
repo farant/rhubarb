@@ -121,10 +121,9 @@ navigator_entitatum_tractare_eventum(
  * Redditionis
  * ================================================== */
 
-/* Reddere navigatorem (tres columnae)
- * Columna sinistra: entitas parens
- * Columna media: entitas currens (cum selectione)
- * Columna dextra: praeviso item selecti
+/* Reddere navigatorem (duae columnae)
+ * Columna sinistra (30%): entitas parens (dimmed)
+ * Columna dextra (70%): entitas currens (cum selectione)
  * focused: VERUM si widget habet focus (mutat colorem border)
  */
 vacuum

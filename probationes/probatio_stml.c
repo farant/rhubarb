@@ -217,6 +217,93 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare stml_legere cum apostrophis (single quotes)
+     * ================================================== */
+
+    imprimere("\n--- Probans stml_legere cum apostrophis ---\n");
+
+    {
+        StmlResultus res;
+        chorda*      val;
+
+        res = stml_legere_ex_literis("<item id='42' name='test'/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        val = stml_attributum_capere(res.elementum_radix, "id");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "42"));
+
+        val = stml_attributum_capere(res.elementum_radix, "name");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "test"));
+
+        imprimere("  Parsatio cum apostrophis: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare stml_legere cum valoribus nudis (bare values)
+     * ================================================== */
+
+    imprimere("\n--- Probans stml_legere cum valoribus nudis ---\n");
+
+    {
+        StmlResultus res;
+        chorda*      val;
+
+        res = stml_legere_ex_literis("<pagina x=0 y=10 latitudo=71/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        val = stml_attributum_capere(res.elementum_radix, "x");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "0"));
+
+        val = stml_attributum_capere(res.elementum_radix, "y");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "10"));
+
+        val = stml_attributum_capere(res.elementum_radix, "latitudo");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "71"));
+
+        imprimere("  Parsatio valoribus nudis: VERUM\n");
+    }
+
+    /* ==================================================
+     * Probare stml_legere cum valoribus mixtis
+     * ================================================== */
+
+    imprimere("\n--- Probans stml_legere cum valoribus mixtis ---\n");
+
+    {
+        StmlResultus res;
+        chorda*      val;
+
+        res = stml_legere_ex_literis("<widget id='main' x=0 name=\"test\" active/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+
+        val = stml_attributum_capere(res.elementum_radix, "id");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "main"));
+
+        val = stml_attributum_capere(res.elementum_radix, "x");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "0"));
+
+        val = stml_attributum_capere(res.elementum_radix, "name");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "test"));
+
+        val = stml_attributum_capere(res.elementum_radix, "active");
+        CREDO_NON_NIHIL(val);
+        CREDO_VERUM(_chorda_ptr_eq_literis(val, "true"));
+
+        imprimere("  Parsatio valoribus mixtis: VERUM\n");
+    }
+
+    /* ==================================================
      * Probare stml_legere cum liberis
      * ================================================== */
 
