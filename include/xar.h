@@ -302,4 +302,84 @@ vacuum
 xar_status_imprimere(
 		constans Xar* xar);
 
+
+/* ========================================================================
+ * REMOTIO
+ * ======================================================================== */
+
+/* Xar Removere Ultimum - Removere elementum ultimum
+ * "Removere ultimum - O(1)"
+ *
+ * Redde: VERUM si successus, FALSUM si xar vacuum
+ */
+b32
+xar_removere_ultimum(
+		Xar* xar);
+
+/* Xar Removere Cum Ultimo - Swap-remove O(1)
+ * "Removere elementum ad indicem mutando cum ultimo"
+ *
+ * Nota: Non servat ordinem! Utile si ordo non refert.
+ * Redde: VERUM si successus, FALSUM si index invalidus
+ */
+b32
+xar_removere_cum_ultimo(
+		Xar* xar,
+		i32  index);
+
+/* Xar Tollere - Pop ultimum elementum (alias removere_ultimum + obtinere)
+ * "Tollere ultimum elementum"
+ *
+ * Copiare ultimum elementum ad destinationem et removere
+ * Redde: VERUM si successus, FALSUM si xar vacuum
+ */
+b32
+xar_tollere(
+		    Xar* xar,
+		 vacuum* destinatio);
+
+
+/* ========================================================================
+ * ORDINATIO ET MANIPULATIO
+ * ======================================================================== */
+
+/* Xar Ordinare - Ordinare in loco
+ * "Ordinare tabulam in loco usans comparatorem"
+ *
+ * Usans selection sort (simplex, O(n²), sed stabilis pro parvis tabulis)
+ */
+vacuum
+xar_ordinare(
+		          Xar* xar,
+		XarComparator  comparator);
+
+/* Xar Invertere - Invertere ordinem in loco
+ * "Invertere ordinem elementorum"
+ */
+vacuum
+xar_invertere(
+		Xar* xar);
+
+/* Xar Mutare - Mutare duo elementa
+ * "Mutare elementa ad indices"
+ *
+ * Redde: VERUM si successus, FALSUM si indices invalidi
+ */
+b32
+xar_mutare(
+		Xar* xar,
+		i32  index_a,
+		i32  index_b);
+
+/* Xar Continet - Verificare si elementum exsistit
+ * "Verificare si elementum exsistit"
+ *
+ * Redde: VERUM si inventus, FALSUM si non
+ */
+b32
+xar_continet(
+		constans         Xar* xar,
+		constans      vacuum* clavis,
+		          XarComparator  comparator);
+
 #endif /* XAR_H */

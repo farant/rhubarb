@@ -116,6 +116,30 @@ chorda_invenire (
 		chorda fenum,
 		chorda acus);
 
+/* chorda_invenire_index - Invenire positionem acus in fenum
+ * Redde: Index (0-based) primae occurrentiae, vel -1 si non inventus
+ */
+s32
+chorda_invenire_index (
+		chorda fenum,
+		chorda acus);
+
+/* chorda_invenire_ultimum - Invenire ultimam occurrentiam acus in fenum
+ * Redde: Vista ad ultimam occurrentiam, vel chorda vacua si non inventus
+ */
+chorda
+chorda_invenire_ultimum (
+		chorda fenum,
+		chorda acus);
+
+/* chorda_invenire_ultimum_index - Invenire positionem ultimae occurrentiae
+ * Redde: Index (0-based) ultimae occurrentiae, vel -1 si non inventus
+ */
+s32
+chorda_invenire_ultimum_index (
+		chorda fenum,
+		chorda acus);
+
 i32
 chorda_numerare_occurrentia (
 		chorda fenum,
@@ -135,9 +159,50 @@ chorda_minuscula (
 		 chorda  s,
 		Piscina* piscina);
 
-chorda 
+chorda
 chorda_maiuscula (
 		 chorda  s,
+		Piscina* piscina);
+
+/* chorda_praecidere_sinistram - Praecidere spatium album a sinistra
+ * Redde: Vista (non allocatio) ad chordam sine spatio album initiali
+ */
+chorda
+chorda_praecidere_sinistram (
+		chorda s);
+
+/* chorda_praecidere_dextram - Praecidere spatium album a dextra
+ * Redde: Vista (non allocatio) ad chordam sine spatio album finali
+ */
+chorda
+chorda_praecidere_dextram (
+		chorda s);
+
+/* chorda_substituere - Substituere omnes occurrentias antiqui cum novo
+ * Redde: Nova chorda cum substitutionibus (allocata ex piscina)
+ */
+chorda
+chorda_substituere (
+		  chorda  s,
+		  chorda  antiquum,
+		  chorda  novum,
+		Piscina* piscina);
+
+/* chorda_invertere - Invertere ordinem characterum
+ * Redde: Nova chorda inversa (allocata ex piscina)
+ */
+chorda
+chorda_invertere (
+		 chorda  s,
+		Piscina* piscina);
+
+/* chorda_duplicare - Repetere chordam n vicibus
+ * Redde: Nova chorda cum repetitionibus (allocata ex piscina)
+ */
+chorda
+chorda_duplicare (
+		 chorda  s,
+		    i32  numerus,
 		Piscina* piscina);
 
 

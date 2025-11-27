@@ -923,3 +923,256 @@ xar_status_imprimere(
 	imprimere("    Utilitas: %.1f%%\n",
 	          allocatus > ZEPHYRUM ? (100.0 * usus / allocatus) : 0.0);
 }
+
+
+/* ========================================================================
+ * REMOTIO
+ * ======================================================================== */
+
+/* Xar Removere Ultimum
+ * "Removere ultimum - O(1)"
+ */
+b32
+xar_removere_ultimum(
+    Xar* xar)
+{
+	si (!xar || xar->numerus_elementorum == ZEPHYRUM)
+	{
+		redde FALSUM;
+	}
+
+	xar->numerus_elementorum--;
+	redde VERUM;
+}
+
+/* Xar Removere Cum Ultimo
+ * "Swap-remove - O(1)"
+ */
+b32
+xar_removere_cum_ultimo(
+    Xar* xar,
+    i32  index)
+{
+	vacuum* elementum_ad_remotionem;
+	vacuum* elementum_ultimum;
+	   i32  index_ultimus;
+
+	si (!xar || xar->numerus_elementorum == ZEPHYRUM)
+	{
+		redde FALSUM;
+	}
+
+	si (index >= xar->numerus_elementorum)
+	{
+		redde FALSUM;
+	}
+
+	index_ultimus = xar->numerus_elementorum - I;
+
+	/* Si index est ultimus, simpliciter removere */
+	si (index == index_ultimus)
+	{
+		xar->numerus_elementorum--;
+		redde VERUM;
+	}
+
+	/* Mutare cum ultimo et removere ultimum */
+	elementum_ad_remotionem = xar_obtinere(xar, index);
+	elementum_ultimum       = xar_obtinere(xar, index_ultimus);
+
+	si (!elementum_ad_remotionem || !elementum_ultimum)
+	{
+		redde FALSUM;
+	}
+
+	/* Copiare ultimum ad positionem remotionis */
+	memcpy(elementum_ad_remotionem, elementum_ultimum, xar->magnitudo_elementi);
+
+	/* Decrementare numerum */
+	xar->numerus_elementorum--;
+
+	redde VERUM;
+}
+
+/* Xar Tollere
+ * "Pop ultimum elementum"
+ */
+b32
+xar_tollere(
+        Xar* xar,
+     vacuum* destinatio)
+{
+	vacuum* ultimum;
+	   i32  index_ultimus;
+
+	si (!xar || !destinatio || xar->numerus_elementorum == ZEPHYRUM)
+	{
+		redde FALSUM;
+	}
+
+	index_ultimus = xar->numerus_elementorum - I;
+	ultimum       = xar_obtinere(xar, index_ultimus);
+
+	si (!ultimum)
+	{
+		redde FALSUM;
+	}
+
+	/* Copiare ad destinationem */
+	memcpy(destinatio, ultimum, xar->magnitudo_elementi);
+
+	/* Removere ultimum */
+	xar->numerus_elementorum--;
+
+	redde VERUM;
+}
+
+
+/* ========================================================================
+ * ORDINATIO ET MANIPULATIO
+ * ======================================================================== */
+
+/* Xar Mutare
+ * "Mutare duo elementa"
+ */
+b32
+xar_mutare(
+    Xar* xar,
+    i32  index_a,
+    i32  index_b)
+{
+	vacuum* elem_a;
+	vacuum* elem_b;
+	    i8  temporalis[CCLVI];  /* Buffer temporalis pro swap */
+	    i8* temp_heap;
+
+	si (!xar)
+	{
+		redde FALSUM;
+	}
+
+	si (index_a >= xar->numerus_elementorum ||
+	    index_b >= xar->numerus_elementorum)
+	{
+		redde FALSUM;
+	}
+
+	/* Si idem index, nihil agendum */
+	si (index_a == index_b)
+	{
+		redde VERUM;
+	}
+
+	elem_a = xar_obtinere(xar, index_a);
+	elem_b = xar_obtinere(xar, index_b);
+
+	si (!elem_a || !elem_b)
+	{
+		redde FALSUM;
+	}
+
+	/* Mutare usans buffer temporalem */
+	si (xar->magnitudo_elementi <= CCLVI)
+	{
+		/* Usare buffer in stack */
+		memcpy(temporalis, elem_a, xar->magnitudo_elementi);
+		memcpy(elem_a, elem_b, xar->magnitudo_elementi);
+		memcpy(elem_b, temporalis, xar->magnitudo_elementi);
+	}
+	alioquin
+	{
+		/* Allocare in heap pro elementis magnis */
+		temp_heap = (i8*)piscina_allocare(xar->piscina, xar->magnitudo_elementi);
+		si (!temp_heap)
+		{
+			redde FALSUM;
+		}
+		memcpy(temp_heap, elem_a, xar->magnitudo_elementi);
+		memcpy(elem_a, elem_b, xar->magnitudo_elementi);
+		memcpy(elem_b, temp_heap, xar->magnitudo_elementi);
+		/* Nota: temp_heap liberabitur cum piscina */
+	}
+
+	redde VERUM;
+}
+
+/* Xar Invertere
+ * "Invertere ordinem in loco"
+ */
+vacuum
+xar_invertere(
+    Xar* xar)
+{
+	i32 sinister;
+	i32 dexter;
+
+	si (!xar || xar->numerus_elementorum <= I)
+	{
+		redde;
+	}
+
+	sinister = ZEPHYRUM;
+	dexter   = xar->numerus_elementorum - I;
+
+	dum (sinister < dexter)
+	{
+		xar_mutare(xar, sinister, dexter);
+		sinister++;
+		dexter--;
+	}
+}
+
+/* Xar Ordinare
+ * "Ordinare in loco usans selection sort"
+ *
+ * Selection sort: O(n²) sed simplex et stabilis
+ */
+vacuum
+xar_ordinare(
+              Xar* xar,
+    XarComparator  comparator)
+{
+	   i32  i;
+	   i32  j;
+	   i32  min_index;
+	vacuum* elem_j;
+	vacuum* elem_min;
+
+	si (!xar || !comparator || xar->numerus_elementorum <= I)
+	{
+		redde;
+	}
+
+	per (i = ZEPHYRUM; i < xar->numerus_elementorum - I; i++)
+	{
+		min_index = i;
+		elem_min  = xar_obtinere(xar, i);
+
+		per (j = i + I; j < xar->numerus_elementorum; j++)
+		{
+			elem_j = xar_obtinere(xar, j);
+			si (elem_j && elem_min && comparator(elem_j, elem_min) < ZEPHYRUM)
+			{
+				min_index = j;
+				elem_min  = elem_j;
+			}
+		}
+
+		si (min_index != i)
+		{
+			xar_mutare(xar, i, min_index);
+		}
+	}
+}
+
+/* Xar Continet
+ * "Verificare si elementum exsistit"
+ */
+b32
+xar_continet(
+    constans         Xar* xar,
+    constans      vacuum* clavis,
+              XarComparator  comparator)
+{
+	redde xar_invenire_index(xar, clavis, comparator) >= ZEPHYRUM;
+}

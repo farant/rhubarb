@@ -442,3 +442,79 @@ piscina_summa_apex_usus (
     redde piscina ? piscina->maximus_usus : ZEPHYRUM;
 }
 
+/* ===========================================================
+ * NOTATIO - MARK/RESET PATTERN
+ * =========================================================== */
+
+PiscinaNotatio
+piscina_notare (
+        Piscina* piscina)
+{
+    PiscinaNotatio notatio;
+
+    si (!piscina)
+    {
+        notatio.alveus_nunc = NIHIL;
+        notatio.positus = ZEPHYRUM;
+        redde notatio;
+    }
+
+    notatio.alveus_nunc = piscina->nunc;
+    notatio.positus = piscina->nunc->offset;
+
+    _debug_imprimere(
+            piscina->titulus ? piscina->titulus : "nemo",
+            "notare",
+            notatio.positus);
+
+    redde notatio;
+}
+
+vacuum
+piscina_reficere (
+              Piscina* piscina,
+        PiscinaNotatio notatio)
+{
+    Alveus* alveus_notatus;
+    Alveus* alveus_iter;
+
+    si (!piscina || !notatio.alveus_nunc) redde;
+
+    alveus_notatus = (Alveus*)notatio.alveus_nunc;
+
+    /* Reficere alveum notatum ad positionem notatam */
+    alveus_notatus->offset = notatio.positus;
+
+    /* Vacare omnes alveos post alveum notatum */
+    per (alveus_iter = alveus_notatus->sequens; alveus_iter; alveus_iter = alveus_iter->sequens)
+    {
+        alveus_iter->offset = ZEPHYRUM;
+    }
+
+    /* Reficere piscina->nunc ad alveum notatum */
+    piscina->nunc = alveus_notatus;
+
+    _debug_imprimere(
+            piscina->titulus ? piscina->titulus : "nemo",
+            "reficere",
+            notatio.positus);
+}
+
+b32
+piscina_potesne_allocare (
+        constans Piscina* piscina,
+          memoriae_index  mensura)
+{
+    memoriae_index reliqua;
+
+    si (!piscina || !piscina->nunc) redde FALSUM;
+
+    reliqua = piscina->nunc->capacitas - piscina->nunc->offset;
+
+    /* Pro piscinis dynamicis, semper possibile (crescet) */
+    si (piscina->est_dynamicum) redde VERUM;
+
+    /* Pro piscinis certae magnitudinis, verificare spatium */
+    redde mensura <= reliqua ? VERUM : FALSUM;
+}
+

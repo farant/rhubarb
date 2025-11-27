@@ -343,6 +343,145 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)result, ZEPHYRUM);
     }
 
+
+    /* ========================================================
+     * PROBARE: piscina_notare et piscina_reficere
+     * ======================================================== */
+
+    {
+               Piscina* p;
+        PiscinaNotatio  nota;
+                vacuum* a1;
+                vacuum* a2;
+                vacuum* a3;
+        memoriae_index  usus_ante;
+        memoriae_index  usus_post;
+
+        imprimere("\n--- Probans piscina_notare_reficere ---\n");
+
+        p = piscina_generare_dynamicum("probatio_notare", CCLVI);
+        CREDO_NON_NIHIL (p);
+
+        /* Allocare aliquid primum */
+        a1 = piscina_allocare(p, L);
+        CREDO_NON_NIHIL (a1);
+
+        /* Notare positionem */
+        nota = piscina_notare(p);
+        usus_ante = piscina_summa_usus(p);
+        CREDO_AEQUALIS_I32 ((i32)usus_ante, L);
+
+        /* Allocare plus post notationem */
+        a2 = piscina_allocare(p, C);
+        CREDO_NON_NIHIL (a2);
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CL);
+
+        /* Reficere ad notationem */
+        piscina_reficere(p, nota);
+        usus_post = piscina_summa_usus(p);
+        CREDO_AEQUALIS_I32 ((i32)usus_post, L);
+
+        /* Allocare denuo - debet reusare memoriam */
+        a3 = piscina_allocare(p, C);
+        CREDO_NON_NIHIL (a3);
+        /* a3 debet esse ubi a2 erat */
+        CREDO_AEQUALIS_PTR (a3, a2);
+
+        piscina_destruere(p);
+    }
+
+
+    /* ========================================================
+     * PROBARE: piscina_notare nested (stack pattern)
+     * ======================================================== */
+
+    {
+               Piscina* p;
+        PiscinaNotatio  nota_exterior;
+        PiscinaNotatio  nota_interior;
+                vacuum* a1;
+                vacuum* a2;
+                vacuum* a3;
+
+        imprimere("\n--- Probans piscina_notare_nested ---\n");
+
+        p = piscina_generare_dynamicum("probatio_nested", DXII);
+        CREDO_NON_NIHIL (p);
+
+        /* Allocare primum */
+        a1 = piscina_allocare(p, L);
+        CREDO_NON_NIHIL (a1);
+
+        /* Nota exterior */
+        nota_exterior = piscina_notare(p);
+
+        /* Allocare secundum */
+        a2 = piscina_allocare(p, L);
+        CREDO_NON_NIHIL (a2);
+
+        /* Nota interior */
+        nota_interior = piscina_notare(p);
+
+        /* Allocare tertium */
+        a3 = piscina_allocare(p, L);
+        CREDO_NON_NIHIL (a3);
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CL);
+
+        /* Reficere ad interiorem - liberare a3 */
+        piscina_reficere(p, nota_interior);
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), C);
+
+        /* Reficere ad exteriorem - liberare a2 et a3 */
+        piscina_reficere(p, nota_exterior);
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), L);
+
+        piscina_destruere(p);
+    }
+
+
+    /* ========================================================
+     * PROBARE: piscina_potesne_allocare
+     * ======================================================== */
+
+    {
+        Piscina* p_dyn;
+        Piscina* p_fix;
+            b32  potest;
+
+        imprimere("\n--- Probans piscina_potesne_allocare ---\n");
+
+        /* Dynamica - semper potest */
+        p_dyn = piscina_generare_dynamicum("probatio_potesne_dyn", CCLVI);
+        CREDO_NON_NIHIL (p_dyn);
+
+        potest = piscina_potesne_allocare(p_dyn, M);
+        CREDO_VERUM (potest);
+
+        piscina_destruere(p_dyn);
+
+        /* Certae magnitudinis - limitata */
+        p_fix = piscina_generare_certae_magnitudinis("probatio_potesne_fix", CCLVI);
+        CREDO_NON_NIHIL (p_fix);
+
+        /* Intra capacitatem */
+        potest = piscina_potesne_allocare(p_fix, C);
+        CREDO_VERUM (potest);
+
+        /* Extra capacitatem */
+        potest = piscina_potesne_allocare(p_fix, D);
+        CREDO_FALSUM (potest);
+
+        /* Post allocatio - verificare spatium reliquum */
+        piscina_allocare(p_fix, CC);
+        potest = piscina_potesne_allocare(p_fix, C);
+        CREDO_FALSUM (potest);
+
+        potest = piscina_potesne_allocare(p_fix, L);
+        CREDO_VERUM (potest);
+
+        piscina_destruere(p_fix);
+    }
+
     /* ========================================================
      * Compendium
      * ======================================================== */
