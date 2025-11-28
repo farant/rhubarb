@@ -218,7 +218,8 @@ _layout_processare_pagina(
     {
         redde FALSUM;
     }
-    pagina_initiare(pagina, dom->piscina, id_chorda);
+    /* Tabula dimensiones = widget dimensiones - border (II pro utroque latere) */
+    pagina_initiare_cum_dimensionibus(pagina, dom->piscina, latitudo - II, altitudo - II, id_chorda);
 
     /* Creare datum wrapper */
     datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumPagina));

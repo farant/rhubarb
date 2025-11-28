@@ -707,9 +707,11 @@ tabula_est_tab_continuatio(
  * ================================================== */
 
 vacuum
-tabula_ex_literis(
+tabula_ex_literis_cum_dimensionibus(
     TabulaCharacterum* tabula,
     Piscina* piscina,
+    i32 latitudo,
+    i32 altitudo,
     constans character* literae)
 {
     i32 linea;
@@ -717,8 +719,8 @@ tabula_ex_literis(
     i32 i;
     b32 indentatio_posita;
 
-    /* Primo initiare cum dimensionibus defaltis */
-    tabula_initiare(tabula, piscina, TABULA_LATITUDO_DEFALTA, TABULA_ALTITUDO_DEFALTA);
+    /* Primo initiare cum dimensionibus datis */
+    tabula_initiare(tabula, piscina, latitudo, altitudo);
 
     linea = ZEPHYRUM;
     columna = ZEPHYRUM;
@@ -768,6 +770,20 @@ tabula_ex_literis(
             }
         }
     }
+}
+
+vacuum
+tabula_ex_literis(
+    TabulaCharacterum* tabula,
+    Piscina* piscina,
+    constans character* literae)
+{
+    tabula_ex_literis_cum_dimensionibus(
+        tabula,
+        piscina,
+        TABULA_LATITUDO_DEFALTA,
+        TABULA_ALTITUDO_DEFALTA,
+        literae);
 }
 
 b32

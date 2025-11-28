@@ -241,6 +241,15 @@ probans_ex_literis(vacuum)
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2");
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'l');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'l');
+
+    /* Cum dimensionibus parvis (10x3) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III, "abc\nde");
+    CREDO_AEQUALIS_I32(tabula.latitudo, X);
+    CREDO_AEQUALIS_I32(tabula.altitudo, III);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)'e');
 }
 
 hic_manens vacuum

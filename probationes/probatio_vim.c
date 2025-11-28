@@ -144,6 +144,15 @@ probans_i_inserere(vacuum)
     status = vim_tractare_clavem(status, 'i');
     CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Idem cum dimensionibus parvis (10x3) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III, "hi");
+    CREDO_AEQUALIS_I32(tabula.latitudo, X);
+    CREDO_AEQUALIS_I32(tabula.altitudo, III);
+    status = vim_initiare(&tabula);
+    status = vim_tractare_clavem(status, 'i');
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 }
 
 hic_manens vacuum

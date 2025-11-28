@@ -335,7 +335,26 @@ tabula_est_tab_continuatio(
  * Test Helpers
  * ================================================== */
 
-/* Creare tabula ex string literal
+/* Creare tabula ex string literal cum dimensionibus specificatis
+ * Initiat tabulam cum dimensionibus datis et implet ex literis
+ * '\n' = nova linea, alii characteres = cellulae
+ * Trailing whitespace in lineis preservatur
+ *
+ * tabula: tabula initianda et implenda
+ * piscina: piscina pro allocatione
+ * latitudo: numerus columnarum
+ * altitudo: numerus linearum
+ * literae: string cum '\n' pro lineis novis
+ */
+vacuum
+tabula_ex_literis_cum_dimensionibus(
+    TabulaCharacterum* tabula,
+    Piscina* piscina,
+    i32 latitudo,
+    i32 altitudo,
+    constans character* literae);
+
+/* Creare tabula ex string literal (cum dimensionibus defaltis)
  * Initiat tabulam cum dimensionibus defaltis et implet ex literis
  * '\n' = nova linea, alii characteres = cellulae
  * Trailing whitespace in lineis preservatur
