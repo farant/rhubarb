@@ -14,75 +14,84 @@
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
 
-/* STML layout definition */
+/* STML layout definition cum widgets et entitates */
 constans character* LAYOUT_STML =
     "<layout>"
     "  <pagina id='editor' x='0' y='0' latitudo='71' altitudo='60'/>"
     "  <navigator id='nav' x='71' y='0' latitudo='71' altitudo='60'/>"
+    ""
+    "  <entitas genus='Root' slug='system'>"
+    "    <proprietas clavis='name' valor='System Root'/>"
+    "    <proprietas clavis='description' valor='Root of the entity graph'/>"
+    "    <nota>#root</nota>"
+    "    <relatio genus='pages' ad='Page::introduction'/>"
+    "    <relatio genus='pages' ad='Page::getting-started'/>"
+    "    <relatio genus='pages' ad='Page::navigation'/>"
+    "    <relatio genus='notes' ad='Note::important'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Page' slug='introduction'>"
+    "    <proprietas clavis='name' valor='Introduction'/>"
+    "    <proprietas clavis='content' valor='Welcome to the entity navigator'/>"
+    "    <proprietas clavis='author' valor='Fran'/>"
+    "    <relatio genus='next' ad='Page::getting-started'/>"
+    "    <relatio genus='references' ad='Note::important'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Page' slug='getting-started'>"
+    "    <proprietas clavis='name' valor='Getting Started'/>"
+    "    <proprietas clavis='content' valor='Use j/k to navigate, l to enter, h to go back'/>"
+    "    <relatio genus='prev' ad='Page::introduction'/>"
+    "    <relatio genus='next' ad='Page::navigation'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Page' slug='navigation'>"
+    "    <proprietas clavis='name' valor='Navigation'/>"
+    "    <proprietas clavis='content' valor='The graph structure allows bidirectional traversal'/>"
+    "    <relatio genus='prev' ad='Page::getting-started'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Note' slug='important'>"
+    "    <proprietas clavis='name' valor='Important'/>"
+    "    <proprietas clavis='text' valor='Remember to test thoroughly'/>"
+    "  </entitas>"
+    ""
+    "  <!-- Entitates cum genere hierarchico -->"
+    "  <entitas genus='Application-State::Widget' slug='editor-widget'>"
+    "    <proprietas clavis='name' valor='Editor Widget'/>"
+    "    <proprietas clavis='type' valor='text-area'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Application-State::Widget' slug='nav-widget'>"
+    "    <proprietas clavis='name' valor='Navigator Widget'/>"
+    "    <proprietas clavis='type' valor='entity-browser'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Application-State::Settings' slug='theme'>"
+    "    <proprietas clavis='name' valor='Theme Settings'/>"
+    "    <proprietas clavis='dark-mode' valor='true'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Content::Document::Article' slug='first-post'>"
+    "    <proprietas clavis='title' valor='First Article'/>"
+    "    <proprietas clavis='published' valor='2025-01-15'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Content::Document::Article' slug='second-post'>"
+    "    <proprietas clavis='title' valor='Second Article'/>"
+    "    <proprietas clavis='published' valor='2025-02-20'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Content::Document::Note' slug='meeting-notes'>"
+    "    <proprietas clavis='title' valor='Meeting Notes'/>"
+    "    <proprietas clavis='date' valor='2025-03-01'/>"
+    "  </entitas>"
+    ""
+    "  <entitas genus='Content::Media' slug='logo'>"
+    "    <proprietas clavis='name' valor='Application Logo'/>"
+    "    <proprietas clavis='format' valor='png'/>"
+    "  </entitas>"
     "</layout>";
-
-/* Creare graphum probationis cum aliquot entitates */
-interior vacuum
-creare_graphum_probationis(
-    EntitasRepositorium* repo)
-{
-    Entitas* radix;
-    Entitas* pagina_1;
-    Entitas* pagina_2;
-    Entitas* pagina_3;
-    Entitas* nota;
-
-    /* === Entitas Radix === */
-    radix = repo->entitas_scaffoldare(repo->datum, "Root", "system");
-    repo->proprietas_ponere(repo->datum, radix, "name", "System Root");
-    repo->proprietas_ponere(repo->datum, radix, "description", "Root of the entity graph");
-    repo->nota_addere(repo->datum, radix, "#root");
-
-    /* === Pagina 1 === */
-    pagina_1 = repo->entitas_scaffoldare(repo->datum, "Page", "introduction");
-    repo->proprietas_ponere(repo->datum, pagina_1, "name", "Introduction");
-    repo->proprietas_ponere(repo->datum, pagina_1, "content", "Welcome to the entity navigator");
-    repo->proprietas_ponere(repo->datum, pagina_1, "author", "Fran");
-
-    /* === Pagina 2 === */
-    pagina_2 = repo->entitas_scaffoldare(repo->datum, "Page", "getting-started");
-    repo->proprietas_ponere(repo->datum, pagina_2, "name", "Getting Started");
-    repo->proprietas_ponere(repo->datum, pagina_2, "content", "Use j/k to navigate, l to enter, h to go back");
-
-    /* === Pagina 3 === */
-    pagina_3 = repo->entitas_scaffoldare(repo->datum, "Page", "navigation");
-    repo->proprietas_ponere(repo->datum, pagina_3, "name", "Navigation");
-    repo->proprietas_ponere(repo->datum, pagina_3, "content", "The graph structure allows bidirectional traversal");
-
-    /* === Nota === */
-    nota = repo->entitas_scaffoldare(repo->datum, "Note", "important");
-    repo->proprietas_ponere(repo->datum, nota, "name", "Important");
-    repo->proprietas_ponere(repo->datum, nota, "text", "Remember to test thoroughly");
-
-    /* === Relationes === */
-    /* Radix -> Paginae */
-    repo->relatio_addere(repo->datum, radix, "pages", pagina_1->id);
-    repo->relatio_addere(repo->datum, radix, "pages", pagina_2->id);
-    repo->relatio_addere(repo->datum, radix, "pages", pagina_3->id);
-
-    /* Radix -> Notae */
-    repo->relatio_addere(repo->datum, radix, "notes", nota->id);
-
-    /* Pagina 1 -> Pagina 2 */
-    repo->relatio_addere(repo->datum, pagina_1, "next", pagina_2->id);
-
-    /* Pagina 2 -> Pagina 1, Pagina 3 */
-    repo->relatio_addere(repo->datum, pagina_2, "prev", pagina_1->id);
-    repo->relatio_addere(repo->datum, pagina_2, "next", pagina_3->id);
-
-    /* Pagina 3 -> Pagina 2 */
-    repo->relatio_addere(repo->datum, pagina_3, "prev", pagina_2->id);
-
-    /* Pagina 1 -> Nota */
-    repo->relatio_addere(repo->datum, pagina_1, "references", nota->id);
-
-    imprimere("Graphus probationis creatus\n");
-}
 
 /* ==================================================
  * Commands
@@ -165,10 +174,7 @@ main(void)
         redde I;
     }
 
-    /* Creare entitates probationis */
-    creare_graphum_probationis(repositorium);
-
-    /* Creare layout ex STML */
+    /* Creare layout ex STML (entitates creantur declarative in STML) */
     dom = layout_creare(piscina, intern, LAYOUT_STML, repositorium);
     si (!dom)
     {

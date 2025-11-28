@@ -524,6 +524,52 @@ entitas_nota_delere(
  * Utilitas
  * ================================================== */
 
+chorda*
+entitas_titulum_capere(
+    Entitas* entitas)
+{
+    i32         i;
+    i32         numerus;
+    Proprietas* prop;
+
+    si (!entitas)
+    {
+        redde NIHIL;
+    }
+
+    /* Primo: quaerere "name" */
+    numerus = xar_numerus(entitas->proprietates);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+        si (prop && prop->clavis && prop->clavis->datum &&
+            chorda_aequalis_literis(*prop->clavis, "name"))
+        {
+            si (prop->valor && prop->valor->datum)
+            {
+                redde prop->valor;
+            }
+        }
+    }
+
+    /* Secundo: quaerere "title" */
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+        si (prop && prop->clavis && prop->clavis->datum &&
+            chorda_aequalis_literis(*prop->clavis, "title"))
+        {
+            si (prop->valor && prop->valor->datum)
+            {
+                redde prop->valor;
+            }
+        }
+    }
+
+    /* Tertio: redde id */
+    redde entitas->id;
+}
+
 i32
 entitas_numerus_proprietatum(
     Entitas* entitas)

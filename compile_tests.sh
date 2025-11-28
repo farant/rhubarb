@@ -197,7 +197,8 @@ compile_gui_app() {
     obj_files=$(get_object_files)
 
     # Compile test file and link with object files
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
+    # -Wno-overlength-strings: GUI apps may have long STML layout strings
+    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         echo ""

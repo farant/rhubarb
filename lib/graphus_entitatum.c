@@ -3,6 +3,25 @@
 #include <string.h>
 
 /* ==================================================
+ * Declarationes Praecurrentes (Forward Declarations)
+ * ================================================== */
+
+interior b32
+_impl_proprietas_ponere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* clavis,
+    constans character* valor);
+
+interior Relatio*
+_impl_relatio_addere(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* genus,
+    chorda*             destinatio_id);
+
+
+/* ==================================================
  * Functiones Implementationis Repositorium - Lectio (Interior)
  * ================================================== */
 
@@ -563,6 +582,258 @@ _impl_entitas_creare(
     redde entitas;
 }
 
+/* ==================================================
+ * Genus Hierarchy Auto-Creation
+ * ================================================== */
+
+/* Creare entitatem Genus pro via data (e.g., "Application-State::Widget")
+ * ID deterministicum ex "Genus:<via>"
+ * Proprietas "name" ponitur ad segmentum ultimum (e.g., "Widget")
+ */
+interior Entitas*
+_assecurare_genus_entitatem(
+    GraphusEntitatum*   graphus,
+    constans character* via)
+{
+    chorda            uuid_chorda;
+    chorda*           id_internatum;
+    chorda*           genus_internatum;
+    Entitas*          entitas_existens;
+    Entitas*          entitas;
+    character         appellatio_buffer[CCLVI];
+
+    /* Generare ID deterministicum: "Genus:<via>" */
+    uuid_chorda = uuidv5_ex_genere_et_titulo(graphus->piscina, "Genus", via);
+    si (!uuid_chorda.datum)
+    {
+        redde NIHIL;
+    }
+
+    id_internatum = chorda_internare(graphus->intern, uuid_chorda);
+    si (!id_internatum)
+    {
+        redde NIHIL;
+    }
+
+    /* Verificare si iam existit */
+    entitas_existens = _impl_capere_entitatem(graphus, id_internatum);
+    si (entitas_existens)
+    {
+        redde entitas_existens;
+    }
+
+    /* Creare novam entitatem Genus */
+    genus_internatum = chorda_internare_ex_literis(graphus->intern, "Genus");
+    si (!genus_internatum)
+    {
+        redde NIHIL;
+    }
+
+    entitas = entitas_creare(graphus->piscina, id_internatum, genus_internatum);
+    si (!entitas)
+    {
+        redde NIHIL;
+    }
+
+    si (!graphus_entitatum_addere_entitatem(graphus, entitas))
+    {
+        redde NIHIL;
+    }
+
+    /* Ponere proprietatem "name" ad segmentum ultimum */
+    /* Invenire ultimum "::" in via */
+    {
+        constans character* segmentum;
+        constans character* p;
+        i32 seg_len;
+
+        /* Invenire ultimum "::" */
+        segmentum = via;
+        p = via;
+        dum (*p != '\0')
+        {
+            si (p[ZEPHYRUM] == ':' && p[I] == ':')
+            {
+                segmentum = p + II;
+                p += II;
+            }
+            alioquin
+            {
+                p++;
+            }
+        }
+
+        /* Copiare segmentum ad buffer */
+        seg_len = ZEPHYRUM;
+        dum (segmentum[seg_len] != '\0' && seg_len < CCLV)
+        {
+            appellatio_buffer[seg_len] = segmentum[seg_len];
+            seg_len++;
+        }
+        appellatio_buffer[seg_len] = '\0';
+
+        _impl_proprietas_ponere(graphus, entitas, "name", appellatio_buffer);
+    }
+
+    redde entitas;
+}
+
+/* Assecurare hierarchiam generis existit et creare relationes "contains"
+ * Pro genere "Application-State::Widget":
+ *   1. Creare Genus::Genus (radix) si non existit
+ *   2. Creare Genus::Application-State
+ *   3. Creare Genus::Application-State::Widget
+ *   4. Genus::Genus --contains--> Genus::Application-State
+ *   5. Genus::Application-State --contains--> Genus::Application-State::Widget
+ *   6. Redde Genus::Application-State::Widget (folium)
+ */
+interior Entitas*
+_assecurare_genus_hierarchiam(
+    GraphusEntitatum*   graphus,
+    constans character* genus)
+{
+    Entitas*   genus_radix;
+    Entitas*   genus_parens;
+    Entitas*   genus_currens;
+    character  via_buffer[CCLVI];
+    i32        via_len;
+    i32        i;
+    chorda*    contains_genus;
+
+    si (!graphus || !genus)
+    {
+        redde NIHIL;
+    }
+
+    /* Internare genus relationis "contains" */
+    contains_genus = chorda_internare_ex_literis(graphus->intern, "contains");
+    si (!contains_genus)
+    {
+        redde NIHIL;
+    }
+
+    /* Assecurare Genus::Genus (radix omnium generum) existit */
+    genus_radix = _assecurare_genus_entitatem(graphus, "Genus");
+    si (!genus_radix)
+    {
+        redde NIHIL;
+    }
+
+    /* Calculare mensuram generis */
+    via_len = ZEPHYRUM;
+    dum (genus[via_len] != '\0')
+    {
+        via_len++;
+    }
+
+    /* Creare entitatem Genus pro toto genere */
+    genus_currens = _assecurare_genus_entitatem(graphus, genus);
+    si (!genus_currens)
+    {
+        redde NIHIL;
+    }
+
+    /* Construere hierarchiam */
+    genus_parens = genus_radix;
+    via_buffer[ZEPHYRUM] = '\0';
+    via_len = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; genus[i] != '\0'; i++)
+    {
+        si (genus[i] == ':' && genus[i + I] != '\0' && genus[i + I] == ':')
+        {
+            /* Terminus segmenti - creare genus pro hac via */
+            via_buffer[via_len] = '\0';
+
+            genus_currens = _assecurare_genus_entitatem(graphus, via_buffer);
+            si (!genus_currens)
+            {
+                redde NIHIL;
+            }
+
+            /* Addere relatio "contains" a parente si nondum existit */
+            /* Verificare si relatio iam existit */
+            {
+                Relatio* rel;
+                i32      num_rel;
+                i32      j;
+                b32      iam_habet;
+
+                iam_habet = FALSUM;
+                num_rel = xar_numerus(genus_parens->relationes);
+                per (j = ZEPHYRUM; j < num_rel; j++)
+                {
+                    rel = (Relatio*)xar_obtinere(genus_parens->relationes, j);
+                    si (rel && rel->genus == contains_genus &&
+                        rel->destinatio_id == genus_currens->id)
+                    {
+                        iam_habet = VERUM;
+                        frange;
+                    }
+                }
+
+                si (!iam_habet)
+                {
+                    _impl_relatio_addere(graphus, genus_parens, "contains",
+                                         genus_currens->id);
+                }
+            }
+
+            genus_parens = genus_currens;
+
+            /* Addere "::" ad via_buffer et saltare secundum ':' */
+            via_buffer[via_len] = ':';
+            via_len++;
+            via_buffer[via_len] = ':';
+            via_len++;
+            i++;  /* Saltare secundum ':' */
+        }
+        alioquin
+        {
+            /* Addere character ad viam */
+            via_buffer[via_len] = genus[i];
+            via_len++;
+        }
+    }
+
+    /* Creare genus finale (totum genus) */
+    via_buffer[via_len] = '\0';
+    genus_currens = _assecurare_genus_entitatem(graphus, via_buffer);
+    si (!genus_currens)
+    {
+        redde NIHIL;
+    }
+
+    /* Addere relatio "contains" a parente ad folium */
+    {
+        Relatio* rel;
+        i32      num_rel;
+        i32      j;
+        b32      iam_habet;
+
+        iam_habet = FALSUM;
+        num_rel = xar_numerus(genus_parens->relationes);
+        per (j = ZEPHYRUM; j < num_rel; j++)
+        {
+            rel = (Relatio*)xar_obtinere(genus_parens->relationes, j);
+            si (rel && rel->genus == contains_genus &&
+                rel->destinatio_id == genus_currens->id)
+            {
+                iam_habet = VERUM;
+                frange;
+            }
+        }
+
+        si (!iam_habet)
+        {
+            _impl_relatio_addere(graphus, genus_parens, "contains",
+                                 genus_currens->id);
+        }
+    }
+
+    redde genus_currens;
+}
+
 interior Entitas*
 _impl_entitas_scaffoldare(
     vacuum*             datum,
@@ -575,6 +846,8 @@ _impl_entitas_scaffoldare(
     chorda*           genus_internatum;
     Entitas*          entitas_existens;
     Entitas*          entitas;
+    Entitas*          genus_folium;
+    chorda*           contains_genus;
 
     graphus = (GraphusEntitatum*)datum;
 
@@ -622,6 +895,40 @@ _impl_entitas_scaffoldare(
     si (!graphus_entitatum_addere_entitatem(graphus, entitas))
     {
         redde NIHIL;
+    }
+
+    /* Assecurare genus hierarchiam et addere relatio "contains" ad entitatem */
+    genus_folium = _assecurare_genus_hierarchiam(graphus, genus);
+    si (genus_folium)
+    {
+        contains_genus = chorda_internare_ex_literis(graphus->intern, "contains");
+        si (contains_genus)
+        {
+            /* Verificare si relatio iam existit */
+            Relatio* rel;
+            i32      num_rel;
+            i32      j;
+            b32      iam_habet;
+
+            iam_habet = FALSUM;
+            num_rel = xar_numerus(genus_folium->relationes);
+            per (j = ZEPHYRUM; j < num_rel; j++)
+            {
+                rel = (Relatio*)xar_obtinere(genus_folium->relationes, j);
+                si (rel && rel->genus == contains_genus &&
+                    rel->destinatio_id == entitas->id)
+                {
+                    iam_habet = VERUM;
+                    frange;
+                }
+            }
+
+            si (!iam_habet)
+            {
+                _impl_relatio_addere(graphus, genus_folium, "contains",
+                                     entitas->id);
+            }
+        }
     }
 
     redde entitas;

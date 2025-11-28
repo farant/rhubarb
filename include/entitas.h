@@ -214,6 +214,15 @@ entitas_nota_delere(
  * Utilitas
  * ================================================== */
 
+/* Capere titulum entitatis pro monstrando
+ * Ordo praeferentiae: proprietas "name", proprietas "title", id
+ *
+ * Redde: chorda* ad titulum (non allocata, indicat ad datum internum)
+ */
+chorda*
+entitas_titulum_capere(
+    Entitas* entitas);
+
 /* Capere numerum proprietatum
  */
 i32

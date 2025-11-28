@@ -568,6 +568,117 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare entitas_scaffoldare cum genere hierarchico
+     * ================================================== */
+
+    {
+        Entitas* ent;
+        Entitas* genus_ent;
+        chorda*  titulum;
+
+        imprimere("\n--- Probans scaffoldare cum genere hierarchico ---\n");
+
+        /* Scaffoldare entitatem cum genere hierarchico */
+        ent = repo->entitas_scaffoldare(repo->datum, "Application-State::Widget", "my-widget");
+        CREDO_NON_NIHIL(ent);
+
+        /* Verificare genus entitatis */
+        CREDO_VERUM(chorda_aequalis_literis(*ent->genus, "Application-State::Widget"));
+
+        /* Verificare Genus::Genus (radix) existit */
+        genus_ent = repo->entitas_scaffoldare(repo->datum, "Genus", "Genus");
+        CREDO_NON_NIHIL(genus_ent);
+
+        /* Verificare Genus::Application-State existit et habet "name" */
+        genus_ent = repo->entitas_scaffoldare(repo->datum, "Genus", "Application-State");
+        CREDO_NON_NIHIL(genus_ent);
+        titulum = entitas_titulum_capere(genus_ent);
+        CREDO_NON_NIHIL(titulum);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "Application-State"));
+
+        /* Verificare Genus::Application-State::Widget existit et habet "name" = "Widget" */
+        genus_ent = repo->entitas_scaffoldare(repo->datum, "Genus", "Application-State::Widget");
+        CREDO_NON_NIHIL(genus_ent);
+        titulum = entitas_titulum_capere(genus_ent);
+        CREDO_NON_NIHIL(titulum);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "Widget"));
+    }
+
+    /* ==================================================
+     * Probare scaffoldare cum genere profunde hierarchico
+     * ================================================== */
+
+    {
+        Entitas* ent;
+        Entitas* genus_ent;
+        chorda*  titulum;
+
+        imprimere("\n--- Probans scaffoldare cum genere profunde hierarchico ---\n");
+
+        /* Scaffoldare entitatem cum genere 3 niveles */
+        ent = repo->entitas_scaffoldare(repo->datum, "Content::Document::Article", "my-article");
+        CREDO_NON_NIHIL(ent);
+
+        /* Verificare Genus::Content existit */
+        genus_ent = repo->entitas_scaffoldare(repo->datum, "Genus", "Content");
+        CREDO_NON_NIHIL(genus_ent);
+        titulum = entitas_titulum_capere(genus_ent);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "Content"));
+
+        /* Verificare Genus::Content::Document existit */
+        genus_ent = repo->entitas_scaffoldare(repo->datum, "Genus", "Content::Document");
+        CREDO_NON_NIHIL(genus_ent);
+        titulum = entitas_titulum_capere(genus_ent);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "Document"));
+
+        /* Verificare Genus::Content::Document::Article existit */
+        genus_ent = repo->entitas_scaffoldare(repo->datum, "Genus", "Content::Document::Article");
+        CREDO_NON_NIHIL(genus_ent);
+        titulum = entitas_titulum_capere(genus_ent);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "Article"));
+    }
+
+    /* ==================================================
+     * Probare genus hierarchia habet relationes "contains"
+     * ================================================== */
+
+    {
+        Entitas* genus_radix;
+        Entitas* genus_content;
+        Entitas* genus_document;
+        chorda*  contains_genus;
+        Xar*     relationes;
+
+        imprimere("\n--- Probans genus hierarchia cum relationibus contains ---\n");
+
+        /* Genus::Genus debet habere "contains" ad Genus::Content */
+        genus_radix = repo->entitas_scaffoldare(repo->datum, "Genus", "Genus");
+        CREDO_NON_NIHIL(genus_radix);
+
+        contains_genus = chorda_internare_ex_literis(intern, "contains");
+        relationes = entitas_relationes_generis_capere(genus_radix, contains_genus, piscina);
+        CREDO_NON_NIHIL(relationes);
+        /* Debet habere relationes ad Content, Application-State, etc. */
+        CREDO_VERUM(xar_numerus(relationes) >= II);
+
+        /* Genus::Content debet habere "contains" ad Genus::Content::Document */
+        genus_content = repo->entitas_scaffoldare(repo->datum, "Genus", "Content");
+        CREDO_NON_NIHIL(genus_content);
+
+        relationes = entitas_relationes_generis_capere(genus_content, contains_genus, piscina);
+        CREDO_NON_NIHIL(relationes);
+        CREDO_VERUM(xar_numerus(relationes) >= I);
+
+        /* Genus::Content::Document debet habere "contains" ad Genus::Content::Document::Article */
+        genus_document = repo->entitas_scaffoldare(repo->datum, "Genus", "Content::Document");
+        CREDO_NON_NIHIL(genus_document);
+
+        relationes = entitas_relationes_generis_capere(genus_document, contains_genus, piscina);
+        CREDO_NON_NIHIL(relationes);
+        CREDO_VERUM(xar_numerus(relationes) >= I);
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

@@ -658,6 +658,86 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Probare entitas_titulum_capere
+     * ================================================== */
+
+    {
+        Entitas* entitas;
+        chorda*  titulum;
+
+        imprimere("\n--- Probans entitas_titulum_capere ---\n");
+
+        /* Casus 1: Entitas cum "name" proprietate */
+        entitas = entitas_creare(
+            piscina,
+            chorda_internare_ex_literis(intern, "titulum-test-1"),
+            chorda_internare_ex_literis(intern, "test"));
+
+        entitas_proprietas_addere(
+            entitas,
+            chorda_internare_ex_literis(intern, "name"),
+            chorda_internare_ex_literis(intern, "My Entity Name"));
+
+        titulum = entitas_titulum_capere(entitas);
+        CREDO_NON_NIHIL(titulum);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "My Entity Name"));
+
+        /* Casus 2: Entitas cum "title" proprietate (sine "name") */
+        entitas = entitas_creare(
+            piscina,
+            chorda_internare_ex_literis(intern, "titulum-test-2"),
+            chorda_internare_ex_literis(intern, "test"));
+
+        entitas_proprietas_addere(
+            entitas,
+            chorda_internare_ex_literis(intern, "title"),
+            chorda_internare_ex_literis(intern, "My Entity Title"));
+
+        titulum = entitas_titulum_capere(entitas);
+        CREDO_NON_NIHIL(titulum);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "My Entity Title"));
+
+        /* Casus 3: Entitas cum "name" et "title" - "name" habet prioritatem */
+        entitas = entitas_creare(
+            piscina,
+            chorda_internare_ex_literis(intern, "titulum-test-3"),
+            chorda_internare_ex_literis(intern, "test"));
+
+        entitas_proprietas_addere(
+            entitas,
+            chorda_internare_ex_literis(intern, "title"),
+            chorda_internare_ex_literis(intern, "Title Value"));
+
+        entitas_proprietas_addere(
+            entitas,
+            chorda_internare_ex_literis(intern, "name"),
+            chorda_internare_ex_literis(intern, "Name Value"));
+
+        titulum = entitas_titulum_capere(entitas);
+        CREDO_NON_NIHIL(titulum);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "Name Value"));
+
+        /* Casus 4: Entitas sine "name" vel "title" - redde id */
+        entitas = entitas_creare(
+            piscina,
+            chorda_internare_ex_literis(intern, "titulum-test-4"),
+            chorda_internare_ex_literis(intern, "test"));
+
+        entitas_proprietas_addere(
+            entitas,
+            chorda_internare_ex_literis(intern, "other"),
+            chorda_internare_ex_literis(intern, "Some Value"));
+
+        titulum = entitas_titulum_capere(entitas);
+        CREDO_NON_NIHIL(titulum);
+        CREDO_VERUM(chorda_aequalis_literis(*titulum, "titulum-test-4"));
+
+        /* Casus 5: Entitas NIHIL */
+        titulum = entitas_titulum_capere(NIHIL);
+        CREDO_NIHIL(titulum);
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

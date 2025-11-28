@@ -1,11 +1,13 @@
 #include "layout.h"
 #include "stml.h"
 #include "registrum_commandi.h"
+#include "xar.h"
+#include "entitas.h"
 #include <string.h>
 #include <stdlib.h>
 
 /* ==================================================
- * Datum Structurae pro Widgets
+ * Datum Structurae pro Widgets et Entitates
  * ================================================== */
 
 /* Datum internum pro pagina widget */
@@ -13,6 +15,13 @@ nomen structura {
     Pagina*    pagina;
     LayoutDom* dom;  /* Pro accedere registrum et piscina */
 } LayoutDatumPagina;
+
+/* Relatio differens - colligitur in prima passu, resolvitur in secunda */
+nomen structura {
+    Entitas* ab_entitas;       /* Entitas originis */
+    chorda*  genus_relationis; /* Genus relationis e.g. "pages" */
+    chorda*  ad_referentia;    /* Referentia destinationis e.g. "Page::introduction" */
+} LayoutRelatioDifferens;
 
 /* Datum internum pro navigator widget */
 nomen structura {
@@ -314,6 +323,140 @@ _layout_processare_navigator(
     redde VERUM;
 }
 
+/* Resolvere referentia "Genus::slug" ad Entitas */
+interior Entitas*
+_layout_resolvere_referentia(
+    LayoutDom*           dom,
+    EntitasRepositorium* repositorium,
+    chorda*              referentia)
+{
+    s32    sep_index;
+    i32    sep_pos;
+    chorda genus;
+    chorda slug;
+    chorda separator;
+
+    /* Invenire ultimum "::" separator (permittit namespaced genus) */
+    separator = chorda_ex_literis("::", dom->piscina);
+    sep_index = chorda_invenire_ultimum_index(*referentia, separator);
+    si (sep_index < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    /* Convertere ad i32 post validationem */
+    sep_pos = (i32)sep_index;
+
+    /* Scindere in genus et slug */
+    genus = chorda_sectio(*referentia, ZEPHYRUM, sep_pos);
+    slug = chorda_sectio(*referentia, sep_pos + II, referentia->mensura);
+
+    /* Obtinere vel creare entitas (scaffoldare est idempotens) */
+    redde repositorium->entitas_scaffoldare(
+        repositorium->datum,
+        chorda_ut_cstr(genus, dom->piscina),
+        chorda_ut_cstr(slug, dom->piscina));
+}
+
+interior b32
+_layout_processare_entitas(
+    LayoutDom*           dom,
+    StmlNodus*           nodus,
+    EntitasRepositorium* repositorium,
+    Xar*                 relationes_differentes)
+{
+    chorda*     genus_attr;
+    chorda*     slug_attr;
+    Entitas*    entitas;
+    StmlNodus*  liberum;
+    i32         i;
+    i32         num_liberi;
+
+    si (!repositorium)
+    {
+        redde FALSUM;
+    }
+
+    /* Legere genus et slug attributa */
+    genus_attr = stml_attributum_capere(nodus, "genus");
+    slug_attr = stml_attributum_capere(nodus, "slug");
+
+    si (!genus_attr || !slug_attr)
+    {
+        redde FALSUM;
+    }
+
+    /* Creare entitas (idempotens) */
+    entitas = repositorium->entitas_scaffoldare(
+        repositorium->datum,
+        chorda_ut_cstr(*genus_attr, dom->piscina),
+        chorda_ut_cstr(*slug_attr, dom->piscina));
+
+    si (!entitas)
+    {
+        redde FALSUM;
+    }
+
+    /* Processare liberos */
+    num_liberi = stml_numerus_liberorum(nodus);
+    per (i = ZEPHYRUM; i < num_liberi; i++)
+    {
+        liberum = stml_liberum_ad_indicem(nodus, i);
+        si (!liberum || liberum->genus != STML_NODUS_ELEMENTUM || !liberum->titulus)
+        {
+            perge;
+        }
+
+        si (chorda_aequalis_literis(*liberum->titulus, "proprietas"))
+        {
+            /* <proprietas clavis='name' valor='value'/> */
+            chorda* clavis = stml_attributum_capere(liberum, "clavis");
+            chorda* valor = stml_attributum_capere(liberum, "valor");
+            si (clavis && valor)
+            {
+                repositorium->proprietas_ponere(
+                    repositorium->datum,
+                    entitas,
+                    chorda_ut_cstr(*clavis, dom->piscina),
+                    chorda_ut_cstr(*valor, dom->piscina));
+            }
+        }
+        alioquin si (chorda_aequalis_literis(*liberum->titulus, "nota"))
+        {
+            /* <nota>#tag</nota> - textus contentum est nota */
+            chorda textus = stml_textus_internus(liberum, dom->piscina);
+            si (textus.datum && textus.mensura > ZEPHYRUM)
+            {
+                repositorium->nota_addere(
+                    repositorium->datum,
+                    entitas,
+                    chorda_ut_cstr(textus, dom->piscina));
+            }
+        }
+        alioquin si (chorda_aequalis_literis(*liberum->titulus, "relatio"))
+        {
+            /* <relatio genus='pages' ad='Page::introduction'/> */
+            /* Differre ad secundam passam */
+            LayoutRelatioDifferens* diff;
+            chorda* genus_rel = stml_attributum_capere(liberum, "genus");
+            chorda* ad = stml_attributum_capere(liberum, "ad");
+
+            si (genus_rel && ad)
+            {
+                diff = xar_addere(relationes_differentes);
+                si (diff)
+                {
+                    diff->ab_entitas = entitas;
+                    diff->genus_relationis = genus_rel;
+                    diff->ad_referentia = ad;
+                }
+            }
+        }
+    }
+
+    redde VERUM;
+}
+
 
 /* ==================================================
  * API Publica
@@ -326,12 +469,14 @@ layout_creare(
     constans character*  stml,
     EntitasRepositorium* repositorium)
 {
-    LayoutDom*   dom;
-    StmlResultus res;
-    StmlNodus*   layout_nodus;
-    StmlNodus*   liberum;
-    i32          i;
-    i32          num_liberi;
+    LayoutDom*              dom;
+    StmlResultus            res;
+    StmlNodus*              layout_nodus;
+    StmlNodus*              liberum;
+    i32                     i;
+    i32                     num_liberi;
+    Xar*                    relationes_differentes;
+    LayoutRelatioDifferens* diff;
 
     si (!piscina || !intern || !stml)
     {
@@ -363,6 +508,13 @@ layout_creare(
         redde NIHIL;
     }
 
+    /* Creare xar pro relationes differentes */
+    relationes_differentes = xar_creare(piscina, magnitudo(LayoutRelatioDifferens));
+    si (!relationes_differentes)
+    {
+        redde NIHIL;
+    }
+
     /* Parsare STML */
     res = stml_legere_ex_literis(stml, piscina, intern);
     si (!res.successus || !res.elementum_radix)
@@ -379,8 +531,95 @@ layout_creare(
         redde NIHIL;
     }
 
-    /* Processare liberos */
+    /* === PRIMA PASSA: Processare entitates (ante widgets!) === */
     num_liberi = stml_numerus_liberorum(layout_nodus);
+    per (i = ZEPHYRUM; i < num_liberi; i++)
+    {
+        liberum = stml_liberum_ad_indicem(layout_nodus, i);
+        si (!liberum || liberum->genus != STML_NODUS_ELEMENTUM || !liberum->titulus)
+        {
+            perge;
+        }
+
+        si (chorda_aequalis_literis(*liberum->titulus, "entitas"))
+        {
+            _layout_processare_entitas(dom, liberum, repositorium, relationes_differentes);
+        }
+    }
+
+    /* === SECUNDA PASSA: Resolvere relationes === */
+    per (i = ZEPHYRUM; i < xar_numerus(relationes_differentes); i++)
+    {
+        Entitas* destinatio;
+
+        diff = (LayoutRelatioDifferens*)xar_obtinere(relationes_differentes, i);
+
+        /* Resolvere "Genus::slug" ad entitas */
+        destinatio = _layout_resolvere_referentia(dom, repositorium, diff->ad_referentia);
+        si (destinatio)
+        {
+            repositorium->relatio_addere(
+                repositorium->datum,
+                diff->ab_entitas,
+                chorda_ut_cstr(*diff->genus_relationis, dom->piscina),
+                destinatio->id);
+        }
+    }
+
+    /* === Addere relatio root --contains--> Genus::Genus === */
+    si (repositorium)
+    {
+        Xar*      radices;
+        Entitas*  entitas_radix;
+        Entitas*  genus_genus;
+
+        radices = repositorium->capere_radices(repositorium->datum);
+        si (radices && xar_numerus(radices) > ZEPHYRUM)
+        {
+            entitas_radix = *(Entitas**)xar_obtinere(radices, ZEPHYRUM);
+            si (entitas_radix)
+            {
+                /* Scaffoldare Genus::Genus (creabitur si non existit) */
+                genus_genus = repositorium->entitas_scaffoldare(
+                    repositorium->datum, "Genus", "Genus");
+                si (genus_genus)
+                {
+                    /* Addere relatio "contains" si nondum existit */
+                    chorda* contains_genus;
+                    b32     iam_habet;
+                    i32     j;
+                    i32     num_rel;
+                    Relatio* rel;
+
+                    contains_genus = chorda_internare_ex_literis(intern, "contains");
+                    iam_habet = FALSUM;
+
+                    num_rel = xar_numerus(entitas_radix->relationes);
+                    per (j = ZEPHYRUM; j < num_rel; j++)
+                    {
+                        rel = (Relatio*)xar_obtinere(entitas_radix->relationes, j);
+                        si (rel && rel->genus == contains_genus &&
+                            rel->destinatio_id == genus_genus->id)
+                        {
+                            iam_habet = VERUM;
+                            frange;
+                        }
+                    }
+
+                    si (!iam_habet)
+                    {
+                        repositorium->relatio_addere(
+                            repositorium->datum,
+                            entitas_radix,
+                            "contains",
+                            genus_genus->id);
+                    }
+                }
+            }
+        }
+    }
+
+    /* === TERTIA PASSA: Processare widgets (post entitates) === */
     per (i = ZEPHYRUM; i < num_liberi; i++)
     {
         liberum = stml_liberum_ad_indicem(layout_nodus, i);
@@ -397,7 +636,7 @@ layout_creare(
         {
             _layout_processare_navigator(dom, liberum, repositorium);
         }
-        /* Alii tags ignorantur pro nunc */
+        /* entitas iam processata in prima passa */
     }
 
     redde dom;
