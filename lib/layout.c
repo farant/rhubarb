@@ -88,14 +88,16 @@ _layout_pagina_tractare_eventum(
         click_y = (eventus->datum.mus.y / character_altitudo) - widget->y - I;
 
         /* Tentare detegere tag ad click position */
-        si (pagina_obtinere_regio_ad_punctum(datum->pagina, click_x, click_y, &regio))
+        /* click_y = linea, click_x = columna */
+        si (pagina_obtinere_regio_ad_punctum(datum->pagina, click_y, click_x, &regio))
         {
             si (strcmp(regio.genus, "command") == ZEPHYRUM)
             {
                 ContextusCommandi ctx;
 
                 ctx.pagina = datum->pagina;
-                ctx.positio = regio.finis;
+                ctx.linea = regio.finis_linea;
+                ctx.columna = regio.finis_columna;
                 ctx.piscina = datum->dom->piscina;
                 ctx.datum_custom = NIHIL;
 

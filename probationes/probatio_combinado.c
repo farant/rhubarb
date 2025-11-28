@@ -117,8 +117,8 @@ command_date(
             tempus_info->tm_year + MCMX);  /* 1900 */
 
     /* Insert result after tag */
-    pagina_ponere_cursor(ctx->pagina, ctx->positio);
-    pagina_inserere_chordam(ctx->pagina, resultado);
+    pagina_ponere_cursor(ctx->pagina, ctx->linea, ctx->columna);
+    pagina_inserere_textum(ctx->pagina, resultado);
 
     redde VERUM;
 }
@@ -200,13 +200,13 @@ main(void)
     pagina = layout_obtinere_pagina(dom, "editor");
     si (pagina)
     {
-        pagina_inserere_chordam(pagina, "TAB = switch focus (not in insert mode)\n\n");
-        pagina_inserere_chordam(pagina, "Click widgets to focus them\n\n");
-        pagina_inserere_chordam(pagina, "Navigator on right ->\n\n");
-        pagina_inserere_chordam(pagina, "Press 'i' to enter insert mode\n");
-        pagina_inserere_chordam(pagina, "Press ESC to return to normal mode\n");
-        pagina_inserere_chordam(pagina, "Use hjkl to navigate\n\n");
-        pagina_inserere_chordam(pagina, "Try clicking on: $date\n");
+        pagina_inserere_textum(pagina, "TAB = switch focus (not in insert mode)\n\n");
+        pagina_inserere_textum(pagina, "Click widgets to focus them\n\n");
+        pagina_inserere_textum(pagina, "Navigator on right ->\n\n");
+        pagina_inserere_textum(pagina, "Press 'i' to enter insert mode\n");
+        pagina_inserere_textum(pagina, "Press ESC to return to normal mode\n");
+        pagina_inserere_textum(pagina, "Use hjkl to navigate\n\n");
+        pagina_inserere_textum(pagina, "Try clicking on: $date\n");
     }
 
     /* Configurare fenestram */

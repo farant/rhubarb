@@ -33,7 +33,8 @@
 /* Context passed to all command functions */
 nomen structura ContextusCommandi {
     Pagina* pagina;         /* Which pagina triggered command */
-    i32 positio;            /* Position in buffer where command was */
+    i32 linea;              /* Grid row where command ends */
+    i32 columna;            /* Grid column where command ends */
     Piscina* piscina;       /* Piscina for allocations */
     vacuum* datum_custom;   /* Application-specific data */
 } ContextusCommandi;

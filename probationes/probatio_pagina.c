@@ -65,10 +65,10 @@ main (
     pagina_initiare(&pagina, chorda_internare_ex_literis(internamentum_globale(), "Page::Test"));
 
     /* Inserere textum initialem */
-    pagina_inserere_chordam(&pagina, "Salve! Hoc est probatio paginae.\n");
-    pagina_inserere_chordam(&pagina, "Preme EFFUGIUM ut claudas.\n\n");
-    pagina_inserere_chordam(&pagina, "i = insert mode, ESC = normal mode\n");
-    pagina_inserere_chordam(&pagina, "Normal: hjkl, wb, o/O, a/i, g/G, dd, dG, d$\n");
+    pagina_inserere_textum(&pagina, "Salve! Hoc est probatio paginae.\n");
+    pagina_inserere_textum(&pagina, "Preme EFFUGIUM ut claudas.\n\n");
+    pagina_inserere_textum(&pagina, "i = insert mode, ESC = normal mode\n");
+    pagina_inserere_textum(&pagina, "Normal: hjkl, wb, o/O, a/i, g/G, dd, dG, d$\n");
 
     /* Monstrare fenestram */
     fenestra_monstrare(fenestra);

@@ -49,6 +49,8 @@ declare -a SOURCE_FILES=(
     "lib/selectio.c"
     "lib/widget.c"
     "lib/pagina.c"
+    "lib/tabula_characterum.c"
+    "lib/vim.c"
     "lib/navigator_entitatum.c"
     "lib/delineare.c"
     "lib/fenestra_textus.c"

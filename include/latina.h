@@ -112,6 +112,10 @@
 #define LXIII				63
 #define LXIV				64
 #define LXV				  65
+#define LXVI				66
+#define LXVII				67
+#define LXVIII			68
+#define LXIX				69
 #define LXX					70
 #define LXXI				71
 #define LXXVI			  76
