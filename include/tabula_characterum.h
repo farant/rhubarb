@@ -33,6 +33,10 @@
 #define TABULA_LATITUDO   LXVIII    /* 68 columns */
 #define TABULA_ALTITUDO   LVI       /* 56 rows */
 
+/* Tab occupat duas cellulas: '\t' sequitur TAB_CONTINUATIO
+ * Hoc permittit tabs reddere ut duo spatia et delere uno backspace */
+#define TAB_CONTINUATIO   ((character)0x01)
+
 
 /* ==================================================
  * Typi
@@ -255,6 +259,54 @@ tabula_invenire_contentum_connexum(
     i32 columna_initium,
     i32* linea_finis,
     i32* columna_finis);
+
+
+/* ==================================================
+ * Tab Handling (Tab = 2 cellulae)
+ * ================================================== */
+
+/* Inserere tab ad positionem (occupat 2 cellulas: '\t' + TAB_CONTINUATIO)
+ * Si contentum existit ad dextram, trudere dextram per 2
+ *
+ * tabula: tabula
+ * linea: linea (0-55)
+ * columna: columna (0-66, tab requirit 2 cellulas)
+ *
+ * Reddit: VERUM si successus, FALSUM si non potest inserere
+ */
+b32
+tabula_inserere_tab(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna);
+
+/* Delere tab ad positionem (vel ad TAB_CONTINUATIO)
+ * Si columna habet TAB_CONTINUATIO, delere totum tab (ambas cellulas)
+ * Si columna habet '\t', delere ambas cellulas
+ *
+ * tabula: tabula
+ * linea: linea (0-55)
+ * columna: columna (0-67)
+ */
+vacuum
+tabula_delere_tab(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna);
+
+/* Verificare si cellula est TAB_CONTINUATIO (pars secunda tab)
+ *
+ * tabula: tabula
+ * linea: linea (0-55)
+ * columna: columna (0-67)
+ *
+ * Reddit: VERUM si TAB_CONTINUATIO
+ */
+b32
+tabula_est_tab_continuatio(
+    constans TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna);
 
 
 /* ==================================================

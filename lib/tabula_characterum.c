@@ -509,6 +509,142 @@ tabula_invenire_contentum_connexum(
 
 
 /* ==================================================
+ * Tab Handling (Tab = 2 cellulae)
+ * ================================================== */
+
+b32
+tabula_inserere_tab(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna)
+{
+    s32 obex;
+    character overflow1;
+    character overflow2;
+
+    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    {
+        redde FALSUM;
+    }
+
+    /* Tab requirit 2 cellulas, ergo columna maxima est TABULA_LATITUDO - 2 */
+    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO - I)
+    {
+        redde FALSUM;
+    }
+
+    /* Invenire obicem (primum non-whitespace post columnam) */
+    obex = tabula_invenire_obicem(tabula, linea, columna);
+
+    si (obex < ZEPHYRUM)
+    {
+        /* Nulla contentum post columnam - solum pingere tab */
+        tabula->cellulae[linea][columna] = '\t';
+        tabula->cellulae[linea][columna + I] = TAB_CONTINUATIO;
+        redde VERUM;
+    }
+
+    /* Contentum existit - trudere dextram bis (pro 2 cellulis) */
+    overflow1 = tabula_trudere_dextram(tabula, linea, columna);
+    overflow2 = tabula_trudere_dextram(tabula, linea, columna);
+
+    /* Pingere tab */
+    tabula->cellulae[linea][columna] = '\t';
+    tabula->cellulae[linea][columna + I] = TAB_CONTINUATIO;
+
+    /* Tractare overflow si necessarium */
+    si (overflow1 != '\0' && !tabula_est_cellula_vacua(overflow1))
+    {
+        si (linea < TABULA_ALTITUDO - I)
+        {
+            si (!tabula_tractare_overflow(tabula, linea, overflow1))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin
+        {
+            redde FALSUM;  /* Pagina plena */
+        }
+    }
+
+    si (overflow2 != '\0' && !tabula_est_cellula_vacua(overflow2))
+    {
+        si (linea < TABULA_ALTITUDO - I)
+        {
+            si (!tabula_tractare_overflow(tabula, linea, overflow2))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin
+        {
+            redde FALSUM;  /* Pagina plena */
+        }
+    }
+
+    redde VERUM;
+}
+
+vacuum
+tabula_delere_tab(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna)
+{
+    i32 columna_tab;
+
+    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    {
+        redde;
+    }
+
+    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO)
+    {
+        redde;
+    }
+
+    /* Si ad TAB_CONTINUATIO, invenire '\t' (columna - 1) */
+    si (tabula->cellulae[linea][columna] == TAB_CONTINUATIO && columna > ZEPHYRUM)
+    {
+        columna_tab = columna - I;
+    }
+    alioquin si (tabula->cellulae[linea][columna] == '\t')
+    {
+        columna_tab = columna;
+    }
+    alioquin
+    {
+        /* Non est tab - nihil facere */
+        redde;
+    }
+
+    /* Delere ambas cellulas: trahere sinistram bis */
+    tabula_trahere_sinistram(tabula, linea, columna_tab);
+    tabula_trahere_sinistram(tabula, linea, columna_tab);
+}
+
+b32
+tabula_est_tab_continuatio(
+    constans TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna)
+{
+    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    {
+        redde FALSUM;
+    }
+
+    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO)
+    {
+        redde FALSUM;
+    }
+
+    redde (tabula->cellulae[linea][columna] == TAB_CONTINUATIO);
+}
+
+
+/* ==================================================
  * Test Helpers
  * ================================================== */
 

@@ -239,6 +239,130 @@ probans_aequalis_literis(vacuum)
 
 
 /* ==================================================
+ * Test: Tab Handling
+ * ================================================== */
+
+hic_manens vacuum
+probans_inserere_tab_simplex(vacuum)
+{
+    TabulaCharacterum tabula;
+    b32 successus;
+
+    /* Inserere tab in tabula vacua ad columna 0 */
+    tabula_initiare(&tabula);
+    successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(successus);
+
+    /* Verificare: '\t' ad columna 0, TAB_CONTINUATIO ad columna 1 */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+
+    /* Verificare: spatia post tab */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)' ');
+}
+
+hic_manens vacuum
+probans_inserere_tab_ante_contentum(vacuum)
+{
+    TabulaCharacterum tabula;
+    b32 successus;
+
+    /* Inserere "hello" deinde tab ad initium - debet trudere */
+    tabula_ex_literis(&tabula, "hello");
+    successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(successus);
+
+    /* Verificare: '\t', TAB_CONTINUATIO, 'h', 'e', 'l', 'l', 'o' */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][III], (i32)'e');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][VI], (i32)'o');
+}
+
+hic_manens vacuum
+probans_inserere_tab_in_medio(vacuum)
+{
+    TabulaCharacterum tabula;
+    b32 successus;
+
+    /* Inserere "ab" deinde tab deinde "cd" */
+    tabula_ex_literis(&tabula, "abcd");
+    successus = tabula_inserere_tab(&tabula, ZEPHYRUM, II);
+    CREDO_VERUM(successus);
+
+    /* Verificare: 'a', 'b', '\t', TAB_CONTINUATIO, 'c', 'd' */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][III], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][IV], (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][V], (i32)'d');
+}
+
+hic_manens vacuum
+probans_delere_tab(vacuum)
+{
+    TabulaCharacterum tabula;
+
+    /* Creare tab manuali */
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = '\t';
+    tabula.cellulae[ZEPHYRUM][I] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][II] = 'h';
+    tabula.cellulae[ZEPHYRUM][III] = 'i';
+
+    /* Delere tab ad columna 0 */
+    tabula_delere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
+
+    /* Verificare: "hi" ad initium */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)'i');
+}
+
+hic_manens vacuum
+probans_delere_ad_tab_continuatio(vacuum)
+{
+    TabulaCharacterum tabula;
+
+    /* Creare "ab" + tab + "cd" */
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = 'a';
+    tabula.cellulae[ZEPHYRUM][I] = 'b';
+    tabula.cellulae[ZEPHYRUM][II] = '\t';
+    tabula.cellulae[ZEPHYRUM][III] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][IV] = 'c';
+    tabula.cellulae[ZEPHYRUM][V] = 'd';
+
+    /* Delere ad columna 3 (TAB_CONTINUATIO) - debet delere totum tab */
+    tabula_delere_tab(&tabula, ZEPHYRUM, III);
+
+    /* Verificare: "abcd" */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][III], (i32)'d');
+}
+
+hic_manens vacuum
+probans_est_tab_continuatio(vacuum)
+{
+    TabulaCharacterum tabula;
+
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = 'a';
+    tabula.cellulae[ZEPHYRUM][I] = '\t';
+    tabula.cellulae[ZEPHYRUM][II] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][III] = 'b';
+
+    CREDO_FALSUM(tabula_est_tab_continuatio(&tabula, ZEPHYRUM, ZEPHYRUM));  /* 'a' */
+    CREDO_FALSUM(tabula_est_tab_continuatio(&tabula, ZEPHYRUM, I));         /* '\t' */
+    CREDO_VERUM(tabula_est_tab_continuatio(&tabula, ZEPHYRUM, II));         /* TAB_CONTINUATIO */
+    CREDO_FALSUM(tabula_est_tab_continuatio(&tabula, ZEPHYRUM, III));       /* 'b' */
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -295,6 +419,24 @@ principale(vacuum)
 
     printf("--- Probans aequalis_literis ---\n");
     probans_aequalis_literis();
+
+    printf("--- Probans inserere_tab_simplex ---\n");
+    probans_inserere_tab_simplex();
+
+    printf("--- Probans inserere_tab_ante_contentum ---\n");
+    probans_inserere_tab_ante_contentum();
+
+    printf("--- Probans inserere_tab_in_medio ---\n");
+    probans_inserere_tab_in_medio();
+
+    printf("--- Probans delere_tab ---\n");
+    probans_delere_tab();
+
+    printf("--- Probans delere_ad_tab_continuatio ---\n");
+    probans_delere_ad_tab_continuatio();
+
+    printf("--- Probans est_tab_continuatio ---\n");
+    probans_est_tab_continuatio();
 
     /* Compendium */
     printf("\n");

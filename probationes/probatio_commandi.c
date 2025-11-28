@@ -253,6 +253,400 @@ probans_sticky_indentatio(vacuum)
 
 
 /* ==================================================
+ * Test: Tab Handling (Vim Layer)
+ * ================================================== */
+
+hic_manens vacuum
+probans_tab_inserere(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: empty grid, insert mode */
+    tabula_initiare(&tabula);
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+
+    /* Insert tab at column 0 */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+
+    /* Verify: '\t' at 0, TAB_CONTINUATIO at 1, cursor at 2 */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+}
+
+hic_manens vacuum
+probans_tab_inserere_ante_textum(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "hello" in grid */
+    tabula_ex_literis(&tabula, "hello");
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+    status = vim_ponere_cursor(status, ZEPHYRUM, ZEPHYRUM);
+
+    /* Insert tab - should push "hello" right by 2 */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+
+    /* Verify layout: '\t', TAB_CONTINUATIO, 'h', 'e', 'l', 'l', 'o' */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][VI], (i32)'o');
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+}
+
+hic_manens vacuum
+probans_backspace_tab(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: tab + "hi" in grid, cursor after tab */
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = '\t';
+    tabula.cellulae[ZEPHYRUM][I] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][II] = 'h';
+    tabula.cellulae[ZEPHYRUM][III] = 'i';
+
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+    status = vim_ponere_cursor(status, ZEPHYRUM, II);  /* After tab */
+
+    /* Backspace should delete both tab cells */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+
+    /* Verify: "hi" at start, cursor at 0 */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)'i');
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+}
+
+hic_manens vacuum
+probans_backspace_tab_continuatio(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "ab" + tab + "cd", cursor on TAB_CONTINUATIO */
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = 'a';
+    tabula.cellulae[ZEPHYRUM][I] = 'b';
+    tabula.cellulae[ZEPHYRUM][II] = '\t';
+    tabula.cellulae[ZEPHYRUM][III] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][IV] = 'c';
+    tabula.cellulae[ZEPHYRUM][V] = 'd';
+
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+    status = vim_ponere_cursor(status, ZEPHYRUM, IV);  /* After tab, at 'c' */
+
+    /* Backspace should delete both tab cells */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+
+    /* Verify: "abcd", cursor at 2 */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][III], (i32)'d');
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+}
+
+hic_manens vacuum
+probans_navigatio_h_skip_tab(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "a" + tab + "b", cursor at 'b' (column 4) */
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = 'a';
+    tabula.cellulae[ZEPHYRUM][I] = '\t';
+    tabula.cellulae[ZEPHYRUM][II] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][III] = 'b';
+
+    status = vim_initiare(&tabula);
+    status = vim_ponere_cursor(status, ZEPHYRUM, III);  /* At 'b' */
+
+    /* Press 'h' - should skip TAB_CONTINUATIO and land on '\t' */
+    status = vim_tractare_clavem(status, 'h');
+
+    /* Should land on '\t' at column 1, not TAB_CONTINUATIO at column 2 */
+    CREDO_AEQUALIS_I32(status.cursor_columna, I);
+}
+
+hic_manens vacuum
+probans_indentatio_cum_tab(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: tab + "hello" (indentation is tab at col 0-1, content at col 2) */
+    tabula_initiare(&tabula);
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+
+    /* Insert tab then "hello" */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+    status = vim_tractare_clavem(status, 'h');
+    status = vim_tractare_clavem(status, 'e');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'o');
+
+    /* Verify: '\t', TAB_CONTINUATIO, 'h', 'e', 'l', 'l', 'o' */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'h');
+
+    /* indentatio should be at column 2 (first non-whitespace) */
+    CREDO_AEQUALIS_S32(tabula.indentatio[ZEPHYRUM], II);
+
+    /* Press Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Cursor should be at line 1, column 2 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+
+    /* New line should have TAB for indentation, not spaces! */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][I], (i32)TAB_CONTINUATIO);
+}
+
+hic_manens vacuum
+probans_indentatio_mixta(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: tab + 2 spaces + "hello" */
+    tabula_initiare(&tabula);
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+
+    /* Insert tab, space, space, then "hi" */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);  /* col 0-1 */
+    status = vim_tractare_clavem(status, ' ');             /* col 2 */
+    status = vim_tractare_clavem(status, ' ');             /* col 3 */
+    status = vim_tractare_clavem(status, 'h');             /* col 4 */
+    status = vim_tractare_clavem(status, 'i');             /* col 5 */
+
+    /* Verify layout */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][III], (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][IV], (i32)'h');
+
+    /* indentatio should be at column 4 */
+    CREDO_AEQUALIS_S32(tabula.indentatio[ZEPHYRUM], IV);
+
+    /* Press Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Cursor should be at line 1, column 4 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, IV);
+
+    /* New line should have same mixed indentation: tab + 2 spaces */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][II], (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][III], (i32)' ');
+}
+
+hic_manens vacuum
+probans_indentatio_tabs_multiplex(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: 2 tabs + "hi" */
+    tabula_initiare(&tabula);
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+
+    /* Insert tab, tab, then "hi" */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);  /* col 0-1 */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);  /* col 2-3 */
+    status = vim_tractare_clavem(status, 'h');             /* col 4 */
+    status = vim_tractare_clavem(status, 'i');             /* col 5 */
+
+    /* Verify layout: '\t', TC, '\t', TC, 'h', 'i' */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][II], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][III], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[ZEPHYRUM][IV], (i32)'h');
+
+    /* indentatio should be at column 4 */
+    CREDO_AEQUALIS_S32(tabula.indentatio[ZEPHYRUM], IV);
+
+    /* Press Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Cursor should be at line 1, column 4 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, IV);
+
+    /* New line should have 2 tabs */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][II], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[I][III], (i32)TAB_CONTINUATIO);
+}
+
+hic_manens vacuum
+probans_indentatio_sticky_tabs_per_lineas_vacuas(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: tab + "hi" */
+    tabula_initiare(&tabula);
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+    status = vim_tractare_clavem(status, 'h');
+    status = vim_tractare_clavem(status, 'i');
+
+    /* indentatio at column 2 */
+    CREDO_AEQUALIS_S32(tabula.indentatio[ZEPHYRUM], II);
+
+    /* Press Enter 3 times (create 3 blank lines) */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+    CREDO_AEQUALIS_I32(status.cursor_linea, III);
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+
+    /* Line 3 should still have tab indentation (sticky through blank lines) */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][I], (i32)TAB_CONTINUATIO);
+
+    /* Type "world" on line 3 */
+    status = vim_tractare_clavem(status, 'w');
+    status = vim_tractare_clavem(status, 'o');
+    status = vim_tractare_clavem(status, 'r');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Verify line 3 content */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][II], (i32)'w');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][VI], (i32)'d');
+
+    /* indentatio on line 3 should now be set to 2 */
+    CREDO_AEQUALIS_S32(tabula.indentatio[III], II);
+}
+
+hic_manens vacuum
+probans_indentatio_post_backspace(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Scenario:
+     * 1. Type "\t\thello\n" - indentation 4 (2 tabs)
+     * 2. Type "\t\t\t\tworld\n" - indentation 8 (4 tabs)
+     * 3. On blank line, backspace twice to reduce to 2 tabs
+     * 4. Press Enter - should have 2 tabs indentation, not 4
+     */
+    tabula_initiare(&tabula);
+    status = vim_initiare(&tabula);
+    status = vim_ponere_modum(status, MODO_VIM_INSERERE);
+
+    /* Line 0: \t\thello */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+    status = vim_tractare_clavem(status, 'h');
+    status = vim_tractare_clavem(status, 'e');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'o');
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    CREDO_AEQUALIS_S32(tabula.indentatio[ZEPHYRUM], IV);  /* indentation at 4 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, IV);  /* cursor at indentation */
+
+    /* Line 1: \t\t\t\tworld */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+    status = vim_tractare_clavem(status, VIM_CLAVIS_TAB);
+    status = vim_tractare_clavem(status, 'w');
+    status = vim_tractare_clavem(status, 'o');
+    status = vim_tractare_clavem(status, 'r');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    CREDO_AEQUALIS_S32(tabula.indentatio[I], VIII);  /* indentation at 8 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
+    CREDO_AEQUALIS_I32(status.cursor_columna, VIII);  /* cursor at indentation (4 tabs copied) */
+
+    /* Line 2 now has 4 tabs copied. Backspace twice to remove 2 tabs. */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_AEQUALIS_I32(status.cursor_columna, VI);  /* cursor at 6 */
+
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_AEQUALIS_I32(status.cursor_columna, IV);  /* cursor at 4 */
+
+    /* Line 2 should now have 2 tabs at beginning */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[II][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[II][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[II][II], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[II][III], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[II][IV], (i32)' ');  /* spaces after */
+
+    /* Now press Enter - should copy 2 tabs (4 columns), NOT 4 tabs (8 columns) */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    CREDO_AEQUALIS_I32(status.cursor_linea, III);
+    CREDO_AEQUALIS_I32(status.cursor_columna, IV);  /* cursor at 4, not 8! */
+
+    /* Line 3 should have 2 tabs, not 4 */
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][ZEPHYRUM], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][I], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][II], (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][III], (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula.cellulae[III][IV], (i32)' ');  /* space, not tab */
+}
+
+hic_manens vacuum
+probans_navigatio_l_skip_tab(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "a" + tab + "b", cursor at '\t' (column 1) */
+    tabula_initiare(&tabula);
+    tabula.cellulae[ZEPHYRUM][ZEPHYRUM] = 'a';
+    tabula.cellulae[ZEPHYRUM][I] = '\t';
+    tabula.cellulae[ZEPHYRUM][II] = TAB_CONTINUATIO;
+    tabula.cellulae[ZEPHYRUM][III] = 'b';
+
+    status = vim_initiare(&tabula);
+    status = vim_ponere_cursor(status, ZEPHYRUM, I);  /* At '\t' */
+
+    /* Press 'l' - should skip TAB_CONTINUATIO and land on 'b' */
+    status = vim_tractare_clavem(status, 'l');
+
+    /* Should land on 'b' at column 3, not TAB_CONTINUATIO at column 2 */
+    CREDO_AEQUALIS_I32(status.cursor_columna, III);
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -293,6 +687,39 @@ principale(vacuum)
 
     printf("--- Probans sticky indentatio ---\n");
     probans_sticky_indentatio();
+
+    printf("--- Probans tab inserere ---\n");
+    probans_tab_inserere();
+
+    printf("--- Probans tab inserere ante textum ---\n");
+    probans_tab_inserere_ante_textum();
+
+    printf("--- Probans backspace tab ---\n");
+    probans_backspace_tab();
+
+    printf("--- Probans backspace tab continuatio ---\n");
+    probans_backspace_tab_continuatio();
+
+    printf("--- Probans navigatio h skip tab ---\n");
+    probans_navigatio_h_skip_tab();
+
+    printf("--- Probans navigatio l skip tab ---\n");
+    probans_navigatio_l_skip_tab();
+
+    printf("--- Probans indentatio cum tab ---\n");
+    probans_indentatio_cum_tab();
+
+    printf("--- Probans indentatio mixta ---\n");
+    probans_indentatio_mixta();
+
+    printf("--- Probans indentatio tabs multiplex ---\n");
+    probans_indentatio_tabs_multiplex();
+
+    printf("--- Probans indentatio sticky tabs per lineas vacuas ---\n");
+    probans_indentatio_sticky_tabs_per_lineas_vacuas();
+
+    printf("--- Probans indentatio post backspace ---\n");
+    probans_indentatio_post_backspace();
 
     printf("\n");
     credo_imprimere_compendium();

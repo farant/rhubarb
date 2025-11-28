@@ -103,8 +103,10 @@ pagina_reddere(
                 perge;
             }
 
-            /* Tractare tab ut duo spatia (non pingere, solum saltare) */
-            si (c == '\t')
+            /* Tractare tab ut duo spatia (non pingere, solum saltare)
+             * Tab occupat 2 cellulas: '\t' + TAB_CONTINUATIO
+             * Ambae saltantur - spatium visuale implicatur per positiones */
+            si (c == '\t' || c == TAB_CONTINUATIO)
             {
                 perge;
             }

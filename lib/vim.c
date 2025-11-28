@@ -124,6 +124,15 @@ _movere_sinistram(
     si (status.cursor_columna > ZEPHYRUM)
     {
         status.cursor_columna--;
+
+        /* Si landed on TAB_CONTINUATIO, skip to '\t' */
+        si (tabula_est_tab_continuatio(status.tabula, status.cursor_linea, status.cursor_columna))
+        {
+            si (status.cursor_columna > ZEPHYRUM)
+            {
+                status.cursor_columna--;
+            }
+        }
     }
 
     redde status;
@@ -137,6 +146,15 @@ _movere_dextram(
     si (status.cursor_columna < TABULA_LATITUDO - I)
     {
         status.cursor_columna++;
+
+        /* Si landed on TAB_CONTINUATIO, skip past it */
+        si (tabula_est_tab_continuatio(status.tabula, status.cursor_linea, status.cursor_columna))
+        {
+            si (status.cursor_columna < TABULA_LATITUDO - I)
+            {
+                status.cursor_columna++;
+            }
+        }
     }
 
     redde status;
@@ -456,14 +474,36 @@ _delere_characterem_ante_cursorem(
 {
     si (status.cursor_columna > ZEPHYRUM)
     {
-        status.cursor_columna--;
+        character c_ante;
 
-        tabula_delere_characterem(
-            status.tabula,
-            status.cursor_linea,
-            status.cursor_columna);
+        c_ante = status.tabula->cellulae[status.cursor_linea][status.cursor_columna - I];
 
-        status.mutatus = VERUM;
+        /* Si character ante est TAB_CONTINUATIO, delere totum tab */
+        si (c_ante == TAB_CONTINUATIO && status.cursor_columna >= II)
+        {
+            tabula_delere_tab(status.tabula, status.cursor_linea, status.cursor_columna - I);
+            status.cursor_columna -= II;  /* Movere cursor retro per 2 */
+            status.mutatus = VERUM;
+        }
+        alioquin si (c_ante == '\t')
+        {
+            /* Cursor est ad TAB_CONTINUATIO, delere totum tab */
+            tabula_delere_tab(status.tabula, status.cursor_linea, status.cursor_columna - I);
+            status.cursor_columna--;
+            status.mutatus = VERUM;
+        }
+        alioquin
+        {
+            /* Normal backspace */
+            status.cursor_columna--;
+
+            tabula_delere_characterem(
+                status.tabula,
+                status.cursor_linea,
+                status.cursor_columna);
+
+            status.mutatus = VERUM;
+        }
     }
     alioquin si (status.cursor_linea > ZEPHYRUM)
     {
@@ -638,27 +678,90 @@ _copiare_indentationem(
     s32 indentatio;
     i32 col;
     i32 linea_scan;
+    s32 linea_cum_indentatio;
 
-    /* Quaerere retro ad invenire lineam cum indentatio posita
-     * Hoc permittit "sticky" behavior: Enter super linea vacua
-     * preservat indentationem ex linea anteriore cum contentu */
     indentatio = -I;
-    per (linea_scan = linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+    linea_cum_indentatio = -I;
+
+    /* Primo: verificare si linea_fons habet contentum et whitespace ad initium
+     * Hoc permittit user adjustare indentationem (backspace tabs)
+     * et Enter respectat adjustationem, non metadata antiquam
+     *
+     * NOTA: tabula_initiare implet cellulas cum spatiis, ergo linea "vacua"
+     * habet 68 spatia. Solum scandimus whitespace si linea habet contentum
+     * (aliquid non-whitespace) */
     {
-        si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
+        s32 finis_contenti;
+
+        finis_contenti = tabula_invenire_finem_contenti(status.tabula, linea_fons);
+
+        /* Solum scandere whitespace si linea habet contentum */
+        si (finis_contenti >= ZEPHYRUM)
         {
-            indentatio = status.tabula->indentatio[linea_scan];
-            frange;
+            i32 indent_finis;
+
+            indent_finis = ZEPHYRUM;
+            col = ZEPHYRUM;
+
+            /* Scandere whitespace (tabs et spatia) ad initium lineae
+             * Scanndimus usque ad finem contenti, non usque ad finem lineae
+             * (quia tabula_initiare implet cum spatiis) */
+            dum (col <= (i32)finis_contenti)
+            {
+                character c;
+
+                c = status.tabula->cellulae[linea_fons][col];
+
+                si (c == '\t')
+                {
+                    /* Tab inventa - saltare TAB_CONTINUATIO quoque */
+                    indent_finis = col + II;
+                    col += II;
+                }
+                alioquin si (c == ' ')
+                {
+                    /* Spatium inventa */
+                    indent_finis = col + I;
+                    col++;
+                }
+                alioquin
+                {
+                    frange;
+                }
+            }
+
+            /* Si whitespace inventum ante contentum, usare illud */
+            si (indent_finis > ZEPHYRUM)
+            {
+                indentatio = (s32)indent_finis;
+                linea_cum_indentatio = (s32)linea_fons;
+            }
+        }
+    }
+
+    /* Si nulla tabs in linea_fons, quaerere retro pro metadata
+     * Hoc est "sticky" behavior pro spatiis */
+    si (indentatio < ZEPHYRUM)
+    {
+        per (linea_scan = linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+        {
+            si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
+            {
+                indentatio = status.tabula->indentatio[linea_scan];
+                linea_cum_indentatio = (s32)linea_scan;
+                frange;
+            }
         }
     }
 
     /* Si inventa indentatio valida, copiare ad lineam currentem */
-    si (indentatio > ZEPHYRUM && indentatio < TABULA_LATITUDO)
+    si (indentatio > ZEPHYRUM && indentatio < TABULA_LATITUDO && linea_cum_indentatio >= ZEPHYRUM)
     {
-        /* Copiare spatia indentationis */
+        /* Copiare characteres indentationis (preservat tabs!) */
         per (col = ZEPHYRUM; col < (i32)indentatio; col++)
         {
-            status.tabula->cellulae[status.cursor_linea][col] = ' ';
+            status.tabula->cellulae[status.cursor_linea][col] =
+                status.tabula->cellulae[(i32)linea_cum_indentatio][col];
         }
 
         /* NON ponere indentatio metadata - permittere typing determinare
@@ -956,7 +1059,13 @@ _tractare_inserere(
             redde _inserere_novam_lineam_in_inserere(status);
 
         casus VIM_CLAVIS_TAB:
-            redde _inserere_characterem(status, '\t');
+            /* Tab occupat 2 cellulas: '\t' + TAB_CONTINUATIO */
+            si (tabula_inserere_tab(status.tabula, status.cursor_linea, status.cursor_columna))
+            {
+                status.cursor_columna += II;  /* Movere cursor per 2 */
+                status.mutatus = VERUM;
+            }
+            redde status;
 
         casus VIM_CLAVIS_SINISTRAM:
             redde _movere_sinistram(status);
