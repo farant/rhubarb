@@ -218,7 +218,7 @@ _layout_processare_pagina(
     {
         redde FALSUM;
     }
-    pagina_initiare(pagina, id_chorda);
+    pagina_initiare(pagina, dom->piscina, id_chorda);
 
     /* Creare datum wrapper */
     datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumPagina));

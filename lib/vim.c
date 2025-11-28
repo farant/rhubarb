@@ -55,7 +55,7 @@ _ultima_linea_cum_contentu(
 {
     s32 linea;
 
-    per (linea = (s32)TABULA_ALTITUDO - I; linea >= ZEPHYRUM; linea--)
+    per (linea = (s32)tabula->altitudo - I; linea >= ZEPHYRUM; linea--)
     {
         si (tabula_invenire_finem_contenti(tabula, (i32)linea) >= ZEPHYRUM)
         {
@@ -94,9 +94,9 @@ _clamp_cursor(
     {
         status.cursor_linea = ZEPHYRUM;
     }
-    si (status.cursor_linea >= (s32)TABULA_ALTITUDO)
+    si (status.cursor_linea >= status.tabula->altitudo)
     {
-        status.cursor_linea = TABULA_ALTITUDO - I;
+        status.cursor_linea = status.tabula->altitudo - I;
     }
 
     /* Clamp columna - 2D grid permittit navigare libere */
@@ -104,9 +104,9 @@ _clamp_cursor(
     {
         status.cursor_columna = ZEPHYRUM;
     }
-    si (status.cursor_columna >= (s32)TABULA_LATITUDO)
+    si (status.cursor_columna >= status.tabula->latitudo)
     {
-        status.cursor_columna = TABULA_LATITUDO - I;
+        status.cursor_columna = status.tabula->latitudo - I;
     }
 
     redde status;
@@ -143,14 +143,14 @@ _movere_dextram(
     VimStatus status)
 {
     /* 2D grid - libera navigatio */
-    si (status.cursor_columna < TABULA_LATITUDO - I)
+    si (status.cursor_columna < status.tabula->latitudo - I)
     {
         status.cursor_columna++;
 
         /* Si landed on TAB_CONTINUATIO, skip past it */
         si (tabula_est_tab_continuatio(status.tabula, status.cursor_linea, status.cursor_columna))
         {
-            si (status.cursor_columna < TABULA_LATITUDO - I)
+            si (status.cursor_columna < status.tabula->latitudo - I)
             {
                 status.cursor_columna++;
             }
@@ -177,7 +177,7 @@ hic_manens VimStatus
 _movere_deorsum(
     VimStatus status)
 {
-    si (status.cursor_linea < TABULA_ALTITUDO - I)
+    si (status.cursor_linea < status.tabula->altitudo - I)
     {
         status.cursor_linea++;
         status = _clamp_cursor(status);
@@ -211,9 +211,9 @@ _movere_finem_lineae(
     {
         /* In insert mode, move past last character */
         status.cursor_columna = (i32)(finis + I);
-        si (status.cursor_columna >= (s32)TABULA_LATITUDO)
+        si (status.cursor_columna >= status.tabula->latitudo)
         {
-            status.cursor_columna = TABULA_LATITUDO - I;
+            status.cursor_columna = status.tabula->latitudo - I;
         }
     }
 
@@ -228,7 +228,7 @@ _movere_initium_contenti(
 
     initium = tabula_invenire_initium_contenti(status.tabula, status.cursor_linea);
 
-    si (initium < TABULA_LATITUDO)
+    si (initium < status.tabula->latitudo)
     {
         status.cursor_columna = initium;
     }
@@ -259,13 +259,13 @@ _movere_verbum_proximum(
         redde status;
     }
 
-    c = status.tabula->cellulae[status.cursor_linea][status.cursor_columna];
+    c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
     in_verbo = _est_character_verbi(c);
 
     /* Saltare characteres similes (verbum vel non-verbum) */
     dum ((s32)status.cursor_columna < finis)
     {
-        c = status.tabula->cellulae[status.cursor_linea][status.cursor_columna];
+        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
 
         si (_est_character_verbi(c) != in_verbo)
         {
@@ -284,7 +284,7 @@ _movere_verbum_proximum(
     /* Saltare spatia */
     dum ((s32)status.cursor_columna <= finis)
     {
-        c = status.tabula->cellulae[status.cursor_linea][status.cursor_columna];
+        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
 
         si (c != ' ' && c != '\t' && c != '\0')
         {
@@ -338,7 +338,7 @@ _movere_verbum_praecedens(
     /* Saltare spatia retro */
     dum (status.cursor_columna > ZEPHYRUM)
     {
-        c = status.tabula->cellulae[status.cursor_linea][status.cursor_columna];
+        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
 
         si (c != ' ' && c != '\t' && c != '\0')
         {
@@ -353,8 +353,8 @@ _movere_verbum_praecedens(
     {
         character c_prior;
 
-        c = status.tabula->cellulae[status.cursor_linea][status.cursor_columna];
-        c_prior = status.tabula->cellulae[status.cursor_linea][status.cursor_columna - I];
+        c = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna);
+        c_prior = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna - I);
 
         /* Si character prior est spatium vel typus differens, sumus ad initium */
         si (c_prior == ' ' || c_prior == '\t' || c_prior == '\0')
@@ -476,7 +476,7 @@ _delere_characterem_ante_cursorem(
     {
         character c_ante;
 
-        c_ante = status.tabula->cellulae[status.cursor_linea][status.cursor_columna - I];
+        c_ante = tabula_cellula(status.tabula, status.cursor_linea, status.cursor_columna - I);
 
         /* Si character ante est TAB_CONTINUATIO, delere totum tab */
         si (c_ante == TAB_CONTINUATIO && status.cursor_columna >= II)
@@ -597,16 +597,16 @@ _augere_indentationem(
         {
             character c;
 
-            c = status.tabula->cellulae[status.cursor_linea][(i32)col];
-            si ((i32)col + II < TABULA_LATITUDO)
+            c = tabula_cellula(status.tabula, status.cursor_linea, (i32)col);
+            si ((i32)col + II < status.tabula->latitudo)
             {
-                status.tabula->cellulae[status.cursor_linea][(i32)col + II] = c;
+                tabula_cellula(status.tabula, status.cursor_linea, (i32)col + II) = c;
             }
         }
 
         /* Inserere duo spatia ad initium */
-        status.tabula->cellulae[status.cursor_linea][ZEPHYRUM] = ' ';
-        status.tabula->cellulae[status.cursor_linea][I] = ' ';
+        tabula_cellula(status.tabula, status.cursor_linea, ZEPHYRUM) = ' ';
+        tabula_cellula(status.tabula, status.cursor_linea, I) = ' ';
 
         status.mutatus = VERUM;
     }
@@ -643,14 +643,14 @@ _minuere_indentationem(
         /* Trahere contentum sinistram */
         per (col = (s32)initium; col <= finis; col++)
         {
-            status.tabula->cellulae[status.cursor_linea][(i32)col - numerus_deletorum] =
-                status.tabula->cellulae[status.cursor_linea][(i32)col];
+            tabula_cellula(status.tabula, status.cursor_linea, (i32)col - numerus_deletorum) =
+                tabula_cellula(status.tabula, status.cursor_linea, (i32)col);
         }
 
         /* Vacare cellulas ad finem */
         per (col = finis - (s32)numerus_deletorum + I; col <= finis; col++)
         {
-            status.tabula->cellulae[status.cursor_linea][(i32)col] = '\0';
+            tabula_cellula(status.tabula, status.cursor_linea, (i32)col) = '\0';
         }
 
         /* Adjustare cursor si necessarium */
@@ -710,7 +710,7 @@ _copiare_indentationem(
             {
                 character c;
 
-                c = status.tabula->cellulae[linea_fons][col];
+                c = tabula_cellula(status.tabula, linea_fons, col);
 
                 si (c == '\t')
                 {
@@ -755,13 +755,13 @@ _copiare_indentationem(
     }
 
     /* Si inventa indentatio valida, copiare ad lineam currentem */
-    si (indentatio > ZEPHYRUM && indentatio < TABULA_LATITUDO && linea_cum_indentatio >= ZEPHYRUM)
+    si (indentatio > ZEPHYRUM && indentatio < (s32)status.tabula->latitudo && linea_cum_indentatio >= ZEPHYRUM)
     {
         /* Copiare characteres indentationis (preservat tabs!) */
         per (col = ZEPHYRUM; col < (i32)indentatio; col++)
         {
-            status.tabula->cellulae[status.cursor_linea][col] =
-                status.tabula->cellulae[(i32)linea_cum_indentatio][col];
+            tabula_cellula(status.tabula, status.cursor_linea, col) =
+                tabula_cellula(status.tabula, (i32)linea_cum_indentatio, col);
         }
 
         /* NON ponere indentatio metadata - permittere typing determinare

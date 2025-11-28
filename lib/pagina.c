@@ -11,10 +11,28 @@
 vacuum
 pagina_initiare(
     Pagina* pagina,
+    Piscina* piscina,
     chorda* identificator)
 {
-    /* Initiare tabula characterum */
-    tabula_initiare(&pagina->tabula);
+    /* Initiare cum dimensionibus defaltis */
+    pagina_initiare_cum_dimensionibus(
+        pagina,
+        piscina,
+        TABULA_LATITUDO_DEFALTA,
+        TABULA_ALTITUDO_DEFALTA,
+        identificator);
+}
+
+vacuum
+pagina_initiare_cum_dimensionibus(
+    Pagina* pagina,
+    Piscina* piscina,
+    i32 latitudo,
+    i32 altitudo,
+    chorda* identificator)
+{
+    /* Initiare tabula characterum cum dimensionibus */
+    tabula_initiare(&pagina->tabula, piscina, latitudo, altitudo);
 
     /* Initiare vim status */
     pagina->vim = vim_initiare(&pagina->tabula);
@@ -31,7 +49,20 @@ vacuum
 pagina_vacare(
     Pagina* pagina)
 {
-    tabula_initiare(&pagina->tabula);
+    i32 linea;
+    i32 columna;
+
+    /* Vacare cellulae - tabula iam allocata est */
+    per (linea = ZEPHYRUM; linea < pagina->tabula.altitudo; linea++)
+    {
+        per (columna = ZEPHYRUM; columna < pagina->tabula.latitudo; columna++)
+        {
+            tabula_cellula(&pagina->tabula, linea, columna) = ' ';
+        }
+        pagina->tabula.indentatio[linea] = -I;
+    }
+
+    /* Reset vim */
     pagina->vim = vim_initiare(&pagina->tabula);
 }
 
@@ -89,13 +120,13 @@ pagina_reddere(
     character_altitudo = VIII * scala;
 
     /* Pingere characteres ex tabula */
-    per (linea = ZEPHYRUM; linea < altitudo && linea < TABULA_ALTITUDO; linea++)
+    per (linea = ZEPHYRUM; linea < altitudo && linea < pagina->tabula.altitudo; linea++)
     {
-        per (columna = ZEPHYRUM; columna < latitudo && columna < TABULA_LATITUDO; columna++)
+        per (columna = ZEPHYRUM; columna < latitudo && columna < pagina->tabula.latitudo; columna++)
         {
             character c;
 
-            c = pagina->tabula.cellulae[linea][columna];
+            c = tabula_cellula(&pagina->tabula, linea, columna);
 
             /* Saltare cellulas vacuas */
             si (c == '\0')
@@ -456,8 +487,8 @@ pagina_obtinere_regio_ad_punctum(
     character c;
 
     /* Verificare limites */
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO ||
-        columna < ZEPHYRUM || columna >= TABULA_LATITUDO)
+    si (linea < ZEPHYRUM || linea >= pagina->tabula.altitudo ||
+        columna < ZEPHYRUM || columna >= pagina->tabula.latitudo)
     {
         redde FALSUM;
     }
@@ -466,7 +497,7 @@ pagina_obtinere_regio_ad_punctum(
     initium_columna = -I;
     per (col = (s32)columna; col >= ZEPHYRUM; col--)
     {
-        c = pagina->tabula.cellulae[linea][(i32)col];
+        c = tabula_cellula(&pagina->tabula, linea, (i32)col);
 
         si (c == '$')
         {
@@ -488,9 +519,9 @@ pagina_obtinere_regio_ad_punctum(
 
     /* Scandere ad finem command */
     finis_columna = (s32)initium_columna + I;
-    per (col = finis_columna; col < TABULA_LATITUDO; col++)
+    per (col = finis_columna; col < (s32)pagina->tabula.latitudo; col++)
     {
-        c = pagina->tabula.cellulae[linea][(i32)col];
+        c = tabula_cellula(&pagina->tabula, linea, (i32)col);
 
         si (c == ' ' || c == '\t' || c == '\0' || !est_character_verbi(c))
         {
@@ -510,7 +541,7 @@ pagina_obtinere_regio_ad_punctum(
     {
         per (col = ZEPHYRUM; col < longitudo; col++)
         {
-            regio->datum[col] = pagina->tabula.cellulae[linea][(s32)initium_columna + I + col];
+            regio->datum[col] = tabula_cellula(&pagina->tabula, linea, (i32)((s32)initium_columna + I + col));
         }
         regio->datum[longitudo] = '\0';
 

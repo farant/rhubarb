@@ -2,6 +2,7 @@
 #define TABULA_CHARACTERUM_H
 
 #include "latina.h"
+#include "piscina.h"
 #include "credo.h"
 
 /* ==================================================
@@ -11,7 +12,8 @@
  * barrier-based insertion and intelligent content pushing.
  *
  * PHILOSOPHIA:
- * - Grid is 68 columns × 56 rows (matches pagina display)
+ * - Grid dimensions are configurable at creation time
+ * - Default: 68 columns × 56 rows
  * - Typing "paints" into cells
  * - Barrier = last whitespace before content
  * - Typing into barrier pushes content forward
@@ -19,7 +21,7 @@
  *
  * EXEMPLUM:
  *   TabulaCharacterum tabula;
- *   tabula_initiare(&tabula);
+ *   tabula_initiare(&tabula, piscina, 68, 56);
  *   tabula_inserere_characterem(&tabula, 0, 0, 'H');
  *   tabula_inserere_characterem(&tabula, 0, 1, 'i');
  *
@@ -30,8 +32,13 @@
  * Constantae
  * ================================================== */
 
-#define TABULA_LATITUDO   LXVIII    /* 68 columns */
-#define TABULA_ALTITUDO   LVI       /* 56 rows */
+/* Dimensiones defaltae - usantur si non specificatae */
+#define TABULA_LATITUDO_DEFALTA   LXVIII    /* 68 columns */
+#define TABULA_ALTITUDO_DEFALTA   LVI       /* 56 rows */
+
+/* Backwards compatibility - mapped to defaults */
+#define TABULA_LATITUDO   TABULA_LATITUDO_DEFALTA
+#define TABULA_ALTITUDO   TABULA_ALTITUDO_DEFALTA
 
 /* Tab occupat duas cellulas: '\t' sequitur TAB_CONTINUATIO
  * Hoc permittit tabs reddere ut duo spatia et delere uno backspace */
@@ -42,24 +49,39 @@
  * Typi
  * ================================================== */
 
-/* Pure 2D character grid - no cursor, no UI state */
+/* Pure 2D character grid - no cursor, no UI state
+ * Cellulae allocantur dynamice ex piscina */
 nomen structura {
-    character cellulae[TABULA_ALTITUDO][TABULA_LATITUDO];
-    s32 indentatio[TABULA_ALTITUDO];  /* Sticky indentation per linea (-1 = non posita) */
+    i32 latitudo;       /* Numerus columnarum */
+    i32 altitudo;       /* Numerus linearum */
+    character* cellulae;  /* [altitudo * latitudo], row-major */
+    s32* indentatio;      /* [altitudo] - Sticky indentation per linea (-1 = non posita) */
 } TabulaCharacterum;
+
+/* Macro pro accessu cellulae - row-major layout */
+#define tabula_cellula(tabula, linea, columna) \
+    ((tabula)->cellulae[(linea) * (tabula)->latitudo + (columna)])
 
 
 /* ==================================================
  * Initiatio
  * ================================================== */
 
-/* Initiare tabulam - omnes cellulae ad '\0'
+/* Initiare tabulam cum dimensionibus specificatis
+ * Allocat cellulae et indentatio ex piscina
+ * Omnes cellulae initiantur ad '\0'
  *
  * tabula: tabula initianda
+ * piscina: piscina pro allocatione
+ * latitudo: numerus columnarum
+ * altitudo: numerus linearum
  */
 vacuum
 tabula_initiare(
-    TabulaCharacterum* tabula);
+    TabulaCharacterum* tabula,
+    Piscina* piscina,
+    i32 latitudo,
+    i32 altitudo);
 
 
 /* ==================================================
@@ -70,7 +92,7 @@ tabula_initiare(
  * Reddit columnam ultimi non-whitespace, vel -1 si linea vacua
  *
  * tabula: tabula
- * linea: linea (0-55)
+ * linea: linea (0 ad altitudo-1)
  */
 s32
 tabula_invenire_finem_contenti(
@@ -78,10 +100,10 @@ tabula_invenire_finem_contenti(
     i32 linea);
 
 /* Invenire initium contenti in linea (post indentationem)
- * Reddit columnam primi non-whitespace, vel TABULA_LATITUDO si vacua
+ * Reddit columnam primi non-whitespace, vel latitudo si vacua
  *
  * tabula: tabula
- * linea: linea (0-55)
+ * linea: linea (0 ad altitudo-1)
  */
 i32
 tabula_invenire_initium_contenti(
@@ -93,8 +115,8 @@ tabula_invenire_initium_contenti(
  * Reddit columnam obicis, vel -1 si nulla contentum post columnam
  *
  * tabula: tabula
- * linea: linea (0-55)
- * ab_columna: columna ab qua quaerere (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * ab_columna: columna ab qua quaerere (0 ad latitudo-1)
  */
 s32
 tabula_invenire_obicem(
@@ -142,8 +164,8 @@ tabula_est_vacua(
  * Reddit characterem qui excidit (overflow) ex columna ultima, vel '\0'
  *
  * tabula: tabula
- * linea: linea (0-55)
- * ab_columna: columna ab qua trudere (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * ab_columna: columna ab qua trudere (0 ad latitudo-1)
  *
  * Reddit: character qui excidit, vel '\0' si nihil
  */
@@ -157,8 +179,8 @@ tabula_trudere_dextram(
  * Cellulae post contentum fiunt '\0'
  *
  * tabula: tabula
- * linea: linea (0-55)
- * ab_columna: columna ab qua trahere (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * ab_columna: columna ab qua trahere (0 ad latitudo-1)
  */
 vacuum
 tabula_trahere_sinistram(
@@ -170,7 +192,7 @@ tabula_trahere_sinistram(
  * Reddit FALSUM si ultima linea habet contentum (non potest trudere)
  *
  * tabula: tabula
- * ad_lineam: linea ubi inserere (0-55)
+ * ad_lineam: linea ubi inserere (0 ad altitudo-1)
  *
  * Reddit: VERUM si successus
  */
@@ -183,7 +205,7 @@ tabula_inserere_lineam(
  * Ultima linea fit vacua
  *
  * tabula: tabula
- * linea: linea delenda (0-55)
+ * linea: linea delenda (0 ad altitudo-1)
  */
 vacuum
 tabula_delere_lineam(
@@ -195,7 +217,7 @@ tabula_delere_lineam(
  * inserit lineam novam pro overflow
  *
  * tabula: tabula
- * linea: linea ex qua overflow venit (0-54)
+ * linea: linea ex qua overflow venit (0 ad altitudo-2)
  * overflow: character qui excidit
  *
  * Reddit: VERUM si successus, FALSUM si pagina plena
@@ -217,8 +239,8 @@ tabula_tractare_overflow(
  * Si contentum existit: trudere contentum, deinde pingere
  *
  * tabula: tabula
- * linea: linea (0-55)
- * columna: columna (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna (0 ad latitudo-1)
  * c: character inserendus
  *
  * Reddit: VERUM si successus, FALSUM si pagina plena
@@ -233,8 +255,8 @@ tabula_inserere_characterem(
 /* Delere characterem ad positionem, trahens contentum sinistram
  *
  * tabula: tabula
- * linea: linea (0-55)
- * columna: columna (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna (0 ad latitudo-1)
  */
 vacuum
 tabula_delere_characterem(
@@ -247,8 +269,8 @@ tabula_delere_characterem(
  * Duo spatia vel cellulae vacuae frangunt connexionem
  *
  * tabula: tabula
- * linea_initium: linea initii (0-55)
- * columna_initium: columna initii (0-67)
+ * linea_initium: linea initii (0 ad altitudo-1)
+ * columna_initium: columna initii (0 ad latitudo-1)
  * linea_finis: [exitus] linea finis contenti connexi
  * columna_finis: [exitus] columna finis contenti connexi
  */
@@ -269,8 +291,8 @@ tabula_invenire_contentum_connexum(
  * Si contentum existit ad dextram, trudere dextram per 2
  *
  * tabula: tabula
- * linea: linea (0-55)
- * columna: columna (0-66, tab requirit 2 cellulas)
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna (0 ad latitudo-2, tab requirit 2 cellulas)
  *
  * Reddit: VERUM si successus, FALSUM si non potest inserere
  */
@@ -285,8 +307,8 @@ tabula_inserere_tab(
  * Si columna habet '\t', delere ambas cellulas
  *
  * tabula: tabula
- * linea: linea (0-55)
- * columna: columna (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna (0 ad latitudo-1)
  */
 vacuum
 tabula_delere_tab(
@@ -297,8 +319,8 @@ tabula_delere_tab(
 /* Verificare si cellula est TAB_CONTINUATIO (pars secunda tab)
  *
  * tabula: tabula
- * linea: linea (0-55)
- * columna: columna (0-67)
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna (0 ad latitudo-1)
  *
  * Reddit: VERUM si TAB_CONTINUATIO
  */
@@ -314,15 +336,18 @@ tabula_est_tab_continuatio(
  * ================================================== */
 
 /* Creare tabula ex string literal
+ * Initiat tabulam cum dimensionibus defaltis et implet ex literis
  * '\n' = nova linea, alii characteres = cellulae
  * Trailing whitespace in lineis preservatur
  *
  * tabula: tabula initianda et implenda
+ * piscina: piscina pro allocatione
  * literae: string cum '\n' pro lineis novis
  */
 vacuum
 tabula_ex_literis(
     TabulaCharacterum* tabula,
+    Piscina* piscina,
     constans character* literae);
 
 /* Comparare tabula ad string expectatum
@@ -352,12 +377,14 @@ tabula_imprimere(
  * Usus cum CREDO framework
  *
  * tabula: tabula verificanda
+ * piscina: piscina pro tabula temporaria (pro imprimendo expectatum)
  * expectatum: string expectatum
  * descriptio: descriptio assertionis
  */
 vacuum
 tabula_asserere(
     TabulaCharacterum* tabula,
+    Piscina* piscina,
     constans character* expectatum,
     constans character* descriptio);
 

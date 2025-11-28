@@ -7,18 +7,35 @@
 
 vacuum
 tabula_initiare(
-    TabulaCharacterum* tabula)
+    TabulaCharacterum* tabula,
+    Piscina* piscina,
+    i32 latitudo,
+    i32 altitudo)
 {
     i32 linea;
     i32 columna;
+    memoriae_index cellulae_magnitudo;
+    memoriae_index indentatio_magnitudo;
+
+    /* Salvare dimensiones */
+    tabula->latitudo = latitudo;
+    tabula->altitudo = altitudo;
+
+    /* Allocare cellulae (row-major: altitudo * latitudo) */
+    cellulae_magnitudo = (memoriae_index)altitudo * (memoriae_index)latitudo * magnitudo(character);
+    tabula->cellulae = piscina_allocare(piscina, cellulae_magnitudo);
+
+    /* Allocare indentatio */
+    indentatio_magnitudo = (memoriae_index)altitudo * magnitudo(s32);
+    tabula->indentatio = piscina_allocare(piscina, indentatio_magnitudo);
 
     /* Implere cum spatiis - permittit navigare libere */
     /* -1 significat indentatio non posita */
-    per (linea = ZEPHYRUM; linea < TABULA_ALTITUDO; linea++)
+    per (linea = ZEPHYRUM; linea < altitudo; linea++)
     {
-        per (columna = ZEPHYRUM; columna < TABULA_LATITUDO; columna++)
+        per (columna = ZEPHYRUM; columna < latitudo; columna++)
         {
-            tabula->cellulae[linea][columna] = ' ';
+            tabula_cellula(tabula, linea, columna) = ' ';
         }
         tabula->indentatio[linea] = -I;
     }
@@ -43,7 +60,7 @@ tabula_invenire_finem_contenti(
 {
     s32 columna;
 
-    si (linea >= TABULA_ALTITUDO)
+    si (linea >= tabula->altitudo)
     {
         redde -I;
     }
@@ -53,11 +70,11 @@ tabula_invenire_finem_contenti(
      * Hoc differt ab tabula_est_cellula_vacua (quae tabs tractat
      * ut whitespace pro cushion comportamento). Pro finem contenti,
      * tabs sunt contentum preservandum (e.g. sticky indentation). */
-    per (columna = (s32)TABULA_LATITUDO - I; columna >= ZEPHYRUM; columna--)
+    per (columna = (s32)tabula->latitudo - I; columna >= ZEPHYRUM; columna--)
     {
         character c;
 
-        c = tabula->cellulae[linea][(i32)columna];
+        c = tabula_cellula(tabula, linea, (i32)columna);
 
         /* Solum '\0' et ' ' sunt trailing whitespace - tabs sunt contentum */
         si (c != '\0' && c != ' ')
@@ -76,21 +93,21 @@ tabula_invenire_initium_contenti(
 {
     i32 columna;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
-        redde TABULA_LATITUDO;
+        redde tabula->latitudo;
     }
 
     /* Scandere ab initio */
-    per (columna = ZEPHYRUM; columna < TABULA_LATITUDO; columna++)
+    per (columna = ZEPHYRUM; columna < tabula->latitudo; columna++)
     {
-        si (!tabula_est_cellula_vacua(tabula->cellulae[linea][columna]))
+        si (!tabula_est_cellula_vacua(tabula_cellula(tabula, linea, columna)))
         {
             redde columna;
         }
     }
 
-    redde TABULA_LATITUDO;  /* Linea vacua */
+    redde tabula->latitudo;  /* Linea vacua */
 }
 
 s32
@@ -101,15 +118,15 @@ tabula_invenire_obicem(
 {
     i32 columna;
 
-    si (linea >= TABULA_ALTITUDO)
+    si (linea >= tabula->altitudo)
     {
         redde -I;
     }
 
     /* Scandere dextram ad primum non-whitespace */
-    per (columna = ab_columna; columna < TABULA_LATITUDO; columna++)
+    per (columna = ab_columna; columna < tabula->latitudo; columna++)
     {
-        si (!tabula_est_cellula_vacua(tabula->cellulae[linea][columna]))
+        si (!tabula_est_cellula_vacua(tabula_cellula(tabula, linea, columna)))
         {
             redde (s32)columna;
         }
@@ -125,9 +142,9 @@ tabula_est_plena(
     /* Tabula plena si ultima linea habet contentum in ultima columna */
     s32 finis;
 
-    finis = tabula_invenire_finem_contenti(tabula, TABULA_ALTITUDO - I);
+    finis = tabula_invenire_finem_contenti(tabula, tabula->altitudo - I);
 
-    redde (finis == (s32)TABULA_LATITUDO - I);
+    redde (finis == (s32)tabula->latitudo - I);
 }
 
 b32
@@ -136,7 +153,7 @@ tabula_est_vacua(
 {
     i32 linea;
 
-    per (linea = ZEPHYRUM; linea < TABULA_ALTITUDO; linea++)
+    per (linea = ZEPHYRUM; linea < tabula->altitudo; linea++)
     {
         si (tabula_invenire_finem_contenti(tabula, linea) >= ZEPHYRUM)
         {
@@ -161,27 +178,27 @@ tabula_trudere_dextram(
     i32 columna;
     character overflow;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde '\0';
     }
 
-    si (ab_columna < ZEPHYRUM || ab_columna >= TABULA_LATITUDO)
+    si (ab_columna < ZEPHYRUM || ab_columna >= tabula->latitudo)
     {
         redde '\0';
     }
 
     /* Salvare character qui excidit */
-    overflow = tabula->cellulae[linea][TABULA_LATITUDO - I];
+    overflow = tabula_cellula(tabula, linea, tabula->latitudo - I);
 
     /* Trudere omnes characteres dextram ab columna */
-    per (columna = TABULA_LATITUDO - I; columna > ab_columna; columna--)
+    per (columna = tabula->latitudo - I; columna > ab_columna; columna--)
     {
-        tabula->cellulae[linea][columna] = tabula->cellulae[linea][columna - I];
+        tabula_cellula(tabula, linea, columna) = tabula_cellula(tabula, linea, columna - I);
     }
 
     /* Cellula ab_columna fit vacua (spatium pro novo charactere) */
-    tabula->cellulae[linea][ab_columna] = ' ';
+    tabula_cellula(tabula, linea, ab_columna) = ' ';
 
     redde overflow;
 }
@@ -194,24 +211,24 @@ tabula_trahere_sinistram(
 {
     i32 columna;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde;
     }
 
-    si (ab_columna < ZEPHYRUM || ab_columna >= TABULA_LATITUDO)
+    si (ab_columna < ZEPHYRUM || ab_columna >= tabula->latitudo)
     {
         redde;
     }
 
     /* Trahere omnes characteres sinistram */
-    per (columna = ab_columna; columna < TABULA_LATITUDO - I; columna++)
+    per (columna = ab_columna; columna < tabula->latitudo - I; columna++)
     {
-        tabula->cellulae[linea][columna] = tabula->cellulae[linea][columna + I];
+        tabula_cellula(tabula, linea, columna) = tabula_cellula(tabula, linea, columna + I);
     }
 
     /* Ultima columna fit vacua */
-    tabula->cellulae[linea][TABULA_LATITUDO - I] = '\0';
+    tabula_cellula(tabula, linea, tabula->latitudo - I) = '\0';
 }
 
 b32
@@ -222,31 +239,31 @@ tabula_inserere_lineam(
     i32 linea;
     i32 columna;
 
-    si (ad_lineam < ZEPHYRUM || ad_lineam >= TABULA_ALTITUDO)
+    si (ad_lineam < ZEPHYRUM || ad_lineam >= tabula->altitudo)
     {
         redde FALSUM;
     }
 
     /* Verificare si ultima linea habet contentum */
-    si (tabula_invenire_finem_contenti(tabula, TABULA_ALTITUDO - I) >= ZEPHYRUM)
+    si (tabula_invenire_finem_contenti(tabula, tabula->altitudo - I) >= ZEPHYRUM)
     {
         redde FALSUM;  /* Non possumus trudere - ultima linea habet contentum */
     }
 
     /* Trudere lineas deorsum (cellulae et indentatio) */
-    per (linea = TABULA_ALTITUDO - I; linea > ad_lineam; linea--)
+    per (linea = tabula->altitudo - I; linea > ad_lineam; linea--)
     {
-        per (columna = ZEPHYRUM; columna < TABULA_LATITUDO; columna++)
+        per (columna = ZEPHYRUM; columna < tabula->latitudo; columna++)
         {
-            tabula->cellulae[linea][columna] = tabula->cellulae[linea - I][columna];
+            tabula_cellula(tabula, linea, columna) = tabula_cellula(tabula, linea - I, columna);
         }
         tabula->indentatio[linea] = tabula->indentatio[linea - I];
     }
 
     /* Vacare lineam novam */
-    per (columna = ZEPHYRUM; columna < TABULA_LATITUDO; columna++)
+    per (columna = ZEPHYRUM; columna < tabula->latitudo; columna++)
     {
-        tabula->cellulae[ad_lineam][columna] = ' ';
+        tabula_cellula(tabula, ad_lineam, columna) = ' ';
     }
     tabula->indentatio[ad_lineam] = -I;  /* Non posita */
 
@@ -261,27 +278,27 @@ tabula_delere_lineam(
     i32 l;
     i32 columna;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde;
     }
 
     /* Trahere lineas sursum (cellulae et indentatio) */
-    per (l = linea; l < TABULA_ALTITUDO - I; l++)
+    per (l = linea; l < tabula->altitudo - I; l++)
     {
-        per (columna = ZEPHYRUM; columna < TABULA_LATITUDO; columna++)
+        per (columna = ZEPHYRUM; columna < tabula->latitudo; columna++)
         {
-            tabula->cellulae[l][columna] = tabula->cellulae[l + I][columna];
+            tabula_cellula(tabula, l, columna) = tabula_cellula(tabula, l + I, columna);
         }
         tabula->indentatio[l] = tabula->indentatio[l + I];
     }
 
     /* Vacare ultimam lineam */
-    per (columna = ZEPHYRUM; columna < TABULA_LATITUDO; columna++)
+    per (columna = ZEPHYRUM; columna < tabula->latitudo; columna++)
     {
-        tabula->cellulae[TABULA_ALTITUDO - I][columna] = ' ';
+        tabula_cellula(tabula, tabula->altitudo - I, columna) = ' ';
     }
-    tabula->indentatio[TABULA_ALTITUDO - I] = -I;  /* Non posita */
+    tabula->indentatio[tabula->altitudo - I] = -I;  /* Non posita */
 }
 
 b32
@@ -299,7 +316,7 @@ tabula_tractare_overflow(
         redde VERUM;  /* Nihil tractandum */
     }
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO - I)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo - I)
     {
         redde FALSUM;  /* Non possumus tractare overflow ex ultima linea */
     }
@@ -308,7 +325,7 @@ tabula_tractare_overflow(
     initium_seq = tabula_invenire_initium_contenti(tabula, linea_seq);
 
     /* Si linea sequens habet indentationem, inserere lineam novam */
-    si (initium_seq > ZEPHYRUM && initium_seq < TABULA_LATITUDO)
+    si (initium_seq > ZEPHYRUM && initium_seq < tabula->latitudo)
     {
         /* Linea sequens habet indentationem - inserere lineam novam */
         si (!tabula_inserere_lineam(tabula, linea_seq))
@@ -317,13 +334,13 @@ tabula_tractare_overflow(
         }
 
         /* Ponere overflow in nova linea */
-        tabula->cellulae[linea_seq][ZEPHYRUM] = overflow;
+        tabula_cellula(tabula, linea_seq, ZEPHYRUM) = overflow;
     }
     alioquin
     {
         /* Linea sequens non habet indentationem - trudere et cascade */
         overflow_seq = tabula_trudere_dextram(tabula, linea_seq, ZEPHYRUM);
-        tabula->cellulae[linea_seq][ZEPHYRUM] = overflow;
+        tabula_cellula(tabula, linea_seq, ZEPHYRUM) = overflow;
 
         /* Recursive: tractare overflow ex linea sequente */
         si (overflow_seq != '\0' && !tabula_est_cellula_vacua(overflow_seq))
@@ -350,12 +367,12 @@ tabula_inserere_characterem(
     s32 obex;
     character overflow;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde FALSUM;
     }
 
-    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO)
+    si (columna < ZEPHYRUM || columna >= tabula->latitudo)
     {
         redde FALSUM;
     }
@@ -375,19 +392,19 @@ tabula_inserere_characterem(
         per (col = (i32)(finis_contenti + I); col < columna; col++)
         {
             /* Si implendo super '\t', convertere TAB_CONTINUATIO quoque */
-            si (tabula->cellulae[linea][col] == '\t' && col + I < TABULA_LATITUDO)
+            si (tabula_cellula(tabula, linea, col) == '\t' && col + I < tabula->latitudo)
             {
-                tabula->cellulae[linea][col + I] = ' ';
+                tabula_cellula(tabula, linea, col + I) = ' ';
             }
             /* Si implendo super TAB_CONTINUATIO, convertere '\t' quoque */
-            si (tabula->cellulae[linea][col] == TAB_CONTINUATIO && col > ZEPHYRUM)
+            si (tabula_cellula(tabula, linea, col) == TAB_CONTINUATIO && col > ZEPHYRUM)
             {
-                tabula->cellulae[linea][col - I] = ' ';
+                tabula_cellula(tabula, linea, col - I) = ' ';
             }
-            tabula->cellulae[linea][col] = ' ';
+            tabula_cellula(tabula, linea, col) = ' ';
         }
 
-        tabula->cellulae[linea][columna] = c;
+        tabula_cellula(tabula, linea, columna) = c;
         redde VERUM;
     }
 
@@ -399,17 +416,17 @@ tabula_inserere_characterem(
         /* Whitespace cushion existit - solum pingere */
 
         /* Si pingimus super '\t', convertere TAB_CONTINUATIO sequens ad spatium */
-        si (tabula->cellulae[linea][columna] == '\t' && columna + I < TABULA_LATITUDO)
+        si (tabula_cellula(tabula, linea, columna) == '\t' && columna + I < tabula->latitudo)
         {
-            tabula->cellulae[linea][columna + I] = ' ';
+            tabula_cellula(tabula, linea, columna + I) = ' ';
         }
         /* Si pingimus super TAB_CONTINUATIO, convertere '\t' praecedens ad spatium */
-        si (tabula->cellulae[linea][columna] == TAB_CONTINUATIO && columna > ZEPHYRUM)
+        si (tabula_cellula(tabula, linea, columna) == TAB_CONTINUATIO && columna > ZEPHYRUM)
         {
-            tabula->cellulae[linea][columna - I] = ' ';
+            tabula_cellula(tabula, linea, columna - I) = ' ';
         }
 
-        tabula->cellulae[linea][columna] = c;
+        tabula_cellula(tabula, linea, columna) = c;
         redde VERUM;
     }
 
@@ -417,12 +434,12 @@ tabula_inserere_characterem(
     overflow = tabula_trudere_dextram(tabula, linea, columna);
 
     /* Pingere novum characterem */
-    tabula->cellulae[linea][columna] = c;
+    tabula_cellula(tabula, linea, columna) = c;
 
     /* Tractare overflow si necessarium */
     si (overflow != '\0' && !tabula_est_cellula_vacua(overflow))
     {
-        si (linea < TABULA_ALTITUDO - I)
+        si (linea < tabula->altitudo - I)
         {
             redde tabula_tractare_overflow(tabula, linea, overflow);
         }
@@ -444,12 +461,12 @@ tabula_delere_characterem(
 {
     s32 finis;
 
-    si (linea >= TABULA_ALTITUDO)
+    si (linea >= tabula->altitudo)
     {
         redde;
     }
 
-    si (columna >= TABULA_LATITUDO)
+    si (columna >= tabula->latitudo)
     {
         redde;
     }
@@ -487,13 +504,13 @@ tabula_invenire_contentum_connexum(
     in_contentu = FALSUM;
 
     /* Scandere per contentum connexum */
-    dum (linea < TABULA_ALTITUDO)
+    dum (linea < tabula->altitudo)
     {
-        dum (columna < TABULA_LATITUDO)
+        dum (columna < tabula->latitudo)
         {
             character c;
 
-            c = tabula->cellulae[linea][columna];
+            c = tabula_cellula(tabula, linea, columna);
 
             si (tabula_est_cellula_vacua(c))
             {
@@ -533,13 +550,13 @@ tabula_invenire_contentum_connexum(
         columna = ZEPHYRUM;
 
         /* Si linea nova incipit cum plus quam uno spatio, finis */
-        si (linea < TABULA_ALTITUDO)
+        si (linea < tabula->altitudo)
         {
             i32 initium;
 
             initium = tabula_invenire_initium_contenti(tabula, linea);
 
-            si (initium > I || initium == TABULA_LATITUDO)
+            si (initium > I || initium == tabula->latitudo)
             {
                 /* Indentatio vel linea vacua - finis connexionis */
                 redde;
@@ -563,13 +580,13 @@ tabula_inserere_tab(
     character overflow1;
     character overflow2;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde FALSUM;
     }
 
-    /* Tab requirit 2 cellulas, ergo columna maxima est TABULA_LATITUDO - 2 */
-    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO - I)
+    /* Tab requirit 2 cellulas, ergo columna maxima est latitudo - 2 */
+    si (columna < ZEPHYRUM || columna >= tabula->latitudo - I)
     {
         redde FALSUM;
     }
@@ -580,8 +597,8 @@ tabula_inserere_tab(
     si (obex < ZEPHYRUM)
     {
         /* Nulla contentum post columnam - solum pingere tab */
-        tabula->cellulae[linea][columna] = '\t';
-        tabula->cellulae[linea][columna + I] = TAB_CONTINUATIO;
+        tabula_cellula(tabula, linea, columna) = '\t';
+        tabula_cellula(tabula, linea, columna + I) = TAB_CONTINUATIO;
         redde VERUM;
     }
 
@@ -590,13 +607,13 @@ tabula_inserere_tab(
     overflow2 = tabula_trudere_dextram(tabula, linea, columna);
 
     /* Pingere tab */
-    tabula->cellulae[linea][columna] = '\t';
-    tabula->cellulae[linea][columna + I] = TAB_CONTINUATIO;
+    tabula_cellula(tabula, linea, columna) = '\t';
+    tabula_cellula(tabula, linea, columna + I) = TAB_CONTINUATIO;
 
     /* Tractare overflow si necessarium */
     si (overflow1 != '\0' && !tabula_est_cellula_vacua(overflow1))
     {
-        si (linea < TABULA_ALTITUDO - I)
+        si (linea < tabula->altitudo - I)
         {
             si (!tabula_tractare_overflow(tabula, linea, overflow1))
             {
@@ -611,7 +628,7 @@ tabula_inserere_tab(
 
     si (overflow2 != '\0' && !tabula_est_cellula_vacua(overflow2))
     {
-        si (linea < TABULA_ALTITUDO - I)
+        si (linea < tabula->altitudo - I)
         {
             si (!tabula_tractare_overflow(tabula, linea, overflow2))
             {
@@ -635,22 +652,22 @@ tabula_delere_tab(
 {
     i32 columna_tab;
 
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde;
     }
 
-    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO)
+    si (columna < ZEPHYRUM || columna >= tabula->latitudo)
     {
         redde;
     }
 
     /* Si ad TAB_CONTINUATIO, invenire '\t' (columna - 1) */
-    si (tabula->cellulae[linea][columna] == TAB_CONTINUATIO && columna > ZEPHYRUM)
+    si (tabula_cellula(tabula, linea, columna) == TAB_CONTINUATIO && columna > ZEPHYRUM)
     {
         columna_tab = columna - I;
     }
-    alioquin si (tabula->cellulae[linea][columna] == '\t')
+    alioquin si (tabula_cellula(tabula, linea, columna) == '\t')
     {
         columna_tab = columna;
     }
@@ -671,17 +688,17 @@ tabula_est_tab_continuatio(
     i32 linea,
     i32 columna)
 {
-    si (linea < ZEPHYRUM || linea >= TABULA_ALTITUDO)
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
         redde FALSUM;
     }
 
-    si (columna < ZEPHYRUM || columna >= TABULA_LATITUDO)
+    si (columna < ZEPHYRUM || columna >= tabula->latitudo)
     {
         redde FALSUM;
     }
 
-    redde (tabula->cellulae[linea][columna] == TAB_CONTINUATIO);
+    redde (tabula_cellula(tabula, linea, columna) == TAB_CONTINUATIO);
 }
 
 
@@ -692,6 +709,7 @@ tabula_est_tab_continuatio(
 vacuum
 tabula_ex_literis(
     TabulaCharacterum* tabula,
+    Piscina* piscina,
     constans character* literae)
 {
     i32 linea;
@@ -699,8 +717,8 @@ tabula_ex_literis(
     i32 i;
     b32 indentatio_posita;
 
-    /* Primo initiare */
-    tabula_initiare(tabula);
+    /* Primo initiare cum dimensionibus defaltis */
+    tabula_initiare(tabula, piscina, TABULA_LATITUDO_DEFALTA, TABULA_ALTITUDO_DEFALTA);
 
     linea = ZEPHYRUM;
     columna = ZEPHYRUM;
@@ -714,29 +732,29 @@ tabula_ex_literis(
             columna = ZEPHYRUM;
             indentatio_posita = FALSUM;
 
-            si (linea >= TABULA_ALTITUDO)
+            si (linea >= tabula->altitudo)
             {
                 frange;
             }
         }
         alioquin
         {
-            si (columna < TABULA_LATITUDO && linea < TABULA_ALTITUDO)
+            si (columna < tabula->latitudo && linea < tabula->altitudo)
             {
                 /* Tractare tab ut duo cellulae: '\t' + TAB_CONTINUATIO */
                 si (literae[i] == '\t')
                 {
-                    tabula->cellulae[linea][columna] = '\t';
+                    tabula_cellula(tabula, linea, columna) = '\t';
                     columna++;
-                    si (columna < TABULA_LATITUDO)
+                    si (columna < tabula->latitudo)
                     {
-                        tabula->cellulae[linea][columna] = TAB_CONTINUATIO;
+                        tabula_cellula(tabula, linea, columna) = TAB_CONTINUATIO;
                         columna++;
                     }
                 }
                 alioquin
                 {
-                    tabula->cellulae[linea][columna] = literae[i];
+                    tabula_cellula(tabula, linea, columna) = literae[i];
 
                     /* Ponere sticky indentatio ad primum non-spatium */
                     si (!indentatio_posita && literae[i] != ' ')
@@ -774,11 +792,11 @@ tabula_aequalis_literis(
         si (c_expect == '\0')
         {
             /* Finis expectati - verificare si tabula habet plus contenti */
-            dum (linea < TABULA_ALTITUDO)
+            dum (linea < tabula->altitudo)
             {
-                dum (columna < TABULA_LATITUDO)
+                dum (columna < tabula->latitudo)
                 {
-                    c_tabula = tabula->cellulae[linea][columna];
+                    c_tabula = tabula_cellula(tabula, linea, columna);
                     si (!tabula_est_cellula_vacua(c_tabula))
                     {
                         redde FALSUM;  /* Tabula habet extra contentum */
@@ -794,9 +812,9 @@ tabula_aequalis_literis(
         si (c_expect == '\n')
         {
             /* Nova linea in expectato - verificare si reliquum lineae est vacuum */
-            dum (columna < TABULA_LATITUDO)
+            dum (columna < tabula->latitudo)
             {
-                c_tabula = tabula->cellulae[linea][columna];
+                c_tabula = tabula_cellula(tabula, linea, columna);
                 si (!tabula_est_cellula_vacua(c_tabula))
                 {
                     redde FALSUM;
@@ -806,7 +824,7 @@ tabula_aequalis_literis(
             linea++;
             columna = ZEPHYRUM;
 
-            si (linea >= TABULA_ALTITUDO)
+            si (linea >= tabula->altitudo)
             {
                 /* Verificare si expectatum habet plus linearum */
                 i++;
@@ -816,18 +834,18 @@ tabula_aequalis_literis(
         alioquin si (c_expect == '\t')
         {
             /* Tab in expectato - verificare '\t' + TAB_CONTINUATIO in tabula */
-            si (linea >= TABULA_ALTITUDO || columna >= TABULA_LATITUDO - I)
+            si (linea >= tabula->altitudo || columna >= tabula->latitudo - I)
             {
                 redde FALSUM;
             }
 
-            si (tabula->cellulae[linea][columna] != '\t')
+            si (tabula_cellula(tabula, linea, columna) != '\t')
             {
                 redde FALSUM;
             }
             columna++;
 
-            si (tabula->cellulae[linea][columna] != TAB_CONTINUATIO)
+            si (tabula_cellula(tabula, linea, columna) != TAB_CONTINUATIO)
             {
                 redde FALSUM;
             }
@@ -835,12 +853,12 @@ tabula_aequalis_literis(
         }
         alioquin
         {
-            si (linea >= TABULA_ALTITUDO || columna >= TABULA_LATITUDO)
+            si (linea >= tabula->altitudo || columna >= tabula->latitudo)
             {
                 redde FALSUM;  /* Expectatum excedit limites */
             }
 
-            c_tabula = tabula->cellulae[linea][columna];
+            c_tabula = tabula_cellula(tabula, linea, columna);
 
             /* Tractare spatia: ' ' in expectato debet match ' ' vel '\0' in tabula? */
             /* Non - debemus esse stricti */
@@ -865,7 +883,7 @@ tabula_imprimere(
 
     /* Invenire ultimam lineam cum contentu */
     ultima_linea_cum_contentu = -I;
-    per (linea = ZEPHYRUM; linea < (s32)TABULA_ALTITUDO; linea++)
+    per (linea = ZEPHYRUM; linea < (s32)tabula->altitudo; linea++)
     {
         si (tabula_invenire_finem_contenti(tabula, (i32)linea) >= ZEPHYRUM)
         {
@@ -894,7 +912,7 @@ tabula_imprimere(
             {
                 character c;
 
-                c = tabula->cellulae[(i32)linea][(i32)col];
+                c = tabula_cellula(tabula, (i32)linea, (i32)col);
 
                 si (c == '\0')
                 {
@@ -927,6 +945,7 @@ tabula_imprimere(
 vacuum
 tabula_asserere(
     TabulaCharacterum* tabula,
+    Piscina* piscina,
     constans character* expectatum,
     constans character* descriptio)
 {
@@ -940,7 +959,7 @@ tabula_asserere(
         printf("Expectatum:\n");
         {
             TabulaCharacterum temp;
-            tabula_ex_literis(&temp, expectatum);
+            tabula_ex_literis(&temp, piscina, expectatum);
             tabula_imprimere(&temp);
         }
         printf("\nActuale:\n");

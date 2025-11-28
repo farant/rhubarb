@@ -62,7 +62,7 @@ main (
     }
 
     /* Initiare paginam */
-    pagina_initiare(&pagina, chorda_internare_ex_literis(internamentum_globale(), "Page::Test"));
+    pagina_initiare(&pagina, piscina, chorda_internare_ex_literis(internamentum_globale(), "Page::Test"));
 
     /* Inserere textum initialem */
     pagina_inserere_textum(&pagina, "Salve! Hoc est probatio paginae.\n");

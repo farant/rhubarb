@@ -73,14 +73,33 @@ nomen structura RegioClicca {
 /* Initiare paginam
  *
  * Ponit paginam ad statum initialem cum identificatore dato.
+ * Allocat tabulam characterum ex piscina cum dimensionibus defaltis.
  *
  * pagina: pagina initianda
+ * piscina: piscina pro allocatione tabulae
  * identificator: identificator paginae (e.g. "page:5", "page:repl")
  *                debet esse chorda* ex internamento vel piscina - Pagina non copiat
  */
 vacuum
 pagina_initiare(
     Pagina* pagina,
+    Piscina* piscina,
+    chorda* identificator);
+
+/* Initiare paginam cum dimensionibus specificatis
+ *
+ * pagina: pagina initianda
+ * piscina: piscina pro allocatione tabulae
+ * latitudo: latitudo tabulae (columnarum numerus)
+ * altitudo: altitudo tabulae (linearum numerus)
+ * identificator: identificator paginae
+ */
+vacuum
+pagina_initiare_cum_dimensionibus(
+    Pagina* pagina,
+    Piscina* piscina,
+    i32 latitudo,
+    i32 altitudo,
     chorda* identificator);
 
 /* Vacare paginam
