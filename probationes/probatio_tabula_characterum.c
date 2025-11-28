@@ -162,19 +162,35 @@ probans_inserere_characterem_simplex(vacuum)
 }
 
 hic_manens vacuum
-probans_inserere_characterem_cum_push(vacuum)
+probans_inserere_characterem_consumere_whitespace(vacuum)
 {
     TabulaCharacterum tabula;
 
-    /* Inserere ante contentum - debet trudere */
+    /* Inserere in whitespace cushion - solum pingere (consumere whitespace) */
     tabula_ex_literis(&tabula, "   hello");
     tabula_inserere_characterem(&tabula, ZEPHYRUM, ZEPHYRUM, 'X');
-    tabula_asserere(&tabula, "X   hello", "inserere X ante spatia et hello");
+    tabula_asserere(&tabula, "X  hello", "inserere X consumit whitespace");
 
-    /* Inserere in medio spatii */
+    /* Inserere in medio whitespace cushion */
     tabula_ex_literis(&tabula, "ab   hello");
     tabula_inserere_characterem(&tabula, ZEPHYRUM, II, 'X');
-    tabula_asserere(&tabula, "abX   hello", "inserere X in barrier");
+    tabula_asserere(&tabula, "abX  hello", "inserere X in whitespace cushion");
+}
+
+hic_manens vacuum
+probans_inserere_characterem_ad_barrier(vacuum)
+{
+    TabulaCharacterum tabula;
+
+    /* Inserere ad barrier (immediate ante contentum) - debet trudere */
+    tabula_ex_literis(&tabula, "ab hello");  /* 1 space = barrier */
+    tabula_inserere_characterem(&tabula, ZEPHYRUM, II, 'X');
+    tabula_asserere(&tabula, "abX hello", "inserere X ad barrier trudere");
+
+    /* Inserere directe ante contentum (cursor ad ultimum whitespace) */
+    tabula_ex_literis(&tabula, "  hello");  /* 2 spaces */
+    tabula_inserere_characterem(&tabula, ZEPHYRUM, I, 'X');
+    tabula_asserere(&tabula, " X hello", "inserere X ad barrier (1 space ante)");
 }
 
 hic_manens vacuum
@@ -405,8 +421,11 @@ principale(vacuum)
     printf("--- Probans inserere_characterem_simplex ---\n");
     probans_inserere_characterem_simplex();
 
-    printf("--- Probans inserere_characterem_cum_push ---\n");
-    probans_inserere_characterem_cum_push();
+    printf("--- Probans inserere_characterem_consumere_whitespace ---\n");
+    probans_inserere_characterem_consumere_whitespace();
+
+    printf("--- Probans inserere_characterem_ad_barrier ---\n");
+    probans_inserere_characterem_ad_barrier();
 
     printf("--- Probans inserere_characterem_post_contentum ---\n");
     probans_inserere_characterem_post_contentum();

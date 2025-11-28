@@ -33,7 +33,7 @@ b32
 tabula_est_cellula_vacua(
     character c)
 {
-    redde (c == '\0' || c == ' ' || c == '\t');
+    redde (c == '\0' || c == ' ' || c == '\t' || c == TAB_CONTINUATIO);
 }
 
 s32
@@ -48,10 +48,19 @@ tabula_invenire_finem_contenti(
         redde -I;
     }
 
-    /* Scandere retro ab ultima columna */
+    /* Scandere retro ab ultima columna
+     * Nota: Hic tabs tractantur ut contentum, NON ut whitespace.
+     * Hoc differt ab tabula_est_cellula_vacua (quae tabs tractat
+     * ut whitespace pro cushion comportamento). Pro finem contenti,
+     * tabs sunt contentum preservandum (e.g. sticky indentation). */
     per (columna = (s32)TABULA_LATITUDO - I; columna >= ZEPHYRUM; columna--)
     {
-        si (!tabula_est_cellula_vacua(tabula->cellulae[linea][(i32)columna]))
+        character c;
+
+        c = tabula->cellulae[linea][(i32)columna];
+
+        /* Solum '\0' et ' ' sunt trailing whitespace - tabs sunt contentum */
+        si (c != '\0' && c != ' ')
         {
             redde columna;
         }
@@ -365,6 +374,16 @@ tabula_inserere_characterem(
         /* Implere spatia inter finem contenti et columnam novam */
         per (col = (i32)(finis_contenti + I); col < columna; col++)
         {
+            /* Si implendo super '\t', convertere TAB_CONTINUATIO quoque */
+            si (tabula->cellulae[linea][col] == '\t' && col + I < TABULA_LATITUDO)
+            {
+                tabula->cellulae[linea][col + I] = ' ';
+            }
+            /* Si implendo super TAB_CONTINUATIO, convertere '\t' quoque */
+            si (tabula->cellulae[linea][col] == TAB_CONTINUATIO && col > ZEPHYRUM)
+            {
+                tabula->cellulae[linea][col - I] = ' ';
+            }
             tabula->cellulae[linea][col] = ' ';
         }
 
@@ -372,7 +391,29 @@ tabula_inserere_characterem(
         redde VERUM;
     }
 
-    /* Contentum existit - trudere dextram */
+    /* Whitespace inter cursor et contentum?
+     * Si sic, solum pingere (consumere whitespace).
+     * Si cursor ad obicem (immediate ante contentum), trudere. */
+    si ((s32)columna < obex - I)
+    {
+        /* Whitespace cushion existit - solum pingere */
+
+        /* Si pingimus super '\t', convertere TAB_CONTINUATIO sequens ad spatium */
+        si (tabula->cellulae[linea][columna] == '\t' && columna + I < TABULA_LATITUDO)
+        {
+            tabula->cellulae[linea][columna + I] = ' ';
+        }
+        /* Si pingimus super TAB_CONTINUATIO, convertere '\t' praecedens ad spatium */
+        si (tabula->cellulae[linea][columna] == TAB_CONTINUATIO && columna > ZEPHYRUM)
+        {
+            tabula->cellulae[linea][columna - I] = ' ';
+        }
+
+        tabula->cellulae[linea][columna] = c;
+        redde VERUM;
+    }
+
+    /* Ad obicem vel supra contentum - trudere dextram */
     overflow = tabula_trudere_dextram(tabula, linea, columna);
 
     /* Pingere novum characterem */
@@ -682,16 +723,30 @@ tabula_ex_literis(
         {
             si (columna < TABULA_LATITUDO && linea < TABULA_ALTITUDO)
             {
-                tabula->cellulae[linea][columna] = literae[i];
-
-                /* Ponere sticky indentatio ad primum non-spatium */
-                si (!indentatio_posita && literae[i] != ' ' && literae[i] != '\t')
+                /* Tractare tab ut duo cellulae: '\t' + TAB_CONTINUATIO */
+                si (literae[i] == '\t')
                 {
-                    tabula->indentatio[linea] = (s32)columna;
-                    indentatio_posita = VERUM;
+                    tabula->cellulae[linea][columna] = '\t';
+                    columna++;
+                    si (columna < TABULA_LATITUDO)
+                    {
+                        tabula->cellulae[linea][columna] = TAB_CONTINUATIO;
+                        columna++;
+                    }
                 }
+                alioquin
+                {
+                    tabula->cellulae[linea][columna] = literae[i];
 
-                columna++;
+                    /* Ponere sticky indentatio ad primum non-spatium */
+                    si (!indentatio_posita && literae[i] != ' ')
+                    {
+                        tabula->indentatio[linea] = (s32)columna;
+                        indentatio_posita = VERUM;
+                    }
+
+                    columna++;
+                }
             }
         }
     }
@@ -724,7 +779,7 @@ tabula_aequalis_literis(
                 dum (columna < TABULA_LATITUDO)
                 {
                     c_tabula = tabula->cellulae[linea][columna];
-                    si (c_tabula != '\0' && c_tabula != ' ')
+                    si (!tabula_est_cellula_vacua(c_tabula))
                     {
                         redde FALSUM;  /* Tabula habet extra contentum */
                     }
@@ -742,7 +797,7 @@ tabula_aequalis_literis(
             dum (columna < TABULA_LATITUDO)
             {
                 c_tabula = tabula->cellulae[linea][columna];
-                si (c_tabula != '\0' && c_tabula != ' ')
+                si (!tabula_est_cellula_vacua(c_tabula))
                 {
                     redde FALSUM;
                 }
@@ -757,6 +812,26 @@ tabula_aequalis_literis(
                 i++;
                 redde (expectatum[i] == '\0');
             }
+        }
+        alioquin si (c_expect == '\t')
+        {
+            /* Tab in expectato - verificare '\t' + TAB_CONTINUATIO in tabula */
+            si (linea >= TABULA_ALTITUDO || columna >= TABULA_LATITUDO - I)
+            {
+                redde FALSUM;
+            }
+
+            si (tabula->cellulae[linea][columna] != '\t')
+            {
+                redde FALSUM;
+            }
+            columna++;
+
+            si (tabula->cellulae[linea][columna] != TAB_CONTINUATIO)
+            {
+                redde FALSUM;
+            }
+            columna++;
         }
         alioquin
         {
