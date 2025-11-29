@@ -838,6 +838,7 @@ probare_validation(Piscina* piscina)
 {
     Persistentia*        pers;
     EntitasRepositorium* repo;
+    Entitas*             typus_sem;
     Entitas*             prop_def;
     Entitas*             item;
     Entitas*             found_def;
@@ -855,16 +856,22 @@ probare_validation(Piscina* piscina)
     repo = entitas_repositorium_creare(piscina, pers);
     CREDO_NON_NIHIL(repo);
 
-    /* === Creare ProprietasDefinitio === */
+    /* === Creare TypusSemanticus === */
+    imprimere("  creare TypusSemanticus...\n");
+    typus_sem = repo->entitas_scaffoldare(repo->datum, "TypusSemanticus", "Currency::USD");
+    CREDO_NON_NIHIL(typus_sem);
+    repo->proprietas_ponere(repo->datum, typus_sem, "name", "Currency::USD");
+    repo->proprietas_ponere(repo->datum, typus_sem, "typus_literalis", "s32");
+
+    /* === Creare ProprietasDefinitio cum relatio "est" === */
     imprimere("  creare ProprietasDefinitio...\n");
     prop_def = repo->entitas_creare(repo->datum, "ProprietasDefinitio");
     CREDO_NON_NIHIL(prop_def);
 
-    /* Definire: Item.price debet esse s32 cum typus_semanticus "Currency::USD" */
+    /* Definire: Item.price --[est]--> TypusSemanticus::Currency::USD */
     repo->proprietas_ponere(repo->datum, prop_def, "entitas_genus", "Item");
     repo->proprietas_ponere(repo->datum, prop_def, "proprietas_nomen", "price");
-    repo->proprietas_ponere(repo->datum, prop_def, "typus_literalis", "s32");
-    repo->proprietas_ponere(repo->datum, prop_def, "typus_semanticus", "Currency::USD");
+    repo->relatio_addere(repo->datum, prop_def, "est", typus_sem->id);
 
     /* === Probare invenire ProprietasDefinitio === */
     imprimere("  invenire ProprietasDefinitio...\n");

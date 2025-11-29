@@ -1873,11 +1873,16 @@ entitas_repositorium_proprietas_validare(
 {
     RepositoriumData* data;
     Entitas*          definitio;
+    Entitas*          typus_semanticus_ent;
     Proprietas*       prop;
     chorda*           typus_literalis_str;
-    chorda*           typus_semanticus;
+    chorda*           typus_semanticus_nomen;
+    chorda*           est_genus;
+    Relatio*          rel;
     TypusLiteralis    typus_expected;
     b32               parse_success;
+    i32               i;
+    i32               numerus_rel;
 
     si (!repo || !entitas || !clavis)
     {
@@ -1906,14 +1911,35 @@ entitas_repositorium_proprietas_validare(
         redde VERUM;
     }
 
-    /* Capere expected type ex definitione */
+    /* Sequi relatio "est" ad TypusSemanticus entitas */
+    est_genus = chorda_internare_ex_literis(data->intern, "est");
+    typus_semanticus_ent = NIHIL;
+
+    numerus_rel = xar_numerus(definitio->relationes);
+    per (i = ZEPHYRUM; i < numerus_rel; i++)
+    {
+        rel = (Relatio*)xar_obtinere(definitio->relationes, i);
+        si (rel && rel->genus == est_genus)
+        {
+            typus_semanticus_ent = _impl_capere_entitatem(repo->datum, rel->destinatio_id);
+            frange;
+        }
+    }
+
+    /* Si nulla relatio "est", nullum typum - validum */
+    si (!typus_semanticus_ent)
+    {
+        redde VERUM;
+    }
+
+    /* Capere typus_literalis ex TypusSemanticus entitas */
     typus_literalis_str = entitas_proprietas_capere(
-        definitio,
+        typus_semanticus_ent,
         chorda_internare_ex_literis(data->intern, "typus_literalis"));
 
     si (!typus_literalis_str)
     {
-        /* Nullum typus definitus - validum */
+        /* Nullum typus definitus in TypusSemanticus - validum */
         redde VERUM;
     }
 
@@ -1924,18 +1950,17 @@ entitas_repositorium_proprietas_validare(
         redde VERUM;
     }
 
-    /* Capere semantic type si existit */
-    typus_semanticus = entitas_proprietas_capere(
-        definitio,
-        chorda_internare_ex_literis(data->intern, "typus_semanticus"));
-
     /* Tentare parsing secundum expected type */
     parse_success = proprietas_parsare_ut_typum(prop, typus_expected);
 
-    /* Set semantic type si available */
-    si (parse_success && typus_semanticus)
+    /* Set semantic type ex TypusSemanticus titulum (slug ut nomen) */
+    si (parse_success)
     {
-        prop->typus_semanticus = typus_semanticus;
+        typus_semanticus_nomen = entitas_titulum_capere(typus_semanticus_ent);
+        si (typus_semanticus_nomen)
+        {
+            prop->typus_semanticus = typus_semanticus_nomen;
+        }
     }
 
     /* TODO: Si parse_success == FALSUM, creare ValidationError entity */
