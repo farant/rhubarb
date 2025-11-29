@@ -1,6 +1,6 @@
 #include "piscina.h"
-#include "graphus_entitatum.h"
 #include "entitas_repositorium.h"
+#include "persistentia.h"
 #include "fenestra.h"
 #include "delineare.h"
 #include "thema.h"
@@ -148,7 +148,7 @@ main(void)
 {
     Piscina*             piscina;
     InternamentumChorda* intern;
-    GraphusEntitatum*    graphus;
+    Persistentia*        persistentia;
     EntitasRepositorium* repositorium;
     LayoutDom*           dom;
     Pagina*              pagina;
@@ -177,16 +177,16 @@ main(void)
     /* Obtinere internamentum */
     intern = internamentum_globale();
 
-    /* Creare graphum */
-    graphus = graphus_entitatum_creare(piscina);
-    si (!graphus)
+    /* Creare persistentia (in memoria) */
+    persistentia = persistentia_memoria_creare(piscina);
+    si (!persistentia)
     {
-        imprimere("Fractura: non potest creare graphum\n");
+        imprimere("Fractura: non potest creare persistentiam\n");
         redde I;
     }
 
     /* Creare repositorium */
-    repositorium = graphus_entitatum_repositorium_creare(graphus);
+    repositorium = entitas_repositorium_creare(piscina, persistentia);
     si (!repositorium)
     {
         imprimere("Fractura: non potest creare repositorium\n");

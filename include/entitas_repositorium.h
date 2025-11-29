@@ -5,6 +5,7 @@
 #include "entitas.h"
 #include "chorda.h"
 #include "xar.h"
+#include "persistentia.h"
 
 /* ==================================================
  * EntitasRepositorium - Repository Interface (Abstract)
@@ -185,5 +186,25 @@ nomen structura EntitasRepositorium {
 		constans character* nota);
 
 } EntitasRepositorium;
+
+
+/* ==================================================
+ * Factory Function (Unified Implementation)
+ * ================================================== */
+
+/* Creare repositorium cum persistentia backend
+ *
+ * piscina: piscina pro allocationibus
+ * persistentia: backend (memoria vel nuntium)
+ *
+ * On creation, replays events from persistentia to rebuild in-memory state.
+ * All write operations emit events to persistentia AND update in-memory state.
+ *
+ * Redde: EntitasRepositorium* si successus, NIHIL si error
+ */
+EntitasRepositorium*
+entitas_repositorium_creare(
+    Piscina*      piscina,
+    Persistentia* persistentia);
 
 #endif /* ENTITAS_REPOSITORIUM_H */

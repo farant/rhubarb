@@ -3,7 +3,8 @@
 #include "layout.h"
 #include "piscina.h"
 #include "internamentum.h"
-#include "graphus_entitatum.h"
+#include "persistentia.h"
+#include "entitas_repositorium.h"
 #include "credo.h"
 #include <stdio.h>
 
@@ -88,15 +89,15 @@ s32 principale(vacuum)
 
     {
         LayoutDom*           dom;
-        GraphusEntitatum*    graphus;
+        Persistentia*        persistentia;
         EntitasRepositorium* repo;
         NavigatorEntitatum*  nav;
 
-        /* Creare graphus et repositorium */
-        graphus = graphus_entitatum_creare(piscina);
-        CREDO_NON_NIHIL(graphus);
+        /* Creare persistentia et repositorium */
+        persistentia = persistentia_memoria_creare(piscina);
+        CREDO_NON_NIHIL(persistentia);
 
-        repo = graphus_entitatum_repositorium_creare(graphus);
+        repo = entitas_repositorium_creare(piscina, persistentia);
         CREDO_NON_NIHIL(repo);
 
         /* Creare layout cum navigator */
@@ -122,13 +123,13 @@ s32 principale(vacuum)
 
     {
         LayoutDom*           dom;
-        GraphusEntitatum*    graphus;
+        Persistentia*        persistentia;
         EntitasRepositorium* repo;
         Pagina*              pagina;
         NavigatorEntitatum*  nav;
 
-        graphus = graphus_entitatum_creare(piscina);
-        repo = graphus_entitatum_repositorium_creare(graphus);
+        persistentia = persistentia_memoria_creare(piscina);
+        repo = entitas_repositorium_creare(piscina, persistentia);
 
         dom = layout_creare(piscina, intern,
             "<layout>"
