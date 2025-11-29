@@ -744,14 +744,14 @@ probare_lectio_eventorum(Piscina* piscina)
     /* === Probare numerus_eventorum === */
     imprimere("  numerus_eventorum...\n");
     numerus = repo->numerus_eventorum(repo->datum);
-    /* 2 CREARE + 2 PROPRIETAS + 1 NOTA = 5 */
-    CREDO_AEQUALIS_I32(numerus, V);
+    /* Minimum 5: 2 CREARE + 2 PROPRIETAS + 1 NOTA (plus Genus events) */
+    CREDO_VERUM(numerus >= V);
 
     /* === Probare legere_omnes_eventus === */
     imprimere("  legere_omnes_eventus...\n");
     eventus = repo->legere_omnes_eventus(repo->datum);
     CREDO_NON_NIHIL(eventus);
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), V);
+    CREDO_VERUM(xar_numerus(eventus) >= V);
 
     /* Verificare primus eventus est CREARE */
     e = *(Eventum**)xar_obtinere(eventus, ZEPHYRUM);
@@ -772,14 +772,18 @@ probare_lectio_eventorum(Piscina* piscina)
 
     /* === Probare legere_eventus_post_indicem === */
     imprimere("  legere_eventus_post_indicem...\n");
-    eventus = repo->legere_eventus_post_indicem(repo->datum, III);
-    CREDO_NON_NIHIL(eventus);
-    /* Events 3, 4 (0-indexed) = 2 events */
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+    {
+        i32 totalis = repo->numerus_eventorum(repo->datum);
 
-    eventus = repo->legere_eventus_post_indicem(repo->datum, ZEPHYRUM);
-    CREDO_NON_NIHIL(eventus);
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), V);
+        eventus = repo->legere_eventus_post_indicem(repo->datum, totalis - II);
+        CREDO_NON_NIHIL(eventus);
+        /* Ultimi 2 eventus */
+        CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+        eventus = repo->legere_eventus_post_indicem(repo->datum, ZEPHYRUM);
+        CREDO_NON_NIHIL(eventus);
+        CREDO_AEQUALIS_I32(xar_numerus(eventus), totalis);
+    }
 
     /* === Probare legere_eventus_recentes === */
     imprimere("  legere_eventus_recentes...\n");
@@ -812,11 +816,13 @@ probare_lectio_eventorum(Piscina* piscina)
     imprimere("  legere_eventus_typi...\n");
     eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_CREARE_ENTITAS);
     CREDO_NON_NIHIL(eventus);
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+    /* Minimum 2: Page + Document (plus Genus entities) */
+    CREDO_VERUM(xar_numerus(eventus) >= II);
 
     eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_PONERE_PROPRIETAS);
     CREDO_NON_NIHIL(eventus);
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+    /* Minimum 2: titulus for Page + titulus for Document (plus Genus name props) */
+    CREDO_VERUM(xar_numerus(eventus) >= II);
 
     eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_ADDERE_NOTA);
     CREDO_NON_NIHIL(eventus);
@@ -870,7 +876,7 @@ probare_validation(Piscina* piscina)
 
     /* Definire: Item.price --[est]--> TypusSemanticus::Currency::USD */
     repo->proprietas_ponere(repo->datum, prop_def, "entitas_genus", "Item");
-    repo->proprietas_ponere(repo->datum, prop_def, "proprietas_nomen", "price");
+    repo->proprietas_ponere(repo->datum, prop_def, "name", "price");
     repo->relatio_addere(repo->datum, prop_def, "est", typus_sem->id);
 
     /* === Probare invenire ProprietasDefinitio === */
@@ -957,6 +963,75 @@ probare_validation(Piscina* piscina)
 }
 
 /* ==================================================
+ * Probare Automatic Genus Creation
+ * ================================================== */
+
+interior vacuum
+probare_genus_automaticum(Piscina* piscina)
+{
+    Persistentia*        pers;
+    EntitasRepositorium* repo;
+    Entitas*             article;
+    Entitas*             genus_article;
+    Entitas*             prop_def;
+    Entitas*             genus_prop_def;
+    chorda*              genus_name;
+    chorda*              name_prop;
+
+    imprimere("\n=== Probare Genus Automaticum ===\n");
+
+    /* Creare repo */
+    pers = persistentia_memoria_creare(piscina);
+    CREDO_NON_NIHIL(pers);
+    repo = entitas_repositorium_creare(piscina, pers);
+    CREDO_NON_NIHIL(repo);
+
+    /* === Probare: entitas_creare debet creare Genus automatice === */
+    imprimere("  entitas_creare creat Genus...\n");
+    article = repo->entitas_creare(repo->datum, "Article");
+    CREDO_NON_NIHIL(article);
+
+    /* Verificare Genus::Article existit */
+    genus_article = repo->entitas_scaffoldare(repo->datum, "Genus", "Article");
+    CREDO_NON_NIHIL(genus_article);
+
+    /* Verificare habet "name" proprietas */
+    genus_name = chorda_internare_ex_literis(internamentum_globale(), "name");
+    name_prop = entitas_proprietas_capere(genus_article, genus_name);
+    CREDO_NON_NIHIL(name_prop);
+    CREDO_VERUM(chorda_aequalis_literis(*name_prop, "Article"));
+
+    /* === Probare: entitas_scaffoldare debet creare Genus automatice === */
+    imprimere("  entitas_scaffoldare creat Genus...\n");
+    prop_def = repo->entitas_scaffoldare(repo->datum, "ProprietasDefinitio", "test-prop");
+    CREDO_NON_NIHIL(prop_def);
+
+    /* Verificare Genus::ProprietasDefinitio existit */
+    genus_prop_def = repo->entitas_scaffoldare(repo->datum, "Genus", "ProprietasDefinitio");
+    CREDO_NON_NIHIL(genus_prop_def);
+
+    /* Verificare habet "name" proprietas */
+    name_prop = entitas_proprietas_capere(genus_prop_def, genus_name);
+    CREDO_NON_NIHIL(name_prop);
+    CREDO_VERUM(chorda_aequalis_literis(*name_prop, "ProprietasDefinitio"));
+
+    /* === Probare: Genus::Genus debet existere (meta-genus) === */
+    imprimere("  Genus::Genus existit...\n");
+    {
+        Entitas* genus_genus;
+
+        genus_genus = repo->entitas_scaffoldare(repo->datum, "Genus", "Genus");
+        CREDO_NON_NIHIL(genus_genus);
+
+        name_prop = entitas_proprietas_capere(genus_genus, genus_name);
+        CREDO_NON_NIHIL(name_prop);
+        CREDO_VERUM(chorda_aequalis_literis(*name_prop, "Genus"));
+    }
+
+    imprimere("  Genus automaticum verificatum!\n");
+}
+
+/* ==================================================
  * Principale
  * ================================================== */
 
@@ -997,6 +1072,9 @@ s32 principale(vacuum)
 
     /* === Probare Validation === */
     probare_validation(piscina);
+
+    /* === Probare Genus Automaticum === */
+    probare_genus_automaticum(piscina);
 
     /* Cleanup file */
     unlink(VIA_PROBATIO);

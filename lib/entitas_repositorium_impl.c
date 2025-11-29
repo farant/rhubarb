@@ -227,7 +227,7 @@ _impl_quaerere_cum_praefixo_notae(
 /* Invenire ProprietasDefinitio pro entitate genus + proprietas nomen
  * Quaerit entities cum genus="ProprietasDefinitio"
  * ubi proprietas "entitas_genus" == target genus
- * et proprietas "proprietas_nomen" == target clavis
+ * et proprietas "name" == target clavis
  *
  * Redde: Entitas* (ProprietasDefinitio) si inventum, NIHIL si non
  */
@@ -274,10 +274,10 @@ _impl_proprietas_definitio_invenire(
             perge;  /* Non aequalis (pointer comparison pro interned) */
         }
 
-        /* Capere proprietas "proprietas_nomen" */
+        /* Capere proprietas "name" */
         prop_proprietas_nomen = entitas_proprietas_capere(
             entitas,
-            chorda_internare_ex_literis(data->intern, "proprietas_nomen"));
+            chorda_internare_ex_literis(data->intern, "name"));
 
         si (!prop_proprietas_nomen || prop_proprietas_nomen != proprietas_nomen)
         {
@@ -788,6 +788,12 @@ _impl_entitas_creare(
     si (!tabula_dispersa_inserere(data->entitates, *id_internatum, entitas))
     {
         redde NIHIL;
+    }
+
+    /* Assecurare genus hierarchiam (non pro "Genus" ipso - evitare recursionem) */
+    si (strcmp(genus, "Genus") != ZEPHYRUM)
+    {
+        _assecurare_genus_hierarchiam(data, genus);
     }
 
     redde entitas;

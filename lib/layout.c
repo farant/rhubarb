@@ -455,7 +455,7 @@ _layout_processare_schema_proprietatis(
                 repositorium->proprietas_ponere(repositorium->datum, error,
                     "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "proprietas_nomen", chorda_ut_cstr(*clavis, dom->piscina));
+                    "name", chorda_ut_cstr(*clavis, dom->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
                     "typus_existens", chorda_ut_cstr(
                         *entitas_titulum_capere(typus_sem_existens), dom->piscina));
@@ -479,7 +479,7 @@ _layout_processare_schema_proprietatis(
         repositorium->proprietas_ponere(repositorium->datum, prop_def,
             "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->piscina));
         repositorium->proprietas_ponere(repositorium->datum, prop_def,
-            "proprietas_nomen", chorda_ut_cstr(*clavis, dom->piscina));
+            "name", chorda_ut_cstr(*clavis, dom->piscina));
 
         /* Addere "est" relatio ad TypusSemanticus */
         repositorium->relatio_addere(repositorium->datum, prop_def, "est", typus_sem->id);
@@ -616,7 +616,7 @@ _layout_processare_entitas(
                     repositorium->proprietas_ponere(repositorium->datum, error,
                         "entitas_genus", chorda_ut_cstr(*genus_attr, dom->piscina));
                     repositorium->proprietas_ponere(repositorium->datum, error,
-                        "proprietas_nomen", chorda_ut_cstr(*clavis, dom->piscina));
+                        "name", chorda_ut_cstr(*clavis, dom->piscina));
                     repositorium->proprietas_ponere(repositorium->datum, error,
                         "literalis", chorda_ut_cstr(*literalis, dom->piscina));
                 }

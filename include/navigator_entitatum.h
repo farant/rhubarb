@@ -16,8 +16,9 @@
  * "Type of item in center column"
  */
 nomen enumeratio {
-    ITEM_RELATIO,      /* Relatio ad alias entitates */
-    ITEM_PROPRIETAS    /* Proprietas (clavis-valor) */
+    ITEM_RELATIO,          /* Relatio ad alias entitates (outbound) */
+    ITEM_PROPRIETAS,       /* Proprietas (clavis-valor) */
+    ITEM_RELATIO_INVERSA   /* Relatio inversa / backlink (inbound) */
 } GenusItem;
 
 /* Item historiae navigationis
