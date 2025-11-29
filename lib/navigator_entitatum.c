@@ -221,15 +221,28 @@ _construere_items(
     numerus = xar_numerus(ent->relationes);
     per (i = ZEPHYRUM; i < numerus && nav->numerus_itemorum < CXXVIII; i++)
     {
+        b32 est_contains;
+        hic_manens i8 contains_lit[] = "contains";
+
         rel = (Relatio*)xar_obtinere(ent->relationes, i);
         si (!rel)
         {
             perge;
         }
 
+        /* Verificare si est "contains" relatio */
+        est_contains = FALSUM;
+        si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+        {
+            si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+            {
+                est_contains = VERUM;
+            }
+        }
+
         item = &nav->items[nav->numerus_itemorum];
         item->genus = ITEM_RELATIO;
-        item->altitudo = I;  /* Relationes sunt semper 1 linea */
+        item->altitudo = est_contains ? I : II;  /* 2 lineae pro non-contains */
         item->datum = rel;
 
         nav->numerus_itemorum++;
@@ -750,10 +763,29 @@ _reddere_items_currens(
                 }
                 buffer[buffer_mensura++] = '/';
                 buffer[buffer_mensura] = '\0';
+
+                textus.datum = (i8*)buffer;
+                textus.mensura = buffer_mensura;
+
+                tabula_pixelorum_pingere_chordam(
+                    tabula,
+                    x_columna * character_latitudo + (II * character_latitudo),
+                    y_currens * character_altitudo,
+                    textus,
+                    color_textus);
             }
             alioquin
             {
-                /* Format: "genus/" */
+                /* Non-contains: 2 lineae */
+                Entitas* dest_ent;
+                chorda* display_chorda;
+                i32 color_genus;
+
+                /* Linea 1: genus (sine "/") - in medium gold */
+                color_genus = est_selectus
+                    ? color_textus
+                    : color_ad_pixelum(color_ex_palette(PALETTE_MEDIUM_GOLD));
+
                 buffer_mensura = ZEPHYRUM;
                 si (rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM &&
                     rel->genus->mensura < CCLVI - buffer_mensura - X)
@@ -763,20 +795,50 @@ _reddere_items_currens(
                            (memoriae_index)rel->genus->mensura);
                     buffer_mensura += rel->genus->mensura;
                 }
+                buffer[buffer_mensura] = '\0';
 
+                textus.datum = (i8*)buffer;
+                textus.mensura = buffer_mensura;
+
+                tabula_pixelorum_pingere_chordam(
+                    tabula,
+                    x_columna * character_latitudo + (II * character_latitudo),
+                    y_currens * character_altitudo,
+                    textus,
+                    color_genus);
+
+                /* Linea 2: "    titulus/" (indentatus cum 4 spatia) */
+                dest_ent = nav->repositorium->capere_entitatem(
+                    nav->repositorium->datum, rel->destinatio_id);
+
+                display_chorda = entitas_titulum_capere(dest_ent);
+
+                buffer_mensura = ZEPHYRUM;
+                buffer[buffer_mensura++] = ' ';
+                buffer[buffer_mensura++] = ' ';
+                buffer[buffer_mensura++] = ' ';
+                buffer[buffer_mensura++] = ' ';
+                si (display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM &&
+                    display_chorda->mensura < CCLVI - buffer_mensura - X)
+                {
+                    memcpy(buffer + buffer_mensura,
+                           display_chorda->datum,
+                           (memoriae_index)display_chorda->mensura);
+                    buffer_mensura += display_chorda->mensura;
+                }
                 buffer[buffer_mensura++] = '/';
                 buffer[buffer_mensura] = '\0';
+
+                textus.datum = (i8*)buffer;
+                textus.mensura = buffer_mensura;
+
+                tabula_pixelorum_pingere_chordam(
+                    tabula,
+                    x_columna * character_latitudo,
+                    (y_currens + I) * character_altitudo,
+                    textus,
+                    color_textus);
             }
-
-            textus.datum = (i8*)buffer;
-            textus.mensura = buffer_mensura;
-
-            tabula_pixelorum_pingere_chordam(
-                tabula,
-                x_columna * character_latitudo + (II * character_latitudo),
-                y_currens * character_altitudo,
-                textus,
-                color_textus);
         }
         alioquin si (item->genus == ITEM_PROPRIETAS)
         {
@@ -898,15 +960,28 @@ _reddere_columnam_entitatis(
     numerus = xar_numerus(entitas->relationes);
     per (i = ZEPHYRUM; i < numerus && numerus_items < CXXVIII; i++)
     {
+        b32 est_contains;
+        hic_manens i8 contains_lit[] = "contains";
+
         rel = (Relatio*)xar_obtinere(entitas->relationes, i);
         si (!rel)
         {
             perge;
         }
 
+        /* Verificare si est "contains" relatio */
+        est_contains = FALSUM;
+        si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+        {
+            si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+            {
+                est_contains = VERUM;
+            }
+        }
+
         item = &items_temp[numerus_items];
         item->genus = ITEM_RELATIO;
-        item->altitudo = I;
+        item->altitudo = est_contains ? I : II;  /* 2 lineae pro non-contains */
         item->datum = rel;
         numerus_items++;
     }
@@ -1110,10 +1185,38 @@ _reddere_columnam_entitatis(
                 }
                 buffer[buffer_mensura++] = '/';
                 buffer[buffer_mensura] = '\0';
+
+                textus.datum = (i8*)buffer;
+                textus.mensura = buffer_mensura;
+
+                tabula_pixelorum_pingere_chordam(
+                    tabula,
+                    x_columna * character_latitudo + (II * character_latitudo),
+                    y_currens * character_altitudo,
+                    textus,
+                    color_textus);
             }
             alioquin
             {
-                /* Format: "genus/" */
+                /* Non-contains: 2 lineae */
+                Entitas* dest_ent;
+                chorda* display_chorda;
+                i32 color_genus;
+
+                /* Linea 1: genus (sine "/") - in medium gold */
+                si (est_selectus)
+                {
+                    color_genus = color_textus;
+                }
+                alioquin si (dimmed)
+                {
+                    color_genus = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+                }
+                alioquin
+                {
+                    color_genus = color_ad_pixelum(color_ex_palette(PALETTE_MEDIUM_GOLD));
+                }
+
                 buffer_mensura = ZEPHYRUM;
                 si (rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM &&
                     rel->genus->mensura < CCLVI - buffer_mensura - X)
@@ -1123,20 +1226,53 @@ _reddere_columnam_entitatis(
                            (memoriae_index)rel->genus->mensura);
                     buffer_mensura += rel->genus->mensura;
                 }
-
-                buffer[buffer_mensura++] = '/';
                 buffer[buffer_mensura] = '\0';
+
+                textus.datum = (i8*)buffer;
+                textus.mensura = buffer_mensura;
+
+                tabula_pixelorum_pingere_chordam(
+                    tabula,
+                    x_columna * character_latitudo + (II * character_latitudo),
+                    y_currens * character_altitudo,
+                    textus,
+                    color_genus);
+
+                /* Linea 2: "    titulus/" (indentatus cum 4 spatia) */
+                si (selectio_repositorium)
+                {
+                    dest_ent = selectio_repositorium->capere_entitatem(
+                        selectio_repositorium->datum, rel->destinatio_id);
+
+                    display_chorda = entitas_titulum_capere(dest_ent);
+
+                    buffer_mensura = ZEPHYRUM;
+                    buffer[buffer_mensura++] = ' ';
+                    buffer[buffer_mensura++] = ' ';
+                    buffer[buffer_mensura++] = ' ';
+                    buffer[buffer_mensura++] = ' ';
+                    si (display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM &&
+                        display_chorda->mensura < CCLVI - buffer_mensura - X)
+                    {
+                        memcpy(buffer + buffer_mensura,
+                               display_chorda->datum,
+                               (memoriae_index)display_chorda->mensura);
+                        buffer_mensura += display_chorda->mensura;
+                    }
+                    buffer[buffer_mensura++] = '/';
+                    buffer[buffer_mensura] = '\0';
+
+                    textus.datum = (i8*)buffer;
+                    textus.mensura = buffer_mensura;
+
+                    tabula_pixelorum_pingere_chordam(
+                        tabula,
+                        x_columna * character_latitudo,
+                        (y_currens + I) * character_altitudo,
+                        textus,
+                        color_textus);
+                }
             }
-
-            textus.datum = (i8*)buffer;
-            textus.mensura = buffer_mensura;
-
-            tabula_pixelorum_pingere_chordam(
-                tabula,
-                x_columna * character_latitudo + (II * character_latitudo),
-                y_currens * character_altitudo,
-                textus,
-                color_textus);
         }
         alioquin si (item->genus == ITEM_PROPRIETAS)
         {
