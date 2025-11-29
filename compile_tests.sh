@@ -63,6 +63,7 @@ declare -a SOURCE_FILES=(
     "lib/cursus.c"
     "lib/tempestivum.c"
     "lib/servitium.c"
+    "lib/sputnik_lexema.c"
 )
 
 # Objective-C source (compiled separately)
