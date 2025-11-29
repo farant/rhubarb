@@ -332,6 +332,62 @@ tabula_est_tab_continuatio(
 
 
 /* ==================================================
+ * Command Output Region Operations
+ * ================================================== */
+
+/* Legere N characteres ab positione
+ * Legit characteres in buffer exitus, null-terminat
+ *
+ * tabula: tabula
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna initii (0 ad latitudo-1)
+ * exitus: buffer pro characteres (debet habere spatium pro longitudo+1)
+ * longitudo: numerus characterum legendorum
+ */
+vacuum
+tabula_legere_ad_positionem(
+    constans TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna,
+    character* exitus,
+    i32 longitudo);
+
+/* Scribere characteres ad positionem (sine trudere, sine cursor)
+ * Simpliciter superpingit cellulas existentes
+ *
+ * tabula: tabula
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna initii (0 ad latitudo-1)
+ * textus: textus scribendus (null-terminated)
+ *
+ * Reddit: numerus characterum scriptorum
+ */
+i32
+tabula_scribere_ad_positionem(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna,
+    constans character* textus);
+
+/* Inserere spatium ad positionem, trudens contentum dextram
+ * Creat N cellulas vacuas ad positionem
+ *
+ * tabula: tabula
+ * linea: linea (0 ad altitudo-1)
+ * columna: columna initii (0 ad latitudo-1)
+ * longitudo: numerus cellularum inserendarum
+ *
+ * Reddit: VERUM si successus, FALSUM si overflow non tractabilis
+ */
+b32
+tabula_inserere_spatium(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna,
+    i32 longitudo);
+
+
+/* ==================================================
  * Test Helpers
  * ================================================== */
 

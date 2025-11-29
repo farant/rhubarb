@@ -703,6 +703,119 @@ tabula_est_tab_continuatio(
 
 
 /* ==================================================
+ * Command Output Region Operations
+ * ================================================== */
+
+vacuum
+tabula_legere_ad_positionem(
+    constans TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna,
+    character* exitus,
+    i32 longitudo)
+{
+    i32 i;
+    i32 col;
+
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
+    {
+        exitus[ZEPHYRUM] = '\0';
+        redde;
+    }
+
+    per (i = ZEPHYRUM; i < longitudo; i++)
+    {
+        col = columna + i;
+
+        si (col >= tabula->latitudo)
+        {
+            exitus[i] = '\0';
+            redde;
+        }
+
+        exitus[i] = tabula_cellula(tabula, linea, col);
+    }
+
+    exitus[longitudo] = '\0';
+}
+
+i32
+tabula_scribere_ad_positionem(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna,
+    constans character* textus)
+{
+    i32 i;
+    i32 col;
+
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
+    {
+        redde ZEPHYRUM;
+    }
+
+    per (i = ZEPHYRUM; textus[i] != '\0'; i++)
+    {
+        col = columna + i;
+
+        si (col >= tabula->latitudo)
+        {
+            redde i;
+        }
+
+        tabula_cellula(tabula, linea, col) = textus[i];
+    }
+
+    redde i;
+}
+
+b32
+tabula_inserere_spatium(
+    TabulaCharacterum* tabula,
+    i32 linea,
+    i32 columna,
+    i32 longitudo)
+{
+    i32 i;
+    character overflow;
+
+    si (linea < ZEPHYRUM || linea >= tabula->altitudo)
+    {
+        redde FALSUM;
+    }
+
+    si (columna < ZEPHYRUM || columna >= tabula->latitudo)
+    {
+        redde FALSUM;
+    }
+
+    /* Trudere dextram longitudo vicibus */
+    per (i = ZEPHYRUM; i < longitudo; i++)
+    {
+        overflow = tabula_trudere_dextram(tabula, linea, columna);
+
+        /* Tractare overflow si necessarium */
+        si (overflow != '\0' && !tabula_est_cellula_vacua(overflow))
+        {
+            si (linea < tabula->altitudo - I)
+            {
+                si (!tabula_tractare_overflow(tabula, linea, overflow))
+                {
+                    redde FALSUM;  /* Pagina plena */
+                }
+            }
+            alioquin
+            {
+                redde FALSUM;  /* Ultima linea - non potest tractare overflow */
+            }
+        }
+    }
+
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Test Helpers
  * ================================================== */
 

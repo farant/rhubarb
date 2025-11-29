@@ -10,6 +10,7 @@
 #include "registrum_commandi.h"
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
@@ -97,28 +98,46 @@ constans character* LAYOUT_STML =
  * Commands
  * ================================================== */
 
-/* $date command - insert current date */
+/* $date command - insert/update current date in output region */
 interior b32
 command_date(
     ContextusCommandi* ctx)
 {
-    character resultado[XXXII];
+    character expectatum[XIII];  /* " MM/DD/YYYY\0" = 12 chars */
+    character contentum[XIII];
+    i32 longitudo;
     time_t tempus_nunc;
     structura tm* tempus_info;
 
-    /* Get current time */
+    /* Generare datum expectatum */
     tempus_nunc = time(NIHIL);
     tempus_info = localtime(&tempus_nunc);
-
-    /* Format: MM/DD/YYYY */
-    sprintf(resultado, " %02d/%02d/%04d",
+    sprintf(expectatum, " %02d/%02d/%04d",
             tempus_info->tm_mon + I,
             tempus_info->tm_mday,
             tempus_info->tm_year + MCMX);  /* 1900 */
 
-    /* Insert result after tag */
-    pagina_ponere_cursor(ctx->pagina, ctx->linea, ctx->columna);
-    pagina_inserere_textum(ctx->pagina, resultado);
+    longitudo = XI;  /* " MM/DD/YYYY" = 11 characters */
+
+    /* Legere contentum currentem ad positionem */
+    tabula_legere_ad_positionem(&ctx->pagina->tabula,
+        ctx->linea, ctx->columna, contentum, longitudo);
+
+    /* Si iam correctum, nihil facere */
+    si (memcmp(contentum, expectatum, (size_t)longitudo) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+
+    /* Aliter: inserere spatium et scribere */
+    si (!tabula_inserere_spatium(&ctx->pagina->tabula,
+        ctx->linea, ctx->columna, longitudo))
+    {
+        redde FALSUM;  /* Pagina plena */
+    }
+
+    tabula_scribere_ad_positionem(&ctx->pagina->tabula,
+        ctx->linea, ctx->columna, expectatum);
 
     redde VERUM;
 }
