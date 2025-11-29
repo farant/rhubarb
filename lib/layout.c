@@ -467,6 +467,8 @@ _layout_processare_schema_proprietatis(
     }
     alioquin
     {
+        Entitas* genus_ent;
+
         /* Creare novam ProprietasDefinitio */
         prop_def = repositorium->entitas_creare(repositorium->datum, "ProprietasDefinitio");
         si (!prop_def)
@@ -481,6 +483,27 @@ _layout_processare_schema_proprietatis(
 
         /* Addere "est" relatio ad TypusSemanticus */
         repositorium->relatio_addere(repositorium->datum, prop_def, "est", typus_sem->id);
+
+        /* Scaffoldare Genus::{entitas_genus} et addere relatio "habet_typum" */
+        genus_ent = repositorium->entitas_scaffoldare(
+            repositorium->datum,
+            "Genus",
+            chorda_ut_cstr(*entitas_genus, dom->piscina));
+
+        si (genus_ent)
+        {
+            /* Ponere name si nondum */
+            si (!entitas_proprietas_capere(genus_ent,
+                chorda_internare_ex_literis(dom->intern, "name")))
+            {
+                repositorium->proprietas_ponere(repositorium->datum, genus_ent,
+                    "name", chorda_ut_cstr(*entitas_genus, dom->piscina));
+            }
+
+            /* Addere relatio Genus --[habet_typum]--> ProprietasDefinitio */
+            repositorium->relatio_addere(repositorium->datum, genus_ent,
+                "habet_typum", prop_def->id);
+        }
     }
 
     redde VERUM;
