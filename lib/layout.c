@@ -326,6 +326,167 @@ _layout_processare_navigator(
     redde VERUM;
 }
 
+/* ==================================================
+ * Schema Creation from typus/literalis Attributes
+ * ================================================== */
+
+/* Creare vel verificare schema pro proprietas
+ *
+ * Processus:
+ * 1. Scaffoldare TypusSemanticus::typus cum typus_literalis
+ * 2. Invenire vel creare ProprietasDefinitio pro (entitas_genus, clavis)
+ * 3. Verificare non conflictus
+ * 4. Linkare via "est" relatio
+ *
+ * Redde: VERUM si successus, FALSUM si conflictus (error entity creata)
+ */
+interior b32
+_layout_processare_schema_proprietatis(
+    LayoutDom*           dom,
+    EntitasRepositorium* repositorium,
+    chorda*              entitas_genus,
+    chorda*              clavis,
+    chorda*              typus,
+    chorda*              literalis)
+{
+    Entitas*  typus_sem;
+    Entitas*  prop_def;
+    chorda*   literalis_existens;
+    chorda*   literalis_default;
+    chorda*   est_genus;
+    chorda*   clavis_intern;
+    chorda*   typus_literalis_clavis;
+    Relatio*  rel;
+    Entitas*  typus_sem_existens;
+    i32       i;
+    i32       num_rel;
+
+    /* Literalis default est "chorda" */
+    literalis_default = chorda_internare_ex_literis(dom->intern, "chorda");
+    si (!literalis)
+    {
+        literalis = literalis_default;
+    }
+
+    /* Scaffoldare TypusSemanticus::typus */
+    typus_sem = repositorium->entitas_scaffoldare(
+        repositorium->datum,
+        "TypusSemanticus",
+        chorda_ut_cstr(*typus, dom->piscina));
+
+    si (!typus_sem)
+    {
+        redde FALSUM;
+    }
+
+    /* Verificare/ponere typus_literalis */
+    typus_literalis_clavis = chorda_internare_ex_literis(dom->intern, "typus_literalis");
+    literalis_existens = entitas_proprietas_capere(typus_sem, typus_literalis_clavis);
+
+    si (literalis_existens)
+    {
+        /* Verificare non conflictus */
+        si (literalis_existens != literalis &&
+            !chorda_aequalis(*literalis_existens, *literalis))
+        {
+            /* Conflictus! Creare error entity */
+            Entitas* error;
+
+            error = repositorium->entitas_creare(repositorium->datum, "SchemaConflictus");
+            si (error)
+            {
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "genus_conflictus", "TypusSemanticus");
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "typus_semanticus", chorda_ut_cstr(*typus, dom->piscina));
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "literalis_existens", chorda_ut_cstr(*literalis_existens, dom->piscina));
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "literalis_novus", chorda_ut_cstr(*literalis, dom->piscina));
+            }
+            redde FALSUM;
+        }
+    }
+    alioquin
+    {
+        /* Ponere typus_literalis et name */
+        repositorium->proprietas_ponere(repositorium->datum, typus_sem,
+            "typus_literalis", chorda_ut_cstr(*literalis, dom->piscina));
+        repositorium->proprietas_ponere(repositorium->datum, typus_sem,
+            "name", chorda_ut_cstr(*typus, dom->piscina));
+    }
+
+    /* Invenire ProprietasDefinitio existens */
+    clavis_intern = chorda_internare_ex_literis(dom->intern,
+        chorda_ut_cstr(*clavis, dom->piscina));
+    prop_def = entitas_repositorium_proprietas_definitio_invenire(
+        repositorium,
+        entitas_genus,
+        clavis_intern);
+
+    si (prop_def)
+    {
+        /* Verificare "est" relatio punctat ad idem TypusSemanticus */
+        est_genus = chorda_internare_ex_literis(dom->intern, "est");
+        typus_sem_existens = NIHIL;
+
+        num_rel = xar_numerus(prop_def->relationes);
+        per (i = ZEPHYRUM; i < num_rel; i++)
+        {
+            rel = (Relatio*)xar_obtinere(prop_def->relationes, i);
+            si (rel && rel->genus == est_genus)
+            {
+                typus_sem_existens = repositorium->capere_entitatem(
+                    repositorium->datum, rel->destinatio_id);
+                frange;
+            }
+        }
+
+        si (typus_sem_existens && typus_sem_existens != typus_sem)
+        {
+            /* Conflictus! ProprietasDefinitio iam habet alium typum */
+            Entitas* error;
+
+            error = repositorium->entitas_creare(repositorium->datum, "SchemaConflictus");
+            si (error)
+            {
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "genus_conflictus", "ProprietasDefinitio");
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->piscina));
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "proprietas_nomen", chorda_ut_cstr(*clavis, dom->piscina));
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "typus_existens", chorda_ut_cstr(
+                        *entitas_titulum_capere(typus_sem_existens), dom->piscina));
+                repositorium->proprietas_ponere(repositorium->datum, error,
+                    "typus_novus", chorda_ut_cstr(*typus, dom->piscina));
+            }
+            redde FALSUM;
+        }
+    }
+    alioquin
+    {
+        /* Creare novam ProprietasDefinitio */
+        prop_def = repositorium->entitas_creare(repositorium->datum, "ProprietasDefinitio");
+        si (!prop_def)
+        {
+            redde FALSUM;
+        }
+
+        repositorium->proprietas_ponere(repositorium->datum, prop_def,
+            "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->piscina));
+        repositorium->proprietas_ponere(repositorium->datum, prop_def,
+            "proprietas_nomen", chorda_ut_cstr(*clavis, dom->piscina));
+
+        /* Addere "est" relatio ad TypusSemanticus */
+        repositorium->relatio_addere(repositorium->datum, prop_def, "est", typus_sem->id);
+    }
+
+    redde VERUM;
+}
+
+
 /* Resolvere referentia "Genus::slug" ad Entitas */
 interior Entitas*
 _layout_resolvere_referentia(
@@ -412,9 +573,44 @@ _layout_processare_entitas(
 
         si (chorda_aequalis_literis(*liberum->titulus, "proprietas"))
         {
-            /* <proprietas clavis='name' valor='value'/> */
+            /* <proprietas clavis='name' valor='value' typus='SemanticType' literalis='s32'/> */
             chorda* clavis = stml_attributum_capere(liberum, "clavis");
             chorda* valor = stml_attributum_capere(liberum, "valor");
+            chorda* typus = stml_attributum_capere(liberum, "typus");
+            chorda* literalis = stml_attributum_capere(liberum, "literalis");
+
+            /* Verificare: literalis requirit typus */
+            si (literalis && !typus)
+            {
+                /* Error: literalis sine typus */
+                Entitas* error;
+
+                error = repositorium->entitas_creare(repositorium->datum, "SchemaConflictus");
+                si (error)
+                {
+                    repositorium->proprietas_ponere(repositorium->datum, error,
+                        "genus_conflictus", "LiteralisSineTypus");
+                    repositorium->proprietas_ponere(repositorium->datum, error,
+                        "entitas_genus", chorda_ut_cstr(*genus_attr, dom->piscina));
+                    repositorium->proprietas_ponere(repositorium->datum, error,
+                        "proprietas_nomen", chorda_ut_cstr(*clavis, dom->piscina));
+                    repositorium->proprietas_ponere(repositorium->datum, error,
+                        "literalis", chorda_ut_cstr(*literalis, dom->piscina));
+                }
+            }
+            alioquin si (typus)
+            {
+                /* Processare schema */
+                _layout_processare_schema_proprietatis(
+                    dom,
+                    repositorium,
+                    genus_attr,
+                    clavis,
+                    typus,
+                    literalis);
+            }
+
+            /* Ponere valorem proprietatis */
             si (clavis && valor)
             {
                 repositorium->proprietas_ponere(
