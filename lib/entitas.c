@@ -1,6 +1,368 @@
 #include "entitas.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>  /* strtod, strtol */
+#include <errno.h>   /* ERANGE */
+#include <limits.h>  /* INT_MIN, INT_MAX */
+
+
+/* ==================================================
+ * Parsing Helpers (Interior)
+ * ================================================== */
+
+/* Parsare chorda ad s32
+ * Redde: VERUM si successus, FALSUM si error
+ */
+interior b32
+_parsare_s32(
+    chorda  valor,
+    s32*    resultus)
+{
+    character buffer[64];
+    character* endptr;
+    longus     val;
+    i32        len;
+
+    si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
+    {
+        redde FALSUM;
+    }
+
+    /* Copiare ad null-terminated buffer */
+    len = valor.mensura;
+    si (len > 63)
+    {
+        len = 63;
+    }
+    memcpy(buffer, valor.datum, (memoriae_index)len);
+    buffer[len] = '\0';
+
+    /* Parsare */
+    errno = 0;
+    val = strtol(buffer, &endptr, 10);
+
+    /* Verificare errores */
+    si (errno == ERANGE || val < INT_MIN || val > INT_MAX)
+    {
+        redde FALSUM;  /* Overflow */
+    }
+
+    si (endptr == buffer || *endptr != '\0')
+    {
+        redde FALSUM;  /* Non numerus validus */
+    }
+
+    *resultus = (s32)val;
+    redde VERUM;
+}
+
+/* Parsare chorda ad s64 (manual parser pro C89 compatibility) */
+interior b32
+_parsare_s64(
+    chorda  valor,
+    s64*    resultus)
+{
+    s64 val;
+    s64 sign;
+    i32 i;
+    i32 start;
+
+    si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
+    {
+        redde FALSUM;
+    }
+
+    val  = 0;
+    sign = 1;
+    i    = 0;
+
+    /* Saltare whitespace */
+    dum (i < valor.mensura &&
+         (valor.datum[i] == ' ' || valor.datum[i] == '\t'))
+    {
+        i++;
+    }
+
+    /* Verificare signum */
+    si (i < valor.mensura && valor.datum[i] == '-')
+    {
+        sign = -1;
+        i++;
+    }
+    alioquin si (i < valor.mensura && valor.datum[i] == '+')
+    {
+        i++;
+    }
+
+    /* Verificare si aliquid ad parsare */
+    start = i;
+    si (i >= valor.mensura)
+    {
+        redde FALSUM;
+    }
+
+    /* Parsare digitos */
+    dum (i < valor.mensura)
+    {
+        character c;
+        c = (character)valor.datum[i];
+
+        si (c >= '0' && c <= '9')
+        {
+            /* Verificare overflow ante multiplicare */
+            si (val > 922337203685477580LL ||
+                (val == 922337203685477580LL && (c - '0') > 7))
+            {
+                redde FALSUM;  /* Overflow */
+            }
+            val = val * 10 + (s64)(c - '0');
+            i++;
+        }
+        alioquin
+        {
+            frange;  /* Non digitus */
+        }
+    }
+
+    /* Verificare si aliquid parsatum */
+    si (i == start)
+    {
+        redde FALSUM;  /* Nullus digitus */
+    }
+
+    /* Verificare si trailing garbage */
+    si (i < valor.mensura)
+    {
+        redde FALSUM;  /* Characters post numerum */
+    }
+
+    *resultus = val * sign;
+    redde VERUM;
+}
+
+/* Parsare chorda ad f64 */
+interior b32
+_parsare_f64(
+    chorda  valor,
+    f64*    resultus)
+{
+    character  buffer[128];
+    character* endptr;
+    f64        val;
+    i32        len;
+
+    si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
+    {
+        redde FALSUM;
+    }
+
+    /* Copiare ad null-terminated buffer */
+    len = valor.mensura;
+    si (len > 127)
+    {
+        len = 127;
+    }
+    memcpy(buffer, valor.datum, (memoriae_index)len);
+    buffer[len] = '\0';
+
+    /* Parsare */
+    errno = 0;
+    val = strtod(buffer, &endptr);
+
+    /* Verificare errores */
+    si (errno == ERANGE)
+    {
+        redde FALSUM;  /* Overflow/underflow */
+    }
+
+    si (endptr == buffer || *endptr != '\0')
+    {
+        redde FALSUM;  /* Non numerus validus */
+    }
+
+    *resultus = val;
+    redde VERUM;
+}
+
+/* Parsare chorda ad b32
+ * Accepta: "true", "false", "1", "0", "verum", "falsum"
+ */
+interior b32
+_parsare_b32(
+    chorda  valor,
+    b32*    resultus)
+{
+    si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
+    {
+        redde FALSUM;
+    }
+
+    /* Verificare "true" / "verum" / "1" */
+    si (chorda_aequalis_literis(valor, "true") ||
+        chorda_aequalis_literis(valor, "verum") ||
+        chorda_aequalis_literis(valor, "1"))
+    {
+        *resultus = VERUM;
+        redde VERUM;
+    }
+
+    /* Verificare "false" / "falsum" / "0" */
+    si (chorda_aequalis_literis(valor, "false") ||
+        chorda_aequalis_literis(valor, "falsum") ||
+        chorda_aequalis_literis(valor, "0"))
+    {
+        *resultus = FALSUM;
+        redde VERUM;
+    }
+
+    redde FALSUM;  /* Valor non cognitus */
+}
+
+/* Parsare chorda ad tempus (s64 milliseconds)
+ * Accepta: raw millisecond string, vel ISO 8601 (futuro)
+ */
+interior b32
+_parsare_tempus(
+    chorda  valor,
+    s64*    resultus)
+{
+    /* Pro nunc, solum acceptare raw millisecond strings */
+    redde _parsare_s64(valor, resultus);
+}
+
+/* Convertere chorda typus literalis ad enum
+ * Accepta: "chorda", "s32", "s64", "f64", "b32", "tempus"
+ * Redde: TypusLiteralis enum valor, vel TYPUS_NIHIL si non cognitus
+ */
+TypusLiteralis
+typus_literalis_ex_chorda(
+    chorda typus)
+{
+    si (!typus.datum || typus.mensura == ZEPHYRUM)
+    {
+        redde TYPUS_NIHIL;
+    }
+
+    si (chorda_aequalis_literis(typus, "chorda"))
+    {
+        redde TYPUS_CHORDA;
+    }
+    si (chorda_aequalis_literis(typus, "s32"))
+    {
+        redde TYPUS_S32;
+    }
+    si (chorda_aequalis_literis(typus, "s64"))
+    {
+        redde TYPUS_S64;
+    }
+    si (chorda_aequalis_literis(typus, "f64"))
+    {
+        redde TYPUS_F64;
+    }
+    si (chorda_aequalis_literis(typus, "b32"))
+    {
+        redde TYPUS_B32;
+    }
+    si (chorda_aequalis_literis(typus, "tempus"))
+    {
+        redde TYPUS_TEMPUS;
+    }
+
+    redde TYPUS_NIHIL;  /* Typus non cognitus */
+}
+
+/* Parsare proprietatem secundum typum specificatum
+ * Caches result in prop->parsitus si successus
+ */
+b32
+proprietas_parsare_ut_typum(
+    Proprietas*    prop,
+    TypusLiteralis typus)
+{
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    commutatio (typus)
+    {
+        casus TYPUS_NIHIL:
+        casus TYPUS_CHORDA:
+            /* Chorda semper valida */
+            prop->typus_literalis  = TYPUS_CHORDA;
+            prop->parsitus_validus = VERUM;
+            redde VERUM;
+
+        casus TYPUS_S32:
+        {
+            s32 val;
+            si (_parsare_s32(*prop->valor, &val))
+            {
+                prop->parsitus.ut_s32  = val;
+                prop->typus_literalis  = TYPUS_S32;
+                prop->parsitus_validus = VERUM;
+                redde VERUM;
+            }
+            redde FALSUM;
+        }
+
+        casus TYPUS_S64:
+        {
+            s64 val;
+            si (_parsare_s64(*prop->valor, &val))
+            {
+                prop->parsitus.ut_s64  = val;
+                prop->typus_literalis  = TYPUS_S64;
+                prop->parsitus_validus = VERUM;
+                redde VERUM;
+            }
+            redde FALSUM;
+        }
+
+        casus TYPUS_F64:
+        {
+            f64 val;
+            si (_parsare_f64(*prop->valor, &val))
+            {
+                prop->parsitus.ut_f64  = val;
+                prop->typus_literalis  = TYPUS_F64;
+                prop->parsitus_validus = VERUM;
+                redde VERUM;
+            }
+            redde FALSUM;
+        }
+
+        casus TYPUS_B32:
+        {
+            b32 val;
+            si (_parsare_b32(*prop->valor, &val))
+            {
+                prop->parsitus.ut_b32  = val;
+                prop->typus_literalis  = TYPUS_B32;
+                prop->parsitus_validus = VERUM;
+                redde VERUM;
+            }
+            redde FALSUM;
+        }
+
+        casus TYPUS_TEMPUS:
+        {
+            s64 val;
+            si (_parsare_tempus(*prop->valor, &val))
+            {
+                prop->parsitus.ut_tempus = val;
+                prop->typus_literalis    = TYPUS_TEMPUS;
+                prop->parsitus_validus   = VERUM;
+                redde VERUM;
+            }
+            redde FALSUM;
+        }
+
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 
 /* ==================================================
  * Creatio
@@ -49,6 +411,9 @@ entitas_creare(
         redde NIHIL;
     }
 
+    /* Proprietas definitiones cache - NIHIL initiale, populabitur later */
+    entitas->proprietas_definitiones = NIHIL;
+
     redde entitas;
 }
 
@@ -58,7 +423,7 @@ entitas_creare(
  * ================================================== */
 
 b32
-entitas_proprietas_addere(
+entitas_proprietas_ponere(
     Entitas* entitas,
     chorda*  clavis,
     chorda*  valor)
@@ -81,6 +446,9 @@ entitas_proprietas_addere(
         {
             /* Renovare valorem existentem */
             prop->valor = valor;
+            /* Reset parsing state - will be re-parsed if needed */
+            prop->typus_literalis  = TYPUS_NIHIL;
+            prop->parsitus_validus = FALSUM;
             redde VERUM;
         }
     }
@@ -92,8 +460,11 @@ entitas_proprietas_addere(
         redde FALSUM;
     }
 
-    prop->clavis = clavis;
-    prop->valor  = valor;
+    prop->clavis           = clavis;
+    prop->valor            = valor;
+    prop->typus_semanticus = NIHIL;
+    prop->typus_literalis  = TYPUS_NIHIL;
+    prop->parsitus_validus = FALSUM;
 
     redde VERUM;
 }
@@ -123,6 +494,228 @@ entitas_proprietas_capere(
     }
 
     redde NIHIL;  /* Non inventum */
+}
+
+Proprietas*
+entitas_proprietas_capere_plena(
+    Entitas* entitas,
+    chorda*  clavis)
+{
+    Proprietas* prop;
+    i32         i;
+    i32         numerus;
+
+    si (!entitas || !clavis)
+    {
+        redde NIHIL;
+    }
+
+    numerus = xar_numerus(entitas->proprietates);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+        si (prop && prop->clavis == clavis)  /* Aequalitas indicis */
+        {
+            redde prop;
+        }
+    }
+
+    redde NIHIL;  /* Non inventum */
+}
+
+b32
+entitas_proprietas_capere_s32(
+    Entitas* entitas,
+    chorda*  clavis,
+    s32*     valor)
+{
+    Proprietas* prop;
+
+    si (!entitas || !clavis || !valor)
+    {
+        redde FALSUM;
+    }
+
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Si iam parsitum ut s32, redde cached valor */
+    si (prop->parsitus_validus && prop->typus_literalis == TYPUS_S32)
+    {
+        *valor = prop->parsitus.ut_s32;
+        redde VERUM;
+    }
+
+    /* Tentare parsare on-demand */
+    si (_parsare_s32(*prop->valor, valor))
+    {
+        /* Cache resultatum */
+        prop->parsitus.ut_s32  = *valor;
+        prop->typus_literalis  = TYPUS_S32;
+        prop->parsitus_validus = VERUM;
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+b32
+entitas_proprietas_capere_s64(
+    Entitas* entitas,
+    chorda*  clavis,
+    s64*     valor)
+{
+    Proprietas* prop;
+
+    si (!entitas || !clavis || !valor)
+    {
+        redde FALSUM;
+    }
+
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Si iam parsitum ut s64, redde cached valor */
+    si (prop->parsitus_validus && prop->typus_literalis == TYPUS_S64)
+    {
+        *valor = prop->parsitus.ut_s64;
+        redde VERUM;
+    }
+
+    /* Tentare parsare on-demand */
+    si (_parsare_s64(*prop->valor, valor))
+    {
+        /* Cache resultatum */
+        prop->parsitus.ut_s64  = *valor;
+        prop->typus_literalis  = TYPUS_S64;
+        prop->parsitus_validus = VERUM;
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+b32
+entitas_proprietas_capere_f64(
+    Entitas* entitas,
+    chorda*  clavis,
+    f64*     valor)
+{
+    Proprietas* prop;
+
+    si (!entitas || !clavis || !valor)
+    {
+        redde FALSUM;
+    }
+
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Si iam parsitum ut f64, redde cached valor */
+    si (prop->parsitus_validus && prop->typus_literalis == TYPUS_F64)
+    {
+        *valor = prop->parsitus.ut_f64;
+        redde VERUM;
+    }
+
+    /* Tentare parsare on-demand */
+    si (_parsare_f64(*prop->valor, valor))
+    {
+        /* Cache resultatum */
+        prop->parsitus.ut_f64  = *valor;
+        prop->typus_literalis  = TYPUS_F64;
+        prop->parsitus_validus = VERUM;
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+b32
+entitas_proprietas_capere_b32(
+    Entitas* entitas,
+    chorda*  clavis,
+    b32*     valor)
+{
+    Proprietas* prop;
+
+    si (!entitas || !clavis || !valor)
+    {
+        redde FALSUM;
+    }
+
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Si iam parsitum ut b32, redde cached valor */
+    si (prop->parsitus_validus && prop->typus_literalis == TYPUS_B32)
+    {
+        *valor = prop->parsitus.ut_b32;
+        redde VERUM;
+    }
+
+    /* Tentare parsare on-demand */
+    si (_parsare_b32(*prop->valor, valor))
+    {
+        /* Cache resultatum */
+        prop->parsitus.ut_b32  = *valor;
+        prop->typus_literalis  = TYPUS_B32;
+        prop->parsitus_validus = VERUM;
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+b32
+entitas_proprietas_capere_tempus(
+    Entitas* entitas,
+    chorda*  clavis,
+    s64*     valor)
+{
+    Proprietas* prop;
+
+    si (!entitas || !clavis || !valor)
+    {
+        redde FALSUM;
+    }
+
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Si iam parsitum ut tempus, redde cached valor */
+    si (prop->parsitus_validus && prop->typus_literalis == TYPUS_TEMPUS)
+    {
+        *valor = prop->parsitus.ut_tempus;
+        redde VERUM;
+    }
+
+    /* Tentare parsare on-demand */
+    si (_parsare_tempus(*prop->valor, valor))
+    {
+        /* Cache resultatum */
+        prop->parsitus.ut_tempus = *valor;
+        prop->typus_literalis    = TYPUS_TEMPUS;
+        prop->parsitus_validus   = VERUM;
+        redde VERUM;
+    }
+
+    redde FALSUM;
 }
 
 b32

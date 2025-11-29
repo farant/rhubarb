@@ -830,6 +830,126 @@ probare_lectio_eventorum(Piscina* piscina)
 }
 
 /* ==================================================
+ * Probare Validation (Schema-Aware)
+ * ================================================== */
+
+interior vacuum
+probare_validation(Piscina* piscina)
+{
+    Persistentia*        pers;
+    EntitasRepositorium* repo;
+    Entitas*             prop_def;
+    Entitas*             item;
+    Entitas*             found_def;
+    Proprietas*          prop;
+    chorda*              genus_item;
+    chorda*              nomen_price;
+    s32                  valor_s32;
+    b32                  validum;
+
+    imprimere("\n=== Probare Validation ===\n");
+
+    /* Creare repo */
+    pers = persistentia_memoria_creare(piscina);
+    CREDO_NON_NIHIL(pers);
+    repo = entitas_repositorium_creare(piscina, pers);
+    CREDO_NON_NIHIL(repo);
+
+    /* === Creare ProprietasDefinitio === */
+    imprimere("  creare ProprietasDefinitio...\n");
+    prop_def = repo->entitas_creare(repo->datum, "ProprietasDefinitio");
+    CREDO_NON_NIHIL(prop_def);
+
+    /* Definire: Item.price debet esse s32 cum typus_semanticus "Currency::USD" */
+    repo->proprietas_ponere(repo->datum, prop_def, "entitas_genus", "Item");
+    repo->proprietas_ponere(repo->datum, prop_def, "proprietas_nomen", "price");
+    repo->proprietas_ponere(repo->datum, prop_def, "typus_literalis", "s32");
+    repo->proprietas_ponere(repo->datum, prop_def, "typus_semanticus", "Currency::USD");
+
+    /* === Probare invenire ProprietasDefinitio === */
+    imprimere("  invenire ProprietasDefinitio...\n");
+    genus_item = chorda_internare_ex_literis(internamentum_globale(), "Item");
+    nomen_price = chorda_internare_ex_literis(internamentum_globale(), "price");
+
+    found_def = entitas_repositorium_proprietas_definitio_invenire(
+        repo, genus_item, nomen_price);
+    CREDO_NON_NIHIL(found_def);
+    CREDO_AEQUALIS_PTR(found_def, prop_def);
+
+    /* === Creare Item cum proprietate valida === */
+    imprimere("  validare proprietas valida...\n");
+    item = repo->entitas_creare(repo->datum, "Item");
+    CREDO_NON_NIHIL(item);
+    repo->proprietas_ponere(repo->datum, item, "price", "9999");
+
+    /* Validare - debet succedere */
+    validum = entitas_repositorium_proprietas_validare(repo, item, nomen_price);
+    CREDO_VERUM(validum);
+
+    /* Verificare typus_semanticus set */
+    prop = entitas_proprietas_capere_plena(item, nomen_price);
+    CREDO_NON_NIHIL(prop);
+    CREDO_NON_NIHIL(prop->typus_semanticus);
+    CREDO_VERUM(chorda_aequalis_literis(*prop->typus_semanticus, "Currency::USD"));
+
+    /* Verificare parsing cache */
+    CREDO_VERUM(prop->parsitus_validus);
+    CREDO_AEQUALIS_I32((i32)prop->typus_literalis, TYPUS_S32);
+    CREDO_AEQUALIS_S32(prop->parsitus.ut_s32, 9999);
+
+    /* Verificare typed accessor */
+    CREDO_VERUM(entitas_proprietas_capere_s32(item, nomen_price, &valor_s32));
+    CREDO_AEQUALIS_S32(valor_s32, 9999);
+
+    /* === Creare Item cum proprietate invalida === */
+    imprimere("  validare proprietas invalida...\n");
+    item = repo->entitas_creare(repo->datum, "Item");
+    CREDO_NON_NIHIL(item);
+    repo->proprietas_ponere(repo->datum, item, "price", "not-a-number");
+
+    /* Validare - debet fallere */
+    validum = entitas_repositorium_proprietas_validare(repo, item, nomen_price);
+    CREDO_FALSUM(validum);
+
+    /* === Probare validare sine schema === */
+    imprimere("  validare sine schema...\n");
+    {
+        chorda* nomen_desc;
+
+        nomen_desc = chorda_internare_ex_literis(internamentum_globale(), "description");
+        repo->proprietas_ponere(repo->datum, item, "description", "Some text");
+
+        /* Nulla ProprietasDefinitio pro "description" - debet succedere (no schema = no validation) */
+        validum = entitas_repositorium_proprietas_validare(repo, item, nomen_desc);
+        CREDO_VERUM(validum);
+    }
+
+    /* === Probare entitas_repositorium_validare (omnes proprietates) === */
+    imprimere("  validare omnes proprietates...\n");
+    {
+        Entitas* good_item;
+        Entitas* bad_item;
+
+        /* Item cum omnibus proprietatibus validis */
+        good_item = repo->entitas_creare(repo->datum, "Item");
+        repo->proprietas_ponere(repo->datum, good_item, "price", "100");
+        repo->proprietas_ponere(repo->datum, good_item, "name", "Good Item");
+
+        validum = entitas_repositorium_validare(repo, good_item);
+        CREDO_VERUM(validum);
+
+        /* Item cum proprietate invalida */
+        bad_item = repo->entitas_creare(repo->datum, "Item");
+        repo->proprietas_ponere(repo->datum, bad_item, "price", "invalid");
+
+        validum = entitas_repositorium_validare(repo, bad_item);
+        CREDO_FALSUM(validum);
+    }
+
+    imprimere("  Validation verificata!\n");
+}
+
+/* ==================================================
  * Principale
  * ================================================== */
 
@@ -867,6 +987,9 @@ s32 principale(vacuum)
 
     /* === Probare Lectio Eventorum === */
     probare_lectio_eventorum(piscina);
+
+    /* === Probare Validation === */
+    probare_validation(piscina);
 
     /* Cleanup file */
     unlink(VIA_PROBATIO);

@@ -258,4 +258,41 @@ entitas_repositorium_creare(
     Piscina*      piscina,
     Persistentia* persistentia);
 
+
+/* ==================================================
+ * Validation Functions (Schema-Aware)
+ * ================================================== */
+
+/* Invenire ProprietasDefinitio pro entitate genus + proprietas nomen
+ * Quaerit entities cum genus="ProprietasDefinitio"
+ *
+ * Redde: Entitas* (ProprietasDefinitio) si inventum, NIHIL si non
+ */
+Entitas*
+entitas_repositorium_proprietas_definitio_invenire(
+    EntitasRepositorium* repo,
+    chorda*              entitas_genus,
+    chorda*              proprietas_nomen);
+
+/* Validare proprietatem singulam contra schema
+ * Si PropertyDefinition existit et parsing fallat, creat ValidationError
+ * Si nullum PropertyDefinition, redde VERUM (no schema = no validation)
+ *
+ * Redde: VERUM si validum vel nullum schema, FALSUM si invalidum
+ */
+b32
+entitas_repositorium_proprietas_validare(
+    EntitasRepositorium* repo,
+    Entitas*             entitas,
+    chorda*              clavis);
+
+/* Validare omnes proprietates entitatis contra schema
+ *
+ * Redde: VERUM si omnes validae, FALSUM si aliqua invalida
+ */
+b32
+entitas_repositorium_validare(
+    EntitasRepositorium* repo,
+    Entitas*             entitas);
+
 #endif /* ENTITAS_REPOSITORIUM_H */

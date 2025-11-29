@@ -76,11 +76,11 @@ s32 principale(vacuum)
         /* Addere proprietates */
         clavis_nomen = chorda_internare_ex_literis(intern, "name");
         valor_nomen  = chorda_internare_ex_literis(intern, "test.txt");
-        CREDO_VERUM(entitas_proprietas_addere(entitas, clavis_nomen, valor_nomen));
+        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis_nomen, valor_nomen));
 
         clavis_color = chorda_internare_ex_literis(intern, "color");
         valor_color  = chorda_internare_ex_literis(intern, "blue");
-        CREDO_VERUM(entitas_proprietas_addere(entitas, clavis_color, valor_color));
+        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis_color, valor_color));
 
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), II);
 
@@ -126,14 +126,14 @@ s32 principale(vacuum)
         valor2 = chorda_internare_ex_literis(intern, "2.0");
 
         /* Addere proprietatem */
-        CREDO_VERUM(entitas_proprietas_addere(entitas, clavis, valor1));
+        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis, valor1));
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), I);
 
         resultus = entitas_proprietas_capere(entitas, clavis);
         CREDO_AEQUALIS_PTR(resultus, valor1);
 
         /* Renovare proprietatem */
-        CREDO_VERUM(entitas_proprietas_addere(entitas, clavis, valor2));
+        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis, valor2));
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), I);  /* Adhuc I */
 
         resultus = entitas_proprietas_capere(entitas, clavis);
@@ -393,12 +393,12 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "demo-entity"),
             chorda_internare_ex_literis(intern, "demo"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "name"),
             chorda_internare_ex_literis(intern, "Demo Entity"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "version"),
             chorda_internare_ex_literis(intern, "1.0"));
@@ -449,7 +449,7 @@ s32 principale(vacuum)
             sprintf(buffer, "value-%d", i);
             valor = chorda_internare_ex_literis(intern, buffer);
 
-            CREDO_VERUM(entitas_proprietas_addere(entitas, clavis, valor));
+            CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis, valor));
         }
 
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), X);
@@ -503,9 +503,9 @@ s32 principale(vacuum)
         clavis3 = chorda_internare_ex_literis(intern, "third");
 
         /* Addere tres proprietates */
-        entitas_proprietas_addere(entitas, clavis1, chorda_internare_ex_literis(intern, "1"));
-        entitas_proprietas_addere(entitas, clavis2, chorda_internare_ex_literis(intern, "2"));
-        entitas_proprietas_addere(entitas, clavis3, chorda_internare_ex_literis(intern, "3"));
+        entitas_proprietas_ponere(entitas, clavis1, chorda_internare_ex_literis(intern, "1"));
+        entitas_proprietas_ponere(entitas, clavis2, chorda_internare_ex_literis(intern, "2"));
+        entitas_proprietas_ponere(entitas, clavis3, chorda_internare_ex_literis(intern, "3"));
 
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), III);
 
@@ -673,7 +673,7 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "titulum-test-1"),
             chorda_internare_ex_literis(intern, "test"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "name"),
             chorda_internare_ex_literis(intern, "My Entity Name"));
@@ -688,7 +688,7 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "titulum-test-2"),
             chorda_internare_ex_literis(intern, "test"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "title"),
             chorda_internare_ex_literis(intern, "My Entity Title"));
@@ -703,12 +703,12 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "titulum-test-3"),
             chorda_internare_ex_literis(intern, "test"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "title"),
             chorda_internare_ex_literis(intern, "Title Value"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "name"),
             chorda_internare_ex_literis(intern, "Name Value"));
@@ -723,7 +723,7 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "titulum-test-4"),
             chorda_internare_ex_literis(intern, "test"));
 
-        entitas_proprietas_addere(
+        entitas_proprietas_ponere(
             entitas,
             chorda_internare_ex_literis(intern, "other"),
             chorda_internare_ex_literis(intern, "Some Value"));
@@ -735,6 +735,214 @@ s32 principale(vacuum)
         /* Casus 5: Entitas NIHIL */
         titulum = entitas_titulum_capere(NIHIL);
         CREDO_NIHIL(titulum);
+    }
+
+    /* ==================================================
+     * Probare proprietates typificatae (typed accessors)
+     * ================================================== */
+
+    {
+        Entitas*    entitas;
+        Proprietas* prop;
+        s32         val_s32;
+        s64         val_s64;
+        f64         val_f64;
+        b32         val_b32;
+
+        imprimere("\n--- Probans proprietates typificatae ---\n");
+
+        entitas = entitas_creare(
+            piscina,
+            chorda_internare_ex_literis(intern, "typed-props"),
+            chorda_internare_ex_literis(intern, "test"));
+
+        /* Probare s32 */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "count"),
+            chorda_internare_ex_literis(intern, "42"));
+
+        CREDO_VERUM(entitas_proprietas_capere_s32(
+            entitas,
+            chorda_internare_ex_literis(intern, "count"),
+            &val_s32));
+        CREDO_AEQUALIS_S32(val_s32, 42);
+
+        /* Verificare caching */
+        prop = entitas_proprietas_capere_plena(
+            entitas,
+            chorda_internare_ex_literis(intern, "count"));
+        CREDO_NON_NIHIL(prop);
+        CREDO_VERUM(prop->parsitus_validus);
+        CREDO_AEQUALIS_I32((i32)prop->typus_literalis, (i32)TYPUS_S32);
+
+        /* Probare s32 negativum */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "offset"),
+            chorda_internare_ex_literis(intern, "-123"));
+
+        CREDO_VERUM(entitas_proprietas_capere_s32(
+            entitas,
+            chorda_internare_ex_literis(intern, "offset"),
+            &val_s32));
+        CREDO_AEQUALIS_S32(val_s32, -123);
+
+        /* Probare s32 invalidum */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "bad_num"),
+            chorda_internare_ex_literis(intern, "not-a-number"));
+
+        CREDO_FALSUM(entitas_proprietas_capere_s32(
+            entitas,
+            chorda_internare_ex_literis(intern, "bad_num"),
+            &val_s32));
+
+        /* Probare s64 */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "big_number"),
+            chorda_internare_ex_literis(intern, "9223372036854775807"));
+
+        CREDO_VERUM(entitas_proprietas_capere_s64(
+            entitas,
+            chorda_internare_ex_literis(intern, "big_number"),
+            &val_s64));
+        CREDO_AEQUALIS_S64(val_s64, 9223372036854775807LL);
+
+        /* Probare s64 negativum */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "neg_big"),
+            chorda_internare_ex_literis(intern, "-1000000000000"));
+
+        CREDO_VERUM(entitas_proprietas_capere_s64(
+            entitas,
+            chorda_internare_ex_literis(intern, "neg_big"),
+            &val_s64));
+        CREDO_AEQUALIS_S64(val_s64, -1000000000000LL);
+
+        /* Probare f64 */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "price"),
+            chorda_internare_ex_literis(intern, "19.99"));
+
+        CREDO_VERUM(entitas_proprietas_capere_f64(
+            entitas,
+            chorda_internare_ex_literis(intern, "price"),
+            &val_f64));
+        /* Comparare cum epsilon */
+        CREDO_VERUM(val_f64 > 19.98 && val_f64 < 20.0);
+
+        /* Probare f64 cum exponente */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "scientific"),
+            chorda_internare_ex_literis(intern, "1.5e10"));
+
+        CREDO_VERUM(entitas_proprietas_capere_f64(
+            entitas,
+            chorda_internare_ex_literis(intern, "scientific"),
+            &val_f64));
+        CREDO_VERUM(val_f64 > 1.4e10 && val_f64 < 1.6e10);
+
+        /* Probare b32 - "true" */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "active"),
+            chorda_internare_ex_literis(intern, "true"));
+
+        CREDO_VERUM(entitas_proprietas_capere_b32(
+            entitas,
+            chorda_internare_ex_literis(intern, "active"),
+            &val_b32));
+        CREDO_VERUM(val_b32);
+
+        /* Probare b32 - "false" */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "disabled"),
+            chorda_internare_ex_literis(intern, "false"));
+
+        CREDO_VERUM(entitas_proprietas_capere_b32(
+            entitas,
+            chorda_internare_ex_literis(intern, "disabled"),
+            &val_b32));
+        CREDO_FALSUM(val_b32);
+
+        /* Probare b32 - "verum" */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "validus"),
+            chorda_internare_ex_literis(intern, "verum"));
+
+        CREDO_VERUM(entitas_proprietas_capere_b32(
+            entitas,
+            chorda_internare_ex_literis(intern, "validus"),
+            &val_b32));
+        CREDO_VERUM(val_b32);
+
+        /* Probare b32 - "0" */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "flag"),
+            chorda_internare_ex_literis(intern, "0"));
+
+        CREDO_VERUM(entitas_proprietas_capere_b32(
+            entitas,
+            chorda_internare_ex_literis(intern, "flag"),
+            &val_b32));
+        CREDO_FALSUM(val_b32);
+
+        /* Probare b32 invalidum */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "bad_bool"),
+            chorda_internare_ex_literis(intern, "maybe"));
+
+        CREDO_FALSUM(entitas_proprietas_capere_b32(
+            entitas,
+            chorda_internare_ex_literis(intern, "bad_bool"),
+            &val_b32));
+
+        /* Probare tempus (milliseconds) */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "timestamp"),
+            chorda_internare_ex_literis(intern, "1701388800000"));
+
+        CREDO_VERUM(entitas_proprietas_capere_tempus(
+            entitas,
+            chorda_internare_ex_literis(intern, "timestamp"),
+            &val_s64));
+        CREDO_AEQUALIS_S64(val_s64, 1701388800000LL);
+
+        /* Probare proprietas non existens */
+        CREDO_FALSUM(entitas_proprietas_capere_s32(
+            entitas,
+            chorda_internare_ex_literis(intern, "nonexistent"),
+            &val_s32));
+
+        /* Probare renovatio proprietatis resets cache */
+        entitas_proprietas_ponere(
+            entitas,
+            chorda_internare_ex_literis(intern, "count"),
+            chorda_internare_ex_literis(intern, "100"));
+
+        prop = entitas_proprietas_capere_plena(
+            entitas,
+            chorda_internare_ex_literis(intern, "count"));
+        CREDO_NON_NIHIL(prop);
+        CREDO_FALSUM(prop->parsitus_validus);  /* Reset post renovatio */
+
+        /* Re-parse debet laborare */
+        CREDO_VERUM(entitas_proprietas_capere_s32(
+            entitas,
+            chorda_internare_ex_literis(intern, "count"),
+            &val_s32));
+        CREDO_AEQUALIS_S32(val_s32, 100);
     }
 
     /* ==================================================

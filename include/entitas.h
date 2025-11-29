@@ -9,16 +9,61 @@
 #include "internamentum.h"
 
 /* ==================================================
+ * Typus Literalis (Literal/Parsed Types)
+ * ================================================== */
+
+/* Typus literalis pro proprietatibus
+ * Discriminator pro unione valoris parsiti
+ */
+nomen enumeratio {
+    TYPUS_NIHIL   = 0,   /* Non definitus / generic chorda */
+    TYPUS_CHORDA  = I,   /* Chorda (default) */
+    TYPUS_S32     = II,  /* Signed 32-bit integer */
+    TYPUS_S64     = III, /* Signed 64-bit integer */
+    TYPUS_F64     = IV,  /* 64-bit floating point */
+    TYPUS_B32     = V,   /* Boolean */
+    TYPUS_TEMPUS  = VI   /* Timestamp (s64 milliseconds since epoch) */
+} TypusLiteralis;
+
+/* Convertere chorda typus literalis ad enum
+ * Accepta: "chorda", "s32", "s64", "f64", "b32", "tempus"
+ * Redde: TypusLiteralis enum valor, vel TYPUS_NIHIL si non cognitus
+ */
+TypusLiteralis
+typus_literalis_ex_chorda(
+    chorda typus);
+
+
+/* ==================================================
  * Structurae
  * ================================================== */
 
-/* Proprietas - Par clavis-valoris
- * "Property: key-value pair"
+/* Proprietas - Par clavis-valoris cum typo
+ * "Property: key-value pair with type information"
  */
 nomen structura {
-    chorda* clavis;  /* Clavis (internata) */
-    chorda* valor;   /* Valor (internatus) */
+    chorda*        clavis;            /* Clavis (internata) */
+    chorda*        valor;             /* Valor originalis (chorda, internata) */
+    chorda*        typus_semanticus;  /* e.g., "Currency::USD", NIHIL si generic */
+    TypusLiteralis typus_literalis;   /* Discriminator pro unione */
+    b32            parsitus_validus;  /* VERUM si parsing successit */
+    unio {
+        s32 ut_s32;
+        s64 ut_s64;
+        f64 ut_f64;
+        b32 ut_b32;
+        s64 ut_tempus;  /* milliseconds since epoch */
+    } parsitus;
 } Proprietas;
+
+/* Parsare proprietatem secundum typum specificatum
+ * Caches result in prop->parsitus si successus
+ * Redde: VERUM si parsing successit, FALSUM si error
+ */
+b32
+proprietas_parsare_ut_typum(
+    Proprietas*    prop,
+    TypusLiteralis typus);
 
 /* Relatio - Arcus directus ad aliam entitatem
  * "Relationship: directed edge to another entity"
@@ -35,11 +80,12 @@ nomen structura {
  * "Entity with properties, relationships, tags"
  */
 nomen structura {
-    chorda* id;             /* ID unicum (internatum) */
-    chorda* genus;          /* Nomen generis (internatum) */
-    Xar*    proprietates;   /* Xar de Proprietas */
-    Xar*    relationes;     /* Xar de Relatio */
-    Xar*    notae;          /* Xar de chorda* (notae internatas) */
+    chorda* id;                        /* ID unicum (internatum) */
+    chorda* genus;                     /* Nomen generis (internatum) */
+    Xar*    proprietates;              /* Xar de Proprietas */
+    Xar*    relationes;                /* Xar de Relatio */
+    Xar*    notae;                     /* Xar de chorda* (notae internatas) */
+    Xar*    proprietas_definitiones;   /* Cache: Xar de Entitas* (ProprietasDefinitio) */
 } Entitas;
 
 
@@ -63,18 +109,18 @@ entitas_creare(
  * Proprietates
  * ================================================== */
 
-/* Addere proprietatem (clavis-valor par)
- * Si clavis iam existit, valor renovatur
+/* Ponere proprietatem (clavis-valor par)
+ * Si clavis iam existit, valor renovatur (upsert)
  *
  * Redde: VERUM si successus, FALSUM si fractura
  */
 b32
-entitas_proprietas_addere(
+entitas_proprietas_ponere(
     Entitas* entitas,
     chorda*  clavis,
     chorda*  valor);
 
-/* Capere valorem proprietatis per clavis
+/* Capere valorem proprietatis per clavis (chorda)
  * Quaestio linearis per omnes proprietates
  *
  * Redde: Valor si inventum, NIHIL si non inventum
@@ -83,6 +129,46 @@ chorda*
 entitas_proprietas_capere(
     Entitas* entitas,
     chorda*  clavis);
+
+/* Capere proprietatem plenam (pro inspectione typi)
+ *
+ * Redde: Proprietas* si inventum, NIHIL si non inventum
+ */
+Proprietas*
+entitas_proprietas_capere_plena(
+    Entitas* entitas,
+    chorda*  clavis);
+
+/* Typed accessors - redde VERUM si successus et valor est typi correcti */
+b32
+entitas_proprietas_capere_s32(
+    Entitas* entitas,
+    chorda*  clavis,
+    s32*     valor);
+
+b32
+entitas_proprietas_capere_s64(
+    Entitas* entitas,
+    chorda*  clavis,
+    s64*     valor);
+
+b32
+entitas_proprietas_capere_f64(
+    Entitas* entitas,
+    chorda*  clavis,
+    f64*     valor);
+
+b32
+entitas_proprietas_capere_b32(
+    Entitas* entitas,
+    chorda*  clavis,
+    b32*     valor);
+
+b32
+entitas_proprietas_capere_tempus(
+    Entitas* entitas,
+    chorda*  clavis,
+    s64*     valor);
 
 /* Verificare si entitas proprietatem habet
  *

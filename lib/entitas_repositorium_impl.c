@@ -46,6 +46,12 @@ _impl_relatio_addere(
     constans character* genus,
     chorda*             destinatio_id);
 
+interior Entitas*
+_impl_proprietas_definitio_invenire(
+    vacuum*  datum,
+    chorda*  entitas_genus,
+    chorda*  proprietas_nomen);
+
 
 /* ==================================================
  * Read Functions
@@ -216,6 +222,73 @@ _impl_quaerere_cum_praefixo_notae(
     }
 
     redde resultus;
+}
+
+/* Invenire ProprietasDefinitio pro entitate genus + proprietas nomen
+ * Quaerit entities cum genus="ProprietasDefinitio"
+ * ubi proprietas "entitas_genus" == target genus
+ * et proprietas "proprietas_nomen" == target clavis
+ *
+ * Redde: Entitas* (ProprietasDefinitio) si inventum, NIHIL si non
+ */
+interior Entitas*
+_impl_proprietas_definitio_invenire(
+    vacuum*  datum,
+    chorda*  entitas_genus,
+    chorda*  proprietas_nomen)
+{
+    RepositoriumData* data;
+    TabulaIterator    iter;
+    chorda            clavis_iter;
+    vacuum*           valor;
+    Entitas*          entitas;
+    chorda*           prop_entitas_genus;
+    chorda*           prop_proprietas_nomen;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !entitas_genus || !proprietas_nomen)
+    {
+        redde NIHIL;
+    }
+
+    iter = tabula_dispersa_iterator_initium(data->entitates);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis_iter, &valor))
+    {
+        entitas = (Entitas*)valor;
+
+        /* Verificare genus == "ProprietasDefinitio" */
+        si (!entitas->genus ||
+            !chorda_aequalis_literis(*entitas->genus, "ProprietasDefinitio"))
+        {
+            perge;
+        }
+
+        /* Capere proprietas "entitas_genus" */
+        prop_entitas_genus = entitas_proprietas_capere(
+            entitas,
+            chorda_internare_ex_literis(data->intern, "entitas_genus"));
+
+        si (!prop_entitas_genus || prop_entitas_genus != entitas_genus)
+        {
+            perge;  /* Non aequalis (pointer comparison pro interned) */
+        }
+
+        /* Capere proprietas "proprietas_nomen" */
+        prop_proprietas_nomen = entitas_proprietas_capere(
+            entitas,
+            chorda_internare_ex_literis(data->intern, "proprietas_nomen"));
+
+        si (!prop_proprietas_nomen || prop_proprietas_nomen != proprietas_nomen)
+        {
+            perge;  /* Non aequalis */
+        }
+
+        /* Inventum! */
+        redde entitas;
+    }
+
+    redde NIHIL;  /* Non inventum */
 }
 
 interior b32
@@ -900,7 +973,7 @@ _impl_proprietas_ponere(
     }
 
     /* Update in memoria */
-    redde entitas_proprietas_addere(entitas, clavis_internata, valor_internatus);
+    redde entitas_proprietas_ponere(entitas, clavis_internata, valor_internatus);
 }
 
 interior b32
@@ -1207,7 +1280,7 @@ _applicare_eventum(
                 redde FALSUM;
             }
 
-            redde entitas_proprietas_addere(entitas, clavis_internata, valor_internatus);
+            redde entitas_proprietas_ponere(entitas, clavis_internata, valor_internatus);
         }
 
         casus EVENTUS_DELERE_PROPRIETAS:
@@ -1768,4 +1841,140 @@ entitas_repositorium_creare(
     repo->legere_eventus_typi = _impl_legere_eventus_typi;
 
     redde repo;
+}
+
+
+/* ==================================================
+ * Validation Functions (Schema-Aware)
+ * ================================================== */
+
+Entitas*
+entitas_repositorium_proprietas_definitio_invenire(
+    EntitasRepositorium* repo,
+    chorda*              entitas_genus,
+    chorda*              proprietas_nomen)
+{
+    si (!repo || !entitas_genus || !proprietas_nomen)
+    {
+        redde NIHIL;
+    }
+
+    redde _impl_proprietas_definitio_invenire(
+        repo->datum,
+        entitas_genus,
+        proprietas_nomen);
+}
+
+b32
+entitas_repositorium_proprietas_validare(
+    EntitasRepositorium* repo,
+    Entitas*             entitas,
+    chorda*              clavis)
+{
+    RepositoriumData* data;
+    Entitas*          definitio;
+    Proprietas*       prop;
+    chorda*           typus_literalis_str;
+    chorda*           typus_semanticus;
+    TypusLiteralis    typus_expected;
+    b32               parse_success;
+
+    si (!repo || !entitas || !clavis)
+    {
+        redde FALSUM;
+    }
+
+    data = (RepositoriumData*)repo->datum;
+
+    /* Invenire PropertyDefinition pro hac proprietate */
+    definitio = _impl_proprietas_definitio_invenire(
+        repo->datum,
+        entitas->genus,
+        clavis);
+
+    /* Si nullum schema, nullum validationem - semper validum */
+    si (!definitio)
+    {
+        redde VERUM;
+    }
+
+    /* Capere proprietatem ab entitate */
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop)
+    {
+        /* Proprietas non existit - validum (non required) */
+        redde VERUM;
+    }
+
+    /* Capere expected type ex definitione */
+    typus_literalis_str = entitas_proprietas_capere(
+        definitio,
+        chorda_internare_ex_literis(data->intern, "typus_literalis"));
+
+    si (!typus_literalis_str)
+    {
+        /* Nullum typus definitus - validum */
+        redde VERUM;
+    }
+
+    typus_expected = typus_literalis_ex_chorda(*typus_literalis_str);
+    si (typus_expected == TYPUS_NIHIL || typus_expected == TYPUS_CHORDA)
+    {
+        /* Generic string type - semper validum */
+        redde VERUM;
+    }
+
+    /* Capere semantic type si existit */
+    typus_semanticus = entitas_proprietas_capere(
+        definitio,
+        chorda_internare_ex_literis(data->intern, "typus_semanticus"));
+
+    /* Tentare parsing secundum expected type */
+    parse_success = proprietas_parsare_ut_typum(prop, typus_expected);
+
+    /* Set semantic type si available */
+    si (parse_success && typus_semanticus)
+    {
+        prop->typus_semanticus = typus_semanticus;
+    }
+
+    /* TODO: Si parse_success == FALSUM, creare ValidationError entity */
+
+    redde parse_success;
+}
+
+b32
+entitas_repositorium_validare(
+    EntitasRepositorium* repo,
+    Entitas*             entitas)
+{
+    Proprietas* prop;
+    i32         i;
+    i32         numerus;
+    b32         omnia_valida;
+
+    si (!repo || !entitas)
+    {
+        redde FALSUM;
+    }
+
+    omnia_valida = VERUM;
+    numerus = xar_numerus(entitas->proprietates);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+        si (!prop || !prop->clavis)
+        {
+            perge;
+        }
+
+        si (!entitas_repositorium_proprietas_validare(repo, entitas, prop->clavis))
+        {
+            omnia_valida = FALSUM;
+            /* Perge validare ceteras - colligere omnes errores */
+        }
+    }
+
+    redde omnia_valida;
 }
