@@ -119,6 +119,15 @@ probans_trudere_dextram(vacuum)
     }
     overflow = tabula_trudere_dextram(&tabula, ZEPHYRUM, ZEPHYRUM);
     CREDO_AEQUALIS_I32((i32)overflow, (i32)'x');
+
+    /* Cum dimensionibus parvis (8x2) - overflow facilius testare */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, II, "abcdefgh");
+    CREDO_AEQUALIS_I32(tabula.latitudo, VIII);
+    overflow = tabula_trudere_dextram(&tabula, ZEPHYRUM, ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)overflow, (i32)'h');  /* Ultimus character excidit */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VII), (i32)'g');
 }
 
 hic_manens vacuum
@@ -132,6 +141,16 @@ probans_inserere_lineam(vacuum)
     successus = tabula_inserere_lineam(&tabula, I);
     CREDO_VERUM(successus);
     tabula_asserere(&tabula, g_piscina, "line0\n\nline1\nline2", "inserere lineam ad 1");
+
+    /* Cum dimensionibus parvis (10x4) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, IV, "aa\nbb\ncc");
+    CREDO_AEQUALIS_I32(tabula.altitudo, IV);
+    successus = tabula_inserere_lineam(&tabula, I);
+    CREDO_VERUM(successus);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)' ');  /* Nova linea vacua */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, III, ZEPHYRUM), (i32)'c');
 }
 
 hic_manens vacuum
@@ -143,6 +162,17 @@ probans_delere_lineam(vacuum)
 
     tabula_delere_lineam(&tabula, I);
     tabula_asserere(&tabula, g_piscina, "line0\nline2", "delere lineam 1");
+
+    /* Idem cum dimensionibus parvis (8x4) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV, "aa\nbb\ncc\ndd");
+    CREDO_AEQUALIS_I32(tabula.altitudo, IV);
+
+    /* Delere lineam 1 (bb) */
+    tabula_delere_lineam(&tabula, I);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'c');  /* cc moved up */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'d');  /* dd moved up */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, III, ZEPHYRUM), (i32)' '); /* ultima linea vacua */
 }
 
 
@@ -162,6 +192,20 @@ probans_inserere_characterem_simplex(vacuum)
 
     tabula_inserere_characterem(&tabula, ZEPHYRUM, I, 'i');
     tabula_asserere(&tabula, g_piscina, "Hi", "inserere i post H");
+
+    /* Idem cum dimensionibus parvis (6x2) */
+    tabula_initiare(&tabula, g_piscina, VI, II);
+    CREDO_AEQUALIS_I32(tabula.latitudo, VI);
+    CREDO_AEQUALIS_I32(tabula.altitudo, II);
+
+    tabula_inserere_characterem(&tabula, ZEPHYRUM, ZEPHYRUM, 'A');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'A');
+
+    tabula_inserere_characterem(&tabula, ZEPHYRUM, I, 'B');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'B');
+
+    tabula_inserere_characterem(&tabula, I, ZEPHYRUM, 'C');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'C');
 }
 
 hic_manens vacuum
@@ -287,6 +331,21 @@ probans_inserere_tab_simplex(vacuum)
 
     /* Verificare: spatia post tab */
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)' ');
+
+    /* Idem cum dimensionibus parvis (6x2) - tab requirit 2 cellulas */
+    tabula_initiare(&tabula, g_piscina, VI, II);
+    CREDO_AEQUALIS_I32(tabula.latitudo, VI);
+
+    successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(successus);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)TAB_CONTINUATIO);
+
+    /* Tab ad columna 2 */
+    successus = tabula_inserere_tab(&tabula, ZEPHYRUM, II);
+    CREDO_VERUM(successus);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)TAB_CONTINUATIO);
 }
 
 hic_manens vacuum
@@ -306,6 +365,19 @@ probans_inserere_tab_ante_contentum(vacuum)
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'h');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)'e');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VI), (i32)'o');
+
+    /* Idem cum dimensionibus parvis (8x2) - tab trudit "ab" */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, II, "ab");
+    CREDO_AEQUALIS_I32(tabula.latitudo, VIII);
+
+    successus = tabula_inserere_tab(&tabula, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(successus);
+
+    /* Verificare: '\t', TAB_CONTINUATIO, 'a', 'b' */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'\t');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)TAB_CONTINUATIO);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)'b');
 }
 
 hic_manens vacuum

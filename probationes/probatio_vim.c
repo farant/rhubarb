@@ -62,6 +62,24 @@ probans_motus_hjkl(vacuum)
     /* k - sursum */
     status = vim_tractare_clavem(status, 'k');
     CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+
+    /* Idem cum dimensionibus parvis (8x4) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV, "ab\ncd\nef");
+    status = vim_initiare(&tabula);
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Navigare in parva tabula */
+    status = vim_tractare_clavem(status, 'l');
+    CREDO_AEQUALIS_I32(status.cursor_columna, I);
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
+    status = vim_tractare_clavem(status, 'h');
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+    status = vim_tractare_clavem(status, 'k');
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
 }
 
 hic_manens vacuum
@@ -86,6 +104,35 @@ probans_motus_limites(vacuum)
     /* k ad primam lineam - non movere */
     status = vim_tractare_clavem(status, 'k');
     CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+
+    /* Idem cum dimensionibus parvis (4x3) - limites strictiores */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, IV, III, "ab\ncd");
+    status = vim_initiare(&tabula);
+    CREDO_AEQUALIS_I32(tabula.latitudo, IV);
+    CREDO_AEQUALIS_I32(tabula.altitudo, III);
+
+    /* h ad initium - non movere */
+    status = vim_tractare_clavem(status, 'h');
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* l ad finem latitudinis */
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'l');
+    CREDO_AEQUALIS_I32(status.cursor_columna, III);  /* latitudo - 1 */
+
+    /* l ultra finem - non movere */
+    status = vim_tractare_clavem(status, 'l');
+    CREDO_AEQUALIS_I32(status.cursor_columna, III);
+
+    /* j ad finem altitudinis */
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);  /* altitudo - 1 */
+
+    /* j ultra finem - non movere */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
 }
 
 hic_manens vacuum
@@ -282,6 +329,20 @@ probans_dd_delere_lineam(vacuum)
     status = vim_tractare_clavem(status, 'd');
 
     tabula_asserere(&tabula, g_piscina, "line1\nline3", "dd delere line2");
+
+    /* Idem cum dimensionibus parvis (8x4) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV, "aa\nbb\ncc");
+    status = vim_initiare(&tabula);
+
+    /* Movere ad linea 1 et delere */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Verificare: linea 0 = "aa", linea 1 = "cc" (bb deleta) */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'c');
 }
 
 hic_manens vacuum
@@ -303,6 +364,22 @@ probans_backspace(vacuum)
     status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
     tabula_asserere(&tabula, g_piscina, "hllo", "backspace delere e");
     CREDO_AEQUALIS_I32(status.cursor_columna, I);
+
+    /* Idem cum dimensionibus parvis (8x3) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, III, "abcd");
+    status = vim_initiare(&tabula);
+
+    /* Movere ad columna 2, insert mode, backspace */
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'l');
+    status = vim_tractare_clavem(status, 'i');
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+    CREDO_AEQUALIS_I32(status.cursor_columna, I);
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'c');  /* 'b' deleta */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'d');
 }
 
 
@@ -327,6 +404,19 @@ probans_o_nova_linea_infra(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     tabula_asserere(&tabula, g_piscina, "line1\n\nline2", "o inserere lineam vacuam");
+
+    /* Idem cum dimensionibus parvis (10x5) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V, "aa\nbb");
+    status = vim_initiare(&tabula);
+
+    status = vim_tractare_clavem(status, 'o');
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Verificare: linea 0 = "aa", linea 1 = vacua, linea 2 = "bb" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'b');
 }
 
 hic_manens vacuum
@@ -349,6 +439,24 @@ probans_O_nova_linea_supra(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     tabula_asserere(&tabula, g_piscina, "line1\n\nline2", "O inserere lineam supra");
+
+    /* Idem cum dimensionibus parvis (10x5) */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V, "aa\nbb\ncc");
+    status = vim_initiare(&tabula);
+
+    /* Movere ad linea 2 et O */
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);
+
+    status = vim_tractare_clavem(status, 'O');
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
+    CREDO_AEQUALIS_I32(status.cursor_linea, II);  /* Nova linea supra cc */
+
+    /* Verificare: aa, bb, vacua, cc */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, III, ZEPHYRUM), (i32)'c');
 }
 
 
