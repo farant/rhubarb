@@ -790,10 +790,18 @@ _impl_entitas_creare(
         redde NIHIL;
     }
 
-    /* Assecurare genus hierarchiam (non pro "Genus" ipso - evitare recursionem) */
+    /* Assecurare genus hierarchiam et addere "est" relationem
+     * (non pro "Genus" ipso - evitare recursionem)
+     */
     si (strcmp(genus, "Genus") != ZEPHYRUM)
     {
-        _assecurare_genus_hierarchiam(data, genus);
+        Entitas* genus_folium;
+        genus_folium = _assecurare_genus_hierarchiam(data, genus);
+        si (genus_folium)
+        {
+            /* Addere "est" relationem: entitas --[est]--> Genus::X */
+            _impl_relatio_addere(data, entitas, "est", genus_folium->id);
+        }
     }
 
     redde entitas;
@@ -812,7 +820,6 @@ _impl_entitas_scaffoldare(
     Entitas*          entitas_existens;
     Entitas*          entitas;
     Entitas*          genus_folium;
-    chorda*           contains_genus;
     Eventum*          e;
 
     data = (RepositoriumData*)datum;
@@ -867,38 +874,12 @@ _impl_entitas_scaffoldare(
         redde NIHIL;
     }
 
-    /* Assecurare genus hierarchiam */
+    /* Assecurare genus hierarchiam et addere "est" relationem */
     genus_folium = _assecurare_genus_hierarchiam(data, genus);
     si (genus_folium)
     {
-        contains_genus = chorda_internare_ex_literis(data->intern, "contains");
-        si (contains_genus)
-        {
-            /* Verificare si relatio iam existit */
-            Relatio* rel;
-            i32      num_rel;
-            i32      j;
-            b32      iam_habet;
-
-            iam_habet = FALSUM;
-            num_rel = xar_numerus(genus_folium->relationes);
-            per (j = ZEPHYRUM; j < num_rel; j++)
-            {
-                rel = (Relatio*)xar_obtinere(genus_folium->relationes, j);
-                si (rel && rel->genus == contains_genus &&
-                    rel->destinatio_id == entitas->id)
-                {
-                    iam_habet = VERUM;
-                    frange;
-                }
-            }
-
-            si (!iam_habet)
-            {
-                _impl_relatio_addere(data, genus_folium, "contains",
-                                     entitas->id);
-            }
-        }
+        /* Addere "est" relationem: entitas --[est]--> Genus::X */
+        _impl_relatio_addere(data, entitas, "est", genus_folium->id);
     }
 
     redde entitas;
@@ -1917,18 +1898,28 @@ entitas_repositorium_proprietas_validare(
         redde VERUM;
     }
 
-    /* Sequi relatio "est" ad TypusSemanticus entitas */
+    /* Sequi relatio "est" ad TypusSemanticus entitas
+     * (non ad Genus - omnes entitates habent "est" ad suum Genus)
+     */
     est_genus = chorda_internare_ex_literis(data->intern, "est");
     typus_semanticus_ent = NIHIL;
 
     numerus_rel = xar_numerus(definitio->relationes);
     per (i = ZEPHYRUM; i < numerus_rel; i++)
     {
+        Entitas* dest_ent;
+
         rel = (Relatio*)xar_obtinere(definitio->relationes, i);
         si (rel && rel->genus == est_genus)
         {
-            typus_semanticus_ent = _impl_capere_entitatem(repo->datum, rel->destinatio_id);
-            frange;
+            dest_ent = _impl_capere_entitatem(repo->datum, rel->destinatio_id);
+            /* Verificare destinatio est TypusSemanticus, non Genus */
+            si (dest_ent && dest_ent->genus &&
+                chorda_aequalis_literis(*dest_ent->genus, "TypusSemanticus"))
+            {
+                typus_semanticus_ent = dest_ent;
+                frange;
+            }
         }
     }
 

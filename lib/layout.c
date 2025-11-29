@@ -426,19 +426,29 @@ _layout_processare_schema_proprietatis(
 
     si (prop_def)
     {
-        /* Verificare "est" relatio punctat ad idem TypusSemanticus */
+        /* Verificare "est" relatio punctat ad idem TypusSemanticus
+         * (non ad Genus - omnes entitates habent "est" ad suum Genus)
+         */
         est_genus = chorda_internare_ex_literis(dom->intern, "est");
         typus_sem_existens = NIHIL;
 
         num_rel = xar_numerus(prop_def->relationes);
         per (i = ZEPHYRUM; i < num_rel; i++)
         {
+            Entitas* dest_ent;
+
             rel = (Relatio*)xar_obtinere(prop_def->relationes, i);
             si (rel && rel->genus == est_genus)
             {
-                typus_sem_existens = repositorium->capere_entitatem(
+                dest_ent = repositorium->capere_entitatem(
                     repositorium->datum, rel->destinatio_id);
-                frange;
+                /* Verificare destinatio est TypusSemanticus, non Genus */
+                si (dest_ent && dest_ent->genus &&
+                    chorda_aequalis_literis(*dest_ent->genus, "TypusSemanticus"))
+                {
+                    typus_sem_existens = dest_ent;
+                    frange;
+                }
             }
         }
 

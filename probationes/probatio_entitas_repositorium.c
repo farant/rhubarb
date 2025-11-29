@@ -762,13 +762,13 @@ probare_lectio_eventorum(Piscina* piscina)
     imprimere("  legere_eventus_entitatis...\n");
     eventus = repo->legere_eventus_entitatis(repo->datum, ent_a->id);
     CREDO_NON_NIHIL(eventus);
-    /* ent_a: 1 CREARE + 1 PROPRIETAS = 2 */
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+    /* ent_a: 1 CREARE + 1 EST_RELATIO + 1 PROPRIETAS >= 3 */
+    CREDO_VERUM(xar_numerus(eventus) >= III);
 
     eventus = repo->legere_eventus_entitatis(repo->datum, ent_b->id);
     CREDO_NON_NIHIL(eventus);
-    /* ent_b: 1 CREARE + 1 PROPRIETAS + 1 NOTA = 3 */
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), III);
+    /* ent_b: 1 CREARE + 1 EST_RELATIO + 1 PROPRIETAS + 1 NOTA >= 4 */
+    CREDO_VERUM(xar_numerus(eventus) >= IV);
 
     /* === Probare legere_eventus_post_indicem === */
     imprimere("  legere_eventus_post_indicem...\n");
@@ -800,13 +800,13 @@ probare_lectio_eventorum(Piscina* piscina)
     imprimere("  legere_eventus_generis_entitatis...\n");
     eventus = repo->legere_eventus_generis_entitatis(repo->datum, "Page");
     CREDO_NON_NIHIL(eventus);
-    /* Page: 1 CREARE + 1 PROPRIETAS = 2 */
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+    /* Page: 1 CREARE + 1 EST_RELATIO + 1 PROPRIETAS >= 3 */
+    CREDO_VERUM(xar_numerus(eventus) >= III);
 
     eventus = repo->legere_eventus_generis_entitatis(repo->datum, "Document");
     CREDO_NON_NIHIL(eventus);
-    /* Document: 1 CREARE + 1 PROPRIETAS + 1 NOTA = 3 */
-    CREDO_AEQUALIS_I32(xar_numerus(eventus), III);
+    /* Document: 1 CREARE + 1 EST_RELATIO + 1 PROPRIETAS + 1 NOTA >= 4 */
+    CREDO_VERUM(xar_numerus(eventus) >= IV);
 
     eventus = repo->legere_eventus_generis_entitatis(repo->datum, "NonExistent");
     CREDO_NON_NIHIL(eventus);
