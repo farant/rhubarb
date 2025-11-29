@@ -25,8 +25,9 @@ nomen enumeratio {
  * "History item for navigation path"
  */
 nomen structura {
-    chorda* entitas_id;        /* ID entitatis parentis */
+    chorda* entitas_id;             /* ID entitatis parentis */
     chorda* entitas_id_destinatio;  /* ID entitatis quo navigavimus */
+    b32     per_backlink;           /* VERUM si navigavimus per backlink */
 } ItemHistoriae;
 
 /* Item ad reddendum in columna media
@@ -83,13 +84,15 @@ navigator_entitatum_creare(
 
 /* Navigare ad entitatem per ID
  * Addit entitatem currens ad viam, cargat novam entitatem
+ * per_backlink: VERUM si navigatio est per backlink (pro historia)
  *
  * Redde: VERUM si successus, FALSUM si entitas non inventa
  */
 b32
 navigator_entitatum_navigare_ad(
     NavigatorEntitatum* nav,
-    chorda*             entitas_id);
+    chorda*             entitas_id,
+    b32                 per_backlink);
 
 /* Retro in via (pop historia)
  * Navigat ad entitatem praecendentem in via
