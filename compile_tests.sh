@@ -58,6 +58,11 @@ declare -a SOURCE_FILES=(
     "lib/tempus.c"
     "lib/layout.c"
     "lib/registrum_commandi.c"
+    "lib/actor.c"
+    "lib/tractator.c"
+    "lib/cursus.c"
+    "lib/tempestivum.c"
+    "lib/servitium.c"
 )
 
 # Objective-C source (compiled separately)

@@ -348,6 +348,19 @@ _impl_quaerere_textum(
             }
         }
 
+        /* Verificare genus */
+        si (!inventum && entitas->genus && entitas->genus->mensura < CCLVI)
+        {
+            memcpy(buffer_valor, entitas->genus->datum,
+                   (memoriae_index)entitas->genus->mensura);
+            buffer_valor[entitas->genus->mensura] = '\0';
+
+            si (_continet_substring(buffer_valor, query))
+            {
+                inventum = VERUM;
+            }
+        }
+
         /* Verificare valores proprietatum */
         si (!inventum)
         {

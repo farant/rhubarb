@@ -42,6 +42,11 @@ declare -a SOURCE_FILES=(
     "lib/color.c"
     "lib/thema.c"
     "lib/nuntium.c"
+    "lib/actor.c"
+    "lib/tractator.c"
+    "lib/cursus.c"
+    "lib/tempestivum.c"
+    "lib/servitium.c"
 )
 
 # Color codes
