@@ -248,6 +248,27 @@ _credo_notare_integrum_i32 (
 }
 
 vacuum
+_credo_notare_integrum_s64 (
+    constans character* genus,
+    constans character* expressio,
+                   s64  valor_primus,
+                   s64  valor_secundus,
+    constans character* filum,
+                   s32  versus)
+{
+    character buffer_primus[64];
+    character buffer_secundus[64];
+          b32 praeteritus;
+
+    snprintf(buffer_primus,   64, "%lld", valor_primus);
+    snprintf(buffer_secundus, 64, "%lld", valor_secundus);
+
+    praeteritus = (valor_primus == valor_secundus);
+
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+vacuum
 _credo_notare_integrum_inaequalitas (
     constans character* genus,
     constans character* expressio,

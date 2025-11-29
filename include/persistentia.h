@@ -25,12 +25,13 @@
  * ================================================== */
 
 /* Header tags (1-9) */
-#define EVENTUM_TAG_ID          I
-#define EVENTUM_TAG_GENUS       II
-#define EVENTUM_TAG_ENTITAS_ID  III
+#define EVENTUM_TAG_ID            I
+#define EVENTUM_TAG_GENUS         II
+#define EVENTUM_TAG_ENTITAS_ID    III
+#define EVENTUM_TAG_ENTITAS_GENUS IV   /* Genus entitatis - in omnibus eventis */
 
 /* Payload tags (10+) - shared across event types */
-#define EVENTUM_TAG_ENTITAS_GENUS  X
+#define EVENTUM_TAG_PAYLOAD_GENUS  X   /* (legacy - pro backwards compat) */
 #define EVENTUM_TAG_CLAVIS         X
 #define EVENTUM_TAG_VALOR          XI
 #define EVENTUM_TAG_RELATIO_ID     X
@@ -82,9 +83,10 @@ nomen structura {
 nomen structura {
     EventusGenus genus;
     chorda*      entitas_id;
+    chorda*      entitas_genus;  /* Genus entitatis - in omnibus eventis */
 
     unio {
-        EventumCreare       creare;
+        EventumCreare       creare;      /* (nunc vacua - genus in top-level) */
         EventumProprietatis proprietas;
         EventumRelationis   relatio;
         EventumNotae        nota;
@@ -194,13 +196,15 @@ eventum_creare_entitas(
 Eventum*
 eventum_delere_entitas(
     Piscina* piscina,
-    chorda*  entitas_id);
+    chorda*  entitas_id,
+    chorda*  entitas_genus);
 
 /* Creare eventum pro ponere proprietas */
 Eventum*
 eventum_ponere_proprietas(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  clavis,
     chorda*  valor);
 
@@ -209,6 +213,7 @@ Eventum*
 eventum_delere_proprietas(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  clavis);
 
 /* Creare eventum pro addere relatio */
@@ -216,6 +221,7 @@ Eventum*
 eventum_addere_relatio(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  relatio_id,
     chorda*  relatio_genus,
     chorda*  destinatio_id);
@@ -225,6 +231,7 @@ Eventum*
 eventum_delere_relatio(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  relatio_id);
 
 /* Creare eventum pro addere nota */
@@ -232,6 +239,7 @@ Eventum*
 eventum_addere_nota(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  nota);
 
 /* Creare eventum pro delere nota */
@@ -239,6 +247,7 @@ Eventum*
 eventum_delere_nota(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  nota);
 
 #endif /* PERSISTENTIA_H */

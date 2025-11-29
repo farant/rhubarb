@@ -709,6 +709,127 @@ probare_continuare_post_replay(Piscina* piscina)
 }
 
 /* ==================================================
+ * Probare Event Log Read Functions
+ * ================================================== */
+
+interior vacuum
+probare_lectio_eventorum(Piscina* piscina)
+{
+    Persistentia*        pers;
+    EntitasRepositorium* repo;
+    Entitas*             ent_a;
+    Entitas*             ent_b;
+    Xar*                 eventus;
+    Eventum*             e;
+    i32                  numerus;
+
+    imprimere("\n=== Probare Lectio Eventorum ===\n");
+
+    /* Creare repo */
+    pers = persistentia_memoria_creare(piscina);
+    CREDO_NON_NIHIL(pers);
+    repo = entitas_repositorium_creare(piscina, pers);
+    CREDO_NON_NIHIL(repo);
+
+    /* Creare aliquot entitates */
+    ent_a = repo->entitas_creare(repo->datum, "Page");
+    CREDO_NON_NIHIL(ent_a);
+    repo->proprietas_ponere(repo->datum, ent_a, "titulus", "Pagina A");
+
+    ent_b = repo->entitas_creare(repo->datum, "Document");
+    CREDO_NON_NIHIL(ent_b);
+    repo->proprietas_ponere(repo->datum, ent_b, "titulus", "Documentum B");
+    repo->nota_addere(repo->datum, ent_b, "#important");
+
+    /* === Probare numerus_eventorum === */
+    imprimere("  numerus_eventorum...\n");
+    numerus = repo->numerus_eventorum(repo->datum);
+    /* 2 CREARE + 2 PROPRIETAS + 1 NOTA = 5 */
+    CREDO_AEQUALIS_I32(numerus, V);
+
+    /* === Probare legere_omnes_eventus === */
+    imprimere("  legere_omnes_eventus...\n");
+    eventus = repo->legere_omnes_eventus(repo->datum);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), V);
+
+    /* Verificare primus eventus est CREARE */
+    e = *(Eventum**)xar_obtinere(eventus, ZEPHYRUM);
+    CREDO_NON_NIHIL(e);
+    CREDO_AEQUALIS_I32((i32)e->genus, EVENTUS_CREARE_ENTITAS);
+
+    /* === Probare legere_eventus_entitatis === */
+    imprimere("  legere_eventus_entitatis...\n");
+    eventus = repo->legere_eventus_entitatis(repo->datum, ent_a->id);
+    CREDO_NON_NIHIL(eventus);
+    /* ent_a: 1 CREARE + 1 PROPRIETAS = 2 */
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+    eventus = repo->legere_eventus_entitatis(repo->datum, ent_b->id);
+    CREDO_NON_NIHIL(eventus);
+    /* ent_b: 1 CREARE + 1 PROPRIETAS + 1 NOTA = 3 */
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), III);
+
+    /* === Probare legere_eventus_post_indicem === */
+    imprimere("  legere_eventus_post_indicem...\n");
+    eventus = repo->legere_eventus_post_indicem(repo->datum, III);
+    CREDO_NON_NIHIL(eventus);
+    /* Events 3, 4 (0-indexed) = 2 events */
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+    eventus = repo->legere_eventus_post_indicem(repo->datum, ZEPHYRUM);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), V);
+
+    /* === Probare legere_eventus_recentes === */
+    imprimere("  legere_eventus_recentes...\n");
+    eventus = repo->legere_eventus_recentes(repo->datum, II);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+    /* Verificare ultimus est NOTA */
+    e = *(Eventum**)xar_obtinere(eventus, I);
+    CREDO_NON_NIHIL(e);
+    CREDO_AEQUALIS_I32((i32)e->genus, EVENTUS_ADDERE_NOTA);
+
+    /* === Probare legere_eventus_generis_entitatis === */
+    imprimere("  legere_eventus_generis_entitatis...\n");
+    eventus = repo->legere_eventus_generis_entitatis(repo->datum, "Page");
+    CREDO_NON_NIHIL(eventus);
+    /* Page: 1 CREARE + 1 PROPRIETAS = 2 */
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+    eventus = repo->legere_eventus_generis_entitatis(repo->datum, "Document");
+    CREDO_NON_NIHIL(eventus);
+    /* Document: 1 CREARE + 1 PROPRIETAS + 1 NOTA = 3 */
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), III);
+
+    eventus = repo->legere_eventus_generis_entitatis(repo->datum, "NonExistent");
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), ZEPHYRUM);
+
+    /* === Probare legere_eventus_typi === */
+    imprimere("  legere_eventus_typi...\n");
+    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_CREARE_ENTITAS);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_PONERE_PROPRIETAS);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
+
+    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_ADDERE_NOTA);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), I);
+
+    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_DELERE_ENTITAS);
+    CREDO_NON_NIHIL(eventus);
+    CREDO_AEQUALIS_I32(xar_numerus(eventus), ZEPHYRUM);
+
+    imprimere("  Lectio eventorum verificata!\n");
+}
+
+/* ==================================================
  * Principale
  * ================================================== */
 
@@ -743,6 +864,9 @@ s32 principale(vacuum)
 
     /* === Probare Continuare Post Replay === */
     probare_continuare_post_replay(piscina);
+
+    /* === Probare Lectio Eventorum === */
+    probare_lectio_eventorum(piscina);
 
     /* Cleanup file */
     unlink(VIA_PROBATIO);

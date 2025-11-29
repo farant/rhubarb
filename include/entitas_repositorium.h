@@ -185,6 +185,57 @@ nomen structura EntitasRepositorium {
 		Entitas*            entitas,
 		constans character* nota);
 
+	/* ==================================================
+	 * Lectio Eventorum (Event Log Read Access)
+	 * ================================================== */
+
+	/* Legere omnes eventus
+	 * Redde: Xar de Eventum*, vel NIHIL si error
+	 */
+	Xar* (*legere_omnes_eventus)(
+		vacuum* datum);
+
+	/* Numerus eventorum in log
+	 * Redde: numerus eventorum
+	 */
+	i32 (*numerus_eventorum)(
+		vacuum* datum);
+
+	/* Legere eventus pro entitate specifica
+	 * Redde: Xar de Eventum*, vel NIHIL si nullae
+	 */
+	Xar* (*legere_eventus_entitatis)(
+		vacuum* datum,
+		chorda* entitas_id);
+
+	/* Legere eventus post indicem (pro sync incrementali)
+	 * Redde: Xar de Eventum*, vel NIHIL si nullae
+	 */
+	Xar* (*legere_eventus_post_indicem)(
+		vacuum* datum,
+		i32     index);
+
+	/* Legere N eventus recentes
+	 * Redde: Xar de Eventum*, vel NIHIL si nullae
+	 */
+	Xar* (*legere_eventus_recentes)(
+		vacuum* datum,
+		i32     numerus);
+
+	/* Legere eventus pro genere entitatis (e.g., "Page", "Document")
+	 * Redde: Xar de Eventum*, vel NIHIL si nullae
+	 */
+	Xar* (*legere_eventus_generis_entitatis)(
+		vacuum*             datum,
+		constans character* genus_entitatis);
+
+	/* Legere eventus per typum eventi (e.g., EVENTUS_CREARE_ENTITAS)
+	 * Redde: Xar de Eventum*, vel NIHIL si nullae
+	 */
+	Xar* (*legere_eventus_typi)(
+		vacuum*      datum,
+		EventusGenus typus);
+
 } EntitasRepositorium;
 
 

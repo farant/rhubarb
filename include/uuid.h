@@ -79,6 +79,20 @@ uuidv5_ex_genere_et_titulo(
 
 
 /* ==================================================
+ * Tempus Extractio
+ * ================================================== */
+
+/* Extrahere tempus ex UUIDv7
+ * UUIDv7 continet Unix timestamp (milliseconds) in primis 48 bits
+ *
+ * Redde: Unix timestamp in milliseconds, vel -1 si non UUIDv7
+ */
+s64
+uuidv7_tempus_extrahere(
+    chorda uuid_chorda);
+
+
+/* ==================================================
  * Conversio
  * ================================================== */
 

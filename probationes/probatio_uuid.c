@@ -4,8 +4,9 @@
 #include "piscina.h"
 #include "credo.h"
 #include <stdio.h>
-#include <string.h>  /* memcmp */
-#include <unistd.h>  /* usleep */
+#include <string.h>   /* memcmp */
+#include <unistd.h>   /* usleep */
+#include <sys/time.h> /* gettimeofday */
 
 s32 principale(vacuum)
 {
@@ -395,6 +396,61 @@ s32 principale(vacuum)
 
         CREDO_FALSUM(uuid_est_v7(uuid_v5));
         CREDO_VERUM(uuid_est_v7(uuid_v7));
+    }
+
+    /* ==================================================
+     * Probare uuidv7_tempus_extrahere
+     * ================================================== */
+
+    {
+        chorda uuid_v7;
+        chorda uuid_v5;
+        s64    tempus_ante;
+        s64    tempus_post;
+        s64    tempus_extractum;
+        structura timeval tv;
+
+        imprimere("\n--- Probans uuidv7_tempus_extrahere ---\n");
+
+        /* Capere tempus ante generationem */
+        gettimeofday(&tv, NIHIL);
+        tempus_ante = ((s64)tv.tv_sec * M) + ((s64)tv.tv_usec / M);
+
+        /* Generare UUIDv7 */
+        uuid_v7 = uuidv7_creare(piscina);
+        CREDO_NON_NIHIL(uuid_v7.datum);
+
+        /* Capere tempus post generationem */
+        gettimeofday(&tv, NIHIL);
+        tempus_post = ((s64)tv.tv_sec * M) + ((s64)tv.tv_usec / M);
+
+        /* Extrahere timestamp */
+        tempus_extractum = uuidv7_tempus_extrahere(uuid_v7);
+
+        imprimere("  UUID: %.*s\n", uuid_v7.mensura, uuid_v7.datum);
+        imprimere("  Tempus ante:      %lld ms\n", tempus_ante);
+        imprimere("  Tempus extractum: %lld ms\n", tempus_extractum);
+        imprimere("  Tempus post:      %lld ms\n", tempus_post);
+
+        /* Tempus extractum debet esse inter ante et post */
+        CREDO_VERUM(tempus_extractum >= tempus_ante);
+        CREDO_VERUM(tempus_extractum <= tempus_post);
+        CREDO_VERUM(tempus_extractum > 0);
+
+        /* Probare quod UUIDv5 reddit -1 */
+        uuid_v5 = uuidv5_ex_genere_et_titulo(piscina, "Test", "timestamp");
+        tempus_extractum = uuidv7_tempus_extrahere(uuid_v5);
+        CREDO_AEQUALIS_S64(tempus_extractum, -I);
+
+        /* Probare cum UUID invalido */
+        {
+            chorda invalida;
+            invalida = chorda_ex_literis("not-a-valid-uuid", piscina);
+            tempus_extractum = uuidv7_tempus_extrahere(invalida);
+            CREDO_AEQUALIS_S64(tempus_extractum, -I);
+        }
+
+        imprimere("  Tempus extractio: VERUM\n");
     }
 
     /* ==================================================

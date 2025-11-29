@@ -259,6 +259,95 @@ uuidv5_ex_genere_et_titulo(
 
 
 /* ==================================================
+ * Tempus Extractio
+ * ================================================== */
+
+s64
+uuidv7_tempus_extrahere(
+    chorda uuid_chorda)
+{
+    i8  bytes[VI];
+    i32 i;
+    i32 char_index;
+    s64 timestamp_ms;
+    character hi;
+    character lo;
+
+    /* Verificare si UUIDv7 */
+    si (!uuid_est_v7(uuid_chorda))
+    {
+        redde -I;
+    }
+
+    /* Extrahere primos 6 bytes (48 bits) - timestamp */
+    /* UUID format: xxxxxxxx-xxxx-7xxx-...
+     * Characters 0-7:   bytes 0-3
+     * Characters 9-12:  bytes 4-5 (post primum dash)
+     */
+    char_index = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        /* Saltare dash post 8 characteres */
+        si (char_index == VIII)
+        {
+            char_index++;
+        }
+
+        hi = (character)uuid_chorda.datum[char_index];
+        lo = (character)uuid_chorda.datum[char_index + I];
+
+        /* Convertere hex ad byte */
+        si (hi >= '0' && hi <= '9')
+        {
+            bytes[i] = (i8)((hi - '0') << IV);
+        }
+        alioquin si (hi >= 'a' && hi <= 'f')
+        {
+            bytes[i] = (i8)((hi - 'a' + X) << IV);
+        }
+        alioquin si (hi >= 'A' && hi <= 'F')
+        {
+            bytes[i] = (i8)((hi - 'A' + X) << IV);
+        }
+        alioquin
+        {
+            redde -I;
+        }
+
+        si (lo >= '0' && lo <= '9')
+        {
+            bytes[i] |= (i8)(lo - '0');
+        }
+        alioquin si (lo >= 'a' && lo <= 'f')
+        {
+            bytes[i] |= (i8)(lo - 'a' + X);
+        }
+        alioquin si (lo >= 'A' && lo <= 'F')
+        {
+            bytes[i] |= (i8)(lo - 'A' + X);
+        }
+        alioquin
+        {
+            redde -I;
+        }
+
+        char_index += II;
+    }
+
+    /* Reconstituere timestamp (big-endian 48 bits) */
+    timestamp_ms = ((s64)(bytes[ZEPHYRUM] & 0xFF) << XL) |
+                   ((s64)(bytes[I] & 0xFF) << XXXII) |
+                   ((s64)(bytes[II] & 0xFF) << XXIV) |
+                   ((s64)(bytes[III] & 0xFF) << XVI) |
+                   ((s64)(bytes[IV] & 0xFF) << VIII) |
+                   ((s64)(bytes[V] & 0xFF));
+
+    redde timestamp_ms;
+}
+
+
+/* ==================================================
  * Conversio
  * ================================================== */
 

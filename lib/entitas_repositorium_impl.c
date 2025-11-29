@@ -840,8 +840,17 @@ _impl_entitas_delere(
         redde FALSUM;
     }
 
-    /* Emit event */
-    e = eventum_delere_entitas(data->piscina, id);
+    /* Obtinere entitas pro genus */
+    {
+        Entitas* entitas_temp;
+        si (!tabula_dispersa_invenire(data->entitates, *id, (vacuum**)&entitas_temp))
+        {
+            redde FALSUM;
+        }
+
+        /* Emit event */
+        e = eventum_delere_entitas(data->piscina, id, entitas_temp->genus);
+    }
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
         redde FALSUM;
@@ -883,7 +892,7 @@ _impl_proprietas_ponere(
     }
 
     /* Emit event */
-    e = eventum_ponere_proprietas(data->piscina, entitas->id,
+    e = eventum_ponere_proprietas(data->piscina, entitas->id, entitas->genus,
                                    clavis_internata, valor_internatus);
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
@@ -918,7 +927,8 @@ _impl_proprietas_delere(
     }
 
     /* Emit event */
-    e = eventum_delere_proprietas(data->piscina, entitas->id, clavis_internata);
+    e = eventum_delere_proprietas(data->piscina, entitas->id, entitas->genus,
+                                   clavis_internata);
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
         redde FALSUM;
@@ -969,7 +979,7 @@ _impl_relatio_addere(
     }
 
     /* Emit event */
-    e = eventum_addere_relatio(data->piscina, entitas->id,
+    e = eventum_addere_relatio(data->piscina, entitas->id, entitas->genus,
                                relatio_id, genus_internatum, destinatio_id);
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
@@ -1006,6 +1016,8 @@ _impl_relatio_delere(
     chorda            clavis;
     vacuum*           valor;
     Entitas*          entitas;
+    Entitas*          entitas_origo;
+    Relatio*          relatio;
     Eventum*          e;
 
     data = (RepositoriumData*)datum;
@@ -1015,14 +1027,21 @@ _impl_relatio_delere(
         redde FALSUM;
     }
 
-    /* Emit event */
-    /* Note: entitas_id is needed for event but we don't have it easily.
-       We'll use an empty chorda as placeholder. */
+    /* Quaerere relatio pro obtinere entitas origo */
+    si (!tabula_dispersa_invenire(data->relationes, *relatio_id, (vacuum**)&relatio))
     {
-        chorda empty = {ZEPHYRUM, NIHIL};
-        chorda* empty_ptr = &empty;
-        e = eventum_delere_relatio(data->piscina, empty_ptr, relatio_id);
+        redde FALSUM;
     }
+
+    /* Quaerere entitas origo */
+    si (!tabula_dispersa_invenire(data->entitates, *relatio->origo_id, (vacuum**)&entitas_origo))
+    {
+        redde FALSUM;
+    }
+
+    /* Emit event */
+    e = eventum_delere_relatio(data->piscina, entitas_origo->id,
+                                entitas_origo->genus, relatio_id);
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
         redde FALSUM;
@@ -1069,7 +1088,7 @@ _impl_nota_addere(
     }
 
     /* Emit event */
-    e = eventum_addere_nota(data->piscina, entitas->id, nota_internata);
+    e = eventum_addere_nota(data->piscina, entitas->id, entitas->genus, nota_internata);
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
         redde FALSUM;
@@ -1103,7 +1122,7 @@ _impl_nota_delere(
     }
 
     /* Emit event */
-    e = eventum_delere_nota(data->piscina, entitas->id, nota_internata);
+    e = eventum_delere_nota(data->piscina, entitas->id, entitas->genus, nota_internata);
     si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
     {
         redde FALSUM;
@@ -1144,8 +1163,12 @@ _applicare_eventum(
         {
             chorda* genus_internatum;
 
-            genus_internatum = chorda_internare(data->intern,
-                                                *eventum->datum.creare.entitas_genus);
+            si (!eventum->entitas_genus)
+            {
+                redde FALSUM;
+            }
+
+            genus_internatum = chorda_internare(data->intern, *eventum->entitas_genus);
             si (!genus_internatum)
             {
                 redde FALSUM;
@@ -1351,6 +1374,308 @@ _replay_eventus(
 
 
 /* ==================================================
+ * Event Log Read Functions
+ * ================================================== */
+
+interior Xar*
+_impl_legere_omnes_eventus(
+    vacuum* datum)
+{
+    RepositoriumData* data;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data)
+    {
+        redde NIHIL;
+    }
+
+    redde data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+}
+
+interior i32
+_impl_numerus_eventorum(
+    vacuum* datum)
+{
+    RepositoriumData* data;
+    Xar*              eventus;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data)
+    {
+        redde ZEPHYRUM;
+    }
+
+    eventus = data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+    si (!eventus)
+    {
+        redde ZEPHYRUM;
+    }
+
+    redde xar_numerus(eventus);
+}
+
+interior Xar*
+_impl_legere_eventus_entitatis(
+    vacuum* datum,
+    chorda* entitas_id)
+{
+    RepositoriumData* data;
+    Xar*              omnes;
+    Xar*              resultus;
+    Eventum*          e;
+    Eventum**         slot;
+    i32               i;
+    i32               numerus;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !entitas_id)
+    {
+        redde NIHIL;
+    }
+
+    omnes = data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+    si (!omnes)
+    {
+        redde NIHIL;
+    }
+
+    resultus = xar_creare(data->piscina, magnitudo(Eventum*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    numerus = xar_numerus(omnes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        e = *(Eventum**)xar_obtinere(omnes, i);
+        si (e && e->entitas_id && chorda_aequalis(*e->entitas_id, *entitas_id))
+        {
+            slot = (Eventum**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = e;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+interior Xar*
+_impl_legere_eventus_post_indicem(
+    vacuum* datum,
+    i32     index)
+{
+    RepositoriumData* data;
+    Xar*              omnes;
+    Xar*              resultus;
+    Eventum*          e;
+    Eventum**         slot;
+    i32               i;
+    i32               numerus;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data)
+    {
+        redde NIHIL;
+    }
+
+    omnes = data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+    si (!omnes)
+    {
+        redde NIHIL;
+    }
+
+    resultus = xar_creare(data->piscina, magnitudo(Eventum*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    numerus = xar_numerus(omnes);
+    per (i = index; i < numerus; i++)
+    {
+        si (i < ZEPHYRUM)
+        {
+            perge;
+        }
+
+        e = *(Eventum**)xar_obtinere(omnes, i);
+        si (e)
+        {
+            slot = (Eventum**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = e;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+interior Xar*
+_impl_legere_eventus_recentes(
+    vacuum* datum,
+    i32     numerus_petitus)
+{
+    RepositoriumData* data;
+    Xar*              omnes;
+    Xar*              resultus;
+    Eventum*          e;
+    Eventum**         slot;
+    i32               i;
+    i32               numerus_totalis;
+    i32               initium;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || numerus_petitus <= ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    omnes = data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+    si (!omnes)
+    {
+        redde NIHIL;
+    }
+
+    resultus = xar_creare(data->piscina, magnitudo(Eventum*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    numerus_totalis = xar_numerus(omnes);
+    initium = numerus_totalis - numerus_petitus;
+    si (initium < ZEPHYRUM)
+    {
+        initium = ZEPHYRUM;
+    }
+
+    per (i = initium; i < numerus_totalis; i++)
+    {
+        e = *(Eventum**)xar_obtinere(omnes, i);
+        si (e)
+        {
+            slot = (Eventum**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = e;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+interior Xar*
+_impl_legere_eventus_generis_entitatis(
+    vacuum*             datum,
+    constans character* genus_entitatis)
+{
+    RepositoriumData* data;
+    Xar*              omnes;
+    Xar*              resultus;
+    Eventum*          e;
+    Eventum**         slot;
+    i32               i;
+    i32               numerus;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !genus_entitatis)
+    {
+        redde NIHIL;
+    }
+
+    omnes = data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+    si (!omnes)
+    {
+        redde NIHIL;
+    }
+
+    resultus = xar_creare(data->piscina, magnitudo(Eventum*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    numerus = xar_numerus(omnes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        e = *(Eventum**)xar_obtinere(omnes, i);
+        si (e && e->entitas_genus &&
+            chorda_aequalis_literis(*e->entitas_genus, genus_entitatis))
+        {
+            slot = (Eventum**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = e;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+interior Xar*
+_impl_legere_eventus_typi(
+    vacuum*      datum,
+    EventusGenus typus)
+{
+    RepositoriumData* data;
+    Xar*              omnes;
+    Xar*              resultus;
+    Eventum*          e;
+    Eventum**         slot;
+    i32               i;
+    i32               numerus;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data)
+    {
+        redde NIHIL;
+    }
+
+    omnes = data->persistentia->legere_eventus(data->persistentia->datum, data->piscina);
+    si (!omnes)
+    {
+        redde NIHIL;
+    }
+
+    resultus = xar_creare(data->piscina, magnitudo(Eventum*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    numerus = xar_numerus(omnes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        e = *(Eventum**)xar_obtinere(omnes, i);
+        si (e && e->genus == typus)
+        {
+            slot = (Eventum**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = e;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+
+/* ==================================================
  * Factory Function
  * ================================================== */
 
@@ -1432,6 +1757,15 @@ entitas_repositorium_creare(
     repo->relatio_delere = _impl_relatio_delere;
     repo->nota_addere = _impl_nota_addere;
     repo->nota_delere = _impl_nota_delere;
+
+    /* Event log read functions */
+    repo->legere_omnes_eventus = _impl_legere_omnes_eventus;
+    repo->numerus_eventorum = _impl_numerus_eventorum;
+    repo->legere_eventus_entitatis = _impl_legere_eventus_entitatis;
+    repo->legere_eventus_post_indicem = _impl_legere_eventus_post_indicem;
+    repo->legere_eventus_recentes = _impl_legere_eventus_recentes;
+    repo->legere_eventus_generis_entitatis = _impl_legere_eventus_generis_entitatis;
+    repo->legere_eventus_typi = _impl_legere_eventus_typi;
 
     redde repo;
 }

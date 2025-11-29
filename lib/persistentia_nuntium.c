@@ -61,15 +61,21 @@ _serialize_eventum(
         redde FALSUM;
     }
 
+    /* Scribere entitas_genus (in omnibus eventis) */
+    si (eventum->entitas_genus)
+    {
+        si (!nuntium_scribere_chorda(scriptor, EVENTUM_TAG_ENTITAS_GENUS,
+                                     *eventum->entitas_genus))
+        {
+            redde FALSUM;
+        }
+    }
+
     /* Scribere payload secundum genus */
     commutatio (eventum->genus)
     {
         casus EVENTUS_CREARE_ENTITAS:
-            si (!nuntium_scribere_chorda(scriptor, EVENTUM_TAG_ENTITAS_GENUS,
-                                         *eventum->datum.creare.entitas_genus))
-            {
-                redde FALSUM;
-            }
+            /* Genus iam scriptum in header */
             frange;
 
         casus EVENTUS_DELERE_ENTITAS:
@@ -277,13 +283,14 @@ _deserialize_eventum(
                 frange;
 
             casus EVENTUM_TAG_ENTITAS_GENUS:
-                /* Also EVENTUM_TAG_CLAVIS, EVENTUM_TAG_RELATIO_ID, EVENTUM_TAG_NOTA */
-                si (genus == EVENTUS_CREARE_ENTITAS)
-                {
-                    entitas_genus = nuntium_legere_chorda(lector);
-                }
-                alioquin si (genus == EVENTUS_PONERE_PROPRIETAS ||
-                             genus == EVENTUS_DELERE_PROPRIETAS)
+                /* Novum: entitas_genus in omnibus eventis (tag IV) */
+                entitas_genus = nuntium_legere_chorda(lector);
+                frange;
+
+            casus EVENTUM_TAG_CLAVIS:
+                /* Also EVENTUM_TAG_RELATIO_ID, EVENTUM_TAG_NOTA (tag X) */
+                si (genus == EVENTUS_PONERE_PROPRIETAS ||
+                    genus == EVENTUS_DELERE_PROPRIETAS)
                 {
                     clavis = nuntium_legere_chorda(lector);
                 }
@@ -360,27 +367,32 @@ _deserialize_eventum(
         }
     }
 
+    /* Copiare entitas_genus ad piscina (in omnibus eventis) */
+    si (entitas_genus.datum)
+    {
+        e->entitas_genus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        si (e->entitas_genus)
+        {
+            e->entitas_genus->datum = (i8*)piscina_allocare(piscina,
+                (memoriae_index)entitas_genus.mensura);
+            si (e->entitas_genus->datum)
+            {
+                memcpy(e->entitas_genus->datum, entitas_genus.datum,
+                       (memoriae_index)entitas_genus.mensura);
+                e->entitas_genus->mensura = entitas_genus.mensura;
+            }
+        }
+    }
+
     /* Populare payload secundum genus */
     commutatio (genus)
     {
         casus EVENTUS_CREARE_ENTITAS:
-            si (entitas_genus.datum)
-            {
-                e->datum.creare.entitas_genus = (chorda*)piscina_allocare(
-                    piscina, magnitudo(chorda));
-                si (e->datum.creare.entitas_genus)
-                {
-                    e->datum.creare.entitas_genus->datum = (i8*)piscina_allocare(
-                        piscina, (memoriae_index)entitas_genus.mensura);
-                    si (e->datum.creare.entitas_genus->datum)
-                    {
-                        memcpy(e->datum.creare.entitas_genus->datum,
-                               entitas_genus.datum,
-                               (memoriae_index)entitas_genus.mensura);
-                        e->datum.creare.entitas_genus->mensura = entitas_genus.mensura;
-                    }
-                }
-            }
+            /* Genus iam in e->entitas_genus */
+            frange;
+
+        casus EVENTUS_DELERE_ENTITAS:
+            /* Nihil payload */
             frange;
 
         casus EVENTUS_PONERE_PROPRIETAS:

@@ -194,7 +194,7 @@ eventum_creare_entitas(
 
     e->genus = EVENTUS_CREARE_ENTITAS;
     e->entitas_id = entitas_id;
-    e->datum.creare.entitas_genus = entitas_genus;
+    e->entitas_genus = entitas_genus;
 
     redde e;
 }
@@ -202,11 +202,12 @@ eventum_creare_entitas(
 Eventum*
 eventum_delere_entitas(
     Piscina* piscina,
-    chorda*  entitas_id)
+    chorda*  entitas_id,
+    chorda*  entitas_genus)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id)
+    si (!piscina || !entitas_id || !entitas_genus)
     {
         redde NIHIL;
     }
@@ -219,6 +220,7 @@ eventum_delere_entitas(
 
     e->genus = EVENTUS_DELERE_ENTITAS;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
 
     redde e;
 }
@@ -227,12 +229,13 @@ Eventum*
 eventum_ponere_proprietas(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  clavis,
     chorda*  valor)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id || !clavis || !valor)
+    si (!piscina || !entitas_id || !entitas_genus || !clavis || !valor)
     {
         redde NIHIL;
     }
@@ -245,6 +248,7 @@ eventum_ponere_proprietas(
 
     e->genus = EVENTUS_PONERE_PROPRIETAS;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
     e->datum.proprietas.clavis = clavis;
     e->datum.proprietas.valor = valor;
 
@@ -255,11 +259,12 @@ Eventum*
 eventum_delere_proprietas(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  clavis)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id || !clavis)
+    si (!piscina || !entitas_id || !entitas_genus || !clavis)
     {
         redde NIHIL;
     }
@@ -272,6 +277,7 @@ eventum_delere_proprietas(
 
     e->genus = EVENTUS_DELERE_PROPRIETAS;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
     e->datum.proprietas.clavis = clavis;
     e->datum.proprietas.valor = NIHIL;
 
@@ -282,13 +288,14 @@ Eventum*
 eventum_addere_relatio(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  relatio_id,
     chorda*  relatio_genus,
     chorda*  destinatio_id)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id || !relatio_id || !relatio_genus || !destinatio_id)
+    si (!piscina || !entitas_id || !entitas_genus || !relatio_id || !relatio_genus || !destinatio_id)
     {
         redde NIHIL;
     }
@@ -301,6 +308,7 @@ eventum_addere_relatio(
 
     e->genus = EVENTUS_ADDERE_RELATIO;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
     e->datum.relatio.relatio_id = relatio_id;
     e->datum.relatio.relatio_genus = relatio_genus;
     e->datum.relatio.destinatio_id = destinatio_id;
@@ -312,11 +320,12 @@ Eventum*
 eventum_delere_relatio(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  relatio_id)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id || !relatio_id)
+    si (!piscina || !entitas_id || !entitas_genus || !relatio_id)
     {
         redde NIHIL;
     }
@@ -329,6 +338,7 @@ eventum_delere_relatio(
 
     e->genus = EVENTUS_DELERE_RELATIO;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
     e->datum.relatio.relatio_id = relatio_id;
     e->datum.relatio.relatio_genus = NIHIL;
     e->datum.relatio.destinatio_id = NIHIL;
@@ -340,11 +350,12 @@ Eventum*
 eventum_addere_nota(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  nota)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id || !nota)
+    si (!piscina || !entitas_id || !entitas_genus || !nota)
     {
         redde NIHIL;
     }
@@ -357,6 +368,7 @@ eventum_addere_nota(
 
     e->genus = EVENTUS_ADDERE_NOTA;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
     e->datum.nota.nota = nota;
 
     redde e;
@@ -366,11 +378,12 @@ Eventum*
 eventum_delere_nota(
     Piscina* piscina,
     chorda*  entitas_id,
+    chorda*  entitas_genus,
     chorda*  nota)
 {
     Eventum* e;
 
-    si (!piscina || !entitas_id || !nota)
+    si (!piscina || !entitas_id || !entitas_genus || !nota)
     {
         redde NIHIL;
     }
@@ -383,6 +396,7 @@ eventum_delere_nota(
 
     e->genus = EVENTUS_DELERE_NOTA;
     e->entitas_id = entitas_id;
+    e->entitas_genus = entitas_genus;
     e->datum.nota.nota = nota;
 
     redde e;
