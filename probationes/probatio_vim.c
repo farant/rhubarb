@@ -276,6 +276,45 @@ probans_inserere_characterem(vacuum)
 }
 
 hic_manens vacuum
+probans_cursor_wrap_ad_finem_lineae(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Parva tabula (6x3) - facile attingere finem lineae */
+    tabula_initiare(&tabula, g_piscina, VI, III);
+    status = vim_initiare(&tabula);
+
+    /* Transire ad modum inserere */
+    status = vim_tractare_clavem(status, 'i');
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Typare "abcdef" - 6 characteres, implet lineam 0 */
+    status = vim_tractare_clavem(status, 'a');
+    status = vim_tractare_clavem(status, 'b');
+    status = vim_tractare_clavem(status, 'c');
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'e');
+    status = vim_tractare_clavem(status, 'f');
+
+    /* Post 6 characteres, cursor debet esse ad finem lineae 0 */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)'f');
+
+    /* Nunc typare 'g' - cursor debet saltare ad lineam 1, columna 0 */
+    status = vim_tractare_clavem(status, 'g');
+
+    /* Verificare cursor wrap */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, I);  /* Post inserere 'g', cursor ad 1 */
+
+    /* Verificare 'g' est ad linea 1, columna 0 */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'g');
+}
+
+hic_manens vacuum
 probans_inserere_in_medio(vacuum)
 {
     TabulaCharacterum tabula;
@@ -574,10 +613,47 @@ probans_G_finem_tabulae(vacuum)
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2\nline3");
     status = vim_initiare(&tabula);
 
-    /* G - ad finem */
+    /* G - ad finem buffer (non ultimam lineam cum contentu) */
     status = vim_tractare_clavem(status, 'G');
-    CREDO_AEQUALIS_I32(status.cursor_linea, II);  /* ultima linea */
-    CREDO_AEQUALIS_I32(status.cursor_columna, IV);  /* '3' in "line3" */
+    CREDO_AEQUALIS_I32(status.cursor_linea, tabula.altitudo - I);  /* ultima linea buffer */
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);  /* linea vacua */
+}
+
+hic_manens vacuum
+probans_G_ad_finem_buffer(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Tabula 10x5 cum contentum solum in linea 0 */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V, "hello");
+    status = vim_initiare(&tabula);
+    CREDO_AEQUALIS_I32(tabula.altitudo, V);
+
+    /* G debet ire ad ultimam lineam buffer (4), non ultimam cum contentu (0) */
+    status = vim_tractare_clavem(status, 'G');
+    CREDO_AEQUALIS_I32(status.cursor_linea, IV);  /* altitudo - 1 */
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);  /* linea vacua, columna 0 */
+}
+
+hic_manens vacuum
+probans_dollar_in_linea_vacua(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Tabula 10x3 cum contentum solum in linea 0 */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III, "hello");
+    status = vim_initiare(&tabula);
+
+    /* Movere ad lineam vacuam (linea 1) */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* $ in linea vacua debet ire ad ultimam cellulam (latitudo - 1) */
+    status = vim_tractare_clavem(status, '$');
+    CREDO_AEQUALIS_I32(status.cursor_columna, IX);  /* latitudo - 1 */
 }
 
 
@@ -879,6 +955,9 @@ principale(vacuum)
     printf("--- Probans inserere characterem ---\n");
     probans_inserere_characterem();
 
+    printf("--- Probans cursor wrap ad finem lineae ---\n");
+    probans_cursor_wrap_ad_finem_lineae();
+
     printf("--- Probans inserere in medio ---\n");
     probans_inserere_in_medio();
 
@@ -914,6 +993,12 @@ principale(vacuum)
 
     printf("--- Probans G finem tabulae ---\n");
     probans_G_finem_tabulae();
+
+    printf("--- Probans G ad finem buffer ---\n");
+    probans_G_ad_finem_buffer();
+
+    printf("--- Probans $ in linea vacua ---\n");
+    probans_dollar_in_linea_vacua();
 
     printf("--- Probans d$ delere ad finem lineae ---\n");
     probans_d_dollar_delere_ad_finem_lineae();

@@ -199,9 +199,20 @@ hic_manens VimStatus
 _movere_finem_lineae(
     VimStatus status)
 {
+    s32 finis_raw;
     s32 finis;
 
-    finis = _finis_lineae(status.tabula, status.cursor_linea);
+    /* Usare raw value pro detectare lineas vacuas */
+    finis_raw = tabula_invenire_finem_contenti(status.tabula, status.cursor_linea);
+
+    /* Si linea vacua, ire ad ultimam cellulam */
+    si (finis_raw < ZEPHYRUM)
+    {
+        status.cursor_columna = status.tabula->latitudo - I;
+        redde status;
+    }
+
+    finis = finis_raw;
 
     si (status.modo == MODO_VIM_NORMALIS)
     {
@@ -384,19 +395,27 @@ _movere_initium_tabulae(
     redde status;
 }
 
-/* G - movere ad finem tabulae */
+/* G - movere ad finem tabulae (ultimam lineam buffer) */
 hic_manens VimStatus
 _movere_finem_tabulae(
     VimStatus status)
 {
-    i32 ultima;
     s32 finis;
 
-    ultima = _ultima_linea_cum_contentu(status.tabula);
-    status.cursor_linea = ultima;
+    /* Ire ad ultimam lineam buffer, non ultimam cum contentu */
+    status.cursor_linea = status.tabula->altitudo - I;
 
     finis = _finis_lineae(status.tabula, status.cursor_linea);
-    status.cursor_columna = (i32)finis;
+
+    /* Si linea vacua, cursor ad columna 0 */
+    si (finis < ZEPHYRUM)
+    {
+        status.cursor_columna = ZEPHYRUM;
+    }
+    alioquin
+    {
+        status.cursor_columna = (i32)finis;
+    }
 
     redde status;
 }
@@ -438,6 +457,22 @@ _inserere_characterem(
         }
 
         status.cursor_columna++;
+
+        /* Cursor wrap: si ad finem lineae, saltare ad initium lineae sequentis */
+        si (status.cursor_columna >= status.tabula->latitudo)
+        {
+            si (status.cursor_linea < status.tabula->altitudo - I)
+            {
+                status.cursor_linea++;
+                status.cursor_columna = ZEPHYRUM;
+            }
+            alioquin
+            {
+                /* Ad ultimam lineam - manere ad finem */
+                status.cursor_columna = status.tabula->latitudo - I;
+            }
+        }
+
         status.mutatus = VERUM;
     }
 
