@@ -16,17 +16,17 @@ hic_manens structura {
     constans character*  verbum;
     SputnikLexemaGenus   genus;
 } VERBA_CLAUSA[] = {
-    {"let",      SPUTNIK_LEXEMA_LET},
-    {"const",    SPUTNIK_LEXEMA_CONST},
-    {"if",       SPUTNIK_LEXEMA_SI},
-    {"else",     SPUTNIK_LEXEMA_ALIOQUIN},
-    {"while",    SPUTNIK_LEXEMA_DUM},
-    {"for",      SPUTNIK_LEXEMA_PER},
-    {"return",   SPUTNIK_LEXEMA_REDDE},
-    {"function", SPUTNIK_LEXEMA_FUNCTIO},
-    {"true",     SPUTNIK_LEXEMA_VERUM},
-    {"false",    SPUTNIK_LEXEMA_FALSUM},
-    {"null",     SPUTNIK_LEXEMA_NIHIL},
+    {"sit",      SPUTNIK_LEXEMA_LET},
+    {"constans", SPUTNIK_LEXEMA_CONST},
+    {"si",       SPUTNIK_LEXEMA_SI},
+    {"alioquin", SPUTNIK_LEXEMA_ALIOQUIN},
+    {"dum",      SPUTNIK_LEXEMA_DUM},
+    {"per",      SPUTNIK_LEXEMA_PER},
+    {"redde",    SPUTNIK_LEXEMA_REDDE},
+    {"functio",  SPUTNIK_LEXEMA_FUNCTIO},
+    {"verum",    SPUTNIK_LEXEMA_VERUM},
+    {"falsum",   SPUTNIK_LEXEMA_FALSUM},
+    {"nihil",    SPUTNIK_LEXEMA_NIHIL},
     {NIHIL,      ZEPHYRUM}
 };
 

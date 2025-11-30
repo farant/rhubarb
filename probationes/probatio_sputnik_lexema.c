@@ -224,22 +224,22 @@ _probare_verba_clausa(Piscina* piscina, InternamentumChorda* intern)
 {
     imprimere("\n--- Probatio Verba Clausa ---\n");
 
-    _probare_lexema_simplex("let", SPUTNIK_LEXEMA_LET, piscina, intern);
-    _probare_lexema_simplex("const", SPUTNIK_LEXEMA_CONST, piscina, intern);
-    _probare_lexema_simplex("if", SPUTNIK_LEXEMA_SI, piscina, intern);
-    _probare_lexema_simplex("else", SPUTNIK_LEXEMA_ALIOQUIN, piscina, intern);
-    _probare_lexema_simplex("while", SPUTNIK_LEXEMA_DUM, piscina, intern);
-    _probare_lexema_simplex("for", SPUTNIK_LEXEMA_PER, piscina, intern);
-    _probare_lexema_simplex("return", SPUTNIK_LEXEMA_REDDE, piscina, intern);
-    _probare_lexema_simplex("function", SPUTNIK_LEXEMA_FUNCTIO, piscina, intern);
-    _probare_lexema_simplex("true", SPUTNIK_LEXEMA_VERUM, piscina, intern);
-    _probare_lexema_simplex("false", SPUTNIK_LEXEMA_FALSUM, piscina, intern);
-    _probare_lexema_simplex("null", SPUTNIK_LEXEMA_NIHIL, piscina, intern);
+    _probare_lexema_simplex("sit", SPUTNIK_LEXEMA_LET, piscina, intern);
+    _probare_lexema_simplex("constans", SPUTNIK_LEXEMA_CONST, piscina, intern);
+    _probare_lexema_simplex("si", SPUTNIK_LEXEMA_SI, piscina, intern);
+    _probare_lexema_simplex("alioquin", SPUTNIK_LEXEMA_ALIOQUIN, piscina, intern);
+    _probare_lexema_simplex("dum", SPUTNIK_LEXEMA_DUM, piscina, intern);
+    _probare_lexema_simplex("per", SPUTNIK_LEXEMA_PER, piscina, intern);
+    _probare_lexema_simplex("redde", SPUTNIK_LEXEMA_REDDE, piscina, intern);
+    _probare_lexema_simplex("functio", SPUTNIK_LEXEMA_FUNCTIO, piscina, intern);
+    _probare_lexema_simplex("verum", SPUTNIK_LEXEMA_VERUM, piscina, intern);
+    _probare_lexema_simplex("falsum", SPUTNIK_LEXEMA_FALSUM, piscina, intern);
+    _probare_lexema_simplex("nihil", SPUTNIK_LEXEMA_NIHIL, piscina, intern);
 
     /* Non-keyword quod simile */
-    _probare_lexema_simplex("letter", SPUTNIK_LEXEMA_IDENTIFICATOR, piscina, intern);
-    _probare_lexema_simplex("constant", SPUTNIK_LEXEMA_IDENTIFICATOR, piscina, intern);
-    _probare_lexema_simplex("iffy", SPUTNIK_LEXEMA_IDENTIFICATOR, piscina, intern);
+    _probare_lexema_simplex("situ", SPUTNIK_LEXEMA_IDENTIFICATOR, piscina, intern);
+    _probare_lexema_simplex("constantia", SPUTNIK_LEXEMA_IDENTIFICATOR, piscina, intern);
+    _probare_lexema_simplex("sibi", SPUTNIK_LEXEMA_IDENTIFICATOR, piscina, intern);
 
     imprimere("  Verba Clausa: VERUM\n");
 }
@@ -356,10 +356,10 @@ _probare_expressiones(Piscina* piscina, InternamentumChorda* intern)
 
     imprimere("\n--- Probatio Expressiones ---\n");
 
-    /* let x = 42; */
-    resultus = sputnik_lexicare_ex_literis("let x = 42;", piscina, intern);
+    /* sit x = 42; */
+    resultus = sputnik_lexicare_ex_literis("sit x = 42;", piscina, intern);
     CREDO_VERUM(resultus.successus);
-    CREDO_AEQUALIS_I32(xar_numerus(resultus.lexemata), VI);  /* let x = 42 ; FINIS */
+    CREDO_AEQUALIS_I32(xar_numerus(resultus.lexemata), VI);  /* sit x = 42 ; FINIS */
 
     lexema = xar_obtinere(resultus.lexemata, ZEPHYRUM);
     CREDO_AEQUALIS_I32(lexema->genus, SPUTNIK_LEXEMA_LET);
@@ -426,7 +426,7 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_ERROR);
 
     /* Full tokenization cum errore */
-    resultus = sputnik_lexicare_ex_literis("let x = @", piscina, intern);
+    resultus = sputnik_lexicare_ex_literis("sit x = @", piscina, intern);
     CREDO_FALSUM(resultus.successus);
 
     imprimere("  Errores: VERUM\n");

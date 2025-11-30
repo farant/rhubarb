@@ -51,7 +51,7 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
     /* Verum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("true;", piscina, intern);
+        r = sputnik_evaluare("verum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
@@ -59,7 +59,7 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
     /* Falsum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("false;", piscina, intern);
+        r = sputnik_evaluare("falsum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
     }
@@ -67,7 +67,7 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
     /* Nihil */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("null;", piscina, intern);
+        r = sputnik_evaluare("nihil;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_NIHIL);
     }
@@ -259,14 +259,14 @@ _probare_logicos(Piscina* piscina, InternamentumChorda* intern)
     /* Et */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("true && true;", piscina, intern);
+        r = sputnik_evaluare("verum && verum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("true && false;", piscina, intern);
+        r = sputnik_evaluare("verum && falsum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
     }
@@ -274,14 +274,14 @@ _probare_logicos(Piscina* piscina, InternamentumChorda* intern)
     /* Vel */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("false || true;", piscina, intern);
+        r = sputnik_evaluare("falsum || verum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("false || false;", piscina, intern);
+        r = sputnik_evaluare("falsum || falsum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
     }
@@ -289,14 +289,14 @@ _probare_logicos(Piscina* piscina, InternamentumChorda* intern)
     /* Non */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("!true;", piscina, intern);
+        r = sputnik_evaluare("!verum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
     }
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("!false;", piscina, intern);
+        r = sputnik_evaluare("!falsum;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
@@ -304,14 +304,14 @@ _probare_logicos(Piscina* piscina, InternamentumChorda* intern)
     /* Short-circuit */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("false && (1/0);", piscina, intern);
+        r = sputnik_evaluare("falsum && (1/0);", piscina, intern);
         CREDO(r.successus);  /* Non error quia short-circuit */
         CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
     }
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("true || (1/0);", piscina, intern);
+        r = sputnik_evaluare("verum || (1/0);", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
@@ -329,14 +329,14 @@ _probare_ternariam(Piscina* piscina, InternamentumChorda* intern)
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("true ? 1 : 2;", piscina, intern);
+        r = sputnik_evaluare("verum ? 1 : 2;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 1.0);
     }
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("false ? 1 : 2;", piscina, intern);
+        r = sputnik_evaluare("falsum ? 1 : 2;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
     }
@@ -344,7 +344,7 @@ _probare_ternariam(Piscina* piscina, InternamentumChorda* intern)
     /* Nested */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("true ? false ? 1 : 2 : 3;", piscina, intern);
+        r = sputnik_evaluare("verum ? falsum ? 1 : 2 : 3;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
     }
@@ -363,7 +363,7 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Let */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let x = 10; x;", piscina, intern);
+        r = sputnik_evaluare("sit x = 10; x;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 10.0);
     }
@@ -371,7 +371,7 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Let sine initializatione */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let y; y;", piscina, intern);
+        r = sputnik_evaluare("sit y; y;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_NIHIL);
     }
@@ -379,7 +379,7 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Assignatio */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let z = 5; z = 15; z;", piscina, intern);
+        r = sputnik_evaluare("sit z = 5; z = 15; z;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 15.0);
     }
@@ -387,7 +387,7 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Const */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("const PI = 3.14; PI;", piscina, intern);
+        r = sputnik_evaluare("constans PI = 3.14; PI;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.14);
     }
@@ -395,14 +395,14 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Const reassign error */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("const C = 1; C = 2;", piscina, intern);
+        r = sputnik_evaluare("constans C = 1; C = 2;", piscina, intern);
         CREDO(!r.successus);  /* Debet fallere */
     }
 
     /* Expressio cum variabilibus */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let a = 5; let b = 3; a * b + 1;", piscina, intern);
+        r = sputnik_evaluare("sit a = 5; sit b = 3; a * b + 1;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 16.0);
     }
@@ -422,8 +422,8 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let x = 0;"
-            "if (true) { x = 1; }"
+            "sit x = 0;"
+            "si (verum) { x = 1; }"
             "x;",
             piscina, intern);
         CREDO(r.successus);
@@ -434,8 +434,8 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let x = 0;"
-            "if (false) { x = 1; }"
+            "sit x = 0;"
+            "si (falsum) { x = 1; }"
             "x;",
             piscina, intern);
         CREDO(r.successus);
@@ -446,8 +446,8 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let x = 0;"
-            "if (false) { x = 1; } else { x = 2; }"
+            "sit x = 0;"
+            "si (falsum) { x = 1; } alioquin { x = 2; }"
             "x;",
             piscina, intern);
         CREDO(r.successus);
@@ -458,9 +458,9 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let sum = 0;"
-            "let i = 1;"
-            "while (i <= 5) {"
+            "sit sum = 0;"
+            "sit i = 1;"
+            "dum (i <= 5) {"
             "  sum = sum + i;"
             "  i = i + 1;"
             "}"
@@ -474,8 +474,8 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let sum = 0;"
-            "for (let i = 1; i <= 5; i = i + 1) {"
+            "sit sum = 0;"
+            "per (sit i = 1; i <= 5; i = i + 1) {"
             "  sum = sum + i;"
             "}"
             "sum;",
@@ -499,7 +499,7 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "function add(a, b) { return a + b; }"
+            "functio add(a, b) { redde a + b; }"
             "add(2, 3);",
             piscina, intern);
         CREDO(r.successus);
@@ -510,7 +510,7 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "function noop() { }"
+            "functio noop() { }"
             "noop();",
             piscina, intern);
         CREDO(r.successus);
@@ -521,9 +521,9 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "function factorial(n) {"
-            "  if (n <= 1) { return 1; }"
-            "  return n * factorial(n - 1);"
+            "functio factorial(n) {"
+            "  si (n <= 1) { redde 1; }"
+            "  redde n * factorial(n - 1);"
             "}"
             "factorial(5);",
             piscina, intern);
@@ -535,9 +535,9 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "function fib(n) {"
-            "  if (n <= 1) { return n; }"
-            "  return fib(n - 1) + fib(n - 2);"
+            "functio fib(n) {"
+            "  si (n <= 1) { redde n; }"
+            "  redde fib(n - 1) + fib(n - 2);"
             "}"
             "fib(10);",
             piscina, intern);
@@ -549,9 +549,9 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "function abs(x) {"
-            "  if (x < 0) { return -x; }"
-            "  return x;"
+            "functio abs(x) {"
+            "  si (x < 0) { redde -x; }"
+            "  redde x;"
             "}"
             "abs(-5) + abs(3);",
             piscina, intern);
@@ -581,7 +581,7 @@ _probare_arrays(Piscina* piscina, InternamentumChorda* intern)
     /* Array accessus */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let arr = [10, 20, 30]; arr[1];", piscina, intern);
+        r = sputnik_evaluare("sit arr = [10, 20, 30]; arr[1];", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 20.0);
     }
@@ -590,7 +590,7 @@ _probare_arrays(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let arr = [1, 2, 3];"
+            "sit arr = [1, 2, 3];"
             "arr[0] = 100;"
             "arr[0];",
             piscina, intern);
@@ -620,7 +620,7 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     /* Objectum literalis */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let obj = { a: 1, b: 2 }; obj;", piscina, intern);
+        r = sputnik_evaluare("sit obj = { a: 1, b: 2 }; obj;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_OBJECTUM);
     }
@@ -628,7 +628,7 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     /* Objectum accessus membri */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let obj = { x: 42 }; obj.x;", piscina, intern);
+        r = sputnik_evaluare("sit obj = { x: 42 }; obj.x;", piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 42.0);
     }
@@ -637,7 +637,7 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let obj = { x: 1 };"
+            "sit obj = { x: 1 };"
             "obj.x = 99;"
             "obj.x;",
             piscina, intern);
@@ -649,7 +649,7 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let obj = { name: \"test\" };"
+            "sit obj = { name: \"test\" };"
             "obj[\"name\"];",
             piscina, intern);
         CREDO(r.successus);
@@ -661,7 +661,7 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let obj = {};"
+            "sit obj = {};"
             "obj.new_prop = 123;"
             "obj.new_prop;",
             piscina, intern);
@@ -714,14 +714,14 @@ _probare_builtins(Piscina* piscina, InternamentumChorda* intern)
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("typeof(true);", piscina, intern);
+        r = sputnik_evaluare("typeof(verum);", piscina, intern);
         CREDO(r.successus);
         CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "boolean"));
     }
 
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("typeof(null);", piscina, intern);
+        r = sputnik_evaluare("typeof(nihil);", piscina, intern);
         CREDO(r.successus);
         CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "null"));
     }
@@ -768,21 +768,21 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
     /* Index extra limites */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let arr = [1, 2]; arr[10];", piscina, intern);
+        r = sputnik_evaluare("sit arr = [1, 2]; arr[10];", piscina, intern);
         CREDO(!r.successus);
     }
 
     /* Const reassign */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("const x = 1; x = 2;", piscina, intern);
+        r = sputnik_evaluare("constans x = 1; x = 2;", piscina, intern);
         CREDO(!r.successus);
     }
 
     /* Non-functio vocatio */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("let x = 5; x();", piscina, intern);
+        r = sputnik_evaluare("sit x = 5; x();", piscina, intern);
         CREDO(!r.successus);
     }
 }
@@ -801,15 +801,15 @@ _probare_complex(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let result = 0;"
-            "for (let i = 1; i <= 15; i = i + 1) {"
-            "  if (i % 15 == 0) {"
+            "sit result = 0;"
+            "per (sit i = 1; i <= 15; i = i + 1) {"
+            "  si (i % 15 == 0) {"
             "    result = result + 15;"
-            "  } else if (i % 3 == 0) {"
+            "  } alioquin si (i % 3 == 0) {"
             "    result = result + 3;"
-            "  } else if (i % 5 == 0) {"
+            "  } alioquin si (i % 5 == 0) {"
             "    result = result + 5;"
-            "  } else {"
+            "  } alioquin {"
             "    result = result + 1;"
             "  }"
             "}"
@@ -825,8 +825,8 @@ _probare_complex(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "function double(x) { return x * 2; }"
-            "function triple(x) { return x * 3; }"
+            "functio double(x) { redde x * 2; }"
+            "functio triple(x) { redde x * 3; }"
             "double(triple(double(5)));",
             piscina, intern);
         CREDO(r.successus);
@@ -837,9 +837,9 @@ _probare_complex(Piscina* piscina, InternamentumChorda* intern)
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare(
-            "let arr = [1, 2, 3, 4, 5];"
-            "let sum = 0;"
-            "for (let i = 0; i < len(arr); i = i + 1) {"
+            "sit arr = [1, 2, 3, 4, 5];"
+            "sit sum = 0;"
+            "per (sit i = 0; i < len(arr); i = i + 1) {"
             "  sum = sum + arr[i];"
             "}"
             "sum;",
