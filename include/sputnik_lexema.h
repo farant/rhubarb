@@ -117,7 +117,11 @@ nomen enumeratio {
     SPUTNIK_LEXEMA_MINUS_AEQ       = LIII,      /* -= */
     SPUTNIK_LEXEMA_ASTERISCUS_AEQ  = LIV,       /* *= */
     SPUTNIK_LEXEMA_DIVISIO_AEQ     = LV,        /* /= */
-    SPUTNIK_LEXEMA_MODULUS_AEQ     = LVI        /* %= */
+    SPUTNIK_LEXEMA_MODULUS_AEQ     = LVI,       /* %= */
+
+    /* Verba Clausa pro Entitas */
+    SPUTNIK_LEXEMA_ENTITAS         = LVII,      /* entitas */
+    SPUTNIK_LEXEMA_COLON_DUO       = LVIII      /* :: (namespace separator) */
 } SputnikLexemaGenus;
 
 

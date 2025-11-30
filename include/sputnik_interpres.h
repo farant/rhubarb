@@ -8,6 +8,8 @@
 #include "xar.h"
 #include "tabula_dispersa.h"
 #include "sputnik_parser.h"
+#include "entitas.h"
+#include "entitas_repositorium.h"
 
 /* ==================================================
  * SPUTNIK INTERPRES - Interpres pro Sputnik
@@ -38,15 +40,17 @@
  * ================================================== */
 
 nomen enumeratio {
-    SPUTNIK_VALOR_NIHIL        = I,
-    SPUTNIK_VALOR_NUMERUS      = II,      /* f64 */
-    SPUTNIK_VALOR_CHORDA       = III,     /* chorda */
-    SPUTNIK_VALOR_VERUM        = IV,      /* boolean true */
-    SPUTNIK_VALOR_FALSUM       = V,       /* boolean false */
-    SPUTNIK_VALOR_XAR          = VI,      /* Xar de SputnikValor* */
-    SPUTNIK_VALOR_OBJECTUM     = VII,     /* TabulaDispersa */
-    SPUTNIK_VALOR_FUNCTIO      = VIII,    /* function reference */
-    SPUTNIK_VALOR_METHODUS_XAR = IX       /* array method reference */
+    SPUTNIK_VALOR_NIHIL            = I,
+    SPUTNIK_VALOR_NUMERUS          = II,      /* f64 */
+    SPUTNIK_VALOR_CHORDA           = III,     /* chorda */
+    SPUTNIK_VALOR_VERUM            = IV,      /* boolean true */
+    SPUTNIK_VALOR_FALSUM           = V,       /* boolean false */
+    SPUTNIK_VALOR_XAR              = VI,      /* Xar de SputnikValor* */
+    SPUTNIK_VALOR_OBJECTUM         = VII,     /* TabulaDispersa */
+    SPUTNIK_VALOR_FUNCTIO          = VIII,    /* function reference */
+    SPUTNIK_VALOR_METHODUS_XAR     = IX,      /* array method reference */
+    SPUTNIK_VALOR_ENTITAS          = X,       /* Entitas* - entity reference */
+    SPUTNIK_VALOR_METHODUS_ENTITAS = XI       /* entity method reference */
 } SputnikValorGenus;
 
 
@@ -63,6 +67,18 @@ nomen structura {
 
 
 /* ==================================================
+ * SputnikMethodusEntitas - Entity Method Reference
+ *
+ * Continet referentiam ad entitas et nomen methodi.
+ * ================================================== */
+
+nomen structura {
+    Entitas* entitas;   /* Entity objectum */
+    chorda   titulus;   /* Nomen methodi (add_relation, related, etc.) */
+} SputnikMethodusEntitas;
+
+
+/* ==================================================
  * SputnikValor - Runtime Value
  *
  * Tagged union pro omnibus valoribus runtime.
@@ -73,12 +89,14 @@ nomen structura SputnikValor SputnikValor;
 structura SputnikValor {
     SputnikValorGenus genus;
     unio {
-        f64                  numerus;
-        chorda               chorda_valor;
-        Xar*                 xar;           /* Xar de SputnikValor* */
-        TabulaDispersa*      objectum;      /* chorda -> SputnikValor* */
-        SputnikAstNodus*     functio;       /* DECLARATIO_FUNCTIO node */
-        SputnikMethodusXar   methodus_xar;  /* array method reference */
+        f64                     numerus;
+        chorda                  chorda_valor;
+        Xar*                    xar;              /* Xar de SputnikValor* */
+        TabulaDispersa*         objectum;         /* chorda -> SputnikValor* */
+        SputnikAstNodus*        functio;          /* DECLARATIO_FUNCTIO node */
+        SputnikMethodusXar      methodus_xar;     /* array method reference */
+        Entitas*                entitas;          /* entity reference */
+        SputnikMethodusEntitas  methodus_entitas; /* entity method reference */
     } ut;
 };
 
@@ -106,6 +124,7 @@ structura SputnikAmbitus {
 nomen structura {
     Piscina*              piscina;
     InternamentumChorda*  intern;
+    EntitasRepositorium*  repositorium;       /* entity storage */
     SputnikAmbitus*       ambitus_globalis;
     SputnikAmbitus*       ambitus_currens;
     b32                   error_accidit;
@@ -163,6 +182,43 @@ sputnik_interpretare(
     SputnikAstNodus*     radix,
     Piscina*             piscina,
     InternamentumChorda* intern);
+
+
+/* ==================================================
+ * API cum Repositorio (Entity-Aware)
+ * ================================================== */
+
+/* Evaluare programma cum repositorio entitatum
+ *
+ * fons: C string cum fonte Sputnik
+ * piscina: Piscina pro allocationibus
+ * intern: Internamentum pro chordis
+ * repositorium: Repositorium entitatum (potest esse NIHIL)
+ *
+ * Redde: SputnikInterpresResultus
+ */
+SputnikInterpresResultus
+sputnik_evaluare_cum_repositorio(
+    constans character*   fons,
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    EntitasRepositorium*  repositorium);
+
+/* Evaluare ex chorda cum repositorio */
+SputnikInterpresResultus
+sputnik_evaluare_ex_chorda_cum_repositorio(
+    chorda                fons,
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    EntitasRepositorium*  repositorium);
+
+/* Interpretare pre-parsed AST cum repositorio */
+SputnikInterpresResultus
+sputnik_interpretare_cum_repositorio(
+    SputnikAstNodus*      radix,
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    EntitasRepositorium*  repositorium);
 
 
 /* ==================================================

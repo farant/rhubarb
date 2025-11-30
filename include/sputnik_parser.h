@@ -81,7 +81,10 @@ nomen enumeratio {
     SPUTNIK_AST_SENTENTIA_DECREMENT  = XXX,       /* i-- */
 
     /* Functio Sagitta (Arrow Function) */
-    SPUTNIK_AST_FUNCTIO_SAGITTA      = XXXI       /* x => x * 2 */
+    SPUTNIK_AST_FUNCTIO_SAGITTA      = XXXI,      /* x => x * 2 */
+
+    /* Declaratio Entitas */
+    SPUTNIK_AST_DECLARATIO_ENTITAS   = XXXII      /* entitas x : Genus::Path; */
 } SputnikAstGenus;
 
 

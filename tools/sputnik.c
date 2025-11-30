@@ -5,6 +5,7 @@
  * USUS:
  *   sputnik <filum.sputnik>
  *   sputnik -e "print(2 + 2);"
+ *   sputnik --db data.db script.sputnik
  *   sputnik --help
  */
 
@@ -14,6 +15,8 @@
 #include "filum.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "persistentia.h"
+#include "entitas_repositorium.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,11 +36,23 @@ _imprimere_valorem(SputnikValor* valor, Piscina* piscina)
 
 
 interior integer
-_executare_fontem(chorda fons, Piscina* piscina, InternamentumChorda* intern)
+_executare_fontem(
+    chorda fons,
+    Piscina* piscina,
+    InternamentumChorda* intern,
+    EntitasRepositorium* repositorium)
 {
     SputnikInterpresResultus resultus;
 
-    resultus = sputnik_evaluare_ex_chorda(fons, piscina, intern);
+    si (repositorium != NIHIL)
+    {
+        resultus = sputnik_evaluare_ex_chorda_cum_repositorio(
+            fons, piscina, intern, repositorium);
+    }
+    alioquin
+    {
+        resultus = sputnik_evaluare_ex_chorda(fons, piscina, intern);
+    }
 
     si (!resultus.successus)
     {
@@ -72,8 +87,11 @@ integer principale(integer argc, constans character* constans* argv)
     ArgumentaFructus* fructus;
     chorda filum_via;
     chorda expressio;
+    chorda db_via;
     chorda fons;
     integer exitus;
+    Persistentia* persistentia;
+    EntitasRepositorium* repositorium;
 
     /* Creare piscina */
     piscina = piscina_generare_dynamicum("sputnik", 1024 * 256);
@@ -83,7 +101,11 @@ integer principale(integer argc, constans character* constans* argv)
         redde I;
     }
 
-    intern = internamentum_creare(piscina);
+    /* Usare internamentum globale ut repositorium et interpres
+     * dividant eandem piscinam internamenti */
+    intern = internamentum_globale();
+    persistentia = NIHIL;
+    repositorium = NIHIL;
 
     /* Configurare parser argumentorum */
     parser = argumenta_creare(piscina);
@@ -96,11 +118,14 @@ integer principale(integer argc, constans character* constans* argv)
         "Ostendere versionem");
     argumenta_addere_optionem(parser, "-e", "--eval",
         "Evaluare expressionem directe");
+    argumenta_addere_optionem(parser, "-d", "--db",
+        "Via ad filum databasei entitatum");
     argumenta_addere_positionalem(parser, "filum",
         "Via ad filum .sputnik", FALSUM);
 
     argumenta_addere_exemplum(parser, "sputnik script.sputnik");
     argumenta_addere_exemplum(parser, "sputnik -e \"print(2 + 2);\"");
+    argumenta_addere_exemplum(parser, "sputnik --db data.db script.sputnik");
 
     /* Parsere argumenta */
     fructus = argumenta_conari_parsere(parser, (i32)argc, argv);
@@ -127,11 +152,61 @@ integer principale(integer argc, constans character* constans* argv)
         redde ZEPHYRUM;
     }
 
+    /* Tractare --db */
+    db_via = argumenta_obtinere_optionem(fructus, "--db", piscina);
+    si (db_via.mensura > ZEPHYRUM)
+    {
+        character* db_via_c;
+
+        /* Convertere ad C string */
+        db_via_c = piscina_allocare(piscina, (memoriae_index)(db_via.mensura + I));
+        si (db_via_c == NIHIL)
+        {
+            fprintf(stderr, "Error: Memoria exhausta\n");
+            piscina_destruere(piscina);
+            redde I;
+        }
+        memcpy(db_via_c, db_via.datum, (size_t)db_via.mensura);
+        db_via_c[db_via.mensura] = '\0';
+
+        /* Aperire vel creare database */
+        si (filum_existit(db_via_c))
+        {
+            persistentia = persistentia_nuntium_aperire(piscina, db_via_c);
+        }
+        alioquin
+        {
+            persistentia = persistentia_nuntium_creare(piscina, db_via_c);
+        }
+
+        si (persistentia == NIHIL)
+        {
+            fprintf(stderr, "Error: Non potest aperire database: %s\n", db_via_c);
+            piscina_destruere(piscina);
+            redde I;
+        }
+
+        repositorium = entitas_repositorium_creare(piscina, persistentia);
+        si (repositorium == NIHIL)
+        {
+            fprintf(stderr, "Error: Non potest creare repositorium\n");
+            piscina_destruere(piscina);
+            redde I;
+        }
+    }
+
     /* Tractare -e / --eval */
     expressio = argumenta_obtinere_optionem(fructus, "--eval", piscina);
     si (expressio.mensura > ZEPHYRUM)
     {
-        exitus = _executare_fontem(expressio, piscina, intern);
+        exitus = _executare_fontem(expressio, piscina, intern, repositorium);
+
+        /* Cleanup */
+        si (persistentia != NIHIL)
+        {
+            persistentia->sync(persistentia->datum);
+            persistentia->claudere(persistentia->datum);
+        }
         piscina_destruere(piscina);
         redde exitus;
     }
@@ -189,8 +264,14 @@ integer principale(integer argc, constans character* constans* argv)
     }
 
     /* Executare */
-    exitus = _executare_fontem(fons, piscina, intern);
+    exitus = _executare_fontem(fons, piscina, intern, repositorium);
 
+    /* Cleanup */
+    si (persistentia != NIHIL)
+    {
+        persistentia->sync(persistentia->datum);
+        persistentia->claudere(persistentia->datum);
+    }
     piscina_destruere(piscina);
     redde exitus;
 }

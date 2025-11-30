@@ -4,6 +4,7 @@
  */
 
 #include "sputnik_parser.h"
+#include "chorda_aedificator.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,6 +55,7 @@ interior SputnikAstNodus* _parsere_declarationem_functio(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_sententiam_frange(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_sententiam_perge(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_functionem_sagittam(SputnikParser* parser);
+interior SputnikAstNodus* _parsere_declarationem_entitas(SputnikParser* parser);
 interior b32 _est_functio_sagitta_parenthesis(SputnikParser* parser);
 
 
@@ -1720,6 +1722,92 @@ _parsere_sententiam_perge(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
+_parsere_declarationem_entitas(SputnikParser* parser)
+{
+    SputnikAstNodus* nodus;
+    SputnikAstNodus* genus_nodus;
+    SputnikLexema* lex;
+    ChordaAedificator* aed;
+    chorda genus_path;
+
+    nodus = _creare_nodum(parser, SPUTNIK_AST_DECLARATIO_ENTITAS);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Skip 'entitas' */
+    _progredi(parser);
+
+    /* Expectare nomen variabilis */
+    lex = _currens(parser);
+    si (lex == NIHIL || lex->genus != SPUTNIK_LEXEMA_IDENTIFICATOR)
+    {
+        _error(parser, "Expectabatur nomen variabilis post 'entitas'");
+        redde NIHIL;
+    }
+
+    nodus->valor = lex->valor;
+    _progredi(parser);
+
+    /* Expectare : */
+    _expectare(parser, SPUTNIK_LEXEMA_COLON, "Expectabatur : post nomen entitatis");
+    si (parser->error_accidit)
+    {
+        redde NIHIL;
+    }
+
+    /* Parsere genus path: Genus vel Genus::Namespace::Type */
+    aed = chorda_aedificator_creare(parser->piscina, LXIV);
+    si (aed == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Primus segmentum - debet esse identificator */
+    lex = _currens(parser);
+    si (lex == NIHIL || lex->genus != SPUTNIK_LEXEMA_IDENTIFICATOR)
+    {
+        _error(parser, "Expectabatur genus post :");
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_chorda(aed, lex->valor);
+    _progredi(parser);
+
+    /* Legere segmenta addita separata per :: */
+    dum (_verificare(parser, SPUTNIK_LEXEMA_COLON_DUO))
+    {
+        _progredi(parser);  /* Skip :: */
+
+        lex = _currens(parser);
+        si (lex == NIHIL || lex->genus != SPUTNIK_LEXEMA_IDENTIFICATOR)
+        {
+            _error(parser, "Expectabatur identificator post ::");
+            redde NIHIL;
+        }
+
+        chorda_aedificator_appendere_literis(aed, "::");
+        chorda_aedificator_appendere_chorda(aed, lex->valor);
+        _progredi(parser);
+    }
+
+    genus_path = chorda_aedificator_finire(aed);
+
+    /* Creare nodum pro genus path */
+    genus_nodus = _creare_nodum(parser, SPUTNIK_AST_IDENTIFICATOR);
+    si (genus_nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    genus_nodus->valor = genus_path;
+    _addere_infantem(nodus, genus_nodus);
+
+    _expectare(parser, SPUTNIK_LEXEMA_SEMICOLON, "Expectabatur ; post declaratione entitatis");
+
+    redde nodus;
+}
+
+interior SputnikAstNodus*
 _parsere_sententiam(SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
@@ -1780,6 +1868,9 @@ _parsere_sententiam(SputnikParser* parser)
 
         casus SPUTNIK_LEXEMA_PERGE:
             redde _parsere_sententiam_perge(parser);
+
+        casus SPUTNIK_LEXEMA_ENTITAS:
+            redde _parsere_declarationem_entitas(parser);
 
         ordinarius:
             /* Expression statement */
@@ -2011,6 +2102,7 @@ sputnik_ast_genus_nomen(SputnikAstGenus genus)
         casus SPUTNIK_AST_SENTENTIA_INCREMENT:  redde "SENTENTIA_INCREMENT";
         casus SPUTNIK_AST_SENTENTIA_DECREMENT:  redde "SENTENTIA_DECREMENT";
         casus SPUTNIK_AST_FUNCTIO_SAGITTA:      redde "FUNCTIO_SAGITTA";
+        casus SPUTNIK_AST_DECLARATIO_ENTITAS:   redde "DECLARATIO_ENTITAS";
         ordinarius:                             redde "IGNOTUM";
     }
 }

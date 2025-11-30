@@ -29,6 +29,7 @@ hic_manens structura {
     {"nihil",    SPUTNIK_LEXEMA_NIHIL},
     {"frange",   SPUTNIK_LEXEMA_FRANGE},
     {"perge",    SPUTNIK_LEXEMA_PERGE},
+    {"entitas",  SPUTNIK_LEXEMA_ENTITAS},
     {NIHIL,      ZEPHYRUM}
 };
 
@@ -760,6 +761,12 @@ sputnik_lexator_legere(SputnikLexator* lex)
         redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_MODULUS_AEQ, II);
     }
 
+    /* :: (namespace separator) */
+    si (c == ':' && c2 == ':')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_COLON_DUO, II);
+    }
+
     /* Single character tokens */
     commutatio (c)
     {
@@ -981,6 +988,8 @@ sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
         casus SPUTNIK_LEXEMA_ASTERISCUS_AEQ:  redde "ASTERISCUS_AEQ";
         casus SPUTNIK_LEXEMA_DIVISIO_AEQ:     redde "DIVISIO_AEQ";
         casus SPUTNIK_LEXEMA_MODULUS_AEQ:     redde "MODULUS_AEQ";
+        casus SPUTNIK_LEXEMA_ENTITAS:         redde "ENTITAS";
+        casus SPUTNIK_LEXEMA_COLON_DUO:       redde "COLON_DUO";
         ordinarius:                           redde "IGNOTUS";
     }
 }
