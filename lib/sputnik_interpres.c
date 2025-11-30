@@ -98,6 +98,16 @@ _valor_functio(SputnikAstNodus* f)
     redde v;
 }
 
+interior SputnikValor
+_valor_methodus_xar(Xar* xar, chorda titulus)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_METHODUS_XAR;
+    v.ut.methodus_xar.xar = xar;
+    v.ut.methodus_xar.titulus = titulus;
+    redde v;
+}
+
 
 /* ==================================================
  * Adiutores - Truthiness
@@ -124,6 +134,7 @@ _est_verum(SputnikValor* valor)
         casus SPUTNIK_VALOR_XAR:
         casus SPUTNIK_VALOR_OBJECTUM:
         casus SPUTNIK_VALOR_FUNCTIO:
+        casus SPUTNIK_VALOR_METHODUS_XAR:
             redde VERUM;
 
         ordinarius:
@@ -430,6 +441,9 @@ _ad_chordam(SputnikInterpres* interp, SputnikValor* valor)
         casus SPUTNIK_VALOR_FUNCTIO:
             redde chorda_ex_literis("[function]", interp->piscina);
 
+        casus SPUTNIK_VALOR_METHODUS_XAR:
+            redde chorda_ex_literis("[array method]", interp->piscina);
+
         ordinarius:
             redde chorda_ex_literis("", interp->piscina);
     }
@@ -547,6 +561,698 @@ _vocare_intrinsecam(SputnikInterpres* interp, chorda titulus, Xar* argumenta, Sp
     }
 
     _error(interp, nodus, "Functio intrinseca ignota");
+    redde _valor_nihil();
+}
+
+
+/* ==================================================
+ * Array Methods
+ * ================================================== */
+
+interior b32
+_est_methodus_xar(chorda titulus)
+{
+    /* Methodi simplices (sine callback) */
+    si (chorda_aequalis_literis(titulus, "push"))    redde VERUM;
+    si (chorda_aequalis_literis(titulus, "pop"))     redde VERUM;
+    si (chorda_aequalis_literis(titulus, "shift"))   redde VERUM;
+    si (chorda_aequalis_literis(titulus, "unshift")) redde VERUM;
+    si (chorda_aequalis_literis(titulus, "indexOf")) redde VERUM;
+    si (chorda_aequalis_literis(titulus, "includes")) redde VERUM;
+    si (chorda_aequalis_literis(titulus, "slice"))   redde VERUM;
+    si (chorda_aequalis_literis(titulus, "concat"))  redde VERUM;
+    si (chorda_aequalis_literis(titulus, "join"))    redde VERUM;
+    /* Methodi cum callback */
+    si (chorda_aequalis_literis(titulus, "map"))     redde VERUM;
+    si (chorda_aequalis_literis(titulus, "filter"))  redde VERUM;
+    si (chorda_aequalis_literis(titulus, "find"))    redde VERUM;
+    si (chorda_aequalis_literis(titulus, "forEach")) redde VERUM;
+    redde FALSUM;
+}
+
+/* push(item) - addere ad finem, redde novam longitudinem */
+interior SputnikValor
+_methodus_xar_push(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* arg;
+    SputnikValor* elem;
+
+    num = xar_numerus(argumenta);
+    si (num < I)
+    {
+        _error(interp, nodus, "push() requirit minimum I argumentum");
+        redde _valor_nihil();
+    }
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        arg = xar_obtinere(argumenta, i);
+        elem = xar_addere(xar);
+        si (elem == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *elem = *arg;
+    }
+
+    redde _valor_numerus((f64)xar_numerus(xar));
+}
+
+/* pop() - removere ab fine, redde elementum remotum */
+interior SputnikValor
+_methodus_xar_pop(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 num;
+    SputnikValor* elem;
+    SputnikValor resultus;
+
+    (vacuum)argumenta;
+
+    num = xar_numerus(xar);
+    si (num == ZEPHYRUM)
+    {
+        _error(interp, nodus, "Non potest pop() ex xar vacuo");
+        redde _valor_nihil();
+    }
+
+    elem = xar_obtinere(xar, num - I);
+    resultus = *elem;
+    xar_removere_ultimum(xar);
+
+    redde resultus;
+}
+
+/* shift() - removere a principio, redde elementum remotum */
+interior SputnikValor
+_methodus_xar_shift(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 num;
+    i32 i;
+    SputnikValor* elem;
+    SputnikValor* next;
+    SputnikValor resultus;
+
+    (vacuum)argumenta;
+
+    num = xar_numerus(xar);
+    si (num == ZEPHYRUM)
+    {
+        _error(interp, nodus, "Non potest shift() ex xar vacuo");
+        redde _valor_nihil();
+    }
+
+    elem = xar_obtinere(xar, ZEPHYRUM);
+    resultus = *elem;
+
+    /* Movere omnia elementa sinistrorsum */
+    per (i = ZEPHYRUM; i < num - I; i++)
+    {
+        elem = xar_obtinere(xar, i);
+        next = xar_obtinere(xar, i + I);
+        *elem = *next;
+    }
+    xar_removere_ultimum(xar);
+
+    redde resultus;
+}
+
+/* unshift(item) - addere ad principium, redde novam longitudinem */
+interior SputnikValor
+_methodus_xar_unshift(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 num;
+    i32 i;
+    SputnikValor* arg;
+    SputnikValor* elem;
+    SputnikValor* next;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "unshift() requirit minimum I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+
+    /* Addere spatium ad finem */
+    elem = xar_addere(xar);
+    si (elem == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    /* Movere omnia elementa dextrorsum */
+    num = xar_numerus(xar);
+    per (i = num - I; i > ZEPHYRUM; i--)
+    {
+        elem = xar_obtinere(xar, i);
+        next = xar_obtinere(xar, i - I);
+        *elem = *next;
+    }
+
+    /* Inserere novum elementum ad principium */
+    elem = xar_obtinere(xar, ZEPHYRUM);
+    *elem = *arg;
+
+    redde _valor_numerus((f64)xar_numerus(xar));
+}
+
+/* indexOf(item) - invenire indicem, redde -1 si non inventum */
+interior SputnikValor
+_methodus_xar_indexOf(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* arg;
+    SputnikValor* elem;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "indexOf() requirit I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    num = xar_numerus(xar);
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(xar, i);
+
+        /* Comparatio secundum genus */
+        si (elem->genus == arg->genus)
+        {
+            commutatio (elem->genus)
+            {
+                casus SPUTNIK_VALOR_NIHIL:
+                    redde _valor_numerus((f64)i);
+                casus SPUTNIK_VALOR_VERUM:
+                casus SPUTNIK_VALOR_FALSUM:
+                    redde _valor_numerus((f64)i);
+                casus SPUTNIK_VALOR_NUMERUS:
+                    si (elem->ut.numerus == arg->ut.numerus)
+                        redde _valor_numerus((f64)i);
+                    frange;
+                casus SPUTNIK_VALOR_CHORDA:
+                    si (chorda_aequalis(elem->ut.chorda_valor, arg->ut.chorda_valor))
+                        redde _valor_numerus((f64)i);
+                    frange;
+                ordinarius:
+                    /* Reference equality */
+                    si (elem->ut.xar == arg->ut.xar)
+                        redde _valor_numerus((f64)i);
+                    frange;
+            }
+        }
+    }
+
+    redde _valor_numerus(-1.0);
+}
+
+/* includes(item) - verificare si continet, redde boolean */
+interior SputnikValor
+_methodus_xar_includes(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor idx;
+    idx = _methodus_xar_indexOf(interp, xar, argumenta, nodus);
+    si (interp->error_accidit)
+        redde _valor_nihil();
+    redde idx.ut.numerus >= 0.0 ? _valor_verum() : _valor_falsum();
+}
+
+/* slice(start, end?) - extrahere portionem, redde novum xar */
+interior SputnikValor
+_methodus_xar_slice(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 start;
+    i32 end;
+    i32 num;
+    i32 i;
+    Xar* novus;
+    SputnikValor* arg;
+    SputnikValor* elem;
+    SputnikValor* copia;
+
+    num = xar_numerus(xar);
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "slice() requirit minimum I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (arg->genus != SPUTNIK_VALOR_NUMERUS)
+    {
+        _error(interp, nodus, "slice() requirit numerum pro start");
+        redde _valor_nihil();
+    }
+    start = (i32)arg->ut.numerus;
+
+    /* Default end est longitudo */
+    end = num;
+    si (xar_numerus(argumenta) >= II)
+    {
+        arg = xar_obtinere(argumenta, I);
+        si (arg->genus != SPUTNIK_VALOR_NUMERUS)
+        {
+            _error(interp, nodus, "slice() requirit numerum pro end");
+            redde _valor_nihil();
+        }
+        end = (i32)arg->ut.numerus;
+    }
+
+    /* Tractare indices negativos */
+    si (start < ZEPHYRUM) start = num + start;
+    si (end < ZEPHYRUM) end = num + end;
+    si (start < ZEPHYRUM) start = ZEPHYRUM;
+    si (end > num) end = num;
+    si (start > end) start = end;
+
+    novus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (novus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    per (i = start; i < end; i++)
+    {
+        elem = xar_obtinere(xar, i);
+        copia = xar_addere(novus);
+        si (copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *copia = *elem;
+    }
+
+    redde _valor_xar(novus);
+}
+
+/* concat(other) - coniungere arrays, redde novum xar */
+interior SputnikValor
+_methodus_xar_concat(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    Xar* novus;
+    SputnikValor* arg;
+    SputnikValor* elem;
+    SputnikValor* copia;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "concat() requirit I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (arg->genus != SPUTNIK_VALOR_XAR)
+    {
+        _error(interp, nodus, "concat() requirit xar ut argumentum");
+        redde _valor_nihil();
+    }
+
+    novus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (novus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    /* Copiare elementa ex primo xar */
+    num = xar_numerus(xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(xar, i);
+        copia = xar_addere(novus);
+        si (copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *copia = *elem;
+    }
+
+    /* Copiare elementa ex secundo xar */
+    num = xar_numerus(arg->ut.xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(arg->ut.xar, i);
+        copia = xar_addere(novus);
+        si (copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *copia = *elem;
+    }
+
+    redde _valor_xar(novus);
+}
+
+/* join(separator?) - coniungere ut chorda */
+interior SputnikValor
+_methodus_xar_join(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    chorda separator;
+    chorda elem_str;
+    ChordaAedificator* aed;
+    SputnikValor* arg;
+    SputnikValor* elem;
+
+    (vacuum)nodus;
+
+    /* Default separator est "," */
+    separator = chorda_ex_literis(",", interp->piscina);
+    si (xar_numerus(argumenta) >= I)
+    {
+        arg = xar_obtinere(argumenta, ZEPHYRUM);
+        si (arg->genus == SPUTNIK_VALOR_CHORDA)
+        {
+            separator = arg->ut.chorda_valor;
+        }
+    }
+
+    aed = chorda_aedificator_creare(interp->piscina, CXXVIII);
+    si (aed == NIHIL)
+    {
+        redde _valor_chorda(chorda_ex_literis("", interp->piscina));
+    }
+
+    num = xar_numerus(xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_chorda(aed, separator);
+        }
+        elem = xar_obtinere(xar, i);
+        elem_str = _ad_chordam(interp, elem);
+        chorda_aedificator_appendere_chorda(aed, elem_str);
+    }
+
+    redde _valor_chorda(chorda_aedificator_finire(aed));
+}
+
+/* Forward declaration - needed for callback methods */
+interior SputnikValor _vocare_functionem(SputnikInterpres*, SputnikAstNodus*, Xar*, SputnikAstNodus*);
+
+/* map(fn) - transform each element */
+interior SputnikValor
+_methodus_xar_map(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* fn_arg;
+    SputnikValor* elem;
+    SputnikValor* copia;
+    SputnikValor resultus;
+    Xar* novus;
+    Xar* args;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "map() requirit functionem");
+        redde _valor_nihil();
+    }
+
+    fn_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (fn_arg->genus != SPUTNIK_VALOR_FUNCTIO)
+    {
+        _error(interp, nodus, "map() requirit functionem ut argumentum");
+        redde _valor_nihil();
+    }
+
+    novus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (novus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    args = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (args == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(xar, i);
+
+        /* Preparare argumenta pro callback: (element) */
+        xar_vacare(args);
+        copia = xar_addere(args);
+        *copia = *elem;
+
+        /* Vocare callback */
+        resultus = _vocare_functionem(interp, fn_arg->ut.functio, args, nodus);
+        si (interp->error_accidit)
+        {
+            redde _valor_nihil();
+        }
+
+        /* Addere resultum ad novum array */
+        copia = xar_addere(novus);
+        si (copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *copia = resultus;
+    }
+
+    redde _valor_xar(novus);
+}
+
+/* filter(fn) - keep elements where fn returns true */
+interior SputnikValor
+_methodus_xar_filter(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* fn_arg;
+    SputnikValor* elem;
+    SputnikValor* copia;
+    SputnikValor resultus;
+    Xar* novus;
+    Xar* args;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "filter() requirit functionem");
+        redde _valor_nihil();
+    }
+
+    fn_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (fn_arg->genus != SPUTNIK_VALOR_FUNCTIO)
+    {
+        _error(interp, nodus, "filter() requirit functionem ut argumentum");
+        redde _valor_nihil();
+    }
+
+    novus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (novus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    args = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (args == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(xar, i);
+
+        /* Preparare argumenta pro callback: (element) */
+        xar_vacare(args);
+        copia = xar_addere(args);
+        *copia = *elem;
+
+        /* Vocare callback */
+        resultus = _vocare_functionem(interp, fn_arg->ut.functio, args, nodus);
+        si (interp->error_accidit)
+        {
+            redde _valor_nihil();
+        }
+
+        /* Si verum, addere elementum ad novum array */
+        si (_est_verum(&resultus))
+        {
+            copia = xar_addere(novus);
+            si (copia == NIHIL)
+            {
+                _error(interp, nodus, "Memoria exhausta");
+                redde _valor_nihil();
+            }
+            *copia = *elem;
+        }
+    }
+
+    redde _valor_xar(novus);
+}
+
+/* find(fn) - return first element where fn returns true */
+interior SputnikValor
+_methodus_xar_find(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* fn_arg;
+    SputnikValor* elem;
+    SputnikValor* copia;
+    SputnikValor resultus;
+    Xar* args;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "find() requirit functionem");
+        redde _valor_nihil();
+    }
+
+    fn_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (fn_arg->genus != SPUTNIK_VALOR_FUNCTIO)
+    {
+        _error(interp, nodus, "find() requirit functionem ut argumentum");
+        redde _valor_nihil();
+    }
+
+    args = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (args == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(xar, i);
+
+        /* Preparare argumenta pro callback: (element) */
+        xar_vacare(args);
+        copia = xar_addere(args);
+        *copia = *elem;
+
+        /* Vocare callback */
+        resultus = _vocare_functionem(interp, fn_arg->ut.functio, args, nodus);
+        si (interp->error_accidit)
+        {
+            redde _valor_nihil();
+        }
+
+        /* Si verum, redde elementum */
+        si (_est_verum(&resultus))
+        {
+            redde *elem;
+        }
+    }
+
+    /* Non inventum */
+    redde _valor_nihil();
+}
+
+/* forEach(fn) - call fn for each element, return nihil */
+interior SputnikValor
+_methodus_xar_forEach(SputnikInterpres* interp, Xar* xar, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* fn_arg;
+    SputnikValor* elem;
+    SputnikValor* copia;
+    Xar* args;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "forEach() requirit functionem");
+        redde _valor_nihil();
+    }
+
+    fn_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (fn_arg->genus != SPUTNIK_VALOR_FUNCTIO)
+    {
+        _error(interp, nodus, "forEach() requirit functionem ut argumentum");
+        redde _valor_nihil();
+    }
+
+    args = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (args == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(xar);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem = xar_obtinere(xar, i);
+
+        /* Preparare argumenta pro callback: (element) */
+        xar_vacare(args);
+        copia = xar_addere(args);
+        *copia = *elem;
+
+        /* Vocare callback (ignore result) */
+        _vocare_functionem(interp, fn_arg->ut.functio, args, nodus);
+        si (interp->error_accidit)
+        {
+            redde _valor_nihil();
+        }
+    }
+
+    redde _valor_nihil();
+}
+
+/* Dispatcher pro array methods */
+interior SputnikValor
+_vocare_methodum_xar(SputnikInterpres* interp, SputnikMethodusXar* meth, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    si (chorda_aequalis_literis(meth->titulus, "push"))
+        redde _methodus_xar_push(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "pop"))
+        redde _methodus_xar_pop(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "shift"))
+        redde _methodus_xar_shift(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "unshift"))
+        redde _methodus_xar_unshift(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "indexOf"))
+        redde _methodus_xar_indexOf(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "includes"))
+        redde _methodus_xar_includes(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "slice"))
+        redde _methodus_xar_slice(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "concat"))
+        redde _methodus_xar_concat(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "join"))
+        redde _methodus_xar_join(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "map"))
+        redde _methodus_xar_map(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "filter"))
+        redde _methodus_xar_filter(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "find"))
+        redde _methodus_xar_find(interp, meth->xar, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "forEach"))
+        redde _methodus_xar_forEach(interp, meth->xar, argumenta, nodus);
+
+    _error(interp, nodus, "Methodus xar ignota");
     redde _valor_nihil();
 }
 
@@ -1077,6 +1783,17 @@ _eval_accessum_membri(SputnikInterpres* interp, SputnikAstNodus* nodus)
     obj = _evaluare_nodum(interp, obj_nodus);
     si (interp->error_accidit) redde _valor_nihil();
 
+    /* Tractare array methods */
+    si (obj.genus == SPUTNIK_VALOR_XAR)
+    {
+        si (_est_methodus_xar(nodus->valor))
+        {
+            redde _valor_methodus_xar(obj.ut.xar, nodus->valor);
+        }
+        _error(interp, nodus, "Membrum xar ignotum");
+        redde _valor_nihil();
+    }
+
     si (obj.genus != SPUTNIK_VALOR_OBJECTUM)
     {
         _error(interp, nodus, "Non potest accedere membrum non-objecti");
@@ -1293,6 +2010,8 @@ _vocare_functionem(SputnikInterpres* interp, SputnikAstNodus* functio, Xar* argu
     SputnikAstNodus* corpus;
     SputnikValor* arg;
     SputnikValor resultus;
+    b32 est_sagitta;
+    b32 est_expressio_corpus;
 
     /* Functio node: liberi = [param0, param1, ..., corpus] */
     num_param = xar_numerus(functio->liberi) - I;
@@ -1324,19 +2043,33 @@ _vocare_functionem(SputnikInterpres* interp, SputnikAstNodus* functio, Xar* argu
         _definire_variabilem(interp, param_nodus->valor, *arg, FALSUM);
     }
 
-    /* Executare corpus */
+    /* Obtinere corpus */
     corpus = *(SputnikAstNodus**)xar_obtinere(functio->liberi, num_param);
-    _executare_sententiam(interp, corpus);
 
-    /* Capturare return value */
-    si (interp->redde_activa)
+    /* Verificare si arrow function cum expressio corpus (implicita redde) */
+    est_sagitta = (functio->genus == SPUTNIK_AST_FUNCTIO_SAGITTA);
+    est_expressio_corpus = (corpus->genus != SPUTNIK_AST_SENTENTIA_GREX);
+
+    si (est_sagitta && est_expressio_corpus)
     {
-        resultus = interp->redde_valor;
-        interp->redde_activa = FALSUM;
+        /* Arrow function cum expressio: implicit return */
+        resultus = _evaluare_nodum(interp, corpus);
     }
     alioquin
     {
-        resultus = _valor_nihil();
+        /* Regular function vel arrow cum block: executare corpus */
+        _executare_sententiam(interp, corpus);
+
+        /* Capturare return value */
+        si (interp->redde_activa)
+        {
+            resultus = interp->redde_valor;
+            interp->redde_activa = FALSUM;
+        }
+        alioquin
+        {
+            resultus = _valor_nihil();
+        }
     }
 
     /* Restaurare scope */
@@ -1403,6 +2136,12 @@ _eval_vocationem(SputnikInterpres* interp, SputnikAstNodus* nodus)
     /* Evaluare callee */
     callee = _evaluare_nodum(interp, callee_nodus);
     si (interp->error_accidit) redde _valor_nihil();
+
+    /* Tractare array method calls */
+    si (callee.genus == SPUTNIK_VALOR_METHODUS_XAR)
+    {
+        redde _vocare_methodum_xar(interp, &callee.ut.methodus_xar, argumenta, nodus);
+    }
 
     si (callee.genus != SPUTNIK_VALOR_FUNCTIO)
     {
@@ -1476,6 +2215,10 @@ _evaluare_nodum(SputnikInterpres* interp, SputnikAstNodus* nodus)
         casus SPUTNIK_AST_SIGNUM:
             /* Tags redde ut chordas */
             redde _valor_chorda(nodus->valor);
+
+        casus SPUTNIK_AST_FUNCTIO_SAGITTA:
+            /* Arrow functions redde ut function value */
+            redde _valor_functio(nodus);
 
         ordinarius:
             _error(interp, nodus, "Genus nodi non evaluabile");
@@ -2104,15 +2847,16 @@ sputnik_valor_genus_nomen(SputnikValorGenus genus)
 {
     commutatio (genus)
     {
-        casus SPUTNIK_VALOR_NIHIL:      redde "null";
-        casus SPUTNIK_VALOR_NUMERUS:    redde "number";
-        casus SPUTNIK_VALOR_CHORDA:     redde "string";
-        casus SPUTNIK_VALOR_VERUM:      redde "boolean";
-        casus SPUTNIK_VALOR_FALSUM:     redde "boolean";
-        casus SPUTNIK_VALOR_XAR:        redde "array";
-        casus SPUTNIK_VALOR_OBJECTUM:   redde "object";
-        casus SPUTNIK_VALOR_FUNCTIO:    redde "function";
-        ordinarius:                     redde "unknown";
+        casus SPUTNIK_VALOR_NIHIL:        redde "null";
+        casus SPUTNIK_VALOR_NUMERUS:      redde "number";
+        casus SPUTNIK_VALOR_CHORDA:       redde "string";
+        casus SPUTNIK_VALOR_VERUM:        redde "boolean";
+        casus SPUTNIK_VALOR_FALSUM:       redde "boolean";
+        casus SPUTNIK_VALOR_XAR:          redde "array";
+        casus SPUTNIK_VALOR_OBJECTUM:     redde "object";
+        casus SPUTNIK_VALOR_FUNCTIO:      redde "function";
+        casus SPUTNIK_VALOR_METHODUS_XAR: redde "function";
+        ordinarius:                       redde "unknown";
     }
 }
 

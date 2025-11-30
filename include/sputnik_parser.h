@@ -78,7 +78,10 @@ nomen enumeratio {
 
     /* Operationes Additi */
     SPUTNIK_AST_SENTENTIA_INCREMENT  = XXIX,      /* i++ */
-    SPUTNIK_AST_SENTENTIA_DECREMENT  = XXX        /* i-- */
+    SPUTNIK_AST_SENTENTIA_DECREMENT  = XXX,       /* i-- */
+
+    /* Functio Sagitta (Arrow Function) */
+    SPUTNIK_AST_FUNCTIO_SAGITTA      = XXXI       /* x => x * 2 */
 } SputnikAstGenus;
 
 

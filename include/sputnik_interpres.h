@@ -38,15 +38,28 @@
  * ================================================== */
 
 nomen enumeratio {
-    SPUTNIK_VALOR_NIHIL     = I,
-    SPUTNIK_VALOR_NUMERUS   = II,      /* f64 */
-    SPUTNIK_VALOR_CHORDA    = III,     /* chorda */
-    SPUTNIK_VALOR_VERUM     = IV,      /* boolean true */
-    SPUTNIK_VALOR_FALSUM    = V,       /* boolean false */
-    SPUTNIK_VALOR_XAR       = VI,      /* Xar de SputnikValor* */
-    SPUTNIK_VALOR_OBJECTUM  = VII,     /* TabulaDispersa */
-    SPUTNIK_VALOR_FUNCTIO   = VIII     /* function reference */
+    SPUTNIK_VALOR_NIHIL        = I,
+    SPUTNIK_VALOR_NUMERUS      = II,      /* f64 */
+    SPUTNIK_VALOR_CHORDA       = III,     /* chorda */
+    SPUTNIK_VALOR_VERUM        = IV,      /* boolean true */
+    SPUTNIK_VALOR_FALSUM       = V,       /* boolean false */
+    SPUTNIK_VALOR_XAR          = VI,      /* Xar de SputnikValor* */
+    SPUTNIK_VALOR_OBJECTUM     = VII,     /* TabulaDispersa */
+    SPUTNIK_VALOR_FUNCTIO      = VIII,    /* function reference */
+    SPUTNIK_VALOR_METHODUS_XAR = IX       /* array method reference */
 } SputnikValorGenus;
+
+
+/* ==================================================
+ * SputnikMethodusXar - Array Method Reference
+ *
+ * Continet referentiam ad array et nomen methodi.
+ * ================================================== */
+
+nomen structura {
+    Xar*   xar;       /* Array objectum */
+    chorda titulus;   /* Nomen methodi (push, pop, etc.) */
+} SputnikMethodusXar;
 
 
 /* ==================================================
@@ -65,6 +78,7 @@ structura SputnikValor {
         Xar*                 xar;           /* Xar de SputnikValor* */
         TabulaDispersa*      objectum;      /* chorda -> SputnikValor* */
         SputnikAstNodus*     functio;       /* DECLARATIO_FUNCTIO node */
+        SputnikMethodusXar   methodus_xar;  /* array method reference */
     } ut;
 };
 

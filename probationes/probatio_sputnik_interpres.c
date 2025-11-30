@@ -1151,6 +1151,415 @@ _probare_complex(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Probationes - Arrow Functions (Functiones Sagittae)
+ * ================================================== */
+
+interior vacuum
+_probare_functiones_sagittas(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Functiones Sagittae ---\n");
+
+    /* Arrow simplex: x => x * 2 */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit double = x => x * 2;"
+            "double(5);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 10.0);
+    }
+
+    /* Arrow cum duobus parametris: (a, b) => a + b */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit add = (a, b) => a + b;"
+            "add(3, 7);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 10.0);
+    }
+
+    /* Arrow cum corpore block */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit complex = x => { sit y = x * 2; redde y + 1; };"
+            "complex(5);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 11.0);
+    }
+
+    /* Arrow sine parametris */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit getFortyTwo = () => 42;"
+            "getFortyTwo();",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 42.0);
+    }
+
+    /* Arrow in variabili et vocata */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit square = x => x * x;"
+            "sit a = 5;"
+            "square(a) + square(3);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 34.0);  /* 25 + 9 = 34 */
+    }
+
+    /* Arrow vocata ab alia functione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit add = (a, b) => a + b;"
+            "functio applyTwice(f, x) { redde f(f(x, 1), 1); }"
+            "applyTwice(add, 5);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 7.0);  /* add(add(5,1),1) = add(6,1) = 7 */
+    }
+}
+
+
+/* ==================================================
+ * Probationes - Array Methods (Methodi Xar)
+ * ================================================== */
+
+interior vacuum
+_probare_methodos_xar(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Methodi Xar ---\n");
+
+    /* push */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.push(4);"
+            "len(arr);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 4.0);
+    }
+
+    /* push - valor ultimo */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.push(4);"
+            "arr[3];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 4.0);
+    }
+
+    /* pop */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "sit x = arr.pop();"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* pop - longitudo reducta */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.pop();"
+            "len(arr);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+
+    /* shift */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "sit x = arr.shift();"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 1.0);
+    }
+
+    /* shift - primum novum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.shift();"
+            "arr[0];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+
+    /* unshift */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [2, 3];"
+            "arr.unshift(1);"
+            "arr[0];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 1.0);
+    }
+
+    /* indexOf - inventum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [10, 20, 30];"
+            "arr.indexOf(20);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 1.0);
+    }
+
+    /* indexOf - non inventum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [10, 20, 30];"
+            "arr.indexOf(99);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, -1.0);
+    }
+
+    /* includes - verum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.includes(2);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* includes - falsum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.includes(99);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
+    }
+
+    /* slice */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3, 4, 5];"
+            "sit sliced = arr.slice(1, 4);"
+            "len(sliced);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* slice - valores */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3, 4, 5];"
+            "sit sliced = arr.slice(1, 4);"
+            "sliced[0] + sliced[1] + sliced[2];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 9.0);  /* 2 + 3 + 4 = 9 */
+    }
+
+    /* concat */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit a = [1, 2];"
+            "sit b = [3, 4];"
+            "sit c = a.concat(b);"
+            "len(c);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 4.0);
+    }
+
+    /* join */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.join(\"-\");",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "1-2-3"));
+    }
+}
+
+
+/* ==================================================
+ * Probationes - Callback Methods (map, filter, find, forEach)
+ * ================================================== */
+
+interior vacuum
+_probare_methodos_callback(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Methodi Callback ---\n");
+
+    /* map - simplex */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "sit doubled = arr.map(x => x * 2);"
+            "doubled[0] + doubled[1] + doubled[2];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 12.0);  /* 2 + 4 + 6 = 12 */
+    }
+
+    /* map - cum block corpus */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "sit result = arr.map(x => { sit y = x * 2; redde y + 1; });"
+            "result[0] + result[1] + result[2];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 15.0);  /* 3 + 5 + 7 = 15 */
+    }
+
+    /* filter - simplex */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3, 4, 5, 6];"
+            "sit evens = arr.filter(x => x % 2 == 0);"
+            "len(evens);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* filter - valores */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3, 4, 5, 6];"
+            "sit evens = arr.filter(x => x % 2 == 0);"
+            "evens[0] + evens[1] + evens[2];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 12.0);  /* 2 + 4 + 6 = 12 */
+    }
+
+    /* filter - nullus */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "sit result = arr.filter(x => x > 100);"
+            "len(result);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 0.0);
+    }
+
+    /* find - inventum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3, 4, 5];"
+            "arr.find(x => x > 3);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 4.0);
+    }
+
+    /* find - non inventum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.find(x => x > 100);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_NIHIL);
+    }
+
+    /* forEach - effectus lateris (usque count) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit count = 0;"
+            "[1, 2, 3].forEach(x => { count = count + 1; });"
+            "count;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* forEach - summa per effectum lateris */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0;"
+            "[1, 2, 3, 4, 5].forEach(x => { sum = sum + x; });"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 15.0);
+    }
+
+    /* Chaining: filter + map */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3, 4, 5];"
+            "sit result = arr.filter(x => x > 2).map(y => y * 2);"
+            "result[0] + result[1] + result[2];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 24.0);  /* 6 + 8 + 10 = 24 */
+    }
+
+    /* map cum functione regulari */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "functio triple(x) { redde x * 3; }"
+            "sit arr = [1, 2, 3];"
+            "sit result = arr.map(x => triple(x));"
+            "result[0] + result[1] + result[2];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 18.0);  /* 3 + 6 + 9 = 18 */
+    }
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -1181,6 +1590,9 @@ integer principale(vacuum)
     _probare_builtins(piscina, intern);
     _probare_errores(piscina, intern);
     _probare_complex(piscina, intern);
+    _probare_functiones_sagittas(piscina, intern);
+    _probare_methodos_xar(piscina, intern);
+    _probare_methodos_callback(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

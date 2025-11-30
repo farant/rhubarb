@@ -53,6 +53,8 @@ interior SputnikAstNodus* _parsere_sententiam_grex(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_declarationem_functio(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_sententiam_frange(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_sententiam_perge(SputnikParser* parser);
+interior SputnikAstNodus* _parsere_functionem_sagittam(SputnikParser* parser);
+interior b32 _est_functio_sagitta_parenthesis(SputnikParser* parser);
 
 
 /* ==================================================
@@ -69,10 +71,6 @@ _currens(SputnikParser* parser)
     redde xar_obtinere(parser->lexemata, parser->positus);
 }
 
-/* _aspicere - Lookahead pro futuro usu
- * Currenter non usitata sed utilis pro extensionibus
- */
-#if 0
 interior SputnikLexema*
 _aspicere(SputnikParser* parser, i32 offset)
 {
@@ -84,7 +82,6 @@ _aspicere(SputnikParser* parser, i32 offset)
     }
     redde xar_obtinere(parser->lexemata, pos);
 }
-#endif
 
 interior b32
 _finis(SputnikParser* parser)
@@ -580,6 +577,151 @@ _parsere_objectum_literalem(SputnikParser* parser)
     redde nodus;
 }
 
+/* ==================================================
+ * Arrow Function Parsing
+ *
+ * Formats:
+ *   x => expr
+ *   x => { ... }
+ *   (x, y) => expr
+ *   (x, y) => { ... }
+ * ================================================== */
+
+/* Verificare si parenthesis initiat functionem sagittam
+ * Scan forward usque ad ) et verificare si => sequitur
+ */
+interior b32
+_est_functio_sagitta_parenthesis(SputnikParser* parser)
+{
+    i32 offset;
+    i32 depth;
+    SputnikLexema* lex;
+
+    /* Currens est (, incipiamus ab offset 1 */
+    offset = I;
+    depth = I;
+
+    dum (depth > ZEPHYRUM)
+    {
+        lex = _aspicere(parser, offset);
+        si (lex == NIHIL || lex->genus == SPUTNIK_LEXEMA_FINIS)
+        {
+            redde FALSUM;
+        }
+
+        si (lex->genus == SPUTNIK_LEXEMA_PARENTHESIS_A)
+        {
+            depth++;
+        }
+        alioquin si (lex->genus == SPUTNIK_LEXEMA_PARENTHESIS_C)
+        {
+            depth--;
+        }
+
+        offset++;
+    }
+
+    /* Nunc offset punctat ad lexema post ) */
+    lex = _aspicere(parser, offset);
+    redde lex != NIHIL && lex->genus == SPUTNIK_LEXEMA_SAGITTA;
+}
+
+/* Parsere functionem sagittam
+ * Assumit currentem positum est aut:
+ *   - Identificator (x => ...)
+ *   - Parenthesis apertam ((x, y) => ...)
+ */
+interior SputnikAstNodus*
+_parsere_functionem_sagittam(SputnikParser* parser)
+{
+    SputnikAstNodus* nodus;
+    SputnikAstNodus* parametrum;
+    SputnikAstNodus* corpus;
+    SputnikLexema* lex;
+
+    nodus = _creare_nodum(parser, SPUTNIK_AST_FUNCTIO_SAGITTA);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    lex = _currens(parser);
+
+    /* Forma 1: x => ... (singulum parametrum sine parenthesi) */
+    si (lex->genus == SPUTNIK_LEXEMA_IDENTIFICATOR)
+    {
+        parametrum = _creare_nodum(parser, SPUTNIK_AST_IDENTIFICATOR);
+        si (parametrum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        parametrum->valor = lex->valor;
+        _addere_infantem(nodus, parametrum);
+        _progredi(parser);
+    }
+    /* Forma 2: (x, y) => ... (parametra in parenthesi) */
+    alioquin si (lex->genus == SPUTNIK_LEXEMA_PARENTHESIS_A)
+    {
+        /* Skip ( */
+        _progredi(parser);
+
+        /* Parsere parametra */
+        dum (!_finis(parser) && !_verificare(parser, SPUTNIK_LEXEMA_PARENTHESIS_C))
+        {
+            lex = _currens(parser);
+            si (lex == NIHIL || lex->genus != SPUTNIK_LEXEMA_IDENTIFICATOR)
+            {
+                _error(parser, "Expectabatur nomen parametri");
+                redde NIHIL;
+            }
+
+            parametrum = _creare_nodum(parser, SPUTNIK_AST_IDENTIFICATOR);
+            si (parametrum == NIHIL)
+            {
+                redde NIHIL;
+            }
+            parametrum->valor = lex->valor;
+            _addere_infantem(nodus, parametrum);
+            _progredi(parser);
+
+            si (!_consumere(parser, SPUTNIK_LEXEMA_COMMA))
+            {
+                frange;
+            }
+        }
+
+        _expectare(parser, SPUTNIK_LEXEMA_PARENTHESIS_C, "Expectabatur )");
+    }
+    alioquin
+    {
+        _error(parser, "Functio sagitta invalida");
+        redde NIHIL;
+    }
+
+    /* Expectare => */
+    _expectare(parser, SPUTNIK_LEXEMA_SAGITTA, "Expectabatur =>");
+
+    /* Corpus - aut block { ... } aut expressio */
+    si (_verificare(parser, SPUTNIK_LEXEMA_BRACCHIUM_A))
+    {
+        /* Block corpus */
+        corpus = _parsere_sententiam_grex(parser);
+    }
+    alioquin
+    {
+        /* Expressio corpus (implicita redde) */
+        corpus = _parsere_expressionem(parser, ZEPHYRUM);
+    }
+
+    si (corpus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _addere_infantem(nodus, corpus);
+
+    redde nodus;
+}
+
 interior SputnikAstNodus*
 _parsere_praefixum_unarium(SputnikParser* parser)
 {
@@ -984,13 +1126,33 @@ _parsere_expressionem(SputnikParser* parser, i32 praecedentia)
             sinister = _parsere_nihil(parser);
             frange;
         casus SPUTNIK_LEXEMA_IDENTIFICATOR:
-            sinister = _parsere_identificatorem(parser);
+            /* Verificare si arrow function: x => ... */
+            {
+                SputnikLexema* next;
+                next = _aspicere(parser, I);
+                si (next != NIHIL && next->genus == SPUTNIK_LEXEMA_SAGITTA)
+                {
+                    sinister = _parsere_functionem_sagittam(parser);
+                }
+                alioquin
+                {
+                    sinister = _parsere_identificatorem(parser);
+                }
+            }
             frange;
         casus SPUTNIK_LEXEMA_SIGNUM:
             sinister = _parsere_signum(parser);
             frange;
         casus SPUTNIK_LEXEMA_PARENTHESIS_A:
-            sinister = _parsere_parenthesin(parser);
+            /* Verificare si arrow function: (x, y) => ... */
+            si (_est_functio_sagitta_parenthesis(parser))
+            {
+                sinister = _parsere_functionem_sagittam(parser);
+            }
+            alioquin
+            {
+                sinister = _parsere_parenthesin(parser);
+            }
             frange;
         casus SPUTNIK_LEXEMA_QUADRATUM_A:
             sinister = _parsere_xar_literalem(parser);
@@ -1848,6 +2010,7 @@ sputnik_ast_genus_nomen(SputnikAstGenus genus)
         casus SPUTNIK_AST_SENTENTIA_PERGE:      redde "SENTENTIA_PERGE";
         casus SPUTNIK_AST_SENTENTIA_INCREMENT:  redde "SENTENTIA_INCREMENT";
         casus SPUTNIK_AST_SENTENTIA_DECREMENT:  redde "SENTENTIA_DECREMENT";
+        casus SPUTNIK_AST_FUNCTIO_SAGITTA:      redde "FUNCTIO_SAGITTA";
         ordinarius:                             redde "IGNOTUM";
     }
 }
