@@ -1964,6 +1964,55 @@ _methodus_repo_roots(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* a
     redde _valor_xar(resultus);
 }
 
+/* REPO.scaffold(genus, titulus) - creare vel obtinere entitatem cum ID deterministico */
+interior SputnikValor
+_methodus_repo_scaffold(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* genus_arg;
+    SputnikValor* titulus_arg;
+    Entitas* entitas;
+    character genus_buffer[CCLVI];
+    character titulus_buffer[CCLVI];
+    i32 len;
+
+    si (xar_numerus(argumenta) < II)
+    {
+        _error(interp, nodus, "REPO.scaffold requirit II argumenta: genus, titulus");
+        redde _valor_nihil();
+    }
+
+    genus_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    titulus_arg = xar_obtinere(argumenta, I);
+
+    si (genus_arg->genus != SPUTNIK_VALOR_CHORDA ||
+        titulus_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumenta ad REPO.scaffold debent esse chordae");
+        redde _valor_nihil();
+    }
+
+    /* Convertere ad C strings */
+    len = genus_arg->ut.chorda_valor.mensura;
+    si (len >= CCLVI) len = CCLV;
+    memcpy(genus_buffer, genus_arg->ut.chorda_valor.datum, (size_t)len);
+    genus_buffer[len] = '\0';
+
+    len = titulus_arg->ut.chorda_valor.mensura;
+    si (len >= CCLVI) len = CCLV;
+    memcpy(titulus_buffer, titulus_arg->ut.chorda_valor.datum, (size_t)len);
+    titulus_buffer[len] = '\0';
+
+    /* Vocare entitas_scaffoldare */
+    entitas = repo->entitas_scaffoldare(repo->datum, genus_buffer, titulus_buffer);
+    si (entitas == NIHIL)
+    {
+        _error(interp, nodus, "Non potest scaffoldare entitatem");
+        redde _valor_nihil();
+    }
+
+    redde _valor_entitas(entitas);
+}
+
 /* Dispatcher pro repository methods */
 interior SputnikValor
 _vocare_methodum_repositorium(SputnikInterpres* interp, SputnikMethodusRepositorium* meth, Xar* argumenta, SputnikAstNodus* nodus)
@@ -1984,6 +2033,8 @@ _vocare_methodum_repositorium(SputnikInterpres* interp, SputnikMethodusRepositor
         redde _methodus_repo_search(interp, meth->repositorium, argumenta, nodus);
     si (chorda_aequalis_literis(meth->titulus, "roots"))
         redde _methodus_repo_roots(interp, meth->repositorium, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "scaffold"))
+        redde _methodus_repo_scaffold(interp, meth->repositorium, argumenta, nodus);
 
     _error(interp, nodus, "Methodus repositorii ignota");
     redde _valor_nihil();
@@ -2669,7 +2720,8 @@ _eval_accessum_membri(SputnikInterpres* interp, SputnikAstNodus* nodus)
             chorda_aequalis_literis(nodus->valor, "query") ||
             chorda_aequalis_literis(nodus->valor, "tagged") ||
             chorda_aequalis_literis(nodus->valor, "search") ||
-            chorda_aequalis_literis(nodus->valor, "roots"))
+            chorda_aequalis_literis(nodus->valor, "roots") ||
+            chorda_aequalis_literis(nodus->valor, "scaffold"))
         {
             redde _valor_methodus_repositorium(repo, nodus->valor);
         }
