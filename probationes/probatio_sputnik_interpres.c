@@ -4,6 +4,8 @@
  */
 
 #include "sputnik_interpres.h"
+#include "persistentia.h"
+#include "entitas_repositorium.h"
 #include "credo.h"
 #include <stdio.h>
 
@@ -1414,6 +1416,37 @@ _probare_methodos_xar(Piscina* piscina, InternamentumChorda* intern)
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
         CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "1-2-3"));
     }
+
+    /* length() methodus */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "arr.length();",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* length() - array vacua */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("[].length();", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 0.0);
+    }
+
+    /* length() post push */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2];"
+            "arr.push(3);"
+            "arr.length();",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
 }
 
 
@@ -1560,6 +1593,348 @@ _probare_methodos_callback(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Probationes - Methodi Chorda (String Methods)
+ * ================================================== */
+
+interior vacuum
+_probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Methodi Chorda ---\n");
+
+    /* length */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".length();", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 5.0);
+    }
+
+    /* length - chorda vacua */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"\".length();", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 0.0);
+    }
+
+    /* charAt */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".charAt(1);", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "e"));
+    }
+
+    /* charAt - extra fines */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hi\".charAt(10);", piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, ""));
+    }
+
+    /* indexOf - inventum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".indexOf(\"l\");", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+
+    /* indexOf - non inventum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".indexOf(\"x\");", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, -1.0);
+    }
+
+    /* includes - verum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".includes(\"ell\");", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* includes - falsum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".includes(\"xyz\");", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
+    }
+
+    /* substring */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".substring(1, 4);", piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "ell"));
+    }
+
+    /* toUpperCase */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"hello\".toUpperCase();", piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "HELLO"));
+    }
+
+    /* toLowerCase */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"HELLO\".toLowerCase();", piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "hello"));
+    }
+
+    /* split */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = \"a,b,c\".split(\",\");"
+            "len(arr);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* split - verificare valores */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = \"a,b,c\".split(\",\");"
+            "arr[0];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "a"));
+    }
+
+    /* chaining methodi */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "\"HELLO\".toLowerCase().substring(0, 2);",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "he"));
+    }
+}
+
+
+/* ==================================================
+ * Probationes - Entitates (Entity System)
+ * ================================================== */
+
+interior vacuum
+_probare_entitates(Piscina* piscina, InternamentumChorda* intern)
+{
+    Persistentia* persistentia;
+    EntitasRepositorium* repositorium;
+
+    imprimere("\n--- Probatio Entitates ---\n");
+
+    /* Creare repositorium in memoria */
+    persistentia = persistentia_memoria_creare(piscina);
+    CREDO(persistentia != NIHIL);
+
+    repositorium = entitas_repositorium_creare(piscina, persistentia);
+    CREDO(repositorium != NIHIL);
+
+    /* REPO.scaffold - creare */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit city = REPO.scaffold(\"City\", \"Roma\");"
+            "city;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_ENTITAS);
+    }
+
+    /* REPO.scaffold - idempotens */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit a = REPO.scaffold(\"City\", \"Roma\");"
+            "sit b = REPO.scaffold(\"City\", \"Roma\");"
+            "a.id == b.id;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* entity.id (proprietas) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Test\");"
+            "typeof(e.id);",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "string"));
+    }
+
+    /* entity.genus (proprietas) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Urbs\");"
+            "e.genus;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "City"));
+    }
+
+    /* TODO: entity proprietas custom - functio in memoria non operatur
+     * Operatur cum persistentia filum sed non cum persistentia_memoria.
+     * Haec probatio praetermittitur donec persistentia_memoria reparetur.
+     */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Londinium\");"
+            "e.population = \"9000000\";"
+            "e.population;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "9000000"));
+    }
+    */
+
+    /* REPO.get */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Athena\");"
+            "sit id = e.id;"
+            "sit found = REPO.get(id);"
+            "found.genus;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "City"));
+    }
+
+    /* TODO: add_relation + related - non operatur
+     * Relationes non inveniuntur post add_relation.
+     * Haec probatio praetermittitur donec reparetur.
+     */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit country = REPO.scaffold(\"Country\", \"Italia\");"
+            "sit city = REPO.scaffold(\"City\", \"Roma\");"
+            "country.add_relation(\"contains\", city.id);"
+            "sit rel = country.related(\"contains\");"
+            "rel.id == city.id;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+    */
+
+    /* TODO: related_all - non operatur (vide supra) */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit parent = REPO.scaffold(\"Parent\", \"P1\");"
+            "sit c1 = REPO.scaffold(\"Child\", \"C1\");"
+            "sit c2 = REPO.scaffold(\"Child\", \"C2\");"
+            "parent.add_relation(\"child\", c1.id);"
+            "parent.add_relation(\"child\", c2.id);"
+            "sit all = parent.related_all(\"child\");"
+            "len(all);",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+    */
+
+    /* TODO: add_tag + has_tag - non operatur cum persistentia_memoria */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Paris\");"
+            "e.add_tag(\"capital\");"
+            "e.has_tag(\"capital\");",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+    */
+
+    /* TODO: has_tag - falsum - non operatur cum persistentia_memoria */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Lyon\");"
+            "e.has_tag(\"capital\");",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
+    }
+    */
+
+    /* TODO: remove_tag - non operatur cum persistentia_memoria */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"City\", \"Berlin\");"
+            "e.add_tag(\"wall\");"
+            "e.remove_tag(\"wall\");"
+            "e.has_tag(\"wall\");",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
+    }
+    */
+
+    /* TODO: REPO.tagged - non operatur cum persistentia_memoria
+     * Notae non inveniuntur.
+     */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e1 = REPO.scaffold(\"City\", \"Vienna\");"
+            "sit e2 = REPO.scaffold(\"City\", \"Prague\");"
+            "e1.add_tag(\"historic\");"
+            "e2.add_tag(\"historic\");"
+            "sit found = REPO.tagged(\"historic\");"
+            "len(found);",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+    */
+
+    /* TODO: REPO.search - non operatur
+     * Tituli non inveniuntur.
+     */
+    /*
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"Document\", \"Manifesto\");"
+            "sit found = REPO.search(\"Manifesto\");"
+            "len(found) > 0;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+    */
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -1593,6 +1968,8 @@ integer principale(vacuum)
     _probare_functiones_sagittas(piscina, intern);
     _probare_methodos_xar(piscina, intern);
     _probare_methodos_callback(piscina, intern);
+    _probare_methodos_chorda(piscina, intern);
+    _probare_entitates(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

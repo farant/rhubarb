@@ -52,7 +52,8 @@ nomen enumeratio {
     SPUTNIK_VALOR_ENTITAS               = X,       /* Entitas* - entity reference */
     SPUTNIK_VALOR_METHODUS_ENTITAS      = XI,      /* entity method reference */
     SPUTNIK_VALOR_REPOSITORIUM          = XII,     /* EntitasRepositorium* */
-    SPUTNIK_VALOR_METHODUS_REPOSITORIUM = XIII     /* repository method reference */
+    SPUTNIK_VALOR_METHODUS_REPOSITORIUM = XIII,    /* repository method reference */
+    SPUTNIK_VALOR_METHODUS_CHORDA       = XIV      /* string method reference */
 } SputnikValorGenus;
 
 
@@ -93,6 +94,18 @@ nomen structura {
 
 
 /* ==================================================
+ * SputnikMethodusChorda - String Method Reference
+ *
+ * Continet referentiam ad chorda et nomen methodi.
+ * ================================================== */
+
+nomen structura {
+    chorda chorda_valor;    /* String value */
+    chorda titulus;         /* Nomen methodi (length, charAt, etc.) */
+} SputnikMethodusChorda;
+
+
+/* ==================================================
  * SputnikValor - Runtime Value
  *
  * Tagged union pro omnibus valoribus runtime.
@@ -113,6 +126,7 @@ structura SputnikValor {
         SputnikMethodusEntitas       methodus_entitas;     /* entity method reference */
         EntitasRepositorium*         repositorium;         /* repository reference */
         SputnikMethodusRepositorium  methodus_repositorium; /* repo method reference */
+        SputnikMethodusChorda        methodus_chorda;      /* string method reference */
     } ut;
 };
 

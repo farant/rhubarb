@@ -146,6 +146,16 @@ _valor_methodus_repositorium(EntitasRepositorium* repo, chorda titulus)
     redde v;
 }
 
+interior SputnikValor
+_valor_methodus_chorda(chorda chorda_valor, chorda titulus)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_METHODUS_CHORDA;
+    v.ut.methodus_chorda.chorda_valor = chorda_valor;
+    v.ut.methodus_chorda.titulus = titulus;
+    redde v;
+}
+
 
 /* ==================================================
  * Adiutores - Truthiness
@@ -173,6 +183,7 @@ _est_verum(SputnikValor* valor)
         casus SPUTNIK_VALOR_OBJECTUM:
         casus SPUTNIK_VALOR_FUNCTIO:
         casus SPUTNIK_VALOR_METHODUS_XAR:
+        casus SPUTNIK_VALOR_METHODUS_CHORDA:
         casus SPUTNIK_VALOR_ENTITAS:
         casus SPUTNIK_VALOR_METHODUS_ENTITAS:
         casus SPUTNIK_VALOR_REPOSITORIUM:
@@ -486,6 +497,9 @@ _ad_chordam(SputnikInterpres* interp, SputnikValor* valor)
         casus SPUTNIK_VALOR_METHODUS_XAR:
             redde chorda_ex_literis("[array method]", interp->piscina);
 
+        casus SPUTNIK_VALOR_METHODUS_CHORDA:
+            redde chorda_ex_literis("[string method]", interp->piscina);
+
         casus SPUTNIK_VALOR_ENTITAS:
             /* Formattare ut [Entitas:genus:id] */
             aed = chorda_aedificator_creare(interp->piscina, CXXVIII);
@@ -645,6 +659,7 @@ interior b32
 _est_methodus_xar(chorda titulus)
 {
     /* Methodi simplices (sine callback) */
+    si (chorda_aequalis_literis(titulus, "length"))  redde VERUM;
     si (chorda_aequalis_literis(titulus, "push"))    redde VERUM;
     si (chorda_aequalis_literis(titulus, "pop"))     redde VERUM;
     si (chorda_aequalis_literis(titulus, "shift"))   redde VERUM;
@@ -660,6 +675,28 @@ _est_methodus_xar(chorda titulus)
     si (chorda_aequalis_literis(titulus, "find"))    redde VERUM;
     si (chorda_aequalis_literis(titulus, "forEach")) redde VERUM;
     redde FALSUM;
+}
+
+/* Verificare si titulus est methodus chorda */
+interior b32
+_est_methodus_chorda(chorda titulus)
+{
+    si (chorda_aequalis_literis(titulus, "length"))     redde VERUM;
+    si (chorda_aequalis_literis(titulus, "charAt"))     redde VERUM;
+    si (chorda_aequalis_literis(titulus, "indexOf"))    redde VERUM;
+    si (chorda_aequalis_literis(titulus, "includes"))   redde VERUM;
+    si (chorda_aequalis_literis(titulus, "substring"))  redde VERUM;
+    si (chorda_aequalis_literis(titulus, "toUpperCase")) redde VERUM;
+    si (chorda_aequalis_literis(titulus, "toLowerCase")) redde VERUM;
+    si (chorda_aequalis_literis(titulus, "split"))      redde VERUM;
+    redde FALSUM;
+}
+
+/* length() - redde longitudinem xar */
+interior SputnikValor
+_methodus_xar_length(Xar* xar)
+{
+    redde _valor_numerus((f64)xar_numerus(xar));
 }
 
 /* push(item) - addere ad finem, redde novam longitudinem */
@@ -1297,6 +1334,8 @@ _methodus_xar_forEach(SputnikInterpres* interp, Xar* xar, Xar* argumenta, Sputni
 interior SputnikValor
 _vocare_methodum_xar(SputnikInterpres* interp, SputnikMethodusXar* meth, Xar* argumenta, SputnikAstNodus* nodus)
 {
+    si (chorda_aequalis_literis(meth->titulus, "length"))
+        redde _methodus_xar_length(meth->xar);
     si (chorda_aequalis_literis(meth->titulus, "push"))
         redde _methodus_xar_push(interp, meth->xar, argumenta, nodus);
     si (chorda_aequalis_literis(meth->titulus, "pop"))
@@ -1325,6 +1364,368 @@ _vocare_methodum_xar(SputnikInterpres* interp, SputnikMethodusXar* meth, Xar* ar
         redde _methodus_xar_forEach(interp, meth->xar, argumenta, nodus);
 
     _error(interp, nodus, "Methodus xar ignota");
+    redde _valor_nihil();
+}
+
+
+/* ==================================================
+ * String Methods
+ * ================================================== */
+
+/* length - redde longitudinem chordae */
+interior SputnikValor
+_methodus_chorda_length(chorda str)
+{
+    redde _valor_numerus((f64)str.mensura);
+}
+
+/* charAt(index) - redde characterem ad indicem */
+interior SputnikValor
+_methodus_chorda_charAt(SputnikInterpres* interp, chorda str, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* arg;
+    i32 index;
+    character* buffer;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "charAt() requirit I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (arg->genus != SPUTNIK_VALOR_NUMERUS)
+    {
+        _error(interp, nodus, "charAt() requirit numerum ut indicem");
+        redde _valor_nihil();
+    }
+
+    index = (i32)arg->ut.numerus;
+    si (index < ZEPHYRUM || index >= str.mensura)
+    {
+        /* Extra limites - redde chordam vacuam */
+        redde _valor_chorda(chorda_ex_literis("", interp->piscina));
+    }
+
+    buffer = piscina_allocare(interp->piscina, II);
+    buffer[ZEPHYRUM] = (character)str.datum[index];
+    buffer[I] = '\0';
+    redde _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+}
+
+/* indexOf(substr) - invenire primam occurrentiam */
+interior SputnikValor
+_methodus_chorda_indexOf(SputnikInterpres* interp, chorda str, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* arg;
+    chorda substr;
+    i32 i, j;
+    b32 inventum;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "indexOf() requirit I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "indexOf() requirit chordam");
+        redde _valor_nihil();
+    }
+
+    substr = arg->ut.chorda_valor;
+
+    /* Casus specialis: substr vacua */
+    si (substr.mensura == ZEPHYRUM)
+    {
+        redde _valor_numerus(0.0);
+    }
+
+    /* Si substr longior quam str */
+    si (substr.mensura > str.mensura)
+    {
+        redde _valor_numerus(-1.0);
+    }
+
+    /* Quaerere substr in str */
+    per (i = ZEPHYRUM; i <= str.mensura - substr.mensura; i++)
+    {
+        inventum = VERUM;
+        per (j = ZEPHYRUM; j < substr.mensura; j++)
+        {
+            si (str.datum[i + j] != substr.datum[j])
+            {
+                inventum = FALSUM;
+                frange;
+            }
+        }
+        si (inventum)
+        {
+            redde _valor_numerus((f64)i);
+        }
+    }
+
+    redde _valor_numerus(-1.0);
+}
+
+/* includes(substr) - verificare si continet */
+interior SputnikValor
+_methodus_chorda_includes(SputnikInterpres* interp, chorda str, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor result;
+
+    result = _methodus_chorda_indexOf(interp, str, argumenta, nodus);
+    si (interp->error_accidit)
+    {
+        redde _valor_nihil();
+    }
+
+    si (result.ut.numerus >= 0.0)
+    {
+        redde _valor_verum();
+    }
+    redde _valor_falsum();
+}
+
+/* substring(start, end?) - extrahere partem */
+interior SputnikValor
+_methodus_chorda_substring(SputnikInterpres* interp, chorda str, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* arg;
+    i32 start, end;
+    i32 len;
+    character* buffer;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "substring() requirit saltem I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (arg->genus != SPUTNIK_VALOR_NUMERUS)
+    {
+        _error(interp, nodus, "substring() requirit numerum ut initium");
+        redde _valor_nihil();
+    }
+    start = (i32)arg->ut.numerus;
+
+    /* Default end = longitudo */
+    end = str.mensura;
+    si (xar_numerus(argumenta) >= II)
+    {
+        arg = xar_obtinere(argumenta, I);
+        si (arg->genus == SPUTNIK_VALOR_NUMERUS)
+        {
+            end = (i32)arg->ut.numerus;
+        }
+    }
+
+    /* Normalizare indices (JavaScript substring behavior) */
+    si (start < ZEPHYRUM) start = ZEPHYRUM;
+    si (end < ZEPHYRUM) end = ZEPHYRUM;
+    si (start > str.mensura) start = str.mensura;
+    si (end > str.mensura) end = str.mensura;
+
+    /* Si start > end, commutare */
+    si (start > end)
+    {
+        i32 temp;
+        temp = start;
+        start = end;
+        end = temp;
+    }
+
+    len = end - start;
+    si (len <= ZEPHYRUM)
+    {
+        redde _valor_chorda(chorda_ex_literis("", interp->piscina));
+    }
+
+    buffer = piscina_allocare(interp->piscina, (memoriae_index)(len + I));
+    memcpy(buffer, str.datum + start, (size_t)len);
+    buffer[len] = '\0';
+    redde _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+}
+
+/* toUpperCase() - convertere ad maiusculas */
+interior SputnikValor
+_methodus_chorda_toUpperCase(SputnikInterpres* interp, chorda str)
+{
+    character* buffer;
+    i32 i;
+
+    buffer = piscina_allocare(interp->piscina, (memoriae_index)(str.mensura + I));
+    per (i = ZEPHYRUM; i < str.mensura; i++)
+    {
+        character c;
+        c = (character)str.datum[i];
+        si (c >= 'a' && c <= 'z')
+        {
+            buffer[i] = (character)(c - 'a' + 'A');
+        }
+        alioquin
+        {
+            buffer[i] = c;
+        }
+    }
+    buffer[str.mensura] = '\0';
+    redde _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+}
+
+/* toLowerCase() - convertere ad minusculas */
+interior SputnikValor
+_methodus_chorda_toLowerCase(SputnikInterpres* interp, chorda str)
+{
+    character* buffer;
+    i32 i;
+
+    buffer = piscina_allocare(interp->piscina, (memoriae_index)(str.mensura + I));
+    per (i = ZEPHYRUM; i < str.mensura; i++)
+    {
+        character c;
+        c = (character)str.datum[i];
+        si (c >= 'A' && c <= 'Z')
+        {
+            buffer[i] = (character)(c - 'A' + 'a');
+        }
+        alioquin
+        {
+            buffer[i] = c;
+        }
+    }
+    buffer[str.mensura] = '\0';
+    redde _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+}
+
+/* split(delimiter) - dividere in xar */
+interior SputnikValor
+_methodus_chorda_split(SputnikInterpres* interp, chorda str, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* arg;
+    chorda delimiter;
+    Xar* resultus;
+    i32 i, j, start;
+    b32 match;
+    SputnikValor* elem;
+    character* buffer;
+    i32 len;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "split() requirit I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "split() requirit chordam ut delimiter");
+        redde _valor_nihil();
+    }
+
+    delimiter = arg->ut.chorda_valor;
+
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (resultus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    /* Casus specialis: delimiter vacua - dividere in characteres */
+    si (delimiter.mensura == ZEPHYRUM)
+    {
+        per (i = ZEPHYRUM; i < str.mensura; i++)
+        {
+            buffer = piscina_allocare(interp->piscina, II);
+            buffer[ZEPHYRUM] = (character)str.datum[i];
+            buffer[I] = '\0';
+
+            elem = xar_addere(resultus);
+            *elem = _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+        }
+        redde _valor_xar(resultus);
+    }
+
+    /* Dividere per delimiter */
+    start = ZEPHYRUM;
+    i = ZEPHYRUM;
+    dum (i <= str.mensura - delimiter.mensura)
+    {
+        /* Verificare si delimiter incipit ad i */
+        match = VERUM;
+        per (j = ZEPHYRUM; j < delimiter.mensura; j++)
+        {
+            si (str.datum[i + j] != delimiter.datum[j])
+            {
+                match = FALSUM;
+                frange;
+            }
+        }
+
+        si (match)
+        {
+            /* Addere segmentum ante delimiter */
+            len = i - start;
+            buffer = piscina_allocare(interp->piscina, (memoriae_index)(len + I));
+            si (len > ZEPHYRUM)
+            {
+                memcpy(buffer, str.datum + start, (size_t)len);
+            }
+            buffer[len] = '\0';
+
+            elem = xar_addere(resultus);
+            *elem = _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+
+            start = i + delimiter.mensura;
+            i = start;
+        }
+        alioquin
+        {
+            i++;
+        }
+    }
+
+    /* Addere ultimum segmentum */
+    len = str.mensura - start;
+    buffer = piscina_allocare(interp->piscina, (memoriae_index)(len + I));
+    si (len > ZEPHYRUM)
+    {
+        memcpy(buffer, str.datum + start, (size_t)len);
+    }
+    buffer[len] = '\0';
+
+    elem = xar_addere(resultus);
+    *elem = _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+
+    redde _valor_xar(resultus);
+}
+
+/* Dispatcher pro methodis chordae */
+interior SputnikValor
+_vocare_methodum_chorda(SputnikInterpres* interp, SputnikMethodusChorda* meth, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    si (chorda_aequalis_literis(meth->titulus, "length"))
+        redde _methodus_chorda_length(meth->chorda_valor);
+    si (chorda_aequalis_literis(meth->titulus, "charAt"))
+        redde _methodus_chorda_charAt(interp, meth->chorda_valor, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "indexOf"))
+        redde _methodus_chorda_indexOf(interp, meth->chorda_valor, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "includes"))
+        redde _methodus_chorda_includes(interp, meth->chorda_valor, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "substring"))
+        redde _methodus_chorda_substring(interp, meth->chorda_valor, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "toUpperCase"))
+        redde _methodus_chorda_toUpperCase(interp, meth->chorda_valor);
+    si (chorda_aequalis_literis(meth->titulus, "toLowerCase"))
+        redde _methodus_chorda_toLowerCase(interp, meth->chorda_valor);
+    si (chorda_aequalis_literis(meth->titulus, "split"))
+        redde _methodus_chorda_split(interp, meth->chorda_valor, argumenta, nodus);
+
+    _error(interp, nodus, "Methodus chorda ignota");
     redde _valor_nihil();
 }
 
@@ -2648,6 +3049,17 @@ _eval_accessum_membri(SputnikInterpres* interp, SputnikAstNodus* nodus)
         redde _valor_nihil();
     }
 
+    /* Tractare string methods */
+    si (obj.genus == SPUTNIK_VALOR_CHORDA)
+    {
+        si (_est_methodus_chorda(nodus->valor))
+        {
+            redde _valor_methodus_chorda(obj.ut.chorda_valor, nodus->valor);
+        }
+        _error(interp, nodus, "Membrum chorda ignotum");
+        redde _valor_nihil();
+    }
+
     /* Tractare entitas */
     si (obj.genus == SPUTNIK_VALOR_ENTITAS)
     {
@@ -3089,6 +3501,12 @@ _eval_vocationem(SputnikInterpres* interp, SputnikAstNodus* nodus)
     si (callee.genus == SPUTNIK_VALOR_METHODUS_REPOSITORIUM)
     {
         redde _vocare_methodum_repositorium(interp, &callee.ut.methodus_repositorium, argumenta, nodus);
+    }
+
+    /* Tractare string method calls */
+    si (callee.genus == SPUTNIK_VALOR_METHODUS_CHORDA)
+    {
+        redde _vocare_methodum_chorda(interp, &callee.ut.methodus_chorda, argumenta, nodus);
     }
 
     si (callee.genus != SPUTNIK_VALOR_FUNCTIO)
@@ -3991,6 +4409,7 @@ sputnik_valor_genus_nomen(SputnikValorGenus genus)
         casus SPUTNIK_VALOR_OBJECTUM:         redde "object";
         casus SPUTNIK_VALOR_FUNCTIO:          redde "function";
         casus SPUTNIK_VALOR_METHODUS_XAR:     redde "function";
+        casus SPUTNIK_VALOR_METHODUS_CHORDA:  redde "function";
         casus SPUTNIK_VALOR_ENTITAS:               redde "entity";
         casus SPUTNIK_VALOR_METHODUS_ENTITAS:      redde "function";
         casus SPUTNIK_VALOR_REPOSITORIUM:          redde "repository";
