@@ -100,6 +100,8 @@ nomen structura {
     i32                   error_columna;
     b32                   redde_activa;       /* return statement hit */
     SputnikValor          redde_valor;        /* return value */
+    b32                   frange_activa;      /* break statement hit */
+    b32                   perge_activa;       /* continue statement hit */
 } SputnikInterpres;
 
 

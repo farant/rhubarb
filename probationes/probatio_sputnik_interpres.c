@@ -487,6 +487,306 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Probationes - Break/Continue (Frange/Perge)
+ * ================================================== */
+
+interior vacuum
+_probare_frange_perge(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Frange/Perge ---\n");
+
+    /* Frange in while */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0;"
+            "sit i = 0;"
+            "dum (verum) {"
+            "  i = i + 1;"
+            "  si (i > 5) { frange; }"
+            "  sum = sum + i;"
+            "}"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 15.0);  /* 1+2+3+4+5 = 15 */
+    }
+
+    /* Frange in for */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0;"
+            "per (sit i = 0; i < 100; i = i + 1) {"
+            "  si (i >= 5) { frange; }"
+            "  sum = sum + i;"
+            "}"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 10.0);  /* 0+1+2+3+4 = 10 */
+    }
+
+    /* Perge in while */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0;"
+            "sit i = 0;"
+            "dum (i < 10) {"
+            "  i = i + 1;"
+            "  si (i % 2 == 0) { perge; }"
+            "  sum = sum + i;"
+            "}"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 25.0);  /* 1+3+5+7+9 = 25 */
+    }
+
+    /* Perge in for */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0;"
+            "per (sit i = 1; i <= 10; i = i + 1) {"
+            "  si (i % 2 == 0) { perge; }"
+            "  sum = sum + i;"
+            "}"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 25.0);  /* 1+3+5+7+9 = 25 */
+    }
+
+    /* Nested loops cum frange */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit count = 0;"
+            "per (sit i = 0; i < 5; i = i + 1) {"
+            "  per (sit j = 0; j < 5; j = j + 1) {"
+            "    si (j >= 2) { frange; }"
+            "    count = count + 1;"
+            "  }"
+            "}"
+            "count;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 10.0);  /* 5 outer * 2 inner = 10 */
+    }
+}
+
+
+/* ==================================================
+ * Probationes - Increment/Decrement
+ * ================================================== */
+
+interior vacuum
+_probare_incrementum_decrementum(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Incrementum/Decrementum ---\n");
+
+    /* Increment simplex */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 5;"
+            "x++;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 6.0);
+    }
+
+    /* Decrement simplex */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 5;"
+            "x--;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 4.0);
+    }
+
+    /* Increment in for loop */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0;"
+            "per (sit i = 0; i < 5; i++) {"
+            "  sum = sum + i;"
+            "}"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 10.0);  /* 0+1+2+3+4 = 10 */
+    }
+
+    /* Decrement in while */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 5;"
+            "sit sum = 0;"
+            "dum (x > 0) {"
+            "  sum = sum + x;"
+            "  x--;"
+            "}"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 15.0);  /* 5+4+3+2+1 = 15 */
+    }
+
+    /* Multiple increments */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 0;"
+            "x++; x++; x++;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.0);
+    }
+
+    /* Increment constans error */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "constans x = 5;"
+            "x++;",
+            piscina, intern);
+        CREDO(!r.successus);  /* Debet fallere */
+    }
+}
+
+
+/* ==================================================
+ * Probationes - Compound Assignment
+ * ================================================== */
+
+interior vacuum
+_probare_assignatio_complexa(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Assignatio Complexa ---\n");
+
+    /* += */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 10;"
+            "x += 5;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 15.0);
+    }
+
+    /* -= */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 10;"
+            "x -= 3;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 7.0);
+    }
+
+    /* *= */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 5;"
+            "x *= 4;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 20.0);
+    }
+
+    /* /= */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 20;"
+            "x /= 4;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 5.0);
+    }
+
+    /* %= */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 17;"
+            "x %= 5;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+
+    /* Chained compound assignment */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 10;"
+            "x += 5;"
+            "x *= 2;"
+            "x -= 10;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 20.0);  /* 10+5=15, 15*2=30, 30-10=20 */
+    }
+
+    /* Compound assignment cum expressione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 10;"
+            "sit y = 5;"
+            "x += y * 2;"
+            "x;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 20.0);  /* 10 + (5*2) = 20 */
+    }
+
+    /* += cum chorda concatenatio */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit s = \"hello\";"
+            "s += \" world\";"
+            "s;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "hello world"));
+    }
+
+    /* Compound assignment constans error */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "constans x = 5;"
+            "x += 1;",
+            piscina, intern);
+        CREDO(!r.successus);  /* Debet fallere */
+    }
+}
+
+
+/* ==================================================
  * Probationes - Functiones
  * ================================================== */
 
@@ -872,6 +1172,9 @@ integer principale(vacuum)
     _probare_ternariam(piscina, intern);
     _probare_variabiles(piscina, intern);
     _probare_control_flow(piscina, intern);
+    _probare_frange_perge(piscina, intern);
+    _probare_incrementum_decrementum(piscina, intern);
+    _probare_assignatio_complexa(piscina, intern);
     _probare_functiones(piscina, intern);
     _probare_arrays(piscina, intern);
     _probare_objecta(piscina, intern);

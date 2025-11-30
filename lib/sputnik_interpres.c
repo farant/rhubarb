@@ -16,6 +16,10 @@
 
 interior SputnikValor _evaluare_nodum(SputnikInterpres* interp, SputnikAstNodus* nodus);
 interior vacuum _executare_sententiam(SputnikInterpres* interp, SputnikAstNodus* nodus);
+interior vacuum _exec_sententiam_frange(SputnikInterpres* interp, SputnikAstNodus* nodus);
+interior vacuum _exec_sententiam_perge(SputnikInterpres* interp, SputnikAstNodus* nodus);
+interior vacuum _exec_sententiam_incrementum(SputnikInterpres* interp, SputnikAstNodus* nodus);
+interior vacuum _exec_sententiam_decrementum(SputnikInterpres* interp, SputnikAstNodus* nodus);
 
 
 /* ==================================================
@@ -1610,6 +1614,20 @@ _exec_sententiam_dum(SputnikInterpres* interp, SputnikAstNodus* nodus)
         }
 
         _executare_sententiam(interp, corpus_nodus);
+
+        /* Tractare continue - reset et perge ad conditionem */
+        si (interp->perge_activa)
+        {
+            interp->perge_activa = FALSUM;
+            perge;
+        }
+
+        /* Tractare break - exit loop */
+        si (interp->frange_activa)
+        {
+            interp->frange_activa = FALSUM;
+            frange;
+        }
     }
 }
 
@@ -1667,15 +1685,30 @@ _exec_sententiam_per(SputnikInterpres* interp, SputnikAstNodus* nodus)
 
         /* Corpus */
         _executare_sententiam(interp, corpus_nodus);
+
+        /* Tractare break - exit loop */
+        si (interp->frange_activa)
+        {
+            interp->frange_activa = FALSUM;
+            frange;
+        }
+
         si (interp->error_accidit || interp->redde_activa)
         {
             frange;
         }
 
+        /* Tractare continue - skip ad incrementum */
+        si (interp->perge_activa)
+        {
+            interp->perge_activa = FALSUM;
+            /* Continuare ad incrementum */
+        }
+
         /* Incrementum */
         si (incrementum_nodus != NIHIL)
         {
-            _evaluare_nodum(interp, incrementum_nodus);
+            _executare_sententiam(interp, incrementum_nodus);
             si (interp->error_accidit)
             {
                 frange;
@@ -1713,7 +1746,8 @@ _exec_sententiam_grex(SputnikInterpres* interp, SputnikAstNodus* nodus)
     _intrare_ambitum(interp);
 
     num = xar_numerus(nodus->liberi);
-    per (i = ZEPHYRUM; i < num && !interp->error_accidit && !interp->redde_activa; i++)
+    per (i = ZEPHYRUM; i < num && !interp->error_accidit && !interp->redde_activa &&
+         !interp->frange_activa && !interp->perge_activa; i++)
     {
         sententia = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, i);
         _executare_sententiam(interp, sententia);
@@ -1737,9 +1771,116 @@ _exec_sententiam_expressio(SputnikInterpres* interp, SputnikAstNodus* nodus)
 }
 
 interior vacuum
+_exec_sententiam_frange(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)nodus;
+    interp->frange_activa = VERUM;
+}
+
+interior vacuum
+_exec_sententiam_perge(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)nodus;
+    interp->perge_activa = VERUM;
+}
+
+interior vacuum
+_exec_sententiam_incrementum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* target_nodus;
+    SputnikValor* valor;
+    chorda titulus;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        _error(interp, nodus, "Incrementum requirit operandum");
+        redde;
+    }
+
+    target_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+
+    si (target_nodus->genus != SPUTNIK_AST_IDENTIFICATOR)
+    {
+        _error(interp, nodus, "Incrementum requirit identificatorem");
+        redde;
+    }
+
+    titulus = target_nodus->valor;
+
+    /* Verificare non constans */
+    si (_est_constans(interp, titulus))
+    {
+        _error(interp, nodus, "Non potest incrementare constantem");
+        redde;
+    }
+
+    valor = _invenire_variabilem(interp, titulus);
+    si (valor == NIHIL)
+    {
+        _error(interp, nodus, "Variabilis non definita");
+        redde;
+    }
+
+    si (valor->genus != SPUTNIK_VALOR_NUMERUS)
+    {
+        _error(interp, nodus, "Incrementum requirit numerum");
+        redde;
+    }
+
+    valor->ut.numerus += 1.0;
+}
+
+interior vacuum
+_exec_sententiam_decrementum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* target_nodus;
+    SputnikValor* valor;
+    chorda titulus;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        _error(interp, nodus, "Decrementum requirit operandum");
+        redde;
+    }
+
+    target_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+
+    si (target_nodus->genus != SPUTNIK_AST_IDENTIFICATOR)
+    {
+        _error(interp, nodus, "Decrementum requirit identificatorem");
+        redde;
+    }
+
+    titulus = target_nodus->valor;
+
+    /* Verificare non constans */
+    si (_est_constans(interp, titulus))
+    {
+        _error(interp, nodus, "Non potest decrementare constantem");
+        redde;
+    }
+
+    valor = _invenire_variabilem(interp, titulus);
+    si (valor == NIHIL)
+    {
+        _error(interp, nodus, "Variabilis non definita");
+        redde;
+    }
+
+    si (valor->genus != SPUTNIK_VALOR_NUMERUS)
+    {
+        _error(interp, nodus, "Decrementum requirit numerum");
+        redde;
+    }
+
+    valor->ut.numerus -= 1.0;
+}
+
+interior vacuum
 _executare_sententiam(SputnikInterpres* interp, SputnikAstNodus* nodus)
 {
-    si (nodus == NIHIL || interp->error_accidit || interp->redde_activa)
+    si (nodus == NIHIL || interp->error_accidit || interp->redde_activa ||
+        interp->frange_activa || interp->perge_activa)
     {
         redde;
     }
@@ -1780,6 +1921,22 @@ _executare_sententiam(SputnikInterpres* interp, SputnikAstNodus* nodus)
 
         casus SPUTNIK_AST_SENTENTIA_EXPRESSIO:
             _exec_sententiam_expressio(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_FRANGE:
+            _exec_sententiam_frange(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_PERGE:
+            _exec_sententiam_perge(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_INCREMENT:
+            _exec_sententiam_incrementum(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_DECREMENT:
+            _exec_sententiam_decrementum(interp, nodus);
             frange;
 
         ordinarius:
@@ -1868,6 +2025,8 @@ sputnik_interpretare(
     interp.error_columna = ZEPHYRUM;
     interp.redde_activa = FALSUM;
     interp.redde_valor = _valor_nihil();
+    interp.frange_activa = FALSUM;
+    interp.perge_activa = FALSUM;
 
     /* Creare global scope */
     interp.ambitus_globalis = _creare_ambitum(&interp, NIHIL);

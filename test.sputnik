@@ -1,0 +1,51 @@
+// Probatio Sputnik
+// Test file for the Sputnik interpreter
+
+print("=== Sputnik Test ===");
+
+// Variables
+sit x = 10;
+sit y = 20;
+print("x + y = " + (x + y));
+
+// Objects
+sit obj = {
+    titulus: "Test Object",
+    numerus: 42
+};
+print("Object titulus: " + obj.titulus);
+
+// Arrays
+sit arr = [1, 2, 3, 4, 5];
+print("Array length: " + len(arr));
+
+// Loop with break
+sit sum = 0;
+per (sit i = 0; i < 10; i++) {
+    si (i >= 5) {
+        frange;
+    }
+    sum += i;
+}
+print("Sum (0..4): " + sum);
+
+// Loop with continue
+sit odd_sum = 0;
+per (sit i = 0; i < 10; i++) {
+    si (i % 2 == 0) {
+        perge;
+    }
+    odd_sum += i;
+}
+print("Odd sum: " + odd_sum);
+
+// Functions
+functio factorial(n) {
+    si (n <= 1) {
+        redde 1;
+    }
+    redde n * factorial(n - 1);
+}
+print("5! = " + factorial(5));
+
+print("=== Done ===");

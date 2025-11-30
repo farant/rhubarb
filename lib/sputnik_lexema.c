@@ -27,6 +27,8 @@ hic_manens structura {
     {"verum",    SPUTNIK_LEXEMA_VERUM},
     {"falsum",   SPUTNIK_LEXEMA_FALSUM},
     {"nihil",    SPUTNIK_LEXEMA_NIHIL},
+    {"frange",   SPUTNIK_LEXEMA_FRANGE},
+    {"perge",    SPUTNIK_LEXEMA_PERGE},
     {NIHIL,      ZEPHYRUM}
 };
 
@@ -716,6 +718,48 @@ sputnik_lexator_legere(SputnikLexator* lex)
         redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_SAGITTA, II);
     }
 
+    /* ++ */
+    si (c == '+' && c2 == '+')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_INCREMENT, II);
+    }
+
+    /* -- */
+    si (c == '-' && c2 == '-')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_DECREMENT, II);
+    }
+
+    /* += */
+    si (c == '+' && c2 == '=')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_PLUS_AEQ, II);
+    }
+
+    /* -= */
+    si (c == '-' && c2 == '=')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_MINUS_AEQ, II);
+    }
+
+    /* *= */
+    si (c == '*' && c2 == '=')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_ASTERISCUS_AEQ, II);
+    }
+
+    /* /= */
+    si (c == '/' && c2 == '=')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_DIVISIO_AEQ, II);
+    }
+
+    /* %= */
+    si (c == '%' && c2 == '=')
+    {
+        redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_MODULUS_AEQ, II);
+    }
+
     /* Single character tokens */
     commutatio (c)
     {
@@ -928,6 +972,15 @@ sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
         casus SPUTNIK_LEXEMA_COLON:           redde "COLON";
         casus SPUTNIK_LEXEMA_INTERROGATIO:   redde "INTERROGATIO";
         casus SPUTNIK_LEXEMA_COMMENTUM:       redde "COMMENTUM";
+        casus SPUTNIK_LEXEMA_FRANGE:          redde "FRANGE";
+        casus SPUTNIK_LEXEMA_PERGE:           redde "PERGE";
+        casus SPUTNIK_LEXEMA_INCREMENT:       redde "INCREMENT";
+        casus SPUTNIK_LEXEMA_DECREMENT:       redde "DECREMENT";
+        casus SPUTNIK_LEXEMA_PLUS_AEQ:        redde "PLUS_AEQ";
+        casus SPUTNIK_LEXEMA_MINUS_AEQ:       redde "MINUS_AEQ";
+        casus SPUTNIK_LEXEMA_ASTERISCUS_AEQ:  redde "ASTERISCUS_AEQ";
+        casus SPUTNIK_LEXEMA_DIVISIO_AEQ:     redde "DIVISIO_AEQ";
+        casus SPUTNIK_LEXEMA_MODULUS_AEQ:     redde "MODULUS_AEQ";
         ordinarius:                           redde "IGNOTUS";
     }
 }

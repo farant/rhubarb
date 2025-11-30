@@ -51,6 +51,8 @@ interior SputnikAstNodus* _parsere_sententiam_per(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_sententiam_redde(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_sententiam_grex(SputnikParser* parser);
 interior SputnikAstNodus* _parsere_declarationem_functio(SputnikParser* parser);
+interior SputnikAstNodus* _parsere_sententiam_frange(SputnikParser* parser);
+interior SputnikAstNodus* _parsere_sententiam_perge(SputnikParser* parser);
 
 
 /* ==================================================
@@ -221,8 +223,13 @@ _praecedentia_infixum(SputnikLexemaGenus genus)
 {
     commutatio (genus)
     {
-        /* Assignatio */
+        /* Assignatio (includere assignatio complexa) */
         casus SPUTNIK_LEXEMA_AEQUALIS:
+        casus SPUTNIK_LEXEMA_PLUS_AEQ:
+        casus SPUTNIK_LEXEMA_MINUS_AEQ:
+        casus SPUTNIK_LEXEMA_ASTERISCUS_AEQ:
+        casus SPUTNIK_LEXEMA_DIVISIO_AEQ:
+        casus SPUTNIK_LEXEMA_MODULUS_AEQ:
             redde PRAEC_ASSIGNATIO;
 
         /* Ternaria */
@@ -277,6 +284,11 @@ _est_dexter_associativum(SputnikLexemaGenus genus)
     commutatio (genus)
     {
         casus SPUTNIK_LEXEMA_AEQUALIS:
+        casus SPUTNIK_LEXEMA_PLUS_AEQ:
+        casus SPUTNIK_LEXEMA_MINUS_AEQ:
+        casus SPUTNIK_LEXEMA_ASTERISCUS_AEQ:
+        casus SPUTNIK_LEXEMA_DIVISIO_AEQ:
+        casus SPUTNIK_LEXEMA_MODULUS_AEQ:
         casus SPUTNIK_LEXEMA_INTERROGATIO:
             redde VERUM;
         ordinarius:
@@ -731,6 +743,93 @@ _parsere_assignationem(SputnikParser* parser, SputnikAstNodus* target)
 }
 
 interior SputnikAstNodus*
+_parsere_assignationem_complexam(SputnikParser* parser, SputnikAstNodus* target)
+{
+    SputnikAstNodus* assignatio;
+    SputnikAstNodus* binaria;
+    SputnikAstNodus* target_copia;
+    SputnikAstNodus* valor;
+    SputnikLexema* lex;
+    SputnikLexemaGenus op_binarius;
+
+    /* Verificare target validum */
+    si (target->genus != SPUTNIK_AST_IDENTIFICATOR &&
+        target->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
+        target->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+    {
+        _error(parser, "Target assignationis invalidum");
+        redde NIHIL;
+    }
+
+    lex = _currens(parser);
+
+    /* Convertere operator complexus ad operator binarius */
+    commutatio (lex->genus)
+    {
+        casus SPUTNIK_LEXEMA_PLUS_AEQ:
+            op_binarius = SPUTNIK_LEXEMA_PLUS;
+            frange;
+        casus SPUTNIK_LEXEMA_MINUS_AEQ:
+            op_binarius = SPUTNIK_LEXEMA_MINUS;
+            frange;
+        casus SPUTNIK_LEXEMA_ASTERISCUS_AEQ:
+            op_binarius = SPUTNIK_LEXEMA_ASTERISCUS;
+            frange;
+        casus SPUTNIK_LEXEMA_DIVISIO_AEQ:
+            op_binarius = SPUTNIK_LEXEMA_DIVISIO;
+            frange;
+        casus SPUTNIK_LEXEMA_MODULUS_AEQ:
+            op_binarius = SPUTNIK_LEXEMA_MODULUS;
+            frange;
+        ordinarius:
+            _error(parser, "Operator assignationis ignotus");
+            redde NIHIL;
+    }
+
+    /* Skip operator */
+    _progredi(parser);
+
+    /* Parsere valorem dextrum */
+    valor = _parsere_expressionem(parser, PRAEC_ASSIGNATIO - I);
+    si (valor == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Creare copiam target pro dextro latere
+     * Pro identificatore simplex, creare nodum novum cum eodem valore */
+    target_copia = _creare_nodum(parser, target->genus);
+    si (target_copia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    target_copia->valor = target->valor;
+    target_copia->operator = target->operator;
+    target_copia->numerus = target->numerus;
+
+    /* Creare operationem binariam: target OP valor */
+    binaria = _creare_nodum(parser, SPUTNIK_AST_OPERATIO_BINARIA);
+    si (binaria == NIHIL)
+    {
+        redde NIHIL;
+    }
+    binaria->operator = op_binarius;
+    _addere_infantem(binaria, target_copia);
+    _addere_infantem(binaria, valor);
+
+    /* Creare assignationem: target = binaria */
+    assignatio = _creare_nodum(parser, SPUTNIK_AST_ASSIGNATIO);
+    si (assignatio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _addere_infantem(assignatio, target);
+    _addere_infantem(assignatio, binaria);
+
+    redde assignatio;
+}
+
+interior SputnikAstNodus*
 _parsere_vocationem(SputnikParser* parser, SputnikAstNodus* callee)
 {
     SputnikAstNodus* nodus;
@@ -964,6 +1063,15 @@ _parsere_expressionem(SputnikParser* parser, i32 praecedentia)
             /* Assignatio */
             casus SPUTNIK_LEXEMA_AEQUALIS:
                 sinister = _parsere_assignationem(parser, sinister);
+                frange;
+
+            /* Assignatio Complexa */
+            casus SPUTNIK_LEXEMA_PLUS_AEQ:
+            casus SPUTNIK_LEXEMA_MINUS_AEQ:
+            casus SPUTNIK_LEXEMA_ASTERISCUS_AEQ:
+            casus SPUTNIK_LEXEMA_DIVISIO_AEQ:
+            casus SPUTNIK_LEXEMA_MODULUS_AEQ:
+                sinister = _parsere_assignationem_complexam(parser, sinister);
                 frange;
 
             /* Vocatio */
@@ -1228,10 +1336,32 @@ _parsere_sententiam_per(SputnikParser* parser)
     _addere_infantem(nodus, conditio);
     _expectare(parser, SPUTNIK_LEXEMA_SEMICOLON, "Expectabatur ;");
 
-    /* Incrementum (optionalis) */
+    /* Incrementum (optionalis) - supportare i++ / i-- */
     si (!_verificare(parser, SPUTNIK_LEXEMA_PARENTHESIS_C))
     {
         incrementum = _parsere_expressionem(parser, ZEPHYRUM);
+
+        /* Verificare si postfix ++ vel -- */
+        {
+            SputnikLexema* lex_inc;
+            lex_inc = _currens(parser);
+            si (lex_inc != NIHIL && lex_inc->genus == SPUTNIK_LEXEMA_INCREMENT)
+            {
+                SputnikAstNodus* inc_nodus;
+                inc_nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_INCREMENT);
+                _addere_infantem(inc_nodus, incrementum);
+                incrementum = inc_nodus;
+                _progredi(parser);
+            }
+            alioquin si (lex_inc != NIHIL && lex_inc->genus == SPUTNIK_LEXEMA_DECREMENT)
+            {
+                SputnikAstNodus* dec_nodus;
+                dec_nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_DECREMENT);
+                _addere_infantem(dec_nodus, incrementum);
+                incrementum = dec_nodus;
+                _progredi(parser);
+            }
+        }
     }
     alioquin
     {
@@ -1390,6 +1520,44 @@ _parsere_declarationem_functio(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
+_parsere_sententiam_frange(SputnikParser* parser)
+{
+    SputnikAstNodus* nodus;
+
+    nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_FRANGE);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Skip 'frange' */
+    _progredi(parser);
+
+    _expectare(parser, SPUTNIK_LEXEMA_SEMICOLON, "Expectabatur ; post 'frange'");
+
+    redde nodus;
+}
+
+interior SputnikAstNodus*
+_parsere_sententiam_perge(SputnikParser* parser)
+{
+    SputnikAstNodus* nodus;
+
+    nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_PERGE);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Skip 'perge' */
+    _progredi(parser);
+
+    _expectare(parser, SPUTNIK_LEXEMA_SEMICOLON, "Expectabatur ; post 'perge'");
+
+    redde nodus;
+}
+
+interior SputnikAstNodus*
 _parsere_sententiam(SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
@@ -1445,12 +1613,59 @@ _parsere_sententiam(SputnikParser* parser)
         casus SPUTNIK_LEXEMA_FUNCTIO:
             redde _parsere_declarationem_functio(parser);
 
+        casus SPUTNIK_LEXEMA_FRANGE:
+            redde _parsere_sententiam_frange(parser);
+
+        casus SPUTNIK_LEXEMA_PERGE:
+            redde _parsere_sententiam_perge(parser);
+
         ordinarius:
             /* Expression statement */
             expressio = _parsere_expressionem(parser, ZEPHYRUM);
             si (expressio == NIHIL)
             {
                 redde NIHIL;
+            }
+
+            /* Verificare si postfix increment/decrement */
+            lex = _currens(parser);
+            si (lex != NIHIL && lex->genus == SPUTNIK_LEXEMA_INCREMENT)
+            {
+                si (expressio->genus != SPUTNIK_AST_IDENTIFICATOR &&
+                    expressio->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
+                    expressio->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+                {
+                    _error(parser, "++ requirit variabilem");
+                    redde NIHIL;
+                }
+                nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_INCREMENT);
+                si (nodus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                _addere_infantem(nodus, expressio);
+                _progredi(parser);  /* Skip ++ */
+                _expectare(parser, SPUTNIK_LEXEMA_SEMICOLON, "Expectabatur ; post ++");
+                redde nodus;
+            }
+            alioquin si (lex != NIHIL && lex->genus == SPUTNIK_LEXEMA_DECREMENT)
+            {
+                si (expressio->genus != SPUTNIK_AST_IDENTIFICATOR &&
+                    expressio->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
+                    expressio->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+                {
+                    _error(parser, "-- requirit variabilem");
+                    redde NIHIL;
+                }
+                nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_DECREMENT);
+                si (nodus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                _addere_infantem(nodus, expressio);
+                _progredi(parser);  /* Skip -- */
+                _expectare(parser, SPUTNIK_LEXEMA_SEMICOLON, "Expectabatur ; post --");
+                redde nodus;
             }
 
             nodus = _creare_nodum(parser, SPUTNIK_AST_SENTENTIA_EXPRESSIO);
@@ -1629,6 +1844,10 @@ sputnik_ast_genus_nomen(SputnikAstGenus genus)
         casus SPUTNIK_AST_SENTENTIA_GREX:       redde "SENTENTIA_GREX";
         casus SPUTNIK_AST_DECLARATIO_FUNCTIO:   redde "DECLARATIO_FUNCTIO";
         casus SPUTNIK_AST_PROGRAMMA:            redde "PROGRAMMA";
+        casus SPUTNIK_AST_SENTENTIA_FRANGE:     redde "SENTENTIA_FRANGE";
+        casus SPUTNIK_AST_SENTENTIA_PERGE:      redde "SENTENTIA_PERGE";
+        casus SPUTNIK_AST_SENTENTIA_INCREMENT:  redde "SENTENTIA_INCREMENT";
+        casus SPUTNIK_AST_SENTENTIA_DECREMENT:  redde "SENTENTIA_DECREMENT";
         ordinarius:                             redde "IGNOTUM";
     }
 }

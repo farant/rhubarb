@@ -102,7 +102,22 @@ nomen enumeratio {
     SPUTNIK_LEXEMA_INTERROGATIO    = XLVI,      /* ? */
 
     /* Commenta */
-    SPUTNIK_LEXEMA_COMMENTUM       = XLVII      /* // vel block */
+    SPUTNIK_LEXEMA_COMMENTUM       = XLVII,     /* // vel block */
+
+    /* Verba Clausa Addita */
+    SPUTNIK_LEXEMA_FRANGE          = XLVIII,    /* break */
+    SPUTNIK_LEXEMA_PERGE           = XLIX,      /* continue */
+
+    /* Operatores Incrementum/Decrementum */
+    SPUTNIK_LEXEMA_INCREMENT       = L,         /* ++ */
+    SPUTNIK_LEXEMA_DECREMENT       = LI,        /* -- */
+
+    /* Operatores Assignatio Complexa */
+    SPUTNIK_LEXEMA_PLUS_AEQ        = LII,       /* += */
+    SPUTNIK_LEXEMA_MINUS_AEQ       = LIII,      /* -= */
+    SPUTNIK_LEXEMA_ASTERISCUS_AEQ  = LIV,       /* *= */
+    SPUTNIK_LEXEMA_DIVISIO_AEQ     = LV,        /* /= */
+    SPUTNIK_LEXEMA_MODULUS_AEQ     = LVI        /* %= */
 } SputnikLexemaGenus;
 
 

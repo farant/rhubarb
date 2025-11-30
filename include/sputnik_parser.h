@@ -70,7 +70,15 @@ nomen enumeratio {
 
     /* Declarationes */
     SPUTNIK_AST_DECLARATIO_FUNCTIO   = XXV,       /* function foo() {} */
-    SPUTNIK_AST_PROGRAMMA            = XXVI       /* root node */
+    SPUTNIK_AST_PROGRAMMA            = XXVI,      /* root node */
+
+    /* Control Flow Additi */
+    SPUTNIK_AST_SENTENTIA_FRANGE     = XXVII,     /* break */
+    SPUTNIK_AST_SENTENTIA_PERGE      = XXVIII,    /* continue */
+
+    /* Operationes Additi */
+    SPUTNIK_AST_SENTENTIA_INCREMENT  = XXIX,      /* i++ */
+    SPUTNIK_AST_SENTENTIA_DECREMENT  = XXX        /* i-- */
 } SputnikAstGenus;
 
 
