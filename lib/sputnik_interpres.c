@@ -127,6 +127,25 @@ _valor_methodus_entitas(Entitas* entitas, chorda titulus)
     redde v;
 }
 
+interior SputnikValor
+_valor_repositorium(EntitasRepositorium* repo)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_REPOSITORIUM;
+    v.ut.repositorium = repo;
+    redde v;
+}
+
+interior SputnikValor
+_valor_methodus_repositorium(EntitasRepositorium* repo, chorda titulus)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_METHODUS_REPOSITORIUM;
+    v.ut.methodus_repositorium.repositorium = repo;
+    v.ut.methodus_repositorium.titulus = titulus;
+    redde v;
+}
+
 
 /* ==================================================
  * Adiutores - Truthiness
@@ -154,6 +173,10 @@ _est_verum(SputnikValor* valor)
         casus SPUTNIK_VALOR_OBJECTUM:
         casus SPUTNIK_VALOR_FUNCTIO:
         casus SPUTNIK_VALOR_METHODUS_XAR:
+        casus SPUTNIK_VALOR_ENTITAS:
+        casus SPUTNIK_VALOR_METHODUS_ENTITAS:
+        casus SPUTNIK_VALOR_REPOSITORIUM:
+        casus SPUTNIK_VALOR_METHODUS_REPOSITORIUM:
             redde VERUM;
 
         ordinarius:
@@ -486,6 +509,12 @@ _ad_chordam(SputnikInterpres* interp, SputnikValor* valor)
 
         casus SPUTNIK_VALOR_METHODUS_ENTITAS:
             redde chorda_ex_literis("[entity method]", interp->piscina);
+
+        casus SPUTNIK_VALOR_REPOSITORIUM:
+            redde chorda_ex_literis("[Repositorium]", interp->piscina);
+
+        casus SPUTNIK_VALOR_METHODUS_REPOSITORIUM:
+            redde chorda_ex_literis("[repository method]", interp->piscina);
 
         ordinarius:
             redde chorda_ex_literis("", interp->piscina);
@@ -1516,11 +1545,27 @@ _methodus_entitas_add_tag(SputnikInterpres* interp, Entitas* e, Xar* argumenta, 
         redde _valor_nihil();
     }
 
-    /* Addere notam via repositorio */
-    successus = interp->repositorium->nota_addere(
-        interp->repositorium->datum,
-        e,
-        (constans character*)nota_arg->ut.chorda_valor.datum);
+    /* Creare C string null-terminatam */
+    {
+        character* nota_c;
+        i32 nota_len;
+
+        nota_len = nota_arg->ut.chorda_valor.mensura;
+        nota_c = piscina_allocare(interp->piscina, (memoriae_index)(nota_len + I));
+        si (nota_c == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        memcpy(nota_c, nota_arg->ut.chorda_valor.datum, (size_t)nota_len);
+        nota_c[nota_len] = '\0';
+
+        /* Addere notam via repositorio */
+        successus = interp->repositorium->nota_addere(
+            interp->repositorium->datum,
+            e,
+            nota_c);
+    }
 
     redde successus ? _valor_verum() : _valor_falsum();
 }
@@ -1624,6 +1669,323 @@ _vocare_methodum_entitas(SputnikInterpres* interp, SputnikMethodusEntitas* meth,
         redde _methodus_entitas_remove_tag(interp, meth->entitas, argumenta, nodus);
 
     _error(interp, nodus, "Methodus entitas ignota");
+    redde _valor_nihil();
+}
+
+
+/* ==================================================
+ * Repository Methods
+ * ================================================== */
+
+/* REPO.get(id) - capere entitatem per ID */
+interior SputnikValor
+_methodus_repo_get(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* id_arg;
+    chorda* id_internata;
+    Entitas* entitas;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "REPO.get requirit argumentum id");
+        redde _valor_nihil();
+    }
+
+    id_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (id_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumentum ad REPO.get debet esse chorda");
+        redde _valor_nihil();
+    }
+
+    /* Internare ID */
+    id_internata = chorda_internare(interp->intern, id_arg->ut.chorda_valor);
+    si (id_internata == NIHIL)
+    {
+        redde _valor_nihil();
+    }
+
+    entitas = repo->capere_entitatem(repo->datum, id_internata);
+    si (entitas == NIHIL)
+    {
+        redde _valor_nihil();
+    }
+
+    redde _valor_entitas(entitas);
+}
+
+/* REPO.query(genus) - capere entitates per genus */
+interior SputnikValor
+_methodus_repo_query(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* genus_arg;
+    Xar* resultus;
+    Xar* entitates_xar;
+    i32 i;
+    i32 numerus;
+    Entitas* e;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "REPO.query requirit argumentum genus");
+        redde _valor_nihil();
+    }
+
+    genus_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (genus_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumentum ad REPO.query debet esse chorda");
+        redde _valor_nihil();
+    }
+
+    /* Creare resultus array */
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (resultus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    /* Iterare per omnes entitates et filtrare per genus */
+    /* Nota: hoc est inefficiens - futura versio debet habere indicem */
+    entitates_xar = repo->legere_omnes_eventus(repo->datum);
+    si (entitates_xar == NIHIL)
+    {
+        redde _valor_xar(resultus);
+    }
+
+    /* Usare capere_radices et traversare, vel simpliciore:
+     * Iterare per hash table si accessibilis */
+    /* Pro nunc, simpliciore approach: text search fallback */
+    {
+        Xar* found;
+        character genus_buffer[CCLVI];
+        i32 genus_len;
+
+        genus_len = genus_arg->ut.chorda_valor.mensura;
+        si (genus_len >= CCLVI) genus_len = CCLV;
+        memcpy(genus_buffer, genus_arg->ut.chorda_valor.datum, (size_t)genus_len);
+        genus_buffer[genus_len] = '\0';
+
+        found = repo->quaerere_textum(repo->datum, genus_buffer);
+        si (found != NIHIL)
+        {
+            numerus = xar_numerus(found);
+            per (i = ZEPHYRUM; i < numerus; i++)
+            {
+                e = *(Entitas**)xar_obtinere(found, i);
+                si (e != NIHIL && e->genus != NIHIL)
+                {
+                    /* Verificare genus exactum */
+                    si (chorda_aequalis(*e->genus, genus_arg->ut.chorda_valor))
+                    {
+                        SputnikValor* elem;
+                        elem = xar_addere(resultus);
+                        si (elem != NIHIL)
+                        {
+                            *elem = _valor_entitas(e);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* REPO.tagged(nota) - capere entitates cum nota */
+interior SputnikValor
+_methodus_repo_tagged(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* nota_arg;
+    chorda* nota_internata;
+    Xar* found;
+    Xar* resultus;
+    i32 i;
+    i32 numerus;
+    Entitas* e;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "REPO.tagged requirit argumentum nota");
+        redde _valor_nihil();
+    }
+
+    nota_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (nota_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumentum ad REPO.tagged debet esse chorda");
+        redde _valor_nihil();
+    }
+
+    /* Internare nota */
+    nota_internata = chorda_internare(interp->intern, nota_arg->ut.chorda_valor);
+    si (nota_internata == NIHIL)
+    {
+        redde _valor_nihil();
+    }
+
+    found = repo->quaerere_cum_nota(repo->datum, nota_internata);
+
+    /* Creare resultus array */
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (resultus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    si (found != NIHIL)
+    {
+        numerus = xar_numerus(found);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            e = *(Entitas**)xar_obtinere(found, i);
+            si (e != NIHIL)
+            {
+                SputnikValor* elem;
+                elem = xar_addere(resultus);
+                si (elem != NIHIL)
+                {
+                    *elem = _valor_entitas(e);
+                }
+            }
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* REPO.search(text) - quaerere textum */
+interior SputnikValor
+_methodus_repo_search(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* text_arg;
+    Xar* found;
+    Xar* resultus;
+    i32 i;
+    i32 numerus;
+    Entitas* e;
+    character text_buffer[CCLVI];
+    i32 text_len;
+
+    si (xar_numerus(argumenta) < I)
+    {
+        _error(interp, nodus, "REPO.search requirit argumentum text");
+        redde _valor_nihil();
+    }
+
+    text_arg = xar_obtinere(argumenta, ZEPHYRUM);
+    si (text_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumentum ad REPO.search debet esse chorda");
+        redde _valor_nihil();
+    }
+
+    /* Convertere ad C string */
+    text_len = text_arg->ut.chorda_valor.mensura;
+    si (text_len >= CCLVI) text_len = CCLV;
+    memcpy(text_buffer, text_arg->ut.chorda_valor.datum, (size_t)text_len);
+    text_buffer[text_len] = '\0';
+
+    found = repo->quaerere_textum(repo->datum, text_buffer);
+
+    /* Creare resultus array */
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (resultus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    si (found != NIHIL)
+    {
+        numerus = xar_numerus(found);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            e = *(Entitas**)xar_obtinere(found, i);
+            si (e != NIHIL)
+            {
+                SputnikValor* elem;
+                elem = xar_addere(resultus);
+                si (elem != NIHIL)
+                {
+                    *elem = _valor_entitas(e);
+                }
+            }
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* REPO.roots() - capere entitates radices */
+interior SputnikValor
+_methodus_repo_roots(SputnikInterpres* interp, EntitasRepositorium* repo, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    Xar* found;
+    Xar* resultus;
+    i32 i;
+    i32 numerus;
+    Entitas* e;
+
+    (vacuum)argumenta;
+    (vacuum)nodus;
+
+    found = repo->capere_radices(repo->datum);
+
+    /* Creare resultus array */
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (resultus == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    si (found != NIHIL)
+    {
+        numerus = xar_numerus(found);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            e = *(Entitas**)xar_obtinere(found, i);
+            si (e != NIHIL)
+            {
+                SputnikValor* elem;
+                elem = xar_addere(resultus);
+                si (elem != NIHIL)
+                {
+                    *elem = _valor_entitas(e);
+                }
+            }
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* Dispatcher pro repository methods */
+interior SputnikValor
+_vocare_methodum_repositorium(SputnikInterpres* interp, SputnikMethodusRepositorium* meth, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    si (meth->repositorium == NIHIL)
+    {
+        _error(interp, nodus, "Repositorium est nihil");
+        redde _valor_nihil();
+    }
+
+    si (chorda_aequalis_literis(meth->titulus, "get"))
+        redde _methodus_repo_get(interp, meth->repositorium, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "query"))
+        redde _methodus_repo_query(interp, meth->repositorium, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "tagged"))
+        redde _methodus_repo_tagged(interp, meth->repositorium, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "search"))
+        redde _methodus_repo_search(interp, meth->repositorium, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "roots"))
+        redde _methodus_repo_roots(interp, meth->repositorium, argumenta, nodus);
+
+    _error(interp, nodus, "Methodus repositorii ignota");
     redde _valor_nihil();
 }
 
@@ -2290,6 +2652,32 @@ _eval_accessum_membri(SputnikInterpres* interp, SputnikAstNodus* nodus)
         redde _valor_nihil();
     }
 
+    /* Tractare repositorium */
+    si (obj.genus == SPUTNIK_VALOR_REPOSITORIUM)
+    {
+        EntitasRepositorium* repo;
+
+        repo = obj.ut.repositorium;
+        si (repo == NIHIL)
+        {
+            _error(interp, nodus, "Repositorium est nihil");
+            redde _valor_nihil();
+        }
+
+        /* Methodi repositorii */
+        si (chorda_aequalis_literis(nodus->valor, "get") ||
+            chorda_aequalis_literis(nodus->valor, "query") ||
+            chorda_aequalis_literis(nodus->valor, "tagged") ||
+            chorda_aequalis_literis(nodus->valor, "search") ||
+            chorda_aequalis_literis(nodus->valor, "roots"))
+        {
+            redde _valor_methodus_repositorium(repo, nodus->valor);
+        }
+
+        _error(interp, nodus, "Methodus repositorii ignota");
+        redde _valor_nihil();
+    }
+
     si (obj.genus != SPUTNIK_VALOR_OBJECTUM)
     {
         _error(interp, nodus, "Non potest accedere membrum non-objecti");
@@ -2643,6 +3031,12 @@ _eval_vocationem(SputnikInterpres* interp, SputnikAstNodus* nodus)
     si (callee.genus == SPUTNIK_VALOR_METHODUS_ENTITAS)
     {
         redde _vocare_methodum_entitas(interp, &callee.ut.methodus_entitas, argumenta, nodus);
+    }
+
+    /* Tractare repository method calls */
+    si (callee.genus == SPUTNIK_VALOR_METHODUS_REPOSITORIUM)
+    {
+        redde _vocare_methodum_repositorium(interp, &callee.ut.methodus_repositorium, argumenta, nodus);
     }
 
     si (callee.genus != SPUTNIK_VALOR_FUNCTIO)
@@ -3337,6 +3731,13 @@ sputnik_interpretare(
         redde resultus;
     }
 
+    /* Iniicere REPO variabilem globalem (null sine repositorio) */
+    {
+        chorda repo_nomen;
+        repo_nomen = chorda_ex_literis("REPO", piscina);
+        _definire_variabilem(&interp, repo_nomen, _valor_nihil(), VERUM);
+    }
+
     /* Executare */
     resultus.valor = _executare_programma(&interp, radix);
 
@@ -3444,6 +3845,23 @@ sputnik_interpretare_cum_repositorio(
         redde resultus;
     }
 
+    /* Iniicere REPO variabilem globalem */
+    {
+        chorda repo_nomen;
+        SputnikValor repo_valor;
+
+        repo_nomen = chorda_ex_literis("REPO", piscina);
+        si (repositorium != NIHIL)
+        {
+            repo_valor = _valor_repositorium(repositorium);
+        }
+        alioquin
+        {
+            repo_valor = _valor_nihil();
+        }
+        _definire_variabilem(&interp, repo_nomen, repo_valor, VERUM);
+    }
+
     /* Executare */
     resultus.valor = _executare_programma(&interp, radix);
 
@@ -3521,9 +3939,11 @@ sputnik_valor_genus_nomen(SputnikValorGenus genus)
         casus SPUTNIK_VALOR_OBJECTUM:         redde "object";
         casus SPUTNIK_VALOR_FUNCTIO:          redde "function";
         casus SPUTNIK_VALOR_METHODUS_XAR:     redde "function";
-        casus SPUTNIK_VALOR_ENTITAS:          redde "entity";
-        casus SPUTNIK_VALOR_METHODUS_ENTITAS: redde "function";
-        ordinarius:                           redde "unknown";
+        casus SPUTNIK_VALOR_ENTITAS:               redde "entity";
+        casus SPUTNIK_VALOR_METHODUS_ENTITAS:      redde "function";
+        casus SPUTNIK_VALOR_REPOSITORIUM:          redde "repository";
+        casus SPUTNIK_VALOR_METHODUS_REPOSITORIUM: redde "function";
+        ordinarius:                                redde "unknown";
     }
 }
 

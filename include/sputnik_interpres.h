@@ -40,17 +40,19 @@
  * ================================================== */
 
 nomen enumeratio {
-    SPUTNIK_VALOR_NIHIL            = I,
-    SPUTNIK_VALOR_NUMERUS          = II,      /* f64 */
-    SPUTNIK_VALOR_CHORDA           = III,     /* chorda */
-    SPUTNIK_VALOR_VERUM            = IV,      /* boolean true */
-    SPUTNIK_VALOR_FALSUM           = V,       /* boolean false */
-    SPUTNIK_VALOR_XAR              = VI,      /* Xar de SputnikValor* */
-    SPUTNIK_VALOR_OBJECTUM         = VII,     /* TabulaDispersa */
-    SPUTNIK_VALOR_FUNCTIO          = VIII,    /* function reference */
-    SPUTNIK_VALOR_METHODUS_XAR     = IX,      /* array method reference */
-    SPUTNIK_VALOR_ENTITAS          = X,       /* Entitas* - entity reference */
-    SPUTNIK_VALOR_METHODUS_ENTITAS = XI       /* entity method reference */
+    SPUTNIK_VALOR_NIHIL                 = I,
+    SPUTNIK_VALOR_NUMERUS               = II,      /* f64 */
+    SPUTNIK_VALOR_CHORDA                = III,     /* chorda */
+    SPUTNIK_VALOR_VERUM                 = IV,      /* boolean true */
+    SPUTNIK_VALOR_FALSUM                = V,       /* boolean false */
+    SPUTNIK_VALOR_XAR                   = VI,      /* Xar de SputnikValor* */
+    SPUTNIK_VALOR_OBJECTUM              = VII,     /* TabulaDispersa */
+    SPUTNIK_VALOR_FUNCTIO               = VIII,    /* function reference */
+    SPUTNIK_VALOR_METHODUS_XAR          = IX,      /* array method reference */
+    SPUTNIK_VALOR_ENTITAS               = X,       /* Entitas* - entity reference */
+    SPUTNIK_VALOR_METHODUS_ENTITAS      = XI,      /* entity method reference */
+    SPUTNIK_VALOR_REPOSITORIUM          = XII,     /* EntitasRepositorium* */
+    SPUTNIK_VALOR_METHODUS_REPOSITORIUM = XIII     /* repository method reference */
 } SputnikValorGenus;
 
 
@@ -79,6 +81,18 @@ nomen structura {
 
 
 /* ==================================================
+ * SputnikMethodusRepositorium - Repository Method Reference
+ *
+ * Continet referentiam ad repositorium et nomen methodi.
+ * ================================================== */
+
+nomen structura {
+    EntitasRepositorium* repositorium;  /* Repository objectum */
+    chorda               titulus;       /* Nomen methodi (get, query, etc.) */
+} SputnikMethodusRepositorium;
+
+
+/* ==================================================
  * SputnikValor - Runtime Value
  *
  * Tagged union pro omnibus valoribus runtime.
@@ -89,14 +103,16 @@ nomen structura SputnikValor SputnikValor;
 structura SputnikValor {
     SputnikValorGenus genus;
     unio {
-        f64                     numerus;
-        chorda                  chorda_valor;
-        Xar*                    xar;              /* Xar de SputnikValor* */
-        TabulaDispersa*         objectum;         /* chorda -> SputnikValor* */
-        SputnikAstNodus*        functio;          /* DECLARATIO_FUNCTIO node */
-        SputnikMethodusXar      methodus_xar;     /* array method reference */
-        Entitas*                entitas;          /* entity reference */
-        SputnikMethodusEntitas  methodus_entitas; /* entity method reference */
+        f64                          numerus;
+        chorda                       chorda_valor;
+        Xar*                         xar;                  /* Xar de SputnikValor* */
+        TabulaDispersa*              objectum;             /* chorda -> SputnikValor* */
+        SputnikAstNodus*             functio;              /* DECLARATIO_FUNCTIO node */
+        SputnikMethodusXar           methodus_xar;         /* array method reference */
+        Entitas*                     entitas;              /* entity reference */
+        SputnikMethodusEntitas       methodus_entitas;     /* entity method reference */
+        EntitasRepositorium*         repositorium;         /* repository reference */
+        SputnikMethodusRepositorium  methodus_repositorium; /* repo method reference */
     } ut;
 };
 
