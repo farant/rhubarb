@@ -64,6 +64,8 @@ declare -a SOURCE_FILES=(
     "lib/tempestivum.c"
     "lib/servitium.c"
     "lib/sputnik_lexema.c"
+    "lib/sputnik_parser.c"
+    "lib/sputnik_interpres.c"
 )
 
 # Objective-C source (compiled separately)

@@ -757,6 +757,8 @@ sputnik_lexator_legere(SputnikLexator* lex)
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_PUNCTUM, I);
         casus ':':
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_COLON, I);
+        casus '?':
+            redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_INTERROGATIO, I);
         ordinarius:
             frange;
     }
@@ -924,6 +926,7 @@ sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
         casus SPUTNIK_LEXEMA_COMMA:           redde "COMMA";
         casus SPUTNIK_LEXEMA_PUNCTUM:         redde "PUNCTUM";
         casus SPUTNIK_LEXEMA_COLON:           redde "COLON";
+        casus SPUTNIK_LEXEMA_INTERROGATIO:   redde "INTERROGATIO";
         casus SPUTNIK_LEXEMA_COMMENTUM:       redde "COMMENTUM";
         ordinarius:                           redde "IGNOTUS";
     }

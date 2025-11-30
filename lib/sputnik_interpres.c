@@ -1,0 +1,1970 @@
+/* sputnik_interpres.c - Interpres pro Sputnik
+ *
+ * Tree-walking evaluator pro AST Sputnik.
+ */
+
+#include "sputnik_interpres.h"
+#include "chorda_aedificator.h"
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+
+/* ==================================================
+ * Prototypi Interni
+ * ================================================== */
+
+interior SputnikValor _evaluare_nodum(SputnikInterpres* interp, SputnikAstNodus* nodus);
+interior vacuum _executare_sententiam(SputnikInterpres* interp, SputnikAstNodus* nodus);
+
+
+/* ==================================================
+ * Adiutores - Value Creation
+ * ================================================== */
+
+interior SputnikValor
+_valor_nihil(vacuum)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_NIHIL;
+    v.ut.numerus = 0.0;
+    redde v;
+}
+
+interior SputnikValor
+_valor_numerus(f64 n)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_NUMERUS;
+    v.ut.numerus = n;
+    redde v;
+}
+
+interior SputnikValor
+_valor_chorda(chorda c)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_CHORDA;
+    v.ut.chorda_valor = c;
+    redde v;
+}
+
+interior SputnikValor
+_valor_verum(vacuum)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_VERUM;
+    v.ut.numerus = 1.0;
+    redde v;
+}
+
+interior SputnikValor
+_valor_falsum(vacuum)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_FALSUM;
+    v.ut.numerus = 0.0;
+    redde v;
+}
+
+interior SputnikValor
+_valor_xar(Xar* x)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_XAR;
+    v.ut.xar = x;
+    redde v;
+}
+
+interior SputnikValor
+_valor_objectum(TabulaDispersa* t)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_OBJECTUM;
+    v.ut.objectum = t;
+    redde v;
+}
+
+interior SputnikValor
+_valor_functio(SputnikAstNodus* f)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_FUNCTIO;
+    v.ut.functio = f;
+    redde v;
+}
+
+
+/* ==================================================
+ * Adiutores - Truthiness
+ * ================================================== */
+
+interior b32
+_est_verum(SputnikValor* valor)
+{
+    commutatio (valor->genus)
+    {
+        casus SPUTNIK_VALOR_NIHIL:
+        casus SPUTNIK_VALOR_FALSUM:
+            redde FALSUM;
+
+        casus SPUTNIK_VALOR_NUMERUS:
+            redde valor->ut.numerus != 0.0;
+
+        casus SPUTNIK_VALOR_CHORDA:
+            redde valor->ut.chorda_valor.mensura > ZEPHYRUM;
+
+        casus SPUTNIK_VALOR_VERUM:
+            redde VERUM;
+
+        casus SPUTNIK_VALOR_XAR:
+        casus SPUTNIK_VALOR_OBJECTUM:
+        casus SPUTNIK_VALOR_FUNCTIO:
+            redde VERUM;
+
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+
+/* ==================================================
+ * Adiutores - Error Handling
+ * ================================================== */
+
+interior vacuum
+_error(SputnikInterpres* interp, SputnikAstNodus* nodus, constans character* nuntius)
+{
+    si (interp->error_accidit)
+    {
+        redde;  /* Solum primus error */
+    }
+
+    interp->error_accidit = VERUM;
+    interp->error_nuntius = chorda_ex_literis(nuntius, interp->piscina);
+
+    si (nodus != NIHIL)
+    {
+        interp->error_linea = nodus->linea;
+        interp->error_columna = nodus->columna;
+    }
+    alioquin
+    {
+        interp->error_linea = ZEPHYRUM;
+        interp->error_columna = ZEPHYRUM;
+    }
+}
+
+
+/* ==================================================
+ * Adiutores - Scope Management
+ * ================================================== */
+
+interior SputnikAmbitus*
+_creare_ambitum(SputnikInterpres* interp, SputnikAmbitus* parens)
+{
+    SputnikAmbitus* ambitus;
+
+    ambitus = piscina_allocare(interp->piscina, magnitudo(SputnikAmbitus));
+    si (ambitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    ambitus->variabiles = tabula_dispersa_creare_chorda(interp->piscina, XXXII);
+    ambitus->constantes = tabula_dispersa_creare_chorda(interp->piscina, XVI);
+    ambitus->parens = parens;
+
+    redde ambitus;
+}
+
+interior vacuum
+_intrare_ambitum(SputnikInterpres* interp)
+{
+    SputnikAmbitus* novus;
+
+    novus = _creare_ambitum(interp, interp->ambitus_currens);
+    si (novus != NIHIL)
+    {
+        interp->ambitus_currens = novus;
+    }
+}
+
+interior vacuum
+_exire_ambitum(SputnikInterpres* interp)
+{
+    si (interp->ambitus_currens != NIHIL &&
+        interp->ambitus_currens->parens != NIHIL)
+    {
+        interp->ambitus_currens = interp->ambitus_currens->parens;
+    }
+}
+
+
+/* ==================================================
+ * Adiutores - Variable Operations
+ * ================================================== */
+
+interior b32
+_definire_variabilem(SputnikInterpres* interp, chorda titulus, SputnikValor valor, b32 est_constans)
+{
+    SputnikValor* valor_copia;
+    b32* const_flag;
+
+    si (interp->ambitus_currens == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Allocare copiam valoris */
+    valor_copia = piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+    si (valor_copia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *valor_copia = valor;
+
+    /* Inserere in variabiles */
+    si (!tabula_dispersa_inserere(interp->ambitus_currens->variabiles, titulus, valor_copia))
+    {
+        redde FALSUM;
+    }
+
+    /* Si constans, notare */
+    si (est_constans)
+    {
+        const_flag = piscina_allocare(interp->piscina, magnitudo(b32));
+        si (const_flag != NIHIL)
+        {
+            *const_flag = VERUM;
+            tabula_dispersa_inserere(interp->ambitus_currens->constantes, titulus, const_flag);
+        }
+    }
+
+    redde VERUM;
+}
+
+interior SputnikValor*
+_invenire_variabilem(SputnikInterpres* interp, chorda titulus)
+{
+    SputnikAmbitus* ambitus;
+    vacuum* valor_ptr;
+
+    ambitus = interp->ambitus_currens;
+    dum (ambitus != NIHIL)
+    {
+        si (tabula_dispersa_invenire(ambitus->variabiles, titulus, &valor_ptr))
+        {
+            redde (SputnikValor*)valor_ptr;
+        }
+        ambitus = ambitus->parens;
+    }
+
+    redde NIHIL;
+}
+
+interior b32
+_est_constans(SputnikInterpres* interp, chorda titulus)
+{
+    SputnikAmbitus* ambitus;
+    vacuum* flag_ptr;
+
+    ambitus = interp->ambitus_currens;
+    dum (ambitus != NIHIL)
+    {
+        si (tabula_dispersa_invenire(ambitus->constantes, titulus, &flag_ptr))
+        {
+            redde VERUM;
+        }
+        /* Si variabilis in hoc ambitu, non constans */
+        si (tabula_dispersa_continet(ambitus->variabiles, titulus))
+        {
+            redde FALSUM;
+        }
+        ambitus = ambitus->parens;
+    }
+
+    redde FALSUM;
+}
+
+interior b32
+_assignare_variabilem(SputnikInterpres* interp, chorda titulus, SputnikValor valor)
+{
+    SputnikAmbitus* ambitus;
+    vacuum* valor_ptr;
+    SputnikValor* existens;
+
+    ambitus = interp->ambitus_currens;
+    dum (ambitus != NIHIL)
+    {
+        si (tabula_dispersa_invenire(ambitus->variabiles, titulus, &valor_ptr))
+        {
+            existens = (SputnikValor*)valor_ptr;
+            *existens = valor;
+            redde VERUM;
+        }
+        ambitus = ambitus->parens;
+    }
+
+    redde FALSUM;
+}
+
+
+/* ==================================================
+ * Adiutores - Type Conversion
+ * ================================================== */
+
+interior chorda
+_ad_chordam(SputnikInterpres* interp, SputnikValor* valor)
+{
+    ChordaAedificator* aed;
+    chorda resultus;
+    i32 i;
+    i32 num;
+    SputnikValor* elem;
+    TabulaIterator iter;
+    chorda clavis;
+    vacuum* val_ptr;
+    b32 primum;
+
+    commutatio (valor->genus)
+    {
+        casus SPUTNIK_VALOR_NIHIL:
+            redde chorda_ex_literis("null", interp->piscina);
+
+        casus SPUTNIK_VALOR_VERUM:
+            redde chorda_ex_literis("true", interp->piscina);
+
+        casus SPUTNIK_VALOR_FALSUM:
+            redde chorda_ex_literis("false", interp->piscina);
+
+        casus SPUTNIK_VALOR_NUMERUS:
+            aed = chorda_aedificator_creare(interp->piscina, XXXII);
+            si (aed == NIHIL)
+            {
+                redde chorda_ex_literis("", interp->piscina);
+            }
+            /* Si integer, non ostendere decimales */
+            si (floor(valor->ut.numerus) == valor->ut.numerus &&
+                valor->ut.numerus >= -1e15 && valor->ut.numerus <= 1e15)
+            {
+                chorda_aedificator_appendere_s32(aed, (s32)valor->ut.numerus);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_f64(aed, valor->ut.numerus, VI);
+            }
+            redde chorda_aedificator_finire(aed);
+
+        casus SPUTNIK_VALOR_CHORDA:
+            redde valor->ut.chorda_valor;
+
+        casus SPUTNIK_VALOR_XAR:
+            aed = chorda_aedificator_creare(interp->piscina, CXXVIII);
+            si (aed == NIHIL)
+            {
+                redde chorda_ex_literis("[]", interp->piscina);
+            }
+            chorda_aedificator_appendere_character(aed, '[');
+            num = xar_numerus(valor->ut.xar);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                si (i > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(aed, ", ");
+                }
+                elem = xar_obtinere(valor->ut.xar, i);
+                resultus = _ad_chordam(interp, elem);
+                si (elem->genus == SPUTNIK_VALOR_CHORDA)
+                {
+                    chorda_aedificator_appendere_character(aed, '"');
+                    chorda_aedificator_appendere_chorda(aed, resultus);
+                    chorda_aedificator_appendere_character(aed, '"');
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_chorda(aed, resultus);
+                }
+            }
+            chorda_aedificator_appendere_character(aed, ']');
+            redde chorda_aedificator_finire(aed);
+
+        casus SPUTNIK_VALOR_OBJECTUM:
+            aed = chorda_aedificator_creare(interp->piscina, CXXVIII);
+            si (aed == NIHIL)
+            {
+                redde chorda_ex_literis("{}", interp->piscina);
+            }
+            chorda_aedificator_appendere_character(aed, '{');
+            iter = tabula_dispersa_iterator_initium(valor->ut.objectum);
+            primum = VERUM;
+            dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &val_ptr))
+            {
+                si (!primum)
+                {
+                    chorda_aedificator_appendere_literis(aed, ", ");
+                }
+                primum = FALSUM;
+                chorda_aedificator_appendere_chorda(aed, clavis);
+                chorda_aedificator_appendere_literis(aed, ": ");
+                elem = (SputnikValor*)val_ptr;
+                resultus = _ad_chordam(interp, elem);
+                si (elem->genus == SPUTNIK_VALOR_CHORDA)
+                {
+                    chorda_aedificator_appendere_character(aed, '"');
+                    chorda_aedificator_appendere_chorda(aed, resultus);
+                    chorda_aedificator_appendere_character(aed, '"');
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_chorda(aed, resultus);
+                }
+            }
+            chorda_aedificator_appendere_character(aed, '}');
+            redde chorda_aedificator_finire(aed);
+
+        casus SPUTNIK_VALOR_FUNCTIO:
+            redde chorda_ex_literis("[function]", interp->piscina);
+
+        ordinarius:
+            redde chorda_ex_literis("", interp->piscina);
+    }
+}
+
+
+/* ==================================================
+ * Built-in Functions
+ * ================================================== */
+
+interior SputnikValor
+_intrinseca_print(SputnikInterpres* interp, Xar* argumenta)
+{
+    i32 i;
+    i32 num;
+    SputnikValor* arg;
+    chorda s;
+
+    num = xar_numerus(argumenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            printf(" ");
+        }
+        arg = xar_obtinere(argumenta, i);
+        s = _ad_chordam(interp, arg);
+        printf("%.*s", s.mensura, s.datum);
+    }
+    printf("\n");
+
+    redde _valor_nihil();
+}
+
+interior SputnikValor
+_intrinseca_len(SputnikInterpres* interp, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* arg;
+
+    si (xar_numerus(argumenta) != I)
+    {
+        _error(interp, nodus, "len() requirit exacte I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+
+    commutatio (arg->genus)
+    {
+        casus SPUTNIK_VALOR_CHORDA:
+            redde _valor_numerus((f64)arg->ut.chorda_valor.mensura);
+
+        casus SPUTNIK_VALOR_XAR:
+            redde _valor_numerus((f64)xar_numerus(arg->ut.xar));
+
+        casus SPUTNIK_VALOR_OBJECTUM:
+            redde _valor_numerus((f64)tabula_dispersa_numerus(arg->ut.objectum));
+
+        ordinarius:
+            _error(interp, nodus, "len() non supportat hunc genus valoris");
+            redde _valor_nihil();
+    }
+}
+
+interior SputnikValor
+_intrinseca_typeof(SputnikInterpres* interp, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* arg;
+    constans character* genus_nomen;
+
+    si (xar_numerus(argumenta) != I)
+    {
+        _error(interp, nodus, "typeof() requirit exacte I argumentum");
+        redde _valor_nihil();
+    }
+
+    arg = xar_obtinere(argumenta, ZEPHYRUM);
+    genus_nomen = sputnik_valor_genus_nomen(arg->genus);
+
+    redde _valor_chorda(chorda_ex_literis(genus_nomen, interp->piscina));
+}
+
+interior b32
+_est_intrinseca(chorda titulus)
+{
+    si (chorda_aequalis_literis(titulus, "print"))
+    {
+        redde VERUM;
+    }
+    si (chorda_aequalis_literis(titulus, "len"))
+    {
+        redde VERUM;
+    }
+    si (chorda_aequalis_literis(titulus, "typeof"))
+    {
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+interior SputnikValor
+_vocare_intrinsecam(SputnikInterpres* interp, chorda titulus, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    si (chorda_aequalis_literis(titulus, "print"))
+    {
+        redde _intrinseca_print(interp, argumenta);
+    }
+    si (chorda_aequalis_literis(titulus, "len"))
+    {
+        redde _intrinseca_len(interp, argumenta, nodus);
+    }
+    si (chorda_aequalis_literis(titulus, "typeof"))
+    {
+        redde _intrinseca_typeof(interp, argumenta, nodus);
+    }
+
+    _error(interp, nodus, "Functio intrinseca ignota");
+    redde _valor_nihil();
+}
+
+
+/* ==================================================
+ * Expression Evaluation
+ * ================================================== */
+
+interior SputnikValor
+_eval_numerum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)interp;
+    redde _valor_numerus(nodus->numerus);
+}
+
+interior SputnikValor
+_eval_chordam(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)interp;
+    redde _valor_chorda(nodus->valor);
+}
+
+interior SputnikValor
+_eval_verum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)interp;
+    (vacuum)nodus;
+    redde _valor_verum();
+}
+
+interior SputnikValor
+_eval_falsum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)interp;
+    (vacuum)nodus;
+    redde _valor_falsum();
+}
+
+interior SputnikValor
+_eval_nihil(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)interp;
+    (vacuum)nodus;
+    redde _valor_nihil();
+}
+
+interior SputnikValor
+_eval_identificatorem(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikValor* valor;
+
+    valor = _invenire_variabilem(interp, nodus->valor);
+    si (valor == NIHIL)
+    {
+        _error(interp, nodus, "Variabilis non definita");
+        redde _valor_nihil();
+    }
+
+    redde *valor;
+}
+
+interior SputnikValor
+_eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* sin_nodus;
+    SputnikAstNodus* dex_nodus;
+    SputnikValor sin;
+    SputnikValor dex;
+    ChordaAedificator* aed;
+
+    si (xar_numerus(nodus->liberi) < II)
+    {
+        _error(interp, nodus, "Operatio binaria requirit II operandos");
+        redde _valor_nihil();
+    }
+
+    sin_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    dex_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+
+    /* Short-circuit pro && et || */
+    si (nodus->operator == SPUTNIK_LEXEMA_ET)
+    {
+        sin = _evaluare_nodum(interp, sin_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+        si (!_est_verum(&sin))
+        {
+            redde sin;
+        }
+        redde _evaluare_nodum(interp, dex_nodus);
+    }
+
+    si (nodus->operator == SPUTNIK_LEXEMA_VEL)
+    {
+        sin = _evaluare_nodum(interp, sin_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+        si (_est_verum(&sin))
+        {
+            redde sin;
+        }
+        redde _evaluare_nodum(interp, dex_nodus);
+    }
+
+    /* Evaluare ambos operandos */
+    sin = _evaluare_nodum(interp, sin_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    dex = _evaluare_nodum(interp, dex_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    commutatio (nodus->operator)
+    {
+        /* Arithmetica */
+        casus SPUTNIK_LEXEMA_PLUS:
+            /* Concatenatio chordarum */
+            si (sin.genus == SPUTNIK_VALOR_CHORDA || dex.genus == SPUTNIK_VALOR_CHORDA)
+            {
+                chorda s1;
+                chorda s2;
+                s1 = _ad_chordam(interp, &sin);
+                s2 = _ad_chordam(interp, &dex);
+                aed = chorda_aedificator_creare(interp->piscina,
+                    (memoriae_index)(s1.mensura + s2.mensura + I));
+                si (aed == NIHIL)
+                {
+                    redde _valor_chorda(chorda_ex_literis("", interp->piscina));
+                }
+                chorda_aedificator_appendere_chorda(aed, s1);
+                chorda_aedificator_appendere_chorda(aed, s2);
+                redde _valor_chorda(chorda_aedificator_finire(aed));
+            }
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator + requirit numeros vel chordas");
+                redde _valor_nihil();
+            }
+            redde _valor_numerus(sin.ut.numerus + dex.ut.numerus);
+
+        casus SPUTNIK_LEXEMA_MINUS:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator - requirit numeros");
+                redde _valor_nihil();
+            }
+            redde _valor_numerus(sin.ut.numerus - dex.ut.numerus);
+
+        casus SPUTNIK_LEXEMA_ASTERISCUS:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator * requirit numeros");
+                redde _valor_nihil();
+            }
+            redde _valor_numerus(sin.ut.numerus * dex.ut.numerus);
+
+        casus SPUTNIK_LEXEMA_DIVISIO:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator / requirit numeros");
+                redde _valor_nihil();
+            }
+            si (dex.ut.numerus == 0.0)
+            {
+                _error(interp, nodus, "Divisio per nihil");
+                redde _valor_nihil();
+            }
+            redde _valor_numerus(sin.ut.numerus / dex.ut.numerus);
+
+        casus SPUTNIK_LEXEMA_MODULUS:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator % requirit numeros");
+                redde _valor_nihil();
+            }
+            si (dex.ut.numerus == 0.0)
+            {
+                _error(interp, nodus, "Modulus per nihil");
+                redde _valor_nihil();
+            }
+            redde _valor_numerus(fmod(sin.ut.numerus, dex.ut.numerus));
+
+        /* Comparatio */
+        casus SPUTNIK_LEXEMA_MINOR:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator < requirit numeros");
+                redde _valor_nihil();
+            }
+            redde sin.ut.numerus < dex.ut.numerus ? _valor_verum() : _valor_falsum();
+
+        casus SPUTNIK_LEXEMA_MAIOR:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator > requirit numeros");
+                redde _valor_nihil();
+            }
+            redde sin.ut.numerus > dex.ut.numerus ? _valor_verum() : _valor_falsum();
+
+        casus SPUTNIK_LEXEMA_MINOR_AUT:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator <= requirit numeros");
+                redde _valor_nihil();
+            }
+            redde sin.ut.numerus <= dex.ut.numerus ? _valor_verum() : _valor_falsum();
+
+        casus SPUTNIK_LEXEMA_MAIOR_AUT:
+            si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator >= requirit numeros");
+                redde _valor_nihil();
+            }
+            redde sin.ut.numerus >= dex.ut.numerus ? _valor_verum() : _valor_falsum();
+
+        /* Aequalitas */
+        casus SPUTNIK_LEXEMA_AEQUALIS_DUO:
+            /* == loose equality */
+            si (sin.genus != dex.genus)
+            {
+                /* Comparatio inter numeros et booleanos */
+                si ((sin.genus == SPUTNIK_VALOR_NUMERUS &&
+                     (dex.genus == SPUTNIK_VALOR_VERUM || dex.genus == SPUTNIK_VALOR_FALSUM)) ||
+                    (dex.genus == SPUTNIK_VALOR_NUMERUS &&
+                     (sin.genus == SPUTNIK_VALOR_VERUM || sin.genus == SPUTNIK_VALOR_FALSUM)))
+                {
+                    f64 n1;
+                    f64 n2;
+                    n1 = sin.genus == SPUTNIK_VALOR_NUMERUS ? sin.ut.numerus :
+                         (sin.genus == SPUTNIK_VALOR_VERUM ? 1.0 : 0.0);
+                    n2 = dex.genus == SPUTNIK_VALOR_NUMERUS ? dex.ut.numerus :
+                         (dex.genus == SPUTNIK_VALOR_VERUM ? 1.0 : 0.0);
+                    redde n1 == n2 ? _valor_verum() : _valor_falsum();
+                }
+                redde _valor_falsum();
+            }
+            commutatio (sin.genus)
+            {
+                casus SPUTNIK_VALOR_NIHIL:
+                    redde _valor_verum();
+                casus SPUTNIK_VALOR_VERUM:
+                casus SPUTNIK_VALOR_FALSUM:
+                    redde _valor_verum();
+                casus SPUTNIK_VALOR_NUMERUS:
+                    redde sin.ut.numerus == dex.ut.numerus ? _valor_verum() : _valor_falsum();
+                casus SPUTNIK_VALOR_CHORDA:
+                    redde chorda_aequalis(sin.ut.chorda_valor, dex.ut.chorda_valor) ?
+                           _valor_verum() : _valor_falsum();
+                ordinarius:
+                    /* Reference equality pro xar, objectum, functio */
+                    redde sin.ut.xar == dex.ut.xar ? _valor_verum() : _valor_falsum();
+            }
+
+        casus SPUTNIK_LEXEMA_AEQUALIS_TRIA:
+            /* === strict equality */
+            si (sin.genus != dex.genus)
+            {
+                redde _valor_falsum();
+            }
+            commutatio (sin.genus)
+            {
+                casus SPUTNIK_VALOR_NIHIL:
+                    redde _valor_verum();
+                casus SPUTNIK_VALOR_VERUM:
+                casus SPUTNIK_VALOR_FALSUM:
+                    redde _valor_verum();
+                casus SPUTNIK_VALOR_NUMERUS:
+                    redde sin.ut.numerus == dex.ut.numerus ? _valor_verum() : _valor_falsum();
+                casus SPUTNIK_VALOR_CHORDA:
+                    redde chorda_aequalis(sin.ut.chorda_valor, dex.ut.chorda_valor) ?
+                           _valor_verum() : _valor_falsum();
+                ordinarius:
+                    redde sin.ut.xar == dex.ut.xar ? _valor_verum() : _valor_falsum();
+            }
+
+        casus SPUTNIK_LEXEMA_NON_AEQUALIS:
+            /* != loose inequality */
+            {
+                SputnikValor aeq;
+                SputnikAstNodus temp;
+                temp = *nodus;
+                temp.operator = SPUTNIK_LEXEMA_AEQUALIS_DUO;
+                aeq = _eval_binarium(interp, &temp);
+                redde aeq.genus == SPUTNIK_VALOR_VERUM ? _valor_falsum() : _valor_verum();
+            }
+
+        casus SPUTNIK_LEXEMA_STRICTE_NON_AEQ:
+            /* !== strict inequality */
+            {
+                SputnikValor aeq;
+                SputnikAstNodus temp;
+                temp = *nodus;
+                temp.operator = SPUTNIK_LEXEMA_AEQUALIS_TRIA;
+                aeq = _eval_binarium(interp, &temp);
+                redde aeq.genus == SPUTNIK_VALOR_VERUM ? _valor_falsum() : _valor_verum();
+            }
+
+        ordinarius:
+            _error(interp, nodus, "Operator binarius ignotus");
+            redde _valor_nihil();
+    }
+}
+
+interior SputnikValor
+_eval_unarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* operandus_nodus;
+    SputnikValor operandus;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        _error(interp, nodus, "Operatio unaria requirit operandum");
+        redde _valor_nihil();
+    }
+
+    operandus_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    operandus = _evaluare_nodum(interp, operandus_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    commutatio (nodus->operator)
+    {
+        casus SPUTNIK_LEXEMA_MINUS:
+            si (operandus.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Operator unarius - requirit numerum");
+                redde _valor_nihil();
+            }
+            redde _valor_numerus(-operandus.ut.numerus);
+
+        casus SPUTNIK_LEXEMA_NON:
+            redde _est_verum(&operandus) ? _valor_falsum() : _valor_verum();
+
+        ordinarius:
+            _error(interp, nodus, "Operator unarius ignotus");
+            redde _valor_nihil();
+    }
+}
+
+interior SputnikValor
+_eval_ternarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* conditio_nodus;
+    SputnikAstNodus* verum_nodus;
+    SputnikAstNodus* falsum_nodus;
+    SputnikValor conditio;
+
+    si (xar_numerus(nodus->liberi) < III)
+    {
+        _error(interp, nodus, "Operatio ternaria requirit III operandos");
+        redde _valor_nihil();
+    }
+
+    conditio_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    verum_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+    falsum_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, II);
+
+    conditio = _evaluare_nodum(interp, conditio_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    si (_est_verum(&conditio))
+    {
+        redde _evaluare_nodum(interp, verum_nodus);
+    }
+    alioquin
+    {
+        redde _evaluare_nodum(interp, falsum_nodus);
+    }
+}
+
+interior SputnikValor
+_eval_assignationem(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* target_nodus;
+    SputnikAstNodus* valor_nodus;
+    SputnikValor valor;
+    chorda titulus;
+
+    si (xar_numerus(nodus->liberi) < II)
+    {
+        _error(interp, nodus, "Assignatio requirit target et valorem");
+        redde _valor_nihil();
+    }
+
+    target_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    valor_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+
+    valor = _evaluare_nodum(interp, valor_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    si (target_nodus->genus == SPUTNIK_AST_IDENTIFICATOR)
+    {
+        titulus = target_nodus->valor;
+
+        /* Verificare non constans */
+        si (_est_constans(interp, titulus))
+        {
+            _error(interp, nodus, "Non potest assignare ad constantem");
+            redde _valor_nihil();
+        }
+
+        si (!_assignare_variabilem(interp, titulus, valor))
+        {
+            _error(interp, nodus, "Variabilis non definita");
+            redde _valor_nihil();
+        }
+
+        redde valor;
+    }
+    alioquin si (target_nodus->genus == SPUTNIK_AST_ACCESSUS_MEMBRI)
+    {
+        SputnikAstNodus* obj_nodus;
+        SputnikValor obj;
+        SputnikValor* valor_copia;
+
+        si (xar_numerus(target_nodus->liberi) < I)
+        {
+            _error(interp, nodus, "Accessus membri invalidus");
+            redde _valor_nihil();
+        }
+
+        obj_nodus = *(SputnikAstNodus**)xar_obtinere(target_nodus->liberi, ZEPHYRUM);
+        obj = _evaluare_nodum(interp, obj_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+
+        si (obj.genus != SPUTNIK_VALOR_OBJECTUM)
+        {
+            _error(interp, nodus, "Non potest assignare membrum non-objecti");
+            redde _valor_nihil();
+        }
+
+        valor_copia = piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+        si (valor_copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *valor_copia = valor;
+
+        tabula_dispersa_inserere(obj.ut.objectum, target_nodus->valor, valor_copia);
+        redde valor;
+    }
+    alioquin si (target_nodus->genus == SPUTNIK_AST_ACCESSUS_INDICE)
+    {
+        SputnikAstNodus* obj_nodus;
+        SputnikAstNodus* index_nodus;
+        SputnikValor obj;
+        SputnikValor index;
+        SputnikValor* elem;
+
+        si (xar_numerus(target_nodus->liberi) < II)
+        {
+            _error(interp, nodus, "Accessus indice invalidus");
+            redde _valor_nihil();
+        }
+
+        obj_nodus = *(SputnikAstNodus**)xar_obtinere(target_nodus->liberi, ZEPHYRUM);
+        index_nodus = *(SputnikAstNodus**)xar_obtinere(target_nodus->liberi, I);
+
+        obj = _evaluare_nodum(interp, obj_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+
+        index = _evaluare_nodum(interp, index_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+
+        si (obj.genus == SPUTNIK_VALOR_XAR)
+        {
+            i32 idx;
+            si (index.genus != SPUTNIK_VALOR_NUMERUS)
+            {
+                _error(interp, nodus, "Index array debet esse numerus");
+                redde _valor_nihil();
+            }
+            idx = (i32)index.ut.numerus;
+            si (idx < ZEPHYRUM || idx >= xar_numerus(obj.ut.xar))
+            {
+                _error(interp, nodus, "Index extra limites");
+                redde _valor_nihil();
+            }
+            elem = xar_obtinere(obj.ut.xar, idx);
+            *elem = valor;
+            redde valor;
+        }
+        alioquin si (obj.genus == SPUTNIK_VALOR_OBJECTUM)
+        {
+            SputnikValor* valor_copia;
+            chorda clavis;
+
+            si (index.genus != SPUTNIK_VALOR_CHORDA)
+            {
+                _error(interp, nodus, "Clavis objecti debet esse chorda");
+                redde _valor_nihil();
+            }
+            clavis = index.ut.chorda_valor;
+
+            valor_copia = piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            si (valor_copia == NIHIL)
+            {
+                _error(interp, nodus, "Memoria exhausta");
+                redde _valor_nihil();
+            }
+            *valor_copia = valor;
+
+            tabula_dispersa_inserere(obj.ut.objectum, clavis, valor_copia);
+            redde valor;
+        }
+        alioquin
+        {
+            _error(interp, nodus, "Non potest assignare per indicem non-array/objecti");
+            redde _valor_nihil();
+        }
+    }
+
+    _error(interp, nodus, "Target assignationis invalidum");
+    redde _valor_nihil();
+}
+
+interior SputnikValor
+_eval_accessum_membri(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* obj_nodus;
+    SputnikValor obj;
+    vacuum* valor_ptr;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        _error(interp, nodus, "Accessus membri requirit objectum");
+        redde _valor_nihil();
+    }
+
+    obj_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    obj = _evaluare_nodum(interp, obj_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    si (obj.genus != SPUTNIK_VALOR_OBJECTUM)
+    {
+        _error(interp, nodus, "Non potest accedere membrum non-objecti");
+        redde _valor_nihil();
+    }
+
+    si (tabula_dispersa_invenire(obj.ut.objectum, nodus->valor, &valor_ptr))
+    {
+        redde *(SputnikValor*)valor_ptr;
+    }
+
+    /* Membrum non inventum - redde nihil */
+    redde _valor_nihil();
+}
+
+interior SputnikValor
+_eval_accessum_indice(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* obj_nodus;
+    SputnikAstNodus* index_nodus;
+    SputnikValor obj;
+    SputnikValor index;
+
+    si (xar_numerus(nodus->liberi) < II)
+    {
+        _error(interp, nodus, "Accessus indice requirit objectum et indicem");
+        redde _valor_nihil();
+    }
+
+    obj_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    index_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+
+    obj = _evaluare_nodum(interp, obj_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    index = _evaluare_nodum(interp, index_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    si (obj.genus == SPUTNIK_VALOR_XAR)
+    {
+        i32 idx;
+        SputnikValor* elem;
+
+        si (index.genus != SPUTNIK_VALOR_NUMERUS)
+        {
+            _error(interp, nodus, "Index array debet esse numerus");
+            redde _valor_nihil();
+        }
+
+        idx = (i32)index.ut.numerus;
+        si (idx < ZEPHYRUM || idx >= xar_numerus(obj.ut.xar))
+        {
+            _error(interp, nodus, "Index extra limites");
+            redde _valor_nihil();
+        }
+
+        elem = xar_obtinere(obj.ut.xar, idx);
+        redde *elem;
+    }
+    alioquin si (obj.genus == SPUTNIK_VALOR_OBJECTUM)
+    {
+        vacuum* valor_ptr;
+        chorda clavis;
+
+        si (index.genus != SPUTNIK_VALOR_CHORDA)
+        {
+            _error(interp, nodus, "Clavis objecti debet esse chorda");
+            redde _valor_nihil();
+        }
+
+        clavis = index.ut.chorda_valor;
+        si (tabula_dispersa_invenire(obj.ut.objectum, clavis, &valor_ptr))
+        {
+            redde *(SputnikValor*)valor_ptr;
+        }
+
+        redde _valor_nihil();
+    }
+    alioquin si (obj.genus == SPUTNIK_VALOR_CHORDA)
+    {
+        i32 idx;
+        chorda substr;
+
+        si (index.genus != SPUTNIK_VALOR_NUMERUS)
+        {
+            _error(interp, nodus, "Index chordae debet esse numerus");
+            redde _valor_nihil();
+        }
+
+        idx = (i32)index.ut.numerus;
+        si (idx < ZEPHYRUM || idx >= obj.ut.chorda_valor.mensura)
+        {
+            _error(interp, nodus, "Index extra limites");
+            redde _valor_nihil();
+        }
+
+        /* Creare chorda singularis characteris */
+        substr.datum = obj.ut.chorda_valor.datum + idx;
+        substr.mensura = I;
+        redde _valor_chorda(substr);
+    }
+
+    _error(interp, nodus, "Non potest accedere per indicem hunc genus");
+    redde _valor_nihil();
+}
+
+interior SputnikValor
+_eval_xar_literalem(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    Xar* xar;
+    i32 i;
+    i32 num;
+    SputnikAstNodus* elem_nodus;
+    SputnikValor elem;
+    SputnikValor* elem_copia;
+
+    xar = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (xar == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        elem_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, i);
+        elem = _evaluare_nodum(interp, elem_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+
+        elem_copia = xar_addere(xar);
+        si (elem_copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *elem_copia = elem;
+    }
+
+    redde _valor_xar(xar);
+}
+
+interior SputnikValor
+_eval_objectum_literalem(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    TabulaDispersa* tabula;
+    i32 i;
+    i32 num;
+    SputnikAstNodus* clavis_nodus;
+    SputnikAstNodus* valor_nodus;
+    SputnikValor valor;
+    SputnikValor* valor_copia;
+    chorda clavis;
+
+    tabula = tabula_dispersa_creare_chorda(interp->piscina, XVI);
+    si (tabula == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i += II)
+    {
+        si (i + I >= num)
+        {
+            _error(interp, nodus, "Objectum literalis invalidum");
+            redde _valor_nihil();
+        }
+
+        clavis_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, i);
+        valor_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, i + I);
+
+        /* Clavis est identificator vel chorda */
+        si (clavis_nodus->genus == SPUTNIK_AST_IDENTIFICATOR)
+        {
+            clavis = clavis_nodus->valor;
+        }
+        alioquin si (clavis_nodus->genus == SPUTNIK_AST_CHORDA_LITERALIS)
+        {
+            clavis = clavis_nodus->valor;
+        }
+        alioquin
+        {
+            _error(interp, nodus, "Clavis objecti debet esse identificator vel chorda");
+            redde _valor_nihil();
+        }
+
+        valor = _evaluare_nodum(interp, valor_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+
+        valor_copia = piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+        si (valor_copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *valor_copia = valor;
+
+        tabula_dispersa_inserere(tabula, clavis, valor_copia);
+    }
+
+    redde _valor_objectum(tabula);
+}
+
+interior SputnikValor
+_vocare_functionem(SputnikInterpres* interp, SputnikAstNodus* functio, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikAmbitus* prior;
+    i32 num_param;
+    i32 num_args;
+    i32 i;
+    SputnikAstNodus* param_nodus;
+    SputnikAstNodus* corpus;
+    SputnikValor* arg;
+    SputnikValor resultus;
+
+    /* Functio node: liberi = [param0, param1, ..., corpus] */
+    num_param = xar_numerus(functio->liberi) - I;
+    num_args = xar_numerus(argumenta);
+
+    si (num_args != num_param)
+    {
+        _error(interp, nodus, "Numerus argumentorum non congruit");
+        redde _valor_nihil();
+    }
+
+    /* Salvare scope currens */
+    prior = interp->ambitus_currens;
+
+    /* Creare novum scope (lexical: parens est globalis) */
+    interp->ambitus_currens = _creare_ambitum(interp, interp->ambitus_globalis);
+    si (interp->ambitus_currens == NIHIL)
+    {
+        interp->ambitus_currens = prior;
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    /* Definire parametra */
+    per (i = ZEPHYRUM; i < num_param; i++)
+    {
+        param_nodus = *(SputnikAstNodus**)xar_obtinere(functio->liberi, i);
+        arg = xar_obtinere(argumenta, i);
+        _definire_variabilem(interp, param_nodus->valor, *arg, FALSUM);
+    }
+
+    /* Executare corpus */
+    corpus = *(SputnikAstNodus**)xar_obtinere(functio->liberi, num_param);
+    _executare_sententiam(interp, corpus);
+
+    /* Capturare return value */
+    si (interp->redde_activa)
+    {
+        resultus = interp->redde_valor;
+        interp->redde_activa = FALSUM;
+    }
+    alioquin
+    {
+        resultus = _valor_nihil();
+    }
+
+    /* Restaurare scope */
+    interp->ambitus_currens = prior;
+
+    redde resultus;
+}
+
+interior SputnikValor
+_eval_vocationem(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* callee_nodus;
+    SputnikValor callee;
+    Xar* argumenta;
+    i32 i;
+    i32 num;
+    SputnikAstNodus* arg_nodus;
+    SputnikValor arg;
+    SputnikValor* arg_copia;
+    chorda functio_titulus;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        _error(interp, nodus, "Vocatio requirit callee");
+        redde _valor_nihil();
+    }
+
+    callee_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+
+    /* Evaluare argumenta */
+    argumenta = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    si (argumenta == NIHIL)
+    {
+        _error(interp, nodus, "Memoria exhausta");
+        redde _valor_nihil();
+    }
+
+    num = xar_numerus(nodus->liberi);
+    per (i = I; i < num; i++)
+    {
+        arg_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, i);
+        arg = _evaluare_nodum(interp, arg_nodus);
+        si (interp->error_accidit) redde _valor_nihil();
+
+        arg_copia = xar_addere(argumenta);
+        si (arg_copia == NIHIL)
+        {
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
+        }
+        *arg_copia = arg;
+    }
+
+    /* Verificare si intrinseca */
+    si (callee_nodus->genus == SPUTNIK_AST_IDENTIFICATOR)
+    {
+        functio_titulus = callee_nodus->valor;
+        si (_est_intrinseca(functio_titulus))
+        {
+            redde _vocare_intrinsecam(interp, functio_titulus, argumenta, nodus);
+        }
+    }
+
+    /* Evaluare callee */
+    callee = _evaluare_nodum(interp, callee_nodus);
+    si (interp->error_accidit) redde _valor_nihil();
+
+    si (callee.genus != SPUTNIK_VALOR_FUNCTIO)
+    {
+        _error(interp, nodus, "Non potest vocare non-functionem");
+        redde _valor_nihil();
+    }
+
+    redde _vocare_functionem(interp, callee.ut.functio, argumenta, nodus);
+}
+
+
+/* ==================================================
+ * Node Dispatcher
+ * ================================================== */
+
+interior SputnikValor
+_evaluare_nodum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    si (nodus == NIHIL || interp->error_accidit)
+    {
+        redde _valor_nihil();
+    }
+
+    commutatio (nodus->genus)
+    {
+        casus SPUTNIK_AST_NUMERUS_LITERALIS:
+            redde _eval_numerum(interp, nodus);
+
+        casus SPUTNIK_AST_CHORDA_LITERALIS:
+            redde _eval_chordam(interp, nodus);
+
+        casus SPUTNIK_AST_VERUM_LITERALIS:
+            redde _eval_verum(interp, nodus);
+
+        casus SPUTNIK_AST_FALSUM_LITERALIS:
+            redde _eval_falsum(interp, nodus);
+
+        casus SPUTNIK_AST_NIHIL_LITERALIS:
+            redde _eval_nihil(interp, nodus);
+
+        casus SPUTNIK_AST_IDENTIFICATOR:
+            redde _eval_identificatorem(interp, nodus);
+
+        casus SPUTNIK_AST_OPERATIO_BINARIA:
+            redde _eval_binarium(interp, nodus);
+
+        casus SPUTNIK_AST_OPERATIO_UNARIA:
+            redde _eval_unarium(interp, nodus);
+
+        casus SPUTNIK_AST_TERNARIA:
+            redde _eval_ternarium(interp, nodus);
+
+        casus SPUTNIK_AST_ASSIGNATIO:
+            redde _eval_assignationem(interp, nodus);
+
+        casus SPUTNIK_AST_ACCESSUS_MEMBRI:
+            redde _eval_accessum_membri(interp, nodus);
+
+        casus SPUTNIK_AST_ACCESSUS_INDICE:
+            redde _eval_accessum_indice(interp, nodus);
+
+        casus SPUTNIK_AST_XAR_LITERALIS:
+            redde _eval_xar_literalem(interp, nodus);
+
+        casus SPUTNIK_AST_OBJECTUM_LITERALIS:
+            redde _eval_objectum_literalem(interp, nodus);
+
+        casus SPUTNIK_AST_VOCATIO:
+            redde _eval_vocationem(interp, nodus);
+
+        casus SPUTNIK_AST_SIGNUM:
+            /* Tags redde ut chordas */
+            redde _valor_chorda(nodus->valor);
+
+        ordinarius:
+            _error(interp, nodus, "Genus nodi non evaluabile");
+            redde _valor_nihil();
+    }
+}
+
+
+/* ==================================================
+ * Statement Execution
+ * ================================================== */
+
+interior vacuum
+_exec_declarationem_let(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikValor valor;
+    chorda titulus;
+
+    titulus = nodus->valor;
+
+    si (xar_numerus(nodus->liberi) > ZEPHYRUM)
+    {
+        SputnikAstNodus* valor_nodus;
+        valor_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+        valor = _evaluare_nodum(interp, valor_nodus);
+        si (interp->error_accidit) redde;
+    }
+    alioquin
+    {
+        valor = _valor_nihil();
+    }
+
+    si (!_definire_variabilem(interp, titulus, valor, FALSUM))
+    {
+        _error(interp, nodus, "Non potest definire variabilem");
+    }
+}
+
+interior vacuum
+_exec_declarationem_const(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikValor valor;
+    SputnikAstNodus* valor_nodus;
+    chorda titulus;
+
+    titulus = nodus->valor;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        _error(interp, nodus, "Const requirit valorem initialem");
+        redde;
+    }
+
+    valor_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    valor = _evaluare_nodum(interp, valor_nodus);
+    si (interp->error_accidit) redde;
+
+    si (!_definire_variabilem(interp, titulus, valor, VERUM))
+    {
+        _error(interp, nodus, "Non potest definire constantem");
+    }
+}
+
+interior vacuum
+_exec_declarationem_functio(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    chorda titulus;
+    SputnikValor functio;
+
+    titulus = nodus->valor;
+    functio = _valor_functio(nodus);
+
+    si (!_definire_variabilem(interp, titulus, functio, FALSUM))
+    {
+        _error(interp, nodus, "Non potest definire functionem");
+    }
+}
+
+interior vacuum
+_exec_sententiam_si(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* conditio_nodus;
+    SputnikAstNodus* tunc_nodus;
+    SputnikAstNodus* alioquin_nodus;
+    SputnikValor conditio;
+    i32 num_liberi;
+
+    num_liberi = xar_numerus(nodus->liberi);
+    si (num_liberi < II)
+    {
+        _error(interp, nodus, "Sententia si requirit conditio et corpus");
+        redde;
+    }
+
+    conditio_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    tunc_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+
+    conditio = _evaluare_nodum(interp, conditio_nodus);
+    si (interp->error_accidit) redde;
+
+    si (_est_verum(&conditio))
+    {
+        _executare_sententiam(interp, tunc_nodus);
+    }
+    alioquin si (num_liberi >= III)
+    {
+        alioquin_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, II);
+        _executare_sententiam(interp, alioquin_nodus);
+    }
+}
+
+interior vacuum
+_exec_sententiam_dum(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* conditio_nodus;
+    SputnikAstNodus* corpus_nodus;
+    SputnikValor conditio;
+
+    si (xar_numerus(nodus->liberi) < II)
+    {
+        _error(interp, nodus, "Sententia dum requirit conditio et corpus");
+        redde;
+    }
+
+    conditio_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    corpus_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+
+    dum (!interp->error_accidit && !interp->redde_activa)
+    {
+        conditio = _evaluare_nodum(interp, conditio_nodus);
+        si (interp->error_accidit) redde;
+
+        si (!_est_verum(&conditio))
+        {
+            frange;
+        }
+
+        _executare_sententiam(interp, corpus_nodus);
+    }
+}
+
+interior vacuum
+_exec_sententiam_per(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* init_nodus;
+    SputnikAstNodus* conditio_nodus;
+    SputnikAstNodus* incrementum_nodus;
+    SputnikAstNodus* corpus_nodus;
+    SputnikValor conditio;
+
+    si (xar_numerus(nodus->liberi) < IV)
+    {
+        _error(interp, nodus, "Sententia per requirit init, conditio, incrementum, corpus");
+        redde;
+    }
+
+    init_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    conditio_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, I);
+    incrementum_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, II);
+    corpus_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, III);
+
+    /* Novum scope pro for loop */
+    _intrare_ambitum(interp);
+
+    /* Initializatio */
+    si (init_nodus != NIHIL)
+    {
+        _executare_sententiam(interp, init_nodus);
+        si (interp->error_accidit)
+        {
+            _exire_ambitum(interp);
+            redde;
+        }
+    }
+
+    /* Loop */
+    dum (!interp->error_accidit && !interp->redde_activa)
+    {
+        /* Conditio */
+        si (conditio_nodus != NIHIL)
+        {
+            conditio = _evaluare_nodum(interp, conditio_nodus);
+            si (interp->error_accidit)
+            {
+                _exire_ambitum(interp);
+                redde;
+            }
+            si (!_est_verum(&conditio))
+            {
+                frange;
+            }
+        }
+
+        /* Corpus */
+        _executare_sententiam(interp, corpus_nodus);
+        si (interp->error_accidit || interp->redde_activa)
+        {
+            frange;
+        }
+
+        /* Incrementum */
+        si (incrementum_nodus != NIHIL)
+        {
+            _evaluare_nodum(interp, incrementum_nodus);
+            si (interp->error_accidit)
+            {
+                frange;
+            }
+        }
+    }
+
+    _exire_ambitum(interp);
+}
+
+interior vacuum
+_exec_sententiam_redde(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    si (xar_numerus(nodus->liberi) > ZEPHYRUM)
+    {
+        SputnikAstNodus* valor_nodus;
+        valor_nodus = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+        interp->redde_valor = _evaluare_nodum(interp, valor_nodus);
+    }
+    alioquin
+    {
+        interp->redde_valor = _valor_nihil();
+    }
+
+    interp->redde_activa = VERUM;
+}
+
+interior vacuum
+_exec_sententiam_grex(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    i32 i;
+    i32 num;
+    SputnikAstNodus* sententia;
+
+    _intrare_ambitum(interp);
+
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num && !interp->error_accidit && !interp->redde_activa; i++)
+    {
+        sententia = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, i);
+        _executare_sententiam(interp, sententia);
+    }
+
+    _exire_ambitum(interp);
+}
+
+interior vacuum
+_exec_sententiam_expressio(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    SputnikAstNodus* expressio;
+
+    si (xar_numerus(nodus->liberi) < I)
+    {
+        redde;
+    }
+
+    expressio = *(SputnikAstNodus**)xar_obtinere(nodus->liberi, ZEPHYRUM);
+    _evaluare_nodum(interp, expressio);
+}
+
+interior vacuum
+_executare_sententiam(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    si (nodus == NIHIL || interp->error_accidit || interp->redde_activa)
+    {
+        redde;
+    }
+
+    commutatio (nodus->genus)
+    {
+        casus SPUTNIK_AST_DECLARATIO_LET:
+            _exec_declarationem_let(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_DECLARATIO_CONST:
+            _exec_declarationem_const(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_DECLARATIO_FUNCTIO:
+            _exec_declarationem_functio(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_SI:
+            _exec_sententiam_si(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_DUM:
+            _exec_sententiam_dum(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_PER:
+            _exec_sententiam_per(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_REDDE:
+            _exec_sententiam_redde(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_GREX:
+            _exec_sententiam_grex(interp, nodus);
+            frange;
+
+        casus SPUTNIK_AST_SENTENTIA_EXPRESSIO:
+            _exec_sententiam_expressio(interp, nodus);
+            frange;
+
+        ordinarius:
+            /* Tentare evaluare ut expressio */
+            _evaluare_nodum(interp, nodus);
+            frange;
+    }
+}
+
+
+/* ==================================================
+ * Program Execution
+ * ================================================== */
+
+interior SputnikValor
+_executare_programma(SputnikInterpres* interp, SputnikAstNodus* programma)
+{
+    i32 i;
+    i32 num;
+    SputnikAstNodus* sententia;
+    SputnikValor ultima;
+
+    ultima = _valor_nihil();
+    num = xar_numerus(programma->liberi);
+
+    per (i = ZEPHYRUM; i < num && !interp->error_accidit && !interp->redde_activa; i++)
+    {
+        sententia = *(SputnikAstNodus**)xar_obtinere(programma->liberi, i);
+
+        /* Si expression statement, captura valorem */
+        si (sententia->genus == SPUTNIK_AST_SENTENTIA_EXPRESSIO &&
+            xar_numerus(sententia->liberi) > ZEPHYRUM)
+        {
+            SputnikAstNodus* expr;
+            expr = *(SputnikAstNodus**)xar_obtinere(sententia->liberi, ZEPHYRUM);
+            ultima = _evaluare_nodum(interp, expr);
+        }
+        alioquin
+        {
+            _executare_sententiam(interp, sententia);
+        }
+    }
+
+    /* Si return activum, usa redde_valor */
+    si (interp->redde_activa)
+    {
+        ultima = interp->redde_valor;
+    }
+
+    redde ultima;
+}
+
+
+/* ==================================================
+ * Functiones Principales
+ * ================================================== */
+
+SputnikInterpresResultus
+sputnik_interpretare(
+    SputnikAstNodus*     radix,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    SputnikInterpresResultus resultus;
+    SputnikInterpres interp;
+
+    resultus.successus = FALSUM;
+    resultus.valor = _valor_nihil();
+    resultus.error_nuntius.datum = NIHIL;
+    resultus.error_nuntius.mensura = ZEPHYRUM;
+    resultus.error_linea = ZEPHYRUM;
+    resultus.error_columna = ZEPHYRUM;
+
+    si (radix == NIHIL || piscina == NIHIL)
+    {
+        redde resultus;
+    }
+
+    /* Initializare interpreter */
+    interp.piscina = piscina;
+    interp.intern = intern;
+    interp.error_accidit = FALSUM;
+    interp.error_nuntius.datum = NIHIL;
+    interp.error_nuntius.mensura = ZEPHYRUM;
+    interp.error_linea = ZEPHYRUM;
+    interp.error_columna = ZEPHYRUM;
+    interp.redde_activa = FALSUM;
+    interp.redde_valor = _valor_nihil();
+
+    /* Creare global scope */
+    interp.ambitus_globalis = _creare_ambitum(&interp, NIHIL);
+    interp.ambitus_currens = interp.ambitus_globalis;
+
+    si (interp.ambitus_globalis == NIHIL)
+    {
+        resultus.error_nuntius = chorda_ex_literis("Memoria exhausta", piscina);
+        redde resultus;
+    }
+
+    /* Executare */
+    resultus.valor = _executare_programma(&interp, radix);
+
+    si (interp.error_accidit)
+    {
+        resultus.error_nuntius = interp.error_nuntius;
+        resultus.error_linea = interp.error_linea;
+        resultus.error_columna = interp.error_columna;
+        redde resultus;
+    }
+
+    resultus.successus = VERUM;
+    redde resultus;
+}
+
+SputnikInterpresResultus
+sputnik_evaluare_ex_chorda(
+    chorda               fons,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    SputnikParserResultus parse_res;
+    SputnikInterpresResultus resultus;
+
+    resultus.successus = FALSUM;
+    resultus.valor = _valor_nihil();
+    resultus.error_nuntius.datum = NIHIL;
+    resultus.error_nuntius.mensura = ZEPHYRUM;
+    resultus.error_linea = ZEPHYRUM;
+    resultus.error_columna = ZEPHYRUM;
+
+    /* Parsere */
+    parse_res = sputnik_parsere_ex_fonte(fons, piscina, intern);
+    si (!parse_res.successus)
+    {
+        resultus.error_nuntius = parse_res.error_nuntius;
+        resultus.error_linea = parse_res.error_linea;
+        resultus.error_columna = parse_res.error_columna;
+        redde resultus;
+    }
+
+    /* Interpretare */
+    redde sputnik_interpretare(parse_res.radix, piscina, intern);
+}
+
+SputnikInterpresResultus
+sputnik_evaluare(
+    constans character*  fons,
+    Piscina*             piscina,
+    InternamentumChorda* intern)
+{
+    chorda ch;
+    ch = chorda_ex_literis(fons, piscina);
+    redde sputnik_evaluare_ex_chorda(ch, piscina, intern);
+}
+
+
+/* ==================================================
+ * Utilitas
+ * ================================================== */
+
+constans character*
+sputnik_valor_genus_nomen(SputnikValorGenus genus)
+{
+    commutatio (genus)
+    {
+        casus SPUTNIK_VALOR_NIHIL:      redde "null";
+        casus SPUTNIK_VALOR_NUMERUS:    redde "number";
+        casus SPUTNIK_VALOR_CHORDA:     redde "string";
+        casus SPUTNIK_VALOR_VERUM:      redde "boolean";
+        casus SPUTNIK_VALOR_FALSUM:     redde "boolean";
+        casus SPUTNIK_VALOR_XAR:        redde "array";
+        casus SPUTNIK_VALOR_OBJECTUM:   redde "object";
+        casus SPUTNIK_VALOR_FUNCTIO:    redde "function";
+        ordinarius:                     redde "unknown";
+    }
+}
+
+chorda
+sputnik_valor_ad_chordam(SputnikValor* valor, Piscina* piscina)
+{
+    SputnikInterpres interp;
+
+    interp.piscina = piscina;
+    interp.intern = NIHIL;
+    interp.error_accidit = FALSUM;
+
+    redde _ad_chordam(&interp, valor);
+}

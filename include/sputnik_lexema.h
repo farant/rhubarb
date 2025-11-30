@@ -99,8 +99,10 @@ nomen enumeratio {
     SPUTNIK_LEXEMA_PUNCTUM         = XLIV,      /* . */
     SPUTNIK_LEXEMA_COLON           = XLV,       /* : */
 
+    SPUTNIK_LEXEMA_INTERROGATIO    = XLVI,      /* ? */
+
     /* Commenta */
-    SPUTNIK_LEXEMA_COMMENTUM       = XLVI       /* // vel block */
+    SPUTNIK_LEXEMA_COMMENTUM       = XLVII      /* // vel block */
 } SputnikLexemaGenus;
 
 
