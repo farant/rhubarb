@@ -222,6 +222,24 @@ _layout_processare_pagina(
     /* Tabula dimensiones = widget dimensiones - border (II pro utroque latere) */
     pagina_initiare_cum_dimensionibus(pagina, dom->piscina, latitudo - II, altitudo - II, id_chorda);
 
+    /* Si nodus habet contentum (raw vel liberi), inserere in pagina */
+    si (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
+    {
+        chorda textus = stml_textus_internus(nodus, dom->piscina);
+        si (textus.mensura > ZEPHYRUM)
+        {
+            /* Pagina_inserere_textum requirit null-terminated */
+            character* textus_nt = piscina_allocare(dom->piscina,
+                (memoriae_index)(textus.mensura + I));
+            si (textus_nt)
+            {
+                memcpy(textus_nt, textus.datum, (size_t)textus.mensura);
+                textus_nt[textus.mensura] = '\0';
+                pagina_inserere_textum(pagina, textus_nt);
+            }
+        }
+    }
+
     /* Creare datum wrapper */
     datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumPagina));
     si (!datum)

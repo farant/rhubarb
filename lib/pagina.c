@@ -37,7 +37,7 @@ pagina_initiare_cum_dimensionibus(
     /* Creare coloratio pro syntax highlighting */
     pagina->coloratio = coloratio_creare(piscina, latitudo, altitudo);
     coloratio_ponere_regulas(pagina->coloratio,
-        COLORATIO_REGULA_COMMANDA | COLORATIO_REGULA_STML);
+        COLORATIO_REGULA_COMMANDA | COLORATIO_REGULA_STML | COLORATIO_REGULA_SPUTNIK);
 
     /* Initiare vim status */
     pagina->vim = vim_initiare(&pagina->tabula);
@@ -458,6 +458,9 @@ pagina_inserere_textum(
     modo_prior = pagina->vim.modo;
     pagina->vim = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
 
+    /* Disablare auto-indent pro programmatic insertion */
+    pagina->vim.sine_auto_indent = VERUM;
+
     per (p = textus; *p != '\0'; p++)
     {
         si (*p == '\n')
@@ -472,7 +475,8 @@ pagina_inserere_textum(
         }
     }
 
-    /* Restituere modum priorem */
+    /* Restituere modum priorem et auto-indent */
+    pagina->vim.sine_auto_indent = FALSUM;
     pagina->vim = vim_ponere_modum(pagina->vim, modo_prior);
 }
 

@@ -28,6 +28,7 @@ vim_initiare(
     status.tempus_f = 0.0;
     status.debet_claudere = FALSUM;
     status.mutatus = FALSUM;
+    status.sine_auto_indent = FALSUM;
 
     redde status;
 }
@@ -874,8 +875,11 @@ _inserere_novam_lineam_in_inserere(
         status.cursor_columna = ZEPHYRUM;
         status.mutatus = VERUM;
 
-        /* Auto-indent: copiare indentationem ex linea superiore */
-        status = _copiare_indentationem(status, linea_fons);
+        /* Auto-indent: copiare indentationem ex linea superiore (nisi disablatum) */
+        si (!status.sine_auto_indent)
+        {
+            status = _copiare_indentationem(status, linea_fons);
+        }
     }
 
     redde status;

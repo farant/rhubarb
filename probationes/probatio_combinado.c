@@ -18,7 +18,55 @@
 /* STML layout definition cum widgets et entitates */
 constans character* LAYOUT_STML =
     "<layout>"
-    "  <pagina id='editor' x='0' y='0' latitudo='71' altitudo='60'/>"
+    "  <pagina! id='editor' x='0' y='0' latitudo='71' altitudo='60'>"
+    "TAB = switch focus (not in insert mode)\n"
+    "\n"
+    "Click widgets to focus them\n"
+    "\n"
+    "Navigator on right ->\n"
+    "\n"
+    "Press 'i' to enter insert mode\n"
+    "Press ESC to return to normal mode\n"
+    "Use hjkl to navigate\n"
+    "\n"
+    "Try clicking on: $date\n"
+    "\n"
+    "--- Tag Examples ---\n"
+    "<div class=\"example\">Hello</div>\n"
+    "<input type=\"text\" value=\"test\"/>\n"
+    "<button disabled>Click me</button>\n"
+    "\n"
+    "--- Sputnik Example ---\n"
+    "<sputnik>\n"
+    "// Declarationes\n"
+    "sit x = 42;\n"
+    "constans PI = 3.14;\n"
+    "sit price = 9.99$;\n"
+    "\n"
+    "// Control flow\n"
+    "si (x > 10) {\n"
+    "    print(\"magnum!\");\n"
+    "} alioquin {\n"
+    "    print('parvum');\n"
+    "}\n"
+    "\n"
+    "// Loop et valores\n"
+    "dum (x > 0) {\n"
+    "    x = x - 1;\n"
+    "}\n"
+    "\n"
+    "sit active = verum;\n"
+    "sit data = nihil;\n"
+    "\n"
+    "// Functio et tags\n"
+    "functio salve(nomen) {\n"
+    "    redde `Hello ${nomen}`;\n"
+    "}\n"
+    "\n"
+    "sit ent = REPO.get('Page::intro');\n"
+    "ent #important #review\n"
+    "</sputnik>\n"
+    "</pagina>"
     "  <navigator id='nav' x='71' y='0' latitudo='71' altitudo='60'/>"
     ""
     "  <entitas genus='Root' slug='system'>"
@@ -159,7 +207,6 @@ main(void)
     Persistentia*        persistentia;
     EntitasRepositorium* repositorium;
     LayoutDom*           dom;
-    Pagina*              pagina;
     Fenestra*            fenestra;
     TabulaPixelorum*     tabula;
     ContextusDelineandi* ctx;
@@ -222,19 +269,6 @@ main(void)
 
     /* Ponere registrum in layout */
     layout_ponere_reg_commandi(dom, reg_commandi);
-
-    /* Obtinere pagina ex layout et inserere textum */
-    pagina = layout_obtinere_pagina(dom, "editor");
-    si (pagina)
-    {
-        pagina_inserere_textum(pagina, "TAB = switch focus (not in insert mode)\n\n");
-        pagina_inserere_textum(pagina, "Click widgets to focus them\n\n");
-        pagina_inserere_textum(pagina, "Navigator on right ->\n\n");
-        pagina_inserere_textum(pagina, "Press 'i' to enter insert mode\n");
-        pagina_inserere_textum(pagina, "Press ESC to return to normal mode\n");
-        pagina_inserere_textum(pagina, "Use hjkl to navigate\n\n");
-        pagina_inserere_textum(pagina, "Try clicking on: $date\n");
-    }
 
     /* Configurare fenestram */
     configuratio.titulus = "Pagina + Navigator - Layout Demo";

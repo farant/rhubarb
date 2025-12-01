@@ -174,8 +174,299 @@ coloratio_ponere_registrum(
 
 
 /* ==================================================
+ * Sputnik Keywords
+ * ================================================== */
+
+/* Keywords - mapped to their color categories */
+hic_manens constans character* clavis_sputnik_declarationes[] = {
+    "sit", "constans", "functio", "entitas", NIHIL
+};
+
+hic_manens constans character* clavis_sputnik_control[] = {
+    "si", "alioquin", "dum", "per", "redde", "frange", "perge", NIHIL
+};
+
+hic_manens constans character* clavis_sputnik_valores[] = {
+    "verum", "falsum", "nihil", NIHIL
+};
+
+hic_manens constans character* clavis_sputnik_builtin[] = {
+    "print", "len", "typeof", "REPO", NIHIL
+};
+
+/* Verificare si verbum est in lista */
+hic_manens b32
+_est_in_lista(constans character* verbum, i32 longitudo, constans character** lista)
+{
+    i32 i;
+    constans character* clavis;
+
+    per (i = ZEPHYRUM; lista[i] != NIHIL; i++)
+    {
+        clavis = lista[i];
+        /* Comparare longitudinem et contentum */
+        si ((i32)strlen(clavis) == longitudo &&
+            memcmp(verbum, clavis, (size_t)longitudo) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Verificare si character est digitus */
+hic_manens b32
+_est_digitus(character c)
+{
+    redde (c >= '0' && c <= '9');
+}
+
+
+/* ==================================================
  * Internal: Line Coloring Functions
  * ================================================== */
+
+/* Colorare sputnik syntax in linea */
+hic_manens vacuum
+_colorare_sputnik(
+    Coloratio* coloratio,
+    constans TabulaCharacterum* tabula,
+    i32 linea)
+{
+    i32 col;
+    i32 initium;
+    i32 finis;
+    i32 i;
+    character c;
+    character verbum[LXIV];
+    i32 verbum_long;
+
+    col = ZEPHYRUM;
+
+    dum (col < tabula->latitudo)
+    {
+        c = tabula_cellula(tabula, linea, col);
+
+        /* Skip spaces */
+        si (c == ' ' || c == '\0')
+        {
+            col++;
+            perge;
+        }
+
+        /* Comments: // */
+        si (c == '/' && col + I < tabula->latitudo &&
+            tabula_cellula(tabula, linea, col + I) == '/')
+        {
+            /* Color rest of line as comment */
+            per (i = col; i < tabula->latitudo; i++)
+            {
+                si (tabula_cellula(tabula, linea, i) == '\0') frange;
+                coloratio_index(coloratio, linea, i) = COLORATIO_COMMENTUM;
+            }
+            redde;
+        }
+
+        /* Strings: " or ' */
+        si (c == '"' || c == '\'')
+        {
+            character delimitator = c;
+            initium = col;
+            col++;
+
+            dum (col < tabula->latitudo)
+            {
+                c = tabula_cellula(tabula, linea, col);
+                si (c == '\0') frange;
+                si (c == '\\' && col + I < tabula->latitudo)
+                {
+                    col += II;  /* Skip escape sequence */
+                    perge;
+                }
+                si (c == delimitator)
+                {
+                    col++;
+                    frange;
+                }
+                col++;
+            }
+
+            finis = col;
+            per (i = initium; i < finis; i++)
+            {
+                coloratio_index(coloratio, linea, i) = COLORATIO_CHORDA;
+            }
+            perge;
+        }
+
+        /* Template strings: ` */
+        si (c == '`')
+        {
+            initium = col;
+            col++;
+
+            dum (col < tabula->latitudo)
+            {
+                c = tabula_cellula(tabula, linea, col);
+                si (c == '\0') frange;
+                si (c == '\\' && col + I < tabula->latitudo)
+                {
+                    col += II;
+                    perge;
+                }
+                si (c == '`')
+                {
+                    col++;
+                    frange;
+                }
+                col++;
+            }
+
+            finis = col;
+            per (i = initium; i < finis; i++)
+            {
+                coloratio_index(coloratio, linea, i) = COLORATIO_CHORDA;
+            }
+            perge;
+        }
+
+        /* Numbers: digits, optionally with . and $ suffix */
+        si (_est_digitus(c) || (c == '.' && col + I < tabula->latitudo &&
+            _est_digitus(tabula_cellula(tabula, linea, col + I))))
+        {
+            initium = col;
+
+            /* Integer part */
+            dum (col < tabula->latitudo && _est_digitus(tabula_cellula(tabula, linea, col)))
+            {
+                col++;
+            }
+
+            /* Decimal part */
+            si (col < tabula->latitudo && tabula_cellula(tabula, linea, col) == '.')
+            {
+                col++;
+                dum (col < tabula->latitudo && _est_digitus(tabula_cellula(tabula, linea, col)))
+                {
+                    col++;
+                }
+            }
+
+            /* Currency suffix $ */
+            si (col < tabula->latitudo && tabula_cellula(tabula, linea, col) == '$')
+            {
+                col++;
+            }
+
+            finis = col;
+            per (i = initium; i < finis; i++)
+            {
+                coloratio_index(coloratio, linea, i) = COLORATIO_NUMERUS;
+            }
+            perge;
+        }
+
+        /* Tags: #word */
+        si (c == '#' && col + I < tabula->latitudo &&
+            _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
+        {
+            initium = col;
+            col++;
+            dum (col < tabula->latitudo && _est_character_verbi(tabula_cellula(tabula, linea, col)))
+            {
+                col++;
+            }
+            finis = col;
+            per (i = initium; i < finis; i++)
+            {
+                coloratio_index(coloratio, linea, i) = COLORATIO_PROPRIETAS;
+            }
+            perge;
+        }
+
+        /* Identifiers and keywords */
+        si (_est_character_verbi(c) && !_est_digitus(c))
+        {
+            initium = col;
+            verbum_long = ZEPHYRUM;
+
+            dum (col < tabula->latitudo && _est_character_verbi(tabula_cellula(tabula, linea, col)))
+            {
+                si (verbum_long < LXIII)
+                {
+                    verbum[verbum_long] = tabula_cellula(tabula, linea, col);
+                    verbum_long++;
+                }
+                col++;
+            }
+            verbum[verbum_long] = '\0';
+
+            finis = col;
+
+            /* Check keyword categories */
+            si (_est_in_lista(verbum, verbum_long, clavis_sputnik_declarationes) ||
+                _est_in_lista(verbum, verbum_long, clavis_sputnik_control))
+            {
+                per (i = initium; i < finis; i++)
+                {
+                    coloratio_index(coloratio, linea, i) = COLORATIO_CLAVIS;
+                }
+            }
+            alioquin si (_est_in_lista(verbum, verbum_long, clavis_sputnik_valores))
+            {
+                per (i = initium; i < finis; i++)
+                {
+                    coloratio_index(coloratio, linea, i) = COLORATIO_NUMERUS;  /* Same as numbers */
+                }
+            }
+            alioquin si (_est_in_lista(verbum, verbum_long, clavis_sputnik_builtin))
+            {
+                per (i = initium; i < finis; i++)
+                {
+                    coloratio_index(coloratio, linea, i) = COLORATIO_COMMANDUM;  /* Builtins like commands */
+                }
+            }
+            /* Else: leave as default */
+
+            perge;
+        }
+
+        /* Operators */
+        si (c == '+' || c == '-' || c == '*' || c == '/' || c == '%' ||
+            c == '=' || c == '<' || c == '>' || c == '!' || c == '&' || c == '|')
+        {
+            coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+            col++;
+            /* Handle multi-char operators */
+            si (col < tabula->latitudo)
+            {
+                character c2 = tabula_cellula(tabula, linea, col);
+                si ((c == '=' && c2 == '=') ||
+                    (c == '!' && c2 == '=') ||
+                    (c == '<' && c2 == '=') ||
+                    (c == '>' && c2 == '=') ||
+                    (c == '&' && c2 == '&') ||
+                    (c == '|' && c2 == '|') ||
+                    (c == '=' && c2 == '>') ||
+                    (c == '+' && c2 == '+') ||
+                    (c == '-' && c2 == '-') ||
+                    (c == '+' && c2 == '=') ||
+                    (c == '-' && c2 == '=') ||
+                    (c == '*' && c2 == '=') ||
+                    (c == '/' && c2 == '='))
+                {
+                    coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                    col++;
+                }
+            }
+            perge;
+        }
+
+        /* Default: skip character */
+        col++;
+    }
+}
+
 
 /* Colorare $command patterns in linea */
 hic_manens vacuum
@@ -567,12 +858,17 @@ _colorare_lineam(
     i32 linea,
     i8 status_initium)
 {
-    (vacuum)status_initium;  /* TODO: use for sputnik syntax coloring */
-
     /* Apply STML tag highlighting si regula activa */
     si (coloratio->regulae & COLORATIO_REGULA_STML)
     {
         _colorare_tags(coloratio, tabula, linea);
+    }
+
+    /* Apply sputnik syntax highlighting si in sputnik block */
+    si (status_initium == STATUS_LINEA_IN_SPUTNIK &&
+        (coloratio->regulae & COLORATIO_REGULA_SPUTNIK))
+    {
+        _colorare_sputnik(coloratio, tabula, linea);
     }
 
     /* Apply $command highlighting si regula activa */
@@ -580,8 +876,6 @@ _colorare_lineam(
     {
         _colorare_commanda(coloratio, tabula, linea);
     }
-
-    /* TODO: Sputnik syntax highlighting when status_initium == IN_SPUTNIK */
 }
 
 

@@ -86,6 +86,7 @@ nomen structura {
     /* Flags */
     b32 debet_claudere;   /* ESC in normal mode */
     b32 mutatus;          /* Tabula mutata hac clave */
+    b32 sine_auto_indent; /* Disable auto-indent (pro programmatic insertion) */
 } VimStatus;
 
 

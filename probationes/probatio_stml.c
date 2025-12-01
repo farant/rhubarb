@@ -989,6 +989,21 @@ s32 principale(vacuum)
         imprimere("  Empty raw content: VERUM\n");
     }
 
+    {
+        StmlResultus res;
+        chorda       textus;
+
+        /* Raw content starting with TAB (uppercase word) */
+        res = stml_legere_ex_literis("<pagina!>TAB = test</pagina>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.elementum_radix->crudus);
+
+        textus = stml_textus_internus(res.elementum_radix, piscina);
+        imprimere("  TAB raw content: [%.*s]\n", textus.mensura, textus.datum);
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "TAB = test");
+        imprimere("  Raw content with TAB word: VERUM\n");
+    }
+
     /* ==================================================
      * Probare serialization edge cases
      * ================================================== */
