@@ -80,8 +80,11 @@ syn match sputnikTag /#\w\+/
 syn match sputnikMethod /\.\(push\|pop\|shift\|unshift\|indexOf\|includes\|slice\|concat\|join\|length\)\>/
 syn match sputnikMethod /\.\(map\|filter\|find\|forEach\)\>/
 syn match sputnikMethod /\.\(charAt\|substring\|toUpperCase\|toLowerCase\|split\)\>/
-syn match sputnikMethod /\.\(add_relation\|related\|related_all\|has_tag\|add_tag\|remove_tag\)\>/
-syn match sputnikMethod /\.\(get\|query\|scaffold\|tagged\|search\)\>/
+syn match sputnikMethod /\.\(add_relation\|related\|related_all\|related_from\|related_from_all\)\>/
+syn match sputnikMethod /\.\(relation_types\|relations\|relations_raw\)\>/
+syn match sputnikMethod /\.\(relation_types_from\|relations_from\|relations_from_raw\)\>/
+syn match sputnikMethod /\.\(has_tag\|add_tag\|remove_tag\|remove_relation\)\>/
+syn match sputnikMethod /\.\(get\|query\|scaffold\|tagged\|search\|roots\)\>/
 
 " Entity properties
 syn match sputnikProperty /\.\(id\|genus\|titulus\)\>/

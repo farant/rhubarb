@@ -1729,6 +1729,8 @@ _methodus_entitas_add_relation(SputnikInterpres* interp, Entitas* e, Xar* argume
     SputnikValor* dest_arg;
     Relatio* relatio;
     chorda* dest_id_interned;
+    character genus_buffer[CCLVI];
+    i32 genus_len;
 
     si (xar_numerus(argumenta) != II)
     {
@@ -1761,11 +1763,17 @@ _methodus_entitas_add_relation(SputnikInterpres* interp, Entitas* e, Xar* argume
         redde _valor_nihil();
     }
 
+    /* Convertere genus ad C string (null-terminata) */
+    genus_len = genus_arg->ut.chorda_valor.mensura;
+    si (genus_len >= CCLVI) genus_len = CCLV;
+    memcpy(genus_buffer, genus_arg->ut.chorda_valor.datum, (size_t)genus_len);
+    genus_buffer[genus_len] = '\0';
+
     /* Addere relationem via repositorio */
     relatio = interp->repositorium->relatio_addere(
         interp->repositorium->datum,
         e,
-        (constans character*)genus_arg->ut.chorda_valor.datum,
+        genus_buffer,
         dest_id_interned);
 
     si (relatio == NIHIL)
@@ -1785,6 +1793,7 @@ _methodus_entitas_related(SputnikInterpres* interp, Entitas* e, Xar* argumenta, 
     SputnikValor* genus_arg;
     Xar* relatae;
     Entitas* relata;
+    chorda* genus_internatum;
 
     si (xar_numerus(argumenta) != I)
     {
@@ -1800,11 +1809,18 @@ _methodus_entitas_related(SputnikInterpres* interp, Entitas* e, Xar* argumenta, 
         redde _valor_nihil();
     }
 
+    /* Internare genus ut pointer comparatio operetur */
+    genus_internatum = chorda_internare(interp->intern, genus_arg->ut.chorda_valor);
+    si (genus_internatum == NIHIL)
+    {
+        redde _valor_nihil();
+    }
+
     /* Capere entitates relatae via repositorio */
     relatae = interp->repositorium->capere_entitates_relatae(
         interp->repositorium->datum,
         e,
-        &genus_arg->ut.chorda_valor);
+        genus_internatum);
 
     si (relatae == NIHIL || xar_numerus(relatae) == ZEPHYRUM)
     {
@@ -1827,6 +1843,7 @@ _methodus_entitas_related_all(SputnikInterpres* interp, Entitas* e, Xar* argumen
     i32 num;
     Entitas* relata;
     SputnikValor* elem;
+    chorda* genus_internatum;
 
     si (xar_numerus(argumenta) != I)
     {
@@ -1842,11 +1859,18 @@ _methodus_entitas_related_all(SputnikInterpres* interp, Entitas* e, Xar* argumen
         redde _valor_nihil();
     }
 
+    /* Internare genus ut pointer comparatio operetur */
+    genus_internatum = chorda_internare(interp->intern, genus_arg->ut.chorda_valor);
+    si (genus_internatum == NIHIL)
+    {
+        redde _valor_xar(xar_creare(interp->piscina, magnitudo(SputnikValor)));
+    }
+
     /* Capere entitates relatae via repositorio */
     relatae = interp->repositorium->capere_entitates_relatae(
         interp->repositorium->datum,
         e,
-        &genus_arg->ut.chorda_valor);
+        genus_internatum);
 
     /* Creare xar de SputnikValor */
     resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
@@ -1865,6 +1889,476 @@ _methodus_entitas_related_all(SputnikInterpres* interp, Entitas* e, Xar* argumen
             elem = xar_addere(resultus);
             *elem = _valor_entitas(relata);
         }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* related_from(genus) - redde primam entitatem quae ad hanc spectat */
+interior SputnikValor
+_methodus_entitas_related_from(SputnikInterpres* interp, Entitas* e, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* genus_arg;
+    Xar* relationes_ad;
+    Relatio* rel;
+    Entitas* origo;
+    i32 i;
+    i32 num;
+
+    si (xar_numerus(argumenta) != I)
+    {
+        _error(interp, nodus, "related_from requirit I argumentum: genus");
+        redde _valor_nihil();
+    }
+
+    genus_arg = (SputnikValor*)xar_obtinere(argumenta, ZEPHYRUM);
+
+    si (genus_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumentum ad related_from debet esse chorda");
+        redde _valor_nihil();
+    }
+
+    /* Capere relationes ad hanc entitatem via indice inverso */
+    relationes_ad = interp->repositorium->capere_relationes_ad(
+        interp->repositorium->datum,
+        e->id);
+
+    si (relationes_ad == NIHIL)
+    {
+        redde _valor_nihil();
+    }
+
+    /* Quaerere relationem generis specificati */
+    num = xar_numerus(relationes_ad);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = *(Relatio**)xar_obtinere(relationes_ad, i);
+        si (rel && chorda_aequalis(*rel->genus, genus_arg->ut.chorda_valor))
+        {
+            /* Capere entitatem originis */
+            origo = interp->repositorium->capere_entitatem(
+                interp->repositorium->datum,
+                rel->origo_id);
+            si (origo != NIHIL)
+            {
+                redde _valor_entitas(origo);
+            }
+        }
+    }
+
+    redde _valor_nihil();
+}
+
+/* related_from_all(genus) - redde xar de entitates quae ad hanc spectant */
+interior SputnikValor
+_methodus_entitas_related_from_all(SputnikInterpres* interp, Entitas* e, Xar* argumenta, SputnikAstNodus* nodus)
+{
+    SputnikValor* genus_arg;
+    Xar* relationes_ad;
+    Xar* resultus;
+    Relatio* rel;
+    Entitas* origo;
+    SputnikValor* elem;
+    i32 i;
+    i32 num;
+
+    si (xar_numerus(argumenta) != I)
+    {
+        _error(interp, nodus, "related_from_all requirit I argumentum: genus");
+        redde _valor_nihil();
+    }
+
+    genus_arg = (SputnikValor*)xar_obtinere(argumenta, ZEPHYRUM);
+
+    si (genus_arg->genus != SPUTNIK_VALOR_CHORDA)
+    {
+        _error(interp, nodus, "Argumentum ad related_from_all debet esse chorda");
+        redde _valor_nihil();
+    }
+
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+
+    /* Capere relationes ad hanc entitatem via indice inverso */
+    relationes_ad = interp->repositorium->capere_relationes_ad(
+        interp->repositorium->datum,
+        e->id);
+
+    si (relationes_ad == NIHIL)
+    {
+        redde _valor_xar(resultus);  /* Xar vacua */
+    }
+
+    /* Colligere entitates originis generis specificati */
+    num = xar_numerus(relationes_ad);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = *(Relatio**)xar_obtinere(relationes_ad, i);
+        si (rel && chorda_aequalis(*rel->genus, genus_arg->ut.chorda_valor))
+        {
+            origo = interp->repositorium->capere_entitatem(
+                interp->repositorium->datum,
+                rel->origo_id);
+            si (origo != NIHIL)
+            {
+                elem = (SputnikValor*)xar_addere(resultus);
+                *elem = _valor_entitas(origo);
+            }
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* relation_types() - redde xar de generibus relationum unicis */
+interior SputnikValor
+_methodus_entitas_relation_types(SputnikInterpres* interp, Entitas* e)
+{
+    TabulaDispersa* seen;
+    Xar* resultus;
+    Relatio* rel;
+    SputnikValor* elem;
+    i32 i;
+    i32 num;
+
+    seen = tabula_dispersa_creare_chorda(interp->piscina, XVI);
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+
+    num = xar_numerus(e->relationes);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = (Relatio*)xar_obtinere(e->relationes, i);
+        si (rel && !tabula_dispersa_continet(seen, *rel->genus))
+        {
+            tabula_dispersa_inserere(seen, *rel->genus, NIHIL);
+            elem = (SputnikValor*)xar_addere(resultus);
+            *elem = _valor_chorda(*rel->genus);
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* relations_raw() - redde xar de objecta {id, type, target_id} */
+interior SputnikValor
+_methodus_entitas_relations_raw(SputnikInterpres* interp, Entitas* e)
+{
+    Xar* resultus;
+    Relatio* rel;
+    SputnikValor* elem;
+    TabulaDispersa* obj;
+    SputnikValor* val;
+    i32 i;
+    i32 num;
+
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+
+    num = xar_numerus(e->relationes);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = (Relatio*)xar_obtinere(e->relationes, i);
+        si (rel)
+        {
+            obj = tabula_dispersa_creare_chorda(interp->piscina, VIII);
+
+            /* id */
+            val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            *val = _valor_chorda(*rel->id);
+            tabula_dispersa_inserere(obj, chorda_ex_literis("id", interp->piscina), val);
+
+            /* type */
+            val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            *val = _valor_chorda(*rel->genus);
+            tabula_dispersa_inserere(obj, chorda_ex_literis("type", interp->piscina), val);
+
+            /* target_id */
+            val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            *val = _valor_chorda(*rel->destinatio_id);
+            tabula_dispersa_inserere(obj, chorda_ex_literis("target_id", interp->piscina), val);
+
+            elem = (SputnikValor*)xar_addere(resultus);
+            *elem = _valor_objectum(obj);
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* relations() - redde xar de objecta {type, entities} grupati per genus */
+interior SputnikValor
+_methodus_entitas_relations(SputnikInterpres* interp, Entitas* e)
+{
+    TabulaDispersa* per_genus;  /* genus -> Xar* de Entitas* */
+    TabulaIterator iter;
+    chorda clavis;
+    vacuum* valor;
+    Xar* resultus;
+    Xar* entitates_xar;
+    Xar* ent_resultus;
+    Relatio* rel;
+    Entitas* dest;
+    Entitas** slot;
+    SputnikValor* elem;
+    SputnikValor* ent_elem;
+    TabulaDispersa* obj;
+    SputnikValor* val;
+    i32 i;
+    i32 j;
+    i32 num;
+    i32 ent_num;
+
+    per_genus = tabula_dispersa_creare_chorda(interp->piscina, XVI);
+
+    /* Grupare relationes per genus */
+    num = xar_numerus(e->relationes);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = (Relatio*)xar_obtinere(e->relationes, i);
+        si (rel)
+        {
+            si (!tabula_dispersa_invenire(per_genus, *rel->genus, &valor))
+            {
+                entitates_xar = xar_creare(interp->piscina, magnitudo(Entitas*));
+                tabula_dispersa_inserere(per_genus, *rel->genus, entitates_xar);
+            }
+            alioquin
+            {
+                entitates_xar = (Xar*)valor;
+            }
+
+            /* Capere entitatem destinationis */
+            dest = interp->repositorium->capere_entitatem(
+                interp->repositorium->datum,
+                rel->destinatio_id);
+            si (dest)
+            {
+                slot = (Entitas**)xar_addere(entitates_xar);
+                *slot = dest;
+            }
+        }
+    }
+
+    /* Convertere ad xar de objecta */
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+    iter = tabula_dispersa_iterator_initium(per_genus);
+
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        entitates_xar = (Xar*)valor;
+        obj = tabula_dispersa_creare_chorda(interp->piscina, VIII);
+
+        /* type */
+        val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+        *val = _valor_chorda(clavis);
+        tabula_dispersa_inserere(obj, chorda_ex_literis("type", interp->piscina), val);
+
+        /* entities */
+        ent_resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+        ent_num = xar_numerus(entitates_xar);
+        per (j = ZEPHYRUM; j < ent_num; j++)
+        {
+            dest = *(Entitas**)xar_obtinere(entitates_xar, j);
+            ent_elem = (SputnikValor*)xar_addere(ent_resultus);
+            *ent_elem = _valor_entitas(dest);
+        }
+        val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+        *val = _valor_xar(ent_resultus);
+        tabula_dispersa_inserere(obj, chorda_ex_literis("entities", interp->piscina), val);
+
+        elem = (SputnikValor*)xar_addere(resultus);
+        *elem = _valor_objectum(obj);
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* relation_types_from() - redde xar de generibus relationum inversarum unicis */
+interior SputnikValor
+_methodus_entitas_relation_types_from(SputnikInterpres* interp, Entitas* e)
+{
+    TabulaDispersa* seen;
+    Xar* relationes_ad;
+    Xar* resultus;
+    Relatio* rel;
+    SputnikValor* elem;
+    i32 i;
+    i32 num;
+
+    seen = tabula_dispersa_creare_chorda(interp->piscina, XVI);
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+
+    relationes_ad = interp->repositorium->capere_relationes_ad(
+        interp->repositorium->datum,
+        e->id);
+
+    si (relationes_ad == NIHIL)
+    {
+        redde _valor_xar(resultus);
+    }
+
+    num = xar_numerus(relationes_ad);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = *(Relatio**)xar_obtinere(relationes_ad, i);
+        si (rel && !tabula_dispersa_continet(seen, *rel->genus))
+        {
+            tabula_dispersa_inserere(seen, *rel->genus, NIHIL);
+            elem = (SputnikValor*)xar_addere(resultus);
+            *elem = _valor_chorda(*rel->genus);
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* relations_from_raw() - redde xar de objecta {id, type, source_id} inversae */
+interior SputnikValor
+_methodus_entitas_relations_from_raw(SputnikInterpres* interp, Entitas* e)
+{
+    Xar* relationes_ad;
+    Xar* resultus;
+    Relatio* rel;
+    SputnikValor* elem;
+    TabulaDispersa* obj;
+    SputnikValor* val;
+    i32 i;
+    i32 num;
+
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+
+    relationes_ad = interp->repositorium->capere_relationes_ad(
+        interp->repositorium->datum,
+        e->id);
+
+    si (relationes_ad == NIHIL)
+    {
+        redde _valor_xar(resultus);
+    }
+
+    num = xar_numerus(relationes_ad);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = *(Relatio**)xar_obtinere(relationes_ad, i);
+        si (rel)
+        {
+            obj = tabula_dispersa_creare_chorda(interp->piscina, VIII);
+
+            /* id */
+            val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            *val = _valor_chorda(*rel->id);
+            tabula_dispersa_inserere(obj, chorda_ex_literis("id", interp->piscina), val);
+
+            /* type */
+            val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            *val = _valor_chorda(*rel->genus);
+            tabula_dispersa_inserere(obj, chorda_ex_literis("type", interp->piscina), val);
+
+            /* source_id */
+            val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+            *val = _valor_chorda(*rel->origo_id);
+            tabula_dispersa_inserere(obj, chorda_ex_literis("source_id", interp->piscina), val);
+
+            elem = (SputnikValor*)xar_addere(resultus);
+            *elem = _valor_objectum(obj);
+        }
+    }
+
+    redde _valor_xar(resultus);
+}
+
+/* relations_from() - redde xar de objecta {type, entities} inversae grupati per genus */
+interior SputnikValor
+_methodus_entitas_relations_from(SputnikInterpres* interp, Entitas* e)
+{
+    TabulaDispersa* per_genus;
+    TabulaIterator iter;
+    chorda clavis;
+    vacuum* valor;
+    Xar* relationes_ad;
+    Xar* resultus;
+    Xar* entitates_xar;
+    Xar* ent_resultus;
+    Relatio* rel;
+    Entitas* origo;
+    Entitas** slot;
+    SputnikValor* elem;
+    SputnikValor* ent_elem;
+    TabulaDispersa* obj;
+    SputnikValor* val;
+    i32 i;
+    i32 j;
+    i32 num;
+    i32 ent_num;
+
+    per_genus = tabula_dispersa_creare_chorda(interp->piscina, XVI);
+    resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+
+    relationes_ad = interp->repositorium->capere_relationes_ad(
+        interp->repositorium->datum,
+        e->id);
+
+    si (relationes_ad == NIHIL)
+    {
+        redde _valor_xar(resultus);
+    }
+
+    /* Grupare relationes per genus */
+    num = xar_numerus(relationes_ad);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        rel = *(Relatio**)xar_obtinere(relationes_ad, i);
+        si (rel)
+        {
+            si (!tabula_dispersa_invenire(per_genus, *rel->genus, &valor))
+            {
+                entitates_xar = xar_creare(interp->piscina, magnitudo(Entitas*));
+                tabula_dispersa_inserere(per_genus, *rel->genus, entitates_xar);
+            }
+            alioquin
+            {
+                entitates_xar = (Xar*)valor;
+            }
+
+            /* Capere entitatem originis */
+            origo = interp->repositorium->capere_entitatem(
+                interp->repositorium->datum,
+                rel->origo_id);
+            si (origo)
+            {
+                slot = (Entitas**)xar_addere(entitates_xar);
+                *slot = origo;
+            }
+        }
+    }
+
+    /* Convertere ad xar de objecta */
+    iter = tabula_dispersa_iterator_initium(per_genus);
+
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        entitates_xar = (Xar*)valor;
+        obj = tabula_dispersa_creare_chorda(interp->piscina, VIII);
+
+        /* type */
+        val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+        *val = _valor_chorda(clavis);
+        tabula_dispersa_inserere(obj, chorda_ex_literis("type", interp->piscina), val);
+
+        /* entities */
+        ent_resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
+        ent_num = xar_numerus(entitates_xar);
+        per (j = ZEPHYRUM; j < ent_num; j++)
+        {
+            origo = *(Entitas**)xar_obtinere(entitates_xar, j);
+            ent_elem = (SputnikValor*)xar_addere(ent_resultus);
+            *ent_elem = _valor_entitas(origo);
+        }
+        val = (SputnikValor*)piscina_allocare(interp->piscina, magnitudo(SputnikValor));
+        *val = _valor_xar(ent_resultus);
+        tabula_dispersa_inserere(obj, chorda_ex_literis("entities", interp->piscina), val);
+
+        elem = (SputnikValor*)xar_addere(resultus);
+        *elem = _valor_objectum(obj);
     }
 
     redde _valor_xar(resultus);
@@ -2047,6 +2541,22 @@ _vocare_methodum_entitas(SputnikInterpres* interp, SputnikMethodusEntitas* meth,
         redde _methodus_entitas_related(interp, meth->entitas, argumenta, nodus);
     si (chorda_aequalis_literis(meth->titulus, "related_all"))
         redde _methodus_entitas_related_all(interp, meth->entitas, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "related_from"))
+        redde _methodus_entitas_related_from(interp, meth->entitas, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "related_from_all"))
+        redde _methodus_entitas_related_from_all(interp, meth->entitas, argumenta, nodus);
+    si (chorda_aequalis_literis(meth->titulus, "relation_types"))
+        redde _methodus_entitas_relation_types(interp, meth->entitas);
+    si (chorda_aequalis_literis(meth->titulus, "relations"))
+        redde _methodus_entitas_relations(interp, meth->entitas);
+    si (chorda_aequalis_literis(meth->titulus, "relations_raw"))
+        redde _methodus_entitas_relations_raw(interp, meth->entitas);
+    si (chorda_aequalis_literis(meth->titulus, "relation_types_from"))
+        redde _methodus_entitas_relation_types_from(interp, meth->entitas);
+    si (chorda_aequalis_literis(meth->titulus, "relations_from"))
+        redde _methodus_entitas_relations_from(interp, meth->entitas);
+    si (chorda_aequalis_literis(meth->titulus, "relations_from_raw"))
+        redde _methodus_entitas_relations_from_raw(interp, meth->entitas);
     si (chorda_aequalis_literis(meth->titulus, "remove_relation"))
         redde _methodus_entitas_remove_relation(interp, meth->entitas, argumenta, nodus);
     si (chorda_aequalis_literis(meth->titulus, "add_tag"))
@@ -3140,6 +3650,14 @@ _eval_accessum_membri(SputnikInterpres* interp, SputnikAstNodus* nodus)
         si (chorda_aequalis_literis(nodus->valor, "add_relation") ||
             chorda_aequalis_literis(nodus->valor, "related") ||
             chorda_aequalis_literis(nodus->valor, "related_all") ||
+            chorda_aequalis_literis(nodus->valor, "related_from") ||
+            chorda_aequalis_literis(nodus->valor, "related_from_all") ||
+            chorda_aequalis_literis(nodus->valor, "relation_types") ||
+            chorda_aequalis_literis(nodus->valor, "relations") ||
+            chorda_aequalis_literis(nodus->valor, "relations_raw") ||
+            chorda_aequalis_literis(nodus->valor, "relation_types_from") ||
+            chorda_aequalis_literis(nodus->valor, "relations_from") ||
+            chorda_aequalis_literis(nodus->valor, "relations_from_raw") ||
             chorda_aequalis_literis(nodus->valor, "remove_relation") ||
             chorda_aequalis_literis(nodus->valor, "add_tag") ||
             chorda_aequalis_literis(nodus->valor, "has_tag") ||

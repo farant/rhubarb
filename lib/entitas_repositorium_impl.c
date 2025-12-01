@@ -938,6 +938,9 @@ _impl_entitas_scaffoldare(
         redde NIHIL;
     }
 
+    /* Ponere titulus ut proprietatem */
+    _impl_proprietas_ponere(data, entitas, "titulus", titulus);
+
     /* Assecurare genus hierarchiam et addere "est" relationem */
     genus_folium = _assecurare_genus_hierarchiam(data, genus);
     si (genus_folium)

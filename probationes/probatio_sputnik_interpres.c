@@ -2303,11 +2303,7 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
         CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "City"));
     }
 
-    /* TODO: add_relation + related - non operatur
-     * Relationes non inveniuntur post add_relation.
-     * Haec probatio praetermittitur donec reparetur.
-     */
-    /*
+    /* add_relation + related */
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare_cum_repositorio(
@@ -2320,10 +2316,8 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
-    */
 
-    /* TODO: related_all - non operatur (vide supra) */
-    /*
+    /* related_all */
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare_cum_repositorio(
@@ -2338,7 +2332,121 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
     }
-    */
+
+    /* relation_types */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit person = REPO.scaffold(\"Person\", \"Test\");"
+            "sit book = REPO.scaffold(\"Book\", \"Liber\");"
+            "person.add_relation(\"wrote\", book.id);"
+            "sit types = person.relation_types();"
+            "types.includes(\"wrote\");",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* relations_raw */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit a = REPO.scaffold(\"A\", \"A1\");"
+            "sit b = REPO.scaffold(\"B\", \"B1\");"
+            "a.add_relation(\"links_to\", b.id);"
+            "sit raw = a.relations_raw();"
+            "len(raw) > 0;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* relations - grouped by type */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit x = REPO.scaffold(\"X\", \"X1\");"
+            "sit y1 = REPO.scaffold(\"Y\", \"Y1\");"
+            "sit y2 = REPO.scaffold(\"Y\", \"Y2\");"
+            "x.add_relation(\"has\", y1.id);"
+            "x.add_relation(\"has\", y2.id);"
+            "sit rels = x.relations();"
+            "len(rels) > 0;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* related_from */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit author = REPO.scaffold(\"Author\", \"Cicero\");"
+            "sit opus = REPO.scaffold(\"Opus\", \"De Finibus\");"
+            "author.add_relation(\"scripsit\", opus.id);"
+            "sit found = opus.related_from(\"scripsit\");"
+            "found.id == author.id;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* related_from_all */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit city = REPO.scaffold(\"City\", \"Alexandria\");"
+            "sit p1 = REPO.scaffold(\"Person\", \"Ptolemy\");"
+            "sit p2 = REPO.scaffold(\"Person\", \"Cleopatra\");"
+            "p1.add_relation(\"lives_in\", city.id);"
+            "p2.add_relation(\"lives_in\", city.id);"
+            "sit residents = city.related_from_all(\"lives_in\");"
+            "len(residents);",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+
+    /* relation_types_from */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit target = REPO.scaffold(\"Target\", \"T1\");"
+            "sit src1 = REPO.scaffold(\"Src\", \"S1\");"
+            "sit src2 = REPO.scaffold(\"Src\", \"S2\");"
+            "src1.add_relation(\"points_to\", target.id);"
+            "src2.add_relation(\"also_points\", target.id);"
+            "sit types = target.relation_types_from();"
+            "len(types);",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
+    }
+
+    /* relations_from_raw */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit dest = REPO.scaffold(\"Dest\", \"D1\");"
+            "sit orig = REPO.scaffold(\"Orig\", \"O1\");"
+            "orig.add_relation(\"ref\", dest.id);"
+            "sit raw = dest.relations_from_raw();"
+            "len(raw) > 0;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* titulus property from scaffold */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare_cum_repositorio(
+            "sit e = REPO.scaffold(\"Book\", \"De Rerum Natura\");"
+            "e.titulus;",
+            piscina, intern, repositorium);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "De Rerum Natura"));
+    }
 
     /* TODO: add_tag + has_tag - non operatur cum persistentia_memoria */
     /*
@@ -2430,7 +2538,9 @@ integer principale(vacuum)
     b32 praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_interpres", 1024 * 64);
-    intern = internamentum_creare(piscina);
+    /* Usare internamentum globale ut repositorium et interpres
+     * habeant eandem tabula chordae internatae */
+    intern = internamentum_globale();
 
     credo_aperire(piscina);
 

@@ -426,6 +426,67 @@ sit sorted = quicksort(unsorted);
 print(`Post: ${sorted}`);
 
 // ==================================================
+// Entity Graph Traversal (si REPO disponibilis)
+// ==================================================
+// Nota: Haec sectio requirit REPO - sine repositorio, saltat
+
+si (REPO != nihil) {
+    print("");
+    print("--- Entity Graph Traversal ---");
+
+    // Creare entitates
+    sit marcus = REPO.scaffold("Person", "Marcus Aurelius");
+    sit seneca = REPO.scaffold("Person", "Seneca");
+    sit meditationes = REPO.scaffold("Book", "Meditationes");
+    sit epistulae = REPO.scaffold("Book", "Epistulae Morales");
+    sit roma = REPO.scaffold("City", "Roma");
+
+    // Addere relationes
+    marcus.add_relation("authored", meditationes.id);
+    seneca.add_relation("authored", epistulae.id);
+    marcus.add_relation("lives_in", roma.id);
+    seneca.add_relation("lives_in", roma.id);
+    marcus.add_relation("learned_from", seneca.id);
+
+    // relation_types() - genera relationum ex entitate
+    sit types = marcus.relation_types();
+    print(`marcus.relation_types(): ${types}`);
+
+    // related() et related_all()
+    sit book = marcus.related("authored");
+    print(`marcus.related("authored"): ${book.titulus}`);
+
+    // related_from() - quis ad me spectat?
+    sit author = meditationes.related_from("authored");
+    print(`meditationes.related_from("authored"): ${author.titulus}`);
+
+    // relations_raw() - data cruda
+    sit raw = marcus.relations_raw();
+    print(`marcus.relations_raw() count: ${len(raw)}`);
+    raw.forEach(r => {
+        print(`  -> type: ${r.type}`);
+    });
+
+    // relation_types_from() - genera relationum ad me
+    sit incoming_types = roma.relation_types_from();
+    print(`roma.relation_types_from(): ${incoming_types}`);
+
+    // related_from_all() - omnes qui ad me spectant
+    sit residents = roma.related_from_all("lives_in");
+    print(`roma.related_from_all("lives_in"):`);
+    residents.forEach(r => {
+        print(`  -> ${r.titulus}`);
+    });
+
+    // relations() - relationes grupatae
+    sit grouped = marcus.relations();
+    print(`marcus.relations():`);
+    grouped.forEach(g => {
+        print(`  ${g.type}: ${len(g.entities)} entities`);
+    });
+}
+
+// ==================================================
 // Finis
 // ==================================================
 print("");
