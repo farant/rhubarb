@@ -45,6 +45,15 @@ _valor_numerus(f64 n)
 }
 
 interior SputnikValor
+_valor_pecunia(s64 centesimi)
+{
+    SputnikValor v;
+    v.genus = SPUTNIK_VALOR_PECUNIA;
+    v.ut.pecunia = centesimi;
+    redde v;
+}
+
+interior SputnikValor
 _valor_chorda(chorda c)
 {
     SputnikValor v;
@@ -423,6 +432,45 @@ _ad_chordam(SputnikInterpres* interp, SputnikValor* valor)
                 chorda_aedificator_appendere_f64(aed, valor->ut.numerus, VI);
             }
             redde chorda_aedificator_finire(aed);
+
+        casus SPUTNIK_VALOR_PECUNIA:
+            {
+                s64 centesimi;
+                s64 pars_integra;
+                s64 pars_decimalis;
+                b32 negativus;
+
+                centesimi = valor->ut.pecunia;
+                negativus = centesimi < ZEPHYRUM;
+                si (negativus)
+                {
+                    centesimi = -centesimi;
+                }
+
+                pars_integra = centesimi / C;
+                pars_decimalis = centesimi % C;
+
+                aed = chorda_aedificator_creare(interp->piscina, XXXII);
+                si (aed == NIHIL)
+                {
+                    redde chorda_ex_literis("0.00$", interp->piscina);
+                }
+
+                si (negativus)
+                {
+                    chorda_aedificator_appendere_character(aed, '-');
+                }
+                chorda_aedificator_appendere_s32(aed, (s32)pars_integra);
+                chorda_aedificator_appendere_character(aed, '.');
+                si (pars_decimalis < X)
+                {
+                    chorda_aedificator_appendere_character(aed, '0');
+                }
+                chorda_aedificator_appendere_s32(aed, (s32)pars_decimalis);
+                chorda_aedificator_appendere_character(aed, '$');
+
+                redde chorda_aedificator_finire(aed);
+            }
 
         casus SPUTNIK_VALOR_CHORDA:
             redde valor->ut.chorda_valor;
@@ -2393,6 +2441,13 @@ _eval_numerum(SputnikInterpres* interp, SputnikAstNodus* nodus)
 }
 
 interior SputnikValor
+_eval_pecuniam(SputnikInterpres* interp, SputnikAstNodus* nodus)
+{
+    (vacuum)interp;
+    redde _valor_pecunia(nodus->pecunia);
+}
+
+interior SputnikValor
 _eval_chordam(SputnikInterpres* interp, SputnikAstNodus* nodus)
 {
     (vacuum)interp;
@@ -2507,22 +2562,41 @@ _eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
                 chorda_aedificator_appendere_chorda(aed, s2);
                 redde _valor_chorda(chorda_aedificator_finire(aed));
             }
+            /* Pecunia + pecunia */
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde _valor_pecunia(sin.ut.pecunia + dex.ut.pecunia);
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
-                _error(interp, nodus, "Operator + requirit numeros vel chordas");
+                _error(interp, nodus, "Operator + requirit numeros vel chordas vel pecuniam");
                 redde _valor_nihil();
             }
             redde _valor_numerus(sin.ut.numerus + dex.ut.numerus);
 
         casus SPUTNIK_LEXEMA_MINUS:
+            /* Pecunia - pecunia */
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde _valor_pecunia(sin.ut.pecunia - dex.ut.pecunia);
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
-                _error(interp, nodus, "Operator - requirit numeros");
+                _error(interp, nodus, "Operator - requirit numeros vel pecuniam");
                 redde _valor_nihil();
             }
             redde _valor_numerus(sin.ut.numerus - dex.ut.numerus);
 
         casus SPUTNIK_LEXEMA_ASTERISCUS:
+            /* Pecunia * numerus vel numerus * pecunia */
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_NUMERUS)
+            {
+                redde _valor_pecunia((s64)(sin.ut.pecunia * dex.ut.numerus));
+            }
+            si (sin.genus == SPUTNIK_VALOR_NUMERUS && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde _valor_pecunia((s64)(sin.ut.numerus * dex.ut.pecunia));
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
                 _error(interp, nodus, "Operator * requirit numeros");
@@ -2531,6 +2605,26 @@ _eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
             redde _valor_numerus(sin.ut.numerus * dex.ut.numerus);
 
         casus SPUTNIK_LEXEMA_DIVISIO:
+            /* Pecunia / numerus = pecunia (integer division) */
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_NUMERUS)
+            {
+                si (dex.ut.numerus == 0.0)
+                {
+                    _error(interp, nodus, "Divisio per nihil");
+                    redde _valor_nihil();
+                }
+                redde _valor_pecunia(sin.ut.pecunia / (s64)dex.ut.numerus);
+            }
+            /* Pecunia / pecunia = ratio (numerus) */
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                si (dex.ut.pecunia == ZEPHYRUM)
+                {
+                    _error(interp, nodus, "Divisio per nihil");
+                    redde _valor_nihil();
+                }
+                redde _valor_numerus((f64)sin.ut.pecunia / (f64)dex.ut.pecunia);
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
                 _error(interp, nodus, "Operator / requirit numeros");
@@ -2558,33 +2652,49 @@ _eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
 
         /* Comparatio */
         casus SPUTNIK_LEXEMA_MINOR:
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde sin.ut.pecunia < dex.ut.pecunia ? _valor_verum() : _valor_falsum();
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
-                _error(interp, nodus, "Operator < requirit numeros");
+                _error(interp, nodus, "Operator < requirit numeros vel pecuniam");
                 redde _valor_nihil();
             }
             redde sin.ut.numerus < dex.ut.numerus ? _valor_verum() : _valor_falsum();
 
         casus SPUTNIK_LEXEMA_MAIOR:
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde sin.ut.pecunia > dex.ut.pecunia ? _valor_verum() : _valor_falsum();
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
-                _error(interp, nodus, "Operator > requirit numeros");
+                _error(interp, nodus, "Operator > requirit numeros vel pecuniam");
                 redde _valor_nihil();
             }
             redde sin.ut.numerus > dex.ut.numerus ? _valor_verum() : _valor_falsum();
 
         casus SPUTNIK_LEXEMA_MINOR_AUT:
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde sin.ut.pecunia <= dex.ut.pecunia ? _valor_verum() : _valor_falsum();
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
-                _error(interp, nodus, "Operator <= requirit numeros");
+                _error(interp, nodus, "Operator <= requirit numeros vel pecuniam");
                 redde _valor_nihil();
             }
             redde sin.ut.numerus <= dex.ut.numerus ? _valor_verum() : _valor_falsum();
 
         casus SPUTNIK_LEXEMA_MAIOR_AUT:
+            si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_PECUNIA)
+            {
+                redde sin.ut.pecunia >= dex.ut.pecunia ? _valor_verum() : _valor_falsum();
+            }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {
-                _error(interp, nodus, "Operator >= requirit numeros");
+                _error(interp, nodus, "Operator >= requirit numeros vel pecuniam");
                 redde _valor_nihil();
             }
             redde sin.ut.numerus >= dex.ut.numerus ? _valor_verum() : _valor_falsum();
@@ -2622,6 +2732,8 @@ _eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
                 casus SPUTNIK_VALOR_CHORDA:
                     redde chorda_aequalis(sin.ut.chorda_valor, dex.ut.chorda_valor) ?
                            _valor_verum() : _valor_falsum();
+                casus SPUTNIK_VALOR_PECUNIA:
+                    redde sin.ut.pecunia == dex.ut.pecunia ? _valor_verum() : _valor_falsum();
                 ordinarius:
                     /* Reference equality pro xar, objectum, functio */
                     redde sin.ut.xar == dex.ut.xar ? _valor_verum() : _valor_falsum();
@@ -2645,6 +2757,8 @@ _eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
                 casus SPUTNIK_VALOR_CHORDA:
                     redde chorda_aequalis(sin.ut.chorda_valor, dex.ut.chorda_valor) ?
                            _valor_verum() : _valor_falsum();
+                casus SPUTNIK_VALOR_PECUNIA:
+                    redde sin.ut.pecunia == dex.ut.pecunia ? _valor_verum() : _valor_falsum();
                 ordinarius:
                     redde sin.ut.xar == dex.ut.xar ? _valor_verum() : _valor_falsum();
             }
@@ -3474,6 +3588,9 @@ _evaluare_nodum(SputnikInterpres* interp, SputnikAstNodus* nodus)
     {
         casus SPUTNIK_AST_NUMERUS_LITERALIS:
             redde _eval_numerum(interp, nodus);
+
+        casus SPUTNIK_AST_PECUNIA_LITERALIS:
+            redde _eval_pecuniam(interp, nodus);
 
         casus SPUTNIK_AST_CHORDA_LITERALIS:
             redde _eval_chordam(interp, nodus);
@@ -4353,6 +4470,7 @@ sputnik_valor_genus_nomen(SputnikValorGenus genus)
         casus SPUTNIK_VALOR_METHODUS_ENTITAS:      redde "function";
         casus SPUTNIK_VALOR_REPOSITORIUM:          redde "repository";
         casus SPUTNIK_VALOR_METHODUS_REPOSITORIUM: redde "function";
+        casus SPUTNIK_VALOR_PECUNIA:               redde "currency";
         ordinarius:                                redde "unknown";
     }
 }

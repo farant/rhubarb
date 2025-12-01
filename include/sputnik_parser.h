@@ -84,7 +84,10 @@ nomen enumeratio {
     SPUTNIK_AST_FUNCTIO_SAGITTA      = XXXI,      /* x => x * 2 */
 
     /* Declaratio Entitas */
-    SPUTNIK_AST_DECLARATIO_ENTITAS   = XXXII      /* entitas x : Genus::Path; */
+    SPUTNIK_AST_DECLARATIO_ENTITAS   = XXXII,     /* entitas x : Genus::Path; */
+
+    /* Pecunia (Currency) */
+    SPUTNIK_AST_PECUNIA_LITERALIS    = XXXIII     /* 9.99$, 10$ */
 } SputnikAstGenus;
 
 
@@ -120,6 +123,7 @@ structura SputnikAstNodus {
     chorda               valor;           /* Identificator, chorda literalis, etc. */
     SputnikLexemaGenus   operator;        /* Pro operationibus binariis/unariis */
     f64                  numerus;         /* Pro numeris literalibus */
+    s64                  pecunia;         /* Pro pecunia literalibus (centesimi) */
     Xar*                 liberi;          /* Xar de SputnikAstNodus* */
     i32                  linea;
     i32                  columna;

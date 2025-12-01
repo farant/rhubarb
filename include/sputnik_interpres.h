@@ -53,7 +53,8 @@ nomen enumeratio {
     SPUTNIK_VALOR_METHODUS_ENTITAS      = XI,      /* entity method reference */
     SPUTNIK_VALOR_REPOSITORIUM          = XII,     /* EntitasRepositorium* */
     SPUTNIK_VALOR_METHODUS_REPOSITORIUM = XIII,    /* repository method reference */
-    SPUTNIK_VALOR_METHODUS_CHORDA       = XIV      /* string method reference */
+    SPUTNIK_VALOR_METHODUS_CHORDA       = XIV,     /* string method reference */
+    SPUTNIK_VALOR_PECUNIA               = XV       /* s64 centesimi (currency) */
 } SputnikValorGenus;
 
 
@@ -127,6 +128,7 @@ structura SputnikValor {
         EntitasRepositorium*         repositorium;         /* repository reference */
         SputnikMethodusRepositorium  methodus_repositorium; /* repo method reference */
         SputnikMethodusChorda        methodus_chorda;      /* string method reference */
+        s64                          pecunia;              /* centesimi (currency) */
     } ut;
 };
 

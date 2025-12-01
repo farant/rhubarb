@@ -338,8 +338,19 @@ _legere_numerum(SputnikLexator* lex)
         }
     }
 
-    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_NUMERUS,
-                            initium, lex->positus, linea, columna);
+    /* Verificare si pecunia (currency) - numerus cum $ suffix */
+    c = _aspicere(lex, ZEPHYRUM);
+    si (c == '$')
+    {
+        _progredi(lex, I);  /* Consume $ */
+        lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_PECUNIA,
+                                initium, lex->positus, linea, columna);
+    }
+    alioquin
+    {
+        lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_NUMERUS,
+                                initium, lex->positus, linea, columna);
+    }
 
     redde lexema;
 }
@@ -1362,6 +1373,7 @@ sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
         casus SPUTNIK_LEXEMA_TEMPLATE_MEDIUM:  redde "TEMPLATE_MEDIUM";
         casus SPUTNIK_LEXEMA_TEMPLATE_FINIS:   redde "TEMPLATE_FINIS";
         casus SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX: redde "TEMPLATE_SIMPLEX";
+        casus SPUTNIK_LEXEMA_PECUNIA:          redde "PECUNIA";
         ordinarius:                           redde "IGNOTUS";
     }
 }

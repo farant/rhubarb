@@ -127,7 +127,10 @@ nomen enumeratio {
     SPUTNIK_LEXEMA_TEMPLATE_INITIUM  = LIX,     /* ` ... ${ */
     SPUTNIK_LEXEMA_TEMPLATE_MEDIUM   = LX,      /* } ... ${ */
     SPUTNIK_LEXEMA_TEMPLATE_FINIS    = LXI,     /* } ... ` */
-    SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX  = LXII     /* ` ... ` (sine interpolatione) */
+    SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX  = LXII,    /* ` ... ` (sine interpolatione) */
+
+    /* Pecunia (Currency) */
+    SPUTNIK_LEXEMA_PECUNIA           = LXIII    /* 9.99$, 10$ */
 } SputnikLexemaGenus;
 
 

@@ -23,8 +23,9 @@ nomen structura {
     Piscina*             piscina;
     Persistentia*        persistentia;
     InternamentumChorda* intern;
-    TabulaDispersa*      entitates;   /* id -> Entitas* */
-    TabulaDispersa*      relationes;  /* relatio_id -> Relatio* */
+    TabulaDispersa*      entitates;           /* id -> Entitas* */
+    TabulaDispersa*      relationes;          /* relatio_id -> Relatio* */
+    TabulaDispersa*      relationes_inversae; /* destinatio_id -> Xar* of Relatio* */
 } RepositoriumData;
 
 
@@ -51,6 +52,89 @@ _impl_proprietas_definitio_invenire(
     vacuum*  datum,
     chorda*  entitas_genus,
     chorda*  proprietas_nomen);
+
+
+/* ==================================================
+ * Reverse Index Helpers
+ * ================================================== */
+
+interior b32
+_index_relatio_inversa(
+    RepositoriumData* data,
+    Relatio*          relatio)
+{
+    vacuum*   existing;
+    Xar*      lista;
+    Relatio** slot;
+
+    si (!data || !relatio || !relatio->destinatio_id)
+    {
+        redde FALSUM;
+    }
+
+    si (tabula_dispersa_invenire(data->relationes_inversae,
+                                  *relatio->destinatio_id, &existing))
+    {
+        lista = (Xar*)existing;
+    }
+    alioquin
+    {
+        lista = xar_creare(data->piscina, magnitudo(Relatio*));
+        si (!lista)
+        {
+            redde FALSUM;
+        }
+        tabula_dispersa_inserere(data->relationes_inversae,
+                                  *relatio->destinatio_id, lista);
+    }
+
+    slot = (Relatio**)xar_addere(lista);
+    si (!slot)
+    {
+        redde FALSUM;
+    }
+    *slot = relatio;
+
+    redde VERUM;
+}
+
+interior b32
+_deindex_relatio_inversa(
+    RepositoriumData* data,
+    Relatio*          relatio)
+{
+    vacuum*  existing;
+    Xar*     lista;
+    Relatio* rel;
+    i32      i;
+    i32      numerus;
+
+    si (!data || !relatio || !relatio->destinatio_id)
+    {
+        redde FALSUM;
+    }
+
+    si (!tabula_dispersa_invenire(data->relationes_inversae,
+                                   *relatio->destinatio_id, &existing))
+    {
+        redde FALSUM;  /* Non in indice */
+    }
+
+    lista = (Xar*)existing;
+    numerus = xar_numerus(lista);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        rel = *(Relatio**)xar_obtinere(lista, i);
+        si (rel && rel->id == relatio->id)  /* Pointer comparison */
+        {
+            xar_removere_cum_ultimo(lista, i);
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;  /* Non inventum */
+}
 
 
 /* ==================================================
@@ -453,15 +537,7 @@ _impl_capere_relationes_ad(
     chorda* entitas_id)
 {
     RepositoriumData* data;
-    Xar*              resultus;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Relatio*          relatio;
-    Relatio**         slot;
-    i32               i;
-    i32               numerus;
+    vacuum*           existing;
 
     data = (RepositoriumData*)datum;
 
@@ -470,39 +546,14 @@ _impl_capere_relationes_ad(
         redde NIHIL;
     }
 
-    resultus = xar_creare(data->piscina, magnitudo(Relatio*));
-    si (!resultus)
+    /* O(1) lookup ex indice inverso */
+    si (tabula_dispersa_invenire(data->relationes_inversae,
+                                  *entitas_id, &existing))
     {
-        redde NIHIL;
+        redde (Xar*)existing;
     }
 
-    /* Iterare per omnes entitates */
-    iter = tabula_dispersa_iterator_initium(data->entitates);
-    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
-    {
-        entitas = (Entitas*)valor;
-
-        numerus = xar_numerus(entitas->relationes);
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            relatio = (Relatio*)xar_obtinere(entitas->relationes, i);
-            si (!relatio)
-            {
-                perge;
-            }
-
-            si (relatio->destinatio_id == entitas_id)  /* Pointer comparison */
-            {
-                slot = (Relatio**)xar_addere(resultus);
-                si (slot)
-                {
-                    *slot = relatio;
-                }
-            }
-        }
-    }
-
-    redde resultus;
+    redde NIHIL;
 }
 
 
@@ -1076,6 +1127,9 @@ _impl_relatio_addere(
     /* Registrare in index */
     tabula_dispersa_inserere(data->relationes, *relatio_id, relatio);
 
+    /* Registrare in indice inverso */
+    _index_relatio_inversa(data, relatio);
+
     redde relatio;
 }
 
@@ -1119,6 +1173,9 @@ _impl_relatio_delere(
     {
         redde FALSUM;
     }
+
+    /* Deregistrare ex indice inverso (ante delere relatio) */
+    _deindex_relatio_inversa(data, relatio);
 
     /* Deregistrare ex index */
     tabula_dispersa_delere(data->relationes, *relatio_id);
@@ -1337,12 +1394,15 @@ _applicare_eventum(
                 redde FALSUM;
             }
 
-            redde tabula_dispersa_inserere(data->relationes, *relatio_id, relatio);
+            tabula_dispersa_inserere(data->relationes, *relatio_id, relatio);
+            _index_relatio_inversa(data, relatio);
+            redde VERUM;
         }
 
         casus EVENTUS_DELERE_RELATIO:
         {
             chorda*        relatio_id;
+            Relatio*       rel;
             TabulaIterator iter;
             chorda         clavis;
             vacuum*        valor;
@@ -1352,6 +1412,12 @@ _applicare_eventum(
             si (!relatio_id)
             {
                 redde FALSUM;
+            }
+
+            /* Deindexare ex indice inverso ante deletionem */
+            si (tabula_dispersa_invenire(data->relationes, *relatio_id, (vacuum**)&rel))
+            {
+                _deindex_relatio_inversa(data, rel);
             }
 
             tabula_dispersa_delere(data->relationes, *relatio_id);
@@ -1799,6 +1865,12 @@ entitas_repositorium_creare(
 
     data->relationes = tabula_dispersa_creare_chorda(piscina, CXXVIII);
     si (!data->relationes)
+    {
+        redde NIHIL;
+    }
+
+    data->relationes_inversae = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    si (!data->relationes_inversae)
     {
         redde NIHIL;
     }

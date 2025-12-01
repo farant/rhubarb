@@ -349,6 +349,98 @@ _parsere_numerum(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
+_parsere_pecuniam(SputnikParser* parser)
+{
+    SputnikAstNodus* nodus;
+    SputnikLexema* lex;
+    character buffer[LXIV];
+    i32 len;
+    i32 i;
+    i32 j;
+    s64 pars_integra;
+    s64 pars_decimalis;
+    i32 decimales;
+    b32 post_punctum;
+
+    lex = _currens(parser);
+    si (lex == NIHIL)
+    {
+        _error(parser, "Expectabatur pecunia");
+        redde NIHIL;
+    }
+
+    nodus = _creare_nodum(parser, SPUTNIK_AST_PECUNIA_LITERALIS);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    nodus->valor = lex->valor;
+
+    /* Parsere valoris pecuniae ad centesimos
+     * Formatus: "123.45$" vel "123$"
+     * Lexer iam inclusit '$' in valor
+     */
+    len = lex->valor.mensura;
+    si (len >= LXIV)
+    {
+        len = LXIII;
+    }
+
+    /* Copiare sine '$' et underscores */
+    j = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < len && j < LXIII; i++)
+    {
+        si (lex->valor.datum[i] != '_' && lex->valor.datum[i] != '$')
+        {
+            buffer[j++] = (character)lex->valor.datum[i];
+        }
+    }
+    buffer[j] = '\0';
+
+    /* Parsere pars integra et decimalis */
+    pars_integra = ZEPHYRUM;
+    pars_decimalis = ZEPHYRUM;
+    decimales = ZEPHYRUM;
+    post_punctum = FALSUM;
+
+    per (i = ZEPHYRUM; buffer[i] != '\0'; i++)
+    {
+        si (buffer[i] == '.')
+        {
+            post_punctum = VERUM;
+        }
+        alioquin si (buffer[i] >= '0' && buffer[i] <= '9')
+        {
+            si (post_punctum)
+            {
+                si (decimales < II)
+                {
+                    pars_decimalis = pars_decimalis * X + (s64)(buffer[i] - '0');
+                    decimales++;
+                }
+            }
+            alioquin
+            {
+                pars_integra = pars_integra * X + (s64)(buffer[i] - '0');
+            }
+        }
+    }
+
+    /* Pad ad 2 decimales */
+    dum (decimales < II)
+    {
+        pars_decimalis *= X;
+        decimales++;
+    }
+
+    nodus->pecunia = pars_integra * C + pars_decimalis;
+
+    _progredi(parser);
+    redde nodus;
+}
+
+interior SputnikAstNodus*
 _parsere_chordam(SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
@@ -1265,6 +1357,9 @@ _parsere_expressionem(SputnikParser* parser, i32 praecedentia)
     {
         casus SPUTNIK_LEXEMA_NUMERUS:
             sinister = _parsere_numerum(parser);
+            frange;
+        casus SPUTNIK_LEXEMA_PECUNIA:
+            sinister = _parsere_pecuniam(parser);
             frange;
         casus SPUTNIK_LEXEMA_CHORDA:
             sinister = _parsere_chordam(parser);
@@ -2258,6 +2353,7 @@ sputnik_ast_genus_nomen(SputnikAstGenus genus)
         casus SPUTNIK_AST_SENTENTIA_DECREMENT:  redde "SENTENTIA_DECREMENT";
         casus SPUTNIK_AST_FUNCTIO_SAGITTA:      redde "FUNCTIO_SAGITTA";
         casus SPUTNIK_AST_DECLARATIO_ENTITAS:   redde "DECLARATIO_ENTITAS";
+        casus SPUTNIK_AST_PECUNIA_LITERALIS:    redde "PECUNIA_LITERALIS";
         ordinarius:                             redde "IGNOTUM";
     }
 }

@@ -1045,6 +1045,200 @@ _probare_builtins(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Probationes - Pecunia (Currency)
+ * ================================================== */
+
+interior vacuum
+_probare_pecuniam(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Pecunia ---\n");
+
+    /* Pecunia literalis simplex */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("9.99$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 999);  /* 999 centesimi */
+    }
+
+    /* Pecunia integer (sine decimali) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("10$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 1000);  /* 1000 centesimi */
+    }
+
+    /* Pecunia cum puncto et uno digito */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("5.5$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 550);  /* 550 centesimi */
+    }
+
+    /* Additio pecuniae */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("5$ + 3.50$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 850);  /* 500 + 350 = 850 */
+    }
+
+    /* Subtractio pecuniae */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("10$ - 3.25$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 675);  /* 1000 - 325 = 675 */
+    }
+
+    /* Multiplicatio pecunia * numerus */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("2.50$ * 3;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 750);  /* 250 * 3 = 750 */
+    }
+
+    /* Multiplicatio numerus * pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("4 * 1.25$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 500);  /* 4 * 125 = 500 */
+    }
+
+    /* Divisio pecunia / numerus */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("10$ / 4;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 250);  /* 1000 / 4 = 250 */
+    }
+
+    /* Comparatio pecunia < pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("5$ < 10$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("10$ < 5$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
+    }
+
+    /* Comparatio pecunia > pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("10$ > 5$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* Comparatio pecunia <= pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("5$ <= 5$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* Comparatio pecunia >= pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("10$ >= 5$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* Aequalitas pecunia == pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("9.99$ == 9.99$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("9.99$ == 10$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
+    }
+
+    /* Stricta aequalitas === */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("5$ === 5$;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
+    }
+
+    /* typeof pecunia */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("typeof(9.99$);", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "currency"));
+    }
+
+    /* Pecunia in variabili */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit pretium = 19.99$;"
+            "sit quantitas = 3;"
+            "pretium * quantitas;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 5997);  /* 1999 * 3 = 5997 */
+    }
+
+    /* Pecunia in array */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit pretia = [10$, 20$, 30$];"
+            "pretia[1];",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 2000);
+    }
+
+    /* Summa pecuniarum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit sum = 0$;"
+            "sum = sum + 10$;"
+            "sum = sum + 5.50$;"
+            "sum = sum + 2.25$;"
+            "sum;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_PECUNIA);
+        CREDO_AEQUALIS_S64(r.valor.ut.pecunia, 1775);  /* 1000 + 550 + 225 = 1775 */
+    }
+}
+
+
+/* ==================================================
  * Probationes - Errors
  * ================================================== */
 
@@ -2254,6 +2448,7 @@ integer principale(vacuum)
     _probare_arrays(piscina, intern);
     _probare_objecta(piscina, intern);
     _probare_builtins(piscina, intern);
+    _probare_pecuniam(piscina, intern);
     _probare_errores(piscina, intern);
     _probare_complex(piscina, intern);
     _probare_functiones_sagittas(piscina, intern);
