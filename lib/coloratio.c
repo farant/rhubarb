@@ -17,6 +17,43 @@ _est_character_verbi(character c)
            (c == '_');
 }
 
+/* Verificare si character potest initiare nomen tag/attributum */
+hic_manens b32
+_est_nomen_initium(character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c == '_') || (c == ':');
+}
+
+/* Verificare si character potest esse in nomine tag/attributum */
+hic_manens b32
+_est_nomen_character(character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           (c == '_') || (c == ':') ||
+           (c == '-') || (c == '.');
+}
+
+/* Verificare si character potest esse in valore nudo (bare value) */
+hic_manens b32
+_est_valor_nudus_character(character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           (c == '_') || (c == '-');
+}
+
+/* Verificare si character est spatium */
+hic_manens b32
+_est_spatium(character c)
+{
+    redde (c == ' ') || (c == '\t') || (c == '\n') || (c == '\r');
+}
+
 
 /* ==================================================
  * Creation
@@ -319,6 +356,209 @@ _computare_status_lineae(
     redde status;
 }
 
+/* Colorare STML/HTML tags in linea */
+hic_manens vacuum
+_colorare_tags(
+    Coloratio* coloratio,
+    constans TabulaCharacterum* tabula,
+    i32 linea)
+{
+    i32 col;
+    i32 tag_initium;
+    character c;
+    character quote_char;
+
+    col = ZEPHYRUM;
+    dum (col < tabula->latitudo)
+    {
+        c = tabula_cellula(tabula, linea, col);
+
+        si (c == '\0')
+        {
+            frange;  /* Finis lineae */
+        }
+
+        si (c == '<')
+        {
+            tag_initium = col;
+
+            /* Colorare '<' ut TAGUM */
+            coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+            col++;
+
+            si (col >= tabula->latitudo)
+            {
+                frange;
+            }
+
+            c = tabula_cellula(tabula, linea, col);
+
+            /* Tractare closing tag </name> */
+            si (c == '/')
+            {
+                coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+                col++;
+            }
+
+            /* Scandere nomen tag */
+            si (col < tabula->latitudo)
+            {
+                c = tabula_cellula(tabula, linea, col);
+                si (_est_nomen_initium(c))
+                {
+                    dum (col < tabula->latitudo)
+                    {
+                        c = tabula_cellula(tabula, linea, col);
+                        si (!_est_nomen_character(c))
+                        {
+                            frange;
+                        }
+                        coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+                        col++;
+                    }
+                }
+            }
+
+            /* Tractare '!' pro raw content tags (STML extension) */
+            si (col < tabula->latitudo)
+            {
+                c = tabula_cellula(tabula, linea, col);
+                si (c == '!')
+                {
+                    coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+                    col++;
+                }
+            }
+
+            /* Scandere attributa */
+            dum (col < tabula->latitudo)
+            {
+                c = tabula_cellula(tabula, linea, col);
+
+                si (c == '\0')
+                {
+                    frange;
+                }
+
+                /* Saltare spatia */
+                si (_est_spatium(c))
+                {
+                    col++;
+                    perge;
+                }
+
+                /* Tag finis: '>' */
+                si (c == '>')
+                {
+                    coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+                    col++;
+                    frange;  /* Tag completum */
+                }
+
+                /* Self-closing: '/>' */
+                si (c == '/')
+                {
+                    coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+                    col++;
+                    si (col < tabula->latitudo)
+                    {
+                        c = tabula_cellula(tabula, linea, col);
+                        si (c == '>')
+                        {
+                            coloratio_index(coloratio, linea, col) = COLORATIO_TAGUM;
+                            col++;
+                        }
+                    }
+                    frange;  /* Tag completum */
+                }
+
+                /* Nomen attributi */
+                si (_est_nomen_initium(c))
+                {
+                    /* Colorare nomen attributi */
+                    dum (col < tabula->latitudo)
+                    {
+                        c = tabula_cellula(tabula, linea, col);
+                        si (!_est_nomen_character(c))
+                        {
+                            frange;
+                        }
+                        coloratio_index(coloratio, linea, col) = COLORATIO_ATTRIBUTUM;
+                        col++;
+                    }
+
+                    /* Verificare pro '=' */
+                    si (col < tabula->latitudo)
+                    {
+                        c = tabula_cellula(tabula, linea, col);
+                        si (c == '=')
+                        {
+                            /* Colorare '=' ut OPERANS */
+                            coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                            col++;
+
+                            /* Legere valor */
+                            si (col < tabula->latitudo)
+                            {
+                                c = tabula_cellula(tabula, linea, col);
+
+                                /* Valor in quotis */
+                                si (c == '"' || c == '\'')
+                                {
+                                    quote_char = c;
+                                    coloratio_index(coloratio, linea, col) = COLORATIO_VALOR_ATTR;
+                                    col++;
+
+                                    /* Scandere usque ad closing quote */
+                                    dum (col < tabula->latitudo)
+                                    {
+                                        c = tabula_cellula(tabula, linea, col);
+                                        si (c == '\0')
+                                        {
+                                            frange;
+                                        }
+                                        coloratio_index(coloratio, linea, col) = COLORATIO_VALOR_ATTR;
+                                        si (c == quote_char)
+                                        {
+                                            col++;
+                                            frange;
+                                        }
+                                        col++;
+                                    }
+                                }
+                                alioquin si (_est_valor_nudus_character(c))
+                                {
+                                    /* Valor nudus (bare value) */
+                                    dum (col < tabula->latitudo)
+                                    {
+                                        c = tabula_cellula(tabula, linea, col);
+                                        si (!_est_valor_nudus_character(c))
+                                        {
+                                            frange;
+                                        }
+                                        coloratio_index(coloratio, linea, col) = COLORATIO_VALOR_ATTR;
+                                        col++;
+                                    }
+                                }
+                            }
+                        }
+                        /* Si non '=', est attributum boolean - iam coloratum */
+                    }
+                    perge;
+                }
+
+                /* Character ignotus in tag - saltare */
+                col++;
+            }
+
+            (vacuum)tag_initium;  /* Supprimere monitum de variabile non usato */
+            perge;
+        }
+
+        col++;
+    }
+}
+
 /* Colorare singulam lineam cum contextu */
 hic_manens vacuum
 _colorare_lineam(
@@ -329,13 +569,18 @@ _colorare_lineam(
 {
     (vacuum)status_initium;  /* TODO: use for sputnik syntax coloring */
 
+    /* Apply STML tag highlighting si regula activa */
+    si (coloratio->regulae & COLORATIO_REGULA_STML)
+    {
+        _colorare_tags(coloratio, tabula, linea);
+    }
+
     /* Apply $command highlighting si regula activa */
     si (coloratio->regulae & COLORATIO_REGULA_COMMANDA)
     {
         _colorare_commanda(coloratio, tabula, linea);
     }
 
-    /* TODO: STML tag highlighting */
     /* TODO: Sputnik syntax highlighting when status_initium == IN_SPUTNIK */
 }
 

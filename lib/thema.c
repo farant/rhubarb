@@ -110,15 +110,15 @@ thema_color_ex_indice_colorationis(i8 index)
      *
      * COLORATIO_DEFALTA     = 0  -> COLOR_TEXT
      * COLORATIO_COMMANDUM   = 1  -> PALETTE_BRIGHT_CYAN
-     * COLORATIO_TAGUM       = 2  -> PALETTE_BRIGHT_GOLD
+     * COLORATIO_TAGUM       = 2  -> PALETTE_WHITE (grayscale)
      * COLORATIO_CLAVIS      = 3  -> PALETTE_MEDIUM_RED
      * COLORATIO_CHORDA      = 4  -> PALETTE_DARK_GOLD
      * COLORATIO_NUMERUS     = 5  -> PALETTE_MEDIUM_GOLD
      * COLORATIO_COMMENTUM   = 6  -> PALETTE_MEDIUM_GRAY
      * COLORATIO_OPERANS     = 7  -> PALETTE_LIGHT_GRAY
      * COLORATIO_PROPRIETAS  = 8  -> PALETTE_MEDIUM_CYAN
-     * COLORATIO_ATTRIBUTUM  = 9  -> PALETTE_DARK_CYAN
-     * COLORATIO_VALOR_ATTR  = 10 -> PALETTE_DARK_GOLD
+     * COLORATIO_ATTRIBUTUM  = 9  -> PALETTE_LIGHT_GRAY (grayscale)
+     * COLORATIO_VALOR_ATTR  = 10 -> PALETTE_MEDIUM_DARK_GRAY (grayscale)
      */
 
     commutatio (index)
@@ -126,7 +126,7 @@ thema_color_ex_indice_colorationis(i8 index)
         casus I:   /* COLORATIO_COMMANDUM */
             redde color_ex_palette(PALETTE_BRIGHT_CYAN);
         casus II:  /* COLORATIO_TAGUM */
-            redde color_ex_palette(PALETTE_BRIGHT_GOLD);
+            redde color_ex_palette(PALETTE_WHITE);
         casus III: /* COLORATIO_CLAVIS */
             redde color_ex_palette(PALETTE_MEDIUM_RED);
         casus IV:  /* COLORATIO_CHORDA */
@@ -140,9 +140,9 @@ thema_color_ex_indice_colorationis(i8 index)
         casus VIII: /* COLORATIO_PROPRIETAS */
             redde color_ex_palette(PALETTE_MEDIUM_CYAN);
         casus IX:  /* COLORATIO_ATTRIBUTUM */
-            redde color_ex_palette(PALETTE_DARK_CYAN);
+            redde color_ex_palette(PALETTE_LIGHT_GRAY);
         casus X:   /* COLORATIO_VALOR_ATTR */
-            redde color_ex_palette(PALETTE_DARK_GOLD);
+            redde color_ex_palette(PALETTE_MEDIUM_DARK_GRAY);
         ordinarius: /* COLORATIO_DEFALTA vel ignotus */
             redde thema_color(COLOR_TEXT);
     }

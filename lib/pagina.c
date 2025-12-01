@@ -36,7 +36,8 @@ pagina_initiare_cum_dimensionibus(
 
     /* Creare coloratio pro syntax highlighting */
     pagina->coloratio = coloratio_creare(piscina, latitudo, altitudo);
-    coloratio_ponere_regulas(pagina->coloratio, COLORATIO_REGULA_COMMANDA);
+    coloratio_ponere_regulas(pagina->coloratio,
+        COLORATIO_REGULA_COMMANDA | COLORATIO_REGULA_STML);
 
     /* Initiare vim status */
     pagina->vim = vim_initiare(&pagina->tabula);
