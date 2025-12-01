@@ -458,7 +458,37 @@ pagina_inserere_textum(
     modo_prior = pagina->vim.modo;
     pagina->vim = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
 
-    /* Disablare auto-indent pro programmatic insertion */
+    per (p = textus; *p != '\0'; p++)
+    {
+        si (*p == '\n')
+        {
+            /* Inserere novam lineam */
+            pagina->vim = vim_tractare_clavem(pagina->vim, VIM_CLAVIS_ENTER);
+        }
+        alioquin
+        {
+            /* Inserere characterem normalem */
+            pagina->vim = vim_tractare_clavem(pagina->vim, (s32)*p);
+        }
+    }
+
+    /* Restituere modum priorem */
+    pagina->vim = vim_ponere_modum(pagina->vim, modo_prior);
+}
+
+vacuum
+pagina_inserere_textum_crudus(
+    Pagina* pagina,
+    constans character* textus)
+{
+    constans character* p;
+    ModoVim modo_prior;
+
+    /* Servare modum et intrare in inserere */
+    modo_prior = pagina->vim.modo;
+    pagina->vim = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
+
+    /* Disablare auto-indent pro insertion ex STML */
     pagina->vim.sine_auto_indent = VERUM;
 
     per (p = textus; *p != '\0'; p++)

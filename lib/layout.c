@@ -235,7 +235,7 @@ _layout_processare_pagina(
             {
                 memcpy(textus_nt, textus.datum, (size_t)textus.mensura);
                 textus_nt[textus.mensura] = '\0';
-                pagina_inserere_textum(pagina, textus_nt);
+                pagina_inserere_textum_crudus(pagina, textus_nt);
             }
         }
     }

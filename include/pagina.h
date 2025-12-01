@@ -255,6 +255,18 @@ pagina_inserere_textum(
     Pagina* pagina,
     constans character* textus);
 
+/* Inserere textum in pagina sine auto-indent
+ *
+ * Pro insertion ex STML vel aliis fontibus ubi indentatio iam in textu est.
+ *
+ * pagina: pagina
+ * textus: textus inserendus (null-terminated)
+ */
+vacuum
+pagina_inserere_textum_crudus(
+    Pagina* pagina,
+    constans character* textus);
+
 
 /* ==================================================
  * Tag Detection

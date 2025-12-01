@@ -545,12 +545,38 @@ _delere_characterem_ante_cursorem(
     {
         /* Ad initium lineae - jungere cum linea superiore */
         s32 finis_superioris;
+        s32 finis_currentis;
+        i32 linea_inferior;
+        i32 col;
+        i32 pos_junctionis;
 
+        linea_inferior = status.cursor_linea;
         status.cursor_linea--;
         finis_superioris = _finis_lineae(status.tabula, status.cursor_linea);
-        status.cursor_columna = (i32)(finis_superioris + I);
+        finis_currentis = _finis_lineae(status.tabula, linea_inferior);
 
-        /* TODO: trahere contentum lineae inferioris sursum */
+        /* Positio ubi cursor erit et ubi contentum jungitur */
+        pos_junctionis = (i32)(finis_superioris + I);
+        status.cursor_columna = pos_junctionis;
+
+        /* Copiare contentum lineae inferioris ad finem lineae superioris */
+        si (finis_currentis >= ZEPHYRUM)
+        {
+            per (col = ZEPHYRUM; col <= (i32)finis_currentis; col++)
+            {
+                character c;
+
+                c = tabula_cellula(status.tabula, linea_inferior, col);
+                si (pos_junctionis + col < status.tabula->latitudo)
+                {
+                    tabula_cellula(status.tabula, status.cursor_linea, pos_junctionis + col) = c;
+                }
+            }
+        }
+
+        /* Delere lineam inferiorem (nunc vacuam) */
+        tabula_delere_lineam(status.tabula, linea_inferior);
+
         status.mutatus = VERUM;
     }
 
@@ -858,28 +884,108 @@ _inserere_lineam_novam_supra(
     redde status;
 }
 
-/* Enter in insert mode - nova linea cum auto-indent */
+/* Enter in insert mode - nova linea cum auto-indent et split line */
 hic_manens VimStatus
 _inserere_novam_lineam_in_inserere(
     VimStatus status)
 {
     b32 successus;
     i32 linea_fons;
+    i32 cursor_col;
+    i32 col;
+    s32 finis_contenti;
+    i32 indentatio_nova;
+    i32 linea_cum_indentatio;
 
     linea_fons = status.cursor_linea;
+    cursor_col = status.cursor_columna;
     successus = tabula_inserere_lineam(status.tabula, status.cursor_linea + I);
 
     si (successus)
     {
-        status.cursor_linea++;
-        status.cursor_columna = ZEPHYRUM;
-        status.mutatus = VERUM;
+        /* Invenire finem contenti in linea fonte */
+        finis_contenti = tabula_invenire_finem_contenti(status.tabula, linea_fons);
 
-        /* Auto-indent: copiare indentationem ex linea superiore (nisi disablatum) */
+        /* Determinare indentationem pro nova linea (ante copiare textum) */
+        indentatio_nova = ZEPHYRUM;
+        linea_cum_indentatio = linea_fons;
         si (!status.sine_auto_indent)
         {
-            status = _copiare_indentationem(status, linea_fons);
+            /* Primo: scandere whitespace in linea fonte si habet contentum */
+            si (finis_contenti >= ZEPHYRUM)
+            {
+                per (col = ZEPHYRUM; col <= (i32)finis_contenti; col++)
+                {
+                    character c;
+
+                    c = tabula_cellula(status.tabula, linea_fons, col);
+                    si (c == ' ' || c == '\t')
+                    {
+                        indentatio_nova = col + I;
+                        /* Si tab, saltare TAB_CONTINUATIO */
+                        si (c == '\t')
+                        {
+                            indentatio_nova = col + II;
+                            col++;
+                        }
+                    }
+                    alioquin
+                    {
+                        frange;
+                    }
+                }
+            }
+
+            /* Si linea vacua vel nulla indentatio, quaerere metadata retro (sticky) */
+            si (indentatio_nova == ZEPHYRUM)
+            {
+                i32 linea_scan;
+
+                per (linea_scan = linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+                {
+                    si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
+                    {
+                        indentatio_nova = (i32)status.tabula->indentatio[linea_scan];
+                        linea_cum_indentatio = linea_scan;
+                        frange;
+                    }
+                }
+            }
         }
+
+        /* Copiare textum a cursore ad finem ad novam lineam (cum offset pro indentatio) */
+        si (finis_contenti >= (s32)cursor_col)
+        {
+            /* Copiare textum ad positionem post indentationem */
+            per (col = cursor_col; col <= (i32)finis_contenti; col++)
+            {
+                character c;
+
+                c = tabula_cellula(status.tabula, linea_fons, col);
+                tabula_cellula(status.tabula, linea_fons + I, indentatio_nova + col - cursor_col) = c;
+            }
+
+            /* Vacare textum a cursore ad finem in linea fonte */
+            per (col = cursor_col; col <= (i32)finis_contenti; col++)
+            {
+                tabula_cellula(status.tabula, linea_fons, col) = ' ';
+            }
+        }
+
+        /* Copiare indentationem ad novam lineam (ex linea_cum_indentatio) */
+        si (indentatio_nova > ZEPHYRUM)
+        {
+            per (col = ZEPHYRUM; col < indentatio_nova; col++)
+            {
+                tabula_cellula(status.tabula, linea_fons + I, col) =
+                    tabula_cellula(status.tabula, linea_cum_indentatio, col);
+            }
+        }
+
+        /* Movere cursor ad novam lineam post indentationem */
+        status.cursor_linea++;
+        status.cursor_columna = indentatio_nova;
+        status.mutatus = VERUM;
     }
 
     redde status;

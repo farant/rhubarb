@@ -907,6 +907,212 @@ probans_vim_dd_ultima_linea(vacuum)
 
 
 /* ==================================================
+ * Test: Enter Split Line
+ * ================================================== */
+
+hic_manens vacuum
+probans_enter_split_line(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "si (abc) {" cum cursor ante '{' */
+    tabula_ex_literis(&tabula, g_piscina, "si (abc) {");
+    status = vim_initiare(&tabula);
+
+    /* Transire ad insert mode */
+    status = vim_tractare_clavem(status, 'i');
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
+
+    /* Ponere cursor ad positionem 9 (ante '{') */
+    status.cursor_columna = IX;
+
+    /* Premere Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Verificare: cursor ad linea 1, columna 0 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Verificare: linea 0 = "si (abc) " (textus ante cursor) */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'s');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'i');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VIII), (i32)' ');
+    /* Columna 9 debet esse vacua (vel '\0') */
+    CREDO_VERUM(tabula_cellula(&tabula, ZEPHYRUM, IX) == '\0' ||
+                tabula_cellula(&tabula, ZEPHYRUM, IX) == ' ');
+
+    /* Verificare: linea 1 = "{" (textus post cursor) */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'{');
+}
+
+hic_manens vacuum
+probans_enter_split_line_in_medio(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "hello world" cum cursor post "hello " */
+    tabula_ex_literis(&tabula, g_piscina, "hello world");
+    status = vim_initiare(&tabula);
+
+    /* Transire ad insert mode */
+    status = vim_tractare_clavem(status, 'i');
+
+    /* Ponere cursor ad positionem 6 (ante 'w') */
+    status.cursor_columna = VI;
+
+    /* Premere Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Verificare: cursor ad linea 1, columna 0 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Verificare: linea 0 = "hello " */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)' ');
+
+    /* Verificare: linea 1 = "world" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'w');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, IV), (i32)'d');
+}
+
+hic_manens vacuum
+probans_enter_ad_initium_lineae(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "hello" cum cursor ad initium */
+    tabula_ex_literis(&tabula, g_piscina, "hello");
+    status = vim_initiare(&tabula);
+
+    /* Transire ad insert mode ad initium */
+    status = vim_tractare_clavem(status, 'i');
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Premere Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Verificare: cursor ad linea 1, columna 0 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Verificare: linea 0 est vacua */
+    CREDO_VERUM(tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) == '\0' ||
+                tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) == ' ');
+
+    /* Verificare: linea 1 = "hello" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, IV), (i32)'o');
+}
+
+hic_manens vacuum
+probans_backspace_join_lines(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "hello\n}" - duae lineae */
+    tabula_ex_literis(&tabula, g_piscina, "hello\n}");
+    status = vim_initiare(&tabula);
+
+    /* Verificare setup */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'}');
+
+    /* Movere ad lineam 1, columna 0 (ante '}') */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    status = vim_tractare_clavem(status, '0');
+    CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
+
+    /* Transire ad insert mode */
+    status = vim_tractare_clavem(status, 'i');
+
+    /* Backspace ad initium lineae - debet jungere lineas */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+
+    /* Verificare: cursor ad linea 0, post "hello" */
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_columna, V);
+
+    /* Verificare: linea 0 = "hello}" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV), (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)'}');
+}
+
+hic_manens vacuum
+probans_backspace_join_lines_cum_spatiis(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "abc\n  xyz" - secunda linea habet indentationem */
+    tabula_ex_literis(&tabula, g_piscina, "abc\n  xyz");
+    status = vim_initiare(&tabula);
+
+    /* Movere ad lineam 1, columna 0 */
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '0');
+
+    /* Transire ad insert mode */
+    status = vim_tractare_clavem(status, 'i');
+
+    /* Backspace - debet jungere lineas, "  xyz" sequitur "abc" */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
+
+    /* Verificare: cursor ad linea 0, post "abc" */
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_columna, III);
+
+    /* Verificare: linea 0 = "abc  xyz" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)'x');
+}
+
+hic_manens vacuum
+probans_enter_split_cum_indentatio(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: "  abc {" cum cursor ante '{' (2 spatia indentatio) */
+    tabula_ex_literis(&tabula, g_piscina, "  abc {");
+    status = vim_initiare(&tabula);
+
+    /* Transire ad insert mode */
+    status = vim_tractare_clavem(status, 'i');
+
+    /* Ponere cursor ad positionem 6 (ante '{') */
+    status.cursor_columna = VI;
+
+    /* Premere Enter */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ENTER);
+
+    /* Verificare: cursor ad linea 1, columna 2 (post indentationem) */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32(status.cursor_columna, II);
+
+    /* Verificare: linea 0 = "  abc " */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)' ');
+
+    /* Verificare: linea 1 = "  {" (indentatio + '{') */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, II), (i32)'{');
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -1031,6 +1237,24 @@ principale(vacuum)
     probans_vim_dd_ultima_linea();
 
     /* Test 4 removed - see comment in test section */
+
+    printf("--- Probans enter split line ---\n");
+    probans_enter_split_line();
+
+    printf("--- Probans enter split line in medio ---\n");
+    probans_enter_split_line_in_medio();
+
+    printf("--- Probans enter ad initium lineae ---\n");
+    probans_enter_ad_initium_lineae();
+
+    printf("--- Probans enter split cum indentatio ---\n");
+    probans_enter_split_cum_indentatio();
+
+    printf("--- Probans backspace join lines ---\n");
+    probans_backspace_join_lines();
+
+    printf("--- Probans backspace join lines cum spatiis ---\n");
+    probans_backspace_join_lines_cum_spatiis();
 
     printf("\n");
     credo_imprimere_compendium();
