@@ -144,24 +144,30 @@ _probare_chordas(Piscina* piscina, InternamentumChorda* intern)
 
     imprimere("\n--- Probatio Chordae ---\n");
 
-    /* Chorda cum quotis duplicibus */
+    /* Chorda cum quotis duplicibus - nunc sine quotis, cum effugiis processatis */
     lexema = _legere_primum("\"hello\"", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_CHORDA);
-    CREDO_AEQUALIS_I32(lexema.valor.mensura, VII);
+    CREDO_AEQUALIS_I32(lexema.valor.mensura, V);  /* "hello" sine quotis = 5 */
 
     /* Chorda cum quotis singularibus */
     lexema = _legere_primum("'world'", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_CHORDA);
-    CREDO_AEQUALIS_I32(lexema.valor.mensura, VII);
+    CREDO_AEQUALIS_I32(lexema.valor.mensura, V);  /* 'world' sine quotis = 5 */
 
     /* Chorda vacua */
     lexema = _legere_primum("\"\"", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_CHORDA);
-    CREDO_AEQUALIS_I32(lexema.valor.mensura, II);
+    CREDO_AEQUALIS_I32(lexema.valor.mensura, ZEPHYRUM);  /* "" vacua = 0 */
 
     /* Chorda cum spatiis */
     lexema = _legere_primum("\"hello world\"", piscina, intern);
     CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_CHORDA);
+    CREDO_AEQUALIS_I32(lexema.valor.mensura, XI);  /* "hello world" = 11 */
+
+    /* Chorda cum effugiis */
+    lexema = _legere_primum("\"a\\nb\"", piscina, intern);
+    CREDO_AEQUALIS_I32(lexema.genus, SPUTNIK_LEXEMA_CHORDA);
+    CREDO_AEQUALIS_I32(lexema.valor.mensura, III);  /* a + newline + b = 3 */
 
     imprimere("  Chordae: VERUM\n");
 }

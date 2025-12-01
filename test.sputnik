@@ -27,7 +27,22 @@ constans PI = 3.14159;
 print(`PI (constans): ${PI}`);
 
 // ==================================================
-// Template Strings (Nova Feature!)
+// Effugia (Escape Sequences)
+// ==================================================
+print("");
+print("--- Effugia ---");
+
+print("Linea prima\nLinea secunda");
+print("Col1\tCol2\tCol3");
+print("Via: C:\\Users\\Test");
+print("Dixit: \"Salve Mundus!\"");
+print('Apostrophum: it\'s working');
+print(`Template cum \t tab et \n newline`);
+print(`Pretium: \$99.99`);
+print(`Codex: \`sit x = 1;\``);
+
+// ==================================================
+// Template Strings
 // ==================================================
 print("");
 print("--- Template Strings ---");

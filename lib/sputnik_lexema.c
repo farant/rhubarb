@@ -346,6 +346,33 @@ _legere_numerum(SputnikLexator* lex)
 
 
 /* ==================================================
+ * Processus Effugiorum (Escape Sequence Processing)
+ * ================================================== */
+
+/* Convertere characterem effugii ad characterem realem
+ * c: character post backslash (e.g., 'n' pro \n)
+ * Redde: character realis vel -1 si ignotus
+ */
+interior i32
+_convertere_effugium(character c)
+{
+    commutatio (c)
+    {
+        casus 'n':  redde '\n';
+        casus 't':  redde '\t';
+        casus 'r':  redde '\r';
+        casus '0':  redde '\0';
+        casus '\\': redde '\\';
+        casus '"':  redde '"';
+        casus '\'': redde '\'';
+        casus '`':  redde '`';
+        casus '$':  redde '$';
+        ordinarius: redde (i32)-I;  /* Ignotus - redde characterem ipsum */
+    }
+}
+
+
+/* ==================================================
  * Legere Chordam (String)
  * ================================================== */
 
@@ -358,6 +385,12 @@ _legere_chordam(SputnikLexator* lex)
     i32 columna;
     character quota;
     character c;
+    character c2;
+    i32 effugium;
+    character* buffer;
+    i32 buffer_cap;
+    i32 buffer_len;
+    i8* resultus;
 
     initium = lex->positus;
     linea = lex->linea;
@@ -367,6 +400,19 @@ _legere_chordam(SputnikLexator* lex)
     quota = _aspicere(lex, ZEPHYRUM);
     _progredi(lex, I);
 
+    /* Allocare buffer pro chorda processata
+     * Capacitas maxima est longitudo fontis residua
+     */
+    buffer_cap = lex->fons.mensura - lex->positus;
+    buffer = piscina_allocare(lex->piscina, buffer_cap);
+    si (buffer == NIHIL)
+    {
+        lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                initium, lex->positus, linea, columna);
+        redde lexema;
+    }
+    buffer_len = ZEPHYRUM;
+
     /* Legere usque ad quota claudens */
     dum (!_finis(lex))
     {
@@ -375,22 +421,58 @@ _legere_chordam(SputnikLexator* lex)
         si (c == quota)
         {
             _progredi(lex, I);
-            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_CHORDA,
-                                    initium, lex->positus, linea, columna);
+
+            /* Creare chorda cum contentis processatis */
+            si (buffer_len > ZEPHYRUM)
+            {
+                resultus = piscina_allocare(lex->piscina, buffer_len);
+                si (resultus == NIHIL)
+                {
+                    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                            initium, lex->positus, linea, columna);
+                    redde lexema;
+                }
+                memcpy(resultus, buffer, (size_t)buffer_len);
+            }
+            alioquin
+            {
+                /* Chorda vacua - datum potest esse NIHIL */
+                resultus = NIHIL;
+            }
+
+            lexema.genus = SPUTNIK_LEXEMA_CHORDA;
+            lexema.valor.datum = resultus;
+            lexema.valor.mensura = buffer_len;
+            lexema.linea = linea;
+            lexema.columna = columna;
+            lexema.offset_initium = initium;
+            lexema.offset_finis = lex->positus;
             redde lexema;
         }
         alioquin si (c == '\\')
         {
-            /* Skip escape sequence (simplex) */
+            /* Processare effugium */
+            c2 = _aspicere(lex, I);
+            effugium = _convertere_effugium(c2);
+            si (effugium >= ZEPHYRUM)
+            {
+                buffer[buffer_len++] = (character)effugium;
+            }
+            alioquin
+            {
+                /* Effugium ignotum - includere characterem ipsum */
+                buffer[buffer_len++] = c2;
+            }
             _progredi(lex, II);
         }
         alioquin si (c == '\n')
         {
-            /* Unterminated string at newline */
+            /* Chorda non clausa ad finem lineae */
             frange;
         }
         alioquin
         {
+            buffer[buffer_len++] = c;
             _progredi(lex, I);
         }
     }
@@ -413,9 +495,13 @@ _legere_template(SputnikLexator* lex)
     i32 initium;
     i32 linea;
     i32 columna;
-    i32 contentum_initium;
     character c;
     character c2;
+    i32 effugium;
+    character* buffer;
+    i32 buffer_cap;
+    i32 buffer_len;
+    i8* resultus;
 
     initium = lex->positus;
     linea = lex->linea;
@@ -423,7 +509,17 @@ _legere_template(SputnikLexator* lex)
 
     /* Skip ` aperiens */
     _progredi(lex, I);
-    contentum_initium = lex->positus;
+
+    /* Allocare buffer pro contentis processatis */
+    buffer_cap = lex->fons.mensura - lex->positus;
+    buffer = piscina_allocare(lex->piscina, buffer_cap);
+    si (buffer == NIHIL)
+    {
+        lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                initium, lex->positus, linea, columna);
+        redde lexema;
+    }
+    buffer_len = ZEPHYRUM;
 
     /* Legere usque ad ` claudens vel ${ */
     dum (!_finis(lex))
@@ -434,27 +530,80 @@ _legere_template(SputnikLexator* lex)
         si (c == '`')
         {
             /* Template simplex sine interpolatione */
-            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX,
-                                    contentum_initium, lex->positus, linea, columna);
+            si (buffer_len > ZEPHYRUM)
+            {
+                resultus = piscina_allocare(lex->piscina, buffer_len);
+                si (resultus == NIHIL)
+                {
+                    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                            initium, lex->positus, linea, columna);
+                    redde lexema;
+                }
+                memcpy(resultus, buffer, (size_t)buffer_len);
+            }
+            alioquin
+            {
+                resultus = NIHIL;
+            }
+
+            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX;
+            lexema.valor.datum = resultus;
+            lexema.valor.mensura = buffer_len;
+            lexema.linea = linea;
+            lexema.columna = columna;
+            lexema.offset_initium = initium;
+            lexema.offset_finis = lex->positus + I;
             _progredi(lex, I);  /* Skip ` claudens */
             redde lexema;
         }
         alioquin si (c == '$' && c2 == '{')
         {
             /* Initium interpolationis */
-            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_INITIUM,
-                                    contentum_initium, lex->positus, linea, columna);
+            si (buffer_len > ZEPHYRUM)
+            {
+                resultus = piscina_allocare(lex->piscina, buffer_len);
+                si (resultus == NIHIL)
+                {
+                    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                            initium, lex->positus, linea, columna);
+                    redde lexema;
+                }
+                memcpy(resultus, buffer, (size_t)buffer_len);
+            }
+            alioquin
+            {
+                resultus = NIHIL;
+            }
+
+            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_INITIUM;
+            lexema.valor.datum = resultus;
+            lexema.valor.mensura = buffer_len;
+            lexema.linea = linea;
+            lexema.columna = columna;
+            lexema.offset_initium = initium;
+            lexema.offset_finis = lex->positus + II;
             _progredi(lex, II);  /* Skip ${ */
             lex->template_profunditas++;
             redde lexema;
         }
         alioquin si (c == '\\')
         {
-            /* Skip escape sequence */
+            /* Processare effugium */
+            effugium = _convertere_effugium(c2);
+            si (effugium >= ZEPHYRUM)
+            {
+                buffer[buffer_len++] = (character)effugium;
+            }
+            alioquin
+            {
+                /* Effugium ignotum - includere characterem ipsum */
+                buffer[buffer_len++] = c2;
+            }
             _progredi(lex, II);
         }
         alioquin
         {
+            buffer[buffer_len++] = c;
             _progredi(lex, I);
         }
     }
@@ -474,9 +623,13 @@ _legere_template_continuatio(SputnikLexator* lex)
     i32 initium;
     i32 linea;
     i32 columna;
-    i32 contentum_initium;
     character c;
     character c2;
+    i32 effugium;
+    character* buffer;
+    i32 buffer_cap;
+    i32 buffer_len;
+    i8* resultus;
 
     initium = lex->positus;
     linea = lex->linea;
@@ -484,7 +637,17 @@ _legere_template_continuatio(SputnikLexator* lex)
 
     /* Skip } claudens interpolationem */
     _progredi(lex, I);
-    contentum_initium = lex->positus;
+
+    /* Allocare buffer pro contentis processatis */
+    buffer_cap = lex->fons.mensura - lex->positus;
+    buffer = piscina_allocare(lex->piscina, buffer_cap);
+    si (buffer == NIHIL)
+    {
+        lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                initium, lex->positus, linea, columna);
+        redde lexema;
+    }
+    buffer_len = ZEPHYRUM;
 
     /* Legere usque ad ` claudens vel ${ */
     dum (!_finis(lex))
@@ -495,8 +658,29 @@ _legere_template_continuatio(SputnikLexator* lex)
         si (c == '`')
         {
             /* Finis template */
-            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_FINIS,
-                                    contentum_initium, lex->positus, linea, columna);
+            si (buffer_len > ZEPHYRUM)
+            {
+                resultus = piscina_allocare(lex->piscina, buffer_len);
+                si (resultus == NIHIL)
+                {
+                    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                            initium, lex->positus, linea, columna);
+                    redde lexema;
+                }
+                memcpy(resultus, buffer, (size_t)buffer_len);
+            }
+            alioquin
+            {
+                resultus = NIHIL;
+            }
+
+            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_FINIS;
+            lexema.valor.datum = resultus;
+            lexema.valor.mensura = buffer_len;
+            lexema.linea = linea;
+            lexema.columna = columna;
+            lexema.offset_initium = initium;
+            lexema.offset_finis = lex->positus + I;
             _progredi(lex, I);  /* Skip ` claudens */
             lex->template_profunditas--;
             redde lexema;
@@ -504,19 +688,51 @@ _legere_template_continuatio(SputnikLexator* lex)
         alioquin si (c == '$' && c2 == '{')
         {
             /* Medium - alia interpolatio sequitur */
-            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_MEDIUM,
-                                    contentum_initium, lex->positus, linea, columna);
+            si (buffer_len > ZEPHYRUM)
+            {
+                resultus = piscina_allocare(lex->piscina, buffer_len);
+                si (resultus == NIHIL)
+                {
+                    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                                            initium, lex->positus, linea, columna);
+                    redde lexema;
+                }
+                memcpy(resultus, buffer, (size_t)buffer_len);
+            }
+            alioquin
+            {
+                resultus = NIHIL;
+            }
+
+            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_MEDIUM;
+            lexema.valor.datum = resultus;
+            lexema.valor.mensura = buffer_len;
+            lexema.linea = linea;
+            lexema.columna = columna;
+            lexema.offset_initium = initium;
+            lexema.offset_finis = lex->positus + II;
             _progredi(lex, II);  /* Skip ${ */
             /* template_profunditas manet eodem - sumus adhuc in eadem template */
             redde lexema;
         }
         alioquin si (c == '\\')
         {
-            /* Skip escape sequence */
+            /* Processare effugium */
+            effugium = _convertere_effugium(c2);
+            si (effugium >= ZEPHYRUM)
+            {
+                buffer[buffer_len++] = (character)effugium;
+            }
+            alioquin
+            {
+                /* Effugium ignotum - includere characterem ipsum */
+                buffer[buffer_len++] = c2;
+            }
             _progredi(lex, II);
         }
         alioquin
         {
+            buffer[buffer_len++] = c;
             _progredi(lex, I);
         }
     }

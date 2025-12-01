@@ -367,16 +367,8 @@ _parsere_chordam(SputnikParser* parser)
         redde NIHIL;
     }
 
-    /* Valor includit quotas, ergo sectio interna */
-    si (lex->valor.mensura >= II)
-    {
-        nodus->valor.datum = lex->valor.datum + I;
-        nodus->valor.mensura = lex->valor.mensura - II;
-    }
-    alioquin
-    {
-        nodus->valor = lex->valor;
-    }
+    /* Lexer iam processavit effugia et removit quotas */
+    nodus->valor = lex->valor;
 
     _progredi(parser);
     redde nodus;

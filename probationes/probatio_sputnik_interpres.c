@@ -1924,6 +1924,98 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Probationes - Effugia (Escape Sequences)
+ * ================================================== */
+
+interior vacuum
+_probare_effugia(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Effugia ---\n");
+
+    /* Newline \n */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"a\\nb\";", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);  /* a + newline + b */
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '\n');
+    }
+
+    /* Tab \t */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"a\\tb\";", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '\t');
+    }
+
+    /* Backslash \\ */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"a\\\\b\";", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '\\');
+    }
+
+    /* Quote \" */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("\"a\\\"b\";", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '"');
+    }
+
+    /* Single quote \' in single-quoted string */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("'a\\'b';", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '\'');
+    }
+
+    /* Escape in template \n */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("`a\\nb`;", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '\n');
+    }
+
+    /* Dollar escape \$ in template */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("`\\$100`;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "$100"));
+    }
+
+    /* Backtick escape \` in template */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("`a\\`b`;", piscina, intern);
+        CREDO(r.successus);
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, III);
+        CREDO_AEQUALIS_I32((i32)r.valor.ut.chorda_valor.datum[I], '`');
+    }
+
+    /* Escape in template interpolation */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("sit x = \"test\"; `a\\n${x}\\nb`;", piscina, intern);
+        CREDO(r.successus);
+        /* a + newline + test + newline + b = 8 */
+        CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, VIII);
+    }
+}
+
+
+/* ==================================================
  * Probationes - Entitates (Entity System)
  * ================================================== */
 
@@ -2169,6 +2261,7 @@ integer principale(vacuum)
     _probare_methodos_callback(piscina, intern);
     _probare_methodos_chorda(piscina, intern);
     _probare_template_strings(piscina, intern);
+    _probare_effugia(piscina, intern);
     _probare_entitates(piscina, intern);
 
     imprimere("\n");
