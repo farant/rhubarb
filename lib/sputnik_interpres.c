@@ -1385,7 +1385,7 @@ _methodus_chorda_charAt(SputnikInterpres* interp, chorda str, Xar* argumenta, Sp
 {
     SputnikValor* arg;
     i32 index;
-    character* buffer;
+    chorda resultus;
 
     si (xar_numerus(argumenta) < I)
     {
@@ -1401,16 +1401,8 @@ _methodus_chorda_charAt(SputnikInterpres* interp, chorda str, Xar* argumenta, Sp
     }
 
     index = (i32)arg->ut.numerus;
-    si (index < ZEPHYRUM || index >= str.mensura)
-    {
-        /* Extra limites - redde chordam vacuam */
-        redde _valor_chorda(chorda_ex_literis("", interp->piscina));
-    }
-
-    buffer = piscina_allocare(interp->piscina, II);
-    buffer[ZEPHYRUM] = (character)str.datum[index];
-    buffer[I] = '\0';
-    redde _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+    resultus = chorda_character_ad(str, index, interp->piscina);
+    redde _valor_chorda(resultus);
 }
 
 /* indexOf(substr) - invenire primam occurrentiam */
@@ -1438,7 +1430,7 @@ _methodus_chorda_indexOf(SputnikInterpres* interp, chorda str, Xar* argumenta, S
     substr = arg->ut.chorda_valor;
 
     /* Casus specialis: substr vacua */
-    si (substr.mensura == ZEPHYRUM)
+    si (chorda_vacua(substr))
     {
         redde _valor_numerus(0.0);
     }
@@ -1607,11 +1599,9 @@ _methodus_chorda_split(SputnikInterpres* interp, chorda str, Xar* argumenta, Spu
     SputnikValor* arg;
     chorda delimiter;
     Xar* resultus;
-    i32 i, j, start;
-    b32 match;
+    chorda_fissio_fructus fissio;
+    i32 i;
     SputnikValor* elem;
-    character* buffer;
-    i32 len;
 
     si (xar_numerus(argumenta) < I)
     {
@@ -1628,6 +1618,10 @@ _methodus_chorda_split(SputnikInterpres* interp, chorda str, Xar* argumenta, Spu
 
     delimiter = arg->ut.chorda_valor;
 
+    /* Usare chorda_fissio_chorda pro divisione */
+    fissio = chorda_fissio_chorda(str, delimiter, interp->piscina);
+
+    /* Convertere ad Xar de SputnikValor */
     resultus = xar_creare(interp->piscina, magnitudo(SputnikValor));
     si (resultus == NIHIL)
     {
@@ -1635,71 +1629,16 @@ _methodus_chorda_split(SputnikInterpres* interp, chorda str, Xar* argumenta, Spu
         redde _valor_nihil();
     }
 
-    /* Casus specialis: delimiter vacua - dividere in characteres */
-    si (delimiter.mensura == ZEPHYRUM)
+    per (i = ZEPHYRUM; i < fissio.numerus; i++)
     {
-        per (i = ZEPHYRUM; i < str.mensura; i++)
+        elem = xar_addere(resultus);
+        si (elem == NIHIL)
         {
-            buffer = piscina_allocare(interp->piscina, II);
-            buffer[ZEPHYRUM] = (character)str.datum[i];
-            buffer[I] = '\0';
-
-            elem = xar_addere(resultus);
-            *elem = _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
+            _error(interp, nodus, "Memoria exhausta");
+            redde _valor_nihil();
         }
-        redde _valor_xar(resultus);
+        *elem = _valor_chorda(fissio.elementa[i]);
     }
-
-    /* Dividere per delimiter */
-    start = ZEPHYRUM;
-    i = ZEPHYRUM;
-    dum (i <= str.mensura - delimiter.mensura)
-    {
-        /* Verificare si delimiter incipit ad i */
-        match = VERUM;
-        per (j = ZEPHYRUM; j < delimiter.mensura; j++)
-        {
-            si (str.datum[i + j] != delimiter.datum[j])
-            {
-                match = FALSUM;
-                frange;
-            }
-        }
-
-        si (match)
-        {
-            /* Addere segmentum ante delimiter */
-            len = i - start;
-            buffer = piscina_allocare(interp->piscina, (memoriae_index)(len + I));
-            si (len > ZEPHYRUM)
-            {
-                memcpy(buffer, str.datum + start, (size_t)len);
-            }
-            buffer[len] = '\0';
-
-            elem = xar_addere(resultus);
-            *elem = _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
-
-            start = i + delimiter.mensura;
-            i = start;
-        }
-        alioquin
-        {
-            i++;
-        }
-    }
-
-    /* Addere ultimum segmentum */
-    len = str.mensura - start;
-    buffer = piscina_allocare(interp->piscina, (memoriae_index)(len + I));
-    si (len > ZEPHYRUM)
-    {
-        memcpy(buffer, str.datum + start, (size_t)len);
-    }
-    buffer[len] = '\0';
-
-    elem = xar_addere(resultus);
-    *elem = _valor_chorda(chorda_ex_literis(buffer, interp->piscina));
 
     redde _valor_xar(resultus);
 }

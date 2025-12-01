@@ -103,6 +103,21 @@ chorda_aedificator_appendere_f64 (
 	              f64  n,
 	              i32  decimales);
 
+/* appendere_repetita: appende characterem n vicibus
+ * Utile ad padding vel indentationem */
+b32
+chorda_aedificator_appendere_repetita (
+	ChordaAedificator* aedificator,
+	        character  c,
+	              i32  numerus);
+
+/* appendere_hex_i32: appende integrum ut hexadecimale (minusculae, sine 0x)
+ * Utile ad debugging vel IDs */
+b32
+chorda_aedificator_appendere_hex_i32 (
+	ChordaAedificator* aedificator,
+	              i32  n);
+
 
 /* ==================================================
  * Appendere - Evasus (Specificus Formati)

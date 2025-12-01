@@ -66,6 +66,28 @@ chorda_fissio (
 		character delim,
 		Piscina* piscina);
 
+/* chorda_fissio_chorda - Dividere chordam per delimitatorem chorda
+ * Similis chorda_fissio sed delimitator est chorda, non character
+ */
+chorda_fissio_fructus
+chorda_fissio_chorda (
+		chorda   s,
+		chorda   delim,
+		Piscina* piscina);
+
+/* chorda_iungere - Iungere array chordarum cum separatore
+ * elementa: array chordarum
+ * numerus: numerus elementorum in array
+ * separator: chorda inter elementa (potest esse vacua)
+ * Redde: Nova chorda iuncta (allocata ex piscina)
+ */
+chorda
+chorda_iungere (
+		chorda*  elementa,
+		    i32  numerus,
+		 chorda  separator,
+		Piscina* piscina);
+
 
 /* ==================================================
  * Comparatio
@@ -224,6 +246,45 @@ b32
 chorda_ut_i32 (
 		chorda  s,
 			 i32* fructus);
+
+b32
+chorda_ut_f64 (
+		chorda  s,
+		   f64* fructus);
+
+/* chorda_ex_s32 - Convertere integrum signatum ad chordam
+ * Redde: Nova chorda (allocata ex piscina)
+ */
+chorda
+chorda_ex_s32 (
+		   s32  numerus,
+		Piscina* piscina);
+
+/* chorda_ex_f64 - Convertere numerum puncta fluitantia ad chordam
+ * praecisio: numerus locorum decimalium
+ * Redde: Nova chorda (allocata ex piscina)
+ */
+chorda
+chorda_ex_f64 (
+		   f64  numerus,
+		   i32  praecisio,
+		Piscina* piscina);
+
+/* chorda_character_ad - Extrahere singularem characterem ut chordam
+ * Redde: Chorda longitudinis 1, vel vacua si index extra limites
+ */
+chorda
+chorda_character_ad (
+		chorda   s,
+		   i32   index,
+		Piscina* piscina);
+
+/* chorda_vacua - Verificare si chorda vacua est
+ * Redde: VERUM si datum == NIHIL vel mensura == 0
+ */
+b32
+chorda_vacua (
+		chorda s);
 
 
 /* ==================================================

@@ -763,6 +763,89 @@ s32 principale (vacuum)
 
 
 	/* ==================================================
+	 * Probare appendere_repetita
+	 * ================================================== */
+
+	{
+		ChordaAedificator* aedificator;
+		            chorda result, speratus;
+
+		imprimere("\n--- Probans appendere_repetita ---\n");
+
+		/* Repetitio simplex */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_repetita(aedificator, 'x', V));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("xxxxx", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+
+		/* Repetitio zero */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_repetita(aedificator, 'x', ZEPHYRUM));
+		result = chorda_aedificator_finire(aedificator);
+		CREDO_AEQUALIS_I32(result.mensura, ZEPHYRUM);
+
+		/* Repetitio cum aliis characteribus */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "hello"));
+		CREDO_VERUM(chorda_aedificator_appendere_repetita(aedificator, ' ', III));
+		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "world"));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("hello   world", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+
+		/* Indentatio */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_repetita(aedificator, ' ', IV));
+		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "indented"));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("    indented", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+	}
+
+
+	/* ==================================================
+	 * Probare appendere_hex_i32
+	 * ================================================== */
+
+	{
+		ChordaAedificator* aedificator;
+		            chorda result, speratus;
+
+		imprimere("\n--- Probans appendere_hex_i32 ---\n");
+
+		/* Numerus simplex */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_hex_i32(aedificator, XV));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("f", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+
+		/* Numerus maior */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_hex_i32(aedificator, CCLV));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("ff", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+
+		/* Zero */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_hex_i32(aedificator, ZEPHYRUM));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("0", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+
+		/* Cum prefixo */
+		aedificator = chorda_aedificator_creare(piscina, CXXVIII);
+		CREDO_VERUM(chorda_aedificator_appendere_literis(aedificator, "0x"));
+		CREDO_VERUM(chorda_aedificator_appendere_hex_i32(aedificator, XLIX));
+		result = chorda_aedificator_finire(aedificator);
+		speratus = chorda_ex_literis("0x31", piscina);
+		CREDO_CHORDA_AEQUALIS(result, speratus);
+	}
+
+
+	/* ==================================================
 	 * Compendium
 	 * ================================================== */
 

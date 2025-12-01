@@ -376,8 +376,8 @@ chorda_aedificator_appendere_i32(
 
 b32
 chorda_aedificator_appendere_f64(
-    ChordaAedificator* aedificator, 
-                  f64  n, 
+    ChordaAedificator* aedificator,
+                  f64  n,
                   i32  decimales)
 {
 	            i8 buffer[CXXXII];
@@ -391,6 +391,50 @@ chorda_aedificator_appendere_f64(
 		redde FALSUM;
 
 	redde _appendere_interna(aedificator, buffer, mensura);
+}
+
+b32
+chorda_aedificator_appendere_repetita(
+    ChordaAedificator* aedificator,
+             character  c,
+                   i32  numerus)
+{
+	i32 i;
+
+	si (!aedificator || numerus < ZEPHYRUM)
+		redde FALSUM;
+
+	si (numerus == ZEPHYRUM)
+		redde VERUM;
+
+	per (i = ZEPHYRUM; i < numerus; i++)
+	{
+		si (!chorda_aedificator_appendere_character(aedificator, c))
+			redde FALSUM;
+	}
+
+	redde VERUM;
+}
+
+b32
+chorda_aedificator_appendere_hex_i32(
+    ChordaAedificator* aedificator,
+                  i32  n)
+{
+	         character buffer[XVI];
+	               s32 mensura_signed;
+	    memoriae_index mensura;
+
+	si (!aedificator)
+		redde FALSUM;
+
+	mensura_signed = snprintf(buffer, magnitudo(buffer), "%x", n);
+	si (mensura_signed < ZEPHYRUM)
+		redde FALSUM;
+
+	mensura = (memoriae_index)mensura_signed;
+
+	redde _appendere_interna(aedificator, (i8*)buffer, mensura);
 }
 
 
