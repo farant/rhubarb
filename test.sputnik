@@ -308,6 +308,61 @@ sit processus = "  HELLO WORLD  ".toLowerCase().substring(2, 7);
 print(`"  HELLO WORLD  ".toLowerCase().substring(2, 7): "${processus}"`);
 
 // ==================================================
+// Pecunia (Currency)
+// ==================================================
+print("");
+print("--- Pecunia ---");
+
+sit pretium = 9.99$;
+sit quantitas = 3;
+print(`pretium: ${pretium}`);
+print(`quantitas: ${quantitas}`);
+print(`pretium * quantitas = ${pretium * quantitas}`);
+
+// Arithmetica pecuniae
+sit a_pecunia = 10$;
+sit b_pecunia = 3.50$;
+print(`${a_pecunia} + ${b_pecunia} = ${a_pecunia + b_pecunia}`);
+print(`${a_pecunia} - ${b_pecunia} = ${a_pecunia - b_pecunia}`);
+print(`${a_pecunia} / 4 = ${a_pecunia / 4}`);
+print(`5 * ${b_pecunia} = ${5 * b_pecunia}`);
+
+// Comparatio pecuniae
+print(`5$ < 10$: ${5$ < 10$}`);
+print(`10$ > 5$: ${10$ > 5$}`);
+print(`5$ == 5$: ${5$ == 5$}`);
+print(`9.99$ != 10$: ${9.99$ != 10$}`);
+
+// Typeof pecunia
+print(`typeof(9.99$): ${typeof(9.99$)}`);
+
+// Summa in loop
+sit summa = 0$;
+sit pretia = [10$, 20$, 5.50$, 3.25$];
+print(`pretia: ${pretia}`);
+pretia.forEach(p => {
+    summa = summa + p;
+});
+print(`summa: ${summa}`);
+
+// Exemplum: Invoice
+print("");
+print("--- Exemplum: Invoice ---");
+sit items = [
+    { nomen: "Liber", pretium: 15.99$, quantitas: 2 },
+    { nomen: "Stilus", pretium: 2.50$, quantitas: 5 },
+    { nomen: "Charta", pretium: 8.00$, quantitas: 1 }
+];
+
+sit totalis = 0$;
+items.forEach(item => {
+    sit linea_totalis = item.pretium * item.quantitas;
+    print(`  ${item.nomen}: ${item.pretium} x ${item.quantitas} = ${linea_totalis}`);
+    totalis = totalis + linea_totalis;
+});
+print(`Totalis: ${totalis}`);
+
+// ==================================================
 // Built-in Functions
 // ==================================================
 print("");
