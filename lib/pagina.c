@@ -34,6 +34,10 @@ pagina_initiare_cum_dimensionibus(
     /* Initiare tabula characterum cum dimensionibus */
     tabula_initiare(&pagina->tabula, piscina, latitudo, altitudo);
 
+    /* Creare coloratio pro syntax highlighting */
+    pagina->coloratio = coloratio_creare(piscina, latitudo, altitudo);
+    coloratio_ponere_regulas(pagina->coloratio, COLORATIO_REGULA_COMMANDA);
+
     /* Initiare vim status */
     pagina->vim = vim_initiare(&pagina->tabula);
 
@@ -119,12 +123,20 @@ pagina_reddere(
     character_latitudo = VI * scala;
     character_altitudo = VIII * scala;
 
+    /* Recomputare coloratio ante reddere */
+    si (pagina->coloratio)
+    {
+        coloratio_computare(pagina->coloratio, &pagina->tabula);
+    }
+
     /* Pingere characteres ex tabula */
     per (linea = ZEPHYRUM; linea < altitudo && linea < pagina->tabula.altitudo; linea++)
     {
         per (columna = ZEPHYRUM; columna < latitudo && columna < pagina->tabula.latitudo; columna++)
         {
             character c;
+            i8 color_index;
+            Color text_color;
 
             c = tabula_cellula(&pagina->tabula, linea, columna);
 
@@ -145,12 +157,18 @@ pagina_reddere(
             pixel_x = (x + columna) * character_latitudo;
             pixel_y = (y + linea) * character_altitudo;
 
+            /* Obtinere colorem ex coloratio */
+            color_index = pagina->coloratio ?
+                coloratio_obtinere(pagina->coloratio, linea, columna) :
+                COLORATIO_DEFALTA;
+            text_color = thema_color_ex_indice_colorationis(color_index);
+
             tabula_pixelorum_pingere_characterem(
                 tabula_pixelorum,
                 pixel_x,
                 pixel_y,
                 c,
-                color_ad_pixelum(thema_color(COLOR_TEXT)));
+                color_ad_pixelum(text_color));
         }
     }
 

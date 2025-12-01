@@ -1,6 +1,7 @@
 #include "layout.h"
 #include "stml.h"
 #include "registrum_commandi.h"
+#include "coloratio.h"
 #include "xar.h"
 #include "entitas.h"
 #include <string.h>
@@ -948,8 +949,31 @@ layout_ponere_reg_commandi(
     LayoutDom*         dom,
     RegistrumCommandi* reg_commandi)
 {
-    si (dom)
+    TabulaIterator iter;
+    chorda clavis;
+    vacuum* valor;
+    LayoutWidgetIntroitus* introitus;
+    Pagina* pagina;
+
+    si (!dom)
     {
-        dom->reg_commandi = reg_commandi;
+        redde;
+    }
+
+    dom->reg_commandi = reg_commandi;
+
+    /* Iterare per omnes widgets et ponere registrum in Pagina coloratios */
+    iter = tabula_dispersa_iterator_initium(dom->widgets);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        introitus = (LayoutWidgetIntroitus*)valor;
+        si (introitus && introitus->genus == LAYOUT_WIDGET_PAGINA)
+        {
+            pagina = (Pagina*)introitus->datum;
+            si (pagina && pagina->coloratio)
+            {
+                coloratio_ponere_registrum(pagina->coloratio, reg_commandi);
+            }
+        }
     }
 }

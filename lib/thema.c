@@ -103,6 +103,51 @@ thema_palette_index(ColorThema color)
     redde mappa_semantica[color];
 }
 
+Color
+thema_color_ex_indice_colorationis(i8 index)
+{
+    /* Mappa ColoratioIndex ad indices palette
+     *
+     * COLORATIO_DEFALTA     = 0  -> COLOR_TEXT
+     * COLORATIO_COMMANDUM   = 1  -> PALETTE_BRIGHT_CYAN
+     * COLORATIO_TAGUM       = 2  -> PALETTE_BRIGHT_GOLD
+     * COLORATIO_CLAVIS      = 3  -> PALETTE_MEDIUM_RED
+     * COLORATIO_CHORDA      = 4  -> PALETTE_DARK_GOLD
+     * COLORATIO_NUMERUS     = 5  -> PALETTE_MEDIUM_GOLD
+     * COLORATIO_COMMENTUM   = 6  -> PALETTE_MEDIUM_GRAY
+     * COLORATIO_OPERANS     = 7  -> PALETTE_LIGHT_GRAY
+     * COLORATIO_PROPRIETAS  = 8  -> PALETTE_MEDIUM_CYAN
+     * COLORATIO_ATTRIBUTUM  = 9  -> PALETTE_DARK_CYAN
+     * COLORATIO_VALOR_ATTR  = 10 -> PALETTE_DARK_GOLD
+     */
+
+    commutatio (index)
+    {
+        casus I:   /* COLORATIO_COMMANDUM */
+            redde color_ex_palette(PALETTE_BRIGHT_CYAN);
+        casus II:  /* COLORATIO_TAGUM */
+            redde color_ex_palette(PALETTE_BRIGHT_GOLD);
+        casus III: /* COLORATIO_CLAVIS */
+            redde color_ex_palette(PALETTE_MEDIUM_RED);
+        casus IV:  /* COLORATIO_CHORDA */
+            redde color_ex_palette(PALETTE_DARK_GOLD);
+        casus V:   /* COLORATIO_NUMERUS */
+            redde color_ex_palette(PALETTE_MEDIUM_GOLD);
+        casus VI:  /* COLORATIO_COMMENTUM */
+            redde color_ex_palette(PALETTE_MEDIUM_GRAY);
+        casus VII: /* COLORATIO_OPERANS */
+            redde color_ex_palette(PALETTE_LIGHT_GRAY);
+        casus VIII: /* COLORATIO_PROPRIETAS */
+            redde color_ex_palette(PALETTE_MEDIUM_CYAN);
+        casus IX:  /* COLORATIO_ATTRIBUTUM */
+            redde color_ex_palette(PALETTE_DARK_CYAN);
+        casus X:   /* COLORATIO_VALOR_ATTR */
+            redde color_ex_palette(PALETTE_DARK_GOLD);
+        ordinarius: /* COLORATIO_DEFALTA vel ignotus */
+            redde thema_color(COLOR_TEXT);
+    }
+}
+
 
 /* ==================================================
  * Ponere Colores

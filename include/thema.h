@@ -115,6 +115,17 @@ thema_color(ColorThema color);
 i32
 thema_palette_index(ColorThema color);
 
+/* Obtinere colorem ex indice colorationis (syntax highlighting)
+ *
+ * Maps ColoratioIndex values (from coloratio.h) to actual colors.
+ *
+ * index: ColoratioIndex value (0 = default, 1 = command, 2 = tag, etc.)
+ *
+ * Reddit: Color structura
+ */
+Color
+thema_color_ex_indice_colorationis(i8 index);
+
 
 /* ==================================================
  * Ponere Colores

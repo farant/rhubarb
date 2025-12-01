@@ -7,6 +7,7 @@
 #include "fenestra.h"
 #include "tabula_characterum.h"
 #include "vim.h"
+#include "coloratio.h"
 
 /* ==================================================
  * PAGINA - Editor Textus 2D Grid
@@ -38,6 +39,9 @@
 nomen structura {
     /* 2D character grid */
     TabulaCharacterum tabula;
+
+    /* Syntax highlighting (owned by Pagina) */
+    Coloratio* coloratio;
 
     /* Vim status (cursor, modo, etc.) */
     VimStatus vim;
