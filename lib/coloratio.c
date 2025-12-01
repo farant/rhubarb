@@ -302,30 +302,84 @@ _colorare_sputnik(
         /* Template strings: ` */
         si (c == '`')
         {
-            initium = col;
+            /* Colorare backtick initium */
+            coloratio_index(coloratio, linea, col) = COLORATIO_CHORDA;
             col++;
 
             dum (col < tabula->latitudo)
             {
                 c = tabula_cellula(tabula, linea, col);
                 si (c == '\0') frange;
+
+                /* Escape sequences */
                 si (c == '\\' && col + I < tabula->latitudo)
                 {
-                    col += II;
+                    coloratio_index(coloratio, linea, col) = COLORATIO_CHORDA;
+                    col++;
+                    coloratio_index(coloratio, linea, col) = COLORATIO_CHORDA;
+                    col++;
                     perge;
                 }
+
+                /* String interpolation: ${ ... } */
+                si (c == '$' && col + I < tabula->latitudo &&
+                    tabula_cellula(tabula, linea, col + I) == '{')
+                {
+                    i32 brace_depth;
+
+                    /* Colorare ${ ut operans */
+                    coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                    col++;
+                    coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                    col++;
+
+                    /* Scandere expressionem, colorare ut defalta */
+                    brace_depth = I;
+                    dum (col < tabula->latitudo && brace_depth > ZEPHYRUM)
+                    {
+                        c = tabula_cellula(tabula, linea, col);
+                        si (c == '\0') frange;
+
+                        si (c == '{')
+                        {
+                            brace_depth++;
+                            coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                            col++;
+                        }
+                        alioquin si (c == '}')
+                        {
+                            brace_depth--;
+                            si (brace_depth == ZEPHYRUM)
+                            {
+                                /* Closing } of interpolation */
+                                coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                                col++;
+                                frange;
+                            }
+                            coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
+                            col++;
+                        }
+                        alioquin
+                        {
+                            /* Default color for expression content */
+                            coloratio_index(coloratio, linea, col) = COLORATIO_DEFALTA;
+                            col++;
+                        }
+                    }
+                    perge;
+                }
+
+                /* Closing backtick */
                 si (c == '`')
                 {
+                    coloratio_index(coloratio, linea, col) = COLORATIO_CHORDA;
                     col++;
                     frange;
                 }
-                col++;
-            }
 
-            finis = col;
-            per (i = initium; i < finis; i++)
-            {
-                coloratio_index(coloratio, linea, i) = COLORATIO_CHORDA;
+                /* Normal string content */
+                coloratio_index(coloratio, linea, col) = COLORATIO_CHORDA;
+                col++;
             }
             perge;
         }
