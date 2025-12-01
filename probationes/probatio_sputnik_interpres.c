@@ -1725,6 +1725,205 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
 
 
 /* ==================================================
+ * Probationes - Template Strings
+ * ================================================== */
+
+interior vacuum
+_probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
+{
+    imprimere("\n--- Probatio Template Strings ---\n");
+
+    /* Template simplex sine interpolatione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("`Salve mundus!`;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Salve mundus!"));
+    }
+
+    /* Template vacuum */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare("``;", piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(r.valor.ut.chorda_valor.mensura == ZEPHYRUM);
+    }
+
+    /* Interpolatio simplex cum variabili */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit nomen = \"Marcus\";"
+            "`Salve ${nomen}!`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Salve Marcus!"));
+    }
+
+    /* Interpolatio cum numero */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 42;"
+            "`Numerus: ${x}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Numerus: 42"));
+    }
+
+    /* Interpolatio multiplex */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit a = 1;"
+            "sit b = 2;"
+            "`${a} + ${b} = ${a + b}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "1 + 2 = 3"));
+    }
+
+    /* Expressio in interpolatione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 5;"
+            "`Duplum: ${x * 2}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Duplum: 10"));
+    }
+
+    /* Vocatio functionis in interpolatione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit arr = [1, 2, 3];"
+            "`Longitudo: ${len(arr)}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Longitudo: 3"));
+    }
+
+    /* Interpolatio ad initium (vacuum ante) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit v = \"test\";"
+            "`${v}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "test"));
+    }
+
+    /* Interpolatio cum concatenatione chordae */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit prae = \"Salve\";"
+            "sit post = \"mundus\";"
+            "`${prae} ${post}!`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Salve mundus!"));
+    }
+
+    /* Interpolatio cum ternaria */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit x = 10;"
+            "`x est ${x > 5 ? \"magnus\" : \"parvus\"}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "x est magnus"));
+    }
+
+    /* Template in variabili */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit nomen = \"Iulius\";"
+            "sit salutatio = `Ave ${nomen}!`;"
+            "salutatio;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Ave Iulius!"));
+    }
+
+    /* Nested template (template in template) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit a = \"X\";"
+            "sit b = \"Y\";"
+            "`outer ${`inner ${a}`} ${b}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "outer inner X Y"));
+    }
+
+    /* Objectum literalis in interpolatione (bracchium profunditas) */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "`typus: ${typeof({a: 1})}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "typus: object"));
+    }
+
+    /* Objectum complexum in interpolatione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit obj = {x: 10, y: 20};"
+            "`x=${obj.x}, y=${obj.y}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "x=10, y=20"));
+    }
+
+    /* Array literalis in interpolatione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "`len: ${len([1, 2, 3])}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "len: 3"));
+    }
+
+    /* Bracchia multiplicata in interpolatione */
+    {
+        SputnikInterpresResultus r;
+        r = sputnik_evaluare(
+            "sit f = x => { redde x * 2; };"
+            "`result: ${f(5)}`;",
+            piscina, intern);
+        CREDO(r.successus);
+        CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "result: 10"));
+    }
+}
+
+
+/* ==================================================
  * Probationes - Entitates (Entity System)
  * ================================================== */
 
@@ -1969,6 +2168,7 @@ integer principale(vacuum)
     _probare_methodos_xar(piscina, intern);
     _probare_methodos_callback(piscina, intern);
     _probare_methodos_chorda(piscina, intern);
+    _probare_template_strings(piscina, intern);
     _probare_entitates(piscina, intern);
 
     imprimere("\n");

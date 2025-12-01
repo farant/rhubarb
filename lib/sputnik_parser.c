@@ -462,6 +462,165 @@ _parsere_signum(SputnikParser* parser)
     redde nodus;
 }
 
+
+/* ==================================================
+ * Parsere Template String
+ *
+ * Template strings cum interpolatione: `Salve ${nomen}!`
+ * Convertit ad concatenationem chordarum: "Salve " + nomen + "!"
+ * ================================================== */
+
+interior SputnikAstNodus*
+_parsere_template(SputnikParser* parser)
+{
+    SputnikAstNodus* resultus;
+    SputnikAstNodus* textus_nodus;
+    SputnikAstNodus* expr_nodus;
+    SputnikAstNodus* concat_nodus;
+    SputnikLexema* lex;
+
+    lex = _currens(parser);
+    si (lex == NIHIL)
+    {
+        _error(parser, "Expectabatur template");
+        redde NIHIL;
+    }
+
+    /* Casus simplex: `texto` sine interpolatione */
+    si (lex->genus == SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX)
+    {
+        textus_nodus = _creare_nodum(parser, SPUTNIK_AST_CHORDA_LITERALIS);
+        si (textus_nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        textus_nodus->valor = lex->valor;
+        _progredi(parser);
+        redde textus_nodus;
+    }
+
+    /* Template cum interpolatione: `texto ${expr} ...` */
+    si (lex->genus != SPUTNIK_LEXEMA_TEMPLATE_INITIUM)
+    {
+        _error(parser, "Expectabatur template initium");
+        redde NIHIL;
+    }
+
+    /* Creare nodum pro texto initiali (potest esse vacuum) */
+    si (lex->valor.mensura > ZEPHYRUM)
+    {
+        textus_nodus = _creare_nodum(parser, SPUTNIK_AST_CHORDA_LITERALIS);
+        si (textus_nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        textus_nodus->valor = lex->valor;
+        resultus = textus_nodus;
+    }
+    alioquin
+    {
+        resultus = NIHIL;
+    }
+
+    _progredi(parser);  /* Skip TEMPLATE_INITIUM */
+
+    /* Loop: parsere expressio, tunc MEDIUM vel FINIS */
+    dum (!parser->error_accidit)
+    {
+        /* Parsere expressionem interpolatam */
+        expr_nodus = _parsere_expressionem(parser, ZEPHYRUM);
+        si (expr_nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+
+        /* Concatenare cum resultatu */
+        si (resultus == NIHIL)
+        {
+            resultus = expr_nodus;
+        }
+        alioquin
+        {
+            concat_nodus = _creare_nodum(parser, SPUTNIK_AST_OPERATIO_BINARIA);
+            si (concat_nodus == NIHIL)
+            {
+                redde NIHIL;
+            }
+            concat_nodus->operator = SPUTNIK_LEXEMA_PLUS;
+            _addere_infantem(concat_nodus, resultus);
+            _addere_infantem(concat_nodus, expr_nodus);
+            resultus = concat_nodus;
+        }
+
+        /* Expectare MEDIUM vel FINIS */
+        lex = _currens(parser);
+        si (lex == NIHIL)
+        {
+            _error(parser, "Template non clausum");
+            redde NIHIL;
+        }
+
+        si (lex->genus == SPUTNIK_LEXEMA_TEMPLATE_FINIS)
+        {
+            /* Addere textum finalem si non vacuum */
+            si (lex->valor.mensura > ZEPHYRUM)
+            {
+                textus_nodus = _creare_nodum(parser, SPUTNIK_AST_CHORDA_LITERALIS);
+                si (textus_nodus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                textus_nodus->valor = lex->valor;
+
+                concat_nodus = _creare_nodum(parser, SPUTNIK_AST_OPERATIO_BINARIA);
+                si (concat_nodus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                concat_nodus->operator = SPUTNIK_LEXEMA_PLUS;
+                _addere_infantem(concat_nodus, resultus);
+                _addere_infantem(concat_nodus, textus_nodus);
+                resultus = concat_nodus;
+            }
+            _progredi(parser);  /* Skip TEMPLATE_FINIS */
+            frange;
+        }
+        alioquin si (lex->genus == SPUTNIK_LEXEMA_TEMPLATE_MEDIUM)
+        {
+            /* Addere textum medium si non vacuum */
+            si (lex->valor.mensura > ZEPHYRUM)
+            {
+                textus_nodus = _creare_nodum(parser, SPUTNIK_AST_CHORDA_LITERALIS);
+                si (textus_nodus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                textus_nodus->valor = lex->valor;
+
+                concat_nodus = _creare_nodum(parser, SPUTNIK_AST_OPERATIO_BINARIA);
+                si (concat_nodus == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                concat_nodus->operator = SPUTNIK_LEXEMA_PLUS;
+                _addere_infantem(concat_nodus, resultus);
+                _addere_infantem(concat_nodus, textus_nodus);
+                resultus = concat_nodus;
+            }
+            _progredi(parser);  /* Skip TEMPLATE_MEDIUM */
+            /* Perge ad proximam expressionem */
+        }
+        alioquin
+        {
+            _error(parser, "Expectabatur template medium vel finis");
+            redde NIHIL;
+        }
+    }
+
+    redde resultus;
+}
+
+
 interior SputnikAstNodus*
 _parsere_parenthesin(SputnikParser* parser)
 {
@@ -1144,6 +1303,10 @@ _parsere_expressionem(SputnikParser* parser, i32 praecedentia)
             frange;
         casus SPUTNIK_LEXEMA_SIGNUM:
             sinister = _parsere_signum(parser);
+            frange;
+        casus SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX:
+        casus SPUTNIK_LEXEMA_TEMPLATE_INITIUM:
+            sinister = _parsere_template(parser);
             frange;
         casus SPUTNIK_LEXEMA_PARENTHESIS_A:
             /* Verificare si arrow function: (x, y) => ... */

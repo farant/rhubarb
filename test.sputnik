@@ -1,51 +1,362 @@
-// Probatio Sputnik
-// Test file for the Sputnik interpreter
+// Probatio Sputnik Comprehensiva
+// Demonstratio omnium featurae linguae
 
-print("=== Sputnik Test ===");
+print("=== Sputnik Probatio ===");
+print("");
 
-// Variables
-sit x = 10;
-sit y = 20;
-print("x + y = " + (x + y));
+// ==================================================
+// Literalia et Variabiles
+// ==================================================
+print("--- Literalia et Variabiles ---");
 
-// Objects
-sit obj = {
-    titulus: "Test Object",
-    numerus: 42
-};
-print("Object titulus: " + obj.titulus);
+sit numerus = 42;
+sit decimalis = 3.14159;
+sit chorda = "Salve Mundus";
+sit veritatis = verum;
+sit falsitatis = falsum;
+sit nihilum = nihil;
 
-// Arrays
-sit arr = [1, 2, 3, 4, 5];
-print("Array length: " + len(arr));
+print(`numerus: ${numerus}`);
+print(`decimalis: ${decimalis}`);
+print(`chorda: ${chorda}`);
+print(`veritatis: ${veritatis}`);
+print(`falsitatis: ${falsitatis}`);
 
-// Loop with break
-sit sum = 0;
+// Constans
+constans PI = 3.14159;
+print(`PI (constans): ${PI}`);
+
+// ==================================================
+// Template Strings (Nova Feature!)
+// ==================================================
+print("");
+print("--- Template Strings ---");
+
+sit nomen = "Marcus";
+sit aetas = 30;
+print(`Salve, ${nomen}! Tu habes ${aetas} annos.`);
+
+// Expressiones in templates
+sit a = 5;
+sit b = 3;
+print(`${a} + ${b} = ${a + b}`);
+print(`${a} * ${b} = ${a * b}`);
+
+// Nested templates
+sit interior = `(${a})`;
+print(`Exterior: ${interior}`);
+
+// ==================================================
+// Arithmetica
+// ==================================================
+print("");
+print("--- Arithmetica ---");
+
+print(`10 + 5 = ${10 + 5}`);
+print(`10 - 5 = ${10 - 5}`);
+print(`10 * 5 = ${10 * 5}`);
+print(`10 / 5 = ${10 / 5}`);
+print(`10 % 3 = ${10 % 3}`);
+
+// Operatores unarii
+sit x = 5;
+print(`-x = ${-x}`);
+print(`!verum = ${!verum}`);
+
+// ==================================================
+// Comparatio et Logica
+// ==================================================
+print("");
+print("--- Comparatio et Logica ---");
+
+print(`5 < 10: ${5 < 10}`);
+print(`5 > 10: ${5 > 10}`);
+print(`5 == 5: ${5 == 5}`);
+print(`5 != 10: ${5 != 10}`);
+print(`verum && falsum: ${verum && falsum}`);
+print(`verum || falsum: ${verum || falsum}`);
+
+// Ternaria
+sit status = 10 > 5 ? "maior" : "minor";
+print(`10 > 5 ? "maior" : "minor" = ${status}`);
+
+// ==================================================
+// Control Flow
+// ==================================================
+print("");
+print("--- Control Flow ---");
+
+// Si/Alioquin
+sit valor = 75;
+si (valor >= 90) {
+    print("Excellens!");
+} alioquin si (valor >= 70) {
+    print("Bonus!");
+} alioquin {
+    print("Melius conare!");
+}
+
+// Per loop
+print("Per loop (0-4):");
+per (sit i = 0; i < 5; i++) {
+    print(`  i = ${i}`);
+}
+
+// Dum loop
+print("Dum loop:");
+sit counter = 0;
+dum (counter < 3) {
+    print(`  counter = ${counter}`);
+    counter++;
+}
+
+// Frange et Perge
+print("Loop cum frange (exit at 3):");
 per (sit i = 0; i < 10; i++) {
-    si (i >= 5) {
+    si (i == 3) {
         frange;
     }
-    sum += i;
+    print(`  i = ${i}`);
 }
-print("Sum (0..4): " + sum);
 
-// Loop with continue
-sit odd_sum = 0;
-per (sit i = 0; i < 10; i++) {
+print("Loop cum perge (skip even):");
+per (sit i = 0; i < 5; i++) {
     si (i % 2 == 0) {
         perge;
     }
-    odd_sum += i;
+    print(`  i = ${i}`);
 }
-print("Odd sum: " + odd_sum);
 
-// Functions
+// ==================================================
+// Functiones
+// ==================================================
+print("");
+print("--- Functiones ---");
+
+// Functio simplex
+functio salutare(nomen) {
+    redde `Salve, ${nomen}!`;
+}
+print(salutare("Iulius"));
+
+// Recursio
 functio factorial(n) {
     si (n <= 1) {
         redde 1;
     }
     redde n * factorial(n - 1);
 }
-print("5! = " + factorial(5));
+print(`5! = ${factorial(5)}`);
 
-print("=== Done ===");
+functio fibonacci(n) {
+    si (n <= 1) {
+        redde n;
+    }
+    redde fibonacci(n - 1) + fibonacci(n - 2);
+}
+print(`fib(10) = ${fibonacci(10)}`);
+
+// ==================================================
+// Functiones Sagittae (Arrow Functions)
+// ==================================================
+print("");
+print("--- Functiones Sagittae ---");
+
+sit duplicare = x => x * 2;
+print(`duplicare(5) = ${duplicare(5)}`);
+
+sit addere = (a, b) => a + b;
+print(`addere(3, 4) = ${addere(3, 4)}`);
+
+sit complexa = x => {
+    sit y = x * 2;
+    redde y + 1;
+};
+print(`complexa(5) = ${complexa(5)}`);
+
+// ==================================================
+// Arrays (Xar)
+// ==================================================
+print("");
+print("--- Arrays ---");
+
+sit numeri = [1, 2, 3, 4, 5];
+print(`numeri: ${numeri}`);
+print(`len(numeri): ${len(numeri)}`);
+print(`numeri[0]: ${numeri[0]}`);
+print(`numeri[4]: ${numeri[4]}`);
+
+// Methodi mutantes
+sit lista = [10, 20, 30];
+lista.push(40);
+print(`Post push(40): ${lista}`);
+
+sit ultimum = lista.pop();
+print(`pop() = ${ultimum}, lista = ${lista}`);
+
+lista.unshift(5);
+print(`Post unshift(5): ${lista}`);
+
+sit primum = lista.shift();
+print(`shift() = ${primum}, lista = ${lista}`);
+
+// Methodi query
+sit arr = [1, 2, 3, 4, 5];
+print(`arr.indexOf(3) = ${arr.indexOf(3)}`);
+print(`arr.includes(3) = ${arr.includes(3)}`);
+print(`arr.includes(99) = ${arr.includes(99)}`);
+
+// Methodi non-mutantes
+print(`arr.slice(1, 3) = ${arr.slice(1, 3)}`);
+print(`arr.join("-") = ${arr.join("-")}`);
+print(`arr.concat([6, 7]) = ${arr.concat([6, 7])}`);
+
+// ==================================================
+// Array Callbacks (Higher-Order)
+// ==================================================
+print("");
+print("--- Array Callbacks ---");
+
+sit numeros = [1, 2, 3, 4, 5];
+
+// Map
+sit duplicati = numeros.map(x => x * 2);
+print(`map(x => x * 2): ${duplicati}`);
+
+// Filter
+sit pares = numeros.filter(x => x % 2 == 0);
+print(`filter(x => x % 2 == 0): ${pares}`);
+
+// Find
+sit inventus = numeros.find(x => x > 3);
+print(`find(x => x > 3): ${inventus}`);
+
+// ForEach
+print("forEach:");
+numeros.forEach(x => print(`  -> ${x}`));
+
+// Chaining
+sit resultus = [1, 2, 3, 4, 5, 6]
+    .filter(x => x % 2 == 0)
+    .map(x => x * 10);
+print(`filter(even).map(*10): ${resultus}`);
+
+// ==================================================
+// Objecta
+// ==================================================
+print("");
+print("--- Objecta ---");
+
+sit persona = {
+    nomen: "Gaius",
+    aetas: 25,
+    urbs: "Roma"
+};
+
+print(`persona.nomen: ${persona.nomen}`);
+print(`persona["aetas"]: ${persona["aetas"]}`);
+
+// Modificatio
+persona.aetas = 26;
+persona.professio = "Senator";
+print(`Post modificatio: nomen=${persona.nomen}, aetas=${persona.aetas}, professio=${persona.professio}`);
+
+// Objectum cum methodis (via arrow functions)
+sit calculator = {
+    valor: 0,
+    addere: nihil,
+    obtinere: nihil
+};
+// Nota: methodae non sunt adhuc plene supportatae
+
+// ==================================================
+// String Methods
+// ==================================================
+print("");
+print("--- String Methods ---");
+
+sit textus = "Salve Mundus";
+print(`textus: "${textus}"`);
+print(`textus.length(): ${textus.length()}`);
+print(`textus.charAt(0): ${textus.charAt(0)}`);
+print(`textus.indexOf("Mundus"): ${textus.indexOf("Mundus")}`);
+print(`textus.includes("Mundus"): ${textus.includes("Mundus")}`);
+print(`textus.substring(0, 5): ${textus.substring(0, 5)}`);
+print(`textus.toUpperCase(): ${textus.toUpperCase()}`);
+print(`textus.toLowerCase(): ${textus.toLowerCase()}`);
+
+sit partes = "a,b,c".split(",");
+print(`"a,b,c".split(","): ${partes}`);
+
+// Method chaining
+sit processus = "  HELLO WORLD  ".toLowerCase().substring(2, 7);
+print(`"  HELLO WORLD  ".toLowerCase().substring(2, 7): "${processus}"`);
+
+// ==================================================
+// Built-in Functions
+// ==================================================
+print("");
+print("--- Built-ins ---");
+
+print(`len("hello"): ${len("hello")}`);
+print(`len([1,2,3]): ${len([1, 2, 3])}`);
+print(`typeof(42): ${typeof(42)}`);
+print(`typeof("hello"): ${typeof("hello")}`);
+print(`typeof([1,2]): ${typeof([1, 2])}`);
+print(`typeof({a: 1}): ${typeof({a: 1})}`);
+print(`typeof(x => x): ${typeof(x => x)}`);
+
+// ==================================================
+// Exemplum Complexum: FizzBuzz
+// ==================================================
+print("");
+print("--- FizzBuzz (1-15) ---");
+
+per (sit i = 1; i <= 15; i++) {
+    si (i % 15 == 0) {
+        print(`${i}: FizzBuzz`);
+    } alioquin si (i % 3 == 0) {
+        print(`${i}: Fizz`);
+    } alioquin si (i % 5 == 0) {
+        print(`${i}: Buzz`);
+    } alioquin {
+        print(`${i}: ${i}`);
+    }
+}
+
+// ==================================================
+// Exemplum Complexum: QuickSort
+// ==================================================
+print("");
+print("--- QuickSort ---");
+
+functio quicksort(arr) {
+    si (len(arr) <= 1) {
+        redde arr;
+    }
+
+    sit pivot = arr[0];
+    sit minores = [];
+    sit maiores = [];
+
+    per (sit i = 1; i < len(arr); i++) {
+        si (arr[i] < pivot) {
+            minores.push(arr[i]);
+        } alioquin {
+            maiores.push(arr[i]);
+        }
+    }
+
+    redde quicksort(minores).concat([pivot]).concat(quicksort(maiores));
+}
+
+sit unsorted = [64, 34, 25, 12, 22, 11, 90];
+print(`Ante: ${unsorted}`);
+sit sorted = quicksort(unsorted);
+print(`Post: ${sorted}`);
+
+// ==================================================
+// Finis
+// ==================================================
+print("");
+print("=== Probatio Completa ===");

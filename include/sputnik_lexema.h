@@ -121,7 +121,13 @@ nomen enumeratio {
 
     /* Verba Clausa pro Entitas */
     SPUTNIK_LEXEMA_ENTITAS         = LVII,      /* entitas */
-    SPUTNIK_LEXEMA_COLON_DUO       = LVIII      /* :: (namespace separator) */
+    SPUTNIK_LEXEMA_COLON_DUO       = LVIII,     /* :: (namespace separator) */
+
+    /* Template Strings */
+    SPUTNIK_LEXEMA_TEMPLATE_INITIUM  = LIX,     /* ` ... ${ */
+    SPUTNIK_LEXEMA_TEMPLATE_MEDIUM   = LX,      /* } ... ${ */
+    SPUTNIK_LEXEMA_TEMPLATE_FINIS    = LXI,     /* } ... ` */
+    SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX  = LXII     /* ` ... ` (sine interpolatione) */
 } SputnikLexemaGenus;
 
 
@@ -150,6 +156,8 @@ nomen structura {
     i32                  columna;
     Piscina*             piscina;
     InternamentumChorda* intern;
+    i32                  template_profunditas;  /* Profunditas interpolationis template */
+    i32                  bracchium_profunditas; /* Profunditas { } intra interpolationem */
 } SputnikLexator;
 
 

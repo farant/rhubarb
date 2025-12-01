@@ -403,6 +403,132 @@ _legere_chordam(SputnikLexator* lex)
 
 
 /* ==================================================
+ * Legere Template String
+ * ================================================== */
+
+interior SputnikLexema
+_legere_template(SputnikLexator* lex)
+{
+    SputnikLexema lexema;
+    i32 initium;
+    i32 linea;
+    i32 columna;
+    i32 contentum_initium;
+    character c;
+    character c2;
+
+    initium = lex->positus;
+    linea = lex->linea;
+    columna = lex->columna;
+
+    /* Skip ` aperiens */
+    _progredi(lex, I);
+    contentum_initium = lex->positus;
+
+    /* Legere usque ad ` claudens vel ${ */
+    dum (!_finis(lex))
+    {
+        c = _aspicere(lex, ZEPHYRUM);
+        c2 = _aspicere(lex, I);
+
+        si (c == '`')
+        {
+            /* Template simplex sine interpolatione */
+            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX,
+                                    contentum_initium, lex->positus, linea, columna);
+            _progredi(lex, I);  /* Skip ` claudens */
+            redde lexema;
+        }
+        alioquin si (c == '$' && c2 == '{')
+        {
+            /* Initium interpolationis */
+            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_INITIUM,
+                                    contentum_initium, lex->positus, linea, columna);
+            _progredi(lex, II);  /* Skip ${ */
+            lex->template_profunditas++;
+            redde lexema;
+        }
+        alioquin si (c == '\\')
+        {
+            /* Skip escape sequence */
+            _progredi(lex, II);
+        }
+        alioquin
+        {
+            _progredi(lex, I);
+        }
+    }
+
+    /* Error: template non clausum */
+    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                            initium, lex->positus, linea, columna);
+    redde lexema;
+}
+
+
+/* Legere continuationem template post } */
+interior SputnikLexema
+_legere_template_continuatio(SputnikLexator* lex)
+{
+    SputnikLexema lexema;
+    i32 initium;
+    i32 linea;
+    i32 columna;
+    i32 contentum_initium;
+    character c;
+    character c2;
+
+    initium = lex->positus;
+    linea = lex->linea;
+    columna = lex->columna;
+
+    /* Skip } claudens interpolationem */
+    _progredi(lex, I);
+    contentum_initium = lex->positus;
+
+    /* Legere usque ad ` claudens vel ${ */
+    dum (!_finis(lex))
+    {
+        c = _aspicere(lex, ZEPHYRUM);
+        c2 = _aspicere(lex, I);
+
+        si (c == '`')
+        {
+            /* Finis template */
+            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_FINIS,
+                                    contentum_initium, lex->positus, linea, columna);
+            _progredi(lex, I);  /* Skip ` claudens */
+            lex->template_profunditas--;
+            redde lexema;
+        }
+        alioquin si (c == '$' && c2 == '{')
+        {
+            /* Medium - alia interpolatio sequitur */
+            lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_TEMPLATE_MEDIUM,
+                                    contentum_initium, lex->positus, linea, columna);
+            _progredi(lex, II);  /* Skip ${ */
+            /* template_profunditas manet eodem - sumus adhuc in eadem template */
+            redde lexema;
+        }
+        alioquin si (c == '\\')
+        {
+            /* Skip escape sequence */
+            _progredi(lex, II);
+        }
+        alioquin
+        {
+            _progredi(lex, I);
+        }
+    }
+
+    /* Error: template non clausum */
+    lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
+                            initium, lex->positus, linea, columna);
+    redde lexema;
+}
+
+
+/* ==================================================
  * Legere Signum (Tag)
  * ================================================== */
 
@@ -574,6 +700,8 @@ sputnik_lexator_creare(
     lex->columna = I;
     lex->piscina = piscina;
     lex->intern = intern;
+    lex->template_profunditas = ZEPHYRUM;
+    lex->bracchium_profunditas = ZEPHYRUM;
 
     redde lex;
 }
@@ -655,6 +783,21 @@ sputnik_lexator_legere(SputnikLexator* lex)
     si (c == '/' && c2 == '*')
     {
         redde _legere_commentum_bloc(lex);
+    }
+
+    /* Template String */
+    si (c == '`')
+    {
+        redde _legere_template(lex);
+    }
+
+    /* Continuatio template post interpolationem
+     * Solum si bracchium_profunditas == 0, alioquin est } normalis
+     */
+    si (c == '}' && lex->template_profunditas > ZEPHYRUM
+                 && lex->bracchium_profunditas == ZEPHYRUM)
+    {
+        redde _legere_template_continuatio(lex);
     }
 
     /* Operatores multi-character (maximal munch) */
@@ -793,8 +936,17 @@ sputnik_lexator_legere(SputnikLexator* lex)
         casus ')':
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_PARENTHESIS_C, I);
         casus '{':
+            si (lex->template_profunditas > ZEPHYRUM)
+            {
+                lex->bracchium_profunditas++;
+            }
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_BRACCHIUM_A, I);
         casus '}':
+            si (lex->template_profunditas > ZEPHYRUM &&
+                lex->bracchium_profunditas > ZEPHYRUM)
+            {
+                lex->bracchium_profunditas--;
+            }
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_BRACCHIUM_C, I);
         casus '[':
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_QUADRATUM_A, I);
@@ -990,6 +1142,10 @@ sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
         casus SPUTNIK_LEXEMA_MODULUS_AEQ:     redde "MODULUS_AEQ";
         casus SPUTNIK_LEXEMA_ENTITAS:         redde "ENTITAS";
         casus SPUTNIK_LEXEMA_COLON_DUO:       redde "COLON_DUO";
+        casus SPUTNIK_LEXEMA_TEMPLATE_INITIUM: redde "TEMPLATE_INITIUM";
+        casus SPUTNIK_LEXEMA_TEMPLATE_MEDIUM:  redde "TEMPLATE_MEDIUM";
+        casus SPUTNIK_LEXEMA_TEMPLATE_FINIS:   redde "TEMPLATE_FINIS";
+        casus SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX: redde "TEMPLATE_SIMPLEX";
         ordinarius:                           redde "IGNOTUS";
     }
 }
