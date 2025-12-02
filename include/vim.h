@@ -60,6 +60,12 @@ nomen enumeratio {
     MODO_VIM_VISUALIS
 } ModoVim;
 
+/* Tipi visualis modi (pro futuro character-level selection) */
+nomen enumeratio {
+    MODO_VIM_VISUALIS_LINEA = ZEPHYRUM,
+    MODO_VIM_VISUALIS_CHARACTER
+} ModoVimVisualisTipo;
+
 /* Status vim - omnia necessaria pro tractare clavem */
 nomen structura {
     /* Tabula characterum (non possessa, referentia externa) */
@@ -75,6 +81,9 @@ nomen structura {
     /* Selectio (pro modo visuali) */
     s32 selectio_initium_linea;
     s32 selectio_initium_columna;
+
+    /* Tipo visualis modi (linea vel character) */
+    ModoVimVisualisTipo visualis_tipo;
 
     /* Status pro multi-key commands (dd, dG, d$, etc.) */
     character clavis_praecedens;

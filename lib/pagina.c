@@ -1,5 +1,6 @@
 #include "pagina.h"
 #include "chorda.h"
+#include "color.h"
 #include "tempus.h"
 #include "delineare.h"
 #include "thema.h"
@@ -99,6 +100,38 @@ pagina_obtinere_modum(
 
 
 /* ==================================================
+ * Utilitas Interna
+ * ================================================== */
+
+/* Verificare si linea est in selectione visuali */
+hic_manens b32
+_est_linea_in_selectio(
+    VimStatus* vim,
+    i32 linea)
+{
+    i32 linea_min;
+    i32 linea_max;
+
+    si (vim->modo != MODO_VIM_VISUALIS)
+    {
+        redde FALSUM;
+    }
+
+    si (vim->selectio_initium_linea < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    linea_min = (vim->selectio_initium_linea < (s32)vim->cursor_linea) ?
+        (i32)vim->selectio_initium_linea : vim->cursor_linea;
+    linea_max = (vim->selectio_initium_linea > (s32)vim->cursor_linea) ?
+        (i32)vim->selectio_initium_linea : vim->cursor_linea;
+
+    redde (linea >= linea_min && linea <= linea_max);
+}
+
+
+/* ==================================================
  * Reddere
  * ================================================== */
 
@@ -133,6 +166,35 @@ pagina_reddere(
     /* Pingere characteres ex tabula */
     per (linea = ZEPHYRUM; linea < altitudo && linea < pagina->tabula.altitudo; linea++)
     {
+        b32 in_selectio;
+        i32 linea_pixel_y;
+
+        in_selectio = _est_linea_in_selectio(&pagina->vim, linea);
+        linea_pixel_y = (y + linea) * character_altitudo;
+
+        /* Si linea in selectione, pingere background */
+        si (in_selectio)
+        {
+            i32 px;
+            i32 py;
+            Color sel_bg;
+
+            sel_bg = thema_color(COLOR_SELECTION);
+
+            /* Pingere rectangulum background pro tota linea */
+            per (py = ZEPHYRUM; py < character_altitudo; py++)
+            {
+                per (px = ZEPHYRUM; px < latitudo * character_latitudo; px++)
+                {
+                    tabula_pixelorum_ponere_pixelum(
+                        tabula_pixelorum,
+                        x * character_latitudo + px,
+                        linea_pixel_y + py,
+                        color_ad_pixelum(sel_bg));
+                }
+            }
+        }
+
         per (columna = ZEPHYRUM; columna < latitudo && columna < pagina->tabula.latitudo; columna++)
         {
             character c;
@@ -156,13 +218,19 @@ pagina_reddere(
             }
 
             pixel_x = (x + columna) * character_latitudo;
-            pixel_y = (y + linea) * character_altitudo;
+            pixel_y = linea_pixel_y;
 
             /* Obtinere colorem ex coloratio */
             color_index = pagina->coloratio ?
                 coloratio_obtinere(pagina->coloratio, linea, columna) :
                 COLORATIO_DEFALTA;
             text_color = thema_color_ex_indice_colorationis(color_index);
+
+            /* Si in selectione, usare colorem contrastum (white) */
+            si (in_selectio)
+            {
+                text_color = color_ex_palette(PALETTE_WHITE);
+            }
 
             tabula_pixelorum_pingere_characterem(
                 tabula_pixelorum,

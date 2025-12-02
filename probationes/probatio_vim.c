@@ -1113,6 +1113,93 @@ probans_enter_split_cum_indentatio(vacuum)
 
 
 /* ==================================================
+ * Test: Visual Line Mode
+ * ================================================== */
+
+hic_manens vacuum
+probans_V_visual_mode(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    tabula_ex_literis(&tabula, g_piscina, "hello\nworld\ntest");
+    status = vim_initiare(&tabula);
+
+    /* V - intrare modum visualem */
+    status = vim_tractare_clavem(status, 'V');
+
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_VISUALIS);
+    CREDO_AEQUALIS_I32((i32)status.selectio_initium_linea, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
+
+    /* j - extendere selectionem deorsum */
+    status = vim_tractare_clavem(status, 'j');
+
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+    CREDO_AEQUALIS_I32((i32)status.selectio_initium_linea, ZEPHYRUM);
+
+    /* Escape - exire ex modo visuali */
+    status = vim_tractare_clavem(status, VIM_CLAVIS_ESCAPE);
+
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_NORMALIS);
+    CREDO_VERUM(status.selectio_initium_linea < ZEPHYRUM);
+}
+
+hic_manens vacuum
+probans_V_indent_selectio(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: tres lineae */
+    tabula_ex_literis(&tabula, g_piscina, "abc\ndef\nghi");
+    status = vim_initiare(&tabula);
+
+    /* V j >> - selectare 2 lineas et indent */
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '>');
+    status = vim_tractare_clavem(status, '>');
+
+    /* Verificare: ambae lineae indented (2 spatia) */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'a');
+
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, II), (i32)'d');
+
+    /* Tertia linea non debet esse indented */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'g');
+}
+
+hic_manens vacuum
+probans_V_dedent_selectio(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Setup: duae lineae cum indentatio */
+    tabula_ex_literis(&tabula, g_piscina, "  abc\n  def\nghi");
+    status = vim_initiare(&tabula);
+
+    /* V j << - selectare 2 lineas et dedent */
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, '<');
+    status = vim_tractare_clavem(status, '<');
+
+    /* Verificare: ambae lineae dedented */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+
+    /* Tertia linea non mutata */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'g');
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -1255,6 +1342,15 @@ principale(vacuum)
 
     printf("--- Probans backspace join lines cum spatiis ---\n");
     probans_backspace_join_lines_cum_spatiis();
+
+    printf("--- Probans V visual mode ---\n");
+    probans_V_visual_mode();
+
+    printf("--- Probans V indent selectio ---\n");
+    probans_V_indent_selectio();
+
+    printf("--- Probans V dedent selectio ---\n");
+    probans_V_dedent_selectio();
 
     printf("\n");
     credo_imprimere_compendium();

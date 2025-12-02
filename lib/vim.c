@@ -23,6 +23,7 @@ vim_initiare(
     status.modo = MODO_VIM_NORMALIS;
     status.selectio_initium_linea = -I;
     status.selectio_initium_columna = -I;
+    status.visualis_tipo = MODO_VIM_VISUALIS_LINEA;
     status.clavis_praecedens = '\0';
     status.esperans_fd = FALSUM;
     status.tempus_f = 0.0;
@@ -731,6 +732,70 @@ _minuere_indentationem(
     redde status;
 }
 
+/* >> pro selectio - augere indentationem omnium linearum in selectione */
+hic_manens VimStatus
+_augere_indentationem_selectio(
+    VimStatus status)
+{
+    i32 linea_min;
+    i32 linea_max;
+    i32 linea;
+    i32 cursor_originalis;
+
+    /* Determinare range selectio */
+    linea_min = (status.selectio_initium_linea < (s32)status.cursor_linea) ?
+        (i32)status.selectio_initium_linea : status.cursor_linea;
+    linea_max = (status.selectio_initium_linea > (s32)status.cursor_linea) ?
+        (i32)status.selectio_initium_linea : status.cursor_linea;
+
+    cursor_originalis = status.cursor_linea;
+
+    /* Augere indentationem pro omni linea in selectione */
+    per (linea = linea_min; linea <= linea_max; linea++)
+    {
+        status.cursor_linea = linea;
+        status = _augere_indentationem(status);
+    }
+
+    /* Restituere cursor */
+    status.cursor_linea = cursor_originalis;
+    status.mutatus = VERUM;
+
+    redde status;
+}
+
+/* << pro selectio - minuere indentationem omnium linearum in selectione */
+hic_manens VimStatus
+_minuere_indentationem_selectio(
+    VimStatus status)
+{
+    i32 linea_min;
+    i32 linea_max;
+    i32 linea;
+    i32 cursor_originalis;
+
+    /* Determinare range selectio */
+    linea_min = (status.selectio_initium_linea < (s32)status.cursor_linea) ?
+        (i32)status.selectio_initium_linea : status.cursor_linea;
+    linea_max = (status.selectio_initium_linea > (s32)status.cursor_linea) ?
+        (i32)status.selectio_initium_linea : status.cursor_linea;
+
+    cursor_originalis = status.cursor_linea;
+
+    /* Minuere indentationem pro omni linea in selectione */
+    per (linea = linea_min; linea <= linea_max; linea++)
+    {
+        status.cursor_linea = linea;
+        status = _minuere_indentationem(status);
+    }
+
+    /* Restituere cursor */
+    status.cursor_linea = cursor_originalis;
+    status.mutatus = VERUM;
+
+    redde status;
+}
+
 /* Copiare indentationem ex linea ad lineam novam (usus sticky metadata) */
 hic_manens VimStatus
 _copiare_indentationem(
@@ -993,6 +1058,84 @@ _inserere_novam_lineam_in_inserere(
 
 
 /* ==================================================
+ * Tractare Modus Visualis
+ * ================================================== */
+
+hic_manens VimStatus
+_tractare_visualis(
+    VimStatus status,
+    s32 clavis)
+{
+    /* Multi-key commands */
+    si (status.clavis_praecedens == '>')
+    {
+        status.clavis_praecedens = '\0';
+
+        si (clavis == '>')
+        {
+            /* >> - indent selection */
+            redde _augere_indentationem_selectio(status);
+        }
+
+        redde status;
+    }
+
+    si (status.clavis_praecedens == '<')
+    {
+        status.clavis_praecedens = '\0';
+
+        si (clavis == '<')
+        {
+            /* << - dedent selection */
+            redde _minuere_indentationem_selectio(status);
+        }
+
+        redde status;
+    }
+
+    /* Single key commands */
+    commutatio (clavis)
+    {
+        /* Motus - extends selection */
+        casus 'j':
+        casus VIM_CLAVIS_DEORSUM:
+            redde _movere_deorsum(status);
+
+        casus 'k':
+        casus VIM_CLAVIS_SURSUM:
+            redde _movere_sursum(status);
+
+        casus 'G':
+            redde _movere_finem_tabulae(status);
+
+        casus 'g':
+            redde _movere_initium_tabulae(status);
+
+        /* Indentation */
+        casus '>':
+            status.clavis_praecedens = '>';
+            redde status;
+
+        casus '<':
+            status.clavis_praecedens = '<';
+            redde status;
+
+        /* Exit visual mode */
+        casus VIM_CLAVIS_ESCAPE:
+            status.modo = MODO_VIM_NORMALIS;
+            status.selectio_initium_linea = -I;
+            status.selectio_initium_columna = -I;
+            redde status;
+
+        ordinarius:
+            redde status;
+    }
+
+    redde status;
+}
+
+
+/* ==================================================
  * Tractare Modus Normalis
  * ================================================== */
 
@@ -1118,6 +1261,14 @@ _tractare_normalis(
 
         casus 'O':
             redde _inserere_lineam_novam_supra(status);
+
+        /* Modus visualis */
+        casus 'V':
+            status.modo = MODO_VIM_VISUALIS;
+            status.visualis_tipo = MODO_VIM_VISUALIS_LINEA;
+            status.selectio_initium_linea = (s32)status.cursor_linea;
+            status.selectio_initium_columna = ZEPHYRUM;
+            redde status;
 
         /* Deletio */
         casus 'x':
@@ -1267,8 +1418,7 @@ vim_tractare_clavem_cum_tempore(
             redde _tractare_inserere(status, clavis, tempus);
 
         casus MODO_VIM_VISUALIS:
-            /* TODO: implementare */
-            redde status;
+            redde _tractare_visualis(status, clavis);
 
         ordinarius:
             redde status;
