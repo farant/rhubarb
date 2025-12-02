@@ -125,6 +125,161 @@ _comparare_case_insensitive(
     redde (s32)(a->mensura - b->mensura);
 }
 
+/* Verificare si proprietas est "contentum"
+ * Redde: VERUM si clavis == "contentum"
+ */
+interior b32
+_est_contentum(
+    Proprietas* prop)
+{
+    hic_manens i8 contentum_lit[] = "contentum";
+
+    si (!prop || !prop->clavis || !prop->clavis->datum)
+    {
+        redde FALSUM;
+    }
+
+    si (prop->clavis->mensura != IX)
+    {
+        redde FALSUM;
+    }
+
+    redde memcmp(prop->clavis->datum, contentum_lit, IX) == ZEPHYRUM;
+}
+
+/* Sanitizare contentum valorem pro navigator display
+ * - Praetermittere spatium initiale
+ * - Substituere newlines cum spatiis
+ * - Truncare ad max_mensura
+ * - Si totum est spatium, ponere "[vacuum]"
+ *
+ * buffer:      destinatio buffer
+ * max_mensura: magnitudo buffer (includit '\0')
+ * valor:       chorda valor originalis
+ *
+ * Redde: mensura scripti (sine '\0')
+ */
+interior i32
+_sanitizare_contentum(
+    character* buffer,
+    i32        max_mensura,
+    chorda*    valor)
+{
+    i32 i;
+    i32 initium;
+    i32 mensura_output;
+    i32 max_output;
+    i8  c;
+    b32 habet_non_spatium;
+
+    si (!buffer || max_mensura < II)
+    {
+        redde ZEPHYRUM;
+    }
+
+    /* Si valor nihil, ponere [vacuum] */
+    si (!valor || !valor->datum || valor->mensura == ZEPHYRUM)
+    {
+        hic_manens i8 vacuum_lit[] = "[vacuum]";
+        i32 len;
+        len = VIII;  /* "[vacuum]" = 8 */
+        si (len >= max_mensura)
+        {
+            len = max_mensura - I;
+        }
+        memcpy(buffer, vacuum_lit, (memoriae_index)len);
+        buffer[len] = '\0';
+        redde len;
+    }
+
+    /* Praetermittere spatium initiale */
+    initium = ZEPHYRUM;
+    dum (initium < valor->mensura)
+    {
+        c = valor->datum[initium];
+        si (c != ' ' && c != '\t' && c != '\n' && c != '\r')
+        {
+            frange;
+        }
+        initium++;
+    }
+
+    /* Verificare si totum est spatium */
+    si (initium >= valor->mensura)
+    {
+        hic_manens i8 vacuum_lit[] = "[vacuum]";
+        i32 len;
+        len = VIII;
+        si (len >= max_mensura)
+        {
+            len = max_mensura - I;
+        }
+        memcpy(buffer, vacuum_lit, (memoriae_index)len);
+        buffer[len] = '\0';
+        redde len;
+    }
+
+    /* Copiare et sanitizare */
+    max_output = max_mensura - I;  /* Reservare pro '\0' */
+    si (max_output > L)  /* Truncare ad ~50 characteres */
+    {
+        max_output = L;
+    }
+
+    mensura_output = ZEPHYRUM;
+    habet_non_spatium = FALSUM;
+
+    per (i = initium; i < valor->mensura && mensura_output < max_output; i++)
+    {
+        c = valor->datum[i];
+
+        /* Substituere newlines et tabs cum spatiis */
+        si (c == '\n' || c == '\r' || c == '\t')
+        {
+            /* Addere spatium solum si non iam spatium */
+            si (mensura_output > ZEPHYRUM && buffer[mensura_output - I] != ' ')
+            {
+                buffer[mensura_output++] = ' ';
+            }
+        }
+        alioquin
+        {
+            buffer[mensura_output++] = (character)c;
+            si (c != ' ')
+            {
+                habet_non_spatium = VERUM;
+            }
+        }
+    }
+
+    /* Si truncatum, addere "..." */
+    si (i < valor->mensura && mensura_output >= III)
+    {
+        buffer[mensura_output - III] = '.';
+        buffer[mensura_output - II] = '.';
+        buffer[mensura_output - I] = '.';
+    }
+
+    buffer[mensura_output] = '\0';
+
+    /* Si nullum non-spatium, usare [vacuum] */
+    si (!habet_non_spatium)
+    {
+        hic_manens i8 vacuum_lit[] = "[vacuum]";
+        i32 len;
+        len = VIII;
+        si (len >= max_mensura)
+        {
+            len = max_mensura - I;
+        }
+        memcpy(buffer, vacuum_lit, (memoriae_index)len);
+        buffer[len] = '\0';
+        redde len;
+    }
+
+    redde mensura_output;
+}
+
 /* Sortare relationes alphabetice
  * Pro "contains" relationes, sortat per titulum destinationis
  * Pro aliis relationibus, sortat per genus
@@ -568,7 +723,13 @@ _construere_items(
                 longitudo_totalis += prop->clavis->mensura;
             }
             longitudo_totalis += II;  /* ": " */
-            si (prop->valor && prop->valor->datum)
+
+            /* Pro contentum, usare longitudinem truncatam (~50 + "[vacuum]") */
+            si (_est_contentum(prop))
+            {
+                longitudo_totalis += LVIII;  /* ~50 chars max + margine */
+            }
+            alioquin si (prop->valor && prop->valor->datum)
             {
                 longitudo_totalis += prop->valor->mensura;
             }
@@ -1250,16 +1411,27 @@ _reddere_items_currens(
 
             clavis_et_separator_mensura = buffer_mensura;
 
-            si (prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM &&
+            /* Pro contentum, usare sanitizationem */
+            si (_est_contentum(prop))
+            {
+                buffer_mensura += _sanitizare_contentum(
+                    buffer + buffer_mensura,
+                    CCLVI - buffer_mensura,
+                    prop->valor);
+            }
+            alioquin si (prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM &&
                 prop->valor->mensura < CCLVI - buffer_mensura)
             {
                 memcpy(buffer + buffer_mensura,
                        prop->valor->datum,
                        (memoriae_index)prop->valor->mensura);
                 buffer_mensura += prop->valor->mensura;
+                buffer[buffer_mensura] = '\0';
             }
-
-            buffer[buffer_mensura] = '\0';
+            alioquin
+            {
+                buffer[buffer_mensura] = '\0';
+            }
 
             /* Determinare color pro valore */
             color_valor = color_textus;
@@ -1615,7 +1787,13 @@ _reddere_columnam_entitatis(
                     longitudo_totalis += prop->clavis->mensura;
                 }
                 longitudo_totalis += II;  /* ": " */
-                si (prop->valor && prop->valor->datum)
+
+                /* Pro contentum, usare longitudinem truncatam */
+                si (_est_contentum(prop))
+                {
+                    longitudo_totalis += LVIII;
+                }
+                alioquin si (prop->valor && prop->valor->datum)
                 {
                     longitudo_totalis += prop->valor->mensura;
                 }
@@ -2021,16 +2199,27 @@ _reddere_columnam_entitatis(
             buffer[buffer_mensura++] = ':';
             buffer[buffer_mensura++] = ' ';
 
-            si (prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM &&
+            /* Pro contentum, usare sanitizationem */
+            si (_est_contentum(prop))
+            {
+                buffer_mensura += _sanitizare_contentum(
+                    buffer + buffer_mensura,
+                    CCLVI - buffer_mensura,
+                    prop->valor);
+            }
+            alioquin si (prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM &&
                 prop->valor->mensura < CCLVI - buffer_mensura)
             {
                 memcpy(buffer + buffer_mensura,
                        prop->valor->datum,
                        (memoriae_index)prop->valor->mensura);
                 buffer_mensura += prop->valor->mensura;
+                buffer[buffer_mensura] = '\0';
             }
-
-            buffer[buffer_mensura] = '\0';
+            alioquin
+            {
+                buffer[buffer_mensura] = '\0';
+            }
 
             /* Reddere cum wrapping */
             offset_textus = ZEPHYRUM;

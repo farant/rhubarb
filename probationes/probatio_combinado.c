@@ -325,6 +325,7 @@ main(void)
     Eventus              eventus;
     b32                  currens;
     RegistrumCommandi*   reg_commandi;
+    LibroPaginarum*      libro;
 
     /* Initiare thema */
     thema_initiare();
@@ -376,16 +377,13 @@ main(void)
     }
 
     /* Obtinere libro ex layout pro commands */
-    {
-        LibroPaginarum* libro;
-        libro = layout_obtinere_libro(dom, "editor");
+    libro = layout_obtinere_libro(dom, "editor");
 
-        /* Registrare commands */
-        registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
-        registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
-        registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
-        registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
-    }
+    /* Registrare commands */
+    registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
+    registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
+    registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
+    registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
 
     /* Ponere registrum in layout */
     layout_ponere_reg_commandi(dom, reg_commandi);
@@ -462,6 +460,9 @@ main(void)
                 }
             }
         }
+
+        /* Salvare libro si immundum et debounce praeteritum */
+        libro_salvare_si_immundum(libro);
 
         /* Vacare fondum cum colore calido griseo */
         tabula_pixelorum_vacare(tabula,

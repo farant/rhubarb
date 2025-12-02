@@ -290,8 +290,8 @@ _layout_libro_tractare_eventum(
                     }
                     alioquin si (link[ZEPHYRUM] >= '0' && link[ZEPHYRUM] <= '9')
                     {
-                        /* Numeric page */
-                        s32 page_num = atoi(link);
+                        /* Numeric page - user expects 1-indexed */
+                        s32 page_num = atoi(link) - I;
                         libro_navigare_ad(datum->libro, page_num);
                     }
                     alioquin
@@ -466,6 +466,24 @@ _layout_processare_libro(
         libro_carcare(libro);
     }
 
+    /* Ponere nomen initiale si attributum "nomen" existit */
+    {
+        chorda* nomen_chorda;
+        nomen_chorda = stml_attributum_capere(nodus, "nomen");
+        si (nomen_chorda && nomen_chorda->mensura > ZEPHYRUM)
+        {
+            /* Creare null-terminated string */
+            character* nomen_nt = piscina_allocare(dom->piscina,
+                (memoriae_index)(nomen_chorda->mensura + I));
+            si (nomen_nt)
+            {
+                memcpy(nomen_nt, nomen_chorda->datum, (size_t)nomen_chorda->mensura);
+                nomen_nt[nomen_chorda->mensura] = '\0';
+                libro_pagina_nominare(libro, ZEPHYRUM, nomen_nt);
+            }
+        }
+    }
+
     /* Si nodus habet contentum (raw vel liberi), inserere in prima pagina */
     si (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
     {
@@ -486,6 +504,9 @@ _layout_processare_libro(
                     memcpy(textus_nt, textus.datum, (size_t)textus.mensura);
                     textus_nt[textus.mensura] = '\0';
                     pagina_inserere_textum_crudus(pagina, textus_nt);
+
+                    /* Salvare statim post contentum initiale */
+                    libro_salvare_paginam(libro);
                 }
             }
         }
@@ -1269,6 +1290,16 @@ layout_ponere_reg_commandi(
             si (pagina && pagina->coloratio)
             {
                 coloratio_ponere_registrum(pagina->coloratio, reg_commandi);
+            }
+        }
+        alioquin si (introitus && introitus->genus == LAYOUT_WIDGET_LIBRO)
+        {
+            LibroPaginarum* libro;
+
+            libro = (LibroPaginarum*)introitus->datum;
+            si (libro)
+            {
+                libro_ponere_reg_commandi(libro, reg_commandi);
             }
         }
     }

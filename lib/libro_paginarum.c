@@ -1,7 +1,9 @@
 #include "libro_paginarum.h"
+#include "coloratio.h"
 #include "delineare.h"
 #include "thema.h"
 #include "tempus.h"
+#include "vim.h"
 #include <stdio.h>
 
 /* ==================================================
@@ -31,6 +33,12 @@ _allocare_paginam(
 
     /* Initiare pagina */
     pagina_initiare(pagina, libro->piscina, identificator);
+
+    /* Ponere reg_commandi in coloratio si habemus */
+    si (libro->reg_commandi != NIHIL && pagina->coloratio != NIHIL)
+    {
+        coloratio_ponere_registrum(pagina->coloratio, libro->reg_commandi);
+    }
 
     redde pagina;
 }
@@ -87,15 +95,19 @@ libro_creare(
     libro->piscina = piscina;
     libro->intern = intern;
     libro->repo = NIHIL;
+    libro->reg_commandi = NIHIL;
     libro->numerus_paginarum = ZEPHYRUM;
     libro->index_currens = ZEPHYRUM;
     libro->historia_numerus = ZEPHYRUM;
+    libro->est_immundus = FALSUM;
+    libro->tempus_ultimae_mutationis = 0.0;
 
     /* Vacare arrays */
     per (i = ZEPHYRUM; i < LIBRO_MAXIMUS_PAGINARUM; i++)
     {
         libro->paginae[i] = NIHIL;
         libro->nomina[i] = NIHIL;
+        libro->entitas_ids[i] = NIHIL;
     }
 
     per (i = ZEPHYRUM; i < LIBRO_HISTORIA_MAGNITUDO; i++)
@@ -123,6 +135,12 @@ libro_connectere_repo(
     si (libro != NIHIL)
     {
         libro->repo = repo;
+
+        /* Salvare omnes paginas existentes ad repository */
+        si (repo != NIHIL)
+        {
+            libro_salvare_omnes(libro);
+        }
     }
 }
 
@@ -170,6 +188,7 @@ libro_navigare_ad(
     dum (index >= (s32)libro->numerus_paginarum)
     {
         i32 nova_index;
+        i32 prior_index;
 
         nova_index = libro->numerus_paginarum;
         libro->paginae[nova_index] = _allocare_paginam(libro, nova_index);
@@ -181,6 +200,15 @@ libro_navigare_ad(
         }
 
         libro->numerus_paginarum++;
+
+        /* Salvare novam paginam ad repository */
+        si (libro->repo != NIHIL)
+        {
+            prior_index = libro->index_currens;
+            libro->index_currens = nova_index;
+            libro_salvare_paginam(libro);
+            libro->index_currens = prior_index;
+        }
     }
 
     /* Navigare */
@@ -388,6 +416,16 @@ libro_pagina_nominare(
     {
         libro->nomina[index] = chorda_internare_ex_literis(libro->intern, nomen_);
     }
+
+    /* Salvare paginam ad repository */
+    si (libro->repo != NIHIL)
+    {
+        i32 prior_index;
+        prior_index = libro->index_currens;
+        libro->index_currens = index;
+        libro_salvare_paginam(libro);
+        libro->index_currens = prior_index;
+    }
 }
 
 
@@ -420,6 +458,7 @@ libro_tractare_eventum(
     constans Eventus* eventus)
 {
     Pagina* pagina;
+    b32 resultum;
 
     si (libro == NIHIL || eventus == NIHIL)
     {
@@ -433,7 +472,16 @@ libro_tractare_eventum(
     }
 
     /* Delegare ad pagina currens */
-    redde pagina_tractare_eventum(pagina, eventus);
+    resultum = pagina_tractare_eventum(pagina, eventus);
+
+    /* Marcare immundum si in modo inserere et clavis pressa */
+    si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS &&
+        pagina->vim.modo == MODO_VIM_INSERERE)
+    {
+        libro_marcare_immundum(libro);
+    }
+
+    redde resultum;
 }
 
 
@@ -501,7 +549,12 @@ libro_reddere(
     /* Computare titulo - nomen paginae vel "Pagina N/M" */
     si (libro->nomina[libro->index_currens] != NIHIL)
     {
-        titulo = *libro->nomina[libro->index_currens];
+        sprintf(indicium_buffer, "%.*s %d/%d",
+                (int)libro->nomina[libro->index_currens]->mensura,
+                libro->nomina[libro->index_currens]->datum,
+                libro->index_currens + I,
+                libro->numerus_paginarum);
+        titulo = chorda_ex_literis(indicium_buffer, piscina);
     }
     alioquin
     {
@@ -753,7 +806,9 @@ _deserializa_tabula(
 }
 
 
-/* Generare titulum scaffold pro pagina */
+/* Generare titulum scaffold pro pagina
+ * Semper usare "pagina-N" pro stabili identitate
+ */
 hic_manens vacuum
 _generare_scaffold_titulum(
     character* buffer,
@@ -772,11 +827,14 @@ libro_salvare_paginam(
     chorda* contentum;
     character scaffold_titulus[XXXII];
     character ordo_buffer[XVI];
+    i32 idx;
 
     si (libro == NIHIL || libro->repo == NIHIL)
     {
         redde FALSUM;
     }
+
+    idx = libro->index_currens;
 
     pagina = libro_pagina_currens(libro);
     si (pagina == NIHIL)
@@ -784,14 +842,29 @@ libro_salvare_paginam(
         redde FALSUM;
     }
 
-    /* Generare titulum scaffold */
-    _generare_scaffold_titulum(scaffold_titulus, libro->index_currens);
+    /* Si iam habemus entity ID, usare capere_entitatem */
+    si (libro->entitas_ids[idx] != NIHIL)
+    {
+        entitas = libro->repo->capere_entitatem(
+            libro->repo->datum,
+            libro->entitas_ids[idx]);
+    }
+    alioquin
+    {
+        /* Prima vice: scaffoldare et memorare ID */
+        _generare_scaffold_titulum(scaffold_titulus, idx);
 
-    /* Scaffoldare entitatem (creat si non existit) */
-    entitas = libro->repo->entitas_scaffoldare(
-        libro->repo->datum,
-        "LibroPagina",
-        scaffold_titulus);
+        entitas = libro->repo->entitas_scaffoldare(
+            libro->repo->datum,
+            "LibroPagina",
+            scaffold_titulus);
+
+        si (entitas != NIHIL)
+        {
+            /* Memorare entity ID */
+            libro->entitas_ids[idx] = entitas->id;
+        }
+    }
 
     si (entitas == NIHIL)
     {
@@ -806,21 +879,21 @@ libro_salvare_paginam(
     }
 
     /* Ponere proprietas "ordo" */
-    sprintf(ordo_buffer, "%d", libro->index_currens);
+    sprintf(ordo_buffer, "%d", idx);
     libro->repo->proprietas_ponere(
         libro->repo->datum,
         entitas,
         "ordo",
         ordo_buffer);
 
-    /* Ponere proprietas "titulus" si nomen existit */
-    si (libro->nomina[libro->index_currens] != NIHIL)
+    /* Ponere proprietas "name" et "titulus" */
+    si (libro->nomina[idx] != NIHIL)
     {
-        /* Creare null-terminated string ex chorda */
+        /* Usare nomen custom */
         character* titulus_buffer;
         chorda* nomen_chorda;
 
-        nomen_chorda = libro->nomina[libro->index_currens];
+        nomen_chorda = libro->nomina[idx];
         titulus_buffer = (character*)piscina_allocare(
             libro->piscina,
             (i32)nomen_chorda->mensura + I);
@@ -837,9 +910,25 @@ libro_salvare_paginam(
             libro->repo->proprietas_ponere(
                 libro->repo->datum,
                 entitas,
+                "name",
+                titulus_buffer);
+
+            libro->repo->proprietas_ponere(
+                libro->repo->datum,
+                entitas,
                 "titulus",
                 titulus_buffer);
         }
+    }
+    alioquin
+    {
+        /* Usare "pagina-N" si nullum nomen */
+        _generare_scaffold_titulum(scaffold_titulus, idx);
+        libro->repo->proprietas_ponere(
+            libro->repo->datum,
+            entitas,
+            "name",
+            scaffold_titulus);
     }
 
     /* Ponere proprietas "contentum" */
@@ -1067,4 +1156,72 @@ libro_carcare(
     }
 
     redde VERUM;
+}
+
+
+vacuum
+libro_ponere_reg_commandi(
+    LibroPaginarum*    libro,
+    RegistrumCommandi* reg)
+{
+    i32 i;
+
+    si (libro == NIHIL)
+    {
+        redde;
+    }
+
+    /* Servare pro paginae futurae */
+    libro->reg_commandi = reg;
+
+    /* Ponere registrum in coloratio omnium paginarum existentium */
+    per (i = ZEPHYRUM; i < libro->numerus_paginarum; i++)
+    {
+        si (libro->paginae[i] != NIHIL && libro->paginae[i]->coloratio != NIHIL)
+        {
+            coloratio_ponere_registrum(libro->paginae[i]->coloratio, reg);
+        }
+    }
+}
+
+
+/* ==================================================
+ * Debounced Save
+ * ================================================== */
+
+vacuum
+libro_marcare_immundum(
+    LibroPaginarum* libro)
+{
+    si (libro == NIHIL)
+    {
+        redde;
+    }
+
+    libro->est_immundus = VERUM;
+    libro->tempus_ultimae_mutationis = tempus_nunc();
+}
+
+
+vacuum
+libro_salvare_si_immundum(
+    LibroPaginarum* libro)
+{
+    f64 tempus_currens;
+    f64 intervallum;
+
+    si (libro == NIHIL || !libro->est_immundus || libro->repo == NIHIL)
+    {
+        redde;
+    }
+
+    tempus_currens = tempus_nunc();
+    intervallum = tempus_currens - libro->tempus_ultimae_mutationis;
+
+    /* 2 secundae debounce */
+    si (intervallum >= 2.0)
+    {
+        libro_salvare_paginam(libro);
+        libro->est_immundus = FALSUM;
+    }
 }

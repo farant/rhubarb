@@ -7,6 +7,7 @@
 #include "internamentum.h"
 #include "pagina.h"
 #include "entitas_repositorium.h"
+#include "registrum_commandi.h"
 
 /* ==================================================
  * LIBRO PAGINARUM - Multi-Page Editor Widget
@@ -52,11 +53,17 @@ nomen structura {
     /* Repository pro persistentia (NIHIL pro standalone) */
     EntitasRepositorium* repo;
 
+    /* Registrum commandi pro coloratio (NIHIL = colorare omnes $word) */
+    RegistrumCommandi* reg_commandi;
+
     /* Array de Pagina* */
     Pagina* paginae[LIBRO_MAXIMUS_PAGINARUM];
 
     /* Nomina paginarum (chorda* internatae) */
     chorda* nomina[LIBRO_MAXIMUS_PAGINARUM];
+
+    /* Entity IDs pro paginis (chorda* internatae, NIHIL si nondum creata) */
+    chorda* entitas_ids[LIBRO_MAXIMUS_PAGINARUM];
 
     /* Numerus paginarum */
     i32 numerus_paginarum;
@@ -67,6 +74,10 @@ nomen structura {
     /* Historia navigationis */
     i32 historia[LIBRO_HISTORIA_MAGNITUDO];
     i32 historia_numerus;
+
+    /* Dirty flag pro debounced save */
+    b32 est_immundus;
+    f64 tempus_ultimae_mutationis;
 } LibroPaginarum;
 
 
@@ -323,6 +334,40 @@ libro_salvare_omnes(
  */
 b32
 libro_carcare(
+    LibroPaginarum* libro);
+
+
+/* Ponere registrum commandi pro coloratio omnium paginarum
+ *
+ * libro: libro paginarum
+ * reg:   registrum commandi
+ */
+vacuum
+libro_ponere_reg_commandi(
+    LibroPaginarum*    libro,
+    RegistrumCommandi* reg);
+
+
+/* ==================================================
+ * Debounced Save
+ * ================================================== */
+
+/* Marcare libro ut immundum (dirty) - resets debounce timer
+ *
+ * libro: libro paginarum
+ */
+vacuum
+libro_marcare_immundum(
+    LibroPaginarum* libro);
+
+
+/* Salvare si immundum et debounce tempus praeteritum
+ * Vocare in render loop vel event loop
+ *
+ * libro: libro paginarum
+ */
+vacuum
+libro_salvare_si_immundum(
     LibroPaginarum* libro);
 
 
