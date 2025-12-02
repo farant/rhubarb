@@ -1,6 +1,7 @@
 #include "piscina.h"
 #include "entitas_repositorium.h"
 #include "persistentia.h"
+#include "filum.h"
 #include "fenestra.h"
 #include "delineare.h"
 #include "thema.h"
@@ -15,6 +16,9 @@
 
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
+
+#define VIA_DIRECTORIUM  "data"
+#define VIA_LOG          "data/combinado.log"
 
 /* STML layout definition cum widgets et entitates */
 constans character* LAYOUT_STML =
@@ -344,8 +348,11 @@ main(void)
     /* Obtinere internamentum */
     intern = internamentum_globale();
 
-    /* Creare persistentia (in memoria) */
-    persistentia = persistentia_memoria_creare(piscina);
+    /* Creare directorium data si necesse */
+    filum_directorium_creare_si_necesse(VIA_DIRECTORIUM);
+
+    /* Creare persistentia (in file) */
+    persistentia = persistentia_nuntium_creare(piscina, VIA_LOG);
     si (!persistentia)
     {
         imprimere("Fractura: non potest creare persistentiam\n");

@@ -997,6 +997,7 @@ _impl_proprietas_ponere(
     RepositoriumData* data;
     chorda*           clavis_internata;
     chorda*           valor_internatus;
+    chorda*           valor_existens;
     Eventum*          e;
 
     data = (RepositoriumData*)datum;
@@ -1016,6 +1017,13 @@ _impl_proprietas_ponere(
     si (!valor_internatus)
     {
         redde FALSUM;
+    }
+
+    /* Idempotentia: si valor iam aequalis, nihil facere */
+    valor_existens = entitas_proprietas_capere(entitas, clavis_internata);
+    si (valor_existens == valor_internatus)
+    {
+        redde VERUM;  /* Iam habet valorem - successus sine evento */
     }
 
     /* Emit event */
@@ -1077,13 +1085,35 @@ _impl_relatio_addere(
     chorda*           relatio_id;
     chorda*           genus_internatum;
     Relatio*          relatio;
+    Relatio*          rel_existens;
     Eventum*          e;
+    i32               i;
+    i32               numerus;
 
     data = (RepositoriumData*)datum;
 
     si (!data || !entitas || !genus || !destinatio_id)
     {
         redde NIHIL;
+    }
+
+    genus_internatum = chorda_internare_ex_literis(data->intern, genus);
+    si (!genus_internatum)
+    {
+        redde NIHIL;
+    }
+
+    /* Idempotentia: verificare si relatio iam existit */
+    numerus = xar_numerus(entitas->relationes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        rel_existens = (Relatio*)xar_obtinere(entitas->relationes, i);
+        si (rel_existens &&
+            rel_existens->genus == genus_internatum &&
+            rel_existens->destinatio_id == destinatio_id)
+        {
+            redde rel_existens;  /* Iam existit - redde existentem */
+        }
     }
 
     /* Generare relatio ID */
@@ -1095,12 +1125,6 @@ _impl_relatio_addere(
 
     relatio_id = chorda_internare(data->intern, relatio_uuid);
     si (!relatio_id)
-    {
-        redde NIHIL;
-    }
-
-    genus_internatum = chorda_internare_ex_literis(data->intern, genus);
-    si (!genus_internatum)
     {
         redde NIHIL;
     }
@@ -1218,6 +1242,12 @@ _impl_nota_addere(
     si (!nota_internata)
     {
         redde FALSUM;
+    }
+
+    /* Idempotentia: si nota iam existit, nihil facere */
+    si (entitas_nota_habet(entitas, nota_internata))
+    {
+        redde VERUM;  /* Iam habet notam - successus sine evento */
     }
 
     /* Emit event */

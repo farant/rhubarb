@@ -876,6 +876,79 @@ filum_copiare(
 
 
 /* ==================================================
+ * Directoria
+ * ================================================== */
+
+b32
+filum_directorium_creare(
+	constans character* via)
+{
+	si (!via)
+	{
+		_filum_error_ponere("via est NIHIL");
+		redde FALSUM;
+	}
+
+	_filum_error_purgare();
+
+#ifdef _WIN32
+	si (_mkdir(via) != ZEPHYRUM)
+#else
+	si (mkdir(via, 0755) != ZEPHYRUM)
+#endif
+	{
+		_filum_error_ponere("mkdir fracta");
+		redde FALSUM;
+	}
+
+	redde VERUM;
+}
+
+b32
+filum_directorium_creare_si_necesse(
+	constans character* via)
+{
+	structura stat st;
+
+	si (!via)
+	{
+		_filum_error_ponere("via est NIHIL");
+		redde FALSUM;
+	}
+
+	_filum_error_purgare();
+
+	/* Si iam existit, successus */
+	si (stat(via, &st) == ZEPHYRUM)
+	{
+		si (S_ISDIR(st.st_mode))
+		{
+			redde VERUM;
+		}
+		/* Existit sed non est directorium */
+		_filum_error_ponere("via existit sed non est directorium");
+		redde FALSUM;
+	}
+
+	/* Non existit - creare */
+	redde filum_directorium_creare(via);
+}
+
+b32
+filum_directorium_existit(
+	constans character* via)
+{
+	structura stat st;
+
+	si (!via) redde FALSUM;
+
+	si (stat(via, &st) != ZEPHYRUM) redde FALSUM;
+
+	redde S_ISDIR(st.st_mode);
+}
+
+
+/* ==================================================
  * Interrogatio Status
  * ================================================== */
 

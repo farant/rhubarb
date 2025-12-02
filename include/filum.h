@@ -162,6 +162,23 @@ filum_copiare (
 	constans character* via_fons,
 	constans character* via_destinatio);
 
+/* Creare directorium
+ * Reddit VERUM in successu, FALSUM si iam existit vel error */
+b32
+filum_directorium_creare (
+	constans character* via);
+
+/* Creare directorium si non existit
+ * Reddit VERUM in successu (vel iam existit) */
+b32
+filum_directorium_creare_si_necesse (
+	constans character* via);
+
+/* Verificare si directorium existit */
+b32
+filum_directorium_existit (
+	constans character* via);
+
 
 /* ==================================================
  * Interrogatio Status

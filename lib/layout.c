@@ -484,8 +484,10 @@ _layout_processare_libro(
         }
     }
 
-    /* Si nodus habet contentum (raw vel liberi), inserere in prima pagina */
-    si (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
+    /* Si nodus habet contentum (raw vel liberi), inserere in prima pagina
+     * SOLUM si nihil carcatum ex repositorio (entitas_ids[0] == NIHIL) */
+    si ((nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM) &&
+        libro->entitas_ids[ZEPHYRUM] == NIHIL)
     {
         Pagina* pagina;
         chorda textus;

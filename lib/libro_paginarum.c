@@ -135,12 +135,8 @@ libro_connectere_repo(
     si (libro != NIHIL)
     {
         libro->repo = repo;
-
-        /* Salvare omnes paginas existentes ad repository */
-        si (repo != NIHIL)
-        {
-            libro_salvare_omnes(libro);
-        }
+        /* Nota: non salvare hic - libro_carcare primo vocabitur,
+         * et salvare fiet per debounced save in event loop */
     }
 }
 
@@ -863,6 +859,8 @@ libro_salvare_paginam(
         {
             /* Memorare entity ID */
             libro->entitas_ids[idx] = entitas->id;
+            /* Addere nota pro quaerere in libro_carcare */
+            libro->repo->nota_addere(libro->repo->datum, entitas, "#LibroPagina");
         }
     }
 
@@ -1133,6 +1131,9 @@ libro_carcare(
         {
             perge;
         }
+
+        /* Memorare entity ID pro futurae salvationes */
+        libro->entitas_ids[ordo] = entitas->id;
 
         /* Carcare titulus */
         titulus_valor = entitas_proprietas_capere(
