@@ -7,6 +7,7 @@
 #include "internamentum.h"
 #include "tempus.h"
 #include "layout.h"
+#include "libro_paginarum.h"
 #include "registrum_commandi.h"
 #include <stdio.h>
 #include <time.h>
@@ -18,55 +19,35 @@
 /* STML layout definition cum widgets et entitates */
 constans character* LAYOUT_STML =
     "<layout>"
-    "  <pagina! id='editor' x='0' y='0' latitudo='71' altitudo='60'>"
-    "TAB = switch focus (not in insert mode)\n"
+    "  <libro! id='editor' x='0' y='0' latitudo='71' altitudo='60'>"
+    "LibroPaginarum Demo - Multi-Page Editor\n"
     "\n"
-    "Click widgets to focus them\n"
+    "Navigation:\n"
+    "  Ctrl+Shift+Right = next page\n"
+    "  Ctrl+Shift+Left  = previous page\n"
+    "  Click #next or #prev links\n"
+    "  Click #back to go back in history\n"
     "\n"
-    "Navigator on right ->\n"
+    "Click $date to insert date\n"
     "\n"
     "Press 'i' to enter insert mode\n"
     "Press ESC to return to normal mode\n"
     "Use hjkl to navigate\n"
     "\n"
-    "Try clicking on: $date\n"
-    "\n"
-    "--- Tag Examples ---\n"
-    "<div class=\"example\">Hello</div>\n"
-    "<input type=\"text\" value=\"test\"/>\n"
-    "<button disabled>Click me</button>\n"
-    "\n"
     "--- Sputnik Example ---\n"
     "<sputnik>\n"
-    "// Declarationes\n"
     "sit x = 42;\n"
     "constans PI = 3.14;\n"
-    "sit price = 9.99$;\n"
     "\n"
-    "// Control flow\n"
     "si (x > 10) {\n"
     "    print(\"magnum!\");\n"
-    "} alioquin {\n"
-    "    print('parvum');\n"
     "}\n"
     "\n"
-    "// Loop et valores\n"
-    "dum (x > 0) {\n"
-    "    x = x - 1;\n"
-    "}\n"
-    "\n"
-    "sit active = verum;\n"
-    "sit data = nihil;\n"
-    "\n"
-    "// Functio et tags\n"
     "functio salve(nomen) {\n"
     "    redde `Hello ${nomen}`;\n"
     "}\n"
-    "\n"
-    "sit ent = REPO.get('Page::intro');\n"
-    "ent #important #review\n"
     "</sputnik>\n"
-    "</pagina>"
+    "</libro>"
     "  <navigator id='nav' x='71' y='0' latitudo='71' altitudo='60'/>"
     ""
     "  <entitas genus='Root' slug='system'>"
@@ -153,6 +134,136 @@ constans character* LAYOUT_STML =
 /* ==================================================
  * Commands
  * ================================================== */
+
+/* Legere argumentum ex textu post command (usque ad finem lineae vel spatium)
+ * Redde: longitudo argumenti
+ */
+interior i32
+_legere_argumentum(
+    ContextusCommandi* ctx,
+    character*         buffer,
+    i32                max_long)
+{
+    i32 i;
+    character c;
+
+    /* Skip leading space */
+    si (ctx->columna < ctx->pagina->tabula.latitudo)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, ctx->columna);
+        si (c == ' ')
+        {
+            ctx->columna++;
+        }
+    }
+
+    /* Read until space or end of line */
+    per (i = ZEPHYRUM; i < max_long - I && (s32)(ctx->columna + i) < (s32)ctx->pagina->tabula.latitudo; i++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, ctx->columna + i);
+        si (c == '\0' || c == ' ' || c == '\n')
+        {
+            frange;
+        }
+        buffer[i] = c;
+    }
+    buffer[i] = '\0';
+
+    redde i;
+}
+
+
+/* $rename <name> - rename current page */
+interior b32
+command_rename(
+    ContextusCommandi* ctx)
+{
+    LibroPaginarum* libro;
+    character titulus[LXIV];
+    i32 longitudo;
+    i32 index;
+
+    libro = (LibroPaginarum*)ctx->datum_custom;
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    longitudo = _legere_argumentum(ctx, titulus, LXIV);
+    si (longitudo == ZEPHYRUM)
+    {
+        redde FALSUM;  /* No name provided */
+    }
+
+    index = libro_index_currens(libro);
+    libro_pagina_nominare(libro, index, titulus);
+
+    redde VERUM;
+}
+
+
+/* $goto <N> - go to page N */
+interior b32
+command_goto(
+    ContextusCommandi* ctx)
+{
+    LibroPaginarum* libro;
+    character num_buffer[XVI];
+    i32 longitudo;
+    s32 page_num;
+    i32 i;
+
+    libro = (LibroPaginarum*)ctx->datum_custom;
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    longitudo = _legere_argumentum(ctx, num_buffer, XVI);
+    si (longitudo == ZEPHYRUM)
+    {
+        redde FALSUM;  /* No number provided */
+    }
+
+    /* Parse integer */
+    page_num = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < longitudo; i++)
+    {
+        si (num_buffer[i] >= '0' && num_buffer[i] <= '9')
+        {
+            page_num = page_num * X + (s32)(num_buffer[i] - '0');
+        }
+    }
+
+    libro_navigare_ad(libro, page_num);
+
+    redde VERUM;
+}
+
+
+/* $new - create new page and navigate to it */
+interior b32
+command_new(
+    ContextusCommandi* ctx)
+{
+    LibroPaginarum* libro;
+    s32 new_index;
+
+    libro = (LibroPaginarum*)ctx->datum_custom;
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    new_index = libro_pagina_nova(libro, NIHIL);
+    si (new_index >= ZEPHYRUM)
+    {
+        libro_navigare_ad(libro, new_index);
+    }
+
+    redde VERUM;
+}
+
 
 /* $date command - insert/update current date in output region */
 interior b32
@@ -264,14 +375,23 @@ main(void)
         redde I;
     }
 
-    /* Registrare commands */
-    registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
+    /* Obtinere libro ex layout pro commands */
+    {
+        LibroPaginarum* libro;
+        libro = layout_obtinere_libro(dom, "editor");
+
+        /* Registrare commands */
+        registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
+        registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
+        registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
+        registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
+    }
 
     /* Ponere registrum in layout */
     layout_ponere_reg_commandi(dom, reg_commandi);
 
     /* Configurare fenestram */
-    configuratio.titulus = "Pagina + Navigator - Layout Demo";
+    configuratio.titulus = "LibroPaginarum + Navigator Demo";
     configuratio.x = C;
     configuratio.y = C;
     configuratio.latitudo = LATITUDO_FENESTRA;

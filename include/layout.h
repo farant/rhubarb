@@ -7,6 +7,7 @@
 #include "tabula_dispersa.h"
 #include "widget.h"
 #include "pagina.h"
+#include "libro_paginarum.h"
 #include "navigator_entitatum.h"
 #include "entitas_repositorium.h"
 #include "registrum_commandi.h"
@@ -40,7 +41,8 @@
 /* Genus widget (pro lookup typato) */
 nomen enumeratio {
     LAYOUT_WIDGET_PAGINA = I,
-    LAYOUT_WIDGET_NAVIGATOR = II
+    LAYOUT_WIDGET_NAVIGATOR = II,
+    LAYOUT_WIDGET_LIBRO = III
 } LayoutGenusWidget;
 
 /* Introitus in tabula lookup */
@@ -120,6 +122,18 @@ layout_obtinere_pagina(
  */
 NavigatorEntitatum*
 layout_obtinere_navigator(
+    LayoutDom*          dom,
+    constans character* id);
+
+/* Obtinere LibroPaginarum per id
+ *
+ * dom: layout dom
+ * id: identificator widget
+ *
+ * Redde: LibroPaginarum* si inventum et genus correctum, NIHIL aliter
+ */
+LibroPaginarum*
+layout_obtinere_libro(
     LayoutDom*          dom,
     constans character* id);
 

@@ -594,6 +594,17 @@ est_character_verbi(
            (c == '_');
 }
 
+/* Verificare si character est pars link (permittit '-' pro nomina paginarum) */
+hic_manens b32
+est_character_link(
+    character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           (c == '_') || (c == '-');
+}
+
 b32
 pagina_obtinere_regio_ad_punctum(
     constans Pagina* pagina,
@@ -606,6 +617,8 @@ pagina_obtinere_regio_ad_punctum(
     s32 finis_columna;
     s32 longitudo;
     character c;
+    character tag_char;
+    b32 est_link;
 
     /* Verificare limites */
     si (linea < ZEPHYRUM || linea >= pagina->tabula.altitudo ||
@@ -614,15 +627,17 @@ pagina_obtinere_regio_ad_punctum(
         redde FALSUM;
     }
 
-    /* Scandere retro ad invenire $ */
+    /* Scandere retro ad invenire $ vel # */
     initium_columna = -I;
+    tag_char = '\0';
     per (col = (s32)columna; col >= ZEPHYRUM; col--)
     {
         c = tabula_cellula(&pagina->tabula, linea, (i32)col);
 
-        si (c == '$')
+        si (c == '$' || c == '#')
         {
             initium_columna = col;
+            tag_char = c;
             frange;
         }
 
@@ -638,20 +653,35 @@ pagina_obtinere_regio_ad_punctum(
         redde FALSUM;
     }
 
-    /* Scandere ad finem command */
+    est_link = (tag_char == '#');
+
+    /* Scandere ad finem tag */
     finis_columna = (s32)initium_columna + I;
     per (col = finis_columna; col < (s32)pagina->tabula.latitudo; col++)
     {
         c = tabula_cellula(&pagina->tabula, linea, (i32)col);
 
-        si (c == ' ' || c == '\t' || c == '\0' || !est_character_verbi(c))
+        si (est_link)
         {
-            finis_columna = col;
-            frange;
+            /* Links permittunt '-' */
+            si (c == ' ' || c == '\t' || c == '\0' || !est_character_link(c))
+            {
+                finis_columna = col;
+                frange;
+            }
+        }
+        alioquin
+        {
+            /* Commands usant solum est_character_verbi */
+            si (c == ' ' || c == '\t' || c == '\0' || !est_character_verbi(c))
+            {
+                finis_columna = col;
+                frange;
+            }
         }
     }
 
-    /* Extrahere nomen command */
+    /* Extrahere nomen (sine $ vel #) */
     longitudo = finis_columna - ((s32)initium_columna + I);
     si (longitudo >= LXIV)
     {
@@ -660,26 +690,51 @@ pagina_obtinere_regio_ad_punctum(
 
     si (longitudo > ZEPHYRUM)
     {
-        per (col = ZEPHYRUM; col < longitudo; col++)
+        /* Pro links, includere # in datum */
+        si (est_link)
         {
-            regio->datum[col] = tabula_cellula(&pagina->tabula, linea, (i32)((s32)initium_columna + I + col));
+            regio->datum[0] = '#';
+            per (col = ZEPHYRUM; col < longitudo; col++)
+            {
+                regio->datum[col + I] = tabula_cellula(&pagina->tabula, linea, (i32)((s32)initium_columna + I + col));
+            }
+            regio->datum[longitudo + I] = '\0';
         }
-        regio->datum[longitudo] = '\0';
+        alioquin
+        {
+            per (col = ZEPHYRUM; col < longitudo; col++)
+            {
+                regio->datum[col] = tabula_cellula(&pagina->tabula, linea, (i32)((s32)initium_columna + I + col));
+            }
+            regio->datum[longitudo] = '\0';
+        }
 
         regio->initium_linea = linea;
         regio->initium_columna = (i32)initium_columna;
         regio->finis_linea = linea;
         regio->finis_columna = (i32)finis_columna;
 
-        /* "command" */
-        regio->genus[0] = 'c';
-        regio->genus[1] = 'o';
-        regio->genus[2] = 'm';
-        regio->genus[3] = 'm';
-        regio->genus[4] = 'a';
-        regio->genus[5] = 'n';
-        regio->genus[6] = 'd';
-        regio->genus[7] = '\0';
+        si (est_link)
+        {
+            /* "link" */
+            regio->genus[0] = 'l';
+            regio->genus[1] = 'i';
+            regio->genus[2] = 'n';
+            regio->genus[3] = 'k';
+            regio->genus[4] = '\0';
+        }
+        alioquin
+        {
+            /* "command" */
+            regio->genus[0] = 'c';
+            regio->genus[1] = 'o';
+            regio->genus[2] = 'm';
+            regio->genus[3] = 'm';
+            regio->genus[4] = 'a';
+            regio->genus[5] = 'n';
+            regio->genus[6] = 'd';
+            regio->genus[7] = '\0';
+        }
 
         redde VERUM;
     }

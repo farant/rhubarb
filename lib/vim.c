@@ -804,7 +804,7 @@ _copiare_indentationem(
 {
     s32 indentatio;
     i32 col;
-    i32 linea_scan;
+    s32 linea_scan;  /* Must be signed for loop to terminate correctly */
     s32 linea_cum_indentatio;
 
     indentatio = -I;
@@ -870,7 +870,7 @@ _copiare_indentationem(
      * Hoc est "sticky" behavior pro spatiis */
     si (indentatio < ZEPHYRUM)
     {
-        per (linea_scan = linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+        per (linea_scan = (s32)linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
         {
             si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
             {
@@ -932,6 +932,12 @@ _inserere_lineam_novam_supra(
 {
     b32 successus;
     i32 linea_fons;
+
+    /* Protectio contra tabula NIHIL */
+    si (status.tabula == NIHIL)
+    {
+        redde status;
+    }
 
     linea_fons = status.cursor_linea;
     successus = tabula_inserere_lineam(status.tabula, status.cursor_linea);
@@ -1004,14 +1010,14 @@ _inserere_novam_lineam_in_inserere(
             /* Si linea vacua vel nulla indentatio, quaerere metadata retro (sticky) */
             si (indentatio_nova == ZEPHYRUM)
             {
-                i32 linea_scan;
+                s32 linea_scan;  /* Must be signed for loop to terminate correctly */
 
-                per (linea_scan = linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
+                per (linea_scan = (s32)linea_fons; linea_scan >= ZEPHYRUM; linea_scan--)
                 {
                     si (status.tabula->indentatio[linea_scan] >= ZEPHYRUM)
                     {
                         indentatio_nova = (i32)status.tabula->indentatio[linea_scan];
-                        linea_cum_indentatio = linea_scan;
+                        linea_cum_indentatio = (i32)linea_scan;
                         frange;
                     }
                 }

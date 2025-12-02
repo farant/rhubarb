@@ -67,6 +67,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_parser.c"
     "lib/sputnik_interpres.c"
     "lib/coloratio.c"
+    "lib/libro_paginarum.c"
 )
 
 # Objective-C source (compiled separately)

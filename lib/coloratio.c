@@ -522,6 +522,54 @@ _colorare_sputnik(
 }
 
 
+/* Colorare #link patterns in linea (outside sputnik blocks) */
+hic_manens vacuum
+_colorare_links(
+    Coloratio* coloratio,
+    constans TabulaCharacterum* tabula,
+    i32 linea)
+{
+    i32 col;
+    i32 initium;
+    i32 i;
+    character c;
+
+    per (col = ZEPHYRUM; col < tabula->latitudo; col++)
+    {
+        c = tabula_cellula(tabula, linea, col);
+
+        si (c == '#')
+        {
+            /* Verificare si proximus character est valida initium verbi */
+            si (col + I < tabula->latitudo &&
+                _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
+            {
+                initium = col;
+                col++;
+
+                /* Scandere verbum (permittere - pro nomina paginarum) */
+                dum (col < tabula->latitudo)
+                {
+                    c = tabula_cellula(tabula, linea, col);
+                    si (!_est_character_verbi(c) && c != '-')
+                    {
+                        frange;
+                    }
+                    col++;
+                }
+
+                /* Colorare totum #word */
+                per (i = initium; i < col; i++)
+                {
+                    coloratio_index(coloratio, linea, i) = COLORATIO_LINK;
+                }
+
+                col--;  /* Adjust for loop increment */
+            }
+        }
+    }
+}
+
 /* Colorare $command patterns in linea */
 hic_manens vacuum
 _colorare_commanda(
@@ -923,6 +971,11 @@ _colorare_lineam(
         (coloratio->regulae & COLORATIO_REGULA_SPUTNIK))
     {
         _colorare_sputnik(coloratio, tabula, linea);
+    }
+    alioquin
+    {
+        /* Apply #link highlighting in normal text (non sputnik) */
+        _colorare_links(coloratio, tabula, linea);
     }
 
     /* Apply $command highlighting si regula activa */

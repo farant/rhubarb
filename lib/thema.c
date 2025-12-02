@@ -119,6 +119,7 @@ thema_color_ex_indice_colorationis(i8 index)
      * COLORATIO_PROPRIETAS  = 8  -> PALETTE_BRIGHT_RED
      * COLORATIO_ATTRIBUTUM  = 9  -> PALETTE_LIGHT_GRAY (grayscale)
      * COLORATIO_VALOR_ATTR  = 10 -> PALETTE_MEDIUM_DARK_GRAY (grayscale)
+     * COLORATIO_LINK        = 11 -> PALETTE_DARK_CYAN
      */
 
     commutatio (index)
@@ -143,6 +144,8 @@ thema_color_ex_indice_colorationis(i8 index)
             redde color_ex_palette(PALETTE_LIGHT_GRAY);
         casus X:   /* COLORATIO_VALOR_ATTR */
             redde color_ex_palette(PALETTE_MEDIUM_DARK_GRAY);
+        casus XI:  /* COLORATIO_LINK */
+            redde color_ex_palette(PALETTE_DARK_CYAN);
         ordinarius: /* COLORATIO_DEFALTA vel ignotus */
             redde thema_color(COLOR_TEXT);
     }

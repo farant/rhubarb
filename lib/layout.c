@@ -30,6 +30,12 @@ nomen structura {
     Piscina*            piscina;
 } LayoutDatumNavigator;
 
+/* Datum internum pro libro widget */
+nomen structura {
+    LibroPaginarum* libro;
+    LayoutDom*      dom;
+} LayoutDatumLibro;
+
 
 /* ==================================================
  * Widget Wrapper Functiones - Pagina
@@ -158,6 +164,153 @@ _layout_navigator_tractare_eventum(
 
 
 /* ==================================================
+ * Widget Wrapper Functiones - Libro
+ * ================================================== */
+
+interior vacuum
+_layout_libro_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    LayoutDatumLibro* datum;
+
+    datum = (LayoutDatumLibro*)widget->datum;
+
+    libro_reddere(
+        datum->dom->piscina,
+        tabula,
+        datum->libro,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+interior b32
+_layout_libro_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    LayoutDatumLibro* datum;
+    Pagina* pagina;
+
+    datum = (LayoutDatumLibro*)widget->datum;
+
+    /* Tractare keyboard navigation */
+    si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
+    {
+        /* Ctrl+Shift+Right -> pagina proxima */
+        si ((eventus->datum.clavis.modificantes & MOD_IMPERIUM) &&
+            (eventus->datum.clavis.modificantes & MOD_SHIFT))
+        {
+            si (eventus->datum.clavis.clavis == CLAVIS_DEXTER)
+            {
+                libro_pagina_proxima(datum->libro);
+                redde VERUM;
+            }
+            /* Ctrl+Shift+Left -> pagina prior */
+            si (eventus->datum.clavis.clavis == CLAVIS_SINISTER)
+            {
+                libro_pagina_prior(datum->libro);
+                redde VERUM;
+            }
+        }
+    }
+
+    /* Tractare mouse clicks pro tag detection (commands et links) */
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->reg_commandi)
+    {
+        RegioClicca regio;
+        i32 click_x;
+        i32 click_y;
+        i32 character_latitudo;
+        i32 character_altitudo;
+
+        pagina = libro_pagina_currens(datum->libro);
+        si (!pagina)
+        {
+            redde VERUM;
+        }
+
+        character_latitudo = VI;   /* 6 pixels per character */
+        character_altitudo = VIII; /* 8 pixels per character */
+
+        /* Convertere pixel ad character coordinates */
+        /* Account for widget position et border */
+        click_x = (eventus->datum.mus.x / character_latitudo) - widget->x - I;
+        click_y = (eventus->datum.mus.y / character_altitudo) - widget->y - I;
+
+        /* Tentare detegere tag ad click position */
+        si (pagina_obtinere_regio_ad_punctum(pagina, click_y, click_x, &regio))
+        {
+            si (strcmp(regio.genus, "command") == ZEPHYRUM)
+            {
+                ContextusCommandi ctx;
+
+                ctx.pagina = pagina;
+                ctx.linea = regio.finis_linea;
+                ctx.columna = regio.finis_columna;
+                ctx.piscina = datum->dom->piscina;
+                ctx.datum_custom = datum->libro;  /* Pass libro as custom datum */
+
+                /* Executare command per reg_commandi */
+                registrum_commandi_executare(datum->dom->reg_commandi, regio.datum, &ctx);
+
+                redde VERUM;  /* Click consumptus */
+            }
+            alioquin si (strcmp(regio.genus, "link") == ZEPHYRUM)
+            {
+                /* Tractare link navigation */
+                constans character* link = regio.datum;
+
+                si (link[ZEPHYRUM] == '#')
+                {
+                    /* Hash link */
+                    link++;  /* Skip '#' */
+
+                    si (strcmp(link, "back") == ZEPHYRUM)
+                    {
+                        libro_retro(datum->libro);
+                    }
+                    alioquin si (strcmp(link, "next") == ZEPHYRUM)
+                    {
+                        libro_pagina_proxima(datum->libro);
+                    }
+                    alioquin si (strcmp(link, "prev") == ZEPHYRUM)
+                    {
+                        libro_pagina_prior(datum->libro);
+                    }
+                    alioquin si (link[ZEPHYRUM] >= '0' && link[ZEPHYRUM] <= '9')
+                    {
+                        /* Numeric page */
+                        s32 page_num = atoi(link);
+                        libro_navigare_ad(datum->libro, page_num);
+                    }
+                    alioquin
+                    {
+                        /* Named page */
+                        libro_navigare_ad_nomen(datum->libro, link);
+                    }
+                    redde VERUM;
+                }
+            }
+        }
+    }
+
+    /* Delegare ad libro tractare_eventum */
+    redde libro_tractare_eventum(datum->libro, eventus);
+}
+
+
+/* ==================================================
  * Auxiliares
  * ================================================== */
 
@@ -268,6 +421,104 @@ _layout_processare_pagina(
     }
     introitus->datum = pagina;
     introitus->genus = LAYOUT_WIDGET_PAGINA;
+
+    tabula_dispersa_inserere(dom->widgets, *id_chorda, introitus);
+
+    redde VERUM;
+}
+
+interior b32
+_layout_processare_libro(
+    LayoutDom*           dom,
+    StmlNodus*           nodus,
+    EntitasRepositorium* repositorium)
+{
+    chorda*                id_chorda;
+    i32                    x, y, latitudo, altitudo;
+    LibroPaginarum*        libro;
+    LayoutDatumLibro*      datum;
+    LayoutWidgetIntroitus* introitus;
+
+    /* Legere attributa - id est chorda* ex STML (iam internata) */
+    id_chorda = stml_attributum_capere(nodus, "id");
+    si (!id_chorda)
+    {
+        id_chorda = chorda_internare_ex_literis(dom->intern, "libro");
+    }
+
+    x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
+    y = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
+    latitudo = _layout_attributum_i32(nodus, "latitudo", LXX);
+    altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
+
+    /* Creare libro */
+    libro = libro_creare(dom->piscina, dom->intern);
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    /* Connectere repositorium si disponibilis (pro persistentia) */
+    si (repositorium)
+    {
+        libro_connectere_repo(libro, repositorium);
+        /* Carcare paginas existentes */
+        libro_carcare(libro);
+    }
+
+    /* Si nodus habet contentum (raw vel liberi), inserere in prima pagina */
+    si (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
+    {
+        Pagina* pagina;
+        chorda textus;
+
+        textus = stml_textus_internus(nodus, dom->piscina);
+        si (textus.mensura > ZEPHYRUM)
+        {
+            pagina = libro_pagina_currens(libro);
+            si (pagina)
+            {
+                /* Pagina_inserere_textum requirit null-terminated */
+                character* textus_nt = piscina_allocare(dom->piscina,
+                    (memoriae_index)(textus.mensura + I));
+                si (textus_nt)
+                {
+                    memcpy(textus_nt, textus.datum, (size_t)textus.mensura);
+                    textus_nt[textus.mensura] = '\0';
+                    pagina_inserere_textum_crudus(pagina, textus_nt);
+                }
+            }
+        }
+    }
+
+    /* Creare datum wrapper */
+    datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumLibro));
+    si (!datum)
+    {
+        redde FALSUM;
+    }
+    datum->libro = libro;
+    datum->dom = dom;
+
+    /* Registrare cum manager */
+    manager_widget_registrare(
+        dom->manager,
+        datum,
+        _layout_libro_reddere,
+        _layout_libro_tractare_eventum,
+        x,
+        y,
+        latitudo,
+        altitudo);
+
+    /* Addere ad tabula lookup */
+    introitus = piscina_allocare(dom->piscina, magnitudo(LayoutWidgetIntroitus));
+    si (!introitus)
+    {
+        redde FALSUM;
+    }
+    introitus->datum = libro;
+    introitus->genus = LAYOUT_WIDGET_LIBRO;
 
     tabula_dispersa_inserere(dom->widgets, *id_chorda, introitus);
 
@@ -883,6 +1134,10 @@ layout_creare(
         {
             _layout_processare_pagina(dom, liberum);
         }
+        alioquin si (chorda_aequalis_literis(*liberum->titulus, "libro"))
+        {
+            _layout_processare_libro(dom, liberum, repositorium);
+        }
         alioquin si (chorda_aequalis_literis(*liberum->titulus, "navigator"))
         {
             _layout_processare_navigator(dom, liberum, repositorium);
@@ -960,6 +1215,29 @@ layout_obtinere_navigator(
     }
 
     redde (NavigatorEntitatum*)introitus->datum;
+}
+
+LibroPaginarum*
+layout_obtinere_libro(
+    LayoutDom*          dom,
+    constans character* id)
+{
+    LayoutWidgetIntroitus* introitus;
+    b32                    inventum;
+
+    si (!dom || !id)
+    {
+        redde NIHIL;
+    }
+
+    inventum = tabula_dispersa_invenire_literis(dom->widgets, id, (vacuum**)&introitus);
+
+    si (!inventum || !introitus || introitus->genus != LAYOUT_WIDGET_LIBRO)
+    {
+        redde NIHIL;
+    }
+
+    redde (LibroPaginarum*)introitus->datum;
 }
 
 vacuum
