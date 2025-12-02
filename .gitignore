@@ -1,6 +1,7 @@
 # Build artifacts
 bin/
 build/
+data/
 *.o
 *.a
 
