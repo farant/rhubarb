@@ -56,6 +56,9 @@ nomen structura {
     /* Registrum commandi pro coloratio (NIHIL = colorare omnes $word) */
     RegistrumCommandi* reg_commandi;
 
+    /* Clipboard communicatus inter omnes paginas */
+    VimClipboard clipboard;
+
     /* Array de Pagina* */
     Pagina* paginae[LIBRO_MAXIMUS_PAGINARUM];
 

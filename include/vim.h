@@ -66,6 +66,49 @@ nomen enumeratio {
     MODO_VIM_VISUALIS_CHARACTER
 } ModoVimVisualisTipo;
 
+
+/* ==================================================
+ * Clipboard (inter editores communicatus)
+ * ================================================== */
+
+#define VIM_CLIPBOARD_LINEA_MAXIMA    LXVIII  /* 68 - par tabula latitudo */
+#define VIM_CLIPBOARD_LINEAE_MAXIMAE  XXXII   /* 32 lineae maxime */
+
+nomen structura {
+    character lineae[VIM_CLIPBOARD_LINEAE_MAXIMAE][VIM_CLIPBOARD_LINEA_MAXIMA];
+    i32 numerus_linearum;
+} VimClipboard;
+
+
+/* ==================================================
+ * Undo Acervus (per-editor)
+ *
+ * Solum operationes linearum sunt retexibiles:
+ * - dd, o, O, p, P, dG
+ * Operationes characterum (x, i, backspace) NON sunt retexibiles.
+ * ================================================== */
+
+#define VIM_UNDO_MAGNITUDO  XXXII  /* 32 operationes */
+
+nomen enumeratio {
+    VIM_UNDO_INSERERE_LINEA,  /* linea inserta (retexere = delere) */
+    VIM_UNDO_DELERE_LINEA     /* linea deleta (retexere = inserere) */
+} VimUndoTipo;
+
+nomen structura {
+    VimUndoTipo tipo;
+    i32 linea;
+    i32 columna;
+    character data[VIM_CLIPBOARD_LINEA_MAXIMA];
+    i32 numerus_linearum;  /* pro multi-linea operationibus */
+} VimUndoOperatio;
+
+nomen structura {
+    VimUndoOperatio operationes[VIM_UNDO_MAGNITUDO];
+    i32 numerus;  /* numerus operationum in acervo */
+    i32 index;    /* proxima positio scribendi (circularis) */
+} VimUndoAcervus;
+
 /* Status vim - omnia necessaria pro tractare clavem */
 nomen structura {
     /* Tabula characterum (non possessa, referentia externa) */
@@ -96,6 +139,12 @@ nomen structura {
     b32 debet_claudere;   /* ESC in normal mode */
     b32 mutatus;          /* Tabula mutata hac clave */
     b32 sine_auto_indent; /* Disable auto-indent (pro programmatic insertion) */
+
+    /* Clipboard (communicatus inter editores, NIHIL si non usus) */
+    VimClipboard* clipboard;
+
+    /* Undo acervus (per-editor, NIHIL si non usus) */
+    VimUndoAcervus* undo_acervus;
 } VimStatus;
 
 
@@ -194,5 +243,85 @@ VimStatus
 vim_ponere_modum(
     VimStatus status,
     ModoVim modo);
+
+
+/* ==================================================
+ * Clipboard Functiones
+ * ================================================== */
+
+/* Initiare clipboard
+ *
+ * clipboard: clipboard initiandus
+ */
+vacuum
+vim_clipboard_initiare(
+    VimClipboard* clipboard);
+
+
+/* ==================================================
+ * Undo Functiones
+ * ================================================== */
+
+/* Creare undo acervus
+ *
+ * piscina: piscina pro allocatione
+ *
+ * Reddit: VimUndoAcervus* si successus, NIHIL si error
+ */
+VimUndoAcervus*
+vim_undo_creare(
+    Piscina* piscina);
+
+/* Trudere operationem in acervum
+ *
+ * acervus: undo acervus
+ * op: operatio trudenda
+ */
+vacuum
+vim_undo_trudere(
+    VimUndoAcervus* acervus,
+    VimUndoOperatio op);
+
+/* Tollere operationem ex acervo
+ *
+ * acervus: undo acervus
+ * op: operatio recepta (output)
+ *
+ * Reddit: VERUM si operatio tolta, FALSUM si acervus vacuus
+ */
+b32
+vim_undo_tollere(
+    VimUndoAcervus* acervus,
+    VimUndoOperatio* op);
+
+/* Interrogare si acervus vacuus
+ *
+ * acervus: undo acervus
+ *
+ * Reddit: VERUM si vacuus
+ */
+b32
+vim_undo_est_vacuus(
+    VimUndoAcervus* acervus);
+
+
+/* ==================================================
+ * Initiatio cum Contextu
+ * ================================================== */
+
+/* Initiare vim status cum clipboard et undo
+ *
+ * tabula: tabula characterum
+ * clipboard: clipboard communicatus (potest esse NIHIL)
+ * undo_acervus: undo acervus (potest esse NIHIL)
+ *
+ * Reddit: status initiatus
+ */
+VimStatus
+vim_initiare_cum_contextu(
+    TabulaCharacterum* tabula,
+    VimClipboard* clipboard,
+    VimUndoAcervus* undo_acervus);
+
 
 #endif /* VIM_H */

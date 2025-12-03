@@ -590,6 +590,13 @@ argumenta_conari_parsere (
 		}
 	}
 
+	/* Si --help vel -h data, saltare verificare positionalia necessaria */
+	si (argumenta_habet_vexillum(fructus, "--help") ||
+	    argumenta_habet_vexillum(fructus, "-h"))
+	{
+		redde fructus;
+	}
+
 	/* Verificare positionalia necessaria */
 	numerus_positionalium_necessariorum = ZEPHYRUM;
 	per (i = ZEPHYRUM; i < parser->numerus_definitionum; i++)

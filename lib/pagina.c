@@ -73,6 +73,25 @@ pagina_vacare(
 }
 
 
+vacuum
+pagina_connectere_vim_contextu(
+    Pagina* pagina,
+    Piscina* piscina,
+    VimClipboard* clipboard)
+{
+    si (pagina == NIHIL || piscina == NIHIL)
+    {
+        redde;
+    }
+
+    /* Connectere clipboard communicatum */
+    pagina->vim.clipboard = clipboard;
+
+    /* Creare undo acervum pro hac pagina */
+    pagina->vim.undo_acervus = vim_undo_creare(piscina);
+}
+
+
 /* ==================================================
  * Interrogationes
  * ================================================== */

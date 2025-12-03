@@ -116,6 +116,21 @@ vacuum
 pagina_vacare(
     Pagina* pagina);
 
+/* Connectere clipboard et creare undo acervum
+ *
+ * Connectit clipboard communicatum et creat undo acervum pro pagina.
+ * Vocare post pagina_initiare.
+ *
+ * pagina: pagina
+ * piscina: piscina pro allocare undo acervum
+ * clipboard: clipboard communicatus (potest esse NIHIL)
+ */
+vacuum
+pagina_connectere_vim_contextu(
+    Pagina* pagina,
+    Piscina* piscina,
+    VimClipboard* clipboard);
+
 
 /* ==================================================
  * Interrogationes

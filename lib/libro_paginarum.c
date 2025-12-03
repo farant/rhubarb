@@ -34,6 +34,9 @@ _allocare_paginam(
     /* Initiare pagina */
     pagina_initiare(pagina, libro->piscina, identificator);
 
+    /* Connectere clipboard et creare undo acervum */
+    pagina_connectere_vim_contextu(pagina, libro->piscina, &libro->clipboard);
+
     /* Ponere reg_commandi in coloratio si habemus */
     si (libro->reg_commandi != NIHIL && pagina->coloratio != NIHIL)
     {
@@ -101,6 +104,9 @@ libro_creare(
     libro->historia_numerus = ZEPHYRUM;
     libro->est_immundus = FALSUM;
     libro->tempus_ultimae_mutationis = 0.0;
+
+    /* Initiare clipboard communicatum */
+    vim_clipboard_initiare(&libro->clipboard);
 
     /* Vacare arrays */
     per (i = ZEPHYRUM; i < LIBRO_MAXIMUS_PAGINARUM; i++)
@@ -470,9 +476,8 @@ libro_tractare_eventum(
     /* Delegare ad pagina currens */
     resultum = pagina_tractare_eventum(pagina, eventus);
 
-    /* Marcare immundum si in modo inserere et clavis pressa */
-    si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS &&
-        pagina->vim.modo == MODO_VIM_INSERERE)
+    /* Marcare immundum si tabula mutata (insert mode keys vel normal mode operations ut dd, p, u) */
+    si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS && pagina->vim.mutatus)
     {
         libro_marcare_immundum(libro);
     }

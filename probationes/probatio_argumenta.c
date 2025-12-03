@@ -390,6 +390,77 @@ s32 principale (vacuum)
 
 
 	/* ==================================================
+	 * Probare --help cum positionalibus necessariis
+	 * ================================================== */
+
+	{
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", "--help"};
+		               i32  argc = II;
+
+		imprimere("\n--- Probans --help cum positionalibus necessariis ---\n");
+
+		parser = argumenta_creare(piscina);
+		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
+
+		/* --help debet succedere etiam sine positionali necessario */
+		fructus = argumenta_conari_parsere(parser, argc, argv);
+		CREDO_NON_NIHIL(fructus);
+		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--help"));
+	}
+
+
+	/* ==================================================
+	 * Probare -h cum positionalibus necessariis
+	 * ================================================== */
+
+	{
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", "-h"};
+		               i32  argc = II;
+
+		imprimere("\n--- Probans -h cum positionalibus necessariis ---\n");
+
+		parser = argumenta_creare(piscina);
+		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
+		argumenta_addere_positionalem(parser, "output", "Output file", VERUM);
+
+		/* -h debet succedere etiam sine duobus positionalibus necessariis */
+		fructus = argumenta_conari_parsere(parser, argc, argv);
+		CREDO_NON_NIHIL(fructus);
+		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-h"));
+	}
+
+
+	/* ==================================================
+	 * Probare sine --help debet adhuc verificare positionalia
+	 * ================================================== */
+
+	{
+		   ArgumentaParser* parser;
+		  ArgumentaFructus* fructus;
+		constans character* argv[] = {"programa", "-v"};
+		               i32  argc = II;
+
+		imprimere("\n--- Probans sine --help debet verificare positionalia ---\n");
+
+		parser = argumenta_creare(piscina);
+		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
+
+		/* Sine --help, positionale necessarium debet verificari */
+		fructus = argumenta_conari_parsere(parser, argc, argv);
+		CREDO_NIHIL(fructus);
+	}
+
+
+	/* ==================================================
 	 * Probare descriptio et exempla
 	 * ================================================== */
 

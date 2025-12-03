@@ -315,7 +315,7 @@ command_date(
 
 
 int
-main(void)
+main(int argc, char** argv)
 {
     Piscina*             piscina;
     InternamentumChorda* intern;
@@ -330,6 +330,39 @@ main(void)
     b32                  currens;
     RegistrumCommandi*   reg_commandi;
     LibroPaginarum*      libro;
+    constans character*  via_log;
+    character            via_temp[CXXVIII];
+    b32                  utere_temp;
+    i32                  i;
+
+    /* Verificare pro --temp-database vexillo */
+    utere_temp = FALSUM;
+    per (i = I; i < (i32)argc; i++)
+    {
+        si (strcmp(argv[i], "--temp-database") == ZEPHYRUM ||
+            strcmp(argv[i], "-t") == ZEPHYRUM)
+        {
+            utere_temp = VERUM;
+            frange;
+        }
+    }
+
+    /* Determinare via ad log file */
+    si (utere_temp)
+    {
+        /* Generare via temporanea unica */
+        sprintf(via_temp, "/tmp/rhubarb_%ld.log", (longus)time(NIHIL));
+        via_log = via_temp;
+        imprimere("Utens database temporanea: %s\n", via_log);
+    }
+    alioquin si (argc > I && argv[I][ZEPHYRUM] != '-')
+    {
+        via_log = argv[I];
+    }
+    alioquin
+    {
+        via_log = VIA_LOG;
+    }
 
     /* Initiare thema */
     thema_initiare();
@@ -352,7 +385,7 @@ main(void)
     filum_directorium_creare_si_necesse(VIA_DIRECTORIUM);
 
     /* Creare persistentia (in file) */
-    persistentia = persistentia_nuntium_creare(piscina, VIA_LOG);
+    persistentia = persistentia_nuntium_creare(piscina, via_log);
     si (!persistentia)
     {
         imprimere("Fractura: non potest creare persistentiam\n");

@@ -1200,6 +1200,249 @@ probans_V_dedent_selectio(vacuum)
 
 
 /* ==================================================
+ * Test: Cut / Paste / Undo
+ * ================================================== */
+
+hic_manens vacuum
+probans_dd_cut_et_p_paste(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    /* Initiare clipboard et undo */
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    /* Setup: tres lineae */
+    tabula_ex_literis(&tabula, g_piscina, "abc\ndef\nghi");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    /* dd - delere primam lineam (cut) */
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Verificare: clipboard habet "abc" */
+    CREDO_AEQUALIS_I32(clipboard.numerus_linearum, I);
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][I], (i32)'b');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][II], (i32)'c');
+
+    /* Verificare: tabula nunc habet "def" in prima linea */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'e');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'f');
+
+    /* p - paste post lineam currentem */
+    status = vim_tractare_clavem(status, 'p');
+
+    /* Verificare: "abc" inserta post "def" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, II), (i32)'c');
+
+    /* Cursor debet esse ad lineam 1 */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+}
+
+hic_manens vacuum
+probans_P_paste_ante(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    /* Setup et cut prima linea */
+    tabula_ex_literis(&tabula, g_piscina, "abc\ndef\nghi");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Movere ad lineam 1 (ghi) */
+    status = vim_tractare_clavem(status, 'j');
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+
+    /* P - paste ante lineam currentem */
+    status = vim_tractare_clavem(status, 'P');
+
+    /* Verificare: "abc" inserta ante "ghi" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'g');
+
+    /* Cursor debet esse ad lineam 1 (ubi inserta) */
+    CREDO_AEQUALIS_I32(status.cursor_linea, I);
+}
+
+hic_manens vacuum
+probans_u_undo_dd(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    tabula_ex_literis(&tabula, g_piscina, "abc\ndef\nghi");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    /* dd - delere primam lineam */
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Verificare: "def" nunc in prima linea */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+
+    /* u - undo */
+    status = vim_tractare_clavem(status, 'u');
+
+    /* Verificare: "abc" restituta */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+}
+
+hic_manens vacuum
+probans_u_undo_p(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    tabula_ex_literis(&tabula, g_piscina, "abc\ndef");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    /* dd et p */
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'd');
+    status = vim_tractare_clavem(status, 'p');
+
+    /* Verificare: "def" in linea 0, "abc" in linea 1 */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
+
+    /* u - undo paste */
+    status = vim_tractare_clavem(status, 'u');
+
+    /* Verificare: "abc" deleta, solum "def" manet */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+
+    /* u - undo dd */
+    status = vim_tractare_clavem(status, 'u');
+
+    /* Verificare: "abc" restituta in prima linea */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+}
+
+hic_manens vacuum
+probans_V_d_cut_multi(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    tabula_ex_literis(&tabula, g_piscina, "aaa\nbbb\nccc\nddd");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    /* V j d - selectare 2 lineas et delere */
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Verificare: clipboard habet 2 lineas */
+    CREDO_AEQUALIS_I32(clipboard.numerus_linearum, II);
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[I][ZEPHYRUM], (i32)'b');
+
+    /* Verificare: tabula nunc habet "ccc" in prima linea */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+
+    /* Verificare: exit visual mode */
+    CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_NORMALIS);
+}
+
+hic_manens vacuum
+probans_V_d_undo_multi(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    tabula_ex_literis(&tabula, g_piscina, "aaa\nbbb\nccc");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    /* V j d - cut 2 lineas */
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* Verificare: solum "ccc" manet */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'c');
+
+    /* u u - undo ambo (lineae deletae singulariter) */
+    status = vim_tractare_clavem(status, 'u');
+    status = vim_tractare_clavem(status, 'u');
+
+    /* Verificare: "aaa" et "bbb" restitutae */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'c');
+}
+
+hic_manens vacuum
+probans_p_paste_multi(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimClipboard clipboard;
+    VimUndoAcervus* undo;
+    VimStatus status;
+
+    vim_clipboard_initiare(&clipboard);
+    undo = vim_undo_creare(g_piscina);
+
+    tabula_ex_literis(&tabula, g_piscina, "aaa\nbbb\nccc");
+    status = vim_initiare_cum_contextu(&tabula, &clipboard, undo);
+
+    /* V j d - cut 2 lineas */
+    status = vim_tractare_clavem(status, 'V');
+    status = vim_tractare_clavem(status, 'j');
+    status = vim_tractare_clavem(status, 'd');
+
+    /* p - paste 2 lineas */
+    status = vim_tractare_clavem(status, 'p');
+
+    /* Verificare: "aaa" et "bbb" insertae post "ccc" */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'b');
+}
+
+
+/* ==================================================
  * Main
  * ================================================== */
 
@@ -1351,6 +1594,27 @@ principale(vacuum)
 
     printf("--- Probans V dedent selectio ---\n");
     probans_V_dedent_selectio();
+
+    printf("--- Probans dd cut et p paste ---\n");
+    probans_dd_cut_et_p_paste();
+
+    printf("--- Probans P paste ante ---\n");
+    probans_P_paste_ante();
+
+    printf("--- Probans u undo dd ---\n");
+    probans_u_undo_dd();
+
+    printf("--- Probans u undo p ---\n");
+    probans_u_undo_p();
+
+    printf("--- Probans V d cut multi ---\n");
+    probans_V_d_cut_multi();
+
+    printf("--- Probans V d undo multi ---\n");
+    probans_V_d_undo_multi();
+
+    printf("--- Probans p paste multi ---\n");
+    probans_p_paste_multi();
 
     printf("\n");
     credo_imprimere_compendium();
