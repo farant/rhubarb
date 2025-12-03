@@ -722,6 +722,75 @@ _delere_ad_finem_tabulae(
     redde status;
 }
 
+/* J - jungere lineam currentem cum linea inferiore */
+hic_manens VimStatus
+_jungere_lineas(
+    VimStatus status)
+{
+    s32 finis_currentis;
+    s32 finis_inferioris;
+    i32 initium_contenti_inferioris;
+    i32 pos_junctionis;
+    i32 col;
+    i32 linea_inferior;
+
+    /* Verificare si non sumus ad ultimam lineam */
+    si (status.cursor_linea >= status.tabula->altitudo - I)
+    {
+        redde status;
+    }
+
+    linea_inferior = status.cursor_linea + I;
+    finis_currentis = tabula_invenire_finem_contenti(status.tabula, status.cursor_linea);
+    finis_inferioris = tabula_invenire_finem_contenti(status.tabula, linea_inferior);
+
+    /* Invenire initium contenti (non-whitespace) in linea inferiore */
+    initium_contenti_inferioris = tabula_invenire_initium_contenti(status.tabula, linea_inferior);
+
+    /* Determinare positio junctionis */
+    si (finis_currentis < ZEPHYRUM)
+    {
+        /* Linea currens vacua - junctio ad columna 0 */
+        pos_junctionis = ZEPHYRUM;
+    }
+    alioquin
+    {
+        /* Addere spatium post finem contenti currentis */
+        pos_junctionis = (i32)finis_currentis + I;
+
+        /* Inserere spatium separator (si linea inferior habet contentum) */
+        si (finis_inferioris >= ZEPHYRUM && pos_junctionis < status.tabula->latitudo - I)
+        {
+            tabula_cellula(status.tabula, status.cursor_linea, pos_junctionis) = ' ';
+            pos_junctionis++;
+        }
+    }
+
+    /* Copiare contentum lineae inferioris (sine leading whitespace) */
+    si (finis_inferioris >= ZEPHYRUM)
+    {
+        per (col = initium_contenti_inferioris; col <= (i32)finis_inferioris; col++)
+        {
+            i32 dest_col;
+
+            dest_col = pos_junctionis + col - initium_contenti_inferioris;
+            si (dest_col < status.tabula->latitudo)
+            {
+                tabula_cellula(status.tabula, status.cursor_linea, dest_col) =
+                    tabula_cellula(status.tabula, linea_inferior, col);
+            }
+        }
+    }
+
+    /* Delere lineam inferiorem */
+    tabula_delere_lineam(status.tabula, linea_inferior);
+
+    /* Cursor manet ad linea currenti (non mutatur) */
+    status.mutatus = VERUM;
+
+    redde status;
+}
+
 /* >> - augere indentationem lineae */
 hic_manens VimStatus
 _augere_indentationem(
@@ -1452,6 +1521,10 @@ _tractare_normalis(
         casus 'd':
             status.clavis_praecedens = 'd';
             redde status;
+
+        /* Jungere lineas (J) */
+        casus 'J':
+            redde _jungere_lineas(status);
 
         /* Gluten (Paste) */
         casus 'p':

@@ -1442,6 +1442,62 @@ probans_p_paste_multi(vacuum)
 }
 
 
+hic_manens vacuum
+probans_J_jungere_lineas(vacuum)
+{
+    TabulaCharacterum tabula;
+    VimStatus status;
+
+    /* Casus basicus: "hello" + "world" -> "hello world" */
+    tabula_ex_literis(&tabula, g_piscina, "hello\nworld");
+    status = vim_initiare(&tabula);
+
+    status = vim_tractare_clavem(status, 'J');
+
+    /* Verificare: "hello world" in linea 0 */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV), (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)' ');  /* spatium */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VI), (i32)'w');
+    CREDO_VERUM(status.mutatus);
+
+    /* Casus cum indentatio: "foo" + "  bar" -> "foo bar" (sine leading spaces) */
+    tabula_ex_literis(&tabula, g_piscina, "foo\n  bar");
+    status = vim_initiare(&tabula);
+
+    status = vim_tractare_clavem(status, 'J');
+
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'f');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)' ');  /* spatium */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV), (i32)'b');
+
+    /* Casus ad ultimam lineam buffer: nihil facere */
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, I, "only");
+    status = vim_initiare(&tabula);
+
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_FALSUM(status.mutatus);  /* Nihil mutatum - vere ultima linea */
+
+    /* Casus linea currens vacua */
+    tabula_ex_literis(&tabula, g_piscina, "\nworld");
+    status = vim_initiare(&tabula);
+
+    status = vim_tractare_clavem(status, 'J');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'w');
+    CREDO_VERUM(status.mutatus);
+
+    /* Casus linea inferior vacua */
+    tabula_ex_literis(&tabula, g_piscina, "hello\n");
+    status = vim_initiare(&tabula);
+
+    status = vim_tractare_clavem(status, 'J');
+    /* "hello" manet, sed linea vacua deleta */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
+    CREDO_VERUM(status.mutatus);
+}
+
+
 /* ==================================================
  * Main
  * ================================================== */
@@ -1615,6 +1671,9 @@ principale(vacuum)
 
     printf("--- Probans p paste multi ---\n");
     probans_p_paste_multi();
+
+    printf("--- Probans J jungere lineas ---\n");
+    probans_J_jungere_lineas();
 
     printf("\n");
     credo_imprimere_compendium();
