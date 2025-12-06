@@ -68,6 +68,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_interpres.c"
     "lib/coloratio.c"
     "lib/libro_paginarum.c"
+    "lib/schirmata.c"
 )
 
 # Objective-C source (compiled separately)

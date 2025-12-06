@@ -10,6 +10,7 @@
 #include "layout.h"
 #include "libro_paginarum.h"
 #include "registrum_commandi.h"
+#include "schirmata.h"
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -330,6 +331,7 @@ main(int argc, char** argv)
     b32                  currens;
     RegistrumCommandi*   reg_commandi;
     LibroPaginarum*      libro;
+    Schirmata*           schirmata;
     constans character*  via_log;
     character            via_temp[CXXVIII];
     b32                  utere_temp;
@@ -408,6 +410,16 @@ main(int argc, char** argv)
         redde I;
     }
 
+    /* Creare libro paginarum (communicatus inter omnes schirmas) */
+    libro = libro_creare(piscina, intern);
+    si (!libro)
+    {
+        imprimere("Fractura: non potest creare libro\n");
+        redde I;
+    }
+    libro_connectere_repo(libro, repositorium);
+    libro_carcare(libro);
+
     /* Creare registrum commandi */
     reg_commandi = registrum_commandi_creare(piscina);
     si (!reg_commandi)
@@ -416,17 +428,22 @@ main(int argc, char** argv)
         redde I;
     }
 
-    /* Obtinere libro ex layout pro commands */
-    libro = layout_obtinere_libro(dom, "editor");
-
     /* Registrare commands */
     registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
     registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
     registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
     registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
 
-    /* Ponere registrum in layout */
-    layout_ponere_reg_commandi(dom, reg_commandi);
+    /* Ponere registrum in libro */
+    libro_ponere_reg_commandi(libro, reg_commandi);
+
+    /* Creare schirmata (screens controller) */
+    schirmata = schirmata_creare(piscina, intern, libro, repositorium, reg_commandi);
+    si (!schirmata)
+    {
+        imprimere("Fractura: non potest creare schirmata\n");
+        redde I;
+    }
 
     /* Configurare fenestram */
     configuratio.titulus = "LibroPaginarum + Navigator Demo";
@@ -487,8 +504,8 @@ main(int argc, char** argv)
             {
                 b32 tractatus;
 
-                /* Manager tractat omnes eventus (focus, routing, etc) */
-                tractatus = manager_widget_tractare_eventum(dom->manager, &eventus);
+                /* Schirmata tractat omnes eventus (screens, focus, routing, etc) */
+                tractatus = schirmata_tractare_eventum(schirmata, &eventus);
 
                 /* Si pagina reddidit FALSUM (ESC in normal mode), exire */
                 si (!tractatus && eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
@@ -508,8 +525,8 @@ main(int argc, char** argv)
         tabula_pixelorum_vacare(tabula,
             color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
-        /* Manager reddit omnes widgets */
-        manager_widget_reddere(dom->manager, tabula, I);
+        /* Schirmata reddit schirmam currentem et tab bar */
+        schirmata_reddere(schirmata, tabula, I);
 
         /* Praesentare pixela */
         fenestra_praesentare_pixela(fenestra, tabula);
