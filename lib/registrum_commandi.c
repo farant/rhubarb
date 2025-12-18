@@ -103,6 +103,9 @@ registrum_commandi_executare(
 
     command = (Command*)valor;
 
+    /* Ponere datum registratum in contextu */
+    ctx->datum_registratus = command->datum;
+
     /* Execute command */
     redde command->executare(ctx);
 }

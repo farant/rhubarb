@@ -211,6 +211,55 @@ _schirmata_navigator_tractare_eventum(
 
 
 /* ==================================================
+ * Widget Wrapper Functiones - Arx Caeli
+ * ================================================== */
+
+/* Datum pro arx caeli widget wrapper */
+nomen structura {
+    ArcCaeli*  arx_caeli;
+    Schirmata* schirmata;
+} SchirmataArcCaeliDatum;
+
+hic_manens vacuum
+_schirmata_arx_caeli_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataArcCaeliDatum* datum;
+
+    datum = (SchirmataArcCaeliDatum*)widget->datum;
+
+    arx_caeli_reddere(
+        datum->arx_caeli,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_arx_caeli_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataArcCaeliDatum* datum;
+
+    datum = (SchirmataArcCaeliDatum*)widget->datum;
+
+    redde arx_caeli_tractare_eventum(datum->arx_caeli, eventus);
+}
+
+
+/* ==================================================
  * Status Salvare / Restituere
  * ================================================== */
 
@@ -333,6 +382,10 @@ _creare_schirma_layout(
     schirma->libro_status.cursor_linea = ZEPHYRUM;
     schirma->libro_status.cursor_columna = ZEPHYRUM;
     schirma->libro_status.modo = MODO_VIM_NORMALIS;
+
+    /* Creare Arx Caeli */
+    schirma->arx_caeli = arx_caeli_creare(schirmata->piscina, schirmata->intern, schirmata->repo);
+    schirma->modus_arx_caeli = FALSUM;  /* Initare in modus navigator */
 
     schirma->initiatus = VERUM;
 
@@ -727,4 +780,112 @@ schirmata_manager_currens(
     }
 
     redde schirmata->schirmae[schirmata->index_currens].manager;
+}
+
+
+/* ==================================================
+ * Mode Switching - Arx Caeli / Navigator
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_arx_caeli(
+    Schirmata*          schirmata,
+    constans character* slug)
+{
+    Schirma*                schirma;
+    ManagerWidget*          manager;
+    SchirmataArcCaeliDatum* arc_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_arx_caeli)
+    {
+        /* Iam in modus arx caeli - navigare ad slug */
+        arx_caeli_navigare_ad(schirma->arx_caeli, slug);
+        redde;
+    }
+
+    /* Commutare ex navigator ad arx caeli */
+    manager = schirma->manager;
+
+    /* Removere widget index 1 (navigator) et addere arx caeli */
+    /* Nota: ManagerWidget non habet functionem removere, ergo recreare */
+
+    /* Creare arx caeli datum */
+    arc_datum = piscina_allocare(schirmata->piscina, magnitudo(SchirmataArcCaeliDatum));
+    si (!arc_datum)
+    {
+        redde;
+    }
+    arc_datum->arx_caeli = schirma->arx_caeli;
+    arc_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = arc_datum;
+        manager->widgets[I].reddere = _schirmata_arx_caeli_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_arx_caeli_tractare_eventum;
+    }
+
+    schirma->modus_arx_caeli = VERUM;
+
+    /* Navigare ad slug */
+    arx_caeli_navigare_ad(schirma->arx_caeli, slug);
+}
+
+vacuum
+schirmata_commutare_ad_navigator(
+    Schirmata* schirmata)
+{
+    Schirma*                 schirma;
+    ManagerWidget*           manager;
+    SchirmataNavigatorDatum* nav_datum;
+    NavigatorEntitatum*      navigator;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (!schirma->modus_arx_caeli)
+    {
+        /* Iam in modus navigator */
+        redde;
+    }
+
+    /* Commutare ex arx caeli ad navigator */
+    manager = schirma->manager;
+
+    /* Creare navigator si non existit */
+    navigator = navigator_entitatum_creare(schirmata->piscina, schirmata->repo);
+    si (!navigator)
+    {
+        redde;
+    }
+
+    nav_datum = piscina_allocare(schirmata->piscina, magnitudo(SchirmataNavigatorDatum));
+    si (!nav_datum)
+    {
+        redde;
+    }
+    nav_datum->navigator = navigator;
+    nav_datum->piscina = schirmata->piscina;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = nav_datum;
+        manager->widgets[I].reddere = _schirmata_navigator_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_navigator_tractare_eventum;
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
 }

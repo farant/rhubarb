@@ -9,6 +9,7 @@
 #include "navigator_entitatum.h"
 #include "entitas_repositorium.h"
 #include "registrum_commandi.h"
+#include "arx_caeli.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -54,6 +55,8 @@ nomen structura {
     ManagerWidget* manager;           /* Widgets pro hac schirma */
     SchirmaLibroStatus libro_status;  /* Status salvatus libro */
     b32 initiatus;                    /* An haec schirma initiata */
+    ArcCaeli* arx_caeli;              /* Cloud castle widget */
+    b32 modus_arx_caeli;              /* VERUM = cards, FALSUM = navigator */
 } Schirma;
 
 /* Controller schirmarum */
@@ -128,6 +131,24 @@ schirmata_proxima(
  */
 vacuum
 schirmata_prior(
+    Schirmata* schirmata);
+
+/* Commutare ad modus Arx Caeli (cards)
+ *
+ * schirmata: controller
+ * slug: slug schirmae cardium (NIHIL = root)
+ */
+vacuum
+schirmata_commutare_ad_arx_caeli(
+    Schirmata*          schirmata,
+    constans character* slug);
+
+/* Commutare ad modus navigator
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_commutare_ad_navigator(
     Schirmata* schirmata);
 
 

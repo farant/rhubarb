@@ -69,6 +69,7 @@ declare -a SOURCE_FILES=(
     "lib/coloratio.c"
     "lib/libro_paginarum.c"
     "lib/schirmata.c"
+    "lib/arx_caeli.c"
 )
 
 # Objective-C source (compiled separately)

@@ -32,11 +32,12 @@
 
 /* Context passed to all command functions */
 nomen structura ContextusCommandi {
-    Pagina* pagina;         /* Which pagina triggered command */
-    i32 linea;              /* Grid row where command ends */
-    i32 columna;            /* Grid column where command ends */
-    Piscina* piscina;       /* Piscina for allocations */
-    vacuum* datum_custom;   /* Application-specific data */
+    Pagina* pagina;           /* Which pagina triggered command */
+    i32 linea;                /* Grid row where command ends */
+    i32 columna;              /* Grid column where command ends */
+    Piscina* piscina;         /* Piscina for allocations */
+    vacuum* datum_custom;     /* Call-site specific data (e.g., libro) */
+    vacuum* datum_registratus;/* Data registered with command (e.g., schirmata) */
 } ContextusCommandi;
 
 

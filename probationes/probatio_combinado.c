@@ -270,6 +270,54 @@ command_new(
 }
 
 
+/* $cards [slug] - switch to card view */
+interior b32
+command_cards(
+    ContextusCommandi* ctx)
+{
+    Schirmata* schirmata;
+    character slug[LXIV];
+    i32 longitudo;
+
+    schirmata = (Schirmata*)ctx->datum_registratus;
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    longitudo = _legere_argumentum(ctx, slug, LXIV);
+    si (longitudo > ZEPHYRUM)
+    {
+        schirmata_commutare_ad_arx_caeli(schirmata, slug);
+    }
+    alioquin
+    {
+        schirmata_commutare_ad_arx_caeli(schirmata, NIHIL);
+    }
+
+    redde VERUM;
+}
+
+
+/* $navigator - switch to navigator view */
+interior b32
+command_navigator(
+    ContextusCommandi* ctx)
+{
+    Schirmata* schirmata;
+
+    schirmata = (Schirmata*)ctx->datum_registratus;
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    schirmata_commutare_ad_navigator(schirmata);
+
+    redde VERUM;
+}
+
+
 /* $date command - insert/update current date in output region */
 interior b32
 command_date(
@@ -444,6 +492,10 @@ main(int argc, char** argv)
         imprimere("Fractura: non potest creare schirmata\n");
         redde I;
     }
+
+    /* Registrare commands quae schirmata requirunt */
+    registrum_commandi_registrare(reg_commandi, "cards", command_cards, schirmata);
+    registrum_commandi_registrare(reg_commandi, "navigator", command_navigator, schirmata);
 
     /* Configurare fenestram */
     configuratio.titulus = "LibroPaginarum + Navigator Demo";
