@@ -212,6 +212,8 @@
 #define CCXXXVIII		238
 #define CCXXXIX			239
 #define CCXL				240
+#define CCXLI				241
+#define CCXLII			242
 #define CCL					250
 #define CCLI 				251
 #define CCLII 			252
@@ -233,9 +235,9 @@
 #define CCCLX 			360
 #define CD					400
 #define CDX					410
-#define CDXI					411
-#define CDXII					412
-#define CDXIII				413
+#define CDXI				411
+#define CDXII				412
+#define CDXIII			413
 #define CDXIV				414
 #define CDXV				415
 #define CDXVI				416
@@ -243,7 +245,7 @@
 #define CDXVIII			418
 #define CDXIX				419
 #define CDXX 				420
-#define CDXXVI 				426
+#define CDXXVI 			426
 #define CDXXX 			430
 #define CDXL 				440
 #define CDL 				450

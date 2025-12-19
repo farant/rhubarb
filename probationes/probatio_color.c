@@ -81,11 +81,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.b, ZEPHYRUM);
         CREDO_AEQUALIS_I32(color.a, CCLV);
 
-        /* Test white (palette index 5) */
+        /* Test warm white (palette index 5: 0x3F, 0x3C, 0x3A) */
         color = color_ex_palette(V);
-        CREDO_AEQUALIS_I32(color.r, CCLV);
-        CREDO_AEQUALIS_I32(color.g, CCLV);
-        CREDO_AEQUALIS_I32(color.b, CCLV);
+        CREDO_AEQUALIS_I32(color.r, CCLV);  /* 0x3F -> 255 */
+        CREDO_AEQUALIS_I32(color.g, CCXLII);   /* 0x3C -> 242 */
+        CREDO_AEQUALIS_I32(color.b, CCXXXIV);   /* 0x3A -> 234 */
     }
 
     /* ==================================================
