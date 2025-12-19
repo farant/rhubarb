@@ -50,6 +50,7 @@ declare -a SOURCE_FILES=(
     "lib/registrum_widget.c"
     "lib/concha.c"
     "lib/thema_visus.c"
+    "lib/sputnik_syntaxis.c"
 )
 
 # Color codes

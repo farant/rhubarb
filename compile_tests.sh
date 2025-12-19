@@ -73,6 +73,7 @@ declare -a SOURCE_FILES=(
     "lib/arx_caeli.c"
     "lib/concha.c"
     "lib/thema_visus.c"
+    "lib/sputnik_syntaxis.c"
 )
 
 # Objective-C source (compiled separately)
@@ -95,10 +96,12 @@ FILTER=""
 TESTS_TOTAL=0
 TESTS_PASSED=0
 TESTS_FAILED=0
+FAILED_TESTS=""
 
 # GUI app results
 GUI_APPS_BUILT=0
 GUI_APPS_FAILED=0
+FAILED_GUI_APPS=""
 
 # Track if libraries need recompilation
 LIBS_COMPILED=0
@@ -219,6 +222,7 @@ compile_gui_app() {
     if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
+        FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
         echo ""
         return 1
     fi
@@ -247,6 +251,7 @@ compile_and_run_test() {
     if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
+        FAILED_TESTS="$FAILED_TESTS $test_name"
         echo ""
         return 1
     fi
@@ -263,6 +268,7 @@ compile_and_run_test() {
     if ! $output_binary 2>&1; then
         echo -e "${RED}✗ TEST FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
+        FAILED_TESTS="$FAILED_TESTS $test_name"
         echo ""
         return 1
     fi
@@ -345,6 +351,9 @@ print_summary() {
         echo "Tests Total:  $TESTS_TOTAL"
         echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${RESET}"
         echo -e "Tests Failed: ${RED}$TESTS_FAILED${RESET}"
+        if [ -n "$FAILED_TESTS" ]; then
+            echo -e "${RED}Failed:$FAILED_TESTS${RESET}"
+        fi
     fi
 
     if [ $((GUI_APPS_BUILT + GUI_APPS_FAILED)) -gt 0 ]; then
@@ -352,6 +361,7 @@ print_summary() {
         echo -e "GUI Apps Built: ${GREEN}$GUI_APPS_BUILT${RESET}"
         if [ $GUI_APPS_FAILED -gt 0 ]; then
             echo -e "GUI Apps Failed: ${RED}$GUI_APPS_FAILED${RESET}"
+            echo -e "${RED}Failed:$FAILED_GUI_APPS${RESET}"
         fi
 
         if [ $GUI_APPS_BUILT -gt 0 ]; then

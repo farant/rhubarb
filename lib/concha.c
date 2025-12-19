@@ -31,6 +31,25 @@ _concha_command_thema(
 }
 
 
+/* $sputnik-syntax command - switch to syntax reference */
+interior b32
+_concha_command_sputnik_syntax(
+    ContextusCommandi* ctx)
+{
+    Schirmata* schirmata;
+
+    schirmata = (Schirmata*)ctx->datum_registratus;
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    schirmata_commutare_ad_sputnik_syntaxis(schirmata);
+
+    redde VERUM;
+}
+
+
 /* $date command - insert/update current date in output region */
 interior b32
 _concha_command_date(
@@ -245,6 +264,7 @@ concha_creare(ConchaConfiguratio* config)
     /* Registrare built-in commands */
     registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);
     registrum_commandi_registrare(reg_commandi, "thema", _concha_command_thema, schirmata);
+    registrum_commandi_registrare(reg_commandi, "sputnik-syntax", _concha_command_sputnik_syntax, schirmata);
 
     /* Configurare fenestram */
     fenestra_config.titulus = config->titulus ? config->titulus : "Concha";

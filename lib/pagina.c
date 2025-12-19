@@ -691,8 +691,8 @@ pagina_obtinere_regio_ad_punctum(
         }
         alioquin
         {
-            /* Commands usant solum est_character_verbi */
-            si (c == ' ' || c == '\t' || c == '\0' || !est_character_verbi(c))
+            /* Commands permittunt '-' (e.g., $sputnik-syntax) */
+            si (c == ' ' || c == '\t' || c == '\0' || (!est_character_verbi(c) && c != '-'))
             {
                 finis_columna = col;
                 frange;

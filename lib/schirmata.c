@@ -309,6 +309,55 @@ _schirmata_thema_visus_tractare_eventum(
 
 
 /* ==================================================
+ * Widget Wrapper Functiones - Sputnik Syntaxis
+ * ================================================== */
+
+/* Datum pro sputnik syntaxis widget wrapper */
+nomen structura {
+    SputnikSyntaxis* sputnik_syntaxis;
+    Schirmata*       schirmata;
+} SchirmataSputnikSyntaxisDatum;
+
+hic_manens vacuum
+_schirmata_sputnik_syntaxis_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataSputnikSyntaxisDatum* datum;
+
+    datum = (SchirmataSputnikSyntaxisDatum*)widget->datum;
+
+    sputnik_syntaxis_reddere(
+        datum->sputnik_syntaxis,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_sputnik_syntaxis_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataSputnikSyntaxisDatum* datum;
+
+    datum = (SchirmataSputnikSyntaxisDatum*)widget->datum;
+
+    redde sputnik_syntaxis_tractare_eventum(datum->sputnik_syntaxis, eventus);
+}
+
+
+/* ==================================================
  * Status Salvare / Restituere
  * ================================================== */
 
@@ -439,6 +488,10 @@ _creare_schirma_layout(
     /* Creare Thema Visus */
     schirma->thema_visus = thema_visus_creare(schirmata->ctx->piscina);
     schirma->modus_thema_visus = FALSUM;
+
+    /* Creare Sputnik Syntaxis */
+    schirma->sputnik_syntaxis = sputnik_syntaxis_creare(schirmata->ctx->piscina);
+    schirma->modus_sputnik_syntaxis = FALSUM;
 
     schirma->initiatus = VERUM;
 
@@ -882,6 +935,7 @@ schirmata_commutare_ad_arx_caeli(
 
     schirma->modus_arx_caeli = VERUM;
     schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirma->arx_caeli, slug);
@@ -903,13 +957,13 @@ schirmata_commutare_ad_navigator(
 
     schirma = &schirmata->schirmae[schirmata->index_currens];
 
-    si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus)
+    si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus && !schirma->modus_sputnik_syntaxis)
     {
         /* Iam in modus navigator */
         redde;
     }
 
-    /* Commutare ex arx caeli vel thema visus ad navigator */
+    /* Commutare ex arx caeli vel thema visus vel sputnik syntaxis ad navigator */
     manager = schirma->manager;
 
     /* Creare navigator si non existit */
@@ -937,6 +991,7 @@ schirmata_commutare_ad_navigator(
 
     schirma->modus_arx_caeli = FALSUM;
     schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
 }
 
 
@@ -987,6 +1042,58 @@ schirmata_commutare_ad_thema_visus(
 
     schirma->modus_arx_caeli = FALSUM;
     schirma->modus_thema_visus = VERUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+}
+
+
+/* ==================================================
+ * Mode Switching - Sputnik Syntaxis
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_sputnik_syntaxis(
+    Schirmata* schirmata)
+{
+    Schirma*                       schirma;
+    ManagerWidget*                 manager;
+    SchirmataSputnikSyntaxisDatum* syntaxis_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_sputnik_syntaxis)
+    {
+        /* Iam in modus sputnik syntaxis */
+        redde;
+    }
+
+    /* Commutare ad sputnik syntaxis */
+    manager = schirma->manager;
+
+    /* Creare sputnik syntaxis datum */
+    syntaxis_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataSputnikSyntaxisDatum));
+    si (!syntaxis_datum)
+    {
+        redde;
+    }
+    syntaxis_datum->sputnik_syntaxis = schirma->sputnik_syntaxis;
+    syntaxis_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = syntaxis_datum;
+        manager->widgets[I].reddere = _schirmata_sputnik_syntaxis_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_sputnik_syntaxis_tractare_eventum;
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = VERUM;
 }
 
 

@@ -11,6 +11,7 @@
 #include "registrum_commandi.h"
 #include "arx_caeli.h"
 #include "thema_visus.h"
+#include "sputnik_syntaxis.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -58,8 +59,10 @@ nomen structura {
     b32 initiatus;                    /* An haec schirma initiata */
     ArcCaeli* arx_caeli;              /* Cloud castle widget */
     ThemaVisus* thema_visus;          /* Theme viewer widget */
+    SputnikSyntaxis* sputnik_syntaxis; /* Syntax reference widget */
     b32 modus_arx_caeli;              /* VERUM = cards mode */
     b32 modus_thema_visus;            /* VERUM = theme viewer mode */
+    b32 modus_sputnik_syntaxis;       /* VERUM = syntax reference mode */
 } Schirma;
 
 /* Controller schirmarum */
@@ -151,6 +154,14 @@ schirmata_commutare_ad_navigator(
  */
 vacuum
 schirmata_commutare_ad_thema_visus(
+    Schirmata* schirmata);
+
+/* Commutare ad modus sputnik syntaxis (syntax reference)
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_commutare_ad_sputnik_syntaxis(
     Schirmata* schirmata);
 
 

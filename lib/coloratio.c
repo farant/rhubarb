@@ -598,7 +598,8 @@ _colorare_commanda(
             dum (col < tabula->latitudo)
             {
                 c = tabula_cellula(tabula, linea, col);
-                si (!_est_character_verbi(c))
+                /* Commands permittunt '-' (e.g., $sputnik-syntax) */
+                si (!_est_character_verbi(c) && c != '-')
                 {
                     frange;
                 }
