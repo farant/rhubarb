@@ -398,6 +398,7 @@ arx_caeli_creare(
     arc->widget_y = ZEPHYRUM;
     arc->widget_latitudo = ZEPHYRUM;
     arc->widget_altitudo = ZEPHYRUM;
+    arc->scala = I;  /* Defectus scala = 1 */
 
     /* Initiare entitas_ids ad NIHIL */
     {
@@ -1123,6 +1124,7 @@ arx_caeli_reddere(
     arc->widget_y = y;
     arc->widget_latitudo = latitudo;
     arc->widget_altitudo = altitudo;
+    arc->scala = scala;
 
     ctx = delineare_creare_contextum(arc->piscina, tabula);
     si (!ctx)
@@ -1313,8 +1315,8 @@ arx_caeli_tractare_eventum(
         s32 diff_y;
 
         /* Convertere ad character coordinates relative ad widget */
-        char_x = (eventus->datum.mus.x / VI) - arc->widget_x;
-        char_y = (eventus->datum.mus.y / VIII) - arc->widget_y;
+        char_x = (eventus->datum.mus.x / (VI * arc->scala)) - arc->widget_x;
+        char_y = (eventus->datum.mus.y / (VIII * arc->scala)) - arc->widget_y;
 
         nunc = tempus_nunc();
         delta = nunc - arc->tempus_ultimus_click;
@@ -1425,8 +1427,8 @@ arx_caeli_tractare_eventum(
                 arc->trahere_origin_y = carta->y;
 
                 /* Calculare offset in pixelis */
-                carta_px_x = (arc->widget_x + carta->x) * VI;
-                carta_px_y = (arc->widget_y + carta->y) * VIII;
+                carta_px_x = (arc->widget_x + carta->x) * VI * arc->scala;
+                carta_px_y = (arc->widget_y + carta->y) * VIII * arc->scala;
                 arc->trahere_offset_px_x = eventus->datum.mus.x - carta_px_x;
                 arc->trahere_offset_px_y = eventus->datum.mus.y - carta_px_y;
 
@@ -1461,33 +1463,54 @@ arx_caeli_tractare_eventum(
         si (arc->trahens && arc->index_selecta != NIHIL_SELECTA)
         {
             Carta* carta;
-            i32 ghost_px_x;
-            i32 ghost_px_y;
-            i32 grid_x;
-            i32 grid_y;
-            i32 max_grid_x;
-            i32 max_grid_y;
-            i32 widget_px_x;
-            i32 widget_px_y;
-            i32 widget_px_lat;
-            i32 widget_px_alt;
+            s32 ghost_px_x;
+            s32 ghost_px_y;
+            s32 grid_x;
+            s32 grid_y;
+            s32 max_grid_x;
+            s32 max_grid_y;
+            s32 widget_px_x;
+            s32 widget_px_y;
+            s32 widget_px_lat;
+            s32 widget_px_alt;
+            s32 char_lat;
+            s32 char_alt;
 
             carta = &arc->cartae[arc->index_selecta];
+
+            /* Dimensiones characterum cum scala */
+            char_lat = (s32)(VI * arc->scala);
+            char_alt = (s32)(VIII * arc->scala);
 
             /* Memorare positio pixelorum */
             arc->trahere_px_x = eventus->datum.mus.x;
             arc->trahere_px_y = eventus->datum.mus.y;
 
             /* Calculare positio ghost in pixelis (relativa ad widget) */
-            widget_px_x = arc->widget_x * VI;
-            widget_px_y = arc->widget_y * VIII;
-            ghost_px_x = eventus->datum.mus.x - arc->trahere_offset_px_x - widget_px_x;
-            ghost_px_y = eventus->datum.mus.y - arc->trahere_offset_px_y - widget_px_y;
+            widget_px_x = (s32)arc->widget_x * char_lat;
+            widget_px_y = (s32)arc->widget_y * char_alt;
+            ghost_px_x = (s32)eventus->datum.mus.x - (s32)arc->trahere_offset_px_x - widget_px_x;
+            ghost_px_y = (s32)eventus->datum.mus.y - (s32)arc->trahere_offset_px_y - widget_px_y;
 
-            /* Cohibere ghost intra limites widget (in pixelis) */
-            widget_px_lat = arc->widget_latitudo * VI;
-            widget_px_alt = arc->widget_altitudo * VIII;
+            /* Cohibere ghost intra limites widget (in pixelis)
+             * NOTA: Cohibere dextrum/fundum primo, deinde sinistrum/summum,
+             * sic sinistrum/summum vincit si carta maior quam widget */
+            widget_px_lat = (s32)arc->widget_latitudo * char_lat;
+            widget_px_alt = (s32)arc->widget_altitudo * char_alt;
 
+            {
+                s32 carta_px_lat = (s32)carta->latitudo * char_lat;
+                s32 carta_px_alt = (s32)carta->altitudo * char_alt;
+
+                si (ghost_px_x + carta_px_lat > widget_px_lat)
+                {
+                    ghost_px_x = widget_px_lat - carta_px_lat;
+                }
+                si (ghost_px_y + carta_px_alt > widget_px_alt)
+                {
+                    ghost_px_y = widget_px_alt - carta_px_alt;
+                }
+            }
             si (ghost_px_x < 0)
             {
                 ghost_px_x = 0;
@@ -1496,26 +1519,18 @@ arx_caeli_tractare_eventum(
             {
                 ghost_px_y = 0;
             }
-            si (ghost_px_x + carta->latitudo * VI > widget_px_lat)
-            {
-                ghost_px_x = widget_px_lat - carta->latitudo * VI;
-            }
-            si (ghost_px_y + carta->altitudo * VIII > widget_px_alt)
-            {
-                ghost_px_y = widget_px_alt - carta->altitudo * VIII;
-            }
 
             /* Recalculare trahere_px ex positione cohibita */
-            arc->trahere_px_x = ghost_px_x + arc->trahere_offset_px_x + widget_px_x;
-            arc->trahere_px_y = ghost_px_y + arc->trahere_offset_px_y + widget_px_y;
+            arc->trahere_px_x = (i32)(ghost_px_x + (s32)arc->trahere_offset_px_x + widget_px_x);
+            arc->trahere_px_y = (i32)(ghost_px_y + (s32)arc->trahere_offset_px_y + widget_px_y);
 
             /* Calculare grid position cum rounding */
-            grid_x = (ghost_px_x + (VI / II)) / VI;
-            grid_y = (ghost_px_y + (VIII / II)) / VIII;
+            grid_x = (ghost_px_x + (char_lat / II)) / char_lat;
+            grid_y = (ghost_px_y + (char_alt / II)) / char_alt;
 
             /* Cohibere grid position */
-            max_grid_x = arc->widget_latitudo - carta->latitudo;
-            max_grid_y = arc->widget_altitudo - carta->altitudo;
+            max_grid_x = (s32)arc->widget_latitudo - (s32)carta->latitudo;
+            max_grid_y = (s32)arc->widget_altitudo - (s32)carta->altitudo;
 
             si (max_grid_x < 0)
             {
@@ -1542,12 +1557,12 @@ arx_caeli_tractare_eventum(
                 grid_y = max_grid_y;
             }
 
-            arc->trahere_grid_x = grid_x;
-            arc->trahere_grid_y = grid_y;
+            arc->trahere_grid_x = (i32)grid_x;
+            arc->trahere_grid_y = (i32)grid_y;
 
             /* Verificare collisio ad snapped grid position */
             arc->trahere_validum = !arx_caeli_verificare_collisio(
-                arc, grid_x, grid_y,
+                arc, (i32)grid_x, (i32)grid_y,
                 carta->latitudo, carta->altitudo,
                 arc->index_selecta);
 

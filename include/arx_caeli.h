@@ -32,10 +32,17 @@
 
 /* ==================================================
  * Constantae
+ *
+ * NOTA DE ARCHITECTURA:
+ * Cartae in memoria (array infra) sunt solum visibiles
+ * in schirma currenti. Repositorium entitatum continet
+ * omnes cartas sine limite - milia cartarum per multas
+ * schirmas possibiles sunt. Haec array est "working set"
+ * pro UI, non pro persistentia.
  * ================================================== */
 
-#define CARTAE_MAXIMUS      LXIV    /* 64 cartae per schirma */
-#define HISTORIA_MAXIMUS    XVI     /* 16 gradus historiae */
+#define CARTAE_MAXIMUS      LXIV    /* 64 cartae per schirma visibiles */
+#define HISTORIA_MAXIMUS    XVI     /* 16 gradus historiae navigationis */
 #define DOUBLE_CLICK_TEMPUS 0.3     /* 300ms */
 
 
@@ -116,6 +123,7 @@ nomen structura {
     i32 widget_y;
     i32 widget_latitudo;
     i32 widget_altitudo;
+    i32 scala;                      /* Factor scalae fontis */
 } ArcCaeli;
 
 
