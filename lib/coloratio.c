@@ -438,20 +438,40 @@ _colorare_sputnik(
             perge;
         }
 
-        /* Identifiers and keywords */
+        /* Identifiers and keywords (kebab-case permissa) */
         si (_est_character_verbi(c) && !_est_digitus(c))
         {
             initium = col;
             verbum_long = ZEPHYRUM;
 
-            dum (col < tabula->latitudo && _est_character_verbi(tabula_cellula(tabula, linea, col)))
+            dum (col < tabula->latitudo)
             {
-                si (verbum_long < LXIII)
+                c = tabula_cellula(tabula, linea, col);
+
+                si (_est_character_verbi(c))
                 {
-                    verbum[verbum_long] = tabula_cellula(tabula, linea, col);
-                    verbum_long++;
+                    si (verbum_long < LXIII)
+                    {
+                        verbum[verbum_long] = c;
+                        verbum_long++;
+                    }
+                    col++;
                 }
-                col++;
+                alioquin si (c == '-' && col + I < tabula->latitudo &&
+                             _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
+                {
+                    /* Hyphen: solum consume si sequitur identifier character */
+                    si (verbum_long < LXIII)
+                    {
+                        verbum[verbum_long] = c;
+                        verbum_long++;
+                    }
+                    col++;
+                }
+                alioquin
+                {
+                    frange;
+                }
             }
             verbum[verbum_long] = '\0';
 
