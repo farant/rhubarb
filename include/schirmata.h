@@ -10,6 +10,7 @@
 #include "entitas_repositorium.h"
 #include "registrum_commandi.h"
 #include "arx_caeli.h"
+#include "thema_visus.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -56,7 +57,9 @@ nomen structura {
     SchirmaLibroStatus libro_status;  /* Status salvatus libro */
     b32 initiatus;                    /* An haec schirma initiata */
     ArcCaeli* arx_caeli;              /* Cloud castle widget */
-    b32 modus_arx_caeli;              /* VERUM = cards, FALSUM = navigator */
+    ThemaVisus* thema_visus;          /* Theme viewer widget */
+    b32 modus_arx_caeli;              /* VERUM = cards mode */
+    b32 modus_thema_visus;            /* VERUM = theme viewer mode */
 } Schirma;
 
 /* Controller schirmarum */
@@ -140,6 +143,14 @@ schirmata_commutare_ad_arx_caeli(
  */
 vacuum
 schirmata_commutare_ad_navigator(
+    Schirmata* schirmata);
+
+/* Commutare ad modus thema visus (theme viewer)
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_commutare_ad_thema_visus(
     Schirmata* schirmata);
 
 

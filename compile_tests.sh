@@ -72,6 +72,7 @@ declare -a SOURCE_FILES=(
     "lib/schirmata.c"
     "lib/arx_caeli.c"
     "lib/concha.c"
+    "lib/thema_visus.c"
 )
 
 # Objective-C source (compiled separately)

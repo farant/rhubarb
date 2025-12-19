@@ -12,6 +12,25 @@
  * Built-in Commands
  * ================================================== */
 
+/* $thema command - switch to theme viewer */
+interior b32
+_concha_command_thema(
+    ContextusCommandi* ctx)
+{
+    Schirmata* schirmata;
+
+    schirmata = (Schirmata*)ctx->datum_registratus;
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    schirmata_commutare_ad_thema_visus(schirmata);
+
+    redde VERUM;
+}
+
+
 /* $date command - insert/update current date in output region */
 interior b32
 _concha_command_date(
@@ -225,6 +244,7 @@ concha_creare(ConchaConfiguratio* config)
 
     /* Registrare built-in commands */
     registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);
+    registrum_commandi_registrare(reg_commandi, "thema", _concha_command_thema, schirmata);
 
     /* Configurare fenestram */
     fenestra_config.titulus = config->titulus ? config->titulus : "Concha";

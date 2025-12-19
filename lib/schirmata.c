@@ -260,6 +260,55 @@ _schirmata_arx_caeli_tractare_eventum(
 
 
 /* ==================================================
+ * Widget Wrapper Functiones - Thema Visus
+ * ================================================== */
+
+/* Datum pro thema visus widget wrapper */
+nomen structura {
+    ThemaVisus* thema_visus;
+    Schirmata*  schirmata;
+} SchirmataThemaVisusDatum;
+
+hic_manens vacuum
+_schirmata_thema_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataThemaVisusDatum* datum;
+
+    datum = (SchirmataThemaVisusDatum*)widget->datum;
+
+    thema_visus_reddere(
+        datum->thema_visus,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_thema_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataThemaVisusDatum* datum;
+
+    datum = (SchirmataThemaVisusDatum*)widget->datum;
+
+    redde thema_visus_tractare_eventum(datum->thema_visus, eventus);
+}
+
+
+/* ==================================================
  * Status Salvare / Restituere
  * ================================================== */
 
@@ -386,6 +435,10 @@ _creare_schirma_layout(
     /* Creare Arx Caeli */
     schirma->arx_caeli = arx_caeli_creare(schirmata->ctx);
     schirma->modus_arx_caeli = FALSUM;  /* Initare in modus navigator */
+
+    /* Creare Thema Visus */
+    schirma->thema_visus = thema_visus_creare(schirmata->ctx->piscina);
+    schirma->modus_thema_visus = FALSUM;
 
     schirma->initiatus = VERUM;
 
@@ -828,6 +881,7 @@ schirmata_commutare_ad_arx_caeli(
     }
 
     schirma->modus_arx_caeli = VERUM;
+    schirma->modus_thema_visus = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirma->arx_caeli, slug);
@@ -849,13 +903,13 @@ schirmata_commutare_ad_navigator(
 
     schirma = &schirmata->schirmae[schirmata->index_currens];
 
-    si (!schirma->modus_arx_caeli)
+    si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus)
     {
         /* Iam in modus navigator */
         redde;
     }
 
-    /* Commutare ex arx caeli ad navigator */
+    /* Commutare ex arx caeli vel thema visus ad navigator */
     manager = schirma->manager;
 
     /* Creare navigator si non existit */
@@ -882,7 +936,59 @@ schirmata_commutare_ad_navigator(
     }
 
     schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
 }
+
+
+/* ==================================================
+ * Mode Switching - Thema Visus
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_thema_visus(
+    Schirmata* schirmata)
+{
+    Schirma*                  schirma;
+    ManagerWidget*            manager;
+    SchirmataThemaVisusDatum* thema_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_thema_visus)
+    {
+        /* Iam in modus thema visus */
+        redde;
+    }
+
+    /* Commutare ad thema visus */
+    manager = schirma->manager;
+
+    /* Creare thema visus datum */
+    thema_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataThemaVisusDatum));
+    si (!thema_datum)
+    {
+        redde;
+    }
+    thema_datum->thema_visus = schirma->thema_visus;
+    thema_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = thema_datum;
+        manager->widgets[I].reddere = _schirmata_thema_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_thema_visus_tractare_eventum;
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = VERUM;
+}
+
 
 LibroPaginarum*
 schirmata_libro(
