@@ -621,7 +621,7 @@ _construere_items(
         _sortare_relationes(
             &nav->items[initium_non_contains],
             numerus_non_contains,
-            nav->repositorium);
+            nav->ctx->repo);
     }
 
     /* Secundo: addere relationes CONTAINS */
@@ -668,7 +668,7 @@ _construere_items(
         _sortare_relationes(
             &nav->items[initium_contains],
             numerus_contains,
-            nav->repositorium);
+            nav->ctx->repo);
     }
 
     /* Addere genus ut pseudo-proprietas */
@@ -767,8 +767,8 @@ _construere_items(
         i32       numerus_backlinks;
         i32       initium_backlinks;
 
-        relationes_ad = nav->repositorium->capere_relationes_ad(
-            nav->repositorium->datum,
+        relationes_ad = nav->ctx->repo->capere_relationes_ad(
+            nav->ctx->repo->datum,
             ent->id);
 
         si (relationes_ad)
@@ -811,7 +811,7 @@ _construere_items(
                 _sortare_relationes_inversas(
                     &nav->items[initium_backlinks],
                     numerus_backlinks,
-                    nav->repositorium);
+                    nav->ctx->repo);
             }
         }
     }
@@ -840,21 +840,20 @@ _calcular_items_per_pagina(
 
 NavigatorEntitatum*
 navigator_entitatum_creare(
-    Piscina*             piscina,
-    EntitasRepositorium* repositorium)
+    ContextusWidget* ctx)
 {
     NavigatorEntitatum* nav;
     Xar*                radices;
     Entitas**           radix_slot;
 
-    si (!piscina || !repositorium)
+    si (!ctx || !ctx->piscina || !ctx->repo)
     {
         redde NIHIL;
     }
 
     /* Allocare structuram */
     nav = (NavigatorEntitatum*)piscina_allocare(
-        piscina,
+        ctx->piscina,
         magnitudo(NavigatorEntitatum));
     si (!nav)
     {
@@ -862,8 +861,7 @@ navigator_entitatum_creare(
     }
 
     /* Initiare campos */
-    nav->repositorium       = repositorium;
-    nav->piscina            = piscina;
+    nav->ctx = ctx;
     nav->entitas_currens    = NIHIL;
     nav->numerus_itemorum   = ZEPHYRUM;
     nav->selectio           = ZEPHYRUM;
@@ -871,14 +869,14 @@ navigator_entitatum_creare(
     nav->items_per_pagina   = XXX;  /* Valor initiarius */
 
     /* Creare Xar pro via navigationis */
-    nav->via = xar_creare(piscina, magnitudo(ItemHistoriae));
+    nav->via = xar_creare(ctx->piscina, magnitudo(ItemHistoriae));
     si (!nav->via)
     {
         redde NIHIL;
     }
 
     /* Tentare navigare ad primam radicem */
-    radices = repositorium->capere_radices(repositorium->datum);
+    radices = ctx->repo->capere_radices(ctx->repo->datum);
     si (radices && xar_numerus(radices) > ZEPHYRUM)
     {
         radix_slot = (Entitas**)xar_obtinere(radices, ZEPHYRUM);
@@ -913,8 +911,8 @@ navigator_entitatum_navigare_ad(
     }
 
     /* Capere novam entitatem ex repositorium */
-    nova_entitas = nav->repositorium->capere_entitatem(
-        nav->repositorium->datum,
+    nova_entitas = nav->ctx->repo->capere_entitatem(
+        nav->ctx->repo->datum,
         entitas_id);
     si (!nova_entitas)
     {
@@ -973,8 +971,8 @@ navigator_entitatum_retro(
     }
 
     /* Capere entitatem */
-    entitas_praecedens = nav->repositorium->capere_entitatem(
-        nav->repositorium->datum,
+    entitas_praecedens = nav->ctx->repo->capere_entitatem(
+        nav->ctx->repo->datum,
         item_historiae->entitas_id);
     si (!entitas_praecedens)
     {
@@ -1281,8 +1279,8 @@ _reddere_items_currens(
                 Entitas* dest_ent;
                 chorda* display_chorda;
 
-                dest_ent = nav->repositorium->capere_entitatem(
-                    nav->repositorium->datum, rel->destinatio_id);
+                dest_ent = nav->ctx->repo->capere_entitatem(
+                    nav->ctx->repo->datum, rel->destinatio_id);
 
                 display_chorda = entitas_titulum_capere(dest_ent);
 
@@ -1343,8 +1341,8 @@ _reddere_items_currens(
                     color_genus);
 
                 /* Linea 2: "    titulus/" (indentatus cum 4 spatia) */
-                dest_ent = nav->repositorium->capere_entitatem(
-                    nav->repositorium->datum, rel->destinatio_id);
+                dest_ent = nav->ctx->repo->capere_entitatem(
+                    nav->ctx->repo->datum, rel->destinatio_id);
 
                 display_chorda = entitas_titulum_capere(dest_ent);
 
@@ -1574,8 +1572,8 @@ _reddere_items_currens(
                 color_genus);
 
             /* Linea 2: "    titulus_originis/" (indentatus cum 4 spatia) */
-            origo_ent = nav->repositorium->capere_entitatem(
-                nav->repositorium->datum, rel->origo_id);
+            origo_ent = nav->ctx->repo->capere_entitatem(
+                nav->ctx->repo->datum, rel->origo_id);
 
             display_chorda = entitas_titulum_capere(origo_ent);
 
@@ -2412,7 +2410,7 @@ navigator_entitatum_reddere(
     color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
 
     /* === REDDERE BORDER === */
-    ctx = delineare_creare_contextum(nav->piscina, tabula);
+    ctx = delineare_creare_contextum(nav->ctx->piscina, tabula);
 
     /* Titulo pro border - usare titulum entitatis (name/title/id) */
     {
@@ -2496,8 +2494,8 @@ navigator_entitatum_reddere(
         item_historiae = (ItemHistoriae*)xar_obtinere(nav->via, numerus_items_via - I);
         si (item_historiae)
         {
-            entitas_parens = nav->repositorium->capere_entitatem(
-                nav->repositorium->datum,
+            entitas_parens = nav->ctx->repo->capere_entitatem(
+                nav->ctx->repo->datum,
                 item_historiae->entitas_id);
         }
     }
@@ -2507,7 +2505,7 @@ navigator_entitatum_reddere(
         _reddere_columnam_entitatis(
             tabula,
             entitas_parens,
-            nav->repositorium,
+            nav->ctx->repo,
             x_sinistra,
             y + I,  /* +1 pro border */
             latitudo_sinistra - I,  /* -1 pro spatio divider */

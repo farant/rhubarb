@@ -61,8 +61,7 @@ nomen structura {
 
 /* Controller schirmarum */
 nomen structura {
-    Piscina* piscina;
-    InternamentumChorda* intern;
+    ContextusWidget* ctx;
 
     Schirma schirmae[SCHIRMATA_MAXIMUS];
     i32 index_currens;        /* Schirma currens (0-9) */
@@ -71,8 +70,6 @@ nomen structura {
 
     /* Res communicatae inter omnes schirmas */
     LibroPaginarum* libro;
-    EntitasRepositorium* repo;
-    RegistrumCommandi* reg_commandi;
 } Schirmata;
 
 
@@ -84,21 +81,15 @@ nomen structura {
  *
  * Initializat omnes X schirmas cum layout defalta.
  *
- * piscina: piscina pro allocatione
- * intern: internamentum chordarum
+ * ctx: contextus widget cum servitiis communicatis
  * libro: libro paginarum (communicatus)
- * repo: repositorium entitatum (communicatus)
- * reg_commandi: registrum commandi
  *
  * Redde: Schirmata* si successus, NIHIL si error
  */
 Schirmata*
 schirmata_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    LibroPaginarum*      libro,
-    EntitasRepositorium* repo,
-    RegistrumCommandi*   reg_commandi);
+    ContextusWidget* ctx,
+    LibroPaginarum*  libro);
 
 
 /* ==================================================

@@ -4,10 +4,47 @@
 #include "latina.h"
 #include "fenestra.h"
 #include "piscina.h"
+#include "internamentum.h"
+#include "entitas_repositorium.h"
+#include "registrum_commandi.h"
 
 /* Constantae pro detectione duplex click */
 #define DUPLEX_CLICK_TEMPUS     0.3     /* 300ms */
 #define DUPLEX_CLICK_DISTANTIA  XII     /* 12 pixels (~2 characteres) */
+
+
+/* ==================================================
+ * CONTEXTUS WIDGET - Servitia Communicata
+ *
+ * Contextus continet omnia servitia quae widgets
+ * requirunt. Omnes widgets utuntur eodem contextu
+ * ut consistentia servetur.
+ *
+ * ================================================== */
+
+nomen structura {
+    Piscina*             piscina;
+    InternamentumChorda* intern;
+    EntitasRepositorium* repo;          /* NIHIL si non requiritur */
+    RegistrumCommandi*   reg_commandi;  /* NIHIL si non requiritur */
+} ContextusWidget;
+
+/* Creare contextum widget
+ *
+ * piscina: piscina pro allocatione
+ * intern: internamentum chordarum
+ * repo: repositorium entitatum (potest esse NIHIL)
+ * reg_commandi: registrum commandi (potest esse NIHIL)
+ *
+ * Redde: ContextusWidget* si successus, NIHIL si error
+ */
+ContextusWidget*
+contextus_widget_creare(
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    EntitasRepositorium* repo,
+    RegistrumCommandi*   reg_commandi);
+
 
 /* ==================================================
  * WIDGET - Sistema Compositionis Widgetorum

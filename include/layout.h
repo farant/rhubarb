@@ -55,9 +55,7 @@ nomen structura {
 nomen structura {
     ManagerWidget*       manager;
     TabulaDispersa*      widgets;  /* id (chorda*) -> LayoutWidgetIntroitus* */
-    Piscina*             piscina;
-    InternamentumChorda* intern;
-    RegistrumCommandi*   reg_commandi;  /* Registrum commandi pro tag clicks */
+    ContextusWidget*     ctx;      /* Contextus communicatus */
 } LayoutDom;
 
 
@@ -70,19 +68,15 @@ nomen structura {
  * Parset STML, creat widgets, registrat cum manager.
  * Tags supportati: <pagina>, <navigator>
  *
- * piscina: piscina pro allocatione
- * intern: internamentum chordarum
+ * ctx: contextus widget cum servitiis communicatis
  * stml: chorda STML cum <layout> radice
- * repositorium: usatum pro <navigator> widgets (potest esse NIHIL si nullus navigator)
  *
  * Redde: LayoutDom* si successus, NIHIL si error
  */
 LayoutDom*
 layout_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    constans character*  stml,
-    EntitasRepositorium* repositorium);
+    ContextusWidget*    ctx,
+    constans character* stml);
 
 
 /* ==================================================

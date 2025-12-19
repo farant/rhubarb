@@ -8,6 +8,7 @@
 #include "pagina.h"
 #include "entitas_repositorium.h"
 #include "registrum_commandi.h"
+#include "widget.h"
 
 /* ==================================================
  * LIBRO PAGINARUM - Multi-Page Editor Widget
@@ -44,17 +45,8 @@
 
 /* Liber paginarum - multi-page editor */
 nomen structura {
-    /* Piscina pro allocationes */
-    Piscina* piscina;
-
-    /* Internamentum pro chordae */
-    InternamentumChorda* intern;
-
-    /* Repository pro persistentia (NIHIL pro standalone) */
-    EntitasRepositorium* repo;
-
-    /* Registrum commandi pro coloratio (NIHIL = colorare omnes $word) */
-    RegistrumCommandi* reg_commandi;
+    /* Contextus widget cum servitiis communicatis */
+    ContextusWidget* ctx;
 
     /* Clipboard communicatus inter omnes paginas */
     VimClipboard clipboard;
@@ -92,26 +84,13 @@ nomen structura {
  *
  * Allocat libro et creat primam paginam.
  *
- * piscina: piscina pro allocationes
- * intern:  internamentum pro chordae
+ * ctx: contextus widget cum servitiis communicatis
  *
  * Redde: LibroPaginarum* si successus, NIHIL si error
  */
 LibroPaginarum*
 libro_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern);
-
-
-/* Connectere repository (optionalis)
- *
- * libro: libro paginarum
- * repo:  repository pro persistentia
- */
-vacuum
-libro_connectere_repo(
-    LibroPaginarum*      libro,
-    EntitasRepositorium* repo);
+    ContextusWidget* ctx);
 
 
 /* ==================================================
@@ -338,17 +317,6 @@ libro_salvare_omnes(
 b32
 libro_carcare(
     LibroPaginarum* libro);
-
-
-/* Ponere registrum commandi pro coloratio omnium paginarum
- *
- * libro: libro paginarum
- * reg:   registrum commandi
- */
-vacuum
-libro_ponere_reg_commandi(
-    LibroPaginarum*    libro,
-    RegistrumCommandi* reg);
 
 
 /* ==================================================

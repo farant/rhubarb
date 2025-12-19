@@ -57,7 +57,7 @@ _layout_pagina_reddere(
     datum = (LayoutDatumPagina*)widget->datum;
 
     pagina_reddere_cum_margine(
-        datum->dom->piscina,
+        datum->dom->ctx->piscina,
         tabula,
         datum->pagina,
         x,
@@ -78,7 +78,7 @@ _layout_pagina_tractare_eventum(
     datum = (LayoutDatumPagina*)widget->datum;
 
     /* Tractare mouse clicks pro tag detection */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->reg_commandi)
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->ctx->reg_commandi)
     {
         RegioClicca regio;
         i32 click_x;
@@ -105,11 +105,11 @@ _layout_pagina_tractare_eventum(
                 ctx.pagina = datum->pagina;
                 ctx.linea = regio.finis_linea;
                 ctx.columna = regio.finis_columna;
-                ctx.piscina = datum->dom->piscina;
+                ctx.piscina = datum->dom->ctx->piscina;
                 ctx.datum_custom = NIHIL;
 
                 /* Executare command per reg_commandi */
-                registrum_commandi_executare(datum->dom->reg_commandi, regio.datum, &ctx);
+                registrum_commandi_executare(datum->dom->ctx->reg_commandi, regio.datum, &ctx);
 
                 redde VERUM;  /* Click consumptus */
             }
@@ -183,7 +183,7 @@ _layout_libro_reddere(
     datum = (LayoutDatumLibro*)widget->datum;
 
     libro_reddere(
-        datum->dom->piscina,
+        datum->dom->ctx->piscina,
         tabula,
         datum->libro,
         x,
@@ -226,7 +226,7 @@ _layout_libro_tractare_eventum(
     }
 
     /* Tractare mouse clicks pro tag detection (commands et links) */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->reg_commandi)
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->ctx->reg_commandi)
     {
         RegioClicca regio;
         i32 click_x;
@@ -258,11 +258,11 @@ _layout_libro_tractare_eventum(
                 ctx.pagina = pagina;
                 ctx.linea = regio.finis_linea;
                 ctx.columna = regio.finis_columna;
-                ctx.piscina = datum->dom->piscina;
+                ctx.piscina = datum->dom->ctx->piscina;
                 ctx.datum_custom = datum->libro;  /* Pass libro as custom datum */
 
                 /* Executare command per reg_commandi */
-                registrum_commandi_executare(datum->dom->reg_commandi, regio.datum, &ctx);
+                registrum_commandi_executare(datum->dom->ctx->reg_commandi, regio.datum, &ctx);
 
                 redde VERUM;  /* Click consumptus */
             }
@@ -358,7 +358,7 @@ _layout_processare_pagina(
     id_chorda = stml_attributum_capere(nodus, "id");
     si (!id_chorda)
     {
-        id_chorda = chorda_internare_ex_literis(dom->intern, "pagina");
+        id_chorda = chorda_internare_ex_literis(dom->ctx->intern, "pagina");
     }
 
     x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
@@ -367,22 +367,22 @@ _layout_processare_pagina(
     altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
 
     /* Allocare et initiare pagina */
-    pagina = piscina_allocare(dom->piscina, magnitudo(Pagina));
+    pagina = piscina_allocare(dom->ctx->piscina, magnitudo(Pagina));
     si (!pagina)
     {
         redde FALSUM;
     }
     /* Tabula dimensiones = widget dimensiones - border (II pro utroque latere) */
-    pagina_initiare_cum_dimensionibus(pagina, dom->piscina, latitudo - II, altitudo - II, id_chorda);
+    pagina_initiare_cum_dimensionibus(pagina, dom->ctx->piscina, latitudo - II, altitudo - II, id_chorda);
 
     /* Si nodus habet contentum (raw vel liberi), inserere in pagina */
     si (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
     {
-        chorda textus = stml_textus_internus(nodus, dom->piscina);
+        chorda textus = stml_textus_internus(nodus, dom->ctx->piscina);
         si (textus.mensura > ZEPHYRUM)
         {
             /* Pagina_inserere_textum requirit null-terminated */
-            character* textus_nt = piscina_allocare(dom->piscina,
+            character* textus_nt = piscina_allocare(dom->ctx->piscina,
                 (memoriae_index)(textus.mensura + I));
             si (textus_nt)
             {
@@ -394,7 +394,7 @@ _layout_processare_pagina(
     }
 
     /* Creare datum wrapper */
-    datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumPagina));
+    datum = piscina_allocare(dom->ctx->piscina, magnitudo(LayoutDatumPagina));
     si (!datum)
     {
         redde FALSUM;
@@ -414,7 +414,7 @@ _layout_processare_pagina(
         altitudo);
 
     /* Addere ad tabula lookup */
-    introitus = piscina_allocare(dom->piscina, magnitudo(LayoutWidgetIntroitus));
+    introitus = piscina_allocare(dom->ctx->piscina, magnitudo(LayoutWidgetIntroitus));
     si (!introitus)
     {
         redde FALSUM;
@@ -429,9 +429,8 @@ _layout_processare_pagina(
 
 interior b32
 _layout_processare_libro(
-    LayoutDom*           dom,
-    StmlNodus*           nodus,
-    EntitasRepositorium* repositorium)
+    LayoutDom* dom,
+    StmlNodus* nodus)
 {
     chorda*                id_chorda;
     i32                    x, y, latitudo, altitudo;
@@ -443,7 +442,7 @@ _layout_processare_libro(
     id_chorda = stml_attributum_capere(nodus, "id");
     si (!id_chorda)
     {
-        id_chorda = chorda_internare_ex_literis(dom->intern, "libro");
+        id_chorda = chorda_internare_ex_literis(dom->ctx->intern, "libro");
     }
 
     x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
@@ -452,17 +451,15 @@ _layout_processare_libro(
     altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
 
     /* Creare libro */
-    libro = libro_creare(dom->piscina, dom->intern);
+    libro = libro_creare(dom->ctx);
     si (!libro)
     {
         redde FALSUM;
     }
 
-    /* Connectere repositorium si disponibilis (pro persistentia) */
-    si (repositorium)
+    /* Carcare paginas existentes si repositorium disponibilis */
+    si (dom->ctx->repo)
     {
-        libro_connectere_repo(libro, repositorium);
-        /* Carcare paginas existentes */
         libro_carcare(libro);
     }
 
@@ -473,7 +470,7 @@ _layout_processare_libro(
         si (nomen_chorda && nomen_chorda->mensura > ZEPHYRUM)
         {
             /* Creare null-terminated string */
-            character* nomen_nt = piscina_allocare(dom->piscina,
+            character* nomen_nt = piscina_allocare(dom->ctx->piscina,
                 (memoriae_index)(nomen_chorda->mensura + I));
             si (nomen_nt)
             {
@@ -492,14 +489,14 @@ _layout_processare_libro(
         Pagina* pagina;
         chorda textus;
 
-        textus = stml_textus_internus(nodus, dom->piscina);
+        textus = stml_textus_internus(nodus, dom->ctx->piscina);
         si (textus.mensura > ZEPHYRUM)
         {
             pagina = libro_pagina_currens(libro);
             si (pagina)
             {
                 /* Pagina_inserere_textum requirit null-terminated */
-                character* textus_nt = piscina_allocare(dom->piscina,
+                character* textus_nt = piscina_allocare(dom->ctx->piscina,
                     (memoriae_index)(textus.mensura + I));
                 si (textus_nt)
                 {
@@ -515,7 +512,7 @@ _layout_processare_libro(
     }
 
     /* Creare datum wrapper */
-    datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumLibro));
+    datum = piscina_allocare(dom->ctx->piscina, magnitudo(LayoutDatumLibro));
     si (!datum)
     {
         redde FALSUM;
@@ -535,7 +532,7 @@ _layout_processare_libro(
         altitudo);
 
     /* Addere ad tabula lookup */
-    introitus = piscina_allocare(dom->piscina, magnitudo(LayoutWidgetIntroitus));
+    introitus = piscina_allocare(dom->ctx->piscina, magnitudo(LayoutWidgetIntroitus));
     si (!introitus)
     {
         redde FALSUM;
@@ -550,9 +547,8 @@ _layout_processare_libro(
 
 interior b32
 _layout_processare_navigator(
-    LayoutDom*           dom,
-    StmlNodus*           nodus,
-    EntitasRepositorium* repositorium)
+    LayoutDom* dom,
+    StmlNodus* nodus)
 {
     chorda*                id_chorda;
     i32                    x, y, latitudo, altitudo;
@@ -560,7 +556,7 @@ _layout_processare_navigator(
     LayoutDatumNavigator*  datum;
     LayoutWidgetIntroitus* introitus;
 
-    si (!repositorium)
+    si (!dom->ctx->repo)
     {
         /* Navigator requirit repositorium */
         redde FALSUM;
@@ -570,7 +566,7 @@ _layout_processare_navigator(
     id_chorda = stml_attributum_capere(nodus, "id");
     si (!id_chorda)
     {
-        id_chorda = chorda_internare_ex_literis(dom->intern, "navigator");
+        id_chorda = chorda_internare_ex_literis(dom->ctx->intern, "navigator");
     }
 
     x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
@@ -579,20 +575,20 @@ _layout_processare_navigator(
     altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
 
     /* Creare navigator */
-    navigator = navigator_entitatum_creare(dom->piscina, repositorium);
+    navigator = navigator_entitatum_creare(dom->ctx);
     si (!navigator)
     {
         redde FALSUM;
     }
 
     /* Creare datum wrapper */
-    datum = piscina_allocare(dom->piscina, magnitudo(LayoutDatumNavigator));
+    datum = piscina_allocare(dom->ctx->piscina, magnitudo(LayoutDatumNavigator));
     si (!datum)
     {
         redde FALSUM;
     }
     datum->navigator = navigator;
-    datum->piscina = dom->piscina;
+    datum->piscina = dom->ctx->piscina;
 
     /* Registrare cum manager */
     manager_widget_registrare(
@@ -606,7 +602,7 @@ _layout_processare_navigator(
         altitudo);
 
     /* Addere ad tabula lookup */
-    introitus = piscina_allocare(dom->piscina, magnitudo(LayoutWidgetIntroitus));
+    introitus = piscina_allocare(dom->ctx->piscina, magnitudo(LayoutWidgetIntroitus));
     si (!introitus)
     {
         redde FALSUM;
@@ -655,7 +651,7 @@ _layout_processare_schema_proprietatis(
     i32       num_rel;
 
     /* Literalis default est "chorda" */
-    literalis_default = chorda_internare_ex_literis(dom->intern, "chorda");
+    literalis_default = chorda_internare_ex_literis(dom->ctx->intern, "chorda");
     si (!literalis)
     {
         literalis = literalis_default;
@@ -665,7 +661,7 @@ _layout_processare_schema_proprietatis(
     typus_sem = repositorium->entitas_scaffoldare(
         repositorium->datum,
         "TypusSemanticus",
-        chorda_ut_cstr(*typus, dom->piscina));
+        chorda_ut_cstr(*typus, dom->ctx->piscina));
 
     si (!typus_sem)
     {
@@ -673,7 +669,7 @@ _layout_processare_schema_proprietatis(
     }
 
     /* Verificare/ponere typus_literalis */
-    typus_literalis_clavis = chorda_internare_ex_literis(dom->intern, "typus_literalis");
+    typus_literalis_clavis = chorda_internare_ex_literis(dom->ctx->intern, "typus_literalis");
     literalis_existens = entitas_proprietas_capere(typus_sem, typus_literalis_clavis);
 
     si (literalis_existens)
@@ -691,11 +687,11 @@ _layout_processare_schema_proprietatis(
                 repositorium->proprietas_ponere(repositorium->datum, error,
                     "genus_conflictus", "TypusSemanticus");
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "typus_semanticus", chorda_ut_cstr(*typus, dom->piscina));
+                    "typus_semanticus", chorda_ut_cstr(*typus, dom->ctx->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "literalis_existens", chorda_ut_cstr(*literalis_existens, dom->piscina));
+                    "literalis_existens", chorda_ut_cstr(*literalis_existens, dom->ctx->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "literalis_novus", chorda_ut_cstr(*literalis, dom->piscina));
+                    "literalis_novus", chorda_ut_cstr(*literalis, dom->ctx->piscina));
             }
             redde FALSUM;
         }
@@ -704,14 +700,14 @@ _layout_processare_schema_proprietatis(
     {
         /* Ponere typus_literalis et name */
         repositorium->proprietas_ponere(repositorium->datum, typus_sem,
-            "typus_literalis", chorda_ut_cstr(*literalis, dom->piscina));
+            "typus_literalis", chorda_ut_cstr(*literalis, dom->ctx->piscina));
         repositorium->proprietas_ponere(repositorium->datum, typus_sem,
-            "name", chorda_ut_cstr(*typus, dom->piscina));
+            "name", chorda_ut_cstr(*typus, dom->ctx->piscina));
     }
 
     /* Invenire ProprietasDefinitio existens */
-    clavis_intern = chorda_internare_ex_literis(dom->intern,
-        chorda_ut_cstr(*clavis, dom->piscina));
+    clavis_intern = chorda_internare_ex_literis(dom->ctx->intern,
+        chorda_ut_cstr(*clavis, dom->ctx->piscina));
     prop_def = entitas_repositorium_proprietas_definitio_invenire(
         repositorium,
         entitas_genus,
@@ -722,7 +718,7 @@ _layout_processare_schema_proprietatis(
         /* Verificare "est" relatio punctat ad idem TypusSemanticus
          * (non ad Genus - omnes entitates habent "est" ad suum Genus)
          */
-        est_genus = chorda_internare_ex_literis(dom->intern, "est");
+        est_genus = chorda_internare_ex_literis(dom->ctx->intern, "est");
         typus_sem_existens = NIHIL;
 
         num_rel = xar_numerus(prop_def->relationes);
@@ -756,14 +752,14 @@ _layout_processare_schema_proprietatis(
                 repositorium->proprietas_ponere(repositorium->datum, error,
                     "genus_conflictus", "ProprietasDefinitio");
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->piscina));
+                    "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->ctx->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "name", chorda_ut_cstr(*clavis, dom->piscina));
+                    "name", chorda_ut_cstr(*clavis, dom->ctx->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
                     "typus_existens", chorda_ut_cstr(
-                        *entitas_titulum_capere(typus_sem_existens), dom->piscina));
+                        *entitas_titulum_capere(typus_sem_existens), dom->ctx->piscina));
                 repositorium->proprietas_ponere(repositorium->datum, error,
-                    "typus_novus", chorda_ut_cstr(*typus, dom->piscina));
+                    "typus_novus", chorda_ut_cstr(*typus, dom->ctx->piscina));
             }
             redde FALSUM;
         }
@@ -780,9 +776,9 @@ _layout_processare_schema_proprietatis(
         }
 
         repositorium->proprietas_ponere(repositorium->datum, prop_def,
-            "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->piscina));
+            "entitas_genus", chorda_ut_cstr(*entitas_genus, dom->ctx->piscina));
         repositorium->proprietas_ponere(repositorium->datum, prop_def,
-            "name", chorda_ut_cstr(*clavis, dom->piscina));
+            "name", chorda_ut_cstr(*clavis, dom->ctx->piscina));
 
         /* Addere "est" relatio ad TypusSemanticus */
         repositorium->relatio_addere(repositorium->datum, prop_def, "est", typus_sem->id);
@@ -791,16 +787,16 @@ _layout_processare_schema_proprietatis(
         genus_ent = repositorium->entitas_scaffoldare(
             repositorium->datum,
             "Genus",
-            chorda_ut_cstr(*entitas_genus, dom->piscina));
+            chorda_ut_cstr(*entitas_genus, dom->ctx->piscina));
 
         si (genus_ent)
         {
             /* Ponere name si nondum */
             si (!entitas_proprietas_capere(genus_ent,
-                chorda_internare_ex_literis(dom->intern, "name")))
+                chorda_internare_ex_literis(dom->ctx->intern, "name")))
             {
                 repositorium->proprietas_ponere(repositorium->datum, genus_ent,
-                    "name", chorda_ut_cstr(*entitas_genus, dom->piscina));
+                    "name", chorda_ut_cstr(*entitas_genus, dom->ctx->piscina));
             }
 
             /* Addere relatio Genus --[habet_typum]--> ProprietasDefinitio */
@@ -827,7 +823,7 @@ _layout_resolvere_referentia(
     chorda separator;
 
     /* Invenire ultimum "::" separator (permittit namespaced genus) */
-    separator = chorda_ex_literis("::", dom->piscina);
+    separator = chorda_ex_literis("::", dom->ctx->piscina);
     sep_index = chorda_invenire_ultimum_index(*referentia, separator);
     si (sep_index < ZEPHYRUM)
     {
@@ -844,8 +840,8 @@ _layout_resolvere_referentia(
     /* Obtinere vel creare entitas (scaffoldare est idempotens) */
     redde repositorium->entitas_scaffoldare(
         repositorium->datum,
-        chorda_ut_cstr(genus, dom->piscina),
-        chorda_ut_cstr(slug, dom->piscina));
+        chorda_ut_cstr(genus, dom->ctx->piscina),
+        chorda_ut_cstr(slug, dom->ctx->piscina));
 }
 
 interior b32
@@ -879,8 +875,8 @@ _layout_processare_entitas(
     /* Creare entitas (idempotens) */
     entitas = repositorium->entitas_scaffoldare(
         repositorium->datum,
-        chorda_ut_cstr(*genus_attr, dom->piscina),
-        chorda_ut_cstr(*slug_attr, dom->piscina));
+        chorda_ut_cstr(*genus_attr, dom->ctx->piscina),
+        chorda_ut_cstr(*slug_attr, dom->ctx->piscina));
 
     si (!entitas)
     {
@@ -917,11 +913,11 @@ _layout_processare_entitas(
                     repositorium->proprietas_ponere(repositorium->datum, error,
                         "genus_conflictus", "LiteralisSineTypus");
                     repositorium->proprietas_ponere(repositorium->datum, error,
-                        "entitas_genus", chorda_ut_cstr(*genus_attr, dom->piscina));
+                        "entitas_genus", chorda_ut_cstr(*genus_attr, dom->ctx->piscina));
                     repositorium->proprietas_ponere(repositorium->datum, error,
-                        "name", chorda_ut_cstr(*clavis, dom->piscina));
+                        "name", chorda_ut_cstr(*clavis, dom->ctx->piscina));
                     repositorium->proprietas_ponere(repositorium->datum, error,
-                        "literalis", chorda_ut_cstr(*literalis, dom->piscina));
+                        "literalis", chorda_ut_cstr(*literalis, dom->ctx->piscina));
                 }
             }
             alioquin si (typus)
@@ -942,20 +938,20 @@ _layout_processare_entitas(
                 repositorium->proprietas_ponere(
                     repositorium->datum,
                     entitas,
-                    chorda_ut_cstr(*clavis, dom->piscina),
-                    chorda_ut_cstr(*valor, dom->piscina));
+                    chorda_ut_cstr(*clavis, dom->ctx->piscina),
+                    chorda_ut_cstr(*valor, dom->ctx->piscina));
             }
         }
         alioquin si (chorda_aequalis_literis(*liberum->titulus, "nota"))
         {
             /* <nota>#tag</nota> - textus contentum est nota */
-            chorda textus = stml_textus_internus(liberum, dom->piscina);
+            chorda textus = stml_textus_internus(liberum, dom->ctx->piscina);
             si (textus.datum && textus.mensura > ZEPHYRUM)
             {
                 repositorium->nota_addere(
                     repositorium->datum,
                     entitas,
-                    chorda_ut_cstr(textus, dom->piscina));
+                    chorda_ut_cstr(textus, dom->ctx->piscina));
             }
         }
         alioquin si (chorda_aequalis_literis(*liberum->titulus, "relatio"))
@@ -989,10 +985,8 @@ _layout_processare_entitas(
 
 LayoutDom*
 layout_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    constans character*  stml,
-    EntitasRepositorium* repositorium)
+    ContextusWidget*    ctx,
+    constans character* stml)
 {
     LayoutDom*              dom;
     StmlResultus            res;
@@ -1003,45 +997,43 @@ layout_creare(
     Xar*                    relationes_differentes;
     LayoutRelatioDifferens* diff;
 
-    si (!piscina || !intern || !stml)
+    si (!ctx || !ctx->piscina || !ctx->intern || !stml)
     {
         redde NIHIL;
     }
 
     /* Allocare DOM */
-    dom = piscina_allocare(piscina, magnitudo(LayoutDom));
+    dom = piscina_allocare(ctx->piscina, magnitudo(LayoutDom));
     si (!dom)
     {
         redde NIHIL;
     }
 
-    dom->piscina = piscina;
-    dom->intern = intern;
-    dom->reg_commandi = NIHIL;  /* Potest poni post per layout_ponere_reg_commandi */
+    dom->ctx = ctx;
 
     /* Creare manager */
-    dom->manager = manager_widget_creare(piscina);
+    dom->manager = manager_widget_creare(ctx->piscina);
     si (!dom->manager)
     {
         redde NIHIL;
     }
 
     /* Creare tabula lookup */
-    dom->widgets = tabula_dispersa_creare_chorda(piscina, XXXII);
+    dom->widgets = tabula_dispersa_creare_chorda(ctx->piscina, XXXII);
     si (!dom->widgets)
     {
         redde NIHIL;
     }
 
     /* Creare xar pro relationes differentes */
-    relationes_differentes = xar_creare(piscina, magnitudo(LayoutRelatioDifferens));
+    relationes_differentes = xar_creare(ctx->piscina, magnitudo(LayoutRelatioDifferens));
     si (!relationes_differentes)
     {
         redde NIHIL;
     }
 
     /* Parsare STML */
-    res = stml_legere_ex_literis(stml, piscina, intern);
+    res = stml_legere_ex_literis(stml, ctx->piscina, ctx->intern);
     si (!res.successus || !res.elementum_radix)
     {
         redde NIHIL;
@@ -1068,7 +1060,7 @@ layout_creare(
 
         si (chorda_aequalis_literis(*liberum->titulus, "entitas"))
         {
-            _layout_processare_entitas(dom, liberum, repositorium, relationes_differentes);
+            _layout_processare_entitas(dom, liberum, dom->ctx->repo, relationes_differentes);
         }
     }
 
@@ -1080,33 +1072,33 @@ layout_creare(
         diff = (LayoutRelatioDifferens*)xar_obtinere(relationes_differentes, i);
 
         /* Resolvere "Genus::slug" ad entitas */
-        destinatio = _layout_resolvere_referentia(dom, repositorium, diff->ad_referentia);
+        destinatio = _layout_resolvere_referentia(dom, dom->ctx->repo, diff->ad_referentia);
         si (destinatio)
         {
-            repositorium->relatio_addere(
-                repositorium->datum,
+            dom->ctx->repo->relatio_addere(
+                dom->ctx->repo->datum,
                 diff->ab_entitas,
-                chorda_ut_cstr(*diff->genus_relationis, dom->piscina),
+                chorda_ut_cstr(*diff->genus_relationis, dom->ctx->piscina),
                 destinatio->id);
         }
     }
 
     /* === Addere relatio root --contains--> Genus::Genus === */
-    si (repositorium)
+    si (dom->ctx->repo)
     {
         Xar*      radices;
         Entitas*  entitas_radix;
         Entitas*  genus_genus;
 
-        radices = repositorium->capere_radices(repositorium->datum);
+        radices = dom->ctx->repo->capere_radices(dom->ctx->repo->datum);
         si (radices && xar_numerus(radices) > ZEPHYRUM)
         {
             entitas_radix = *(Entitas**)xar_obtinere(radices, ZEPHYRUM);
             si (entitas_radix)
             {
                 /* Scaffoldare Genus::Genus (creabitur si non existit) */
-                genus_genus = repositorium->entitas_scaffoldare(
-                    repositorium->datum, "Genus", "Genus");
+                genus_genus = dom->ctx->repo->entitas_scaffoldare(
+                    dom->ctx->repo->datum, "Genus", "Genus");
                 si (genus_genus)
                 {
                     /* Addere relatio "contains" si nondum existit */
@@ -1116,7 +1108,7 @@ layout_creare(
                     i32     num_rel;
                     Relatio* rel;
 
-                    contains_genus = chorda_internare_ex_literis(intern, "contains");
+                    contains_genus = chorda_internare_ex_literis(dom->ctx->intern, "contains");
                     iam_habet = FALSUM;
 
                     num_rel = xar_numerus(entitas_radix->relationes);
@@ -1133,8 +1125,8 @@ layout_creare(
 
                     si (!iam_habet)
                     {
-                        repositorium->relatio_addere(
-                            repositorium->datum,
+                        dom->ctx->repo->relatio_addere(
+                            dom->ctx->repo->datum,
                             entitas_radix,
                             "contains",
                             genus_genus->id);
@@ -1159,11 +1151,11 @@ layout_creare(
         }
         alioquin si (chorda_aequalis_literis(*liberum->titulus, "libro"))
         {
-            _layout_processare_libro(dom, liberum, repositorium);
+            _layout_processare_libro(dom, liberum);
         }
         alioquin si (chorda_aequalis_literis(*liberum->titulus, "navigator"))
         {
-            _layout_processare_navigator(dom, liberum, repositorium);
+            _layout_processare_navigator(dom, liberum);
         }
         /* entitas iam processata in prima passa */
     }
@@ -1279,7 +1271,7 @@ layout_ponere_reg_commandi(
         redde;
     }
 
-    dom->reg_commandi = reg_commandi;
+    dom->ctx->reg_commandi = reg_commandi;
 
     /* Iterare per omnes widgets et ponere registrum in Pagina coloratios */
     iter = tabula_dispersa_iterator_initium(dom->widgets);
@@ -1297,11 +1289,19 @@ layout_ponere_reg_commandi(
         alioquin si (introitus && introitus->genus == LAYOUT_WIDGET_LIBRO)
         {
             LibroPaginarum* libro;
+            i32 j;
 
             libro = (LibroPaginarum*)introitus->datum;
+            /* Libro obtinet reg_commandi ex ctx, ergo solum actualizare coloratios paginarum */
             si (libro)
             {
-                libro_ponere_reg_commandi(libro, reg_commandi);
+                per (j = ZEPHYRUM; j < libro->numerus_paginarum; j++)
+                {
+                    si (libro->paginae[j] != NIHIL && libro->paginae[j]->coloratio != NIHIL)
+                    {
+                        coloratio_ponere_registrum(libro->paginae[j]->coloratio, reg_commandi);
+                    }
+                }
             }
         }
     }

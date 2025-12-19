@@ -21,7 +21,7 @@ _allocare_paginam(
     chorda* identificator;
 
     /* Allocare Pagina ex piscina */
-    pagina = (Pagina*)piscina_allocare(libro->piscina, magnitudo(Pagina));
+    pagina = (Pagina*)piscina_allocare(libro->ctx->piscina, magnitudo(Pagina));
     si (pagina == NIHIL)
     {
         redde NIHIL;
@@ -29,18 +29,18 @@ _allocare_paginam(
 
     /* Creare identificator "pagina:N" */
     sprintf(id_buffer, "pagina:%d", index);
-    identificator = chorda_internare_ex_literis(libro->intern, id_buffer);
+    identificator = chorda_internare_ex_literis(libro->ctx->intern, id_buffer);
 
     /* Initiare pagina */
-    pagina_initiare(pagina, libro->piscina, identificator);
+    pagina_initiare(pagina, libro->ctx->piscina, identificator);
 
     /* Connectere clipboard et creare undo acervum */
-    pagina_connectere_vim_contextu(pagina, libro->piscina, &libro->clipboard);
+    pagina_connectere_vim_contextu(pagina, libro->ctx->piscina, &libro->clipboard);
 
     /* Ponere reg_commandi in coloratio si habemus */
-    si (libro->reg_commandi != NIHIL && pagina->coloratio != NIHIL)
+    si (libro->ctx->reg_commandi != NIHIL && pagina->coloratio != NIHIL)
     {
-        coloratio_ponere_registrum(pagina->coloratio, libro->reg_commandi);
+        coloratio_ponere_registrum(pagina->coloratio, libro->ctx->reg_commandi);
     }
 
     redde pagina;
@@ -76,29 +76,25 @@ _recordare_in_historia(
 
 LibroPaginarum*
 libro_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern)
+    ContextusWidget* ctx)
 {
     LibroPaginarum* libro;
     i32 i;
 
-    si (piscina == NIHIL || intern == NIHIL)
+    si (ctx == NIHIL || ctx->piscina == NIHIL || ctx->intern == NIHIL)
     {
         redde NIHIL;
     }
 
     /* Allocare libro */
-    libro = (LibroPaginarum*)piscina_allocare(piscina, magnitudo(LibroPaginarum));
+    libro = (LibroPaginarum*)piscina_allocare(ctx->piscina, magnitudo(LibroPaginarum));
     si (libro == NIHIL)
     {
         redde NIHIL;
     }
 
     /* Initiare campos */
-    libro->piscina = piscina;
-    libro->intern = intern;
-    libro->repo = NIHIL;
-    libro->reg_commandi = NIHIL;
+    libro->ctx = ctx;
     libro->numerus_paginarum = ZEPHYRUM;
     libro->index_currens = ZEPHYRUM;
     libro->historia_numerus = ZEPHYRUM;
@@ -133,20 +129,6 @@ libro_creare(
 }
 
 
-vacuum
-libro_connectere_repo(
-    LibroPaginarum*      libro,
-    EntitasRepositorium* repo)
-{
-    si (libro != NIHIL)
-    {
-        libro->repo = repo;
-        /* Nota: non salvare hic - libro_carcare primo vocabitur,
-         * et salvare fiet per debounced save in event loop */
-    }
-}
-
-
 /* ==================================================
  * Navigatio
  * ================================================== */
@@ -178,7 +160,7 @@ libro_navigare_ad(
     }
 
     /* Auto-save pagina currens ante navigare */
-    si (libro->repo != NIHIL)
+    si (libro->ctx->repo != NIHIL)
     {
         libro_salvare_paginam(libro);
     }
@@ -204,7 +186,7 @@ libro_navigare_ad(
         libro->numerus_paginarum++;
 
         /* Salvare novam paginam ad repository */
-        si (libro->repo != NIHIL)
+        si (libro->ctx->repo != NIHIL)
         {
             prior_index = libro->index_currens;
             libro->index_currens = nova_index;
@@ -286,7 +268,7 @@ libro_navigare_ad_nomen(
     }
 
     /* Internare nomen pro comparatione */
-    nomen_chorda = chorda_internare_ex_literis(libro->intern, nomen_);
+    nomen_chorda = chorda_internare_ex_literis(libro->ctx->intern, nomen_);
 
     /* Quaerere paginam cum nomine */
     per (i = ZEPHYRUM; i < libro->numerus_paginarum; i++)
@@ -385,7 +367,7 @@ libro_pagina_nova(
     /* Ponere nomen si datum */
     si (nomen_ != NIHIL)
     {
-        libro->nomina[nova_index] = chorda_internare_ex_literis(libro->intern, nomen_);
+        libro->nomina[nova_index] = chorda_internare_ex_literis(libro->ctx->intern, nomen_);
     }
 
     libro->numerus_paginarum++;
@@ -416,11 +398,11 @@ libro_pagina_nominare(
     }
     alioquin
     {
-        libro->nomina[index] = chorda_internare_ex_literis(libro->intern, nomen_);
+        libro->nomina[index] = chorda_internare_ex_literis(libro->ctx->intern, nomen_);
     }
 
     /* Salvare paginam ad repository */
-    si (libro->repo != NIHIL)
+    si (libro->ctx->repo != NIHIL)
     {
         i32 prior_index;
         prior_index = libro->index_currens;
@@ -830,7 +812,7 @@ libro_salvare_paginam(
     character ordo_buffer[XVI];
     i32 idx;
 
-    si (libro == NIHIL || libro->repo == NIHIL)
+    si (libro == NIHIL || libro->ctx->repo == NIHIL)
     {
         redde FALSUM;
     }
@@ -846,8 +828,8 @@ libro_salvare_paginam(
     /* Si iam habemus entity ID, usare capere_entitatem */
     si (libro->entitas_ids[idx] != NIHIL)
     {
-        entitas = libro->repo->capere_entitatem(
-            libro->repo->datum,
+        entitas = libro->ctx->repo->capere_entitatem(
+            libro->ctx->repo->datum,
             libro->entitas_ids[idx]);
     }
     alioquin
@@ -855,8 +837,8 @@ libro_salvare_paginam(
         /* Prima vice: scaffoldare et memorare ID */
         _generare_scaffold_titulum(scaffold_titulus, idx);
 
-        entitas = libro->repo->entitas_scaffoldare(
-            libro->repo->datum,
+        entitas = libro->ctx->repo->entitas_scaffoldare(
+            libro->ctx->repo->datum,
             "LibroPagina",
             scaffold_titulus);
 
@@ -865,7 +847,7 @@ libro_salvare_paginam(
             /* Memorare entity ID */
             libro->entitas_ids[idx] = entitas->id;
             /* Addere nota pro quaerere in libro_carcare */
-            libro->repo->nota_addere(libro->repo->datum, entitas, "#LibroPagina");
+            libro->ctx->repo->nota_addere(libro->ctx->repo->datum, entitas, "#LibroPagina");
         }
     }
 
@@ -875,7 +857,7 @@ libro_salvare_paginam(
     }
 
     /* Serializa contentum */
-    contentum = _serializa_tabula(libro->piscina, &pagina->tabula);
+    contentum = _serializa_tabula(libro->ctx->piscina, &pagina->tabula);
     si (contentum == NIHIL)
     {
         redde FALSUM;
@@ -883,8 +865,8 @@ libro_salvare_paginam(
 
     /* Ponere proprietas "ordo" */
     sprintf(ordo_buffer, "%d", idx);
-    libro->repo->proprietas_ponere(
-        libro->repo->datum,
+    libro->ctx->repo->proprietas_ponere(
+        libro->ctx->repo->datum,
         entitas,
         "ordo",
         ordo_buffer);
@@ -898,7 +880,7 @@ libro_salvare_paginam(
 
         nomen_chorda = libro->nomina[idx];
         titulus_buffer = (character*)piscina_allocare(
-            libro->piscina,
+            libro->ctx->piscina,
             (i32)nomen_chorda->mensura + I);
 
         si (titulus_buffer != NIHIL)
@@ -910,14 +892,14 @@ libro_salvare_paginam(
             }
             titulus_buffer[nomen_chorda->mensura] = '\0';
 
-            libro->repo->proprietas_ponere(
-                libro->repo->datum,
+            libro->ctx->repo->proprietas_ponere(
+                libro->ctx->repo->datum,
                 entitas,
                 "name",
                 titulus_buffer);
 
-            libro->repo->proprietas_ponere(
-                libro->repo->datum,
+            libro->ctx->repo->proprietas_ponere(
+                libro->ctx->repo->datum,
                 entitas,
                 "titulus",
                 titulus_buffer);
@@ -927,8 +909,8 @@ libro_salvare_paginam(
     {
         /* Usare "pagina-N" si nullum nomen */
         _generare_scaffold_titulum(scaffold_titulus, idx);
-        libro->repo->proprietas_ponere(
-            libro->repo->datum,
+        libro->ctx->repo->proprietas_ponere(
+            libro->ctx->repo->datum,
             entitas,
             "name",
             scaffold_titulus);
@@ -939,7 +921,7 @@ libro_salvare_paginam(
         character* contentum_buffer;
 
         contentum_buffer = (character*)piscina_allocare(
-            libro->piscina,
+            libro->ctx->piscina,
             (i32)contentum->mensura + I);
 
         si (contentum_buffer != NIHIL)
@@ -951,8 +933,8 @@ libro_salvare_paginam(
             }
             contentum_buffer[contentum->mensura] = '\0';
 
-            libro->repo->proprietas_ponere(
-                libro->repo->datum,
+            libro->ctx->repo->proprietas_ponere(
+                libro->ctx->repo->datum,
                 entitas,
                 "contentum",
                 contentum_buffer);
@@ -971,7 +953,7 @@ libro_salvare_omnes(
     i32 prior_index;
     b32 successus;
 
-    si (libro == NIHIL || libro->repo == NIHIL)
+    si (libro == NIHIL || libro->ctx->repo == NIHIL)
     {
         redde FALSUM;
     }
@@ -1004,14 +986,14 @@ libro_carcare(
     i32 num_entitates;
     s32 maximus_ordo;
 
-    si (libro == NIHIL || libro->repo == NIHIL)
+    si (libro == NIHIL || libro->ctx->repo == NIHIL)
     {
         redde FALSUM;
     }
 
     /* Quaerere omnes LibroPagina entitates */
-    entitates = libro->repo->quaerere_cum_praefixo_notae(
-        libro->repo->datum,
+    entitates = libro->ctx->repo->quaerere_cum_praefixo_notae(
+        libro->ctx->repo->datum,
         "#LibroPagina");
 
     /* Si nullae entitates, nihil carcare */
@@ -1044,7 +1026,7 @@ libro_carcare(
 
         ordo_valor = entitas_proprietas_capere(
             entitas,
-            chorda_internare_ex_literis(libro->intern, "ordo"));
+            chorda_internare_ex_literis(libro->ctx->intern, "ordo"));
 
         si (ordo_valor != NIHIL)
         {
@@ -1110,7 +1092,7 @@ libro_carcare(
         /* Obtinere ordo */
         ordo_valor = entitas_proprietas_capere(
             entitas,
-            chorda_internare_ex_literis(libro->intern, "ordo"));
+            chorda_internare_ex_literis(libro->ctx->intern, "ordo"));
 
         si (ordo_valor == NIHIL)
         {
@@ -1143,7 +1125,7 @@ libro_carcare(
         /* Carcare titulus */
         titulus_valor = entitas_proprietas_capere(
             entitas,
-            chorda_internare_ex_literis(libro->intern, "titulus"));
+            chorda_internare_ex_literis(libro->ctx->intern, "titulus"));
 
         si (titulus_valor != NIHIL)
         {
@@ -1153,7 +1135,7 @@ libro_carcare(
         /* Carcare contentum */
         contentum_valor = entitas_proprietas_capere(
             entitas,
-            chorda_internare_ex_literis(libro->intern, "contentum"));
+            chorda_internare_ex_literis(libro->ctx->intern, "contentum"));
 
         si (contentum_valor != NIHIL && libro->paginae[ordo] != NIHIL)
         {
@@ -1162,32 +1144,6 @@ libro_carcare(
     }
 
     redde VERUM;
-}
-
-
-vacuum
-libro_ponere_reg_commandi(
-    LibroPaginarum*    libro,
-    RegistrumCommandi* reg)
-{
-    i32 i;
-
-    si (libro == NIHIL)
-    {
-        redde;
-    }
-
-    /* Servare pro paginae futurae */
-    libro->reg_commandi = reg;
-
-    /* Ponere registrum in coloratio omnium paginarum existentium */
-    per (i = ZEPHYRUM; i < libro->numerus_paginarum; i++)
-    {
-        si (libro->paginae[i] != NIHIL && libro->paginae[i]->coloratio != NIHIL)
-        {
-            coloratio_ponere_registrum(libro->paginae[i]->coloratio, reg);
-        }
-    }
 }
 
 
@@ -1216,7 +1172,7 @@ libro_salvare_si_immundum(
     f64 tempus_currens;
     f64 intervallum;
 
-    si (libro == NIHIL || !libro->est_immundus || libro->repo == NIHIL)
+    si (libro == NIHIL || !libro->est_immundus || libro->ctx->repo == NIHIL)
     {
         redde;
     }

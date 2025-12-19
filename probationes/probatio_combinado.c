@@ -450,25 +450,7 @@ main(int argc, char** argv)
         redde I;
     }
 
-    /* Creare layout ex STML (entitates creantur declarative in STML) */
-    dom = layout_creare(piscina, intern, LAYOUT_STML, repositorium);
-    si (!dom)
-    {
-        imprimere("Fractura: non potest creare layout\n");
-        redde I;
-    }
-
-    /* Creare libro paginarum (communicatus inter omnes schirmas) */
-    libro = libro_creare(piscina, intern);
-    si (!libro)
-    {
-        imprimere("Fractura: non potest creare libro\n");
-        redde I;
-    }
-    libro_connectere_repo(libro, repositorium);
-    libro_carcare(libro);
-
-    /* Creare registrum commandi */
+    /* Creare registrum commandi (ante ctx quia ctx continet reg_commandi) */
     reg_commandi = registrum_commandi_creare(piscina);
     si (!reg_commandi)
     {
@@ -476,17 +458,43 @@ main(int argc, char** argv)
         redde I;
     }
 
-    /* Registrare commands */
-    registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
-    registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
-    registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
-    registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
+    /* Creare contextum widget (communicatus inter omnes widgets) */
+    {
+        ContextusWidget* ctx;
 
-    /* Ponere registrum in libro */
-    libro_ponere_reg_commandi(libro, reg_commandi);
+        ctx = contextus_widget_creare(piscina, intern, repositorium, reg_commandi);
+        si (!ctx)
+        {
+            imprimere("Fractura: non potest creare contextum widget\n");
+            redde I;
+        }
 
-    /* Creare schirmata (screens controller) */
-    schirmata = schirmata_creare(piscina, intern, libro, repositorium, reg_commandi);
+        /* Creare layout ex STML (entitates creantur declarative in STML) */
+        dom = layout_creare(ctx, LAYOUT_STML);
+        si (!dom)
+        {
+            imprimere("Fractura: non potest creare layout\n");
+            redde I;
+        }
+
+        /* Creare libro paginarum (communicatus inter omnes schirmas) */
+        libro = libro_creare(ctx);
+        si (!libro)
+        {
+            imprimere("Fractura: non potest creare libro\n");
+            redde I;
+        }
+        libro_carcare(libro);
+
+        /* Registrare commands */
+        registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
+        registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
+        registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
+        registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
+
+        /* Creare schirmata (screens controller) */
+        schirmata = schirmata_creare(ctx, libro);
+    }
     si (!schirmata)
     {
         imprimere("Fractura: non potest creare schirmata\n");

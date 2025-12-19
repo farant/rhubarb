@@ -5,6 +5,7 @@
 #include "fenestra.h"
 #include "thema.h"
 #include "internamentum.h"
+#include "widget.h"
 #include <stdio.h>
 
 #define LATITUDO_FENESTRA  853
@@ -77,6 +78,7 @@ int
 main(void)
 {
     Piscina*             piscina;
+    InternamentumChorda* intern;
     Persistentia*        persistentia;
     EntitasRepositorium* repositorium;
     NavigatorEntitatum*  navigator;
@@ -94,6 +96,14 @@ main(void)
     si (!piscina)
     {
         imprimere("Fractura: non potest creare piscinam\n");
+        redde I;
+    }
+
+    /* Creare internamentum */
+    intern = internamentum_creare(piscina);
+    si (!intern)
+    {
+        imprimere("Fractura: non potest creare internamentum\n");
         redde I;
     }
 
@@ -116,8 +126,19 @@ main(void)
     /* Creare entitates probationis */
     creare_graphum_probationis(repositorium);
 
-    /* Creare navigator */
-    navigator = navigator_entitatum_creare(piscina, repositorium);
+    /* Creare contextum et navigator */
+    {
+        ContextusWidget* ctx;
+
+        ctx = contextus_widget_creare(piscina, intern, repositorium, NIHIL);
+        si (!ctx)
+        {
+            imprimere("Fractura: non potest creare contextum\n");
+            redde I;
+        }
+
+        navigator = navigator_entitatum_creare(ctx);
+    }
     si (!navigator)
     {
         imprimere("Fractura: non potest creare navigator\n");

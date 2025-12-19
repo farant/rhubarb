@@ -302,7 +302,7 @@ _exire_inserere(
     arc->edit_buffer[arc->edit_longitudo] = '\0';
 
     /* Internare novum textum */
-    nova_chorda = chorda_internare_ex_literis(arc->intern, arc->edit_buffer);
+    nova_chorda = chorda_internare_ex_literis(arc->ctx->intern, arc->edit_buffer);
     si (nova_chorda)
     {
         carta->textus = *nova_chorda;
@@ -350,26 +350,22 @@ _invenire_carta_ad_punctum(
 
 ArcCaeli*
 arx_caeli_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    EntitasRepositorium* repo)
+    ContextusWidget* ctx)
 {
     ArcCaeli* arc;
 
-    si (!piscina || !intern)
+    si (!ctx || !ctx->piscina || !ctx->intern)
     {
         redde NIHIL;
     }
 
-    arc = piscina_allocare(piscina, magnitudo(ArcCaeli));
+    arc = piscina_allocare(ctx->piscina, magnitudo(ArcCaeli));
     si (!arc)
     {
         redde NIHIL;
     }
 
-    arc->piscina = piscina;
-    arc->intern = intern;
-    arc->repo = repo;
+    arc->ctx = ctx;
 
     arc->schirma_currens_id.datum = NIHIL;
     arc->schirma_currens_id.mensura = ZEPHYRUM;
@@ -434,33 +430,33 @@ _invenire_vel_creare_schirmam(
     chorda* clavis_slug;
     chorda* slug_valor;
 
-    si (!arc || !arc->repo || !slug)
+    si (!arc || !arc->ctx->repo || !slug)
     {
         redde NIHIL;
     }
 
     /* Usare scaffoldare - creat cum UUID deterministico ex "Schirma" + slug
      * Idempotens: reddit existentem si iam creata */
-    schirma_entitas = arc->repo->entitas_scaffoldare(arc->repo->datum, "Schirma", slug);
+    schirma_entitas = arc->ctx->repo->entitas_scaffoldare(arc->ctx->repo->datum, "Schirma", slug);
     si (!schirma_entitas)
     {
         redde NIHIL;
     }
 
     /* Ponere proprietates (scaffoldare non ponit proprietates) */
-    clavis_slug = chorda_internare_ex_literis(arc->intern, "slug");
+    clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
     slug_valor = entitas_proprietas_capere(schirma_entitas, clavis_slug);
 
     si (!slug_valor)
     {
         /* Nova entitas - ponere proprietates */
-        arc->repo->proprietas_ponere(arc->repo->datum, schirma_entitas, "slug", slug);
-        arc->repo->proprietas_ponere(arc->repo->datum, schirma_entitas, "titulus", slug);
+        arc->ctx->repo->proprietas_ponere(arc->ctx->repo->datum, schirma_entitas, "slug", slug);
+        arc->ctx->repo->proprietas_ponere(arc->ctx->repo->datum, schirma_entitas, "titulus", slug);
 
         /* Addere #Radix tag solum pro schirma radice */
         si (strcmp(slug, "root") == ZEPHYRUM)
         {
-            arc->repo->nota_addere(arc->repo->datum, schirma_entitas, "#Radix");
+            arc->ctx->repo->nota_addere(arc->ctx->repo->datum, schirma_entitas, "#Radix");
         }
     }
 
@@ -504,14 +500,14 @@ arx_caeli_navigare_ad(
     slug_effectivum = slug ? slug : "root";
 
     /* Ponere novum slug */
-    slug_interned = chorda_internare_ex_literis(arc->intern, slug_effectivum);
+    slug_interned = chorda_internare_ex_literis(arc->ctx->intern, slug_effectivum);
     si (slug_interned)
     {
         arc->schirma_currens_slug = *slug_interned;
     }
 
     /* Invenire vel creare entitatem schirmae */
-    si (arc->repo)
+    si (arc->ctx->repo)
     {
         schirma_entitas = _invenire_vel_creare_schirmam(arc, slug_effectivum);
         si (schirma_entitas)
@@ -560,9 +556,9 @@ arx_caeli_retro(
         arc->schirma_currens_slug = arc->historia[arc->historia_index];
 
         /* Invenire entitatem schirmae */
-        si (arc->repo && arc->schirma_currens_slug.datum)
+        si (arc->ctx->repo && arc->schirma_currens_slug.datum)
         {
-            slug_cstr = chorda_ut_cstr(arc->schirma_currens_slug, arc->piscina);
+            slug_cstr = chorda_ut_cstr(arc->schirma_currens_slug, arc->ctx->piscina);
             si (slug_cstr)
             {
                 schirma_entitas = _invenire_vel_creare_schirmam(arc, slug_cstr);
@@ -614,7 +610,7 @@ arx_caeli_carta_creare(
     carta->x = x;
     carta->y = y;
 
-    textus_interned = chorda_internare_ex_literis(arc->intern, "Nova carta");
+    textus_interned = chorda_internare_ex_literis(arc->ctx->intern, "Nova carta");
     si (textus_interned)
     {
         carta->textus = *textus_interned;
@@ -664,9 +660,9 @@ arx_caeli_carta_delere(
     }
 
     /* Delere entitas ex repositorio si existit */
-    si (arc->entitas_ids[index] != NIHIL && arc->repo != NIHIL)
+    si (arc->entitas_ids[index] != NIHIL && arc->ctx->repo != NIHIL)
     {
-        arc->repo->entitas_delere(arc->repo->datum, arc->entitas_ids[index]);
+        arc->ctx->repo->entitas_delere(arc->ctx->repo->datum, arc->entitas_ids[index]);
     }
 
     /* Movere cartas et entitas_ids post index */
@@ -839,7 +835,7 @@ _movere_carta_ad_schirmam(
     Relatio* nova_relatio;
     i32 i;
 
-    si (!arc || !arc->repo || index < ZEPHYRUM || index >= arc->numerus_cartarum)
+    si (!arc || !arc->ctx->repo || index < ZEPHYRUM || index >= arc->numerus_cartarum)
     {
         redde;
     }
@@ -857,14 +853,14 @@ _movere_carta_ad_schirmam(
     }
 
     entitas_id = arc->entitas_ids[index];
-    entitas = arc->repo->capere_entitatem(arc->repo->datum, entitas_id);
+    entitas = arc->ctx->repo->capere_entitatem(arc->ctx->repo->datum, entitas_id);
 
     si (entitas == NIHIL)
     {
         redde;
     }
 
-    slug_novus_cstr = chorda_ut_cstr(nova_schirma_slug, arc->piscina);
+    slug_novus_cstr = chorda_ut_cstr(nova_schirma_slug, arc->ctx->piscina);
     si (!slug_novus_cstr)
     {
         redde;
@@ -878,8 +874,8 @@ _movere_carta_ad_schirmam(
     }
 
     /* Invenire et delere veterem "continet" relationem per back-reference */
-    genus_continet = chorda_internare_ex_literis(arc->intern, "continet");
-    relationes_ad = arc->repo->capere_relationes_ad(arc->repo->datum, entitas_id);
+    genus_continet = chorda_internare_ex_literis(arc->ctx->intern, "continet");
+    relationes_ad = arc->ctx->repo->capere_relationes_ad(arc->ctx->repo->datum, entitas_id);
 
     si (relationes_ad)
     {
@@ -898,15 +894,15 @@ _movere_carta_ad_schirmam(
             /* Verificare si est "continet" relatio */
             si (rel->genus && chorda_aequalis(*rel->genus, *genus_continet))
             {
-                arc->repo->relatio_delere(arc->repo->datum, rel->id);
+                arc->ctx->repo->relatio_delere(arc->ctx->repo->datum, rel->id);
                 frange;
             }
         }
     }
 
     /* Creare novam "continet" relationem ex nova schirma */
-    nova_relatio = arc->repo->relatio_addere(
-        arc->repo->datum,
+    nova_relatio = arc->ctx->repo->relatio_addere(
+        arc->ctx->repo->datum,
         nova_schirma,
         "continet",
         entitas_id);
@@ -1122,7 +1118,7 @@ arx_caeli_reddere(
     arc->widget_altitudo = altitudo;
     arc->scala = scala;
 
-    ctx = delineare_creare_contextum(arc->piscina, tabula);
+    ctx = delineare_creare_contextum(arc->ctx->piscina, tabula);
     si (!ctx)
     {
         redde;
@@ -1157,14 +1153,14 @@ arx_caeli_reddere(
         /* Capere titulum ex entitate schirmae */
         titulus = arc->schirma_currens_slug;  /* Defectus: slug */
 
-        si (arc->repo && arc->schirma_currens_id.datum != NIHIL)
+        si (arc->ctx->repo && arc->schirma_currens_id.datum != NIHIL)
         {
-            schirma_entitas = arc->repo->capere_entitatem(
-                arc->repo->datum, &arc->schirma_currens_id);
+            schirma_entitas = arc->ctx->repo->capere_entitatem(
+                arc->ctx->repo->datum, &arc->schirma_currens_id);
 
             si (schirma_entitas)
             {
-                clavis_titulus = chorda_internare_ex_literis(arc->intern, "titulus");
+                clavis_titulus = chorda_internare_ex_literis(arc->ctx->intern, "titulus");
                 si (clavis_titulus)
                 {
                     titulus_proprietas = entitas_proprietas_capere(schirma_entitas, clavis_titulus);
@@ -1192,7 +1188,7 @@ arx_caeli_reddere(
     {
         chorda retro_label;
 
-        retro_label = chorda_ex_literis("< Retro", arc->piscina);
+        retro_label = chorda_ex_literis("< Retro", arc->ctx->piscina);
 
         tabula_pixelorum_pingere_chordam(
             tabula,
@@ -1333,14 +1329,14 @@ arx_caeli_tractare_eventum(
                 chorda* genus_portal;
                 Xar* portal_rels;
 
-                carta_entitas = arc->repo->capere_entitatem(
-                    arc->repo->datum, arc->entitas_ids[carta_index]);
+                carta_entitas = arc->ctx->repo->capere_entitatem(
+                    arc->ctx->repo->datum, arc->entitas_ids[carta_index]);
 
                 si (carta_entitas)
                 {
-                    genus_portal = chorda_internare_ex_literis(arc->intern, "portal_ad");
+                    genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
                     portal_rels = entitas_relationes_generis_capere(
-                        carta_entitas, genus_portal, arc->piscina);
+                        carta_entitas, genus_portal, arc->ctx->piscina);
 
                     si (portal_rels && xar_numerus(portal_rels) > ZEPHYRUM)
                     {
@@ -1353,18 +1349,18 @@ arx_caeli_tractare_eventum(
                         rel = (Relatio*)xar_obtinere(portal_rels, ZEPHYRUM);
                         si (rel)
                         {
-                            dest_schirma = arc->repo->capere_entitatem(
-                                arc->repo->datum, rel->destinatio_id);
+                            dest_schirma = arc->ctx->repo->capere_entitatem(
+                                arc->ctx->repo->datum, rel->destinatio_id);
 
                             si (dest_schirma)
                             {
-                                clavis_slug = chorda_internare_ex_literis(arc->intern, "slug");
+                                clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
                                 dest_slug = entitas_proprietas_capere(dest_schirma, clavis_slug);
 
                                 si (dest_slug && dest_slug->datum)
                                 {
                                     character* slug_cstr;
-                                    slug_cstr = chorda_ut_cstr(*dest_slug, arc->piscina);
+                                    slug_cstr = chorda_ut_cstr(*dest_slug, arc->ctx->piscina);
                                     si (slug_cstr)
                                     {
                                         arx_caeli_navigare_ad(arc, slug_cstr);
@@ -1586,14 +1582,14 @@ arx_caeli_tractare_eventum(
                 chorda* genus_portal;
                 Xar* portal_rels;
 
-                folder_entitas = arc->repo->capere_entitatem(
-                    arc->repo->datum, arc->entitas_ids[folder_index]);
+                folder_entitas = arc->ctx->repo->capere_entitatem(
+                    arc->ctx->repo->datum, arc->entitas_ids[folder_index]);
 
                 si (folder_entitas)
                 {
-                    genus_portal = chorda_internare_ex_literis(arc->intern, "portal_ad");
+                    genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
                     portal_rels = entitas_relationes_generis_capere(
-                        folder_entitas, genus_portal, arc->piscina);
+                        folder_entitas, genus_portal, arc->ctx->piscina);
 
                     si (portal_rels && xar_numerus(portal_rels) > ZEPHYRUM)
                     {
@@ -1606,12 +1602,12 @@ arx_caeli_tractare_eventum(
                         rel = (Relatio*)xar_obtinere(portal_rels, ZEPHYRUM);
                         si (rel)
                         {
-                            dest_schirma = arc->repo->capere_entitatem(
-                                arc->repo->datum, rel->destinatio_id);
+                            dest_schirma = arc->ctx->repo->capere_entitatem(
+                                arc->ctx->repo->datum, rel->destinatio_id);
 
                             si (dest_schirma)
                             {
-                                clavis_slug = chorda_internare_ex_literis(arc->intern, "slug");
+                                clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
                                 dest_slug = entitas_proprietas_capere(dest_schirma, clavis_slug);
 
                                 si (dest_slug && dest_slug->datum)
@@ -1848,7 +1844,7 @@ arx_caeli_carcare(
     chorda* clavis_x;
     chorda* clavis_y;
 
-    si (!arc || !arc->repo)
+    si (!arc || !arc->ctx->repo)
     {
         redde;
     }
@@ -1863,7 +1859,7 @@ arx_caeli_carcare(
     /* Obtinere slug ut C string (DEBET esse null-terminatum!) */
     si (arc->schirma_currens_slug.datum)
     {
-        slug_str = chorda_ut_cstr(arc->schirma_currens_slug, arc->piscina);
+        slug_str = chorda_ut_cstr(arc->schirma_currens_slug, arc->ctx->piscina);
     }
     alioquin
     {
@@ -1878,9 +1874,9 @@ arx_caeli_carcare(
     }
 
     /* Capere cartas per relatio "continet" */
-    genus_continet = chorda_internare_ex_literis(arc->intern, "continet");
-    entitates = arc->repo->capere_entitates_relatae(
-        arc->repo->datum, schirma_entitas, genus_continet);
+    genus_continet = chorda_internare_ex_literis(arc->ctx->intern, "continet");
+    entitates = arc->ctx->repo->capere_entitates_relatae(
+        arc->ctx->repo->datum, schirma_entitas, genus_continet);
 
     si (!entitates)
     {
@@ -1888,10 +1884,10 @@ arx_caeli_carcare(
     }
 
     /* Internare claves semel */
-    clavis_textus = chorda_internare_ex_literis(arc->intern, "textus");
-    clavis_x = chorda_internare_ex_literis(arc->intern, "x");
-    clavis_y = chorda_internare_ex_literis(arc->intern, "y");
-    genus_portal = chorda_internare_ex_literis(arc->intern, "portal_ad");
+    clavis_textus = chorda_internare_ex_literis(arc->ctx->intern, "textus");
+    clavis_x = chorda_internare_ex_literis(arc->ctx->intern, "x");
+    clavis_y = chorda_internare_ex_literis(arc->ctx->intern, "y");
+    genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
 
     /* Iterare per entitates */
     per (i = ZEPHYRUM; i < xar_numerus(entitates) && arc->numerus_cartarum < CARTAE_MAXIMUS; i++)
@@ -1928,7 +1924,7 @@ arx_caeli_carcare(
         }
         alioquin
         {
-            chorda* defectus = chorda_internare_ex_literis(arc->intern, "");
+            chorda* defectus = chorda_internare_ex_literis(arc->ctx->intern, "");
             si (defectus)
             {
                 carta->textus = *defectus;
@@ -1959,7 +1955,7 @@ arx_caeli_carcare(
         }
 
         /* Detegere folder per portal_ad relatio */
-        portal_relationes = entitas_relationes_generis_capere(entitas, genus_portal, arc->piscina);
+        portal_relationes = entitas_relationes_generis_capere(entitas, genus_portal, arc->ctx->piscina);
         carta->est_folder = (portal_relationes && xar_numerus(portal_relationes) > ZEPHYRUM);
 
         /* Calculare dimensiones */
@@ -1979,7 +1975,7 @@ arx_caeli_salvare(
     constans character* slug_str;
     Entitas* schirma_entitas;
 
-    si (!arc || !arc->repo)
+    si (!arc || !arc->ctx->repo)
     {
         redde;
     }
@@ -1987,7 +1983,7 @@ arx_caeli_salvare(
     /* Obtinere slug ut C string (DEBET esse null-terminatum!) */
     si (arc->schirma_currens_slug.datum)
     {
-        slug_str = chorda_ut_cstr(arc->schirma_currens_slug, arc->piscina);
+        slug_str = chorda_ut_cstr(arc->schirma_currens_slug, arc->ctx->piscina);
     }
     alioquin
     {
@@ -2008,12 +2004,12 @@ arx_caeli_salvare(
         /* Si iam habemus entity ID, usare capere_entitatem */
         si (arc->entitas_ids[i] != NIHIL)
         {
-            entitas = arc->repo->capere_entitatem(arc->repo->datum, arc->entitas_ids[i]);
+            entitas = arc->ctx->repo->capere_entitatem(arc->ctx->repo->datum, arc->entitas_ids[i]);
         }
         alioquin
         {
             /* Prima vice: creare novam entitas */
-            entitas = arc->repo->entitas_creare(arc->repo->datum, "Carta");
+            entitas = arc->ctx->repo->entitas_creare(arc->ctx->repo->datum, "Carta");
             si (entitas != NIHIL)
             {
                 /* Memorare entity ID */
@@ -2022,8 +2018,8 @@ arx_caeli_salvare(
                 /* Creare relatio: Schirma --[continet]--> Carta */
                 si (schirma_entitas)
                 {
-                    arc->repo->relatio_addere(
-                        arc->repo->datum,
+                    arc->ctx->repo->relatio_addere(
+                        arc->ctx->repo->datum,
                         schirma_entitas,
                         "continet",
                         entitas->id);
@@ -2054,8 +2050,8 @@ arx_caeli_salvare(
             }
             textus_buffer[len] = '\0';
 
-            arc->repo->proprietas_ponere(
-                arc->repo->datum,
+            arc->ctx->repo->proprietas_ponere(
+                arc->ctx->repo->datum,
                 entitas,
                 "textus",
                 textus_buffer);
@@ -2065,14 +2061,14 @@ arx_caeli_salvare(
         sprintf(x_buffer, "%d", carta->x);
         sprintf(y_buffer, "%d", carta->y);
 
-        arc->repo->proprietas_ponere(
-            arc->repo->datum,
+        arc->ctx->repo->proprietas_ponere(
+            arc->ctx->repo->datum,
             entitas,
             "x",
             x_buffer);
 
-        arc->repo->proprietas_ponere(
-            arc->repo->datum,
+        arc->ctx->repo->proprietas_ponere(
+            arc->ctx->repo->datum,
             entitas,
             "y",
             y_buffer);
@@ -2092,10 +2088,10 @@ arx_caeli_salvare(
             titulus = _extrahere_titulum_folderis(carta->textus);
             si (titulus.mensura > ZEPHYRUM)
             {
-                slug = chorda_kebab(titulus, arc->piscina);
+                slug = chorda_kebab(titulus, arc->ctx->piscina);
                 si (slug.mensura > ZEPHYRUM)
                 {
-                    dest_slug_cstr = chorda_ut_cstr(slug, arc->piscina);
+                    dest_slug_cstr = chorda_ut_cstr(slug, arc->ctx->piscina);
                     si (dest_slug_cstr)
                     {
                         /* Invenire vel creare destinationem schirmae */
@@ -2103,14 +2099,14 @@ arx_caeli_salvare(
                         si (dest_schirma)
                         {
                             /* Verificare si relatio iam existit */
-                            genus_portal = chorda_internare_ex_literis(arc->intern, "portal_ad");
-                            extantes = entitas_relationes_generis_capere(entitas, genus_portal, arc->piscina);
+                            genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
+                            extantes = entitas_relationes_generis_capere(entitas, genus_portal, arc->ctx->piscina);
 
                             si (!extantes || xar_numerus(extantes) == ZEPHYRUM)
                             {
                                 /* Creare nova relatio: Carta --[portal_ad]--> Schirma */
-                                arc->repo->relatio_addere(
-                                    arc->repo->datum,
+                                arc->ctx->repo->relatio_addere(
+                                    arc->ctx->repo->datum,
                                     entitas,
                                     "portal_ad",
                                     dest_schirma->id);

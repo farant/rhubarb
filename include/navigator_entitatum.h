@@ -7,6 +7,7 @@
 #include "piscina.h"
 #include "fenestra.h"
 #include "xar.h"
+#include "widget.h"
 
 /* ==================================================
  * Structurae
@@ -43,8 +44,7 @@ nomen structura {
  * "Entity navigator - Widget for graph exploration"
  */
 nomen structura {
-    EntitasRepositorium* repositorium;
-    Piscina*             piscina;
+    ContextusWidget*     ctx;
 
     /* Via navigationis (historia) */
     Xar* via;  /* Xar de ItemHistoriae - dynamic path stack */
@@ -70,12 +70,13 @@ nomen structura {
 /* Creare navigatorem novum
  * Si repositorium habet radices, navigat ad primam radicem
  *
+ * ctx: contextus widget cum servitiis communicatis
+ *
  * Redde: Navigator novus, vel NIHIL si fractura
  */
 NavigatorEntitatum*
 navigator_entitatum_creare(
-    Piscina*             piscina,
-    EntitasRepositorium* repositorium);
+    ContextusWidget* ctx);
 
 
 /* ==================================================

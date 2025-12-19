@@ -7,6 +7,7 @@
 #include "chorda.h"
 #include "fenestra.h"
 #include "entitas_repositorium.h"
+#include "widget.h"
 
 /* ==================================================
  * ARX CAELI - Castellum Nubium (Cloud Castle)
@@ -69,9 +70,7 @@ nomen structura {
 
 /* Controller Arcis Caeli */
 nomen structura {
-    Piscina*             piscina;
-    InternamentumChorda* intern;
-    EntitasRepositorium* repo;
+    ContextusWidget*     ctx;
 
     /* Schirma currens */
     chorda schirma_currens_id;      /* Entitas ID schirmae */
@@ -127,17 +126,13 @@ nomen structura {
 
 /* Creare controller Arcis Caeli
  *
- * piscina: piscina pro allocatione
- * intern: internamentum chordarum
- * repo: repositorium entitatum
+ * ctx: contextus widget cum servitiis communicatis
  *
  * Redde: ArcCaeli* si successus, NIHIL si error
  */
 ArcCaeli*
 arx_caeli_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    EntitasRepositorium* repo);
+    ContextusWidget* ctx);
 
 
 /* ==================================================

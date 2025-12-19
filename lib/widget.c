@@ -1,6 +1,40 @@
 #include "widget.h"
 #include "tempus.h"
 
+
+/* ==================================================
+ * ContextusWidget - Creatio
+ * ================================================== */
+
+ContextusWidget*
+contextus_widget_creare(
+    Piscina*             piscina,
+    InternamentumChorda* intern,
+    EntitasRepositorium* repo,
+    RegistrumCommandi*   reg_commandi)
+{
+    ContextusWidget* ctx;
+
+    si (!piscina || !intern)
+    {
+        redde NIHIL;
+    }
+
+    ctx = piscina_allocare(piscina, magnitudo(ContextusWidget));
+    si (!ctx)
+    {
+        redde NIHIL;
+    }
+
+    ctx->piscina = piscina;
+    ctx->intern = intern;
+    ctx->repo = repo;
+    ctx->reg_commandi = reg_commandi;
+
+    redde ctx;
+}
+
+
 /* ==================================================
  * Manager - Creatio
  * ================================================== */

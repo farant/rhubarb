@@ -3,12 +3,14 @@
 #include "libro_paginarum.h"
 #include "piscina.h"
 #include "internamentum.h"
+#include "widget.h"
 #include "credo.h"
 #include <stdio.h>
 
 /* Piscina globalis pro probationes */
 hic_manens Piscina* g_piscina = NIHIL;
 hic_manens InternamentumChorda* g_intern = NIHIL;
+hic_manens ContextusWidget* g_ctx = NIHIL;
 
 
 /* ==================================================
@@ -20,7 +22,7 @@ probans_libro_creare(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
 
     CREDO_NON_NIHIL(libro);
     CREDO_AEQUALIS_I32(libro_numerus_paginarum(libro), I);
@@ -38,7 +40,7 @@ probans_libro_navigare_ad(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Navigare ad paginam 2 (creat paginas 1 et 2) */
@@ -54,7 +56,7 @@ probans_libro_pagina_proxima(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* pagina_proxima creat novam paginam */
@@ -69,7 +71,7 @@ probans_libro_pagina_prior(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Navigare ad paginam 2 */
@@ -87,7 +89,7 @@ probans_libro_pagina_prior_ad_initium(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* pagina_prior ad initium - non debet movere */
@@ -106,7 +108,7 @@ probans_libro_historia(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Navigare: 0 -> 2 -> 5 */
@@ -139,7 +141,7 @@ probans_libro_nominare_pagina(vacuum)
     LibroPaginarum* libro;
     chorda* titulus;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Nominare paginam 0 */
@@ -154,7 +156,7 @@ probans_libro_navigare_ad_nomen(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Creare paginas cum nominibus */
@@ -181,7 +183,7 @@ probans_libro_pagina_nova(vacuum)
     LibroPaginarum* libro;
     s32 index;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Creare novam paginam */
@@ -203,7 +205,7 @@ probans_libro_pagina_currens(vacuum)
     LibroPaginarum* libro;
     Pagina* pagina;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     pagina = libro_pagina_currens(libro);
@@ -223,7 +225,7 @@ probans_libro_limites_index(vacuum)
 {
     LibroPaginarum* libro;
 
-    libro = libro_creare(g_piscina, g_intern);
+    libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
 
     /* Index negativus */
@@ -254,6 +256,7 @@ principale(vacuum)
     }
     g_piscina = piscina;
     g_intern = internamentum_creare(piscina);
+    g_ctx = contextus_widget_creare(piscina, g_intern, NIHIL, NIHIL);
 
     credo_aperire(piscina);
 

@@ -5,6 +5,7 @@
 #include "internamentum.h"
 #include "persistentia.h"
 #include "entitas_repositorium.h"
+#include "widget.h"
 #include "credo.h"
 #include <stdio.h>
 
@@ -12,6 +13,7 @@ s32 principale(vacuum)
 {
     Piscina*             piscina;
     InternamentumChorda* intern;
+    ContextusWidget*     ctx_sine_repo;  /* Contextus sine repositorium */
     b32                  praeteritus;
 
     /* Aperire piscinam et credonem */
@@ -30,6 +32,15 @@ s32 principale(vacuum)
         redde I;
     }
 
+    /* Creare contextum sine repositorium pro probationes simplices */
+    ctx_sine_repo = contextus_widget_creare(piscina, intern, NIHIL, NIHIL);
+    si (!ctx_sine_repo)
+    {
+        imprimere("FRACTA: contextus_widget_creare\n");
+        piscina_destruere(piscina);
+        redde I;
+    }
+
     credo_aperire(piscina);
 
     /* ==================================================
@@ -41,11 +52,10 @@ s32 principale(vacuum)
     {
         LayoutDom* dom;
 
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx_sine_repo,
             "<layout>"
             "  <pagina id='editor' x=0 y=0 latitudo=71 altitudo=60/>"
-            "</layout>",
-            NIHIL);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);
         CREDO_NON_NIHIL(dom->manager);
@@ -64,11 +74,10 @@ s32 principale(vacuum)
         LayoutDom* dom;
         Pagina*    pagina;
 
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx_sine_repo,
             "<layout>"
             "  <pagina id='mea-pagina' x=10 y=5 latitudo=80 altitudo=40/>"
-            "</layout>",
-            NIHIL);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);
 
@@ -91,6 +100,7 @@ s32 principale(vacuum)
         LayoutDom*           dom;
         Persistentia*        persistentia;
         EntitasRepositorium* repo;
+        ContextusWidget*     ctx;
         NavigatorEntitatum*  nav;
 
         /* Creare persistentia et repositorium */
@@ -100,12 +110,15 @@ s32 principale(vacuum)
         repo = entitas_repositorium_creare(piscina, persistentia);
         CREDO_NON_NIHIL(repo);
 
+        /* Creare contextum cum repositorium */
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL);
+        CREDO_NON_NIHIL(ctx);
+
         /* Creare layout cum navigator */
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx,
             "<layout>"
             "  <navigator id='nav' x=0 y=0 latitudo=71 altitudo=60/>"
-            "</layout>",
-            repo);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);
 
@@ -125,18 +138,19 @@ s32 principale(vacuum)
         LayoutDom*           dom;
         Persistentia*        persistentia;
         EntitasRepositorium* repo;
+        ContextusWidget*     ctx;
         Pagina*              pagina;
         NavigatorEntitatum*  nav;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL);
 
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx,
             "<layout>"
             "  <pagina id='editor' x=0 y=0 latitudo=71 altitudo=60/>"
             "  <navigator id='browser' x=71 y=0 latitudo=71 altitudo=60/>"
-            "</layout>",
-            repo);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);
 
@@ -163,11 +177,10 @@ s32 principale(vacuum)
         LayoutDom* dom;
         vacuum*    widget;
 
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx_sine_repo,
             "<layout>"
             "  <pagina id='test' x=0 y=0 latitudo=50 altitudo=30/>"
-            "</layout>",
-            NIHIL);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);
 
@@ -191,11 +204,10 @@ s32 principale(vacuum)
         NavigatorEntitatum* nav;
 
         /* Navigator sine repositorium non debet creari */
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx_sine_repo,
             "<layout>"
             "  <navigator id='nav' x=0 y=0 latitudo=71 altitudo=60/>"
-            "</layout>",
-            NIHIL);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);  /* Layout creatur */
 
@@ -216,11 +228,10 @@ s32 principale(vacuum)
         Pagina*    pagina;
 
         /* Pagina sine attributa explicita */
-        dom = layout_creare(piscina, intern,
+        dom = layout_creare(ctx_sine_repo,
             "<layout>"
             "  <pagina id='minimal'/>"
-            "</layout>",
-            NIHIL);
+            "</layout>");
 
         CREDO_NON_NIHIL(dom);
 

@@ -46,7 +46,7 @@ _schirmata_libro_reddere(
     datum = (SchirmataLibroDatum*)widget->datum;
 
     libro_reddere(
-        datum->schirmata->piscina,
+        datum->schirmata->ctx->piscina,
         tabula,
         datum->libro,
         x,
@@ -89,7 +89,7 @@ _schirmata_libro_tractare_eventum(
     }
 
     /* Tractare mouse clicks pro tag detection (commands et links) */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->schirmata->reg_commandi)
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->schirmata->ctx->reg_commandi)
     {
         RegioClicca regio;
         i32 click_x;
@@ -120,10 +120,10 @@ _schirmata_libro_tractare_eventum(
                 ctx.pagina = pagina;
                 ctx.linea = regio.finis_linea;
                 ctx.columna = regio.finis_columna;
-                ctx.piscina = datum->schirmata->piscina;
+                ctx.piscina = datum->schirmata->ctx->piscina;
                 ctx.datum_custom = datum->libro;
 
-                registrum_commandi_executare(datum->schirmata->reg_commandi, regio.datum, &ctx);
+                registrum_commandi_executare(datum->schirmata->ctx->reg_commandi, regio.datum, &ctx);
 
                 redde VERUM;
             }
@@ -322,7 +322,7 @@ _creare_schirma_layout(
     schirma = &schirmata->schirmae[index];
 
     /* Creare manager pro hac schirma */
-    manager = manager_widget_creare(schirmata->piscina);
+    manager = manager_widget_creare(schirmata->ctx->piscina);
     si (!manager)
     {
         redde FALSUM;
@@ -330,7 +330,7 @@ _creare_schirma_layout(
     schirma->manager = manager;
 
     /* Creare libro widget datum */
-    libro_datum = piscina_allocare(schirmata->piscina, magnitudo(SchirmataLibroDatum));
+    libro_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataLibroDatum));
     si (!libro_datum)
     {
         redde FALSUM;
@@ -351,16 +351,16 @@ _creare_schirma_layout(
         LIX);       /* altitudo = 59 */
 
     /* Creare navigator si repositorium disponibilis */
-    si (schirmata->repo)
+    si (schirmata->ctx->repo)
     {
-        navigator = navigator_entitatum_creare(schirmata->piscina, schirmata->repo);
+        navigator = navigator_entitatum_creare(schirmata->ctx);
         si (navigator)
         {
-            nav_datum = piscina_allocare(schirmata->piscina, magnitudo(SchirmataNavigatorDatum));
+            nav_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataNavigatorDatum));
             si (nav_datum)
             {
                 nav_datum->navigator = navigator;
-                nav_datum->piscina = schirmata->piscina;
+                nav_datum->piscina = schirmata->ctx->piscina;
 
                 /* Registrare navigator widget (dextra medietas) */
                 /* altitudo = 59 (reservare unum versum pro tabula schirmarum) */
@@ -384,7 +384,7 @@ _creare_schirma_layout(
     schirma->libro_status.modo = MODO_VIM_NORMALIS;
 
     /* Creare Arx Caeli */
-    schirma->arx_caeli = arx_caeli_creare(schirmata->piscina, schirmata->intern, schirmata->repo);
+    schirma->arx_caeli = arx_caeli_creare(schirmata->ctx);
     schirma->modus_arx_caeli = FALSUM;  /* Initare in modus navigator */
 
     schirma->initiatus = VERUM;
@@ -478,33 +478,27 @@ _reddere_tabulam_schirmarum(
 
 Schirmata*
 schirmata_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    LibroPaginarum*      libro,
-    EntitasRepositorium* repo,
-    RegistrumCommandi*   reg_commandi)
+    ContextusWidget* ctx,
+    LibroPaginarum*  libro)
 {
     Schirmata* schirmata;
     i32 i;
 
-    si (!piscina || !intern || !libro)
+    si (!ctx || !ctx->piscina || !ctx->intern || !libro)
     {
         redde NIHIL;
     }
 
     /* Allocare schirmata */
-    schirmata = piscina_allocare(piscina, magnitudo(Schirmata));
+    schirmata = piscina_allocare(ctx->piscina, magnitudo(Schirmata));
     si (!schirmata)
     {
         redde NIHIL;
     }
 
     /* Initiare campos */
-    schirmata->piscina = piscina;
-    schirmata->intern = intern;
+    schirmata->ctx = ctx;
     schirmata->libro = libro;
-    schirmata->repo = repo;
-    schirmata->reg_commandi = reg_commandi;
     schirmata->index_currens = ZEPHYRUM;
     schirmata->praefixum_activum = FALSUM;
     schirmata->tempus_praefixum = 0.0;
@@ -817,7 +811,7 @@ schirmata_commutare_ad_arx_caeli(
     /* Nota: ManagerWidget non habet functionem removere, ergo recreare */
 
     /* Creare arx caeli datum */
-    arc_datum = piscina_allocare(schirmata->piscina, magnitudo(SchirmataArcCaeliDatum));
+    arc_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataArcCaeliDatum));
     si (!arc_datum)
     {
         redde;
@@ -865,19 +859,19 @@ schirmata_commutare_ad_navigator(
     manager = schirma->manager;
 
     /* Creare navigator si non existit */
-    navigator = navigator_entitatum_creare(schirmata->piscina, schirmata->repo);
+    navigator = navigator_entitatum_creare(schirmata->ctx);
     si (!navigator)
     {
         redde;
     }
 
-    nav_datum = piscina_allocare(schirmata->piscina, magnitudo(SchirmataNavigatorDatum));
+    nav_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataNavigatorDatum));
     si (!nav_datum)
     {
         redde;
     }
     nav_datum->navigator = navigator;
-    nav_datum->piscina = schirmata->piscina;
+    nav_datum->piscina = schirmata->ctx->piscina;
 
     /* Substituere widget index 1 */
     si (manager->numerus_widgetorum > I)
