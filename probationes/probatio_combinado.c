@@ -1,16 +1,6 @@
-#include "piscina.h"
-#include "entitas_repositorium.h"
-#include "persistentia.h"
-#include "filum.h"
-#include "fenestra.h"
-#include "delineare.h"
-#include "thema.h"
-#include "internamentum.h"
-#include "tempus.h"
-#include "layout.h"
-#include "libro_paginarum.h"
+/* probatio_combinado.c - Demo applicatio cum Concha */
+#include "concha.h"
 #include "registrum_commandi.h"
-#include "schirmata.h"
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -18,123 +8,7 @@
 #define LATITUDO_FENESTRA  DCCCLIII  /* 853 */
 #define ALTITUDO_FENESTRA  CDLXXX    /* 480 */
 
-#define VIA_DIRECTORIUM  "data"
 #define VIA_LOG          "data/combinado.log"
-
-/* STML layout definition cum widgets et entitates */
-constans character* LAYOUT_STML =
-    "<layout>"
-    "  <libro! id='editor' x='0' y='0' latitudo='71' altitudo='60'>"
-    "LibroPaginarum Demo - Multi-Page Editor\n"
-    "\n"
-    "Navigation:\n"
-    "  Ctrl+Shift+Right = next page\n"
-    "  Ctrl+Shift+Left  = previous page\n"
-    "  Click #next or #prev links\n"
-    "  Click #back to go back in history\n"
-    "\n"
-    "Click $date to insert date\n"
-    "\n"
-    "Press 'i' to enter insert mode\n"
-    "Press ESC to return to normal mode\n"
-    "Use hjkl to navigate\n"
-    "\n"
-    "--- Sputnik Example ---\n"
-    "<sputnik>\n"
-    "sit x = 42;\n"
-    "constans PI = 3.14;\n"
-    "\n"
-    "si (x > 10) {\n"
-    "    print(\"magnum!\");\n"
-    "}\n"
-    "\n"
-    "functio salve(nomen) {\n"
-    "    redde `Hello ${nomen}`;\n"
-    "}\n"
-    "</sputnik>\n"
-    "</libro>"
-    "  <navigator id='nav' x='71' y='0' latitudo='71' altitudo='60'/>"
-    ""
-    "  <entitas genus='Root' slug='system'>"
-    "    <proprietas clavis='name' valor='System Root'/>"
-    "    <proprietas clavis='description' valor='Root of the entity graph'/>"
-    "    <nota>#root</nota>"
-    "    <relatio genus='pages' ad='Page::introduction'/>"
-    "    <relatio genus='pages' ad='Page::getting-started'/>"
-    "    <relatio genus='pages' ad='Page::navigation'/>"
-    "    <relatio genus='notes' ad='Note::important'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Page' slug='introduction'>"
-    "    <proprietas clavis='name' valor='Introduction'/>"
-    "    <proprietas clavis='content' valor='Welcome to the entity navigator'/>"
-    "    <proprietas clavis='author' valor='Fran'/>"
-    "    <relatio genus='next' ad='Page::getting-started'/>"
-    "    <relatio genus='references' ad='Note::important'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Page' slug='getting-started'>"
-    "    <proprietas clavis='name' valor='Getting Started'/>"
-    "    <proprietas clavis='content' valor='Use j/k to navigate, l to enter, h to go back'/>"
-    "    <relatio genus='prev' ad='Page::introduction'/>"
-    "    <relatio genus='next' ad='Page::navigation'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Page' slug='navigation'>"
-    "    <proprietas clavis='name' valor='Navigation'/>"
-    "    <proprietas clavis='content' valor='The graph structure allows bidirectional traversal'/>"
-    "    <relatio genus='prev' ad='Page::getting-started'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Note' slug='important'>"
-    "    <proprietas clavis='name' valor='Important'/>"
-    "    <proprietas clavis='text' valor='Remember to test thoroughly'/>"
-    "  </entitas>"
-    ""
-    "  <!-- Entitates cum genere hierarchico -->"
-    "  <entitas genus='Application-State::Widget' slug='editor-widget'>"
-    "    <proprietas clavis='name' valor='Editor Widget'/>"
-    "    <proprietas clavis='type' valor='text-area' typus='WidgetType'/>"
-    "    <proprietas clavis='x' valor='0' typus='Coordinate' literalis='s32'/>"
-    "    <proprietas clavis='y' valor='0' typus='Coordinate' literalis='s32'/>"
-    "    <proprietas clavis='width' valor='71' typus='Dimension' literalis='s32'/>"
-    "    <proprietas clavis='height' valor='60' typus='Dimension' literalis='s32'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Application-State::Widget' slug='nav-widget'>"
-    "    <proprietas clavis='name' valor='Navigator Widget'/>"
-    "    <proprietas clavis='type' valor='entity-browser' typus='WidgetType'/>"
-    "    <proprietas clavis='x' valor='71' typus='Coordinate' literalis='s32'/>"
-    "    <proprietas clavis='y' valor='0' typus='Coordinate' literalis='s32'/>"
-    "    <proprietas clavis='width' valor='71' typus='Dimension' literalis='s32'/>"
-    "    <proprietas clavis='height' valor='60' typus='Dimension' literalis='s32'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Application-State::Settings' slug='theme'>"
-    "    <proprietas clavis='name' valor='Theme Settings'/>"
-    "    <proprietas clavis='dark-mode' valor='true' typus='Boolean' literalis='b32'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Content::Document::Article' slug='first-post'>"
-    "    <proprietas clavis='title' valor='First Article'/>"
-    "    <proprietas clavis='published' valor='2025-01-15' typus='Date'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Content::Document::Article' slug='second-post'>"
-    "    <proprietas clavis='title' valor='Second Article'/>"
-    "    <proprietas clavis='published' valor='2025-02-20' typus='Date'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Content::Document::Note' slug='meeting-notes'>"
-    "    <proprietas clavis='title' valor='Meeting Notes'/>"
-    "    <proprietas clavis='date' valor='2025-03-01'/>"
-    "  </entitas>"
-    ""
-    "  <entitas genus='Content::Media' slug='logo'>"
-    "    <proprietas clavis='name' valor='Application Logo'/>"
-    "    <proprietas clavis='format' valor='png'/>"
-    "  </entitas>"
-    "</layout>";
 
 /* ==================================================
  * Commands
@@ -318,72 +192,21 @@ command_navigator(
 }
 
 
-/* $date command - insert/update current date in output region */
-interior b32
-command_date(
-    ContextusCommandi* ctx)
-{
-    character expectatum[XIII];  /* " MM/DD/YYYY\0" = 12 chars */
-    character contentum[XIII];
-    i32 longitudo;
-    time_t tempus_nunc;
-    structura tm* tempus_info;
-
-    /* Generare datum expectatum */
-    tempus_nunc = time(NIHIL);
-    tempus_info = localtime(&tempus_nunc);
-    sprintf(expectatum, " %02d/%02d/%04d",
-            tempus_info->tm_mon + I,
-            tempus_info->tm_mday,
-            tempus_info->tm_year + MCMX);  /* 1900 */
-
-    longitudo = XI;  /* " MM/DD/YYYY" = 11 characters */
-
-    /* Legere contentum currentem ad positionem */
-    tabula_legere_ad_positionem(&ctx->pagina->tabula,
-        ctx->linea, ctx->columna, contentum, longitudo);
-
-    /* Si iam correctum, nihil facere */
-    si (memcmp(contentum, expectatum, (size_t)longitudo) == ZEPHYRUM)
-    {
-        redde VERUM;
-    }
-
-    /* Aliter: inserere spatium et scribere */
-    si (!tabula_inserere_spatium(&ctx->pagina->tabula,
-        ctx->linea, ctx->columna, longitudo))
-    {
-        redde FALSUM;  /* Pagina plena */
-    }
-
-    tabula_scribere_ad_positionem(&ctx->pagina->tabula,
-        ctx->linea, ctx->columna, expectatum);
-
-    redde VERUM;
-}
-
+/* ==================================================
+ * Main
+ * ================================================== */
 
 int
 main(int argc, char** argv)
 {
-    Piscina*             piscina;
-    InternamentumChorda* intern;
-    Persistentia*        persistentia;
-    EntitasRepositorium* repositorium;
-    LayoutDom*           dom;
-    Fenestra*            fenestra;
-    TabulaPixelorum*     tabula;
-    ContextusDelineandi* ctx;
-    FenestraConfiguratio configuratio;
-    Eventus              eventus;
-    b32                  currens;
-    RegistrumCommandi*   reg_commandi;
-    LibroPaginarum*      libro;
-    Schirmata*           schirmata;
-    constans character*  via_log;
-    character            via_temp[CXXVIII];
-    b32                  utere_temp;
-    i32                  i;
+    Concha*             concha;
+    ConchaConfiguratio  config;
+    LibroPaginarum*     libro;
+    Schirmata*          schirmata;
+    constans character* via_log;
+    character           via_temp[CXXVIII];
+    b32                 utere_temp;
+    i32                 i;
 
     /* Verificare pro --temp-database vexillo */
     utere_temp = FALSUM;
@@ -414,187 +237,31 @@ main(int argc, char** argv)
         via_log = VIA_LOG;
     }
 
-    /* Initiare thema */
-    thema_initiare();
+    /* Configurare concha */
+    config.titulus = "LibroPaginarum + Navigator Demo";
+    config.latitudo = LATITUDO_FENESTRA;
+    config.altitudo = ALTITUDO_FENESTRA;
+    config.via_persistentia = via_log;
 
-    /* Initiare tempus */
-    tempus_initiare();
-
-    /* Creare piscinam */
-    piscina = piscina_generare_dynamicum("combinado", M * M * II);  /* 2MB */
-    si (!piscina)
+    /* Creare concha */
+    concha = concha_creare(&config);
+    si (!concha)
     {
-        imprimere("Fractura: non potest creare piscinam\n");
+        imprimere("Fractura: non potest creare concha\n");
         redde I;
     }
 
-    /* Obtinere internamentum */
-    intern = internamentum_globale();
+    /* Obtinere libro et schirmata pro commands */
+    libro = concha_libro(concha);
+    schirmata = concha_schirmata(concha);
 
-    /* Creare directorium data si necesse */
-    filum_directorium_creare_si_necesse(VIA_DIRECTORIUM);
+    /* Registrare app-specific commands */
+    concha_registrare_commandi(concha, "rename", command_rename, libro);
+    concha_registrare_commandi(concha, "goto", command_goto, libro);
+    concha_registrare_commandi(concha, "new", command_new, libro);
+    concha_registrare_commandi(concha, "cards", command_cards, schirmata);
+    concha_registrare_commandi(concha, "navigator", command_navigator, schirmata);
 
-    /* Creare persistentia (in file) */
-    persistentia = persistentia_nuntium_creare(piscina, via_log);
-    si (!persistentia)
-    {
-        imprimere("Fractura: non potest creare persistentiam\n");
-        redde I;
-    }
-
-    /* Creare repositorium */
-    repositorium = entitas_repositorium_creare(piscina, persistentia);
-    si (!repositorium)
-    {
-        imprimere("Fractura: non potest creare repositorium\n");
-        redde I;
-    }
-
-    /* Creare registrum commandi (ante ctx quia ctx continet reg_commandi) */
-    reg_commandi = registrum_commandi_creare(piscina);
-    si (!reg_commandi)
-    {
-        imprimere("Fractura: non potest creare registrum commandi\n");
-        redde I;
-    }
-
-    /* Creare contextum widget (communicatus inter omnes widgets) */
-    {
-        ContextusWidget* ctx;
-
-        ctx = contextus_widget_creare(piscina, intern, repositorium, reg_commandi);
-        si (!ctx)
-        {
-            imprimere("Fractura: non potest creare contextum widget\n");
-            redde I;
-        }
-
-        /* Creare layout ex STML (entitates creantur declarative in STML) */
-        dom = layout_creare(ctx, LAYOUT_STML);
-        si (!dom)
-        {
-            imprimere("Fractura: non potest creare layout\n");
-            redde I;
-        }
-
-        /* Creare libro paginarum (communicatus inter omnes schirmas) */
-        libro = libro_creare(ctx);
-        si (!libro)
-        {
-            imprimere("Fractura: non potest creare libro\n");
-            redde I;
-        }
-        libro_carcare(libro);
-
-        /* Registrare commands */
-        registrum_commandi_registrare(reg_commandi, "date", command_date, NIHIL);
-        registrum_commandi_registrare(reg_commandi, "rename", command_rename, libro);
-        registrum_commandi_registrare(reg_commandi, "goto", command_goto, libro);
-        registrum_commandi_registrare(reg_commandi, "new", command_new, libro);
-
-        /* Creare schirmata (screens controller) */
-        schirmata = schirmata_creare(ctx, libro);
-    }
-    si (!schirmata)
-    {
-        imprimere("Fractura: non potest creare schirmata\n");
-        redde I;
-    }
-
-    /* Registrare commands quae schirmata requirunt */
-    registrum_commandi_registrare(reg_commandi, "cards", command_cards, schirmata);
-    registrum_commandi_registrare(reg_commandi, "navigator", command_navigator, schirmata);
-
-    /* Configurare fenestram */
-    configuratio.titulus = "LibroPaginarum + Navigator Demo";
-    configuratio.x = C;
-    configuratio.y = C;
-    configuratio.latitudo = LATITUDO_FENESTRA;
-    configuratio.altitudo = ALTITUDO_FENESTRA;
-    configuratio.vexilla = FENESTRA_ORDINARIA;
-
-    /* Creare fenestram */
-    fenestra = fenestra_creare(piscina, &configuratio);
-    si (!fenestra)
-    {
-        imprimere("Fractura: non potest creare fenestram\n");
-        redde I;
-    }
-
-    /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, ALTITUDO_FENESTRA);
-    si (!tabula)
-    {
-        imprimere("Fractura: non potest creare tabulam\n");
-        fenestra_destruere(fenestra);
-        redde I;
-    }
-
-    /* Creare contextum delineandi */
-    ctx = delineare_creare_contextum(piscina, tabula);
-    si (!ctx)
-    {
-        imprimere("Fractura: non potest creare contextum\n");
-        fenestra_destruere(fenestra);
-        redde I;
-    }
-
-    /* Monstrare fenestram */
-    fenestra_monstrare(fenestra);
-
-    /* Cyclus principalis */
-    currens = VERUM;
-
-    dum (currens && !fenestra_debet_claudere(fenestra))
-    {
-        /* Actualizare tempus */
-        tempus_quadrum();
-
-        /* Perscrutari eventus */
-        fenestra_perscrutari_eventus(fenestra);
-
-        /* Tractare eventus */
-        dum (fenestra_obtinere_eventus(fenestra, &eventus))
-        {
-            si (eventus.genus == EVENTUS_CLAUDERE)
-            {
-                currens = FALSUM;
-            }
-            alioquin
-            {
-                b32 tractatus;
-
-                /* Schirmata tractat omnes eventus (screens, focus, routing, etc) */
-                tractatus = schirmata_tractare_eventum(schirmata, &eventus);
-
-                /* Si pagina reddidit FALSUM (ESC in normal mode), exire */
-                si (!tractatus && eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
-                {
-                    si (eventus.datum.clavis.clavis == CLAVIS_EFFUGIUM)
-                    {
-                        currens = FALSUM;
-                    }
-                }
-            }
-        }
-
-        /* Salvare libro si immundum et debounce praeteritum */
-        libro_salvare_si_immundum(libro);
-
-        /* Vacare fondum cum colore calido griseo */
-        tabula_pixelorum_vacare(tabula,
-            color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
-
-        /* Schirmata reddit schirmam currentem et tab bar */
-        schirmata_reddere(schirmata, tabula, I);
-
-        /* Praesentare pixela */
-        fenestra_praesentare_pixela(fenestra, tabula);
-    }
-
-    /* Purgare */
-    fenestra_destruere(fenestra);
-    piscina_destruere(piscina);
-
-    redde ZEPHYRUM;
+    /* Currere event loop */
+    redde concha_currere(concha);
 }

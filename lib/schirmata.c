@@ -883,3 +883,15 @@ schirmata_commutare_ad_navigator(
 
     schirma->modus_arx_caeli = FALSUM;
 }
+
+LibroPaginarum*
+schirmata_libro(
+    Schirmata* schirmata)
+{
+    si (!schirmata)
+    {
+        redde NIHIL;
+    }
+
+    redde schirmata->libro;
+}

@@ -256,7 +256,7 @@ principale(vacuum)
     }
     g_piscina = piscina;
     g_intern = internamentum_creare(piscina);
-    g_ctx = contextus_widget_creare(piscina, g_intern, NIHIL, NIHIL);
+    g_ctx = contextus_widget_creare(piscina, g_intern, NIHIL, NIHIL, NIHIL);
 
     credo_aperire(piscina);
 

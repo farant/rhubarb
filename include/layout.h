@@ -11,6 +11,7 @@
 #include "navigator_entitatum.h"
 #include "entitas_repositorium.h"
 #include "registrum_commandi.h"
+#include "registrum_widget.h"
 
 /* ==================================================
  * LAYOUT - Systema Declarativum pro Widgets
@@ -148,5 +149,23 @@ vacuum
 layout_ponere_reg_commandi(
     LayoutDom*         dom,
     RegistrumCommandi* reg_commandi);
+
+
+/* ==================================================
+ * Registratio Defalta
+ * ================================================== */
+
+/* Registrare built-in widget factories
+ *
+ * Registrat factories pro: pagina, libro, navigator
+ * Vocare ante layout_creare() si usare registrum.
+ *
+ * reg: registrum widget
+ *
+ * Redde: VERUM si successus, FALSUM si error
+ */
+b32
+layout_registrare_defalta(
+    RegistrumWidget* reg);
 
 #endif /* LAYOUT_H */

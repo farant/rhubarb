@@ -204,5 +204,15 @@ ManagerWidget*
 schirmata_manager_currens(
     Schirmata* schirmata);
 
+/* Obtinere libro paginarum (communicatus)
+ *
+ * schirmata: controller
+ *
+ * Redde: LibroPaginarum*
+ */
+LibroPaginarum*
+schirmata_libro(
+    Schirmata* schirmata);
+
 
 #endif /* SCHIRMATA_H */

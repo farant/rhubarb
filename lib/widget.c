@@ -11,7 +11,8 @@ contextus_widget_creare(
     Piscina*             piscina,
     InternamentumChorda* intern,
     EntitasRepositorium* repo,
-    RegistrumCommandi*   reg_commandi)
+    RegistrumCommandi*   reg_commandi,
+    RegistrumWidget*     reg_widget)
 {
     ContextusWidget* ctx;
 
@@ -30,6 +31,7 @@ contextus_widget_creare(
     ctx->intern = intern;
     ctx->repo = repo;
     ctx->reg_commandi = reg_commandi;
+    ctx->reg_widget = reg_widget;
 
     redde ctx;
 }

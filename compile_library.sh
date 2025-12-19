@@ -47,6 +47,8 @@ declare -a SOURCE_FILES=(
     "lib/cursus.c"
     "lib/tempestivum.c"
     "lib/servitium.c"
+    "lib/registrum_widget.c"
+    "lib/concha.c"
 )
 
 # Color codes

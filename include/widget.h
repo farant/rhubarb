@@ -7,6 +7,7 @@
 #include "internamentum.h"
 #include "entitas_repositorium.h"
 #include "registrum_commandi.h"
+#include "registrum_widget.h"
 
 /* Constantae pro detectione duplex click */
 #define DUPLEX_CLICK_TEMPUS     0.3     /* 300ms */
@@ -27,6 +28,7 @@ nomen structura {
     InternamentumChorda* intern;
     EntitasRepositorium* repo;          /* NIHIL si non requiritur */
     RegistrumCommandi*   reg_commandi;  /* NIHIL si non requiritur */
+    RegistrumWidget*     reg_widget;    /* NIHIL si non requiritur */
 } ContextusWidget;
 
 /* Creare contextum widget
@@ -35,6 +37,7 @@ nomen structura {
  * intern: internamentum chordarum
  * repo: repositorium entitatum (potest esse NIHIL)
  * reg_commandi: registrum commandi (potest esse NIHIL)
+ * reg_widget: registrum widget factories (potest esse NIHIL)
  *
  * Redde: ContextusWidget* si successus, NIHIL si error
  */
@@ -43,7 +46,8 @@ contextus_widget_creare(
     Piscina*             piscina,
     InternamentumChorda* intern,
     EntitasRepositorium* repo,
-    RegistrumCommandi*   reg_commandi);
+    RegistrumCommandi*   reg_commandi,
+    RegistrumWidget*     reg_widget);
 
 
 /* ==================================================

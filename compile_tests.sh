@@ -58,6 +58,7 @@ declare -a SOURCE_FILES=(
     "lib/tempus.c"
     "lib/layout.c"
     "lib/registrum_commandi.c"
+    "lib/registrum_widget.c"
     "lib/actor.c"
     "lib/tractator.c"
     "lib/cursus.c"
@@ -70,6 +71,7 @@ declare -a SOURCE_FILES=(
     "lib/libro_paginarum.c"
     "lib/schirmata.c"
     "lib/arx_caeli.c"
+    "lib/concha.c"
 )
 
 # Objective-C source (compiled separately)

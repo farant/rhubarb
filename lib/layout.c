@@ -1,6 +1,7 @@
 #include "layout.h"
 #include "stml.h"
 #include "registrum_commandi.h"
+#include "registrum_widget.h"
 #include "coloratio.h"
 #include "xar.h"
 #include "entitas.h"
@@ -345,9 +346,11 @@ _layout_attributum_i32(
 
 interior b32
 _layout_processare_pagina(
-    LayoutDom* dom,
-    StmlNodus* nodus)
+    vacuum* dom_v,
+    vacuum* nodus_v)
 {
+    LayoutDom* dom = (LayoutDom*)dom_v;
+    StmlNodus* nodus = (StmlNodus*)nodus_v;
     chorda*               id_chorda;
     i32                   x, y, latitudo, altitudo;
     Pagina*               pagina;
@@ -429,9 +432,11 @@ _layout_processare_pagina(
 
 interior b32
 _layout_processare_libro(
-    LayoutDom* dom,
-    StmlNodus* nodus)
+    vacuum* dom_v,
+    vacuum* nodus_v)
 {
+    LayoutDom* dom = (LayoutDom*)dom_v;
+    StmlNodus* nodus = (StmlNodus*)nodus_v;
     chorda*                id_chorda;
     i32                    x, y, latitudo, altitudo;
     LibroPaginarum*        libro;
@@ -547,9 +552,11 @@ _layout_processare_libro(
 
 interior b32
 _layout_processare_navigator(
-    LayoutDom* dom,
-    StmlNodus* nodus)
+    vacuum* dom_v,
+    vacuum* nodus_v)
 {
+    LayoutDom* dom = (LayoutDom*)dom_v;
+    StmlNodus* nodus = (StmlNodus*)nodus_v;
     chorda*                id_chorda;
     i32                    x, y, latitudo, altitudo;
     NavigatorEntitatum*    navigator;
@@ -1139,23 +1146,41 @@ layout_creare(
     /* === TERTIA PASSA: Processare widgets (post entitates) === */
     per (i = ZEPHYRUM; i < num_liberi; i++)
     {
+        FunctioWidgetFactory factory;
+
         liberum = stml_liberum_ad_indicem(layout_nodus, i);
         si (!liberum || liberum->genus != STML_NODUS_ELEMENTUM || !liberum->titulus)
         {
             perge;
         }
 
-        si (chorda_aequalis_literis(*liberum->titulus, "pagina"))
+        /* Tentare registrum si disponibilis */
+        factory = NIHIL;
+        si (ctx->reg_widget)
         {
-            _layout_processare_pagina(dom, liberum);
+            factory = registrum_widget_invenire(ctx->reg_widget, liberum->titulus);
         }
-        alioquin si (chorda_aequalis_literis(*liberum->titulus, "libro"))
+
+        si (factory)
         {
-            _layout_processare_libro(dom, liberum);
+            /* Usare factory ex registro */
+            factory(dom, liberum);
         }
-        alioquin si (chorda_aequalis_literis(*liberum->titulus, "navigator"))
+        alioquin
         {
-            _layout_processare_navigator(dom, liberum);
+            /* Fallback ad built-in widgets si registrum non disponibilis */
+            si (chorda_aequalis_literis(*liberum->titulus, "pagina"))
+            {
+                _layout_processare_pagina(dom, liberum);
+            }
+            alioquin si (chorda_aequalis_literis(*liberum->titulus, "libro"))
+            {
+                _layout_processare_libro(dom, liberum);
+            }
+            alioquin si (chorda_aequalis_literis(*liberum->titulus, "navigator"))
+            {
+                _layout_processare_navigator(dom, liberum);
+            }
         }
         /* entitas iam processata in prima passa */
     }
@@ -1305,4 +1330,37 @@ layout_ponere_reg_commandi(
             }
         }
     }
+}
+
+
+/* ==================================================
+ * Registratio Defalta
+ * ================================================== */
+
+b32
+layout_registrare_defalta(
+    RegistrumWidget* reg)
+{
+    si (!reg)
+    {
+        redde FALSUM;
+    }
+
+    /* Registrare built-in widget factories */
+    si (!registrum_widget_registrare(reg, "pagina", _layout_processare_pagina))
+    {
+        redde FALSUM;
+    }
+
+    si (!registrum_widget_registrare(reg, "libro", _layout_processare_libro))
+    {
+        redde FALSUM;
+    }
+
+    si (!registrum_widget_registrare(reg, "navigator", _layout_processare_navigator))
+    {
+        redde FALSUM;
+    }
+
+    redde VERUM;
 }
