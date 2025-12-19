@@ -43,7 +43,6 @@
 
 #define CARTAE_MAXIMUS      LXIV    /* 64 cartae per schirma visibiles */
 #define HISTORIA_MAXIMUS    XVI     /* 16 gradus historiae navigationis */
-#define DOUBLE_CLICK_TEMPUS 0.3     /* 300ms */
 
 
 /* ==================================================
@@ -108,11 +107,6 @@ nomen structura {
     i32 trahere_grid_x;             /* Positio snapped ad gridum */
     i32 trahere_grid_y;
     b32 trahere_validum;            /* An positio valida? */
-
-    /* Detectio double-click */
-    f64 tempus_ultimus_click;
-    i32 ultimus_click_x;
-    i32 ultimus_click_y;
 
     /* Status immunditiae pro debounced save */
     b32 immundum;

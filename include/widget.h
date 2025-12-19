@@ -5,6 +5,10 @@
 #include "fenestra.h"
 #include "piscina.h"
 
+/* Constantae pro detectione duplex click */
+#define DUPLEX_CLICK_TEMPUS     0.3     /* 300ms */
+#define DUPLEX_CLICK_DISTANTIA  XII     /* 12 pixels (~2 characteres) */
+
 /* ==================================================
  * WIDGET - Sistema Compositionis Widgetorum
  *
@@ -90,6 +94,11 @@ nomen structura ManagerWidget {
     Widget   widgets[XVI];      /* Array widgetorum registratorum */
     s32      numerus_widgetorum;
     s32      focus_index;       /* Index widget cum focus (-1 si nullus) */
+
+    /* Detectio duplex click */
+    f64      tempus_ultimus_click;
+    i32      ultimus_click_x;   /* In pixelis */
+    i32      ultimus_click_y;
 } ManagerWidget;
 
 

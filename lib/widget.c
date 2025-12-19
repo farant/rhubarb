@@ -1,4 +1,5 @@
 #include "widget.h"
+#include "tempus.h"
 
 /* ==================================================
  * Manager - Creatio
@@ -20,6 +21,11 @@ manager_widget_creare(
     manager->piscina = piscina;
     manager->numerus_widgetorum = ZEPHYRUM;
     manager->focus_index = -I;  /* Nullus focus initio */
+
+    /* Initiare detectio duplex click */
+    manager->tempus_ultimus_click = 0.0;
+    manager->ultimus_click_x = ZEPHYRUM;
+    manager->ultimus_click_y = ZEPHYRUM;
 
     /* Initiare widgets */
     per (i = ZEPHYRUM; i < XVI; i++)
@@ -175,25 +181,60 @@ manager_widget_tractare_eventum(
 {
     Widget* focused_widget;
     b32 consumptus;
+    Eventus eventus_ad_widget;
 
     si (!manager || !eventus)
     {
         redde FALSUM;
     }
 
-    /* Click-to-focus (but still pass event to widget) */
+    /* Copiare eventum - potentialiter mutabimus genus */
+    eventus_ad_widget = *eventus;
+
+    /* Click-to-focus et detectio duplex click */
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
     {
         i32 character_latitudo;
         i32 click_x_char;
         i32 click_y_char;
+        f64 nunc;
+        f64 delta;
+        s32 diff_x;
+        s32 diff_y;
+        b32 est_duplex;
 
         character_latitudo = VI;  /* 6 pixels per character (scala = 1) */
         click_x_char = eventus->datum.mus.x / character_latitudo;
         click_y_char = eventus->datum.mus.y / (VIII);  /* 8 pixels per character height */
 
         manager_widget_focus_ad_punctum(manager, click_x_char, click_y_char);
-        /* Don't return - let widget handle the click too */
+
+        /* Detectio duplex click */
+        nunc = tempus_nunc();
+        delta = nunc - manager->tempus_ultimus_click;
+        diff_x = (s32)eventus->datum.mus.x - (s32)manager->ultimus_click_x;
+        diff_y = (s32)eventus->datum.mus.y - (s32)manager->ultimus_click_y;
+
+        /* Verificare si intra limites temporis et distantiae */
+        est_duplex = (delta < DUPLEX_CLICK_TEMPUS &&
+                      diff_x < DUPLEX_CLICK_DISTANTIA && diff_x > -DUPLEX_CLICK_DISTANTIA &&
+                      diff_y < DUPLEX_CLICK_DISTANTIA && diff_y > -DUPLEX_CLICK_DISTANTIA);
+
+        si (est_duplex)
+        {
+            /* Mutare genus ad duplex click */
+            eventus_ad_widget.genus = EVENTUS_MUS_DUPLEX;
+
+            /* Reset - ne triplex click fiat duplex */
+            manager->tempus_ultimus_click = 0.0;
+        }
+        alioquin
+        {
+            /* Memorare hunc click pro detectione futura */
+            manager->tempus_ultimus_click = nunc;
+            manager->ultimus_click_x = eventus->datum.mus.x;
+            manager->ultimus_click_y = eventus->datum.mus.y;
+        }
     }
 
     /* Passare eventum ad widget cum focus */
@@ -204,7 +245,7 @@ manager_widget_tractare_eventum(
 
         si (focused_widget->tractare_eventum)
         {
-            consumptus = focused_widget->tractare_eventum(focused_widget, eventus);
+            consumptus = focused_widget->tractare_eventum(focused_widget, &eventus_ad_widget);
 
             si (consumptus)
             {
@@ -214,9 +255,9 @@ manager_widget_tractare_eventum(
     }
 
     /* Si widget non consumpsit, manager tractat TAB pro focus cycling */
-    si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
+    si (eventus_ad_widget.genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
-        si (eventus->datum.clavis.clavis == CLAVIS_TABULA)
+        si (eventus_ad_widget.datum.clavis.clavis == CLAVIS_TABULA)
         {
             manager_widget_focus_proximum(manager);
             redde VERUM;

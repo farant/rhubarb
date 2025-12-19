@@ -84,7 +84,8 @@ nomen enumeratio {
     EVENTUS_MUS_DEPRESSUS,
     EVENTUS_MUS_LIBERATUS,
     EVENTUS_MUS_MOTUS,
-    EVENTUS_MUS_ROTULA
+    EVENTUS_MUS_ROTULA,
+    EVENTUS_MUS_DUPLEX          /* Double-click */
 } eventus_genus_t;
 
 

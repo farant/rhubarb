@@ -387,10 +387,6 @@ arx_caeli_creare(
     arc->trahens = FALSUM;
     arc->trahere_validum = FALSUM;
 
-    arc->tempus_ultimus_click = 0.0;
-    arc->ultimus_click_x = ZEPHYRUM;
-    arc->ultimus_click_y = ZEPHYRUM;
-
     arc->immundum = FALSUM;
     arc->tempus_immundum = 0.0;
 
@@ -1302,35 +1298,109 @@ arx_caeli_tractare_eventum(
         redde FALSUM;
     }
 
-    /* Tractare eventus muris */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
+    /* Tractare eventus muris - duplex click */
+    si (eventus->genus == EVENTUS_MUS_DUPLEX)
     {
         i32 char_x;
         i32 char_y;
-        f64 nunc;
-        f64 delta;
-        b32 est_double_click;
         i32 carta_index;
-        s32 diff_x;
-        s32 diff_y;
 
         /* Convertere ad character coordinates relative ad widget */
         char_x = (eventus->datum.mus.x / (VI * arc->scala)) - arc->widget_x;
         char_y = (eventus->datum.mus.y / (VIII * arc->scala)) - arc->widget_y;
 
-        nunc = tempus_nunc();
-        delta = nunc - arc->tempus_ultimus_click;
+        /* Si in modus inserere, exire primo (salvat mutationes) */
+        si (arc->modus == ARC_MODUS_INSERERE)
+        {
+            _exire_inserere(arc);
+        }
 
-        diff_x = (s32)char_x - (s32)arc->ultimus_click_x;
-        diff_y = (s32)char_y - (s32)arc->ultimus_click_y;
+        /* Terminare drag si activum */
+        arc->trahens = FALSUM;
 
-        est_double_click = (delta < DOUBLE_CLICK_TEMPUS &&
-                            diff_x < 2 && diff_x > -2 &&
-                            diff_y < 2 && diff_y > -2);
+        /* Hit test cartas */
+        carta_index = _invenire_carta_ad_punctum(arc, char_x, char_y);
 
-        arc->tempus_ultimus_click = nunc;
-        arc->ultimus_click_x = char_x;
-        arc->ultimus_click_y = char_y;
+        si (carta_index != NIHIL_SELECTA)
+        {
+            Carta* carta = &arc->cartae[carta_index];
+
+            /* Si folder, navigare; alioquin intrare inserere */
+            si (carta->est_folder)
+            {
+                /* Traversare portal_ad relationem ad destinationem */
+                Entitas* carta_entitas;
+                chorda* genus_portal;
+                Xar* portal_rels;
+
+                carta_entitas = arc->repo->capere_entitatem(
+                    arc->repo->datum, arc->entitas_ids[carta_index]);
+
+                si (carta_entitas)
+                {
+                    genus_portal = chorda_internare_ex_literis(arc->intern, "portal_ad");
+                    portal_rels = entitas_relationes_generis_capere(
+                        carta_entitas, genus_portal, arc->piscina);
+
+                    si (portal_rels && xar_numerus(portal_rels) > ZEPHYRUM)
+                    {
+                        Relatio* rel;
+                        Entitas* dest_schirma;
+                        chorda* clavis_slug;
+                        chorda* dest_slug;
+
+                        /* entitas_relationes_generis_capere reddit Xar de Relatio (non Relatio*) */
+                        rel = (Relatio*)xar_obtinere(portal_rels, ZEPHYRUM);
+                        si (rel)
+                        {
+                            dest_schirma = arc->repo->capere_entitatem(
+                                arc->repo->datum, rel->destinatio_id);
+
+                            si (dest_schirma)
+                            {
+                                clavis_slug = chorda_internare_ex_literis(arc->intern, "slug");
+                                dest_slug = entitas_proprietas_capere(dest_schirma, clavis_slug);
+
+                                si (dest_slug && dest_slug->datum)
+                                {
+                                    character* slug_cstr;
+                                    slug_cstr = chorda_ut_cstr(*dest_slug, arc->piscina);
+                                    si (slug_cstr)
+                                    {
+                                        arx_caeli_navigare_ad(arc, slug_cstr);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                redde VERUM;
+            }
+            alioquin
+            {
+                /* Intrare modus inserere */
+                _intrare_inserere(arc, carta_index);
+            }
+        }
+        alioquin
+        {
+            /* Duplex click in vacuum - creare novam cartam */
+            arx_caeli_carta_creare(arc, char_x, char_y);
+        }
+
+        redde VERUM;
+    }
+
+    /* Tractare eventus muris - singulum click */
+    si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        i32 char_x;
+        i32 char_y;
+        i32 carta_index;
+
+        /* Convertere ad character coordinates relative ad widget */
+        char_x = (eventus->datum.mus.x / (VI * arc->scala)) - arc->widget_x;
+        char_y = (eventus->datum.mus.y / (VIII * arc->scala)) - arc->widget_y;
 
         /* Si in modus inserere, exire primo (salvat mutationes) */
         si (arc->modus == ARC_MODUS_INSERERE)
@@ -1351,108 +1421,34 @@ arx_caeli_tractare_eventum(
 
         si (carta_index != NIHIL_SELECTA)
         {
-            /* Click in carta */
-            si (est_double_click)
-            {
-                Carta* carta = &arc->cartae[carta_index];
+            /* Selectare et initiare drag */
+            Carta* carta = &arc->cartae[carta_index];
+            i32 carta_px_x;
+            i32 carta_px_y;
 
-                /* Si folder, navigare; alioquin intrare inserere */
-                si (carta->est_folder)
-                {
-                    /* Traversare portal_ad relationem ad destinationem */
-                    Entitas* carta_entitas;
-                    chorda* genus_portal;
-                    Xar* portal_rels;
+            arc->index_selecta = carta_index;
+            arc->modus = ARC_MODUS_SELECTA;
+            arc->trahens = VERUM;
+            arc->trahere_origin_x = carta->x;
+            arc->trahere_origin_y = carta->y;
 
-                    carta_entitas = arc->repo->capere_entitatem(
-                        arc->repo->datum, arc->entitas_ids[carta_index]);
+            /* Calculare offset in pixelis */
+            carta_px_x = (arc->widget_x + carta->x) * VI * arc->scala;
+            carta_px_y = (arc->widget_y + carta->y) * VIII * arc->scala;
+            arc->trahere_offset_px_x = eventus->datum.mus.x - carta_px_x;
+            arc->trahere_offset_px_y = eventus->datum.mus.y - carta_px_y;
 
-                    si (carta_entitas)
-                    {
-                        genus_portal = chorda_internare_ex_literis(arc->intern, "portal_ad");
-                        portal_rels = entitas_relationes_generis_capere(
-                            carta_entitas, genus_portal, arc->piscina);
-
-                        si (portal_rels && xar_numerus(portal_rels) > ZEPHYRUM)
-                        {
-                            Relatio* rel;
-                            Entitas* dest_schirma;
-                            chorda* clavis_slug;
-                            chorda* dest_slug;
-
-                            /* entitas_relationes_generis_capere reddit Xar de Relatio (non Relatio*) */
-                            rel = (Relatio*)xar_obtinere(portal_rels, ZEPHYRUM);
-                            si (rel)
-                            {
-                                dest_schirma = arc->repo->capere_entitatem(
-                                    arc->repo->datum, rel->destinatio_id);
-
-                                si (dest_schirma)
-                                {
-                                    clavis_slug = chorda_internare_ex_literis(arc->intern, "slug");
-                                    dest_slug = entitas_proprietas_capere(dest_schirma, clavis_slug);
-
-                                    si (dest_slug && dest_slug->datum)
-                                    {
-                                        character* slug_cstr;
-                                        slug_cstr = chorda_ut_cstr(*dest_slug, arc->piscina);
-                                        si (slug_cstr)
-                                        {
-                                            arx_caeli_navigare_ad(arc, slug_cstr);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    redde VERUM;
-                }
-                alioquin
-                {
-                    /* Intrare modus inserere */
-                    _intrare_inserere(arc, carta_index);
-                }
-            }
-            alioquin
-            {
-                /* Selectare et initiare drag */
-                Carta* carta = &arc->cartae[carta_index];
-                i32 carta_px_x;
-                i32 carta_px_y;
-
-                arc->index_selecta = carta_index;
-                arc->modus = ARC_MODUS_SELECTA;
-                arc->trahens = VERUM;
-                arc->trahere_origin_x = carta->x;
-                arc->trahere_origin_y = carta->y;
-
-                /* Calculare offset in pixelis */
-                carta_px_x = (arc->widget_x + carta->x) * VI * arc->scala;
-                carta_px_y = (arc->widget_y + carta->y) * VIII * arc->scala;
-                arc->trahere_offset_px_x = eventus->datum.mus.x - carta_px_x;
-                arc->trahere_offset_px_y = eventus->datum.mus.y - carta_px_y;
-
-                arc->trahere_px_x = eventus->datum.mus.x;
-                arc->trahere_px_y = eventus->datum.mus.y;
-                arc->trahere_grid_x = carta->x;
-                arc->trahere_grid_y = carta->y;
-                arc->trahere_validum = VERUM;
-            }
+            arc->trahere_px_x = eventus->datum.mus.x;
+            arc->trahere_px_y = eventus->datum.mus.y;
+            arc->trahere_grid_x = carta->x;
+            arc->trahere_grid_y = carta->y;
+            arc->trahere_validum = VERUM;
         }
         alioquin
         {
-            /* Click in vacuum */
-            si (est_double_click)
-            {
-                /* Creare novam cartam */
-                arx_caeli_carta_creare(arc, char_x, char_y);
-            }
-            alioquin
-            {
-                /* Deselect */
-                arc->index_selecta = NIHIL_SELECTA;
-                arc->modus = ARC_MODUS_NORMALIS;
-            }
+            /* Click in vacuum - deselect */
+            arc->index_selecta = NIHIL_SELECTA;
+            arc->modus = ARC_MODUS_NORMALIS;
         }
 
         redde VERUM;
