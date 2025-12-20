@@ -14,6 +14,7 @@ declare -a GCC_FLAGS=(
     "-Wmissing-prototypes"
     "-Wwrite-strings"
     "-Wno-long-long"
+    "-Wno-overlength-strings"
 )
 
 # Include paths
@@ -74,6 +75,7 @@ declare -a SOURCE_FILES=(
     "lib/concha.c"
     "lib/thema_visus.c"
     "lib/sputnik_syntaxis.c"
+    "lib/biblia_dr.c"
 )
 
 # Objective-C source (compiled separately)

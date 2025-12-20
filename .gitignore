@@ -9,3 +9,5 @@ data/
 .DS_Store
 
 stml-parser-reference
+
+events.db
