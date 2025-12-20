@@ -535,7 +535,7 @@ _reddere_tabulam_schirmarum(
     color_text_normal = thema_color(COLOR_BACKGROUND);      /* Warm gray text */
     color_text_activum = color_ex_palette(PALETTE_DARK_RED);  /* Bright pink text */
     color_fondum_bar = color_ex_palette(PALETTE_DARK_GRAY); /* Dark gray bar */
-    color_fondum_activum = color_ex_palette(PALETTE_MEDIUM_RED);  /* Blue background */
+    color_fondum_activum = color_ex_palette(PALETTE_BLUE);  /* Blue background */
 
     /* Pingere fondum tab bar (tota linea, extra pixel altitudo) */
     {

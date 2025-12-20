@@ -215,7 +215,7 @@ sputnik_syntaxis_reddere(
     color_background = thema_color(COLOR_BACKGROUND);
     color_text = thema_color(COLOR_TEXT);
     color_text_dim = thema_color(COLOR_TEXT_DIM);
-    color_accent = color_ex_palette(PALETTE_DARK_CYAN);
+    color_accent = color_ex_palette(PALETTE_DARK_LEAF);
 
     pixelum_text = color_ad_pixelum(color_text);
     pixelum_text_dim = color_ad_pixelum(color_text_dim);

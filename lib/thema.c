@@ -67,18 +67,18 @@ thema_initiare(vacuum)
     mappa_semantica[COLOR_SELECTION]        = PALETTE_MEDIUM_DARK_GRAY;
 
     mappa_semantica[COLOR_BORDER]           = PALETTE_MEDIUM_DARK_GRAY;
-    mappa_semantica[COLOR_BORDER_ACTIVE]    = PALETTE_DARK_CYAN;
+    mappa_semantica[COLOR_BORDER_ACTIVE]    = PALETTE_DARK_LEAF;
 
     mappa_semantica[COLOR_STATUS_NORMAL]    = PALETTE_MEDIUM_GRAY;
     mappa_semantica[COLOR_STATUS_INSERT]    = PALETTE_BRIGHT_GOLD;
-    mappa_semantica[COLOR_STATUS_VISUAL]    = PALETTE_BRIGHT_CYAN;
+    mappa_semantica[COLOR_STATUS_VISUAL]    = PALETTE_BRIGHT_LEAF;
 
-    mappa_semantica[COLOR_ACCENT_PRIMARY]   = PALETTE_BRIGHT_CYAN;
+    mappa_semantica[COLOR_ACCENT_PRIMARY]   = PALETTE_BRIGHT_LEAF;
     mappa_semantica[COLOR_ACCENT_SECONDARY] = PALETTE_BRIGHT_GOLD;
 
-    mappa_semantica[COLOR_ERROR]            = PALETTE_BRIGHT_RED;
+    mappa_semantica[COLOR_ERROR]            = PALETTE_BRIGHT_PINK;
     mappa_semantica[COLOR_WARNING]          = PALETTE_MEDIUM_GOLD;
-    mappa_semantica[COLOR_SUCCESS]          = PALETTE_BRIGHT_CYAN;
+    mappa_semantica[COLOR_SUCCESS]          = PALETTE_BRIGHT_LEAF;
 }
 
 
@@ -117,10 +117,10 @@ thema_color_ex_indice_colorationis(i8 index)
      * COLORATIO_NUMERUS     = 5  -> PALETTE_MEDIUM_GOLD
      * COLORATIO_COMMENTUM   = 6  -> PALETTE_MEDIUM_GRAY
      * COLORATIO_OPERANS     = 7  -> PALETTE_LIGHT_GRAY
-     * COLORATIO_PROPRIETAS  = 8  -> PALETTE_BRIGHT_RED
+     * COLORATIO_PROPRIETAS  = 8  -> PALETTE_BRIGHT_PINK
      * COLORATIO_ATTRIBUTUM  = 9  -> PALETTE_LIGHT_GRAY (grayscale)
      * COLORATIO_VALOR_ATTR  = 10 -> PALETTE_MEDIUM_DARK_GRAY (grayscale)
-     * COLORATIO_LINK        = 11 -> PALETTE_DARK_CYAN
+     * COLORATIO_LINK        = 11 -> PALETTE_DARK_LEAF
      */
 
     commutatio (index)
@@ -140,13 +140,13 @@ thema_color_ex_indice_colorationis(i8 index)
         casus VII: /* COLORATIO_OPERANS */
             redde color_ex_palette(PALETTE_LIGHT_GRAY);
         casus VIII: /* COLORATIO_PROPRIETAS */
-            redde color_ex_palette(PALETTE_BRIGHT_RED);
+            redde color_ex_palette(PALETTE_BRIGHT_PINK);
         casus IX:  /* COLORATIO_ATTRIBUTUM */
             redde color_ex_palette(PALETTE_LIGHT_GRAY);
         casus X:   /* COLORATIO_VALOR_ATTR */
             redde color_ex_palette(PALETTE_MEDIUM_DARK_GRAY);
         casus XI:  /* COLORATIO_LINK */
-            redde color_ex_palette(PALETTE_DARK_CYAN);
+            redde color_ex_palette(PALETTE_DARK_LEAF);
         ordinarius: /* COLORATIO_DEFALTA vel ignotus */
             redde thema_color(COLOR_TEXT);
     }

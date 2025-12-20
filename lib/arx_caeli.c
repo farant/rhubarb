@@ -1014,7 +1014,7 @@ _reddere_carta(
     }
     alioquin si (selecta)
     {
-        color_border = color_ex_palette(PALETTE_MEDIUM_RED);
+        color_border = color_ex_palette(PALETTE_BLUE);
     }
     alioquin si (carta->est_folder)
     {
@@ -1078,7 +1078,7 @@ _reddere_carta(
                     ctx->tabula,
                     cursor_px_x,
                     cursor_px_y + j,
-                    color_ad_pixelum(color_ex_palette(PALETTE_DARK_CYAN)));
+                    color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF)));
             }
         }
     }

@@ -36,16 +36,16 @@
 #define PALETTE_WHITE           V
 
 #define PALETTE_DARK_RED        VI
-#define PALETTE_MEDIUM_RED      VII
-#define PALETTE_BRIGHT_RED      VIII
+#define PALETTE_BLUE            VII
+#define PALETTE_BRIGHT_PINK     VIII
 
 #define PALETTE_DARK_GOLD       IX
 #define PALETTE_MEDIUM_GOLD     X
 #define PALETTE_BRIGHT_GOLD     XI
 
-#define PALETTE_DARK_CYAN       XII
-#define PALETTE_MEDIUM_CYAN     XIII
-#define PALETTE_BRIGHT_CYAN     XIV
+#define PALETTE_DARK_LEAF       XII
+#define PALETTE_MEDIUM_LEAF     XIII
+#define PALETTE_BRIGHT_LEAF     XIV
 
 #define PALETTE_WARM_GRAY       XV
 

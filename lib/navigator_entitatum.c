@@ -1260,7 +1260,7 @@ _reddere_items_currens(
 
             /* Reddere prefix - "(" pro contains (dark cyan), ">" pro aliis (bright cyan) */
             color_arrow = est_contains
-                ? color_ad_pixelum(color_ex_palette(PALETTE_DARK_CYAN))
+                ? color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF))
                 : color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
             arrow_buffer[ZEPHYRUM] = est_contains ? '(' : '>';
             arrow_buffer[I] = ' ';
@@ -1436,7 +1436,7 @@ _reddere_items_currens(
             si (!est_selectus && prioritas > ZEPHYRUM)
             {
                 /* name/title valor in dark cyan */
-                color_valor = color_ad_pixelum(color_ex_palette(PALETTE_DARK_CYAN));
+                color_valor = color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF));
             }
 
             /* Reddere cum wrapping */
@@ -2022,7 +2022,7 @@ _reddere_columnam_entitatis(
             }
             alioquin si (est_contains)
             {
-                color_arrow = color_ad_pixelum(color_ex_palette(PALETTE_DARK_CYAN));
+                color_arrow = color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF));
             }
             alioquin
             {
