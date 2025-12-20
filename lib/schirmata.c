@@ -27,6 +27,28 @@ nomen structura {
 
 
 /* ==================================================
+ * Arx Caeli Link Callback
+ * ================================================== */
+
+hic_manens vacuum
+_arx_caeli_link_callback(
+    vacuum*             datum,
+    constans character* link)
+{
+    Schirmata* schirmata;
+
+    schirmata = (Schirmata*)datum;
+    si (!schirmata || !schirmata->libro || !link)
+    {
+        redde;
+    }
+
+    /* Navigare ad paginam per nomen */
+    libro_navigare_ad_nomen(schirmata->libro, link);
+}
+
+
+/* ==================================================
  * Widget Wrapper Functiones - Libro
  * ================================================== */
 
@@ -532,6 +554,12 @@ _creare_schirma_layout(
 
     /* Creare Arx Caeli */
     schirma->arx_caeli = arx_caeli_creare(schirmata->ctx);
+    si (schirma->arx_caeli)
+    {
+        arx_caeli_ponere_link_callback(schirma->arx_caeli,
+                                        _arx_caeli_link_callback,
+                                        schirmata);
+    }
     schirma->modus_arx_caeli = FALSUM;  /* Initare in modus navigator */
 
     /* Creare Thema Visus */

@@ -57,6 +57,9 @@ nomen enumeratio {
     ARC_MODUS_INSERERE      /* Editare textum cartae */
 } ArcModus;
 
+/* Callback pro link navigation (#link-name) */
+nomen vacuum (*FunctioLinkCallback)(vacuum* datum, constans character* link);
+
 /* Singula carta */
 nomen structura {
     chorda id;              /* Entitas ID */
@@ -117,6 +120,10 @@ nomen structura {
     i32 widget_latitudo;
     i32 widget_altitudo;
     i32 scala;                      /* Factor scalae fontis */
+
+    /* Link callback */
+    FunctioLinkCallback link_callback;
+    vacuum*             link_callback_datum;
 } ArcCaeli;
 
 
@@ -156,6 +163,18 @@ arx_caeli_navigare_ad(
 vacuum
 arx_caeli_retro(
     ArcCaeli* arc);
+
+/* Ponere callback pro link navigation
+ *
+ * arc: controller
+ * callback: functio vocanda cum link clicca
+ * datum: datum transmittendum ad callback
+ */
+vacuum
+arx_caeli_ponere_link_callback(
+    ArcCaeli*           arc,
+    FunctioLinkCallback callback,
+    vacuum*             datum);
 
 
 /* ==================================================

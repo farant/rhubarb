@@ -347,6 +347,221 @@ _invenire_carta_ad_punctum(
     redde NIHIL_SELECTA;
 }
 
+/* ==================================================
+ * Link Detection
+ * ================================================== */
+
+/* Verificare si character est pars nominis link */
+hic_manens b32
+_est_character_link(
+    character c)
+{
+    redde (c >= 'a' && c <= 'z') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= '0' && c <= '9') ||
+           (c == '_') || (c == '-');
+}
+
+/* Detectare link in textu ad positionem
+ *
+ * textus: datum textus (i8*)
+ * longitudo: longitudo textus
+ * positio: positio characteris in textu (0-indexed)
+ * link_initium: output - initium link (inclusivum, ad #)
+ * link_finis: output - finis link (exclusivum)
+ *
+ * Redde: VERUM si link inventus ad positionem
+ */
+hic_manens b32
+_detecta_linkum(
+    constans i8* textus,
+    i32 longitudo,
+    i32 positio,
+    i32* link_initium,
+    i32* link_finis)
+{
+    s32 col;
+    character c;
+    s32 hash_pos;
+
+    si (!textus || positio < ZEPHYRUM || positio >= longitudo)
+    {
+        redde FALSUM;
+    }
+
+    /* Scandere retro ad invenire # */
+    hash_pos = -I;
+    per (col = (s32)positio; col >= ZEPHYRUM; col--)
+    {
+        c = (character)textus[col];
+
+        si (c == '#')
+        {
+            hash_pos = col;
+            frange;
+        }
+
+        /* Stop at whitespace, newline, or non-link char */
+        si (c == ' ' || c == '\t' || c == '\n' || c == '\0')
+        {
+            redde FALSUM;
+        }
+
+        si (!_est_character_link(c))
+        {
+            redde FALSUM;
+        }
+    }
+
+    si (hash_pos < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Scandere ad finem link (post #) */
+    *link_initium = (i32)hash_pos;
+    *link_finis = (i32)hash_pos + I;
+
+    per (col = (s32)hash_pos + I; col < (s32)longitudo; col++)
+    {
+        c = (character)textus[col];
+
+        si (!_est_character_link(c))
+        {
+            frange;
+        }
+
+        *link_finis = (i32)col + I;
+    }
+
+    /* Verificare si link habet nomen (non solum #) */
+    si (*link_finis <= *link_initium + I)
+    {
+        redde FALSUM;
+    }
+
+    redde VERUM;
+}
+
+/* Verificare si positio est intra aliquem link in textu
+ *
+ * Redde: VERUM si positio est pars link
+ */
+hic_manens b32
+_est_in_link(
+    constans i8* textus,
+    i32 longitudo,
+    i32 positio)
+{
+    i32 link_initium;
+    i32 link_finis;
+
+    si (_detecta_linkum(textus, longitudo, positio, &link_initium, &link_finis))
+    {
+        redde (positio >= link_initium && positio < link_finis);
+    }
+
+    redde FALSUM;
+}
+
+/* Convertere positionem click (in pixelis) ad index characteris in textu cartae
+ *
+ * arc: controller
+ * carta: carta
+ * click_px_x, click_px_y: positio click in pixelis (absoluta)
+ *
+ * Redde: index characteris si inventum, -1 si extra textum
+ */
+hic_manens s32
+_pixel_ad_char_index(
+    ArcCaeli* arc,
+    Carta*    carta,
+    i32       click_px_x,
+    i32       click_px_y)
+{
+    i32 char_lat;
+    i32 char_alt;
+    i32 carta_px_x;
+    i32 carta_px_y;
+    i32 inset;
+    i32 vis_x;
+    i32 vis_y;
+    i32 text_px_x;
+    i32 text_px_y;
+    i32 click_col;
+    i32 click_linea;
+    i32 textus_longitudo;
+    constans i8* textus_datum;
+    i32 linea_currens;
+    i32 col_currens;
+    i32 i;
+
+    si (!arc || !carta)
+    {
+        redde -I;
+    }
+
+    char_lat = VI * arc->scala;
+    char_alt = VIII * arc->scala;
+    inset = CARTA_INSET_VISUAL * arc->scala;
+
+    /* Calculare positio visualis cartae in pixelis */
+    carta_px_x = (arc->widget_x + carta->x) * char_lat;
+    carta_px_y = (arc->widget_y + carta->y) * char_alt;
+    vis_x = carta_px_x + inset;
+    vis_y = (i32)((s32)carta_px_y + (s32)inset + (CARTA_OFFSET_VERTICALIS * (s32)arc->scala));
+
+    /* Positio textus (cum padding) */
+    text_px_x = vis_x + CARTA_PADDING * char_lat;
+    text_px_y = vis_y + CARTA_PADDING * char_alt;
+
+    /* Convertere click ad columna et linea relativum ad textum */
+    click_col = (click_px_x - text_px_x) / char_lat;
+    click_linea = (click_px_y - text_px_y) / char_alt;
+
+    si (click_col < ZEPHYRUM || click_linea < ZEPHYRUM)
+    {
+        redde -I;
+    }
+
+    /* Iterare per textum ad invenire character index */
+    textus_datum = carta->textus.datum;
+    textus_longitudo = (i32)carta->textus.mensura;
+    linea_currens = ZEPHYRUM;
+    col_currens = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < textus_longitudo; i++)
+    {
+        si (linea_currens == click_linea && col_currens == click_col)
+        {
+            redde (s32)i;
+        }
+
+        si (textus_datum[i] == '\n')
+        {
+            /* Si click est post finem lineae sed in linea correcta */
+            si (linea_currens == click_linea && col_currens < click_col)
+            {
+                redde -I;  /* Extra finem lineae */
+            }
+            linea_currens++;
+            col_currens = ZEPHYRUM;
+        }
+        alioquin
+        {
+            col_currens++;
+        }
+    }
+
+    /* Verificare ultimum character */
+    si (linea_currens == click_linea && col_currens == click_col)
+    {
+        redde (s32)(textus_longitudo - I);
+    }
+
+    redde -I;
+}
+
 
 /* ==================================================
  * Creatio
@@ -1053,28 +1268,55 @@ _reddere_carta(
     /* Pingere border cum angulis rotundis */
     delineare_rectangulum_rotundum(ctx, vis_x, vis_y, vis_lat, vis_alt, radius, color_border);
 
-    /* Pingere textum (relativum ad limites visuales) */
-    linea_y = ZEPHYRUM;
-    linea_start = ZEPHYRUM;
-
-    per (i = ZEPHYRUM; i <= textus_longitudo; i++)
+    /* Pingere textum per characterem (pro link highlighting) */
     {
-        si (i == textus_longitudo || textus_datum[i] == '\n')
+        i32 col;
+        Color color_link;
+
+        color_link = color_ex_palette(PALETTE_DARK_LEAF);
+        linea_y = ZEPHYRUM;
+        col = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < textus_longitudo; i++)
         {
-            linea.datum = textus_datum + linea_start;
-            linea.mensura = i - linea_start;
+            si (textus_datum[i] == '\n')
+            {
+                linea_y++;
+                col = ZEPHYRUM;
+            }
+            alioquin
+            {
+                Color char_color;
+                chorda char_chorda;
 
-            tabula_pixelorum_pingere_chordam(
-                ctx->tabula,
-                vis_x + CARTA_PADDING * char_lat,
-                vis_y + (CARTA_PADDING + linea_y) * char_alt,
-                linea,
-                color_ad_pixelum(color_textus));
+                /* Verificare si character est pars link */
+                si (_est_in_link(textus_datum, textus_longitudo, i))
+                {
+                    char_color = color_link;
+                }
+                alioquin
+                {
+                    char_color = color_textus;
+                }
 
-            linea_start = i + I;
-            linea_y++;
+                /* Pingere singulum characterem */
+                char_chorda.datum = textus_datum + i;
+                char_chorda.mensura = I;
+
+                tabula_pixelorum_pingere_chordam(
+                    ctx->tabula,
+                    vis_x + (CARTA_PADDING + col) * char_lat,
+                    vis_y + (CARTA_PADDING + linea_y) * char_alt,
+                    char_chorda,
+                    color_ad_pixelum(char_color));
+
+                col++;
+            }
         }
     }
+
+    (vacuum)linea;
+    (vacuum)linea_start;
 
     /* Pingere cursor si in inserere */
     si (in_inserere)
@@ -1416,7 +1658,48 @@ arx_caeli_tractare_eventum(
             }
             alioquin
             {
-                /* Intrare modus inserere */
+                /* Verificare si click est super link */
+                s32 char_index;
+
+                char_index = _pixel_ad_char_index(arc, carta,
+                                                   eventus->datum.mus.x,
+                                                   eventus->datum.mus.y);
+
+                si (char_index >= ZEPHYRUM && arc->link_callback)
+                {
+                    i32 link_initium;
+                    i32 link_finis;
+
+                    si (_detecta_linkum(carta->textus.datum,
+                                        (i32)carta->textus.mensura,
+                                        (i32)char_index,
+                                        &link_initium,
+                                        &link_finis))
+                    {
+                        /* Extrahere nomen link (sine #) */
+                        character link_buffer[LXIV];
+                        i32 link_len;
+                        i32 k;
+
+                        link_len = link_finis - link_initium - I;  /* -1 pro # */
+                        si (link_len > LXIII)
+                        {
+                            link_len = LXIII;
+                        }
+
+                        per (k = ZEPHYRUM; k < link_len; k++)
+                        {
+                            link_buffer[k] = (character)carta->textus.datum[link_initium + I + k];
+                        }
+                        link_buffer[link_len] = '\0';
+
+                        /* Vocare callback */
+                        arc->link_callback(arc->link_callback_datum, link_buffer);
+                        redde VERUM;
+                    }
+                }
+
+                /* Non in link - intrare modus inserere */
                 _intrare_inserere(arc, carta_index);
             }
         }
@@ -1459,14 +1742,59 @@ arx_caeli_tractare_eventum(
 
         si (carta_index != NIHIL_SELECTA)
         {
-            /* Selectare et initiare drag */
             Carta* carta = &arc->cartae[carta_index];
-            i32 carta_px_x;
-            i32 carta_px_y;
 
-            arc->index_selecta = carta_index;
-            arc->modus = ARC_MODUS_SELECTA;
-            arc->trahens = VERUM;
+            /* Verificare si click est super link (prioritas ante drag) */
+            si (!carta->est_folder && arc->link_callback)
+            {
+                s32 char_index;
+
+                char_index = _pixel_ad_char_index(arc, carta,
+                                                   eventus->datum.mus.x,
+                                                   eventus->datum.mus.y);
+
+                si (char_index >= ZEPHYRUM)
+                {
+                    i32 link_initium;
+                    i32 link_finis;
+
+                    si (_detecta_linkum(carta->textus.datum,
+                                        (i32)carta->textus.mensura,
+                                        (i32)char_index,
+                                        &link_initium,
+                                        &link_finis))
+                    {
+                        /* Extrahere nomen link (sine #) */
+                        character link_buffer[LXIV];
+                        i32 link_len;
+                        i32 k;
+
+                        link_len = link_finis - link_initium - I;
+                        si (link_len > LXIII)
+                        {
+                            link_len = LXIII;
+                        }
+
+                        per (k = ZEPHYRUM; k < link_len; k++)
+                        {
+                            link_buffer[k] = (character)carta->textus.datum[link_initium + I + k];
+                        }
+                        link_buffer[link_len] = '\0';
+
+                        arc->link_callback(arc->link_callback_datum, link_buffer);
+                        redde VERUM;
+                    }
+                }
+            }
+
+            /* Selectare et initiare drag */
+            {
+                i32 carta_px_x;
+                i32 carta_px_y;
+
+                arc->index_selecta = carta_index;
+                arc->modus = ARC_MODUS_SELECTA;
+                arc->trahens = VERUM;
             arc->trahere_origin_x = carta->x;
             arc->trahere_origin_y = carta->y;
 
@@ -1481,6 +1809,7 @@ arx_caeli_tractare_eventum(
             arc->trahere_grid_x = carta->x;
             arc->trahere_grid_y = carta->y;
             arc->trahere_validum = VERUM;
+            }
         }
         alioquin
         {
@@ -2196,4 +2525,24 @@ arx_caeli_marcare_immundum(
 
     arc->immundum = VERUM;
     arc->tempus_immundum = tempus_nunc();
+}
+
+
+/* ==================================================
+ * Link Callback
+ * ================================================== */
+
+vacuum
+arx_caeli_ponere_link_callback(
+    ArcCaeli*           arc,
+    FunctioLinkCallback callback,
+    vacuum*             datum)
+{
+    si (!arc)
+    {
+        redde;
+    }
+
+    arc->link_callback = callback;
+    arc->link_callback_datum = datum;
 }
