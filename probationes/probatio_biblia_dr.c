@@ -231,6 +231,125 @@ s32 principale(vacuum)
 
 
     /* ==================================================
+     * Probare ordo canonicus Douay-Rheims
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans ordo canonicus ---\n");
+
+        /* Verify book indices are in correct order */
+        CREDO_AEQUALIS_I32(LIBER_GENESIS, 0);
+        CREDO_AEQUALIS_I32(LIBER_EXODUS, 1);
+        CREDO_AEQUALIS_I32(LIBER_TOBIAE, 16);      /* After Nehemiah (15) */
+        CREDO_AEQUALIS_I32(LIBER_JUDITH, 17);
+        CREDO_AEQUALIS_I32(LIBER_SAPIENTIAE, 24);  /* Wisdom */
+        CREDO_AEQUALIS_I32(LIBER_ECCLESIASTICUS, 25); /* Sirach */
+        CREDO_AEQUALIS_I32(LIBER_BARUCH, 29);
+        CREDO_AEQUALIS_I32(LIBER_I_MACHABAEORUM, 44);
+        CREDO_AEQUALIS_I32(LIBER_II_MACHABAEORUM, 45);
+        CREDO_AEQUALIS_I32(LIBER_MATTHAEUS, 46);   /* First NT book */
+        CREDO_AEQUALIS_I32(LIBER_JOANNES, 49);
+        CREDO_AEQUALIS_I32(LIBER_APOCALYPSIS, 72);
+    }
+
+
+    /* ==================================================
+     * Probare libri deuterocanonici
+     * ================================================== */
+
+    {
+        constans Biblia* b;
+        chorda v;
+        constans character* titulus;
+
+        imprimere("\n--- Probans libri deuterocanonici ---\n");
+
+        b = biblia_obtinere_dr();
+
+        /* Tobias 1:1 */
+        v = biblia_versus(b, LIBER_TOBIAE, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+        CREDO_VERUM(memcmp(v.datum, "Tobias", VI) == ZEPHYRUM);
+
+        titulus = biblia_nomen_libri(b, LIBER_TOBIAE);
+        CREDO_NON_NIHIL(titulus);
+        CREDO_AEQUALIS_S32(strcmp(titulus, "Tobias"), ZEPHYRUM);
+
+        /* Judith 1:1 */
+        v = biblia_versus(b, LIBER_JUDITH, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+
+        /* Wisdom (Sapientiae) 1:1 */
+        v = biblia_versus(b, LIBER_SAPIENTIAE, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+
+        titulus = biblia_nomen_libri(b, LIBER_SAPIENTIAE);
+        CREDO_NON_NIHIL(titulus);
+        CREDO_AEQUALIS_S32(strcmp(titulus, "Wisdom"), ZEPHYRUM);
+
+        /* Sirach (Ecclesiasticus) 1:1 */
+        v = biblia_versus(b, LIBER_ECCLESIASTICUS, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+
+        /* Baruch 1:1 */
+        v = biblia_versus(b, LIBER_BARUCH, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+
+        /* 1 Maccabees 1:1 */
+        v = biblia_versus(b, LIBER_I_MACHABAEORUM, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+        CREDO_VERUM(memcmp(v.datum, "Now it came to pass", XIX) == ZEPHYRUM);
+
+        /* 2 Maccabees 1:1 */
+        v = biblia_versus(b, LIBER_II_MACHABAEORUM, I, I);
+        CREDO_VERUM(v.mensura > ZEPHYRUM);
+        CREDO_NON_NIHIL(v.datum);
+    }
+
+
+    /* ==================================================
+     * Probare versus specifici (verifica textus exactus)
+     * ================================================== */
+
+    {
+        constans Biblia* b;
+        chorda v;
+
+        imprimere("\n--- Probans versus specifici ---\n");
+
+        b = biblia_obtinere_dr();
+
+        /* John 1:1 should have "was the Word" (not just "In the beginning") */
+        v = biblia_versus(b, LIBER_JOANNES, I, I);
+        CREDO_VERUM(v.mensura > XL);
+        CREDO_VERUM(memcmp(v.datum, "In the beginning was the Word", XXIX) == ZEPHYRUM);
+
+        /* Genesis 1:1 vs John 1:1 - both start same but different books */
+        {
+            chorda gen_1_1;
+            chorda joh_1_1;
+
+            gen_1_1 = biblia_versus(b, LIBER_GENESIS, I, I);
+            joh_1_1 = biblia_versus(b, LIBER_JOANNES, I, I);
+
+            /* Both start with "In the beginning" */
+            CREDO_VERUM(memcmp(gen_1_1.datum, "In the beginning", XVI) == ZEPHYRUM);
+            CREDO_VERUM(memcmp(joh_1_1.datum, "In the beginning", XVI) == ZEPHYRUM);
+
+            /* But they are different texts */
+            CREDO_VERUM(gen_1_1.datum != joh_1_1.datum);
+            CREDO_VERUM(gen_1_1.mensura != joh_1_1.mensura);
+        }
+    }
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

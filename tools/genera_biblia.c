@@ -125,16 +125,40 @@ static int find_book_index(const char* abbr) {
     return -1;
 }
 
+/* Calculate output length after transformation (smart quotes -> ASCII) */
+static int calc_output_length(const char* s) {
+    const unsigned char* p;
+    int len = 0;
+    for (p = (const unsigned char*)s; *p; p++) {
+        /* UTF-8 smart apostrophe: 3 bytes -> 1 byte */
+        if (p[0] == 0xE2 && p[1] == 0x80 && p[2] == 0x99) {
+            len++;
+            p += 2;
+            continue;
+        }
+        if (*p != '\r') {  /* skip CR */
+            len++;
+        }
+    }
+    return len;
+}
+
 static void print_escaped_string(const char* s) {
-    const char* p;
-    for (p = s; *p; p++) {
+    const unsigned char* p;
+    for (p = (const unsigned char*)s; *p; p++) {
+        /* Check for UTF-8 smart apostrophe: E2 80 99 -> ASCII ' */
+        if (p[0] == 0xE2 && p[1] == 0x80 && p[2] == 0x99) {
+            putchar('\'');
+            p += 2;  /* skip next 2 bytes (loop will skip 3rd) */
+            continue;
+        }
         switch (*p) {
             case '\\': printf("\\\\"); break;
             case '"':  printf("\\\""); break;
             case '\n': printf("\\n"); break;
             case '\r': break;  /* skip CR */
             case '\t': printf("\\t"); break;
-            default:   putchar(*p); break;
+            default:   putchar((int)*p); break;
         }
     }
 }
@@ -199,8 +223,29 @@ int main(int argc, char** argv) {
     printf("\n");
     printf("hic_manens constans character textus_dr[] =\n");
 
+    /* Order by Douay-Rheims canonical order, not database id */
     rc = sqlite3_prepare_v2(db,
-        "SELECT book, chapter, verse, text FROM bible_dra ORDER BY id",
+        "SELECT book, chapter, verse, text FROM bible_dra "
+        "ORDER BY CASE book "
+        "WHEN 'GEN' THEN 0 WHEN 'EXO' THEN 1 WHEN 'LEV' THEN 2 WHEN 'NUM' THEN 3 "
+        "WHEN 'DEU' THEN 4 WHEN 'JOS' THEN 5 WHEN 'JDG' THEN 6 WHEN 'RUT' THEN 7 "
+        "WHEN '1SA' THEN 8 WHEN '2SA' THEN 9 WHEN '1KI' THEN 10 WHEN '2KI' THEN 11 "
+        "WHEN '1CH' THEN 12 WHEN '2CH' THEN 13 WHEN 'EZR' THEN 14 WHEN 'NEH' THEN 15 "
+        "WHEN 'TOB' THEN 16 WHEN 'JDT' THEN 17 WHEN 'EST' THEN 18 WHEN 'JOB' THEN 19 "
+        "WHEN 'PSA' THEN 20 WHEN 'PRO' THEN 21 WHEN 'ECC' THEN 22 WHEN 'SOL' THEN 23 "
+        "WHEN 'WIS' THEN 24 WHEN 'SIR' THEN 25 WHEN 'ISA' THEN 26 WHEN 'JER' THEN 27 "
+        "WHEN 'LAM' THEN 28 WHEN 'BAR' THEN 29 WHEN 'EZE' THEN 30 WHEN 'DAN' THEN 31 "
+        "WHEN 'HOS' THEN 32 WHEN 'JOE' THEN 33 WHEN 'AMO' THEN 34 WHEN 'OBA' THEN 35 "
+        "WHEN 'JON' THEN 36 WHEN 'MIC' THEN 37 WHEN 'NAH' THEN 38 WHEN 'HAB' THEN 39 "
+        "WHEN 'ZEP' THEN 40 WHEN 'HAG' THEN 41 WHEN 'ZEC' THEN 42 WHEN 'MAL' THEN 43 "
+        "WHEN '1MA' THEN 44 WHEN '2MA' THEN 45 WHEN 'MAT' THEN 46 WHEN 'MAR' THEN 47 "
+        "WHEN 'LUK' THEN 48 WHEN 'JOH' THEN 49 WHEN 'ACT' THEN 50 WHEN 'ROM' THEN 51 "
+        "WHEN '1CO' THEN 52 WHEN '2CO' THEN 53 WHEN 'GAL' THEN 54 WHEN 'EPH' THEN 55 "
+        "WHEN 'PHI' THEN 56 WHEN 'COL' THEN 57 WHEN '1TH' THEN 58 WHEN '2TH' THEN 59 "
+        "WHEN '1TI' THEN 60 WHEN '2TI' THEN 61 WHEN 'TIT' THEN 62 WHEN 'PHM' THEN 63 "
+        "WHEN 'HEB' THEN 64 WHEN 'JAM' THEN 65 WHEN '1PE' THEN 66 WHEN '2PE' THEN 67 "
+        "WHEN '1JO' THEN 68 WHEN '2JO' THEN 69 WHEN '3JO' THEN 70 WHEN 'JUD' THEN 71 "
+        "WHEN 'REV' THEN 72 ELSE 99 END, chapter, verse",
         -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
@@ -214,7 +259,7 @@ int main(int argc, char** argv) {
         int chapter = sqlite3_column_int(stmt, 1);
         int verse = sqlite3_column_int(stmt, 2);
         const char* text = (const char*)sqlite3_column_text(stmt, 3);
-        int text_len = (int)strlen(text);
+        int text_len = calc_output_length(text);
 
         int book_idx = find_book_index(book);
 
