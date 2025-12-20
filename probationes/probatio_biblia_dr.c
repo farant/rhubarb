@@ -350,6 +350,74 @@ s32 principale(vacuum)
 
 
     /* ==================================================
+     * Probare biblia_invenire_librum
+     * ================================================== */
+
+    {
+        constans Biblia* b;
+        i32 idx;
+
+        imprimere("\n--- Probans biblia_invenire_librum ---\n");
+
+        b = biblia_obtinere_dr();
+
+        /* Exact match */
+        idx = biblia_invenire_librum(b, "Genesis");
+        CREDO_AEQUALIS_I32(idx, LIBER_GENESIS);
+
+        idx = biblia_invenire_librum(b, "Exodus");
+        CREDO_AEQUALIS_I32(idx, LIBER_EXODUS);
+
+        idx = biblia_invenire_librum(b, "Apocalypse");
+        CREDO_AEQUALIS_I32(idx, LIBER_APOCALYPSIS);
+
+        /* Case insensitive */
+        idx = biblia_invenire_librum(b, "genesis");
+        CREDO_AEQUALIS_I32(idx, LIBER_GENESIS);
+
+        idx = biblia_invenire_librum(b, "JOHN");
+        CREDO_AEQUALIS_I32(idx, LIBER_JOANNES);
+
+        /* Prefix match */
+        idx = biblia_invenire_librum(b, "Gen");
+        CREDO_AEQUALIS_I32(idx, LIBER_GENESIS);
+
+        idx = biblia_invenire_librum(b, "Tob");
+        CREDO_AEQUALIS_I32(idx, LIBER_TOBIAE);
+
+        idx = biblia_invenire_librum(b, "Psa");
+        CREDO_AEQUALIS_I32(idx, LIBER_PSALMORUM);
+
+        /* Numbered books (DR uses "Machabees" not "Maccabees") */
+        idx = biblia_invenire_librum(b, "1 Machabees");
+        CREDO_AEQUALIS_I32(idx, LIBER_I_MACHABAEORUM);
+
+        idx = biblia_invenire_librum(b, "2 Machabees");
+        CREDO_AEQUALIS_I32(idx, LIBER_II_MACHABAEORUM);
+
+        idx = biblia_invenire_librum(b, "1 Ma");
+        CREDO_AEQUALIS_I32(idx, LIBER_I_MACHABAEORUM);
+
+        idx = biblia_invenire_librum(b, "1 Kings");
+        CREDO_AEQUALIS_I32(idx, LIBER_III_REGUM);
+
+        /* Not found */
+        idx = biblia_invenire_librum(b, "Foo");
+        CREDO_AEQUALIS_I32(idx, (i32)(-I));
+
+        idx = biblia_invenire_librum(b, "");
+        CREDO_AEQUALIS_I32(idx, (i32)(-I));
+
+        /* Null inputs */
+        idx = biblia_invenire_librum(NIHIL, "Genesis");
+        CREDO_AEQUALIS_I32(idx, (i32)(-I));
+
+        idx = biblia_invenire_librum(b, NIHIL);
+        CREDO_AEQUALIS_I32(idx, (i32)(-I));
+    }
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

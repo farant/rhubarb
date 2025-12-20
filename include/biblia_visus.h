@@ -120,4 +120,22 @@ biblia_visus_tractare_eventum(
     constans Eventus* eventus);
 
 
+/* ==================================================
+ * Navigatio
+ * ================================================== */
+
+/* Navigate ad referentiam biblicam
+ *
+ * visus: Bible viewer
+ * referentia: "Book", "Book N", vel "Book N:V"
+ *             e.g., "Genesis", "Genesis 3", "Genesis 3:16"
+ *
+ * Redde: VERUM si navigatio successus, FALSUM si liber non inventus
+ */
+b32
+biblia_visus_navigare_ad(
+    BibliaVisus* visus,
+    constans character* referentia);
+
+
 #endif /* BIBLIA_VISUS_H */

@@ -936,3 +936,194 @@ biblia_visus_tractare_eventum(
 
     redde FALSUM;
 }
+
+
+/* ==================================================
+ * Navigatio
+ * ================================================== */
+
+/* Parse reference: "Book", "Book N", "Book N:V"
+ * Extract book name, chapter (default 1), verse (default 0 = no specific verse)
+ */
+hic_manens b32
+_biblia_visus_parse_referentiam(
+    constans Biblia* biblia,
+    constans character* referentia,
+    i32* liber_out,
+    i32* capitulum_out,
+    i32* versus_out)
+{
+    character nomen_buffer[LXIV];
+    i32 nomen_idx;
+    constans character* p;
+    i32 liber;
+    i32 capitulum;
+    i32 versus;
+    b32 in_numero_libri;
+
+    si (!biblia || !referentia || !*referentia)
+    {
+        redde FALSUM;
+    }
+
+    /* Initialize defaults */
+    capitulum = I;
+    versus = ZEPHYRUM;
+    nomen_idx = ZEPHYRUM;
+    p = referentia;
+    in_numero_libri = FALSUM;
+
+    /* Handle numbered books (e.g., "1 Maccabees", "2 Kings") */
+    si (*p >= '1' && *p <= '9')
+    {
+        nomen_buffer[nomen_idx++] = *p++;
+        in_numero_libri = VERUM;
+
+        /* Copy space if present */
+        si (*p == ' ')
+        {
+            nomen_buffer[nomen_idx++] = *p++;
+        }
+    }
+
+    /* Find end of book name:
+     * - If we had a book number prefix, look for next digit
+     * - Otherwise, look for digit or end of string
+     */
+    dum (*p && nomen_idx < LX)
+    {
+        /* Stop at digit that starts chapter reference */
+        si (*p >= '0' && *p <= '9')
+        {
+            /* But don't stop at digits in book names like "1 Kings" */
+            si (!in_numero_libri)
+            {
+                frange;
+            }
+            in_numero_libri = FALSUM;
+        }
+
+        nomen_buffer[nomen_idx++] = *p++;
+    }
+
+    /* Trim trailing space from book name */
+    dum (nomen_idx > ZEPHYRUM && nomen_buffer[nomen_idx - I] == ' ')
+    {
+        nomen_idx--;
+    }
+    nomen_buffer[nomen_idx] = '\0';
+
+    /* Look up book */
+    liber = biblia_invenire_librum(biblia, nomen_buffer);
+    si (liber < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Parse chapter number if present */
+    si (*p >= '0' && *p <= '9')
+    {
+        capitulum = ZEPHYRUM;
+        dum (*p >= '0' && *p <= '9')
+        {
+            capitulum = capitulum * X + (i32)(*p - '0');
+            p++;
+        }
+
+        /* Clamp to valid range */
+        {
+            i32 max_cap;
+
+            max_cap = biblia_capitula_in_libro(biblia, liber);
+            si (capitulum < I)
+            {
+                capitulum = I;
+            }
+            si (capitulum > max_cap)
+            {
+                capitulum = max_cap;
+            }
+        }
+    }
+
+    /* Parse verse number if : present */
+    si (*p == ':')
+    {
+        p++;
+        si (*p >= '0' && *p <= '9')
+        {
+            versus = ZEPHYRUM;
+            dum (*p >= '0' && *p <= '9')
+            {
+                versus = versus * X + (i32)(*p - '0');
+                p++;
+            }
+        }
+    }
+
+    *liber_out = liber;
+    *capitulum_out = capitulum;
+    *versus_out = versus;
+
+    redde VERUM;
+}
+
+b32
+biblia_visus_navigare_ad(
+    BibliaVisus* visus,
+    constans character* referentia)
+{
+    i32 liber;
+    i32 capitulum;
+    i32 versus;
+
+    si (!visus || !referentia || !*referentia)
+    {
+        redde FALSUM;
+    }
+
+    si (!_biblia_visus_parse_referentiam(visus->biblia,
+            referentia, &liber, &capitulum, &versus))
+    {
+        redde FALSUM;
+    }
+
+    /* Set navigation state */
+    visus->liber_currens = liber;
+    visus->capitulum_currens = capitulum;
+    visus->in_toc = FALSUM;
+    visus->cache_liber = (i32)(-1);  /* Force recalculation */
+    visus->cache_capitulum = (i32)(-1);
+
+    /* If verse specified, find page containing it */
+    si (versus > ZEPHYRUM)
+    {
+        /* Need to calculate pagination first */
+        _biblia_visus_calculare_paginationem(visus,
+            visus->latitudo_characterum > ZEPHYRUM ? visus->latitudo_characterum : LXXX,
+            visus->altitudo_linearum > ZEPHYRUM ? visus->altitudo_linearum : XL);
+
+        /* Find page containing verse (0-indexed internally) */
+        {
+            i32 versus_idx;
+            i32 pagina;
+
+            versus_idx = versus - I;  /* Convert to 0-indexed */
+
+            per (pagina = visus->paginae_numerus - I; pagina >= ZEPHYRUM; pagina--)
+            {
+                si (visus->paginae_limites[pagina] <= versus_idx)
+                {
+                    visus->index_paginae = pagina;
+                    frange;
+                }
+            }
+        }
+    }
+    alioquin
+    {
+        visus->index_paginae = ZEPHYRUM;
+    }
+
+    redde VERUM;
+}

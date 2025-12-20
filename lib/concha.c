@@ -50,12 +50,23 @@ _concha_command_sputnik_syntax(
 }
 
 
-/* $bible command - switch to Bible viewer */
+/* $bible command - switch to Bible viewer with optional reference
+ *
+ * Usage: $bible                 - open TOC
+ *        $bible Genesis         - open Genesis 1
+ *        $bible Genesis 3       - open Genesis 3
+ *        $bible Genesis 3:16    - open Genesis 3, page with verse 16
+ */
 interior b32
 _concha_command_biblia(
     ContextusCommandi* ctx)
 {
     Schirmata* schirmata;
+    Schirma* schirma;
+    character argumentum[LXIV];
+    i32 col;
+    i32 idx;
+    character c;
 
     schirmata = (Schirmata*)ctx->datum_registratus;
     si (!schirmata)
@@ -63,7 +74,40 @@ _concha_command_biblia(
         redde FALSUM;
     }
 
+    /* Legere argumentum post commandum (skip leading space) */
+    idx = ZEPHYRUM;
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
+
+        /* Skip leading spaces */
+        si (idx == ZEPHYRUM && c == ' ')
+        {
+            perge;
+        }
+
+        /* Stop at end of line or null */
+        si (c == '\0' || c == '\n')
+        {
+            frange;
+        }
+
+        argumentum[idx++] = c;
+    }
+    argumentum[idx] = '\0';
+
+    /* Commutare ad biblia visus */
     schirmata_commutare_ad_biblia_visus(schirmata);
+
+    /* Si argumentum, navigare ad referentiam */
+    si (idx > ZEPHYRUM)
+    {
+        schirma = &schirmata->schirmae[schirmata->index_currens];
+        si (schirma->biblia_visus)
+        {
+            biblia_visus_navigare_ad(schirma->biblia_visus, argumentum);
+        }
+    }
 
     redde VERUM;
 }

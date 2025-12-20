@@ -216,5 +216,17 @@ biblia_versus_in_capitulo(
     i32 liber,
     i32 capitulum);
 
+/* Invenire librum per nomen (case-insensitive prefix match)
+ *
+ * biblia: pointer ad Biblia
+ * quaesitum: nomen libri quaerendi (e.g., "Genesis", "Gen", "1 Maccabees")
+ *
+ * Reddit: index libri si inventus, -1 si non inventus
+ */
+i32
+biblia_invenire_librum(
+    constans Biblia* biblia,
+    constans character* quaesitum);
+
 
 #endif /* BIBLIA_H */
