@@ -601,6 +601,7 @@ arx_caeli_creare(
 
     arc->trahens = FALSUM;
     arc->trahere_validum = FALSUM;
+    arc->trahere_hover_folder = NIHIL_SELECTA;
 
     arc->immundum = FALSUM;
     arc->tempus_immundum = 0.0;
@@ -1155,6 +1156,7 @@ _reddere_carta(
     ArcCaeli*            arc,
     ContextusDelineandi* ctx,
     Carta*               carta,
+    i32                  carta_index,
     i32                  widget_x,
     i32                  widget_y,
     i32                  scala,
@@ -1238,13 +1240,25 @@ _reddere_carta(
     /* Folders habent fondum obscuriorem */
     si (carta->est_folder)
     {
-        color_background = color_ex_palette(PALETTE_LIGHT_GRAY);
+        /* Verificare si folder est hover target */
+        si (arc->trahens && carta_index == arc->trahere_hover_folder)
+        {
+            color_background = color_ex_palette(PALETTE_BRIGHT_LEAF);
+            color_border = color_ex_palette(PALETTE_DARK_LEAF);
+        }
+        alioquin
+        {
+            color_background = color_ex_palette(PALETTE_LIGHT_GRAY);
+            color_border = thema_color(COLOR_STATUS_VISUAL);
+        }
     }
     alioquin
     {
         color_background = color_ex_palette(PALETTE_WHITE);
+        color_border = thema_color(COLOR_BORDER);
     }
 
+    /* Override border pro selecta/inserere */
     si (in_inserere)
     {
         color_border = thema_color(COLOR_STATUS_INSERT);
@@ -1252,14 +1266,6 @@ _reddere_carta(
     alioquin si (selecta)
     {
         color_border = color_ex_palette(PALETTE_BLUE);
-    }
-    alioquin si (carta->est_folder)
-    {
-        color_border = thema_color(COLOR_STATUS_VISUAL);
-    }
-    alioquin
-    {
-        color_border = thema_color(COLOR_BORDER);
     }
 
     /* Pingere fondum cum angulis rotundis */
@@ -1471,7 +1477,7 @@ arx_caeli_reddere(
         est_selecta = (i == arc->index_selecta);
         in_inserere = (est_selecta && arc->modus == ARC_MODUS_INSERERE);
 
-        _reddere_carta(arc, ctx, &arc->cartae[i], x, y, scala, est_selecta, in_inserere);
+        _reddere_carta(arc, ctx, &arc->cartae[i], i, x, y, scala, est_selecta, in_inserere);
     }
 
     /* Reddere drag ghost si trahens */
@@ -1929,6 +1935,13 @@ arx_caeli_tractare_eventum(
                 carta->latitudo, carta->altitudo,
                 arc->index_selecta);
 
+            /* Detectare folder hover */
+            arc->trahere_hover_folder = _invenire_folder_sub_puncto(
+                arc,
+                arc->trahere_grid_x,
+                arc->trahere_grid_y,
+                arc->index_selecta);
+
             redde VERUM;
         }
     }
@@ -2005,6 +2018,7 @@ arx_caeli_tractare_eventum(
             /* Si non validum et non folder, carta manet in loco originali */
 
             arc->trahens = FALSUM;
+            arc->trahere_hover_folder = NIHIL_SELECTA;
             redde VERUM;
         }
     }

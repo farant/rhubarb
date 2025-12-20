@@ -109,6 +109,7 @@ nomen structura {
     i32 trahere_grid_x;             /* Positio snapped ad gridum */
     i32 trahere_grid_y;
     b32 trahere_validum;            /* An positio valida? */
+    i32 trahere_hover_folder;       /* Index folderis sub puncto, NIHIL_SELECTA si nihil */
 
     /* Status immunditiae pro debounced save */
     b32 immundum;
