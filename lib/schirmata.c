@@ -599,7 +599,7 @@ _reddere_tabulam_schirmarum(
 
         /* Numerus: 1-9, 0 pro 10 */
         num = (i + I) % X;
-        sprintf(buffer, "[%d]", num);
+        sprintf(buffer, " %d ", num);
         label.datum = (i8*)buffer;
         label.mensura = III;
 
