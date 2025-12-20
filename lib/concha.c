@@ -50,6 +50,25 @@ _concha_command_sputnik_syntax(
 }
 
 
+/* $bible command - switch to Bible viewer */
+interior b32
+_concha_command_biblia(
+    ContextusCommandi* ctx)
+{
+    Schirmata* schirmata;
+
+    schirmata = (Schirmata*)ctx->datum_registratus;
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    schirmata_commutare_ad_biblia_visus(schirmata);
+
+    redde VERUM;
+}
+
+
 /* $date command - insert/update current date in output region */
 interior b32
 _concha_command_date(
@@ -265,6 +284,7 @@ concha_creare(ConchaConfiguratio* config)
     registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);
     registrum_commandi_registrare(reg_commandi, "thema", _concha_command_thema, schirmata);
     registrum_commandi_registrare(reg_commandi, "sputnik-syntax", _concha_command_sputnik_syntax, schirmata);
+    registrum_commandi_registrare(reg_commandi, "bible", _concha_command_biblia, schirmata);
 
     /* Configurare fenestram */
     fenestra_config.titulus = config->titulus ? config->titulus : "Concha";

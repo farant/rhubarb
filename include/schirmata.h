@@ -12,6 +12,7 @@
 #include "arx_caeli.h"
 #include "thema_visus.h"
 #include "sputnik_syntaxis.h"
+#include "biblia_visus.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -60,9 +61,11 @@ nomen structura {
     ArcCaeli* arx_caeli;              /* Cloud castle widget */
     ThemaVisus* thema_visus;          /* Theme viewer widget */
     SputnikSyntaxis* sputnik_syntaxis; /* Syntax reference widget */
+    BibliaVisus* biblia_visus;        /* Bible viewer widget */
     b32 modus_arx_caeli;              /* VERUM = cards mode */
     b32 modus_thema_visus;            /* VERUM = theme viewer mode */
     b32 modus_sputnik_syntaxis;       /* VERUM = syntax reference mode */
+    b32 modus_biblia_visus;           /* VERUM = Bible viewer mode */
 } Schirma;
 
 /* Controller schirmarum */
@@ -162,6 +165,14 @@ schirmata_commutare_ad_thema_visus(
  */
 vacuum
 schirmata_commutare_ad_sputnik_syntaxis(
+    Schirmata* schirmata);
+
+/* Commutare ad modus biblia visus (Bible viewer)
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_commutare_ad_biblia_visus(
     Schirmata* schirmata);
 
 

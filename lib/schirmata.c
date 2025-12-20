@@ -358,6 +358,55 @@ _schirmata_sputnik_syntaxis_tractare_eventum(
 
 
 /* ==================================================
+ * Widget Wrapper Functiones - Biblia Visus
+ * ================================================== */
+
+/* Datum pro biblia visus widget wrapper */
+nomen structura {
+    BibliaVisus* biblia_visus;
+    Schirmata*   schirmata;
+} SchirmataBibliaVisusDatum;
+
+hic_manens vacuum
+_schirmata_biblia_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataBibliaVisusDatum* datum;
+
+    datum = (SchirmataBibliaVisusDatum*)widget->datum;
+
+    biblia_visus_reddere(
+        datum->biblia_visus,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_biblia_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataBibliaVisusDatum* datum;
+
+    datum = (SchirmataBibliaVisusDatum*)widget->datum;
+
+    redde biblia_visus_tractare_eventum(datum->biblia_visus, eventus);
+}
+
+
+/* ==================================================
  * Status Salvare / Restituere
  * ================================================== */
 
@@ -492,6 +541,10 @@ _creare_schirma_layout(
     /* Creare Sputnik Syntaxis */
     schirma->sputnik_syntaxis = sputnik_syntaxis_creare(schirmata->ctx->piscina);
     schirma->modus_sputnik_syntaxis = FALSUM;
+
+    /* Creare Biblia Visus */
+    schirma->biblia_visus = biblia_visus_creare(schirmata->ctx->piscina);
+    schirma->modus_biblia_visus = FALSUM;
 
     schirma->initiatus = VERUM;
 
@@ -980,6 +1033,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_arx_caeli = VERUM;
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirma->arx_caeli, slug);
@@ -1036,6 +1090,7 @@ schirmata_commutare_ad_navigator(
     schirma->modus_arx_caeli = FALSUM;
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
 }
 
 
@@ -1087,6 +1142,7 @@ schirmata_commutare_ad_thema_visus(
     schirma->modus_arx_caeli = FALSUM;
     schirma->modus_thema_visus = VERUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
 }
 
 
@@ -1138,6 +1194,60 @@ schirmata_commutare_ad_sputnik_syntaxis(
     schirma->modus_arx_caeli = FALSUM;
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = VERUM;
+    schirma->modus_biblia_visus = FALSUM;
+}
+
+
+/* ==================================================
+ * Mode Switching - Biblia Visus
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_biblia_visus(
+    Schirmata* schirmata)
+{
+    Schirma*                   schirma;
+    ManagerWidget*             manager;
+    SchirmataBibliaVisusDatum* biblia_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_biblia_visus)
+    {
+        /* Iam in modus biblia visus */
+        redde;
+    }
+
+    /* Commutare ad biblia visus */
+    manager = schirma->manager;
+
+    /* Creare biblia visus datum */
+    biblia_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataBibliaVisusDatum));
+    si (!biblia_datum)
+    {
+        redde;
+    }
+    biblia_datum->biblia_visus = schirma->biblia_visus;
+    biblia_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = biblia_datum;
+        manager->widgets[I].reddere = _schirmata_biblia_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_biblia_visus_tractare_eventum;
+        manager->focus_index = I;  /* Focus ad biblia_visus */
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = VERUM;
 }
 
 

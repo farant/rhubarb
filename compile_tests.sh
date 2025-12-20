@@ -76,6 +76,7 @@ declare -a SOURCE_FILES=(
     "lib/thema_visus.c"
     "lib/sputnik_syntaxis.c"
     "lib/biblia_dr.c"
+    "lib/biblia_visus.c"
 )
 
 # Objective-C source (compiled separately)
