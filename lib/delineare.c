@@ -455,6 +455,171 @@ delineare_rectangulum_plenum (
     }
 }
 
+/* Rectangulum rotundum plenum
+ *
+ * Usare scanline approach: pro quaque linea horizontali,
+ * calculare inset ex circulo pro angulis rotundis
+ */
+vacuum
+delineare_rectangulum_rotundum_plenum (
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  radius,
+    Color                color)
+{
+    i32 py;
+    i32 dy;
+    i32 dx;
+    i32 r2;
+
+    si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
+
+    /* Cohibere radius ad dimensiones */
+    si (radius > latitudo / II) radius = latitudo / II;
+    si (radius > altitudo / II) radius = altitudo / II;
+    si (radius < ZEPHYRUM) radius = ZEPHYRUM;
+
+    /* Si radius est 0, delineare rectangulum normale */
+    si (radius == ZEPHYRUM)
+    {
+        delineare_rectangulum_plenum(ctx, x, y, latitudo, altitudo, color);
+        redde;
+    }
+
+    r2 = radius * radius;
+
+    /* Scanline per totam altitudinem */
+    per (py = ZEPHYRUM; py < altitudo; py++)
+    {
+        i32 x0;
+        i32 x1;
+
+        si (py < radius)
+        {
+            /* Regio superior cum angulis rotundis */
+            dy = radius - py;
+            dx = ZEPHYRUM;
+            dum ((radius - dx) * (radius - dx) + dy * dy >= r2 && dx < radius)
+            {
+                dx++;
+            }
+            /* +1 ut fill sit stricte intra border */
+            x0 = x + dx + I;
+            x1 = x + latitudo - dx - II;
+        }
+        alioquin si (py >= altitudo - radius)
+        {
+            /* Regio inferior cum angulis rotundis */
+            dy = py - (altitudo - radius - I);
+            dx = ZEPHYRUM;
+            dum ((radius - dx) * (radius - dx) + dy * dy >= r2 && dx < radius)
+            {
+                dx++;
+            }
+            /* +1 ut fill sit stricte intra border */
+            x0 = x + dx + I;
+            x1 = x + latitudo - dx - II;
+        }
+        alioquin
+        {
+            /* Regio media - intra border verticales */
+            x0 = x + I;
+            x1 = x + latitudo - II;
+        }
+
+        delineare_lineam_horizontalem(ctx, x0, x1, y + py, color);
+    }
+}
+
+/* Rectangulum rotundum (contour solum) */
+vacuum
+delineare_rectangulum_rotundum (
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  radius,
+    Color                color)
+{
+    i32 cx_sinister;
+    i32 cx_dexter;
+    i32 cy_superior;
+    i32 cy_inferior;
+    i32 qx;
+    i32 qy;
+    i32 error;
+    i32 pixel_color;
+
+    si (!ctx || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM) redde;
+
+    /* Cohibere radius */
+    si (radius > latitudo / II) radius = latitudo / II;
+    si (radius > altitudo / II) radius = altitudo / II;
+    si (radius < ZEPHYRUM) radius = ZEPHYRUM;
+
+    /* Si radius est 0, delineare rectangulum normale */
+    si (radius == ZEPHYRUM)
+    {
+        delineare_rectangulum(ctx, x, y, latitudo, altitudo, color);
+        redde;
+    }
+
+    pixel_color = color_ad_pixelum(color);
+
+    /* Centra angulorum */
+    cx_sinister = x + radius;
+    cx_dexter = x + latitudo - radius - I;
+    cy_superior = y + radius;
+    cy_inferior = y + altitudo - radius - I;
+
+    /* Delineare lineas horizontales (inter angulos) */
+    delineare_lineam_horizontalem(ctx, cx_sinister, cx_dexter, y, color);                    /* Superior */
+    delineare_lineam_horizontalem(ctx, cx_sinister, cx_dexter, y + altitudo - I, color);     /* Inferior */
+
+    /* Delineare lineas verticales (inter angulos) */
+    delineare_lineam_verticalem(ctx, x, cy_superior, cy_inferior, color);                    /* Sinister */
+    delineare_lineam_verticalem(ctx, x + latitudo - I, cy_superior, cy_inferior, color);    /* Dexter */
+
+    /* Delineare quattuor arcus angulares */
+    qx = radius;
+    qy = ZEPHYRUM;
+    error = ZEPHYRUM;
+
+    dum (qx >= qy)
+    {
+        /* Quadrans superior sinister */
+        ponere_pixelum_internum(ctx, cx_sinister - qx, cy_superior - qy, pixel_color);
+        ponere_pixelum_internum(ctx, cx_sinister - qy, cy_superior - qx, pixel_color);
+
+        /* Quadrans superior dexter */
+        ponere_pixelum_internum(ctx, cx_dexter + qx, cy_superior - qy, pixel_color);
+        ponere_pixelum_internum(ctx, cx_dexter + qy, cy_superior - qx, pixel_color);
+
+        /* Quadrans inferior sinister */
+        ponere_pixelum_internum(ctx, cx_sinister - qx, cy_inferior + qy, pixel_color);
+        ponere_pixelum_internum(ctx, cx_sinister - qy, cy_inferior + qx, pixel_color);
+
+        /* Quadrans inferior dexter */
+        ponere_pixelum_internum(ctx, cx_dexter + qx, cy_inferior + qy, pixel_color);
+        ponere_pixelum_internum(ctx, cx_dexter + qy, cy_inferior + qx, pixel_color);
+
+        si (error <= ZEPHYRUM)
+        {
+            qy += I;
+            error += II * qy + I;
+        }
+        si (error > ZEPHYRUM)
+        {
+            qx -= I;
+            error -= II * qx + I;
+        }
+    }
+}
+
 /* Circulus utendo algorithmo circuli puncti medii */
 vacuum
 delineare_circulum (

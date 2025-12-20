@@ -16,6 +16,10 @@
 #define CARTA_LATITUDO_MINIMUS  X       /* 10 characters minimum */
 #define CARTA_ALTITUDO_MINIMUS  III     /* 3 lines minimum */
 #define CARTA_PADDING           I       /* 1 character padding */
+#define CARTA_INSET_VISUAL      IV      /* 4 pixels visual inset from logical bounds */
+#define CARTA_OFFSET_VERTICALIS (-IV)   /* -4 pixels: shift visual card up for better text centering */
+#define CARTA_TRIM_INFERIOR     VIII    /* 8 pixels: trim bottom whitespace (1 char height) */
+#define CARTA_RADIUS_ANGULI     III     /* 3 pixels corner radius */
 #define DEBOUNCE_TEMPUS         2.0     /* 2 seconds */
 #define NIHIL_SELECTA           0xFFFFFFFF  /* Sentinel pro "nihil selectum" */
 
@@ -948,6 +952,12 @@ _reddere_carta(
     i32 px_y;
     i32 px_lat;
     i32 px_alt;
+    i32 vis_x;
+    i32 vis_y;
+    i32 vis_lat;
+    i32 vis_alt;
+    i32 inset;
+    i32 radius;
     Color color_border;
     Color color_background;
     Color color_textus;
@@ -996,6 +1006,18 @@ _reddere_carta(
     px_x = (widget_x + carta->x) * char_lat;
     px_y = (widget_y + carta->y) * char_alt;
 
+    /* Calculare limites visuales (inset a limitibus logicis) */
+    inset = CARTA_INSET_VISUAL * scala;
+    radius = CARTA_RADIUS_ANGULI * scala;
+    vis_x = px_x + inset;
+    vis_y = (i32)((s32)px_y + (s32)inset + (CARTA_OFFSET_VERTICALIS * (s32)scala));  /* Shift up */
+    vis_lat = px_lat - (inset * II);
+    vis_alt = px_alt - (inset * II) - (CARTA_TRIM_INFERIOR * scala);  /* Trim bottom */
+
+    /* Assecurare dimensiones minimae pro visual */
+    si (vis_lat < radius * II + II) vis_lat = radius * II + II;
+    si (vis_alt < radius * II + II) vis_alt = radius * II + II;
+
     color_textus = thema_color(COLOR_TEXT);
 
     /* Folders habent fondum obscuriorem */
@@ -1025,13 +1047,13 @@ _reddere_carta(
         color_border = thema_color(COLOR_BORDER);
     }
 
-    /* Pingere fondum */
-    delineare_rectangulum_plenum(ctx, px_x, px_y, px_lat, px_alt, color_background);
+    /* Pingere fondum cum angulis rotundis */
+    delineare_rectangulum_rotundum_plenum(ctx, vis_x, vis_y, vis_lat, vis_alt, radius, color_background);
 
-    /* Pingere border */
-    delineare_rectangulum(ctx, px_x, px_y, px_lat, px_alt, color_border);
+    /* Pingere border cum angulis rotundis */
+    delineare_rectangulum_rotundum(ctx, vis_x, vis_y, vis_lat, vis_alt, radius, color_border);
 
-    /* Pingere textum */
+    /* Pingere textum (relativum ad limites visuales) */
     linea_y = ZEPHYRUM;
     linea_start = ZEPHYRUM;
 
@@ -1044,8 +1066,8 @@ _reddere_carta(
 
             tabula_pixelorum_pingere_chordam(
                 ctx->tabula,
-                px_x + (CARTA_PADDING + I) * char_lat,
-                px_y + (CARTA_PADDING + I + linea_y) * char_alt,
+                vis_x + CARTA_PADDING * char_lat,
+                vis_y + (CARTA_PADDING + linea_y) * char_alt,
                 linea,
                 color_ad_pixelum(color_textus));
 
@@ -1062,8 +1084,8 @@ _reddere_carta(
         i32 j;
         f32 blink;
 
-        cursor_px_x = px_x + (CARTA_PADDING + I + arc->cursor_columna) * char_lat;
-        cursor_px_y = px_y + (CARTA_PADDING + I + arc->cursor_linea) * char_alt;
+        cursor_px_x = vis_x + (CARTA_PADDING + arc->cursor_columna) * char_lat;
+        cursor_px_y = vis_y + (CARTA_PADDING + arc->cursor_linea) * char_alt;
 
         /* Blink cursor - unda quadrata cum frequentia 2Hz */
         blink = unda_quadratus((f32)tempus_nunc(), 2.0f, 1.0f);
@@ -1218,6 +1240,12 @@ arx_caeli_reddere(
         i32 ghost_px_y;
         i32 ghost_px_lat;
         i32 ghost_px_alt;
+        i32 ghost_vis_x;
+        i32 ghost_vis_y;
+        i32 ghost_vis_lat;
+        i32 ghost_vis_alt;
+        i32 ghost_inset;
+        i32 ghost_radius;
         Color ghost_color;
         Color ghost_background;
         chorda linea;
@@ -1233,6 +1261,18 @@ arx_caeli_reddere(
         ghost_px_lat = carta->latitudo * char_lat;
         ghost_px_alt = carta->altitudo * char_alt;
 
+        /* Calculare limites visuales ghost */
+        ghost_inset = CARTA_INSET_VISUAL * scala;
+        ghost_radius = CARTA_RADIUS_ANGULI * scala;
+        ghost_vis_x = ghost_px_x + ghost_inset;
+        ghost_vis_y = (i32)((s32)ghost_px_y + (s32)ghost_inset + (CARTA_OFFSET_VERTICALIS * (s32)scala));
+        ghost_vis_lat = ghost_px_lat - (ghost_inset * II);
+        ghost_vis_alt = ghost_px_alt - (ghost_inset * II) - (CARTA_TRIM_INFERIOR * scala);
+
+        /* Assecurare dimensiones minimae */
+        si (ghost_vis_lat < ghost_radius * II + II) ghost_vis_lat = ghost_radius * II + II;
+        si (ghost_vis_alt < ghost_radius * II + II) ghost_vis_alt = ghost_radius * II + II;
+
         si (arc->trahere_validum)
         {
             ghost_color = thema_color(COLOR_STATUS_INSERT);
@@ -1242,16 +1282,18 @@ arx_caeli_reddere(
             ghost_color = thema_color(COLOR_ERROR);
         }
 
-        /* Pingere fondum ghost */
+        /* Pingere fondum ghost cum angulis rotundis */
         ghost_background = color_ex_palette(PALETTE_WHITE);
-        delineare_rectangulum_plenum(ctx, ghost_px_x, ghost_px_y,
-                                     ghost_px_lat, ghost_px_alt, ghost_background);
+        delineare_rectangulum_rotundum_plenum(ctx, ghost_vis_x, ghost_vis_y,
+                                              ghost_vis_lat, ghost_vis_alt,
+                                              ghost_radius, ghost_background);
 
-        /* Pingere border ghost */
-        delineare_rectangulum(ctx, ghost_px_x, ghost_px_y,
-                              ghost_px_lat, ghost_px_alt, ghost_color);
+        /* Pingere border ghost cum angulis rotundis */
+        delineare_rectangulum_rotundum(ctx, ghost_vis_x, ghost_vis_y,
+                                       ghost_vis_lat, ghost_vis_alt,
+                                       ghost_radius, ghost_color);
 
-        /* Pingere textum ghost */
+        /* Pingere textum ghost (relativum ad limites visuales) */
         linea_y = ZEPHYRUM;
         linea_start = ZEPHYRUM;
 
@@ -1264,8 +1306,8 @@ arx_caeli_reddere(
 
                 tabula_pixelorum_pingere_chordam(
                     ctx->tabula,
-                    ghost_px_x + (CARTA_PADDING + I) * char_lat,
-                    ghost_px_y + (CARTA_PADDING + I + linea_y) * char_alt,
+                    ghost_vis_x + CARTA_PADDING * char_lat,
+                    ghost_vis_y + (CARTA_PADDING + linea_y) * char_alt,
                     linea,
                     color_ad_pixelum(thema_color(COLOR_TEXT)));
 

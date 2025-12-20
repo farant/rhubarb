@@ -297,6 +297,46 @@ delineare_rectangulum_plenum (
     i32                  altitudo,
     Color                color);
 
+/* Delineare rectangulum rotundum (cum angulis rotundis)
+ *
+ * ctx: contextus delineandi
+ * x: coordinata x
+ * y: coordinata y
+ * latitudo: latitudo rectanguli
+ * altitudo: altitudo rectanguli
+ * radius: radius angulorum
+ * color: color
+ */
+vacuum
+delineare_rectangulum_rotundum (
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  radius,
+    Color                color);
+
+/* Delineare rectangulum rotundum plenum
+ *
+ * ctx: contextus delineandi
+ * x: coordinata x
+ * y: coordinata y
+ * latitudo: latitudo rectanguli
+ * altitudo: altitudo rectanguli
+ * radius: radius angulorum
+ * color: color
+ */
+vacuum
+delineare_rectangulum_rotundum_plenum (
+    ContextusDelineandi* ctx,
+    i32                  x,
+    i32                  y,
+    i32                  latitudo,
+    i32                  altitudo,
+    i32                  radius,
+    Color                color);
+
 
 /* ==================================================
  * Functiones Primitivae - Circuli
