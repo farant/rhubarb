@@ -495,7 +495,6 @@ libro_reddere(
     Color color_border_inner;
     chorda titulo;
     chorda modo_textus;
-    chorda pagina_indicium;
     constans character* modo_str;
     character indicium_buffer[XXXII];
 
@@ -551,26 +550,17 @@ libro_reddere(
     modo_str = vim_nomen_modi(pagina->vim.modo);
     modo_textus = chorda_ex_literis(modo_str, piscina);
 
-    /* Pagina indicium pro angulo dextro */
-    sprintf(indicium_buffer, "%d/%d",
-            libro->index_currens + I,
-            libro->numerus_paginarum);
-    pagina_indicium = chorda_ex_literis(indicium_buffer, piscina);
-
     {
         i32 titulo_pixel_width;
         i32 modo_pixel_width;
-        i32 indicium_pixel_width;
         i32 titulo_x, titulo_y;
         i32 modo_x, modo_y;
-        i32 indicium_x, indicium_y;
         i32 gap_padding;
 
         gap_padding = character_latitudo;
 
         titulo_pixel_width = titulo.mensura * character_latitudo;
         modo_pixel_width = modo_textus.mensura * character_latitudo;
-        indicium_pixel_width = pagina_indicium.mensura * character_latitudo;
 
         /* Center titulo on top line */
         titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
@@ -579,10 +569,6 @@ libro_reddere(
         /* Center modo on bottom line */
         modo_x = box_x0 + ((box_x1 - box_x0) - modo_pixel_width) / II;
         modo_y = box_y1 - (character_altitudo / II) + II;
-
-        /* Pagina indicium in angulo dextro superiore */
-        indicium_x = box_x1 - indicium_pixel_width - gap_padding;
-        indicium_y = titulo_y;
 
         /* Pingere Double Border */
 
@@ -617,12 +603,6 @@ libro_reddere(
                                               color_ad_pixelum(thema_color(COLOR_STATUS_INSERT)) :
                                               color_ad_pixelum(thema_color(COLOR_STATUS_NORMAL)));
 
-        /* Pingere pagina indicium si nomen est monstratum (non duplicare) */
-        si (libro->nomina[libro->index_currens] != NIHIL)
-        {
-            tabula_pixelorum_pingere_chordam(tabula_pixelorum, indicium_x, indicium_y, pagina_indicium,
-                                              color_ad_pixelum(color_border));
-        }
     }
 
     /* Reddere Textum Paginae (interior) */
