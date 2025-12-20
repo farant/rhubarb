@@ -28,6 +28,9 @@
  * Typi
  * ================================================== */
 
+/* Maximum pages in a chapter (176 verses in Psalm 119) */
+#define BIBLIA_PAGINAE_MAXIMUS LXIV
+
 /* BibliaVisus - Widget state */
 nomen structura {
     Piscina* piscina;
@@ -38,6 +41,18 @@ nomen structura {
     i32 liber_currens;       /* Index libri currentis */
     i32 capitulum_currens;   /* Capitulum currens (1-indexed) */
     i32 versus_initium;      /* Primus versus in pagina currenti */
+    i32 versus_in_pagina;    /* Versus redditi in pagina currenti */
+
+    /* Pre-calculated pagination for current chapter */
+    i32 paginae_limites[BIBLIA_PAGINAE_MAXIMUS];  /* First verse of each page */
+    i32 paginae_numerus;     /* Total pages in chapter */
+    i32 index_paginae;       /* Current page index (0-based) */
+
+    /* Cache invalidation */
+    i32 cache_liber;         /* Cached liber for pagination */
+    i32 cache_capitulum;     /* Cached capitulum for pagination */
+    i32 cache_latitudo;      /* Cached latitudo for pagination */
+    i32 cache_altitudo;      /* Cached altitudo for pagination */
 
     /* Layout dimensions (set during render) */
     i32 latitudo_characterum; /* Characters per line */
