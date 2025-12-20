@@ -50,6 +50,7 @@ enumeratio {
     COLORATIO_ATTRIBUTUM  = 9,   /* Attribute names in tags */
     COLORATIO_VALOR_ATTR  = 10,  /* Attribute values */
     COLORATIO_LINK        = 11,  /* #hashtag links */
+    COLORATIO_TYPUS       = 12,  /* Type annotation colons (: and ::) */
     COLORATIO_NUMERUS_MAX = 16   /* Reserved space for expansion */
 } ColoratioIndex;
 

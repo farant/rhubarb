@@ -485,6 +485,80 @@ _colorare_sputnik(
                 {
                     coloratio_index(coloratio, linea, i) = COLORATIO_CLAVIS;
                 }
+
+                /* Tractare speciale pro "entitas variable-name : EntityName" */
+                si (verbum_long == VII &&
+                    verbum[ZEPHYRUM] == 'e' && verbum[I] == 'n' && verbum[II] == 't' &&
+                    verbum[III] == 'i' && verbum[IV] == 't' && verbum[V] == 'a' && verbum[VI] == 's')
+                {
+                    /* Saltare spatia post "entitas" */
+                    dum (col < tabula->latitudo &&
+                         (tabula_cellula(tabula, linea, col) == ' ' ||
+                          tabula_cellula(tabula, linea, col) == '\t'))
+                    {
+                        col++;
+                    }
+
+                    /* Saltare nomen variabilis (relinquere colorem defaltam) */
+                    dum (col < tabula->latitudo)
+                    {
+                        c = tabula_cellula(tabula, linea, col);
+                        si (_est_character_verbi(c) || c == '-')
+                        {
+                            col++;
+                        }
+                        alioquin
+                        {
+                            frange;
+                        }
+                    }
+
+                    /* Saltare spatia ante ':' */
+                    dum (col < tabula->latitudo &&
+                         (tabula_cellula(tabula, linea, col) == ' ' ||
+                          tabula_cellula(tabula, linea, col) == '\t'))
+                    {
+                        col++;
+                    }
+
+                    /* Quaerere ':' */
+                    si (col < tabula->latitudo && tabula_cellula(tabula, linea, col) == ':')
+                    {
+                        /* Colorare ':' viride claro (bright leaf) */
+                        coloratio_index(coloratio, linea, col) = COLORATIO_TYPUS;
+                        col++;
+
+                        /* Saltare spatia post ':' */
+                        dum (col < tabula->latitudo &&
+                             (tabula_cellula(tabula, linea, col) == ' ' ||
+                              tabula_cellula(tabula, linea, col) == '\t'))
+                        {
+                            col++;
+                        }
+
+                        /* Colorare nomen typi (identifier cum - permisso, :: separatim) */
+                        dum (col < tabula->latitudo)
+                        {
+                            c = tabula_cellula(tabula, linea, col);
+                            si (c == ':')
+                            {
+                                /* Colones in namespace :: sunt viride claro (bright leaf) */
+                                coloratio_index(coloratio, linea, col) = COLORATIO_TYPUS;
+                                col++;
+                            }
+                            alioquin si (_est_character_verbi(c) || c == '-')
+                            {
+                                /* Identifier characters sunt viride obscuro (dark leaf) */
+                                coloratio_index(coloratio, linea, col) = COLORATIO_LINK;
+                                col++;
+                            }
+                            alioquin
+                            {
+                                frange;
+                            }
+                        }
+                    }
+                }
             }
             alioquin si (_est_in_lista(verbum, verbum_long, clavis_sputnik_valores))
             {
