@@ -124,7 +124,7 @@ _biblia_visus_calculare_paginationem(
     versus_in_capitulo = biblia_versus_in_capitulo(visus->biblia,
         visus->liber_currens, visus->capitulum_currens);
     chars_disponibiles = latitudo - (PADDING * II);
-    lineae_disponibiles = altitudo - V;  /* header, separator, footer */
+    lineae_disponibiles = altitudo - VI;  /* header(3) + separator(1) + footer(2) = 6 */
 
     si (lineae_disponibiles < I)
     {
@@ -440,7 +440,7 @@ _biblia_visus_reddere_lectio(
     versus_in_capitulo = biblia_versus_in_capitulo(visus->biblia,
         visus->liber_currens, visus->capitulum_currens);
 
-    lineae_disponibiles = altitudo - V;  /* header, separator, footer */
+    lineae_disponibiles = altitudo - VI;  /* header(3) + separator(1) + footer(2) = 6 */
     lineae_usae = ZEPHYRUM;
 
     /* Dark red pro numeris versuum */
@@ -492,6 +492,12 @@ _biblia_visus_reddere_lectio(
             si (lineae_usae + lineae_versus > lineae_disponibiles)
             {
                 frange;  /* Stop - don't break mid-verse */
+            }
+
+            /* Also check absolute bounds - must have room for at least one line */
+            si (linea >= y + altitudo - II)
+            {
+                frange;  /* No room for text, stop before rendering number */
             }
 
             /* Render verse with word wrap */
