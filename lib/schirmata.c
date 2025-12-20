@@ -1055,7 +1055,8 @@ schirmata_commutare_ad_navigator(
 
     schirma = &schirmata->schirmae[schirmata->index_currens];
 
-    si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus && !schirma->modus_sputnik_syntaxis)
+    si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus &&
+        !schirma->modus_sputnik_syntaxis && !schirma->modus_biblia_visus)
     {
         /* Iam in modus navigator */
         redde;
