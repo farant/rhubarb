@@ -28,8 +28,8 @@ hic_manens constans character* nomina_palette[XVI] = {
     "Light Gray",
     "White",
     "Dark Red",
-    "Medium Red",
-    "Bright Red",
+    "Blue",
+    "Bright Pink",
     "Dark Gold",
     "Medium Gold",
     "Bright Gold",
@@ -175,55 +175,116 @@ thema_visus_reddere(
     delineare_rectangulum_plenum(ctx, px_x, px_y,
         latitudo * char_lat, altitudo * char_alt, color_background);
 
-    /* === Sectio: Palette === */
+    /* === Sectio: Contrast Grid === */
     linea = y + I;
 
     /* Titulus */
-    nomen_chorda = _chorda_ex_cstr("=== Palette (XVI Colores) ===");
+    nomen_chorda = _chorda_ex_cstr("=== Contrast Grid ===");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         nomen_chorda, pixelum_text, scala);
     linea += II;
 
-    /* Omnes XVI colores */
-    per (i = ZEPHYRUM; i < XVI; i++)
+    /* Grid: 16 rows (background) x 16 columns (foreground) */
     {
-        Color palette_color;
-        i32 swatch_x;
-        i32 swatch_y;
-        i32 swatch_lat;
-        i32 swatch_alt;
+        i32 row, col;
+        i32 cell_lat;
+        i32 cell_alt;
+        i32 grid_x;
+        i32 grid_y;
+        chorda aa_chorda;
 
-        /* Numero (0-15) */
-        sprintf(numero_buffer, "%2d", i);
-        numero_chorda = _chorda_ex_cstr(numero_buffer);
-        tabula_pixelorum_pingere_chordam_scalatam(tabula,
-            (x + PADDING) * char_lat, linea * char_alt,
-            numero_chorda, pixelum_text_dim, scala);
+        aa_chorda = _chorda_ex_cstr("Aa");
+        cell_lat = II * char_lat;   /* 2 chars wide per cell */
+        cell_alt = char_alt;        /* 1 char tall */
+        grid_x = (x + PADDING) * char_lat;
 
-        /* Nomen */
-        nomen_chorda = _chorda_ex_cstr(nomina_palette[i]);
+        per (row = ZEPHYRUM; row < XVI; row++)
+        {
+            Color bg_color;
+
+            bg_color = color_ex_palette(row);
+            grid_y = linea * char_alt;
+
+            per (col = ZEPHYRUM; col < XVI; col++)
+            {
+                Color fg_color;
+                i32 cell_x;
+
+                fg_color = color_ex_palette(col);
+                cell_x = grid_x + col * cell_lat;
+
+                /* Pingere fondum */
+                delineare_rectangulum_plenum(ctx, cell_x, grid_y,
+                    cell_lat, cell_alt, bg_color);
+
+                /* Pingere "Aa" */
+                tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                    cell_x, grid_y,
+                    aa_chorda, color_ad_pixelum(fg_color), scala);
+            }
+
+            linea++;
+        }
+    }
+
+    linea += II;
+
+    /* === Sectio: Palette === */
+    /* Palette ad dextram grid */
+    {
+        i32 palette_x;
+        i32 palette_linea;
+
+        palette_x = x + PADDING + XXXIV;  /* To the right of the grid */
+        palette_linea = y + I;
+
+        /* Titulus */
+        nomen_chorda = _chorda_ex_cstr("=== Palette ===");
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
-            (x + PADDING + IV) * char_lat, linea * char_alt,
+            palette_x * char_lat, palette_linea * char_alt,
             nomen_chorda, pixelum_text, scala);
+        palette_linea += II;
 
-        /* Swatch - rectangulum plenum cum colore */
-        palette_color = color_ex_palette(i);
-        swatch_x = (x + PADDING + XX) * char_lat;
-        swatch_y = linea * char_alt;
-        swatch_lat = SWATCH_LATITUDO * char_lat;
-        swatch_alt = char_alt;
+        /* Omnes XVI colores */
+        per (i = ZEPHYRUM; i < XVI; i++)
+        {
+            Color palette_color;
+            i32 swatch_x;
+            i32 swatch_y;
+            i32 swatch_lat;
+            i32 swatch_alt;
 
-        delineare_rectangulum_plenum(ctx, swatch_x, swatch_y,
-            swatch_lat, swatch_alt, palette_color);
-        delineare_rectangulum(ctx, swatch_x, swatch_y,
-            swatch_lat, swatch_alt, color_border);
+            /* Numero (0-15) */
+            sprintf(numero_buffer, "%2d", i);
+            numero_chorda = _chorda_ex_cstr(numero_buffer);
+            tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                palette_x * char_lat, palette_linea * char_alt,
+                numero_chorda, pixelum_text_dim, scala);
 
-        linea++;
+            /* Nomen */
+            nomen_chorda = _chorda_ex_cstr(nomina_palette[i]);
+            tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                (palette_x + IV) * char_lat, palette_linea * char_alt,
+                nomen_chorda, pixelum_text, scala);
+
+            /* Swatch - rectangulum plenum cum colore */
+            palette_color = color_ex_palette(i);
+            swatch_x = (palette_x + XX) * char_lat;
+            swatch_y = palette_linea * char_alt;
+            swatch_lat = SWATCH_LATITUDO * char_lat;
+            swatch_alt = char_alt;
+
+            delineare_rectangulum_plenum(ctx, swatch_x, swatch_y,
+                swatch_lat, swatch_alt, palette_color);
+            delineare_rectangulum(ctx, swatch_x, swatch_y,
+                swatch_lat, swatch_alt, color_border);
+
+            palette_linea++;
+        }
     }
 
     /* === Sectio: Semantic Mappings === */
-    linea += II;
 
     nomen_chorda = _chorda_ex_cstr("=== Semantic Mappings ===");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,

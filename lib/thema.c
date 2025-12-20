@@ -14,15 +14,15 @@ hic_manens constans i8 palette_aquinas[XLVIII] = {
     0x3A, 0x36, 0x30,  /* 4: Light gray (warm) */
     0x3F, 0x3C, 0x3A,
 
-    /* Reds (3 shades) */
+    /* Reds (2 shades) + Blue */
     0x20, 0x08, 0x08,  /* 6: Dark red */
-    0x30, 0x0C, 0x0C,  /* 7: Medium red */
-    0x3F, 0x10, 0x10,  /* 8: Bright red */
+    0x18, 0x2F, 0x3F,  /* 7: Blue (#63BEFF) */
+    0x3F, 0x06, 0x1C,  /* 8: Bright red/pink (#FF1B72) */
 
     /* Yellow-golds (3 shades) */
-    0x28, 0x20, 0x08,  /* 9:  Dark gold */
-    0x38, 0x30, 0x10,  /* 10: Medium gold */
-    0x3F, 0x38, 0x18,  /* 11: Bright yellow-gold */
+    0x29, 0x1A, 0x00,  /* 9:  Dark gold (#A76A00) */
+    0x3A, 0x2D, 0x00,  /* 10: Medium gold (#E8B500) */
+    0x3F, 0x36, 0x10,  /* 11: Bright yellow-gold (#FFD940) */
 
     /* Leaf greens (3 shades) */
     0x10, 0x20, 0x08,  /* 12: Dark leaf green */
@@ -30,7 +30,7 @@ hic_manens constans i8 palette_aquinas[XLVIII] = {
     0x28, 0x3C, 0x18,  /* 14: Bright leaf green */
 
     /* Special purpose */
-    0x2C, 0x28, 0x20   /* 15: Warm gray (for text backgrounds) */
+    0x2D, 0x25, 0x1F   /* 15: Warm gray (#B5977D) */
 };
 
 
@@ -112,7 +112,7 @@ thema_color_ex_indice_colorationis(i8 index)
      * COLORATIO_DEFALTA     = 0  -> COLOR_TEXT
      * COLORATIO_COMMANDUM   = 1  -> PALETTE_BRIGHT_GOLD
      * COLORATIO_TAGUM       = 2  -> PALETTE_WHITE (grayscale)
-     * COLORATIO_CLAVIS      = 3  -> PALETTE_MEDIUM_RED
+     * COLORATIO_CLAVIS      = 3  -> PALETTE_DARK_RED
      * COLORATIO_CHORDA      = 4  -> PALETTE_DARK_GOLD
      * COLORATIO_NUMERUS     = 5  -> PALETTE_MEDIUM_GOLD
      * COLORATIO_COMMENTUM   = 6  -> PALETTE_MEDIUM_GRAY
@@ -130,7 +130,7 @@ thema_color_ex_indice_colorationis(i8 index)
         casus II:  /* COLORATIO_TAGUM */
             redde color_ex_palette(PALETTE_WHITE);
         casus III: /* COLORATIO_CLAVIS */
-            redde color_ex_palette(PALETTE_MEDIUM_RED);
+            redde color_ex_palette(PALETTE_DARK_RED);
         casus IV:  /* COLORATIO_CHORDA */
             redde color_ex_palette(PALETTE_DARK_GOLD);
         casus V:   /* COLORATIO_NUMERUS */
