@@ -33,9 +33,9 @@ hic_manens constans character* nomina_palette[XVI] = {
     "Dark Gold",
     "Medium Gold",
     "Bright Gold",
-    "Dark Cyan",
-    "Medium Cyan",
-    "Bright Cyan",
+    "Dark Leaf",
+    "Medium Leaf",
+    "Bright Leaf",
     "Warm Gray"
 };
 

@@ -9,7 +9,7 @@ hic_manens constans i8 palette_aquinas[XLVIII] = {
     /*0x0D, 0x11, 0x09, */ /* 0: Black */
     0x00, 0x00, 0x00,  /* 0: Black */
     0x0D, 0x11, 0x09,  /* 1: Dark gray */
-    0x20, 0x20, 0x20,  /* 2: Medium dark gray */
+    0x19, 0x17, 0x1F,  /* 2: Medium dark gray (purple) */
     0x32, 0x2E, 0x28,  /* 3: Medium gray (warm) */
     0x3A, 0x36, 0x30,  /* 4: Light gray (warm) */
     0x3F, 0x3C, 0x3A,
@@ -24,10 +24,10 @@ hic_manens constans i8 palette_aquinas[XLVIII] = {
     0x38, 0x30, 0x10,  /* 10: Medium gold */
     0x3F, 0x38, 0x18,  /* 11: Bright yellow-gold */
 
-    /* Cyans (3 shades) */
-    0x08, 0x20, 0x28,  /* 12: Dark cyan */
-    0x10, 0x30, 0x38,  /* 13: Medium cyan */
-    0x18, 0x38, 0x3F,  /* 14: Bright cyan */
+    /* Leaf greens (3 shades) */
+    0x10, 0x20, 0x08,  /* 12: Dark leaf green */
+    0x20, 0x30, 0x10,  /* 13: Medium leaf green */
+    0x28, 0x3C, 0x18,  /* 14: Bright leaf green */
 
     /* Special purpose */
     0x2C, 0x28, 0x20   /* 15: Warm gray (for text backgrounds) */
