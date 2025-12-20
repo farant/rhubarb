@@ -52,6 +52,7 @@ declare -a SOURCE_FILES=(
     "lib/thema_visus.c"
     "lib/sputnik_syntaxis.c"
     "lib/iter_directoria.c"
+    "lib/exemplar.c"
 )
 
 # Color codes
