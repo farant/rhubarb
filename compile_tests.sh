@@ -77,6 +77,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_syntaxis.c"
     "lib/biblia_dr.c"
     "lib/biblia_visus.c"
+    "lib/iter_directoria.c"
 )
 
 # Objective-C source (compiled separately)

@@ -51,6 +51,7 @@ declare -a SOURCE_FILES=(
     "lib/concha.c"
     "lib/thema_visus.c"
     "lib/sputnik_syntaxis.c"
+    "lib/iter_directoria.c"
 )
 
 # Color codes
