@@ -25,6 +25,15 @@
 
 
 /* ==================================================
+ * Forward Declarations
+ * ================================================== */
+
+hic_manens i32 _obtinere_max_z_index(ArcCaeli* arc);
+hic_manens vacuum _ordinare_per_z_index_asc(ArcCaeli* arc, i32* indices);
+hic_manens vacuum _ordinare_per_z_index_desc(ArcCaeli* arc, i32* indices);
+
+
+/* ==================================================
  * Functiones Auxiliares
  * ================================================== */
 
@@ -323,24 +332,51 @@ _exire_inserere(
     arx_caeli_marcare_immundum(arc);
 }
 
-/* Hit test: invenire cartam ad positionem */
+/* Hit test: invenire cartam ad positionem (topmost = highest z_index)
+ *
+ * x, y: positio in pixelis (relativum ad widget)
+ */
 hic_manens i32
 _invenire_carta_ad_punctum(
     ArcCaeli* arc,
     i32       x,
     i32       y)
 {
-    s32 i;
+    i32 sorted_indices[CARTAE_MAXIMUS];
+    i32 i;
+    i32 char_lat;
+    i32 char_alt;
 
-    /* Iterare a fine (top) ad initium (bottom) */
-    per (i = (s32)arc->numerus_cartarum - 1; i >= 0; i--)
+    si (!arc)
     {
-        Carta* carta = &arc->cartae[i];
+        redde NIHIL_SELECTA;
+    }
 
-        si (x >= carta->x && x < carta->x + carta->latitudo &&
-            y >= carta->y && y < carta->y + carta->altitudo)
+    char_lat = VI * arc->scala;
+    char_alt = VIII * arc->scala;
+
+    /* Sortare per z_index descendens (high z first) */
+    _ordinare_per_z_index_desc(arc, sorted_indices);
+
+    /* Iterare ab alto ad bassum - primus hit est topmost */
+    per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
+    {
+        i32 idx;
+        Carta* carta;
+        i32 carta_px_lat;
+        i32 carta_px_alt;
+
+        idx = sorted_indices[i];
+        carta = &arc->cartae[idx];
+
+        /* Convertere dimensiones ad pixela */
+        carta_px_lat = carta->latitudo * char_lat;
+        carta_px_alt = carta->altitudo * char_alt;
+
+        si (x >= carta->x && x < carta->x + carta_px_lat &&
+            y >= carta->y && y < carta->y + carta_px_alt)
         {
-            redde (i32)i;
+            redde idx;
         }
     }
 
@@ -505,9 +541,10 @@ _pixel_ad_char_index(
     char_alt = VIII * arc->scala;
     inset = CARTA_INSET_VISUAL * arc->scala;
 
-    /* Calculare positio visualis cartae in pixelis */
-    carta_px_x = (arc->widget_x + carta->x) * char_lat;
-    carta_px_y = (arc->widget_y + carta->y) * char_alt;
+    /* Calculare positio visualis cartae in pixelis
+     * NOTA: carta->x/y jam sunt widget-relativum pixela */
+    carta_px_x = (arc->widget_x * char_lat) + carta->x;
+    carta_px_y = (arc->widget_y * char_alt) + carta->y;
     vis_x = carta_px_x + inset;
     vis_y = (i32)((s32)carta_px_y + (s32)inset + (CARTA_OFFSET_VERTICALIS * (s32)arc->scala));
 
@@ -560,6 +597,120 @@ _pixel_ad_char_index(
     }
 
     redde -I;
+}
+
+
+/* ==================================================
+ * Z-Index Helpers
+ * ================================================== */
+
+/* Obtinere maximum z_index inter omnes cartas
+ *
+ * Redde: maximum z_index, vel 0 si nullae cartae
+ */
+hic_manens i32
+_obtinere_max_z_index(
+    ArcCaeli* arc)
+{
+    i32 max_z;
+    i32 i;
+
+    si (!arc)
+    {
+        redde ZEPHYRUM;
+    }
+
+    max_z = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
+    {
+        si (arc->cartae[i].z_index > max_z)
+        {
+            max_z = arc->cartae[i].z_index;
+        }
+    }
+
+    redde max_z;
+}
+
+/* Ordinare indices per z_index (ascending - low z first, high z last)
+ *
+ * arc: controller
+ * indices: array output de indices sortatis (debet habere CARTAE_MAXIMUS elementa)
+ *
+ * Pro rendering: low z draws first, high z draws last (on top)
+ */
+hic_manens vacuum
+_ordinare_per_z_index_asc(
+    ArcCaeli* arc,
+    i32*      indices)
+{
+    i32 i;
+    s32 j;  /* DEBET esse signatus pro j-- dum j >= 0 */
+    i32 temp;
+
+    si (!arc || !indices)
+    {
+        redde;
+    }
+
+    /* Initiare cum indice originali */
+    per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
+    {
+        indices[i] = i;
+    }
+
+    /* Insertion sort (simplex pro max 64 elementa) */
+    per (i = I; i < arc->numerus_cartarum; i++)
+    {
+        temp = indices[i];
+        j = (s32)i - I;
+
+        dum (j >= ZEPHYRUM && arc->cartae[indices[j]].z_index > arc->cartae[temp].z_index)
+        {
+            indices[j + I] = indices[j];
+            j--;
+        }
+        indices[j + I] = temp;
+    }
+}
+
+/* Ordinare indices per z_index (descending - high z first, low z last)
+ *
+ * Pro hit testing: high z checked first (topmost card)
+ */
+hic_manens vacuum
+_ordinare_per_z_index_desc(
+    ArcCaeli* arc,
+    i32*      indices)
+{
+    i32 i;
+    s32 j;  /* DEBET esse signatus pro j-- dum j >= 0 */
+    i32 temp;
+
+    si (!arc || !indices)
+    {
+        redde;
+    }
+
+    /* Initiare cum indice originali */
+    per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
+    {
+        indices[i] = i;
+    }
+
+    /* Insertion sort descending */
+    per (i = I; i < arc->numerus_cartarum; i++)
+    {
+        temp = indices[i];
+        j = (s32)i - I;
+
+        dum (j >= ZEPHYRUM && arc->cartae[indices[j]].z_index < arc->cartae[temp].z_index)
+        {
+            indices[j + I] = indices[j];
+            j--;
+        }
+        indices[j + I] = temp;
+    }
 }
 
 
@@ -807,8 +958,8 @@ arx_caeli_retro(
 vacuum
 arx_caeli_carta_creare(
     ArcCaeli* arc,
-    i32       x,
-    i32       y)
+    i32       px_x,
+    i32       px_y)
 {
     Carta* carta;
     chorda* textus_interned;
@@ -827,8 +978,10 @@ arx_caeli_carta_creare(
 
     carta->id.datum = NIHIL;
     carta->id.mensura = ZEPHYRUM;
-    carta->x = x;
-    carta->y = y;
+
+    /* Positio in pixelis (widget-relativum) */
+    carta->x = px_x;
+    carta->y = px_y;
 
     textus_interned = chorda_internare_ex_literis(arc->ctx->intern, "Nova carta");
     si (textus_interned)
@@ -846,14 +999,10 @@ arx_caeli_carta_creare(
 
     _calculare_dimensiones(carta);
 
-    /* Verificare collisio */
-    si (arx_caeli_verificare_collisio(arc, carta->x, carta->y,
-                                       carta->latitudo, carta->altitudo,
-                                       NIHIL_SELECTA))
-    {
-        /* Collisio - non creare */
-        redde;
-    }
+    /* Nulla collisio - cartae possunt overlap */
+
+    /* Nova carta est super omnes */
+    carta->z_index = _obtinere_max_z_index(arc) + I;
 
     arc->numerus_cartarum++;
     arc->index_selecta = arc->numerus_cartarum - I;
@@ -906,10 +1055,16 @@ vacuum
 arx_caeli_carta_movere(
     ArcCaeli* arc,
     i32       index,
-    i32       x,
-    i32       y)
+    i32       px_x,
+    i32       px_y)
 {
     Carta* carta;
+    i32 char_lat;
+    i32 char_alt;
+    i32 widget_px_lat;
+    i32 widget_px_alt;
+    i32 carta_px_lat;
+    i32 carta_px_alt;
 
     si (!arc)
     {
@@ -923,25 +1078,31 @@ arx_caeli_carta_movere(
 
     carta = &arc->cartae[index];
 
-    /* Verificare limites widget */
-    si (x < ZEPHYRUM || y < ZEPHYRUM ||
-        x + carta->latitudo > arc->widget_latitudo ||
-        y + carta->altitudo > arc->widget_altitudo)
+    /* Dimensiones in pixelis */
+    char_lat = VI * arc->scala;
+    char_alt = VIII * arc->scala;
+    widget_px_lat = arc->widget_latitudo * char_lat;
+    widget_px_alt = arc->widget_altitudo * char_alt;
+    carta_px_lat = carta->latitudo * char_lat;
+    carta_px_alt = carta->altitudo * char_alt;
+
+    /* Verificare limites widget (pixela) */
+    si (px_x < ZEPHYRUM || px_y < ZEPHYRUM ||
+        px_x + carta_px_lat > widget_px_lat ||
+        px_y + carta_px_alt > widget_px_alt)
     {
         /* Extra limites - non movere */
         redde;
     }
 
-    /* Verificare collisio ad novam positionem */
-    si (arx_caeli_verificare_collisio(arc, x, y,
-                                       carta->latitudo, carta->altitudo, index))
-    {
-        /* Collisio - non movere */
-        redde;
-    }
+    /* Nulla collisio - cartae possunt overlap */
 
-    carta->x = x;
-    carta->y = y;
+    /* Actualizare positio (pixela) */
+    carta->x = px_x;
+    carta->y = px_y;
+
+    /* Ponere z_index ad summum (carta nunc est super omnes) */
+    carta->z_index = _obtinere_max_z_index(arc) + I;
 
     arx_caeli_marcare_immundum(arc);
 }
@@ -990,15 +1151,18 @@ arx_caeli_verificare_collisio(
 
 /* Invenire folder sub puncto (x, y), ignorando cartam specificam
  *
- * Redde: index folderis si inventum, NIHIL_SELECTA si non
+ * Redde: index folderis si inventum (topmost), NIHIL_SELECTA si non
  */
 hic_manens i32
 _invenire_folder_sub_puncto(
     ArcCaeli* arc,
-    i32       x,
-    i32       y,
+    i32       px_x,
+    i32       px_y,
     i32       ignorare_index)
 {
+    i32 sorted_indices[CARTAE_MAXIMUS];
+    i32 char_lat;
+    i32 char_alt;
     i32 i;
 
     si (!arc)
@@ -1006,16 +1170,28 @@ _invenire_folder_sub_puncto(
         redde NIHIL_SELECTA;
     }
 
+    /* Dimensiones characteris in pixelis */
+    char_lat = VI * arc->scala;
+    char_alt = VIII * arc->scala;
+
+    /* Sortare per z_index descendens (high z first) */
+    _ordinare_per_z_index_desc(arc, sorted_indices);
+
     per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
     {
+        i32 idx;
         Carta* carta;
+        i32 carta_px_lat;
+        i32 carta_px_alt;
 
-        si (i == ignorare_index)
+        idx = sorted_indices[i];
+
+        si (idx == ignorare_index)
         {
             perge;
         }
 
-        carta = &arc->cartae[i];
+        carta = &arc->cartae[idx];
 
         /* Solum folders */
         si (!carta->est_folder)
@@ -1023,11 +1199,15 @@ _invenire_folder_sub_puncto(
             perge;
         }
 
-        /* Punctum in carta? */
-        si (x >= carta->x && x < carta->x + carta->latitudo &&
-            y >= carta->y && y < carta->y + carta->altitudo)
+        /* Convertere latitudo/altitudo ad pixela */
+        carta_px_lat = carta->latitudo * char_lat;
+        carta_px_alt = carta->altitudo * char_alt;
+
+        /* Punctum in carta? (omnia in pixelis) */
+        si (px_x >= carta->x && px_x < carta->x + carta_px_lat &&
+            px_y >= carta->y && px_y < carta->y + carta_px_alt)
         {
-            redde i;
+            redde idx;
         }
     }
 
@@ -1220,8 +1400,9 @@ _reddere_carta(
         px_alt = carta->altitudo * char_alt;
     }
 
-    px_x = (widget_x + carta->x) * char_lat;
-    px_y = (widget_y + carta->y) * char_alt;
+    /* Carta.x/y jam sunt in pixelis (relativum ad widget) */
+    px_x = (widget_x * char_lat) + carta->x;
+    px_y = (widget_y * char_alt) + carta->y;
 
     /* Calculare limites visuales (inset a limitibus logicis) */
     inset = CARTA_INSET_VISUAL * scala;
@@ -1468,16 +1649,24 @@ arx_caeli_reddere(
             color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY)));
     }
 
-    /* Reddere cartas */
-    per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
+    /* Reddere cartas in ordine z_index (low first, high last = on top) */
     {
-        b32 est_selecta;
-        b32 in_inserere;
+        i32 sorted_indices[CARTAE_MAXIMUS];
 
-        est_selecta = (i == arc->index_selecta);
-        in_inserere = (est_selecta && arc->modus == ARC_MODUS_INSERERE);
+        _ordinare_per_z_index_asc(arc, sorted_indices);
 
-        _reddere_carta(arc, ctx, &arc->cartae[i], i, x, y, scala, est_selecta, in_inserere);
+        per (i = ZEPHYRUM; i < arc->numerus_cartarum; i++)
+        {
+            i32 idx;
+            b32 est_selecta;
+            b32 in_inserere;
+
+            idx = sorted_indices[i];
+            est_selecta = (idx == arc->index_selecta);
+            in_inserere = (est_selecta && arc->modus == ARC_MODUS_INSERERE);
+
+            _reddere_carta(arc, ctx, &arc->cartae[idx], idx, x, y, scala, est_selecta, in_inserere);
+        }
     }
 
     /* Reddere drag ghost si trahens */
@@ -1587,13 +1776,19 @@ arx_caeli_tractare_eventum(
     /* Tractare eventus muris - duplex click */
     si (eventus->genus == EVENTUS_MUS_DUPLEX)
     {
-        i32 char_x;
-        i32 char_y;
+        i32 char_lat;
+        i32 char_alt;
+        i32 px_x;
+        i32 px_y;
         i32 carta_index;
 
-        /* Convertere ad character coordinates relative ad widget */
-        char_x = (eventus->datum.mus.x / (VI * arc->scala)) - arc->widget_x;
-        char_y = (eventus->datum.mus.y / (VIII * arc->scala)) - arc->widget_y;
+        /* Dimensiones characterum cum scala */
+        char_lat = VI * arc->scala;
+        char_alt = VIII * arc->scala;
+
+        /* Convertere ad pixel coordinates relative ad widget */
+        px_x = eventus->datum.mus.x - (arc->widget_x * char_lat);
+        px_y = eventus->datum.mus.y - (arc->widget_y * char_alt);
 
         /* Si in modus inserere, exire primo (salvat mutationes) */
         si (arc->modus == ARC_MODUS_INSERERE)
@@ -1604,8 +1799,8 @@ arx_caeli_tractare_eventum(
         /* Terminare drag si activum */
         arc->trahens = FALSUM;
 
-        /* Hit test cartas */
-        carta_index = _invenire_carta_ad_punctum(arc, char_x, char_y);
+        /* Hit test cartas (pixela) */
+        carta_index = _invenire_carta_ad_punctum(arc, px_x, px_y);
 
         si (carta_index != NIHIL_SELECTA)
         {
@@ -1711,8 +1906,8 @@ arx_caeli_tractare_eventum(
         }
         alioquin
         {
-            /* Duplex click in vacuum - creare novam cartam */
-            arx_caeli_carta_creare(arc, char_x, char_y);
+            /* Duplex click in vacuum - creare novam cartam (pixela) */
+            arx_caeli_carta_creare(arc, px_x, px_y);
         }
 
         redde VERUM;
@@ -1721,13 +1916,19 @@ arx_caeli_tractare_eventum(
     /* Tractare eventus muris - singulum click */
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
     {
-        i32 char_x;
-        i32 char_y;
+        i32 char_lat;
+        i32 char_alt;
+        i32 px_x;
+        i32 px_y;
         i32 carta_index;
 
-        /* Convertere ad character coordinates relative ad widget */
-        char_x = (eventus->datum.mus.x / (VI * arc->scala)) - arc->widget_x;
-        char_y = (eventus->datum.mus.y / (VIII * arc->scala)) - arc->widget_y;
+        /* Dimensiones characterum cum scala */
+        char_lat = VI * arc->scala;
+        char_alt = VIII * arc->scala;
+
+        /* Convertere ad pixel coordinates relative ad widget */
+        px_x = eventus->datum.mus.x - (arc->widget_x * char_lat);
+        px_y = eventus->datum.mus.y - (arc->widget_y * char_alt);
 
         /* Si in modus inserere, exire primo (salvat mutationes) */
         si (arc->modus == ARC_MODUS_INSERERE)
@@ -1735,16 +1936,16 @@ arx_caeli_tractare_eventum(
             _exire_inserere(arc);
         }
 
-        /* Verificare < Retro click */
+        /* Verificare < Retro click (primi 10 characteres, primae 2 lineae) */
         si (arc->historia_index > ZEPHYRUM &&
-            char_y < II && char_x < X)
+            px_y < (II * char_alt) && px_x < (X * char_lat))
         {
             arx_caeli_retro(arc);
             redde VERUM;
         }
 
-        /* Hit test cartas */
-        carta_index = _invenire_carta_ad_punctum(arc, char_x, char_y);
+        /* Hit test cartas (pixela) */
+        carta_index = _invenire_carta_ad_punctum(arc, px_x, px_y);
 
         si (carta_index != NIHIL_SELECTA)
         {
@@ -1795,26 +1996,31 @@ arx_caeli_tractare_eventum(
 
             /* Selectare et initiare drag */
             {
-                i32 carta_px_x;
-                i32 carta_px_y;
+                i32 carta_screen_px_x;
+                i32 carta_screen_px_y;
 
                 arc->index_selecta = carta_index;
                 arc->modus = ARC_MODUS_SELECTA;
                 arc->trahens = VERUM;
-            arc->trahere_origin_x = carta->x;
-            arc->trahere_origin_y = carta->y;
+                arc->trahere_origin_x = carta->x;
+                arc->trahere_origin_y = carta->y;
 
-            /* Calculare offset in pixelis */
-            carta_px_x = (arc->widget_x + carta->x) * VI * arc->scala;
-            carta_px_y = (arc->widget_y + carta->y) * VIII * arc->scala;
-            arc->trahere_offset_px_x = eventus->datum.mus.x - carta_px_x;
-            arc->trahere_offset_px_y = eventus->datum.mus.y - carta_px_y;
+                /* Calculare offset in pixelis
+                 * carta->x/y jam sunt widget-relativum pixela
+                 * Convertere ad screen pixels pro offset */
+                carta_screen_px_x = (arc->widget_x * char_lat) + carta->x;
+                carta_screen_px_y = (arc->widget_y * char_alt) + carta->y;
+                arc->trahere_offset_px_x = eventus->datum.mus.x - carta_screen_px_x;
+                arc->trahere_offset_px_y = eventus->datum.mus.y - carta_screen_px_y;
 
-            arc->trahere_px_x = eventus->datum.mus.x;
-            arc->trahere_px_y = eventus->datum.mus.y;
-            arc->trahere_grid_x = carta->x;
-            arc->trahere_grid_y = carta->y;
-            arc->trahere_validum = VERUM;
+                /* Initiare trahere_px pro ghost rendering */
+                arc->trahere_px_x = eventus->datum.mus.x;
+                arc->trahere_px_y = eventus->datum.mus.y;
+
+                /* trahere_grid_x/y nunc tenent widget-relativum pixela */
+                arc->trahere_grid_x = carta->x;
+                arc->trahere_grid_y = carta->y;
+                arc->trahere_validum = VERUM;
             }
         }
         alioquin
@@ -1834,10 +2040,6 @@ arx_caeli_tractare_eventum(
             Carta* carta;
             s32 ghost_px_x;
             s32 ghost_px_y;
-            s32 grid_x;
-            s32 grid_y;
-            s32 max_grid_x;
-            s32 max_grid_y;
             s32 widget_px_x;
             s32 widget_px_y;
             s32 widget_px_lat;
@@ -1850,10 +2052,6 @@ arx_caeli_tractare_eventum(
             /* Dimensiones characterum cum scala */
             char_lat = (s32)(VI * arc->scala);
             char_alt = (s32)(VIII * arc->scala);
-
-            /* Memorare positio pixelorum */
-            arc->trahere_px_x = eventus->datum.mus.x;
-            arc->trahere_px_y = eventus->datum.mus.y;
 
             /* Calculare positio ghost in pixelis (relativa ad widget) */
             widget_px_x = (s32)arc->widget_x * char_lat;
@@ -1889,53 +2087,19 @@ arx_caeli_tractare_eventum(
                 ghost_px_y = 0;
             }
 
-            /* Recalculare trahere_px ex positione cohibita */
+            /* Memorare positio ghost in pixelis (widget-relativum)
+             * NOTA: trahere_grid_x/y nunc tenent pixela, non grid chars */
+            arc->trahere_grid_x = (i32)ghost_px_x;
+            arc->trahere_grid_y = (i32)ghost_px_y;
+
+            /* Recalculare trahere_px ex positione cohibita (screen pixels) */
             arc->trahere_px_x = (i32)(ghost_px_x + (s32)arc->trahere_offset_px_x + widget_px_x);
             arc->trahere_px_y = (i32)(ghost_px_y + (s32)arc->trahere_offset_px_y + widget_px_y);
 
-            /* Calculare grid position cum rounding */
-            grid_x = (ghost_px_x + (char_lat / II)) / char_lat;
-            grid_y = (ghost_px_y + (char_alt / II)) / char_alt;
+            /* Nulla collisio - cartae possunt overlap */
+            arc->trahere_validum = VERUM;
 
-            /* Cohibere grid position */
-            max_grid_x = (s32)arc->widget_latitudo - (s32)carta->latitudo;
-            max_grid_y = (s32)arc->widget_altitudo - (s32)carta->altitudo;
-
-            si (max_grid_x < 0)
-            {
-                max_grid_x = 0;
-            }
-            si (max_grid_y < 0)
-            {
-                max_grid_y = 0;
-            }
-            si (grid_x < 0)
-            {
-                grid_x = 0;
-            }
-            si (grid_x > max_grid_x)
-            {
-                grid_x = max_grid_x;
-            }
-            si (grid_y < 0)
-            {
-                grid_y = 0;
-            }
-            si (grid_y > max_grid_y)
-            {
-                grid_y = max_grid_y;
-            }
-
-            arc->trahere_grid_x = (i32)grid_x;
-            arc->trahere_grid_y = (i32)grid_y;
-
-            /* Verificare collisio ad snapped grid position */
-            arc->trahere_validum = !arx_caeli_verificare_collisio(
-                arc, (i32)grid_x, (i32)grid_y,
-                carta->latitudo, carta->altitudo,
-                arc->index_selecta);
-
-            /* Detectare folder hover */
+            /* Detectare folder hover (pixela) */
             arc->trahere_hover_folder = _invenire_folder_sub_puncto(
                 arc,
                 arc->trahere_grid_x,
@@ -1952,7 +2116,7 @@ arx_caeli_tractare_eventum(
         {
             i32 folder_index;
 
-            /* Invenire si drop est super folder (usare grid position) */
+            /* Invenire si drop est super folder (pixela) */
             folder_index = _invenire_folder_sub_puncto(
                 arc,
                 arc->trahere_grid_x,
@@ -2008,14 +2172,14 @@ arx_caeli_tractare_eventum(
             }
             alioquin si (arc->trahere_validum)
             {
-                /* Committere move ad snapped grid position */
+                /* Committere move ad novam positionem (pixela) */
                 arx_caeli_carta_movere(
                     arc,
                     arc->index_selecta,
                     arc->trahere_grid_x,
                     arc->trahere_grid_y);
             }
-            /* Si non validum et non folder, carta manet in loco originali */
+            /* Si extra limites, carta manet in loco originali */
 
             arc->trahens = FALSUM;
             arc->trahere_hover_folder = NIHIL_SELECTA;
@@ -2228,6 +2392,7 @@ arx_caeli_carcare(
     chorda* clavis_textus;
     chorda* clavis_x;
     chorda* clavis_y;
+    chorda* clavis_z;
 
     si (!arc || !arc->ctx->repo)
     {
@@ -2272,6 +2437,7 @@ arx_caeli_carcare(
     clavis_textus = chorda_internare_ex_literis(arc->ctx->intern, "textus");
     clavis_x = chorda_internare_ex_literis(arc->ctx->intern, "x");
     clavis_y = chorda_internare_ex_literis(arc->ctx->intern, "y");
+    clavis_z = chorda_internare_ex_literis(arc->ctx->intern, "z_index");
     genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
 
     /* Iterare per entitates */
@@ -2283,6 +2449,7 @@ arx_caeli_carcare(
         chorda* textus_valor;
         chorda* x_valor;
         chorda* y_valor;
+        chorda* z_valor;
         Xar* portal_relationes;
 
         entitas_slot = (Entitas**)xar_obtinere(entitates, i);
@@ -2302,6 +2469,7 @@ arx_caeli_carcare(
         textus_valor = entitas_proprietas_capere(entitas, clavis_textus);
         x_valor = entitas_proprietas_capere(entitas, clavis_x);
         y_valor = entitas_proprietas_capere(entitas, clavis_y);
+        z_valor = entitas_proprietas_capere(entitas, clavis_z);
 
         si (textus_valor)
         {
@@ -2339,6 +2507,15 @@ arx_caeli_carcare(
             carta->y = ZEPHYRUM;
         }
 
+        si (z_valor && z_valor->datum)
+        {
+            carta->z_index = (i32)atoi((constans character*)z_valor->datum);
+        }
+        alioquin
+        {
+            carta->z_index = ZEPHYRUM;
+        }
+
         /* Detegere folder per portal_ad relatio */
         portal_relationes = entitas_relationes_generis_capere(entitas, genus_portal, arc->ctx->piscina);
         carta->est_folder = (portal_relationes && xar_numerus(portal_relationes) > ZEPHYRUM);
@@ -2357,6 +2534,7 @@ arx_caeli_salvare(
     i32 i;
     character x_buffer[XVI];
     character y_buffer[XVI];
+    character z_buffer[XVI];
     constans character* slug_str;
     Entitas* schirma_entitas;
 
@@ -2442,9 +2620,10 @@ arx_caeli_salvare(
                 textus_buffer);
         }
 
-        /* Convertere x et y ad chordas */
+        /* Convertere x, y, z_index ad chordas */
         sprintf(x_buffer, "%d", carta->x);
         sprintf(y_buffer, "%d", carta->y);
+        sprintf(z_buffer, "%d", carta->z_index);
 
         arc->ctx->repo->proprietas_ponere(
             arc->ctx->repo->datum,
@@ -2457,6 +2636,12 @@ arx_caeli_salvare(
             entitas,
             "y",
             y_buffer);
+
+        arc->ctx->repo->proprietas_ponere(
+            arc->ctx->repo->datum,
+            entitas,
+            "z_index",
+            z_buffer);
 
         /* Creare portal_ad relatio si carta est folder (incipit cum >) */
         si (carta->textus.datum && carta->textus.mensura > ZEPHYRUM &&

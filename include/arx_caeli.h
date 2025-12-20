@@ -63,10 +63,11 @@ nomen vacuum (*FunctioLinkCallback)(vacuum* datum, constans character* link);
 /* Singula carta */
 nomen structura {
     chorda id;              /* Entitas ID */
-    i32 x;                  /* Positio in characteribus */
-    i32 y;
-    i32 latitudo;           /* Latitudo calculata ex textu */
-    i32 altitudo;           /* Altitudo calculata ex textu */
+    i32 x;                  /* Positio in pixelis (relativum ad widget) */
+    i32 y;                  /* Positio in pixelis */
+    i32 latitudo;           /* Latitudo calculata ex textu (in characteribus) */
+    i32 altitudo;           /* Altitudo calculata ex textu (in characteribus) */
+    i32 z_index;            /* Ordo reddendi (higher = on top) */
     chorda textus;          /* Contentum cartae (multilinea) */
     b32 est_folder;         /* Habet portal_ad relationem */
 } Carta;
