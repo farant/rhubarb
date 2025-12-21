@@ -11,14 +11,11 @@
  *
  * Subset sufficit pro nostris usibus:
  * - Chordae simplices: Key = "value"
- * - Numeri integri: Year = 1920
+ * - Numeri integri: Year = 1920 (etiam negativi)
  * - Tabulata chordarum: Tags = ["a", "b"]
  * - Chordae multilineae: Summary = """..."""
- *
- * NON supportatum:
- * - Tabulae [section]
- * - Tabulae interiores
- * - Dates, floats, booleans
+ * - Boolean: active = true/false
+ * - Tabulae [section] (ignorantur, claves fiunt top-level)
  * ================================================== */
 
 /* ==================================================
@@ -28,7 +25,8 @@
 nomen enumeratio {
     TOML_CHORDA     = I,      /* Chorda valor */
     TOML_NUMERUS    = II,     /* Integer valor */
-    TOML_TABULATUM  = III     /* Tabulatum chordarum (array) */
+    TOML_TABULATUM  = III,    /* Tabulatum chordarum (array) */
+    TOML_BOOLEAN    = IV      /* Boolean valor (true/false) */
 } TomlGenus;
 
 /* ==================================================
@@ -42,6 +40,7 @@ nomen structura {
         chorda   chorda_valor;
         s32      numerus_valor;
         Xar*     tabulatum_valor;  /* Xar de chorda */
+        b32      boolean_valor;
     } datum;
 } TomlValor;
 
@@ -107,6 +106,12 @@ toml_capere_numerum(
 /* Capere tabulatum (redde NIHIL si non inventum) */
 Xar*
 toml_capere_tabulatum(
+    TomlDocumentum*     doc,
+    constans character* clavis);
+
+/* Capere boolean (redde FALSUM si non inventum) */
+b32
+toml_capere_boolean(
     TomlDocumentum*     doc,
     constans character* clavis);
 

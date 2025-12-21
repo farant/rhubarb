@@ -17,6 +17,15 @@
     <notae>I chose circa 220 CE as the year because this represents approximately when Dio was actively composing this work (he wrote over a period spanning roughly 200-220+ CE). The translated edition shown is from 1906, but since you asked for the year most historically accurate to the original work itself, the early 3rd century CE date is most appropriate. This is a primary historical source, not a later commentary or annotated edition.
 </notae>
   </liber>
+  <liber numerus="1177" status="enriched">
+    <titulus>Memorabilia (Recollections of Socrates)</titulus>
+    <auctor>Xenophon</auctor>
+    <annus>-371</annus>
+    <summarium>The Memorabilia is one of the primary sources for understanding the historical Socrates, written by his student Xenophon. It consists of four books that record conversations and actions of Socrates, aiming to defend him against the charges that led to his execution and to portray him as a model of virtue and wisdom. Unlike Plato's more philosophical dialogues, Xenophon's account focuses on Socrates as a practical moral teacher concerned with everyday ethics and civic virtue. The work provides valuable insight into Socratic teaching methods and 4th century BCE Athenian society.
+</summarium>
+    <notae>Dating ancient works is complex. Xenophon lived 431-354 BCE. The Memorabilia was likely composed sometime between 385-375 BCE, after Socrates' death in 399 BCE and during Xenophon's exile. I've chosen approximately -371 BCE as a middle estimate for the composition date, representing when the work itself was written rather than the events it describes. The negative year notation follows historical convention (BCE). This translation by H.G. Dakyns was published by Macmillan in 1897.
+</notae>
+  </liber>
   <liber numerus="10553" status="enriched">
     <titulus>The Pentateuch and The New Testament (Tyndale Bible)</titulus>
     <auctor>William Tyndale (translator)</auctor>
@@ -97,6 +106,15 @@
     <summarium>Boswell's Life of Johnson is widely considered one of the greatest biographies ever written in the English language. James Boswell (1740-1795) met Samuel Johnson in 1763 and maintained a close friendship with the great English lexicographer, critic, and conversationalist until Johnson's death in 1784. Boswell meticulously recorded Johnson's conversations, habits, and opinions, creating an intimate and vivid portrait that revolutionized biographical writing. The work includes Boswell's famous Journal of a Tour to the Hebrides (1773) and provides invaluable insight into 18th-century literary London. This particular volume (VI) is from George Birkbeck Hill's scholarly edition published in 1887, which includes extensive annotations, addenda, and an index.
 </summarium>
     <notae>Year chosen: 1791 - the original publication date of Boswell's Life of Johnson. While this excerpt is from Hill's 1887 scholarly edition (which became the standard scholarly text), for a historical timeline the 1791 date is most appropriate as it marks when this groundbreaking biography first appeared and transformed the genre.
+</notae>
+  </liber>
+  <liber numerus="10256" status="enriched">
+    <titulus>O, Tannenbaum</titulus>
+    <auctor>Traditional (performed by Nebe Quartett)</auctor>
+    <annus>1824</annus>
+    <summarium>'O, Tannenbaum' (O Christmas Tree) is a traditional German Christmas carol. The melody is believed to have originated earlier, but the most well-known lyrics about the fir tree were written by Ernst Anschütz, a Leipzig teacher and organist, in 1824. The song celebrates the evergreen fir tree as a symbol of constancy and faithfulness. This Project Gutenberg entry is an audio recording performed by the Nebe Quartett, taken from the Edison National Historic Site, representing an early phonograph recording of this beloved carol.
+</summarium>
+    <notae>I chose 1824 as the year because that's when Ernst Anschütz wrote the familiar lyrics we associate with 'O, Tannenbaum' today. While the melody existed earlier (possibly from a 16th-century Silesian folk song), and the song has evolved through various versions, 1824 represents the creation of the version that became the standard. This Gutenberg entry is actually an audio recording (mp3 format) rather than a text, which is unusual - it's a historical phonograph recording from the Edison collection, but for timeline purposes the composition date is most historically meaningful. Not marked as Catholic despite being a Christmas carol since it's a secular song about a Christmas tree rather than a liturgical or devotional work.
 </notae>
   </liber>
   <liber numerus="11068" status="enriched">
@@ -211,6 +229,15 @@ original publication date is the relevant historical date.
     <notae>The year 1836 represents this specific third edition as stated in the advertisement. Earlier editions would have been published slightly before this. Alcott was a prolific writer on health reform topics and cousin to Louisa May Alcott's father, Amos Bronson Alcott. While Alcott may have had Protestant religious influences, this work is primarily a secular health manual and does not qualify for the 'catholic' tag based on the criteria provided.
 </notae>
   </liber>
+  <liber numerus="10173" status="enriched">
+    <titulus>Hungarian Rhapsody No. 2</titulus>
+    <auctor>Franz Liszt</auctor>
+    <annus>1847</annus>
+    <summarium>Hungarian Rhapsody No. 2 in C-sharp minor is one of Franz Liszt's most famous piano compositions, part of his set of 19 Hungarian Rhapsodies. The work is based on Hungarian folk melodies and csárdás dance forms, featuring a dramatic slow introduction (Lassan) followed by a virtuosic fast section (Friska). It has become one of the most recognizable pieces in the classical piano repertoire and has been arranged for orchestra and other ensembles. This Project Gutenberg entry contains an audio recording by the Edison Concert Band, representing an early 20th century performance/arrangement of Liszt's work.
+</summarium>
+    <notae>The composition was originally published in 1847 as a piano work. While this particular Project Gutenberg entry is an audio recording by the Edison Concert Band (likely from the early 1900s based on Edison's recording era), the historically appropriate year is when Liszt composed and published the original work. The piece was part of Liszt's series exploring Hungarian musical themes during his romantic nationalist period.
+</notae>
+  </liber>
   <liber numerus="11636" status="enriched">
     <titulus>Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc.</titulus>
     <auctor>Various Contributors</auctor>
@@ -266,6 +293,11 @@ does not receive a 'catholic' tag despite its philosophical merit.
     <notae>The year 1851 represents the original German publication date of 'Parerga and Paralipomena'. T. Bailey Saunders' English translation was published later (around 1890-1893), but since this is Schopenhauer's original work rather than a substantially modified edition, the original publication date is most historically accurate for timeline purposes.
 </notae>
   </liber>
+  <liber numerus="10715" status="enriched">
+    <titulus>Counsels and Maxims</titulus>
+    <auctor>Arthur Schopenhauer</auctor>
+    <annus>1851</annus>
+  </liber>
   <liber numerus="11083" status="enriched">
     <titulus>The Parables of the Saviour, in Easy Verse</titulus>
     <auctor>Anonymous</auctor>
@@ -304,6 +336,15 @@ does not receive a 'catholic' tag despite its philosophical merit.
     </tags>
     <summarium>A novella by Herman Melville about a Wall Street lawyer who hires a peculiar scrivener (law-copyist) named Bartleby. The story explores themes of alienation, passive resistance, and the dehumanizing effects of modern work through Bartleby's increasingly withdrawn behavior and his haunting refrain 'I would prefer not to.' It's considered one of the earliest and most influential works examining workplace alienation and existential malaise in American literature. The story has become iconic for its exploration of individual agency versus social obligation.</summarium>
     <notae>Originally published in Putnam's Magazine in two parts (November and December 1853). This is one of Melville's most celebrated shorter works, written during a difficult period after the commercial failure of 'Moby-Dick.' The 1853 date represents the original magazine publication, which is the most historically significant date for this work.</notae>
+  </liber>
+  <liber numerus="11137" status="enriched">
+    <titulus>Twenty-Two Years a Slave, and Forty Years a Freeman</titulus>
+    <auctor>Austin Steward</auctor>
+    <annus>1857</annus>
+    <summarium>This is Austin Steward's slave narrative, published in 1857 (though dated 1856 in some editions). Steward was enslaved for twenty-two years before gaining his freedom and becoming a prominent abolitionist and community leader. The work documents his experiences under slavery and his subsequent forty years of freedom, including his time as president of the Wilberforce Colony in London, Canada West (Ontario), one of the settlements established for formerly enslaved people who escaped to Canada. The narrative includes correspondence from his time leading this colony. Slave narratives like this were crucial primary sources documenting the horrors of slavery and were important tools in the abolitionist movement. Steward's account is particularly notable for its documentation of both the Southern slave experience and the post-emancipation challenges of building free Black communities in Canada.
+</summarium>
+    <notae>The work was published in Rochester in 1856/1857 (there's some ambiguity in dating - the title page says 1856, but it was published in September 1856 and often cataloged as 1857). I've chosen 1857 as it appears to be the more common scholarly dating. The letter from Governor Myron H. Clark of New York dated May 10, 1856 shows Steward was soliciting subscribers before publication. This is a historically significant primary source document from the antebellum period.
+</notae>
   </liber>
   <liber numerus="11196" status="enriched">
     <titulus>Thomas Paine's Second Appearance in the United States (The Atlantic Monthly, Vol. IV, July 1859)</titulus>
@@ -552,6 +593,15 @@ rather a 19th-century essay about Paine's historical impact.
     <notae>The first edition was published in 1887, though this Project Gutenberg text appears to be from an 1896 edition (as shown on the title page). I've chosen 1887 as the primary date since that represents the original publication and historical context of the work. Emily Lawless (1845-1913) was a significant literary figure of her time, and this was one of her major historical works alongside her novels about Irish life.
 </notae>
   </liber>
+  <liber numerus="10179" status="enriched">
+    <titulus>Extracts from the Ballet-Suite Scheherazade, Part 1</titulus>
+    <auctor>Nikolai Rimsky-Korsakov</auctor>
+    <annus>1888</annus>
+    <summarium>Scheherazade (Op. 35) is a symphonic suite composed by Nikolai Rimsky-Korsakov in 1888, based on the stories from One Thousand and One Nights (Arabian Nights). The work is one of the most popular pieces of Russian classical music and represents Rimsky-Korsakov's masterful orchestration and use of exotic Eastern themes. The suite tells the framing story of Scheherazade, who saves her life by telling the Sultan captivating stories over 1,001 nights. This Project Gutenberg entry is an audio recording from the Edison National Historic Site, performed by the American Concert Orchestra, representing an early 20th-century recording of this beloved work.
+</summarium>
+    <notae>While this Project Gutenberg file is a recording edited by Thomas Edison (likely early 1900s), the actual musical composition was written by Rimsky-Korsakov in 1888, which is the historically significant date for the work itself. The composition premiered in St. Petersburg on October 28, 1888. Since this is fundamentally Rimsky-Korsakov's creative work being performed, I've attributed the Year to the original composition date rather than the recording date.
+</notae>
+  </liber>
   <liber numerus="10466" status="enriched">
     <titulus>Little Saint Elizabeth and Other Stories</titulus>
     <auctor>Frances Hodgson Burnett</auctor>
@@ -732,6 +782,11 @@ religious content or a Catholic author perspective.
     <summarium>An adventure novel by G.A. Henty, a prolific British author known for historical adventure stories aimed at young readers in the Victorian era. The story appears to involve gold-seeking in the American West, featuring chapters about escape, searching for a golden valley, and encounters with Native Americans. Henty's works typically combined exciting narratives with moral instruction and historical detail, designed to educate and entertain young Victorian readers about various periods and places in history.</summarium>
     <notae>1899 appears to be the original publication date based on the Hurst &amp; Company edition information. This is one of Henty's many adventure novels written during the height of his career in the late Victorian period.</notae>
   </liber>
+  <liber numerus="10499" status="enriched">
+    <titulus>Delia's Gone</titulus>
+    <auctor>Traditional/Anonymous</auctor>
+    <annus>1900</annus>
+  </liber>
   <liber numerus="11126" status="enriched">
     <titulus>Ten Girls from Dickens</titulus>
     <auctor>Kate Dickinson Sweetser</auctor>
@@ -779,6 +834,36 @@ religious content or a Catholic author perspective.
     </tags>
     <summarium>A posthumous collection of short stories by Victorian novelist George Gissing, published three years after his death. Gissing was known for his realistic portrayals of late Victorian English life, particularly focusing on the struggles of the lower-middle class and the educated poor. This collection includes nine short stories with an introductory survey by Thomas Seccombe. Gissing's work is characterized by social realism, psychological depth, and often melancholic tone as he explored themes of poverty, social class, and intellectual aspiration.</summarium>
     <notae>Year chosen is 1906, the publication year of this specific collection. While Gissing died in 1903, this posthumous collection represents the first publication of these stories together. The individual stories may have been written earlier, but 1906 is the historically accurate date for this work as a collection.</notae>
+  </liber>
+  <liber numerus="11614" status="enriched">
+    <titulus>The Second Generation</titulus>
+    <auctor>David Graham Phillips</auctor>
+    <annus>1906</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>novel</tag>
+      <tag>american-literature</tag>
+      <tag>social-commentary</tag>
+      <tag>20th-century</tag>
+    </tags>
+    <summarium>'The Second Generation' is a novel by David Graham Phillips, an American \
+journalist and novelist who was part of the muckraking movement. Phillips was \
+known for his social realist fiction that criticized American society, \
+particularly the wealthy class and political corruption. This novel explores \
+themes common to Phillips' work: the inheritance of wealth, the moral decay of \
+the upper classes, and the challenges faced by those who inherit rather than \
+earn their fortunes. The chapter titles suggest a narrative about family \
+legacy, wills, legal matters, and romantic entanglements within the context of \
+generational wealth transfer. Phillips' work often examined how second-generation \
+wealth affected character and society.\
+</summarium>
+    <notae>The year 1906 is clearly indicated on the title page. This was during Phillips' \
+most productive period as a novelist. He was not a Catholic author - he was a \
+secular progressive reformer and muckraker who was critical of many American \
+institutions. The work would not be considered suitable for an imprimatur. \
+Phillips was assassinated in 1911 by a man who believed one of his novels \
+defamed his family.\
+</notae>
   </liber>
   <liber numerus="10761" status="enriched">
     <titulus>Essays of Robert Louis Stevenson</titulus>
@@ -951,6 +1036,15 @@ suggests this is a later digitization of the original work.
     <summarium>Beltane the Smith is a historical romance novel by Jeffery Farnol set in medieval England. It tells the story of Beltane, a smith who lives in the greenwood and becomes embroiled in adventure, love, and conflict. The novel features typical Farnol elements including chivalric romance, medieval atmosphere, and swashbuckling adventure. Farnol was known for his romanticized historical fiction written in an archaic style meant to evoke the medieval period. This work follows in the tradition of his earlier successes like 'The Broad Highway' and 'The Amateur Gentleman,' blending action, romance, and period detail.</summarium>
     <notae>The date is clearly marked in the dedication as 'London, August, 1915.' This is the original publication date. Farnol was a popular English novelist of the early 20th century who specialized in historical romances set in medieval and Georgian England. While Farnol may have had Christian influences, this is romantic adventure fiction rather than specifically Catholic literature, so it does not receive the 'catholic' tag.</notae>
   </liber>
+  <liber numerus="10258" status="enriched">
+    <titulus>Nataligino Kolo</titulus>
+    <auctor>Jugoslavensko Tamburasko Drustvo</auctor>
+    <annus>1915</annus>
+    <summarium>This is an audio recording of 'Nataligino Kolo' (Christmas Kolo) performed by the Jugoslavensko Tamburasko Drustvo (Yugoslav Tamburitza Society). A kolo is a traditional Slavic circle dance, and this appears to be a Christmas-themed version. The tamburitza is a family of long-necked string instruments traditional to Southern Slavic peoples. This recording comes from the Thomas Edison collection at the Edison National Historic Site, representing an important piece of early 20th century immigrant musical heritage in America, as Yugoslav communities maintained their cultural traditions through such musical performances.
+</summarium>
+    <notae>The year 1915 is an educated estimate based on the context of Edison's recording activities and the period of Yugoslav immigration to America. Edison's phonograph recording activities were most active from the 1890s through the 1920s. Yugoslav tamburitza societies flourished in American immigrant communities during this period. Without access to the actual audio file or more specific dating information in the metadata, the exact recording date cannot be determined with certainty, but it likely falls somewhere between 1900-1925.
+</notae>
+  </liber>
   <liber numerus="11075" status="enriched">
     <titulus>Der Mann im Nebel</titulus>
     <auctor>Gustav Falke</auctor>
@@ -977,6 +1071,15 @@ suggests this is a later digitization of the original work.
     <summarium>This is a biography of Ernest Psichari (1883-1914), written by Henri Massis and published in 1916, shortly after Psichari's death in World War I. Ernest Psichari was a French soldier, writer, and religious thinker who became an important figure in the French Catholic intellectual revival of the early 20th century. He was the grandson of Ernest Renan, the famous anti-clerical philosopher, which made his own conversion to Catholicism in 1913 particularly significant to his contemporaries. Psichari served in the French colonial army in the Congo and Mauritania, and wrote autobiographical works about military life. After his conversion, he considered becoming a priest but decided to serve the Church through his military vocation instead. He was killed at the Battle of Rossignol in Belgium on August 22, 1914, at age 30. Massis's biography documents Psichari's spiritual journey and military career, portraying him as a Catholic soldier-intellectual.
 </summarium>
     <notae>Year chosen: 1916 is the publication date of this biography by Henri Massis, published by l'Art Catholique in Paris. This is appropriate since the work is Massis's biographical account written after Psichari's death, not Psichari's own writings. The biography would have received ecclesiastical approval given its publication by a Catholic publisher and its subject matter celebrating a Catholic convert.
+</notae>
+  </liber>
+  <liber numerus="10247" status="enriched">
+    <titulus>Dixieland</titulus>
+    <auctor>Lopez and Hamilton's Kings of Harmony</auctor>
+    <annus>1917</annus>
+    <summarium>This is an audio recording of the jazz/ragtime standard &quot;Dixieland&quot; (also known as &quot;Original Dixieland One-Step&quot;) performed by Lopez and Hamilton's Kings of Harmony. The recording comes from the Edison National Historic Site archives and represents early 20th century American popular music. The Original Dixieland Jass Band first recorded &quot;Dixieland Jass Band One-Step&quot; in 1917, which became one of the first jazz recordings ever made and a landmark in American music history. This Project Gutenberg entry preserves this historical audio recording in MP3 format.
+</summarium>
+    <notae>I've chosen 1917 as the year because that's when &quot;Dixieland&quot; (the Original Dixieland One-Step) was first recorded and became a foundational work in jazz history. While this specific performance by Lopez and Hamilton's Kings of Harmony may have been recorded slightly later (Edison made many recordings in the late 1910s-1920s), the work itself dates to 1917. For a historical timeline focused on when works entered cultural consciousness, 1917 is the most educationally appropriate date as it marks the birth of recorded jazz. If more specific recording date information for this particular Lopez and Hamilton performance were available, that could refine this estimate to perhaps 1917-1920.
 </notae>
   </liber>
   <liber numerus="11200" status="enriched">
@@ -1229,5 +1332,12 @@ reading material.
 </summarium>
     <notae>The year 2000 is chosen based on the explicit copyright notice '(c) 2000 by John Moncure Wetterau' in the text itself. The Library of Congress registration number (00-193498) also confirms this as a work registered in 2000. While the Project Gutenberg copyright notice shows 2003, this refers to the digitization date, not the original publication date of the work.
 </notae>
+  </liber>
+  <liber numerus="10488" status="enriched">
+    <titulus>Away in a Manger</titulus>
+    <auctor>Roger McGuinn (performer), James Murray (composer), John Thomas McFarland (third verse), Anonymous (verses 1-2)</auctor>
+    <annus>2003</annus>
+    <summarium>This is an audio recording (MP3 format) of the traditional Christmas carol 'Away in a Manger' performed by Roger McGuinn and provided through his Folk Den project. The carol itself dates to the late 19th century, with music composed by James Murray in 1887 and the third verse written by John Thomas McFarland around 1904-1906. The first two verses are anonymous. McGuinn, best known as the founder of The Byrds, created the Folk Den as an online repository of traditional folk music performances.</summarium>
+    <notae>I chose 2003 because this is specifically a copyrighted modern recording by Roger McGuinn, not a historical text. If you prefer to date this to the carol's composition (1887 for Murray's melody), that would also be defensible. The carol is Christian in nature but not specifically Catholic - it's a pan-Protestant/Christian carol.</notae>
   </liber>
 </librarium>

@@ -283,6 +283,68 @@ probatio_error_chorda_non_clausa(vacuum)
 }
 
 /* ==================================================
+ * Probationes Boolean et Table Headers
+ * ================================================== */
+
+hic_manens vacuum
+probatio_boolean(vacuum)
+{
+    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+    TomlDocumentum* doc;
+
+    doc = toml_legere_literis(
+        "Active = true\n"
+        "Disabled = false", p);
+
+    CREDO_VERUM(toml_successus(doc));
+    CREDO_AEQUALIS_I32(toml_numerus_introituum(doc), 2);
+    CREDO_VERUM(toml_capere_boolean(doc, "Active"));
+    CREDO_FALSUM(toml_capere_boolean(doc, "Disabled"));
+
+    piscina_destruere(p);
+    imprimere("  [OK] Boolean\n");
+}
+
+hic_manens vacuum
+probatio_table_headers(vacuum)
+{
+    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+    TomlDocumentum* doc;
+
+    doc = toml_legere_literis(
+        "Title = \"Test\"\n"
+        "[Tags]\n"
+        "categories = [\"fiction\"]\n"
+        "active = true", p);
+
+    CREDO_VERUM(toml_successus(doc));
+    /* Table header [Tags] should be skipped */
+    CREDO_VERUM(toml_habet(doc, "Title"));
+    CREDO_VERUM(toml_habet(doc, "categories"));
+    CREDO_VERUM(toml_habet(doc, "active"));
+
+    piscina_destruere(p);
+    imprimere("  [OK] Table headers\n");
+}
+
+hic_manens vacuum
+probatio_numerus_negativus_magnus(vacuum)
+{
+    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+    TomlDocumentum* doc;
+    s32 annus;
+
+    doc = toml_legere_literis("Year = -371", p);
+
+    CREDO_VERUM(toml_successus(doc));
+    annus = toml_capere_numerum(doc, "Year");
+    CREDO_AEQUALIS_S32(annus, -371);
+
+    piscina_destruere(p);
+    imprimere("  [OK] Numerus negativus magnus\n");
+}
+
+/* ==================================================
  * Probatio Formatis LLM
  * ================================================== */
 
@@ -377,6 +439,11 @@ s32 principale(s32 argc, character** argv)
     imprimere("\nErrores:\n");
     probatio_error_sine_aequali();
     probatio_error_chorda_non_clausa();
+
+    imprimere("\nBoolean et Table Headers:\n");
+    probatio_boolean();
+    probatio_table_headers();
+    probatio_numerus_negativus_magnus();
 
     imprimere("\nFormat LLM:\n");
     probatio_format_llm();

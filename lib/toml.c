@@ -207,6 +207,12 @@ _parsare_lineam(TomlContextus* ctx, TomlDocumentum* doc)
         redde VERUM;
     }
 
+    /* Saltare table headers [section] */
+    si (ctx->datum[ctx->positio] == '[') {
+        _saltare_ad_finem_lineae(ctx);
+        redde VERUM;
+    }
+
     /* Status: Chorda multilinea */
     si (ctx->status == TOML_STATUS_CHORDA_MULTILINEA) {
         /* Quaerere closing """ */
@@ -323,6 +329,31 @@ _parsare_lineam(TomlContextus* ctx, TomlDocumentum* doc)
             valor.genus = TOML_NUMERUS;
             valor.datum.numerus_valor = _legere_numerum(ctx);
             _addere_introitum(doc, clavis, valor);
+            _saltare_ad_finem_lineae(ctx);
+        } alioquin si (ctx->positio + 4 <= ctx->mensura &&
+                      ctx->datum[ctx->positio] == 't' &&
+                      ctx->datum[ctx->positio + 1] == 'r' &&
+                      ctx->datum[ctx->positio + 2] == 'u' &&
+                      ctx->datum[ctx->positio + 3] == 'e') {
+            /* Boolean true */
+            TomlValor valor;
+            valor.genus = TOML_BOOLEAN;
+            valor.datum.boolean_valor = VERUM;
+            _addere_introitum(doc, clavis, valor);
+            ctx->positio += 4;
+            _saltare_ad_finem_lineae(ctx);
+        } alioquin si (ctx->positio + 5 <= ctx->mensura &&
+                      ctx->datum[ctx->positio] == 'f' &&
+                      ctx->datum[ctx->positio + 1] == 'a' &&
+                      ctx->datum[ctx->positio + 2] == 'l' &&
+                      ctx->datum[ctx->positio + 3] == 's' &&
+                      ctx->datum[ctx->positio + 4] == 'e') {
+            /* Boolean false */
+            TomlValor valor;
+            valor.genus = TOML_BOOLEAN;
+            valor.datum.boolean_valor = FALSUM;
+            _addere_introitum(doc, clavis, valor);
+            ctx->positio += 5;
             _saltare_ad_finem_lineae(ctx);
         } alioquin {
             doc->successus = FALSUM;
@@ -491,6 +522,18 @@ toml_capere_tabulatum(TomlDocumentum* doc, constans character* clavis)
     }
 
     redde NIHIL;
+}
+
+b32
+toml_capere_boolean(TomlDocumentum* doc, constans character* clavis)
+{
+    TomlValor* val = toml_capere(doc, clavis);
+
+    si (val != NIHIL && val->genus == TOML_BOOLEAN) {
+        redde val->datum.boolean_valor;
+    }
+
+    redde FALSUM;
 }
 
 b32
