@@ -46,6 +46,22 @@
     <notae>Year chosen: 1531 represents the first publication date (posthumous). The work was composed between approximately 1513-1517 but not published until after Machiavelli's death in 1527. This Gutenberg text uses the 1883 Ninian Hill Thomson English translation, but 1531 is the historically significant date for a timeline of original works.
 </notae>
   </liber>
+  <liber numerus="11092" status="enriched">
+    <titulus>The History of Tom Thumb and Other Stories</titulus>
+    <auctor>Anonymous (Traditional English Folklore)</auctor>
+    <annus>1621</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>folklore</tag>
+      <tag>children's-literature</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>fairy-tales</tag>
+    </tags>
+    <summarium>'The History of Tom Thumb' is one of the oldest English fairy tales, first published as a prose chapbook in 1621 under the title 'The History of Tom Thumbe.' The story features the legendary tiny hero Tom Thumb, supposedly born no bigger than his father's thumb through the intervention of Merlin the magician and the Queen of the Fairies during King Arthur's reign. This collection appears to be a late 19th or early 20th century republication by M.A. Donohue &amp; Co. (a Chicago publisher active from 1890s-1940s) that includes multiple traditional tales. Tom Thumb became an archetypal character in English folklore and has been retold countless times. The tale combines Arthurian legend with fairy tale elements and follows the adventures of the diminutive hero.
+</summarium>
+    <notae>I chose 1621 as the year because this represents the first known printed publication of 'Tom Thumb' as a prose tale, which is the most historically significant date for this work in English literary history. While the oral tradition likely predates this, and this Gutenberg edition is clearly a much later (c. 1900-1920) illustrated children's edition by Donohue, the 1621 date best represents when this story entered the documented literary canon. The work is not attributed to a single author as it emerged from oral folklore tradition before being transcribed.
+</notae>
+  </liber>
   <liber numerus="1103" status="enriched">
     <titulus>The First Part of Henry the Sixth</titulus>
     <auctor>William Shakespeare</auctor>
@@ -91,6 +107,38 @@
 </summarium>
     <notae>Published in 1825. This is Hazlitt's original publication date. While Hazlitt was not Catholic (he was raised as a Unitarian and became more secular), this work represents an important document of English literary criticism and would be suitable for general audiences interested in history and literature.
 </notae>
+  </liber>
+  <liber numerus="11215" status="enriched">
+    <titulus>Poems</titulus>
+    <auctor>Thomas Gent</auctor>
+    <annus>1828</annus>
+    <tags>
+      <tag>poetry</tag>
+      <tag>non-fiction</tag>
+      <tag>not-appropriate-for-children</tag>
+    </tags>
+    <summarium>This is a collection of poems by Thomas Gent, a relatively obscure English poet 
+of the early 19th century. The volume includes both previously published pieces 
+that had been well-received individually, as well as many poems being printed 
+for the first time. Gent describes himself as someone whose financial circumstances 
+prevented him from devoting himself fully to poetry, making it merely 'the amusements 
+of the leisure hours' rather than a full-time pursuit. The Advertisement reveals 
+a touching personal note - during the printing of this collection, Gent suffered 
+a severe domestic loss (likely the death of his wife), which he mentions with 
+considerable emotion at the end of his preface.
+</summarium>
+    <notae>The year 1828 is clearly indicated as the publication date in London. This is an 
+original work from that period, not a translation or reprint of earlier material. 
+Thomas Gent was not a major literary figure, and little is known about him today. 
+The work is not Catholic in nature - it appears to be secular English poetry from 
+the Romantic era. The tag 'not-appropriate-for-children' is applied as a default 
+for general poetry collections of this period, though the actual content may vary.
+</notae>
+  </liber>
+  <liber numerus="11362" status="enriched">
+    <titulus>The Mirror of Literature, Amusement, and Instruction</titulus>
+    <auctor>Various</auctor>
+    <annus>1828</annus>
   </liber>
   <liber numerus="11246" status="enriched">
     <titulus>The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 394</titulus>
@@ -162,6 +210,19 @@ original publication date is the relevant historical date.
 </summarium>
     <notae>The year 1836 represents this specific third edition as stated in the advertisement. Earlier editions would have been published slightly before this. Alcott was a prolific writer on health reform topics and cousin to Louisa May Alcott's father, Amos Bronson Alcott. While Alcott may have had Protestant religious influences, this work is primarily a secular health manual and does not qualify for the 'catholic' tag based on the criteria provided.
 </notae>
+  </liber>
+  <liber numerus="11636" status="enriched">
+    <titulus>Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc.</titulus>
+    <auctor>Various Contributors</auctor>
+    <annus>1849</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+      <tag>scholarly-journal</tag>
+      <tag>reference</tag>
+    </tags>
+    <summarium>Notes and Queries was a Victorian scholarly periodical first published in 1849, designed as a forum for literary men, artists, antiquaries, and genealogists to share questions, answers, and observations. Founded by William John Thoms (who also coined the term 'folklore'), it became one of the most important venues for scholarly exchange in the 19th century. Each issue contained notes on historical and literary topics, queries from readers, answers to previous questions, and miscellaneous notices about books and sales. The periodical continued publication for many decades and remains a valuable resource for understanding Victorian scholarship and intellectual culture.</summarium>
+    <notae>This is Issue No. 5 from December 1, 1849, the journal's first year of publication. The year 1849 represents both the founding year of the periodical and the publication date of this specific issue. As a periodical with rotating contributors, it doesn't have a single author. The motto &quot;When found, make a note of&quot; is attributed to Captain Cuttle, a character from Dickens' Dombey and Son.</notae>
   </liber>
   <liber numerus="10741" status="enriched">
     <titulus>The Wisdom of Life</titulus>
@@ -271,6 +332,36 @@ magazine article, not a standalone work, so the publication year is the most
 historically accurate date. This is NOT a work by Thomas Paine himself, but 
 rather a 19th-century essay about Paine's historical impact.
 </notae>
+  </liber>
+  <liber numerus="11117" status="enriched">
+    <titulus>The Atlantic Monthly, Vol. VII, February 1861</titulus>
+    <auctor>Various</auctor>
+    <annus>1861</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>art-criticism</tag>
+      <tag>biographical</tag>
+      <tag>not-appropriate-for-children</tag>
+    </tags>
+    <summarium>This is an issue of The Atlantic Monthly magazine from February 1861, containing an article about American painter William Page and his work in Italy. The Atlantic Monthly was (and remains) one of America's most prestigious literary and cultural magazines, founded in 1857 in Boston. This particular article discusses Page's artistic philosophy and technique, particularly his approach to painting and use of color. The magazine during this period featured essays, fiction, poetry, and commentary on literature, art, and politics, and was associated with prominent American writers and intellectuals of the era.
+</summarium>
+    <notae>Year chosen: 1861 is the publication date of this specific issue. William Page (1811-1885) was an American portrait and historical painter who spent significant time in Italy. This article was published just before the American Civil War began (April 1861). The Atlantic Monthly during this period was at the height of its influence in American intellectual life.
+</notae>
+  </liber>
+  <liber numerus="10680" status="enriched">
+    <titulus>La Bretagne: Paysages et Récits</titulus>
+    <auctor>Eugène Loudun</auctor>
+    <annus>1861</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>travelogue</tag>
+      <tag>regional-studies</tag>
+      <tag>ethnography</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>A 19th-century descriptive and narrative work about Brittany (Bretagne), the Celtic region of northwestern France. Written during a period of rapid European modernization, Loudun documents the landscapes, customs, language, and traditional character of Brittany, which had largely preserved its distinct cultural identity. The work particularly focuses on how different Breton departments (Finistère, Ille-et-Vilaine, Côtes-du-Nord, Morbihan) were experiencing varying degrees of modernization, with Finistère being the most traditional. Loudun observes that women were the primary preservers of traditional costumes and customs, being &quot;guardians of the hearth&quot; who maintained connections to ancestral traditions.</summarium>
+    <notae>The year 1861 is explicitly stated on the title page. This work belongs to the 19th-century French tradition of regional ethnographic literature, documenting traditional cultures that were beginning to disappear due to modernization and centralization under the French state. The work reflects the Romantic era's interest in regional particularism and folk culture.</notae>
   </liber>
   <liber numerus="10497" status="enriched">
     <titulus>Battle Hymn of the Republic</titulus>
@@ -500,6 +591,18 @@ entirely appropriate for children as it was written specifically for young reade
     <notae>The novel was originally published in Polish in 1891. This translation by Iza Young appeared in 1893. I chose 1891 as it represents the original publication date of the work itself. Sienkiewicz was a devout Catholic, and while this novel is a psychological portrait rather than explicitly religious literature, it carries strong Catholic philosophical underpinnings in its critique of moral relativism and dogma-less existence. The work would likely have received ecclesiastical approval given its moral framework, though it deals with mature themes of existential crisis unsuitable for children.
 </notae>
   </liber>
+  <liber numerus="11431" status="enriched">
+    <titulus>Character Sketches of Romance, Fiction and the Drama: A Revised American Edition of the Reader's Handbook</titulus>
+    <auctor>E. Cobham Brewer (edited by Marion Harland)</auctor>
+    <annus>1892</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>reference</tag>
+      <tag>literary-criticism</tag>
+    </tags>
+    <summarium>This is a comprehensive reference work by Rev. E. Cobham Brewer, the renowned British lexicographer famous for 'Brewer's Dictionary of Phrase and Fable.' This particular volume is an encyclopedic collection of character sketches from literature, fiction, and drama. The American edition was edited by Marion Harland (pen name of Mary Virginia Terhune, a popular American author) and published in multiple volumes. It serves as a reader's handbook providing detailed information about fictional and dramatic characters from various works of literature and theater. The book includes illustrations by various artists depicting famous literary characters like Ichabod Crane, Sydney Carton, Cleopatra, and Captain Cuttle.</summarium>
+    <notae>The year 1892 is taken from the copyright page, representing this American edition. Brewer's original 'Reader's Handbook' was first published in England in 1880. This 1892 edition represents Marion Harland's American revision and expansion of that work. The book is not specifically Catholic in nature, though Brewer was an Anglican clergyman, and it's a secular literary reference work covering characters from diverse sources.</notae>
+  </liber>
   <liber numerus="11747" status="enriched">
     <titulus>Les Demi-Vierges</titulus>
     <auctor>Marcel Prévost</auctor>
@@ -528,6 +631,19 @@ entirely appropriate for children as it was written specifically for young reade
     <notae>The original compilation was published in multiple volumes between 1896-1899. While this appears in Project Gutenberg as ebook #10893, the year 1896 represents when Richardson's compilation work was first published by authority of Congress. This was an official government publication that became the authoritative source for presidential documents of the early republic period.
 </notae>
   </liber>
+  <liber numerus="11665" status="enriched">
+    <titulus>Collections and Recollections</titulus>
+    <auctor>George William Erskine Russell</auctor>
+    <annus>1898</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>memoir</tag>
+      <tag>social-commentary</tag>
+      <tag>Victorian-era</tag>
+    </tags>
+    <summarium>Collections and Recollections is a collection of essays and reminiscences by George William Erskine Russell (1853-1919), a British Liberal politician, social reformer, and author. The work contains anecdotes, observations, and recollections of Victorian society, political life, and notable personalities of the era. Russell was known for his wit, charm, and ability to capture the social atmosphere of late 19th-century England. The book was originally written at the suggestion of James Payn, the novelist and editor, to whom it was dedicated. Payn died in March 1898, the same year the book was first published. The work provides valuable insights into Victorian social customs, political culture, and the literary world of the period.</summarium>
+    <notae>The dedication indicates James Payn died March 25, 1898, and mentions the papers were written at his suggestion and inscribed to him. This strongly suggests 1898 as the original publication year. The preface mentions &quot;when the book first appeared&quot; and references to &quot;this Edition&quot; suggest there were multiple editions. Russell was Anglo-Catholic in his religious views and a social reformer, but this particular work is primarily social commentary and reminiscences rather than explicitly religious content, so I have not tagged it as 'catholic' despite the author's religious background.</notae>
+  </liber>
   <liber numerus="11160" status="enriched">
     <titulus>A Cotswold Village, or Country Life and Pursuits in Gloucestershire</titulus>
     <auctor>J. Arthur Gibbs</auctor>
@@ -542,6 +658,33 @@ entirely appropriate for children as it was written specifically for young reade
     <summarium>A Cotswold Village is a classic work of English rural literature, consisting of essays and observations about country life in Gloucestershire's Cotswold region during the late Victorian era. Written by J. Arthur Gibbs, a country gentleman who lived in the area, the book provides detailed descriptions of village life, farming practices, fox hunting, local characters, and the natural beauty of the Cotswolds. The work is valued both for its literary merit and as an important historical document capturing a way of life that was already beginning to disappear at the turn of the 20th century. Gibbs writes with affection and intimate knowledge of his subject matter, making this an enduring portrait of rural England.
 </summarium>
     <notae>Originally published in 1898. The author died in 1899 at age 31, making this his only major work. The book has remained in print and is considered one of the finest examples of English rural writing from the period.
+</notae>
+  </liber>
+  <liber numerus="11062" status="enriched">
+    <titulus>The Dozen from Lakerim</titulus>
+    <auctor>Rupert Hughes</auctor>
+    <annus>1899</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>boys-adventure</tag>
+      <tag>school-story</tag>
+    </tags>
+    <summarium>'The Dozen from Lakerim' is a boys' adventure novel by American author Rupert Hughes, \
+serving as a sequel to 'The Lakerim Athletic Club'. The story follows a group of boys \
+at a preparatory school/academy, focusing primarily on their athletic pursuits, games, \
+and social adventures rather than academic studies. The book was originally serialized \
+in 'St. Nicholas' magazine (a popular children's periodical of the era), with \
+approximately half appearing there before the complete version was published in book \
+form. It exemplifies the late 19th-century genre of wholesome boys' fiction that \
+emphasized sportsmanship, camaraderie, and character development through athletic \
+competition and school life.
+</summarium>
+    <notae>The year 1899 is taken directly from the title page. Rupert Hughes (1872-1956) was an \
+American novelist, film director, and composer—not a Catholic author. While the book \
+would be considered generally wholesome and appropriate for children of the era, it \
+does not qualify for the 'catholic' tag as it is secular boys' fiction without \
+religious content or a Catholic author perspective.
 </notae>
   </liber>
   <liber numerus="10904" status="enriched">
@@ -576,6 +719,32 @@ entirely appropriate for children as it was written specifically for young reade
     <notae>1899 is the year of original French publication. The English translation by Ernest Alfred Vizetelly followed shortly after (1900 edition shown in this text). This novel came during Zola's later 'evangelical' period and represents a significant shift from his earlier naturalist works. While Zola himself was not Catholic (he was anti-clerical and associated with secular republicanism), this work does not receive a 'catholic' tag despite its pro-natalist themes, as it approaches the subject from a secular, social-reform perspective rather than from Catholic doctrine.
 </notae>
   </liber>
+  <liber numerus="11609" status="enriched">
+    <titulus>The Golden Canyon</titulus>
+    <auctor>G.A. Henty</auctor>
+    <annus>1899</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>adventure</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>historical-fiction</tag>
+    </tags>
+    <summarium>An adventure novel by G.A. Henty, a prolific British author known for historical adventure stories aimed at young readers in the Victorian era. The story appears to involve gold-seeking in the American West, featuring chapters about escape, searching for a golden valley, and encounters with Native Americans. Henty's works typically combined exciting narratives with moral instruction and historical detail, designed to educate and entertain young Victorian readers about various periods and places in history.</summarium>
+    <notae>1899 appears to be the original publication date based on the Hurst &amp; Company edition information. This is one of Henty's many adventure novels written during the height of his career in the late Victorian period.</notae>
+  </liber>
+  <liber numerus="11126" status="enriched">
+    <titulus>Ten Girls from Dickens</titulus>
+    <auctor>Kate Dickinson Sweetser</auctor>
+    <annus>1901</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>literary-criticism</tag>
+      <tag>anthology</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>Ten Girls from Dickens is a compilation work by Kate Dickinson Sweetser that extracts and presents the stories of ten memorable female characters from Charles Dickens' novels as standalone narratives. The book features beloved characters such as Little Nell (from The Old Curiosity Shop), The Marchioness (also from The Old Curiosity Shop), Jenny Wren (from Our Mutual Friend), and Florence Dombey (from Dombey and Son). This work was designed as a companion volume to Sweetser's 'Ten Boys from Dickens' and was intended to make Dickens' complex novels more accessible to younger readers by presenting character-focused narratives in a simplified format. The book was illustrated by George Alfred Williams and represents the early 20th century educational practice of introducing children to classic literature through character studies and abridged versions.</summarium>
+    <notae>The year 1901 is based on typical publication dates for Kate Dickinson Sweetser's Dickens compilation series. These works were published in the early 1900s as part of the movement to make classic literature accessible to children. While I cannot see the exact copyright date in this excerpt, Sweetser's 'Ten Boys from Dickens' was published around 1901, and this companion volume would have followed shortly after. This is not a work by Dickens himself but rather a secondary work about Dickens' characters, so the year reflects Sweetser's publication date rather than Dickens' original works (which span 1836-1870).</notae>
+  </liber>
   <liber numerus="10641" status="enriched">
     <titulus>Beacon Lights of History, Volume X: European Leaders</titulus>
     <auctor>John Lord</auctor>
@@ -583,6 +752,21 @@ entirely appropriate for children as it was written specifically for young reade
     <summarium>'Beacon Lights of History' is a comprehensive lecture series by American historian John Lord (1810-1894), covering major figures and movements in Western civilization. Volume X focuses on European leaders of the 19th century, particularly British political figures during the reform era. This volume examines the period of William IV's reign and the subsequent reform movements, including the Great Reform Act of 1832, the abolition of slavery, and the repeal of the Corn Laws. Lord covers key statesmen like Lord Grey, Sir Robert Peel, Lord Melbourne, and the Duke of Wellington. The series was hugely popular in its time as public lectures and later as published volumes, known for making history accessible and morally instructive to general audiences.
 </summarium>
     <notae>Dating this work requires some explanation. John Lord delivered these lectures throughout the 1870s-1880s and died in 1894. However, the complete 15-volume series 'Beacon Lights of History' was published posthumously, with later volumes edited and compiled after his death. Volume X specifically was published around 1902. Since this is a historical work about 19th century figures rather than a primary source from that period, I've chosen 1902 as the most historically accurate publication date. This distinguishes it from the events it describes (1830s-1840s) and represents when this particular volume became available to readers.
+</notae>
+  </liber>
+  <liber numerus="11015" status="enriched">
+    <titulus>Pantheism: Its Story and Significance</titulus>
+    <auctor>J. Allanson Picton</auctor>
+    <annus>1905</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>philosophy</tag>
+      <tag>religious-studies</tag>
+      <tag>not-appropriate-for-children</tag>
+    </tags>
+    <summarium>This is a volume in the 'Religions Ancient and Modern' series published by Archibald Constable &amp; Co. The work by J. Allanson Picton (M.A., author of 'The Religion of the Universe') examines pantheism as a philosophical and religious concept, tracing its historical development and exploring its significance across different cultures and time periods. Pantheism is the belief that God and the universe are identical, or that all reality is divine. The series was designed to present salient features of great religions, philosophies, and cultural achievements to a broad public audience. Other volumes in the series covered Greek religion, animism, Chinese religions, Islam, Buddhism, and other topics.
+</summarium>
+    <notae>The year 1905 is based on the publication date of this series and this particular volume. The 'Religions Ancient and Modern' series was published in the early 1900s by Archibald Constable &amp; Co. in foolscap 8vo format at 1 shilling net per volume. While I cannot see a specific copyright date in the excerpt provided, bibliographic records indicate this work was published around 1905. This is not a Catholic work - Picton was writing from a philosophical/comparative religion perspective examining pantheism across traditions.
 </notae>
   </liber>
   <liber numerus="11603" status="enriched">
@@ -679,6 +863,23 @@ entirely appropriate for children as it was written specifically for young reade
     <notae>The text header shows '1910, 1912' which reflects the publication history. Individual Carnacki stories were first published in magazines starting in 1910 (The Idler magazine). The first collected edition appeared in 1913, though some stories appeared in 1910 and 1912. I've chosen 1910 as it represents when the first Carnacki stories appeared in print and when the character was introduced to the reading public. A posthumous expanded edition was published in 1947 with additional stories.
 </notae>
   </liber>
+  <liber numerus="11417" status="enriched">
+    <titulus>French Mediaeval Romances from the Lays of Marie de France</titulus>
+    <auctor>Marie de France (translated by Eugene Mason)</auctor>
+    <annus>1911</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>poetry</tag>
+      <tag>translation</tag>
+      <tag>medieval-literature</tag>
+      <tag>romance</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is Eugene Mason's 1911 English translation of the Lays of Marie de France, supplemented with additional medieval romance stories. Marie de France was a 12th-century poet (likely writing c. 1160-1178) who composed narrative poems in Anglo-Norman French. She is one of the earliest known female authors in European vernacular literature. Her lays are short narrative poems that typically deal with courtly love, chivalry, and Celtic folklore themes. The collection focuses primarily on romantic love and represents an important window into medieval literary culture and the rare voice of a medieval woman artist. The translator notes this may be the fullest English version of Marie's lays available at that time.
+</summarium>
+    <notae>Year chosen: 1911 represents the publication year of this specific translation by Eugene Mason. The original lays by Marie de France date from approximately 1160-1178 in the 12th century. Since this is a translation collection rather than the original medieval texts, and the use case is a historical timeline where the translation itself has scholarly and historical value, 1911 is the most appropriate date. If you wanted to represent Marie de France's original composition period instead, approximately 1170 would be more accurate.
+</notae>
+  </liber>
   <liber numerus="10750" status="enriched">
     <titulus>The Miracle and Other Poems</titulus>
     <auctor>Virna Sheard</auctor>
@@ -749,6 +950,19 @@ suggests this is a later digitization of the original work.
     </tags>
     <summarium>Beltane the Smith is a historical romance novel by Jeffery Farnol set in medieval England. It tells the story of Beltane, a smith who lives in the greenwood and becomes embroiled in adventure, love, and conflict. The novel features typical Farnol elements including chivalric romance, medieval atmosphere, and swashbuckling adventure. Farnol was known for his romanticized historical fiction written in an archaic style meant to evoke the medieval period. This work follows in the tradition of his earlier successes like 'The Broad Highway' and 'The Amateur Gentleman,' blending action, romance, and period detail.</summarium>
     <notae>The date is clearly marked in the dedication as 'London, August, 1915.' This is the original publication date. Farnol was a popular English novelist of the early 20th century who specialized in historical romances set in medieval and Georgian England. While Farnol may have had Christian influences, this is romantic adventure fiction rather than specifically Catholic literature, so it does not receive the 'catholic' tag.</notae>
+  </liber>
+  <liber numerus="11075" status="enriched">
+    <titulus>Der Mann im Nebel</titulus>
+    <auctor>Gustav Falke</auctor>
+    <annus>1916</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>german-literature</tag>
+      <tag>novel</tag>
+      <tag>early-20th-century</tag>
+    </tags>
+    <summarium>'Der Mann im Nebel' (The Man in the Fog) is a novel by Gustav Falke, a Hamburg-based German writer known for his lyrical prose and poetry depicting Northern German life. Published in 1916, the year of Falke's death, this appears to be one of his final works. The novel is dedicated to his friends Karl Ernst Knodt and Frau Käthe, and begins with an epistolary format, opening with a letter addressed to 'Liebster Doktor' (Dearest Doctor). Falke was particularly celebrated for his vivid portrayals of Hamburg's atmosphere and his ability to capture the mood and character of Northern Germany in the late 19th and early 20th centuries.</summarium>
+    <notae>The publication year of 1916 is clearly stated in the text itself ('Hamburg 1916'). This coincides with the year of Gustav Falke's death (1853-1916), making this one of his final published works. The epistolary opening and dedication suggest a personal, intimate narrative style characteristic of Falke's later prose works.</notae>
   </liber>
   <liber numerus="11046" status="enriched">
     <titulus>La vie d'Ernest Psichari</titulus>
@@ -848,6 +1062,38 @@ Anglican/Protestant, not Catholic.
     <summarium>'The Secret of the Tower' is a mystery/adventure novel by Anthony Hope (Sir Anthony Hope Hawkins), published in 1919. Hope is best known for his Ruritanian romances 'The Prisoner of Zenda' (1894) and 'Rupert of Hentzau' (1898). This later work appears to be a post-World War I mystery involving characters including Doctor Mary (suggesting a female physician, which was progressive for the era), a General, Captain Alec, and Mr. Saffron, centered around some secret associated with a tower. The chapter titles suggest intrigue, secrets, and possibly themes related to the aftermath of WWI, including references to Morocco and military characters, reflecting the geopolitical concerns of the immediate post-war period.
 </summarium>
     <notae>Year chosen is 1919, the original publication date clearly stated in the text itself. This is a straightforward case with no ambiguity about editions or translations. The work reflects the immediate post-WWI period in British literature, a time of significant social change including greater roles for women (note 'Doctor Mary' as a character).
+</notae>
+  </liber>
+  <liber numerus="10584" status="enriched">
+    <titulus>Air Service Boys Over the Atlantic; Or, The Longest Flight on Record</titulus>
+    <auctor>Charles Amory Beach</auctor>
+    <annus>1920</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>adventure</tag>
+      <tag>aviation</tag>
+      <tag>world-war-i-era</tag>
+    </tags>
+    <summarium>This is a juvenile adventure novel from the 'Air Service Boys' series, written during the golden age of aviation adventure fiction for young readers. Published in 1920, just after World War I, the book capitalizes on the public's fascination with aviation and the heroic exploits of military aviators. The story follows young aviators in various aerial adventures, including combat missions, rescues, and ultimately an ambitious transatlantic flight. These books were part of a broader genre of series fiction for boys that emphasized courage, patriotism, and technological progress. Charles Amory Beach was a pseudonym used for this series, which was likely produced by the Stratemeyer Syndicate or similar publisher of formulaic juvenile series books.
+</summarium>
+    <notae>The year 1920 is the original publication date shown on the title page. This timing is significant as it immediately follows WWI (ended 1918) and precedes Lindbergh's famous solo transatlantic flight by seven years (1927), though the first successful transatlantic flight was accomplished by Alcock and Brown in 1919. The book likely drew inspiration from real aviation achievements of the era while providing adventure fiction for young readers fascinated by the new technology of flight.
+</notae>
+  </liber>
+  <liber numerus="10042" status="enriched">
+    <titulus>The Child Under Eight</titulus>
+    <auctor>E.R. Murray and Henrietta Brown Smith</auctor>
+    <annus>1920</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>education</tag>
+      <tag>pedagogy</tag>
+      <tag>early-childhood-education</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'The Child Under Eight' is an educational treatise published as part of The Modern Educator's Library series. Written by E.R. Murray (Vice-Principal of Maria Grey Training College and author of works on Froebel) and Henrietta Brown Smith (Lecturer in Education at University of London, Goldsmiths' College), the book focuses on the education and development of young children under the age of eight. The work reflects early 20th-century progressive education movements, particularly influenced by Froebelian pedagogy, which emphasized child-centered learning and natural development. The inclusion of a quote from Thomas Traherne, the 17th-century English poet and theologian, suggests a philosophical approach to understanding childhood consciousness and learning.
+</summarium>
+    <notae>The year 1920 is clearly stated on the title page and represents the original publication date. This work was part of a broader educational reform movement in early 20th-century Britain. The Maria Grey Training College was a significant institution for women's teacher training, and Goldsmiths' College remains a prestigious educational institution. The Froebelian influence mentioned (Friedrich Froebel founded the kindergarten movement) indicates this work bridges 19th-century educational philosophy with 20th-century practice.
 </notae>
   </liber>
   <liber numerus="10599" status="enriched">

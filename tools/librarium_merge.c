@@ -140,7 +140,7 @@ _invenire_ultimum_result(chorda textus, Piscina* piscina)
     redde fructus;
 }
 
-/* Extrahere TOML inter ``` fences */
+/* Extrahere TOML inter ``` fences, vel totum contentum si non sunt fences */
 hic_manens chorda
 _extrahere_toml(chorda result_content, Piscina* piscina)
 {
@@ -176,11 +176,46 @@ _extrahere_toml(chorda result_content, Piscina* piscina)
         }
     }
 
+    /* Si non inventae fences, uti toto contentu */
     si (initium < 0 || finis < 0 || finis <= initium) {
+        s32 start = 0;
+        s32 end = (s32)result_content.mensura;
+        s32 k;
+
+        /* Saltare spatium initiale */
+        dum (start < end) {
+            character c = (character)result_content.datum[(i32)start];
+            si (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                start++;
+            } alioquin {
+                frange;
+            }
+        }
+
+        /* Saltare spatium finale */
+        dum (end > start) {
+            character c = (character)result_content.datum[(i32)(end - 1)];
+            si (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                end--;
+            } alioquin {
+                frange;
+            }
+        }
+
+        si (end <= start) {
+            redde fructus;
+        }
+
+        fructus.datum = (i8*)piscina_allocare(piscina, (i32)(end - start));
+        fructus.mensura = (i32)(end - start);
+        per (k = 0; k < end - start; k++) {
+            fructus.datum[k] = result_content.datum[(i32)(start + k)];
+        }
+
         redde fructus;
     }
 
-    /* Copiare TOML */
+    /* Copiare TOML inter fences */
     {
         s32 len = finis - initium;
         s32 k;
