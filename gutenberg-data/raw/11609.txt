@@ -1,0 +1,14 @@
+I see the file only contains the beginning portion you pasted. Based on what you've provided and my knowledge of the work:
+
+**G.A. Henty** was a prolific British author of historical adventure novels for young people, writing primarily in the late 19th century. "The Golden Canyon" is one of his adventure stories, typical of his work which combined exciting narratives with historical settings designed to educate young readers.
+
+The publisher information shows "Hurst & Company Publishers" with the date 1899, which appears to be the original publication date for this work.
+
+<result>
+Title = "The Golden Canyon"
+Author = "G.A. Henty"
+Year = 1899
+Tags = ["fiction", "adventure", "appropriate-for-children", "historical-fiction"]
+Summary = "An adventure novel by G.A. Henty, a prolific British author known for historical adventure stories aimed at young readers in the Victorian era. The story appears to involve gold-seeking in the American West, featuring chapters about escape, searching for a golden valley, and encounters with Native Americans. Henty's works typically combined exciting narratives with moral instruction and historical detail, designed to educate and entertain young Victorian readers about various periods and places in history."
+Notes = "1899 appears to be the original publication date based on the Hurst & Company edition information. This is one of Henty's many adventure novels written during the height of his career in the late Victorian period."
+</result>

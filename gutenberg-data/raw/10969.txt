@@ -1,0 +1,43 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Ski-Running" by Katharine Furse, published in 1924. The title page and preface make this explicit. Katharine Furse was a notable British figure (G.B.E., R.R.C. - honors indicating Dame Grand Cross of the Order of the British Empire and Royal Red Cross) who wrote about skiing instruction. This is a non-fiction instructional book on skiing technique.
+
+<result>
+```toml
+Title = "Ski-Running"
+Author = "Katharine Furse"
+Year = 1924
+
+Tags = [
+    "non-fiction",
+    "instructional",
+    "sports",
+    "skiing",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Ski-Running' is an instructional manual on skiing technique written by \
+Katharine Furse, a prominent British public servant who held the honors \
+of Dame Grand Cross of the Order of the British Empire (G.B.E.) and the \
+Royal Red Cross (R.R.C.). Published in 1924, the book aims to fill a \
+niche between existing comprehensive skiing manuals by authors like \
+Vivien Caulfeild and Arnold Lunn. Furse's work is particularly aimed at \
+beginners and intermediate skiers, drawing on her extensive experience \
+coaching novices. The book contains practical advice on skiing technique, \
+with illustrations from photographs and a map. Writing from the perspective \
+of someone who learned the sport later in life, Furse offers accessible \
+instruction while acknowledging the physical challenges that age presents \
+to mastering advanced techniques like the Christiania turn in difficult \
+conditions.
+"""
+
+Notes = """
+The year 1924 is clearly stated on the title page and represents the \
+original publication date of this work. This was during the early period \
+of recreational skiing's popularization in Britain and represents an \
+important historical document in the development of skiing instruction \
+literature in English.
+"""
+```
+</result>

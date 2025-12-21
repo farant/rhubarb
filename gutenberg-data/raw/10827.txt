@@ -1,0 +1,28 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+This is clearly Machiavelli's "Discourses on Livy" (Discorsi sopra la prima deca di Tito Livio), one of his major political treatises. The work was written between approximately 1513-1517 and first published in 1531, several years after Machiavelli's death in 1527. The most historically accurate year would be 1531 for the publication, though the composition period is also significant.
+
+The translation here is by Ninian Hill Thomson, published in 1883, but for your historical timeline purposes, the original work's publication date is most relevant.
+
+<result>
+```toml
+Title = "Discourses on the First Decade of Titus Livius"
+Author = "Niccolò Machiavelli"
+Year = 1531
+
+Tags = [
+    "non-fiction",
+    "political-philosophy",
+    "history",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+The Discourses on Livy is Machiavelli's major work of republican political theory, written as a commentary on the first ten books of Livy's Roman history. Unlike 'The Prince' which focuses on autocratic rule, the Discourses examines republican government and civic virtue, using Roman history as a lens to analyze political liberty, military organization, and the role of conflict in healthy republics. Machiavelli argues that republics are superior to principalities and examines how Rome's political institutions, including the tension between patricians and plebeians, contributed to its success. This work profoundly influenced republican thought and constitutional theory in subsequent centuries.
+"""
+
+Notes = """
+Year chosen: 1531 represents the first publication date (posthumous). The work was composed between approximately 1513-1517 but not published until after Machiavelli's death in 1527. This Gutenberg text uses the 1883 Ninian Hill Thomson English translation, but 1531 is the historically significant date for a timeline of original works.
+"""
+```
+</result>

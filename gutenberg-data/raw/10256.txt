@@ -1,0 +1,20 @@
+<result>
+```toml
+Title = "O, Tannenbaum"
+Author = "Traditional (performed by Nebe Quartett)"
+Year = 1824
+
+[Tags]
+categories = ["non-fiction", "historical-document"]
+appropriate_for_children = true
+catholic = false
+
+Summary = """
+'O, Tannenbaum' (O Christmas Tree) is a traditional German Christmas carol. The melody is believed to have originated earlier, but the most well-known lyrics about the fir tree were written by Ernst Anschütz, a Leipzig teacher and organist, in 1824. The song celebrates the evergreen fir tree as a symbol of constancy and faithfulness. This Project Gutenberg entry is an audio recording performed by the Nebe Quartett, taken from the Edison National Historic Site, representing an early phonograph recording of this beloved carol.
+"""
+
+Notes = """
+I chose 1824 as the year because that's when Ernst Anschütz wrote the familiar lyrics we associate with 'O, Tannenbaum' today. While the melody existed earlier (possibly from a 16th-century Silesian folk song), and the song has evolved through various versions, 1824 represents the creation of the version that became the standard. This Gutenberg entry is actually an audio recording (mp3 format) rather than a text, which is unusual - it's a historical phonograph recording from the Edison collection, but for timeline purposes the composition date is most historically meaningful. Not marked as Catholic despite being a Christmas carol since it's a secular song about a Christmas tree rather than a liturgical or devotional work.
+"""
+```
+</result>

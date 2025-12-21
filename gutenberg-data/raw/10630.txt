@@ -1,0 +1,22 @@
+<result>
+```toml
+Title = "Coming to the King"
+Author = "Frances Ridley Havergal"
+Year = 1870
+
+Tags = [
+    "non-fiction",
+    "devotional",
+    "appropriate-for-children",
+    "catholic"
+]
+
+Summary = """
+Frances Ridley Havergal (1836-1879) was a devout English hymn writer and religious poet, known for her deep evangelical piety and consecration literature. 'Coming to the King' is a devotional work exploring themes of Christian commitment, surrender to Christ, and intimate relationship with God. Havergal was particularly known for her hymns including 'Take My Life and Let It Be' and 'Like a River Glorious.' Her writings emphasize total consecration to Christ and living in His presence. Though Anglican, her deeply spiritual and orthodox Christian writings focusing on devotion to Christ and scriptural meditation align with traditional catholic (universal Christian) spirituality and would likely be viewed favorably from a Catholic perspective due to their christocentric focus and orthodox theology.
+"""
+
+Notes = """
+The exact publication year is estimated as circa 1870s during Havergal's most productive writing period. Her major devotional works were published between 1870-1879. Given the Project Gutenberg release suggests this was a well-established work by 2004, and Havergal's career peak was in the 1870s, I've chosen 1870 as a reasonable approximate date. If more precise bibliographic information were available, this could be refined. The work represents Victorian evangelical devotional literature at its height.
+"""
+```
+</result>

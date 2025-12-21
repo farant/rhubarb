@@ -1,0 +1,28 @@
+I'll help you identify this work and provide the structured information in TOML format.
+
+This is "The Young Mother, or Management of Children in Regard to Health" by William A. Alcott, published in 1836. This is a highly influential 19th-century American child-rearing and domestic health manual. Alcott was a physician, educator, and moral reformer who wrote extensively on health, education, and family life during the antebellum period.
+
+<result>
+```toml
+Title = "The Young Mother, or Management of Children in Regard to Health"
+Author = "William A. Alcott"
+Year = 1836
+
+Tags = [
+    "non-fiction",
+    "health",
+    "child-rearing",
+    "domestic-medicine",
+    "historical-document",
+    "appropriate-for-children"
+]
+
+Summary = """
+This is one of the most influential American child-rearing manuals of the 19th century, written by physician and reformer William Andrus Alcott. The work provides practical advice on managing children's health, covering topics from nursery arrangement and temperature control to ventilation, clothing, diet, and general childcare practices. Alcott was part of the health reform movement of his era and advocated for rational, scientific approaches to child-rearing rather than traditional folk practices. This third edition (1836) was enlarged with additional sections including guidance for mothers' own health and conduct. The book reflects the emerging professionalization of medicine and domestic science in antebellum America and was widely read by middle-class families seeking modern, enlightened approaches to child-rearing.
+"""
+
+Notes = """
+The year 1836 represents this specific third edition as stated in the advertisement. Earlier editions would have been published slightly before this. Alcott was a prolific writer on health reform topics and cousin to Louisa May Alcott's father, Amos Bronson Alcott. While Alcott may have had Protestant religious influences, this work is primarily a secular health manual and does not qualify for the 'catholic' tag based on the criteria provided.
+"""
+```
+</result>

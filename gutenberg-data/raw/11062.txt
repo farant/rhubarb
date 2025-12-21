@@ -1,0 +1,38 @@
+I'll read through this text to identify the work and provide the structured information you requested.
+
+Based on the text, this is clearly "The Dozen from Lakerim" by Rupert Hughes, published in 1899. This appears to be a boys' adventure story set at a preparatory school/academy. Rupert Hughes was an American author, and this is a sequel to "The Lakerim Athletic Club" mentioned in the author attribution.
+
+Let me provide the structured output in TOML format:
+
+<result>
+Title = "The Dozen from Lakerim"
+Author = "Rupert Hughes"
+Year = 1899
+
+Tags = [
+    "fiction",
+    "appropriate-for-children",
+    "boys-adventure",
+    "school-story"
+]
+
+Summary = """
+'The Dozen from Lakerim' is a boys' adventure novel by American author Rupert Hughes, \
+serving as a sequel to 'The Lakerim Athletic Club'. The story follows a group of boys \
+at a preparatory school/academy, focusing primarily on their athletic pursuits, games, \
+and social adventures rather than academic studies. The book was originally serialized \
+in 'St. Nicholas' magazine (a popular children's periodical of the era), with \
+approximately half appearing there before the complete version was published in book \
+form. It exemplifies the late 19th-century genre of wholesome boys' fiction that \
+emphasized sportsmanship, camaraderie, and character development through athletic \
+competition and school life.
+"""
+
+Notes = """
+The year 1899 is taken directly from the title page. Rupert Hughes (1872-1956) was an \
+American novelist, film director, and composer—not a Catholic author. While the book \
+would be considered generally wholesome and appropriate for children of the era, it \
+does not qualify for the 'catholic' tag as it is secular boys' fiction without \
+religious content or a Catholic author perspective.
+"""
+</result>

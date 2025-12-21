@@ -1,0 +1,23 @@
+I recognize this work immediately - it's Samuel Richardson's famous epistolary novel "Clarissa," one of the longest novels in the English language and a landmark work of 18th-century literature.
+
+<result>
+```toml
+Title = "Clarissa, or, the History of a Young Lady"
+Author = "Samuel Richardson"
+Year = 1748
+
+Tags = [
+    "fiction",
+    "epistolary-novel",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Clarissa' is Samuel Richardson's monumental epistolary novel, told entirely through letters between the characters. It chronicles the tragic story of Clarissa Harlowe, a virtuous young woman from a wealthy family who is pursued by the rake Robert Lovelace. The novel explores themes of virtue, sexuality, individual autonomy versus family authority, and the position of women in 18th-century society. After Clarissa refuses an arranged marriage and is subsequently abducted and violated by Lovelace, the narrative follows her moral and physical decline despite Lovelace's offers of marriage. The work is considered one of the most important novels in the English language and a foundational text of the novel form itself. Richardson, a printer by trade, created this work partly as a moral instruction, though its psychological complexity transcends simple didacticism.
+"""
+
+Notes = """
+The novel was originally published in multiple installments between December 1747 and December 1748. I've chosen 1748 as it represents the completion of the first edition. Richardson later revised it substantially. While Richardson was Protestant (Anglican/Church of England), not Catholic, the novel does engage deeply with Christian themes of virtue, repentance, and redemption. It was widely read across denominational lines and influenced Catholic as well as Protestant moral literature. The work is decidedly not appropriate for children due to its subject matter involving abduction and sexual violation, even though these are handled with 18th-century discretion.
+"""
+```
+</result>

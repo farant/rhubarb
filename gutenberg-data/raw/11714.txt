@@ -1,0 +1,25 @@
+I'll analyze this text from Project Gutenberg to identify the work, author, and relevant metadata.
+
+<result>
+```toml
+Title = "Contes de la Bécasse"
+Author = "Guy de Maupassant"
+Year = 1883
+
+Tags = [
+    "fiction",
+    "short-stories",
+    "french-literature",
+    "realism",
+    "naturalism"
+]
+
+Summary = """
+'Contes de la Bécasse' (Tales of the Woodcock) is a collection of short stories by Guy de Maupassant, one of the masters of the French short story form. The collection is framed by a narrative device: a group of hunters gathers at the estate of Baron des Ravots, and each hunter tells a story. The frame story involves the aging baron, now paralyzed and confined to his chair, who still shoots pigeons from his window and loves to hear tales. Maupassant's stories in this collection showcase his characteristic style: sharp psychological insight, irony, and often dark or cynical views of human nature. The tales range from tragic to comic, exploring themes of love, deception, social class, and the human condition in late 19th-century France. Maupassant is considered one of the fathers of the modern short story, and this collection demonstrates his mastery of compressed narrative and his naturalist approach to depicting reality.
+"""
+
+Notes = """
+First published in 1883. This is an original work by Maupassant, not a translation. The Gutenberg text indicates this is the 16th edition published in Paris in 1894, but the original publication date was 1883, which is the historically relevant date for a timeline of literary works. Maupassant (1850-1893) was at the height of his powers in the early 1880s.
+"""
+```
+</result>

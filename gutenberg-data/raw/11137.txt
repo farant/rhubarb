@@ -1,0 +1,24 @@
+I see the file is very short. Let me check what's actually in there and work with the text you've provided directly.
+
+Based on the text you've provided, I can identify this work:
+
+<result>
+```toml
+Title = "Twenty-Two Years a Slave, and Forty Years a Freeman"
+Author = "Austin Steward"
+Year = 1857
+
+[Tags]
+categories = ["non-fiction", "historical-document", "autobiography"]
+appropriate_for_children = false
+catholic = false
+
+Summary = """
+This is Austin Steward's slave narrative, published in 1857 (though dated 1856 in some editions). Steward was enslaved for twenty-two years before gaining his freedom and becoming a prominent abolitionist and community leader. The work documents his experiences under slavery and his subsequent forty years of freedom, including his time as president of the Wilberforce Colony in London, Canada West (Ontario), one of the settlements established for formerly enslaved people who escaped to Canada. The narrative includes correspondence from his time leading this colony. Slave narratives like this were crucial primary sources documenting the horrors of slavery and were important tools in the abolitionist movement. Steward's account is particularly notable for its documentation of both the Southern slave experience and the post-emancipation challenges of building free Black communities in Canada.
+"""
+
+Notes = """
+The work was published in Rochester in 1856/1857 (there's some ambiguity in dating - the title page says 1856, but it was published in September 1856 and often cataloged as 1857). I've chosen 1857 as it appears to be the more common scholarly dating. The letter from Governor Myron H. Clark of New York dated May 10, 1856 shows Steward was soliciting subscribers before publication. This is a historically significant primary source document from the antebellum period.
+"""
+```
+</result>

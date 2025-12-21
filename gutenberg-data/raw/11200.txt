@@ -1,0 +1,25 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the preface, this is clearly "The World War and What Was Behind It" (also subtitled "The Story of the Map of Europe") by L. P. Bénézet, Superintendent of Schools in Evansville, Indiana. The book was written to explain the causes of World War I to American audiences of various ages following talks given in fall 1914. Given that it discusses WWI as "the great European war" and was written shortly after its outbreak in 1914, this appears to be a contemporary analysis published around 1915-1916.
+
+<result>
+```toml
+Title = "The World War and What Was Behind It, or The Story of the Map of Europe"
+Author = "L. P. Bénézet"
+Year = 1918
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "appropriate-for-children"
+]
+
+Summary = """
+A contemporary analysis of the causes and origins of World War I (referred to as 'the great European war'), written by an American school superintendent for general audiences including children and adults. The book emerged from a series of public lectures given in fall 1914 explaining the complex political, ethnic, and territorial conflicts that made the war 'inevitable.' It aims to explain European conditions—particularly the ethnic tensions and nationalistic movements absent in America's melting pot—through simple language, maps, and charts. The work provides historical context about the 'remarkable sequence of events' leading to WWI and claims to reveal facts not previously published in histories up to that time.
+"""
+
+Notes = """
+The book was clearly written shortly after WWI began (autumn 1914 lectures mentioned), likely published between 1916-1918. Project Gutenberg lists this as ebook #11200. The year 1918 represents the likely publication date based on the context of describing ongoing or very recent events while the war was still being fought or just concluded. This is an educational work designed to be accessible to upper elementary students while remaining useful for adults.
+"""
+```
+</result>

@@ -1,0 +1,22 @@
+I'll help you identify this work and extract the relevant information.
+
+Based on the Project Gutenberg text, this is clearly "Among the Trees at Elmridge" by Ella Rodman Church, published in 1886. This appears to be a children's educational book about different types of trees, written in a narrative format. Ella Rodman Church was an American author known for her educational nature books for children in the late 19th century.
+
+<result>
+```toml
+Title = "Among the Trees at Elmridge"
+Author = "Ella Rodman Church"
+Year = 1886
+
+Tags = [
+    "non-fiction",
+    "educational",
+    "appropriate-for-children",
+    "nature"
+]
+
+Summary = "A children's educational book about trees, written by American author Ella Rodman Church. The work uses a narrative format to teach young readers about various tree species including maples, elms, oaks, pines, palms, and many others. Church was known for writing accessible natural history books for children in the late 19th century. The book combines botanical information with engaging storytelling, covering both native North American trees and exotic species from around the world. Each chapter focuses on different tree families, their characteristics, uses, and interesting facts."
+
+Notes = "The year 1886 is clearly stated on the title page and represents the original publication date of this work. This is a straightforward case with no translation or edition ambiguity."
+```
+</result>

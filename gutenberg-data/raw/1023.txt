@@ -1,0 +1,20 @@
+<result>
+```toml
+Title = "Bleak House"
+Author = "Charles Dickens"
+Year = 1853
+
+[Tags]
+categories = ["fiction"]
+suitability = ["appropriate-for-children"]
+religious = []
+
+Summary = """
+Bleak House is one of Charles Dickens' major novels, published in serial form between 1852-1853. It is a complex social novel that satirizes the British judicial system, particularly the Court of Chancery, through the protracted case of Jarndyce and Jarndyce. The novel follows multiple interconnected storylines, including the young Esther Summerson's narrative, Lady Dedlock's mysterious past, and a large cast of memorable characters from various social classes. The novel is notable for its innovative dual narrative structure (third-person omniscient alternating with Esther's first-person account), its criticism of institutional incompetence and bureaucratic delays, its vivid portrayal of Victorian London including the slums of Tom-all-Alone's, and its detective plot elements involving Inspector Bucket. Dickens uses the interminable Chancery case as a metaphor for systemic dysfunction that destroys lives and drains resources. The novel is considered one of his finest achievements and a masterpiece of Victorian literature.
+"""
+
+Notes = """
+Published in monthly installments from March 1852 to September 1853, then in book form in 1853. I've used 1853 as the canonical publication year since that's when the complete novel appeared in book form and is the date most commonly associated with the work historically.
+"""
+```
+</result>

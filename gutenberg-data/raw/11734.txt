@@ -1,0 +1,23 @@
+Salve Fran! This is a straightforward one to identify - it's a periodical issue rather than a single authored work.
+
+<result>
+```toml
+Title = "Scientific American Supplement, No. 460"
+Author = "Various"
+Year = 1884
+
+Tags = [
+    "non-fiction",
+    "periodical",
+    "science",
+    "technology",
+    "historical-document"
+]
+
+Summary = "Scientific American Supplement was a weekly periodical published alongside Scientific American magazine, providing additional technical articles, patents, and scientific discoveries. Issue No. 460 from October 25, 1884 would have contained articles on contemporary scientific and technological developments of the mid-1880s, including engineering, chemistry, physics, and industrial innovations of that era. Scientific American itself was established in 1845 and became one of the most important popular science publications in the United States."
+
+Notes = "The year 1884 is unambiguous here - this is a dated periodical issue from October 25, 1884. As a collection of various technical articles by different authors, this would not qualify for 'appropriate-for-children' or 'catholic' tags, though the content would generally be educational and appropriate for technically-minded readers of various ages."
+```
+</result>
+
+This is a periodical compilation so the dating is straightforward - it's the publication date of the issue itself. The "Various" attribution is appropriate since these supplement issues typically contained multiple articles by different technical writers and contributors.

@@ -1,0 +1,12 @@
+Based on the text you provided, I can identify this work:
+
+<result>
+```toml
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+Summary = "The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published from 1822 to 1849. It featured a wide variety of content including engravings, articles on natural history, travel narratives, poetry, anecdotes, and general knowledge pieces aimed at educating and entertaining middle-class Victorian readers. This particular issue (Vol. 20, No. 560) from August 4, 1832, includes an article about the elephants in the newly established Zoological Gardens in Regent's Park, London, which opened in 1828. The periodical was known for its accessible writing style and illustrations, making knowledge and culture available to a broad audience."
+Notes = "The year 1832 is taken directly from the publication date shown in the text (SATURDAY, AUGUST 4, 1832). This is a periodical rather than a single-authored book, so 'Various' is appropriate for the author field. The Mirror was a significant publication in its time, representing the Victorian era's enthusiasm for self-improvement and the democratization of knowledge. The Zoological Gardens mentioned in this issue were relatively new at the time, having opened just a few years earlier."
+```
+</result>

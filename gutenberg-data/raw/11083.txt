@@ -1,0 +1,26 @@
+Looking at this text, I can identify this as a work from the "Good Child's Library" series, specifically the tenth book titled "The Parables of the Saviour, in Easy Verse."
+
+<result>
+```toml
+Title = "The Parables of the Saviour, in Easy Verse"
+Author = "Anonymous"
+Year = 1851
+
+Tags = [
+    "non-fiction",
+    "religious",
+    "appropriate-for-children",
+    "catholic",
+    "poetry",
+    "educational"
+]
+
+Summary = """
+This is the tenth book in 'The Good Child's Library' series, a collection of religious educational materials designed for children in the mid-19th century. The work presents the parables of Jesus Christ in verse form, making them more accessible and memorable for young readers. The book was published with elaborate color illustrations (using an oil color printing process that was innovative for its time) depicting biblical scenes. The series aimed to encourage Scripture reading among children by presenting New Testament narratives in an attractive, engaging format while maintaining doctrinal soundness suitable for Catholic instruction.
+"""
+
+Notes = """
+The year 1851 is taken directly from the title page of this edition. This appears to be an American Catholic publication, as indicated by the publisher's claim to originating the oil color printing process "in this country" and the explicitly Catholic educational aims (references to making the Bible accessible while maintaining proper religious formation). The work is clearly intended to have ecclesiastical approval, given its educational purpose and the era's publishing standards for Catholic children's materials.
+"""
+```
+</result>

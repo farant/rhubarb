@@ -1,0 +1,26 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the content, this is clearly "The Secret of the Tower" by Anthony Hope, published in 1919. Anthony Hope is best known for "The Prisoner of Zenda" and its sequel "Rupert of Hentzau." This appears to be a post-WWI era novel (given the 1919 publication date, which coincides with the end of World War I).
+
+<result>
+```toml
+Title = "The Secret of the Tower"
+Author = "Anthony Hope"
+Year = 1919
+
+Tags = [
+    "fiction",
+    "mystery",
+    "adventure",
+    "post-wwi"
+]
+
+Summary = """
+'The Secret of the Tower' is a mystery/adventure novel by Anthony Hope (Sir Anthony Hope Hawkins), published in 1919. Hope is best known for his Ruritanian romances 'The Prisoner of Zenda' (1894) and 'Rupert of Hentzau' (1898). This later work appears to be a post-World War I mystery involving characters including Doctor Mary (suggesting a female physician, which was progressive for the era), a General, Captain Alec, and Mr. Saffron, centered around some secret associated with a tower. The chapter titles suggest intrigue, secrets, and possibly themes related to the aftermath of WWI, including references to Morocco and military characters, reflecting the geopolitical concerns of the immediate post-war period.
+"""
+
+Notes = """
+Year chosen is 1919, the original publication date clearly stated in the text itself. This is a straightforward case with no ambiguity about editions or translations. The work reflects the immediate post-WWI period in British literature, a time of significant social change including greater roles for women (note 'Doctor Mary' as a character).
+"""
+```
+</result>

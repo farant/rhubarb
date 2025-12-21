@@ -1,0 +1,23 @@
+<result>
+```toml
+Title = "Beacon Lights of History, Volume I: The Old Pagan Civilizations"
+Author = "John Lord"
+Year = 1883
+
+Tags = [
+    "non-fiction",
+    "history",
+    "lectures",
+    "educational",
+    "appropriate-for-children"
+]
+
+Summary = """
+'Beacon Lights of History' is a multi-volume series of historical lectures by John Lord (1810-1894), an American historian and lecturer who was enormously popular in the 19th century. Volume I focuses on 'The Old Pagan Civilizations,' examining ancient societies before Christianity. Lord was known for his engaging lecture style that made history accessible to general audiences. His work aimed to illuminate the great figures and movements of history, showing how they shaped civilization. The series was widely used in schools and for self-education in the late 19th and early 20th centuries. Lord presents history through a Christian lens, interpreting ancient civilizations in light of their relationship to what he saw as the inevitable progress toward Christian civilization.
+"""
+
+Notes = """
+The complete 'Beacon Lights of History' series was published between 1883-1896. Volume I was among the first volumes published around 1883. Lord died in 1894, and some later volumes were completed posthumously. While Lord was a Protestant Christian writing from a Christian worldview, this is not a Catholic work and would not receive a nihil obstat or imprimatur. The work represents 19th-century American Protestant historiography with its characteristic interpretation of history as progressive revelation leading to Christian civilization.
+"""
+```
+</result>

@@ -1,0 +1,43 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+```toml
+Title = "The Second Generation"
+Author = "David Graham Phillips"
+Year = 1906
+
+Tags = [
+    "fiction",
+    "novel",
+    "american-literature",
+    "social-commentary",
+    "20th-century"
+]
+
+Summary = """
+'The Second Generation' is a novel by David Graham Phillips, an American \
+journalist and novelist who was part of the muckraking movement. Phillips was \
+known for his social realist fiction that criticized American society, \
+particularly the wealthy class and political corruption. This novel explores \
+themes common to Phillips' work: the inheritance of wealth, the moral decay of \
+the upper classes, and the challenges faced by those who inherit rather than \
+earn their fortunes. The chapter titles suggest a narrative about family \
+legacy, wills, legal matters, and romantic entanglements within the context of \
+generational wealth transfer. Phillips' work often examined how second-generation \
+wealth affected character and society.\
+"""
+
+Notes = """
+The year 1906 is clearly indicated on the title page. This was during Phillips' \
+most productive period as a novelist. He was not a Catholic author - he was a \
+secular progressive reformer and muckraker who was critical of many American \
+institutions. The work would not be considered suitable for an imprimatur. \
+Phillips was assassinated in 1911 by a man who believed one of his novels \
+defamed his family.\
+"""
+
+[Additional_Classification]
+appropriate-for-children = false
+catholic = false
+```
+</result>

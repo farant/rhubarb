@@ -1,0 +1,22 @@
+I recognize this as a work by Epictetus, the Stoic philosopher. Let me analyze the text to provide you with the structured information you requested.
+
+<result>
+```toml
+Title = "A Selection from the Discourses of Epictetus with the Encheiridion"
+Author = "Epictetus (translated by George Long)"
+Year = 108
+
+[Tags]
+categories = ["non-fiction", "philosophy"]
+audience = ["appropriate-for-children"]
+religious = []
+
+Summary = """
+This work contains selected discourses (lectures and conversations) of Epictetus along with the Encheiridion (meaning 'Manual' or 'Handbook'), which is a brief compendium of Stoic ethical advice. Epictetus (c. 50-135 AD) was a Greek Stoic philosopher who was born a slave in Hierapolis, Phrygia. He studied under Musonius Rufus and eventually gained his freedom. After being exiled from Rome by Emperor Domitian around 93 AD, he established a philosophical school in Nicopolis in northwestern Greece. Epictetus wrote nothing himself; his teachings were recorded by his student Arrian. The Discourses represent his philosophical teachings on ethics, logic, and how to live a good life according to Stoic principles, emphasizing what is within our control versus what is not. The Encheiridion is a shorter, more practical handbook derived from the Discourses. This translation by George Long (1800-1879) was one of the most popular English versions in the 19th century.
+"""
+
+Notes = """
+Dating Epictetus' works is challenging since he wrote nothing himself. The Discourses and Encheiridion were compiled by his student Arrian sometime between 108-125 AD. I've chosen 108 AD as a reasonable middle estimate for when Arrian likely began compiling these teachings, though the actual lectures would have been delivered over many years. Some scholars prefer dating it closer to 125 AD. The philosophical content reflects teachings from Epictetus' school in Nicopolis after his exile from Rome (c. 93 AD). This particular translation by George Long was published in the 19th century.
+"""
+```
+</result>

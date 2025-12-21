@@ -1,0 +1,32 @@
+Alright, based on the text you've shown me, this is clearly **James Boswell's _Life of Samuel Johnson_**. Specifically, this is Volume VI from George Birkbeck Hill's scholarly edition from 1887.
+
+For the metadata:
+
+- **Title**: The most famous edition that codified this work is Boswell's original publication in 1791
+- **Author**: James Boswell 
+- **Year**: The original _Life of Johnson_ was published in 1791. Hill's edition (1887) is an important scholarly edition, but for a historical timeline, 1791 is the seminal date
+- This is one of the most celebrated biographies in English literature - Boswell essentially invented modern biography with this work through his detailed recording of conversations and his intimate knowledge of Johnson over many years
+
+<result>
+```toml
+Title = "The Life of Samuel Johnson, LL.D."
+Author = "James Boswell"
+Year = 1791
+
+Tags = [
+    "non-fiction",
+    "biography",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+Boswell's Life of Johnson is widely considered one of the greatest biographies ever written in the English language. James Boswell (1740-1795) met Samuel Johnson in 1763 and maintained a close friendship with the great English lexicographer, critic, and conversationalist until Johnson's death in 1784. Boswell meticulously recorded Johnson's conversations, habits, and opinions, creating an intimate and vivid portrait that revolutionized biographical writing. The work includes Boswell's famous Journal of a Tour to the Hebrides (1773) and provides invaluable insight into 18th-century literary London. This particular volume (VI) is from George Birkbeck Hill's scholarly edition published in 1887, which includes extensive annotations, addenda, and an index.
+"""
+
+Notes = """
+Year chosen: 1791 - the original publication date of Boswell's Life of Johnson. While this excerpt is from Hill's 1887 scholarly edition (which became the standard scholarly text), for a historical timeline the 1791 date is most appropriate as it marks when this groundbreaking biography first appeared and transformed the genre.
+"""
+```
+</result>
+
+Ave, Fran. This is a straightforward identification - Boswell's Johnson is one of those landmark texts. The 1791 date captures the historical moment when this work entered the world and changed how biography was written.

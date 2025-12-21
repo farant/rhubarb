@@ -1,0 +1,22 @@
+I'll analyze this text from Project Gutenberg to identify the work, author, and publication details.
+
+<result>
+```toml
+Title = "Chivalry"
+Author = "James Branch Cabell"
+Year = 1909
+
+[Tags]
+categories = ["fiction"]
+audience = ["appropriate-for-children"]
+religious = []
+
+Summary = """
+'Chivalry' is a collection of romantic historical tales by James Branch Cabell, one of America's most distinctive early 20th-century writers. The work consists of interconnected stories set in medieval times, exploring themes of romance, honor, and idealized love through various historical and legendary figures. Cabell was known for his elaborate prose style, ironic wit, and creation of an intricate fictional genealogy connecting his various works. This book fits into his larger 'Biography of the Life of Manuel' series, which traces an imaginary lineage through romantic and chivalric tales. The work reflects Cabell's fascination with medieval romance traditions and his characteristic blend of romanticism and skepticism.
+"""
+
+Notes = """
+While this Project Gutenberg edition is dated 1921, 'Chivalry' was originally published in 1909 by Harper & Brothers. The 1921 date likely refers to a revised or reissued edition. I've chosen 1909 as the historically accurate publication year for the original work. Cabell revised and republished several of his works throughout his career, particularly after the controversy surrounding 'Jurgen' (1919) brought him wider attention. The dedication to 'Anne Branch Cabell' and the introduction discussing Cabell's cohesive body of work suggest this may be from a later collected edition, but the work itself originates from 1909.
+"""
+```
+</result>

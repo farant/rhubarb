@@ -1,0 +1,22 @@
+Salve Fran! Based on the text excerpt you provided, I can identify this work and provide the structured information you requested.
+
+<result>
+```toml
+Title = "History of Modern Philosophy: From Nicolas of Cusa to the Present Time"
+Author = "Richard Falckenberg"
+Year = 1886
+
+[Tags]
+categories = ["non-fiction"]
+audience = ["appropriate-for-children"]
+religious = []
+
+Summary = """
+This is a comprehensive academic survey of modern Western philosophy, tracing its development from the Renaissance philosopher Nicholas of Cusa (15th century) through the late 19th century. Written by German philosopher Richard Falckenberg, Professor at the University of Erlangen, this work was designed as a middle-ground textbook—more detailed than brief compendiums but more accessible than exhaustive multi-volume histories. Falckenberg studied under major German philosophers including Kuno Fischer, Lotze, and J.E. Erdmann, and this work reflects the rigorous German academic tradition of philosophical historiography. The book would have covered major figures like Descartes, Spinoza, Leibniz, the British empiricists, Kant, and the German idealists, making it a standard reference work for university philosophy students of its era.
+"""
+
+Notes = """
+The year chosen (1886) represents the first German edition publication date, which would precede this 1893 "Third American from the Second German Edition." This is an original scholarly work rather than a translation of older material, so the original publication date is most historically relevant. The work is not categorized as 'catholic' despite Nicholas of Cusa being a Catholic cardinal, because Falckenberg himself was writing in the German academic tradition of his time, and the work is a scholarly survey rather than a work of Catholic philosophy per se.
+"""
+```
+</result>

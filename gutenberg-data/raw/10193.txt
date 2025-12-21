@@ -1,0 +1,10 @@
+<result>
+```toml
+Title = "Backyard Conversation Between Mrs. Reilly and Mrs. Finnegan"
+Author = "Ada Jones"
+Year = 1910
+Tags = ["audio-recording", "comedy", "historical-document", "appropriate-for-children"]
+Summary = "This is an early audio recording from the Edison cylinder era, featuring Ada Jones performing a comedic dialogue between two Irish-American women gossiping over the backyard fence. Ada Jones (1873-1922) was one of the most prolific and popular recording artists of the early phonograph era, known especially for her ethnic comedy routines and character voices. This type of 'backyard conversation' sketch was a popular vaudeville and phonograph format in the early 1900s, representing everyday immigrant life with humor and dialect. The recording comes from the Edison National Historic Site collection."
+Notes = "The exact recording date is difficult to pinpoint from this metadata alone. Ada Jones was most active recording for Edison between roughly 1905-1920. Given the title format and the Edison cylinder context, I'm estimating circa 1910 as a reasonable middle point of her peak recording period, though it could range anywhere from 1905-1915. This represents the approximate era when such recordings were made rather than a definitively known publication year."
+```
+</result>

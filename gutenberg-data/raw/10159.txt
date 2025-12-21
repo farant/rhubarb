@@ -1,0 +1,39 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "England and the War" by Walter Raleigh (not the Elizabethan explorer, but the Oxford professor of English literature, 1861-1922). The book is a collection of addresses delivered during World War I and was published in 1918 in Oxford, as stated on the title page.
+
+<result>
+```toml
+Title = "England and the War"
+Author = "Walter Raleigh"
+Year = 1918
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "appropriate-for-children"
+]
+
+Summary = """
+A collection of wartime addresses by Walter Raleigh (1861-1922), the Oxford \
+Professor of English Literature, delivered during World War I. The work \
+contains six pieces written between 1914 and 1918, including 'Might is Right,' \
+'The War of Ideas,' 'The Faith of England,' 'Some Gains of the War,' 'The War \
+and the Press,' and 'Shakespeare and England' (his British Academy Shakespeare \
+Lecture). These addresses represent intellectual and cultural commentary on \
+Britain's role and ideals during the Great War, exploring themes of national \
+character, patriotism, and England's cultural heritage in wartime. Raleigh was \
+a prominent literary scholar and critic, knighted in 1911, who served on \
+various wartime committees and later became the official historian of the Royal \
+Air Force before his death in 1922.
+"""
+
+Notes = """
+The year 1918 is unambiguous as it appears on the title page and represents \
+when these previously delivered addresses were first collected into book form. \
+The individual addresses span 1914-1918, making this a primary historical \
+document from World War I. Not tagged as 'catholic' as Walter Raleigh was \
+Anglican/Protestant, not Catholic.
+"""
+```
+</result>

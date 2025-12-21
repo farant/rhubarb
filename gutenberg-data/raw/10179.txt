@@ -1,0 +1,24 @@
+<result>
+```toml
+Title = "Extracts from the Ballet-Suite Scheherazade, Part 1"
+Author = "Nikolai Rimsky-Korsakov"
+Year = 1888
+
+[Tags]
+categories = ["non-fiction", "historical-document"]
+appropriate_for_children = true
+catholic = false
+
+Summary = """
+Scheherazade (Op. 35) is a symphonic suite composed by Nikolai Rimsky-Korsakov in 1888, based on the stories from One Thousand and One Nights (Arabian Nights). The work is one of the most popular pieces of Russian classical music and represents Rimsky-Korsakov's masterful orchestration and use of exotic Eastern themes. The suite tells the framing story of Scheherazade, who saves her life by telling the Sultan captivating stories over 1,001 nights. This Project Gutenberg entry is an audio recording from the Edison National Historic Site, performed by the American Concert Orchestra, representing an early 20th-century recording of this beloved work.
+"""
+
+Notes = """
+While this Project Gutenberg file is a recording edited by Thomas Edison (likely early 1900s), the actual musical composition was written by Rimsky-Korsakov in 1888, which is the historically significant date for the work itself. The composition premiered in St. Petersburg on October 28, 1888. Since this is fundamentally Rimsky-Korsakov's creative work being performed, I've attributed the Year to the original composition date rather than the recording date.
+"""
+```
+</result>
+
+Salve, Fran! This is an interesting case - it's an audio recording artifact rather than a traditional text. The Project Gutenberg entry is essentially metadata about an early Edison recording of Rimsky-Korsakov's famous orchestral work. I chose 1888 as the year because that's when the musical composition itself was created, which seems most educationally relevant for a historical timeline, even though this particular recording is from decades later.
+
+The "American Concert Orchestra" listed as author is really just the performing ensemble on this Edison recording - the actual creative author is Rimsky-Korsakov, so I've attributed it to him in the TOML output.

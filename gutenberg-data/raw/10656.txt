@@ -1,0 +1,28 @@
+I'll help you identify this work. Let me analyze the text you've provided.
+
+This is clearly a scholarly edition rather than a single original work. It's a collection of old English plays edited by A.H. Bullen. The text shows this is Volume II of a four-volume series published between 1882-89.
+
+The key point here is that this is an editorial work containing multiple plays from the early modern period (likely 16th-17th century), but the Project Gutenberg text itself is Bullen's scholarly edition from the 1880s. Since you're asking about the Gutenberg text specifically and want to place it on a historical timeline, I should identify it as Bullen's editorial work.
+
+<result>
+```toml
+Title = "A Collection of Old English Plays, Vol. II"
+Author = "A.H. Bullen (editor)"
+Year = 1882
+
+Tags = [
+    "non-fiction",
+    "scholarly-edition",
+    "drama-anthology",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+This is the second volume of A.H. Bullen's four-volume scholarly edition of previously unpublished English Renaissance plays. The volume contains four plays: 'Dick of Devonshire' (possibly by Thomas Heywood), 'The Lady Mother' (by Henry Glapthorne), 'The Tragedy of Sir John Van Olden Barnavelt' (by John Fletcher and Philip Massinger), and 'Captain Underwit' (by James Shirley). Bullen transcribed these plays from manuscripts, including the Egerton MS. 1,994. This collection is significant for making these 17th-century dramatic works accessible to scholars and represents important work in English Renaissance literary scholarship.
+"""
+
+Notes = """
+The date 1882 represents the beginning of the publication period (1882-89) for the four-volume series. This is an editorial/scholarly work rather than original creative work, containing plays originally written in the 17th century but published here for the first time from manuscript sources.
+"""
+```
+</result>

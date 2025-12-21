@@ -1,0 +1,22 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Beltane the Smith" by Jeffery Farnol. Based on the dedication page, it was published in London in August 1915. Jeffery Farnol was an English author known for historical romance novels, and this is one of his medieval romances.
+
+<result>
+```toml
+Title = "Beltane the Smith"
+Author = "Jeffery Farnol"
+Year = 1915
+
+Tags = [
+    "fiction",
+    "historical-romance",
+    "medieval",
+    "adventure"
+]
+
+Summary = "Beltane the Smith is a historical romance novel by Jeffery Farnol set in medieval England. It tells the story of Beltane, a smith who lives in the greenwood and becomes embroiled in adventure, love, and conflict. The novel features typical Farnol elements including chivalric romance, medieval atmosphere, and swashbuckling adventure. Farnol was known for his romanticized historical fiction written in an archaic style meant to evoke the medieval period. This work follows in the tradition of his earlier successes like 'The Broad Highway' and 'The Amateur Gentleman,' blending action, romance, and period detail."
+
+Notes = "The date is clearly marked in the dedication as 'London, August, 1915.' This is the original publication date. Farnol was a popular English novelist of the early 20th century who specialized in historical romances set in medieval and Georgian England. While Farnol may have had Christian influences, this is romantic adventure fiction rather than specifically Catholic literature, so it does not receive the 'catholic' tag."
+```
+</result>

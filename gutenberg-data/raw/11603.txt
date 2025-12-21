@@ -1,0 +1,14 @@
+I can identify this work from your excerpt. This is **"The House of Cobwebs and Other Stories"** by **George Gissing**, published posthumously in **1906**. 
+
+George Gissing (1857-1903) was a Victorian English novelist who died in 1903, and this collection of short stories was published after his death with an introductory survey by Thomas Seccombe.
+
+<result>
+```toml
+Title = "The House of Cobwebs and Other Stories"
+Author = "George Gissing"
+Year = 1906
+Tags = ["fiction", "short-stories"]
+Summary = "A posthumous collection of short stories by Victorian novelist George Gissing, published three years after his death. Gissing was known for his realistic portrayals of late Victorian English life, particularly focusing on the struggles of the lower-middle class and the educated poor. This collection includes nine short stories with an introductory survey by Thomas Seccombe. Gissing's work is characterized by social realism, psychological depth, and often melancholic tone as he explored themes of poverty, social class, and intellectual aspiration."
+Notes = "Year chosen is 1906, the publication year of this specific collection. While Gissing died in 1903, this posthumous collection represents the first publication of these stories together. The individual stories may have been written earlier, but 1906 is the historically accurate date for this work as a collection."
+```
+</result>

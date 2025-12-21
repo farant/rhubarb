@@ -1,0 +1,23 @@
+Looking at this Project Gutenberg text, I can see this is actually an audio recording of the Christmas carol "Away in a Manger" performed by Roger McGuinn, not a traditional text work.
+
+The carol "Away in a Manger" has a complex history - the first two verses are anonymous (often misattributed to Martin Luther), the third verse was written by John Thomas McFarland around 1904-1906, and this particular melody was composed by James Murray in 1887.
+
+However, this specific eBook is a **copyrighted 2003 recording** by Roger McGuinn (of The Byrds fame) from his Folk Den project. So we have a modern performance of a historical carol.
+
+Given your use case of a historical timeline for educational purposes, I need to make a decision: should this be dated to the carol's composition (~1887 for this melody version) or the modern recording (2003)? Since this is specifically Roger McGuinn's copyrighted performance and not a historical text, I'll date it to 2003, but note the carol's origins.
+
+<result>
+Title = "Away in a Manger"
+Author = "Roger McGuinn (performer), James Murray (composer), John Thomas McFarland (third verse), Anonymous (verses 1-2)"
+Year = 2003
+
+[Tags]
+Type = "non-fiction"
+Category = "audio-recording"
+Appropriate_for_children = true
+Catholic = false
+
+Summary = "This is an audio recording (MP3 format) of the traditional Christmas carol 'Away in a Manger' performed by Roger McGuinn and provided through his Folk Den project. The carol itself dates to the late 19th century, with music composed by James Murray in 1887 and the third verse written by John Thomas McFarland around 1904-1906. The first two verses are anonymous. McGuinn, best known as the founder of The Byrds, created the Folk Den as an online repository of traditional folk music performances."
+
+Notes = "I chose 2003 because this is specifically a copyrighted modern recording by Roger McGuinn, not a historical text. If you prefer to date this to the carol's composition (1887 for Murray's melody), that would also be defensible. The carol is Christian in nature but not specifically Catholic - it's a pan-Protestant/Christian carol."
+</result>

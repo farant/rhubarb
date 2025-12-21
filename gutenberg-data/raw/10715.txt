@@ -1,0 +1,20 @@
+I'll read the text and provide the structured information about this work.
+
+<result>
+```toml
+Title = "Counsels and Maxims"
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+[Tags]
+categories = ["non-fiction", "philosophy"]
+appropriate_for_children = false
+catholic = false
+
+[Summary]
+"Counsels and Maxims" is part of Arthur Schopenhauer's larger work "Parerga and Paralipomena" (1851), which contains his philosophical essays on various aspects of human life and conduct. This particular essay focuses on practical wisdom for living, organized into chapters covering general rules, one's relation to oneself, relations to others, worldly fortune, and the ages of life. Schopenhauer (1788-1860) was a German philosopher known for his pessimistic philosophy, heavily influenced by Kant and Eastern philosophy. This translation by T. Bailey Saunders was one of the earliest and most influential English translations of Schopenhauer's work. The text represents Schopenhauer's attempt to distill practical life advice from his philosophical system, though he notes he is not simply repeating commonplace maxims from earlier thinkers like Theognis, Solomon, and La Rochefoucauld, but offering his own distinctive philosophical perspective on the art of living.
+
+[Notes]
+"I chose 1851 as this is when 'Parerga and Paralipomena' was originally published in German. 'Counsels and Maxims' (originally 'Aphorismen zur Lebensweisheit') was a major essay within that collection. While this particular English translation by Saunders came later (late 19th century), the original composition date is most historically accurate for timeline purposes. Schopenhauer was not Catholic and his philosophy was influenced more by Buddhism and Hindu thought, representing a distinct break from Christian philosophical traditions."
+```
+</result>

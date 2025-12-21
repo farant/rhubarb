@@ -1,0 +1,25 @@
+I recognize this as "The Story of Ireland" by Emily Lawless, a historical work from the late 19th century that was part of the popular "Story of the Nations" series. Let me provide the structured information you requested:
+
+<result>
+```toml
+Title = "The Story of Ireland"
+Author = "Emily Lawless (with additions by Mrs. Arthur Bronson)"
+Year = 1887
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "history",
+    "Ireland",
+    "appropriate-for-children"
+]
+
+Summary = """
+'The Story of Ireland' by Emily Lawless is a comprehensive historical narrative of Ireland from ancient times through the late 19th century. It was part of the influential 'Story of the Nations' series published by G.P. Putnam's Sons, which aimed to provide accessible national histories for general readers. Lawless, an Anglo-Irish novelist and historian, presents Ireland's complex history including its Celtic origins, Viking invasions, Norman conquest, English colonization, religious conflicts, and the struggle for independence. The work is notable for its attempt at balanced perspective during a contentious period in Irish-British relations. This edition includes additions by Mrs. Arthur Bronson and was dedicated to the Earl of Dufferin, then Viceroy of India.
+"""
+
+Notes = """
+The first edition was published in 1887, though this Project Gutenberg text appears to be from an 1896 edition (as shown on the title page). I've chosen 1887 as the primary date since that represents the original publication and historical context of the work. Emily Lawless (1845-1913) was a significant literary figure of her time, and this was one of her major historical works alongside her novels about Irish life.
+"""
+```
+</result>

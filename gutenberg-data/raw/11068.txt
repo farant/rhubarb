@@ -1,0 +1,23 @@
+I see the file seems to only have what you pasted. Based on the text you've shown me, I can identify this work:
+
+<result>
+```toml
+Title = "The Spirit of the Age: or, Contemporary Portraits"
+Author = "William Hazlitt"
+Year = 1825
+
+[[Tags]]
+category = "non-fiction"
+
+[[Tags]]
+audience = "appropriate-for-children"
+
+Summary = """
+'The Spirit of the Age' is a collection of critical essays by William Hazlitt, one of the greatest English essayists and critics of the Romantic period. Published in 1825, the work contains character sketches and literary portraits of prominent intellectual figures of early 19th-century England. The essays examine philosophers, poets, writers, and thinkers including Jeremy Bentham, William Godwin, Samuel Taylor Coleridge, Lord Byron, William Wordsworth, Walter Scott, and Thomas Malthus, among others. Hazlitt's penetrating observations combine biographical details with critical assessments of their work and influence on contemporary thought. The book is considered a masterpiece of biographical criticism and provides invaluable insight into the intellectual climate of the Romantic era.
+"""
+
+Notes = """
+Published in 1825. This is Hazlitt's original publication date. While Hazlitt was not Catholic (he was raised as a Unitarian and became more secular), this work represents an important document of English literary criticism and would be suitable for general audiences interested in history and literature.
+"""
+```
+</result>

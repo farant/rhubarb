@@ -1,0 +1,18 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly a reference work - "Character Sketches of Romance, Fiction and the Drama" which is a revised American edition of "The Reader's Handbook" by Rev. E. Cobham Brewer, edited by Marion Harland. The copyright page shows 1892.
+
+E. Cobham Brewer was a British clergyman and scholar, famous for his reference works including "Brewer's Dictionary of Phrase and Fable." This particular work is a comprehensive character encyclopedia covering literary, dramatic, and fictional characters.
+
+<result>
+[book]
+Title = "Character Sketches of Romance, Fiction and the Drama: A Revised American Edition of the Reader's Handbook"
+Author = "E. Cobham Brewer (edited by Marion Harland)"
+Year = 1892
+
+Tags = ["non-fiction", "reference", "literary-criticism"]
+
+Summary = "This is a comprehensive reference work by Rev. E. Cobham Brewer, the renowned British lexicographer famous for 'Brewer's Dictionary of Phrase and Fable.' This particular volume is an encyclopedic collection of character sketches from literature, fiction, and drama. The American edition was edited by Marion Harland (pen name of Mary Virginia Terhune, a popular American author) and published in multiple volumes. It serves as a reader's handbook providing detailed information about fictional and dramatic characters from various works of literature and theater. The book includes illustrations by various artists depicting famous literary characters like Ichabod Crane, Sydney Carton, Cleopatra, and Captain Cuttle."
+
+Notes = "The year 1892 is taken from the copyright page, representing this American edition. Brewer's original 'Reader's Handbook' was first published in England in 1880. This 1892 edition represents Marion Harland's American revision and expansion of that work. The book is not specifically Catholic in nature, though Brewer was an Anglican clergyman, and it's a secular literary reference work covering characters from diverse sources."
+</result>

@@ -1,0 +1,36 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This appears to be a collection of poems by Thomas Gent, a minor English poet from the early 19th century. Based on the publication information (London, 1828) and the advertisement dated December 1827, this is clearly the 1828 edition of his collected poems.
+
+<result>
+Title = "Poems"
+Author = "Thomas Gent"
+Year = 1828
+
+Tags = [
+    "poetry",
+    "non-fiction",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+This is a collection of poems by Thomas Gent, a relatively obscure English poet 
+of the early 19th century. The volume includes both previously published pieces 
+that had been well-received individually, as well as many poems being printed 
+for the first time. Gent describes himself as someone whose financial circumstances 
+prevented him from devoting himself fully to poetry, making it merely 'the amusements 
+of the leisure hours' rather than a full-time pursuit. The Advertisement reveals 
+a touching personal note - during the printing of this collection, Gent suffered 
+a severe domestic loss (likely the death of his wife), which he mentions with 
+considerable emotion at the end of his preface.
+"""
+
+Notes = """
+The year 1828 is clearly indicated as the publication date in London. This is an 
+original work from that period, not a translation or reprint of earlier material. 
+Thomas Gent was not a major literary figure, and little is known about him today. 
+The work is not Catholic in nature - it appears to be secular English poetry from 
+the Romantic era. The tag 'not-appropriate-for-children' is applied as a default 
+for general poetry collections of this period, though the actual content may vary.
+"""
+</result>

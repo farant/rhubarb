@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+<result>
+Title = "The History of Tom Thumb and Other Stories"
+Author = "Anonymous (Traditional English Folklore)"
+Year = 1621
+
+Tags = ["fiction", "folklore", "children's-literature", "appropriate-for-children", "fairy-tales"]
+
+Summary = """
+'The History of Tom Thumb' is one of the oldest English fairy tales, first published as a prose chapbook in 1621 under the title 'The History of Tom Thumbe.' The story features the legendary tiny hero Tom Thumb, supposedly born no bigger than his father's thumb through the intervention of Merlin the magician and the Queen of the Fairies during King Arthur's reign. This collection appears to be a late 19th or early 20th century republication by M.A. Donohue & Co. (a Chicago publisher active from 1890s-1940s) that includes multiple traditional tales. Tom Thumb became an archetypal character in English folklore and has been retold countless times. The tale combines Arthurian legend with fairy tale elements and follows the adventures of the diminutive hero.
+"""
+
+Notes = """
+I chose 1621 as the year because this represents the first known printed publication of 'Tom Thumb' as a prose tale, which is the most historically significant date for this work in English literary history. While the oral tradition likely predates this, and this Gutenberg edition is clearly a much later (c. 1900-1920) illustrated children's edition by Donohue, the 1621 date best represents when this story entered the documented literary canon. The work is not attributed to a single author as it emerged from oral folklore tradition before being transcribed.
+"""
+</result>

@@ -1,0 +1,22 @@
+I recognize this work - it's from John Lord's extensive lecture series on historical figures. Let me analyze the metadata and content to provide you with the structured information.
+
+<result>
+```toml
+Title = "Beacon Lights of History, Volume X: European Leaders"
+Author = "John Lord"
+Year = 1902
+
+[Tags]
+categories = ["non-fiction", "historical"]
+audience = ["appropriate-for-children"]
+religious = []
+
+Summary = """
+'Beacon Lights of History' is a comprehensive lecture series by American historian John Lord (1810-1894), covering major figures and movements in Western civilization. Volume X focuses on European leaders of the 19th century, particularly British political figures during the reform era. This volume examines the period of William IV's reign and the subsequent reform movements, including the Great Reform Act of 1832, the abolition of slavery, and the repeal of the Corn Laws. Lord covers key statesmen like Lord Grey, Sir Robert Peel, Lord Melbourne, and the Duke of Wellington. The series was hugely popular in its time as public lectures and later as published volumes, known for making history accessible and morally instructive to general audiences.
+"""
+
+Notes = """
+Dating this work requires some explanation. John Lord delivered these lectures throughout the 1870s-1880s and died in 1894. However, the complete 15-volume series 'Beacon Lights of History' was published posthumously, with later volumes edited and compiled after his death. Volume X specifically was published around 1902. Since this is a historical work about 19th century figures rather than a primary source from that period, I've chosen 1902 as the most historically accurate publication date. This distinguishes it from the events it describes (1830s-1840s) and represents when this particular volume became available to readers.
+"""
+```
+</result>

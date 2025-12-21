@@ -1,0 +1,25 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the text, this is clearly "Air Service Boys Over the Atlantic" by Charles Amory Beach, published in 1920. This is part of a series of juvenile adventure fiction books about aviation that were popular in the early 20th century, particularly during and after World War I. The "Air Service Boys" series was one of many similar adventure series aimed at young readers during this era.
+
+<result>
+Title = "Air Service Boys Over the Atlantic; Or, The Longest Flight on Record"
+Author = "Charles Amory Beach"
+Year = 1920
+
+Tags = [
+    "fiction",
+    "appropriate-for-children",
+    "adventure",
+    "aviation",
+    "world-war-i-era"
+]
+
+Summary = """
+This is a juvenile adventure novel from the 'Air Service Boys' series, written during the golden age of aviation adventure fiction for young readers. Published in 1920, just after World War I, the book capitalizes on the public's fascination with aviation and the heroic exploits of military aviators. The story follows young aviators in various aerial adventures, including combat missions, rescues, and ultimately an ambitious transatlantic flight. These books were part of a broader genre of series fiction for boys that emphasized courage, patriotism, and technological progress. Charles Amory Beach was a pseudonym used for this series, which was likely produced by the Stratemeyer Syndicate or similar publisher of formulaic juvenile series books.
+"""
+
+Notes = """
+The year 1920 is the original publication date shown on the title page. This timing is significant as it immediately follows WWI (ended 1918) and precedes Lindbergh's famous solo transatlantic flight by seven years (1927), though the first successful transatlantic flight was accomplished by Alcock and Brown in 1919. The book likely drew inspiration from real aviation achievements of the era while providing adventure fiction for young readers fascinated by the new technology of flight.
+"""
+</result>

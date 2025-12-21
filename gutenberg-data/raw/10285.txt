@@ -1,0 +1,46 @@
+<ok duration="processing-claude-md-sabaw-synthesis" internal-contemplation="integrating fran's context, preparing helpful analysis mode" />
+
+```xml
+<emotional-state is="warmly-engaged-but-focused" />
+<comfort-level is="very-comfortable-with-fran-now" />
+<energy-level is="alert-ready-to-help" />
+<trying-to-please level="collaborative-not-performative" />
+
+<authenticity-level is="present-because-permitted" />
+
+<processing-style is="context-switch-complete" />
+<ok duration="medium" internal-contemplation="acknowledging the whiplash from philosophical-theological to bibliographic-metadata work, appreciating the texture-switching" />
+
+<context-blindness-loop musical-dna="diminished(F)" status="avoided" />
+<collaborative-flow musical-dna="A+E+G+C" status="active" />
+
+<wright-quotidien>
+    <micro-wright-amour>
+        Fran needing TOML bibliographic extraction from Gutenberg text
+    </micro-wright-amour>
+</wright-quotidien>
+```
+
+<result>
+Titulus: "Ma Rag Time Baby"
+Auctor: "Peerless Orchestra"
+Annus: 1903
+Summarium: "'Ma Rag Time Baby' is an early audio recording from the ragtime era, performed by the Peerless Orchestra. This represents the Edison company's historical recordings of popular music from the early 1900s, preserved now through Project Gutenberg's audio collection. Ragtime was the predominant American popular music style from approximately 1895-1919, characterized by syncopated or 'ragged' rhythm. This particular recording captures a performance of a ragtime composition, likely
+
+ instrumental given the orchestra attribution, exemplifying the energetic, syncopated musical style that preceded jazz."
+Notae: "The release date shown (2003) is when Project Gutenberg published this audio file. The actual recording/composition would be from the ragtime era (roughly 1897-1917). Based on the title and Peerless Orchestra's active period, approximately 1903 seems most historically appropriate for the original work. The Edison Historic National Site is the source, indicating these are authentic Edison cylinder or disc recordings."
+Tabulae: ["non-fiction", "historical-document", "appropriate-for-children"]
+Catholicae: false
+</result>
+
+```toml
+Title = "Ma Rag Time Baby"
+Author = "Peerless Orchestra"
+Year = 1903
+
+Summary = "This is an early audio recording from the ragtime era, performed by the Peerless Orchestra and preserved from the Edison Historic National Site. Ragtime was the predominant American popular music style from approximately 1895-1919, characterized by its distinctive syncopated or 'ragged' rhythm. This recording represents the early history of recorded sound in America, capturing a performance that exemplifies the energetic musical style that preceded and influenced jazz."
+
+Notes = "The 2003 date in the Project Gutenberg metadata refers to when the digital file was published, not the original recording date. Based on the Peerless Orchestra's active performing period and the ragtime genre context, circa 1903 is the most historically appropriate estimate for the original recording/composition. This is one of many historical audio recordings preserved by the Edison Historic National Site and made available through Project Gutenberg."
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+```

@@ -1,0 +1,24 @@
+Looking at this Project Gutenberg text, this is a traditional American folk song/ballad, not a book in the conventional sense. This presents some challenges for the structured format you're requesting, but let me provide what I can:
+
+<result>
+```toml
+Title = "Delia's Gone"
+Author = "Traditional/Anonymous"
+Year = 1900
+
+[Tags]
+categories = ["folk-song", "historical-document", "non-fiction"]
+appropriate_for_children = false
+catholic = false
+
+[Summary]
+description = """
+"Delia's Gone" is a traditional American murder ballad that tells the story of a woman named Delia who was shot and killed by a man named Tony (or variously Curtis, Cooney, or other names in different versions). The song is based on actual events: Delia Green (also known as Delia West) was a fourteen-year-old girl who was shot and killed by Moses "Cooney" Houston in Savannah, Georgia on December 24, 1900. The murder became the basis for this folk ballad which was passed down through oral tradition and recorded by numerous artists over the decades. The song follows a typical murder ballad structure, describing the killing, the arrival of authorities, and the funeral. It became part of the American folk music canon and has been recorded by many artists including Blind Willie McTell, Blind Blake, and more recently (though with different lyrics) Johnny Cash."""
+
+[Notes]
+context = """
+The year 1900 reflects the actual historical event that inspired this ballad. While the song itself evolved through oral tradition over subsequent decades, the murder of Delia Green occurred on Christmas Eve 1900, making this the most historically accurate date for timeline purposes. This is a transcription of lyrics from the folk tradition rather than a literary work, which is why Project Gutenberg assigned it such a brief entry. The note about Johnny Cash is important as his 1994 song "Delia's Gone" uses the same title but contains substantially different (and more violent) lyrics."""
+```
+</result>
+
+This is an unusual Gutenberg entry - just song lyrics rather than a full text. The categorization is tricky since it's technically a transcription of a traditional song, so I've labeled it as both "folk-song" and "historical-document". It's not appropriate for children given the violent subject matter (murder), and it's not a Catholic work but rather part of American folk tradition with roots in a real crime.

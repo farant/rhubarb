@@ -1,0 +1,21 @@
+<result>
+```toml
+Title = "Joe Burke's Last Stand: Every Story Is A Love Story"
+Author = "John Moncure Wetterau"
+Year = 2000
+
+Tags = [
+    "fiction",
+    "contemporary-fiction",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Joe Burke's Last Stand' is a contemporary work of fiction by American author John Moncure Wetterau, first published in 2000. Based on the copyright notice and Library of Congress registration, this appears to be a novel with the subtitle 'Every Story Is A Love Story', suggesting thematic elements around love and relationships. This is a modern work that was later made available through Project Gutenberg under a Creative Commons license. Little information is widely available about this particular work or author in historical literary records.
+"""
+
+Notes = """
+The year 2000 is chosen based on the explicit copyright notice '(c) 2000 by John Moncure Wetterau' in the text itself. The Library of Congress registration number (00-193498) also confirms this as a work registered in 2000. While the Project Gutenberg copyright notice shows 2003, this refers to the digitization date, not the original publication date of the work.
+"""
+```
+</result>

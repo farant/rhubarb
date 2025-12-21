@@ -1,0 +1,23 @@
+Based on the text you provided, I can identify this work. This is "Counsels and Maxims" by Arthur Schopenhauer, which is part of his larger work "Parerga and Paralipomena" published in 1851. The translator is T. Bailey Saunders, who published this English translation in the late 19th century.
+
+<result>
+```toml
+Title = "Counsels and Maxims"
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+Tags = [
+    "non-fiction",
+    "philosophy",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Counsels and Maxims' (German: 'Aphorismen zur Lebensweisheit') is part of Arthur Schopenhauer's 'Parerga and Paralipomena' (1851), a collection of philosophical essays. This particular section offers practical wisdom and guidance for living, covering topics like our relation to ourselves and others, worldly fortune, and the ages of life. Schopenhauer, known for his pessimistic philosophy influenced by Eastern thought and Kant, here presents accessible ethical reflections and life advice. The work is more practical than his metaphysical writings like 'The World as Will and Representation'. This English translation by T. Bailey Saunders made Schopenhauer's thought widely accessible to English readers in the late Victorian era.
+"""
+
+Notes = """
+The year 1851 represents the original German publication date of 'Parerga and Paralipomena'. T. Bailey Saunders' English translation was published later (around 1890-1893), but since this is Schopenhauer's original work rather than a substantially modified edition, the original publication date is most historically accurate for timeline purposes.
+"""
+```
+</result>

@@ -1,0 +1,25 @@
+I recognize this work! This is "Carnacki, The Ghost Finder" by William Hope Hodgson, one of his most famous works featuring the occult detective Thomas Carnacki.
+
+<result>
+```toml
+Title = "Carnacki, The Ghost Finder"
+Author = "William Hope Hodgson"
+Year = 1910
+
+Tags = [
+    "fiction",
+    "horror",
+    "supernatural",
+    "detective",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+Carnacki, The Ghost Finder is a collection of supernatural detective stories by William Hope Hodgson featuring Thomas Carnacki, an Edwardian occult detective who investigates hauntings and supernatural phenomena. The stories follow a consistent structure where Carnacki invites a small group of friends to dinner and then recounts his latest investigation. Hodgson blends supernatural horror with pseudo-scientific explanations, as Carnacki uses both occult knowledge and invented devices like the 'Electric Pentacle' to combat paranormal threats. The collection includes some of Hodgson's most famous stories, including 'The Gateway of the Monster,' 'The House Among the Laurels,' and 'The Whistling Room.' Hodgson was an innovative early 20th-century writer who significantly influenced the development of both supernatural horror and weird fiction.
+"""
+
+Notes = """
+The text header shows '1910, 1912' which reflects the publication history. Individual Carnacki stories were first published in magazines starting in 1910 (The Idler magazine). The first collected edition appeared in 1913, though some stories appeared in 1910 and 1912. I've chosen 1910 as it represents when the first Carnacki stories appeared in print and when the character was introduced to the reading public. A posthumous expanded edition was published in 1947 with additional stories.
+"""
+```
+</result>

@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+```toml
+Title = "Les Demi-Vierges"
+Author = "Marcel Prévost"
+Year = 1894
+
+Tags = [
+    "fiction",
+    "non-fiction",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Les Demi-Vierges' (The Half-Virgins) is a controversial novel by French writer Marcel Prévost that examines the behavior and moral condition of young women in late 19th-century Parisian high society. The work critiques what Prévost saw as a dangerous new type of young woman who, while technically maintaining virginity, engaged in flirtatious behavior and worldly sophistication that contradicted traditional Catholic ideals of feminine purity. The novel sparked significant debate in its time about female education, morality, and the institution of Christian marriage. Prévost was concerned about the influence of Anglo-Saxon 'flirting' culture on French society and argued that modern education was creating young women incompatible with traditional Christian marriage. The preface (included in this text) defends his observations and clarifies that he was describing a specific minority within the Parisian leisure class, not all French women.
+"""
+
+Notes = """
+The novel was first published in 1894 and became one of Marcel Prévost's most famous and controversial works. It was initially serialized in a Parisian magazine before book publication. While Prévost was a French Catholic writer, this particular work's provocative subject matter and the moral concerns it addresses would likely have been considered controversial even within Catholic circles, thus it may not have received official ecclesiastical approval (nihil obstat/imprimatur). The work is more of a social critique with Catholic moral framework rather than devotional literature.
+"""
+```
+</result>

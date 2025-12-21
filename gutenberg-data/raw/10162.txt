@@ -1,0 +1,26 @@
+I can help you identify this work and create the structured output you need. Based on the text, this is clearly Cassius Dio's "Roman History" (often called "Dio's Rome"), translated by Herbert Baldwin Foster.
+
+Let me provide the TOML format you requested:
+
+<result>
+```toml
+Title = "Roman History (Dio's Rome), Volume III"
+Author = "Cassius Dio"
+Year = 220
+
+[Tags]
+categories = ["non-fiction", "historical-document"]
+audience = []
+religious = []
+
+Summary = """
+Cassius Dio's Roman History is a monumental 80-book work covering Roman history from the legendary founding of Rome to 229 CE. Written in Greek during the reigns of Septimius Severus through Alexander Severus (roughly 211-229 CE), it is one of the most important surviving sources for Roman imperial history. This third volume (translated by Herbert Baldwin Foster in 1906) covers Books 45-51, spanning the critical period from 44 BCE to 29 BCE - including the aftermath of Julius Caesar's assassination, the formation and dissolution of the Second Triumvirate, the civil wars between Octavian and Mark Antony, and the Battle of Actium. Dio was a Roman senator and consul who had access to official records and wrote from an insider's perspective on Roman politics and governance.
+"""
+
+Notes = """
+I chose circa 220 CE as the year because this represents approximately when Dio was actively composing this work (he wrote over a period spanning roughly 200-220+ CE). The translated edition shown is from 1906, but since you asked for the year most historically accurate to the original work itself, the early 3rd century CE date is most appropriate. This is a primary historical source, not a later commentary or annotated edition.
+"""
+```
+</result>
+
+The work is not tagged as "appropriate-for-children" because it contains detailed accounts of political violence, civil war, and assassination. It's also not tagged as "catholic" since Cassius Dio was a pagan Roman writing before Christianity became the dominant religion of the empire - he represents the classical Greco-Roman historical tradition.
