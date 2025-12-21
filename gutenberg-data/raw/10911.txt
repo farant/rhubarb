@@ -1,0 +1,22 @@
+I recognize this work! Let me provide you with the structured information about it.
+
+<result>
+```toml
+Title = "Buried Alive: A Tale of These Days"
+Author = "Arnold Bennett"
+Year = 1908
+
+Tags = [
+    "fiction",
+    "comedy",
+    "satire",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Buried Alive: A Tale of These Days' is a comedic novel by English author Arnold Bennett, first published in 1908. The story follows Priam Farll, a famous but reclusive painter who is terrified of public attention. When his valet dies suddenly, Farll sees an opportunity to escape his fame by switching identities with the deceased servant. The novel satirizes English society, fame, and the art world of the Edwardian era. Bennett was known for his realistic portrayals of English provincial life, though this work is more comedic and fantastic in nature. The book was later adapted into a play and film."""
+
+Notes = """
+1908 is the original publication year. Arnold Bennett was not a Catholic author - he came from a Methodist background and later became more secular/agnostic in his views. The novel is lighthearted comedy/satire rather than having religious themes, so it does not qualify for the 'catholic' tag. The dedication to John Frederick Farrar (identified as M.R.C.S., L.R.C.P. - medical qualifications) suggests a personal friendship, and Bennett humorously calls him a 'collaborator' though this appears to be affectionate jest rather than literal co-authorship."""
+```
+</result>

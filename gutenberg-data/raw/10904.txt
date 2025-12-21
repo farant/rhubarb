@@ -1,0 +1,26 @@
+I'll analyze this Project Gutenberg text and provide structured output in TOML format:
+
+<result>
+```toml
+Title = "Frank Merriwell's Nobility, or The Tragedy of the Ocean Tramp"
+Author = "Burt L. Standish (Gilbert Patten)"
+Year = 1899
+
+Tags = [
+    "fiction",
+    "adventure", 
+    "dime-novel",
+    "young-adult",
+    "pulp-fiction",
+    "non-catholic"
+]
+
+Summary = """
+Frank Merriwell's Nobility is part of the extensive Frank Merriwell series - one of the most successful dime novel series in American publishing history. Written by Gilbert Patten under the pseudonym Burt L. Standish, these stories followed the adventures of Frank Merriwell, an idealized American hero who embodied courage, sportsmanship, and moral virtue. The series ran from 1896-1913 in Tip Top Weekly magazine and was enormously popular with young male readers. Frank Merriwell became a cultural icon representing the ideal of the "muscular Christian" gentleman-athlete. This particular story, 'The Tragedy of the Ocean Tramp,' involves seafaring adventure and was published in the weekly serialized format that made the series famous. The stories typically combined sports, adventure, and moral lessons in an accessible, exciting format.
+"""
+
+Notes = """
+Year chosen as 1899 based on the publication date explicitly stated in the text: "NEW YORK, April 22, 1899." This is the original publication date in Tip Top Weekly. While these dime novels were formulaic entertainment rather than literary works, they had massive cultural influence on American youth culture and ideas of masculinity at the turn of the 20th century.
+"""
+```
+</result>

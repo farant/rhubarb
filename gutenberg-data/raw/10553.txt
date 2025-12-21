@@ -1,0 +1,46 @@
+<result>
+```toml
+Title = "The Pentateuch and The New Testament (Tyndale Bible)"
+Author = "William Tyndale (translator)"
+Year = 1530
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "catholic",
+    "appropriate-for-children"
+]
+
+Summary = """
+This is William Tyndale's pioneering English translation of the Pentateuch (first five books of the Old Testament) and the New Testament, translated directly from Hebrew and Greek sources rather than from the Latin Vulgate. Tyndale's work was revolutionary for making Scripture accessible to English-speaking common people and profoundly influenced all subsequent English Bible translations, including the King James Version. His translation work was considered heretical by authorities at the time, and Tyndale was eventually executed for his efforts in 1536. This particular edition modernizes the spelling while preserving Tyndale's original wording, with some variant readings noted from Coverdale (1535) and Matthew's Bible (1537).
+"""
+
+Notes = """
+I chose 1530 as the year because that's when Tyndale's Pentateuch was first published, which represents the completion of his Old Testament translation work that's featured here alongside his earlier New Testament translation (first published 1526). While Tyndale worked on biblical translation from 1525-1535, the 1530 date represents the significant milestone of the complete Pentateuch publication. Regarding the 'catholic' tag: while Tyndale was Protestant and his work was condemned by the Catholic Church of his era, his translation is of Sacred Scripture itself, which is the foundation of Christian faith including Catholicism. However, given the historical context that this was a Protestant Reformation-era translation explicitly rejected by Catholic authorities (and Tyndale was executed partly for this work), the 'catholic' tag may not be appropriate despite the sacred content. I'll revise this.
+"""
+```
+</result>
+
+Actually, let me reconsider the 'catholic' tag given your criteria. While this is Sacred Scripture, Tyndale was a Protestant reformer whose work was explicitly condemned by Catholic authorities and would definitely NOT have received a nihil obstat or imprimatur. Let me revise:
+
+<result>
+```toml
+Title = "The Pentateuch and The New Testament (Tyndale Bible)"
+Author = "William Tyndale (translator)"
+Year = 1530
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "appropriate-for-children"
+]
+
+Summary = """
+This is William Tyndale's pioneering English translation of the Pentateuch (first five books of the Old Testament) and the New Testament, translated directly from Hebrew and Greek sources rather than from the Latin Vulgate. Tyndale's work was revolutionary for making Scripture accessible to English-speaking common people and profoundly influenced all subsequent English Bible translations, including the King James Version. His translation work was considered heretical by Catholic authorities at the time, and Tyndale was eventually executed for his efforts in 1536. This particular edition modernizes the spelling while preserving Tyndale's original wording, with some variant readings noted from Coverdale (1535) and Matthew's Bible (1537).
+"""
+
+Notes = """
+Year chosen as 1530 when Tyndale's Pentateuch was first published, representing the completion of his Old Testament work featured here. His New Testament was published earlier (1526). Did not include 'catholic' tag despite sacred content because Tyndale was a Protestant reformer whose work was condemned by the Catholic Church and would not have received ecclesiastical approval—he was executed partly for this translation work.
+"""
+```
+</result>

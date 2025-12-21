@@ -1,0 +1,24 @@
+I'll analyze this Project Gutenberg text to extract the information you need and format it as TOML.
+
+<result>
+```toml
+Title = "The Gospel of the Pentateuch: A Set of Parish Sermons"
+Author = "Charles Kingsley"
+Year = 1863
+
+Tags = [
+    "non-fiction",
+    "religious",
+    "sermons",
+    "appropriate-for-children"
+]
+
+Summary = """
+Charles Kingsley (1819-1875) was an English clergyman, novelist, and social reformer associated with Christian Socialism and the Broad Church movement within Anglicanism. 'The Gospel of the Pentateuch' is a collection of parish sermons exploring Christian theological themes found in the first five books of the Hebrew Bible (Torah). Kingsley was known for his muscular Christianity philosophy and efforts to make Christianity socially relevant. The work is dedicated to Canon Stanley, whose writings on the Jewish Church influenced Kingsley's approach. As a collection of sermons, it represents Victorian Anglican homiletics and biblical interpretation, seeking to draw out the evangelical message (gospel) from Old Testament narratives.
+"""
+
+Notes = """
+The exact publication year isn't stated in the excerpt, but Charles Kingsley's sermons were typically published in the 1860s. Based on historical records, 'The Gospel of the Pentateuch' was first published around 1863. While Kingsley was a clergyman in the Church of England (Anglican), this work would not receive a Catholic imprimatur as Anglicanism separated from Rome in the 16th century. The work represents Protestant biblical interpretation and homiletics rather than Catholic tradition.
+"""
+```
+</result>

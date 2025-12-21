@@ -1,0 +1,39 @@
+I recognize this work! Let me analyze it and provide you with the structured information.
+
+This is Arthur Schopenhauer's philosophical essay "The Wisdom of Life" (originally "Aphorismen zur Lebensweisheit"), which is part of his larger work "Parerga and Paralipomena" published in 1851. This particular translation by T. Bailey Saunders was first published in the 1890s.
+
+<result>
+```toml
+Title = "The Wisdom of Life"
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+Tags = [
+    "non-fiction",
+    "philosophy",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'The Wisdom of Life' (Aphorismen zur Lebensweisheit) is one of Arthur Schopenhauer's \
+most accessible philosophical essays, part of his 'Parerga and Paralipomena' (1851). \
+In this work, Schopenhauer presents practical philosophy on how to achieve eudaimonia \
+(happiness/flourishing) through understanding what truly contributes to human happiness. \
+He divides human existence into three fundamental categories: what one is (personality), \
+what one has (property), and what one represents (reputation/position). Despite his \
+famous pessimism about existence, this essay offers practical wisdom for living well. \
+Schopenhauer was heavily influenced by Kant, Plato, and Eastern philosophy, particularly \
+Buddhism and Hinduism, though his philosophy is fundamentally atheistic and incompatible \
+with Catholic teaching.
+"""
+
+Notes = """
+I chose 1851 as the year because that's when the original German work 'Parerga und \
+Paralipomena' was published, which contains this essay. The T. Bailey Saunders English \
+translation came later (1890s), but for historical timeline purposes, the original \
+composition date is most educationally accurate. Note: Schopenhauer was baptized Lutheran \
+but was an explicit atheist and pessimist who rejected Christian metaphysics, so this \
+does not receive a 'catholic' tag despite its philosophical merit.
+"""
+```
+</result>

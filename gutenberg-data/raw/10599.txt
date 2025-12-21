@@ -1,0 +1,40 @@
+I can identify this work for you. Let me create the structured output based on what I can determine from the text.
+
+<result>
+```toml
+Title = "Lost in the Air"
+Author = "Roy J. Snell"
+Year = 1920
+
+Tags = [
+    "fiction",
+    "appropriate-for-children",
+    "adventure",
+    "mystery",
+    "aviation"
+]
+
+Summary = """
+'Lost in the Air' is an adventure novel by Roy J. Snell, part of his \
+'Mystery Stories for Boys' series. The story follows Bruce Manning and \
+Barney Menter, two recently discharged WWI aviation servicemen (from \
+Canada and the U.S. respectively), who embark on an Arctic adventure. \
+The narrative involves Arctic exploration, encounters with indigenous \
+peoples, walrus hunts, treasure seeking, and various perils in the far \
+north. Roy J. Snell was a prolific American author who wrote numerous \
+adventure and mystery series for young readers in the early 20th century, \
+often featuring themes of aviation, exploration, and resourceful young \
+protagonists overcoming challenges.\
+"""
+
+Notes = """
+The year 1920 is clearly stated in the original publication information \
+and represents the actual publication date of this work. This appears to \
+be the original edition published by Reilly & Lee Company as part of \
+their juvenile adventure series. Roy J. Snell (1878-1959) was writing \
+during the immediate post-WWI era when aviation stories were extremely \
+popular with young readers, and he capitalized on this interest with \
+stories featuring recently discharged aviators having adventures.\
+"""
+```
+</result>

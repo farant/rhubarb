@@ -1,0 +1,28 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the text, this is clearly "French Mediaeval Romances from the Lays of Marie de France," translated by Eugene Mason and published in 1911. The introduction explains that this is a collection of translations primarily from Marie de France's 12th-century lays, with additional medieval romance stories added.
+
+Marie de France was a 12th-century poet who wrote in Anglo-Norman French, likely between 1160-1215. Her original lays date from approximately 1160-1178. However, since this specific work is Eugene Mason's 1911 English translation collection rather than Marie's original medieval texts, I'll provide information reflecting both aspects.
+
+<result>
+Title = "French Mediaeval Romances from the Lays of Marie de France"
+Author = "Marie de France (translated by Eugene Mason)"
+Year = 1911
+
+Tags = [
+    "non-fiction",
+    "poetry",
+    "translation",
+    "medieval-literature",
+    "romance",
+    "appropriate-for-children"
+]
+
+Summary = """
+This is Eugene Mason's 1911 English translation of the Lays of Marie de France, supplemented with additional medieval romance stories. Marie de France was a 12th-century poet (likely writing c. 1160-1178) who composed narrative poems in Anglo-Norman French. She is one of the earliest known female authors in European vernacular literature. Her lays are short narrative poems that typically deal with courtly love, chivalry, and Celtic folklore themes. The collection focuses primarily on romantic love and represents an important window into medieval literary culture and the rare voice of a medieval woman artist. The translator notes this may be the fullest English version of Marie's lays available at that time.
+"""
+
+Notes = """
+Year chosen: 1911 represents the publication year of this specific translation by Eugene Mason. The original lays by Marie de France date from approximately 1160-1178 in the 12th century. Since this is a translation collection rather than the original medieval texts, and the use case is a historical timeline where the translation itself has scholarly and historical value, 1911 is the most appropriate date. If you wanted to represent Marie de France's original composition period instead, approximately 1170 would be more accurate.
+"""
+</result>

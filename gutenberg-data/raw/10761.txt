@@ -1,0 +1,25 @@
+I can identify this work based on the title page and contents. Let me provide the structured information:
+
+<result>
+```toml
+Title = "Essays of Robert Louis Stevenson"
+Author = "Robert Louis Stevenson"
+Year = 1906
+
+Tags = [
+    "non-fiction",
+    "essays",
+    "literary",
+    "philosophy",
+    "appropriate-for-children"
+]
+
+Summary = """
+This is a curated collection of Robert Louis Stevenson's personal essays, edited by William Lyon Phelps and published in 1906, two years after Stevenson's death in 1894. The collection focuses on essays that reveal Stevenson's personality, character, and philosophy rather than his formal literary criticism. Notable essays include 'An Apology for Idlers,' 'Aes Triplex' (a meditation on mortality and courage), 'On the Enjoyment of Unpleasant Places,' and 'Talk and Talkers.' Stevenson (1850-1894) was a Scottish novelist and essayist best known for 'Treasure Island' and 'Strange Case of Dr Jekyll and Mr Hyde.' His essays are celebrated for their elegant prose style, optimistic philosophy despite his chronic illness, and insights into the art of living well. This particular edition was designed for educational use in schools and colleges.
+"""
+
+Notes = """
+I chose 1906 as the year because this is a posthumous editorial collection published specifically in this form. While the individual essays were written earlier (during Stevenson's lifetime, primarily in the 1870s-1880s), this particular work as a unified, edited volume with Phelps's introduction and notes is a 1906 publication. For a historical timeline, this represents when this influential educational edition entered circulation and helped establish Stevenson's essays as part of the English literary canon in American academia. If you prefer the dates when the individual essays were originally published, those would range from approximately 1876-1887, but that seems less appropriate for this specific editorial collection.
+"""
+```
+</result>

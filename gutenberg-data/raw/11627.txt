@@ -1,0 +1,29 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is a compilation of sermons, not a single authored work. The text shows it's "The World's Great Sermons, Volume II (of 10)" compiled by Grenville Kleiser, covering the period from Hooker to South. This appears to be an anthology published in the early 20th century (Grenville Kleiser was active around 1900-1920s).
+
+The volume contains sermons by various historical preachers, starting with Thomas Hooker (1586-1647), an important Puritan divine and founder of Connecticut. This is a collection of historical religious texts, not original works by a single author.
+
+<result>
+```toml
+Title = "The World's Great Sermons, Volume II: Hooker to South"
+Author = "Various (Compiled by Grenville Kleiser)"
+Year = 1908
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "christian-theology",
+    "sermons",
+    "anthology"
+]
+
+Summary = """
+This is the second volume of a ten-volume anthology of historically significant Christian sermons, compiled by Grenville Kleiser with assistance from contemporary theologians and an introduction by Lewis O. Brastow of Yale. This volume covers the period from Thomas Hooker (1586-1647) through Robert South, spanning roughly the 17th century. It includes sermons from prominent English-speaking Protestant divines of the Reformation and post-Reformation period. Thomas Hooker, the first preacher featured, was a Cambridge-educated Puritan who fled England under Archbishop Laud's persecution and became a founder of Connecticut. The anthology serves as both a theological resource and a historical document of Christian preaching during a pivotal period in English and American religious history.
+"""
+
+Notes = """
+The year 1908 is estimated based on Grenville Kleiser's active publishing period and typical publication dates for such anthologies. This is a Protestant anthology focusing on Reformed and Anglican preachers, not a Catholic work. While it contains valuable historical religious material, it would not carry a nihil obstat or imprimatur. The 'appropriate-for-children' tag is omitted as this is scholarly theological material intended for mature readers and seminary students.
+"""
+```
+</result>

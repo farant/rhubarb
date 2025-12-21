@@ -1,0 +1,20 @@
+<result>
+```toml
+Title = "Dixieland"
+Author = "Lopez and Hamilton's Kings of Harmony"
+Year = 1917
+
+[Tags]
+categories = ["non-fiction", "historical-document"]
+appropriate_for_children = true
+catholic = false
+
+Summary = """
+This is an audio recording of the jazz/ragtime standard "Dixieland" (also known as "Original Dixieland One-Step") performed by Lopez and Hamilton's Kings of Harmony. The recording comes from the Edison National Historic Site archives and represents early 20th century American popular music. The Original Dixieland Jass Band first recorded "Dixieland Jass Band One-Step" in 1917, which became one of the first jazz recordings ever made and a landmark in American music history. This Project Gutenberg entry preserves this historical audio recording in MP3 format.
+"""
+
+Notes = """
+I've chosen 1917 as the year because that's when "Dixieland" (the Original Dixieland One-Step) was first recorded and became a foundational work in jazz history. While this specific performance by Lopez and Hamilton's Kings of Harmony may have been recorded slightly later (Edison made many recordings in the late 1910s-1920s), the work itself dates to 1917. For a historical timeline focused on when works entered cultural consciousness, 1917 is the most educationally appropriate date as it marks the birth of recorded jazz. If more specific recording date information for this particular Lopez and Hamilton performance were available, that could refine this estimate to perhaps 1917-1920.
+"""
+```
+</result>

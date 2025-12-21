@@ -1,0 +1,20 @@
+<result>
+```toml
+Title = "Hungarian Rhapsody No. 2"
+Author = "Franz Liszt"
+Year = 1847
+
+[Tags]
+categories = ["non-fiction", "music"]
+appropriate_for_children = true
+catholic = false
+
+Summary = """
+Hungarian Rhapsody No. 2 in C-sharp minor is one of Franz Liszt's most famous piano compositions, part of his set of 19 Hungarian Rhapsodies. The work is based on Hungarian folk melodies and csárdás dance forms, featuring a dramatic slow introduction (Lassan) followed by a virtuosic fast section (Friska). It has become one of the most recognizable pieces in the classical piano repertoire and has been arranged for orchestra and other ensembles. This Project Gutenberg entry contains an audio recording by the Edison Concert Band, representing an early 20th century performance/arrangement of Liszt's work.
+"""
+
+Notes = """
+The composition was originally published in 1847 as a piano work. While this particular Project Gutenberg entry is an audio recording by the Edison Concert Band (likely from the early 1900s based on Edison's recording era), the historically appropriate year is when Liszt composed and published the original work. The piece was part of Liszt's series exploring Hungarian musical themes during his romantic nationalist period.
+"""
+```
+</result>

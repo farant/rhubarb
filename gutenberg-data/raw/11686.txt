@@ -1,0 +1,27 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "Without Dogma" (Polish: "Bez dogmatu") by Henryk Sienkiewicz, translated by Iza Young. Based on the translator's name and the 1893 date shown, this appears to be the first English translation.
+
+<result>
+```toml
+Title = "Without Dogma"
+Author = "Henryk Sienkiewicz"
+Year = 1891
+
+Tags = [
+    "fiction",
+    "non-fiction=false",
+    "historical-document=false",
+    "appropriate-for-children=false",
+    "catholic=true"
+]
+
+Summary = """
+'Without Dogma' is a psychological novel by Nobel Prize-winning Polish author Henryk Sienkiewicz, presented as the diary of Leon Płoszowski, a wealthy, overeducated Polish aristocrat suffering from excessive skepticism and inability to commit to beliefs or action. Unlike Sienkiewicz's famous historical epics ('Quo Vadis', 'The Trilogy'), this is a modern psychological study exploring themes of paralysis by analysis, the crisis of faith in the late 19th century, and the dangers of excessive intellectualism without moral grounding. The protagonist represents the spiritual malaise of the modern educated European who, having questioned all dogmas and traditions, finds himself unable to act or love decisively. It's considered one of Sienkiewicz's most philosophically profound works, and reflects Catholic concerns about the corrosive effects of radical skepticism and relativism on the soul.
+"""
+
+Notes = """
+The novel was originally published in Polish in 1891. This translation by Iza Young appeared in 1893. I chose 1891 as it represents the original publication date of the work itself. Sienkiewicz was a devout Catholic, and while this novel is a psychological portrait rather than explicitly religious literature, it carries strong Catholic philosophical underpinnings in its critique of moral relativism and dogma-less existence. The work would likely have received ecclesiastical approval given its moral framework, though it deals with mature themes of existential crisis unsuitable for children.
+"""
+```
+</result>

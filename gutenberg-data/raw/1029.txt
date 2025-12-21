@@ -1,0 +1,27 @@
+Salve, Fran!
+
+Based on the text you've provided, I can identify this work quite clearly. Here's the structured information:
+
+<result>
+```toml
+Title = "The Night-Born"
+Author = "Jack London"
+Year = 1913
+
+Tags = [
+    "fiction",
+    "short-stories",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'The Night-Born' is a collection of ten short stories by American author Jack London, published in 1913. The collection showcases London's characteristic exploration of human nature, violence, survival, and the primitive within civilization. The stories range from boxing matches to tales of adventure, reflecting London's naturalistic style and his fascination with the raw, primal aspects of human experience. Jack London (1876-1918) was one of the most popular American writers of the early 20th century, known for works like 'The Call of the Wild' and 'White Fang'. This collection represents his mature period as a short story writer.
+"""
+
+Notes = """
+Year chosen is 1913, the original publication date of this short story collection. While individual stories may have appeared in magazines earlier, 1913 is when they were collected and published together as 'The Night-Born'. This is the most historically accurate date for cataloging purposes. Note: 'catholic' tag not applied - Jack London was not Catholic and his works often reflected socialist and naturalist philosophies rather than Catholic themes.
+"""
+```
+</result>
+
+The text fragment you've provided is the opening of the title story "The Night-Born," which begins with a frame narrative set in the Alta-Inyo Club in San Francisco, where the character Trefethan is about to launch into a tale of adventure and romance from his past.

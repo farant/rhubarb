@@ -1,0 +1,28 @@
+Based on my knowledge and the search confirmation, I can identify this work. "Fruitfulness" (Fécondité) was originally published in 1899 as the first of Zola's "Four Gospels" series. This was one of Zola's final major works, written near the end of his life (he died in 1902).
+
+<result>
+```toml
+Title = "Fruitfulness (Fécondité)"
+Author = "Émile Zola"
+Year = 1899
+
+Tags = [
+    "fiction",
+    "social-criticism",
+    "naturalism",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+'Fruitfulness' is the first novel in Émile Zola's final tetralogy, 'Les Quatre Évangiles' (The Four Gospels), which were meant to embody the cardinal principles of human life: Fruitfulness, Work, Truth, and Justice. This work promotes large families and natalism as a solution to social problems, in contrast to the declining birth rates in fin-de-siècle France. The novel follows the Froment family through multiple generations, celebrating fertility, family life, and colonization as means of national regeneration. It represents Zola's mature philosophical vision and his attempt to offer positive solutions after the darker naturalist works of his earlier career. The work is part of his transition from the pessimistic determinism of the Rougon-Macquart cycle to a more optimistic, reformist vision for society.
+"""
+
+Notes = """
+1899 is the year of original French publication. The English translation by Ernest Alfred Vizetelly followed shortly after (1900 edition shown in this text). This novel came during Zola's later 'evangelical' period and represents a significant shift from his earlier naturalist works. While Zola himself was not Catholic (he was anti-clerical and associated with secular republicanism), this work does not receive a 'catholic' tag despite its pro-natalist themes, as it approaches the subject from a secular, social-reform perspective rather than from Catholic doctrine.
+"""
+```
+</result>
+
+Sources:
+- [Fruitfulness by Émile Zola | Project Gutenberg](https://www.gutenberg.org/ebooks/10330)
+- [The Project Gutenberg eBook of Fruitfulnees (Fécondité) by Émile Zola](https://www.gutenberg.org/files/10330/10330-h/10330-h.htm)

@@ -1,0 +1,22 @@
+<result>
+```toml
+Title = "Battle Hymn of the Republic"
+Author = "Julia Ward Howe"
+Year = 1862
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "poetry",
+    "appropriate-for-children"
+]
+
+Summary = """
+'Battle Hymn of the Republic' is one of the most famous American patriotic songs, written during the American Civil War. Julia Ward Howe wrote the lyrics in November 1861 after visiting a Union Army camp near Washington, D.C. The poem was set to the tune of 'John Brown's Body' and first published in The Atlantic Monthly in February 1862. The hymn became an anthem for the Union cause during the Civil War and has remained a significant piece of American cultural and religious heritage, often performed at patriotic ceremonies and in church settings. The lyrics invoke biblical imagery and Christian themes of righteousness and divine justice, framing the Union cause in apocalyptic terms.
+"""
+
+Notes = """
+The year 1862 reflects the first publication in The Atlantic Monthly (February 1862), though it was written in late 1861. This Project Gutenberg entry is an audio recording by Roger McGuinn, but the work itself dates to 1862. I did not include 'catholic' tag as Julia Ward Howe was Unitarian, not Catholic, despite the Christian themes in the work.
+"""
+```
+</result>

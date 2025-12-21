@@ -1,0 +1,24 @@
+I need to analyze this Project Gutenberg text to extract the metadata you requested.
+
+Looking at this entry, I can see it's an audio recording rather than a traditional text. "Nataligino Kolo" appears to be a Christmas carol or dance ("Nataligino" suggests Christmas-related, "Kolo" is a traditional Slavic circle dance). The performer is listed as "Jugoslavensko Tamburasko Drustvo" (Yugoslav Tamburitza Society), and it was edited/recorded by Thomas Edison.
+
+This is quite unique - it's an audio recording from Edison's collection at the Edison National Historic Site. Given that Thomas Edison's recording activities were primarily in the late 1800s to early 1920s, and considering Yugoslav tamburitza orchestras were particularly active in immigrant communities in the early 20th century, this recording was likely made somewhere between 1900-1925. Without being able to listen to the recording or having more specific information, I'd estimate around 1910-1920 as the most likely period, but I'll note this uncertainty.
+
+<result>
+Title = "Nataligino Kolo"
+Author = "Jugoslavensko Tamburasko Drustvo"
+Year = 1915
+
+[Tags]
+categories = ["non-fiction", "historical-document", "audio-recording"]
+appropriate_for_children = true
+catholic = false
+
+Summary = """
+This is an audio recording of 'Nataligino Kolo' (Christmas Kolo) performed by the Jugoslavensko Tamburasko Drustvo (Yugoslav Tamburitza Society). A kolo is a traditional Slavic circle dance, and this appears to be a Christmas-themed version. The tamburitza is a family of long-necked string instruments traditional to Southern Slavic peoples. This recording comes from the Thomas Edison collection at the Edison National Historic Site, representing an important piece of early 20th century immigrant musical heritage in America, as Yugoslav communities maintained their cultural traditions through such musical performances.
+"""
+
+Notes = """
+The year 1915 is an educated estimate based on the context of Edison's recording activities and the period of Yugoslav immigration to America. Edison's phonograph recording activities were most active from the 1890s through the 1920s. Yugoslav tamburitza societies flourished in American immigrant communities during this period. Without access to the actual audio file or more specific dating information in the metadata, the exact recording date cannot be determined with certainty, but it likely falls somewhere between 1900-1925.
+"""
+</result>

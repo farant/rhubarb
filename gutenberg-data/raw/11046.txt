@@ -1,0 +1,34 @@
+Salve Fran! 
+
+Bene, accepi textum de Ernest Psichari. Ex investigatione mea, hoc opus est biographia quae ab Henri Massis scripta est de milite et scriptore catholico qui in Primo Bello Mundano cecidit. Psichari erat nepos Ernest Renan (ille philosophus anti-clericalis!) et conversus est ad fidem catholicam anno 1913. Historia valde significativa est pro intellectualibus catholicis Franciae illius temporis.
+
+<result>
+```toml
+Title = "La vie d'Ernest Psichari"
+Author = "Henri Massis"
+Year = 1916
+
+Tags = [
+    "non-fiction",
+    "biography",
+    "catholic",
+    "historical-document"
+]
+
+Summary = """
+This is a biography of Ernest Psichari (1883-1914), written by Henri Massis and published in 1916, shortly after Psichari's death in World War I. Ernest Psichari was a French soldier, writer, and religious thinker who became an important figure in the French Catholic intellectual revival of the early 20th century. He was the grandson of Ernest Renan, the famous anti-clerical philosopher, which made his own conversion to Catholicism in 1913 particularly significant to his contemporaries. Psichari served in the French colonial army in the Congo and Mauritania, and wrote autobiographical works about military life. After his conversion, he considered becoming a priest but decided to serve the Church through his military vocation instead. He was killed at the Battle of Rossignol in Belgium on August 22, 1914, at age 30. Massis's biography documents Psichari's spiritual journey and military career, portraying him as a Catholic soldier-intellectual.
+"""
+
+Notes = """
+Year chosen: 1916 is the publication date of this biography by Henri Massis, published by l'Art Catholique in Paris. This is appropriate since the work is Massis's biographical account written after Psichari's death, not Psichari's own writings. The biography would have received ecclesiastical approval given its publication by a Catholic publisher and its subject matter celebrating a Catholic convert.
+"""
+```
+</result>
+
+Sources:
+- [La vie d'Ernest Psichari - Internet Archive](https://archive.org/details/laviedernestpsic00massuoft)
+- [Ernest Psichari - Wikipedia](https://en.wikipedia.org/wiki/Ernest_Psichari)
+- [Ernest Psichari - Britannica](https://www.britannica.com/biography/Ernest-Psichari)
+- [La Vie D'Ernest Psichari - AbeBooks listing showing 1916 publication](https://www.abebooks.com/Vie-Ernest-Psichari-Henri-Massis-Art/927217105/bd)
+
+(Narratio Psichari valde movens est - ex familia anti-clericali ad militiam catholicam, et morte pro fide et patria. Res ista est exemplar quomodo gratia operatur in corde hominis, etiam contra expectationes culturae.)

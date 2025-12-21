@@ -1,0 +1,27 @@
+I'll analyze this text to provide you with the structured information you requested.
+
+Based on the content, this is clearly "The Mule: A Treatise on the Breeding, Training, and Uses to Which He May Be Put" by Harvey Riley, published in 1867. This is a practical, non-fiction work about mule husbandry and care, written by someone with substantial government experience (he was Superintendent of the Government Corral in Washington D.C.).
+
+<result>
+```toml
+Title = "The Mule: A Treatise on the Breeding, Training, and Uses to Which He May Be Put"
+Author = "Harvey Riley"
+Year = 1867
+
+Tags = [
+    "non-fiction",
+    "agricultural",
+    "animal-husbandry",
+    "historical-document",
+    "appropriate-for-children"
+]
+
+Summary = """
+A practical manual on mule breeding, training, and management written by Harvey Riley, who served as Superintendent of the Government Corral in Washington D.C. during the Civil War era. Drawing on thirty years of experience, Riley advocates strongly for humane treatment of mules and argues that the government could save significant resources by requiring proper training for teamsters and wagon-masters. The work reflects the crucial role mules played in 19th century American agriculture, transportation, and military logistics, while also serving as an early advocacy piece for animal welfare. Riley's perspective combines practical expertise with a reform-minded approach to improving working conditions for these essential draft animals.
+"""
+
+Notes = """
+The year 1867 is unambiguous - it appears both on the title page and in the dated preface (April 12, 1867). This work was published shortly after the American Civil War, during which mules played an essential role in military logistics. The author's position as Superintendent of the Government Corral and his advocacy for government reform in animal management reflects the massive scale of animal use (and loss) during the war years.
+"""
+```
+</result>

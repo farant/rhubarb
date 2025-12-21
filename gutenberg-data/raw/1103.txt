@@ -1,0 +1,22 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and relevant metadata.
+
+<result>
+```toml
+Title = "The First Part of Henry the Sixth"
+Author = "William Shakespeare"
+Year = 1623
+
+[Tags]
+categories = ["fiction", "historical-drama"]
+audience = ["appropriate-for-children"]
+religious = []
+
+Summary = """
+'The First Part of Henry the Sixth' (often written as 'Henry VI, Part 1') is a history play by William Shakespeare that dramatizes events during the early reign of King Henry VI of England and the early stages of the Hundred Years' War with France. The play focuses on the loss of English territories in France, the rivalry between the Duke of Gloucester and the Bishop of Winchester, and the rise of Joan of Arc (depicted as 'Joan la Pucelle'). It also introduces the conflict between the houses of York and Lancaster that would later erupt into the Wars of the Roses. The play is notable for its depiction of English military hero John Talbot and the political machinations at the English court. This appears to be from the First Folio edition based on the Executive Director's notes about original printing conventions.
+"""
+
+Notes = """
+The year 1623 represents the First Folio publication, which is the first collected edition of Shakespeare's plays and the primary source text for Henry VI Part 1. While the play was likely written and performed in the early 1590s (possibly 1591-1592), the 1623 First Folio is the most historically significant edition as it's our earliest printed source. The Executive Director's notes about printing conventions (cliches, u/v substitutions, etc.) confirm this is reproduced from First Folio typography. The historical events depicted in the play occurred in the 1420s-1430s, but for a timeline of literary works, 1623 represents the definitive publication date.
+"""
+```
+</result>

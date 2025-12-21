@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to extract the bibliographic information you requested.
+
+Based on the text, this is clearly "The Education of the Negro Prior to 1861" by C.G. Woodson, published in 1919. C.G. Woodson (Carter Godwin Woodson) is known as the "Father of Black History" and founded Negro History Week, which later became Black History Month. This is a significant work of historical scholarship examining the education of enslaved and free Black people in the United States before the Civil War.
+
+<result>
+```toml
+Title = "The Education of the Negro Prior to 1861: A History of the Education of the Colored People of the United States from the Beginning of Slavery to the Civil War"
+Author = "Carter G. Woodson"
+Year = 1919
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "educational-history",
+    "african-american-history",
+    "scholarly-work"
+]
+
+Summary = "This groundbreaking work by Carter G. Woodson, known as the 'Father of Black History,' documents the largely unknown history of educational efforts among enslaved and free Black Americans before the Civil War. Woodson discovered that the struggle for education among Black Americans during slavery was more extensive and heroic than previously documented. The book examines how both Black and white benevolent teachers worked to educate African Americans under the most adverse circumstances, including legal prohibitions in many states. This scholarly work filled a significant gap in historical literature, as previous works had only touched on specific localities or aspects of this history. The preface indicates this was meant to be part of a larger project on Negro education but became focused on the ante-bellum period due to the compelling nature of the source material."
+
+Notes = "The year 1919 is the publication date as stated in the text. This work represents early 20th-century historical scholarship on African American education and was published during a period when Woodson was establishing the field of Black history as a legitimate academic discipline. The work is not classified as 'appropriate-for-children' due to its scholarly nature and difficult subject matter, nor as 'catholic' as it is a secular historical work."
+```
+</result>

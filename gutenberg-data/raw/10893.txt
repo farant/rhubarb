@@ -1,0 +1,25 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a compilation of presidential papers, specifically the section covering Thomas Jefferson's presidency (1801-1809), compiled by James D. Richardson. This is a well-known historical reference work.
+
+<result>
+```toml
+Title = "A Compilation of the Messages and Papers of the Presidents: Thomas Jefferson (1801-1809)"
+Author = "James D. Richardson (compiler)"
+Year = 1896
+
+Tags = [
+    "non-fiction",
+    "historical-document",
+    "not-appropriate-for-children"
+]
+
+Summary = """
+This is part of James D. Richardson's monumental compilation of presidential messages and papers, commissioned by Congress. This particular volume covers Thomas Jefferson's presidency from March 4, 1801 to March 4, 1809. The work includes biographical information about Jefferson, his official messages to Congress, proclamations, executive orders, and other presidential papers. Richardson's compilation was the first comprehensive collection of presidential documents and became a standard reference work for American historical and political research. The text begins with a biographical sketch of Jefferson, detailing his birth at Shadwell in 1743, his education at William and Mary, his role in drafting the Declaration of Independence, his governorship of Virginia, and his diplomatic service in France before becoming the first Secretary of State under Washington and eventually the third President.
+"""
+
+Notes = """
+The original compilation was published in multiple volumes between 1896-1899. While this appears in Project Gutenberg as ebook #10893, the year 1896 represents when Richardson's compilation work was first published by authority of Congress. This was an official government publication that became the authoritative source for presidential documents of the early republic period.
+"""
+```
+</result>

@@ -1,0 +1,27 @@
+I recognize this work immediately. Let me analyze the text and provide you with the structured information you requested.
+
+<result>
+```toml
+Title = "Minnie's Sacrifice"
+Author = "Frances Ellen Watkins Harper"
+Year = 1869
+
+Tags = [
+    "fiction",
+    "historical-document",
+    "african-american-literature",
+    "abolitionist-literature"
+]
+
+Summary = """
+'Minnie's Sacrifice' is a serialized novel by Frances Ellen Watkins Harper, one of the most prominent African-American writers and activists of the 19th century. The novel tells the story of the tragic consequences of slavery, focusing on themes of racial identity, motherhood, and the destruction of families under the institution of slavery. It follows characters affected by slavery's brutal realities, including sexual exploitation and the separation of families. Harper was a pioneering voice in African-American literature, and this work reflects her deep commitment to abolition and civil rights. The novel was originally serialized in the Christian Recorder and was considered lost for many years before being rediscovered and republished in the late 20th century.
+"""
+
+Notes = """
+The year 1869 reflects when this novel was originally serialized in the Christian Recorder, a weekly publication of the African Methodist Episcopal Church. This was during the Reconstruction era, just after the Civil War. While Harper lived from 1825-1911 and published works over six decades, this particular novel comes from her immediate post-Civil War period when she was actively writing about the legacy of slavery and the challenges facing newly freed African Americans. The novel was considered lost literature until Frances Smith Foster rediscovered and edited it for modern publication.
+"""
+
+# Note: Not tagged as 'catholic' - Harper was associated with African Methodist Episcopal Church
+# Not tagged as 'appropriate-for-children' - deals with mature themes including sexual violence and slavery's brutality
+```
+</result>
