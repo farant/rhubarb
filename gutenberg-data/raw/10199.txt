@@ -1,24 +1,24 @@
+This appears to be an audio recording rather than a text document - it's an MP3 file from the Edison National Historic Site, not a traditional book. "Down in a Georgia Jail" is a folk song/ballad that was recorded in the early 20th century. Based on the Edison connection and the nature of early phonograph recordings, this would likely be from around 1900-1920.
+
+However, this is a tricky case because:
+1. It's an audio recording, not a written work
+2. The song itself (as folk material) predates any specific recording
+3. Posey Rorer was a musician who recorded for Edison Records
+
+Given that this is an audio artifact rather than a literary work, and folk songs don't have clear publication dates, I'll provide my best assessment:
+
 <result>
-```toml
 Title = "Down in a Georgia Jail"
-Author = "Posey Rorer"
-Year = 1920
+Author = "Posey Rorer (performer)"
+Year = 1924
 
-[Tags]
-categories = ["non-fiction", "historical-document", "audio-recording"]
-appropriate_for_children = false
-catholic = false
+Tags = ["audio-recording", "folk-music", "historical-document", "appropriate-for-children"]
 
-[Summary]
-This is an early audio recording from the Edison National Historic Site, likely one of Thomas Edison's phonograph recordings. "Down in a Georgia Jail" appears to be a song or spoken word performance by Posey Rorer, edited by Thomas Edison. This represents an important artifact from the early era of sound recording technology, capturing American vernacular music or spoken word from the early 20th century. The title suggests it may be related to the folk/blues tradition of songs about imprisonment, which was a common theme in American music of this period.
+Summary = """
+This is an audio recording of the American folk song "Down in a Georgia Jail" performed by Posey Rorer, preserved at the Edison National Historic Site. Rorer was a country musician who recorded for Thomas Edison's record company in the 1920s. The song is a traditional folk ballad about imprisonment, typical of the rural Southern musical tradition of the era. This represents an early example of commercially recorded American folk music.
+"""
 
-[Notes]
-The exact year is uncertain from this text alone. I've estimated circa 1920 based on the Edison connection and the era when such recordings were being made and preserved. Edison's main recording activity was from the 1890s through the 1920s. Without being able to hear the actual audio or having more metadata, this is an educated guess based on the technological and historical context. The recording was later digitized as part of Project Gutenberg's effort to preserve historical audio materials.
-```
+Notes = """
+The exact recording date is uncertain, but Posey Rorer recorded for Edison Records primarily in the 1920s. The year chosen (1924) represents the approximate period of Edison cylinder and disc recordings of folk material. As an audio artifact rather than a written text, the "publication" date refers to the recording date rather than composition date of the folk song itself, which would be earlier and uncertain.
+"""
 </result>
-
-Salve Fran! This was an interesting artifact to analyze. The metadata is quite sparse - it's essentially just a pointer to audio files from Edison's collection. Without being able to actually identify the song or performance from my knowledge base, I had to work primarily from context clues. The Edison connection and the "Georgia Jail" theme suggest early American vernacular music, but I can't pin down the exact year with confidence. The 1920 estimate is essentially a midpoint guess for Edison-era recordings.
-
-If you're building that historical timeline database, you might want a field to indicate confidence level for the year, since for many works (especially recordings like this) the dating can be quite uncertain. This one would be low confidence compared to, say, a published book with a clear publication date.
-
-Is this part of indexing the Gutenberg corpus? Are you extracting this kind of metadata programmatically from the text files?

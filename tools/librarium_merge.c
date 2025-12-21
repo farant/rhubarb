@@ -281,6 +281,7 @@ _extrahere_annus(StmlNodus* liber)
     StmlNodus* textus;
     chorda* valor;
     s32 annus = 0;
+    s32 signum = 1;
     i32 i;
 
     annus_nodus = stml_invenire_liberum(liber, "annus");
@@ -304,13 +305,13 @@ _extrahere_annus(StmlNodus* liber)
         si (c >= '0' && c <= '9') {
             annus = annus * 10 + (c - '0');
         } alioquin si (c == '-' && annus == 0) {
-            /* Saltare signum negativum initiale */
+            signum = -1;
         } alioquin {
             frange;
         }
     }
 
-    redde annus;
+    redde annus * signum;
 }
 
 /* Ordinare liberos per annum (insertion sort) */

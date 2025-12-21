@@ -1,0 +1,17 @@
+I'll help you identify this text and extract the metadata. Let me read through it to determine the title, author, and other details.
+
+<result>
+Title = "The Desire of the Moth and The Come On"
+Author = "Eugene Manlove Rhodes"
+Year = 1916
+
+Tags = ["fiction", "western", "appropriate-for-children"]
+
+Summary = """
+This is a collection of two Western short stories by Eugene Manlove Rhodes, one of the most celebrated writers of the American West. Rhodes was known for his authentic portrayal of cowboys and ranch life in New Mexico and the Southwest. "The Desire of the Moth" is the lead story, featuring John Wesley Pringle in the landscape around the Organ Mountains of New Mexico. Rhodes' work is characterized by literate cowboys, vivid descriptions of the Western landscape, and a romantic but realistic portrayal of frontier life. His stories often featured themes of honor, loyalty, and the code of the West, written with literary sophistication uncommon in Western fiction of the era.
+"""
+
+Notes = """
+"The Desire of the Moth" was first published in 1916, along with "The Come On" in a single volume by Henry Holt and Company. Rhodes wrote most of his work between 1900-1930, and this represents his mature period. He is sometimes called the "novelist laureate of the cattle range" and his work influenced later Western writers. The year 1916 represents the original book publication of these two stories together.
+"""
+</result>

@@ -1,4 +1,13 @@
 <librarium>
+  <liber numerus="1177" status="enriched">
+    <titulus>Memorabilia (Recollections of Socrates)</titulus>
+    <auctor>Xenophon</auctor>
+    <annus>-371</annus>
+    <summarium>The Memorabilia is one of the primary sources for understanding the historical Socrates, written by his student Xenophon. It consists of four books that record conversations and actions of Socrates, aiming to defend him against the charges that led to his execution and to portray him as a model of virtue and wisdom. Unlike Plato's more philosophical dialogues, Xenophon's account focuses on Socrates as a practical moral teacher concerned with everyday ethics and civic virtue. The work provides valuable insight into Socratic teaching methods and 4th century BCE Athenian society.
+</summarium>
+    <notae>Dating ancient works is complex. Xenophon lived 431-354 BCE. The Memorabilia was likely composed sometime between 385-375 BCE, after Socrates' death in 399 BCE and during Xenophon's exile. I've chosen approximately -371 BCE as a middle estimate for the composition date, representing when the work itself was written rather than the events it describes. The negative year notation follows historical convention (BCE). This translation by H.G. Dakyns was published by Macmillan in 1897.
+</notae>
+  </liber>
   <liber numerus="10661" status="enriched">
     <titulus>A Selection from the Discourses of Epictetus with the Encheiridion</titulus>
     <auctor>Epictetus (translated by George Long)</auctor>
@@ -15,15 +24,6 @@
     <summarium>Cassius Dio's Roman History is a monumental 80-book work covering Roman history from the legendary founding of Rome to 229 CE. Written in Greek during the reigns of Septimius Severus through Alexander Severus (roughly 211-229 CE), it is one of the most important surviving sources for Roman imperial history. This third volume (translated by Herbert Baldwin Foster in 1906) covers Books 45-51, spanning the critical period from 44 BCE to 29 BCE - including the aftermath of Julius Caesar's assassination, the formation and dissolution of the Second Triumvirate, the civil wars between Octavian and Mark Antony, and the Battle of Actium. Dio was a Roman senator and consul who had access to official records and wrote from an insider's perspective on Roman politics and governance.
 </summarium>
     <notae>I chose circa 220 CE as the year because this represents approximately when Dio was actively composing this work (he wrote over a period spanning roughly 200-220+ CE). The translated edition shown is from 1906, but since you asked for the year most historically accurate to the original work itself, the early 3rd century CE date is most appropriate. This is a primary historical source, not a later commentary or annotated edition.
-</notae>
-  </liber>
-  <liber numerus="1177" status="enriched">
-    <titulus>Memorabilia (Recollections of Socrates)</titulus>
-    <auctor>Xenophon</auctor>
-    <annus>-371</annus>
-    <summarium>The Memorabilia is one of the primary sources for understanding the historical Socrates, written by his student Xenophon. It consists of four books that record conversations and actions of Socrates, aiming to defend him against the charges that led to his execution and to portray him as a model of virtue and wisdom. Unlike Plato's more philosophical dialogues, Xenophon's account focuses on Socrates as a practical moral teacher concerned with everyday ethics and civic virtue. The work provides valuable insight into Socratic teaching methods and 4th century BCE Athenian society.
-</summarium>
-    <notae>Dating ancient works is complex. Xenophon lived 431-354 BCE. The Memorabilia was likely composed sometime between 385-375 BCE, after Socrates' death in 399 BCE and during Xenophon's exile. I've chosen approximately -371 BCE as a middle estimate for the composition date, representing when the work itself was written rather than the events it describes. The negative year notation follows historical convention (BCE). This translation by H.G. Dakyns was published by Macmillan in 1897.
 </notae>
   </liber>
   <liber numerus="10553" status="enriched">
@@ -577,6 +577,20 @@ rather a 19th-century essay about Paine's historical impact.
     <summarium>A children's educational book about trees, written by American author Ella Rodman Church. The work uses a narrative format to teach young readers about various tree species including maples, elms, oaks, pines, palms, and many others. Church was known for writing accessible natural history books for children in the late 19th century. The book combines botanical information with engaging storytelling, covering both native North American trees and exotic species from around the world. Each chapter focuses on different tree families, their characteristics, uses, and interesting facts.</summarium>
     <notae>The year 1886 is clearly stated on the title page and represents the original publication date of this work. This is a straightforward case with no translation or edition ambiguity.</notae>
   </liber>
+  <liber numerus="11990" status="enriched">
+    <titulus>Shakespeare's Insomnia, and the Causes Thereof</titulus>
+    <auctor>Franklin H. Head</auctor>
+    <annus>1887</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>literary-hoax</tag>
+      <tag>non-fiction-style</tag>
+    </tags>
+    <summarium>This is a literary hoax by Franklin H. Head that presents itself as a scholarly examination of William Shakespeare's supposed insomnia. The work uses the framing device of analyzing fictitious letters to explore the phenomenon of sleeplessness, particularly as it affects men in active professional life past their mid-thirties. While ostensibly about Shakespeare, it appears to be more of a late 19th-century meditation on the modern problem of insomnia, attributing it to the rapid pace of industrial society, telegraphs, railroads, and intense business competition. The work is notable as an example of the &quot;literary hoax&quot; genre popular in the Victorian era, where fictional scholarly works were presented as genuine historical or literary analysis.
+</summarium>
+    <notae>The year 1887 is clearly stated on the title page. This work is not appropriate for the 'catholic' tag as Franklin H. Head was not a Catholic author writing from a Catholic perspective. It's also not truly 'appropriate-for-children' as it's a somewhat sophisticated literary hoax dealing with adult themes of professional stress and insomnia. The tag 'literary-hoax' is particularly important here as the work explicitly acknowledges its fictional nature.
+</notae>
+  </liber>
   <liber numerus="11917" status="enriched">
     <titulus>The Story of Ireland</titulus>
     <auctor>Emily Lawless (with additions by Mrs. Arthur Bronson)</auctor>
@@ -679,6 +693,21 @@ entirely appropriate for children as it was written specifically for young reade
     <summarium>This is part of James D. Richardson's monumental compilation of presidential messages and papers, commissioned by Congress. This particular volume covers Thomas Jefferson's presidency from March 4, 1801 to March 4, 1809. The work includes biographical information about Jefferson, his official messages to Congress, proclamations, executive orders, and other presidential papers. Richardson's compilation was the first comprehensive collection of presidential documents and became a standard reference work for American historical and political research. The text begins with a biographical sketch of Jefferson, detailing his birth at Shadwell in 1743, his education at William and Mary, his role in drafting the Declaration of Independence, his governorship of Virginia, and his diplomatic service in France before becoming the first Secretary of State under Washington and eventually the third President.
 </summarium>
     <notae>The original compilation was published in multiple volumes between 1896-1899. While this appears in Project Gutenberg as ebook #10893, the year 1896 represents when Richardson's compilation work was first published by authority of Congress. This was an official government publication that became the authoritative source for presidential documents of the early republic period.
+</notae>
+  </liber>
+  <liber numerus="1205" status="enriched">
+    <titulus>The Colour of Life</titulus>
+    <auctor>Alice Meynell</auctor>
+    <annus>1897</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>essays</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>catholic</tag>
+    </tags>
+    <summarium>A collection of essays by Alice Meynell, the acclaimed Victorian-era Catholic poet, essayist, and suffragist. The volume contains ten contemplative essays on various subjects including nature, art, biography, and mortality. Meynell was known for her refined prose style and ability to find profound meaning in everyday observations. Topics range from meditations on clouds, winds, and grasses to reflections on the actress Eleonora Duse and visits to monastery gates. Her writing combines aesthetic sensitivity with spiritual depth, characteristic of her position as one of the leading Catholic literary figures of her time.
+</summarium>
+    <notae>Using 1897 as the publication year based on the transcription note indicating this was transcribed from the &quot;1897 John Lane edition.&quot; Alice Meynell (1847-1922) was a prominent Catholic convert and her work was widely respected in Catholic literary circles. Her essays often reflect contemplative and spiritual themes consistent with her faith, making the 'catholic' tag appropriate. The work is suitable for older children and adults given its contemplative, non-controversial nature.
 </notae>
   </liber>
   <liber numerus="11665" status="enriched">
@@ -1058,6 +1087,20 @@ suggests this is a later digitization of the original work.
     <summarium>'Der Mann im Nebel' (The Man in the Fog) is a novel by Gustav Falke, a Hamburg-based German writer known for his lyrical prose and poetry depicting Northern German life. Published in 1916, the year of Falke's death, this appears to be one of his final works. The novel is dedicated to his friends Karl Ernst Knodt and Frau Käthe, and begins with an epistolary format, opening with a letter addressed to 'Liebster Doktor' (Dearest Doctor). Falke was particularly celebrated for his vivid portrayals of Hamburg's atmosphere and his ability to capture the mood and character of Northern Germany in the late 19th and early 20th centuries.</summarium>
     <notae>The publication year of 1916 is clearly stated in the text itself ('Hamburg 1916'). This coincides with the year of Gustav Falke's death (1853-1916), making this one of his final published works. The epistolary opening and dedication suggest a personal, intimate narrative style characteristic of Falke's later prose works.</notae>
   </liber>
+  <liber numerus="11960" status="enriched">
+    <titulus>The Desire of the Moth and The Come On</titulus>
+    <auctor>Eugene Manlove Rhodes</auctor>
+    <annus>1916</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>western</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is a collection of two Western short stories by Eugene Manlove Rhodes, one of the most celebrated writers of the American West. Rhodes was known for his authentic portrayal of cowboys and ranch life in New Mexico and the Southwest. &quot;The Desire of the Moth&quot; is the lead story, featuring John Wesley Pringle in the landscape around the Organ Mountains of New Mexico. Rhodes' work is characterized by literate cowboys, vivid descriptions of the Western landscape, and a romantic but realistic portrayal of frontier life. His stories often featured themes of honor, loyalty, and the code of the West, written with literary sophistication uncommon in Western fiction of the era.
+</summarium>
+    <notae>&quot;The Desire of the Moth&quot; was first published in 1916, along with &quot;The Come On&quot; in a single volume by Henry Holt and Company. Rhodes wrote most of his work between 1900-1930, and this represents his mature period. He is sometimes called the &quot;novelist laureate of the cattle range&quot; and his work influenced later Western writers. The year 1916 represents the original book publication of these two stories together.
+</notae>
+  </liber>
   <liber numerus="11046" status="enriched">
     <titulus>La vie d'Ernest Psichari</titulus>
     <auctor>Henri Massis</auctor>
@@ -1260,6 +1303,21 @@ original publication date of this work. This was during the early period \
 of recreational skiing's popularization in Britain and represents an \
 important historical document in the development of skiing instruction \
 literature in English.
+</notae>
+  </liber>
+  <liber numerus="10199" status="enriched">
+    <titulus>Down in a Georgia Jail</titulus>
+    <auctor>Posey Rorer (performer)</auctor>
+    <annus>1924</annus>
+    <tags>
+      <tag>audio-recording</tag>
+      <tag>folk-music</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is an audio recording of the American folk song &quot;Down in a Georgia Jail&quot; performed by Posey Rorer, preserved at the Edison National Historic Site. Rorer was a country musician who recorded for Thomas Edison's record company in the 1920s. The song is a traditional folk ballad about imprisonment, typical of the rural Southern musical tradition of the era. This represents an early example of commercially recorded American folk music.
+</summarium>
+    <notae>The exact recording date is uncertain, but Posey Rorer recorded for Edison Records primarily in the 1920s. The year chosen (1924) represents the approximate period of Edison cylinder and disc recordings of folk material. As an audio artifact rather than a written text, the &quot;publication&quot; date refers to the recording date rather than composition date of the folk song itself, which would be earlier and uncertain.
 </notae>
   </liber>
   <liber numerus="11815" status="enriched">

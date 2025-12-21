@@ -172,6 +172,12 @@
     <filum via="../gutenberg-mirror/1/1/0/4/11046/11046-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/0/4/11046/11046.txt"/>
   </liber>
+  <liber numerus="12109" status="parsatum">
+    <titulus>The House That Jack Built</titulus>
+    <auctor>Randolph Caldecott</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/0/12109/old/12109.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12109/12109-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10904" status="parsatum">
     <titulus>Frank Merriwell's Nobility</titulus>
     <auctor>Burt L. Standish (AKA Gilbert Patten)</auctor>
@@ -266,6 +272,12 @@
     <auctor>Ada Jones</auctor>
     <filum via="../gutenberg-mirror/1/0/1/9/10193/10193-m/10193-m-readme.txt"/>
   </liber>
+  <liber numerus="12112" status="parsatum">
+    <titulus>The Boy Scouts of the Eagle Patrol</titulus>
+    <auctor>Howard Payson</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12112/old/12112.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12112/12112-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12052" status="parsatum">
     <titulus>Half a Century</titulus>
     <auctor>Jane Grey Cannon Swisshelm</auctor>
@@ -278,6 +290,13 @@
     <filum via="../gutenberg-mirror/1/0/1/6/10162/old/10162-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/1/6/10162/old/10162.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/1/6/10162/10162-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12123" status="parsatum">
+    <titulus>Bill's Paper Chase</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12123/old/12123.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12123/12123-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12123/12123.txt"/>
   </liber>
   <liber numerus="11092" status="parsatum">
     <titulus>The History Of Tom Thumb and Other Stories.</titulus>
@@ -409,6 +428,10 @@
     <filum via="../gutenberg-mirror/1/1/2/1/11215/old/11215.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/1/11215/old/11215-8.txt" in_old duplicatum/>
   </liber>
+  <liber numerus="12103" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/0/12103/12103-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12103/old/12103.txt" in_old/>
+  </liber>
   <liber numerus="12025" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/2/0/2/12025/12025-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/2/12025/old/12025.txt" in_old/>
@@ -449,6 +472,13 @@
     <filum via="../gutenberg-mirror/1/1/5/0/11500/old/11500.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/0/11500/old/11500-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11500/11500-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12154" status="parsatum">
+    <titulus>The Weaker Vessel</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12154/12154.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12154/old/12154.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12154/12154-0.txt" duplicatum/>
   </liber>
   <liber numerus="12014" status="parsatum">
     <titulus>The Lives of the Poets of Great Britain and Ireland (1753)</titulus>
@@ -515,6 +545,11 @@
     <filum via="../gutenberg-mirror/1/1/0/6/11068/old/11068.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/0/6/11068/old/11068-8.txt" in_old duplicatum/>
   </liber>
+  <liber numerus="1218" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/1218/1218-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1218/old/1218-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1218/old/1218.txt" in_old/>
+  </liber>
   <liber numerus="11196" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/1/9/11196/11196-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/1/9/11196/old/11196.txt" in_old/>
@@ -544,6 +579,13 @@
     <filum via="../gutenberg-mirror/1/1/2/3/11231/old/11231-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/3/11231/old/old/old-2024-06-25/11231-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/3/11231/old/old/11231.txt" in_old/>
+  </liber>
+  <liber numerus="12129" status="parsatum">
+    <titulus>A Mixed Proposal</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12129/old/12129.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12129/12129-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12129/12129.txt"/>
   </liber>
   <liber numerus="11747" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/7/4/11747/11747-0.txt" duplicatum/>
@@ -601,6 +643,11 @@
     <titulus>The Purse</titulus>
     <auctor>Honore de Balzac</auctor>
     <filum via="../gutenberg-mirror/1/1/9/1196/old/old/20050712-1196.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12149" status="parsatum">
+    <titulus>String Quartet No. 3 Opus 18</titulus>
+    <auctor>Ludwig von Beethoven</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/4/12149/12149-readme.txt"/>
   </liber>
   <liber numerus="10715" status="parsatum">
     <titulus>Counsels and Maxims</titulus>
@@ -920,6 +967,13 @@
     <filum via="../gutenberg-mirror/1/1/6/4/11643/old/11643-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/6/4/11643/old/11643.txt" in_old/>
   </liber>
+  <liber numerus="12169" status="parsatum">
+    <titulus>Sakoontala or The Lost Ring</titulus>
+    <auctor>Kalidasa</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/6/12169/old/12169-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12169/old/12169.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12169/12169-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10385" status="parsatum">
     <titulus>Histoire de la Revolution francaise, III</titulus>
     <auctor>Adolphe Thiers</auctor>
@@ -1039,6 +1093,13 @@
     <filum via="../gutenberg-mirror/1/1/4/5/11455/old/11455-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/4/5/11455/old/11455.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/5/11455/11455-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12176" status="parsatum">
+    <titulus>The Gate of the Giant Scissors</titulus>
+    <auctor>Annie Fellows Johnston</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12176/old/12176-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12176/old/12176.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12176/12176-0.txt" duplicatum/>
   </liber>
   <liber numerus="10848" status="parsatum">
     <titulus>Natalie</titulus>
@@ -1171,6 +1232,10 @@
     <filum via="../gutenberg-mirror/1/1/5/4/11541/old/11541-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/4/11541/old/11541.txt" in_old/>
   </liber>
+  <liber numerus="12167" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/6/12167/12167-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12167/old/12167-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="10277" status="parsatum">
     <titulus>Audio: Hallelujah Chorus</titulus>
     <auctor>Oratorio Chorus</auctor>
@@ -1242,6 +1307,11 @@
     <filum via="../gutenberg-mirror/1/1/2/6/11267/old/11267-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/6/11267/old/11267.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/6/11267/11267-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12183" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/8/12183/12183-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12183/old/12183.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12183/old/12183-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="10802" status="parsatum">
     <titulus>The Project Gutenberg CD and DVD Images</titulus>
@@ -1687,6 +1757,15 @@
     <filum via="../gutenberg-mirror/1/2/0/2/12028/old/12028.txt" in_old/>
     <filum via="../gutenberg-mirror/1/2/0/2/12028/12028-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12108" status="parsatum">
+    <titulus>Der Tod in Venedig</titulus>
+    <auctor>Thomas Mann</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/0/12108/12108-8.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12108/old/12108-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12108/old/12108.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12108/12108.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12108/12108-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10483" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/4/8/10483/10483-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/0/4/8/10483/old/10483.txt" in_old/>
@@ -1719,6 +1798,14 @@
     <auctor>Murray K. Hill</auctor>
     <filum via="../gutenberg-mirror/1/0/1/9/10190/10190-m/10190-m-readme.txt"/>
   </liber>
+  <liber numerus="12113" status="parsatum">
+    <titulus>Eine vornehme Frau</titulus>
+    <auctor>Hermann Heiberg</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12113/old/12113-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12113/old/12113.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12113/old/12113-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12113/12113-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12055" status="parsatum">
     <titulus>Slave Narratives: A Folk History of Slavery in the United States From Interviews with Former Slaves</titulus>
     <auctor>Work Projects Administration</auctor>
@@ -1737,6 +1824,11 @@
     <filum via="../gutenberg-mirror/1/0/1/6/10161/old/10161-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/1/6/10161/old/10161.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/1/6/10161/10161-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12122" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/2/12122/12122-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12122/old/12122-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12122/old/old/12122.txt" in_old/>
   </liber>
   <liber numerus="11093" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/0/9/11093/11093-0.txt" duplicatum/>
@@ -1849,6 +1941,10 @@
     <auctor>Edison Minstrels</auctor>
     <filum via="../gutenberg-mirror/1/0/1/8/10185/10185-m/10185-m-readme.txt"/>
   </liber>
+  <liber numerus="12102" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/0/12102/12102-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12102/old/12102.txt" in_old/>
+  </liber>
   <liber numerus="12026" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/2/0/2/12026/12026-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/2/12026/old/12026.txt" in_old/>
@@ -1883,6 +1979,13 @@
     <filum via="../gutenberg-mirror/1/1/5/0/11501/11501-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11501/old/11501.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/0/11501/old/11501-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12155" status="parsatum">
+    <titulus>Stepping Backwards</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12155/12155.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12155/old/12155.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12155/12155-0.txt" duplicatum/>
   </liber>
   <liber numerus="12017" status="parsatum">
     <titulus>The Mirror of Literature, Amusement, and Instruction--Volume 13</titulus>
@@ -1996,6 +2099,13 @@
     <filum via="../gutenberg-mirror/1/1/7/4/11740/old/11740-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/4/11740/11740-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12128" status="parsatum">
+    <titulus>A Tiger's Skin</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12128/old/12128.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12128/12128.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12128/12128-0.txt" duplicatum/>
+  </liber>
   <liber numerus="11161" status="parsatum">
     <titulus>Mary Wollaston</titulus>
     <auctor>Henry Kitchell Webster</auctor>
@@ -2048,6 +2158,10 @@
     <filum via="../gutenberg-mirror/1/1/5/1/11514/old/11514.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/1/11514/11514-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12148" status="parsatum">
+    <titulus>Railway Shop Up to Date</titulus>
+    <filum via="../gutenberg-mirror/1/2/1/4/12148/12148-readme.txt"/>
+  </liber>
   <liber numerus="10716" status="parsatum">
     <titulus>The Epic</titulus>
     <auctor>Lascelles Abercrombie</auctor>
@@ -2096,6 +2210,12 @@
     <filum via="../gutenberg-mirror/1/1/2/2/11223/old/11223-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/2/11223/old/11223.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/2/11223/11223-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="1211" status="parsatum">
+    <titulus>A Selection From The Lyrical Poems Of Robert Herrick</titulus>
+    <auctor>Robert Herrick</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1211/old/1211.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1211/1211-0.txt" duplicatum/>
   </liber>
   <liber numerus="11174" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/1/7/11174/11174-0.txt" duplicatum/>
@@ -2390,6 +2510,12 @@
     <filum via="../gutenberg-mirror/1/1/6/4/11642/old/11642-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/6/4/11642/old/11642.txt" in_old/>
   </liber>
+  <liber numerus="12168" status="parsatum">
+    <titulus>Min gamle kammerat</titulus>
+    <auctor>Herman Bang</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/6/12168/old/12168-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12168/12168-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10384" status="parsatum">
     <titulus>Le Pays de l'or</titulus>
     <auctor>Henri Conscience</auctor>
@@ -2530,6 +2656,13 @@
     <filum via="../gutenberg-mirror/1/1/5/7/11579/11579-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/7/11579/old/11579.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/7/11579/old/11579-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12177" status="parsatum">
+    <titulus>The Precipice</titulus>
+    <auctor>Elia Wilkinson Peattie</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12177/old/12177-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12177/old/12177.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12177/12177-0.txt" duplicatum/>
   </liber>
   <liber numerus="10849" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/8/4/10849/10849-0.txt" duplicatum/>
@@ -2692,6 +2825,13 @@
     <filum via="../gutenberg-mirror/1/0/4/5/10457/old/10457.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/4/5/10457/10457-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12166" status="parsatum">
+    <titulus>The Works of John Dryden, Vol. II</titulus>
+    <auctor>Edited by Walter Scott</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/6/12166/old/12166-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12166/old/12166.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12166/12166-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10276" status="parsatum">
     <titulus>Audio: Gloria</titulus>
     <auctor>Gregorian Choir</auctor>
@@ -2756,6 +2896,13 @@
     <filum via="../gutenberg-mirror/1/1/2/6/11266/old/11266.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/6/11266/old/11266-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/6/11266/11266-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12182" status="parsatum">
+    <titulus>Veneh'ojalaiset</titulus>
+    <auctor>Arvid Jaernefelt</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/8/12182/old/12182.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12182/old/12182-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12182/12182-0.txt" duplicatum/>
   </liber>
   <liber numerus="10803" status="parsatum">
     <titulus>A General History and Collection of Voyages and Travels, Vol. II</titulus>
@@ -3239,6 +3386,13 @@
     <auctor>Cal Stewart</auctor>
     <filum via="../gutenberg-mirror/1/0/1/9/10191/10191-m/10191-m-readme.txt"/>
   </liber>
+  <liber numerus="12114" status="parsatum">
+    <titulus>Punch, or the London Charivari, Vol. 156, May 14, 1919</titulus>
+    <auctor>Various</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12114/old/12114-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12114/old/12114.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12114/12114-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12054" status="parsatum">
     <titulus>The Mirror of Literature, Amusement, and Instruction, No. 571</titulus>
     <auctor>Various</auctor>
@@ -3256,6 +3410,13 @@
     <filum via="../gutenberg-mirror/1/0/1/6/10160/old/10160-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/1/6/10160/old/10160.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/1/6/10160/10160-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12125" status="parsatum">
+    <titulus>Cupboard Love</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12125/12125-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12125/12125.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12125/old/12125.txt" in_old/>
   </liber>
   <liber numerus="11402" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/4/0/11402/11402-0.txt" duplicatum/>
@@ -3374,6 +3535,12 @@
     <auctor>Roth String Quartet</auctor>
     <filum via="../gutenberg-mirror/1/0/1/8/10184/10184-m/10184-m-readme.txt"/>
   </liber>
+  <liber numerus="12101" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/0/12101/12101-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12101/old/12101-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12101/old/old/12101-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12101/old/old/12101.txt" in_old/>
+  </liber>
   <liber numerus="12027" status="parsatum">
     <titulus>Crime: Its Cause and Treatment</titulus>
     <auctor>Clarence Darrow</auctor>
@@ -3411,6 +3578,13 @@
     <filum via="../gutenberg-mirror/1/1/5/0/11506/11506-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11506/old/11506.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/0/11506/old/11506-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12156" status="parsatum">
+    <titulus>The Three Sisters</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12156/12156.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12156/old/12156.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12156/12156-0.txt" duplicatum/>
   </liber>
   <liber numerus="12016" status="parsatum">
     <titulus>The Merchant of Berlin</titulus>
@@ -3542,6 +3716,13 @@
     <filum via="../gutenberg-mirror/1/1/2/0/11202/old/11202.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/0/11202/11202-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12136" status="parsatum">
+    <titulus>Government and Administration of the United States</titulus>
+    <auctor>Westel W. Willoughby and William F. Willoughby</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12136/old/12136-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12136/old/12136.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12136/12136-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12036" status="parsatum">
     <titulus>Hygeia, a City of Health</titulus>
     <auctor>Benjamin Ward Richardson</auctor>
@@ -3571,6 +3752,11 @@
     <auctor>J. A. Graves</auctor>
     <filum via="../gutenberg-mirror/1/1/5/1/11517/old/11517.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/1/11517/11517-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12147" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/4/12147/12147-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12147/old/12147.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12147/old/12147-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="10717" status="parsatum">
     <titulus>The Extant Odes of Pindar</titulus>
@@ -3626,6 +3812,13 @@
     <filum via="../gutenberg-mirror/1/1/2/2/11222/old/11222-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/2/11222/old/11222.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/2/11222/11222-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="1210" status="parsatum">
+    <titulus>Kwaidan: Stories and Studies of Strange Things</titulus>
+    <auctor>Lafcadio Hearn</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1210/old/old/1210.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1210/old/1210-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1210/1210-0.txt" duplicatum/>
   </liber>
   <liber numerus="11173" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/1/7/11173/11173-0.txt" duplicatum/>
@@ -4058,6 +4251,13 @@
     <filum via="../gutenberg-mirror/1/1/4/5/11457/old/11457.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/5/11457/11457-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12174" status="parsatum">
+    <titulus>Baccara</titulus>
+    <auctor>Hector Malot</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12174/old/12174-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12174/old/12174.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12174/12174-0.txt" duplicatum/>
+  </liber>
   <liber numerus="1139" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/3/1139/1139-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/3/1139/old/1139.txt" in_old/>
@@ -4172,6 +4372,11 @@
     <filum via="../gutenberg-mirror/1/0/4/5/10456/old/10456.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/4/5/10456/10456-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12161" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/6/12161/12161-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12161/old/12161-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12161/old/old/12161-2006-10-30.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="10275" status="parsatum">
     <titulus>Audio: La Gioconda</titulus>
     <auctor>Paola Koraleck</auctor>
@@ -4220,6 +4425,16 @@
     <filum via="../gutenberg-mirror/1/1/2/6/11265/old/11265-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/6/11265/old/11265.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/6/11265/11265-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12181" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/8/12181/12181-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12181/old/12181.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12181/old/12181-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12095" status="parsatum">
+    <titulus>More Bywords</titulus>
+    <auctor>Charlotte M. Yonge</auctor>
+    <filum via="../gutenberg-mirror/1/2/0/9/12095/12095.txt"/>
   </liber>
   <liber numerus="10087" status="parsatum">
     <titulus>Old Lady Number 31</titulus>
@@ -4668,6 +4883,13 @@
     <auctor>Fiddlin' Powers and Family</auctor>
     <filum via="../gutenberg-mirror/1/0/1/9/10196/10196-m/10196-m-readme.txt"/>
   </liber>
+  <liber numerus="12115" status="parsatum">
+    <titulus>Discoveries in Australia, Volume 1.</titulus>
+    <auctor>J Lort Stokes</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12115/old/12115.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12115/12115.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12115/12115-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12057" status="parsatum">
     <titulus>Yolanda: Maid of Burgundy</titulus>
     <auctor>Charles Major</auctor>
@@ -4685,6 +4907,13 @@
   <liber numerus="1039" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/3/1039/1039-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/0/3/1039/old/1039.txt" in_old/>
+  </liber>
+  <liber numerus="12124" status="parsatum">
+    <titulus>The Well</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12124/12124-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12124/12124.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12124/old/12124.txt" in_old/>
   </liber>
   <liber numerus="11719" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/7/1/11719/11719-0.txt" duplicatum/>
@@ -4810,6 +5039,11 @@
     <auctor>Len Spencer</auctor>
     <filum via="../gutenberg-mirror/1/0/1/8/10187/10187-m/10187-m-readme.txt"/>
   </liber>
+  <liber numerus="12100" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/0/12100/12100-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12100/old/12100.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12100/old/12100-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="12020" status="parsatum">
     <titulus>A Woman of the World</titulus>
     <auctor>Ella Wheeler Wilcox</auctor>
@@ -4846,6 +5080,13 @@
     <filum via="../gutenberg-mirror/1/1/5/0/11507/11507-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11507/old/11507.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/0/11507/old/11507-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12157" status="parsatum">
+    <titulus>The Unknown</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12157/12157.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12157/old/12157.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12157/12157-0.txt" duplicatum/>
   </liber>
   <liber numerus="12011" status="parsatum">
     <titulus>Monsieur Parent</titulus>
@@ -4940,6 +5181,15 @@
     <filum via="../gutenberg-mirror/1/1/7/1/11713/old/11713.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/7/1/11713/11713-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12137" status="parsatum">
+    <titulus>La Légende des Siècles</titulus>
+    <auctor>Victor Hugo</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12137/12137-8.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12137/old/12137-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12137/old/12137.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12137/12137.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12137/12137-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12035" status="parsatum">
     <titulus>Progressive Morality</titulus>
     <auctor>Thomas Fowler</auctor>
@@ -4978,6 +5228,13 @@
     <filum via="../gutenberg-mirror/1/1/5/1/11516/old/11516-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/1/11516/old/11516.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/1/11516/11516-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12146" status="parsatum">
+    <titulus>Discoveries in Australia, Volume 2</titulus>
+    <auctor>John Lort Stokes</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/4/12146/12146.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12146/12146-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12146/old/12146.txt" in_old/>
   </liber>
   <liber numerus="11241" status="parsatum">
     <titulus>Wee Ones' Bible Stories</titulus>
@@ -5032,6 +5289,15 @@
     <filum via="../gutenberg-mirror/1/1/2/2/11221/old/11221-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/2/11221/old/11221.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/2/11221/11221-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="1213" status="parsatum">
+    <titulus>The Man that Corrupted Hadleyburg</titulus>
+    <auctor>Mark Twain</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1213/old/old/old/1213.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1213/old/old/1213.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1213/old/old/1213-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1213/old/1213-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1213/1213-0.txt" duplicatum/>
   </liber>
   <liber numerus="11172" status="parsatum">
     <titulus>Abraham Lincoln</titulus>
@@ -5444,6 +5710,13 @@
     <filum via="../gutenberg-mirror/1/1/4/5/11450/old/11450.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/5/11450/11450-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12175" status="parsatum">
+    <titulus>The Nest of the Sparrowhawk</titulus>
+    <auctor>Baroness Orczy</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12175/old/12175-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12175/old/12175.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12175/12175-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10116" status="parsatum">
     <titulus>All Saints' Day and Other Sermons</titulus>
     <auctor>Charles Kingsley</auctor>
@@ -5540,6 +5813,13 @@
     <filum via="../gutenberg-mirror/1/0/4/5/10455/old/10455.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/4/5/10455/10455-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12160" status="parsatum">
+    <titulus>His Other Self</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/6/12160/12160-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12160/old/12160.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12160/12160.txt"/>
+  </liber>
   <liber numerus="10274" status="parsatum">
     <titulus>Sermons on Evil-Speaking</titulus>
     <auctor>Isaac Barrow</auctor>
@@ -5592,6 +5872,18 @@
     <filum via="../gutenberg-mirror/1/1/2/6/11264/old/11264.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/6/11264/old/11264-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/6/11264/11264-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12180" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/8/12180/12180-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12180/old/12180.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12180/old/12180-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12094" status="parsatum">
+    <titulus>O Henry Memorial Award Prize Stories of 1919</titulus>
+    <auctor>Various</auctor>
+    <filum via="../gutenberg-mirror/1/2/0/9/12094/old/12094-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12094/old/12094.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12094/12094-0.txt" duplicatum/>
   </liber>
   <liber numerus="10080" status="parsatum">
     <titulus>Mobilizing Woman-Power</titulus>
@@ -6009,6 +6301,12 @@
     <filum via="../gutenberg-mirror/1/1/3/4/11348/old/11348-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/3/4/11348/11348-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12116" status="parsatum">
+    <titulus>Struwwelpeter: Merry Tales and Funny Pictures</titulus>
+    <auctor>Heinrich Hoffman</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12116/old/12116.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12116/12116-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12056" status="parsatum">
     <titulus>Phases of Faith</titulus>
     <auctor>Francis William Newman</auctor>
@@ -6027,6 +6325,13 @@
     <titulus>Style</titulus>
     <auctor>Walter Raleigh</auctor>
     <filum via="../gutenberg-mirror/1/0/3/1038/1038-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12127" status="parsatum">
+    <titulus>Captain Rogers</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12127/12127.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12127/12127-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12127/old/12127.txt" in_old/>
   </liber>
   <liber numerus="11718" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/7/1/11718/11718-0.txt" duplicatum/>
@@ -6127,6 +6432,13 @@
     <auctor>Frank Kennedy</auctor>
     <filum via="../gutenberg-mirror/1/0/1/8/10186/10186-m/10186-m-readme.txt"/>
   </liber>
+  <liber numerus="12107" status="parsatum">
+    <titulus>Atlantic Monthly, Vol. 9, No. 55, May, 1862</titulus>
+    <auctor>Various</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/0/12107/old/12107.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12107/old/12107-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12107/12107-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12021" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/2/0/2/12021/12021-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/2/12021/old/12021.txt" in_old/>
@@ -6141,6 +6453,15 @@
   <liber numerus="11504" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/5/0/11504/11504-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11504/old/11504.txt" in_old/>
+  </liber>
+  <liber numerus="12150" status="parsatum">
+    <titulus>North, South and Over the Sea</titulus>
+    <auctor>M.E. Francis (Mrs. Francis Blundell)</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12150/12150.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12150/12150-8.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12150/old/12150.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12150/old/12150-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12150/12150-0.txt" duplicatum/>
   </liber>
   <liber numerus="12010" status="parsatum">
     <titulus>The Fourth Dimensional Reaches of the Panama-Pacific International Exposition</titulus>
@@ -6217,6 +6538,12 @@
     <filum via="../gutenberg-mirror/1/1/7/1/11712/old/11712-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/1/11712/11712-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12134" status="parsatum">
+    <titulus>American Missionary, Vol. XLII., June, 1888., No. 6</titulus>
+    <auctor>Various</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12134/old/12134.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12134/12134-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12034" status="parsatum">
     <titulus>Knights of Malta, 1523-1798</titulus>
     <auctor>R. Cohen</auctor>
@@ -6270,6 +6597,20 @@
     <auctor>Louisa C. Tuthill</auctor>
     <filum via="../gutenberg-mirror/1/1/1/2/11120/old/11120.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/1/2/11120/11120-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="20040422" status="parsatum">
+    <titulus>The Boy Scouts of the Eagle Patrol</titulus>
+    <auctor>Robert Drake</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12112/old/old/20040422.12112.txt" in_old/>
+  </liber>
+  <liber numerus="12145" status="parsatum">
+    <titulus>The Poetical Works of William Wordsworth, Vol. II.</titulus>
+    <auctor>William Wordsworth</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/4/12145/12145-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12145/12145.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12145/old/12145.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12145/old/12145-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12145/12145-8.txt" duplicatum/>
   </liber>
   <liber numerus="11240" status="parsatum">
     <titulus>The Apartment Next Door</titulus>
@@ -6347,6 +6688,14 @@
   </liber>
   <liber numerus="11220" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/2/2/11220/11220-readme.txt"/>
+  </liber>
+  <liber numerus="1212" status="parsatum">
+    <titulus>Love And Freindship And Other Early Works</titulus>
+    <auctor>Jane Austen</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1212/old/old/1212.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1212/old/old/old-2024-08-13/1212-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1212/old/1212-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1212/1212-0.txt" duplicatum/>
   </liber>
   <liber numerus="11171" status="parsatum">
     <titulus>Uncle Tom's Cabin, Young Folks' Edition</titulus>
@@ -6679,6 +7028,11 @@
     <filum via="../gutenberg-mirror/1/1/5/1157/old/1157-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/1157/1157-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12099" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/0/9/12099/12099-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12099/old/12099.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12099/old/12099-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="10133" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/1/3/10133/10133-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/0/1/3/10133/old/10133.txt" in_old/>
@@ -6872,6 +7226,12 @@
     <filum via="../gutenberg-mirror/1/0/4/5/10454/old/10454.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/4/5/10454/10454-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12163" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/6/12163/12163-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12163/old/12163-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12163/old/old/12163-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12163/old/old/12163.txt" in_old/>
+  </liber>
   <liber numerus="10273" status="parsatum">
     <titulus>Audio: Ah! Fors' e Lui</titulus>
     <auctor>Lucrezia Bori (soprano)</auctor>
@@ -6911,6 +7271,13 @@
     <filum via="../gutenberg-mirror/1/0/8/5/10859/10859.txt"/>
     <filum via="../gutenberg-mirror/1/0/8/5/10859/old/10859.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/8/5/10859/10859-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12097" status="parsatum">
+    <titulus>Atlantic Monthly, Vol. 9, No. 54, April, 1862</titulus>
+    <auctor>Various</auctor>
+    <filum via="../gutenberg-mirror/1/2/0/9/12097/old/12097.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12097/old/12097-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12097/12097-0.txt" duplicatum/>
   </liber>
   <liber numerus="10081" status="parsatum">
     <titulus>The Boy Allies at Jutland</titulus>
@@ -7343,6 +7710,12 @@
     <filum via="../gutenberg-mirror/1/2/0/5/12059/old/12059.txt" in_old/>
     <filum via="../gutenberg-mirror/1/2/0/5/12059/old/12059-8.txt" in_old duplicatum/>
   </liber>
+  <liber numerus="12117" status="parsatum">
+    <titulus>Excentriske noveller</titulus>
+    <auctor>Herman Bang</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12117/old/12117-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12117/12117-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10165" status="parsatum">
     <titulus>Across the Zodiac</titulus>
     <auctor>Percy Greg</auctor>
@@ -7357,6 +7730,13 @@
   <liber numerus="11829" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/8/2/11829/11829-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/8/2/11829/old/11829-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12126" status="parsatum">
+    <titulus>In The Library</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12126/12126-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12126/12126.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12126/old/12126.txt" in_old/>
   </liber>
   <liber numerus="11407" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/4/0/11407/11407-0.txt" duplicatum/>
@@ -7435,6 +7815,15 @@
     <auctor>Hotel Commodore Ensemble</auctor>
     <filum via="../gutenberg-mirror/1/0/1/8/10181/10181-m/10181-m-readme.txt"/>
   </liber>
+  <liber numerus="12106" status="parsatum">
+    <titulus>Old Gorgon Graham</titulus>
+    <auctor>George Horace Lorimer</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/0/12106/12106-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12106/old/12106.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12106/old/12106-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12106/12106.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12106/12106-8.txt" duplicatum/>
+  </liber>
   <liber numerus="10242" status="parsatum">
     <titulus>Audio: Plaque No. 6</titulus>
     <auctor>Losey's Orchestra</auctor>
@@ -7462,6 +7851,13 @@
     <filum via="../gutenberg-mirror/1/1/5/0/11505/old/11505-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11505/old/old/11505.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/0/11505/old/old/11505-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12151" status="parsatum">
+    <titulus>Back to Back</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12151/12151.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12151/old/12151.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12151/12151-0.txt" duplicatum/>
   </liber>
   <liber numerus="12013" status="parsatum">
     <titulus>My Year of the War</titulus>
@@ -7544,6 +7940,12 @@
     <filum via="../gutenberg-mirror/1/1/4/0/11409/old/11409.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/0/11409/old/11409-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/4/0/11409/11409-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12135" status="parsatum">
+    <titulus>The Art of Fencing</titulus>
+    <auctor>Monsieur L'Abbat</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12135/old/12135.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12135/12135-0.txt" duplicatum/>
   </liber>
   <liber numerus="12033" status="parsatum">
     <titulus>What's the Matter with Ireland?</titulus>
@@ -7633,6 +8035,11 @@
     <filum via="../gutenberg-mirror/1/1/5/1/11510/old/11510.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/1/11510/11510-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12144" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/4/12144/12144-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12144/old/12144.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12144/old/12144-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="11110" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/1/1/11110/11110-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/1/1/11110/old/11110.txt" in_old/>
@@ -7715,6 +8122,12 @@
     <filum via="../gutenberg-mirror/1/1/7/2/11726/11726-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/2/11726/old/11726-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/2/11726/old/11726.txt" in_old/>
+  </liber>
+  <liber numerus="1215" status="parsatum">
+    <titulus>The Elixir of Life</titulus>
+    <auctor>Honore de Balzac</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1215/old/1215.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1215/1215-0.txt" duplicatum/>
   </liber>
   <liber numerus="10356" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/3/5/10356/10356-0.txt" duplicatum/>
@@ -8043,6 +8456,10 @@
     <filum via="../gutenberg-mirror/1/1/5/1154/old/1154-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/1154/1154-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12098" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/0/9/12098/12098-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12098/old/12098.txt" in_old/>
+  </liber>
   <liber numerus="10955" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/9/5/10955/10955-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/0/9/5/10955/old/10955-8.txt" in_old duplicatum/>
@@ -8213,6 +8630,11 @@
     <filum via="../gutenberg-mirror/1/0/4/5/10453/10453.txt"/>
     <filum via="../gutenberg-mirror/1/0/4/5/10453/10453-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12162" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/6/12162/12162-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12162/old/12162-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12162/old/12162.txt" in_old/>
+  </liber>
   <liber numerus="20061104" status="parsatum">
     <titulus>An Antarctic Mystery</titulus>
     <auctor>Jules Verne</auctor>
@@ -8271,6 +8693,12 @@
   </liber>
   <liber numerus="1129" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/2/1129/1129-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12096" status="parsatum">
+    <titulus>Bushido, the Soul of Japan</titulus>
+    <auctor>Inazo NitobÃ©</auctor>
+    <filum via="../gutenberg-mirror/1/2/0/9/12096/old/12096-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12096/12096-0.txt" duplicatum/>
   </liber>
   <liber numerus="10082" status="parsatum">
     <titulus>The Hampstead Mystery</titulus>
@@ -8712,6 +9140,10 @@
     <filum via="../gutenberg-mirror/1/2/0/1209/old/1209.txt" in_old/>
     <filum via="../gutenberg-mirror/1/2/0/1209/1209-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12118" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/1/12118/12118-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12118/old/12118.txt" in_old/>
+  </liber>
   <liber numerus="12058" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/2/0/5/12058/12058-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/5/12058/old/12058.txt" in_old/>
@@ -8768,6 +9200,11 @@
     <filum via="../gutenberg-mirror/1/1/3/6/11366/old/11366.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/3/6/11366/old/11366-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/3/6/11366/11366-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12138" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/3/12138/12138-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12138/old/12138.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12138/old/12138-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="12038" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/2/0/3/12038/12038-0.txt" duplicatum/>
@@ -8841,6 +9278,13 @@
     <filum via="../gutenberg-mirror/1/2/0/2/12023/old/12023.txt" in_old/>
     <filum via="../gutenberg-mirror/1/2/0/2/12023/old/12023-8.txt" in_old duplicatum/>
   </liber>
+  <liber numerus="12105" status="parsatum">
+    <titulus>La lutte pour la sante</titulus>
+    <auctor>Dr. Burlureaux</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/0/12105/old/12105.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12105/old/12105-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12105/12105-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10153" status="parsatum">
     <titulus>Audio: Voice Trial - Kinetophone Actor Audition</titulus>
     <auctor>Frank Lenord</auctor>
@@ -8862,6 +9306,13 @@
     <filum via="../gutenberg-mirror/1/1/6/7/11674/old/11674-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/6/7/11674/old/11674.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/6/7/11674/11674-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12152" status="parsatum">
+    <titulus>Keeping Watch</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12152/12152.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12152/old/12152.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12152/12152-0.txt" duplicatum/>
   </liber>
   <liber numerus="12012" status="parsatum">
     <titulus>Drei Gaugöttinnen</titulus>
@@ -8932,6 +9383,13 @@
     <filum via="../gutenberg-mirror/1/1/4/0/11408/old/11408-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/4/0/11408/old/11408.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/0/11408/11408-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12132" status="parsatum">
+    <titulus>Three at Table</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12132/12132.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12132/old/12132.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12132/12132-0.txt" duplicatum/>
   </liber>
   <liber numerus="12032" status="parsatum">
     <titulus>Collected Poems 1901-1918 in Two Volumes</titulus>
@@ -9023,6 +9481,10 @@
     <filum via="../gutenberg-mirror/1/1/7/3/11730/old/11730.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/7/3/11730/11730-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12143" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/4/12143/12143-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12143/old/12143.txt" in_old/>
+  </liber>
   <liber numerus="11113" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/1/1/11113/11113-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/1/1/11113/old/11113.txt" in_old/>
@@ -9064,6 +9526,18 @@
     <filum via="../gutenberg-mirror/1/0/6/9/10693/old/10693-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/6/9/10693/10693-0.txt" duplicatum/>
   </liber>
+  <liber numerus="20040831" status="parsatum">
+    <titulus>The Elixir of Life</titulus>
+    <auctor>Honore de Balzac</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1215/old/old/20040831-1215.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12158" status="parsatum">
+    <titulus>The Vigil</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12158/12158-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12158/old/12158.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12158/12158.txt"/>
+  </liber>
   <liber numerus="12018" status="parsatum">
     <titulus>Notes and Queries 1850.02.23</titulus>
     <auctor>Various</auctor>
@@ -9077,6 +9551,13 @@
     <filum via="../gutenberg-mirror/1/1/0/8/11087/old/11087-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/0/8/11087/old/11087.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/0/8/11087/11087-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="1214" status="parsatum">
+    <titulus>The Street of Seven Stars</titulus>
+    <auctor>Mary Roberts Rinehart</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1214/old/1214.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1214/old/1214-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1214/1214-0.txt" duplicatum/>
   </liber>
   <liber numerus="10536" status="parsatum">
     <titulus>Audio: Project Gutenberg Fanfare</titulus>
@@ -9191,6 +9672,9 @@
     <filum via="../gutenberg-mirror/1/0/8/3/10832/old/old/2004-01-25-10832.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/0/11703/old/old/2004-03-24-11703-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/0/11703/old/old/2004-03-24-11703.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12096/old/old/2004-04-21-12096-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12096/old/old/2004-04-21-12096.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12096/old/old/2004-04-21-12096-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="11204" status="parsatum">
     <titulus>Diseases of the Horse's Foot</titulus>
@@ -9499,6 +9983,10 @@
     <filum via="../gutenberg-mirror/1/1/3/1/11315/11315-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/3/1/11315/old/11315.txt" in_old/>
   </liber>
+  <liber numerus="12178" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/7/12178/12178-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12178/old/12178-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="1077" status="parsatum">
     <titulus>The Mirror of Kong Ho</titulus>
     <auctor>Ernest Bramah</auctor>
@@ -9716,6 +10204,12 @@
     <filum via="../gutenberg-mirror/1/1/5/7/11576/old/11576-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/7/11576/old/11576.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/7/11576/11576-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12172" status="parsatum">
+    <titulus>Alone In London</titulus>
+    <auctor>Hesba Stretton</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12172/old/12172.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12172/12172-0.txt" duplicatum/>
   </liber>
   <liber numerus="11159" status="parsatum">
     <titulus>Atlantic Monthly, Vol. 10, No. 62, December, 1862</titulus>
@@ -10131,6 +10625,10 @@
     <filum via="../gutenberg-mirror/1/1/6/3/11633/old/11633.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/6/3/11633/11633-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12119" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/1/12119/12119-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12119/old/12119-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="10912" status="parsatum">
     <titulus>The Infant's Delight: Poetry</titulus>
     <auctor>Anonymous</auctor>
@@ -10177,6 +10675,11 @@
     <filum via="../gutenberg-mirror/1/1/3/6/11367/old/11367-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/3/6/11367/old/11367.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/3/6/11367/11367-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12139" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/3/12139/12139-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12139/old/12139.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12139/old/12139-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="11414" status="parsatum">
     <titulus>In the Claws of the German Eagle</titulus>
@@ -10238,6 +10741,11 @@
     <filum via="../gutenberg-mirror/1/1/0/4/11041/old/11041.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/0/4/11041/11041-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12104" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/0/12104/12104-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12104/old/12104.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/0/12104/old/12104-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="10648" status="parsatum">
     <titulus>Beacon Lights of History, Volume XIII</titulus>
     <auctor>John Lord</auctor>
@@ -10270,6 +10778,13 @@
     <filum via="../gutenberg-mirror/1/1/6/7/11675/old/11675.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/6/7/11675/old/11675-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/6/7/11675/11675-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12153" status="parsatum">
+    <titulus>The Understudy</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12153/12153.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12153/old/12153.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12153/12153-0.txt" duplicatum/>
   </liber>
   <liber numerus="11050" status="parsatum">
     <titulus>Taquisara</titulus>
@@ -10347,6 +10862,12 @@
     <filum via="../gutenberg-mirror/1/1/7/1/11717/old/11717.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/7/1/11717/11717-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12133" status="parsatum">
+    <titulus>Lady of the Barge and Others, Entire Collection</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12133/old/12133-2006-10-30.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12133/12133-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10255" status="parsatum">
     <titulus>Audio: La Paloma</titulus>
     <auctor>Banda de Zapadores de Mexico</auctor>
@@ -10406,6 +10927,13 @@
     <filum via="../gutenberg-mirror/1/1/1/2/11123/old/11123.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/1/2/11123/11123-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12142" status="parsatum">
+    <titulus>Sterne</titulus>
+    <auctor>H.D. Traill</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/4/12142/old/12142.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12142/old/12142-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12142/12142-0.txt" duplicatum/>
+  </liber>
   <liber numerus="11245" status="parsatum">
     <titulus>The Mirror of Literature, Amusement, and Instruction</titulus>
     <auctor>Various</auctor>
@@ -10447,6 +10975,20 @@
     <filum via="../gutenberg-mirror/1/0/6/9/10692/old/10692-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/6/9/10692/old/10692.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/6/9/10692/10692-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12159" status="parsatum">
+    <titulus>Easy Money</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/5/12159/12159-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12159/old/12159.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/5/12159/12159.txt"/>
+  </liber>
+  <liber numerus="1217" status="parsatum">
+    <titulus>Penelope's Experiences in Scotland</titulus>
+    <auctor>Kate Douglas Wiggin</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1217/old/1217-0.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1217/old/1217.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1217/1217-0.txt" duplicatum/>
   </liber>
   <liber numerus="11086" status="parsatum">
     <titulus>A Surgeon in Belgium</titulus>
@@ -10801,6 +11343,11 @@
     <filum via="../gutenberg-mirror/1/0/9/5/10953/old/10953.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/9/5/10953/old/10953-8.txt" in_old duplicatum/>
   </liber>
+  <liber numerus="12179" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/7/12179/12179-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12179/old/12179.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12179/old/12179-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="10395" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/0/3/9/10395/10395-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/0/3/9/10395/old/10395.txt" in_old/>
@@ -11074,6 +11621,11 @@
   <liber numerus="1127" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/2/1127/1127-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12184" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/8/12184/12184-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12184/old/12184.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/8/12184/old/12184-8.txt" in_old duplicatum/>
+  </liber>
   <liber numerus="12090" status="parsatum">
     <titulus>The Lives of the Poets of Great Britain and Ireland (1753),Vol. V.</titulus>
     <auctor>Theophilus Cibber</auctor>
@@ -11101,6 +11653,13 @@
     <filum via="../gutenberg-mirror/1/1/4/6/11461/11461-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/4/6/11461/old/11461.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/6/11461/old/11461-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12173" status="parsatum">
+    <titulus>The Two Lovers of Heaven: Chrysanthus and Daria</titulus>
+    <auctor>Pedro Calderon de la Barca</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12173/old/12173.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12173/12173-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12173/12173.txt"/>
   </liber>
   <liber numerus="11158" status="parsatum">
     <titulus>Atlantic Monthly, Vol. 10, No. 61, November, 1862</titulus>
@@ -11680,6 +12239,12 @@
     <filum via="../gutenberg-mirror/1/2/0/0/12005/12005-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/0/12005/old/12005-8.txt" in_old duplicatum/>
   </liber>
+  <liber numerus="12110" status="parsatum">
+    <titulus>The Scornful Lady</titulus>
+    <auctor>Francis Beaumont and John Fletcher</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12110/old/12110.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12110/12110-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12050" status="parsatum">
     <titulus>The Works of Samuel Johnson in Nine Volumes</titulus>
     <auctor>Samuel Johnson</auctor>
@@ -11706,6 +12271,13 @@
     <filum via="../gutenberg-mirror/1/1/2/3/11239/old/11239-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/2/3/11239/old/11239.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/2/3/11239/11239-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12121" status="parsatum">
+    <titulus>Lady of the Barge</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/2/12121/12121.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12121/12121-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12121/old/12121.txt" in_old/>
   </liber>
   <liber numerus="11090" status="parsatum">
     <titulus>Industrial Progress and Human Economics</titulus>
@@ -11765,6 +12337,13 @@
     <filum via="../gutenberg-mirror/1/2/0/3/12030/old/12030-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/3/12030/12030-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12130" status="parsatum">
+    <titulus>An Adulteration Act</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12130/12130.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12130/old/12130.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12130/12130-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10654" status="parsatum">
     <titulus>Audio: The St. James Infirmary Blues</titulus>
     <auctor>Roger McGuinn</auctor>
@@ -11781,6 +12360,10 @@
   <liber numerus="11703" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/7/0/11703/11703-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/0/11703/old/11703-0.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12141" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/4/12141/12141-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12141/old/12141.txt" in_old/>
   </liber>
   <liber numerus="10287" status="parsatum">
     <titulus>Audio: New York Blues</titulus>
@@ -11852,6 +12435,12 @@
     <filum via="../gutenberg-mirror/1/1/0/5/11052/11502-8.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11502/11502-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/0/11502/old/11502-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="1216" status="parsatum">
+    <titulus>Decline of Science in England</titulus>
+    <auctor>Charles Babbage</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1216/old/1216.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1216/1216-0.txt" duplicatum/>
   </liber>
   <liber numerus="11085" status="parsatum">
     <titulus>M. or N. &quot;Similia similibus curantur.&quot;</titulus>
@@ -12435,6 +13024,13 @@
     <auctor>Miller Reese Hutchinson</auctor>
     <filum via="../gutenberg-mirror/1/0/2/3/10233/10233-m/10233-m-readme.txt"/>
   </liber>
+  <liber numerus="12093" status="parsatum">
+    <titulus>The Song of the Stone Wall</titulus>
+    <auctor>Helen Keller</auctor>
+    <filum via="../gutenberg-mirror/1/2/0/9/12093/old/12093-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12093/old/12093.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12093/12093-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10135" status="parsatum">
     <titulus>The Great English Short-Story Writers, Vol. 1</titulus>
     <auctor>Various</auctor>
@@ -12462,6 +13058,13 @@
     <titulus>Audio: Skamba Kankliah ir Trimintia</titulus>
     <auctor>Jouzas Suildauskas (baritonas)</auctor>
     <filum via="../gutenberg-mirror/1/0/2/6/10264/10264-m/10264-m-readme.txt"/>
+  </liber>
+  <liber numerus="12170" status="parsatum">
+    <titulus>The Wolf Hunters</titulus>
+    <auctor>James Oliver Curwood</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12170/old/12170.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12170/12170-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12170/12170.txt"/>
   </liber>
   <liber numerus="12040" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/2/0/4/12040/12040-0.txt" duplicatum/>
@@ -12576,6 +13179,10 @@
     <filum via="../gutenberg-mirror/1/1/5/4/11543/11543-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/4/11543/old/11543-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/4/11543/old/11543.txt" in_old/>
+  </liber>
+  <liber numerus="12165" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/6/12165/12165-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12165/old/12165-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="10279" status="parsatum">
     <titulus>Audio: Uncle Tom's Cabin</titulus>
@@ -13088,6 +13695,13 @@
     <filum via="../gutenberg-mirror/1/1/4/3/11430/old/11430.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/4/3/11430/11430-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12111" status="parsatum">
+    <titulus>The Glories of Ireland</titulus>
+    <auctor>Edited by Joseph Dunn and P.J. Lennox</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1/12111/old/12111-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12111/old/12111.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/1/12111/12111-0.txt" duplicatum/>
+  </liber>
   <liber numerus="12053" status="parsatum">
     <titulus>Gladius Dei; Schwere Stunde</titulus>
     <auctor>Thomas Mann</auctor>
@@ -13103,6 +13717,11 @@
     <filum via="../gutenberg-mirror/1/0/1/6/10163/old/10163-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/1/6/10163/old/10163.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/1/6/10163/10163-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12120" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/2/12120/12120-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12120/old/12120.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/2/12120/old/12120-8.txt" in_old duplicatum/>
   </liber>
   <liber numerus="11091" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/0/9/11091/11091-0.txt" duplicatum/>
@@ -13148,6 +13767,13 @@
     <filum via="../gutenberg-mirror/1/1/0/7/11074/old/11074.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/0/7/11074/11074-0.txt" duplicatum/>
   </liber>
+  <liber numerus="12131" status="parsatum">
+    <titulus>A Golden Venture</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/3/12131/12131.txt"/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12131/old/12131.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/3/12131/12131-0.txt" duplicatum/>
+  </liber>
   <liber numerus="10657" status="parsatum">
     <titulus>&quot;De Bello Gallico&quot; and Other Commentaries</titulus>
     <auctor>Caius Julius Caesar</auctor>
@@ -13162,6 +13788,13 @@
     <filum via="../gutenberg-mirror/1/1/7/0/11704/11704-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/0/11704/old/11704.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/7/0/11704/old/11704-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12140" status="parsatum">
+    <titulus>Roman Farm Management</titulus>
+    <auctor>Marcus Porcius Cato</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/4/12140/old/12140.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12140/old/12140-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/4/12140/12140-0.txt" duplicatum/>
   </liber>
   <liber numerus="10284" status="parsatum">
     <titulus>Audio: Spring of Love</titulus>
@@ -13308,6 +13941,11 @@
   <liber numerus="11722" status="indiget_llm">
     <filum via="../gutenberg-mirror/1/1/7/2/11722/11722-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/7/2/11722/old/11722.txt" in_old/>
+  </liber>
+  <liber numerus="1219" status="parsatum">
+    <titulus>An Essay on Comedy</titulus>
+    <auctor>George Meredith</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/1219/1219.txt"/>
   </liber>
   <liber numerus="11103" status="parsatum">
     <titulus>Atlantic Monthly Volume 6, No. 37, November, 1860</titulus>
@@ -13808,6 +14446,7 @@
     <titulus>The Oxford Movement</titulus>
     <auctor>R.W. Church</auctor>
     <filum via="../gutenberg-mirror/1/2/0/9/12092/old/12092-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/0/9/12092/old/12092.txt" in_old/>
     <filum via="../gutenberg-mirror/1/2/0/9/12092/old/12092-0.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/2/0/9/12092/12092-0.txt" duplicatum/>
   </liber>
@@ -13856,6 +14495,13 @@
     <filum via="../gutenberg-mirror/1/0/1/0/10107/old/10107-8.txt" in_old duplicatum/>
     <filum via="../gutenberg-mirror/1/0/1/0/10107/old/10107.txt" in_old/>
     <filum via="../gutenberg-mirror/1/0/1/0/10107/10107-0.txt" duplicatum/>
+  </liber>
+  <liber numerus="12171" status="parsatum">
+    <titulus>Women Workers in Seven Professions</titulus>
+    <auctor>Edith J. Morley</auctor>
+    <filum via="../gutenberg-mirror/1/2/1/7/12171/old/12171-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12171/old/12171.txt" in_old/>
+    <filum via="../gutenberg-mirror/1/2/1/7/12171/12171-0.txt" duplicatum/>
   </liber>
   <liber numerus="11454" status="parsatum">
     <titulus>A Visit To The United States In 1841</titulus>
@@ -13971,6 +14617,11 @@
     <filum via="../gutenberg-mirror/1/1/5/4/11540/11540-0.txt" duplicatum/>
     <filum via="../gutenberg-mirror/1/1/5/4/11540/old/11540.txt" in_old/>
     <filum via="../gutenberg-mirror/1/1/5/4/11540/old/11540-8.txt" in_old duplicatum/>
+  </liber>
+  <liber numerus="12164" status="indiget_llm">
+    <filum via="../gutenberg-mirror/1/2/1/6/12164/12164-0.txt" duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12164/old/12164-8.txt" in_old duplicatum/>
+    <filum via="../gutenberg-mirror/1/2/1/6/12164/old/12164.txt" in_old/>
   </liber>
   <liber numerus="10278" status="parsatum">
     <titulus>Audio: Sei Forse L'Angelo Fedele</titulus>

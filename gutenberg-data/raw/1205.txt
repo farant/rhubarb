@@ -1,0 +1,15 @@
+<result>
+Title = "The Colour of Life"
+Author = "Alice Meynell"
+Year = 1897
+
+Tags = ["non-fiction", "essays", "appropriate-for-children", "catholic"]
+
+Summary = """
+A collection of essays by Alice Meynell, the acclaimed Victorian-era Catholic poet, essayist, and suffragist. The volume contains ten contemplative essays on various subjects including nature, art, biography, and mortality. Meynell was known for her refined prose style and ability to find profound meaning in everyday observations. Topics range from meditations on clouds, winds, and grasses to reflections on the actress Eleonora Duse and visits to monastery gates. Her writing combines aesthetic sensitivity with spiritual depth, characteristic of her position as one of the leading Catholic literary figures of her time.
+"""
+
+Notes = """
+Using 1897 as the publication year based on the transcription note indicating this was transcribed from the "1897 John Lane edition." Alice Meynell (1847-1922) was a prominent Catholic convert and her work was widely respected in Catholic literary circles. Her essays often reflect contemplative and spiritual themes consistent with her faith, making the 'catholic' tag appropriate. The work is suitable for older children and adults given its contemplative, non-controversial nature.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the structured information you requested.
+
+This is "Shakespeare's Insomnia, and the Causes Thereof" by Franklin H. Head, published in 1887. This is indeed a literary hoax, as the transcriber's note indicates - it's a work of imaginative fiction that purports to analyze Shakespeare's sleep troubles through fictitious letters.
+
+<result>
+Title = "Shakespeare's Insomnia, and the Causes Thereof"
+Author = "Franklin H. Head"
+Year = 1887
+
+Tags = ["fiction", "literary-hoax", "non-fiction-style"]
+
+Summary = """
+This is a literary hoax by Franklin H. Head that presents itself as a scholarly examination of William Shakespeare's supposed insomnia. The work uses the framing device of analyzing fictitious letters to explore the phenomenon of sleeplessness, particularly as it affects men in active professional life past their mid-thirties. While ostensibly about Shakespeare, it appears to be more of a late 19th-century meditation on the modern problem of insomnia, attributing it to the rapid pace of industrial society, telegraphs, railroads, and intense business competition. The work is notable as an example of the "literary hoax" genre popular in the Victorian era, where fictional scholarly works were presented as genuine historical or literary analysis.
+"""
+
+Notes = """
+The year 1887 is clearly stated on the title page. This work is not appropriate for the 'catholic' tag as Franklin H. Head was not a Catholic author writing from a Catholic perspective. It's also not truly 'appropriate-for-children' as it's a somewhat sophisticated literary hoax dealing with adult themes of professional stress and insomnia. The tag 'literary-hoax' is particularly important here as the work explicitly acknowledges its fictional nature.
+"""
+</result>
