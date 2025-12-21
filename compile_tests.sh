@@ -79,6 +79,7 @@ declare -a SOURCE_FILES=(
     "lib/biblia_visus.c"
     "lib/iter_directoria.c"
     "lib/exemplar.c"
+    "lib/toml.c"
 )
 
 # Objective-C source (compiled separately)

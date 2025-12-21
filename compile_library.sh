@@ -53,6 +53,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_syntaxis.c"
     "lib/iter_directoria.c"
     "lib/exemplar.c"
+    "lib/toml.c"
 )
 
 # Color codes
