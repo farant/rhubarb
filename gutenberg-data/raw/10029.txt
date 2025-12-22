@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Hunt Ball Mystery"
+Author = "Sir William Magnay, Bt."
+Year = 1918
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+'The Hunt Ball Mystery' is a detective novel by Sir William Magnay, Baronet, published during the final year of World War I. It is a classic British mystery centered around suspicious events at a hunt ball, featuring investigators Kelson and Gifford who must unravel a complex puzzle involving an intruder, mysterious stains, a missing guest, and a locked room. The novel exemplifies the early 20th-century detective fiction genre that preceded the Golden Age of mystery writing. Magnay was a prolific writer of mystery and adventure novels during the Edwardian and early Georgian periods.
+"""
+
+Notes = """
+The year 1918 is clearly stated on the title page as the publication date. This appears to be the original publication year for this work. Sir William Magnay wrote numerous popular mysteries and adventure novels in the early 20th century, though he is less well-known today than contemporaries like Agatha Christie who would emerge in the 1920s.
+"""
+</result>

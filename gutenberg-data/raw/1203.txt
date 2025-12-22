@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Dolly Dialogues"
+Author = "Anthony Hope"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Dolly Dialogues' is a collection of twenty witty, light-hearted dialogues and short sketches by Anthony Hope (Sir Anthony Hope Hawkins), best known for 'The Prisoner of Zenda'. The stories feature conversations between the narrator and the charming, flirtatious Mrs. Dolly Foster (née Mickleham), exploring the social manners, romantic entanglements, and witty repartee of late Victorian society. The work is characterized by its humor, social commentary, and the delightful character of Dolly, who represents the "New Woman" of the 1890s—independent, clever, and socially confident. The dialogues are episodic and can be read independently, each offering a glimpse into the world of upper-class London society with its balls, social calls, and romantic complications.
+"""
+
+Notes = """
+Published in 1894, 'Dolly Dialogues' was one of Anthony Hope's early successes, coming out the same year as 'The Prisoner of Zenda' which would make him famous. The work represents the sophisticated drawing-room comedy popular in the 1890s and showcases Hope's talent for dialogue and social satire before he became primarily known for his adventure romances.
+"""
+</result>

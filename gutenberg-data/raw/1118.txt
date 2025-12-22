@@ -1,0 +1,19 @@
+Based on the excerpt you provided in your message, this is clearly **Hamlet** by William Shakespeare. The Executive Director's notes discuss the original printing conventions and spelling variations found in early editions of the play, including the famous opening lines with Barnardo and Francisco.
+
+From the context about original printing errors and the "canon" of Shakespeare, this appears to be based on one of the early Quarto or Folio editions, likely the First Folio of 1623, though Hamlet was first performed around 1600-1601.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "tragedy"]
+
+Summary = """
+Hamlet is one of Shakespeare's most famous tragedies, written around 1600-1601. The play tells the story of Prince Hamlet of Denmark, who seeks revenge against his uncle Claudius for murdering his father, marrying his mother, and usurping the throne. The play explores themes of revenge, madness, mortality, and moral corruption. It contains some of the most famous lines in English literature, including "To be or not to be" and features the iconic characters of Hamlet, Ophelia, Polonius, and the ghost of Hamlet's father. This particular edition preserves the original printing conventions and spelling variations from early modern English printing practices.
+"""
+
+Notes = """
+I chose 1603 as this appears to be based on an early printed edition, and the First Quarto of Hamlet was published in 1603. The play was likely first performed around 1600-1601, and the more authoritative Second Quarto was published in 1604, with the First Folio appearing in 1623. Given the editor's notes about preserving original printing errors and conventions, and this being a scholarly text focused on the historical printing, 1603 represents the earliest printed version. The work is not tagged as "appropriate-for-children" due to mature themes including murder, suicide, and madness. Not tagged as "catholic" as Shakespeare's religious affiliation is debated and the work itself is not distinctly Catholic in nature.
+"""
+</result>

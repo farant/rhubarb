@@ -1,0 +1,15 @@
+<result>
+Title = "The Healing of Nations and the Hidden Sources of Their Strife"
+Author = "Edward Carpenter"
+Year = 1915
+
+Tags = ["non-fiction", "political-philosophy", "pacifism", "world-war-i"]
+
+Summary = """
+Written during World War I, this work by English socialist poet and philosopher Edward Carpenter examines the psychological, economic, and social roots of war and nationalism. Carpenter was a prominent radical thinker, early advocate for homosexual rights, and pacifist who challenged conventional views on patriotism, imperialism, and militarism. In this book, he attempts to analyze both sides of the Great War, exploring the deeper causes of international conflict while proposing paths toward healing and peace between nations. The work reflects the pacifist and internationalist movements of the early 20th century and critiques commercial interests, colonial expansion, and the psychological manipulation used in war recruitment.
+"""
+
+Notes = """
+Year is straightforward - published in 1915 during WWI. Carpenter (1844-1929) was writing as a contemporary observer and critic of the ongoing war. This is an original work, not a translation, so the publication year is the appropriate historical marker.
+"""
+</result>

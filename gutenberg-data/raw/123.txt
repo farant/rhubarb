@@ -1,0 +1,15 @@
+<result>
+Title = "At the Earth's Core"
+Author = "Edgar Rice Burroughs"
+Year = 1914
+
+Tags = ["fiction", "science-fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+'At the Earth's Core' is the first novel in Edgar Rice Burroughs' Pellucidar series. It tells the story of David Innes and his inventor friend Abner Perry, who accidentally burrow into the Earth's interior using a mechanical prospecting device called the Iron Mole. They discover Pellucidar, a savage prehistoric world at the Earth's core with a sun at its center, where Stone Age humans live under the tyranny of the telepathic Mahars (intelligent pterodactyl-like creatures). The novel follows Innes's adventures, his encounter with Dian the Beautiful, and his experiences with slavery, escape, and survival in this bizarre inner world. Burroughs wrote this as a "hollow Earth" adventure romance, combining elements of Jules Verne-style scientific romance with his characteristic pulp action and exotic settings.
+"""
+
+Notes = """
+The novel was first serialized in All-Story Weekly in April 1914, then published as a book later that same year. 1914 represents the original publication date. This is classic pulp science fiction from Burroughs' most productive period, written around the same time as his early Tarzan and Barsoom (John Carter of Mars) novels.
+"""
+</result>

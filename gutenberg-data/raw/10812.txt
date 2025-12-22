@@ -1,0 +1,15 @@
+<result>
+Title = "The Worshipper of the Image"
+Author = "Richard Le Gallienne"
+Year = 1900
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+"The Worshipper of the Image" is a romantic novel by Richard Le Gallienne, an English poet and critic associated with the Aesthetic and Decadent movements of the 1890s. The work is subtitled "A Tragic Fairy-Tale" and centers around a character named Silencieux. Le Gallienne was known for his lyrical prose style and romantic sensibility, and this work exemplifies the fin-de-siècle aesthetic literature that explored themes of beauty, art, and idealized love. The novel follows a somewhat mystical or fairy-tale structure while dealing with romantic and possibly tragic themes.
+"""
+
+Notes = """
+The publication year 1900 is clearly stated on the title page. Richard Le Gallienne was not a Catholic author - he was associated with the Aesthetic movement and later moved to America. This work is characteristic of late Victorian/Edwardian romantic literature with its emphasis on beauty and idealization. The dedication to "Silencieux" (French for "silent one") and chapter titles suggest a symbolic or allegorical approach to the narrative.
+"""
+</result>

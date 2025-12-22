@@ -1,0 +1,15 @@
+<result>
+Title = "Ashton-Kirk, Investigator"
+Author = "John T. McIntyre"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Ashton-Kirk, Investigator" is a detective novel by American author John T. McIntyre, featuring the gentleman detective Ashton-Kirk. The protagonist is portrayed as a wealthy young man of high social position who works as a private investigator, solving mysteries through scientific methods and scholarly research. McIntyre wrote several novels featuring this character, and this appears to be one of the earlier entries in the Ashton-Kirk series. The book exemplifies early 20th-century detective fiction, with an educated amateur detective in the tradition of Sherlock Holmes, combining intellectual pursuits with criminal investigation.
+"""
+
+Notes = """
+The year 1910 is taken directly from the title page of the book as the publication date. John T. McIntyre was an American author who wrote multiple detective novels in the early 20th century, and this appears to be an original work published in Philadelphia. The book represents the popular genre of gentleman detective fiction that flourished in this era.
+"""
+</result>

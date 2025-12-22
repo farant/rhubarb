@@ -1,0 +1,15 @@
+<result>
+Title = "Old Testament Scenes and Narratives: History of the Flood"
+Author = "Anonymous"
+Year = 1851
+
+Tags = ["non-fiction", "religious", "appropriate-for-children", "catholic"]
+
+Summary = """
+This work is part of "The Good Child's Library" series, a collection of religious educational books for children published in mid-19th century America. This particular volume focuses on the biblical narrative of Noah's Flood from the Book of Genesis. It appears to be a Catholic children's book designed to teach Old Testament stories through narrative retellings and illustrations. The series was specifically marketed as religious instruction material for young readers, presenting biblical accounts in an accessible format suitable for children's comprehension and moral education.
+"""
+
+Notes = """
+Year chosen is 1851, the copyright date shown in the text. This is a 19th-century American Catholic publication by Hogan, Perkins & Co. of Philadelphia. While the biblical story of Noah dates to ancient times, this particular work is a Victorian-era children's educational text, so the relevant historical date is when this specific edition was produced and published. The series title "The Good Child's Library" was typical of Catholic educational publishing of this period.
+"""
+</result>

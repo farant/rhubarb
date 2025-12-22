@@ -1,0 +1,28 @@
+I need to analyze this Project Gutenberg text to identify the title, author, year, and other metadata.
+
+From the text, I can clearly see:
+- Title: "JUHA"
+- Author: "Juhani Aho"
+- Year indicated in text: "1911"
+
+The text is in Finnish. Based on my knowledge, this is "Juha" by Juhani Aho, a classic Finnish novel first published in 1911. Juhani Aho (1861-1921) was one of Finland's most prominent writers and a pioneer of Finnish realism.
+
+The novel tells the story of Juha, a hardworking but aging farmer, his young wife Marja, and a merchant named Shemeikka. It's considered one of Aho's masterpieces and deals with themes of betrayal, innocence, and tragedy in rural Finnish life.
+
+The passage describes a man (Juha) clearing forest on a hillside, reflecting on harsh words spoken to him about his physical deformity - his limp and crooked appearance. This sets up the novel's tragic trajectory.
+
+<result>
+Title = "Juha"
+Author = "Juhani Aho"
+Year = 1911
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+Juha is a classic Finnish novel by Juhani Aho, one of Finland's most important realist writers. The novel tells the tragic story of Juha, an aging, hardworking farmer with physical deformities, his young wife Marja, and a visiting merchant named Shemeikka who disrupts their lives. Set in rural Finland, the novel explores themes of betrayal, innocence lost, marital discord, and the clash between traditional rural life and outside influences. The work is considered one of Aho's masterpieces and a landmark of Finnish literature, depicting the harsh realities of peasant life with psychological depth and naturalistic detail.
+"""
+
+Notes = """
+1911 is the original publication year. Juhani Aho was not Catholic (Finland being predominantly Lutheran), so the 'catholic' tag is not applicable. The novel deals with adult themes of betrayal and tragedy, so it's not marked as appropriate for children. This is a work of realistic fiction depicting Finnish rural life in the late 19th/early 20th century.
+"""
+</result>

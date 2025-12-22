@@ -353,6 +353,36 @@ _librarium_visus_carcare_catalogum(
         /* Addere ad libri */
         *(LibrumInfo**)xar_addere(visus->libri) = liber;
     }
+
+    /* Sortare tags alphabetice (insertion sort) */
+    {
+        s32 num_tags = (s32)xar_numerus(visus->tags_unici);
+        s32 i;
+        s32 j;
+
+        per (i = 1; i < num_tags; i++)
+        {
+            chorda tag_i = *(chorda*)xar_obtinere(visus->tags_unici, (i32)i);
+            j = i - 1;
+
+            dum (j >= 0)
+            {
+                chorda* tag_j = (chorda*)xar_obtinere(visus->tags_unici, (i32)j);
+
+                si (_comparare_titulum(*tag_j, tag_i) <= 0)
+                {
+                    frange;
+                }
+
+                /* Movere tag_j ad j+1 */
+                *(chorda*)xar_obtinere(visus->tags_unici, (i32)(j + 1)) = *tag_j;
+                j--;
+            }
+
+            /* Inserere tag_i ad j+1 */
+            *(chorda*)xar_obtinere(visus->tags_unici, (i32)(j + 1)) = tag_i;
+        }
+    }
 }
 
 
@@ -741,9 +771,27 @@ _reddere_tags(
         linea++;
     }
 
+    /* Pagina indicator */
+    {
+        i32 num_paginae = (num_tags + tags_per_pagina - 1) / tags_per_pagina;
+        si (num_paginae < 1)
+        {
+            num_paginae = 1;
+        }
+        si (num_paginae > 1)
+        {
+            character pagina_buf[XXXII];
+            sprintf(pagina_buf, "Pagina %d/%d", (i32)visus->index_paginae + 1, num_paginae);
+            titulus = _chorda_ex_cstr(pagina_buf);
+            tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                (x + latitudo - PADDING - XVI) * char_lat, (y + II) * char_alt,
+                titulus, pixelum_text_dim, scala);
+        }
+    }
+
     /* Instructiones */
     linea = y + altitudo - II;
-    titulus = _chorda_ex_cstr("j/k: selectare   Enter: filtrare   Esc: retro");
+    titulus = _chorda_ex_cstr("j/k: selectare   h/l: pagina   Enter: filtrare   Esc: retro");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         titulus, pixelum_text_dim, scala);
@@ -1915,6 +1963,7 @@ librarium_visus_tractare_eventum(
         {
             s32 num_tags = visus->tags_unici ? (s32)xar_numerus(visus->tags_unici) : 0;
             s32 tags_per_pagina = visus->altitudo_linearum - VIII;
+            s32 num_paginae;
             s32 tags_in_pagina;
 
             si (tags_per_pagina < 1)
@@ -1922,10 +1971,20 @@ librarium_visus_tractare_eventum(
                 tags_per_pagina = 1;
             }
 
+            num_paginae = (num_tags + tags_per_pagina - 1) / tags_per_pagina;
+            si (num_paginae < 1)
+            {
+                num_paginae = 1;
+            }
+
             tags_in_pagina = num_tags - (visus->index_paginae * tags_per_pagina);
             si (tags_in_pagina > tags_per_pagina)
             {
                 tags_in_pagina = tags_per_pagina;
+            }
+            si (tags_in_pagina < 0)
+            {
+                tags_in_pagina = 0;
             }
 
             commutatio (eventus->datum.clavis.typus)
@@ -1936,12 +1995,32 @@ librarium_visus_tractare_eventum(
                     {
                         visus->index_selecta = tags_in_pagina - 1;
                     }
+                    si (visus->index_selecta < 0)
+                    {
+                        visus->index_selecta = 0;
+                    }
                     redde VERUM;
 
                 casus 'k':
                     visus->index_selecta--;
                     si (visus->index_selecta < 0)
                     {
+                        visus->index_selecta = 0;
+                    }
+                    redde VERUM;
+
+                casus 'h':
+                    si (visus->index_paginae > 0)
+                    {
+                        visus->index_paginae--;
+                        visus->index_selecta = 0;
+                    }
+                    redde VERUM;
+
+                casus 'l':
+                    si (visus->index_paginae < num_paginae - 1)
+                    {
+                        visus->index_paginae++;
                         visus->index_selecta = 0;
                     }
                     redde VERUM;

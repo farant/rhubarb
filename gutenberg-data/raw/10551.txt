@@ -1,0 +1,15 @@
+<result>
+Title = "Affair in Araby"
+Author = "Talbot Mundy"
+Year = 1920
+
+Tags = ["fiction", "adventure"]
+
+Summary = """
+"Affair in Araby" is an adventure novel by Talbot Mundy featuring his recurring character James Schuyler Grim (known as "Jimgrim"). The story is set in the Middle East during the tumultuous post-WWI period and involves intrigue surrounding Faisal I (referred to as "Feisul" in the text), who was attempting to establish an Arab kingdom. The novel combines political intrigue, espionage, and adventure as the protagonists navigate the complex geopolitical landscape of the early 20th century Middle East. Mundy, who spent years in the Near East, brought authentic knowledge of the region to his adventure fiction. The book is part of his Jimgrim series and reflects the era's colonial perspectives while celebrating Arab independence movements.
+"""
+
+Notes = """
+The novel was published in 1920-1921, first serialized in Adventure magazine (1920) and then as a book (1921). I've chosen 1920 as the initial publication year. The reference to "Feisul boy" refers to Faisal I of Iraq, who was a major historical figure in the Arab Revolt and post-WWI Arab independence movements. The novel is adventure fiction rather than children's literature despite its relatively clean content. Talbot Mundy (born William Lancaster Gribbon) was not Catholic but was interested in mysticism and Eastern philosophy.
+"""
+</result>

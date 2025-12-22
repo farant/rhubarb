@@ -1,0 +1,25 @@
+I can see this is a Finnish text from Project Gutenberg (ebook #12804). Let me analyze what I can determine about this work.
+
+From the text, I can clearly see:
+- Title: "PANKKIHERROJA"
+- Subtitle: "Kuvaus nykyaikaisesta suomalaisesta liike-elämästä" (A depiction of modern Finnish business life)
+- Author: Eino Leino
+- Publication year shown: 1914
+
+This is a work by Eino Leino, one of Finland's most prominent poets and writers. "Pankkiherroja" (which translates roughly to "Bank Barons" or "Banking Gentlemen") is a novel depicting Finnish business life in the early 20th century. Based on the opening, it appears to be a work of fiction focusing on banking and business circles.
+
+<result>
+Title = "Pankkiherroja"
+Author = "Eino Leino"
+Year = 1914
+
+Tags = ["fiction", "finnish-literature"]
+
+Summary = """
+'Pankkiherroja' (Bank Barons) is a novel by Finnish author Eino Leino depicting modern Finnish business and banking life in the early 20th century. The work explores the commercial and financial circles of Finland during this period, focusing on characters involved in banking and business. Eino Leino (1878-1926) was one of Finland's most celebrated writers and poets, known for his contributions to Finnish literature during the national romantic period. While primarily known for his poetry, Leino also wrote prose works examining contemporary Finnish society.
+"""
+
+Notes = """
+The text clearly indicates 1914 as the publication year. Eino Leino was not a Catholic author - he was Finnish and worked primarily within the context of Finnish national romanticism and modernism. The work is fiction but not appropriate to tag as 'appropriate-for-children' given it deals with adult themes of business and banking.
+"""
+</result>

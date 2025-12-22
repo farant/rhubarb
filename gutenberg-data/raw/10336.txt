@@ -1,0 +1,17 @@
+The file appears to only contain what you pasted. Based on the text you provided, this is a collection volume edited by Robert Dodsley, not a single work. However, the first play mentioned is "Tancred and Gismunda" which appears to be the primary content.
+
+<result>
+Title = "A Select Collection of Old English Plays, Vol. VII"
+Author = "Robert Dodsley (editor)"
+Year = 1876
+
+Tags = ["historical-document", "non-fiction"]
+
+Summary = """
+This is the seventh volume of Robert Dodsley's influential anthology of early English drama, originally published in 1744 and revised in this fourth edition of 1876. The volume contains five plays: "Tancred and Gismunda" (originally performed by gentlemen of the Inner Temple before Queen Elizabeth I, revised by R.W. in 1591 from a 1568 original), "The Wounds of Civil War", "Mucedorus", "The Two Angry Women of Abington", and "Look About You". The collection represents an important effort to preserve and document English Renaissance drama. "Tancred and Gismunda" in particular is noted as being written in a classical style resembling Gascoigne's paraphrase of Euripides' "Jocasta".
+"""
+
+Notes = """
+I chose 1876 as the year because this is explicitly the fourth edition published in that year. While the original Dodsley collection dates to 1744, and the plays themselves are much older (1568-1590s), the educational and historical value lies in this being a scholarly edition with commentary from multiple editors. If you wanted to focus on the primary work "Tancred and Gismunda" itself, the date would be either 1568 (original composition) or 1591 (published revision by R.W./Robert Wilmot). The 1876 date reflects the scholarly apparatus and chronological arrangement that makes this a reference work rather than just the plays themselves.
+"""
+</result>
