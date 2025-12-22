@@ -1,0 +1,15 @@
+<result>
+Title = "Studies in Civics"
+Author = "James T. McCleary"
+Year = 1897
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Studies in Civics" is an American educational textbook designed to teach students about the structure and function of government in the United States. Written by James T. McCleary, a teacher of civics and history at the State Normal School in Mankato, Minnesota, the work provides a comprehensive examination of American governmental institutions. The book includes a detailed study of the U.S. Constitution and covers various levels of government, starting with local town government and progressing to broader governmental concepts. McCleary's pedagogical approach, developed over eighteen years of teaching experience, emphasizes beginning with observable local institutions before moving to more abstract concepts. The work is part of the "American Educational Series" and was specifically designed for classroom use, with reference materials organized in an appendix for easy access.
+"""
+
+Notes = """
+The year 1897 is indicated as the revision date on the title page. While there may have been an earlier edition, 1897 represents the published version described in this text. This was during a period of significant growth in civic education in American schools, and normal schools (teacher training institutions) were important centers for developing pedagogical methods for teaching citizenship and government.
+"""
+</result>

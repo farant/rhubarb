@@ -1,0 +1,19 @@
+I recognize this work! This is W.W. Jacobs, the English humorist and short story writer known for his maritime tales and stories about working-class life in London's docklands. "The Guardian Angel" is one of his short stories featuring his recurring characters Sam Small, Ginger Dick, and Peter Russet - three sailors whose adventures and mishaps form the basis of many of his humorous tales.
+
+W.W. Jacobs lived from 1863-1943 and was most prolific in the early 20th century. "Ship's Company" was a collection of his short stories published in 1911. While Jacobs is most famous for his horror story "The Monkey's Paw" (1902), the bulk of his work consisted of these lighthearted, humorous tales of sailors and dock workers.
+
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children", "humor"]
+
+Summary = """
+'Ship's Company' is a collection of humorous short stories by W.W. Jacobs featuring recurring characters Sam Small, Ginger Dick, and Peter Russet - three sailors whose adventures and misadventures in London's docklands provide the basis for lighthearted tales of working-class life. Jacobs was a master of the humorous short story and dialect writing, capturing the vernacular and spirit of maritime workers at the turn of the 20th century. While he is best known today for his horror story 'The Monkey's Paw,' the majority of his work consisted of these gentle comedies about sailors, night-watchmen, and dock workers. 'The Guardian Angel' is one story from this collection, demonstrating Jacobs' skill at character-driven humor and his affectionate portrayal of working-class camaraderie and conflict.
+"""
+
+Notes = """
+Year chosen is 1911, the publication date of the 'Ship's Company' collection. W.W. Jacobs (1863-1943) was an English author who wrote primarily in the late Victorian and Edwardian periods, with his most productive years being roughly 1896-1926.
+"""
+</result>

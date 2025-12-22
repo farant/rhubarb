@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is "Odd Craft" by W.W. Jacobs, a collection of short stories by the English author best known for "The Monkey's Paw." W.W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific writer of humorous short stories and sea tales. "Odd Craft" was published in 1903 and contains various comedic stories, including "Blundell's Improvement" which appears to be the opening story in this collection.
+
+The text shows Jacobs' characteristic style of gentle humor and romantic comedy, set in rural or working-class English settings. This collection is fiction, appropriate for general audiences including children (Jacobs wrote clean, family-friendly humor), and would be considered light entertainment rather than serious literature.
+
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children", "short-stories", "humor"]
+
+Summary = """
+'Odd Craft' is a collection of humorous short stories by W.W. Jacobs, published in 1903. Jacobs was an English author best known for his supernatural story 'The Monkey's Paw' but was primarily a writer of comedic tales featuring working-class and rural English characters. The collection includes various stories of romantic comedy and gentle humor, including 'Blundell's Improvement,' which opens with a scene of two suitors competing for the attention of Venia Turnbull while her father desperately tries to take his Sunday afternoon nap. Jacobs' work was enormously popular in the Edwardian era for its wit, character-driven humor, and clean, accessible style.
+"""
+
+Notes = """
+1903 is the original publication year for this collection. W.W. Jacobs was not a Catholic author, so the 'catholic' tag is not included, though his work is wholesome and family-friendly.
+"""
+</result>

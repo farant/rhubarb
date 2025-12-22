@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and extract the requested information.
+
+This appears to be "Dogs and All About Them" by Robert Leighton, a comprehensive reference work on dog breeds. Based on the preface mentioning statistics from 1909 and the publication context, this work was originally published in the early 20th century. The mention of 1909 data and the phrasing "at the present time" suggests this was published around 1910-1911.
+
+<result>
+Title = "Dogs and All About Them"
+Author = "Robert Leighton"
+Year = 1910
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A comprehensive reference guide to dog breeds, written by Robert Leighton with assistance from various breed experts. The book covers the characteristics, care, and breeding of different dog breeds popular in Edwardian Britain. It includes seventeen full-page plates and provides detailed information about dogs as companions, guardians, hunting assistants, and show animals. The work reflects the growing popularity of purebred dogs in early 20th century Britain, noting that over two million dog licenses were issued in 1909 and that 906 dog shows were held that year under Kennel Club sanction.
+"""
+
+Notes = """
+The year 1910 is estimated based on the preface discussing 1909 statistics as recent data and referring to them as occurring 'in the course of 1909' and 'in that year,' suggesting publication shortly after. Some editions may have been published in 1911. This is a practical handbook rather than scientific treatise, aimed at the general dog-owning public during the height of Victorian/Edwardian interest in purebred dogs.
+"""
+</result>

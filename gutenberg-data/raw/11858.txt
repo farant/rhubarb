@@ -1,0 +1,15 @@
+<result>
+Title = "George Washington: Farmer"
+Author = "Paul Leland Haworth"
+Year = 1915
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This work examines George Washington's life as a farmer and agricultural innovator at Mount Vernon. Paul Leland Haworth, an American historian, presents Washington not in his familiar role as military commander or first president, but as a dedicated agriculturalist who pioneered farming techniques and managed extensive estates. The book explores Washington's home life, his agricultural experiments, crop rotation practices, and his efforts to improve American farming methods. Washington was deeply committed to scientific agriculture and corresponded with agricultural societies in England. This biographical work provides insight into the domestic and agrarian aspects of Washington's character, showing him as a practical man of the land who approached farming with the same methodical care he applied to military and political affairs.
+"""
+
+Notes = """
+Paul Leland Haworth (1876-1936) was an American historian who wrote several works on American history. "George Washington: Farmer" was first published in 1915. This date represents the original publication year of Haworth's historical study, not the period of Washington's life it describes (Washington lived 1732-1799). The work is a scholarly examination written in the early 20th century about Washington's 18th-century agricultural pursuits.
+"""
+</result>

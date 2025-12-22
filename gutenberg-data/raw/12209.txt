@@ -1,0 +1,15 @@
+<result>
+Title = "The Persecution of Bob Pretty"
+Author = "W. W. Jacobs"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Persecution of Bob Pretty" is a humorous short story by W. W. Jacobs, part of his collection "Odd Craft" published in 1904. The story is told by an elderly narrator who recounts the exploits of Bob Pretty, a notorious poacher and clever schemer in a rural English village. Jacobs was known for his comic tales of English country life and seafaring adventures, with a gift for dialect and character. His stories often featured working-class characters engaged in petty schemes and comedic misunderstandings. This particular tale is characteristic of his gentle, humorous style that made him one of the most popular English short story writers of the early 20th century.
+"""
+
+Notes = """
+I chose 1904 as the year because this is when "Odd Craft" was originally published. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific English author best known for "The Monkey's Paw" (1902) but who wrote many lighthearted stories about rural and maritime England. This work represents his comedic rather than horror writing.
+"""
+</result>

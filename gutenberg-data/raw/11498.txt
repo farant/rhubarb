@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement, No. 601, July 9, 1887"
+Author = "Various"
+Year = 1887
+
+Tags = ["non-fiction", "periodical", "science", "technology", "historical-document"]
+
+Summary = """
+This is an issue of the Scientific American Supplement, a weekly periodical that provided extended technical and scientific content to complement the main Scientific American magazine. The Supplement series ran from 1876 to 1919 and featured in-depth articles on engineering, manufacturing, chemistry, physics, and other scientific disciplines of the era. Each issue typically contained detailed technical illustrations, patent descriptions, and reports on the latest innovations and discoveries. This particular issue from July 9, 1887 would contain articles reflecting the state of science and technology during the late 19th century industrial age.
+"""
+
+Notes = """
+Year chosen is the publication date of this specific issue (1887). Scientific American itself was established in 1845 and became one of the most important popular science publications in American history. The Supplement series was designed for readers who wanted more technical depth than the weekly magazine provided.
+"""
+</result>

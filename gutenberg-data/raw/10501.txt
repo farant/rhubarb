@@ -1,0 +1,21 @@
+Looking at this text, it's a traditional sea shanty (folk song) called "The Whale Catchers" or sometimes known as "Greenland Whale Fisheries." Traditional songs don't have a single identifiable author or a precise publication year - they evolved through oral tradition over time. However, I can provide contextual information.
+
+This particular whaling song likely originated in the 18th or early 19th century during the height of British and American whaling expeditions to Greenland waters. Songs like this were sung by sailors aboard whaling vessels. The mention of Davis Strait and the Greenland whale hunt places it in the context of Arctic whaling that was prominent from roughly the 1750s through the 1850s.
+
+Since this is a traditional folk song with no known single author and no definitive original publication date, I'll estimate a mid-point in the whaling era for historical context purposes.
+
+<result>
+Title = "The Whale Catchers (Greenland Whale Fisheries)"
+Author = "Traditional"
+Year = 1800
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A traditional British or American sea shanty about whaling expeditions to Greenland waters. The song describes the harsh conditions faced by whalers sailing to the Arctic, including frozen extremities and dangerous work hunting Greenland whales (likely bowhead whales). Like many work songs of the era, it balances the hardship of the voyage with the promise of celebration and ale-drinking upon return to London. Sea shanties were functional work songs sung aboard ships to coordinate labor and maintain morale during long, difficult voyages.
+"""
+
+Notes = """
+The year 1800 is an approximation representing the height of Greenland whaling activity. Traditional folk songs have no single composition date - they evolved through oral tradition. British Arctic whaling peaked roughly 1750-1850. This song reflects the actual historical practice of whaling expeditions departing in March (as mentioned in the lyrics) to reach Arctic waters during the brief summer season. Classified as non-fiction/historical-document because it represents authentic working life and culture of whalers, though it is a song rather than prose narrative.
+"""
+</result>

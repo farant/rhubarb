@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Half a Century" by Jane Grey Swisshelm, an autobiography/memoir published in 1880 (as shown on the title page). Jane Grey Swisshelm was a prominent American journalist, abolitionist, and women's rights advocate. The preface makes clear this is a firsthand account of the anti-slavery movement and her experiences during the Civil War, particularly in hospitals.
+
+<result>
+Title = "Half a Century"
+Author = "Jane Grey Swisshelm"
+Year = 1880
+
+Tags = ["non-fiction", "memoir", "autobiography", "abolition", "civil-war", "womens-rights"]
+
+Summary = """
+"Half a Century" is the autobiography of Jane Grey Swisshelm (1815-1884), a pioneering American journalist, abolitionist, and women's rights advocate. Published in 1880, this memoir chronicles her experiences in the anti-slavery movement and the Civil War era. Swisshelm was notable as one of the first female newspaper editors and political reporters in the United States. The work provides firsthand accounts of the abolition struggle, hospital conditions during the Civil War, and the social and political battles of mid-19th century America. Her preface explicitly states her purpose: to correct the misconception that the anti-slavery movement originated in infidelity rather than Christian conviction, and to preserve the "inside history" of both the abolition movement and Civil War hospitals for future generations.
+"""
+
+Notes = """
+1880 is the publication year stated on the title page. This is a primary source memoir covering approximately 50 years of the author's life (hence "Half a Century"), likely spanning from around 1830 to 1880. Swisshelm was a complex figure who doesn't fit neatly into modern categories - she was progressive on abolition and women's rights but held other views typical of her era. The work is not classified as 'catholic' despite her Christian framework, as she was Protestant (Presbyterian/Methodist background) and the work doesn't reflect specifically Catholic authorship or perspective.
+"""
+</result>

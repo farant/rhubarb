@@ -1,0 +1,17 @@
+I can see this is the beginning of a Project Gutenberg text of Shakespeare's Hamlet. Based on the executive notes discussing the original printing conventions (like "liue" for "live" and u/v substitutions) and the opening lines with Barnardo and Francisco, this is clearly the First Folio version of Hamlet.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Hamlet is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks to avenge his father's murder by his uncle Claudius, who has seized the throne and married Hamlet's mother. The play explores themes of revenge, madness, mortality, and moral corruption. It contains some of the most famous lines in English literature, including "To be or not to be" and features iconic scenes like the ghost of Hamlet's father and the play-within-a-play. This appears to be a First Folio or early quarto version, preserving the original printing conventions of Shakespeare's time.
+"""
+
+Notes = """
+I chose 1603 as this represents the approximate date of the Second Quarto, which is generally considered the most authoritative early text. The First Quarto dates to 1603, though Hamlet was likely first performed around 1600-1601. The First Folio was published in 1623. Given that this Gutenberg text preserves early printing conventions and spellings, 1603 captures the historical moment when this version of the text emerged. For a historical timeline, this date represents when English audiences first encountered this form of the play in print.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "L'inutile Beauté"
+Author = "Guy de Maupassant"
+Year = 1890
+
+Tags = ["fiction", "short-stories", "french-literature"]
+
+Summary = """
+"L'inutile Beauté" (Useless Beauty) is a collection of short stories by French author Guy de Maupassant, published in 1890, one of his final works before his mental decline. The collection includes several of Maupassant's later stories that showcase his mature style and often darker, more psychologically complex themes. The title story explores themes of beauty, vanity, marriage, and the relationships between men and women in bourgeois society. Maupassant was a master of the short story form and this collection demonstrates his skill at portraying human nature with both cynicism and compassion. His works often examined the social dynamics of late 19th-century France, particularly focusing on the middle and upper classes.
+"""
+
+Notes = """
+The publication year 1890 is clearly stated on the title page. This was published near the end of Maupassant's career - he would begin suffering from syphilis-related mental illness in 1891 and died in 1893. Maupassant was not a Catholic author and his works often contained themes and content that would not receive ecclesiastical approval, so the 'catholic' tag is not applicable.
+"""
+</result>

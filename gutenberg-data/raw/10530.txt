@@ -1,0 +1,15 @@
+<result>
+Title = "Ride Railroad Bill"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording by Roger McGuinn (founding member of The Byrds) performing the traditional American folk song "Railroad Bill." The song tells the story of Railroad Bill, a legendary African American outlaw and folk hero from Alabama in the 1890s who evaded capture by hiding in railroad cars. McGuinn's version is part of his Folk Den project, where he recorded and shared traditional folk songs. This is a performance/interpretation of a traditional folk ballad rather than an original composition.
+"""
+
+Notes = """
+The year 2001 reflects when McGuinn created this recording for Project Gutenberg. However, "Railroad Bill" itself is a traditional folk song dating back to the 1890s, chronicling the real-life exploits of Morris Slater (Railroad Bill), who was killed in 1896. The song has been recorded by numerous artists throughout the 20th century. McGuinn's folk revival interpretation represents a modern performance of this historical American folk tradition.
+"""
+</result>

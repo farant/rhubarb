@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the information you requested.
+
+This is clearly **The Nibelungenlied**, a medieval German epic poem. Let me provide the structured information:
+
+<result>
+Title = "The Nibelungenlied"
+Author = "Unknown"
+Year = 1200
+
+Tags = ["non-fiction", "historical-document", "medieval-epic", "poetry"]
+
+Summary = """
+The Nibelungenlied is a Middle High German epic poem written around 1200 AD by an unknown author. It is one of the most important works of German medieval literature and tells the story of the dragon-slayer Siegfried, his marriage to Kriemhild, his murder by Hagen, and Kriemhild's revenge. The epic combines elements from Germanic heroic legend (particularly the Burgundian kings and Attila the Hun) with courtly medieval culture. It has been enormously influential in German culture and was a major source for Richard Wagner's Ring Cycle. The poem consists of 39 adventures (chapters) written in stanzas of four lines each. This translation by Daniel B. Shumway was published in 1909.
+"""
+
+Notes = """
+I chose circa 1200 AD as the year because this represents when the poem was originally composed in Middle High German, which is the most historically significant date for this work. While the exact date is uncertain (estimates range from approximately 1180-1210), around 1200 is the scholarly consensus. This is more meaningful than using 1909 (the publication year of this particular English translation). The work itself is the literary product of that medieval period and should be dated accordingly. The Nibelungenlied is not a work of fiction in the modern sense but rather a medieval epic that reworks older Germanic legends into the courtly culture of around 1200 AD, hence the 'historical-document' tag.
+"""
+</result>

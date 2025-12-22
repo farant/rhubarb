@@ -1,0 +1,17 @@
+I can see from your message that this is a Finnish text - it's "Seitsemän veljestä" (Seven Brothers) by Aleksis Kivi, one of the foundational works of Finnish literature. The text itself indicates it was first published in 1870 (appearing in four installments), then as a single volume in 1873. The edition shown is from 1890.
+
+<result>
+Title = "Seitsemän veljestä"
+Author = "Aleksis Kivi"
+Year = 1870
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Seitsemän veljestä" (Seven Brothers) is considered the first significant novel in Finnish literature and one of the most important works in the Finnish language. Written by Aleksis Kivi, it tells the story of seven brothers - Juhani, Tuomas, Aapo, Simeoni, Timo, Lauri, and Eero - who live on the Jukola farm in southern Häme. The novel chronicles their wild, often comedic adventures as they resist civilization (particularly learning to read, attending church, and following social norms) and eventually mature into responsible citizens. The work is both a coming-of-age story and a vivid portrayal of rural Finnish life in the 19th century. It has been enormously influential in Finnish culture and is still widely read today.
+"""
+
+Notes = """
+I chose 1870 as the primary year since this was when the work was first published, even though it appeared in installments. The 1873 date represents the first single-volume edition, and 1890 is this particular edition. The original 1870 publication date is most historically significant for educational purposes, as it marks when this groundbreaking work entered Finnish literature.
+"""
+</result>

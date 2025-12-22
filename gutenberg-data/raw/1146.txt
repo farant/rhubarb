@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly **The Journal of a Voyage to Lisbon** by **Henry Fielding**. This is one of Fielding's final works, written as he traveled to Portugal in 1754 seeking relief from his failing health. He died in Lisbon in October 1754, and the work was published posthumously in 1755.
+
+The text is an autobiographical journal documenting Fielding's voyage to Lisbon, written with characteristic wit and observation despite his deteriorating physical condition. As noted in the introduction, it provides invaluable biographical insight into Fielding's character, showing his stoicism, family devotion, and undiminished literary powers even while facing death.
+
+<result>
+Title = "The Journal of a Voyage to Lisbon"
+Author = "Henry Fielding"
+Year = 1755
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Journal of a Voyage to Lisbon is Henry Fielding's final work, a deeply personal travel narrative written during his voyage to Portugal in 1754 while suffering from dropsy and other ailments. The renowned author of Tom Jones and Joseph Andrews documented his journey with characteristic wit, keen observation, and remarkable stoicism despite knowing his illness was likely fatal. Published posthumously in 1755, the work offers invaluable biographical insight into Fielding's character during his final months, revealing his affectionate concern for his family, his satirical yet kindly view of humanity, and his undiminished literary powers. It stands as both a touching human document and a fine example of 18th-century travel writing.
+"""
+
+Notes = """
+Year chosen is 1755, the year of posthumous publication, since this is when the work was actually completed and made available. Fielding died in Lisbon in October 1754, shortly after the events described in the journal. While technically written in 1754, the work exists as a complete entity only from its 1755 publication.
+"""
+</result>

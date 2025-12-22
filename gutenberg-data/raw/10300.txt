@@ -1,0 +1,15 @@
+<result>
+Title = "Does Your Mother Know You're Out?"
+Author = "George P. Watson"
+Year = 1909
+
+Tags = ["audio", "recording", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an early audio recording from the Edison era, part of the Edison National Historic Site collection. George P. Watson performed this piece, which was edited by Thomas A. Edison. The title "Does Your Mother Know You're Out?" suggests it's likely a comedic or vaudeville-style performance piece typical of the early recording industry. This represents an important piece of audio history from the pioneering days of sound recording technology.
+"""
+
+Notes = """
+The exact year is difficult to determine from the Gutenberg metadata alone. Edison's peak recording years were roughly 1890s-1920s. Given Watson's involvement and Edison's editorial role, this likely dates to the 1900s-1910s era of cylinder or early disc recordings. I've estimated ~1909 as a reasonable midpoint of Edison's active recording period, but the actual recording date could range from approximately 1895-1920. The Project Gutenberg release date (2003) is clearly just the digitization date, not the original recording date.
+"""
+</result>

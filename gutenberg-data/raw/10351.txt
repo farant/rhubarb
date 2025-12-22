@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information in TOML format.
+
+This appears to be Volume 10 of Samuel Johnson's collected works, published in 1825 (MDCCCXXV). The volume contains parliamentary debates that Johnson wrote for *The Gentleman's Magazine* in the 1740s under the guise of "Debates in the Senate of Magna Lilliput." These were not verbatim transcripts but Johnson's literary recreations of parliamentary proceedings, which he wrote from 1741-1744.
+
+<result>
+Title = "The Works of Samuel Johnson, LL.D., Volume the Tenth"
+Author = "Samuel Johnson"
+Year = 1825
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the tenth volume of Samuel Johnson's collected works, published in 1825. It contains Johnson's famous Parliamentary Debates, which he originally wrote for The Gentleman's Magazine between 1741-1744 under the fictional pretense of reporting debates from the "Senate of Magna Lilliput" (to avoid legal restrictions on reporting actual parliamentary proceedings). These debates cover important political matters of the early 1740s including military affairs, the War of Austrian Succession, and attempts to remove Prime Minister Robert Walpole. Johnson's parliamentary debates are considered significant works of 18th-century political prose, though they are literary recreations rather than verbatim transcripts. Johnson himself later acknowledged he "took care that the Whig dogs should not have the best of it."
+"""
+
+Notes = """
+The year 1825 refers to this collected edition. The actual parliamentary debates contained within were originally written by Johnson between 1741-1744. I chose 1825 as it represents this specific published volume, though the content dates from the 1740s. Johnson was Anglican, not Catholic, so this does not receive a 'catholic' tag.
+"""
+</result>

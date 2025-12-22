@@ -1,0 +1,15 @@
+<result>
+Title = "Aunt Jane's Nieces Out West"
+Author = "Edith Van Dyne"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Aunt Jane's Nieces Out West" is part of the "Aunt Jane's Nieces" series written under the pseudonym Edith Van Dyne by L. Frank Baum (author of "The Wizard of Oz" series). This installment takes the three nieces to California and Hollywood, where they become involved in the early motion picture industry. The series follows the adventures of three young women who inherit their wealthy Aunt Jane's fortune and use it for various entrepreneurial and philanthropic endeavors. This particular volume explores the nascent film industry in the 1910s and includes elements of mystery, adventure, and social commentary typical of early 20th century young adult fiction.
+"""
+
+Notes = """
+The year 1914 is clearly indicated in the text itself and represents the original publication date. The Aunt Jane's Nieces series was published between 1906-1918, with this being one of the later entries. L. Frank Baum used the Edith Van Dyne pseudonym for this entire series, which was aimed at young female readers and proved quite popular in its era.
+"""
+</result>

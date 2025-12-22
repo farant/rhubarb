@@ -443,6 +443,168 @@ _addere_elementum_textus(MergeContextus* ctx, StmlNodus* liber,
     stml_liberum_addere(liber, novum);
 }
 
+/* Verificare si chorda iam in xar */
+hic_manens b32
+_chorda_in_xar(Xar* xar, chorda ch)
+{
+    i32 i;
+    i32 num;
+
+    si (xar == NIHIL) {
+        redde FALSUM;
+    }
+
+    num = xar_numerus(xar);
+    per (i = 0; i < num; i++) {
+        chorda* elem = (chorda*)xar_obtinere(xar, i);
+        si (elem->mensura == ch.mensura) {
+            b32 aequalis = VERUM;
+            i32 j;
+            per (j = 0; j < (i32)ch.mensura; j++) {
+                si (elem->datum[j] != ch.datum[j]) {
+                    aequalis = FALSUM;
+                    frange;
+                }
+            }
+            si (aequalis) {
+                redde VERUM;
+            }
+        }
+    }
+
+    redde FALSUM;
+}
+
+/* Addere chordam ad xar si non iam praesens */
+hic_manens vacuum
+_addere_chorda_si_non_praesens(Xar* xar, chorda ch)
+{
+    chorda* nova;
+
+    si (ch.datum == NIHIL || ch.mensura == 0) {
+        redde;
+    }
+
+    si (_chorda_in_xar(xar, ch)) {
+        redde;
+    }
+
+    nova = (chorda*)xar_addere(xar);
+    *nova = ch;
+}
+
+/* Colligere tags ex omnibus fontibus TOML */
+hic_manens Xar*
+_colligere_tags(TomlDocumentum* doc, Piscina* piscina)
+{
+    Xar* tags;
+    Xar* temp;
+    i32 i;
+    i32 num;
+
+    tags = xar_creare(piscina, magnitudo(chorda));
+
+    /* 1. Primum tentare "Tags" directe */
+    temp = toml_capere_tabulatum(doc, "Tags");
+    si (temp != NIHIL) {
+        num = xar_numerus(temp);
+        per (i = 0; i < num; i++) {
+            chorda* elem = (chorda*)xar_obtinere(temp, i);
+            _addere_chorda_si_non_praesens(tags, *elem);
+        }
+    }
+
+    /* 2. Si vacua, tentare "categories" */
+    si (xar_numerus(tags) == 0) {
+        temp = toml_capere_tabulatum(doc, "categories");
+        si (temp != NIHIL) {
+            num = xar_numerus(temp);
+            per (i = 0; i < num; i++) {
+                chorda* elem = (chorda*)xar_obtinere(temp, i);
+                _addere_chorda_si_non_praesens(tags, *elem);
+            }
+        }
+    }
+
+    /* 2b. Tentare singulares claves: "category", "Type", "Category" */
+    si (xar_numerus(tags) == 0) {
+        chorda val = toml_capere_chorda(doc, "category");
+        si (val.datum != NIHIL && val.mensura > 0) {
+            _addere_chorda_si_non_praesens(tags, val);
+        }
+    }
+    si (xar_numerus(tags) == 0) {
+        chorda val = toml_capere_chorda(doc, "Type");
+        si (val.datum != NIHIL && val.mensura > 0) {
+            _addere_chorda_si_non_praesens(tags, val);
+        }
+    }
+    si (xar_numerus(tags) == 0) {
+        chorda val = toml_capere_chorda(doc, "Category");
+        si (val.datum != NIHIL && val.mensura > 0) {
+            _addere_chorda_si_non_praesens(tags, val);
+        }
+    }
+
+    /* 3. Mergere "audience" tabulatum vel chorda */
+    temp = toml_capere_tabulatum(doc, "audience");
+    si (temp != NIHIL) {
+        num = xar_numerus(temp);
+        per (i = 0; i < num; i++) {
+            chorda* elem = (chorda*)xar_obtinere(temp, i);
+            _addere_chorda_si_non_praesens(tags, *elem);
+        }
+    } alioquin {
+        /* Tentare ut chorda singularis */
+        chorda val = toml_capere_chorda(doc, "audience");
+        si (val.datum != NIHIL && val.mensura > 0) {
+            _addere_chorda_si_non_praesens(tags, val);
+        }
+    }
+
+    /* 4. Mergere "religious" tabulatum */
+    temp = toml_capere_tabulatum(doc, "religious");
+    si (temp != NIHIL) {
+        num = xar_numerus(temp);
+        per (i = 0; i < num; i++) {
+            chorda* elem = (chorda*)xar_obtinere(temp, i);
+            _addere_chorda_si_non_praesens(tags, *elem);
+        }
+    }
+
+    /* 5. Verificare "appropriate_for_children" boolean (et variationes) */
+    si (toml_capere_boolean(doc, "appropriate_for_children") ||
+        toml_capere_boolean(doc, "Appropriate_for_children")) {
+        chorda tag;
+        constans character* lit = "appropriate-for-children";
+        i32 len = 24;
+        i32 k;
+        tag.datum = (i8*)piscina_allocare(piscina, len);
+        tag.mensura = len;
+        per (k = 0; k < len; k++) {
+            tag.datum[k] = (i8)lit[k];
+        }
+        _addere_chorda_si_non_praesens(tags, tag);
+    }
+
+    /* 6. Verificare "catholic" boolean (et variationes) */
+    si (toml_capere_boolean(doc, "catholic") ||
+        toml_capere_boolean(doc, "Catholic")) {
+        chorda tag;
+        constans character* lit = "catholic";
+        i32 len = 8;
+        i32 k;
+        tag.datum = (i8*)piscina_allocare(piscina, len);
+        tag.mensura = len;
+        per (k = 0; k < len; k++) {
+            tag.datum[k] = (i8)lit[k];
+        }
+        _addere_chorda_si_non_praesens(tags, tag);
+    }
+
+    redde tags;
+}
+
 /* Addere tags */
 hic_manens vacuum
 _addere_tags(MergeContextus* ctx, StmlNodus* liber, Xar* tags)
@@ -564,7 +726,7 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
     valor_titulus = toml_capere_chorda(doc, "Title");
     valor_auctor = toml_capere_chorda(doc, "Author");
     valor_annus = toml_capere_numerum(doc, "Year");
-    valor_tags = toml_capere_tabulatum(doc, "Tags");
+    valor_tags = _colligere_tags(doc, ctx->piscina);
     valor_summarium = toml_capere_chorda(doc, "Summary");
     valor_notae = toml_capere_chorda(doc, "Notes");
 

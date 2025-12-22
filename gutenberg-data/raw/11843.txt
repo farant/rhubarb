@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1971
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office publication listing renewal registrations for books, pamphlets, serials, and periodical contributions during a specific period in 1971. These catalogs served as official records of copyright renewals, which were necessary under the copyright law in effect before 1978 to maintain copyright protection beyond the initial term. The document provides bibliographic information for works whose copyrights were being renewed, including original registration dates and renewal claimant information. Such catalogs are now valuable historical resources for tracking the copyright status and publication history of 20th-century works.
+"""
+
+Notes = """
+Year 1971 is chosen based on the renewal dates visible in the entries (showing renewals registered in 1971 for works originally copyrighted in the early 1940s, which is consistent with the 28-year initial copyright term that was in effect at that time). This is not a creative work but rather a government publication - an administrative catalog produced by the U.S. Copyright Office.
+"""
+</result>

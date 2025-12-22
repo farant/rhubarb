@@ -1,0 +1,17 @@
+I can see this is a table of contents from The Atlantic Monthly magazine, which is a periodical publication rather than a single authored work. Let me provide the structured information:
+
+<result>
+Title = "The Atlantic Monthly: A Magazine of Literature, Art, and Politics"
+Author = "Various"
+Year = 1860
+
+Tags = ["non-fiction", "periodical", "literature", "historical-document"]
+
+Summary = """
+The Atlantic Monthly (later The Atlantic) was founded in 1857 in Boston as a literary and cultural magazine. This particular issue appears to be from around 1859-1860 based on the table of contents, which includes serialized fiction like Harriet Beecher Stowe's "The Minister's Wooing" (which ran in the magazine from December 1858 to December 1859). The magazine featured essays, poetry, fiction, and commentary on politics and culture, and became one of America's most prestigious literary journals. Contributors in its early years included Ralph Waldo Emerson, Henry Wadsworth Longfellow, Oliver Wendell Holmes Sr., and Harriet Beecher Stowe among other prominent American writers.
+"""
+
+Notes = """
+The year 1860 is chosen as a best estimate based on "The Minister's Wooing" appearing in the contents, which was serialized 1858-1859, suggesting this is likely an 1859 or early 1860 issue. Without more specific information about which volume/issue this represents, 1860 serves as a representative year for this early period of the magazine. This is not appropriate for children as it's a sophisticated literary magazine aimed at adult readers. It is not tagged as 'catholic' as The Atlantic Monthly was a general interest magazine without specific religious affiliation, though it may have included works by Catholic authors among its varied contributors.
+"""
+</result>

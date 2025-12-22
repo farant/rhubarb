@@ -1,0 +1,19 @@
+Looking at this text, I can identify this as "The Lives of the Poets of Great Britain and Ireland" compiled by Colley Cibber and others. This is Volume IV published in 1753 (MDCCLIII in Roman numerals shown on the title page).
+
+This is a biographical compendium of English poets, which was later expanded by others. Colley Cibber (1671-1757) was an English actor-manager and Poet Laureate who compiled these biographical sketches.
+
+<result>
+Title = "The Lives of the Poets of Great Britain and Ireland, Volume IV"
+Author = "Colley Cibber and other Hands"
+Year = 1753
+
+Tags = ["non-fiction", "biography", "literary-history"]
+
+Summary = """
+This is the fourth volume of a comprehensive biographical compendium of British and Irish poets, compiled by Colley Cibber (1671-1757), an English actor-manager, playwright, and Poet Laureate, along with other contributors. The work provides biographical sketches and critical assessments of poets from the late 17th and early 18th centuries. Volume IV includes lives of notable literary figures such as William Congreve, John Vanbrugh, Richard Steele, Matthew Prior, and Lord Lansdowne (George Granville), among others. This collection was an important early work of English literary biography and criticism, providing valuable historical context about the poets and their works during a formative period of English literature.
+"""
+
+Notes = """
+The year 1753 is taken directly from the title page (MDCCLIII). While Cibber initiated this project, he died in 1757, and the work was continued and expanded by Robert Shiels and other contributors. This multi-volume work was influential in establishing the biographical-critical tradition in English literary studies.
+"""
+</result>

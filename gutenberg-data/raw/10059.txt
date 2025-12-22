@@ -1,0 +1,15 @@
+<result>
+Title = "Aunt Jane's Nieces on Vacation"
+Author = "Edith Van Dyne"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Aunt Jane's Nieces on Vacation' is part of the popular 'Aunt Jane's Nieces' series written under the pseudonym Edith Van Dyne by L. Frank Baum (creator of The Wizard of Oz). This installment follows the three nieces as they venture into the newspaper business during their vacation in the rural town of Millville, establishing 'The Millville Daily Tribune'. The series was aimed at young female readers and combined elements of adventure, entrepreneurship, and early feminist themes showing young women taking on professional endeavors. The books were very popular in the early 20th century as wholesome entertainment for children and young adults.
+"""
+
+Notes = """
+The year 1912 is clearly stated on the title page and represents the original publication date. 'Edith Van Dyne' was one of several pen names used by L. Frank Baum. While Baum himself was not Catholic, the work is considered appropriate moral fiction for children of the era.
+"""
+</result>

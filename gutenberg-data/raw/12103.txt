@@ -1,0 +1,15 @@
+<result>
+Title = "The Tale of Mrs. Tiggy-Winkle"
+Author = "Beatrix Potter"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Tale of Mrs. Tiggy-Winkle is one of Beatrix Potter's beloved children's stories featuring anthropomorphic animals. The story follows a little girl named Lucie who loses her pocket-handkerchiefs and goes searching for them, eventually discovering Mrs. Tiggy-Winkle, a hedgehog washerwoman who does laundry for all the animals. Like Potter's other works, it combines charming illustrations with gentle storytelling aimed at young children. The character of Mrs. Tiggy-Winkle was inspired by Potter's own pet hedgehog and by Kitty MacDonald, a Scottish washerwoman. This is one of the classic "little books" in Potter's Peter Rabbit series that has remained continuously in print and beloved by generations of children.
+"""
+
+Notes = """
+The publication year is clearly stated as 1905 in the title page. This was the original publication date by Frederick Warne & Co. The work is dedicated "For THE REAL LITTLE LUCIE OF NEWLANDS," referring to Lucie Carr, the daughter of the vicar of Newlands, Keswick, where Potter spent holidays.
+"""
+</result>

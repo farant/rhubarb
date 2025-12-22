@@ -1,0 +1,15 @@
+<result>
+Title = "Billie Bradley and Her Inheritance, or The Queer Homestead at Cherry Corners"
+Author = "Janet D. Wheeler"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a book from the "Billie Bradley" series, a popular early 20th century girls' adventure series written by Janet D. Wheeler (a pseudonym used by the Stratemeyer Syndicate). The series follows Billie Bradley, a spirited young girl, through various adventures and mysteries. In this installment, Billie apparently inherits property at a place called Cherry Corners and encounters mysteries involving a "queer homestead," strange burglars, and possibly supernatural occurrences. The series was aimed at young female readers and was part of the broader tradition of girls' series books that included Nancy Drew, the Bobbsey Twins, and similar characters. These books emphasized plucky, resourceful young heroines solving mysteries and having adventures.
+"""
+
+Notes = """
+The year 1920 is clearly stated on the title page and represents the original publication date. Janet D. Wheeler was one of several pseudonyms used by writers working for the Stratemeyer Syndicate, which produced numerous popular children's series in the early-to-mid 20th century. The Billie Bradley series ran from approximately 1920-1932.
+"""
+</result>

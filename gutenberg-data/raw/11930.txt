@@ -1,0 +1,17 @@
+I recognize this work! Let me analyze it and provide the structured information you requested.
+
+<result>
+Title = "More Fables"
+Author = "George Ade"
+Year = 1900
+
+Tags = ["fiction", "humor", "appropriate-for-children"]
+
+Summary = """
+'More Fables' is a collection of humorous fables by George Ade, a follow-up to his successful 'Fables in Slang' (1899). Ade was an American writer and humorist known for his satirical fables written in colloquial American English of the early 20th century. His fables typically lampooned American social types and pretensions with wit and clever wordplay. The stories featured capitalized nouns and used vernacular speech to comment on modern American life, including topics like social climbers, marriage, business, and cultural trends. Ade's work was extremely popular in its time and influenced American humor writing. The fables are lighthearted moral tales with a distinctly American flavor, often ending with a humorous "moral" in the tradition of Aesop but applied to contemporary American society.
+"""
+
+Notes = """
+The year 1900 is indicated directly in the text. This appears to be the original publication date. George Ade (1866-1944) was not Catholic, so the 'catholic' tag is not applied. The fables are generally appropriate for children in terms of moral content, though they satirize adult social situations. Illustrated by Clyde J. Newman.
+"""
+</result>

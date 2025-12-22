@@ -1,0 +1,23 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information in TOML format.
+
+This is clearly a volume from John Lingard's "The History of England," which was a groundbreaking historical work. This particular edition appears to be a later revision/expansion with Hilaire Belloc's collaboration, published in 1912. However, the original work by Lingard alone was first published between 1819-1830.
+
+The key question here is which date to use: the original Lingard publication (1819-1830) or this revised edition (1912). Given your guidance about historical accuracy and educational value, and that this is explicitly a collaborative edition with Belloc adding substantial material, I believe 1912 is the appropriate year for this specific text.
+
+Lingard was a Catholic priest and historian who wrote what became known as the first scholarly "Catholic" history of England, providing a counterpoint to Protestant-dominated historiography of his era. The 1912 edition with Belloc (also Catholic) and introduction by Cardinal Gibbons reinforces this Catholic scholarly tradition.
+
+<result>
+Title = "The History of England, From The First Invasion By The Romans To The Accession Of King George The Fifth, Volume VIII"
+Author = "John Lingard, Hilaire Belloc"
+Year = 1912
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+This is the eighth volume of a comprehensive Catholic history of England, originally written by John Lingard (1771-1851), a Catholic priest and historian whose work revolutionized English historiography by providing a scholarly, balanced Catholic perspective. This 1912 edition represents a collaboration with Hilaire Belloc and includes an introduction by Cardinal Gibbons. Volume VIII covers the reign of Charles I, including major Civil War events like the Battle of Edge Hill, various parliamentary negotiations, the Self-Denying Ordinance, and the trial and execution of Archbishop Laud. Lingard's original work (1819-1830) was groundbreaking for its use of primary sources and relatively objective treatment of controversial religious and political events in English history.
+"""
+
+Notes = """
+The year 1912 is chosen because this is explicitly a revised/collaborative edition with Belloc's contributions and Cardinal Gibbons' introduction, making it a distinct work from Lingard's original 1819-1830 publication. The collaboration represents a continuation of Catholic historical scholarship into the early 20th century.
+"""
+</result>

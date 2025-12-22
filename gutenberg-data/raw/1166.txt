@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other relevant information.
+
+<result>
+Title = "The Second Book of Modern Verse"
+Author = "Jessie B. Rittenhouse (Editor)"
+Year = 1919
+
+Tags = ["non-fiction", "poetry", "anthology", "appropriate-for-children"]
+
+Summary = """
+"The Second Book of Modern Verse" is an anthology of modern poetry edited by Jessie Belle Rittenhouse (1869-1948), an American poet, critic, and anthologist. This is a sequel to her earlier anthology "The Little Book of Modern Verse" (1913), which was highly successful. Rittenhouse was known for her role in promoting modern American poetry in the early 20th century and served as the first secretary of the Poetry Society of America. This collection features contemporary poets of the early 20th century, showcasing the evolution of American and British verse during the modernist period. The anthology helped introduce readers to the "new poetry" movement and includes works that represented a departure from Victorian conventions toward more contemporary forms and themes.
+"""
+
+Notes = """
+"The Second Book of Modern Verse" was first published in 1919 by Houghton Mifflin Company. This was Rittenhouse's follow-up to her enormously popular 1913 anthology "The Little Book of Modern Verse." The 1919 date represents the original publication year of this specific anthology, which captured the state of modern poetry following World War I. As an anthology, this work compiles poems by various authors rather than being authored by Rittenhouse herself, though her editorial selection and arrangement represent significant curatorial work in shaping American poetry taste during this period.
+"""
+</result>

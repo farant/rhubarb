@@ -1,0 +1,17 @@
+I recognize this work! Let me analyze the text and provide the structured information you requested.
+
+<result>
+Title = "The Money Moon: A Romance"
+Author = "Jeffery Farnol"
+Year = 1911
+
+Tags = ["fiction", "romance", "appropriate-for-children"]
+
+Summary = """
+"The Money Moon" is a romantic novel by British author Jeffery Farnol, published in 1911. Farnol was known for his romantic historical and adventure novels written in a distinctive style that often featured pastoral English settings. This work is a lighter romance compared to his more famous novel "The Broad Highway" (1910). The story involves George Bellew and a character called "Small Porges" in what appears to be a pastoral English setting. Farnol's works were popular in the early 20th century for their escapist, romantic quality and clean, wholesome storytelling that made them suitable for family reading.
+"""
+
+Notes = """
+The publication year of 1911 is clearly stated in the frontispiece of this edition. Farnol dedicated this book to "Jennifer" in February 1910, suggesting it was written in 1909-1910 and published in 1911. This was published shortly after his successful debut novel "The Broad Highway" (1910), which established his reputation as a romance writer.
+"""
+</result>

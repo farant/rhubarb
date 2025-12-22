@@ -1,0 +1,19 @@
+I'll help you identify this work. Let me analyze the text from Project Gutenberg.
+
+Based on the information provided, this is clearly "The Masters of the Peaks" by Joseph A. Altsheler, published in 1918. This is the fourth volume in his French and Indian War Series, which is a set of historical adventure novels for young readers set during the French and Indian War (1754-1763). Altsheler was an American author known for his historical fiction series aimed at young audiences.
+
+<result>
+Title = "The Masters of the Peaks: A Story of the Great North Woods"
+Author = "Joseph A. Altsheler"
+Year = 1918
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+The Masters of the Peaks is the fourth volume in Joseph A. Altsheler's French and Indian War Series, following the adventures of Robert Lennox (a youth of mysterious origins), Tayoga (a young Onondaga warrior), and David Willet (a hunter) during the French and Indian War. Altsheler was a prolific American author of historical adventure novels for young readers in the early 20th century. This series dramatizes the conflict between British and French forces in colonial North America (1754-1763), incorporating both historical events and fictional characters. The novels are known for their fast-paced action, wilderness settings in the Great North Woods, and portrayal of Native American allies on both sides of the conflict.
+"""
+
+Notes = """
+The publication year 1918 is straightforward as this is an original work of early 20th century historical fiction, not a republication or translation of an older text. Altsheler wrote these adventure novels specifically for young American readers during the World War I era, romanticizing America's colonial past.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Lady of the Barge and Other Stories"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Lady of the Barge and Other Stories' is a collection of short stories by English humorist and author W. W. Jacobs, first published in 1902. The collection is perhaps best known for containing 'The Monkey's Paw,' one of the most famous horror stories in English literature. However, most stories in the collection are humorous tales about sailormen and dockside life, written in Jacobs' characteristic style featuring working-class vernacular dialogue and gentle comedy. 'Bill's Paper Chase' is one of these lighter nautical tales, featuring the night watchman narrator who appears in many of Jacobs' stories, recounting humorous anecdotes about sailors and their adventures.
+"""
+
+Notes = """
+1902 is the original publication date of 'The Lady of the Barge and Other Stories' collection. W. W. Jacobs (1863-1943) was a prolific writer of humorous short stories, primarily about dockworkers and sailors in London. While the collection contains the famous Gothic horror tale 'The Monkey's Paw,' most stories like this one are light comedic pieces appropriate for general audiences.
+"""
+</result>

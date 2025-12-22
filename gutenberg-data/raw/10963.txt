@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "The Grip of Desire" (French: "L'Étreinte du Désir") by Hector France, a controversial French author and journalist.
+
+<result>
+Title = "The Grip of Desire"
+Author = "Hector France"
+Year = 1903
+
+Tags = ["fiction", "anti-clerical"]
+
+Summary = """
+'The Grip of Desire' (French: 'L'Étreinte du Désir') is a controversial novel by Hector France subtitled 'The Story of a Parish-Priest'. The novel deals with the struggles of a Catholic priest with celibacy and sexual desire. France was a French journalist and author known for his anti-clerical works in the late 19th/early 20th century. This work was considered scandalous at the time of publication for its frank treatment of priestly sexuality and its critique of Catholic clerical celibacy requirements.
+"""
+
+Notes = """
+The original French edition was published around 1903. Hector France (1837-1908) was a controversial French author known for his anti-clerical and libertine works. This novel is explicitly anti-clerical in nature and would definitely NOT be considered appropriate for children or receive a nihil obstat or imprimatur from Catholic authorities, despite dealing with Catholic clergy as subject matter. The work was translated into English by Alfred Allinson, who translated many of France's works.
+"""
+</result>

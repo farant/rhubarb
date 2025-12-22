@@ -1,0 +1,15 @@
+<result>
+Title = "Utilitarianism"
+Author = "John Stuart Mill"
+Year = 1861
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+Utilitarianism is one of the most influential works in moral philosophy, written by John Stuart Mill. The book presents and defends the utilitarian ethical theory, which holds that actions are right insofar as they promote happiness and wrong insofar as they produce unhappiness. Mill refines earlier utilitarian thought (particularly from Jeremy Bentham) by introducing qualitative distinctions between pleasures and arguing that some pleasures are inherently more valuable than others. The work addresses major objections to utilitarianism and explores the connection between utility and justice. It remains a foundational text in consequentialist ethics and continues to influence moral and political philosophy.
+"""
+
+Notes = """
+First published in Fraser's Magazine in 1861 as a series of three articles. The first book edition appeared in 1863. I've chosen 1861 as the historically significant date when the work first appeared in print. This 1879 edition is the seventh edition published by Longmans, Green, and Co. Mill was not Catholic - he was a secular philosopher and one of the leading figures of British empiricism and liberalism.
+"""
+</result>

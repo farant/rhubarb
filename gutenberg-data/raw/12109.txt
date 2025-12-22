@@ -1,0 +1,15 @@
+<result>
+Title = "The House That Jack Built"
+Author = "Traditional/Anonymous (Illustrated by Randolph Caldecott)"
+Year = 1878
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The House That Jack Built' is a traditional English nursery rhyme and cumulative tale, part of the Mother Goose collection. This particular edition is one of Randolph Caldecott's famous Picture Books, published in 1878. The rhyme builds upon itself in a repetitive pattern, introducing a chain of characters and events connected to a house that Jack built. Caldecott's illustrations transformed the simple nursery rhyme into a beloved illustrated work that significantly influenced children's book illustration. His lively, humorous drawings brought new life to traditional rhymes and earned him lasting recognition in children's literature.
+"""
+
+Notes = """
+I chose 1878 as the year because this is specifically the Randolph Caldecott illustrated edition published by Frederick Warne & Co., which is what makes this Project Gutenberg text distinctive. The rhyme itself dates back to at least the 16th century and possibly earlier, with various origins proposed (some suggest it may derive from an Aramaic chant or have connections to historical events). However, the 1878 Caldecott edition is a significant publication in its own right and represents when this particular version entered the world. The Caldecott Medal, awarded annually to distinguished American picture books for children, was named after Randolph Caldecott in recognition of his pioneering work in children's book illustration.
+"""
+</result>

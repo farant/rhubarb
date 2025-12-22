@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the title, author, and other requested information.
+
+Based on the text, this is clearly "Our Little Alaskan Cousin" by Mary F. Nixon-Roulet, part of the Little Cousin Series. This series was published in the early 1900s, primarily between 1900-1910. The "Little Cousin" series was a popular children's educational book series designed to teach American children about different cultures and peoples around the world.
+
+Given that this is about Alaska and the series was most active in the 1900s-1910s, and considering Alaska's purchase by the US was in 1867 with increasing American interest in the early 1900s (particularly around the Gold Rush era), I would estimate this particular volume was likely published around 1905-1908. Without seeing the actual publication date in the text, I'll use 1907 as a reasonable estimate for this series entry.
+
+<result>
+Title = "Our Little Alaskan Cousin"
+Author = "Mary F. Nixon-Roulet"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+Part of the popular 'Little Cousin Series' published in the early 20th century, this book was designed to introduce American children to the lives, customs, and cultures of people in Alaska. The series as a whole aimed to foster understanding and appreciation of different peoples and places around the world through engaging stories about children from various regions. This particular volume would have provided young readers with insights into Alaskan life, indigenous peoples, and the unique environment of America's northern territory during a period of growing American interest in the region following the Gold Rush and prior to statehood.
+"""
+
+Notes = """
+The exact publication year is not visible in the provided excerpt, but the Little Cousin Series was most actively published between 1901-1910. The year 1907 is an educated estimate based on the series' publication pattern and Alaska's historical context during this period. Alaska wouldn't become a state until 1959, so this book represents an early 20th century American perspective on the territory.
+"""
+</result>

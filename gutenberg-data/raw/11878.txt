@@ -1,0 +1,28 @@
+I need to analyze this Project Gutenberg text to determine the title, author, year, and other metadata.
+
+From the text, I can clearly see:
+- **Title**: "Three Plays" (containing The Fiddler's House, The Land, and Thomas Muskerry)
+- **Author**: Padraic Colum (Irish playwright)
+- **Publication year shown**: 1916 (published by Little, Brown, and Company in Boston)
+
+Based on my knowledge, Padraic Colum (1881-1972) was a significant figure in the Irish Literary Revival and the Irish National Theatre movement (which became the Abbey Theatre). These plays were written in the early 1900s for the National Theatre Society. "The Land" specifically references the Land Act of 1903, suggesting these plays were written in the 1903-1910 period, but this collection was published together in 1916.
+
+For the year, I should use 1916 as that's when this collected edition was published, which is the actual work being presented here (three plays published together with an Author's Note).
+
+Regarding tags: This is drama/playwriting (fiction in the theatrical sense), dealing with Irish national themes. Colum was Catholic and part of the Irish cultural revival, though these are secular plays about Irish rural life. They deal with emigration, family conflict, and social issues, so probably not specifically "appropriate-for-children" in the sense of being written for children, though they're not inappropriate.
+
+<result>
+Title = "Three Plays: The Fiddler's House, The Land, Thomas Muskerry"
+Author = "Padraic Colum"
+Year = 1916
+
+Tags = ["fiction", "drama", "irish-literature"]
+
+Summary = """
+A collection of three Irish plays by Padraic Colum, a leading figure in the Irish Literary Revival and the Irish National Theatre movement. Written for the National Theatre Society in the early 1900s, these plays explore Irish rural life, family dynamics, and social conflicts. "The Land" celebrates the Land Act of 1903 which transferred Irish land from landlords to peasants, while also examining emigration to America. "The Fiddler's House" explores the conflict between individual aspirations and family obligations. These plays were written for a small stage and an audience deeply invested in expressions of Irish national character during a pivotal period of Irish cultural and political awakening.
+"""
+
+Notes = """
+The plays were written in the early 1900s (circa 1903-1910) for the Irish National Theatre Society, but this collected edition was published in 1916. Colum was a contemporary of W.B. Yeats and Lady Gregory in the Irish theatre movement. The year 1916 represents this specific published collection with its Author's Note, rather than the individual composition dates of the plays.
+"""
+</result>

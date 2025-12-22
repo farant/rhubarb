@@ -1,0 +1,15 @@
+<result>
+Title = "The Edinburgh Lectures on Mental Science"
+Author = "Thomas Troward"
+Year = 1904
+
+Tags = ["non-fiction", "philosophy", "metaphysics", "new-thought"]
+
+Summary = """
+'The Edinburgh Lectures on Mental Science' is a foundational text in the New Thought movement, originally delivered as lectures in Edinburgh's Queen Street Hall in 1904. Thomas Troward, a retired divisional judge from Punjab, India, presents a systematic exploration of the relationship between mental action and material conditions. The work examines concepts such as spirit and matter, subjective and objective mind, intuition, healing, and the will. Troward's lectures were influential in the development of New Thought philosophy and later influenced various self-help and metaphysical movements. The book attempts to establish natural principles governing how thought influences reality, blending elements of philosophy, psychology, and metaphysics.
+"""
+
+Notes = """
+The year 1904 is clearly indicated in the foreword dated March 1904. While Thomas Troward was nominally Christian, this is decidedly not a Catholic work - it belongs to the New Thought movement which has different theological foundations. Therefore, it does not receive the 'catholic' tag. The work is philosophical/metaphysical in nature and while not inappropriate for older children, its abstract content is more suited to adult readers, so it does not receive the 'appropriate-for-children' tag.
+"""
+</result>

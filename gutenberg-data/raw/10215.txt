@@ -1,0 +1,21 @@
+Looking at this text, I can see it's an Italian historical novel. Let me analyze the key information:
+
+The text is "Manfredo Palavicino o I Francesi e gli Sforzeschi" (Manfredo Palavicino or The French and the Sforzas), which is described as an "Italian History" written by Giuseppe Rovani. This edition shows it was published in Milan in 1877 by Carlo Barbini.
+
+Giuseppe Rovani (1818-1874) was an Italian novelist and art critic from Milan. "Manfredo Palavicino" was originally published in the 1840s as part of his historical fiction series about Italian history. The work depicts the turbulent period of French invasions and the Sforza dynasty in Milan during the late 15th/early 16th centuries.
+
+<result>
+Title = "Manfredo Palavicino, o I Francesi e gli Sforzeschi"
+Author = "Giuseppe Rovani"
+Year = 1845
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A historical novel by Giuseppe Rovani set during the period of French invasions of Italy and the conflicts involving the Sforza dynasty in Milan. The work is part of Rovani's series of historical novels depicting significant periods in Italian history. Rovani was a prominent 19th-century Milanese novelist and art critic known for his historical fiction that combined romantic storytelling with detailed historical research about Renaissance and early modern Italy. The novel dramatizes the political and military upheavals of late 15th and early 16th century Lombardy when French armies repeatedly invaded Italy and clashed with the ruling Sforza family of Milan.
+"""
+
+Notes = """
+The exact first publication date of this specific novel in Rovani's series is somewhat uncertain, but his major historical fiction works were published in the 1840s-1850s. The edition shown here is from 1877 (seconda edizione - second edition), published after Rovani's death in 1874. I've chosen 1845 as an approximate date for the original publication based on Rovani's active period of historical fiction writing. This is secular historical fiction by a 19th-century Italian author, not a Catholic devotional or theological work.
+"""
+</result>

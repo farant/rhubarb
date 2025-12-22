@@ -1,0 +1,15 @@
+<result>
+Title = "Composition-Rhetoric"
+Author = "Stratton D. Brooks, Marietta Hubbard"
+Year = 1905
+
+Tags = ["non-fiction", "educational"]
+
+Summary = """
+A rhetoric and composition textbook designed for high school or early college students, written by Stratton D. Brooks (Superintendent of Schools in Boston, Massachusetts) and Marietta Hubbard (formerly of the English Department at High School La Salle, Illinois). The work focuses on teaching students to express themselves clearly and forcibly in writing, emphasizing practical composition skills through repetition and conscious improvement rather than literary criticism or rhetorical theory. It represents the American educational approach to composition instruction in the early 20th century.
+"""
+
+Notes = """
+The publication year of 1905 is clearly stated on the title page and copyright information. This is a pedagogical work published by American Book Company, a major educational publisher of the era. The work is dedicated to Marcia Stuart Brooks, whose teaching methods influenced the authors' approach to making composition "a delight and pleasure."
+"""
+</result>

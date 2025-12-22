@@ -1,0 +1,15 @@
+<result>
+Title = "Ma Rag Time Baby"
+Author = "Peerless Orchestra"
+Year = 1900
+
+Tags = ["historical-document", "audio-recording", "appropriate-for-children"]
+
+Summary = """
+This is an early audio recording from the Edison Historic National Site, performed by the Peerless Orchestra. "Ma Rag Time Baby" is a ragtime composition, representing the popular music genre that dominated American entertainment from roughly 1895-1919. Ragtime was characterized by its syncopated or "ragged" rhythm and was a precursor to jazz. The Peerless Orchestra was a recording ensemble that made numerous recordings for Thomas Edison's phonograph company in the early 1900s. This Project Gutenberg entry is an MP3 digitization of the original Edison cylinder or disc recording.
+"""
+
+Notes = """
+Dating early audio recordings can be imprecise, but ragtime's peak popularity was 1899-1910. The Peerless Orchestra was most active in the 1900s-1910s recording for Edison. Without access to the actual audio or more metadata, I've estimated circa 1900 as representative of the ragtime era and early Edison recording period. The actual recording could be anywhere from 1898-1915. This is primarily a historical artifact rather than a literary work - it's an audio recording, not a text.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as Anthony Trollope's novel "Mr. Scarborough's Family." Let me analyze this for you.
+
+<result>
+Title = "Mr. Scarborough's Family"
+Author = "Anthony Trollope"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Mr. Scarborough's Family" is one of Anthony Trollope's later novels, published posthumously in 1883. The novel centers on the eccentric Mr. Scarborough, who shocks society by declaring that his eldest son Mountjoy is illegitimate, thus disinheriting him in favor of his younger son Augustus. The story explores themes of family, inheritance, legitimacy, and the moral complexities of a father's manipulation of the law to protect his children. Trollope examines Victorian social conventions and the tangled relationships within the Scarborough family as the truth gradually unfolds. The novel is characteristic of Trollope's later, darker work, dealing with more morally ambiguous characters and situations than his earlier, more optimistic novels.
+"""
+
+Notes = """
+This was Trollope's last completed novel before his death in 1882, published serially in All the Year Round from May 1882 to June 1883, and in book form in 1883. The year 1883 represents both the book publication date and is most historically accurate for cataloging purposes, as this was when it became widely available to readers.
+"""
+</result>

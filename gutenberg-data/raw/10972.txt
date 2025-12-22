@@ -1,0 +1,17 @@
+I recognize this as "With the 'Die-Hards' in Siberia" by Colonel John Ward, a firsthand account of the British military intervention in Siberia during the Russian Civil War period following World War I. The book was published in 1920, as indicated in the text itself.
+
+<result>
+Title = "With the 'Die-Hards' in Siberia"
+Author = "Colonel John Ward"
+Year = 1920
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand military account by Colonel John Ward, C.B., C.M.G., M.P., of the British military expedition to Siberia during the Russian Civil War (1918-1920). Ward commanded battalions of the Middlesex Regiment (the 'Die-Hards') during the Allied intervention in Siberia following the Russian Revolution. The work documents military operations, political complexities, and the chaotic situation in Russia during this period. Originally written as a personal narrative for his sons in case he did not return, it provides valuable primary source material on the Allied intervention in Russia and the tumultuous post-WWI period in Siberia.
+"""
+
+Notes = """
+The year 1920 is the publication year stated in the text itself. This is a contemporary account written shortly after the events described (the Siberian intervention of 1918-1920), making it a valuable primary historical source rather than a later historical analysis. The author explicitly notes in his forward that he wrote of events as they occurred and recorded motivations in real-time, which gives the work its documentary value despite what he acknowledges as limitations in historical perspective.
+"""
+</result>

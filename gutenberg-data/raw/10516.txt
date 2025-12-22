@@ -1,0 +1,17 @@
+Looking at this Project Gutenberg text, I can identify this work and provide the information you requested.
+
+<result>
+Title = "Bits of Home Matters"
+Author = "Helen Hunt Jackson"
+Year = 1873
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Bits of Home Matters" is a collection of essays by Helen Hunt Jackson (who wrote under the pen name "H.H.") focused on domestic life, child-rearing, and family matters in Victorian America. The work addresses various aspects of parenting and household management, with particular emphasis on treating children with kindness and respect. Topics include critiques of harsh parenting practices (corporal punishment, breaking children's wills), the importance of courtesy within families, children's education and social development, and various domestic concerns. Jackson was a prolific American writer known for her advocacy work and literary contributions in the late 19th century, though she is perhaps best known today for her novel "Ramona" and her advocacy for Native American rights.
+"""
+
+Notes = """
+The year 1873 is clearly stated on the title page. Helen Hunt Jackson (1830-1885) wrote under several pen names including "H.H." and was a contemporary of Emily Dickinson. While Jackson was Episcopalian rather than Catholic, this work focuses on humane, compassionate parenting and would likely be compatible with Catholic moral teaching on the dignity of children, though it would not qualify for the 'catholic' tag under your specified criteria.
+"""
+</result>

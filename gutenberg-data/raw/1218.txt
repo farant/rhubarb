@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "The Adventures of Jimmie Dale" by Frank L. Packard, a classic early 20th-century crime/adventure novel. Jimmie Dale is a wealthy socialite who leads a double life as "The Gray Seal," a gentleman thief and crime-fighter. This was one of the early precursor works to characters like The Shadow and Batman.
+
+<result>
+Title = "The Adventures of Jimmie Dale"
+Author = "Frank L. Packard"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Adventures of Jimmie Dale is an early crime adventure novel featuring one of the first masked hero archetypes in popular fiction. The protagonist, Jimmie Dale, is a wealthy New York socialite who secretly operates as "The Gray Seal," a mysterious vigilante who solves crimes and rights wrongs while leaving his signature gray seal as a calling card. The novel combines elements of mystery, adventure, and romance, and was highly influential in establishing tropes later used in pulp fiction and superhero stories. Packard's creation predated characters like The Shadow and influenced the development of the vigilante hero archetype in American popular culture.
+"""
+
+Notes = """
+First published in 1917, though it was serialized in People's Magazine beginning in 1914. I've used the 1917 book publication date as it represents the complete work. This was the first of several Jimmie Dale novels by Packard, establishing a popular series in the early 20th century.
+"""
+</result>

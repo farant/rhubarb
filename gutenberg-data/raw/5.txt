@@ -1,0 +1,15 @@
+<result>
+Title = "The Constitution of the United States of America"
+Author = "Constitutional Convention"
+Year = 1787
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The Constitution of the United States of America is the supreme law of the United States, establishing the framework of the federal government and defining the relationship between the federal government and the states. Drafted at the Constitutional Convention in Philadelphia in 1787, it was signed on September 17, 1787, and subsequently ratified by the states. The Constitution establishes three branches of government (legislative, executive, and judicial) with a system of checks and balances, and initially consisted of seven articles. This text is the original Constitution without the amendments (the Bill of Rights and subsequent amendments were added later, beginning in 1791).
+"""
+
+Notes = """
+The year 1787 is the most historically accurate date as this is when the Constitution was written and signed at the Constitutional Convention (September 17, 1787). While ratification by the required nine states occurred in 1788 and it went into effect in 1789, the document itself is dated 1787 and this is the conventional historical date used. This text explicitly notes it does not include the amendments, which is consistent with the original 1787 document. The Constitution was not authored by a single individual but by the Constitutional Convention delegates, with significant contributions from James Madison (often called the "Father of the Constitution"), though it represents a collective work.
+"""
+</result>

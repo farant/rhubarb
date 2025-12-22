@@ -1,0 +1,28 @@
+I need to analyze this text from Project Gutenberg to identify the title, author, year, and other metadata.
+
+From the text, I can clearly see:
+- Title: "The Evil Guest"
+- Author: "J. Sheridan LeFanu" (Joseph Sheridan Le Fanu)
+- The text shows "1895" which appears to be a publication date
+
+Let me provide some context from my knowledge: "The Evil Guest" by J. Sheridan Le Fanu was actually first published in 1851 as a serialized novel in the Dublin University Magazine. It was later published in book form. The 1895 date shown here likely refers to a posthumous edition (Le Fanu died in 1873).
+
+For the purposes of a historical timeline, I believe 1851 (the original publication date) would be most historically accurate and educational, as this represents when the work first appeared and had its cultural impact.
+
+Le Fanu was an Irish writer known for gothic fiction and mystery novels. He was Catholic (born into a Huguenot family but his wife was Catholic and he had connections to Catholic Ireland). However, "The Evil Guest" is a gothic thriller/mystery novel rather than explicitly Catholic literature, so I won't tag it as "catholic" in the sense you specified (likely to have nihil obstat/imprimatur).
+
+<result>
+Title = "The Evil Guest"
+Author = "J. Sheridan Le Fanu"
+Year = 1851
+
+Tags = ["fiction", "gothic", "mystery"]
+
+Summary = """
+'The Evil Guest' is a gothic mystery novel by Irish author J. Sheridan Le Fanu, first serialized in the Dublin University Magazine in 1851. The story is set in England about sixty years before its publication (circa 1790s) and centers on the Marston family at their decaying estate called Gray Forest. The novel follows the Hon. Richard Marston, his wife, and their two children as they become entangled with a mysterious and sinister guest. Le Fanu was a master of gothic fiction and psychological suspense, and this early work displays his talent for creating atmosphere and dread. The novel explores themes of lust, sin, and death, as indicated by its biblical epigraph.
+"""
+
+Notes = """
+The text displays '1895' which likely refers to a posthumous edition. Le Fanu died in 1873, so this would be a later reprint. The original publication was in 1851 as a serial, making it one of Le Fanu's earlier works. I chose 1851 as the year because it represents the work's original appearance and historical significance. The story itself is set "about sixty years ago" from the 1851 publication, placing the narrative around the 1790s.
+"""
+</result>

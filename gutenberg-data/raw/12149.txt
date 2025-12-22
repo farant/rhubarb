@@ -1,0 +1,15 @@
+<result>
+Title = "String Quartet No. 3, Opus 18"
+Author = "Ludwig van Beethoven"
+Year = 1801
+
+Tags = ["non-fiction", "musical-score", "classical-music"]
+
+Summary = """
+This is the third of Beethoven's six String Quartets that comprise his Opus 18, which are considered his first mature works in the string quartet genre. These quartets were composed between 1798-1800 and published in 1801, representing Beethoven's early period when he was still heavily influenced by Haydn and Mozart, though his distinctive voice was beginning to emerge. The Opus 18 quartets established Beethoven as a significant composer in the quartet form, a genre he would revolutionize in his later works. This particular quartet (No. 3 in D major) is known for its lyrical character and demonstrates Beethoven's growing mastery of four-part writing and thematic development.
+"""
+
+Notes = """
+The year 1801 represents the publication date of the Opus 18 quartets, which is the most historically significant date for these works. While composition occurred 1798-1800, the publication date is when these works became publicly available and established Beethoven's reputation in the quartet genre. This is a musical score, not a text work, so tags like 'appropriate-for-children' or 'fiction/non-fiction' in the traditional literary sense don't quite apply - I've categorized it as 'non-fiction' in the sense that musical scores are instructional/performance documents rather than narrative works.
+"""
+</result>

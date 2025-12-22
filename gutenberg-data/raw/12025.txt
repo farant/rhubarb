@@ -1,0 +1,17 @@
+I can identify this work from the preface. This is a composition textbook edited by Frederick William Roe and George Roy Elliott.
+
+<result>
+Title = "English Prose: A Series of Related Essays for the Discussion and Practice of the Art of Writing"
+Author = "Frederick William Roe, George Roy Elliott"
+Year = 1913
+
+Tags = ["non-fiction", "educational"]
+
+Summary = """
+This is a college-level composition textbook designed for teaching the art of writing. The editors have arranged prose selections into nine thematic groups representing different phases of life, from character and personality to art and literature. The pedagogical approach emphasizes that good writing comes from having substantial content to express, arguing against excessive focus on formal exercises divorced from meaningful subject matter. The work represents early 20th century approaches to teaching composition in American universities.
+"""
+
+Notes = """
+The year 1913 is clearly stated on the title page as the publication date. This is an educational anthology/textbook, not a primary literary work, so the publication date is the most relevant historical marker. Not marked as 'appropriate-for-children' as it is specifically designed for college-level instruction. Not marked 'catholic' as there is no indication the editors or the pedagogical approach are specifically Catholic in nature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States from Interviews with Former Slaves, Volume VI, Kansas Narratives"
+Author = "Works Progress Administration Federal Writers' Project"
+Year = 1941
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This volume is part of the Slave Narratives collection, a monumental historical project conducted by the Federal Writers' Project during the Great Depression (1936-1938). It contains first-person interviews with formerly enslaved people, preserving their oral histories and lived experiences of slavery in the United States. Volume VI specifically covers narratives from Kansas and includes interviews with Clayton Holbert, Bill Simms, and Belle Williams. These interviews represent invaluable primary source documents that provide direct testimony about the institution of slavery from those who experienced it, capturing details of daily life, family relationships, work conditions, and the transition to freedom. The collection was assembled by the Library of Congress and published in 1941.
+"""
+
+Notes = """
+I chose 1941 as the year because that is when this compilation was officially published and assembled as a historical document by the Library of Congress. While the interviews were conducted between 1936-1938, the published work as a complete archival collection dates to 1941. This is a historical document that records oral histories, so the 1941 publication date marks its creation as a historical artifact rather than the events it describes (which occurred in the 19th century). The work is not marked as 'appropriate-for-children' as it contains frank descriptions of slavery that may be disturbing. It is not tagged as 'catholic' as it is a secular government historical documentation project, though individual informants may have had various religious backgrounds.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Kitty's Class Day and Other Stories"
+Author = "Louisa M. Alcott"
+Year = 1882
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of short stories by Louisa M. Alcott, author of the beloved "Little Women" series. Originally published under the title "Proverb Stories" in 1882, this collection includes five tales: "Kitty's Class Day," "Aunt Kipp," "Psyche's Art," "A Country Christmas," and "On Picket Duty." The preface reveals Alcott's characteristic self-deprecating humor as she describes collecting these "waifs and strays" while forbidden to write new material due to health concerns. She also includes "The Baron's Gloves" (though not listed in this table of contents excerpt) as an example of the "romantic rubbish" she wrote early in her career, offering it as a cautionary example to aspiring young writers. The collection showcases Alcott's range as a storyteller while maintaining her accessible, moralistic style that made her popular with young readers.
+"""
+
+Notes = """
+The year 1882 is clearly stated as the original publication date in the excerpt. Louisa May Alcott (1832-1888) was at the height of her fame during this period, having published "Little Women" in 1868. The preface's mention of being "forbidden to write" reflects Alcott's ongoing health struggles in her later years. While Alcott herself was raised in a transcendentalist household and her personal religious views were complex, her work generally promoted moral values consistent with mainstream Protestant American culture of her time, though she was not Catholic.
+"""
+</result>

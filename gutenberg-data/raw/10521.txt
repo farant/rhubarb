@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the structured information in TOML format.
+
+This is clearly "The Primadonna" by F. Marion Crawford, published in 1908. The text itself provides most of the key information right at the beginning. Crawford was an American writer who lived much of his life in Italy and wrote numerous novels, often with Italian settings and themes. "The Primadonna" is part of his opera-themed trilogy.
+
+<result>
+Title = "The Primadonna"
+Author = "F. Marion Crawford"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Primadonna is a novel by F. Marion Crawford, part of a trilogy that includes "Fair Margaret" and "The Diva's Ruby." It centers on the world of opera in the early 20th century, following the life and career of an opera singer named Cordova. The story explores themes of love, ambition, and the theatrical world, set against the backdrop of European high society and the opera stage. Crawford was known for his detailed portrayals of Italian life and society, and this work continues that tradition while focusing on the dramatic world of opera performance.
+"""
+
+Notes = """
+The year 1908 is clearly indicated in the book's front matter. This is the original publication date of the novel. F. Marion Crawford (1854-1909) was a prolific American author who spent most of his adult life in Italy. While he had Catholic connections (his uncle was sculptor Thomas Crawford, and he converted to Catholicism), his fiction was primarily romantic and adventure-oriented rather than explicitly Catholic in nature, so I have not included the 'catholic' tag.
+"""
+</result>

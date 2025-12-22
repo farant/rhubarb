@@ -1,0 +1,15 @@
+<result>
+Title = "Tales of Lonely Trails"
+Author = "Zane Grey"
+Year = 1922
+
+Tags = ["non-fiction", "adventure", "nature", "western", "appropriate-for-children"]
+
+Summary = """
+Tales of Lonely Trails is a collection of adventure narratives by Zane Grey, the famous author of Western novels. This work represents Grey's non-fiction writings about his actual outdoor expeditions in the American West. The book includes accounts of his travels through remote wilderness areas including explorations of Nonnezoshe (Rainbow Bridge), Colorado trails, lion hunting expeditions in the Grand Canyon, adventures in the Tonto Basin, and Death Valley. Grey was an avid outdoorsman and conservationist, and these tales reflect his genuine experiences exploring some of the most isolated and spectacular landscapes of the American Southwest in the early 20th century. The work combines adventure narrative with nature writing and gives readers a glimpse into the wild frontier that was rapidly disappearing during Grey's lifetime.
+"""
+
+Notes = """
+The year 1922 is clearly indicated in the text itself and represents the original publication date of this collection. Zane Grey (1872-1939) was primarily known for his Western fiction novels, but he also wrote extensively about his real outdoor adventures. While Grey was not a Catholic author, these adventure tales are wholesome and appropriate for general audiences including children interested in nature and exploration.
+"""
+</result>

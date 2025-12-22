@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "This Is The End" by Stella Benson, published in 1917. Stella Benson was an English novelist, poet, and travel writer. This appears to be the opening of her novel, which is a semi-autobiographical work written during World War I. The narrative style is characteristic of early modernist fiction, with its philosophical musings and unconventional approach to storytelling.
+
+Stella Benson was not a Catholic author - she was English and her work doesn't reflect Catholic themes or sensibilities. The novel is literary fiction appropriate for adult readers, dealing with themes of idealism, social commentary, and the uncertainties of wartime life.
+
+<result>
+Title = "This Is The End"
+Author = "Stella Benson"
+Year = 1917
+
+Tags = ["fiction", "modernist-literature", "world-war-i-era"]
+
+Summary = """
+"This Is The End" is a semi-autobiographical novel by English writer Stella Benson, published during World War I. The work is characteristic of early modernist fiction, featuring philosophical reflections on the arbitrary nature of reality and social conventions. The narrator introduces Jay, a bus-conductor and idealist who questions fundamental assumptions about life. The novel explores themes of uncertainty, idealism, and social observation during a time of upheaval. Benson was known for her unconventional narrative style and feminist perspectives, and this work reflects her skeptical view of established social norms and her interest in characters who exist outside conventional society.
+"""
+
+Notes = """
+The year 1917 is straightforward as it appears in the text itself and matches historical records for the first publication of this novel. Stella Benson (1892-1933) was an English modernist writer who is somewhat forgotten today but was respected in her time for her innovative prose style and social commentary.
+"""
+</result>

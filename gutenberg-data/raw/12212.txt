@@ -1,0 +1,15 @@
+<result>
+Title = "The Third String"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Third String" is one of the short stories from W.W. Jacobs' collection "Odd Craft," published in 1903. Jacobs was a popular English humorist and author known for his maritime tales and stories of dockside life. This particular story features one of his recurring characters, a night-watchman who serves as narrator, philosophizing about love and its complications in his distinctive working-class voice. Jacobs is perhaps best known for his supernatural story "The Monkey's Paw," but the majority of his work consisted of humorous tales like this one, featuring colorful characters and witty observations about everyday life in late Victorian and Edwardian England.
+"""
+
+Notes = """
+"Odd Craft" was published in 1903 as a collection of short stories. This is part 12 of that collection. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was writing during the height of his career at this time. The stories are gentle comedies suitable for general audiences, featuring working-class characters like sailors, night-watchmen, and dock workers.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Weaker Vessel"
+Author = "W.W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Weaker Vessel" is a humorous short story by W.W. Jacobs, part of his collection "Night Watches" published in 1914. The story follows Mr. Gribble, who arrives home to find his wife absent and no tea prepared—a domestic catastrophe that hasn't occurred in thirty years of marriage. Jacobs was known for his comic tales of everyday English life, particularly stories involving working-class characters, sailors, and domestic situations. His writing style combines gentle satire with warm humor, and his works were extremely popular in the early 20th century. This particular story appears to be a lighthearted exploration of marriage, gender roles, and domestic expectations in Edwardian England.
+"""
+
+Notes = """
+W.W. Jacobs (William Wymark Jacobs, 1863-1943) published "Night Watches" in 1914. While he's perhaps best known today for his macabre story "The Monkey's Paw," the bulk of his work consisted of humorous tales like this one. The year 1914 reflects the original publication date of the collection from which this story is drawn.
+"""
+</result>

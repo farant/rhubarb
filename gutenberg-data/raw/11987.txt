@@ -1,0 +1,15 @@
+<result>
+Title = "By Advice of Counsel"
+Author = "Arthur Train"
+Year = 1921
+
+Tags = ["fiction", "legal"]
+
+Summary = """
+'By Advice of Counsel' is a collection of legal fiction stories featuring the adventures of Mr. Ephraim Tutt, one of the most beloved fictional lawyers in American literature. Arthur Train (1875-1945) was himself a lawyer and former Assistant District Attorney in New York, and he created the character of Mr. Tutt as a wise, humanitarian lawyer who defends the underdog with cleverness and moral integrity. The stories blend courtroom drama with humor and social commentary, portraying the American legal system of the early 20th century. The Tutt & Tutt stories were enormously popular in their time and appeared in The Saturday Evening Post before being collected into books.
+"""
+
+Notes = """
+This collection was first published in 1921. Arthur Train wrote numerous Mr. Tutt stories and novels between 1919 and 1943. 'By Advice of Counsel' was one of the early collections in the series. The exact publication year is based on the original book publication date.
+"""
+</result>

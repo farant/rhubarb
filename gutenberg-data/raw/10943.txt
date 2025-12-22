@@ -1,0 +1,15 @@
+<result>
+Title = "Elusive Isabel"
+Author = "Jacques Futrelle"
+Year = 1908
+
+Tags = ["fiction", "mystery", "spy-thriller"]
+
+Summary = """
+"Elusive Isabel" is a spy thriller novel by Jacques Futrelle, best known for creating "The Thinking Machine" detective stories. This novel follows the mysterious Isabel Thorne, a beautiful and enigmatic woman involved in international intrigue in Washington D.C. The story involves espionage, secret agents, romance, and diplomatic machinations as various parties attempt to uncover Isabel's true identity and mission. It combines elements of mystery, adventure, and early spy fiction, characteristic of the pre-WWI era when concerns about foreign agents and diplomatic secrets were beginning to capture popular imagination.
+"""
+
+Notes = """
+The publication year of 1908 is clearly indicated on the title page. Jacques Futrelle (1875-1912) was an American journalist and mystery writer who tragically died in the sinking of the Titanic. This work represents the early development of the spy thriller genre in American literature, predating the more famous spy novels that would emerge during and after World War I.
+"""
+</result>

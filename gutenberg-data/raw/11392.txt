@@ -1,0 +1,17 @@
+Looking at this Project Gutenberg text, I can see it's a collection of short stories from 1872 by multiple authors including John Hay, Clara F. Guernsey, Margaret Hosmer, Harriet Prescott Spofford, Lucy Hamilton Hooper, and others.
+
+<result>
+Title = "Not Pretty, But Precious, and Other Short Stories"
+Author = "John Hay, Clara F. Guernsey, Margaret Hosmer, Harriet Prescott Spofford, Lucy Hamilton Hooper, et al."
+Year = 1872
+
+Tags = ["fiction", "short-stories", "appropriate-for-children"]
+
+Summary = """
+This is a collection of short stories published in 1872 by various American authors of the mid-19th century. The collection includes works by John Hay (who would later become U.S. Secretary of State under McKinley and Theodore Roosevelt), Harriet Prescott Spofford (a prolific writer of the period known for gothic and romantic fiction), and several other contemporary authors. The title story "Not Pretty, But Precious" is by Margret Field. The collection represents typical American literary magazine fiction of the post-Civil War era, focusing on moral tales, romance, and domestic themes common to the period.
+"""
+
+Notes = """
+The year 1872 is clearly stated on the title page as the publication date. This appears to be an original anthology collection rather than reprints, so 1872 is the appropriate year. The Latin epigraph "Mille modi veneris" (a thousand ways of love/beauty) suggests romantic themes. While some individual authors may have been Catholic, this is a general American literary collection and not specifically Catholic literature, so I have not included the 'catholic' tag.
+"""
+</result>
