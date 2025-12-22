@@ -1,0 +1,15 @@
+<result>
+Title = "Oregon, Washington and Alaska; Sights and Scenes for the Tourist"
+Author = "E. L. Lomax"
+Year = 1890
+
+Tags = ["non-fiction", "travel-guide", "historical-document"]
+
+Summary = """
+This is a late 19th-century travel guide describing tourist sights and scenes in the Pacific Northwest territories of Oregon, Washington, and Alaska. E. L. Lomax was associated with railroad promotion literature, and works like this were commonly published to encourage tourism and settlement in the American West during the era of railroad expansion. The book would have provided practical information and romantic descriptions to entice tourists to visit these regions during a period of rapid development and before Alaska achieved statehood (1959) or even territorial status with full civil government.
+"""
+
+Notes = """
+The exact publication year is not stated in the provided text, but based on the style, subject matter, and E. L. Lomax's known activity as a passenger agent for Union Pacific Railroad publishing promotional travel literature in the 1880s-1890s, this work most likely dates to approximately 1890. Travel guides of this type were particularly popular during the 1880s-1900s period when transcontinental railroad travel made the Pacific Northwest newly accessible to tourists from the eastern United States.
+"""
+</result>

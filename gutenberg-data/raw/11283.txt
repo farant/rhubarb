@@ -1,0 +1,15 @@
+<result>
+Title = "Plays of Gods and Men"
+Author = "Lord Dunsany"
+Year = 1917
+
+Tags = ["fiction", "drama", "fantasy"]
+
+Summary = """
+'Plays of Gods and Men' is a collection of four one-act and short plays by Lord Dunsany (Edward Plunkett, 18th Baron of Dunsany), one of the most influential fantasy writers of the early 20th century. The collection includes 'The Tents of the Arabs', 'The Laughter of the Gods', 'A Night at an Inn', and 'The Queen's Enemies'. Written between 1910-1913, these plays showcase Dunsany's characteristic mythopoeic style, blending elements of ancient mythology, exotic settings, and cosmic irony. His work influenced later fantasy and weird fiction writers including H.P. Lovecraft. The plays feature imaginary kingdoms, gods, prophets, and mortals caught in tragic or darkly humorous situations, often exploring themes of hubris, fate, and the relationship between humanity and the divine.
+"""
+
+Notes = """
+I chose 1917 as the year because this is when the Unwin edition was first published in the UK, which is the edition indicated in the preface note. While the individual plays were written between 1910-1913 (as Dunsany meticulously documents in his preface, written while serving as a Captain in WWI), the collection as a whole was published in 1917. Lord Dunsany was Anglo-Irish and not Catholic - he came from a Protestant Irish aristocratic family - so the 'catholic' tag is not included despite his Irish heritage.
+"""
+</result>

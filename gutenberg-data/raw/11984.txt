@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly William James's "A Pluralistic Universe," based on his Hibbert Lectures delivered at Manchester College in 1909. This is one of James's major philosophical works where he argues for radical empiricism and pluralism against absolute idealism.
+
+<result>
+Title = "A Pluralistic Universe: Hibbert Lectures at Manchester College on the Present Situation in Philosophy"
+Author = "William James"
+Year = 1909
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+A Pluralistic Universe is a collection of William James's Hibbert Lectures delivered at Manchester College in 1909. In this work, James develops his philosophy of radical empiricism and argues for a pluralistic metaphysics against the monistic idealism that was dominant in his time (particularly absolute idealism as represented by thinkers like Bradley and Royce). James contrasts rationalism with empiricism, theism with pantheism, and most importantly, argues for pluralism over monism - the view that reality consists of many independent things rather than a single unified Absolute. The work is a major contribution to American pragmatist philosophy and represents James's mature philosophical position. He argues that the 'each-form' of representing the world is more adequate than the 'all-form', and that finite consciousness has features that cannot be reconciled with absolute idealism.
+"""
+
+Notes = """
+The year 1909 is straightforward as this is when the lectures were delivered and the book was published. William James was not Catholic - he was raised in a broadly Protestant environment and his philosophy, while sympathetic to religious experience, represents a pragmatist and empiricist tradition quite distinct from Catholic scholasticism. The work is highly technical philosophy and not appropriate for children.
+"""
+</result>

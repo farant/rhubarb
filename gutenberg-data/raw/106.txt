@@ -1,0 +1,19 @@
+I'll read through this text to identify the work and provide the requested information.
+
+This is clearly "Jungle Tales of Tarzan" by Edgar Rice Burroughs. Let me provide the structured information:
+
+<result>
+Title = "Jungle Tales of Tarzan"
+Author = "Edgar Rice Burroughs"
+Year = 1919
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+'Jungle Tales of Tarzan' is a collection of twelve short stories featuring Tarzan in his youth, before he left the jungle and encountered civilization. Published in 1919, these tales explore Tarzan's formative years among the great apes, his first romantic feelings, encounters with witch doctors, battles with jungle predators, and his developing understanding of the world around him. The stories fill in backstory between Burroughs' first Tarzan novel and its sequel, showing the ape-man's growth from adolescence to young adulthood. The collection includes adventures like 'Tarzan's First Love,' 'The Capture of Tarzan,' and whimsical tales like 'Tarzan Rescues the Moon.'
+"""
+
+Notes = """
+The work was originally published in 1919. The stories were first serialized in pulp magazines in 1916-1917 before being collected into book form. I've chosen 1919 as it represents the first book publication date, which is most historically relevant for timeline purposes.
+"""
+</result>

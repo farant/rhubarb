@@ -1,0 +1,15 @@
+<result>
+Title = "The Project Gutenberg CD and DVD Images"
+Author = "Project Gutenberg"
+Year = 2004
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a README document published by Project Gutenberg that explains how to use and distribute Project Gutenberg CD and DVD images. It serves as documentation for their digital distribution efforts, encouraging users to download, copy, and freely distribute these collections of eBooks. The document provides technical guidance and licensing information for handling Project Gutenberg's compiled eBook collections. This represents part of Project Gutenberg's mission to democratize access to literature by making their catalog available in bulk formats that could be easily shared, particularly useful in the early 2000s when internet bandwidth was more limited.
+"""
+
+Notes = """
+The year 2004 is chosen based on the original release date (February 5, 2004) stated in the document itself. While this was updated as late as December 24, 2020, the substantive content and purpose of the document dates to 2004 when it was first released as eBook #10802. This is a meta-document about Project Gutenberg's distribution methods rather than a literary or historical work in the traditional sense.
+"""
+</result>

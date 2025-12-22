@@ -1,0 +1,19 @@
+<result>
+Title = "An Easter Disciple: The Chronicle of Quintus, the Roman Knight"
+Author = "Arthur Benton Sanford"
+Year = 1922
+
+Tags = ["non-fiction", "christian-devotional", "appropriate-for-children", "theological"]
+
+Summary = """
+A Christian devotional and theological work that explores themes of resurrection, eternal life, and faith through a narrative framework. The book tells the story from the perspective of Quintus, a Roman knight who becomes involved in the events surrounding Jesus' crucifixion and resurrection. Through chapters examining topics like "Christ Himself the Witness to Immortality," "Cicero or Christ?," and "The Vision of the Risen Christ," Sanford uses this narrative device to explore early Christian apologetics and the contrast between classical Roman philosophy and Christian revelation. The work appears designed for Easter meditation and reflection on the meaning of Christ's resurrection.
+"""
+
+Notes = """
+Published in 1922, this is an original work by Arthur Benton Sanford, not a translation or historical document from antiquity. While it uses a Roman character as a narrative device, it is a 20th-century American Christian devotional work. I did not tag this as 'catholic' because there is insufficient evidence that Sanford was a Catholic author or that this work would have received ecclesiastical approval, though it deals with Christian themes that would be acceptable to various Christian denominations.
+"""
+</result>
+
+Sources:
+- [The Project Gutenberg eBook of An Easter Disciple](https://www.gutenberg.org/cache/epub/12671/pg12671-images.html)
+- [An Easter Disciple on Barnes & Noble](https://www.barnesandnoble.com/w/an-easter-disciple-arthur-benton-sanford/1014278560)

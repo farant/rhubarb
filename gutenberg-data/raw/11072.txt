@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and relevant details.
+
+This is clearly Dante Alighieri's "Divine Comedy," specifically the Purgatorio (Purgatory/Kiirastuli in Finnish), translated into Finnish by Eino Leino. The text shows "Ensimmäinen laulu" (First Canto) of Purgatorio, which begins with the famous lines about setting sail on better waters after leaving the cruel seas behind (referring to leaving Hell/Inferno).
+
+Let me provide the structured information:
+
+<result>
+Title = "The Divine Comedy: Purgatorio"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "theology", "medieval-literature"]
+
+Summary = """
+Purgatorio is the second part of Dante Alighieri's Divine Comedy, following Inferno and preceding Paradiso. Written in the early 14th century, it describes Dante's journey through Purgatory, the mountain where souls are purified before ascending to Heaven. This is a Finnish translation by Eino Leino (first published 1913). The work is a cornerstone of Catholic literature and Western civilization, depicting the seven terraces of Purgatory corresponding to the seven deadly sins. Dante's epic poem combines theology, philosophy, politics, and personal reflection in terza rima verse form. It is one of the greatest works of world literature and a profound meditation on sin, redemption, and divine grace.
+"""
+
+Notes = """
+The year 1320 represents approximately when Dante completed Purgatorio (he began the Divine Comedy around 1308 and finished it shortly before his death in 1321). Some scholars date Purgatorio's completion to 1319-1320. Since this is the original composition date and the work is fundamentally Dante's despite being in translation, this date is most historically appropriate for a timeline of important works. The Finnish translation by Eino Leino was published in 1913, but the work itself dates to the medieval period.
+"""
+</result>

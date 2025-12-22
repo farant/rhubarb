@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the structured information you requested.
+
+This is "Captain Fracasse" (Le Capitaine Fracasse) by Théophile Gautier, a well-known 19th century French novel. Let me provide the details in the format you specified:
+
+<result>
+Title = "Captain Fracasse"
+Author = "Théophile Gautier"
+Year = 1863
+
+Tags = ["fiction", "historical-fiction", "adventure", "romance"]
+
+Summary = """
+Captain Fracasse (Le Capitaine Fracasse) is a historical adventure novel by French author Théophile Gautier, set in 17th century France during the reign of Louis XIII. The story follows the Baron de Sigognac, an impoverished nobleman living in a dilapidated castle in Gascony, who joins a traveling theater troupe and adopts the stage name "Captain Fracasse." The novel combines swashbuckling adventure, romance, and social commentary as the protagonist encounters brigands, duels, and aristocratic intrigue while falling in love with one of the actresses. Gautier's work is notable for its vivid historical detail, romantic atmosphere, and celebration of theatrical life in 17th century France. It's considered one of Gautier's major works and a classic of French romantic literature.
+"""
+
+Notes = """
+The novel was originally published in 1863, though it is set in the 1630s during the reign of Louis XIII. Gautier began writing it much earlier but didn't complete it until the 1860s. The 1863 date represents the original French publication, which is the most historically significant date for this work.
+"""
+</result>

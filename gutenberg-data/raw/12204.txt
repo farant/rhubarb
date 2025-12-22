@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a collection of short stories by W.W. Jacobs, specifically "Odd Craft." The text shows the beginning of the story "Bill's Lapse" told by the night-watchman character, which is typical of Jacobs' narrative style. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author famous for his humorous short stories about dockside life and his classic horror story "The Monkey's Paw."
+
+"Odd Craft" was originally published in 1903 and contains a collection of humorous tales, many featuring the recurring characters of night-watchmen telling stories about sailors like Ginger Dick, Peter Russet, and Sam Small.
+
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Odd Craft" is a collection of humorous short stories by W.W. Jacobs, one of the most popular English humorists of the early 20th century. The collection features Jacobs' characteristic tales of maritime life, often told through the voice of a night-watchman narrator who recounts the adventures and misadventures of sailors and dockworkers. The stories are known for their wit, clever dialogue, and gentle satire of working-class English life. Characters like Ginger Dick, Peter Russet, and Sam Small recur throughout Jacobs' work. While Jacobs is perhaps best known today for his horror story "The Monkey's Paw," his humorous maritime tales were extremely popular in their time and showcase his skill at character development and comic timing.
+"""
+
+Notes = """
+1903 is the original publication year for "Odd Craft." W.W. Jacobs was not a Catholic author, so the 'catholic' tag is not included. The stories are family-friendly humor appropriate for children, written in accessible vernacular English that captures the dialect and speech patterns of English sailors and dockworkers of the period.
+"""
+</result>

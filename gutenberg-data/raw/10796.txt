@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of the Two Bulls"
+Author = "John R. Bolles"
+Year = 1856
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A children's story published in the mid-19th century by John R. Bolles. Based on the title and publication context (Daniel Burgess & Co. was a publisher of children's literature), this appears to be a moral or instructive tale featuring two bulls, likely designed to convey lessons about character, behavior, or virtue to young readers in the tradition of 19th-century children's literature.
+"""
+
+Notes = """
+The year 1856 is taken directly from the original publication information shown on the title page. This was published during the golden age of American children's literature, when didactic animal stories were popular pedagogical tools.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Työmiehen vaimo"
+Author = "Minna Canth"
+Year = 1885
+
+Tags = ["fiction", "non-fiction", "historical-document"]
+
+Summary = """
+"Työmiehen vaimo" (The Worker's Wife) is a five-act play by Finnish author and playwright Minna Canth, first published and performed in 1885. Canth was a pioneering figure in Finnish literature and theater, known for her realistic depictions of working-class life and her advocacy for social reform, particularly women's rights. This play examines the life of working-class families in 19th century Finland, exploring themes of marriage, poverty, social inequality, and the struggles faced by women in that era. The play opens with a wedding scene (Johanna's wedding to Risto) and follows the couple's life together. Canth was known for her unflinching portrayals of social problems and her plays often sparked public debate about issues such as alcohol abuse, domestic violence, and women's economic dependence on men.
+"""
+
+Notes = """
+The year 1885 is clearly stated on the title page of this Project Gutenberg text. This is the original publication year of the play. Minna Canth (1844-1897) was one of Finland's most important 19th-century writers and is considered a key figure in the development of Finnish-language literature and realistic drama. While Canth was not a Catholic author (Finland is predominantly Lutheran), this work represents an important piece of Nordic social realist literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Night Land"
+Author = "William Hope Hodgson"
+Year = 1912
+
+Tags = ["fiction", "science-fiction", "fantasy", "horror"]
+
+Summary = """
+The Night Land is a seminal work of science fiction/horror by William Hope Hodgson, first published in 1912. It is set in the far future when the sun has died and the last remnants of humanity live in a massive pyramid called the Last Redoubt, surrounded by a dark landscape filled with horrific creatures and malevolent forces. The novel follows a 17th-century man who has visions/memories of this future world where he undertakes a perilous journey across the Night Land to rescue his reincarnated love. The work is notable for its archaic pseudo-17th-century prose style, its cosmic horror atmosphere, and its influence on later science fiction and fantasy writers. It combines elements of dying earth fiction, romance, and existential horror, exploring themes of eternal love, human perseverance, and cosmic dread.
+"""
+
+Notes = """
+The year 1912 is straightforward as this is the first edition publication date. William Hope Hodgson was not a Catholic author - he was an English writer known for his supernatural and horror fiction. The work is definitely not appropriate for children due to its dark themes, horror elements, and challenging archaic prose style. While the work contains romantic and quasi-religious/spiritual elements, it is not a Catholic work and would not receive an imprimatur.
+"""
+</result>

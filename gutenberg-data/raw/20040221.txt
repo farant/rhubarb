@@ -1,0 +1,17 @@
+I recognize this work as a firsthand Civil War account by Thomas W. Knox, who was a correspondent for the New York Herald. Based on the publication information provided in the text itself, it was published in 1865.
+
+<result>
+Title = "Camp-Fire and Cotton-Field: Southern Adventure in Time of War"
+Author = "Thomas W. Knox"
+Year = 1865
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand account of the American Civil War written by Thomas W. Knox, a correspondent for the New York Herald. The book chronicles Knox's experiences traveling with Union armies and his observations while residing on a Louisiana plantation during the war. As a journalist embedded with Union forces, Knox recorded the military campaigns and daily life of soldiers, providing contemporary documentation of the conflict. The work offers a Northern perspective on the war, combining military history with social observations of the occupied South.
+"""
+
+Notes = """
+1865 is the original publication year as stated in the book itself. This was published very shortly after the end of the Civil War (which concluded in April 1865), making it one of the earliest published accounts of the conflict. The book is dedicated to press correspondents who covered the Union armies.
+"""
+</result>

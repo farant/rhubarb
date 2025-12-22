@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Vanishing Man"
+Author = "R. Austin Freeman"
+Year = 1911
+
+Tags = ["fiction", "mystery", "detective-fiction"]
+
+Summary = """
+The Vanishing Man (also published as "The Eye of Osiris") is a detective novel by R. Austin Freeman featuring his famous forensic detective Dr. John Thorndyke. The story involves the mysterious disappearance of John Bellingham and the subsequent investigation using scientific detection methods. Freeman is considered one of the pioneers of the "inverted detective story" and was known for his meticulous attention to forensic science and medical jurisprudence. This novel showcases Thorndyke's methodical approach to solving crimes through careful observation and scientific analysis, including the examination of physical evidence and expert testimony in court proceedings.
+"""
+
+Notes = """
+The year 1911 is clearly stated on the title page of the Gutenberg text. R. Austin Freeman (1862-1943) was a British writer of detective stories, primarily featuring Dr. Thorndyke. This work was originally published as "The Eye of Osiris" in the UK and as "The Vanishing Man" in the US, both in 1911. Freeman was himself a qualified physician and used his medical knowledge extensively in his detective fiction, essentially creating the medical-legal detective genre.
+"""
+</result>

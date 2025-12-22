@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This appears to be "Enkens Søn" (The Widow's Son) by Herman Bang, a Danish writer. The text is in Danish and describes the story of a young widowed countess who becomes the prioress of a monastery, living there with her young son Otto Heinrich.
+
+Herman Bang (1857-1912) was a significant Danish author known for his impressionistic style. "Enkens Søn" is part of his collection "Stille Eksistenser" (Quiet Existences), published in 1886.
+
+<result>
+Title = "Enkens Søn"
+Author = "Herman Bang"
+Year = 1886
+
+Tags = ["fiction", "danish-literature"]
+
+Summary = """
+"Enkens Søn" (The Widow's Son) is the first part of Herman Bang's "Stille Eksistenser" (Quiet Existences), published in 1886. The work tells the story of a young Countess of Waldeck, widowed at thirty-two after her husband fell at Gravelotte in the Franco-Prussian War. Despite controversy over her youth, she becomes the Prioress of the Eisenstein monastery. The narrative focuses on her quiet life at the monastery with her ten-year-old son Otto Heinrich, and her gradual acceptance by the elder ladies of the institution. Herman Bang was a prominent Danish author of the Modern Breakthrough movement, known for his impressionistic prose style and sensitive portrayals of marginalized individuals and quiet suffering.
+"""
+
+Notes = """
+Herman Bang was a Danish author of the late 19th century, part of the Modern Breakthrough literary movement. While he was baptized and raised in a Christian environment, his works are primarily literary fiction rather than explicitly Catholic devotional literature. The work is in Danish and represents Scandinavian literary realism/impressionism of the period.
+"""
+</result>

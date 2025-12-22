@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a French literary work - I can see it's "Contes à la Brune" (Tales to the Brunette) by Armand Silvestre, published in July 1888 according to the dedication. This is a collection of stories/tales dedicated to "the very beautiful one who inspired them." The work includes illustrations by Kauffmann and begins with "L'Hymne des Brunes" (The Hymn to Brunettes) dedicated to Catulle Mendès.
+
+Armand Silvestre (1837-1901) was a French poet and conteur (storyteller) associated with the Parnassian movement. This particular work is a collection of romantic tales with both melancholic and cheerful tones, as he describes in his dedication.
+
+<result>
+Title = "Contes à la Brune"
+Author = "Armand Silvestre"
+Year = 1888
+
+Tags = ["fiction", "short-stories", "french-literature"]
+
+Summary = """
+'Contes à la Brune' (Tales to the Brunette) is a collection of romantic tales by French poet and writer Armand Silvestre, featuring illustrations by Kauffmann. The work represents Silvestre's best pages from his 'Pleines Fantaisies' series, combining melancholy and gaiety in stories about love. As Silvestre writes in his dedication, these are love stories that embody both supreme sadness and supreme joy. The collection opens with 'L'Hymne des Brunes' (The Hymn to Brunettes), a response to Catulle Mendès's song praising blondes. Silvestre was a notable figure in late 19th-century French literature, associated with the Parnassian movement and known for his poetry and prose tales.
+"""
+
+Notes = """
+The year 1888 comes directly from Silvestre's dated dedication ('Juillet 1888'). This represents the original French publication date of this collection.
+"""
+</result>

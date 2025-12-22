@@ -1,0 +1,15 @@
+<result>
+Title = "Dio's Rome, Volume 4: An Historical Narrative (Books 52-60)"
+Author = "Cassius Dio (translated by Herbert Baldwin Foster)"
+Year = 220
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the fourth volume of Cassius Dio's Roman History, covering Books 52-60, which chronicle Roman history from 29 BC to 54 AD. This period includes the consolidation of Augustus's power, the reigns of Tiberius, Caligula, and Claudius. Cassius Dio (c. 155-235 AD) was a Roman statesman and historian who wrote his monumental 80-book history of Rome in Greek. This English translation was produced by Herbert Baldwin Foster and published in 1905. Dio's work is one of the most important sources for understanding the early Roman Empire, particularly the Julio-Claudian dynasty.
+"""
+
+Notes = """
+The year 220 represents approximately when Cassius Dio completed this portion of his history during the Severan dynasty, as indicated in the title page. While the Foster translation was published in 1905, the historical value lies in Dio's original composition in the early 3rd century AD. Dio wrote during the reigns of Septimius Severus through Alexander Severus (as noted on the title page), making his work a near-contemporary source for the Severan period and a later historical account of the Julio-Claudian era he describes in these books.
+"""
+</result>

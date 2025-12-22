@@ -1,0 +1,19 @@
+I can see this is from "The Mirror of Literature, Amusement, and Instruction," which was a weekly British periodical publication. Based on the header information, this is Volume 20, No. 564, from Saturday, September 1, 1832.
+
+This appears to be a single article about Belvoir Castle from that periodical issue, not a complete standalone book. The Project Gutenberg number 11865 corresponds to this specific issue of the periodical.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 20, No. 564"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early-to-mid 19th century. It contained miscellaneous articles on history, biography, topography, literature, science, and the arts, often illustrated with engravings. This particular issue from September 1, 1832 features an article on Belvoir Castle, the seat of the Manners family, describing its architectural features, location, and historical significance. The periodical was aimed at general readers and sought to provide educational and entertaining content for a middle-class Victorian audience.
+"""
+
+Notes = """
+The year 1832 is taken from the publication date shown in the header. This is an issue of a periodical rather than a standalone book. The Mirror was published weekly and was priced at 2 pence per issue, making it accessible to a broad readership during the early Victorian era.
+"""
+</result>

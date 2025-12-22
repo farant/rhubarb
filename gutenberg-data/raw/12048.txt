@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is "Our Little Korean Cousin" by H. Lee M. Pike, published in the early 20th century as part of the "Little Cousin" series - a popular educational children's book series that introduced American children to other cultures around the world.
+
+<result>
+Title = "Our Little Korean Cousin"
+Author = "H. Lee M. Pike"
+Year = 1905
+
+Tags = ["non-fiction", "appropriate-for-children", "educational", "cultural-studies"]
+
+Summary = """
+'Our Little Korean Cousin' is part of the popular 'Little Cousin' series published in the early 1900s, designed to introduce American children to the lives, customs, and cultures of children in other countries. This volume focuses on Korea through the story of a young Korean boy named Yung Pak. The book provides insights into Korean life, traditions, superstitions, and customs during a period of significant historical change for Korea, when Western influences were beginning to penetrate the previously isolated nation. The author references the work of American and British figures like Rodgers, Blake, and Kimberly who played roles in opening Korea to Western influence and education.
+"""
+
+Notes = """
+The 'Little Cousin' series was published primarily between 1901-1910. Based on the references to 'recent events' that introduced Korea to the world and the mention of it being a time of change (likely referring to the Russo-Japanese War of 1904-1905 and increasing foreign influence in Korea), this book was most likely published around 1905. The Project Gutenberg ID 12048 also suggests an early 20th century publication date.
+"""
+</result>

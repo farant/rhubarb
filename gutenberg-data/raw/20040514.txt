@@ -1,0 +1,17 @@
+I recognize this work. Let me analyze the text to provide you with the requested information.
+
+<result>
+Title = "The House on the Borderland"
+Author = "William Hope Hodgson"
+Year = 1908
+
+Tags = ["fiction", "horror", "supernatural", "cosmic-horror"]
+
+Summary = """
+'The House on the Borderland' is a supernatural horror novel by William Hope Hodgson, considered one of the pioneering works of cosmic horror and weird fiction. The story is presented as a manuscript discovered in the ruins of a house in rural Ireland, detailing the bizarre and terrifying experiences of an unnamed recluse who lives in an isolated house with his sister and dog. The narrative combines psychological horror with cosmic visions, including interdimensional travel, encounters with swine-like creatures, and apocalyptic visions of the end of time. The novel influenced later writers like H.P. Lovecraft and is noted for its innovative blending of horror genres and its ambitious scope spanning both intimate personal terror and vast cosmic dread.
+"""
+
+Notes = """
+The novel was first published in 1908. This is one of Hodgson's most famous works and represents an important early contribution to the cosmic horror genre. The framing device of the manuscript being discovered by Tonnison and Berreggnog adds to the verisimilitude of the tale. While Hodgson wrote other notable works including maritime horror stories, this novel stands as his most ambitious and influential work. Not appropriate for children due to horror content and disturbing imagery.
+"""
+</result>

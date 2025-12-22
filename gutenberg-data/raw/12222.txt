@@ -1,0 +1,19 @@
+Based on the text you provided, I can identify this work:
+
+<result>
+Title = "The Faithful Shepherdess"
+Author = "Francis Beaumont and John Fletcher"
+Year = 1609
+
+Tags = ["fiction", "drama", "pastoral"]
+
+Summary = """
+The Faithful Shepherdess is a pastoral tragicomedy written primarily by John Fletcher (though traditionally attributed to both Beaumont and Fletcher). It is one of the earliest English pastoral dramas, telling the story of Clorin, a shepherdess who has vowed chastity and lives by her lover's grave, practicing herbalism and healing. The play explores themes of chastity, love, desire, and virtue through various shepherds and shepherdesses in an idyllic Thessalian setting. The work was innovative in its use of the pastoral mode for English drama and influenced later works in the genre. It features Fletcher's characteristic lyrical verse and explores the tension between natural desire and virtuous restraint.
+"""
+
+Notes = """
+The play was first performed around 1608-1609 and published in 1609. While traditionally part of the Beaumont and Fletcher canon, modern scholarship attributes this work primarily or entirely to Fletcher alone. The play initially failed with audiences who expected a typical comedy, but it later gained appreciation and influenced pastoral literature. I've chosen 1609 as it represents both the approximate composition date and first publication.
+"""
+</result>
+
+Vale! This is a pastoral tragicomedy from the Jacobean era - the opening scene you provided shows Clorin establishing her character as a chaste shepherdess devoted to her deceased lover's memory, who will now dedicate herself to healing with herbs. Fletcher's verse here is characteristically lyrical and melancholic.

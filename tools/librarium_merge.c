@@ -10,6 +10,7 @@
 #include "xar.h"
 #include "internamentum.h"
 #include "iter_directoria.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,6 +20,7 @@
 
 #define VIA_RAW      "gutenberg-data/raw"
 #define VIA_OUTPUT   "librarium.stml"
+#define VIA_INDEX    "gutenberg_index.stml"
 
 /* ==================================================
  * Contextus
@@ -28,6 +30,7 @@ nomen structura {
     Piscina*              piscina;
     InternamentumChorda*  intern;
     StmlNodus*            radix;           /* Radix librarium */
+    TabulaDispersa*       viae_canonicae;  /* numerus -> via canonica */
     i32                   libri_processati;
     i32                   libri_errores;
 } MergeContextus;
@@ -69,6 +72,103 @@ _extrahere_numerum(chorda titulus)
     }
 
     redde numerus;
+}
+
+/* Scorare via fili pro selectione canonica
+ * Prioritas: -0.txt (UTF-8) > .txt (plain) > -8.txt (Latin-1) > -N.txt (duplicata)
+ * Detrahere 1000 si in /old/ directorio
+ */
+hic_manens s32
+_scorare_via(chorda via, b32 in_old)
+{
+    s32 score = 0;
+    s32 i;
+    s32 ultima_sep = -1;
+    s32 punctum = -1;
+    s32 mensura = (s32)via.mensura;
+
+    /* Invenire ultimum / et ultimum . */
+    per (i = 0; i < mensura; i++) {
+        si ((character)via.datum[i] == '/') {
+            ultima_sep = i;
+        }
+        si ((character)via.datum[i] == '.') {
+            punctum = i;
+        }
+    }
+
+    /* Extrahere nomen fili (post ultimum /) */
+    {
+        s32 nomen_init = ultima_sep + 1;
+        s32 nomen_finis = punctum > nomen_init ? punctum : mensura;
+
+        /* Quaerere -0, -8, vel -N pattern ante .txt */
+        si (nomen_finis - nomen_init >= 2) {
+            s32 dash_pos = nomen_finis - 2;
+            /* Verificare si est -N pattern */
+            dum (dash_pos > nomen_init) {
+                si ((character)via.datum[dash_pos] == '-') {
+                    character suffix = (character)via.datum[dash_pos + 1];
+                    si (suffix == '0') {
+                        /* -0 = UTF-8, optimus */
+                        score = 100;
+                    } alioquin si (suffix == '8') {
+                        /* -8 = Latin-1, minus bonus */
+                        score = 80;
+                    } alioquin si (suffix >= '1' && suffix <= '9') {
+                        /* -1, -2, etc = duplicata */
+                        score = 50;
+                    }
+                    frange;
+                }
+                dash_pos--;
+            }
+
+            /* Si nullum -N inventum, est plain .txt */
+            si (score == 0) {
+                score = 90;
+            }
+        } alioquin {
+            /* Nomen brevissimum, probabiliter plain */
+            score = 90;
+        }
+    }
+
+    /* Penalizare si in old/ */
+    si (in_old) {
+        score -= 1000;
+    }
+
+    redde score;
+}
+
+/* Selectare via canonica ex liber nodo in gutenberg_index.stml */
+hic_manens chorda
+_selectare_via_canonica(StmlNodus* liber, Piscina* piscina)
+{
+    StmlNodus* filum;
+    chorda optima_via;
+    s32 optimus_score = -9999;
+
+    optima_via.datum = NIHIL;
+    optima_via.mensura = 0;
+
+    filum = stml_invenire_liberum(liber, "filum");
+    dum (filum != NIHIL) {
+        chorda* via_attr = stml_attributum_capere(filum, "via");
+        si (via_attr != NIHIL && via_attr->mensura > 0) {
+            b32 in_old = stml_attributum_habet(filum, "in_old");
+            s32 score = _scorare_via(*via_attr, in_old);
+
+            si (score > optimus_score) {
+                optimus_score = score;
+                optima_via = chorda_transcribere(*via_attr, piscina);
+            }
+        }
+        filum = stml_frater_proximus(filum);
+    }
+
+    redde optima_via;
 }
 
 /* Invenire ultimum <result> blocum in textu */
@@ -746,6 +846,16 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
     _addere_elementum_textus(ctx, liber, "summarium", valor_summarium);
     _addere_elementum_textus(ctx, liber, "notae", valor_notae);
 
+    /* Addere via canonica si disponibilis */
+    {
+        chorda numerus_ch = _s32_ad_chorda(numerus, ctx->piscina);
+        vacuum* via_valor = NIHIL;
+        si (tabula_dispersa_invenire(ctx->viae_canonicae, numerus_ch, &via_valor)) {
+            chorda* via_canonica = (chorda*)via_valor;
+            _addere_elementum_textus(ctx, liber, "via", *via_canonica);
+        }
+    }
+
     /* Actualizare status */
     stml_attributum_addere(liber, ctx->piscina, ctx->intern, "status", "enriched");
 
@@ -781,8 +891,43 @@ s32 principale(s32 argc, character** argv)
     ctx.piscina = piscina;
     ctx.intern = intern;
     ctx.radix = stml_elementum_creare(piscina, intern, "librarium");
+    ctx.viae_canonicae = tabula_dispersa_creare_chorda(piscina, MMMMXCVI);
     ctx.libri_processati = 0;
     ctx.libri_errores = 0;
+
+    /* Legere gutenberg_index.stml et construere tabulam viarum canonicarum */
+    imprimere("Legendo vias canonicas ex %s...\n", VIA_INDEX);
+    {
+        chorda index_contentum = filum_legere_totum(VIA_INDEX, piscina);
+        si (index_contentum.datum != NIHIL && index_contentum.mensura > 0) {
+            StmlResultus index_res = stml_legere(index_contentum, piscina, intern);
+            si (index_res.successus && index_res.elementum_radix != NIHIL) {
+                StmlNodus* librarium = index_res.elementum_radix;
+                StmlNodus* liber = stml_invenire_liberum(librarium, "liber");
+                i32 viae_inventae = 0;
+
+                dum (liber != NIHIL) {
+                    chorda* numerus_attr = stml_attributum_capere(liber, "numerus");
+                    si (numerus_attr != NIHIL && numerus_attr->mensura > 0) {
+                        chorda via_canonica = _selectare_via_canonica(liber, piscina);
+                        si (via_canonica.datum != NIHIL && via_canonica.mensura > 0) {
+                            chorda* via_copia = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+                            *via_copia = via_canonica;
+                            tabula_dispersa_inserere(ctx.viae_canonicae, *numerus_attr, via_copia);
+                            viae_inventae++;
+                        }
+                    }
+                    liber = stml_frater_proximus(liber);
+                }
+
+                imprimere("  Inventae %d viae canonicae\n\n", viae_inventae);
+            } alioquin {
+                imprimere("  Admonitio: non potest parsare %s\n\n", VIA_INDEX);
+            }
+        } alioquin {
+            imprimere("  Admonitio: non potest legere %s\n\n", VIA_INDEX);
+        }
+    }
 
     /* Ambulare per raw directoria */
     imprimere("Legendo fila ex %s...\n\n", VIA_RAW);

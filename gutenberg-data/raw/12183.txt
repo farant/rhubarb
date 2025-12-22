@@ -1,0 +1,21 @@
+I'll read through this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text provided, this is clearly "Wau-Bun, The Early Day in the Northwest" by Mrs. John H. Kinzie (Juliette Augusta Magill Kinzie), published in its first edition in 1856, though this appears to be an 1873 edition from Philadelphia.
+
+The work is a memoir of frontier life in the early Wisconsin Territory during the 1830s. Mrs. Kinzie was married to Indian agent John H. Kinzie and lived at Fort Winnebago. The title "Wau-bun" is an Ojibwe word meaning "the dawn" or "the break of day."
+
+<result>
+Title = "Wau-Bun, The Early Day in the Northwest"
+Author = "Juliette Augusta Magill Kinzie (Mrs. John H. Kinzie)"
+Year = 1856
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Wau-Bun is a pioneering memoir of frontier life in the Wisconsin Territory during the 1830s. Written by Juliette Kinzie, wife of Indian agent John H. Kinzie, the work provides a firsthand account of life at Fort Winnebago and interactions with various Native American tribes, particularly the Ojibwe and Potawatomi peoples. The title, meaning "the dawn" in Ojibwe, symbolically refers both to early morning and to the early days of American settlement in the Northwest Territory. The book is valued as an important historical document of frontier life, Native American relations, and the role of women in western expansion. It offers detailed descriptions of Native American customs, frontier society, and the landscape of early Wisconsin.
+"""
+
+Notes = """
+The text shown is from an 1873 Philadelphia edition, but the work was originally published in 1856. This is considered one of the first books written by a woman about the American frontier and remains an important primary source for historians studying the Old Northwest Territory and early Chicago history.
+"""
+</result>

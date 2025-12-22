@@ -1,0 +1,15 @@
+<result>
+Title = "Dawn"
+Author = "H. Rider Haggard"
+Year = 1884
+
+Tags = ["fiction"]
+
+Summary = """
+"Dawn" is H. Rider Haggard's first novel, published in 1884, before he achieved fame with "King Solomon's Mines" and "She". It is a three-volume Victorian novel that deals with themes of inheritance, betrayal, love, and redemption. The story follows the fortunes of the Caresfoot family and their estate, involving complex romantic entanglements and moral dilemmas typical of Victorian sensation fiction. Unlike Haggard's later adventure romances set in exotic locales, "Dawn" is set in England and follows the conventions of the domestic novel of the period, though it already shows signs of the dramatic plotting and melodramatic intensity that would characterize his later work.
+"""
+
+Notes = """
+The year 1884 is straightforward as it appears directly in the text and matches the known publication date of Haggard's debut novel. This work predates his more famous African adventure novels and represents his early attempt at Victorian domestic fiction.
+"""
+</result>

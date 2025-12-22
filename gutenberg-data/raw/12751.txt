@@ -1,0 +1,15 @@
+<result>
+Title = "Quatre Mois de l'Expédition de Garibaldi en Sicile et en Italie"
+Author = "H. Durand-Brager"
+Year = 1861
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand account of Giuseppe Garibaldi's famous Expedition of the Thousand (Spedizione dei Mille) in Sicily and Italy, written by H. Durand-Brager who accompanied the expedition. The work documents four months of Garibaldi's military campaign that led to the unification of Italy in 1860-1861. Durand-Brager, who knew Garibaldi from his earlier time in the Río de la Plata region of South America, presents himself as an eyewitness chronicler focusing on the pictorial and immediate aspects of the campaign rather than political commentary. The book was published in Paris in 1861, shortly after the events it describes, providing a contemporary French perspective on one of the most significant military and political events of the Italian Risorgimento.
+"""
+
+Notes = """
+The year 1861 reflects the original publication date as stated on the title page. The events described took place primarily in 1860 (Garibaldi's conquest of Sicily and Naples), with the account published immediately afterward in 1861 while the Italian unification process was still ongoing. This is a contemporary historical document rather than a retrospective history.
+"""
+</result>

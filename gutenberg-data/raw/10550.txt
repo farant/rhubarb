@@ -1,0 +1,15 @@
+<result>
+Title = "A Select Collection of Old English Plays, Vol. IX"
+Author = "W. Carew Hazlitt"
+Year = 1874
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the ninth volume of W. Carew Hazlitt's fourth edition of Robert Dodsley's collection of old English plays, originally published in 1744. This scholarly edition was chronologically arranged, revised and enlarged with notes from previous commentators plus new annotations by Hazlitt. The volume contains five Renaissance-era dramatic works: "How a Man May Choose a Good Wife from a Bad," "The Return from Parnassus," "Wily Beguiled," "Lingua," and "The Miseries of Enforced Marriage." These plays represent important examples of late Elizabethan and early Jacobean drama, performed by various theatrical companies in the early 1600s. Hazlitt's work was part of a significant Victorian-era scholarly effort to preserve and document early English theatrical history.
+"""
+
+Notes = """
+I chose 1874 as the year because this is the date of Hazlitt's edition (the header indicates 1874-76 for the series). While the individual plays date from the early 1600s (the first play "How a Man May Choose" shows editions from 1602-1634), this particular text is a scholarly collection and compilation work. The historical and educational value lies in Hazlitt's editorial work and commentary on these Renaissance plays, not the original composition dates of the individual works. If you were cataloging the individual plays themselves rather than this scholarly edition, you would use their original dates (circa 1600-1610).
+"""
+</result>

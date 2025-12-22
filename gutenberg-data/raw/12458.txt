@@ -1,0 +1,15 @@
+<result>
+Title = "The Talisman: From the Russian of Alexander Pushkin with Other Pieces"
+Author = "Alexander Pushkin (translated by George Borrow)"
+Year = 1835
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by Alexander Pushkin, the great Russian poet often considered the founder of modern Russian literature, translated into English by George Borrow. The collection includes "The Talisman," "The Mermaid," "Ancient Russian Song," "Ancient Ballad," and "The Renegade." Pushkin (1799-1837) was a Romantic poet whose work profoundly influenced Russian literature and culture. George Borrow (1803-1881) was an English author and polyglot known for his travel writings and linguistic abilities, who translated various works from multiple languages including Russian.
+"""
+
+Notes = """
+The year 1835 is chosen as an approximate date for when these poems would have been originally written by Pushkin, during his most productive period. Pushkin's major works were published in the 1820s-1830s before his death in a duel in 1837. Borrow's translation was likely done in the mid-19th century. Since the primary author is Pushkin and this is a collection of his poetry, dating it to his creative period seems most historically appropriate for a timeline of literary works.
+"""
+</result>

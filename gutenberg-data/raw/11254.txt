@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is a collected works volume edited by Rev. George Gilfillan, published in Edinburgh in 1855 (indicated by M.DCCC.LV.). It contains the poetical works of four 18th-century British poets: Samuel Johnson, Thomas Parnell, Thomas Gray, and Tobias Smollett.
+
+<result>
+Title = "The Poetical Works of Johnson, Parnell, Gray, and Smollett"
+Author = "Samuel Johnson, Thomas Parnell, Thomas Gray, Tobias Smollett (edited by Rev. George Gilfillan)"
+Year = 1855
+
+Tags = ["non-fiction", "poetry", "anthology"]
+
+Summary = """
+This is a collected edition of the complete poetical works of four prominent 18th-century British writers: Samuel Johnson (1709-1784), Thomas Parnell (1679-1718), Thomas Gray (1716-1771), and Tobias Smollett (1721-1771). The volume was edited by Rev. George Gilfillan and includes biographical memoirs, critical dissertations, and explanatory notes for each poet. The anthology represents the Romantic-era Victorian interest in preserving and analyzing 18th-century English literature, particularly poetry. Johnson is represented by works including his famous imitations of Juvenal ("London" and "The Vanity of Human Wishes") along with various prologues. This type of collected edition was popular in the mid-19th century as a way to make classic poetry accessible to educated readers.
+"""
+
+Notes = """
+I chose 1855 as the year because this is an editorial compilation published in that year, not a collection of the original publication dates of the individual poems. The original works span from the early 1700s to the late 1700s, but this specific volume as a curated scholarly edition dates to 1855. This is indicated by the Roman numeral M.DCCC.LV. on the title page.
+"""
+</result>

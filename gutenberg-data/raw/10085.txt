@@ -1,0 +1,15 @@
+<result>
+Title = "Moorish Literature: Comprising Romantic Ballads, Tales of the Berbers, Stories of the Kabyles, Folk-Lore, and National Traditions"
+Author = "Various, edited and introduced by René Basset"
+Year = 1901
+
+Tags = ["non-fiction", "folklore", "anthology", "appropriate-for-children"]
+
+Summary = """
+This is an anthology of Moorish literature translated into English, featuring romantic ballads, Berber tales, Kabyle stories, folklore, and national traditions from North Africa. The collection was edited and introduced by René Basset, Ph.D., of the University of France and Director of the Académie d'Alger. The work represents the literary traditions of the region extending from Egypt to the Atlantic Ocean, encompassing the cultural heritage of the Berbers, Arabs, and Spanish Muslims who were collectively known as Moors. This appears to be one of the first comprehensive English translations of Moorish literary traditions, providing Western readers access to the rich oral and written traditions of North African peoples.
+"""
+
+Notes = """
+The year 1901 is clearly stated on the title page as the publication date. This anthology represents a collection of various traditional works from different time periods and authors, so 1901 refers to when this specific English translation and compilation was published, not when the individual works were originally composed. René Basset was a prominent French Orientalist and specialist in Berber languages and North African literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Home-Life of the Lancashire Factory Folk during the Cotton Famine"
+Author = "Edwin Waugh"
+Year = 1863
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a first-hand account by Edwin Waugh, a Lancashire dialect poet and writer, documenting the lives of cotton mill workers during the Cotton Famine of 1861-1865. The famine was caused by the American Civil War, which disrupted cotton supplies to Lancashire's textile mills, causing massive unemployment and hardship. Waugh traveled through Lancashire observing and recording the conditions, resilience, and daily struggles of the working-class families affected by the crisis. The book provides valuable social history and eyewitness testimony of one of the most significant economic disasters in 19th-century British industrial history.
+"""
+
+Notes = """
+The Cotton Famine lasted from 1861-1865, but most accounts and Waugh's observations were published around 1862-1863 as the crisis was unfolding. Without access to the full text's publication details, 1863 is the most likely original publication year, as this was when Waugh was most actively documenting and publishing his observations of the famine conditions. Some editions may have appeared slightly earlier or later, but mid-famine (1862-1864) represents the period of Waugh's reporting.
+"""
+</result>

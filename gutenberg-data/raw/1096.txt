@@ -1,0 +1,15 @@
+<result>
+Title = "The Faith of Men"
+Author = "Jack London"
+Year = 1904
+
+Tags = ["fiction", "short-stories", "adventure"]
+
+Summary = """
+"The Faith of Men" is a collection of short stories by Jack London set primarily in the Yukon and Alaska during the Klondike Gold Rush era. The collection features London's characteristic tales of survival, human nature under extreme conditions, and the moral complexities of men living on the frontier. These stories explore themes of loyalty, betrayal, courage, and the "faith" that men place in each other when civilization's constraints are stripped away. London drew heavily on his own experiences in the Klondike during 1897-1898 for these tales, which showcase his naturalistic writing style and his fascination with the harsh realities of life in the frozen North.
+"""
+
+Notes = """
+"The Faith of Men" was originally published in 1904 as a short story collection. While the Project Gutenberg text indicates it was prepared from a 1919 William Heinemann edition (a reprint), the work itself was first published in 1904. This represents London's early period as a writer, following his initial success with "The Call of the Wild" (1903) and preceding "The Sea-Wolf" (1904). The 1904 date is the most historically accurate for educational timeline purposes as it marks when these stories first appeared as a collected work.
+"""
+</result>

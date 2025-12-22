@@ -1,0 +1,17 @@
+I recognize this as "The Title" by Arnold Bennett. This is a comedy/satire that Bennett wrote during World War I, published in 1918. The play satirizes the British obsession with titles and social status. Arnold Bennett was a prolific English novelist and playwright, not a Catholic author, and this is a secular work of fiction appropriate for general adult audiences.
+
+<result>
+Title = "The Title"
+Author = "Arnold Bennett"
+Year = 1918
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+'The Title' is a satirical comedy in three acts by Arnold Bennett, written during World War I. The play satirizes the British social obsession with aristocratic titles and honors. Set in the well-furnished West End home of the Culver family over the course of a few days between Christmas and New Year, the play explores the family's reactions and social maneuvering around the prospect of receiving a title. Bennett uses the situation to lampoon the pretensions and vanities of the British middle and upper classes, examining themes of social climbing, family dynamics, and the absurdity of the honors system. The play is characteristic of Bennett's sharp social observation and wit.
+"""
+
+Notes = """
+The publication year of 1918 (MCMXVIII in the copyright notice) represents the original publication date of this play. This was during the latter part of World War I, when honors and titles were being distributed more liberally, making it a particularly timely satire. Bennett was known for his realistic and often satirical portrayals of English society.
+"""
+</result>

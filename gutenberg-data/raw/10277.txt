@@ -1,0 +1,15 @@
+<result>
+Title = "Hallelujah Chorus"
+Author = "George Frideric Handel"
+Year = 1742
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children", "catholic"]
+
+Summary = """
+The "Hallelujah Chorus" is the culminating movement of Part II of George Frideric Handel's sacred oratorio "Messiah." First performed in Dublin in 1742, it is one of the most famous and recognizable pieces of choral music in Western classical tradition. The text is taken from the Book of Revelation and other biblical passages, celebrating Christ's triumph and eternal reign. The piece is known for its majestic grandeur and the tradition (possibly apocryphal) that King George II stood during its first London performance, establishing the custom of audiences rising during its performance. This Project Gutenberg entry is an audio recording from the Edison National Historic Site, representing an early phonograph recording of this iconic work.
+"""
+
+Notes = """
+The year 1742 represents the premiere of Handel's "Messiah" in Dublin on April 13, 1742. While this Gutenberg entry is actually an audio recording (likely early 20th century from Edison's collection), the work itself dates to 1742. Handel was Anglican, but "Messiah" is universally embraced across Christian denominations and is thoroughly biblical in content, making it appropriate for Catholic contexts. The work is entirely suitable for all ages and is regularly performed in churches and concert halls worldwide.
+"""
+</result>

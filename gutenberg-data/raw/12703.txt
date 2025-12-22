@@ -1,0 +1,15 @@
+<result>
+Title = "The Little Match Girl"
+Author = "Hans Christian Andersen"
+Year = 1845
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Little Match Girl" (Danish: "Den Lille Pige med Svovlstikkerne") is one of Hans Christian Andersen's most famous and poignant fairy tales. It tells the story of a poor young girl who is trying to sell matches on a cold New Year's Eve. As she freezes in the winter cold, she lights her matches one by one to keep warm, and with each match she sees beautiful visions - a warm stove, a Christmas feast, a Christmas tree, and finally her deceased grandmother. The story is a powerful meditation on poverty, suffering, and death, characteristic of Andersen's deeper, more melancholic fairy tales. Despite being marketed as a children's story, it deals with serious themes of social inequality and human compassion.
+"""
+
+Notes = """
+The story was first published in December 1845 in the fifth volume of "Nye Eventyr" (New Fairy Tales). Note that the author's name is spelled "Andersen" (not "Anderson" as it appears in the Gutenberg header - this is a common anglicization error). The 1845 date represents the original Danish publication, which is the most historically significant date for this work.
+"""
+</result>

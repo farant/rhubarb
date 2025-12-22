@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly a non-fiction historical and architectural work about the medieval churches of Coventry, England. The title page is explicit: "THE CHURCHES OF COVENTRY: A SHORT HISTORY OF THE CITY & ITS MEDIEVAL REMAINS" by Frederic W. Woodhouse, published in London by George Bell & Sons in 1909.
+
+This appears to be a scholarly architectural and historical survey, likely including detailed descriptions of Coventry's famous three spires and medieval ecclesiastical architecture. The work would have been published during the Edwardian period when there was significant interest in medieval architecture and local history.
+
+<result>
+Title = "The Churches of Coventry: A Short History of the City & Its Medieval Remains"
+Author = "Frederic W. Woodhouse"
+Year = 1909
+
+Tags = ["non-fiction", "history", "architecture", "appropriate-for-children"]
+
+Summary = """
+A historical and architectural survey of the medieval churches of Coventry, England, focusing on the city's famous ecclesiastical buildings and their architectural remains. Published during the Edwardian era when interest in medieval architecture and local history was flourishing, this work documents Coventry's rich ecclesiastical heritage, including its iconic "Three Spires" that define the city's skyline. The book contains forty illustrations documenting these medieval structures.
+"""
+
+Notes = """
+The publication year of 1909 is clearly stated on the title page. This is an original scholarly work from that period, not a translation or edition of an earlier text. Coventry's medieval churches, including St. Michael's Cathedral (later destroyed in WWII), Holy Trinity, and Christ Church, were significant examples of Gothic architecture.
+"""
+</result>

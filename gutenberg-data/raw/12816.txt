@@ -1,0 +1,15 @@
+<result>
+Title = "The Devil's Pool"
+Author = "George Sand"
+Year = 1846
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Devil's Pool' (original French title: 'La Mare au Diable') is a pastoral novel by George Sand, considered one of her most charming and accessible works. It tells the story of a widowed peasant farmer named Germain who is encouraged to remarry, and his journey with a young woman named Marie. Set in the rural Berry region of central France, the novel celebrates rustic life and simple virtues while exploring themes of love, grief, and community. The work is notable for its idealized yet sympathetic portrayal of French country life and peasant culture. George Sand (pen name of Amantine Lucile Aurore Dupin) was one of the most prominent French writers of the 19th century, known for her independent spirit and prolific literary output.
+"""
+
+Notes = """
+'La Mare au Diable' was first published in 1846. This edition appears to be an English translation by George B. Ives published in 1901 by George Barrie & Sons in Philadelphia as part of their 'Bibliothèque des Chefs-d'Oeuvre du Roman Contemporain' series. I've used 1846 as the year since that represents when Sand wrote the original work, which is most relevant for a historical timeline of literature. George Sand was the pen name of a woman writer, which was quite progressive for the era.
+"""
+</result>

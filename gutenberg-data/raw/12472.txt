@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly an educational edition of the French play "Bataille de Dames" (Battle of Ladies) by Eugène Scribe and Ernest Legouvé, edited with introduction, notes, and vocabulary by Benjamin W. Wells for English-speaking students of French. The text shown is the beginning of the scholarly introduction.
+
+The play "Bataille de Dames" was first performed and published in 1851. This is a classic French comedy that became widely used as a teaching text in American and English schools.
+
+<result>
+Title = "Bataille de Dames"
+Author = "Eugène Scribe, Ernest Legouvé"
+Year = 1851
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+"Bataille de Dames" (Battle of Ladies) is a popular French comedy of manners written collaboratively by Eugène Scribe and Ernest Legouvé. The play exemplifies the comédie-vaudeville style that Scribe helped develop and popularize during the 19th century. This particular edition was prepared as an educational text for English-speaking students learning French, complete with introduction, notes, and vocabulary by Professor Benjamin W. Wells. The play represents the lighter dramatic tradition of French theater, focusing on wit, intrigue, and social comedy rather than heavy moral instruction. Scribe was one of the most prolific and commercially successful French playwrights of his era, and this collaboration with Legouvé became a standard text in French language instruction.
+"""
+
+Notes = """
+The play was first performed in 1851. This Project Gutenberg edition is the educational version prepared by Benjamin W. Wells, Ph.D., intended for students of French. The year 1851 represents the original composition and first performance date, which is the most historically significant date for this work.
+"""
+</result>

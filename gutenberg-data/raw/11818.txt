@@ -1,0 +1,15 @@
+<result>
+Title = "Renewal Registrations (Catalog of Copyright Entries)"
+Author = "United States Copyright Office"
+Year = 1958
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is an official publication from the United States Copyright Office listing renewal registrations for copyrighted works during a specific period in 1958. It provides a comprehensive alphabetical catalog of books, pamphlets, serials, and periodical contributions that had their copyright renewals processed, including information about both the original and renewal registration for each entry. This type of government document serves as an important historical record of intellectual property administration in mid-20th century America.
+"""
+
+Notes = """
+The year 1958 is chosen as this represents the publication date of this specific catalog issue, as evidenced by the renewal dates shown (e.g., "19Nov58; R225353"). While the works being renewed are from earlier periods (primarily 1930-1931 based on the original copyright dates shown), this document itself is a 1958 administrative publication. The Project Gutenberg ID 11818 corresponds to this Copyright Office catalog issue.
+"""
+</result>

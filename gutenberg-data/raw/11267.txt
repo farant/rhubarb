@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XII, No. 328"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This issue from August 23, 1828 features an article on the ancient plan of Oxford Castle, discussing its Saxon and Norman origins. The magazine was designed to provide educational content, historical information, and general knowledge to a broad readership in an accessible format. It included illustrations, historical essays, poetry, and miscellaneous articles on topics of cultural and antiquarian interest.
+"""
+
+Notes = """
+The publication date is clearly stated as Saturday, August 23, 1828, both in the header and the volume/issue number. This is a periodical rather than a single-authored work, hence "Various" for the author field. The content appears appropriate for general audiences including children, being educational in nature and focusing on historical subjects. While the magazine was British and published during a predominantly Christian era, there's no indication this was specifically a Catholic publication, so I have not included the 'catholic' tag.
+"""
+</result>

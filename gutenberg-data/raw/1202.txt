@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text for you.
+
+<result>
+Title = "Tales of Unrest"
+Author = "Joseph Conrad"
+Year = 1898
+
+Tags = ["fiction", "short-stories", "literary-fiction"]
+
+Summary = """
+"Tales of Unrest" is Joseph Conrad's first collection of short stories, published in 1898. The collection contains five stories: "Karain: A Memory," "The Idiots," "An Outpost of Progress," "The Return," and "The Lagoon." These stories showcase Conrad's transition from his Malayan phase (evident in earlier novels like "Almayer's Folly" and "An Outcast of the Islands") and demonstrate his developing mastery of the short story form. The collection explores themes of isolation, moral corruption, psychological distress, and the clash between Western and non-Western cultures. "The Lagoon" was actually Conrad's first short story, though it appears last in the collection. The stories vary in setting from Malayan landscapes to European contexts, reflecting Conrad's wide-ranging maritime experiences and his deep interest in human psychology under extreme conditions.
+"""
+
+Notes = """
+The year 1898 is the first publication date of "Tales of Unrest" as a collection. While "The Lagoon" was written earlier (around 1896-1897) and some stories appeared in magazines before book publication, 1898 represents the historical publication of this complete work. Conrad was still early in his literary career at this point, having only published two novels before this story collection.
+"""
+</result>

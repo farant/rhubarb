@@ -1,0 +1,17 @@
+Let me work with the text you've provided. This is "Rakkautta" (Love) by Maiju Lassila, a Finnish author. Based on the text and my knowledge:
+
+<result>
+Title = "Rakkautta"
+Author = "Maiju Lassila"
+Year = 1912
+
+Tags = ["fiction", "humor"]
+
+Summary = """
+'Rakkautta' (Love) is described as a "traagillinen lemmen tarina" (tragic love story) by Finnish author Maiju Lassila, published in 1912. Maiju Lassila was the pseudonym of Algoth Untola (also known as Algoth Tietäväinen and Irmari Rantamala), a prolific Finnish writer known for his satirical and humorous works. The story appears to be a comedic narrative written in a colloquial, humorous Finnish style typical of Lassila's work, involving social interactions and romantic entanglements. Despite the subtitle claiming it to be "tragic," Lassila's works are generally characterized by their humor and social satire rather than genuine tragedy.
+"""
+
+Notes = """
+The year 1912 is explicitly stated in the text as the publication date. Maiju Lassila was one of several pseudonyms used by Algoth Untola (1868-1918), a Finnish author known for comic novels and stories that often satirized Finnish rural life and social conventions. This work is not marked as appropriate-for-children due to its adult social themes and satirical nature.
+"""
+</result>

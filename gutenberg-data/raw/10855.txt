@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as Alfred Russel Wallace's work "Is Mars Habitable?" which critiques Percival Lowell's theories about Mars. Let me provide the structured information:
+
+<result>
+Title = "Is Mars Habitable? A Critical Examination of Professor Percival Lowell's Book 'Mars and Its Canals,' With an Alternative Explanation"
+Author = "Alfred Russel Wallace"
+Year = 1907
+
+Tags = ["non-fiction", "science", "astronomy", "planetary-science"]
+
+Summary = """
+This is a scientific critique by Alfred Russel Wallace (co-discoverer of evolution by natural selection alongside Darwin) examining Percival Lowell's theories about the habitability of Mars. Wallace wrote this in response to Lowell's book 'Mars and Its Canals,' which proposed that Mars had artificial canals built by intelligent beings and a climate suitable for life. Wallace systematically refutes Lowell's claims using mathematical and physical arguments about Mars's atmosphere, temperature, and climate. He argues that Mars's thin atmosphere and distance from the sun make it uninhabitable, contrary to Lowell's optimistic assessments. The work represents an important historical debate in planetary science before modern space exploration definitively resolved these questions.
+"""
+
+Notes = """
+Published in 1907. This was one of Wallace's later scientific works (he lived 1823-1913). The debate between Wallace and Lowell about Martian canals and habitability was a major scientific controversy of the early 20th century. Lowell's theories about artificial canals on Mars were eventually disproven by spacecraft observations, vindicating Wallace's skepticism.
+"""
+</result>

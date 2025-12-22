@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+<result>
+Title = "Peace Theories and the Balkan War"
+Author = "Norman Angell"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a response by Norman Angell, author of the famous pacifist work "The Great Illusion" (1910), to the Balkan War of 1912. The text appears to be a pamphlet or essay addressing criticisms of pacifist theories in light of the outbreak of war in the Balkans. Angell examines how this conflict seemed to contradict peace theories, noting that it occurred despite efforts by rulers, diplomats, and financial powers to prevent it, and arose from the Balkan peoples' understanding of their own history and perceived duties. The work represents an important moment in early 20th century peace theory, written just before World War I would further challenge pacifist assumptions.
+"""
+
+Notes = """
+The year 1912 is clearly stated on the title page and reflects the publication date, which is appropriate as this is a direct response to contemporary events (the First Balkan War began in October 1912). Norman Angell (1872-1967) was a British journalist and author who won the Nobel Peace Prize in 1933. His most famous work, "The Great Illusion" (1910), argued that war was economically futile in the modern interconnected world - a theory that this pamphlet appears to be defending or reconsidering in light of the Balkan conflict.
+"""
+</result>

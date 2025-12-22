@@ -1,0 +1,23 @@
+I'll help you identify this text and extract the information you need.
+
+This appears to be an issue of "The Mirror of Literature, Amusement, and Instruction," which was a popular British periodical/magazine published in the 19th century. This particular issue is from December 22, 1832 (Volume 20, No. 582).
+
+This is a periodical publication rather than a single-authored book. The Mirror was edited by various people over its run, but it's a collaborative periodical with multiple contributors, and individual articles were often unsigned or anonymous.
+
+For periodicals like this, the "author" would typically be listed as the editor or simply as "Various" since it contains multiple articles by different writers. The year is clearly 1832 based on the publication date.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 20, No. 582"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the 19th century (1822-1849). It contained a variety of content including essays, historical articles, illustrations, poetry, and general educational material aimed at middle-class readers. This particular issue from December 22, 1832 features an article about the York Column in St. James's Park, discussing the improvements made to the park and the removal of Carlton House. The periodical was known for its woodcut illustrations and accessible writing style, making literature and knowledge available to a broad audience.
+"""
+
+Notes = """
+Year is straightforward as this is a dated periodical issue from 1832. This is not a single-authored work but a weekly magazine compilation. Individual issues like this are historical documents that provide insight into Victorian-era British culture, architecture, and public life.
+"""
+</result>

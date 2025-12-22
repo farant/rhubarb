@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to extract the bibliographic information.
+
+This is "Town Geology" by Charles Kingsley. Based on my knowledge, this work was first published in 1872. Charles Kingsley (1819-1875) was an English clergyman, novelist, and social reformer who wrote various works including this geology text aimed at making scientific knowledge accessible to urban working-class audiences.
+
+<result>
+Title = "Town Geology"
+Author = "Charles Kingsley"
+Year = 1872
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+Town Geology is a popular science work by Charles Kingsley designed to make geology accessible to urban working-class men, particularly those in manufacturing districts of England and Scotland. Originally delivered as lectures to young men in Chester, the book teaches readers how to understand the rocks and soils of their local area without requiring extensive prior scientific education. Kingsley was known for his efforts to bring scientific education to ordinary people, and this work exemplifies his pedagogical approach of making complex subjects understandable through practical observation and clear explanation.
+"""
+
+Notes = """
+First published in 1872. Charles Kingsley was an Anglican clergyman and Christian socialist who believed in making education accessible to working people. While not explicitly Catholic, Kingsley was a religious figure, though his Anglican perspective would not qualify this work for Catholic imprimatur status.
+"""
+</result>

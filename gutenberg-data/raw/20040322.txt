@@ -1,0 +1,19 @@
+I'll help you identify this text and extract the relevant information in TOML format.
+
+Based on the content, this is clearly "Peace Theories and the Balkan War" by Norman Angell, published in 1912. Norman Angell was a British journalist and author, famous for his work "The Great Illusion" (1909), which argued that war was economically futile. This work was written in response to the First Balkan War (1912-1913) and represented a critical examination of his own peace theories in light of the conflict.
+
+<result>
+Title = "Peace Theories and the Balkan War"
+Author = "Norman Angell"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A reflective essay by Norman Angell, author of the influential 'The Great Illusion,' written in response to the outbreak of the First Balkan War in 1912. Angell examines his own theories about the futility of war in light of this conflict, which erupted despite diplomatic efforts and economic incentives for peace. The work grapples with the reality that war can emerge from peoples' understanding of their history and perceived duties rather than from ignorance or manipulation by press or financial interests. It represents an important moment of intellectual honesty as Angell confronts the limitations of purely economic arguments against war when faced with nationalist passions and historical grievances in the Balkans.
+"""
+
+Notes = """
+The year 1912 is clearly indicated in the text itself and represents the actual publication year. This work was written during the First Balkan War (October 1912 - May 1913), making it a contemporary analysis rather than a historical retrospective.
+"""
+</result>

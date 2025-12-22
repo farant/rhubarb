@@ -1,0 +1,26 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly a French translation of Edgar Allan Poe's works. Based on the text, this is:
+
+- **Title**: "Derniers Contes" (Last Tales) - a collection of Poe's stories translated into French
+- **Translator**: F. Rabbe
+- **Publication year of this translation**: 1887
+- The introduction references Baudelaire, who was Poe's famous French translator and champion
+
+For the original author and year, Edgar Allan Poe wrote his tales throughout the 1830s-1840s. Since this is a collection of "derniers contes" (last tales) published posthumously (Poe died in 1849), and this specific French edition is from 1887, I'll use 1887 as the year since this represents a significant French translation work, not just the original tales.
+
+<result>
+Title = "Derniers Contes (Last Tales)"
+Author = "Edgar Allan Poe, translated by F. Rabbe"
+Year = 1887
+
+Tags = ["fiction", "translation", "gothic", "horror", "mystery"]
+
+Summary = """
+This is a French translation of Edgar Allan Poe's later tales, published as part of the 'Romans Étrangers Modernes' series. The collection was translated by F. Rabbe and includes an introduction that defends Poe's reputation against the slanders propagated by his literary executor Rufus Griswold. The introduction prominently quotes Charles Baudelaire, Poe's greatest French advocate, who championed the American author's genius and whose own translations helped establish Poe's reputation in France. The work celebrates Poe as a master of the psychological and the exceptional in moral order, praising his crystalline style and unique temperament.
+"""
+
+Notes = """
+The year 1887 represents this specific French edition rather than Poe's original composition dates (1830s-1840s). This translation is significant as part of Poe's French literary legacy, heavily influenced by Baudelaire's earlier translations and critical appreciation. The introduction explicitly references J.H. Ingram's biographical work which corrected many falsehoods about Poe's life.
+"""
+</result>

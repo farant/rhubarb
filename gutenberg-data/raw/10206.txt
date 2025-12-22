@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: The Liver Complaint Story"
+Author = "Thomas A. Edison"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording by Thomas A. Edison, the famous American inventor. Edison not only invented the phonograph but also created numerous experimental recordings in the late 19th century. "The Liver Complaint Story" appears to be one of these early phonograph recordings, likely a humorous or commercial narrative recorded on Edison's sound recording equipment. This represents an important piece of early audio technology history, demonstrating the commercial and entertainment applications of Edison's phonograph invention.
+"""
+
+Notes = """
+The exact recording date is uncertain from this Project Gutenberg metadata. Edison's phonograph was invented in 1877, and commercial recordings became more common in the 1890s. Without access to the actual audio content or Edison National Historic Site records, I've estimated circa 1890 as a reasonable approximation for when such commercial/entertainment recordings were being produced. The actual recording could date anywhere from the late 1880s to early 1900s during Edison's active period of phonograph development and commercial recording production.
+"""
+</result>

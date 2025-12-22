@@ -1,0 +1,15 @@
+<result>
+Title = "Language: An Introduction to the Study of Speech"
+Author = "Edward Sapir"
+Year = 1921
+
+Tags = ["non-fiction", "linguistics", "anthropology", "academic"]
+
+Summary = """
+This is Edward Sapir's foundational work in linguistics, one of the most influential books in the field. Sapir (1884-1939) was a pioneering American linguist and anthropologist who made fundamental contributions to the study of language, particularly in relation to culture and thought. In this accessible introduction, Sapir explores the nature of language, its variability across time and space, and its relationships to thought, history, race, culture, and art. The work is notable for its philosophical depth and for articulating what would later be developed into the Sapir-Whorf hypothesis about linguistic relativity. Sapir emphasizes the unconscious nature of linguistic structure and its diagnostic value for understanding human psychology and cultural evolution. Written for both specialists and general readers, the book avoids technical jargon while providing profound insights into the fundamental role of language in human life.
+"""
+
+Notes = """
+The book was first published in 1921, as indicated both in the text and by the publication date shown. The '1939' date that appears may refer to a later edition or reprint, possibly connected to Sapir's death in 1939. For historical and educational purposes, 1921 is the most appropriate year as it marks when this influential work first appeared and began shaping the field of linguistics.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll read through this text to identify the work, author, and relevant details.
+
+This is clearly "Bull Hunter" by Max Brand (Frederick Faust's pen name). Max Brand was an incredibly prolific author who wrote westerns and adventure fiction in the early 20th century. "Bull Hunter" was published in 1921 and is one of his well-known western novels.
+
+The text shows the opening of the novel with the Campbell brothers trying to remove a tree stump. Max Brand was not a Catholic author, and his westerns were adventure/genre fiction aimed at popular audiences. While generally clean adventure stories, they're western fiction with typical themes of violence and frontier justice.
+
+<result>
+Title = "Bull Hunter"
+Author = "Max Brand"
+Year = 1921
+
+Tags = ["fiction", "western", "adventure", "appropriate-for-children"]
+
+Summary = """
+Bull Hunter is a western novel by Max Brand (pen name of Frederick Faust), one of the most prolific writers of western fiction in American literature. The story follows its titular character through the rough frontier life of the American West. Max Brand was known for creating memorable characters and fast-paced adventure stories that defined the western genre in the early 20th century. This novel exemplifies his style of combining action, character development, and the harsh beauty of the western landscape. The opening scene with the Campbell brothers struggling to remove a tree stump at high altitude immediately establishes the rugged setting and the physical challenges faced by the characters.
+"""
+
+Notes = """
+1921 is the original publication year. Max Brand (Frederick Faust, 1892-1944) wrote under numerous pseudonyms and produced an enormous body of work, primarily westerns. While his stories are generally suitable for young readers in terms of language and themes, they do contain typical western violence and frontier conflict.
+"""
+</result>

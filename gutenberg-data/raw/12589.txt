@@ -1,0 +1,25 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, year, and other requested information.
+
+This is clearly an issue of *Notes and Queries*, a Victorian-era periodical that served as a forum for scholarly communication among literary figures, antiquaries, and researchers. The text shows this is:
+
+- **Number 31** of the publication
+- **Dated Saturday, June 1, 1850**
+- **Price: Threepence (Stamped Edition 4d)**
+
+*Notes and Queries* was founded by William John Thoms in 1849 and became one of the most important scholarly journals of the Victorian era. This particular issue is from its first year of publication.
+
+<result>
+Title = "Notes and Queries, Number 31, June 1, 1850"
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+Notes and Queries was a Victorian-era scholarly periodical founded in 1849 by William John Thoms that served as "A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc." The journal featured scholarly notes, queries (questions posed by readers), and replies on topics ranging from folklore and literary history to genealogy and antiquarian studies. This issue (Number 31, June 1, 1850) contains articles on parish registers, Hudibrastic verse, folk lore, Jeremy Taylor's works, and various scholarly queries and replies typical of the publication. The motto "When found, make a note of" comes from Charles Dickens's Captain Cuttle character.
+"""
+
+Notes = """
+Year chosen as 1850 since this is a periodical issue explicitly dated June 1, 1850. Notes and Queries continued publication for over 150 years and remains an important primary source for Victorian scholarship and intellectual history. Authors are listed as 'Various' since each issue contained contributions from multiple scholars and correspondents, though this issue includes identifiable contributors like S.W. Singer, James Crosby, J.E.B. Mayor, Bolton Corney, and W.B. MacCabe.
+"""
+</result>

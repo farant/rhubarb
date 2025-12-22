@@ -1,0 +1,15 @@
+<result>
+Title = "Red Masquerade"
+Author = "Louis Joseph Vance"
+Year = 1921
+
+Tags = ["fiction", "mystery", "adventure"]
+
+Summary = """
+"Red Masquerade" is a novel by Louis Joseph Vance featuring the character known as "The Lone Wolf" and his daughter. Vance was a prolific American novelist and short story writer who created the popular Lone Wolf character - Michael Lanyard, a jewel thief turned detective. This particular installment focuses on the daughter of the Lone Wolf protagonist. The work was originally created as a motion picture scenario in 1919, then adapted into a novel published in 1921. It represents the adventure-mystery genre popular in early 20th century American fiction, combining elements of crime, romance, and international intrigue that characterized Vance's Lone Wolf series.
+"""
+
+Notes = """
+The text clearly states publication year as 1921 in the title page. The author's apology note indicates this novel was adapted from a motion picture produced in autumn 1919, then serialized in The Pictorial Review before book publication. The dedication date of December 31, 1920 suggests the book was prepared for 1921 publication.
+"""
+</result>

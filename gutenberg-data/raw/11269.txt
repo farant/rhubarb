@@ -1,0 +1,15 @@
+<result>
+Title = "Virgie's Inheritance"
+Author = "Georgie Sheldon"
+Year = 1891
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Virgie's Inheritance" is a novel by Mrs. Georgie Sheldon, a popular American author of domestic fiction in the late 19th century. Sheldon (born Sarah Elizabeth Forbush Downs, 1843-1926) was known for her sentimental novels aimed at young readers, particularly girls. Her works typically featured virtuous heroines facing adversity and moral challenges. This novel appears to follow a young woman named Virgie whose father is dying from illness and must make provisions for her future before his death. The story likely explores themes of perseverance, virtue, and eventual triumph over hardship that were characteristic of Sheldon's work and popular in late Victorian-era domestic fiction.
+"""
+
+Notes = """
+The copyright dates listed are 1887, 1888, and 1891. I chose 1891 as it represents the most complete published version. This work is typical of the "girls' fiction" genre popular in America during the Gilded Age, featuring moral instruction wrapped in entertaining narratives. While wholesome and appropriate for children, this is not a Catholic work - Sheldon wrote popular Protestant-influenced domestic fiction for the American market.
+"""
+</result>

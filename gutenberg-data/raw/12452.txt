@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the text, this is clearly "Fort Lafayette; or, Love and Secession" by Benjamin Wood, published in 1862 (MDCCCLXII). This was a Civil War-era novel written during the war itself. Benjamin Wood was a New York politician and newspaper editor who was sympathetic to the Democratic Party and critical of Lincoln's administration. Fort Lafayette (now part of Fort Hamilton in Brooklyn, NY) was used during the Civil War to detain Confederate sympathizers and others deemed disloyal to the Union.
+
+<result>
+Title = "Fort Lafayette; or, Love and Secession"
+Author = "Benjamin Wood"
+Year = 1862
+
+Tags = ["fiction", "historical"]
+
+Summary = """
+A Civil War-era novel published during the conflict itself in 1862. The story deals with themes of love and political division during the American Civil War. Fort Lafayette was a real military installation in New York Harbor that was used during the Civil War to imprison Confederate sympathizers, prisoners of war, and those accused of disloyalty to the Union. Benjamin Wood was a New York Democratic politician and newspaper editor who owned the New York Daily News and was known for his sympathy toward the South and criticism of Lincoln's wartime policies. The novel explores the tensions between loyalty, love, and political conviction during America's most divisive period.
+"""
+
+Notes = """
+The year 1862 is clearly stated on the title page as MDCCCLXII. This work was published contemporaneously with the Civil War events it depicts, making it a primary source of Civil War literature rather than a historical retrospective. The epigraphs from Thomson and Shakespeare about peace suggest the novel's themes of reconciliation and the costs of conflict.
+"""
+</result>

@@ -1,0 +1,19 @@
+I can see the copyright page and opening material you've provided. Let me search for more information about this work to provide accurate context.
+
+Based on what you've shown me, this is "Back to the Woods" by Hugh McHugh, published in 1902. Hugh McHugh was a pen name for George Vere Hobart (1867-1926), an American humorist who created the character "John Henry" and wrote a series of humorous books in the early 1900s. These were popular comic sketches in a slangy, colloquial style that was characteristic of American humor at the turn of the 20th century.
+
+<result>
+Title = "Back to the Woods: The Story of a Fall from Grace"
+Author = "Hugh McHugh (George Vere Hobart)"
+Year = 1902
+
+Tags = ["fiction", "humor", "appropriate-for-children"]
+
+Summary = """
+A collection of humorous short stories featuring the character John Henry, written by George Vere Hobart under his pen name Hugh McHugh. The book is part of a popular series of American comic sketches published in the early 1900s, written in a colloquial, slangy style characteristic of turn-of-the-century American humor. The stories include tales of lucky days, ghost stories, burglars, country cops, telegrams, and domestic comedy, all revolving around the misadventures of the titular character John Henry.
+"""
+
+Notes = """
+Year is clearly stated on the copyright page as 1902. Hugh McHugh was the pen name of George Vere Hobart, a prolific American humorist and playwright. This was part of his popular "John Henry" series of humorous books.
+"""
+</result>

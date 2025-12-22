@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This appears to be a contemporary collection of short stories by John Moncure Wetterau titled "Michelangelo's Shoulder," published in 2003. This is a modern work with a Creative Commons license and ISBN, published by Fox Print Books.
+
+<result>
+Title = "Michelangelo's Shoulder"
+Author = "John Moncure Wetterau"
+Year = 2003
+
+Tags = ["fiction", "short-stories", "contemporary"]
+
+Summary = """
+A collection of short stories by contemporary American author John Moncure Wetterau, published in 2003 by Fox Print Books. Some of the stories in this collection were previously published in literary magazines Archipelago and The Paumanok Review. This is a modern work of literary fiction made available through Project Gutenberg under a Creative Commons Attribution-NoDerivs-NonCommercial License.
+"""
+
+Notes = """
+This is a contemporary work with a clear publication date of 2003. The copyright notice and Creative Commons licensing information make the dating straightforward. This is not a historical text but rather a modern collection that has been made available through Project Gutenberg. The work is clearly from the 21st century given the Creative Commons license structure cited (which did not exist before 2001) and the modern ISBN system.
+"""
+</result>

@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and publication details.
+
+This is clearly a collection of letters by Horace Walpole (1717-1797), the famous English writer, art historian, and politician. He was the son of Britain's first Prime Minister Robert Walpole and is well known for his extensive correspondence which provides valuable insights into 18th-century English society, politics, and culture.
+
+The letters themselves were written over many decades (this volume covers 1736-1764 based on the contents page), but this particular *edition* was edited by Charles Duke Yonge and published in 1890 (MDCCCXC in Roman numerals, as shown on the title page).
+
+For the year, I'll use 1890 as this represents the published collection as an editorial work. While the letters themselves date from the 18th century, this is a curated edition with editorial apparatus, so the edition date is most appropriate for cataloging purposes.
+
+<result>
+Title = "Letters of Horace Walpole"
+Author = "Horace Walpole"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "letters"]
+
+Summary = """
+A collection of letters by Horace Walpole (1717-1797), edited by Charles Duke Yonge. Walpole was an English writer, art historian, politician, and son of Britain's first Prime Minister. His extensive correspondence provides invaluable firsthand accounts of 18th-century English society, politics, culture, and notable events. Volume I covers letters from 1736-1764, including correspondence with friends like Montagu, discussing everything from royal marriages to travel plans and social observations. Walpole's letters are considered among the finest in English literature for their wit, detail, and historical significance.
+"""
+
+Notes = """
+The letters themselves were written between 1736-1764 (and beyond in other volumes), but this is an edited collection published in 1890. I chose 1890 as the year because this represents the editorial work as published, rather than the dates of the original correspondence. This edition by Charles Duke Yonge was a significant scholarly compilation of Walpole's vast correspondence.
+"""
+</result>

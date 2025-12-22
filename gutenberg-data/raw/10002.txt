@@ -1,0 +1,19 @@
+Ah, the file is empty, so I'll work with the excerpt you provided. Based on the text provided, I can identify this work:
+
+**The House on the Borderland** by William Hope Hodgson, first published in 1908. This is a classic weird fiction/horror novel that had significant influence on later writers like H.P. Lovecraft. It's a tale of cosmic horror involving a recluse in rural Ireland who experiences strange visions and encounters with otherworldly beings.
+
+<result>
+Title = "The House on the Borderland"
+Author = "William Hope Hodgson"
+Year = 1908
+
+Tags = ["fiction", "horror", "weird-fiction"]
+
+Summary = """
+The House on the Borderland is a supernatural horror novel by William Hope Hodgson, first published in 1908. The story is framed as a manuscript discovered in the ruins of a house in rural Ireland. It tells of a recluse who lives in an isolated house and experiences terrifying visions of cosmic horror, including encounters with pig-like creatures and journeys through time and space. The novel is considered a pioneering work of cosmic horror and weird fiction, predating and influencing H.P. Lovecraft's work. It combines elements of the haunted house story with metaphysical speculation about the nature of reality, time, and the universe's end. The work is notable for its ambitious scope, moving from intimate personal horror to vast cosmic vistas.
+"""
+
+Notes = """
+1908 is the year of first publication by Chapman & Hall in London. This is Hodgson's most celebrated work and a landmark in the development of weird fiction and cosmic horror. The novel was influential on later writers in the genre, particularly H.P. Lovecraft, who praised it. Not appropriate for children due to horror content. Not a Catholic work - Hodgson was not a Catholic author and the work deals with cosmic horror themes rather than Christian theology.
+"""
+</result>

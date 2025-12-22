@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1957
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office catalog documenting copyright renewal registrations made during 1957. It contains an alphabetical listing of books, pamphlets, serials, and periodical contributions that had their copyrights renewed during this period. Each entry includes information about both the original copyright registration (typically from the late 1920s or early 1930s, given the timing of the renewal period) and the renewal registration. This type of catalog served as an official public record of copyright renewals in the United States before the Copyright Act of 1976 changed renewal procedures. The document shows works by various authors including Jane Abbott and Pierre Abraham, among others, with original copyright dates around 1929-1930 being renewed in 1957 (consistent with the 28-year renewal period required under pre-1976 copyright law).
+"""
+
+Notes = """
+Year 1957 chosen as this is clearly the year of publication for this catalog based on the renewal dates (R-numbers from 1957) throughout the document. While the works listed in the catalog are from earlier years (primarily 1929-1930), this is a 1957 government publication documenting those renewals. The Project Gutenberg ID 11816 is consistent with a mid-20th century government document that would have entered the public domain.
+"""
+</result>

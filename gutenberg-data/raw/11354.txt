@@ -1,0 +1,15 @@
+<result>
+Title = "The Irrational Knot"
+Author = "George Bernard Shaw"
+Year = 1880
+
+Tags = ["fiction", "social-commentary"]
+
+Summary = """
+"The Irrational Knot" is the second novel written by George Bernard Shaw, though it was published much later in 1905. The novel explores themes of marriage, class differences, and social conventions in Victorian England. It tells the story of Edward Conolly, a working-class electrical engineer who marries above his station into the upper classes, and examines the tensions and ultimate breakdown of this "irrational knot" of marriage across class boundaries. The work reflects Shaw's early socialist views and his critique of Victorian marriage conventions and class prejudices. Shaw himself later considered it an immature work, hence his description of it as a novel "of his nonage" (youth/immaturity).
+"""
+
+Notes = """
+Shaw wrote this novel around 1880 (when he was about 24 years old), but it was not published until 1905. The 1880 date represents the original composition, which is more historically significant for understanding Shaw's intellectual development and the Victorian context he was critiquing. The subtitle "Being the Second Novel of His Nonage" was Shaw's own retrospective acknowledgment that this was an early, less mature work.
+"""
+</result>

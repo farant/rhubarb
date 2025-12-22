@@ -1,0 +1,28 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+Looking at this text, I can identify several key elements:
+- The title "TWO LITTLE KNIGHTS OF KENTUCKY" is clearly stated
+- The dedication mentions "Margaret and Albion, Mary, Helen, Lura and Rose, William and George"
+- There's a reference to "THE LITTLE COLONEL" in the chapter titles (Chapter VI)
+- The setting is Kentucky (Lloydsborough Valley)
+- The style and language suggest late 19th/early 20th century American children's literature
+
+This is one of "The Little Colonel" series books by Annie Fellows Johnston. The reference to "THE LITTLE COLONEL" in the chapter titles and the Kentucky setting are distinctive markers of this series. Annie Fellows Johnston wrote this popular series of children's books in the late 1890s and early 1900s. "Two Little Knights of Kentucky" was published in 1899.
+
+Annie Fellows Johnston was not a Catholic author - she was Protestant and wrote wholesome children's fiction set in the American South.
+
+<result>
+Title = "Two Little Knights of Kentucky"
+Author = "Annie Fellows Johnston"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Part of "The Little Colonel" series by Annie Fellows Johnston, this children's novel is set in Kentucky and follows the adventures of young characters in Lloydsborough Valley. The story takes place during a particularly cold winter and involves various adventures including encounters with tramps and a bear, a Valentine's party, and other episodic adventures typical of wholesome American children's literature of the late Victorian era. The series was immensely popular in its time and portrayed idealized Southern life and childhood adventures with moral lessons appropriate for young readers.
+"""
+
+Notes = """
+This is Book 2 in "The Little Colonel" series. The year 1899 reflects the original publication date. The series was widely read in American households in the early 20th century and represented typical children's literature of the period.
+"""
+</result>

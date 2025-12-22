@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1963
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office catalog of copyright renewal registrations from 1963. It lists books, pamphlets, serials, and periodical contributions for which copyright renewals were filed during the covered period. The catalog is arranged alphabetically by author or issuing body, with cross-references. Each entry includes information about both the original copyright registration and the renewal registration. This type of catalog represents an important administrative and historical record of intellectual property protection in mid-20th century America.
+"""
+
+Notes = """
+The year 1963 is based on the header notation '1963_h1/A/0919' which indicates this is from a 1963 copyright renewal catalog. Under the 1909 Copyright Act (in effect until 1978), works required renewal registration after 28 years to maintain copyright protection. These catalogs are important historical documents for tracking the publication and copyright history of mid-20th century works. Project Gutenberg ID 11827 corresponds to this specific volume of renewal registrations.
+"""
+</result>

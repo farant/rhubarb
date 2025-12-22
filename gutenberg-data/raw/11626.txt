@@ -1,0 +1,17 @@
+I recognize this work from the preface. This is "The Dawn of All" by Robert Hugh Benson, written as a companion piece to his earlier dystopian novel "Lord of the World." Let me read a bit more to confirm and gather additional context.
+
+<result>
+Title = "The Dawn of All"
+Author = "Robert Hugh Benson"
+Year = 1911
+
+Tags = ["fiction", "catholic", "speculative-fiction"]
+
+Summary = """
+'The Dawn of All' is a Catholic utopian novel by Monsignor Robert Hugh Benson, written as a counterpoint to his earlier dystopian work 'Lord of the World' (1907). While 'Lord of the World' depicted a future where secularism and modernism had triumphed, 'The Dawn of All' presents an alternate future (set approximately sixty years hence from its publication) where Catholic and traditional Christian thought has instead become dominant in society. The novel explores the social, political, and spiritual developments that might occur if ancient Catholic wisdom were to be embraced rather than rejected by modern civilization. The preface also includes Benson's defense of the historical Church's involvement in religious persecution, arguing that such policies were driven by the State rather than the Church and were responses to perceived threats to civil stability rather than mere theological disagreement.
+"""
+
+Notes = """
+Published in 1911, this was one of Benson's later works before his early death in 1914 at age 43. Robert Hugh Benson was a convert to Catholicism (1903) and son of Edward White Benson, Archbishop of Canterbury. He was ordained a Catholic priest in 1904 and became a Monsignor in 1911. Both 'Lord of the World' and 'The Dawn of All' are considered pioneering works of Catholic speculative fiction, exploring opposing trajectories for Western civilization.
+"""
+</result>

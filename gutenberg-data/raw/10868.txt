@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Clerambault: The Story of an Independent Spirit During the War" by Romain Rolland, translated by Katherine Miller. The text shows it was published in 1921, which is when this translation appeared. However, the original French work "Clerambault: Histoire d'une conscience libre pendant la guerre" was published in 1920.
+
+Romain Rolland was a French author, dramatist, and essayist who won the Nobel Prize in Literature in 1915. He was known for his pacifist stance during World War I. While Rolland had some spiritual interests, he was not Catholic - he was more influenced by Tolstoy, Indian philosophy, and humanism. The work is a semi-autobiographical novel about pacifism and conscience during WWI.
+
+<result>
+Title = "Clerambault: The Story of an Independent Spirit During the War"
+Author = "Romain Rolland"
+Year = 1920
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+Clerambault is a semi-autobiographical work by Nobel Prize-winning French author Romain Rolland, written during and immediately after World War I. The book explores the inner struggles of a pacifist intellectual during wartime, tracing his journey from initial patriotic fervor to opposition to the war. Rolland uses the character of Clerambault to examine themes of conscience, independent thinking, and moral courage in the face of social pressure and nationalism. The work reflects Rolland's own pacifist stance during WWI, which made him controversial in France. It's described by the author as "the confession of a free spirit" rather than a straightforward novel, blending narrative with philosophical meditation in the tradition of French moralists.
+"""
+
+Notes = """
+The original French edition was published in 1920. This English translation by Katherine Miller appeared in 1921. I chose 1920 as the year since that represents the original publication of the work. Rolland was not a Catholic author - he was influenced by Tolstoy's philosophy, Indian spirituality, and humanist ideals, so the 'catholic' tag does not apply.
+"""
+</result>

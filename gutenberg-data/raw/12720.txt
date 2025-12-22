@@ -1,0 +1,15 @@
+<result>
+Title = "Sonnet 40"
+Author = "William Shakespeare"
+Year = 1609
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+Sonnet 40 is one of William Shakespeare's 154 sonnets, part of the Fair Youth sequence (sonnets 1-126). This particular sonnet deals with themes of betrayal, love, and forgiveness. The speaker addresses a young man who has taken the speaker's mistress, expressing both hurt and a willingness to forgive. It's part of a sub-group (sonnets 40-42) that deal with a romantic triangle involving the speaker, the fair youth, and the speaker's mistress. The sonnet demonstrates Shakespeare's mastery of the English sonnet form with its characteristic three quatrains and a concluding couplet.
+"""
+
+Notes = """
+The sonnets were first published in 1609 by Thomas Thorpe, though they were likely written over a period of years in the 1590s-1600s. I've chosen 1609 as the publication year since that's the standard historical reference point for Shakespeare's sonnets as a complete collection. This is an audio recording format from Project Gutenberg (note the "MP3" character set encoding), specifically a human reading of the sonnet.
+"""
+</result>

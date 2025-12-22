@@ -1,0 +1,15 @@
+<result>
+Title = "Sailors' Knots"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Sailors' Knots' is a collection of humorous short stories by W.W. Jacobs, an English author known for his tales of dockside life and supernatural fiction. While Jacobs is perhaps best remembered for 'The Monkey's Paw,' he wrote numerous collections of comic stories about sailors, longshoremen, and working-class characters in early 20th century England. This collection includes 'The Toll-House,' a ghost story that begins with a group of friends at the Three Feathers Inn debating the existence of the supernatural. Jacobs was a master of both comedy and the macabre, often blending wit with elements of mystery and the uncanny.
+"""
+
+Notes = """
+The text clearly shows 1909 as the publication year. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific English short story writer. His works are generally appropriate for older children and adults, featuring gentle humor and occasional supernatural elements without graphic content.
+"""
+</result>

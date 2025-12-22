@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly an educational edition of "Los Amantes de Teruel" (The Lovers of Teruel) by Juan Eugenio Hartzenbusch. The text shows this is a 1920 scholarly edition with introduction, notes, and vocabulary by G.W. Umphrey, but the actual play itself was written by Hartzenbusch in the 19th century.
+
+"Los Amantes de Teruel" is a romantic drama first performed in 1837, based on a medieval Spanish legend about two lovers from Teruel. Hartzenbusch was a prominent Spanish Romantic playwright, and this became his most famous work.
+
+<result>
+Title = "Los Amantes de Teruel"
+Author = "Juan Eugenio Hartzenbusch"
+Year = 1837
+
+Tags = ["fiction", "drama", "romantic-period"]
+
+Summary = """
+Los Amantes de Teruel is a romantic drama based on the famous medieval Spanish legend of the lovers of Teruel. The play tells the story of Isabel de Segura and Diego de Marcilla, whose love is thwarted by social circumstances. It is considered Hartzenbusch's masterpiece and one of the most important works of Spanish Romantic theater. The legend embodies themes of pure and constant love, loyalty, and tragic devotion. The play was enormously popular in 19th-century Spain and has maintained its place in Spanish literary tradition.
+"""
+
+Notes = """
+The year 1837 represents the first performance of the play, which is the most historically significant date for this work. This Project Gutenberg text is actually a 1920 educational edition prepared by G.W. Umphrey for American students, but the original work dates to 1837. Hartzenbusch (1806-1880) was a leading figure of Spanish Romanticism.
+"""
+</result>

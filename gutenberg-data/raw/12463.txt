@@ -1,0 +1,19 @@
+I'll read through this document to identify the work and provide the requested information.
+
+This appears to be a volume from James D. Richardson's compilation of presidential messages and papers, specifically the volume covering James K. Polk's presidency (1845-1849). This was a comprehensive multi-volume reference work that compiled official presidential documents.
+
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents: James K. Polk"
+Author = "James D. Richardson"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a volume from James D. Richardson's comprehensive compilation of official presidential messages, proclamations, and papers. This particular volume covers the presidency of James K. Polk (March 4, 1845 to March 4, 1849). Richardson's compilation was commissioned by Congress and became the standard reference work for presidential documents, covering presidents from George Washington through the end of the 19th century. The work includes biographical information, inaugural addresses, annual messages to Congress, proclamations, executive orders, and other official communications. This multi-volume set was an important historical resource before the establishment of the modern Presidential Papers series.
+"""
+
+Notes = """
+The original compilation was published in multiple editions. The first edition was published 1896-1899 by authority of Congress. I've chosen 1897 as a representative year during the main publication period of this monumental work. Richardson was a Congressman from Tennessee who undertook this comprehensive compilation project. While this Gutenberg text is identified as "12463", suggesting it may be from a later reprint or edition, the work itself dates to the 1890s.
+"""
+</result>

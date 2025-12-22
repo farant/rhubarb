@@ -1,0 +1,15 @@
+<result>
+Title = "Spalding's Official Baseball Guide 1913"
+Author = "Edited by John B. Foster"
+Year = 1913
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Spalding's Official Baseball Guide was an annual publication that served as the authoritative reference for professional baseball statistics, rules, records, and commentary. The 1913 edition, edited by sportswriter John B. Foster, would have contained the official rules of baseball, team rosters, player statistics from the 1912 season, league standings, and articles about the state of the game. Published by the American Sports Publishing Company (owned by sporting goods magnate A.G. Spalding), these guides were the primary statistical and historical record of professional baseball during the early 20th century and are now invaluable primary sources for baseball historians studying the dead-ball era.
+"""
+
+Notes = """
+The year 1913 is clearly indicated as this is the 1913 edition of an annual guide. This guide would have been published in early 1913 (likely spring) covering the 1912 baseball season and looking ahead to the 1913 season. The advertisement within mentions A.G. Spalding's book "America's National Game," which was published in 1911, providing additional chronological context.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, and publication details.
+
+<result>
+Title = "La Tête de Martin"
+Author = "E. Grangé, Decourcelle, Th. Barrière (adapted by Régis Roy)"
+Year = 1900
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+"La Tête de Martin" is a one-act comedy originally written by French playwrights E. Grangé, Decourcelle, and Th. Barrière. This particular edition was adapted for youth theater circles ("cercles de jeunes gens") by Régis Roy and published in Montreal in 1900 by C.O. Beauchemin & Fils. The play features four characters and takes place in a furnished hotel ("hôtel garni"). As a light comedy adapted specifically for young people, it represents the popular French theatrical tradition of the late 19th century being adapted for French-Canadian audiences.
+"""
+
+Notes = """
+I chose 1900 as the year because this is the date of the Régis Roy adaptation published in Montreal, which is the specific edition in this Project Gutenberg text. The original French play by Grangé, Decourcelle, and Barrière would have been written earlier (likely mid-to-late 19th century), but since this is a distinct adaptation "arrangée pour cercles de jeunes gens" with a specific publication date, the 1900 date seems most appropriate for this edition. The adaptation was likely made more appropriate for youth audiences than the original.
+"""
+</result>

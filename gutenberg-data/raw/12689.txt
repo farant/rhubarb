@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "The High School Freshmen" by H. Irving Hancock, part of his "High School Boys Series." Based on the title page information, this is a young adult fiction book focusing on Dick & Co.'s adventures during their freshman year of high school.
+
+H. Irving Hancock was a prolific American author who wrote numerous series for young readers in the early 20th century. The "High School Boys Series" was published in the 1910s, and based on bibliographic records, "The High School Freshmen" was first published in 1910.
+
+<result>
+Title = "The High School Freshmen; or, Dick & Co.'s First Year Pranks and Sports"
+Author = "H. Irving Hancock"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children", "young-adult"]
+
+Summary = """
+'The High School Freshmen' is the first book in H. Irving Hancock's 'High School Boys Series,' following Dick Prescott and his friends (collectively known as 'Dick & Co.') through their first year of high school. The book chronicles their adventures, pranks, sports activities, and various mysteries they encounter, including football games, a locker mystery, and even bank robbers. Hancock was known for writing wholesome adventure stories for young readers that emphasized friendship, integrity, and school spirit. This series was part of the popular 'school story' genre that was extremely popular in early 20th century American literature for young people.
+"""
+
+Notes = """
+Published in 1910 as part of the High School Boys Series. H. Irving Hancock wrote multiple series for young readers including the Motor Boat Club Series, the Young Engineers Series, and others. These books were typical of the wholesome, morally-instructive adventure fiction marketed to adolescent boys in the early 1900s.
+"""
+</result>

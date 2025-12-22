@@ -1,0 +1,15 @@
+<result>
+Title = "The Sea Lions; or, The Lost Sealers"
+Author = "James Fenimore Cooper"
+Year = 1849
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+The Sea Lions is a maritime adventure novel by James Fenimore Cooper, published in 1849. The story follows rival sealing expeditions to the Antarctic, combining Cooper's typical themes of adventure on the high seas with deeper philosophical and religious contemplations. The novel explores themes of faith, redemption, and man's relationship with the divine, set against the backdrop of dangerous seal hunting voyages in polar waters. The work is notable for its vivid descriptions of maritime life and the harsh conditions of Antarctic exploration, while also serving as a vehicle for Cooper's reflections on spiritual matters.
+"""
+
+Notes = """
+The Sea Lions was originally published in 1849, though this Gutenberg edition appears to be from an 1860 printing (as indicated by the date on the title page). The novel was written late in Cooper's career and represents his mature work. The year 1849 is most historically accurate as it marks the work's first appearance and its place in American literary history. The preface excerpt suggests Cooper's concern with spiritual themes and mankind's indifference to divine presence, which is characteristic of his later works.
+"""
+</result>

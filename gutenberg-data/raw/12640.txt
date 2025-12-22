@@ -1,0 +1,15 @@
+<result>
+Title = "Trial of Mary Blandy"
+Author = "William Roughead (editor)"
+Year = 1752
+
+Tags = ["non-fiction", "historical-document", "legal"]
+
+Summary = """
+This is an edited collection of trial records from the infamous murder trial of Mary Blandy, who was tried and executed in 1752 for poisoning her father with arsenic. The case was one of the most sensational criminal trials of 18th-century England. Mary Blandy, a gentlewoman from Henley-on-Thames, was convicted of murdering her father, Francis Blandy, allegedly at the instigation of her lover, Captain William Henry Cranstoun, who provided her with the poison disguised as a "love powder." The trial attracted enormous public attention and became a landmark case in English criminal law. William Roughead was a notable Scottish lawyer and crime historian who edited this collection of trial documents in the early 20th century.
+"""
+
+Notes = """
+The year given (1752) refers to the original trial date, as this is the historically significant event being documented. William Roughead's editorial work was published much later (likely early 1900s as part of the Notable British Trials series), but the primary historical value and content of the work centers on the 1752 trial itself. This approach aligns with your stated preference for choosing the year that is most historically accurate and educational for timeline purposes.
+"""
+</result>

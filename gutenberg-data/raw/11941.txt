@@ -1,0 +1,17 @@
+I recognize this work immediately - it's one of Theodore Roosevelt's most significant historical works.
+
+<result>
+Title = "The Winning of the West, Volume One: From the Alleghanies to the Mississippi, 1769-1776"
+Author = "Theodore Roosevelt"
+Year = 1889
+
+Tags = ["non-fiction", "history", "american-history"]
+
+Summary = """
+The Winning of the West is Theodore Roosevelt's comprehensive four-volume history of the American frontier, examining the westward expansion of English-speaking peoples across the Appalachian Mountains and into the trans-Allegheny region. Volume One covers the period from 1769 to 1776, focusing on the early pioneers who crossed the Alleghanies and established settlements in what would become Kentucky, Tennessee, and the Ohio Valley. Roosevelt traces the conflicts with Native American tribes, the struggles of frontier life, and the character of the backwoodsmen who opened the West. The work is notable for Roosevelt's vivid prose and his thesis that westward expansion was part of a larger historical pattern of English-speaking peoples' expansion across continents. Written before his presidency, this work established Roosevelt as a serious historian and reflects his views on American exceptionalism, frontier spirit, and nation-building.
+"""
+
+Notes = """
+First published in 1889, when Roosevelt was just 30 years old. The complete four-volume series was published between 1889-1896. This work was one of Roosevelt's major intellectual achievements before entering politics at the highest levels, and it reveals much about his philosophy of American history and character. The dedication to Francis Parkman, the great American historian of the frontier and French-Indian conflicts, shows Roosevelt's debt to earlier frontier historiography.
+"""
+</result>

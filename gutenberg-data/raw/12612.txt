@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be a collection of short stories ("LYHYITÄ KERTOMUKSIA") by Finnish author Minna Canth. The text shows a table of contents listing various stories including "Hemmo," "Ensimmäiset markkinat" (First Markets), "Äiti ja poika" (Mother and Son), and others.
+
+Minna Canth (1844-1897) was one of Finland's most important writers and social activists, known for her realistic portrayals of Finnish life and her advocacy for women's rights and social justice. The publication dates shown (1917-19) refer to this particular collection, but the individual stories were originally written between 1877-1895 as indicated in parentheses.
+
+<result>
+Title = "Lyhyitä kertomuksia"
+Author = "Minna Canth"
+Year = 1877
+
+Tags = ["fiction", "short-stories", "finnish-literature", "realistic-fiction", "social-commentary"]
+
+Summary = """
+A collection of short stories by Minna Canth, one of Finland's most significant 19th-century authors and social reformers. Canth was known for her realistic depictions of Finnish society, particularly focusing on the lives of women, workers, and the poor. Her stories often addressed social injustices and advocated for women's rights and equality. This collection includes various tales written between 1877-1895, including 'Hemmo,' 'Ensimmäiset markkinat' (First Markets), 'Äiti ja poika' (Mother and Son), and others. Canth's work was groundbreaking in Finnish literature for its social realism and feminist perspectives.
+"""
+
+Notes = """
+The collection was published posthumously in 1917-19, but contains stories originally written between 1877-1895. I've chosen 1877 as the year since it represents when Canth began publishing these short stories, making it the most historically accurate date for understanding the work's original cultural context and impact. The individual stories were published separately during her lifetime before being collected in this volume.
+"""
+</result>

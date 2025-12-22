@@ -1,0 +1,17 @@
+The file appears to be very short or possibly empty beyond what you pasted. Based on the excerpt you provided, I can identify this work from the editorial notes alone:
+
+<result>
+Title = "The Tragedie of Hamlet, Prince of Denmarke"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "historical-document"]
+
+Summary = """
+This is the First Quarto edition of Hamlet, one of Shakespeare's most famous tragedies. The play tells the story of Prince Hamlet of Denmark, who seeks revenge against his uncle Claudius for murdering his father, marrying his mother, and seizing the throne. The First Quarto (Q1) was published in 1603 and is notably different from the more familiar Second Quarto (1604) and First Folio (1623) versions. This early printing contains numerous variations in spelling, punctuation, and even text that reflect the printing practices of the time, including the use of 'u' for 'v' and vice versa, and other typographical substitutions that occurred when printers ran out of certain characters in their type cases.
+"""
+
+Notes = """
+The year 1603 represents the publication of the First Quarto, which is the earliest printed version of Hamlet. The actual composition date is believed to be around 1599-1601, but for a historical timeline, the 1603 publication date of Q1 is the most concrete documentary evidence. The text preserves the original printing conventions and "errors" that are now considered part of the historical record of early modern printing practices.
+"""
+</result>

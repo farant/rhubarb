@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "The Riddle of the Rhine: Chemical Strategy in Peace and War" by Victor LeFebure. Based on my knowledge, this is a work about chemical warfare and the German chemical industry, written after World War I. Victor LeFebure was a British officer who served in the Chemical Warfare Service during WWI. The book was first published in 1921 and deals with the role of chemistry in warfare, particularly focusing on Germany's chemical industry and its implications for both war and peace.
+
+<result>
+Title = "The Riddle of the Rhine: Chemical Strategy in Peace and War"
+Author = "Victor LeFebure"
+Year = 1921
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A historical analysis of chemical warfare and Germany's chemical industry written by British officer Victor LeFebure, who served in the Chemical Warfare Service during World War I. The book examines the development and use of chemical weapons during WWI, particularly by Germany, and discusses the strategic implications of the chemical industry for both military and peacetime purposes. It provides insight into early 20th century chemical warfare, industrial policy, and the geopolitical concerns surrounding Germany's scientific and industrial capabilities in the aftermath of the Great War.
+"""
+
+Notes = """
+Published in 1921, shortly after World War I ended. The work is significant as a contemporary account of chemical warfare written by someone with direct military experience in the field. The title refers to the Rhine River region, center of Germany's chemical industry.
+"""
+</result>

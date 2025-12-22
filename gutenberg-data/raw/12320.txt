@@ -1,0 +1,17 @@
+I recognize this work by Scott Nearing. Let me provide the structured information:
+
+<result>
+Title = "Civilization and Beyond: Learning from History"
+Author = "Scott Nearing"
+Year = 1975
+
+Tags = ["non-fiction", "history", "political-theory", "social-analysis"]
+
+Summary = """
+'Civilization and Beyond' is Scott Nearing's ambitious analysis of the rise and fall of civilizations throughout history. Published when Nearing was 92 years old, the work examines various civilizations from Egypt to Rome to Western civilization, identifying common patterns in their life cycles. Nearing argues that civilization as a social form is becoming obsolete and proposes building blocks for a new world order beyond traditional civilization. The book reflects Nearing's lifetime of radical political thought, combining historical analysis with social critique and forward-looking proposals for social organization. Scott Nearing (1883-1983) was an American radical economist, educator, and advocate of simple living who became famous for his homesteading lifestyle and opposition to capitalism and war.
+"""
+
+Notes = """
+The year 1975 is explicitly stated in the book itself as the publication date (August 1975, Social Science Institute, Harborside, Maine). This was one of Nearing's final major works, written near the end of his long life as a social critic and radical thinker. The book is deliberately placed in the public domain by the author, as indicated by the copyright notice.
+"""
+</result>

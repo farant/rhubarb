@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is a collection of three short works by Gustave Flaubert. The text shows "The Dance of Death" (1838), "The Legend of Saint-Julian the Hospitaller," and "A Simple Soul." These are well-known works by Flaubert, with "The Dance of Death" being an early romantic work from his youth, while the other two ("The Legend of Saint-Julian the Hospitaller" and "A Simple Soul") are from his mature period and were published together with "Herodias" in 1877 as "Trois Contes" (Three Tales).
+
+For the year, since this is a collection spanning different periods of Flaubert's career, I'll use 1877, which is when the two mature tales were published together. "The Dance of Death" was written much earlier (1838) when Flaubert was only 17, but the significant literary works here are the two from "Trois Contes."
+
+<result>
+Title = "Three Short Works (The Dance of Death; The Legend of Saint-Julian the Hospitaller; A Simple Soul)"
+Author = "Gustave Flaubert"
+Year = 1877
+
+Tags = ["fiction", "literary-fiction"]
+
+Summary = """
+This collection contains three works by Gustave Flaubert spanning his career. 'The Dance of Death' (1838) is an early romantic prose poem written when Flaubert was seventeen, showing the influence of the Romantic movement. 'The Legend of Saint-Julian the Hospitaller' and 'A Simple Soul' are two of the three tales from 'Trois Contes' (Three Tales), published in 1877. 'Saint-Julian' is a medieval legend about a nobleman cursed to kill his parents who finds redemption through hospitality and charity. 'A Simple Soul' tells the story of Félicité, a devoted servant woman whose simple faith and capacity for love define her life. These mature works showcase Flaubert's mastery of prose style and his ability to portray human experience with psychological depth and restraint.
+"""
+
+Notes = """
+Year chosen is 1877, when 'Trois Contes' was published, as these two mature tales represent the primary literary significance of this collection. 'The Dance of Death' was written in 1838 during Flaubert's youth. While Flaubert was raised Catholic and these works engage with Christian themes (especially 'Saint-Julian'), Flaubert himself was not a practicing Catholic writer in the devotional sense, so the 'catholic' tag is not included.
+"""
+</result>

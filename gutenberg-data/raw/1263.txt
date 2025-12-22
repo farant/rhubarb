@@ -1,0 +1,17 @@
+I recognize this work - it's "The Glimpses of the Moon" by Edith Wharton, published in 1922. This was one of Wharton's novels from her later period, written after she had settled in France following World War I. The novel follows the marriage of convenience between Nick Lansing and Susy Branch, two members of the international social set who marry with the understanding that they'll divorce if either finds a wealthier match. It's a romantic novel that explores themes of love, money, and social climbing in the post-WWI era.
+
+<result>
+Title = "The Glimpses of the Moon"
+Author = "Edith Wharton"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by Edith Wharton published in 1922, set among the international social set of the post-World War I era. The story follows Nick Lansing and Susy Branch, two charming but impoverished members of high society who marry with a cynical pact: they will stay together only as long as it's convenient, and will divorce if either finds a wealthier match. The novel explores their honeymoon period as they live off the generosity of their wealthy friends, borrowing villas and estates across Europe. As their marriage of convenience evolves, the story examines themes of love versus material security, social climbing, and the moral compromises of their glittering but superficial world. The title refers to fleeting moments of genuine happiness and insight that break through their carefully constructed arrangement.
+"""
+
+Notes = """
+This was published as a serial in 1922 before book publication the same year. It became one of Wharton's most popular novels and was adapted into a silent film in 1923. The novel represents Wharton's continued interest in examining the manners and morals of the wealthy leisure class, though set in the more modern post-WWI period rather than her earlier Gilded Age settings.
+"""
+</result>

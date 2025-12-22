@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly James A.H. Murray's Romanes Lecture from 1900 on "The Evolution of English Lexicography." Murray was the primary editor of the Oxford English Dictionary and a towering figure in lexicography. This lecture discusses the history of English dictionary-making, delivered at Oxford's Sheldonian Theatre.
+
+<result>
+Title = "The Evolution of English Lexicography"
+Author = "James A.H. Murray"
+Year = 1900
+
+Tags = ["non-fiction", "academic", "linguistics", "historical"]
+
+Summary = """
+This is the text of the Romanes Lecture delivered by James A.H. Murray at Oxford University on June 22, 1900. Murray, the principal editor of the Oxford English Dictionary, provides a scholarly examination of the history and development of English lexicography. The lecture traces the evolution of dictionary-making in England, discussing various lexicographers and their methods, including Dr. Johnson. Murray uses his deep expertise to illuminate how English dictionaries developed over time and the challenges inherent in capturing and defining a living language. The work is both a historical survey and a meditation on the nature of lexicographical work itself.
+"""
+
+Notes = """
+Year is straightforward as this was delivered and published in 1900. James A.H. Murray (1837-1915) was the primary editor of the Oxford English Dictionary and one of the most important lexicographers in history. The Romanes Lecture is a prestigious annual lecture series established at Oxford in 1892. This is an academic lecture, not appropriate for children due to its specialized scholarly nature. Not tagged as 'catholic' as Murray was Scottish Presbyterian, though he was a deeply learned and principled scholar.
+"""
+</result>

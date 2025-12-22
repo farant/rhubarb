@@ -1,0 +1,15 @@
+<result>
+Title = "La Divina Commedia - Paradiso"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "appropriate-for-children"]
+
+Summary = """
+Paradiso is the third and final part of Dante Alighieri's Divine Comedy, following Inferno and Purgatorio. In this canticle, Dante the pilgrim ascends through the nine celestial spheres of Heaven, guided by Beatrice, his idealized beloved who represents divine love and theology. The work culminates in a mystical vision of God. Paradiso is considered one of the greatest works of world literature and a supreme achievement of medieval Catholic theology and poetry. Through elaborate allegorical structure and sublime poetry, Dante explores themes of divine justice, the beatific vision, free will, and the hierarchical nature of the cosmos according to medieval Christian cosmology. The work profoundly influenced Western literature and thought, synthesizing Classical philosophy (especially Aristotle and Aquinas) with Christian doctrine.
+"""
+
+Notes = """
+The Divine Comedy was written between approximately 1308-1320. Paradiso, being the final part, was completed near the end of this period, likely around 1320, shortly before Dante's death in 1321. The exact composition dates are debated by scholars, but 1320 represents a reasonable approximation for when Paradiso was completed. The work as a whole is written in Italian vernacular rather than Latin, which was revolutionary for its time, making profound theological and philosophical content accessible beyond the learned elite.
+"""
+</result>

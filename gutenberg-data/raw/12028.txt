@@ -1,0 +1,17 @@
+I recognize this work! "The Uttermost Farthing" is a detective/crime novel by R. Austin Freeman, published in 1914. Freeman is best known for creating Dr. Thorndyke, one of the first scientific detective characters in fiction. While Freeman himself was not Catholic and this is secular fiction (with rather dark themes about revenge), I can provide the structured information you requested.
+
+<result>
+Title = "The Uttermost Farthing: A Savant's Vendetta"
+Author = "R. Austin Freeman"
+Year = 1914
+
+Tags = ["fiction", "mystery", "crime"]
+
+Summary = """
+'The Uttermost Farthing' is a dark psychological crime novel by R. Austin Freeman, the creator of the forensic detective Dr. Thorndyke. The novel follows Humphrey Challoner, a scientist who embarks on an elaborate and methodical vendetta against criminals after a personal tragedy. Unlike Freeman's other works featuring Dr. Thorndyke, this is a standalone novel told from the perspective of the avenger himself, exploring themes of revenge, justice, and obsession. The narrative frame involves the protagonist's strange collection and his systematic pursuit of vengeance, pushing the boundaries of Victorian/Edwardian moral conventions. Freeman was known for pioneering the "inverted detective story" format and bringing scientific methodology to crime fiction.
+"""
+
+Notes = """
+First published in 1914. This is one of Freeman's darker works, departing from his usual Dr. Thorndyke series. The novel's ethical ambiguity and the narrator's "abnormal outlook" (as mentioned in the introduction) make it quite different from typical detective fiction of the era. Freeman (1862-1943) was a British physician who brought medical and scientific accuracy to the detective genre.
+"""
+</result>

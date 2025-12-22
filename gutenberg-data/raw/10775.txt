@@ -1,0 +1,19 @@
+I recognize this as Guy de Maupassant's famous short story "Le Horla" from the text itself, which explicitly states the title and author at the beginning. This is one of Maupassant's most celebrated works - a psychological horror story about a man who believes he is being haunted by an invisible being called "the Horla." The story is told through diary entries and explores themes of madness, the supernatural, and the limits of human perception.
+
+The text indicates 1887 as the publication year, which corresponds to the second, more developed version of this story that Maupassant wrote (there was an earlier 1886 version that was much shorter).
+
+<result>
+Title = "Le Horla"
+Author = "Guy de Maupassant"
+Year = 1887
+
+Tags = ["fiction", "horror", "psychological"]
+
+Summary = """
+Le Horla is a seminal work of psychological horror literature by French author Guy de Maupassant. Written in the form of a diary, the story follows a man who becomes increasingly convinced that an invisible being called "the Horla" is haunting him and slowly taking control of his mind and will. The narrative traces his descent into what may be madness or may be a genuine supernatural encounter. The story is considered a masterpiece of 19th-century horror fiction and a pioneering work in psychological fiction, exploring themes of paranoia, the unconscious mind, and the fragility of human sanity. Maupassant himself suffered from mental illness in his later years, lending the work additional poignancy and authenticity.
+"""
+
+Notes = """
+This is the 1887 version of Le Horla, which is the more famous and developed version. Maupassant wrote an earlier, shorter version in 1886, but the 1887 text is the definitive version that appears in most collections and is the one typically referenced in literary discussions.
+"""
+</result>

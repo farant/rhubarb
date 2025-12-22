@@ -1,0 +1,25 @@
+Looking at this Project Gutenberg entry, I can see this is an audio recording rather than a traditional text. This is "Johnson 'jass' Blues" by the Friscoe "Jass" Band, edited/produced by Thomas A. Edison.
+
+Based on the title and context:
+- This appears to be an early jazz (spelled "jass" in the era) recording
+- The involvement of Thomas Edison and the spelling "jass" suggests this is from the 1910s-1920s, the early jazz era
+- Edison's company was actively recording jazz music in the late 1910s
+- The term "jass" was used before "jazz" became standardized, primarily 1916-1918
+
+Given the Edison connection and the "jass" spelling, this likely dates to around 1917-1919, the peak period of Edison's jazz recordings and when "jass" was still common terminology. I'll use 1918 as a reasonable estimate for this recording.
+
+<result>
+Title = "Johnson 'Jass' Blues"
+Author = "Friscoe 'Jass' Band"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+An early jazz recording from the pioneering era of recorded music, produced under Thomas Edison's direction. This audio document captures the Friscoe "Jass" Band performing "Johnson 'Jass' Blues," representing the early development of jazz music in America. The spelling "jass" reflects the transitional period before "jazz" became the standard terminology for the genre. As an Edison recording, this represents an important artifact in both the history of jazz music and the history of sound recording technology.
+"""
+
+Notes = """
+The year 1918 is estimated based on several factors: Thomas Edison's active period recording jazz music (primarily 1917-1920), the use of "jass" spelling which was most common 1916-1918, and the general context of early jazz recordings. This is an audio recording rather than a traditional text, representing a historical sound document from the early jazz era. The exact recording date may vary but would fall within the late 1910s period.
+"""
+</result>

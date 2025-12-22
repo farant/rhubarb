@@ -1,0 +1,15 @@
+<result>
+Title = "How Jerusalem Was Won: Being the Record of Allenby's Campaign in Palestine"
+Author = "W.T. Massey"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a first-hand historical account by W.T. Massey, who served as the official correspondent of the London newspapers with the Egyptian Expeditionary Force during World War I. The book chronicles General Edmund Allenby's successful military campaign in Palestine that culminated in the capture of Jerusalem from the Ottoman Empire in December 1917. Massey describes this as "the twenty-third fall of Jerusalem" and covers the campaign from the Gaza-Beersheba line through to the occupation of Jericho, which secured Jerusalem from any Turkish counterattack. The work provides detailed military history of what Massey calls "one of the most beneficent happenings of all wars," ending four centuries of Ottoman rule over the Holy City. The preface indicates this is the first volume, with a planned second volume to cover the subsequent campaign that drove Turkish forces entirely out of the war.
+"""
+
+Notes = """
+The publication year of 1919 is clearly stated on the title page. This is a contemporary historical account written immediately after the events it describes (the Jerusalem campaign occurred in 1917). As an official war correspondent's account, it represents primary source material for World War I's Middle Eastern theater. The work is not tagged as 'catholic' despite the religious significance of Jerusalem, as it is primarily a military history written from a British imperial perspective rather than a religious treatise.
+"""
+</result>

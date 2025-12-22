@@ -1,0 +1,15 @@
+<result>
+Title = "The Roll-Call"
+Author = "Arnold Bennett"
+Year = 1918
+
+Tags = ["fiction"]
+
+Summary = """
+"The Roll-Call" is a novel by Arnold Bennett, one of the major English novelists of the early 20th century. Bennett is best known for his detailed, realistic portrayals of life in the industrial "Five Towns" region of Staffordshire. "The Roll-Call" was written during World War I and deals with themes related to the war period and its impact on British society. The novel follows the life of an architect and explores the social and personal changes brought about by the Great War. Bennett was a highly prolific writer known for his naturalistic style and careful attention to the details of everyday middle-class life.
+"""
+
+Notes = """
+"The Roll-Call" was first published in 1918. This date reflects both the original composition and publication during the final year of World War I, which is thematically significant to the novel's content and historical context.
+"""
+</result>

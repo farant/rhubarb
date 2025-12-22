@@ -1,0 +1,15 @@
+<result>
+Title = "The Splendid Idle Forties: Stories of Old California"
+Author = "Gertrude Atherton"
+Year = 1902
+
+Tags = ["fiction", "historical-fiction", "short-stories"]
+
+Summary = """
+A collection of short stories by Gertrude Atherton set during California's rancho period in the 1840s, before American annexation. The work romanticizes the era of Spanish-Mexican California, focusing on the lives of the Californio aristocracy during what the author characterizes as a splendid, idle time. Atherton was known for her historical fiction and her interest in California's Spanish colonial past. The stories depict the culture, society, and lifestyle of old California during this transitional period in the state's history.
+"""
+
+Notes = """
+The publication year of 1902 is clearly stated on the title page. This represents the original publication date of this story collection. Gertrude Atherton (1857-1948) was a prolific American author who wrote extensively about California history and society.
+"""
+</result>

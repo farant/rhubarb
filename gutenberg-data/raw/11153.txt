@@ -1,0 +1,15 @@
+<result>
+Title = "No Hero"
+Author = "E. W. Hornung"
+Year = 1903
+
+Tags = ["fiction"]
+
+Summary = """
+'No Hero' is a novel by E. W. Hornung, best known as the creator of the gentleman thief Raffles. Published in 1903, this work represents Hornung's other literary output beyond his famous Raffles stories. Hornung was a popular English author of the late Victorian and Edwardian era, known for his crime fiction and adventure stories. While 'No Hero' is less well-known than his Raffles series, it demonstrates his skill in crafting suspenseful narratives with moral complexity. The chapter titles suggest a story involving conflict, pursuit, and dramatic tension, typical of Hornung's narrative style.
+"""
+
+Notes = """
+The year 1903 is clearly stated in the Project Gutenberg text and represents the original publication date. E. W. Hornung (Ernest William Hornung, 1866-1921) was Arthur Conan Doyle's brother-in-law and achieved fame primarily through his Raffles series, though he wrote numerous other novels and stories during his career.
+"""
+</result>

@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "The Way of Peace" by James Allen, a British philosophical writer known for his inspirational books and poetry.
+
+<result>
+Title = "The Way of Peace"
+Author = "James Allen"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"The Way of Peace" is a spiritual and philosophical work by James Allen, the British author best known for "As a Man Thinketh." This book explores themes of meditation, spiritual development, selflessness, and inner peace. Allen presents a practical philosophy for achieving spiritual growth through meditation and self-mastery, discussing topics such as the power of meditation, the realization of selfless love, and the attainment of perfect peace. The work reflects Allen's New Thought philosophy, emphasizing the power of thought and meditation to transform one's life and achieve spiritual enlightenment. Written in an accessible, devotional style, it offers guidance for those seeking inner peace and spiritual development through contemplation and ethical living.
+"""
+
+Notes = """
+James Allen published "The Way of Peace" in 1907, shortly after his most famous work "As a Man Thinketh" (1903). While Allen was influenced by Christian mysticism and uses Christian terminology, his work represents the New Thought movement rather than orthodox Christian theology. The book has a universalist spiritual orientation rather than being specifically Catholic or aligned with Catholic teaching, so it would not receive a nihil obstat or imprimatur. The publication year of 1907 represents when Allen wrote and published this specific work.
+"""
+</result>

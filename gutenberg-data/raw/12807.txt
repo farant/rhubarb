@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as part of H. Irving Hancock's West Point series featuring Dick Prescott. This was a popular series of juvenile adventure novels from the early 20th century.
+
+<result>
+Title = "Dick Prescott's Fourth Year at West Point; or, Ready to Drop the Gray for Shoulder Straps"
+Author = "H. Irving Hancock"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of H. Irving Hancock's West Point series following the adventures of Dick Prescott during his fourth and final year at the United States Military Academy. The book chronicles his experiences as a senior cadet preparing to graduate and receive his commission as a military officer. The series was popular early 20th century juvenile fiction that romanticized military academy life and featured themes of honor, duty, and friendship among cadets. The plot includes typical elements of the series such as intrigue among cadets, athletic competitions (including the Army-Navy baseball game), and challenges to the protagonist's character and standing.
+"""
+
+Notes = """
+The Dick Prescott at West Point series was published between 1910-1911. This being the "Fourth Year" volume would place it at approximately 1911. H. Irving Hancock was a prolific author of juvenile series fiction in the early 1900s, writing multiple series about military schools, the Navy, and adventure stories aimed at young male readers. While popular in their time, these works represent a particular era of American literature focused on traditional military values and coming-of-age stories within institutional settings.
+"""
+</result>

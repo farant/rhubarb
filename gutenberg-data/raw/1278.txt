@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is "Penelope's English Experiences" by Kate Douglas Wiggin, a charming travelogue/epistolary novel about American women traveling in England. Kate Douglas Wiggin is best known for writing "Rebecca of Sunnybrook Farm" and was a prominent American author and educator.
+
+<result>
+Title = "Penelope's English Experiences"
+Author = "Kate Douglas Wiggin"
+Year = 1893
+
+Tags = ["fiction", "appropriate-for-children", "travelogue", "humor"]
+
+Summary = """
+A lighthearted epistolary novel presented as extracts from the commonplace book of Penelope Hamilton, chronicling the adventures of American women traveling through England. The book is divided into two parts: experiences in London and experiences in the English countryside. Written with gentle humor and keen observation, Wiggin captures the cultural differences between Americans and the English through the eyes of her protagonist. The work belongs to the popular late 19th-century genre of American travel literature focused on England, combining social commentary with entertaining anecdotes about English customs, society, and daily life. Kate Douglas Wiggin was a beloved American author and kindergarten pioneer, best known for 'Rebecca of Sunnybrook Farm.'
+"""
+
+Notes = """
+First published in 1893. This was Wiggin's first adult novel and proved quite popular, leading to sequels 'Penelope's Irish Experiences' (1901) and 'Penelope's Postscripts' (1915). The book reflects the late Victorian era's fascination with transatlantic cultural comparisons and the 'American abroad' literary tradition.
+"""
+</result>

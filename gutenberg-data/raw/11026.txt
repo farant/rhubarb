@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This is a collection of essays by Charles Kingsley, the Victorian-era English clergyman, novelist, and social reformer. Based on the content listing (literary criticism essays on various poets and topics), this appears to be a posthumous collection of his lectures and essays.
+
+Charles Kingsley lived from 1819-1875, and collections of his lectures and essays were published both during his lifetime and posthumously. Given that this is titled "Literary and General Lectures and Essays" and contains various literary criticism pieces, this collection was likely compiled and published in the 1880s, shortly after his death, though the individual essays/lectures would have been delivered earlier during his lifetime.
+
+<result>
+Title = "Literary and General Lectures and Essays"
+Author = "Charles Kingsley"
+Year = 1880
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A collection of lectures and essays by Charles Kingsley (1819-1875), Victorian clergyman, novelist, and social reformer. The volume contains literary criticism and commentary on major English poets including Shelley, Byron, Alexander Pope, Tennyson, and Burns, as well as essays on English composition, literature, and sacred art. Kingsley was a prominent figure in Victorian England, known for his social activism (Christian Socialism), his novels (including 'The Water-Babies' and 'Westward Ho!'), and his work as a professor and canon. These essays reflect his engagement with the literary culture of his time and his perspectives on poetry, drama, and the English literary tradition.
+"""
+
+Notes = """
+Year chosen as 1880 (approximate) as this appears to be a posthumous collection published after Kingsley's death in 1875. The individual lectures and essays would have been delivered/written during his lifetime (roughly 1840s-1870s), but the compilation as a unified work came later. If a more specific publication date is found in other Gutenberg metadata, that should be used instead.
+"""
+</result>

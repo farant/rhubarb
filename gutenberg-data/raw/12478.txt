@@ -1,0 +1,15 @@
+<result>
+Title = "Books & Characters: French & English"
+Author = "Lytton Strachey"
+Year = 1922
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+'Books & Characters: French & English' is a collection of literary essays by Lytton Strachey, a prominent member of the Bloomsbury Group and one of the most influential English critics and biographers of the early 20th century. The volume contains fourteen essays examining various literary figures from both French and English traditions, spanning from the Elizabethan period to the 19th century. Subjects include Racine, Shakespeare, Sir Thomas Browne, William Blake, Voltaire (multiple essays), Rousseau, Madame du Deffand, Samuel Johnson's 'Lives of the Poets', Stendhal (Henri Beyle), and Lady Hester Stanhope. The collection showcases Strachey's characteristic wit, psychological insight, and elegant prose style. Many of these essays were previously published in periodicals such as the Independent Review, the New Quarterly, the Athenaeum, and the Edinburgh Review. The volume notably includes what is described as a previously unpublished dialogue manuscript in Voltaire's handwriting from his English period.
+"""
+
+Notes = """
+Year is straightforward as this is an original work first published in May 1922. Strachey (1880-1932) was not Catholic and his work would not typically align with Catholic literary standards, so the 'catholic' tag is not applicable. The work is sophisticated literary criticism aimed at educated adult readers, so 'appropriate-for-children' is not included.
+"""
+</result>

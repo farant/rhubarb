@@ -1,0 +1,17 @@
+I recognize this immediately - this is Thomas Hardy's classic novel "The Return of the Native," one of his Wessex novels. Let me provide the structured information you requested.
+
+<result>
+Title = "The Return of the Native"
+Author = "Thomas Hardy"
+Year = 1878
+
+Tags = ["fiction", "classic-literature", "romance", "tragedy"]
+
+Summary = """
+"The Return of the Native" is Thomas Hardy's sixth published novel and one of his most famous works set in the fictional region of Wessex (based on Dorset, England). The novel tells the story of Clym Yeobright, a native son who returns to Egdon Heath from Paris, and his tragic romance with the beautiful and restless Eustacia Vye. The heath itself functions almost as a character in the novel, representing the wild, unchanging forces of nature against which human ambitions and desires play out. The novel explores themes of fate, ambition, love, and the conflict between urban sophistication and rural simplicity. Hardy's fatalistic worldview is on full display as characters struggle against circumstances largely beyond their control, leading to tragedy. The novel is notable for its rich descriptive passages of the heath landscape and its psychological complexity in depicting characters caught between their desires and their circumstances.
+"""
+
+Notes = """
+The novel was first published in serial form in Belgravia magazine from January to December 1878, and then published in book form in three volumes in November 1878. I've chosen 1878 as the year since this represents the original publication date when the work became available to the reading public. Hardy was not a Catholic author - he was raised Anglican but became increasingly agnostic/atheistic in his views, and his novels often express a deterministic, fatalistic worldview that would not receive Catholic approval.
+"""
+</result>

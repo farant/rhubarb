@@ -1,0 +1,17 @@
+The file appears to be empty or has an issue. Based on the text you provided in your message, I can identify the work and provide the information:
+
+<result>
+Title = "The Ghost-Ship and Other Stories"
+Author = "Richard Middleton"
+Year = 1912
+
+Tags = ["fiction", "short-stories", "supernatural", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by Richard Middleton (1882-1911), published posthumously. Middleton was a British author known for his supernatural and fantasy short stories with a distinctive melancholic and whimsical quality. His work often explores themes of loneliness, the search for meaning, and the thin boundary between the mundane and the fantastic. The collection includes the titular story "The Ghost-Ship" along with philosophical pieces like "The Story of a Book" and "The Biography of a Superman" which blur the line between essay and narrative fiction. Middleton tragically took his own life in Brussels at age 29, before achieving wider recognition. His work was championed posthumously by writers who recognized his unique voice and imaginative power.
+"""
+
+Notes = """
+Richard Middleton died in 1911, and this collection was published posthumously in 1912. I've chosen 1912 as the year since this represents when the collection as a whole was published and made available to the public, rather than the individual composition dates of the stories. The preface mentions that Middleton is dead and refers to reading the volume in proof, indicating this was written by a friend or admirer preparing the work for publication after the author's death.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "The Mettle of the Pasture" by James Lane Allen, published in 1903. The title page is explicitly shown in the text. James Lane Allen was an American novelist from Kentucky, known for his regional fiction set in Kentucky. This appears to be a novel (fiction) opening with a romantic, pastoral scene.
+
+<result>
+Title = "The Mettle of the Pasture"
+Author = "James Lane Allen"
+Year = 1903
+
+Tags = ["fiction"]
+
+Summary = """
+'The Mettle of the Pasture' is a novel by American author James Lane Allen, published in 1903. Allen was known for his romantic regionalist fiction set in Kentucky, including works like 'The Choir Invisible' and 'A Kentucky Cardinal.' This novel continues his exploration of Southern pastoral themes and human character. The opening scene depicts a woman in contemplation in an elegant Kentucky home, setting a romantic and atmospheric tone characteristic of Allen's style. The novel explores themes of love, morality, and social conventions in turn-of-the-century Kentucky society.
+"""
+
+Notes = """
+The year 1903 is clearly stated on the title page. This is the original publication year as indicated in the Project Gutenberg text. James Lane Allen (1849-1925) was a prominent American novelist during the late 19th and early 20th centuries, and this was one of his major works from his mature period.
+"""
+</result>

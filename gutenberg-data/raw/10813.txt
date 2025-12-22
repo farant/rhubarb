@@ -1,0 +1,13 @@
+<result>
+Title = "A Versailles Christmas-Tide"
+Author = "Mary Stuart Boyd"
+Year = 1901
+
+Tags = ["non-fiction", "travel", "historical", "appropriate-for-children"]
+
+Summary = """
+A Versailles Christmas-Tide is a travelogue and historical narrative by Mary Stuart Boyd, recounting her experiences and observations during a Christmas season spent at Versailles, France. The work combines travel writing with historical commentary about the Palace of Versailles and its surroundings, offering readers a glimpse into both the contemporary experience of visiting Versailles at the turn of the 20th century and reflections on its rich historical past. The book is illustrated with fifty-three illustrations by A.S. Boyd, adding visual dimension to the narrative."""
+
+Notes = """
+The year 1901 is clearly stated in the Project Gutenberg header as the publication date. This appears to be the original publication year of the work, making it a late Victorian/early Edwardian era travel narrative."""
+</result>

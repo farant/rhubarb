@@ -1,0 +1,13 @@
+<result>
+Title = "The Servant in the House"
+Author = "Charles Rann Kennedy"
+Year = 1908
+
+Tags = ["fiction", "drama", "christian-themes"]
+
+Summary = """
+'The Servant in the House' is a Christian allegorical drama by Charles Rann Kennedy, first produced in 1908. The play centers on Manson, a mysterious servant who arrives at an English vicarage and reveals himself to be more than he appears. Through his presence, the play explores themes of brotherhood, hypocrisy, and true Christian service. The servant character serves as a Christ-like figure who exposes the moral failings and pretensions of the vicar and his household while advocating for genuine love and service to others. The play was quite popular in its time and became one of Kennedy's most well-known works, praised for its spiritual depth and social commentary on religious hypocrisy."""
+
+Notes = """
+The copyright page clearly indicates 1908 as the publication year. The play is explicitly Christian in its themes and messaging (as evidenced by the biblical epigraph from 1 John about loving one's brother), though Charles Rann Kennedy was not Catholic but rather wrote from a broader Christian/spiritual perspective. The work has strong moral and religious themes but is not specifically Catholic in orientation, so I have not included the 'catholic' tag. The drama deals with mature themes of hypocrisy and moral failing, so I have not included 'appropriate-for-children' tag."""
+</result>

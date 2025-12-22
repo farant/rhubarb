@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Darkest India: A Supplement to General Booth's 'In Darkest England, and the Way Out'"
+Author = "Frederick Booth-Tucker"
+Year = 1891
+
+Tags = ["non-fiction", "social-reform", "historical-document"]
+
+Summary = """
+"Darkest India" is a social reform treatise written by Salvation Army Commissioner Frederick Booth-Tucker as a companion volume to General William Booth's influential work "In Darkest England and the Way Out." The book applies General Booth's social salvation principles to the Indian context, arguing that if England's poor deserve a "cabhorse charter" (basic standards of living comparable to those afforded to cab horses), then India's impoverished masses deserve a "bullock charter." Booth-Tucker examines poverty, social conditions, and the need for systematic relief efforts in British India, proposing adaptations of the Salvation Army's social welfare model to address India's unique circumstances. The work represents an early example of Christian social gospel thinking applied to colonial India's social problems.
+"""
+
+Notes = """
+The year 1891 is taken from the publication date listed in the preface. This work was written shortly after William Booth's "In Darkest England" (1890) and represents the Salvation Army's extension of its social reform mission to India. Frederick Booth-Tucker (1853-1929) was a British Salvation Army commissioner who served extensively in India and married William Booth's daughter Emma. Not tagged as 'catholic' as this is a Protestant/Salvation Army work, though it shares social reform concerns common to Christian social teaching of the period.
+"""
+</result>

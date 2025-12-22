@@ -1,0 +1,15 @@
+<result>
+Title = "The Lady of the Barge and Other Stories"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "short-stories", "horror", "appropriate-for-children"]
+
+Summary = """
+This is a collection of short stories by British author William Wymark Jacobs, best known for containing "The Monkey's Paw," one of the most famous horror short stories in English literature. "The Monkey's Paw" tells the tale of a family who receives a magical talisman that grants three wishes, but with terrible and ironic consequences. The story has become a classic cautionary tale about being careful what you wish for. Jacobs was primarily known for his humorous stories about sailors and dock workers, but "The Monkey's Paw" represents his venture into supernatural horror and has become his most enduring work. The collection includes other stories featuring maritime themes and everyday English life at the turn of the 20th century.
+"""
+
+Notes = """
+The Lady of the Barge and Other Stories was first published in 1902 by Harper & Brothers. "The Monkey's Paw" appeared in this collection and was also published separately in the same year. While some of Jacobs' humorous maritime stories might contain mild content, "The Monkey's Paw" deals with death and supernatural horror in a way that is frightening but not graphically violent, making it generally considered appropriate for older children and commonly taught in schools.
+"""
+</result>

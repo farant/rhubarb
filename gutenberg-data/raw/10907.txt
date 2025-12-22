@@ -1,0 +1,21 @@
+I recognize this as Titus Livius's (Livy's) *The History of Rome*, specifically Books IX-XXVI in the translation by D. Spillan and Cyrus Edmonds. The text shows Book IX beginning with the famous disaster at the Caudine Forks (321 BC).
+
+Livy wrote *Ab Urbe Condita* (From the Foundation of the City) in the late 1st century BC/early 1st century AD, with most scholars dating the work's composition from approximately 27 BC to 9 BC or later. The work chronicles Roman history from its legendary founding in 753 BC.
+
+For the "Year" field, I'll use circa 27 BC as the approximate start of composition, though the work was written over many years. This represents the historical period when Livy was active and this monumental history was being created.
+
+<result>
+Title = "The History of Rome, Books IX-XXVI"
+Author = "Titus Livius (Livy)"
+Year = -27
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Livy's Ab Urbe Condita (History of Rome from its Foundation) is one of the monumental works of Roman historiography. Books IX-XXVI cover the period of the Samnite Wars, the Pyrrhic War, and the Second Punic War (roughly 321-201 BC). This section includes famous episodes like the disaster at the Caudine Forks, Rome's gradual expansion through Italy, and the existential struggle against Hannibal. Livy wrote in a grand, rhetorical style that aimed to celebrate Roman virtues and provide moral exempla for his contemporaries. The work blends historical fact with legend and moralistic interpretation.
+"""
+
+Notes = """
+Year chosen as circa 27 BC, representing the approximate beginning of Livy's composition of Ab Urbe Condita during the Augustan age. The complete work originally consisted of 142 books, of which only 35 survive (including Books IX-XXVI). This translation by Spillan and Edmonds is a 19th-century English rendering. Not tagged as "appropriate-for-children" due to detailed descriptions of warfare and political intrigue, though the moral tone was intended for educational purposes.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this German text from Project Gutenberg to identify the work and provide the requested information.
+
+This is "Eine vornehme Frau" (A Distinguished Lady) by Hermann Heiberg, published in 1886. Hermann Heiberg (1840-1910) was a Danish-German writer and translator. The text shows this is a novel about social class divisions in a small German town after the Austro-Prussian War of 1866, when the town received a Prussian garrison.
+
+<result>
+Title = "Eine vornehme Frau"
+Author = "Hermann Heiberg"
+Year = 1886
+
+Tags = ["fiction"]
+
+Summary = """
+"Eine vornehme Frau" (A Distinguished Lady) is a novel by Hermann Heiberg, a Danish-German writer. The work is set in a small German town of about 20,000 inhabitants in the aftermath of the Austro-Prussian War of 1866. The novel explores themes of social class divisions and the changes that occur when the newly Prussian town receives a military garrison, including hussar squadrons. The narrative examines how the officer families maintain social distance from the townspeople, associating primarily with higher officials and nobility, while the economic impact of the military presence brings prosperity and modernization to the town. The dedication to his mother, Asta (née Countess von Baudissin), suggests semi-autobiographical or observational elements drawn from the author's own experience of German society.
+"""
+
+Notes = """
+The year 1886 appears on the title page and represents the original publication date of this work. Hermann Heiberg was known for his novels examining social dynamics in German society during the period of German unification and its aftermath.
+"""
+</result>

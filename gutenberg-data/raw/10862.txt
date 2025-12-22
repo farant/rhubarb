@@ -1,0 +1,15 @@
+<result>
+Title = "The White Waterfall"
+Author = "James Francis Dwyer"
+Year = 1912
+
+Tags = ["fiction", "adventure"]
+
+Summary = """
+'The White Waterfall' is an adventure novel by Australian-American writer James Francis Dwyer. Set in the South Pacific, it's a thrilling tale involving mysterious islands, dangerous expeditions, and colonial-era exploration. Dwyer was known for his adventure fiction and short stories that often featured exotic locales and suspenseful plots. This work is representative of early 20th-century adventure literature in the tradition of writers like H. Rider Haggard and Robert Louis Stevenson, featuring elements of danger, mystery, and romance in remote tropical settings.
+"""
+
+Notes = """
+James Francis Dwyer was an Australian-born author who moved to America and wrote extensively for popular magazines in the early 1900s. 'The White Waterfall' was published in 1912 and represents the adventure fiction genre popular in that era. The novel contains period-typical attitudes toward colonialism and indigenous peoples that reflect its historical context rather than modern perspectives.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll help you identify this work. Based on the text, this is clearly "People of the Whirlpool" by Mabel Osgood Wright, published in 1903 (as stated in the title page).
+
+Let me provide you with the structured information:
+
+<result>
+Title = "People of the Whirlpool: From the Experience Book of a Commuter's Wife"
+Author = "Mabel Osgood Wright"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'People of the Whirlpool' is a novel by Mabel Osgood Wright, presented as the experience book of a commuter's wife. Wright was an American author and naturalist known for her nature writing and novels about American life in the early 20th century. This work is told through an epistolary format (indicated by chapters titled 'Miss Lavinia's Letters to Barbara' and 'Martin Cortright's Letters') and explores domestic and social life in the era of early American suburbanization, when commuting from countryside to city was becoming common. The 'whirlpool' likely refers to the social whirl and complexities of navigating between rural and urban worlds during this transitional period in American society.
+"""
+
+Notes = """
+The year 1903 is stated directly on the title page of the Project Gutenberg edition. Mabel Osgood Wright (1859-1934) was a pioneering American author, ornithologist, and conservationist. While not specifically a Catholic author, her works were generally wholesome and appropriate for family reading, reflecting Progressive Era values.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Parent and Child, Volume Three: Child Study and Training"
+Author = "Mosiah Hall"
+Year = 1916
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an educational manual on child-rearing and parenting published by the Deseret Sunday School Union, an institution of The Church of Jesus Christ of Latter-day Saints. Written by Mosiah Hall, an education professor at the University of Utah, the work provides a series of lessons focused on child study and child development to help parents better understand and guide their children. The book emphasizes the need for "enlightened parenthood" and scientific understanding of child nature and development, reflecting the early 20th century movement toward more systematic and informed approaches to parenting and education.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page as the publication date. Mosiah Hall was a prominent educator in Utah and the broader Latter-day Saints community during this period. This appears to be part of a series (Volume Three), suggesting an ongoing educational program for parents within the LDS church structure.
+"""
+</result>

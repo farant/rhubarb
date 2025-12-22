@@ -1,0 +1,15 @@
+<result>
+Title = "Snarleyyow; or, The Dog Fiend"
+Author = "Frederick Marryat"
+Year = 1837
+
+Tags = ["fiction", "nautical-fiction", "adventure"]
+
+Summary = """
+"Snarleyyow; or, The Dog Fiend" is a nautical adventure novel by Captain Frederick Marryat, set in the late 17th century during the Glorious Revolution period. The story revolves around the misadventures of Lieutenant Vanslyperken, commander of the cutter Yungfrau, and his seemingly indestructible dog Snarleyyow, who survives numerous attempts on his life. The novel combines maritime adventure with dark comedy, featuring smugglers, conspirators, and various colorful characters in the waters between England and Holland. Marryat, a former Royal Navy captain, was known for his realistic depictions of naval life and his influence on later maritime fiction writers.
+"""
+
+Notes = """
+The novel was first published in 1837. The date "MDCCCXCV" (1895) shown in this edition is likely a reprint date. Captain Marryat (1792-1848) wrote this as one of his many popular nautical novels following his successful naval career. While Marryat was a naval officer writing about maritime life, this is an adventure novel rather than a specifically Catholic work, despite Marryat being Anglican.
+"""
+</result>

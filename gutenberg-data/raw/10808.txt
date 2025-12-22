@@ -1,0 +1,15 @@
+<result>
+Title = "Consumers' Cooperative Societies in New York State"
+Author = "Cedric Long (revised by The Consumers' League of New York)"
+Year = 1922
+
+Tags = ["non-fiction", "economics", "cooperative-movement", "appropriate-for-children"]
+
+Summary = """
+This is a study examining consumers' cooperative societies operating in New York State, published by the Consumers' League of New York in April 1922. The work was originally prepared by Cedric Long in 1921 and subsequently revised. The study outlines the fundamental principles of cooperative societies as established by the Rochdale Pioneers in England in 1844, which became the foundation for the modern cooperative movement. These principles include limiting capital stock earnings to legal interest rates, returning surplus earnings to members proportionally, and maintaining democratic one-member-one-vote governance. The document appears to be part of the early 20th century American cooperative movement, which sought to apply European cooperative principles to American economic conditions during a period of significant industrialization and labor organizing.
+"""
+
+Notes = """
+The year 1922 is chosen as it represents the publication date of this revised edition. While the original study was prepared in 1921, the document explicitly states it was published in April 1922. This work is a primary source document from the American cooperative movement of the early 20th century rather than a historical work about earlier periods.
+"""
+</result>

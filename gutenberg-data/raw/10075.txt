@@ -1,0 +1,15 @@
+<result>
+Title = "A Narrative of the Life and Adventures of Venture, a Native of Africa"
+Author = "Venture Smith"
+Year = 1798
+
+Tags = ["non-fiction", "historical-document", "autobiography"]
+
+Summary = """
+This is one of the earliest known slave narratives published in America, written by Venture Smith (born Broteer Furro), who was captured in Africa at age six, brought to America as a slave at eight years old, and eventually purchased his own freedom and that of his family. The narrative details his life in bondage, his remarkable efforts to earn money and buy his freedom, and his subsequent life as a free man in Connecticut. Published in New London in 1798, this work predates the more famous narratives of Frederick Douglass and others by several decades, making it a crucial primary source document for understanding slavery in colonial and early American history.
+"""
+
+Notes = """
+The year 1798 is the original publication date as stated on the title page. Venture Smith was born around 1729 in West Africa (in what is now Guinea) and died in 1805. This narrative is notable for being published during Smith's lifetime and is considered one of the first slave narratives in American literature. The work was dictated by Smith (who was likely literate but employed someone to write it down) and published when he was approximately 69 years old, after having lived as a free man for several decades.
+"""
+</result>

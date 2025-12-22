@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Swift Among the Diamond Makers, or The Secret of Phantom Mountain"
+Author = "Victor Appleton"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Tom Swift Among the Diamond Makers" is part of the Tom Swift series of juvenile adventure novels published by the Stratemeyer Syndicate under the house pseudonym Victor Appleton. The series follows the adventures of Tom Swift, a young inventor and entrepreneur. In this particular installment, Tom investigates mysterious diamond makers and travels to Phantom Mountain, encountering various adventures involving secret caves and the artificial creation of diamonds. The Tom Swift series was enormously popular in the early 20th century and helped establish many tropes of young adult adventure and science fiction literature.
+"""
+
+Notes = """
+The Tom Swift series began in 1910 with "Tom Swift and His Motor Cycle." "Tom Swift Among the Diamond Makers" was the seventh book in the original series, published in 1911. Victor Appleton was not a real person but a pseudonym used by the Stratemeyer Syndicate, with various ghostwriters producing the books. The series was aimed at young boys and emphasized themes of invention, adventure, and American ingenuity during the Progressive Era.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Symphony No. 5 in C minor, Op. 67"
+Author = "Ludwig van Beethoven"
+Year = 1808
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Beethoven's Fifth Symphony is one of the most famous and influential compositions in Western classical music. Known for its iconic four-note opening motif (often described as "fate knocking at the door"), the symphony represents a journey from darkness to light, from C minor to C major. Composed between 1804 and 1808, it premiered on December 22, 1808, at the Theater an der Wien in Vienna. The work is structured in four movements and exemplifies Beethoven's middle period, showcasing his innovative approach to symphonic form and his ability to develop a simple motif throughout an entire work. This Project Gutenberg edition contains MIDI files of the symphony rather than a text analysis or score.
+"""
+
+Notes = """
+The symphony was composed over several years (1804-1808) but premiered and was published in 1808, which is the standard historical date used for this work. The premiere concert on December 22, 1808 was a marathon event that also included the premiere of the Sixth Symphony, among other works. This is a musical work in MIDI format rather than a literary text, so it's been tagged as a historical-document rather than fiction/non-fiction in the traditional sense.
+"""
+</result>

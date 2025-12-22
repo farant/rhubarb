@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "At Sunwich Port" by W. W. Jacobs. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author known for his humorous short stories and novels about dockside and seafaring life, as well as his famous horror story "The Monkey's Paw." "At Sunwich Port" is one of his comic novels featuring colorful characters in a seaside town setting.
+
+The novel was first published in 1902. This appears to be Part 5 of a serialized or divided edition, showing Chapter XXI with illustrations by Will Owen (who frequently collaborated with Jacobs).
+
+<result>
+Title = "At Sunwich Port"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'At Sunwich Port' is a humorous novel by W. W. Jacobs set in an English seaside town. The story revolves around Captain Nugent, his son's impending marriage, and the persistent visits of Jem Hardy, who appears to be pursuing some undisclosed objective despite the captain's resistance. Jacobs is known for his light comedic touch and vivid characterizations of English working-class and maritime life. This work exemplifies his skill at depicting the social dynamics and comic misunderstandings of small-town life, with particular attention to stubborn sea captains and the romantic entanglements of their families. The novel was illustrated by Will Owen, whose drawings complemented Jacobs's narrative style.
+"""
+
+Notes = """
+First published in 1902. W. W. Jacobs was a popular author of his era, and while he was English and writing in the Edwardian period, there's no indication this is a specifically Catholic work. The 'appropriate-for-children' tag applies as Jacobs's humor was generally wholesome and his novels were suitable family reading of the period.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "American Scenes, and Christian Slavery: A Recent Tour of Four Thousand Miles in the United States" by Ebenezer Davies, published in 1849 (MDCCCXLIX in Roman numerals as shown on the title page).
+
+Based on the preface, this is a non-fiction travelogue and abolitionist work written by a British minister who toured the United States, entering through New Orleans and observing slavery firsthand. Davies was a pastor who had previously served in Berbice (British Guiana) where many of his congregation were formerly enslaved people. He writes from a Nonconformist/Puritan religious perspective and is clearly aligned with the abolitionist cause.
+
+<result>
+Title = "American Scenes, and Christian Slavery: A Recent Tour of Four Thousand Miles in the United States"
+Author = "Ebenezer Davies"
+Year = 1849
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand account of an 1840s tour through the United States by British Nonconformist minister Ebenezer Davies, who had previously served as pastor in Berbice (British Guiana) to a congregation including many formerly enslaved people. The work focuses on observations of American slavery, particularly after entering through New Orleans, and examines American society through the lens of a British abolitionist. Davies also explores the development of Puritan and Nonconformist religious principles in America, particularly in New England. The book represents an important British Protestant perspective on antebellum American slavery.
+"""
+
+Notes = """
+Published in 1849 as indicated by the Roman numerals MDCCCXLIX on the title page. This work is part of the broader transatlantic abolitionist literature of the pre-Civil War period. While Davies was a Christian minister, this is not marked as 'catholic' as he explicitly identifies with Puritan/Nonconformist (Protestant) traditions. Not marked as appropriate for children due to the subject matter of slavery and its treatment.
+"""
+</result>

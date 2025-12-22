@@ -1,0 +1,15 @@
+<result>
+Title = "Murder in Any Degree: And Other Stories"
+Author = "Owen Johnson"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of short stories by Owen Johnson, best known for his novels "Stover at Yale" and "The Varmint" which depicted American prep school and college life in the early 20th century. The collection includes nine stories: "Murder in Any Degree," "One Hundred in the Dark," "A Comedy for Wives," "The Lie," "Even Threes," "A Man of No Imagination," "Larry Moore," "My Wife's Wedding Presents," and "The Surprises of the Lottery." Johnson was a popular American writer who specialized in humor and stories about American youth and society. His work was characterized by wit, keen observation of social manners, and generally wholesome entertainment suitable for family reading.
+"""
+
+Notes = """
+The copyright page shows various dates from 1906-1913, indicating these stories were published in different magazines (Curtis Publishing Company, Good Housekeeping, etc.) before being collected in this volume. The book publication date is August 1913, which I've used as the primary year since this represents when the collection was assembled and published as a complete work. Owen Johnson was not a Catholic author, so the 'catholic' tag is not included.
+"""
+</result>

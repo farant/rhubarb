@@ -1,0 +1,15 @@
+<result>
+Title = "Camp-Fire and Cotton-Field: Southern Adventure in Time of War"
+Author = "Thomas W. Knox"
+Year = 1865
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a firsthand account by Thomas W. Knox, a war correspondent for the New York Herald, documenting his experiences with the Union armies during the American Civil War (1861-1865). The book chronicles Knox's adventures following Union forces through various campaigns, as well as his time spent on a Louisiana plantation during the war. As a journalist embedded with the troops, Knox provides eyewitness accounts of military operations, camp life, and the social and economic conditions in the South during this tumultuous period. The work is dedicated to fellow press representatives who covered the war and offers valuable primary source material on the conflict from a Northern correspondent's perspective.
+"""
+
+Notes = """
+The publication year of 1865 is clearly stated in the book itself and represents the immediate post-war publication. This is the original publication date. Knox was a prominent war correspondent known for his reporting on campaigns in the Western Theater of the Civil War, including his controversial coverage of the Vicksburg Campaign. This work represents one of the early published memoirs from the Civil War period, appearing in the same year the war ended.
+"""
+</result>

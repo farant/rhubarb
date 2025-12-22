@@ -1,0 +1,15 @@
+<result>
+Title = "Polish National Dance"
+Author = "Charles D'Almaine"
+Year = 1890
+
+Tags = ["audio", "music", "instrumental", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of a Polish national dance performed by violinist Charles D'Almaine, edited by Thomas Edison. The recording was taken from the Edison National Historic Site and represents one of the early audio recordings made during Edison's phonograph era. Polish national dances typically refer to mazurkas, polonaises, or krakowiak dances that were popular in classical and folk music traditions.
+"""
+
+Notes = """
+The exact year is difficult to determine from this text alone. Charles D'Almaine (1840-1904) was a prominent violinist who worked with Edison's recording projects in the 1890s. Edison's phonograph recordings began in the late 1870s-1880s, with commercial production ramping up in the 1890s. Given D'Almaine's career and Edison's recording timeline, circa 1890 seems a reasonable estimate for when this recording was likely made, though it could range from 1880s-early 1900s. This is an audio artifact rather than a written text, representing early recording technology history.
+"""
+</result>

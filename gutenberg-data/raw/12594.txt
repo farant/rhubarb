@@ -1,0 +1,19 @@
+Looking at this text, I can identify it as "Creative Impulse in Industry: A Proposition for Educators" by Helen Marot, published in 1918. This is a work of non-fiction dealing with education and industrial labor from the Progressive Era.
+
+Helen Marot was a labor activist and writer (not a Catholic author), and this work examines the relationship between education, creativity, and industrial work. The dedication to Caroline Pratt (founder of the City and Country School) and the preface by the Bureau of Educational Experiments situate this firmly in the progressive education reform movement of the early 20th century.
+
+<result>
+Title = "Creative Impulse in Industry: A Proposition for Educators"
+Author = "Helen Marot"
+Year = 1918
+
+Tags = ["non-fiction"]
+
+Summary = """
+A progressive era examination of the relationship between education, creativity, and industrial labor. Helen Marot, a labor activist and writer, explores how educational systems can better serve workers and foster creative impulses within industrial environments. The work is associated with the Bureau of Educational Experiments, a group dedicated to scientific approaches to modern education, and is dedicated to Caroline Pratt, founder of the City and Country School. The book represents early 20th century progressive educational reform thinking, arguing for educational environments that promote growth and creativity rather than rote industrial training.
+"""
+
+Notes = """
+The year 1918 is clearly stated on the title page and represents the original publication date. Helen Marot (1865-1940) was a labor reformer and secretary of the Women's Trade Union League, not a Catholic author. The Bureau of Educational Experiments mentioned in the preface later became the Bank Street College of Education.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work - it's a critical biography of the English poet George Crabbe by Alfred Ainger, part of the prestigious "English Men of Letters" series. Based on the prefatory note and publication information visible in the text, this was published in 1903 (as indicated by "NINETEEN HUNDRED AND THREE").
+
+<result>
+Title = "Crabbe (English Men of Letters series)"
+Author = "Alfred Ainger"
+Year = 1903
+
+Tags = ["non-fiction", "biography", "literary criticism"]
+
+Summary = """
+This is a critical biography of George Crabbe (1754-1832), the English poet known for his realistic depictions of rural life and social issues in works like "The Village" and "The Borough." Written by Alfred Ainger as part of the influential "English Men of Letters" series, this book examines Crabbe's life and literary achievements. The work draws heavily on the memoir written by Crabbe's son in 1834, as well as manuscript materials including sermons, letters, and commonplace books. Ainger also benefited from annotations by Edward FitzGerald, who had personal connections to Crabbe's descendants.
+"""
+
+Notes = """
+The year 1903 is clearly stated in the title page as 'NINETEEN HUNDRED AND THREE'. This is a work of literary biography and criticism rather than Crabbe's original poetry, so the date reflects when this scholarly assessment was published rather than when Crabbe's own works appeared (which were primarily early 19th century).
+"""
+</result>
