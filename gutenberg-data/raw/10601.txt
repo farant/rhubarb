@@ -1,0 +1,17 @@
+I recognize this as "The Rangeland Avenger" by Max Brand (a pseudonym of Frederick Faust), a Western novel. Based on the text's own indication, it was originally published in 1922 in Western Story Magazine as "Three Who Paid" under the pseudonym George Owen Baxter, then published in book form as "The Rangeland Avenger" in 1924.
+
+<result>
+Title = "The Rangeland Avenger"
+Author = "Max Brand (Frederick Faust)"
+Year = 1922
+
+Tags = ["fiction", "western", "adventure"]
+
+Summary = """
+A Western adventure novel by Max Brand (pseudonym of prolific author Frederick Faust), originally serialized in Western Story Magazine. The story follows Hal Sinclair and three companions (Quade, Lowrie, and Sandersen) who have been prospecting for gold in the mountains. After their mining venture fails, they attempt a dangerous shortcut across the desert, only to find themselves in a desperate water famine when Sawyer's water hole runs dry. The novel is typical of Brand's action-packed Western fiction, featuring themes of survival, revenge, and frontier justice.
+"""
+
+Notes = """
+Chose 1922 as the year of original publication in Western Story Magazine under the pseudonym George Owen Baxter, rather than 1924 when it appeared in book form, as this represents the work's first public appearance. Max Brand was one of Frederick Faust's most famous pseudonyms; he was an extraordinarily prolific writer who produced hundreds of Western novels and stories.
+"""
+</result>

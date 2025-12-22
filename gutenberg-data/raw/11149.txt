@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Little Folded Hands: Prayers for Children"
+Author = "Various"
+Year = 1900
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+"Little Folded Hands: Prayers for Children" is a collection of traditional Christian prayers compiled for young children. The work consists of simple, rhyming prayers intended to be memorized and recited by children at various times throughout the day, particularly morning and evening prayers. These types of prayer collections were extremely popular in late 19th and early 20th century Christian households as tools for religious education and formation of children. The prayers emphasize themes of God's protection, gratitude, and childlike trust in divine care. Such collections were commonly used in both Protestant and Catholic homes, though the simple, devotional nature and emphasis on traditional prayer forms suggests broad Christian appeal.
+"""
+
+Notes = """
+The year 1900 is an approximation based on the style and format typical of children's prayer books from the turn of the 20th century. This appears to be a "Revised Edition" as noted in the text, suggesting an earlier edition existed. Without more specific publication information in the excerpt, 1900 represents the late Victorian/early Edwardian era when such compilations were at peak popularity. The prayers themselves draw from much older Christian traditions, some potentially dating back centuries, but this particular compilation and arrangement appears to be from around 1900. Project Gutenberg ID 11149 supports a date in this general timeframe.
+"""
+</result>

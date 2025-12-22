@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Travels of Marco Polo" in the famous Yule-Cordier edition. Henry Yule originally translated and annotated Marco Polo's travels, and Henri Cordier later revised and expanded this work. The text shows this is the third edition from 1903, with Cordier's additional notes from 1920.
+
+Marco Polo's original travels took place between approximately 1271-1295, and he dictated his account to Rustichello da Pisa while imprisoned in Genoa in 1298-1299. The work was originally titled "Livre des merveilles du monde" (Book of the Marvels of the World) or "Il Milione."
+
+<result>
+Title = "The Travels of Marco Polo"
+Author = "Marco Polo, with Rustichello da Pisa"
+Year = 1299
+
+Tags = ["non-fiction", "historical-document", "travel", "appropriate-for-children", "catholic"]
+
+Summary = """
+The Travels of Marco Polo is one of the most important travel narratives in Western literature. Marco Polo (1254-1324), a Venetian merchant, traveled to China and the court of Kublai Khan, spending nearly 17 years in Asia (1275-1292). Upon his return to Venice, he was imprisoned during a conflict with Genoa, where he dictated his extraordinary adventures to fellow prisoner Rustichello da Pisa. The work describes the Mongol Empire, China, India, Japan, and other Asian lands with remarkable detail, introducing Europeans to the wealth, customs, and wonders of the East. This particular edition is the renowned Yule-Cordier edition, which includes extensive scholarly annotations by Sir Henry Yule (1903) and later additions by Henri Cordier (1920), making it one of the most comprehensive and authoritative editions of Polo's travels.
+"""
+
+Notes = """
+I chose 1299 as the year because this represents when Marco Polo dictated his travels to Rustichello da Pisa in prison, creating the original work. While various manuscript copies and editions appeared over subsequent centuries, this date marks the historical creation of the text. The edition shown here (Yule-Cordier) is a scholarly 20th-century edition, but for a historical timeline, the original composition date is most educationally appropriate. Marco Polo was a Catholic Venetian, and while the work is primarily a travel narrative rather than religious literature, it reflects a Catholic worldview and would likely have been suitable for a nihil obstat.
+"""
+</result>

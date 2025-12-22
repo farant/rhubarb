@@ -1,0 +1,15 @@
+<result>
+Title = "The Strength of the Strong"
+Author = "Jack London"
+Year = 1914
+
+Tags = ["fiction", "short-stories", "political-fiction"]
+
+Summary = """
+"The Strength of the Strong" is a collection of short stories by Jack London, originally published in 1914. The title story is a parable about prehistoric humans discovering the power of collective action and cooperation, which London uses as an allegory for socialist political theory. The collection includes several other stories that explore themes of class struggle, social inequality, and political revolution from London's socialist perspective. London was one of the most prominent American authors of the early 20th century, known for adventure stories like "The Call of the Wild" and "White Fang," but also for his political writings advocating for socialism and workers' rights.
+"""
+
+Notes = """
+The book was first published in 1914 by Macmillan. While individual stories in the collection may have been published earlier in magazines, 1914 represents the publication date of the collected work. This is not appropriate-for-children due to mature political themes and some violence. Not tagged as 'catholic' - Jack London was not Catholic and his socialist political views would not have received ecclesiastical approval.
+"""
+</result>

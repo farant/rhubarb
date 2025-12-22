@@ -1,0 +1,15 @@
+<result>
+Title = "French Conversation and Composition"
+Author = "Harry Vincent Wann"
+Year = 1913
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an educational textbook designed for students learning French, combining conversational practice with grammar review. Written by Harry Vincent Wann, a Professor of Romance Languages at Indiana State Normal School, the book emerged from his five years of teaching experience at the University of Michigan. The work contains anecdotes and exercises adapted to help students develop both conversational skills and a firm grasp of fundamental French grammar principles. It was designed to fill a gap in available teaching materials for intermediate French students who could translate but struggled with practical application of grammatical concepts.
+"""
+
+Notes = """
+The exact publication year is not stated in this excerpt, but Project Gutenberg ebook #11748 corresponds to works published in the early 1900s. Based on the context (the author's teaching experience at University of Michigan, the references to Claude Augé's grammar, and the Petit Larousse dictionary), this work was likely published between 1910-1920. I've estimated 1913 as a reasonable midpoint for this educational text, though the precise year would require additional verification from the full text or publication records.
+"""
+</result>

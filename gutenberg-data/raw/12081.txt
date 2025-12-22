@@ -1,0 +1,28 @@
+I need to examine this text to identify the work, author, and publication details.
+
+From the provided text, I can see:
+- **Title**: "Lives of Girls Who Became Famous"
+- **Author**: Sarah K. Bolton
+- **Publication year shown**: 1914 (in the text)
+
+Let me analyze what I know about this work:
+
+This is a biographical collection by Sarah Knowles Bolton (1841-1916), an American writer who specialized in biographical works. She wrote several "Lives of..." books, including "Poor Boys Who Became Famous" (mentioned as another work by her in the text). "Lives of Girls Who Became Famous" was first published in 1886, with multiple editions following. The 1914 date shown in this text appears to be a later edition.
+
+For the year, since this is a collection of biographies rather than a creative work, and the use case is for a historical timeline, I should use the original publication date (1886) as that's when the work first appeared and had its historical impact, rather than this particular edition's date.
+
+For tags: This is non-fiction (biographical collection), could be appropriate for children (inspirational biographies of successful women), and given the time period and nature of the work, it's likely to have traditional Christian values though I cannot confirm Bolton was Catholic or that it would have Catholic approval.
+
+<result>
+Title = "Lives of Girls Who Became Famous"
+Author = "Sarah K. Bolton"
+Year = 1886
+
+Tags = ["non-fiction", "appropriate-for-children", "biography"]
+
+Summary = """
+A collection of biographical sketches of notable women who achieved fame and success in their respective fields. Written by Sarah Knowles Bolton, an American author known for her inspirational biographical works, this book presents the life stories of accomplished women as examples for young readers. Bolton wrote several similar works including 'Poor Boys Who Became Famous,' and her books were popular in the late 19th and early 20th centuries for their moral and educational value, encouraging young people through examples of perseverance and achievement."""
+
+Notes = """
+The text shows 1914, which is a later edition. The original publication was in 1886. I chose the original publication year as it represents when this work first entered the historical record and began influencing readers. The book went through multiple editions due to its popularity as educational and inspirational reading for young people."""
+</result>

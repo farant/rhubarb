@@ -1,0 +1,15 @@
+<result>
+Title = "The Description of Wales"
+Author = "Giraldus Cambrensis (Gerald of Wales)"
+Year = 1194
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+The Description of Wales (Descriptio Cambriae) is a medieval geographical and ethnographic work by Giraldus Cambrensis (Gerald of Wales), a 12th-century Welsh-Norman cleric and chronicler. Written around 1194, this work provides a detailed account of Wales, its people, customs, and characteristics. It serves as a companion to his earlier work on the topography of Ireland and his Journey Through Wales. Gerald, who was Archdeacon of Brecon and had extensive knowledge of Welsh society through his family connections and travels, offers both praise and criticism of the Welsh character, their military customs, social structures, and religious practices. The work is valuable both as a historical source for medieval Welsh society and as an example of medieval travel writing and ethnography. Gerald's perspective is shaped by his dual heritage as both Welsh and Norman, as well as his ecclesiastical position and education in Paris.
+"""
+
+Notes = """
+The year 1194 is chosen as it represents when Gerald completed and revised this work after his journey through Wales in 1188. While the manuscript was subsequently revised and the text we have may reflect later editions, 1194 marks the essential completion of the Description of Wales as a companion to his Itinerary through Wales. Gerald of Wales (c. 1146-1223) was a prolific writer and churchman whose works are important primary sources for 12th-century British history. The work is addressed to Stephen Langton, Archbishop of Canterbury (though Langton didn't become archbishop until 1207, suggesting this preface was added in a later revision).
+"""
+</result>

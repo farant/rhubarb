@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "Legends of the Madonna, as Represented in the Fine Arts"
+Author = "Anna Jameson"
+Year = 1852
+
+Tags = ["non-fiction", "art-history", "religious-studies", "catholic"]
+
+Summary = """
+This is a scholarly work by Anna Jameson (Mrs. Jameson) examining the artistic representations of the Virgin Mary throughout Christian art history. The book explores the origins of Marian devotion, iconography, and how various legends and traditions about the Madonna have been depicted in painting, sculpture, and other fine arts across centuries. Jameson was a pioneering art historian who wrote extensively on sacred and legendary art, making complex religious iconography accessible to Victorian audiences. This work is part of her larger series on Sacred and Legendary Art and remains an important reference for understanding Christian artistic traditions and Marian imagery.
+"""
+
+Notes = """
+The year 1852 reflects the original publication date of "Legends of the Madonna." This Project Gutenberg text is based on an 1881 American edition published by Houghton, Mifflin and Company, which was described as a "corrected and enlarged edition." Anna Jameson died in 1860 (as noted in the publisher's note), and this work was part of her influential series on sacred art. Tagged as 'catholic' because while Jameson was Anglo-Irish and Anglican, the subject matter deals extensively with Catholic Marian tradition and iconography, and the work would have been considered sympathetic and scholarly treatment of Catholic artistic traditions.
+"""
+</result>

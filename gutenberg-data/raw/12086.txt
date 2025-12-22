@@ -1,0 +1,15 @@
+<result>
+Title = "Eastern Shame Girl"
+Author = "George Soulié de Morant"
+Year = 1929
+
+Tags = ["fiction", "non-fiction", "adult-content"]
+
+Summary = """
+Eastern Shame Girl is a collection of Chinese tales translated from French by George Soulié de Morant, a French diplomat and sinologist who lived in China in the early 20th century. The work contains traditional Chinese stories, some dealing with romantic and erotic themes. The collection includes tales such as "The Wedding of Ya-Nei," "A Strange Destiny," and "The Error of the Embroidered Slipper." The book was later republished as "Chinese Love Tales" in 1935 and was subjected to legal challenge due to its content, though it was ultimately acquitted with courts recognizing its literary merit. Soulié de Morant was known for his work translating and popularizing Chinese literature and culture in the West, and is also famous for introducing acupuncture to France.
+"""
+
+Notes = """
+I chose 1929 as the year because this is the date shown on the title page of this particular edition ("Privately Printed 1929"). While Soulié de Morant's translations were based on traditional Chinese tales (some dating back centuries), this represents a modern French translation and compilation rather than an ancient original work. The 1929 date reflects when this specific Western presentation of these tales was published. The transcriber's note mentions a 1935 publication under a different title, but the primary edition date appears to be 1929. Not tagged as appropriate-for-children due to the adult themes indicated by the legal challenges and "Privately Printed" nature of the publication.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Beast in the Jungle"
+Author = "Henry James"
+Year = 1903
+
+Tags = ["fiction", "literary-fiction", "psychological"]
+
+Summary = """
+"The Beast in the Jungle" is a novella by Henry James, one of his most celebrated works of psychological fiction. It tells the story of John Marcher, a man who lives his entire life convinced that he is destined for some extraordinary fate—a catastrophic event he imagines as a beast lurking in the jungle, waiting to pounce. He confides this premonition to May Bartram, a woman who becomes his lifelong companion, and she patiently watches and waits with him for this predicted doom. The story is a profound meditation on wasted life, missed opportunities, and the tragedy of self-absorption. James explores themes of consciousness, unfulfilled potential, and the irony of a man so focused on his own destiny that he fails to recognize the love and life happening around him. It is considered one of James's masterworks of his late period, showcasing his psychological depth and complex narrative style.
+"""
+
+Notes = """
+"The Beast in the Jungle" was first published in 1903 in the collection "The Better Sort." While this Project Gutenberg text is transcribed from a 1915 Martin Secker edition, the work itself dates to 1903, which is the historically significant year for this text. Henry James was not a Catholic author; he was raised in a liberal Protestant household and later became interested in various philosophical and religious ideas but never formally affiliated with Catholicism.
+"""
+</result>

@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "Gems of Poetry, for Girls and Boys" published in 1850. This appears to be a children's poetry collection from the mid-19th century American publishing market (note the Cincinnati illustration, suggesting it was published there).
+
+<result>
+Title = "Gems of Poetry, for Girls and Boys"
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+This is a mid-19th century anthology of poetry specifically compiled for young readers. Published in 1850, it represents the Victorian-era tradition of morally instructive and aesthetically pleasing literature for children. The collection includes poems about nature, seasons, and simple pleasures meant to educate and delight young minds. The Cincinnati publication suggests this was part of the growing American publishing market for children's literature in the antebellum period. Such collections were common in this era, combining entertainment with moral and educational purposes, teaching children about the natural world, virtue, and appreciation for beauty through verse.
+"""
+
+Notes = """
+The year 1850 is clearly stated on the title page. The author is listed as "Various" as this is an anthology collection rather than the work of a single poet. Cincinnati was a major publishing center in the American West during this period, and the inclusion of local illustrations (View of Cincinnati, Cotton Plant) suggests regional pride and educational intent.
+"""
+</result>

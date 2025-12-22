@@ -1,0 +1,15 @@
+<result>
+Title = "Further Foolishness: Sketches and Satires on The Follies of The Day"
+Author = "Stephen Leacock"
+Year = 1916
+
+Tags = ["non-fiction", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+"Further Foolishness" is a collection of humorous sketches and satirical pieces by Canadian humorist Stephen Leacock, one of the most popular English-language humorists of the early 20th century. The book satirizes contemporary literary trends, social conventions, and cultural follies of the 1910s. It includes sections like "Stories Shorter Still" (parodying the trend toward ever-shorter short stories) and "The Snoopopaths; or Fifty Stories in One" (satirizing detective fiction). Leacock was known for his gentle, absurdist humor and his ability to mock pretension and affectation in literature and society while remaining accessible and good-natured. This collection represents his characteristic style of light social commentary through parody and exaggeration.
+"""
+
+Notes = """
+The year 1916 is clearly stated in the preface dated November 1, 1916, from McGill University in Montreal where Leacock was a professor of political economy. This represents the original publication date of the work.
+"""
+</result>

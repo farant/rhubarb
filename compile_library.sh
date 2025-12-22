@@ -54,6 +54,7 @@ declare -a SOURCE_FILES=(
     "lib/iter_directoria.c"
     "lib/exemplar.c"
     "lib/toml.c"
+    "lib/paginarium.c"
 )
 
 # Color codes

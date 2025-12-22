@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly "The Uprising of a Great People: The United States in 1861" by Count Agénor de Gasparin, translated by Mary L. Booth. The work was originally published in French and deals with the American Civil War from a French Protestant perspective. Gasparin was a strong supporter of the Union cause and an opponent of slavery.
+
+<result>
+Title = "The Uprising of a Great People: The United States in 1861"
+Author = "Count Agénor de Gasparin"
+Year = 1861
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A contemporary analysis of the American Civil War written by French Protestant statesman Count Agénor de Gasparin in 1861, at the very outbreak of the conflict. The work is a passionate defense of the Union cause and an argument against slavery from a European perspective. Gasparin, who was deeply religious and liberal in his politics, sought to explain the significance of the American conflict to European audiences and to counter pro-Confederate sentiment in Europe. The work was influential in shaping European opinion about the Civil War. This edition, translated by Mary L. Booth and revised in 1862, includes additional material on the Trent Affair. The book proved remarkably prophetic in its analysis of the war's trajectory and the inevitability of emancipation as a war aim.
+"""
+
+Notes = """
+The original French edition was published in 1861. This is the revised American edition from 1862, but I've chosen 1861 as the year since that represents when the work was originally written and published, and when its historical analysis was most contemporaneous with the events it describes. The work is not tagged as 'catholic' because Gasparin was a prominent French Protestant (Huguenot), though he shared many moral positions with Catholics on slavery. Not tagged as 'appropriate-for-children' as it's a sophisticated political and historical analysis.
+"""
+</result>

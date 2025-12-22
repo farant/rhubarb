@@ -1,0 +1,15 @@
+<result>
+Title = "Queen Victoria"
+Author = "Lytton Strachey"
+Year = 1921
+
+Tags = ["non-fiction", "biography", "appropriate-for-children"]
+
+Summary = """
+'Queen Victoria' is a landmark biographical work by Lytton Strachey, one of the most influential members of the Bloomsbury Group. Published in 1921, this biography revolutionized the genre of biographical writing in English literature. Strachey departed from the Victorian tradition of hagiographic, exhaustive multi-volume biographies and instead crafted a concise, psychologically penetrating, and subtly ironic portrait of the British monarch who ruled from 1837 to 1901. The book traces Victoria's life from her isolated childhood through her close relationship with Lord Melbourne, her marriage to Prince Albert, her long widowhood, and her relationship with Prime Ministers Gladstone and Disraeli (Lord Beaconsfield), to her final years as the matriarch of an empire. Strachey's witty and irreverent approach humanized the queen and made her flaws and virtues equally visible, establishing a new standard for modern biography.
+"""
+
+Notes = """
+The year 1921 represents the original publication date by Harcourt, Brace and Company in New York. This is the appropriate date since this is an original 20th century work of non-fiction biography, not a reprinting or translation of an earlier text. Strachey's 'Queen Victoria' was groundbreaking in its time and remains one of the most important biographies of the Victorian era.
+"""
+</result>

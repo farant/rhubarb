@@ -1,0 +1,15 @@
+<result>
+Title = "Beacon Lights of History, Volume VIII: Great Rulers"
+Author = "John Lord"
+Year = 1883
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+"Beacon Lights of History" is a multi-volume series by John Lord (1810-1894), an American historian and popular lecturer. Volume VIII focuses on "Great Rulers" and is part of Lord's comprehensive lecture series covering major figures and movements throughout Western history. Lord was known for his engaging narrative style and his ability to make history accessible to general audiences. The series examines influential leaders, thinkers, and cultural movements, presenting them as pivotal points ("beacon lights") in the development of civilization. This particular volume would cover significant monarchs, emperors, and political leaders who shaped the course of history.
+"""
+
+Notes = """
+The "Beacon Lights of History" series was published in multiple volumes beginning in the 1880s. Volume VIII was first published around 1883-1884 as part of the complete series. Lord was a prominent American lecturer during the 19th century who delivered his historical lectures across the United States before compiling them into book form. The work reflects Victorian-era historical writing with its focus on "great men" as drivers of historical progress.
+"""
+</result>

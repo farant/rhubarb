@@ -1,0 +1,15 @@
+<result>
+Title = "Life, Letters and Epicurean Philosophy of Ninon de L'Enclos"
+Author = "Robinson-Overton"
+Year = 1903
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+This is a biography of Ninon de l'Enclos (1620-1705), one of the most celebrated courtesans and intellectuals of 17th-century France. Ninon was renowned for her beauty, wit, and unconventional lifestyle, maintaining a salon that attracted leading philosophers, writers, and nobles of her time. She was known for her Epicurean philosophy, rejection of conventional morality, and advocacy for women's intellectual and sexual freedom. The work includes biographical material, correspondence, and philosophical reflections that made her a controversial but influential figure in French cultural history.
+"""
+
+Notes = """
+The year 1903 is chosen as this represents the publication date of this particular biographical compilation by Robinson-Overton. While the subject lived from 1620-1705, this is a modern biographical work about her rather than her own writings. The work documents the life of a 17th-century figure from an early 20th-century perspective.
+"""
+</result>

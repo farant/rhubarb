@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be a German-language novel titled "Grevinde" (which means "Countess" in Danish) by Hermann Heiberg. The text shows the opening of what seems to be a romance or social novel set in Denmark (given the Danish phrases mixed with German text and the Danish place name "Schloß Rankholm").
+
+Hermann Heiberg (1840-1910) was a Danish author who wrote in both Danish and German. "Grevinde" (sometimes titled "Die Gräfin" in German) was one of his novels. Based on his active writing period and the style of the work, this would likely have been published in the late 19th century, probably around the 1870s-1880s.
+
+<result>
+Title = "Grevinde (Die Gräfin)"
+Author = "Hermann Heiberg"
+Year = 1875
+
+Tags = ["fiction", "romance", "novel"]
+
+Summary = """
+'Grevinde' (The Countess) is a novel by Danish author Hermann Heiberg, written in German. The story begins with Graf (Count) Axel Dehn arriving by post coach at the estate of Schloß Rankholm in Denmark. The novel appears to be a social romance typical of 19th-century Scandinavian literature, exploring themes of aristocratic life and relationships. Heiberg was known for his novels depicting Danish society and wrote in both Danish and German, making him accessible to broader Scandinavian and German-speaking audiences.
+"""
+
+Notes = """
+Hermann Heiberg (1840-1910) was a Danish novelist and playwright. The exact publication year of 'Grevinde' is difficult to pinpoint with certainty, but based on Heiberg's most productive period and the style of the work, circa 1875 is a reasonable estimate. The novel is written in German but set in Denmark and includes Danish dialogue, reflecting the cultural overlap in 19th-century Scandinavia.
+"""
+</result>

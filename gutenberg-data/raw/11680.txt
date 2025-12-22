@@ -1,0 +1,17 @@
+Based on the text excerpt you provided, I can identify this work. This is a critical biography/literary study of George Eliot written by George Willis Cooke, first published in 1883 (with this being the second edition from 1884, as noted in the preface).
+
+<result>
+Title = "George Eliot: A Critical Study of Her Life, Writings and Philosophy"
+Author = "George Willis Cooke"
+Year = 1883
+
+Tags = ["non-fiction", "literary-criticism", "biography"]
+
+Summary = """
+A comprehensive critical study and biography of the famous Victorian novelist George Eliot (pen name of Mary Ann Evans) by George Willis Cooke. This work examines Eliot's life, her major novels and writings, and the philosophical underpinnings of her work. Cooke, who also wrote a similar critical biography of Ralph Waldo Emerson, provides detailed analysis of Eliot's development as a writer and thinker. The work you're reading is the second edition from 1884, which includes a preface correcting an attribution error from the first edition regarding an essay on "The Lady Novelists" that was actually written by George Henry Lewes, Eliot's companion.
+"""
+
+Notes = """
+I chose 1883 as the year because this represents the first edition publication date. While the text provided is from the 1884 second edition (as indicated in the preface), the work itself was first published in 1883, which is the most historically significant date for this literary study. This is a scholarly work of literary criticism and biography, not a primary work of literature itself.
+"""
+</result>

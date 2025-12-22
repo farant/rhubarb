@@ -1,0 +1,15 @@
+<result>
+Title = "Public Lands and Agrarian Laws of the Roman Republic"
+Author = "Andrew Stephenson"
+Year = 1891
+
+Tags = ["non-fiction", "history", "academic"]
+
+Summary = """
+This is an academic monograph published as part of the Johns Hopkins University Studies in Historical and Political Science series. The work examines the complex history of public land distribution and agrarian legislation in ancient Rome, including the struggles between patricians and plebeians over land reform, the ager publicus (public land), and the various agrarian laws that were passed throughout the Republic's history. It represents late 19th-century American scholarship on Roman history and would have been used primarily in university settings.
+"""
+
+Notes = """
+The exact year is 1891. This work was published as part of the Johns Hopkins University Studies series (Ninth Series, volumes VII-VIII). While the Gutenberg release date is 2004, the original publication was in the 1890s. The series editor Herbert B. Adams included the Freeman quote "History is past Politics and Politics present History" which was characteristic of this influential historical studies series that helped establish American academic historiography.
+"""
+</result>

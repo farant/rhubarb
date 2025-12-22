@@ -1,0 +1,15 @@
+<result>
+Title = "O. Henry Memorial Award Prize Stories of 1919"
+Author = "Various (edited by Blanche Colton Williams)"
+Year = 1919
+
+Tags = ["fiction", "anthology", "short-stories"]
+
+Summary = """
+This is an anthology of prize-winning short stories from 1919, selected by the Society of Arts and Sciences as part of the O. Henry Memorial Award series. The O. Henry Awards were established in 1919 to honor the legacy of short story writer William Sydney Porter (O. Henry) and recognize excellence in the American short story form. This collection includes works by prominent early 20th-century American writers including Wilbur Daniel Steele, Fannie Hurst, James Branch Cabell, and others. The stories represent the best of American short fiction from that period, chosen for their literary merit and craftsmanship.
+"""
+
+Notes = """
+I chose 1919 as the year because this is specifically the "Prize Stories of 1919" collection, though the book itself may have been published in 1920 or later (your file shows 1924, which may be a reprint edition). The 1919 date reflects when these stories were originally selected and represents the most historically accurate marker for this anthology in a timeline of literary works. The O. Henry Awards began in 1919, making this one of the very first collections in what would become a prestigious annual tradition in American letters.
+"""
+</result>

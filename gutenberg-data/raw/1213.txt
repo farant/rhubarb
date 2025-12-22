@@ -1,0 +1,17 @@
+I recognize this work! This is one of Mark Twain's most famous short stories.
+
+<result>
+Title = "The Man That Corrupted Hadleyburg"
+Author = "Mark Twain"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Man That Corrupted Hadleyburg" is a satirical short story by Mark Twain about a small American town known for its exceptional honesty and moral rectitude. When a mysterious stranger passes through and is offended by the town's self-righteous pride, he devises an elaborate revenge scheme to expose the hypocrisy lurking beneath Hadleyburg's veneer of incorruptibility. Through a clever plot involving a sack of gold and manufactured evidence, the stranger tests the honesty of the town's leading citizens, revealing that their vaunted virtue was more a product of never having been truly tempted than of genuine moral strength. The story is a classic Twain commentary on human nature, pride, and the corrupting influence of greed.
+"""
+
+Notes = """
+This story was first published in Harper's Monthly Magazine in December 1899. It's one of Twain's later works and represents his increasingly cynical view of human nature and American society. The work is considered appropriate for older children and young adults, though it deals with sophisticated themes of moral corruption and hypocrisy.
+"""
+</result>

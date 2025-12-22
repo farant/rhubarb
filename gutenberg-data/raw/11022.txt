@@ -1,0 +1,19 @@
+I recognize this as "Sowing and Reaping" by Frances Ellen Watkins Harper. This was a serialized temperance novel that was originally published in the Christian Recorder newspaper in 1876-1877, and was later rediscovered and published in book form by Frances Smith Foster.
+
+Frances E.W. Harper was an African American author, abolitionist, and activist who was also a devout Christian. While she was active in various reform movements including temperance, I should note that she was African Methodist Episcopal rather than Roman Catholic, so this work would not qualify for the "catholic" tag by your criteria (even though it's clearly a moral/Christian work).
+
+<result>
+Title = "Sowing and Reaping: A Temperance Story"
+Author = "Frances Ellen Watkins Harper"
+Year = 1876
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+'Sowing and Reaping' is a temperance novel by Frances Ellen Watkins Harper, originally serialized in the Christian Recorder newspaper from 1876-1877. The story explores the destructive effects of alcohol on families and communities through the intertwined lives of several characters. It follows the moral struggles of people involved in the liquor trade and those affected by it, emphasizing themes of personal responsibility, redemption, and the power of moral conviction. Harper uses the narrative to advocate for temperance reform while also addressing issues of marriage, women's moral authority within the home, and social responsibility. The novel was lost for over a century before being rediscovered and published in book form by scholar Frances Smith Foster.
+"""
+
+Notes = """
+Harper was a prominent African American writer, lecturer, and activist in the 19th century. Though this is a work of fiction, it served a didactic purpose as part of the temperance movement. The work was serialized starting in 1876, which I've used as the primary date. Harper was AME Christian, not Catholic, so this does not receive a 'catholic' tag despite its strong Christian moral framework.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as "The Reflections of Ambrosine" by Elinor Glyn. This was her second novel, published in 1902, following her successful "The Visits of Elizabeth" (1900). Elinor Glyn was a British novelist who became famous (and somewhat notorious) for her romantic fiction that pushed the boundaries of Edwardian propriety. This novel is a romantic tale told through the perspective of Ambrosine, a young woman of aristocratic but impoverished background, dealing with themes of class, love, and social expectations.
+
+<result>
+Title = "The Reflections of Ambrosine"
+Author = "Elinor Glyn"
+Year = 1902
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+'The Reflections of Ambrosine' is Elinor Glyn's second novel, a romantic tale narrated by the titular character Ambrosine, a young woman of aristocratic lineage ('blue blood') who has fallen on hard times after her father's failed speculation in South America. The novel explores themes of class consciousness, poverty among the aristocracy, love, and the tensions between maintaining dignity and facing financial hardship. Written in Glyn's characteristic style that blended romantic sentiment with social observation, it reflects the Edwardian era's fascination with both aristocratic life and the changing social landscape. Glyn would later become famous for coining the concept of 'It' (sex appeal) and writing more daring romantic fiction.
+"""
+
+Notes = """
+Published in 1902, this was Glyn's follow-up to her successful debut 'The Visits of Elizabeth' (1900). The note at the beginning about unauthorized books appearing under similar titles reflects a common problem of the era with unauthorized sequels or imitations.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Mobilizing Woman-Power"
+Author = "Harriot Stanton Blatch"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"Mobilizing Woman-Power" is a historical account written during World War I examining women's contributions to the war effort across different nations. The book analyzes how women were mobilized for wartime service in Great Britain, France, Germany, and America, covering topics such as women's industrial work, economic contributions, and organizational efforts during the Great War. Written by prominent suffragist Harriot Stanton Blatch (daughter of Elizabeth Cady Stanton), the work documents the unprecedented entry of women into the workforce and public life during wartime, with implications for post-war women's rights and suffrage movements. The book includes a foreword by Theodore Roosevelt and is dedicated to the women of Great Britain and France who supported the Allied war effort.
+"""
+
+Notes = """
+Year chosen is 1918, the publication date clearly stated on the title page. This was during the final year of World War I, when the book was published as a contemporary account of ongoing events rather than a historical retrospective. The book was written as wartime advocacy and documentation, making the original publication year the most historically significant.
+"""
+</result>

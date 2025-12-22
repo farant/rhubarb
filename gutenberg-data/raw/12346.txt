@@ -1,0 +1,17 @@
+I'll analyze the text you provided. This is F. Marion Crawford's "A Roman Singer," a novel published in 1884. Let me construct the TOML format with the appropriate metadata:
+
+<result>
+Title = "A Roman Singer"
+Author = "F. Marion Crawford"
+Year = 1884
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Roman Singer is a novel by American author F. Marion Crawford, first published in 1884. The story is narrated by Cornelio Grandi, a former landowner turned philosophy professor who has fallen on hard times and had to sell his estate. He tells the story of Nino, a young man he raised from childhood after Nino's mother (a peasant woman with an extraordinary singing voice) died. Despite Cornelio's efforts to make Nino a philosopher by teaching him Latin, Nino's exceptional vocal talent leads him toward becoming a professional singer. The novel is set in Rome and explores themes of social class, artistic talent, and the relationship between the pragmatic narrator and his ward. Crawford was known for his novels set in Italy and featuring Italian characters, and this work is typical of his romantic and melodramatic style.
+"""
+
+Notes = """
+The text indicates this is from a 1909 edition (based on the header), but the novel was originally published in 1884. I chose 1884 as the year because that represents the original publication date and historical significance of the work. F. Marion Crawford (1854-1909) was an American writer who spent much of his life in Italy and wrote prolifically about Italian life and society. This was one of his earlier and more successful novels.
+"""
+</result>

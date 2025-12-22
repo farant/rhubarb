@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement, No. 598, June 18, 1887"
+Author = "Various"
+Year = 1887
+
+Tags = ["non-fiction", "periodical", "science", "technology", "appropriate-for-children"]
+
+Summary = """
+This is a single issue of the Scientific American Supplement, a weekly periodical that provided extended coverage of scientific and technological developments beyond what appeared in the main Scientific American magazine. The Scientific American brand, established in 1845, was one of the most important popular science publications in America during the 19th and 20th centuries. These supplements typically contained detailed technical articles, illustrations, and reports on recent inventions, industrial processes, engineering projects, and scientific discoveries of the era. They served both professional and amateur audiences interested in the progress of science and technology during the Industrial Age.
+"""
+
+Notes = """
+The year 1887 is straightforward here as this is a periodical issue dated June 18, 1887. Scientific American Supplement was published as a companion to the main Scientific American magazine, providing more in-depth technical content. The 'Various' authorship is typical for periodicals with multiple contributing writers and editors.
+"""
+</result>

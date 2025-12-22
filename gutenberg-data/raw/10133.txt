@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Looking at the text, this is clearly "The Vigil of Venus and Other Poems" by "Q" (the pen name of Sir Arthur Quiller-Couch), published in 1912. The book includes his translation/adaptation of the "Pervigilium Veneris" (an ancient Latin poem) along with other original poems and a drama.
+
+The "Pervigilium Veneris" itself is an anonymous late Roman poem (likely 2nd-4th century CE), but this 1912 publication is Q's literary work featuring his English version alongside other original compositions. Since this is presented as Q's collection rather than simply a translation, 1912 is the appropriate year.
+
+<result>
+Title = "The Vigil of Venus and Other Poems"
+Author = "Q (Arthur Quiller-Couch)"
+Year = 1912
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+This collection by Sir Arthur Quiller-Couch (writing as "Q") features his English rendition of the Pervigilium Veneris (The Vigil of Venus), a celebrated late Roman Latin poem of unknown authorship celebrating the festival of Venus. The original Pervigilium Veneris, likely composed between the 2nd-4th century CE, is a lyrical celebration of spring, love, and renewal with the famous refrain about singing and loving. Q's 1912 volume also includes his original works: a one-act drama titled "The Regent" and various poems including Exmoor Verses and folk songs. Quiller-Couch was a prominent English writer, literary critic, and professor at Cambridge University, known for his literary taste and editorial work on the Oxford Book of English Verse.
+"""
+
+Notes = """
+While the Pervigilium Veneris dates to late antiquity (2nd-4th century CE), the year 1912 reflects this specific publication as Q's literary work. This is appropriate since the volume is presented as a collection "by Q" rather than merely a translation, and includes substantial original material alongside the Vigil of Venus adaptation.
+"""
+</result>

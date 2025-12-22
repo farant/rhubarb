@@ -1,0 +1,15 @@
+<result>
+Title = "Stories by American Authors V"
+Author = "Henry James, F.D. Millet, Park Benjamin, George Arnold, E.P. Mitchell"
+Year = 1884
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the fifth volume in the "Stories by American Authors" series, a collection published in 1884 featuring short stories by several prominent American writers of the late 19th century. The volume includes "A Light Man" by Henry James, along with works by F.D. Millet ("Yatil"), Park Benjamin ("The End of New York"), George Arnold ("Why Thomas Was Discharged"), and E.P. Mitchell ("The Tachypomp"). These collections were designed to showcase American literary talent during a period when American literature was establishing its distinct identity separate from British traditions.
+"""
+
+Notes = """
+The year 1884 is clearly stated as the publication date for this collection. While some of the individual stories may have been published earlier in magazines or journals, 1884 represents when they were compiled into this anthology. Henry James's "A Light Man" was actually written earlier (around 1869), but this collection's publication date is the most relevant for cataloging purposes.
+"""
+</result>

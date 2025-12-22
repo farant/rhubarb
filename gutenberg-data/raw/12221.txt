@@ -1,0 +1,19 @@
+The file appears to be empty or nearly empty. However, based on the text you provided in your message, I can identify this work. This is **"The Beggars' Bush"** (also written as "Beggars Bush"), a Jacobean comedy written by **John Fletcher** and **Francis Beaumont** (though Fletcher is considered the primary author, with possible contributions from Philip Massinger as well).
+
+The play was written around 1615-1622, with most scholars dating it to approximately 1622. It was first published in 1647 in the Beaumont and Fletcher folio.
+
+<result>
+Title = "The Beggars' Bush"
+Author = "John Fletcher and Francis Beaumont"
+Year = 1622
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Beggars' Bush is a Jacobean comedy written primarily by John Fletcher with contributions from Francis Beaumont (and possibly Philip Massinger). The play tells the story of Gerrard, the rightful Earl of Flanders, who has been usurped by Wolfort. Gerrard disguises himself as Clause, the King of the Beggars, while his son-in-law Florez poses as Goswin, a rich merchant of Bruges. The play follows their efforts to reclaim the earldom through elaborate disguises and schemes involving a colorful cast of beggars and courtiers. The "beggars' bush" refers to a meeting place for beggars, and the play is notable for its sympathetic portrayal of beggar life and its exploration of themes of disguise, identity, and rightful authority. It was a popular play in its time and remained in the theatrical repertoire for many years.
+"""
+
+Notes = """
+The play was written circa 1622, though it was not published until 1647 in the first Beaumont and Fletcher folio. The authorship is primarily attributed to Fletcher, with Beaumont having a lesser role (he died in 1616), and some scholars also credit Philip Massinger with portions of the work. I chose 1622 as the date because it represents the approximate date of composition, which is most historically significant for a theatrical work.
+"""
+</result>

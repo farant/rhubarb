@@ -1,0 +1,15 @@
+<result>
+Title = "Moby-Dick; or, The Whale"
+Author = "Herman Melville"
+Year = 1851
+
+Tags = ["fiction", "adventure", "philosophical"]
+
+Summary = """
+Moby-Dick is one of the greatest American novels, narrated by Ishmael, a sailor who joins the whaling ship Pequod under the command of the monomaniacal Captain Ahab. Ahab is obsessed with hunting down Moby Dick, a massive white sperm whale that destroyed his ship and took his leg in a previous encounter. The novel is simultaneously an adventure story, a detailed exploration of the whaling industry, and a profound meditation on obsession, fate, free will, good and evil, and humanity's relationship with nature. Melville weaves together narrative, philosophical digressions, cetology (the study of whales), and epic tragedy to create a work of extraordinary depth and ambition that was not fully appreciated until decades after its publication.
+"""
+
+Notes = """
+The year 1851 is straightforward as it appears clearly on the title page as both the publication year and copyright year. This first edition was published simultaneously in the United States by Harper & Brothers and in London by Richard Bentley. The novel initially received mixed reviews and was not commercially successful during Melville's lifetime, but is now considered one of the central works of American literature and a masterpiece of world literature.
+"""
+</result>

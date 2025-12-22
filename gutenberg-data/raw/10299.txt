@@ -1,0 +1,19 @@
+I need to clarify something important about this text. This is an audio recording from Project Gutenberg, not a traditional written work. The actual work being performed is "Poet and Peasant Overture" by Franz von Suppé, an Austrian composer. Eddie Peabody is performing it on banjo, and this appears to be from an Edison recording.
+
+Let me provide the structured information:
+
+<result>
+Title = "Poet and Peasant Overture"
+Author = "Franz von Suppé"
+Year = 1846
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Poet and Peasant Overture (Dichter und Bauer) is a concert overture composed by Franz von Suppé, an Austrian composer and conductor. It is one of the most popular and frequently performed overtures in the classical repertoire. The piece is characterized by its lyrical opening cello melody contrasted with lively peasant dance themes. This particular Project Gutenberg entry is an audio recording performed by Eddie Peabody on banjo, taken from the Edison National Historic Site, representing early 20th century American popular music culture where classical works were adapted for popular instruments.
+"""
+
+Notes = """
+The composition date is 1846 when von Suppé wrote this overture. This Project Gutenberg entry (from 2003) is actually an audio recording, not a text, featuring a banjo performance by Eddie Peabody, likely from the early-to-mid 20th century Edison recordings. I chose 1846 as the year since that represents when the actual musical work was created, which seems most appropriate for a historical timeline of works. Von Suppé was Catholic (Austrian), though this is primarily a secular musical composition.
+"""
+</result>

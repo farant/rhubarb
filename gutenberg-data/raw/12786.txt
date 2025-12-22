@@ -1,0 +1,15 @@
+<result>
+Title = "The Khasis"
+Author = "P.R.T. Gurdon"
+Year = 1907
+
+Tags = ["non-fiction", "ethnography", "anthropology", "historical-document"]
+
+Summary = """
+This is an ethnographic study of the Khasi people of Assam (northeastern India) by Major P.R.T. Gurdon, who served as Deputy Commissioner and Superintendent of Ethnography in Assam. The work provides a systematic account of Khasi culture, including their manners, customs, ethnological affinities, laws, institutions, religious beliefs, folklore, origin theories, and language. The book was published under the orders of the Government of Eastern Bengal and Assam and includes an introduction by Sir Charles Lyall. The Khasis are a matrilineal tribal people inhabiting the Khasi and Jaintia Hills (now in the state of Meghalaya, India), and this work represents an important early ethnographic record of their society during the British colonial period.
+"""
+
+Notes = """
+The book was published circa 1907 based on internal references to the Government of Eastern Bengal and Assam (which was created in 1905 and existed until 1912) and mentions of Sir Bampfylde Fuller as "lately Lieutenant-Governor" (he served 1905-1906). This is one of the foundational ethnographic works on the Khasi people and remains a valuable historical document for understanding their traditional culture before significant modernization. The work represents colonial-era ethnography with its particular perspectives and methodologies.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1973
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office catalog listing renewal registrations for copyrighted works during a specific period in 1973. It serves as an administrative and legal record of copyright renewals, arranged alphabetically by author or issuing body. Under the copyright law in effect at the time, works required renewal registration after an initial term (typically 28 years) to maintain copyright protection. This particular volume documents renewals for works originally copyrighted in the 1940s, providing valuable historical information about which works had their copyrights renewed and by whom. These catalogs are important historical documents for tracking the copyright status of mid-20th century publications.
+"""
+
+Notes = """
+The year 1973 is chosen because this is when this specific catalog volume was published, as indicated by the renewal dates (Feb73, Apr73) throughout the document. While the works being renewed are from 1945-1946, the document itself is a 1973 publication. The Project Gutenberg ID 11847 corresponds to this catalog volume. This is not a work of literature but rather a government document/reference catalog.
+"""
+</result>

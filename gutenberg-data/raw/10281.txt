@@ -1,0 +1,15 @@
+<result>
+Title = "Antony's Address Over the Body of Caesar"
+Author = "William Shakespeare (performed by Harry E. Humphrey)"
+Year = 1599
+
+Tags = ["historical-document", "drama", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of Mark Antony's famous funeral oration from Shakespeare's tragedy "Julius Caesar" (Act III, Scene II). The speech, beginning with "Friends, Romans, countrymen, lend me your ears," is one of the most celebrated pieces of rhetoric in English literature. In the play, Antony turns the Roman crowd against Caesar's assassins through skillful persuasion. This particular recording was made by Harry E. Humphrey and was edited by Thomas A. Edison, making it a historical artifact of early audio recording technology as well as a performance of classical drama.
+"""
+
+Notes = """
+The year 1599 reflects the approximate date of Shakespeare's composition of "Julius Caesar." While this Project Gutenberg entry is an audio recording from the Edison era (early 1900s), the work itself dates to Shakespeare's original play. The speech depicts the historical event of Julius Caesar's assassination (44 BC) but is Shakespeare's artistic interpretation rather than a historically accurate transcription. Since this is a dramatic performance of Shakespeare rather than the original text, and represents early 20th century recording technology, there's a layered historicity here - but for educational timeline purposes, Shakespeare's authorship date seems most appropriate.
+"""
+</result>

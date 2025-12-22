@@ -1,0 +1,15 @@
+<result>
+Title = "String Quartet No. 5 in A Major, Opus 18, No. 5"
+Author = "Ludwig van Beethoven"
+Year = 1801
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Beethoven's String Quartet No. 5 in A Major, the fifth of his six Opus 18 string quartets. The Opus 18 quartets were Beethoven's first published string quartets, composed in 1799-1800 and published in 1801. They show the influence of Haydn and Mozart while beginning to establish Beethoven's distinctive voice. This quartet is in four movements and demonstrates the classical quartet form while hinting at the innovations Beethoven would later develop. This Project Gutenberg edition is a digital musical score in Finale format rather than a text document.
+"""
+
+Notes = """
+I chose 1801 as the publication year for the Opus 18 quartets. While the composition dates are 1799-1800, the work became publicly available and historically significant upon its 1801 publication. This is not tagged as 'appropriate-for-children' since it's a musical score file rather than readable content. It's also not tagged 'catholic' - while Beethoven composed religious works including the Missa Solemnis, his instrumental chamber music doesn't fall into the category of specifically Catholic literature with nihil obstat/imprimatur status.
+"""
+</result>

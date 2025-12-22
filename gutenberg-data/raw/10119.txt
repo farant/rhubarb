@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and provide the requested information.
+
+This is clearly Shelley's elegy "Adonais," written for John Keats, presented in an 1891 edition edited by William Michael Rossetti. The poem itself was originally composed and published by Percy Bysshe Shelley in 1821.
+
+<result>
+Title = "Adonais: An Elegy on the Death of John Keats"
+Author = "Percy Bysshe Shelley"
+Year = 1821
+
+Tags = ["non-fiction", "poetry", "elegy", "literary-criticism"]
+
+Summary = """
+Adonais is Percy Bysshe Shelley's pastoral elegy mourning the death of fellow poet John Keats, who died in Rome in 1821 at age 25. The poem, composed in Spenserian stanzas, follows the classical tradition of pastoral elegies like those of Bion and Moschus. Shelley blamed Keats's death partly on the harsh critical reception of his work, particularly savage reviews in contemporary journals. The elegy transforms personal grief into a meditation on mortality, art, and immortality, ultimately concluding that Keats lives on through his poetry and has become one with the eternal beauty of nature. This edition includes Rossetti's scholarly apparatus with biographical memoirs of both poets, textual analysis, and detailed notes. It is considered one of the greatest elegies in English literature.
+"""
+
+Notes = """
+I chose 1821 as the year because that is when Shelley composed and first published Adonais (in Pisa, Italy). While this Project Gutenberg text is based on the 1891 Clarendon Press edition edited by William Michael Rossetti, the work itself dates to 1821. The 1891 edition is significant for its scholarly commentary but the primary work is Shelley's original elegy. Keats died in February 1821, and Shelley composed Adonais between April and June of that same year.
+"""
+</result>

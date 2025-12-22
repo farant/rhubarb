@@ -1,0 +1,15 @@
+<result>
+Title = "John Marr and Other Poems"
+Author = "Herman Melville"
+Year = 1888
+
+Tags = ["fiction", "poetry", "nautical"]
+
+Summary = """
+"John Marr and Other Poems" is a collection of maritime poetry by Herman Melville, best known for his novel "Moby-Dick". Published late in his life, this volume showcases Melville's deep connection to the sea and seafaring life. The collection is divided into sections: "John Marr and Other Sailors" (featuring character portraits of sailors), "Sea Pieces" (maritime-themed poems), and selections from "Timoleon" (more philosophical and contemplative works). The title poem, "John Marr," depicts a former sailor living inland who nostalgically recalls his life at sea and lost companions. These poems reflect Melville's mature poetic voice, combining his intimate knowledge of maritime life with philosophical meditation on memory, loss, and the passage of time. The work was privately printed in a very small edition during Melville's lifetime when he had largely faded from public attention.
+"""
+
+Notes = """
+First published in 1888 as a private edition of only 25 copies. This is one of Melville's later works, published during a period when he had largely withdrawn from public literary life and was working as a customs inspector. The 1922 edition referenced in this text includes an introductory note by Henry Chapin, representing renewed interest in Melville's work after his death in 1891.
+"""
+</result>

@@ -1,0 +1,21 @@
+Let me read through this text to identify the work and provide the information you requested.
+
+This is clearly **Clarissa** (full title: *Clarissa, or, The History of a Young Lady*) by **Samuel Richardson**. This is one of the longest novels in the English language and a landmark work of 18th-century epistolary fiction.
+
+The novel was first published in 1748, though it was published in installments (volumes 1-2 in December 1747, volumes 3-4 in April 1748, and volumes 5-7 in December 1748). The standard date cited is 1748 for the complete work.
+
+<result>
+Title = "Clarissa, or, The History of a Young Lady"
+Author = "Samuel Richardson"
+Year = 1748
+
+Tags = ["fiction", "epistolary-novel"]
+
+Summary = """
+Clarissa is a landmark 18th-century epistolary novel by Samuel Richardson, told entirely through letters. It chronicles the tragic story of Clarissa Harlowe, a virtuous young woman who is forced by her family to marry a wealthy man she despises. She seeks help from Robert Lovelace, a rake who appears to offer rescue but ultimately betrays her. The novel explores themes of virtue, family duty, individual autonomy, and the position of women in society. At nearly one million words, it is one of the longest novels in the English language and was hugely influential on the development of the novel form. This volume (VIII of nine) shows Clarissa in her final decline, dealing with her family's continued rejection and making arrangements for her death.
+"""
+
+Notes = """
+The novel was published in three installments between December 1747 and December 1748. The year 1748 is the standard publication date cited for the complete work. This is not appropriate for children due to mature themes including abduction and sexual assault. While Richardson was writing during a Christian cultural context and the novel contains religious themes and a virtuous protagonist, Richardson was Anglican/Protestant, not Catholic, so this does not receive a 'catholic' tag.
+"""
+</result>

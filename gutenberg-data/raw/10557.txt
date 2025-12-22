@@ -1,0 +1,15 @@
+<result>
+Title = "Johnny Crow's Party"
+Author = "L. Leslie Brooke"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Johnny Crow's Party" is a children's picture book by L. Leslie Brooke, a sequel to his popular "Johnny Crow's Garden" (1903). The book features whimsical illustrations and verse about Johnny Crow hosting a party for various animals in his garden. Brooke was known for his distinctive illustrated children's books in the Edwardian era, combining gentle humor with detailed, charming artwork. The book follows the tradition of English children's literature from the early 20th century, with its light-hearted animal characters and rhyming text that would appeal to young readers.
+"""
+
+Notes = """
+The first edition was published in 1907, as clearly stated in the book's frontmatter. This is a straightforward case with no ambiguity about the publication date.
+"""
+</result>

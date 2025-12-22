@@ -1,0 +1,15 @@
+<result>
+Title = "La Cour de Louis XIV"
+Author = "Imbert de Saint-Amand"
+Year = 1875
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"La Cour de Louis XIV" (The Court of Louis XIV) is a historical work by French historian Arthur-Léon Imbert de Saint-Amand (1834-1900), examining the court life and political intrigue during the reign of Louis XIV, the Sun King of France. The book is part of Saint-Amand's larger series of works on French court history, which he wrote in a narrative, accessible style that made historical subjects engaging for general readers. The work focuses on the personalities, relationships, and daily life at Versailles during one of France's most culturally significant periods. Saint-Amand was known for his detailed research and ability to bring historical figures to life through carefully documented anecdotes and character sketches.
+"""
+
+Notes = """
+The year 1875 is approximate - Imbert de Saint-Amand published numerous works on French court history throughout the 1870s-1890s. This particular volume on Louis XIV's court was likely published in the mid-to-late 1870s as part of his popular series on French royal courts. The exact publication date isn't evident from this Project Gutenberg text, but 1875 represents the period when he was most actively writing about the Ancien Régime.
+"""
+</result>

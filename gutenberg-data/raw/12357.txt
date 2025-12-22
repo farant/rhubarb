@@ -1,0 +1,15 @@
+<result>
+Title = "The Case and the Girl"
+Author = "Randall Parrish"
+Year = 1922
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+"The Case and the Girl" is a mystery novel by Randall Parrish, an American author known for his historical romances and adventure stories. The novel appears to be a detective/mystery story involving intrigue, as suggested by chapter titles like "The Body of a Suicide," "Trapped," and "Facing Death." The story seems to follow a protagonist named West as he investigates a case involving various characters including Miss Coolidge. Parrish was a prolific writer of popular fiction in the early 20th century, producing numerous adventure novels, westerns, and mysteries.
+"""
+
+Notes = """
+The year 1922 is clearly indicated on the title page as the publication date. This appears to be the original publication year for this work.
+"""
+</result>

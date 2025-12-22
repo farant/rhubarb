@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly a forestry textbook written by Charles Lathrop Pack, published in 1922. The text indicates this is an educational work about forestry and conservation, written during the early American conservation movement period.
+
+<result>
+Title = "The School Book of Forestry"
+Author = "Charles Lathrop Pack"
+Year = 1922
+
+Tags = ["non-fiction", "appropriate-for-children", "educational", "conservation", "forestry"]
+
+Summary = """
+An educational textbook on forestry written by Charles Lathrop Pack, President of the American Tree Association, during the height of the early American conservation movement. The book was designed to teach students about forest conservation, the importance of trees, and proper forestry practices. Pack acknowledges assistance from prominent foresters of the era including Gifford Pinchot and Henry S. Graves. The work reflects the Progressive Era emphasis on conservation education and civic responsibility regarding natural resources.
+"""
+
+Notes = """
+The year 1922 is clearly stated on the title page. This was published during a significant period in American conservation history, following the establishment of the U.S. Forest Service and during active efforts to educate the public about forest preservation. The book's subtitle emphasizes civic duty in forest conservation, characteristic of the Progressive Era's approach to environmental stewardship.
+"""
+</result>

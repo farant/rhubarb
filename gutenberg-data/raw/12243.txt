@@ -1,0 +1,15 @@
+<result>
+Title = "Round the Block"
+Author = "John Bell Bouton"
+Year = 1864
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Round the Block" is an American novel by John Bell Bouton published in 1864. The novel follows the interconnected lives of residents living around a city block in mid-19th century America. It's a character-driven narrative that explores urban life during the Civil War era, examining the relationships, daily activities, and social dynamics of various neighbors. The work is an example of American domestic fiction of the period, offering a window into urban American society during a tumultuous time in the nation's history. Bouton was a journalist and author who wrote during the mid-1800s, and this novel represents his contribution to American literature of that era.
+"""
+
+Notes = """
+The year 1864 is clearly stated on the title page as the publication date. This was during the American Civil War period (1861-1865), which provides important historical context for understanding the setting and themes of the work.
+"""
+</result>

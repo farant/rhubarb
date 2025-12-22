@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Studies in Literature" by John Morley, a collection of literary essays and criticism. The title page indicates it was published in 1907, and the note mentions the contents were previously published (with a date of October 1890 for that note). Based on the publication history, this appears to be a later edition of essays that were collected around 1890-1891, with this particular edition from 1907.
+
+John Morley (1838-1923) was a British Liberal statesman, writer, and newspaper editor, known for his biographical and critical works. While he was a Victorian-era writer, he was not Catholic - he was actually known for his agnostic and rationalist views.
+
+<result>
+Title = "Studies in Literature"
+Author = "John Morley"
+Year = 1891
+
+Tags = ["non-fiction", "literary-criticism", "essays"]
+
+Summary = """
+'Studies in Literature' is a collection of literary essays by John Morley, Victorian statesman and man of letters. The volume contains critical essays on major literary figures and topics including Wordsworth, Victor Hugo, Browning's 'The Ring and the Book', and general reflections on the study of literature and aphorisms. These essays originally appeared in prominent Victorian periodicals like the Nineteenth Century and Fortnightly Review. Morley was known for his clear, thoughtful prose and his ability to place literature in its broader intellectual and moral context. The collection represents Victorian literary criticism at its height, combining scholarly insight with accessible prose.
+"""
+
+Notes = """
+The text shows a 1907 publication date on the title page, but this appears to be a later edition. The original collection was first published around 1890-1891 (the note is dated October 1890). I've chosen 1891 as the year since this represents the first book publication of these collected essays, which is most historically significant. This is not a Catholic work - Morley was actually known for his rationalist and agnostic philosophical positions.
+"""
+</result>

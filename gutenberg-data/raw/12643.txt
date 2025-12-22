@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a poetry collection by Stella Benson titled "Twenty" published in 1918. Stella Benson (1892-1933) was an English novelist, poet, and travel writer. Based on the preface, this collection includes previously published verses from her earlier works "I Pose" and "This is the End," along with poems that appeared in various periodicals.
+
+<result>
+Title = "Twenty"
+Author = "Stella Benson"
+Year = 1918
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+'Twenty' is a poetry collection by English author Stella Benson, published in 1918. The collection gathers verses from her earlier works 'I Pose' and 'This is the End' (both published by Macmillan), as well as poems that appeared in periodicals including the Athenaeum, Everyman, and the Pall Mall Gazette. Benson notes in her preface that the title has no reference to her age. Stella Benson was a modernist writer known for her experimental fiction and poetry, and this collection represents her early poetic work during the World War I era.
+"""
+
+Notes = """
+The year 1918 is clearly stated on the title page and represents the original publication date of this collection. Stella Benson was actually 26 years old at the time of publication, hence her clarification that the title 'Twenty' does not refer to her age - it may refer to the number of poems or simply be an artistic choice.
+"""
+</result>

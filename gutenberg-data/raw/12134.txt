@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary"
+Author = "American Missionary Association"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children", "catholic"]
+
+Summary = """
+The American Missionary is a periodical published by the American Missionary Association, a Protestant organization founded in 1846 that played a crucial role in education, evangelism, and civil rights work, particularly focused on African Americans in the post-Civil War South, Native Americans, and Chinese immigrants. This June 1888 issue (Vol. XLII, No. 6) contains articles on missionary work, education, temperance, and racial issues of the era. The publication served as a fundraising and awareness tool for the Association's various missions, including schools for freedmen in the South, work among Native American tribes, and Chinese immigrant communities. The AMA was instrumental in founding historically black colleges and universities and advocating for civil rights during Reconstruction and beyond.
+"""
+
+Notes = """
+The year 1888 is explicitly stated in the document as the publication date of this issue. While the American Missionary Association was primarily a Protestant (particularly Congregationalist) organization rather than Catholic, I've included 'catholic' (lowercase) in the tags as per your guidance about works that might be considered edifying from a Christian perspective, though this may be questionable given the theological differences. You may want to review this tag for this particular work. The journal itself ran from 1846 to approximately 1934, documenting crucial periods of American history including Reconstruction, Jim Crow, and early civil rights work.
+"""
+</result>

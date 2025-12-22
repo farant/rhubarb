@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and extract the requested information.
+
+This appears to be an academic monograph from the Johns Hopkins University Studies series, published in 1908. The work is a scholarly study of the ancient city of Praeneste (modern Palestrina, Italy) by Ralph Van Deman Magoffin.
+
+<result>
+Title = "Study of the Topography and Municipal History of Praeneste"
+Author = "Ralph Van Deman Magoffin"
+Year = 1908
+
+Tags = ["non-fiction", "academic", "archaeology", "ancient-history", "roman-history"]
+
+Summary = """
+This is an academic monograph published as part of the Johns Hopkins University Studies in Historical and Political Science series. The work examines the ancient Roman city of Praeneste (modern Palestrina, Italy) from both topographical and municipal-administrative perspectives. The study covers the physical layout of the city including its walls, gates, water supply, and the famous Temple of Fortuna Primigenia, as well as the governmental structure and municipal offices of Praeneste, including its transition from municipium to colony. The work represents early 20th century classical archaeology and Roman municipal history scholarship.
+"""
+
+Notes = """
+The year 1908 is clearly the publication date of this scholarly work as indicated by the copyright notice and the series designation (September, October 1908). This is not a translation or edition of an ancient text, but rather a modern academic study written by Ralph Van Deman Magoffin, who is identified as a Fellow in Latin at Johns Hopkins University. The work would be classified as an academic monograph in classical archaeology and ancient Roman history.
+"""
+</result>

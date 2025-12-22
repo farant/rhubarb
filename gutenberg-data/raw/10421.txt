@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Lord Byron"
+Author = "John Galt"
+Year = 1830
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is a biography of George Gordon Byron, 6th Baron Byron (Lord Byron), one of the leading figures of the Romantic movement and one of the greatest English poets. Written by John Galt, a Scottish novelist and contemporary of Byron, this work offers insights into Byron's singular character and extraordinary life. Byron (1788-1824) was known not only for his poetry including works like "Don Juan" and "Childe Harold's Pilgrimage," but also for his controversial personal life, his travels through Europe, and his involvement in the Greek War of Independence, where he ultimately died. Galt, who knew Byron personally and traveled with him, provides a biographical account that attempts to capture both Byron's literary genius and complex personality.
+"""
+
+Notes = """
+John Galt's biography of Byron was first published in 1830, six years after Byron's death in 1824. Galt knew Byron personally and traveled with him in the Mediterranean, giving him unique insight into Byron's character. This is one of the earliest biographies of Byron and remains historically significant for its firsthand observations, though Galt's interpretation of Byron's character has been debated by later scholars.
+"""
+</result>

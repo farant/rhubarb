@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Bunch Grass: A Chronicle of Life on a Cattle Ranch" by Horace Annesley Vachell, published in 1913. The text includes the title page and foreword which explicitly state this information.
+
+Horace Annesley Vachell (1861-1955) was an English novelist who spent nearly two decades ranching in California before returning to England to write. This work is a collection of interconnected stories about ranch life in California during the period when the author lived there (approximately 1883-1900).
+
+<result>
+Title = "Bunch Grass: A Chronicle of Life on a Cattle Ranch"
+Author = "Horace Annesley Vachell"
+Year = 1913
+
+Tags = ["fiction", "western", "appropriate-for-children"]
+
+Summary = """
+A collection of interconnected stories set in the California cattle ranch country during the 1880s-1890s, written by an English author who spent seventeen years ranching in California. The book chronicles life on the frontier during a transformative period when California's wild cow-country was being subdivided into small holdings, capturing the atmosphere of pioneer life, cattle ranching, and the passing of the Old West. Vachell witnessed the tail end of the lawless frontier era, including encounters with outlaws, vigilante justice, cattle thieves, and the conflicts between settlers and squatters. The stories attempt to preserve the memory of a vanished way of life and landscape that changed dramatically within three decades.
+"""
+
+Notes = """
+The publication year 1913 is clearly stated on the title page. This is when the collected stories were published in book form, though the author notes in the foreword that the stories originally appeared in English and American magazines. The events described take place approximately 1883-1900 based on the author's statement that he went to California "just thirty years ago" from the time of writing and remained seventeen years.
+"""
+</result>

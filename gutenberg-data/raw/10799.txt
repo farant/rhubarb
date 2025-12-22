@@ -1,0 +1,23 @@
+I'll help you identify this work. Let me analyze the text provided.
+
+This is clearly Samuel Richardson's "Clarissa, or, the History of a Young Lady" - one of the longest novels in the English language and a masterpiece of 18th-century epistolary fiction. The format (letter-based narrative between Lovelace and Belford, and Clarissa and Miss Howe) and the character names (Clarissa Harlowe, Lovelace, Miss Howe, Captain Tomlinson) are unmistakable.
+
+The novel was originally published in 1748 (published in installments from December 1747 to December 1748, but 1748 is the standard publication year cited).
+
+This is a tragic novel about virtue, seduction, and the constraints placed on women in 18th-century English society. It's definitely not appropriate for children due to its themes of sexual manipulation, abduction, and assault.
+
+<result>
+Title = "Clarissa, or, the History of a Young Lady"
+Author = "Samuel Richardson"
+Year = 1748
+
+Tags = ["fiction", "epistolary-novel", "tragedy"]
+
+Summary = """
+Clarissa is one of the longest novels in the English language and a landmark of 18th-century literature. Written as a series of letters (epistolary format), it tells the tragic story of Clarissa Harlowe, a virtuous young woman from a wealthy family who is pursued by the rakish Robert Lovelace. After being pressured by her family to marry a man she despises, Clarissa is tricked into fleeing with Lovelace, who claims to offer her protection but actually plots her seduction. The novel explores themes of virtue, family duty, individual autonomy, sexual politics, and the position of women in Georgian society. It's considered a masterpiece of psychological realism and had enormous influence on the development of the novel as a literary form.
+"""
+
+Notes = """
+Published in installments from December 1747 through December 1748, but 1748 is the standard publication year. This is Volume V of the nine-volume work. Not appropriate for children due to mature themes including manipulation, abduction, and sexual assault. While Richardson was a moralist who intended the work as a cautionary tale about virtue, the novel is far too complex and dark for young readers.
+"""
+</result>

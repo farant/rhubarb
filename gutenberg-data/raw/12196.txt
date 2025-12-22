@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "Red Saunders: His Adventures West & East" by Henry Wallace Phillips. The text provides explicit information about the title, author, and publication year (1901) right at the beginning. This appears to be a collection of Western stories featuring the character Red Saunders, written in a humorous, colloquial style characteristic of turn-of-the-century American Western fiction.
+
+Phillips was an American author known for his Western stories that appeared in popular magazines of the era. This 1901 publication represents the original collection of these tales. The work is fiction with a distinct Western American setting and humor.
+
+<result>
+Title = "Red Saunders: His Adventures West & East"
+Author = "Henry Wallace Phillips"
+Year = 1901
+
+Tags = ["fiction", "western", "appropriate-for-children", "american-literature", "humor"]
+
+Summary = """
+A collection of Western adventure stories featuring the character Red Saunders, written in a humorous, colloquial style. The book includes tales such as "A Chance Shot," "A Red-Haired Cupid," "The Golden Ford," and "When the Chinook Struck Fairfield." Phillips writes in the vernacular of the American West, capturing the spirit and humor of frontier life through the adventures of his protagonist. The stories were popular in their time for their authentic Western flavor and entertaining narrative style.
+"""
+
+Notes = """
+1901 is the original publication year for this collection. Henry Wallace Phillips (1869-1930) was a popular writer of Western fiction whose stories frequently appeared in magazines like McClure's and The Saturday Evening Post before being collected into book form.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Style"
+Author = "Walter Raleigh"
+Year = 1897
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+'Style' is a seminal work of literary criticism by Walter Raleigh (1861-1922), the English literary scholar and critic who served as the first Professor of English Literature at Oxford University. This book is a treatise on the art and craft of writing, examining what constitutes good style in literature. Raleigh analyzes the principles of effective prose writing, discussing clarity, precision, rhythm, and the relationship between form and content. The work became influential in late Victorian and Edwardian literary circles and represents Raleigh's contribution to the emerging academic study of English literature as a serious discipline. It reflects the period's interest in codifying literary excellence and understanding the mechanics of effective communication through language.
+"""
+
+Notes = """
+The first edition of 'Style' was published in 1897. The Project Gutenberg transcription is from the 1904 Edward Arnold edition, indicating the work went through multiple printings. Walter Raleigh should not be confused with the Elizabethan explorer Sir Walter Raleigh (1552-1618); this is the Victorian-Edwardian literary scholar of the same name.
+"""
+</result>

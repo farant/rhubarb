@@ -1,0 +1,15 @@
+<result>
+Title = "Shareholders"
+Author = "W.W. Jacobs"
+Year = 1919
+
+Tags = ["fiction", "short-story", "appropriate-for-children"]
+
+Summary = """
+"Shareholders" is a short story by W.W. Jacobs, part of his collection "Deep Waters" (1919). Jacobs was an English humorist and author best known for "The Monkey's Paw" but also prolific in writing humorous stories about sailors, dockworkers, and working-class life in English ports. His night-watchman stories feature a recurring character who tells tales of sailors and their misadventures ashore. These stories are characterized by gentle humor, colorful characters, and dialect-heavy narration that captures the voice of waterfront life in late Victorian and Edwardian England. Jacobs' work is noted for its accessibility, wit, and keen observation of human nature.
+"""
+
+Notes = """
+"Deep Waters" was published as a collection in 1919. The individual stories, including "Shareholders," were likely published in magazines prior to collection. I've chosen 1919 as the publication year of the collection. W.W. Jacobs (1863-1943) was at the height of his career during this period. His sailor stories are lighthearted and family-friendly, contrasting with his more famous gothic horror tale "The Monkey's Paw."
+"""
+</result>

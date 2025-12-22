@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Deadham Hard"
+Author = "Lucas Malet (Mary St. Leger Harrison)"
+Year = 1919
+
+Tags = ["fiction", "romance", "appropriate-for-children"]
+
+Summary = """
+'Deadham Hard' is a romance novel by Lucas Malet (pseudonym of Mary St. Leger Harrison, daughter of Charles Kingsley). Published in 1919, the novel is set in the fictional English coastal location of Deadham Hard. The work follows the story of a humanist who becomes a hermit and involves various characters including a young scholar. Malet was known for her psychologically complex novels that often explored themes of identity, social conventions, and human nature. This novel, like much of her work, features careful character development and explores the tensions between past and present, youth and age, as suggested by the Bulgarian proverb epigraph: "Youth has no boundaries, age has the grave."
+"""
+
+Notes = """
+The publication year of 1919 is clearly stated on the title page and represents the original publication date of this work. The dedication mentions dates from 1899 to 1919, likely indicating the period over which the work was conceived or written. Mary St. Leger Harrison (1852-1931) wrote under the masculine pseudonym Lucas Malet and was the daughter of the famous Victorian novelist Charles Kingsley.
+"""
+</result>

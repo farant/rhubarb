@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+Based on the content, this is clearly "The Young Trail Hunters; or, The Wild Riders of the Plains" by Samuel Woodworth Cozzens, published in 1877 (as stated in the text itself).
+
+This is an adventure book for young readers set in the American Southwest, involving two boys (Hal Hyde and Ned Brown) traveling across the plains and encountering Native Americans. Samuel Woodworth Cozzens was an American author known for his frontier adventure stories in the late 19th century.
+
+<result>
+Title = "The Young Trail Hunters; or, The Wild Riders of the Plains"
+Author = "Samuel Woodworth Cozzens"
+Year = 1877
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+A frontier adventure novel following the journey of two young boys, Hal Hyde and Ned Brown, as they travel across the Great Plains of the American Southwest. The book recounts their "hair-breadth escapes" and encounters with Native American tribes, written by Samuel Woodworth Cozzens based on his personal observations of the region. This was a popular genre of American adventure literature in the late 19th century, designed to both entertain and instruct young readers about life on the western frontier. The author promises a sequel titled "Crossing the Quicksands, or Hal and Ned on the Pacific Slope."
+"""
+
+Notes = """
+The year 1877 is taken directly from the publication information in the text. This is part of the "dime novel" tradition of American frontier adventure stories that were popular in the post-Civil War era. While appropriate for children of its time, modern readers should note that 19th-century depictions of Native Americans often reflect the prejudices and perspectives of that era.
+"""
+</result>

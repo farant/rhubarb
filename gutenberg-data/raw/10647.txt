@@ -1,0 +1,19 @@
+I'll read through this text to identify the work and extract the requested information.
+
+Based on the text, this is from "Beacon Lights of History, Volume XII: American Leaders" by John Lord, LL.D. The publishers' preface is dated September 1902, which appears to be when this particular volume was published. John Lord (1810-1894) was an American historian and lecturer who created this multi-volume series of historical lectures.
+
+<result>
+Title = "Beacon Lights of History, Volume XII: American Leaders"
+Author = "John Lord"
+Year = 1902
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+This is the twelfth volume in John Lord's "Beacon Lights of History" series, focusing on American Leaders. The work is a collection of biographical lectures on prominent American historical figures. This volume includes studies of Daniel Webster, Clay, Calhoun, and notably Robert E. Lee, with the latter written by Dr. E. Benjamin Andrews. The publishers' preface indicates this was part of a reorganized new edition that redistributed lectures from earlier volumes into more thematically appropriate groupings. The volume reflects a post-Civil War perspective attempting to take dispassionate views of the era's controversies.
+"""
+
+Notes = """
+Year chosen is 1902 based on the publishers' preface date. John Lord himself died in 1894, so this appears to be a posthumous publication and reorganization of his lecture series. The inclusion of the Robert E. Lee chapter by Dr. E. Benjamin Andrews (not Lord) suggests this volume was compiled and edited after Lord's death.
+"""
+</result>

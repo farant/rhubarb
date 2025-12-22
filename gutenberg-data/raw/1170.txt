@@ -1,0 +1,15 @@
+<result>
+Title = "Anabasis"
+Author = "Xenophon"
+Year = -401
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Anabasis (Greek for "The March Up Country" or "The Expedition") is Xenophon's firsthand account of the Greek mercenary expedition into Persia in 401 BC. The work chronicles how 10,000 Greek soldiers were hired by Cyrus the Younger to help him seize the Persian throne from his brother Artaxerxes II. After Cyrus was killed at the Battle of Cunaxa, the Greeks found themselves stranded deep in enemy territory. Xenophon, who emerged as one of the leaders, describes their perilous retreat of over 1,500 miles through hostile lands to the Black Sea coast. The famous cry "Thalatta! Thalatta!" ("The sea! The sea!") when the Greeks finally sighted the ocean has become one of the most memorable moments in ancient literature. The work is valued both as military history and as one of the finest examples of ancient Greek prose, widely read for its clear narrative style and practical wisdom.
+"""
+
+Notes = """
+I've used -401 to represent 401 BC (the year the expedition began). The events covered span from 401 BC to March 399 BC. This is a work of ancient history and memoir rather than a text with Catholic context, so it does not receive a 'catholic' tag. The translation presented here is by H. G. Dakyns from the late 19th century. I've marked it as appropriate for children as it has long been used as an educational text for students learning Greek and studying ancient history, though it does contain descriptions of warfare and hardship typical of military campaigns.
+"""
+</result>

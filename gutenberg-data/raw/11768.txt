@@ -1,0 +1,23 @@
+I'll analyze this text from Project Gutenberg to identify the work, author, and publication details.
+
+Based on the content, this is clearly a collection of miscellaneous works by Samuel Johnson (Dr. Johnson), published in 1825 as part of a nine-volume collected works edition. The volume contains various pieces including his famous works on the English dictionary, Shakespeare, and the Harleian library.
+
+Samuel Johnson (1709-1784) was one of the most important figures in 18th-century English literature. However, this particular volume is a posthumous collection published in 1825, well after his death.
+
+For the year, I need to consider: this is a compilation published in 1825 (as shown by "MDCCCXXV"), but the individual works were written much earlier - primarily in the 1750s-1760s. The most famous pieces here (the Dictionary prefaces and Shakespeare preface) date from 1755 and 1765 respectively. Since this is a collected edition rather than original publications, and the use case is for a historical timeline, I'll use 1825 as it represents when this particular compilation was published, though I'll note the original composition dates.
+
+<result>
+Title = "The Works of Samuel Johnson, LL.D., Volume the Fifth: Miscellaneous Pieces"
+Author = "Samuel Johnson"
+Year = 1825
+
+Tags = ["non-fiction", "literary-criticism", "reference", "essays"]
+
+Summary = """
+This is the fifth volume of a nine-volume collected edition of Samuel Johnson's works, published in 1825 as part of the Oxford English Classics series. It contains important miscellaneous pieces including Johnson's groundbreaking work on lexicography (his Plan and Prefaces to his Dictionary of the English Language), his influential literary criticism (Preface to Shakespeare and observations on Macbeth), and his essays on bibliography and library science (writings on the Harleian library). Samuel Johnson (1709-1784) was one of the towering figures of 18th-century English literature, known for his dictionary, literary criticism, essays, and wit. This volume showcases his scholarly and critical works that helped establish modern standards for lexicography and Shakespearean criticism.
+"""
+
+Notes = """
+Year chosen is 1825, the publication date of this collected edition (indicated by "MDCCCXXV"). The individual works were originally composed much earlier: the Dictionary materials date from 1747-1773, the Shakespeare preface from 1765, and the Harleian library pieces from the 1740s-1750s. Since this is a posthumous collected edition rather than original publications, 1825 represents when this particular compilation was made available to readers.
+"""
+</result>

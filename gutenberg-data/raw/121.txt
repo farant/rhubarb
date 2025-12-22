@@ -1,0 +1,15 @@
+<result>
+Title = "Northanger Abbey"
+Author = "Jane Austen"
+Year = 1817
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Northanger Abbey is Jane Austen's satirical Gothic novel and coming-of-age story about Catherine Morland, a naive young woman who visits Bath and becomes infatuated with Gothic novels. Her imagination, fueled by reading too many sensational Gothic romances, leads her to misinterpret events at Northanger Abbey, the home of her love interest Henry Tilney. The novel is both a parody of the popular Gothic fiction of Austen's time (particularly Ann Radcliffe's "The Mysteries of Udolpho") and a commentary on the distinction between fiction and reality. It explores themes of social pretension, the dangers of naivety, and the importance of developing sound judgment. Though lighter in tone than Austen's other works, it contains her characteristic wit and social observation.
+"""
+
+Notes = """
+Austen wrote this novel in 1798-1799 (originally titled "Susan"), and it was sold to a publisher in 1803 but not published during her lifetime. The text notes 1803 in the header, which was when it was prepared for publication. However, it was eventually published posthumously in December 1817 (dated 1818) along with Persuasion, after her brother Henry purchased back the manuscript. The 1817 publication date is the most historically accurate for when it became available to readers, though the Advertisement by the Authoress references the earlier composition. I've chosen 1817 as it marks when the work actually entered the public consciousness, which seems most appropriate for a historical timeline.
+"""
+</result>

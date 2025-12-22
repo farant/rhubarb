@@ -148,6 +148,8 @@ _comparare_titulum(
     redde (s32)(a.mensura) - (s32)(b.mensura);
 }
 
+/* Functiones _numerare_newlines et _est_versus nunc in paginarium.c */
+
 
 /* ==================================================
  * Carcare Catalogum ex STML
@@ -1132,7 +1134,20 @@ _reddere_catalogo_plenus(
             (x + PADDING) * char_lat, linea * char_alt,
             titulus, pixelum_text, scala);
     }
-    linea += II;
+    linea++;
+
+    /* Gutenberg Numerus */
+    si (liber->numerus.mensura > 0)
+    {
+        character buffer[LXIV];
+        sprintf(buffer, "Gutenberg #%.*s",
+            (int)liber->numerus.mensura, (constans character*)liber->numerus.datum);
+        titulus = _chorda_ex_cstr(buffer);
+        tabula_pixelorum_pingere_chordam_scalatam(tabula,
+            (x + PADDING) * char_lat, linea * char_alt,
+            titulus, pixelum_text_dim, scala);
+    }
+    linea++;
 
     /* Tags */
     si (liber->tags && xar_numerus(liber->tags) > 0)
@@ -1385,6 +1400,19 @@ _reddere_libro(
     }
     linea++;
 
+    /* Gutenberg Numerus */
+    si (liber->numerus.mensura > 0)
+    {
+        character buffer[LXIV];
+        sprintf(buffer, "Gutenberg #%.*s",
+            (int)liber->numerus.mensura, (constans character*)liber->numerus.datum);
+        titulus = _chorda_ex_cstr(buffer);
+        tabula_pixelorum_pingere_chordam_scalatam(tabula,
+            (x + PADDING) * char_lat, linea * char_alt,
+            titulus, pixelum_text_dim, scala);
+        linea++;
+    }
+
     /* Tags */
     si (liber->tags && xar_numerus(liber->tags) > 0)
     {
@@ -1510,7 +1538,7 @@ _reddere_libro(
 
 
 /* ==================================================
- * Calculare Paginationem Lectionis
+ * Calculare Paginationem Lectionis (via paginarium)
  * ================================================== */
 
 hic_manens vacuum
@@ -1519,10 +1547,9 @@ _librarium_visus_calculare_paginationem(
     i32             latitudo,
     i32             altitudo)
 {
+    PaginariumConfig config;
     i32 chars_disponibiles;
     i32 lineae_disponibiles;
-    i32 pos;
-    i32 pagina_idx;
 
     /* Check cache */
     si (visus->cache_liber == visus->liber_currens &&
@@ -1543,7 +1570,7 @@ _librarium_visus_calculare_paginationem(
     }
 
     chars_disponibiles = latitudo - (PADDING * II);
-    lineae_disponibiles = altitudo - IV;  /* Header et footer */
+    lineae_disponibiles = altitudo - V;  /* Header et footer */
 
     si (chars_disponibiles < X)
     {
@@ -1554,67 +1581,16 @@ _librarium_visus_calculare_paginationem(
         lineae_disponibiles = V;
     }
 
-    /* Prima pagina incipit a 0 */
-    visus->paginae_limites[0] = 0;
-    pagina_idx = 1;
-    pos = 0;
+    /* Configurare paginarium */
+    config = paginarium_config_defectus();
+    config.latitudo = chars_disponibiles;
+    config.altitudo = lineae_disponibiles;
 
-    dum (pos < visus->textus_libri.mensura && pagina_idx < LIBRARIUM_PAGINAE_MAX)
-    {
-        i32 lineae_usae = 0;
+    /* Paginare via paginarium */
+    visus->paginarium_resultus = paginarium_paginare(
+        visus->textus_libri, config, visus->piscina);
 
-        dum (pos < visus->textus_libri.mensura && lineae_usae < lineae_disponibiles)
-        {
-            i32 chars_in_line;
-            i32 break_pos;
-
-            chars_in_line = chars_disponibiles;
-            si (pos + chars_in_line > visus->textus_libri.mensura)
-            {
-                chars_in_line = visus->textus_libri.mensura - pos;
-            }
-
-            /* Check for newline */
-            break_pos = chars_in_line;
-            {
-                i32 i;
-                per (i = 0; i < chars_in_line; i++)
-                {
-                    character c = (character)visus->textus_libri.datum[pos + i];
-                    si (c == '\n')
-                    {
-                        break_pos = i + 1;
-                        frange;
-                    }
-                }
-            }
-
-            /* Find word boundary if not newline */
-            si (break_pos == chars_in_line && pos + chars_in_line < visus->textus_libri.mensura)
-            {
-                i32 i;
-                per (i = chars_in_line - 1; i > 0; i--)
-                {
-                    si ((character)visus->textus_libri.datum[pos + i] == ' ')
-                    {
-                        break_pos = i + 1;
-                        frange;
-                    }
-                }
-            }
-
-            pos += break_pos;
-            lineae_usae++;
-        }
-
-        si (pos < visus->textus_libri.mensura)
-        {
-            visus->paginae_limites[pagina_idx] = (s32)pos;
-            pagina_idx++;
-        }
-    }
-
-    visus->paginae_totales = (s32)pagina_idx;
+    visus->paginae_totales = (s32)visus->paginarium_resultus.numerus_paginarum;
 }
 
 
@@ -1641,10 +1617,6 @@ _reddere_lectio(
     i32 pixelum_accent;
     Color color_background;
     chorda titulus;
-    i32 chars_disponibiles;
-    i32 lineae_disponibiles;
-    i32 pos;
-    i32 finis;
     LibrumInfo* liber;
 
     ctx = delineare_creare_contextum(visus->piscina, tabula);
@@ -1668,8 +1640,6 @@ _reddere_lectio(
         color_background);
 
     linea = y + I;
-    chars_disponibiles = latitudo - (PADDING * II);
-    lineae_disponibiles = altitudo - IV;
 
     /* Calculare paginationem */
     _librarium_visus_calculare_paginationem(visus, latitudo, altitudo);
@@ -1721,68 +1691,48 @@ _reddere_lectio(
     }
     alioquin
     {
-        i32 lineae_usae = 0;
+        PaginariumPagina* pagina;
+        i32 numerus_linearum;
+        i32 i;
 
-        pos = (i32)visus->paginae_limites[visus->pagina_lectio];
-        finis = visus->pagina_lectio + 1 < visus->paginae_totales
-            ? (i32)visus->paginae_limites[visus->pagina_lectio + 1]
-            : visus->textus_libri.mensura;
+        pagina = paginarium_pagina_obtinere(
+            &visus->paginarium_resultus, (i32)visus->pagina_lectio);
 
-        dum (pos < finis && lineae_usae < lineae_disponibiles)
+        si (pagina)
         {
-            character line_buffer[CXXVIII];
-            i32 chars_in_line;
-            i32 break_pos;
-            chorda line_chorda;
+            numerus_linearum = paginarium_pagina_numerus_linearum(pagina);
 
-            chars_in_line = chars_disponibiles;
-            si (pos + chars_in_line > finis)
+            per (i = 0; i < numerus_linearum; i++)
             {
-                chars_in_line = finis - pos;
-            }
+                PaginariumLinea* pag_linea;
+                chorda linea_reddita;
 
-            /* Check for newline */
-            break_pos = chars_in_line;
-            {
-                i32 i;
-                per (i = 0; i < chars_in_line; i++)
+                pag_linea = paginarium_linea_obtinere(pagina, i);
+                si (!pag_linea)
                 {
-                    character c = (character)visus->textus_libri.datum[pos + i];
-                    si (c == '\n')
-                    {
-                        break_pos = i;
-                        frange;
-                    }
+                    perge;
                 }
-            }
 
-            si (break_pos > 0)
-            {
-                memcpy(line_buffer, visus->textus_libri.datum + pos, (size_t)break_pos);
-                line_buffer[break_pos] = '\0';
-                line_chorda = _chorda_ex_cstr(line_buffer);
-
-                tabula_pixelorum_pingere_chordam_scalatam(tabula,
-                    (x + PADDING) * char_lat, linea * char_alt,
-                    line_chorda, pixelum_text, scala);
-            }
-
-            /* Avanzare pos */
-            si ((character)visus->textus_libri.datum[pos + break_pos] == '\n')
-            {
-                pos += break_pos + 1;
-            }
-            alioquin
-            {
-                pos += break_pos;
-                dum (pos < finis && (character)visus->textus_libri.datum[pos] == ' ')
+                si (pag_linea->est_vacua)
                 {
-                    pos++;
+                    /* Linea vacua - nihil pingere */
+                    linea++;
+                    perge;
                 }
-            }
 
-            linea++;
-            lineae_usae++;
+                /* Reddere lineam via paginarium */
+                linea_reddita = paginarium_linea_reddere(
+                    visus->textus_libri, pag_linea, visus->piscina);
+
+                si (linea_reddita.mensura > 0)
+                {
+                    tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                        (x + PADDING) * char_lat, linea * char_alt,
+                        linea_reddita, pixelum_text, scala);
+                }
+
+                linea++;
+            }
         }
     }
 

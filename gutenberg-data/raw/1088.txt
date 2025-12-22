@@ -1,0 +1,21 @@
+I'll read through this text to identify the work and provide the requested information.
+
+This is clearly "Rolf in the Woods" by Ernest Thompson Seton. Based on the preface, this is a historical novel set during the War of 1812 (specifically mentioning events from 1812-14 like the battles of Lake Erie, Plattsburg, and New Orleans). Ernest Thompson Seton was a famous naturalist, writer, and one of the founders of the Boy Scouts of America. This work was published in 1911.
+
+The book is a boys' adventure story that focuses on outdoor skills, woodland scouting, and historical events of the War of 1812. Seton wrote it with educational purposes - teaching outdoor skills and presenting a balanced view of Native Americans. While Seton had naturalist and spiritual interests, he was not Catholic, so this wouldn't qualify for the "catholic" tag.
+
+<result>
+Title = "Rolf in the Woods"
+Author = "Ernest Thompson Seton"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "adventure"]
+
+Summary = """
+A historical adventure novel for boys set during the War of 1812. The story follows a young protagonist through wilderness experiences and the historical events surrounding the battles of Lake Erie, Plattsburg, and New Orleans. Written by naturalist Ernest Thompson Seton (co-founder of the Boy Scouts), the book emphasizes outdoor skills, woodland scouting, and character development. Seton aimed to show the influences that shaped young Americans of that era into citizens and heroes, while also presenting a more balanced and realistic portrayal of Native Americans than was typical for the time. The narrative combines adventure, historical events, and detailed instruction in wilderness survival and "peace scouting."
+"""
+
+Notes = """
+Year chosen is the original publication date. The preface indicates Seton consulted historical sources including Theodore Roosevelt's "Naval War of 1812" and unpublished manuscripts, and visited the historical sites in the Lake Champlain region to ensure accuracy. The work emphasizes chivalry and courtesy on both sides of the War of 1812, countering the "rancorous hate" found in contemporary histories of that conflict.
+"""
+</result>

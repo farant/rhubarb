@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text for you.
+
+<result>
+Title = "Only an Irish Boy, or, Andy Burke's Fortunes"
+Author = "Horatio Alger, Jr."
+Year = 1874
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Only an Irish Boy" is one of Horatio Alger Jr.'s popular novels for young readers, following the classic "rags-to-riches" formula he was famous for. The story chronicles Andy Burke, an Irish immigrant boy, and his journey toward success through hard work, honesty, and moral virtue. Like most Alger novels, it emphasizes the values of perseverance, integrity, and self-improvement, showing how a disadvantaged youth can rise in American society through determination and good character. The novel includes typical Alger elements: a poor but virtuous protagonist, encounters with both helpful benefactors and villainous characters, and ultimate triumph over adversity.
+"""
+
+Notes = """
+Horatio Alger Jr. (1832-1899) was one of the most prolific and popular American authors of the 19th century, writing over 100 books for young readers. "Only an Irish Boy" was published in 1874 and is part of his extensive catalog of juvenile fiction promoting the "American Dream" ideal. The novel reflects both the opportunities and prejudices faced by Irish immigrants in 19th-century America. While Alger's works were enormously popular and influential in their time, they are now primarily of historical interest for understanding Victorian-era values and attitudes toward class, immigration, and social mobility.
+"""
+</result>

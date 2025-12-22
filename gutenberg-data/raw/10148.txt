@@ -1,0 +1,15 @@
+<result>
+Title = "The Merry Adventures of Robin Hood"
+Author = "Howard Pyle"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Merry Adventures of Robin Hood" is Howard Pyle's classic retelling of the Robin Hood legends, first published in 1883. Pyle, an American author and illustrator, compiled and adapted traditional English ballads and stories about the legendary outlaw of Sherwood Forest into a cohesive narrative suitable for young readers. The book follows Robin Hood and his band of Merry Men as they outwit the Sheriff of Nottingham, encounter King Richard the Lionheart, and champion the poor against corrupt officials. Pyle's version became the definitive American interpretation of the Robin Hood tales, featuring his own distinctive illustrations and a narrative style that captures the spirit of medieval romance while remaining accessible to children. The work is notable for its episodic structure, humor, and romanticized portrayal of medieval England.
+"""
+
+Notes = """
+First published in 1883 by Charles Scribner's Sons. While Robin Hood legends date back to medieval times, this specific literary work represents Pyle's original composition and compilation from various ballad sources, making 1883 the appropriate year for this text.
+"""
+</result>

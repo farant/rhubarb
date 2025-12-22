@@ -1,0 +1,15 @@
+<result>
+Title = "Trois Contes"
+Author = "Gustave Flaubert"
+Year = 1877
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+'Trois Contes' (Three Tales) is a collection of three short stories by Gustave Flaubert, published in 1877, just three years before his death. The collection includes 'Un Cœur Simple' (A Simple Heart), 'La Légende de Saint-Julien l'Hospitalier' (The Legend of Saint Julian the Hospitaller), and 'Hérodias'. These stories showcase Flaubert's mastery of different narrative styles and historical periods. 'Un Cœur Simple' tells the poignant story of Félicité, a devoted servant woman living a life of humble service and faith. 'Saint-Julien' is a medieval legend about a nobleman cursed to kill his parents who seeks redemption through service to the poor. 'Hérodias' recounts the biblical story of John the Baptist's execution. The collection represents some of Flaubert's finest work in the short story form, demonstrating his characteristic precision of language and psychological insight.
+"""
+
+Notes = """
+The year 1877 is clearly marked in the text as the 'Cinquième Édition' (Fifth Edition). This appears to be the publication year for this edition. The work was actually first published in 1877, making this fifth edition from the same year, which suggests it was quite popular upon release.
+"""
+</result>

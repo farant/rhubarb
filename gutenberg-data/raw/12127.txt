@@ -1,0 +1,15 @@
+<result>
+Title = "Captain Rogers"
+Author = "W.W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Captain Rogers" is a short story by W.W. Jacobs, part of his collection "The Lady of the Barge and Others." W.W. Jacobs (1863-1943) was an English author known for his humorous short stories about dockside and seafaring life, as well as for his macabre tale "The Monkey's Paw." His stories typically feature working-class characters in maritime settings along the Thames, written with wit and a keen eye for dialogue. "Captain Rogers" follows this pattern, depicting a weary traveler arriving at a riverside town. Jacobs' work was immensely popular in the early 20th century for its gentle humor and vivid characterization of ordinary English life.
+"""
+
+Notes = """
+"The Lady of the Barge and Others" was first published in 1902. While this Project Gutenberg text identifies "Captain Rogers" as "Part 7" of that collection, the original publication date of the collection as a whole is 1902, which is the most historically accurate year for this work. Jacobs was not a Catholic author, so the 'catholic' tag is not included.
+"""
+</result>

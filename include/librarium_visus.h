@@ -7,6 +7,7 @@
 #include "xar.h"
 #include "chorda.h"
 #include "widget.h"
+#include "paginarium.h"
 
 /* ==================================================
  * LIBRARIUM VISUS - Library Viewer Widget
@@ -112,8 +113,8 @@ nomen structura {
     s32 pagina_lectio;       /* Pagina currens lectionis */
     s32 paginae_totales;     /* Totales paginae in libro */
 
-    /* Cache paginationis pro lectione */
-    s32 paginae_limites[LIBRARIUM_PAGINAE_MAX];
+    /* Paginatio via paginarium */
+    PaginariumResultus paginarium_resultus;
     s32 cache_liber;
     s32 cache_latitudo;
     s32 cache_altitudo;

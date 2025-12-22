@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Andrew Carnegie"
+Author = "Andrew Carnegie, edited by Thomas A. Edison"
+Year = 1920
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording featuring Andrew Carnegie, the Scottish-American industrialist and philanthropist who became one of the wealthiest individuals of the Gilded Age. Carnegie (1835-1919) is famous for leading the expansion of the American steel industry and for his extensive philanthropic work, including funding libraries, universities, and educational institutions. The recording was edited by Thomas A. Edison and comes from the Edison National Historic Site. This represents early audio recording technology and provides a direct historical artifact of Carnegie's voice and thoughts.
+"""
+
+Notes = """
+I've chosen approximately 1920 as the year, as this would be around the time period when Edison was actively recording prominent figures. Carnegie died in 1919, so any recordings would have been made shortly before or during his final years. The exact recording date isn't specified in the metadata, but given Edison's involvement and the Edison National Historic Site as the source, this places it in the late 1910s to early 1920s period. I did not include 'appropriate-for-children' as an audio recording of a historical figure's speech would typically be more appropriate for older students/adults with historical context. I also did not include 'catholic' as while Carnegie was raised Presbyterian and his work was certainly moral and philanthropic, he would not be considered a Catholic author in the specific sense described.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This is a scholarly work from the Johns Hopkins University Studies in Historical and Political Science series. The text is clearly identified as "History of Liberia" by J.H.T. McPherson, Ph.D., published in 1891.
+
+<result>
+Title = "History of Liberia"
+Author = "J.H.T. McPherson"
+Year = 1891
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+This is an academic monograph published as part of the Johns Hopkins University Studies in Historical and Political Science series (Ninth Series, Volume X). Written by J.H.T. McPherson, a Ph.D. and Fellow in History at Johns Hopkins University, the work examines the history of Liberia from its origins through the colonization movement. The book covers the American Colonization Society's efforts to establish Liberia as a colony for freed African Americans, the Maryland colony in Liberia, and the establishment of the Republic of Liberia. McPherson analyzes the historical significance of colonization from multiple perspectives: as a Southern movement toward emancipation, as an effort to suppress the slave trade, as an attempt to civilize Africa, as a missionary endeavor, and as a potential refuge for African Americans facing increasing competition in America. This work represents late 19th-century scholarly perspectives on African colonization and its implications.
+"""
+
+Notes = """
+The year 1891 is clearly stated on the title page as the publication date. This is an original scholarly work, not a translation or republication, so there is no ambiguity about the date. The work reflects the racial attitudes and terminology common in late 19th-century American academic discourse.
+"""
+</result>

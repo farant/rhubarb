@@ -1,0 +1,17 @@
+Looking at this text from Project Gutenberg #11422, this is part of the Federal Writers' Project Slave Narratives collection. These are oral history interviews conducted during the New Deal era with formerly enslaved people.
+
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States From Interviews with Former Slaves, Volume II, Arkansas Narratives, Part 7"
+Author = "Federal Writers' Project, Work Projects Administration"
+Year = 1941
+
+Tags = ["non-fiction", "historical-document", "oral-history"]
+
+Summary = """
+This is part of the Federal Writers' Project Slave Narratives, a monumental collection of over 2,300 first-person accounts from formerly enslaved African Americans interviewed between 1936-1938 as part of the Works Progress Administration (WPA). This particular volume contains interviews from Arkansas. The narratives provide invaluable direct testimony about the experience of slavery in the United States, capturing the voices, memories, and perspectives of people who lived through enslavement in the decades before the Civil War. The collection represents one of the most comprehensive oral history projects ever undertaken and is a crucial primary source for understanding American slavery from the perspective of the enslaved themselves.
+"""
+
+Notes = """
+I chose 1941 because that is when these typewritten records were officially assembled and published by the Library of Congress, even though the actual interviews were conducted 1936-1938. The historical value lies in both when the interviews were conducted (capturing memories before they were lost) and when they were formally compiled as a historical record. This is not appropriate for children due to the difficult subject matter and accounts of violence and trauma inherent in slavery narratives.
+"""
+</result>

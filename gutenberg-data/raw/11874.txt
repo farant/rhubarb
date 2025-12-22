@@ -1,0 +1,25 @@
+I need to identify this text from Project Gutenberg. Let me analyze what I can see:
+
+The book is "Hodge and His Masters" by Richard Jefferies. From the preface, I can see this is a work about agricultural life in England, discussing farmers, landowners, laborers, and rural communities during a period of agricultural depression.
+
+Richard Jefferies (1848-1887) was a prominent English nature writer and journalist known for his detailed observations of rural English life. "Hodge and His Masters" was originally published as a series of articles in the _Standard_ newspaper before being collected into book form in 1880.
+
+The work is a non-fiction sociological study of agricultural England during the agricultural depression of the 1870s-1880s. "Hodge" was a traditional generic name for the English farm laborer, much like "John Doe." The book examines the lives and conditions of farm workers, tenant farmers, and landowners during this challenging economic period.
+
+Jefferies was not a Catholic author - he came from a farming family background and his writings were more naturalistic and observational rather than religious in nature. The work would be appropriate for older children/young adults who could understand the socioeconomic content.
+
+<result>
+Title = "Hodge and His Masters"
+Author = "Richard Jefferies"
+Year = 1880
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+'Hodge and His Masters' is a sociological study of English agricultural life during the agricultural depression of the late 19th century. Written by nature writer and journalist Richard Jefferies, the work originally appeared as articles in the Standard newspaper before being collected into book form. The title uses 'Hodge,' a traditional generic name for English farm laborers, to explore the lives and conditions of rural workers, tenant farmers, and landowners during a period of significant economic hardship in the countryside. Jefferies provides detailed observations of rural life, examining the relationships between different classes in agricultural communities and the effects of economic depression on country towns and villages.
+"""
+
+Notes = """
+The book was first published in 1880. The preface references the agricultural depression affecting England at the time of writing, which was a significant economic crisis for British agriculture during the 1870s-1880s caused by cheap grain imports from America.
+"""
+</result>

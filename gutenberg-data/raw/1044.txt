@@ -1,0 +1,15 @@
+<result>
+Title = "Extract from Captain Stormfield's Visit to Heaven"
+Author = "Mark Twain"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a satirical short story by Mark Twain (Samuel Clemens) that tells the story of Captain Eli Stormfield, a sea captain who dies and travels through space to reach Heaven. The work is a humorous commentary on conventional Christian ideas about the afterlife, presenting Heaven as a vast, bureaucratic cosmos where expectations are constantly subverted. Twain uses the story to explore themes of human vanity, the limitations of earthly perspectives, and the gap between religious dogma and a more cosmic reality. The work is characteristic of Twain's later period, where he became increasingly interested in philosophical and religious satire, though this piece maintains his trademark humor and accessibility.
+"""
+
+Notes = """
+This work was first published in Harper's Magazine in December 1907 and January 1908, then as a book in 1909. Twain had been working on various versions of this story since the 1870s, but it wasn't published in his lifetime in complete form. The "Extract" version is the published portion - Twain had written more material that remained unpublished until later editions. I've chosen 1909 as it represents the first book publication and is the date most commonly associated with this work in literary history.
+"""
+</result>

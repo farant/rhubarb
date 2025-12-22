@@ -1,0 +1,15 @@
+<result>
+Title = "Flow Gently Sweet Afton and Bonnie, Sweet Bonnie"
+Author = "Robert Burns (lyrics), Robert Trucksess (performance)"
+Year = 1789
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording from the Edison National Historic Site featuring guitar performances of two traditional Scottish songs with lyrics by Robert Burns. "Flow Gently, Sweet Afton" was written by Burns in 1789 as a tribute to the River Afton in Ayrshire, Scotland. The recording represents an early audio documentation effort, with performances by Robert Trucksess on American Guitar, edited by Thomas Edison. These songs are part of the Scottish folk music tradition that Burns helped preserve and popularize.
+"""
+
+Notes = """
+I chose 1789 as the year because that's when Robert Burns wrote "Flow Gently, Sweet Afton," which is the primary work being performed here. While this is actually an audio recording from a later era (likely early 20th century given Edison's involvement), the historical and educational value points to Burns's original composition date. The recording itself is a performance/interpretation of Burns's work rather than an original composition. Burns was Scottish Presbyterian, not Catholic, so this does not receive a 'catholic' tag.
+"""
+</result>

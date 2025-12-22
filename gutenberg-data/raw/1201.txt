@@ -1,0 +1,21 @@
+The file appears to be very short or empty. Based on the text you provided in your message (the Project Gutenberg header), I can identify this work:
+
+This is **"An Essay on the Trial by Jury"** by **Lysander Spooner**, originally published in **1852**.
+
+Lysander Spooner was an American political philosopher, abolitionist, and legal theorist. This particular essay is one of his most important works, arguing for the rights of jury nullification and the power of juries to judge both law and fact. It was part of his broader constitutional theory challenging governmental authority.
+
+<result>
+Title = "An Essay on the Trial by Jury"
+Author = "Lysander Spooner"
+Year = 1852
+
+Tags = ["non-fiction", "legal-theory", "political-philosophy"]
+
+Summary = """
+An Essay on the Trial by Jury is a legal and political treatise by American anarchist and abolitionist Lysander Spooner. The work argues extensively for the doctrine of jury nullification - the right and duty of juries to judge not only the facts of a case but also the justice of the law itself. Spooner contends that trial by jury was historically intended as a protection against governmental tyranny and unjust laws. The essay is part of Spooner's broader constitutional philosophy that challenged the legitimacy of governmental authority and defended individual liberty. It became an influential work in libertarian and anarchist thought, as well as in discussions of jury rights and legal philosophy.
+"""
+
+Notes = """
+First published in 1852. Spooner was not Catholic - he was a religious skeptic and political anarchist, so the 'catholic' tag does not apply. The work is significant in American legal and political philosophy, particularly in libertarian circles.
+"""
+</result>

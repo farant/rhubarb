@@ -1,0 +1,27 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+Looking at this text, I can see it's a Spanish colonial history work. The title page clearly states:
+
+**HISTORIADORES PRIMITIVOS DE LAS INDIAS OCCIDENTALES**
+
+This is a compilation work edited by **Don Andrés González de Barcia (also known as Andrés González Barcia Carballido y Zúñiga)**. The imprint shows "EN MADRID: Año M.DCCXLIX" which is **1749**.
+
+The work is a three-volume compilation of early Spanish colonial historians. The first volume (Tomo I) contains the History of Admiral Christopher Columbus written by his son Fernando Colón.
+
+This is an important historical compilation of Spanish colonial sources from the Indies (the Americas). González de Barcia was a Spanish historian and member of the Council of the Indies who compiled, translated, and annotated these early historical sources.
+
+<result>
+Title = "Historiadores Primitivos de las Indias Occidentales, Tomo I"
+Author = "Andrés González de Barcia (editor)"
+Year = 1749
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the first volume of a three-volume compilation of early Spanish colonial historians edited by Andrés González de Barcia, a member of the Spanish Council of the Indies. Published in Madrid in 1749, this work brings together, translates, and annotates primary historical sources about the Spanish conquest and colonization of the Americas (the West Indies). The first volume includes the History of Admiral Christopher Columbus written by his son Fernando Colón, originally in Spanish, translated to Italian by Alfonso de Ulloa, and here translated back to Spanish. This compilation became an essential reference work for Spanish colonial history.
+"""
+
+Notes = """
+The year 1749 is clearly stated on the title page (M.DCCXLIX in Roman numerals). This is the publication year of the compilation itself, not the original sources contained within it. As an editorial compilation rather than an original work, the 1749 date represents when Barcia made these historical sources available together with his scholarly annotations.
+"""
+</result>

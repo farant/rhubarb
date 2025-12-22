@@ -1,0 +1,23 @@
+I'll analyze this text to identify the work, author, and publication details.
+
+This is clearly a collected works edition of Samuel Johnson's writings. The text shows the title page and advertisement (preface) for a nine-volume edition of Johnson's works published in 1825 (MDCCCXXV in Roman numerals). This is an editorial collection rather than an original work by Johnson himself.
+
+Samuel Johnson (1709-1784) was one of the most important English literary figures of the 18th century - a poet, essayist, critic, biographer, and lexicographer best known for his Dictionary of the English Language.
+
+Since this is an editorial collection published posthumously rather than an original work, I'll use 1825 as the year (when this edition was compiled), though Johnson's actual productive years were mid-18th century.
+
+<result>
+Title = "The Works of Samuel Johnson, LL.D."
+Author = "Samuel Johnson"
+Year = 1825
+
+Tags = ["non-fiction", "collected-works"]
+
+Summary = """
+This is a nine-volume collected edition of Samuel Johnson's complete works, published in 1825. Samuel Johnson (1709-1784) was one of the preeminent figures of 18th-century English literature, known for his dictionary, essays, criticism, poetry, and biography. This comprehensive edition includes his life, poems, tales, and other writings, with editorial notes and annotations. Johnson was a towering intellectual figure whose works encompassed literary criticism, moral philosophy, biography (most famously his Lives of the Poets), and the monumental Dictionary of the English Language (1755).
+"""
+
+Notes = """
+Year chosen is 1825, the publication date of this specific collected edition rather than Johnson's original productive period (roughly 1730s-1780s). This is an editorial compilation published 41 years after Johnson's death, not an original work. The editor(s) remain anonymous in this extract but emphasize providing accurate texts with judicious annotation.
+"""
+</result>

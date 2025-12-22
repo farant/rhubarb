@@ -1,0 +1,15 @@
+<result>
+Title = "Parish Papers"
+Author = "Norman Macleod"
+Year = 1863
+
+Tags = ["non-fiction", "religious", "christian", "appropriate-for-children", "scottish"]
+
+Summary = """
+Parish Papers is a collection of pastoral writings by Norman Macleod, a prominent 19th-century Scottish minister who served as one of Queen Victoria's chaplains for Scotland. The work contains theological reflections organized into three main sections: thoughts on Christianity (examining fundamental questions about Christ and Christian belief), thoughts on the Final Judgment (exploring eschatological themes), and thoughts on the afterlife. Macleod was known for his accessible and compassionate approach to religious writing, making complex theological concepts understandable to ordinary parishioners. He dedicated this work to the parishioners of the three parishes he served: Loudoun, Dalkeith, and the Barony parish in Glasgow.
+"""
+
+Notes = """
+The year 1863 is clearly stated on the title page as the publication date. Norman Macleod was a well-known figure in the Church of Scotland and editor of the magazine "Good Words." While Macleod was a devout Christian minister, I did not include the 'catholic' tag because he was Presbyterian/Church of Scotland rather than Roman Catholic. His works were widely read and considered theologically sound within Protestant Christianity.
+"""
+</result>

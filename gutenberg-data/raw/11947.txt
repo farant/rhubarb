@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, and year, along with the other requested information.
+
+<result>
+Title = "On the Edge of the War Zone: From the Battle of the Marne to the Entrance of the Stars and Stripes"
+Author = "Mildred Aldrich"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the sequel to Mildred Aldrich's acclaimed memoir 'A Hilltop on the Marne' (1915). It consists of letters written from her home in La Creste, France, chronicling her experiences living near the Western Front during World War I, from after the Battle of the Marne in September 1914 through America's entry into the war in 1917. Aldrich was an American journalist and writer who retired to France just before WWI began, and her eyewitness accounts of the war from a civilian perspective became bestsellers and helped shape American understanding of the conflict. Her vivid descriptions of daily life in the war zone, interactions with soldiers, and observations of the devastating effects of modern warfare made her one of the most important chroniclers of WWI from a non-combatant viewpoint.
+"""
+
+Notes = """
+The book was published in 1918 by Small, Maynard and Company. While the letters themselves span from September 1914 to America's entrance into WWI (April 1917), I've chosen 1918 as the year since that's when this collected, edited work was published as a book. This seems most appropriate for a historical timeline as it represents when this particular work became available to the public, distinct from her earlier memoir.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "George Washington"
+Author = "Henry Cabot Lodge"
+Year = 1889
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+This is Volume II of Henry Cabot Lodge's comprehensive two-volume biography of George Washington, part of the "American Statesmen" series. The work covers Washington's presidency and later years, including chapters on starting the government, domestic and foreign affairs, his role in party politics, and his final years. Lodge (1850-1924) was a prominent American historian and statesman who wrote several biographies in the late 19th century. This biography is considered one of the significant scholarly works on Washington from that era, offering detailed analysis of his political leadership and legacy.
+"""
+
+Notes = """
+The Project Gutenberg edition indicates 1899 on the title page shown, but this appears to be a reprint date. Henry Cabot Lodge's two-volume biography of George Washington was originally published in 1889 as part of the American Statesmen series. I've used 1889 as the year since that represents when Lodge's scholarly work was first made available, which is more historically significant for a timeline of literature about Washington. The 1899 date may represent a later printing or edition of the same work.
+"""
+</result>

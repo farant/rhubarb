@@ -1,0 +1,17 @@
+I recognize this work - it's a collection of translations by George Borrow, the 19th century British author and linguist known for his travel writings and linguistic interests.
+
+<result>
+Title = "Targum, or Metrical Translations From Thirty Languages And Dialects"
+Author = "George Borrow"
+Year = 1835
+
+Tags = ["non-fiction", "poetry", "translation", "philological"]
+
+Summary = """
+A collection of poetical translations from thirty different languages and dialects by George Borrow, the renowned British linguist, traveler, and author. This work showcases Borrow's exceptional linguistic abilities and his dedication to philological studies. The title 'Targum' is itself significant - it refers to Aramaic translations or paraphrases of Hebrew biblical texts, suggesting Borrow's interest in bridging linguistic and cultural divides through translation. The collection represents years of his work in comparative linguistics and demonstrates the breadth of languages he had mastered, from European to Middle Eastern to Asian tongues.
+"""
+
+Notes = """
+The year 1835 is when this collection was first published. George Borrow (1803-1881) was a fascinating polyglot who claimed to know dozens of languages. He's better known today for his travel books like 'The Bible in Spain' and 'Lavengro', but this earlier work demonstrates his serious philological scholarship. The Persian epigraph ("The raven has ascended to the nest of the nightingale") suggests his awareness of the inherent presumptuousness in translation work - a humbler bird attempting to inhabit the space of a more melodious one.
+"""
+</result>

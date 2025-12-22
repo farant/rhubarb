@@ -1,0 +1,15 @@
+<result>
+Title = "His Big Opportunity"
+Author = "Amy Le Feuvre"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+"His Big Opportunity" is a children's novel by Amy Le Feuvre, a prolific British author known for her evangelical Christian fiction for young readers. Le Feuvre wrote numerous popular children's books in the late Victorian and Edwardian periods, often featuring moral lessons and Christian themes woven into engaging stories about children's adventures and character development. Her works, including "Teddy's Button" and "Probable Sons," were widely read in both Britain and America and emphasized values of faith, courage, and doing good deeds. "His Big Opportunity" follows this pattern, likely telling the story of a young protagonist who encounters a significant chance to demonstrate character and faith.
+"""
+
+Notes = """
+The year 1898 is taken from the publication date shown in the book's frontmatter. Amy Le Feuvre (1861-1929) was a devout Anglican whose works were popular in evangelical Christian circles. While not Catholic, her books share similar moral and Christian educational themes that made them acceptable reading in many religious households of the era.
+"""
+</result>

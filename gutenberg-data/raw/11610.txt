@@ -1,0 +1,15 @@
+<result>
+Title = "Madam Crowl's Ghost and The Dead Sexton"
+Author = "Joseph Sheridan Le Fanu"
+Year = 1871
+
+Tags = ["fiction", "gothic", "horror", "supernatural"]
+
+Summary = """
+A collection of two ghost stories by Irish Gothic writer Joseph Sheridan Le Fanu, originally published in 1871. Le Fanu (1814-1873) was a major figure in Victorian supernatural fiction, known for his atmospheric tales of terror and pioneering contributions to the ghost story genre. "Madam Crowl's Ghost" and "The Dead Sexton" exemplify his mastery of psychological horror and the uncanny, featuring haunted settings and supernatural encounters typical of his work. Le Fanu's Gothic stories often explored themes of guilt, retribution, and the supernatural intrusion into everyday life, influencing later writers like M.R. James and contemporary horror fiction.
+"""
+
+Notes = """
+The text explicitly states both stories were originally published in 1871, which is consistent with Le Fanu's productive period in the late 1860s and early 1870s. Le Fanu was a Protestant Irish writer, not Catholic, so the 'catholic' tag does not apply. These are Gothic horror tales not appropriate for children due to supernatural themes and potentially frightening content.
+"""
+</result>

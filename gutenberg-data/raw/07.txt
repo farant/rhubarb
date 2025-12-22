@@ -1,0 +1,15 @@
+<result>
+Title = "The Rights of Labor"
+Author = "William H. Taft"
+Year = 1909
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a speech or address by William Howard Taft on labor rights. Taft served as the 27th President of the United States (1909-1913) and later as Chief Justice of the Supreme Court (1921-1930). He was known for his conservative approach to labor issues while still acknowledging certain rights of workers. This audio recording was preserved at the Edison National Historic Site, indicating it was part of Thomas Edison's collection of early sound recordings. The work represents an important historical document capturing early 20th century perspectives on labor relations during a period of significant industrial change and labor movement activity in America.
+"""
+
+Notes = """
+The exact year is difficult to pinpoint from the text alone, but 1909 is chosen as it marks the beginning of Taft's presidency, when he would have been most actively addressing labor issues publicly. Taft succeeded Theodore Roosevelt and took office in March 1909. This speech likely dates from around this period when labor rights were a prominent national issue. The audio format suggests this was recorded during the early era of sound recording technology, which aligns with the 1909-1913 timeframe of his presidency. If additional context suggests a different specific year during his public career (1909-1930), that could be more precise.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Ancient Nahuatl Poetry, Containing the Nahuatl Text of XXVII Ancient Mexican Poems"
+Author = "Daniel G. Brinton"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "poetry", "linguistics"]
+
+Summary = """
+This is a scholarly collection and translation of 27 ancient Mexican poems written in Nahuatl, the language of the Aztecs. The work was compiled and translated by Daniel G. Brinton, a prominent American ethnologist and archaeologist who specialized in Native American cultures and languages. The book represents pioneering work in preserving and making accessible pre-Columbian Mexican literature. It includes the original Nahuatl text along with English translations, extensive notes, and a vocabulary. This was part of Brinton's larger series "Brinton's Library of Aboriginal American Literature" which aimed to document and preserve indigenous American texts and traditions.
+"""
+
+Notes = """
+The year 1890 represents the publication date of Brinton's scholarly edition and translation. The poems themselves are ancient pre-Columbian works, but their exact original composition dates are unclear and would vary by individual poem. Since this is presented as a scholarly edition and translation work rather than the original compositions, 1890 is the most appropriate date for cataloging purposes. Brinton notes in his preface that these songs had never before been translated into a European language, making this a significant pioneering work in Mesoamerican studies.
+"""
+</result>

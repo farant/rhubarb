@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Middle Temple Murder" by J.S. Fletcher, published in 1919. This is a detective/mystery novel from the early 20th century. Fletcher was a prolific British mystery writer who was very popular in his time, particularly known for his intricate plotting.
+
+<result>
+Title = "The Middle Temple Murder"
+Author = "J.S. Fletcher"
+Year = 1919
+
+Tags = ["fiction", "mystery", "detective-fiction"]
+
+Summary = """
+The Middle Temple Murder is a detective novel by British author J.S. Fletcher, first published in 1919. The story begins with the discovery of a murdered man in Middle Temple Lane in London and follows the investigation led by journalist Frank Spargo and other characters as they unravel the mystery. The novel is set in the legal district of London and involves multiple witnesses, clues, and revelations. Fletcher was one of the most popular mystery writers of the early 20th century, and this novel exemplifies the Golden Age detective fiction style with its focus on methodical investigation and clever plotting. The work was particularly popular in America and helped establish Fletcher's reputation as a master of the mystery genre.
+"""
+
+Notes = """
+1919 is the original publication year for this work. J.S. Fletcher (Joseph Smith Fletcher, 1863-1935) was not a Catholic author - he was a British Methodist - so the 'catholic' tag is not included. The work is adult mystery fiction and not appropriate for children due to the murder mystery content and mature themes.
+"""
+</result>

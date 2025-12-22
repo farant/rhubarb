@@ -1,0 +1,15 @@
+<result>
+Title = "David: Five Sermons"
+Author = "Charles Kingsley"
+Year = 1868
+
+Tags = ["non-fiction", "religious", "sermons", "appropriate-for-children", "christian"]
+
+Summary = """
+This is a collection of five sermons on the life of King David by Charles Kingsley (1819-1893), an Anglican clergyman, novelist, and Christian socialist. The first four sermons were preached before the University of Cambridge. Kingsley was known for his muscular Christianity movement and his ability to make biblical figures come alive for Victorian audiences. These sermons examine David's character, weaknesses, and role as a model of faith, using the Old Testament narrative to draw moral and spiritual lessons for his contemporary audience. Kingsley was a broad churchman who emphasized practical Christianity and social reform alongside traditional Anglican theology.
+"""
+
+Notes = """
+Charles Kingsley preached various sermon series throughout his career. This particular collection on David appears to date from around 1868 based on publication records of his collected sermons. Kingsley was appointed Chaplain in Ordinary to Queen Victoria in 1859 and Canon of Westminster in 1873, giving context to his preaching before Cambridge University. While Kingsley was Anglican rather than Catholic, I have not included a 'catholic' tag as he would not have received nihil obstat or imprimatur, despite his Christian orthodoxy on many points.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Principal Navigations, Voyages, Traffiques and Discoveries of the English Nation, Volume XI: Africa"
+Author = "Richard Hakluyt"
+Year = 1598
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume XI of Richard Hakluyt's monumental work 'The Principal Navigations, Voyages, Traffiques and Discoveries of the English Nation', focusing specifically on Africa. Hakluyt (c. 1552-1616) was an English writer, geographer, and Anglican clergyman who compiled extensive accounts of English exploration and trade voyages. This collection preserves primary source narratives of English maritime expeditions, trade missions, and encounters with African peoples and territories during the age of exploration. The work is invaluable for understanding Elizabethan-era English overseas expansion, early modern geography, and the beginnings of English colonial enterprise. This edition was later edited by Edmund Goldsmid in the 19th century.
+"""
+
+Notes = """
+The complete work was originally published in multiple editions - the first edition in 1589 (single volume) and the substantially expanded second edition in 1598-1600 (three volumes). I've chosen 1598 as it represents the beginning of the more comprehensive second edition that established Hakluyt's reputation. The work remained the authoritative English source on exploration narratives for centuries. This particular volume focuses on English voyages to and knowledge of Africa, documenting early English involvement in African trade and exploration during the 16th century.
+"""
+</result>

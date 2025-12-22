@@ -1,0 +1,23 @@
+I can help identify this Project Gutenberg text. Let me analyze what we have here.
+
+This is a French work by Jules Janin titled "Contes, Nouvelles et Récits" (Stories, Short Stories, and Tales). The text shows this is the second edition from 1885. Jules Janin (1804-1874) was a prominent French writer and literary critic, often called "le prince des critiques" (the prince of critics).
+
+The work is a collection of short stories and tales, including pieces like "Tout de bon coeur," "L'épagneul maître d'école," "Mlle de Malboissière," and others listed in the table of contents.
+
+Based on this being marked as the "deuxième édition" (second edition) from 1885, and knowing that Janin died in 1874, this appears to be a posthumous collected edition. The original stories would have been written and published earlier in Janin's career, likely in the 1830s-1850s when he was most active as a writer of fiction and feuilletons. However, for historical timeline purposes, I'll use 1885 as that's when this collected edition was published.
+
+<result>
+Title = "Contes, Nouvelles et Récits"
+Author = "Jules Janin"
+Year = 1885
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+A collection of short stories and tales by Jules Janin (1804-1874), one of the most prominent French literary critics and writers of the 19th century. Known as "le prince des critiques," Janin was a prolific writer of feuilletons and literary works. This second edition, published posthumously in 1885, contains various stories including "Tout de bon coeur," "L'épagneul maître d'école," "Mlle de Malboissière," "Mlle de Launay," "Zémire," "Versailles," "Le Poète en voyage," and "La Reine Marguerite." The stories reflect Janin's narrative style and his ability to weave dramatic and literary tales.
+"""
+
+Notes = """
+This is the second edition published in 1885, eleven years after Janin's death in 1874. While the individual stories were likely written and published earlier in Janin's career (primarily 1830s-1850s), I've chosen 1885 as the year since this represents the collected edition as a historical artifact. The work is entirely in French.
+"""
+</result>

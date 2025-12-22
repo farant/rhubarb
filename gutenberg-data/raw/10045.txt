@@ -1,0 +1,15 @@
+<result>
+Title = "Dave Darrin's Second Year at Annapolis; or, Two Midshipmen as Naval Academy 'Youngsters'"
+Author = "H. Irving Hancock"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of H. Irving Hancock's popular early 20th-century series of boys' adventure books focused on the U.S. Naval Academy at Annapolis. The "Dave Darrin" series follows young midshipmen through their years at the Academy, combining naval education, character development, and adventure. This second installment covers Dave Darrin's "youngster" year (second year) at Annapolis, featuring typical themes of honor, duty, rivalry, and coming-of-age challenges within the military academy setting. Hancock wrote numerous series for young readers, including books about West Point, high school athletics, and various military adventures, all aimed at instilling values of courage, integrity, and patriotism in young American readers.
+"""
+
+Notes = """
+The year 1911 is indicated by the Roman numerals "MCMXI" on the title page, which is the publication date. This was part of the golden age of boys' series fiction in America, when such adventure stories were immensely popular and helped shape ideals about military service and character among young readers.
+"""
+</result>

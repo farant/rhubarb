@@ -1,0 +1,15 @@
+<result>
+Title = "North, South and Over the Sea"
+Author = "M.E. Francis (Mrs. Francis Blundell)"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by M.E. Francis (pseudonym of Mary Elizabeth Sweetman Blundell, 1859-1930), an Irish-born Catholic author who wrote extensively about rural life in England and Ireland. This work features tales set in various locations across Britain and Ireland, reflecting the author's keen observation of regional customs, dialects, and social dynamics of late Victorian and Edwardian rural communities. Francis was known for her sympathetic portrayals of working-class characters and her ability to capture the distinct character of different regions - the North of England, the South, and across the Irish Sea. The stories typically explore themes of love, duty, class, and the challenges of rural life with a mix of humor and pathos.
+"""
+
+Notes = """
+The publication year 1902 is clearly stated on the title page. M.E. Francis was a Catholic author whose works would likely have been considered appropriate for Catholic readers of the period, though this particular collection appears to be general regional fiction rather than explicitly religious work. The 'Country Life Library of Fiction' series suggests these were popular, accessible stories aimed at a broad readership interested in rural life and regional character studies.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Project Gutenberg CD-ROM August 2003"
+Author = "Various"
+Year = 2003
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a README/documentation file for the Project Gutenberg CD-ROM released in August 2003. It contains approximately 600 eBooks from the Project Gutenberg collection. The file describes the available download formats (ISO image, zipped versions) and provides technical instructions for downloading, verifying file integrity through checksums, and burning the content to DVD. This represents a snapshot of Project Gutenberg's digital library distribution method from the early 2000s, before modern streaming and cloud storage became prevalent.
+"""
+
+Notes = """
+This is not a literary work but rather technical documentation for a Project Gutenberg distribution medium. The year 2003 represents when this specific CD compilation was released. This type of file would not typically be included in a historical timeline of literary works - it's metadata about a collection rather than a work itself. You may want to skip processing README/technical files like this and focus on the actual literary texts in your gutenberg-data/raw directory.
+"""
+</result>

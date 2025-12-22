@@ -1,0 +1,15 @@
+<result>
+Title = "Mahomet: Founder of Islam"
+Author = "G. M. Draycott"
+Year = 632
+
+Tags = ["non-fiction", "biography", "historical", "religious-studies"]
+
+Summary = """
+This is a biographical work about Muhammad (referred to as "Mahomet" in older English texts), the founder of Islam. Written by G. M. Draycott, the book chronicles Muhammad's life from his birth in Mecca through his prophetic mission, the flight to Medina (Hijra), and his eventual triumph and return to Mecca. The work covers major events including the battles of Badr and Uhud, conflicts with Jewish tribes, and the establishment of the Islamic community. The book follows the traditional narrative structure of Muhammad's life, examining both his spiritual journey and his role as a political and military leader in 7th century Arabia.
+"""
+
+Notes = """
+I've chosen 632 CE as the year, which is the year of Muhammad's death and represents the culmination of his life and mission that this biography chronicles. While this is clearly a later biographical work written by Draycott (likely early 20th century based on the style and transliteration "Mahomet"), the subject matter itself centers on events from 570-632 CE. For a historical timeline, 632 CE marks the completion of Muhammad's prophetic career and would be the most historically significant date for understanding Islam's founding period. The book is not tagged as "appropriate-for-children" as it deals with complex religious, political, and military themes. It is not tagged as "catholic" as it is a biographical/historical study of Islam's founder, not a work by a Catholic author from a Catholic perspective.
+"""
+</result>

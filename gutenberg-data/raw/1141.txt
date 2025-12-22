@@ -1,0 +1,17 @@
+<result>
+Title = "Selected Poems of Oscar Wilde"
+Author = "Oscar Wilde"
+Year = 1898
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by Oscar Wilde (1854-1900), the Irish poet and playwright known for his wit, aesthetic philosophy, and tragic downfall. The collection includes "The Ballad of Reading Gaol," Wilde's most famous poem, written after his release from prison in 1897 where he served two years of hard labor for "gross indecency." The ballad reflects on his prison experience and the execution of a fellow inmate, containing the famous lines "Yet each man kills the thing he loves." Wilde's poetry is characterized by rich imagery, musicality, and themes of beauty, love, mortality, and social critique. This particular edition was edited by Robert Ross, Wilde's literary executor and close friend, and published by Methuen in 1911, though it contains works from throughout Wilde's career.
+"""
+
+Notes = """
+I chose 1898 as the year because "The Ballad of Reading Gaol" (the most significant work mentioned in the title) was published in February 1898, shortly after Wilde's release from prison. While this 1911 Methuen edition is a later compilation, the collection's defining work dates to 1898. Wilde's earlier poems were published throughout the 1880s-1890s, but the inclusion of Reading Gaol as the featured work makes 1898 the most historically significant date for this collection's content.
+
+Not tagged as "appropriate-for-children" due to mature themes including imprisonment, execution, and adult relationships. Not tagged as "catholic" - while Wilde converted to Catholicism on his deathbed in 1900, his work was often controversial and would not have received ecclesiastical approval during his lifetime.
+"""
+</result>

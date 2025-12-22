@@ -1,0 +1,15 @@
+<result>
+Title = "Michael Row the Boat Ashore"
+Author = "Traditional (African-American Spiritual)"
+Year = 1867
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children", "music", "spiritual"]
+
+Summary = """
+"Michael Row the Boat Ashore" is a traditional African-American spiritual that originated among enslaved people in the Southern United States, particularly associated with the Sea Islands off the coast of South Carolina and Georgia. The song uses biblical imagery, with "Michael" likely referring to the Archangel Michael, and "Jordan's River" representing both the literal River Jordan and metaphorically the passage from slavery to freedom, or from earthly life to heaven. The call-and-response structure with "hallelujah" refrains is characteristic of African-American spirituals. The song gained wider popularity during the folk music revival of the 1960s, being recorded by numerous artists including Pete Seeger, The Highwaymen, and Harry Belafonte.
+"""
+
+Notes = """
+Dating traditional spirituals is inherently imprecise as they emerged from oral tradition. The year 1867 represents when this song was first documented in print, appearing in "Slave Songs of the United States" compiled by William Francis Allen, Charles Pickard Ware, and Lucy McKim Garrison - the first major collection of African-American spirituals. The songs themselves often predate their documentation by decades. This date represents the historical moment when the song entered the written record and became accessible to broader study and preservation, making it appropriate for a historical timeline context.
+"""
+</result>

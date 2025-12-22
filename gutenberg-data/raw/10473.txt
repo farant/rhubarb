@@ -1,0 +1,15 @@
+<result>
+Title = "The Heart of the Range"
+Author = "William Patterson White"
+Year = 1921
+
+Tags = ["fiction", "western", "appropriate-for-children"]
+
+Summary = """
+"The Heart of the Range" is a Western novel by William Patterson White, an author known for his frontier and cowboy stories in the early 20th century. White was a prolific writer of Western fiction during the 1910s and 1920s, producing adventure tales set in the American West featuring cowboys, ranchers, horse thieves, and frontier justice. This novel appears to be typical of his work—action-oriented stories of the range with themes of honor, friendship, and survival in the rugged Western territories. The dedication "To Ranger, a good horse and a better friend" suggests the importance of the horse-human bond that was central to Western life and literature.
+"""
+
+Notes = """
+The year 1921 is clearly stated on the title page and represents the original publication date. This was during the golden age of Western pulp fiction and popular novels, when writers like Zane Grey and Max Brand were also at their peak. William Patterson White was a contemporary of these authors, writing adventure stories for a popular audience.
+"""
+</result>

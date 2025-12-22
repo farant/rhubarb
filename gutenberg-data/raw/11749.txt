@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, publication year, and other details.
+
+<result>
+Title = "New Comedies"
+Author = "Lady Gregory"
+Year = 1913
+
+Tags = ["fiction", "drama", "irish-literature"]
+
+Summary = """
+'New Comedies' is a collection of five one-act plays by Lady Augusta Gregory, one of the co-founders of the Irish Literary Theatre and the Abbey Theatre. The plays include 'The Bogie Men', 'The Full Moon', 'Coats', 'Damer's Gold', and 'McDonough's Wife'. These comedies are part of Lady Gregory's contribution to the Irish Literary Revival, featuring Irish characters, dialects, and rural life. The plays were written for and performed at the Abbey Theatre in Dublin, showcasing her talent for folk comedy and her deep understanding of Irish peasant life and folklore. Lady Gregory was instrumental in the development of modern Irish drama alongside W.B. Yeats and J.M. Synge.
+"""
+
+Notes = """
+The copyright date of 1913 clearly indicates the original publication year. This collection was published during the height of the Irish Literary Revival and represents Lady Gregory's mature work as a playwright. The dedication to W.F. Bailey and the notation of Abbey Theatre 1913 confirms this dating. While Lady Gregory was Anglo-Irish Protestant rather than Catholic, she was deeply connected to Irish Catholic culture through her folklore collecting and her plays often depicted the lives of rural Irish Catholics with sympathy and understanding.
+"""
+</result>

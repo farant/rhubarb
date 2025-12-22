@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewals"
+Author = "United States Copyright Office"
+Year = 1954
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office publication listing copyright renewals registered during a specific period in 1954. It provides an alphabetical catalog of books, pamphlets, serials, and periodical contributions for which copyright renewal registrations were filed. Each entry includes information about both the original copyright registration (typically from the 1920s, given the renewal period) and the renewal registration. This type of document serves as an official government record of intellectual property rights and is useful for researchers tracking publication history and copyright status of works from the early-to-mid 20th century.
+"""
+
+Notes = """
+The year 1954 represents when this particular catalog was published by the Copyright Office. The document itself is a government administrative record rather than a creative or scholarly work. The entries shown are renewals for works originally copyrighted in the 1920s (copyright renewals were required 28 years after original registration under the copyright law of that era). Project Gutenberg ID 11809 corresponds to one of many such catalogs published periodically by the U.S. Copyright Office.
+"""
+</result>

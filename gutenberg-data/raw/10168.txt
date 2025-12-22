@@ -1,0 +1,15 @@
+<result>
+Title = "Kaiser Frederick March"
+Author = "British Military Band"
+Year = 1888
+
+Tags = ["historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of the Kaiser Frederick March, performed by a British Military Band. The recording was edited by Thomas A. Edison and is preserved in the Edison National Historic Site collection. The Kaiser Frederick March was a military march composed in honor of German Emperor Frederick III, who reigned briefly in 1888 before his death from throat cancer. This Project Gutenberg entry is an audio recording (MP3 format) rather than a traditional text, representing early phonograph recordings from the Edison era.
+"""
+
+Notes = """
+The year 1888 is chosen as it corresponds to Kaiser Frederick III's brief reign (99 days, March-June 1888), which would have been the period when marches in his honor were most prominently performed and recorded. The actual Edison recording could be from the late 1880s to 1890s, as Edison's phonograph technology was being actively developed and used for such recordings during this period. This is an audio artifact rather than a literary work.
+"""
+</result>

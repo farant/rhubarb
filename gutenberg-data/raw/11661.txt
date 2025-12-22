@@ -1,0 +1,15 @@
+<result>
+Title = "The Piper"
+Author = "Josephine Preston Peabody"
+Year = 1909
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+"The Piper" is a four-act play by American poet and dramatist Josephine Preston Peabody, based on the medieval German legend of the Pied Piper of Hamelin. The play reimagines the famous folk tale about a mysterious piper who rids the town of Hamelin of rats, but when the townspeople refuse to pay him, he leads their children away. Peabody's verse drama won the Stratford-on-Avon Prize Competition in 1910 and was performed at the Shakespeare Memorial Theatre. The work explores themes of broken promises, social justice, and the consequences of greed, while giving depth and humanity to the legendary piper character. The inscription referenced in the epigraph refers to the historical legend dated 1284, when 130 children were supposedly lost from Hamelin.
+"""
+
+Notes = """
+The play was copyrighted in 1909 and published in November 1909, making 1909 the appropriate year for this work. While the play is based on a medieval legend from 1284 (as referenced in the Hamelin inscription), 1909 represents the year of this specific creative work's publication and first performance period.
+"""
+</result>

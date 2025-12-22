@@ -1,0 +1,15 @@
+<result>
+Title = "Quit Your Worrying!"
+Author = "George Wharton James"
+Year = 1916
+
+Tags = ["non-fiction", "self-help"]
+
+Summary = """
+"Quit Your Worrying!" is a self-help book by George Wharton James addressing the psychological and spiritual dimensions of worry. Written in the early 20th century, it examines worry as a widespread affliction of modern life and offers practical and philosophical guidance for overcoming it. The book covers various forms of worry including health concerns, parental anxieties, marital troubles, religious doubts, and professional stress. James draws on religious wisdom, particularly referencing "Holy Writ" and positioning worry as contrary to faith in divine providence. The work reflects the emerging self-improvement and positive thinking movements of the Progressive Era.
+"""
+
+Notes = """
+The publication year of 1916 is clearly stated on the title page. George Wharton James was a prolific American author and lecturer known for his works on California, Native American culture, and inspirational/self-help topics. While James had connections to various religious and philosophical movements, this appears to be a general self-help work with Christian themes rather than a specifically Catholic text, so the 'catholic' tag was not applied.
+"""
+</result>

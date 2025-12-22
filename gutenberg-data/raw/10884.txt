@@ -1,0 +1,15 @@
+<result>
+Title = "A Publisher and His Friends: Memoir and Correspondence of John Murray"
+Author = "Samuel Smiles (edited by Thomas Mackay)"
+Year = 1891
+
+Tags = ["non-fiction", "biography", "literary-history"]
+
+Summary = """
+This work is a biographical memoir of John Murray II (1778-1843), the prominent London publisher who founded the modern publishing house of John Murray. Written by Samuel Smiles and later condensed by Thomas Mackay, the book chronicles Murray's life and career through his correspondence and personal papers. Murray was one of the most influential publishers of the early 19th century, publishing major works by Lord Byron, Sir Walter Scott, Jane Austen, and many other literary luminaries. The memoir provides valuable insight into the literary world of Regency and early Victorian England, documenting Murray's relationships with authors like Byron, Scott, Lockhart, Croker, George Borrow, Hallam, Canning, Gifford, Disraeli, Southey, and Milman. The work serves as an important chapter in English literary history, showing how Murray rose from modest circumstances to become what Byron called "the Anax of Publishers."
+"""
+
+Notes = """
+The original two-volume work by Samuel Smiles was first published in 1891 (twenty years before this 1911 condensed edition). I've chosen 1891 as the year since that represents when this historical work was first compiled and published, making it the most educationally relevant date for a historical timeline. The 1911 edition shown here is a condensed reprint edited by Thomas Mackay. The memoir covers the period 1768-1843, spanning the founding of the Murray publishing house and John Murray II's career.
+"""
+</result>

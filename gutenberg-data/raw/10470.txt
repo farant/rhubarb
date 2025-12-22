@@ -1,0 +1,15 @@
+<result>
+Title = "Nine Hundred Miles"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["fiction", "audio", "folk-music"]
+
+Summary = """
+This is an audio recording by Roger McGuinn of the traditional American folk song "Nine Hundred Miles." McGuinn, best known as the founder and lead singer of The Byrds, recorded this as part of his Folk Den project which began in 1995. The Folk Den project was McGuinn's effort to preserve and share traditional folk songs through digital recordings, making them freely available online. "Nine Hundred Miles" is a classic American railroad song with roots in the late 19th/early 20th century, expressing themes of longing, distance, and separation.
+"""
+
+Notes = """
+The copyright date of 2001 (McGuinn Music) is used as the year, as this represents when this specific recording/performance was created and copyrighted by Roger McGuinn. While the original folk song "Nine Hundred Miles" dates back much earlier (likely late 1800s/early 1900s), this Project Gutenberg entry is specifically for McGuinn's audio performance/recording, not the original composition. This is an audio file (MP3) rather than a text document, which is unusual for Project Gutenberg but part of their audio collection.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Inca Land: Explorations in the Highlands of Peru"
+Author = "Hiram Bingham"
+Year = 1922
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+Inca Land is an account of Hiram Bingham's archaeological expeditions to Peru, most notably his 1911 discovery and subsequent explorations of Machu Picchu. Bingham was an American historian and explorer who conducted multiple expeditions to the Peruvian Andes between 1911 and 1915. This work documents his travels through the highlands, his encounters with local people, and his archaeological discoveries including the famous "Lost City of the Incas." The book combines adventure narrative with archaeological and historical observations about Inca civilization. Bingham's expeditions were sponsored by Yale University and the National Geographic Society, and his work brought international attention to Machu Picchu, though his methods and removal of artifacts have been controversial in retrospect.
+"""
+
+Notes = """
+The year 1922 is clearly stated in the text itself and represents the publication date of this work. This was published over a decade after Bingham's initial 1911 discovery of Machu Picchu, allowing him time to conduct multiple expeditions and compile his observations. The work is generally appropriate for older children/young adults interested in exploration and archaeology, though it reflects early 20th century perspectives on indigenous peoples and archaeology.
+"""
+</result>

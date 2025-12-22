@@ -1,0 +1,15 @@
+<result>
+Title = "Two Rubes at the Vaudeville"
+Author = "Byron G. Harlan"
+Year = 1903
+
+Tags = ["audio-recording", "comedy", "vaudeville", "appropriate-for-children"]
+
+Summary = """
+This is an early 20th century audio recording of a comedic vaudeville sketch performed by Byron G. Harlan, a popular American vaudeville singer and recording artist of the early 1900s. The piece depicts two rural characters (rubes) experiencing vaudeville theater, a common comedic premise of the era. The recording was made by the Edison company as part of their early phonograph cylinder or disc recordings. Byron G. Harlan was one of the most prolific recording artists of the acoustic era, known for his character songs and comedy sketches.
+"""
+
+Notes = """
+The year 1903 is an estimate based on Byron G. Harlan's most active recording period with Edison (roughly 1901-1910) and the typical dating of early Edison vaudeville comedy recordings. Without more specific metadata from the Edison National Historic Site catalog, this represents the approximate era when such recordings were produced. Edison began commercial cylinder recordings in the late 1890s, and vaudeville comedy sketches like this were popular throughout the first decade of the 20th century.
+"""
+</result>

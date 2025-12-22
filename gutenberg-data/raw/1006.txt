@@ -1,0 +1,15 @@
+<result>
+Title = "Purgatorio (The Divine Comedy)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "medieval", "theological"]
+
+Summary = """
+Purgatorio is the second part of Dante Alighieri's Divine Comedy, following Inferno and preceding Paradiso. Written in the early 14th century, it describes Dante's journey through Purgatory, guided by the Roman poet Virgil. The work depicts Purgatory as a mountain with seven terraces, each corresponding to one of the seven deadly sins. As Dante ascends, he witnesses souls undergoing purification through various penances before they can enter Paradise. The poem is a masterpiece of medieval Catholic theology and literature, combining personal spiritual journey with political commentary, classical learning, and profound theological insight. This translation by Henry Francis Cary, published in the early 19th century, was highly influential in introducing Dante to English readers.
+"""
+
+Notes = """
+The year 1320 represents approximately when Dante completed Purgatorio (the middle section was likely written between 1308-1320, with the entire Comedy completed shortly before his death in 1321). This is a more historically significant date than the Cary translation date (first published 1814), as the work is fundamentally Dante's medieval masterpiece. The Purgatorio is considered essential Catholic literature, exploring the doctrine of Purgatory and the soul's purification process.
+"""
+</result>

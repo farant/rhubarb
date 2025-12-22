@@ -1,0 +1,26 @@
+I need to identify this work from Project Gutenberg. Let me analyze the text:
+
+This is clearly "The Botanic Garden, Part II: The Loves of the Plants" by Erasmus Darwin. The distinctive features are:
+
+1. The title explicitly states "THE BOTANIC GARDEN. PART II. CONTAINING THE LOVES OF THE PLANTS. A POEM. WITH PHILOSOPHICAL NOTES."
+2. The publisher information shows "LONDON: PRINTED BY J. NICHOLS, FOR J. JOHNSON, ST. PAUL'S CHURCH YARD. M, DCC, XC." - which is 1790
+3. This is marked as "THE SECOND EDITION"
+4. The Latin epigraph from Claudian and the mention of "Imagination under the banner of Science" are characteristic of Darwin's work
+
+Erasmus Darwin (grandfather of Charles Darwin) was a physician, natural philosopher, and poet who wrote this famous didactic poem that personified plants according to the Linnaean sexual system of classification. Part II was actually published before Part I.
+
+<result>
+Title = "The Botanic Garden, Part II: The Loves of the Plants"
+Author = "Erasmus Darwin"
+Year = 1789
+
+Tags = ["non-fiction", "poetry", "science", "natural-history"]
+
+Summary = """
+'The Loves of the Plants' is Part II of Erasmus Darwin's didactic poem 'The Botanic Garden', which personifies plants according to the Linnaean sexual classification system. Darwin, a prominent physician and natural philosopher, used poetic imagery to describe botanical reproduction, assigning plants human characteristics based on their stamens (male) and pistils (female). The work includes extensive philosophical and scientific notes explaining the natural history behind the verses. It was an influential work of Romantic-era science poetry that sought to make botanical knowledge accessible and entertaining to a broader audience. Darwin's anthropomorphization of plant sexuality was both celebrated for its imagination and criticized for its licentiousness.
+"""
+
+Notes = """
+Part II was actually published first in 1789, though this text shows it is the second edition from 1790. Part I ('The Economy of Vegetation') followed in 1791. I've chosen 1789 as the publication year since that represents when this part first appeared and became influential. Erasmus Darwin was Charles Darwin's grandfather and a member of the Lunar Society. While not specifically Catholic content, this is a significant work in the history of science and Romantic poetry.
+"""
+</result>

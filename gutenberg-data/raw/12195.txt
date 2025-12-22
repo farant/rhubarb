@@ -1,0 +1,15 @@
+<result>
+Title = "The Mystery of Metropolisville"
+Author = "Edward Eggleston"
+Year = 1873
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Mystery of Metropolisville is a novel by Edward Eggleston, an American author known for his realistic portrayals of American frontier life and Midwestern society. Eggleston was a pioneering figure in American regionalism and realism, moving away from European literary imitation. This novel, like his other works including "The Hoosier School-Master" and "The End of the World," depicts specific forms of American life and society in the 19th century. The work focuses on representing authentic American customs, manners, and civilization during a period of westward expansion and land speculation. Eggleston explicitly states in his preface that he aims to contribute to the history of American civilization through truthful representation of contemporary American life.
+"""
+
+Notes = """
+The year 1873 is chosen based on the dedication date (March 18th, 1873) and the preface date (Brooklyn, March, 1873), indicating this was when the work was completed and published. The edition shown here appears to be from 1888, but the original publication was 1873. Edward Eggleston (1837-1902) was a Methodist minister turned author who became one of the early realist writers in American literature. While Eggleston had Methodist religious background, his work was not specifically Catholic, so the 'catholic' tag is not applied.
+"""
+</result>

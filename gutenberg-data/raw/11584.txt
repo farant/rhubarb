@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This appears to be "Madcap" by George Gibbs. Based on the chapter titles and the romantic/adventure nature of the work suggested by titles like "The Fairy Godmother," "Vagabondia," and "Circe and the Fossil," this appears to be an early 20th century romantic adventure novel by American author George Gibbs, who was a popular novelist and illustrator during that period.
+
+<result>
+Title = "Madcap"
+Author = "George Gibbs"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Madcap" is a romantic adventure novel by George Gibbs, an American author and illustrator who was popular in the early 20th century. The novel follows a romantic entanglement involving characters named Hermia and Mr. Markham, with elements of mystery, adventure, and society drama. The chapter titles suggest a story involving rescue, fugitives, chance encounters, and various colorful characters including Russian émigrés (Olga Tcherny), philosophers, and mountebanks. The work is characteristic of the light romantic fiction that was popular in American magazines and books during the Edwardian era, featuring adventure, romance, and social comedy.
+"""
+
+Notes = """
+George Gibbs (1870-1942) was a prolific American author who wrote numerous popular novels in the early 1900s. "Madcap" was published in 1904 and represents the type of light, entertaining romantic fiction that was widely read in this period. The novel was typical of the era's popular literature, combining romance with mild adventure and society drama.
+"""
+</result>

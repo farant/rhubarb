@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text for you.
+
+This is clearly "Against the Grain" (*À rebours*) by Joris-Karl Huysmans, translated by John Howard. This is one of the most famous French Decadent novels, originally published in French in 1884.
+
+The novel follows Jean Des Esseintes, an eccentric aesthete who withdraws from Parisian society to pursue a life of refined sensory and intellectual experiences in isolation. It's a landmark work of the Decadent movement and had enormous influence on later writers, including Oscar Wilde.
+
+Regarding Huysmans' religious status: He was a Catholic convert (converted in the 1890s, after writing this novel), but "Against the Grain" itself was written during his decadent period before his conversion. The novel is actually quite anti-religious and celebrates aesthetic excess and artificiality. So while Huysmans later became Catholic, this particular work would NOT have received an imprimatur - it's a decadent novel that the Church would have found problematic.
+
+<result>
+Title = "Against the Grain"
+Author = "Joris-Karl Huysmans"
+Year = 1884
+
+Tags = ["fiction", "decadent-literature", "philosophical-fiction"]
+
+Summary = """
+A landmark novel of the French Decadent movement, 'Against the Grain' (À rebours) follows the aristocratic aesthete Jean Des Esseintes as he withdraws from Parisian society to create a life of extreme refinement and artificial sensory experiences. The novel is a detailed exploration of aesthetic philosophy, rejecting naturalism in favor of artifice and exploring themes of ennui, sensory experience, and the rejection of bourgeois values. It had enormous influence on later writers including Oscar Wilde, who referenced it in 'The Picture of Dorian Gray.' The work represents the pinnacle of Decadent literature and marks a turning point in French fiction away from naturalism.
+"""
+
+Notes = """
+Original French publication year (1884) used. Huysmans later converted to Catholicism in the 1890s and wrote religious works, but this novel predates his conversion and represents his decadent period. The work would not have been considered suitable for Catholic approval due to its celebration of aesthetic excess and rejection of traditional morality.
+"""
+</result>

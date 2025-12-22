@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the content, this is clearly "The Sorrows of a Show Girl" by Kenneth McGaffey, published in 1908. The text explicitly states it was originally printed in The Morning Telegraph, New York. This appears to be a serialized fiction work about theatrical life in early 20th century New York (the "Great White Way" refers to Broadway's theater district).
+
+<result>
+Title = "The Sorrows of a Show Girl: A Story of the Great White Way"
+Author = "Kenneth McGaffey"
+Year = 1908
+
+Tags = ["fiction", "theatrical-life", "humor"]
+
+Summary = """
+A serialized fiction work originally published in The Morning Telegraph, New York, following the adventures and misadventures of Sabrina, a chorus girl navigating the theatrical world of Broadway's "Great White Way" in early 20th century New York. The episodic narrative follows Sabrina through various situations including her theatrical career, financial ups and downs, a trip home to Emporia that scandalizes the town, involvement with the Chorus Girls' Union, romantic entanglements with a press agent, and her attempts to maintain her lifestyle and automobile while working in the chorus. The work appears to be a humorous, satirical look at show business and the lives of chorus girls during this era.
+"""
+
+Notes = """
+The year 1908 is explicitly stated on the title page. This work represents early 20th century popular fiction about Broadway theatrical life. The Morning Telegraph was a New York newspaper known for its extensive theatrical coverage, making it an appropriate venue for this serialized story about show business.
+"""
+</result>

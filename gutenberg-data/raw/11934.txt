@@ -1,0 +1,17 @@
+I'll read the text and provide you with the structured information about this work.
+
+<result>
+Title = "Primitive Love and Love-Stories"
+Author = "Henry T. Finck"
+Year = 1899
+
+Tags = ["non-fiction", "anthropology", "sociology"]
+
+Summary = """
+This is an anthropological and sociological study by Henry T. Finck examining the evolution of love from primitive societies through civilization. The work explores love customs and marriage practices across different cultures and stages of human development (savagery, barbarism, semi-civilization, and civilization). Finck builds on his earlier work "Romantic Love and Personal Beauty" (1887), but this volume focuses specifically on love-affairs and customs among savages and barbarians from an evolutionary perspective. The author engages with contemporary evolutionary theory and the emerging science of anthropology, attempting to provide what he considers the first comprehensive evolutionary analysis of love as a phenomenon.
+"""
+
+Notes = """
+The year 1899 is clearly stated on the title page as the publication date. This work represents late 19th-century anthropological thinking, written during the height of evolutionary theory's influence on social sciences. The author references Schopenhauer's philosophy of love and situates his work within the context of post-Darwinian evolutionary thought. While Finck may have been Catholic (given the dedication and writing style), this is not a Catholic theological work but rather a secular anthropological study, so I have not included the 'catholic' tag.
+"""
+</result>

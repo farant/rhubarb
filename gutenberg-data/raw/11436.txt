@@ -1,0 +1,15 @@
+<result>
+Title = "Stories by American Authors, Volume 1"
+Author = "Various (Bayard Taylor, Brander Matthews, H.C. Bunner, William Henry Bishop, Rebecca Harding Davis, Albert Webster)"
+Year = 1903
+
+Tags = ["fiction", "short-stories", "anthology"]
+
+Summary = """
+This is an anthology of short stories by various American authors from the late 19th/early 20th century. The collection includes five stories: "Who Was She" by Bayard Taylor, "The Documents in the Case" by Brander Matthews and H.C. Bunner (a collaborative work), "One of the Thirty Pieces" by William Henry Bishop, "Balacchi Brothers" by Rebecca Harding Davis, and "An Operation in Money" by Albert Webster. These collections were part of a series published by Charles Scribner's Sons showcasing contemporary American literature of the period, representing the diversity of American short fiction at the turn of the century.
+"""
+
+Notes = """
+The publication year of 1903 appears on the title page of this volume. While the individual stories may have been published earlier in magazines or other venues, this compilation was published in 1903 as part of a multi-volume series. This represents the most historically accurate date for this particular work as an anthology.
+"""
+</result>

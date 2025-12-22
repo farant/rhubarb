@@ -1,0 +1,15 @@
+<result>
+Title = "A Walk from London to John O'Groat's"
+Author = "Elihu Burritt"
+Year = 1864
+
+Tags = ["non-fiction", "appropriate-for-children", "travel"]
+
+Summary = """
+A travelogue by Elihu Burritt (1810-1879), an American diplomat, consul, and social activist known as "the Learned Blacksmith." This work chronicles his walking journey from London to John O'Groat's (the northernmost point of mainland Scotland), documenting observations about rural life, agriculture, and British society in the mid-19th century. Burritt was a pacifist, advocate for international arbitration, and social reformer who took keen interest in agricultural improvements and rural conditions. The book reflects his characteristic attention to practical details of farming, rural economy, and the lives of ordinary people, contrasting the experiences of railway travel with the more intimate observations possible on foot.
+"""
+
+Notes = """
+First published in 1864. Burritt wrote this after serving as U.S. consul in Birmingham (1865-1870 dating varies by source, but the walk and book preceded his consulship). The work is part travel narrative, part social commentary on Victorian England and Scotland, with particular attention to agricultural reform movements of the period.
+"""
+</result>

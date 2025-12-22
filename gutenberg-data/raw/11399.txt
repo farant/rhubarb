@@ -1,0 +1,15 @@
+<result>
+Title = "The Pirates of Malabar, and an Englishwoman in India Two Hundred Years Ago"
+Author = "John Biddulph"
+Year = 1907
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+This work by Colonel John Biddulph examines the early history of English trade and presence in India, focusing particularly on the period before the mid-eighteenth century wars with France. The book details the significant dangers and hardships faced by early English traders in India, including piracy (particularly from the Malabar coast), treacherous sea voyages, hostile environments, and the general challenges of establishing and maintaining commercial operations in India during the seventeenth and early eighteenth centuries. The work also includes an account of an Englishwoman's experiences in India two hundred years prior to publication. Biddulph aims to give proper recognition to these early traders and adventurers whose efforts established the foundation for British presence in India, arguing that their contributions have been underappreciated in historical accounts that typically focus on later military conflicts.
+"""
+
+Notes = """
+The year 1907 represents the publication date of this specific work. This appears to be a historical study written in the early twentieth century looking back at events from approximately 200 years prior (early 1700s). The book was published in 1907 as indicated on the title page.
+"""
+</result>

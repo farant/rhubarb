@@ -1,0 +1,15 @@
+<result>
+Title = "The Boy Allies in Great Peril; Or, With the Italian Army in the Alps"
+Author = "Clair W. Hayes"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "war-story"]
+
+Summary = """
+This is a World War I adventure novel from the popular "Boy Allies" series by Clair W. Hayes (a pseudonym). The series follows young American protagonists, in this case Hal and Chester, as they participate in various theaters of the Great War. This particular installment focuses on Italy's entry into World War I and follows the boys' adventures with the Italian Army in the Alps. The Boy Allies series was aimed at young readers and capitalized on contemporary interest in the ongoing war, providing patriotic adventure stories featuring teenage heroes in military settings. These books were typical of early 20th century juvenile literature that romanticized war and emphasized courage, duty, and adventure.
+"""
+
+Notes = """
+The year 1916 is clearly indicated on the title page as the publication date. This timing is historically appropriate as Italy entered World War I in May 1915, so a 1916 publication would be timely for American audiences interested in Italy's role in the conflict. The book references Italy's decision to enter the war, which would have been recent history when published.
+"""
+</result>

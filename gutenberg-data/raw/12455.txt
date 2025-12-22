@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+<result>
+Title = "Legends of the Middle Ages: Narrated with Special Reference to Literature and Art"
+Author = "H.A. Guerber"
+Year = 1896
+
+Tags = ["non-fiction", "appropriate-for-children", "mythology", "literature", "art-history"]
+
+Summary = """
+This is a comprehensive collection of medieval European legends compiled by H.A. Guerber (Hélène Adeline Guerber), an American author known for her accessible retellings of mythology and legendary tales. The work narrates the major legends of the Middle Ages with particular attention to how they appear in literature and art. It likely covers stories of Charlemagne and Roland, King Arthur, Tristan and Isolde, and other figures from medieval romance traditions, as suggested by the epigraph from the Cursor Mundi. Guerber was known for making classical and medieval legends accessible to young readers and students, and this work follows that educational tradition.
+"""
+
+Notes = """
+The year 1896 is clearly stated on the title page as the publication date. This is Guerber's original compilation work rather than a translation, so this date is appropriate. H.A. Guerber (1859-1929) was a prolific writer of mythology and legend compilations for educational purposes in the late 19th and early 20th centuries.
+"""
+</result>

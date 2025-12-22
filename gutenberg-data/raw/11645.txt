@@ -1,0 +1,21 @@
+I recognize this work immediately. Let me analyze the text and provide the structured information you requested.
+
+This is "La Rôtisserie de la Reine Pédauque" (At the Sign of the Reine Pédauque) by Anatole France, published in 1893. It's a picaresque novel set in 18th-century France that follows the adventures of Jacques Tournebroche and his mentor, the learned and bibulous Abbé Jérôme Coignard. The novel is known for its satirical wit, philosophical digressions, and gentle mockery of both ecclesiastical and occult pretensions.
+
+Anatole France (Jacques Anatole Thibault, 1844-1924) was indeed a Catholic by birth and cultural formation, though his later works became increasingly skeptical. However, this particular novel, while satirical, treats its Catholic characters (especially the Abbé Coignard) with affection and would likely have been acceptable to Catholic readers of the period, even if it wouldn't receive formal ecclesiastical approval due to its gentle satire.
+
+<result>
+Title = "La Rôtisserie de la Reine Pédauque"
+Author = "Anatole France"
+Year = 1893
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A picaresque novel set in 18th-century France following the adventures of young Jacques Tournebroche and his tutor, the learned and wine-loving Abbé Jérôme Coignard. The narrative involves encounters with a Gascon cabalist, occult sciences, Rose-Croix mysteries, and philosophical adventures on the Île aux Cygnes. The novel is celebrated for Anatole France's elegant prose, gentle satire, and the memorable character of Abbé Coignard, who embodies both classical learning and human frailty. The work combines adventure, philosophy, and social commentary on pre-Revolutionary French society.
+"""
+
+Notes = """
+The edition shown is the sixth edition from 1893, the same year as original publication, indicating its immediate popularity. Anatole France won the Nobel Prize in Literature in 1921. While France was culturally Catholic and this work treats Catholic characters affectionately, it contains mild satire that would likely preclude a nihil obstat, so I have not included the 'catholic' tag despite the protagonist being an abbé. The novel is not appropriate for children due to adult themes and complexity.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the title, author, year, and other details.
+
+This appears to be from the collected works of Napoleon Bonaparte, specifically correspondence from his Egyptian campaign. The text contains military letters dated March 18, 1799 (28 ventose an 7 in the French Revolutionary calendar), written from Mont Carmel during the Siege of Acre.
+
+The publication year shown is 1821 (MDCCCXXI), which was when this particular edition of Napoleon's collected works was published, shortly after his death in 1821 on Saint Helena.
+
+<result>
+Title = "Oeuvres de Napoléon Bonaparte, Tome Troisième"
+Author = "Napoleon Bonaparte"
+Year = 1821
+
+Tags = ["non-fiction", "historical-document", "military-history"]
+
+Summary = """
+This is the third volume of the collected works of Napoleon Bonaparte, published in 1821. This particular section contains military correspondence from Napoleon's Egyptian Campaign (1798-1801), specifically letters written from Mont Carmel on March 18, 1799, during the siege of Acre. The letters are addressed to General Reynier and Adjutant-General Grézieux, discussing military logistics, grain supplies, and troop movements during the Syrian campaign. These works provide primary source documentation of Napoleon's military campaigns and administrative communications.
+"""
+
+Notes = """
+The year 1821 represents the publication date of this collected edition, which appeared shortly after Napoleon's death in May 1821. While the letters themselves date from 1799 during the Egyptian Campaign, the historical significance of this work lies in its publication as part of the posthumous compilation of Napoleon's writings and correspondence. This edition used the original French Revolutionary calendar dates alongside Gregorian calendar conversions.
+"""
+</result>

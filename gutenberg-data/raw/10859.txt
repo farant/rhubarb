@@ -1,0 +1,15 @@
+<result>
+Title = "Paul and Virginia"
+Author = "Jacques-Henri Bernardin de Saint-Pierre"
+Year = 1788
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Paul et Virginie (Paul and Virginia) is a romantic novel by French author Bernardin de Saint-Pierre, first published in 1788. The story is set on the island of Mauritius (then called Île de France) and tells the tale of two childhood friends, Paul and Virginia, who grow up together in an idyllic natural paradise raised by their mothers who had fled France. The novel explores themes of innocence, natural virtue, the corrupting influence of civilization, and tragic love. When Virginia is sent to France for education and to claim an inheritance, the separation leads to tragedy. The work became enormously popular in the Romantic era and influenced the development of the pastoral novel. It reflects Rousseau's ideas about the nobility of natural life versus the artificiality of civilized society.
+"""
+
+Notes = """
+The original French publication date was 1788. This Project Gutenberg edition appears to be from an 1851 English translation. The work was written during the pre-Revolutionary period in France and became one of the most widely read French novels of the 19th century, going through numerous editions and translations.
+"""
+</result>

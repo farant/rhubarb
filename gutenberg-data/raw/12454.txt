@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly a work by Rudyard Kipling about France during World War I. The text shows it's a collection of essays/dispatches titled "France at War: On the Frontier of Civilization" published in 1915. Kipling wrote several war-related pieces during WWI, and this appears to be one of his non-fiction works documenting his observations of France during the war.
+
+<result>
+Title = "France at War: On the Frontier of Civilization"
+Author = "Rudyard Kipling"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document", "war-correspondence"]
+
+Summary = """
+A collection of essays and observations by Rudyard Kipling documenting France during World War I. Published in 1915, this work comprises six chapters describing various aspects of the French war effort, including life in the trenches, the spirit of the French people, and battle conditions. Kipling, the famous British author and poet, visited the Western Front and wrote these dispatches to convey the courage, determination, and character of France and its people during the Great War. The book opens with Kipling's poem "France" which celebrates the French national character and the historical bond between France and Britain.
+"""
+
+Notes = """
+The year 1915 is clearly stated on the title page as the publication date. This was during the height of World War I, and Kipling wrote this as war propaganda/journalism to bolster support for the Allied cause and document the French war effort. Not tagged as 'catholic' despite Kipling's complex religious views, as this is primarily war journalism rather than religious writing.
+"""
+</result>

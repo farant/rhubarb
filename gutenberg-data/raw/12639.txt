@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "Spanish Doubloons" by Camilla Kenyon, published in 1919. Based on the table of contents with chapter titles like "The Isle of Fortune," "The Cave with Two Mouths," and references to treasure hunting themes, this appears to be an adventure/mystery novel.
+
+<result>
+Title = "Spanish Doubloons"
+Author = "Camilla Kenyon"
+Year = 1919
+
+Tags = ["fiction", "adventure", "mystery", "appropriate-for-children"]
+
+Summary = """
+Spanish Doubloons is an adventure novel by Camilla Kenyon published in 1919. The story follows a young woman who becomes involved in a treasure-hunting expedition to a remote island in search of buried pirate gold. The narrative includes elements of mystery, romance, and humor as the protagonist navigates both the dangers of the treasure hunt and the eccentric personalities of her fellow adventurers. The chapter titles suggest a classic treasure island adventure with caves, clues, and complications typical of the genre popular in the early 20th century.
+"""
+
+Notes = """
+The publication year of 1919 is clearly stated on the title page. This appears to be the original publication date. Camilla Kenyon was an American author who wrote during the early 20th century, and this work fits within the popular adventure fiction genre of that era.
+"""
+</result>

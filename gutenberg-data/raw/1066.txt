@@ -1,0 +1,15 @@
+<result>
+Title = "William the Conqueror"
+Author = "Edward Augustus Freeman"
+Year = 1888
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+This is a biographical work on William the Conqueror (c. 1028-1087), Duke of Normandy and King of England, written by the distinguished Victorian historian Edward Augustus Freeman. Freeman was Regius Professor of Modern History at Oxford and a leading authority on Norman and Anglo-Saxon history. This book examines William's life, his claim to the English throne, the Norman Conquest of 1066, and his subsequent reign over England. Freeman was known for his meticulous scholarship and his ability to synthesize complex historical events into accessible narratives. This work is part of Freeman's larger project to understand the Norman impact on English constitutional and political development.
+"""
+
+Notes = """
+Edward Augustus Freeman first published this biography of William the Conqueror in 1888 as part of the "English Men of Action" series published by Macmillan. The edition transcribed here is from 1913, but represents Freeman's original scholarship from the 1880s. Freeman (1823-1892) was one of the most important English historians of the Victorian era, and his work on the Norman period, including his massive multi-volume "History of the Norman Conquest," shaped understanding of this period for generations.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other relevant information.
+
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents: John Tyler"
+Author = "James D. Richardson"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a volume from James D. Richardson's comprehensive compilation of presidential messages and papers, focusing on the presidency of John Tyler (April 4, 1841, to March 4, 1845). Richardson's compilation was an ambitious project that gathered official messages, proclamations, and papers from all U.S. presidents. This particular volume includes biographical information about Tyler and his presidential documents. Tyler was the first Vice President to assume the presidency upon the death of a sitting president (William Henry Harrison), establishing important constitutional precedents. The work includes Tyler's personal background, his career in Virginia politics, and his service in both the state legislature and U.S. Senate before becoming president.
+"""
+
+Notes = """
+James D. Richardson's "A Compilation of the Messages and Papers of the Presidents" was published in multiple volumes between 1896-1899. The complete set was authorized by Congress and became the standard reference for presidential documents of that era. I've chosen 1897 as a representative year for the initial publication of the complete work, though individual volumes may have appeared in adjacent years. This compilation remains historically significant as one of the first comprehensive collections of presidential papers, predating the modern Public Papers of the Presidents series.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Mystic Isles of the South Seas"
+Author = "Frederick O'Brien"
+Year = 1919
+
+Tags = ["non-fiction", "travel", "memoir", "ethnography"]
+
+Summary = """
+A travel memoir by American journalist and adventurer Frederick O'Brien about his experiences in Tahiti and Moorea in French Polynesia. The book describes the author's immersive experiences with the indigenous peoples, local customs, dances, songs, and the natural beauty of the South Pacific islands. Written in a romantic, impressionistic style, it chronicles island life, reef adventures, and interactions with both white settlers and native Polynesians. This was O'Brien's second book about the South Seas, preceding "White Shadows in the South Seas" chronologically in experience, and forming part of a trilogy about his journeys through the Pacific islands.
+"""
+
+Notes = """
+First published in 1919 by The Century Co. This is the second of O'Brien's South Seas trilogy, though it covers experiences chronologically before his first published book "White Shadows in the South Seas" (1919). The work reflects early 20th-century American fascination with Polynesian cultures and represents a period when Western observers were documenting indigenous Pacific cultures they believed were disappearing. The book was quite popular in its time and helped romanticize the South Pacific for American audiences.
+"""
+</result>

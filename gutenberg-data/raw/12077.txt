@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "The Philippines Past and Present"
+Author = "Dean C. Worcester"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"The Philippines Past and Present" is a two-volume work by Dean C. Worcester, who served as Secretary of the Interior of the Philippine Islands from 1901-1913 and was a member of the Philippine Commission from 1900-1913. The work provides a comprehensive account of the Philippines under American colonial rule, documenting the transition from Spanish colonial period through the Philippine-American War and into the early American administration. Worcester was a prominent American colonial administrator and zoologist who played a significant role in shaping American policy in the Philippines. The work is heavily illustrated with 128 plates and presents the author's perspective on American governance, economic development, and social changes in the archipelago during the early 20th century. The frontispiece notably features General Emilio Aguinaldo, former leader of the Philippine independence movement, in a peaceful domestic scene, symbolizing the author's narrative of American-brought "peace, prosperity, and enlightenment."
+"""
+
+Notes = """
+The year 1914 is clearly stated on the title page as the publication date. This work represents a colonial-era American perspective on Philippine history and should be read with awareness of its historical context and inherent biases regarding imperialism and colonialism.
+"""
+</result>

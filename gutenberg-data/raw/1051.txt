@@ -1,0 +1,25 @@
+I'll read through this text to identify the work, author, and publication details.
+
+This is clearly **"Sartor Resartus: The Life and Opinions of Herr Teufelsdrӧckh"** by **Thomas Carlyle**. The text itself provides the date **1831**, which aligns with when Carlyle completed the work (though it was first published serially in Fraser's Magazine in 1833-34, and as a book in 1836).
+
+"Sartor Resartus" (Latin for "The Tailor Re-tailored") is Carlyle's philosophical novel/essay that uses the metaphor of clothes to explore deeper truths about society, religion, and human nature. It's written in a complex, satirical style with the fictional German philosopher Diogenes Teufelsdröckh as the central character.
+
+Regarding the year: Since the text itself indicates 1831, and this appears to be when Carlyle completed the manuscript (even though publication came later), I'll use 1831 as it seems to be the date the author himself associated with the work.
+
+Regarding Catholic content: Carlyle was raised Presbyterian in Scotland and later developed his own complex philosophical and spiritual views. This work, while deeply concerned with spiritual matters, would not be considered Catholic literature and likely would not receive a nihil obstat or imprimatur.
+
+<result>
+Title = "Sartor Resartus: The Life and Opinions of Herr Teufelsdröckh"
+Author = "Thomas Carlyle"
+Year = 1831
+
+Tags = ["non-fiction", "philosophy", "satire"]
+
+Summary = """
+Sartor Resartus (Latin for "The Tailor Re-tailored") is Thomas Carlyle's philosophical work that uses the extended metaphor of clothing to explore fundamental questions about society, spirituality, materialism, and human nature. Presented as a commentary on the fragmentary writings of a fictional German philosopher named Diogenes Teufelsdröckh, the work develops a "Philosophy of Clothes" that examines how all institutions, beliefs, and social structures are like garments that both reveal and conceal deeper truths. Written in an elaborate, satirical style with frequent digressions and Germanic influences, it's considered one of Carlyle's most important works and a significant contribution to Victorian literature and transcendentalist thought.
+"""
+
+Notes = """
+The text indicates 1831, which is when Carlyle completed the manuscript. The work was first published serially in Fraser's Magazine (1833-34) and as a book in Boston (1836) and London (1838). Using 1831 as it represents the completion date the author himself associated with the work.
+"""
+</result>

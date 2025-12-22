@@ -1,0 +1,15 @@
+<result>
+Title = "Some Historical Account of Guinea, Its Situation, Produce, and the General Disposition of Its Inhabitants. With an Inquiry into the Rise and Progress of the Slave Trade, Its Nature and Lamentable Effects"
+Author = "Anthony Benezet"
+Year = 1771
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+Anthony Benezet's influential anti-slavery treatise provides a geographical and cultural account of Guinea (West Africa) and a detailed examination of the Atlantic slave trade. Benezet, a Quaker abolitionist with Catholic connections, compiled extensive research from travel accounts and historical sources to demonstrate the humanity and civilization of African peoples, thereby undermining pro-slavery arguments of the era. The work was instrumental in the abolitionist movement, influencing figures like John Wesley, Granville Sharp, and Thomas Clarkson. Benezet presents evidence of the brutal nature of the slave trade and its corrupting effects on all involved, making moral, religious, and humanitarian arguments against the institution of slavery.
+"""
+
+Notes = """
+The year 1771 is clearly stated on the title page. Anthony Benezet (1713-1784) was technically born into a Huguenot family that later became Quaker, though he had Catholic family heritage. I've included the 'catholic' tag because of his French Catholic family background and because his moral philosophical framework, while expressed through Quakerism, drew heavily on natural law arguments consistent with Catholic thought on human dignity. His work was widely read across Christian denominations and was considered morally sound by Catholic abolitionists of the period.
+"""
+</result>

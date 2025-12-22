@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a collection of old English plays edited by A.H. Bullen, published between 1882-1889. This is Volume I of a four-volume set containing several plays including "The Tragedy of Nero," "The Mayde's Metamorphosis," "The Martyr'd Souldier," and "The Noble Souldier."
+
+<result>
+Title = "A Collection of Old English Plays, Vol. I"
+Author = "Various (Edited by A.H. Bullen)"
+Year = 1882
+
+Tags = ["non-fiction", "anthology", "drama", "literary-scholarship"]
+
+Summary = """
+This is the first volume of a four-volume scholarly collection of old English plays edited by A.H. Bullen and published between 1882-1889. The collection focuses on rare and previously unpublished English Renaissance drama. Volume I includes four plays: The Tragedy of Nero, The Mayde's Metamorphosis, The Martyr'd Souldier, and The Noble Souldier. The editor's preface indicates that most plays in the collection had not been reprinted before, and some had never been printed at all. Future volumes were to include previously unknown works by Massinger, Fletcher, Shirley, and Heywood, as well as a reprint of the rare 1592 quarto of Arden of Feversham. This collection represents important scholarly work in preserving and making accessible English dramatic literature from the 16th and 17th centuries.
+"""
+
+Notes = """
+I chose 1882 as the year because this represents the beginning of the publication period (1882-1889) for the four-volume set. This is an editorial anthology rather than a single-author work, so the relevant historical date is when Bullen's scholarly edition was published, not the original composition dates of the individual plays (which would vary and date from the Elizabethan/Jacobean era). This work is significant as a piece of Victorian literary scholarship rather than as creative literature itself.
+"""
+</result>

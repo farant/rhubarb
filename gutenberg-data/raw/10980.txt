@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work, author, and publication details.
+
+<result>
+Title = "Lady John Russell: A Memoir with Selections from Her Diaries and Correspondence"
+Author = "Desmond MacCarthy and Agatha Russell"
+Year = 1910
+
+Tags = ["non-fiction", "biography", "memoir"]
+
+Summary = """
+This is a biographical memoir of Lady John Russell (wife of Lord John Russell, British Prime Minister), compiled and edited by Desmond MacCarthy and Agatha Russell (her daughter). The work draws from Lady Russell's personal diaries and correspondence, though the manuscripts apparently focused more on her husband's life than her own. The memoir includes political and historical commentary about Lord John Russell's career, with MacCarthy handling much of the narrative and political analysis. The second edition was published in 1910 and includes ten illustrations, six in color, as well as letters from Queen Victoria published with royal permission.
+"""
+
+Notes = """
+The text indicates this is the second edition from 1910. The preface is written by Agatha Russell, Lady John Russell's daughter, who explains the collaborative editing process. Lady John Russell (Frances Anna Maria Elliott-Murray-Kynynmound) was married to Lord John Russell, 1st Earl Russell, who served as British Prime Minister. The 1910 publication date represents when this edited collection was published, not the original composition dates of the diaries and letters it contains.
+"""
+</result>

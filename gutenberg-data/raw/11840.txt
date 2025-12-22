@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Third Series, Volume 23, Part 2A, Books and Pamphlets, January-June 1969, Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1969
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a U.S. Copyright Office catalog documenting renewal registrations for copyrighted works during January-June 1969. It lists books, pamphlets, serials, and periodical contributions that had their copyright renewed during this period, providing bibliographic information about both the original and renewal registrations. These catalogs served as official public records of copyright activity and are valuable historical documents for tracking the publication and copyright status of American works. The renewal system was part of the older U.S. copyright regime before the 1976 Copyright Act eliminated the requirement for renewal registration.
+"""
+
+Notes = """
+The year 1969 reflects when this catalog was published and covers renewal registrations from that period. These Copyright Office catalogs were published regularly to document copyright activity. This is not a creative work but rather a government document/reference work. The "appropriate-for-children" tag is not applicable as this is an administrative reference document.
+"""
+</result>

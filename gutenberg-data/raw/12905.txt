@@ -1,0 +1,17 @@
+I recognize this as an issue of Punch magazine, specifically Vol. 99 from December 13, 1890. Punch was a famous British humor and satire magazine. This particular excerpt contains a parody piece "Mr. Punch's Prize Novels" with the subtitle "The Curse of Cognac" written in the style of (and parodying) popular Victorian novelists.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, December 13, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["non-fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire published from 1841 to 1992 (and briefly revived afterwards). This volume from December 1890 includes various satirical pieces, cartoons, and social commentary typical of the magazine's Victorian era output. The excerpt shown features "Mr. Punch's Prize Novels," a recurring series that parodied popular contemporary novelists and their literary styles. This particular installment, "The Curse of Cognac," appears to mock the melodramatic and sensational fiction popular in the period, complete with a satirical author biography listing absurdly titled works.
+"""
+
+Notes = """
+Since this is a periodical magazine with multiple contributors, "Various" is listed as the author. The year 1890 reflects the publication date of this specific issue. Punch was known for its influence on British culture and politics, coining terms like "cartoon" in its modern sense. While some contributors may have been Catholic, the magazine itself was not a Catholic publication and would not have carried ecclesiastical approval.
+"""
+</result>

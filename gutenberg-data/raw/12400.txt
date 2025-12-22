@@ -1,0 +1,15 @@
+<result>
+Title = "Bismarck and the Foundation of the German Empire"
+Author = "James Wycliffe Headlam"
+Year = 1899
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+This is a biography of Otto von Bismarck (1815-1898), the Prussian statesman who orchestrated the unification of Germany in 1871 and served as its first Chancellor. Written by British historian James Wycliffe Headlam, the work examines Bismarck's political career, diplomatic maneuvering, and the three wars (Danish War 1864, Austro-Prussian War 1866, Franco-Prussian War 1870-71) that led to the creation of the German Empire. The book was part of the "Heroes of the Nations" series published around the turn of the 20th century, providing English-speaking audiences with a comprehensive account of one of the most influential statesmen of the 19th century.
+"""
+
+Notes = """
+The book was first published in 1899, shortly after Bismarck's death in 1898. This timing is significant as it represents a contemporary assessment of Bismarck's legacy by a British scholar. The Project Gutenberg release date of 2004 is merely the digitization date, not the original publication year.
+"""
+</result>

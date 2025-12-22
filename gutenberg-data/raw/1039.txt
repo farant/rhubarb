@@ -1,0 +1,17 @@
+I recognize this work immediately from the title and author. Let me provide you with the structured information:
+
+<result>
+Title = "Missionary Travels and Researches in South Africa"
+Author = "David Livingstone"
+Year = 1857
+
+Tags = ["non-fiction", "exploration", "missionary-work", "africa", "historical-document"]
+
+Summary = """
+This is David Livingstone's account of his famous expeditions across southern and central Africa from 1840-1856, culminating in his becoming the first European to cross the African continent from coast to coast. The Scottish missionary and explorer documents his efforts to end the slave trade, establish legitimate commerce, spread Christianity, and map previously unknown regions of Africa. The work includes detailed observations of African peoples, cultures, geography, wildlife, and natural resources. Livingstone's relatively enlightened views on race for his era, combined with his scientific observations and advocacy against slavery, made this one of the most influential travel narratives of the Victorian era. The book was a bestseller and helped spark European interest in African exploration and missionary work.
+"""
+
+Notes = """
+The book was first published in 1857 by John Murray in London. This was immediately after Livingstone's return to England from his transcontinental journey (1853-1856). The work became an instant bestseller, selling over 70,000 copies and making Livingstone a celebrity. While Livingstone was indeed a devout Christian and missionary, this particular work is more of an exploration narrative than explicitly Catholic literature, and Livingstone was Presbyterian/Congregationalist rather than Catholic, so the 'catholic' tag is not included.
+"""
+</result>

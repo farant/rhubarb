@@ -1,0 +1,17 @@
+I'll read through this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+<result>
+Title = "Rolf in the Woods"
+Author = "Ernest Thompson Seton"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "adventure"]
+
+Summary = """
+'Rolf in the Woods' is a historical adventure novel by naturalist and writer Ernest Thompson Seton. The story follows a young man's experiences during the War of 1812, particularly around Lake Champlain and the northern frontier. The narrative combines wilderness survival, woodland scouting skills, and the historical events of 1812-14, including the battles of Lake Erie, Plattsburg, and New Orleans. Seton uses the story to illustrate the influences that shaped young Americans a century before his writing, making them into capable citizens and heroes. The book also aims to portray Native Americans authentically and teach practical outdoor skills to young readers. Seton was known for his nature writing and co-founding the Boy Scouts of America, and this work reflects his educational philosophy about character development through outdoor experience.
+"""
+
+Notes = """
+The book was first published in 1911. While the story is set during the War of 1812 (1812-1814), the publication year reflects when Seton wrote and published the work. The preface indicates Seton's careful historical research, consulting Theodore Roosevelt's 'Naval War of 1812' and other historical sources, as well as conducting field research in the Lake Champlain region with unpublished manuscripts and oral histories from descendants of the participants.
+"""
+</result>

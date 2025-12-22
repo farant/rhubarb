@@ -1,0 +1,15 @@
+<result>
+Title = "The Atlantic Monthly, Vol. IX, February 1862, No. 52"
+Author = "Various"
+Year = 1862
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+This is an issue of The Atlantic Monthly magazine from February 1862, a prestigious American literary and cultural magazine founded in 1857. This particular issue is historically significant as it contains the first publication of Julia Ward Howe's "Battle Hymn of the Republic," one of the most famous American patriotic songs, written during the Civil War. The issue also includes serialized fiction such as Harriet Beecher Stowe's "Agnes of Sorrento." The Atlantic Monthly published works by many prominent American writers and intellectuals of the 19th century and continues publication today.
+"""
+
+Notes = """
+I chose 1862 as this is a periodical issue from that specific date. The "Battle Hymn of the Republic" by Julia Ward Howe, featured prominently in this issue, was written in November 1861 and published here in February 1862, making this its first publication. This is a collection/periodical rather than a single-author work, hence "Various" for the author field. Not tagged as "appropriate-for-children" due to the war context and mixed content. "Agnes of Sorrento" by Harriet Beecher Stowe was being serialized in this period.
+"""
+</result>

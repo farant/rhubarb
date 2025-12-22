@@ -1,0 +1,15 @@
+<result>
+Title = "Calvert of Strathore"
+Author = "Carter Goodloe"
+Year = 1903
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+"Calvert of Strathore" is a historical novel by American author Carter Goodloe, set during the French Revolution of 1789. The story follows Mr. Calvert, apparently an American associated with the legation in Paris, as he navigates the tumultuous events of the revolutionary period. The narrative appears to chronicle key historical moments including the storming of the Bastille (July 14, 1789) and the attack on the Tuileries Palace (August 10, 1792). The novel seems to blend romance, adventure, and historical drama, featuring interactions with historical figures like Lafayette and depicting life in both Paris and Versailles during this critical period in French history.
+"""
+
+Notes = """
+The publication year of 1903 is clearly stated in the text itself. This appears to be an American historical romance novel of the early 20th century, when there was considerable American interest in the French Revolution as a historical subject. The title suggests the protagonist is named Calvert and has some connection to "Strathore" (possibly Strathmore). Based on the chapter titles mentioning duels, campaigns, and "hazardous enterprises," this appears to be an adventure novel suitable for general audiences of that era.
+"""
+</result>

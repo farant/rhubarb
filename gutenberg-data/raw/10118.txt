@@ -1,0 +1,15 @@
+I'll analyze this Project Gutenberg text to extract the bibliographic information and metadata you requested.
+
+<result>
+Title = "The Folk-Lore of Plants"
+Author = "T. F. Thiselton-Dyer"
+Year = 1889
+
+Tags = ["non-fiction", "folklore", "ethnobotany", "appropriate-for-children"]
+
+Summary = """
+'The Folk-Lore of Plants' is a systematic survey of plant folklore compiled by T. F. Thiselton-Dyer, a British botanist and writer. The work examines the various folk beliefs, superstitions, and cultural traditions that have developed around plants throughout history. The book covers topics including plant worship, the role of plants in witchcraft and demonology, lightning plants, fairy-lore associated with plants, and primitive and savage notions about plant life. Written in the Victorian era when folklore studies were gaining considerable popularity in Britain and on the Continent, this work serves as a comprehensive handbook synthesizing existing research on botanical folklore into a concise, systematic format. The author's goal was to provide readers with an accessible overview of how human culture has interpreted and mythologized the vegetable kingdom across different societies and time periods."""
+
+Notes = """
+The year 1889 is clearly stated on the title page and represents the original publication date of this work. The preface is dated November 19, 1888, indicating it was written shortly before publication. This is a Victorian-era scholarly work on folklore studies, a field that was experiencing significant academic interest during this period."""
+</result>

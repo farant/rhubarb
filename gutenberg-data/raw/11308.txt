@@ -1,0 +1,21 @@
+Based on the text you provided from Project Gutenberg #11308, I can analyze this work:
+
+The title page clearly states "THE BOOK OF ENTERPRISE & ADVENTURE; BEING AN EXCITEMENT TO READING. FOR YOUNG PEOPLE." This appears to be an anthology/collection published in London in 1851, illustrated by Absalon. The preface indicates this is a collection of selected pieces meant to inspire young readers with "heroic enthusiasm" and teach them to "despise danger."
+
+This type of Victorian-era youth anthology was common in the mid-19th century. Without seeing the full table of contents or the complete work, I cannot identify a single author - these were typically compiled by an editor (often anonymous) who selected exciting adventure stories, historical accounts, and morally uplifting tales from various sources.
+
+<result>
+Title = "The Book of Enterprise and Adventure: Being an Excitement to Reading for Young People"
+Author = "Various (Editor Unknown)"
+Year = 1851
+
+Tags = ["non-fiction", "anthology", "appropriate-for-children", "adventure"]
+
+Summary = """
+A Victorian-era anthology designed to encourage reading habits among young people through exciting and morally uplifting stories. This collection features tales of enterprise, adventure, and heroism selected to inspire courage and noble sentiments in its readers. Illustrated by Absalon, this was part of a popular 19th-century genre of instructional adventure literature for youth that combined entertainment with character formation.
+"""
+
+Notes = """
+Year chosen is 1851 as stated on the title page - this appears to be a "new and condensed edition" suggesting there may have been earlier editions. These Victorian anthologies typically compiled stories from multiple sources and authors, edited for young audiences.
+"""
+</result>

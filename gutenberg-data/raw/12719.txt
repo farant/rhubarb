@@ -1,0 +1,15 @@
+<result>
+Title = "Sonnet 29"
+Author = "William Shakespeare"
+Year = 1609
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+Sonnet 29 is one of William Shakespeare's 154 sonnets, part of the Fair Youth sequence. The poem begins with the speaker in a state of disgrace and self-pity ("When, in disgrace with fortune and men's eyes"), but transforms into a meditation on love's redemptive power. The speaker's despair is overcome when he thinks of his beloved, at which point his spirits soar like a lark at break of day. This is one of Shakespeare's most famous and beloved sonnets, exploring themes of depression, social ostracism, envy, and ultimately the transcendent power of love and human connection. The volta (turn) in the poem occurs when memory of the beloved transforms the speaker's emotional state completely, demonstrating that love can redeem even the most desolate circumstances.
+"""
+
+Notes = """
+Shakespeare's sonnets were first published in 1609 by Thomas Thorpe in a quarto volume, though they were likely written over the course of the 1590s and early 1600s. While individual sonnets may have been composed earlier and circulated privately, 1609 represents the canonical publication date for the collection and is the standard year used for scholarly reference. This particular Project Gutenberg file is an audio recording from 2004, but the work itself dates to the original 1609 publication.
+"""
+</result>

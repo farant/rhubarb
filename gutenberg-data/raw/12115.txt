@@ -1,0 +1,15 @@
+<result>
+Title = "Discoveries in Australia, Volume 1: With An Account Of The Coasts And Rivers Explored And Surveyed During The Voyage Of H.M.S. Beagle"
+Author = "John Lort Stokes"
+Year = 1846
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the first volume of John Lort Stokes' account of his surveying voyage aboard H.M.S. Beagle from 1837-1843. Stokes served as a naval officer and surveyor, participating in the famous Beagle's third voyage (the second voyage being Darwin's famous journey). This expedition focused on surveying the coasts and rivers of Australia, particularly the northern and western coasts. The work provides detailed observations of Australian geography, encounters with indigenous peoples, and the challenges of maritime exploration during this period. It also includes an account of Captain Owen Stanley's visits to islands in the Arafura Sea. This is a significant primary source for understanding early European exploration and mapping of Australia.
+"""
+
+Notes = """
+The voyage took place 1837-1843, but the work was published in 1846 (two volumes). I've chosen 1846 as the year since this is when the written account became available to the public, though the events described occurred earlier. This is the original publication date of Stokes' narrative, not a later edition or reprint.
+"""
+</result>

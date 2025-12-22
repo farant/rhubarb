@@ -1,0 +1,15 @@
+<result>
+Title = "An Old Babylonian Version of the Gilgamesh Epic: On the Basis of Recently Discovered Texts"
+Author = "Morris Jastrow Jr., Albert T. Clay"
+Year = 1920
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly work presenting an Old Babylonian version of the Epic of Gilgamesh, one of the oldest known works of literature from ancient Mesopotamia. The epic tells the story of Gilgamesh, king of Uruk, and his quest for immortality. This particular publication, part of the Yale Oriental Series, represents early 20th-century academic research into newly discovered cuneiform texts that provided earlier versions of the epic than were previously known. The authors, Morris Jastrow Jr. and Albert T. Clay, were prominent Assyriologists who analyzed and translated these ancient texts for scholarly purposes.
+"""
+
+Notes = """
+The copyright date of 1920 is used as the publication year. While the Gilgamesh Epic itself dates to ancient Mesopotamia (the Old Babylonian period being roughly 2000-1600 BCE), this is a modern scholarly edition and translation, so 1920 is the appropriate year for timeline purposes as it represents a significant contribution to Gilgamesh scholarship rather than the original composition.
+"""
+</result>

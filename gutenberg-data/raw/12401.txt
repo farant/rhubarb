@@ -1,0 +1,15 @@
+<result>
+Title = "La dernière lettre écrite par des soldats français tombés au champ d'honneur 1914-1918"
+Author = "Various (Collection)"
+Year = 1921
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is a collection of final letters written by French soldiers who fell in battle during World War I (1914-1918). The letters were selected by bereaved fathers who lost sons fighting for France, and by veterans' organizations, under the presidency of Marshal Foch. Published in 1921, this compilation serves as a poignant memorial to the French soldiers who made the ultimate sacrifice. The letters reveal the idealistic and pure spirit in which these soldiers faced death, demonstrating their conscious and willing sacrifice for their nation. It stands as a monument to the imperishable glory of the French soldier.
+"""
+
+Notes = """
+I chose 1921 as the year because this is when this particular collection was compiled and published, which is the most historically relevant date for this work. While the letters themselves were written between 1914-1918, the collection as a whole represents a post-war memorial effort. The work was published by the Union of Fathers and Mothers whose sons died for the Fatherland, the League of Section Chiefs and Combat Soldiers, and Ernest Flammarion. Given the Catholic context of France at the time and the nature of soldiers' final letters often expressing faith, I've included 'catholic' as a tag, though this is a general assessment of the cultural context rather than a formal religious designation.
+"""
+</result>

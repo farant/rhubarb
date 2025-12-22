@@ -1,0 +1,15 @@
+<result>
+Title = "Discoveries in Australia, Volume 2"
+Author = "John Lort Stokes"
+Year = 1846
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the second volume of John Lort Stokes' account of the HMS Beagle's surveying expedition to Australia from 1837-1843. Stokes served as a naval officer and later commander on the Beagle (the same ship that carried Charles Darwin on his famous earlier voyage). This work documents the systematic exploration and charting of Australia's northern and western coastlines, including discoveries of harbors, rivers, and geographical features. The volume also includes accounts of Captain Owen Stanley's visits to islands in the Arafura Sea. This is a significant historical document of 19th-century exploration and the European mapping of Australian territory.
+"""
+
+Notes = """
+The work was published in 1846 in London by T. and W. Boone. This represents the year the expedition account was formally published, though the voyage itself took place 1837-1843. I chose 1846 as it represents when this historical account became available as a complete work, which seems most appropriate for a historical timeline of published works.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Kincaid's Battery" by George W. Cable, published in 1908. George Washington Cable was a prominent American author known for his stories about Louisiana and New Orleans. This appears to be a novel set during the Civil War era, based on Cable's typical subject matter and the publication date.
+
+<result>
+Title = "Kincaid's Battery"
+Author = "George W. Cable"
+Year = 1908
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'Kincaid's Battery' is a novel by George W. Cable, an American novelist known for his vivid portrayals of Louisiana life and society. Cable was particularly celebrated for his stories set in New Orleans and the American South during the 19th century. This work, published in 1908, is set during the American Civil War period and follows the story of a Confederate artillery battery. Cable's novels typically explored themes of honor, regional identity, and the complexities of Southern society during and after the Civil War. As a later work in Cable's career, it represents his mature style and continued engagement with Southern historical themes.
+"""
+
+Notes = """
+The year 1908 is the original publication date as clearly indicated on the title page. George W. Cable (1844-1925) was not a Catholic author—he was raised in a Presbyterian family and later became involved with various Protestant congregations. Therefore, the 'catholic' tag is not included. The work is fiction intended for general adult audiences rather than specifically for children.
+"""
+</result>

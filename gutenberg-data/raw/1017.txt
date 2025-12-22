@@ -1,0 +1,15 @@
+<result>
+Title = "The Soul of Man under Socialism"
+Author = "Oscar Wilde"
+Year = 1891
+
+Tags = ["non-fiction", "philosophy", "political-theory"]
+
+Summary = """
+'The Soul of Man under Socialism' is a political essay by Oscar Wilde in which he expounds his libertarian socialist worldview and his ideas about art, individualism, and society. Wilde argues that socialism would liberate individuals from the burden of property and enable them to fully develop their personalities and artistic capabilities. The essay advocates for individualism and artistic freedom while critiquing both authoritarianism and conventional charity. It represents Wilde's most sustained engagement with political philosophy and remains one of his most significant prose works, blending his aesthetic philosophy with social critique. The work is notable for its paradoxical arguments that socialism, rather than suppressing individualism, would actually enable true individual freedom and self-realization.
+"""
+
+Notes = """
+The work was originally published in 1891 in The Fortnightly Review under the title 'The Soul of Man under Socialism'. While Oscar Wilde was baptized Catholic as a child and expressed interest in Catholicism throughout his life (formally converting on his deathbed in 1900), this particular work represents heterodox political and philosophical views that would not align with Catholic social teaching of the period, so I have not included the 'catholic' tag. The essay's libertarian socialist and individualist perspectives, while intellectually significant, would not have received ecclesiastical approval. The work is sophisticated political philosophy not appropriate for children.
+"""
+</result>

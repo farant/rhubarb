@@ -1,0 +1,15 @@
+<result>
+Title = "The Girl's Cabinet of Instructive and Moral Stories"
+Author = "Uncle Philip"
+Year = 1850
+
+Tags = ["non-fiction", "appropriate-for-children", "moral-instruction"]
+
+Summary = """
+"The Girl's Cabinet of Instructive and Moral Stories" is a 19th-century collection of didactic tales written under the pseudonym "Uncle Philip." This work belongs to the genre of moral literature designed specifically for young girls in the Victorian era. These types of instructional books were extremely popular in the mid-1800s and aimed to teach proper conduct, virtue, and moral lessons through engaging stories. The "Uncle Philip" persona was commonly used for children's educational literature of this period, presenting an avuncular, authoritative yet friendly voice to guide young readers. The book would have included various tales illustrating moral principles such as honesty, kindness, industry, and piety—all considered essential for the proper formation of young ladies in 19th-century society.
+"""
+
+Notes = """
+The exact publication year is not given in the Project Gutenberg header, but the original images are noted as being from the "Preservation and Access for American and British Children's Literature, 1850-1869" collection, and the Florida archives reference suggests this was published in the 1850s. Given the style, genre, and archival classification, I've assigned 1850 as the approximate year, representing the mid-19th century period when such moral instruction literature for children was at its peak popularity. The actual first edition may have been a few years earlier or later within that decade.
+"""
+</result>

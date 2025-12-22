@@ -1,0 +1,19 @@
+I recognize this as a collection of essays by Arthur Schopenhauer, the German philosopher. This appears to be the T. Bailey Saunders translation of essays drawn from Schopenhauer's *Parerga and Paralipomena* and posthumous writings. 
+
+Schopenhauer's main period of writing these essays was in the 1840s-1850s. The *Parerga and Paralipomena* was published in 1851, which represents his later philosophical work. Since this is a collection drawn from that work and his posthumous writings, but we're dealing with Schopenhauer's original composition rather than just a modern translation, I'll use 1851 as the most historically significant date for this collection's source material.
+
+<result>
+Title = "On Human Nature (Essays)"
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+Tags = ["non-fiction", "philosophy", "ethics"]
+
+Summary = """
+This is a collection of essays by German philosopher Arthur Schopenhauer (1788-1860), translated by T. Bailey Saunders. The essays are drawn from Schopenhauer's Parerga and Paralipomena and his posthumous writings, focusing on human nature from various perspectives including ethics, government, free will, character, and moral instinct. Schopenhauer was known for his pessimistic philosophy and his influence on later thinkers including Nietzsche and Freud. His work emphasizes the role of will in human existence and offers penetrating psychological observations about human behavior and morality.
+"""
+
+Notes = """
+The year 1851 represents the publication of Parerga and Paralipomena, the primary source for these essays. This was Schopenhauer's last major published work during his lifetime and represents his mature philosophical perspective. The translation by T. Bailey Saunders was done in the late 19th/early 20th century and made Schopenhauer's work widely accessible to English readers.
+"""
+</result>

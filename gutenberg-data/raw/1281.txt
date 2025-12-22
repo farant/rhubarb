@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Swift and His Aerial Warship, or The Naval Terror of the Seas"
+Author = "Victor Appleton"
+Year = 1915
+
+Tags = ["fiction", "adventure", "appropriate-for-children", "science-fiction"]
+
+Summary = """
+"Tom Swift and His Aerial Warship" is part of the popular Tom Swift series of juvenile adventure novels published by the Stratemeyer Syndicate under the house pseudonym Victor Appleton. The series follows young inventor Tom Swift through various technological adventures. In this installment, Tom creates an aerial warship - a flying battleship designed for naval warfare in the skies. The Tom Swift series was enormously popular in early 20th century America and helped inspire interest in science, technology, and invention among young readers. The books typically featured cutting-edge (for their time) technological concepts mixed with adventure, mystery, and derring-do.
+"""
+
+Notes = """
+This is the 18th book in the original Tom Swift series. "Victor Appleton" was a house pseudonym used by the Stratemeyer Syndicate; the actual author of this particular volume was Howard R. Garis. The Tom Swift series ran from 1910-1941 in its original form. The year 1915 represents the original publication date of this specific title in the series.
+"""
+</result>

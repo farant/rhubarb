@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, year, and other requested information.
+
+This is clearly an issue of **Punch, or The London Charivari** magazine. Based on the text itself, it explicitly states this is "VOL. 146" dated "January 21, 1914."
+
+Punch was a British weekly magazine of humor and satire, not attributed to a single author but rather a collective editorial effort. The content shows typical Punch features: satirical commentary on current events (references to Major-General Leonard Wood, Alsace, Ulster, the Balkan States), political cartoons, and the "Charivaria" section with short humorous paragraphs.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 146, January 21, 1914"
+Author = "Various (Punch Editorial Staff)"
+Year = 1914
+
+Tags = ["non-fiction", "periodical", "satire", "humor", "historical-document"]
+
+Summary = """
+Punch, or The London Charivari, was Britain's premier satirical and humor magazine, published weekly from 1841 to 1992 (with later revivals). This particular issue from January 21, 1914 represents a snapshot of British wit and political commentary on the eve of World War I. It includes political cartoons, the "Charivaria" section of brief humorous observations on current events, and satirical commentary on international affairs. Topics in this issue include American military preparedness, the situation in Ulster, tensions in Alsace (then German-controlled), and travel in the Balkans. The magazine was influential in shaping British public opinion and humor, known for coining the term "cartoon" in its modern sense and for its sharp social and political satire.
+"""
+
+Notes = """
+The year 1914 is taken directly from the publication date of this specific issue. This is a periodical rather than a standalone book, making it a primary historical document from immediately before World War I began in August 1914. The references to Alsace, Ulster, and the Balkans reflect the major political tensions of early 1914 that would soon explode into global conflict.
+"""
+</result>

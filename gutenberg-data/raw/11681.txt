@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Marco Paul's Voyages and Travels: Vermont" by Jacob Abbott, published in 1852. Jacob Abbott was a prolific American author who wrote educational literature for children in the 19th century. The Marco Paul series was designed to be both entertaining and educational, teaching children about American geography, customs, and institutions through the travels of a young boy.
+
+<result>
+Title = "Marco Paul's Voyages and Travels: Vermont"
+Author = "Jacob Abbott"
+Year = 1852
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+Part of Jacob Abbott's Marco Paul series, this book follows the adventures of a young traveler named Marco Paul as he explores Vermont. The series was explicitly designed as educational literature, combining an entertaining narrative with accurate geographical, cultural, and institutional information about different regions of America. Marco Paul travels under the guidance of an intelligent companion who helps him learn and develop character. Abbott, a prominent 19th-century American author and educator, created this series to instruct children about their country while keeping them engaged with adventure stories. The work exemplifies the didactic children's literature popular in mid-19th century America.
+"""
+
+Notes = """
+The year 1852 is taken directly from the title page. Jacob Abbott (1803-1879) was an American writer, educator, and Congregationalist minister who wrote numerous books for young readers. While he was a Christian author, he was not Catholic, so I have not included the 'catholic' tag. The work straddles fiction and non-fiction - it has fictional characters and incidents (as Abbott explicitly states in the preface), but promises "strict and exact truth and fidelity" in all descriptions of actual places and institutions. I've included both tags to reflect this hybrid nature, along with 'educational' to capture its primary pedagogical purpose.
+"""
+</result>

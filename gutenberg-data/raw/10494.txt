@@ -1,0 +1,15 @@
+<result>
+Title = "Henry the Second"
+Author = "Mrs. J. R. Green"
+Year = 1888
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+This is a biographical work about King Henry II of England (1133-1189) by Alice Stopford Green (Mrs. J. R. Green), wife of the historian John Richard Green. The book examines Henry II's reign, his establishment of the Angevin Empire, his reforms to English law and governance (including the famous Constitutions of Clarendon), and his conflict with Thomas Becket and the Church. Henry II is considered one of England's most consequential medieval monarchs, responsible for major legal reforms that laid the foundation for English common law. Mrs. Green was a respected historian in her own right, known for her scholarly approach to medieval English history.
+"""
+
+Notes = """
+Mrs. J. R. Green (Alice Stopford Green, 1847-1929) published this work as part of the "Twelve English Statesmen" series in 1888. While she was married to historian J. R. Green, she was a significant historian herself. The work is a scholarly historical biography rather than primary source material, so the year reflects the publication date of this particular historical analysis rather than Henry II's reign (1154-1189).
+"""
+</result>

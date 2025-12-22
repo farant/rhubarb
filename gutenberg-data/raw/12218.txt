@@ -1,0 +1,17 @@
+I recognize this as Walter W. Greg's scholarly work on pastoral literature and drama. This is a significant academic study examining the pastoral tradition in English literature, particularly focusing on drama before the Restoration period (1660).
+
+<result>
+Title = "Pastoral Poetry and Pastoral Drama: A Literary Inquiry, with Special Reference to the Pre-Restoration Stage in England"
+Author = "Walter W. Greg"
+Year = 1906
+
+Tags = ["non-fiction", "literary-criticism", "academic", "drama-studies"]
+
+Summary = """
+Walter W. Greg's 'Pastoral Poetry and Pastoral Drama' is a foundational work of literary scholarship examining the pastoral tradition in English literature. The book traces the development of pastoral poetry and drama from classical origins through the Renaissance and up to the English Restoration period (1660). Greg analyzes the conventions, themes, and evolution of pastoral literature, with particular emphasis on English dramatic works. This study was groundbreaking in its systematic examination of pastoral drama and remains an important reference work in English literary studies. Greg was a prominent bibliographer and literary scholar whose work on Elizabethan and Jacobean drama significantly influenced twentieth-century Shakespeare and Renaissance studies.
+"""
+
+Notes = """
+The publication year 1906 is indicated by the Roman numerals 'MCMVI' on the title page. This represents the original publication date of this scholarly work. Walter W. Greg (1875-1959) was a distinguished English bibliographer and textual scholar, and this was one of his early major works that established his reputation in Renaissance literary studies.
+"""
+</result>

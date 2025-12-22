@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Three Young Knights"
+Author = "Annie Hamilton Donnell"
+Year = 1896
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Three Young Knights" is a children's adventure novel by Annie Hamilton Donnell, an American author who wrote primarily for young audiences in the late 19th and early 20th centuries. The story follows three boys—Jot, Kent, and Old Tilly—who work on the Eddy farm and, after completing their haying season, are given a two-week holiday and five dollars each as payment. The novel chronicles their adventures during this period of freedom, reflecting the rural American life and values of the era. The book was popular in its time as wholesome reading for young people, emphasizing themes of hard work, friendship, and youthful adventure.
+"""
+
+Notes = """
+The year 1896 represents the original publication date of this work. Annie Hamilton Donnell was a prolific author of children's literature during this period. The book exemplifies the genre of pastoral adventure fiction that was popular for young readers in the late Victorian era, depicting rural American farm life and the adventures of country boys with a moral, wholesome tone typical of children's literature of that time.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll read through this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "Moon-Face and Other Stories" by Jack London. Based on the content and my knowledge of Jack London's work, this is a collection of short stories published in 1906. Jack London (1876-1916) was an American novelist and short story writer, known for works like "The Call of the Wild" and "White Fang."
+
+This particular collection contains eight short stories, with the title story "Moon-Face" being a darkly humorous tale. The collection showcases London's range as a writer, from adventure tales to psychological fiction.
+
+<result>
+Title = "Moon-Face and Other Stories"
+Author = "Jack London"
+Year = 1906
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of eight short stories by Jack London, first published in 1906. The collection includes the title story "Moon-Face," a darkly comedic tale of hatred and revenge, along with "The Leopard Man's Story," "Local Color," "Amateur Night," "The Minions of Midas," "The Shadow and the Flash," "All Gold Canyon," and "Planchette." The stories demonstrate London's versatility as a writer, ranging from psychological fiction to adventure narratives. London (1876-1916) was a prominent American author of the early 20th century, known for his vivid storytelling and naturalistic approach to fiction.
+"""
+
+Notes = """
+1906 is the first publication year of this collection by Macmillan Company. Jack London was not a Catholic author, so the 'catholic' tag is not included.
+"""
+</result>

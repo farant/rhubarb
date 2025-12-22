@@ -1,0 +1,15 @@
+<result>
+Title = "The Wheels of Chance: A Bicycling Idyll"
+Author = "H.G. Wells"
+Year = 1896
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Wheels of Chance' is a humorous novel by H.G. Wells about Mr. Hoopdriver, a draper's assistant who takes a cycling holiday through the English countryside. Published during the height of the bicycle craze in Victorian England, the novel follows Hoopdriver's adventures and misadventures as he encounters a young woman in grey and becomes entangled in a romantic pursuit. The story is a light-hearted comedy of manners that explores themes of social class, the emerging independence of women, and the transformative effect of the bicycle on Victorian society. Unlike Wells' more famous scientific romances, this is a gentle, comedic work that captures the spirit of the 1890s cycling boom and the dreams of an ordinary working man on his annual vacation.
+"""
+
+Notes = """
+The year 1896 is clearly indicated in the text itself. This was one of Wells' earlier works, written before he became famous for his science fiction novels like 'The War of the Worlds' (1898) and 'The Time Machine' (1895). The bicycle was a revolutionary invention in the 1890s, providing unprecedented freedom and mobility, particularly for women, which is a subtext in this novel.
+"""
+</result>

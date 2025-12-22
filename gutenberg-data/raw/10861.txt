@@ -1,0 +1,19 @@
+I'll analyze this text to identify the title, author, and publication details.
+
+This is clearly a work by John Leighton from 1871 about the Paris Commune. The text includes a prominent quote from Victor Hugo from 1848 describing socialism/the "Red Republic." The work is a firsthand account of the Paris Commune, which lasted 73 days in 1871 during what Leighton calls "the second siege" of Paris (the first being the Franco-Prussian War siege).
+
+<result>
+Title = "Paris Under the Commune: Or, The Seventy-Three Days of the Second Siege"
+Author = "John Leighton"
+Year = 1871
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand eyewitness account of the Paris Commune of 1871, written by British artist and author John Leighton, F.S.A. The Paris Commune was a revolutionary socialist government that briefly ruled Paris from March 18 to May 28, 1871 (approximately 73 days), following France's defeat in the Franco-Prussian War. Leighton documented the events through illustrations and narrative, describing the radical political experiment that included the destruction of the Vendôme Column, class warfare, and ultimately the violent suppression during "Bloody Week" (Semaine sanglante). The work includes numerous illustrations and sketches made on location during this tumultuous period. The opening quote from Victor Hugo (1848) frames the author's perspective on revolutionary socialism and foreshadows the violence and chaos he witnessed.
+"""
+
+Notes = """
+Published in 1871, the same year as the events described. This is a contemporary account rather than a historical retrospective. The Paris Commune remains one of the most significant events in revolutionary history and influenced socialist and communist movements for generations. Leighton's perspective is clearly anti-Communard, as evidenced by his choice to open with Hugo's denunciation of revolutionary socialism.
+"""
+</result>

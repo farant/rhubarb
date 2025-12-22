@@ -1,0 +1,23 @@
+I can see this is a Finnish theatrical work. Let me analyze what I can determine:
+
+This is "Karkurit" (The Fugitives), a five-act play by **Aleksis Kivi**, one of Finland's most important 19th-century authors and the creator of the first significant novel in Finnish literature. 
+
+Aleksis Kivi (1834-1872) wrote this play, and based on historical records, "Karkurit" was written around 1866-1867, though it was published posthumously. The 1919 date shown in the text is likely a publication/printing date from Project Gutenberg's source edition, not the original composition date.
+
+The play is set in Finland and involves characters from two manor houses (Viitala and Kuusela), with typical themes of Kivi's work including class relations and romantic entanglements in the Finnish countryside.
+
+<result>
+Title = "Karkurit"
+Author = "Aleksis Kivi"
+Year = 1867
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Karkurit (The Fugitives) is a five-act play by Aleksis Kivi, the father of Finnish literature. The play is set in rural Finland and centers around the inhabitants of two manor houses, Viitala and Kuusela. The characters include Baron Markus and his son Tyko, Baron Mauno with his children Pauli and Elma, along with various other members of their households including foster children Niilo and Hanna. The play explores themes typical of Kivi's work, including social class dynamics, romantic relationships, and life in the Finnish countryside during the 19th century.
+"""
+
+Notes = """
+The text shows a 1919 publication date, but this is likely the date of the edition used by Project Gutenberg. Kivi wrote Karkurit around 1866-1867, though it was published after his death in 1872. I've chosen 1867 as a reasonable mid-point for the composition period. Aleksis Kivi is considered the national author of Finland and creator of the first major novel in Finnish (Seitsemän veljestä/Seven Brothers).
+"""
+</result>

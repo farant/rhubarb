@@ -1,0 +1,15 @@
+<result>
+Title = "The Picture of Dorian Gray"
+Author = "Oscar Wilde"
+Year = 1890
+
+Tags = ["fiction", "philosophical-novel"]
+
+Summary = """
+"The Picture of Dorian Gray" is Oscar Wilde's only novel, a philosophical work exploring themes of aestheticism, morality, vanity, and the nature of beauty and corruption. The story follows Dorian Gray, a handsome young man whose portrait is painted by the artist Basil Hallward. After meeting Lord Henry Wotton, who espouses a philosophy of hedonism and self-indulgence, Dorian wishes that he could remain young while his portrait ages instead. His wish is granted, and as Dorian descends into a life of vice and moral degradation, his portrait reflects the corruption of his soul while he remains outwardly beautiful. The novel is a masterpiece of Gothic fiction and a critique of Victorian morality and the aesthetic movement. This particular text is a Dutch translation by Mevrouw Louis Couperus, published in 1919.
+"""
+
+Notes = """
+I chose 1890 as the year because this is when the novel was first published in Lippincott's Monthly Magazine. The more familiar book version with additional chapters was published in 1891, but 1890 represents the work's initial publication date. The text presented here is a Dutch translation ("Het Portret van Dorian Gray") by Mevrouw Louis Couperus from 1919, but the year should reflect the original work's composition by Wilde. The novel was controversial upon publication and remains one of the most important works of late Victorian literature. Note: Not tagged as "appropriate-for-children" due to mature themes of hedonism, moral corruption, and implied vice. Not tagged as "catholic" as Wilde was Anglican/aesthetic movement, not Catholic (though he converted on his deathbed).
+"""
+</result>

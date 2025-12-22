@@ -1,0 +1,15 @@
+<result>
+Title = "La Légende des Siècles"
+Author = "Victor Hugo"
+Year = 1859
+
+Tags = ["fiction", "poetry", "non-fiction", "historical"]
+
+Summary = """
+La Légende des Siècles (The Legend of the Centuries) is an epic poetry collection by Victor Hugo that represents one of his most ambitious works. The collection presents a sweeping vision of human history from biblical times through the 19th century, organized into a series of dramatic and philosophical poems. Hugo intended it as a poetic history of humanity, exploring themes of progress, justice, heroism, and the struggle between good and evil across different epochs. The work showcases Hugo's romantic idealism and his belief in human moral evolution. It was published in three series: the first in 1859, the second in 1877, and the final series in 1883.
+"""
+
+Notes = """
+The first series of La Légende des Siècles was published in 1859, which is the foundational and most historically significant publication date for this work. While Hugo later expanded the collection with additional series in 1877 and 1883, the 1859 date represents when this major work was first introduced to the world and is the most appropriate year for educational and historical timeline purposes.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Love and Freindship and Other Early Works"
+Author = "Jane Austen"
+Year = 1790
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of Jane Austen's juvenile writings, composed primarily between 1787-1793 when she was a teenager (roughly ages 11-17). The collection includes several satirical works written in an epistolary format. "Love and Freindship" (note the deliberate misspelling) is a comic parody of the sentimental novels popular in the late 18th century, written around 1790. The collection also includes "Lesley Castle" (another unfinished epistolary novel), "The History of England" (a humorous and irreverent mock-history), and "A Collection of Letters." These works showcase Austen's early wit, her talent for satire, and her developing literary voice. They were originally written for the private entertainment of her family and circulated in manuscript form during her lifetime, not published until long after her death.
+"""
+
+Notes = """
+I chose 1790 as the representative year because "Love and Freindship," the titular and most substantial work in this collection, was written around 1790 when Austen was approximately 14 years old. The various works in this collection were composed over a span of several years (roughly 1787-1793) during her adolescence. These juvenilia were not published during Austen's lifetime and only appeared in print in the early 20th century. The year 1790 serves as a reasonable midpoint for when these works were created and represents the period of Austen's youthful literary experimentation.
+"""
+</result>

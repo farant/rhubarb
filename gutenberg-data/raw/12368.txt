@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "Contigo Pan y Cebolla" (literally "With You, Bread and Onions"), a Spanish-language comedy by Manuel Eduardo de Gorostiza. Based on the preface, this is an educational edition prepared by Elizabeth McGuire in 1922, but the original play is from the early 19th century.
+
+Manuel Eduardo de Gorostiza (1789-1851) was a Mexican-Spanish playwright who wrote during the Romantic period. "Contigo Pan y Cebolla" was first performed in 1833 in Mexico City and is considered one of his most popular works. It's a light comedy about romantic love versus practical considerations in marriage.
+
+<result>
+Title = "Contigo Pan y Cebolla"
+Author = "Manuel Eduardo de Gorostiza"
+Year = 1833
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Spanish-language prose comedy by Mexican-Spanish playwright Manuel Eduardo de Gorostiza. The play is a light domestic comedy that explores the conflict between romantic love and practical considerations in marriage. According to tradition, Gorostiza wrote it to cure his daughter Luisa of her infatuation with a worthy but impecunious suitor. The title translates to "With You, Bread and Onions," suggesting the theme of choosing love over material comfort. It offers a glimpse into Spanish family life and social customs of the early 19th century, with dialogue focused on everyday domestic vocabulary and situations.
+"""
+
+Notes = """
+The play was first performed in 1833 in Mexico City. This Project Gutenberg text is from an educational edition prepared by Elizabeth McGuire in 1922, based on the four-volume "Obras de D. Manuel E. de Gorostiza" published in México in 1899. I chose 1833 as the year since that represents the original composition and first performance of the work, which is most relevant for historical timeline purposes.
+"""
+</result>

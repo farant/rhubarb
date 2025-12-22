@@ -1,0 +1,15 @@
+<result>
+Title = "Dragon's Blood"
+Author = "Henry Milner Rideout"
+Year = 1909
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+Dragon's Blood is an adventure novel by American author Henry Milner Rideout, published in 1909 with illustrations by Harold M. Brett. The work appears to be a tale of adventure, likely set in an exotic locale given the evocative title and the dedication's reference to Kipling's "The Man Who Would Be King" (through the character Peachey Carnehan). Rideout was known for writing adventure stories often set in Asia, and this novel exemplifies the early 20th-century American fascination with exotic settings and adventure narratives. The book was popular enough in its time to be adapted as a silent film.
+"""
+
+Notes = """
+The publication year of 1909 is clearly stated in the original publication information. This is an original work of fiction, not a translation or historical document. Henry Milner Rideout (1877-1927) was an American novelist who wrote adventure fiction, often with Asian settings, during the early 20th century. The dedication reference to Kipling's character suggests the adventurous nature of the work.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as Thomas Carlyle's "Latter-Day Pamphlets," a collection of controversial essays published in 1850. This work represents Carlyle's increasingly critical views on Victorian society, democracy, and social reform.
+
+<result>
+Title = "Latter-Day Pamphlets"
+Author = "Thomas Carlyle"
+Year = 1850
+
+Tags = ["non-fiction", "political-philosophy", "social-criticism"]
+
+Summary = """
+Latter-Day Pamphlets is a collection of eight essays by Scottish philosopher and historian Thomas Carlyle, published throughout 1850. The work represents Carlyle's scathing critique of mid-Victorian society, democracy, and various reform movements of his time. Written in his characteristically intense prophetic style, these pamphlets address topics including the state of England, prison reform, government administration, and political leadership. The work was controversial upon publication for its increasingly authoritarian tone and rejection of democratic principles, marking a turning point in Carlyle's reputation. Despite its harsh reception, it remains an important document of Victorian intellectual history and social criticism.
+"""
+
+Notes = """
+The pamphlets were published serially throughout 1850, with "The Present Time" appearing first on February 1, 1850, as indicated in the text. This is clearly the year of original publication, with no translation or annotation issues to consider.
+"""
+</result>

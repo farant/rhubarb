@@ -1,0 +1,21 @@
+I recognize this work! This is Robert Graves' first major published collection of poetry, "Fairies and Fusiliers," which came out in 1917 (though some sources cite early 1918 as the publication date). The collection is significant as one of the notable works of World War I poetry, written while Graves was serving as an officer in the Royal Welch Fusiliers.
+
+The poems blend war experiences with mythological and fairy-tale elements (hence the title), reflecting Graves' dual interests even during the Great War. This collection helped establish his reputation as a war poet, though he would later become better known for his novels and historical works.
+
+Given the dedication to the Royal Welch Fusiliers and the contents visible (including war-themed poems like "Dead Cow Farm," "Two Fusiliers," and "Goliath and David"), this is clearly the wartime poetry collection. The 1918 date shown in the header matches one of the publication dates associated with this work.
+
+<result>
+Title = "Fairies and Fusiliers"
+Author = "Robert Graves"
+Year = 1917
+
+Tags = ["non-fiction", "poetry", "war-literature"]
+
+Summary = """
+"Fairies and Fusiliers" is Robert Graves' first major poetry collection, published during World War I while he was serving as an officer in the Royal Welch Fusiliers. The collection is notable for blending stark war poetry with mythological and fairy-tale imagery, reflecting the duality in the title. Graves was one of the significant British war poets, alongside Siegfried Sassoon and Wilfred Owen. The poems capture the experience of trench warfare while also exploring themes of mythology, romance, and the fantastical. This collection helped establish Graves' literary reputation, though he would later become more famous for his novels like "I, Claudius" and his work on mythology.
+"""
+
+Notes = """
+Publication date is sometimes cited as 1917, sometimes as early 1918. I've chosen 1917 as it appears to be the more commonly accepted date for the first edition. The work shown here indicates 1918 on the title page, which may represent a later printing or the Project Gutenberg transcription date reference.
+"""
+</result>

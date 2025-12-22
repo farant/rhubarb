@@ -1,0 +1,23 @@
+I need to analyze this Project Gutenberg text to identify the work, author, and publication details.
+
+Looking at this entry, I can see it's an audio recording rather than a traditional text. The titles are "In de Mornin'" and "Jes Gib Him One Ob Mine" - these appear to be songs or spoken word pieces in dialect. The author is listed as Edward Sterling Wright, and it was edited by Thomas A. Edison, indicating this is likely from Edison's phonograph cylinder or early recording era.
+
+Based on the dialect spelling and the Edison connection, these appear to be early 20th century recordings, likely from the 1890s-1920s when Edison was actively producing phonograph cylinders and recordings. Edward Sterling Wright was involved in early recording work with Edison. The dialect suggests these may be minstrel-show style songs or recitations, which were common in that era.
+
+Given that this is edited by Thomas Edison and comes from the Edison National Historic Site, and considering Edison's phonograph work peaked in the 1900s-1920s, I'll estimate this is from around 1910-1920 for the recordings themselves.
+
+<result>
+Title = "In de Mornin' and Jes Gib Him One Ob Mine"
+Author = "Edward Sterling Wright"
+Year = 1910
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording from the Edison National Historic Site, featuring two pieces performed by Edward Sterling Wright and edited by Thomas A. Edison. The works are presented in dialect spelling characteristic of early 20th century American entertainment. These recordings represent an artifact of early phonograph technology and the popular entertainment of the Edison era.
+"""
+
+Notes = """
+The exact year is uncertain, but based on Edison's active phonograph recording period and the Edison National Historic Site attribution, circa 1910 represents the approximate era of these recordings. The dialect content reflects the entertainment conventions of early 20th century America. This is an audio-only work distributed as MP3 files by Project Gutenberg.
+"""
+</result>

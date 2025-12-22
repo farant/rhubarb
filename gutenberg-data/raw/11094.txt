@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 156, March 12, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari, was Britain's most celebrated satirical magazine, published from 1841 to 1992 (and briefly revived later). Known for its political cartoons, social commentary, and witty observations on British life, Punch was a weekly fixture of Victorian and Edwardian culture. This particular volume from March 12, 1919, captures the immediate post-World War I period, with humorous takes on the influenza epidemic (the devastating 1918-1919 flu pandemic), the introduction of American jazz culture to Britain, and various social observations of the era. The magazine's characteristic style blended light humor with sharp social commentary, making it accessible to a broad readership while maintaining sophisticated wit.
+"""
+
+Notes = """
+The year 1919 is straightforward here as this is a periodical issue with a specific publication date. This volume was published just months after the end of World War I (November 1918) and during the height of the Spanish Flu pandemic, both of which inform the humor in this issue. The references to "Jazz" and American cultural influence reflect the significant social changes Britain was experiencing in the immediate postwar period.
+"""
+</result>

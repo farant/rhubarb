@@ -1,0 +1,28 @@
+I'll read through this text to identify the work, author, and publication details.
+
+This is clearly "La Fontana de Oro" by Benito Pérez Galdós. From the text itself, I can see:
+
+1. The title is explicitly stated: "LA FONTANA DE ORO"
+2. The author is: "B. PÉREZ GALDÓS" (Benito Pérez Galdós)
+3. The edition shown is from Madrid 1921
+4. However, there's a key note dated "Diciembre de 1870" where the author mentions the work was written much earlier, with only the last pages being written after the September Revolution (La Gloriosa of 1868), and he's publishing it in December 1870.
+
+This indicates "La Fontana de Oro" was Galdós's first novel, originally written around 1867-1868 and first published in 1870. The historical novel deals with the turbulent period of 1820-1823 in Spain (the Liberal Triennium).
+
+Benito Pérez Galdós (1843-1920) was one of Spain's greatest novelists, known for his "Episodios Nacionales" and realistic novels depicting Spanish society. While he came from a Catholic background and depicted Catholic Spain extensively, his works often contained liberal and anticlerical themes, so he would not typically receive imprimatur.
+
+<result>
+Title = "La Fontana de Oro"
+Author = "Benito Pérez Galdós"
+Year = 1870
+
+Tags = ["fiction", "historical-fiction", "non-fiction"]
+
+Summary = """
+La Fontana de Oro is Benito Pérez Galdós's first novel, a historical work set during the Liberal Triennium (1820-1823), one of the most turbulent periods in Spanish history during the era of political reorganization that began in 1812. The novel takes its name from a famous Madrid café that served as a meeting place for liberal political clubs during this period. Galdós wrote this work to draw parallels between that revolutionary era and the political upheaval of his own time, particularly the Revolution of 1868 (La Gloriosa). The novel combines historical events with fictional characters to portray the passionate political debates, social conflicts, and revolutionary fervor of early 19th-century Spain.
+"""
+
+Notes = """
+The year 1870 represents the first publication date. Though the Project Gutenberg edition shown is from Madrid 1921, the author's preface is dated December 1870, when he decided to publish this work that had been written earlier (mostly before the September 1868 Revolution). Galdós (1843-1920) would become one of Spain's most important 19th-century novelists. While from a Catholic background, his liberal views and occasional anticlericalism mean his works would not typically be considered for imprimatur, so the 'catholic' tag is not applied.
+"""
+</result>

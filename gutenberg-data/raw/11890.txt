@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Comrades of the Saddle, or The Young Rough Riders of the Plains" by Frank V. Webster. This appears to be one of the many boys' adventure series books that were popular in the early 20th century. Frank V. Webster was a house pseudonym used by the Stratemeyer Syndicate, which produced numerous juvenile series books.
+
+Based on the publisher (Cupples & Leon Company) and the style of the book, along with the other titles listed in the advertisement section, this would have been published in the early 1900s-1910s era, which was the height of these types of adventure series for boys.
+
+<result>
+Title = "Comrades of the Saddle, or The Young Rough Riders of the Plains"
+Author = "Frank V. Webster"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A boys' adventure novel from the early 20th century, part of the juvenile fiction series published under the Frank V. Webster pseudonym by the Stratemeyer Syndicate. The book follows young protagonists on adventures in the American West, likely involving frontier life, cowboys, and the kind of wholesome adventure stories that were popular for young male readers in the Progressive Era. The title references the "Rough Riders," invoking the romanticized image of Theodore Roosevelt's volunteer cavalry unit from the Spanish-American War, which had captured American imagination in this period.
+"""
+
+Notes = """
+Frank V. Webster was a house pseudonym used by the Stratemeyer Syndicate. The exact publication year is estimated as circa 1910 based on the publisher (Cupples & Leon) and the style of the series. These books were mass-produced juvenile fiction designed to be wholesome entertainment for young boys, featuring themes of courage, adventure, and American frontier life.
+"""
+</result>

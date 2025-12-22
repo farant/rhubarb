@@ -1,0 +1,15 @@
+<result>
+Title = "Cyrano de Bergerac"
+Author = "Edmond Rostand"
+Year = 1897
+
+Tags = ["fiction", "drama", "romance", "historical-fiction"]
+
+Summary = """
+Cyrano de Bergerac is a celebrated French verse drama by Edmond Rostand, first performed in Paris in 1897. The play is loosely based on the life of the real 17th-century writer and duelist Cyrano de Bergerac. It tells the tragic story of the brilliant, eloquent, and swordsman Cyrano, who is deeply in love with his cousin Roxane but believes his grotesquely large nose makes him unworthy of her love. When the handsome but inarticulate Christian de Neuvillette also falls for Roxane, Cyrano provides him with the poetic words to woo her, creating one of literature's most famous love triangles. The play is renowned for its wit, romanticism, and themes of inner beauty versus outward appearance. This English translation by Gladys Thomas and Mary F. Guillemard helped bring the work to English-speaking audiences.
+"""
+
+Notes = """
+The play premiered at the Théâtre de la Porte Saint-Martin in Paris on December 28, 1897, making 1897 the definitive publication year. This was an immediate sensation and became one of the most popular plays in French theater history. The Thomas and Guillemard English translation was published shortly after the original French version.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The History of Puerto Rico: From the Spanish Discovery to the American Occupation"
+Author = "R.A. Van Middeldyk"
+Year = 1903
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the first comprehensive history of Puerto Rico written in English, chronicling four centuries of Spanish colonial rule from Columbus's discovery of the island in 1493 through the American occupation in 1898 and the establishment of civil government in 1900. Written by R.A. Van Middeldyk, the librarian of the Free Public Library of San Juan, and edited by Martin G. Brumbaugh (the first Commissioner of Education for Puerto Rico), this work fills a significant gap in English-language historical literature about Spain's oldest possession in the Americas, which became the United States' newest territory at the turn of the 20th century.
+"""
+
+Notes = """
+The copyright date of 1903 is used as the publication year. This work was written during the early American colonial period of Puerto Rico, just a few years after the Spanish-American War transferred control of the island to the United States. The book is part of "The Expansion of the Republic Series," reflecting the American imperial expansion of the late 19th/early 20th century. The editor, Martin G. Brumbaugh, was an important figure in early American Puerto Rico as the first Commissioner of Education.
+"""
+</result>

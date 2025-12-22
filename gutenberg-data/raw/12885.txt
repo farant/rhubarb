@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other relevant information.
+
+<result>
+Title = "Bundling: Its Origin, Progress and Decline in America"
+Author = "Henry Reed Stiles"
+Year = 1871
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A historical and sociological study by Dr. Henry Reed Stiles examining the colonial American courtship practice of "bundling" - where courting couples would share a bed while fully clothed, often with a wooden board between them. Written as a scholarly defense following criticism of statements Stiles made about bundling in his earlier "History and Genealogies of Ancient Windsor, Connecticut," this work traces the practice's European origins, its prevalence in New England and other American colonies, and its eventual decline. The book provides a fascinating glimpse into colonial American social customs and moral standards, approached from a historical and ethnographic perspective.
+"""
+
+Notes = """
+The publication year of 1871 is clearly stated on the title page. This is a piece of American social history written in the Victorian era examining colonial customs. While the subject matter involves courtship practices, it is written in a scholarly, historical manner typical of 19th-century antiquarian studies. The dedication mentions it was written in response to criticism of statements in Stiles's earlier work on Windsor, Connecticut history.
+"""
+</result>

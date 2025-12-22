@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Great Sermons, Volume VIII: Talmage to Knox Little"
+Author = "Grenville Kleiser (editor)"
+Year = 1908
+
+Tags = ["non-fiction", "christian", "sermons"]
+
+Summary = """
+This is the eighth volume of an anthology of prominent sermons compiled by Grenville Kleiser, a member of the Yale Divinity School faculty. This particular volume features sermons from late 19th century Protestant preachers including Thomas DeWitt Talmage, Charles Spurgeon, Henry Codman Potter, Lyman Abbott, Phillips Brooks, Washington Gladden, and John Clifford, among others. The collection includes both American and British preachers and represents various Protestant denominations. Each volume in the series was designed to showcase the oratorical and theological contributions of influential preachers from different eras of Christian history.
+"""
+
+Notes = """
+Year is based on the publication date shown in the original text (1908). While the volume contains sermons from preachers who lived in the 1800s (with dates provided for each: Talmage 1832-1901, Spurgeon 1834-1892, etc.), the compilation itself was published in 1908. This is primarily a Protestant collection and does not qualify for the 'catholic' tag - these are prominent Protestant preachers from various denominations. Not tagged as 'appropriate-for-children' as sermonic anthologies are typically aimed at adult theological readers.
+"""
+</result>

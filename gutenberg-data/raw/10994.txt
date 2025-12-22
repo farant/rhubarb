@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be a religious/moral instructional story for children published by the Methodist Episcopal Church's Sunday-School Union. The text shows it was revised by D.P. Kidder and published in 1831. This is a didactic tale about Isabella Gardner learning to control her temper - a common format for Sunday School literature of the early 19th century.
+
+Based on the publication information clearly stated in the text (Methodist Episcopal Church Sunday-School Union, 200 Mulberry-Street, 1831) and the nature of the work, I can provide the metadata:
+
+<result>
+Title = "The Good Resolution"
+Author = "Unknown (Revised by D.P. Kidder)"
+Year = 1831
+
+Tags = ["fiction", "appropriate-for-children", "religious", "moral-instruction"]
+
+Summary = """
+A didactic moral tale published by the Methodist Episcopal Church's Sunday-School Union, focusing on fourteen-year-old Isabella Gardner who struggles with a fretful and peevish temper. The story follows her journey toward self-improvement and controlling her anger, particularly in her relationships with her parents and sister. This type of instructional fiction was common in early 19th-century American Sunday School literature, designed to teach children Christian virtues and proper behavior through relatable examples.
+"""
+
+Notes = """
+The year 1831 is taken from the publication date clearly stated in the text. The author is listed as unknown with D.P. Kidder credited as the reviser, suggesting this may have been adapted from an earlier work or was a collaborative Sunday School publication. These types of moral tales were widely distributed through Methodist Sunday School networks in the antebellum period.
+"""
+</result>

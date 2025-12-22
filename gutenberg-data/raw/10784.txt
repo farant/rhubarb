@@ -1,0 +1,15 @@
+<result>
+Title = "Sentence Deferred"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Sentence Deferred" is a humorous short story by W.W. Jacobs, part of his collection "Sailor's Knots" published in 1909. W.W. Jacobs (1863-1943) was a prolific English author known for his comedic tales of dockside life and seafaring adventures, though he is perhaps best remembered today for his macabre story "The Monkey's Paw." This particular story features Captain Bligh in a comic predicament involving a police sergeant, showcasing Jacobs' characteristic wit and his talent for depicting working-class characters in absurd situations. The story exemplifies the light, entertaining fiction that made Jacobs popular in Edwardian England.
+"""
+
+Notes = """
+The year 1909 is taken from the text itself, which identifies this as part of the "Sailor's Knots" collection published that year. This represents the original publication date of this particular story as part of that collection.
+"""
+</result>

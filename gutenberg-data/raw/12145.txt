@@ -1,0 +1,15 @@
+<result>
+Title = "The Poetical Works of William Wordsworth, Volume II"
+Author = "William Wordsworth"
+Year = 1896
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+This is the second volume of William Wordsworth's collected poetical works, edited by William Knight and published in 1896. This volume contains several of Wordsworth's most famous poems including "Peter Bell," "Lines Composed a Few Miles above Tintern Abbey" (one of his most celebrated works from 1798), and various other poems from the late 1790s. Wordsworth (1770-1850) was a major English Romantic poet who, along with Samuel Taylor Coleridge, helped launch the Romantic Age in English literature with their joint publication "Lyrical Ballads" in 1798. His poetry often focuses on nature, memory, and the relationship between the human mind and the natural world.
+"""
+
+Notes = """
+I chose 1896 as the year because this is specifically an edited collection published in that year by William Knight, not the original composition dates of the individual poems. Since this is a scholarly edition with editorial apparatus, the 1896 publication date is the most historically accurate for this particular work. The individual poems within span primarily from 1798-1799, but this collection as a coherent editorial work is a distinct publication from those original compositions.
+"""
+</result>

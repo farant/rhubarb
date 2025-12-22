@@ -1,0 +1,15 @@
+<result>
+Title = "A Spinner in the Sun"
+Author = "Myrtle Reed"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Spinner in the Sun is a novel by Myrtle Reed, an American author known for her romantic fiction and popular novels in the early 20th century. Reed was a prolific writer whose works often featured themes of romance, domestic life, and personal transformation. This novel, published in 1906, appears to follow the story of characters including Miss Mehitable, Araminta, and others through various domestic and romantic situations. Reed's novels were widely read during her lifetime and were known for their sentimental yet accessible style that appealed to a broad audience. The chapter titles suggest themes of redemption, secrets, and romantic entanglements typical of early 20th century popular fiction.
+"""
+
+Notes = """
+The year 1906 is clearly indicated on the title page as the publication date. Myrtle Reed (1874-1911) was an American author whose works were bestsellers in her time. While Reed was not a Catholic author and this appears to be secular romantic fiction, it was appropriate for the general reading public of the early 1900s and would be considered suitable for older children and young adults.
+"""
+</result>

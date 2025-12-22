@@ -1,0 +1,15 @@
+<result>
+Title = "The Czar's Spy: The Mystery of a Silent Love"
+Author = "William Le Queux"
+Year = 1905
+
+Tags = ["fiction", "spy-thriller", "mystery", "adventure"]
+
+Summary = """
+'The Czar's Spy' is a spy thriller novel by William Le Queux, a prolific British author known for his invasion literature and espionage novels during the Edwardian era. Le Queux was highly popular in the early 20th century for his sensational stories about foreign spies and international intrigue, often featuring elaborate conspiracies involving European powers, particularly Russia and Germany. This novel follows the pattern of his typical work: a mystery involving espionage, secret agents, romance, and international politics during a period of heightened tensions between European powers. Le Queux's works helped establish many conventions of the spy thriller genre that would later influence authors like John Buchan and ultimately Ian Fleming.
+"""
+
+Notes = """
+The year 1905 is clearly indicated in the text itself as the publication date. This was during the height of Le Queux's popularity and coincides with growing British anxieties about espionage and foreign threats in the years leading up to World War I. The reference to "The Czar" in the title reflects contemporary concerns about Russian intelligence operations in Britain.
+"""
+</result>

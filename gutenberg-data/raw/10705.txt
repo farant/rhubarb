@@ -1,0 +1,15 @@
+<result>
+Title = "The History of Rome, Book V: The Establishment of the Military Monarchy"
+Author = "Theodor Mommsen"
+Year = 1885
+
+Tags = ["non-fiction", "history", "classical-antiquity"]
+
+Summary = """
+This is the fifth and final volume of Theodor Mommsen's monumental "Römische Geschichte" (The History of Rome), which covers the period of the late Roman Republic and the establishment of the Roman Empire under Julius Caesar and Augustus. Mommsen (1817-1903) was a German classical scholar who won the Nobel Prize in Literature in 1902, primarily for this groundbreaking historical work. Book V specifically examines the transformation from the Roman Republic to the "military monarchy" - the period of civil wars, the rise of powerful military commanders like Caesar and Pompey, and the eventual establishment of the Imperial system. The work is notable for its detailed analysis of Roman political, social, and economic institutions, written with both scholarly rigor and literary excellence. This English translation by William Purdie Dickson made the work accessible to English-speaking audiences.
+"""
+
+Notes = """
+The original German "Römische Geschichte" was published in multiple volumes between 1854-1856 (Books I-III) and 1885 (Book V). Book IV was never completed. I've chosen 1885 as the year because this specifically refers to Book V, which was published separately and much later than the earlier volumes. The English translation followed shortly after. This is considered one of the foundational works of modern Roman historiography, though its treatment of Caesar as a heroic figure has been debated by subsequent historians.
+"""
+</result>

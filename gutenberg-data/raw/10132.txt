@@ -1,0 +1,15 @@
+<result>
+Title = "The Sowers"
+Author = "Henry Seton Merriman"
+Year = 1896
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"The Sowers" is a novel by Henry Seton Merriman (pseudonym of Hugh Stowell Scott), set primarily in Russia during the late 19th century. The story follows the lives of Russian nobility and explores themes of political intrigue, social reform, and romance against the backdrop of Imperial Russia. Merriman was known for his adventure novels with exotic settings, and this work examines the tensions between traditional aristocratic life and the emerging revolutionary movements in Russia. The title "The Sowers" likely refers to the biblical parable and the idea of sowing seeds of change or consequence.
+"""
+
+Notes = """
+While the Project Gutenberg file header shows 1895, the novel was actually first published in 1896. This was a common occurrence with serialization and different editions. I've chosen 1896 as the more historically accurate publication year for the first complete edition. The novel was published during the height of Merriman's popularity as a writer of adventure fiction with political themes.
+"""
+</result>

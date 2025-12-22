@@ -1,0 +1,15 @@
+<result>
+Title = "The United States Declaration of Independence"
+Author = "Continental Congress"
+Year = 1776
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+The United States Declaration of Independence is the founding document of the United States, adopted by the Continental Congress on July 4, 1776. It announced the thirteen American colonies' separation from Great Britain and articulated the principles of individual liberty and government by consent of the governed. Primarily drafted by Thomas Jefferson, with input from John Adams, Benjamin Franklin, Roger Sherman, and Robert Livingston, the Declaration outlined grievances against King George III and established the philosophical foundation for American democracy. It remains one of the most influential documents in world history, inspiring numerous democratic movements globally.
+"""
+
+Notes = """
+Year chosen is 1776, when the Declaration was adopted on July 4th. While this was technically drafted and signed in 1776, the document represents the collective work of the Continental Congress rather than a single author. This was also the very first eBook released by Project Gutenberg in 1971, making it historically significant in the digital age as well. The document itself has never been under copyright.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Principles of Success in Literature"
+Author = "George Henry Lewes"
+Year = 1865
+
+Tags = ["non-fiction", "literary-criticism", "philosophy"]
+
+Summary = """
+'The Principles of Success in Literature' is a collection of essays by George Henry Lewes, the Victorian philosopher, critic, and partner of George Eliot. The work examines the nature of literature and what constitutes excellence in writing. Lewes analyzes the fundamental principles that distinguish great literature from mediocre work, discussing concepts such as vision, sincerity, and the relationship between literature and social progress. Drawing on his extensive knowledge of philosophy, science, and criticism, Lewes argues that literature plays a crucial role in civilization's advancement, serving both as a cause and effect of social progress. The work reflects the Victorian era's serious engagement with questions of art, culture, and their role in society.
+"""
+
+Notes = """
+These essays were originally published serially in The Fortnightly Review in 1865, making that the most appropriate publication year. While Lewes was known primarily as a philosopher and scientific writer during his lifetime, this work on literary criticism has endured as one of his most important contributions. He was closely associated with George Eliot (Mary Ann Evans), whom he lived with in a common-law marriage.
+"""
+</result>

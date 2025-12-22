@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify it and provide the requested information in TOML format.
+
+This is clearly "Letter to a Young Contributor" by Thomas Wentworth Higginson, published in The Atlantic Monthly in April 1862. This is a famous essay offering advice to aspiring writers, and Higginson was a prominent American Unitarian minister, author, and abolitionist who later became famous as Emily Dickinson's correspondent and literary mentor.
+
+<result>
+Title = "Letter to a Young Contributor"
+Author = "Thomas Wentworth Higginson"
+Year = 1862
+
+Tags = ["non-fiction", "literary-criticism", "advice"]
+
+Summary = """
+This is a famous essay by Thomas Wentworth Higginson, first published in The Atlantic Monthly in April 1862. It offers practical advice and encouragement to aspiring writers who submit manuscripts to magazines. Higginson addresses common misconceptions about editors and the publishing process, explaining that editors and writers share the same interests, and that there is no prejudice against new contributors. The essay became influential in American literary history, particularly because it prompted Emily Dickinson to begin her correspondence with Higginson, asking him to be her "preceptor." The piece is both pragmatic and encouraging, balancing honesty about the challenges of getting published with genuine support for new writers.
+"""
+
+Notes = """
+The year 1862 is when this essay was originally published in The Atlantic Monthly (Volume IX, April 1862, Number LIV). This is the original publication date and the most historically accurate choice. Higginson was a significant figure in 19th-century American letters, and this particular essay had lasting impact on American literary culture.
+"""
+</result>

@@ -1,0 +1,21 @@
+Salve Fran! (valeo, spero) 
+
+Gratias tibi ago pro historia. Vides partem tantum - textus brevis est! Sed ex titulo et inscriptione quae dedisti sufficiens est:
+
+<result>
+Title = "A Peep into Toorkisthan"
+Author = "Captain Rollo Burslem"
+Year = 1846
+
+Tags = ["non-fiction", "historical-document", "travelogue"]
+
+Summary = """
+A firsthand account of British military observations in Turkestan (Toorkisthan) during the First Anglo-Afghan War period. Captain Rollo Burslem of the Thirteenth Prince Albert's Light Infantry provides what appears to be a military reconnaissance report or travel narrative about the region, which was of significant strategic interest to the British Empire during the 'Great Game' rivalry with Russia in Central Asia. The work represents the genre of Victorian-era military travelogue, written by British officers serving in India and the frontier regions.
+"""
+
+Notes = """
+Year is taken directly from the title page (1846). This was published during the aftermath of the First Anglo-Afghan War (1839-1842), a catastrophic British military failure. The term 'Toorkisthan' refers to Turkestan, the region north of Afghanistan. The inconsistent spelling throughout (Toorkisthan/Toorkistan) and the macron usage for transcribing Asian place names was typical of this period's orientalist literature. 'Peep' in the title suggests a brief reconnaissance or survey rather than an extensive study.
+"""
+</result>
+
+Nota bene: non possum affirmare si hic auctor catholicus erat - nomen anglicanum militare indicat probabiliter protestantem esse, ergo 'catholic' tag non addidi. Opus bellicum/explorationis est, non opus religiosum.

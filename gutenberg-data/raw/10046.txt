@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "Salute to Adventurers" by John Buchan. Based on the dedication and the reference to "old Virginian ways," this is Buchan's historical adventure novel set in 17th-century colonial Virginia. The dedication mentions Patrick Walker and "Muckle John Gib," which is a historical figure from Scottish Covenanter history.
+
+John Buchan published "Salute to Adventurers" in 1915. This was one of his adventure novels written during his prolific period before and during World War I.
+
+<result>
+Title = "Salute to Adventurers"
+Author = "John Buchan"
+Year = 1915
+
+Tags = ["fiction", "historical-fiction", "adventure"]
+
+Summary = """
+'Salute to Adventurers' is a historical adventure novel by John Buchan set in late 17th-century colonial Virginia. The story follows Scottish colonists and their encounters with frontier life, Native Americans, and the challenges of building a new society in the American wilderness. The novel incorporates historical figures like Muckle John Gib, a Scottish Covenanter mentioned in Patrick Walker's historical writings. Buchan, who would later become famous for 'The Thirty-Nine Steps,' demonstrates his characteristic blend of historical detail, adventure, and exploration of character under pressure. The novel reflects early American colonial history through a Scottish Presbyterian lens.
+"""
+
+Notes = """
+Published in 1915 during Buchan's most productive period as a novelist. The dedication to Major-General Sir Reginald Talbot references both American Civil War history (Sheridan, Lee) and British imperial campaigns (Gordon in Sudan), connecting the adventurous spirit across different eras. Buchan was a Presbyterian Scots writer, though not specifically a Catholic author.
+"""
+</result>

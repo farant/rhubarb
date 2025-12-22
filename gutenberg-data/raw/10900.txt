@@ -1,0 +1,15 @@
+<result>
+Title = "The Holy Bible, King James Version"
+Author = "Various"
+Year = 1611
+
+Tags = ["non-fiction", "historical-document", "religious-text"]
+
+Summary = """
+The King James Version (KJV), also known as the Authorized Version, is an English translation of the Christian Bible commissioned by King James I of England and completed in 1611. It was produced by a committee of 47 scholars and clergymen who worked from Hebrew, Aramaic, and Greek texts. The KJV became one of the most influential books in English literature and shaped the English language itself for centuries. It includes the Old Testament (39 books), the New Testament (27 books), and in some editions, the Apocrypha. The translation is known for its majestic prose, memorable phrases, and literary excellence. It remained the dominant English Bible translation for over 300 years and continues to be widely used today, particularly in Protestant churches.
+"""
+
+Notes = """
+I chose 1611 as this is the year the King James Version was first published, which is the most historically significant date for this specific translation. While the biblical texts themselves were written over many centuries (roughly 1500 BC to 100 AD), this particular work is the KJV translation itself. Note: I did not include 'catholic' tag because the KJV is a Protestant translation that excludes the deuterocanonical books (or relegates them to Apocrypha), and was specifically created in opposition to Catholic translations like the Douay-Rheims. I also did not include 'appropriate-for-children' as the Bible contains mature themes including violence, although portions are certainly read to children in religious education.
+"""
+</result>

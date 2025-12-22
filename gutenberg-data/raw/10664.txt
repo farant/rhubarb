@@ -1,0 +1,29 @@
+I'll read through this Project Gutenberg text to identify the work, author, and publication details.
+
+This is clearly a work by **Multatuli** (the pen name of Eduard Douwes Dekker, 1820-1887), a famous Dutch writer. The text is in Dutch and appears to be a preface to the second edition of his essay "Specialiteiten" (Specialties).
+
+From the text, I can see:
+- The title is "Specialiteiten" 
+- The author is Multatuli
+- The preface mentions this is from autumn 1875 for the second edition
+- The publisher mentioned is WALTMAN
+
+Multatuli is best known for "Max Havelaar" (1860), but he wrote many essays and works. "Specialiteiten" appears to be a critical essay about political representation, voters, and specialists, based on the reference to what could be learned by "Volksvertegenwoordigers, Kiezers" (People's Representatives, Voters).
+
+The first edition would have been published earlier, likely in the early 1870s. Based on the context and the date of the second edition preface (1875), I'll estimate the original publication around 1871-1873.
+
+<result>
+Title = "Specialiteiten"
+Author = "Multatuli (Eduard Douwes Dekker)"
+Year = 1871
+
+Tags = ["non-fiction", "political-essay", "social-criticism"]
+
+Summary = """
+'Specialiteiten' (Specialties) is a critical essay by the Dutch writer Multatuli, pen name of Eduard Douwes Dekker (1820-1887). The work appears to be a political and social commentary focusing on the concept of specialists and their role in society, particularly addressing issues relevant to political representatives, voters, and governance. Multatuli was known for his sharp social criticism and advocacy for justice, most famously demonstrated in his novel 'Max Havelaar' (1860). This essay continues his tradition of challenging Dutch society and its institutions. The preface to the second edition (1875) indicates the author believed the work contained important lessons for political representatives and voters.
+"""
+
+Notes = """
+The exact year of first publication is not explicitly stated in this text, which is a preface to the second edition from 1875. I've estimated 1871 as a reasonable date for the original publication, though it could have been published anywhere from 1870-1874. The Project Gutenberg number is 10664. The work is not marked as appropriate-for-children as it appears to be a serious political essay. While Multatuli was culturally Protestant Dutch, he was highly critical of religious and social institutions, so this would not receive a Catholic imprimatur.
+"""
+</result>

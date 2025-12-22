@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Home as Found" by James Fenimore Cooper, a sequel to "Homeward Bound." The text shows it's from an 1871 edition, but the work was originally published in 1838. Cooper wrote this as part of his Littlepage Manuscripts series, and it's a social commentary novel about American society.
+
+<result>
+Title = "Home as Found"
+Author = "James Fenimore Cooper"
+Year = 1838
+
+Tags = ["fiction", "social-commentary", "appropriate-for-children"]
+
+Summary = """
+'Home as Found' is the sequel to 'Homeward Bound' by James Fenimore Cooper, published in 1838. The novel follows the Effingham family as they return to their ancestral home in upstate New York after years abroad in Europe. Cooper uses the narrative to offer sharp social criticism of American society in the 1830s, particularly addressing themes of democracy, property rights, social class, and the contrast between American and European manners. The book was controversial upon publication for its satirical treatment of American provincialism and democratic excess, and it reflects Cooper's increasingly conservative views on American culture and politics during this period of his career.
+"""
+
+Notes = """
+The original publication year is 1838. While this Project Gutenberg text is from an 1871 edition, the work itself dates to 1838. Cooper wrote this as a direct sequel to 'Homeward Bound' (1838), and the two novels were conceived as a single narrative split into two volumes. The book generated significant controversy and criticism when first published due to Cooper's unflattering portrayal of American democratic society, which many readers found unpatriotic. This represents Cooper's later, more socially critical period of writing.
+"""
+</result>

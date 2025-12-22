@@ -1,0 +1,17 @@
+I recognize this work based on the introduction and attribution. This is a monograph on the Italian Renaissance painter Giorgione (Giorgio Barbarelli da Castelfranco) by Herbert Cook, published in 1904.
+
+<result>
+Title = "Giorgione"
+Author = "Herbert Cook"
+Year = 1904
+
+Tags = ["non-fiction", "art-history", "biography"]
+
+Summary = """
+This is an art historical monograph on the Italian Renaissance painter Giorgione (c. 1477-1510) by Herbert Cook, M.A., F.S.A., published in its second revised edition in 1904. The work represents an early 20th-century scholarly attempt to reconstruct and systematize knowledge about Giorgione, whose life and works had been subject to extensive critical debate and "disintegrating" scholarly processes. Cook's study incorporates newly discovered documents and recovered paintings to present a more comprehensive understanding of this Venetian master. The book addresses the challenge that, unlike most famous historical artists, Giorgione lacked a modern biographer at the time of writing.
+"""
+
+Notes = """
+I chose 1904 as this is specifically the second revised edition with a new appendix published in February 1904 (the first edition was November 1900). Since this is a modern scholarly work rather than a historical primary source or translation, the appropriate date is the publication year of this edition rather than any earlier date. The work represents early 20th-century art historical scholarship attempting to establish a more solid foundation for understanding Giorgione's oeuvre.
+"""
+</result>

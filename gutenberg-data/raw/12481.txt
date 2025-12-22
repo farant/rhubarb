@@ -1,0 +1,15 @@
+<result>
+Title = "Hero Tales of the Far North"
+Author = "Jacob A. Riis"
+Year = 1910
+
+Tags = ["non-fiction", "historical", "biography", "appropriate-for-children"]
+
+Summary = """
+Hero Tales of the Far North is a collection of biographical stories about Scandinavian heroes and historical figures by Jacob A. Riis, the famous Danish-American social reformer and journalist. Riis, best known for his groundbreaking work documenting urban poverty in 'How the Other Half Lives', turned his attention to celebrating the heroic figures and cultural heritage of his native Denmark and the broader Nordic region. The book presents inspiring tales of courage, leadership, and character from Scandinavian history, written in an accessible style suitable for younger readers and general audiences. It reflects Riis's desire to share his cultural heritage with his adopted American audience and to provide uplifting examples of moral courage and achievement.
+"""
+
+Notes = """
+Jacob A. Riis published this work in 1910. While the Project Gutenberg header shows a release date of 2004 (which is when it was digitized), the original publication date was 1910 based on standard bibliographic records. Riis (1849-1914) was a pioneering photojournalist and social reformer who emigrated from Denmark to America in 1870 and became famous for exposing the conditions of New York City's tenements. This book represents a different aspect of his work - celebrating the heroic traditions of his homeland.
+"""
+</result>

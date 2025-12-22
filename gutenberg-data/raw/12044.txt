@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work, author, and other details you've requested.
+
+<result>
+Title = "The Grimké Sisters: Sarah and Angelina Grimké, The First American Women Advocates of Abolition and Woman's Rights"
+Author = "Catherine H. Birney"
+Year = 1885
+
+Tags = ["non-fiction", "biography", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a biography of Sarah and Angelina Grimké, pioneering American abolitionists and women's rights advocates. The Grimké sisters were born into a slave-holding family in South Carolina but became radical opponents of slavery and vocal proponents of women's equality. They were among the first American women to speak publicly on political issues, breaking gender barriers in the abolitionist movement. This work chronicles their lives, drawing on personal diaries and letters, and was written by Catherine H. Birney, who knew the sisters personally during the final years of their lives.
+"""
+
+Notes = """
+The year 1885 is clearly indicated on the title page and in the preface, where Birney signs off from Washington City in September 1885. This is a contemporary biography written shortly after the sisters' deaths (Sarah died in 1873, Angelina in 1879). The author emphasizes her personal acquaintance with the subjects, having lived under the same roof with them for nearly two years.
+"""
+</result>

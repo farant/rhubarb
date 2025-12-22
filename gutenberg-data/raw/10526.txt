@@ -1,0 +1,15 @@
+<result>
+Title = "Nancy Whiskey"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording by Roger McGuinn (founder of The Byrds) performing the traditional folk song "Nancy Whiskey." McGuinn is known for his Folk Den project where he recorded and shared traditional folk songs. "Nancy Whiskey" is a traditional Scottish/Irish folk song about a man's love for whiskey personified as a woman named Nancy. The song has been part of the folk tradition for centuries, but this particular recording and arrangement by McGuinn was created as part of his effort to preserve and share folk music in digital format.
+"""
+
+Notes = """
+I chose 2001 as the year because this is when McGuinn created this specific recording and copyrighted it. While "Nancy Whiskey" itself is a traditional folk song that dates back possibly to the 18th or 19th century, this Project Gutenberg entry is specifically about McGuinn's audio recording, not the original folk song. The copyright notice clearly states "Copyright (C) 2001 McGuinn Music," indicating this particular version was created in 2001.
+"""
+</result>

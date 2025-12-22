@@ -1,0 +1,17 @@
+I recognize this as Patrick Henry's famous speech "Give Me Liberty or Give Me Death" delivered to the Virginia Convention in 1775. This is a foundational American Revolutionary text - a passionate call to arms against British rule.
+
+<result>
+Title = "Give Me Liberty Or Give Me Death"
+Author = "Patrick Henry"
+Year = 1775
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is Patrick Henry's legendary speech delivered on March 23, 1775, at St. John's Church in Richmond, Virginia, to the Second Virginia Convention. The speech is one of the most famous orations in American history, passionately arguing for Virginia's participation in the American Revolutionary War against Great Britain. Henry employs powerful rhetoric to convince his fellow delegates that peaceful reconciliation with Britain is impossible and that armed resistance is the only path to preserve American liberty. The speech culminates in the immortal phrase "Give me liberty or give me death!" which became a rallying cry for the American Revolution. The speech was instrumental in convincing the Virginia Convention to pass a resolution delivering Virginia troops for the Revolutionary War.
+"""
+
+Notes = """
+The year 1775 represents when this speech was delivered (March 23, 1775). This is a historical document rather than a published literary work - it represents Henry's actual words at the Virginia Convention. The speech was not immediately published but was reconstructed from memory by William Wirt in his 1817 biography of Patrick Henry. However, 1775 is the historically accurate date as it represents when this pivotal moment in American history occurred.
+"""
+</result>

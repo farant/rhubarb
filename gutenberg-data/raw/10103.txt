@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Events by Famous Historians, Volume VIII"
+Author = "Various"
+Year = 1905
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume VIII of "The Great Events by Famous Historians," a comprehensive multi-volume historical reference work edited by Rossiter Johnson, with associate editors Charles F. Horne and John Rudd. The series aimed to provide a comprehensive and readable account of world history by compiling narratives from eminent historians, arranged chronologically with extensive scholarly apparatus including indices, bibliographies, and reading guides. The work was designed to be non-sectarian, non-partisan, and non-sectional, representing a major early 20th-century effort to create an accessible yet authoritative world history reference. This particular volume features an ornate binding that is a facsimile of an 18th-century mosaic design by Antoine Michel Padeloup, the royal binder of France and Portugal, originally created around 1710.
+"""
+
+Notes = """
+"The Great Events by Famous Historians" was published in multiple editions between approximately 1905-1914. The work represents the scholarly historical compilation tradition popular in the early 20th century. I've chosen 1905 as a representative publication year for the series, though individual volumes may have varied. The elaborate description of the binding suggests this was a premium edition aimed at libraries and serious collectors. The work is not tagged as appropriate-for-children due to its comprehensive academic nature and likely complex historical content, nor as Catholic despite its scholarly rigor, as it was explicitly designed to be non-sectarian and drew from historians of various backgrounds.
+"""
+</result>

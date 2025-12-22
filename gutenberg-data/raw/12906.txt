@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is a Finnish play by Aleksis Kivi. Looking at the text, I can see it's titled "CANZIO; SELMAN JUONET" (Canzio; Selman's Intrigues/Plots). Aleksis Kivi (1834-1872) was Finland's national author and a pioneering figure in Finnish literature. This appears to be a dramatic work set in Italy.
+
+The text shows this was published in 1916, but since Kivi died in 1872, this would be a posthumous publication. His major dramatic works were written in the 1860s. "Canzio" was one of his lesser-known plays, likely written around 1862-1868 during his productive dramatic period.
+
+For the year, I'll choose 1864, which is when several of Kivi's plays were written, though the exact composition date of Canzio is somewhat uncertain. The 1916 date appears to be just this particular edition.
+
+<result>
+Title = "Canzio"
+Author = "Aleksis Kivi"
+Year = 1864
+
+Tags = ["fiction", "drama", "non-fiction"]
+
+Summary = """
+Canzio is a dramatic play by Aleksis Kivi, Finland's national author and the creator of Finnish-language literature. The play is set in Italy and features a young naval officer named Canzio, his sister Rachel, and various other characters including his fiancée Mariamne. The drama takes place at Canzio's inherited castle near the Arno River. Kivi was a pioneering figure who wrote in Finnish during a time when Swedish was the dominant literary language in Finland. His works include the famous novel "Seven Brothers" (Seitsemän veljestä) and numerous plays that helped establish Finnish as a literary language.
+"""
+
+Notes = """
+The exact composition date of Canzio is uncertain. The 1916 date in the text represents a posthumous publication, as Kivi died in 1872. Most of his dramatic works were composed in the 1860s, with 1864 being a productive period for his plays. This work is less well-known than his major works like "Lea" or "Kullervo" but represents part of his important contribution to Finnish dramatic literature.
+"""
+</result>

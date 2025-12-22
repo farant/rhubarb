@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a work by W.W. Jacobs, as stated at the beginning. The text shows it's from "Ship's Company," which is a collection of humorous short stories. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author famous for his maritime humor stories and his horror story "The Monkey's Paw."
+
+"Ship's Company" was published in 1911. This is a collection of nautical and dockside comedy stories featuring working-class characters in England. The excerpt shown is from the story "Fairy Gold."
+
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Ship's Company' is a collection of humorous short stories by W.W. Jacobs, primarily featuring maritime and dockside life in England. Jacobs was renowned for his comic tales of sailors, dockers, and working-class characters in English ports and towns. His stories are characterized by witty dialogue, amusing situations, and gentle satire of human nature. While Jacobs is perhaps most famous for his horror story 'The Monkey's Paw,' the bulk of his work consisted of lighthearted comedy stories like those in this collection. The stories typically involve schemes, misunderstandings, and domestic comedy among sailors and their families.
+"""
+
+Notes = """
+The year 1911 represents the first publication of this collection. W.W. Jacobs was a prolific writer during the Edwardian era, and his humorous maritime stories were extremely popular in England and America during his lifetime.
+"""
+</result>

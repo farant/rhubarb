@@ -1,0 +1,15 @@
+<result>
+Title = "The Rights of Labor"
+Author = "William H. Taft"
+Year = 1909
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a speech or audio recording by William Howard Taft (27th President of the United States, 1909-1913) on the topic of labor rights. Taft, who served as both President and later Chief Justice of the Supreme Court, was known for his progressive stance on labor issues during the early 20th century. The work was edited by Thomas Edison and comes from the Edison National Historic Site collection, suggesting it was one of Edison's early audio recordings. The piece likely discusses workers' rights, labor relations, and the balance between capital and labor during the Progressive Era.
+"""
+
+Notes = """
+Dating this work is somewhat challenging since it's an audio recording. Taft served as President from 1909-1913, and given the context of Edison's involvement and the Progressive Era labor discussions, I've estimated 1909 as the publication year, coinciding with the start of his presidency when labor rights were a significant national issue. The actual recording could have been made anywhere from approximately 1909-1913. This appears to be an early example of political audio recording technology. Not marked as 'appropriate-for-children' as it's a political/legal treatise. Not marked as 'catholic' - while Taft had religious connections, this is a political speech on labor rights rather than a work of Catholic thought.
+"""
+</result>

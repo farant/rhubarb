@@ -1,0 +1,15 @@
+<result>
+Title = "Fate Knocks At The Door"
+Author = "Will Levington Comfort"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Fate Knocks At The Door" is a novel by Will Levington Comfort, an American author and journalist known for his adventure novels and spiritual writings in the early 20th century. The title and structure are inspired by Beethoven's Fifth Symphony, specifically the famous four-note opening motif that Beethoven described as "Fate knocking at the door." The novel appears to be structured in movements like a symphony, with the first section titled "ASIA" marked as "Allegro con brio" (a musical tempo marking meaning "fast and with vigor"). The work is dedicated "To THE MOTHERS OF MEN" and seems to explore themes of conflict, emotion, and human experience through an adventure narrative set partly in Asia, including the Philippines (Luzon is mentioned in the chapter titles). Comfort was known for writing philosophical adventure fiction that explored deeper spiritual and emotional themes.
+"""
+
+Notes = """
+The year 1912 is clearly stated on the title page as the publication year. This represents the original publication date of this novel. Will Levington Comfort (1878-1932) was a prolific American writer whose works often combined adventure with philosophical and spiritual themes.
+"""
+</result>

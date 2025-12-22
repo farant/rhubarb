@@ -1,0 +1,17 @@
+I recognize this as Emily Dickinson's poetry collection, one of the most significant works in American literature. Let me provide the structured information:
+
+<result>
+Title = "Poems by Emily Dickinson"
+Author = "Emily Dickinson"
+Year = 1890
+
+Tags = ["poetry", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is the first published collection of Emily Dickinson's poems, edited posthumously by Mabel Loomis Todd and Thomas Wentworth Higginson. Emily Dickinson (1830-1886) was a reclusive poet from Amherst, Massachusetts, who wrote nearly 1,800 poems during her lifetime but published fewer than a dozen. Her innovative style—characterized by unconventional punctuation, slant rhyme, and compressed language—was revolutionary for its time. The poems explore themes of death, immortality, nature, love, and the inner life with remarkable psychological depth and linguistic precision. This collection introduced the world to one of America's greatest poets, though the editors significantly altered her punctuation and capitalization to conform to contemporary standards.
+"""
+
+Notes = """
+I chose 1890 as the year because this represents the first series of Poems by Emily Dickinson, published four years after her death. While Dickinson wrote these poems between roughly 1850-1886, the work as a collected volume did not exist until the 1890 publication, which was a major literary event. The preface quoted here is by Thomas Wentworth Higginson. Subsequent series were published in 1891 and 1896. The complete, unedited versions of her poems were not published until the mid-20th century.
+"""
+</result>

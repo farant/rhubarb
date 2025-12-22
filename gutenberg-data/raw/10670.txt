@@ -1,0 +1,19 @@
+I'll read through this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This appears to be "With Zola in England: A Story of Exile" by Ernest Alfred Vizetelly. This is a memoir/historical account about Émile Zola's exile in England during the Dreyfus Affair (1898-1899). Vizetelly was Zola's English translator and friend who helped him during his exile.
+
+<result>
+Title = "With Zola in England: A Story of Exile"
+Author = "Ernest Alfred Vizetelly"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+This is a first-hand account by Ernest Alfred Vizetelly, Émile Zola's English translator and friend, documenting the famous French novelist's exile in England during the Dreyfus Affair. After Zola published his courageous letter 'J'Accuse' in defense of Captain Alfred Dreyfus (who had been wrongly convicted of treason), Zola faced prosecution for libel and fled to England in 1898 to avoid imprisonment. Vizetelly's memoir provides an intimate look at Zola's time in hiding in England, his daily life, struggles, and thoughts during this tumultuous period. The work is historically significant as it documents one of the most important political and social justice controversies of late 19th-century France, and Zola's principled stand for truth and justice despite personal cost.
+"""
+
+Notes = """
+The year 1899 represents when Zola's exile in England occurred and likely when this account was written or first published. The exile lasted from July 1898 to June 1899. The poetic dedication at the beginning references Zola's quest for "Light, Truth, and Justice" in the Dreyfus Affair, which became a defining moment in the history of press freedom and intellectual courage.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Tramp Abroad"
+Author = "Mark Twain"
+Year = 1880
+
+Tags = ["non-fiction", "travelogue", "humor", "appropriate-for-children"]
+
+Summary = """
+A Tramp Abroad is a travel narrative by Mark Twain (Samuel Langhorne Clemens) chronicling his journey through central and southern Europe with his fictional companion Harris (based on his real-life friend Joseph Twichell). The book is characteristic of Twain's humorous style, blending actual travel observations with tall tales, satire, and comic exaggeration. The narrative follows their adventures through Germany, Switzerland, and Italy, with particular focus on German culture, student dueling traditions in Heidelberg, Alpine climbing (or rather, avoiding it), and various amusing encounters with European customs. The work showcases Twain's gift for comedic storytelling while also providing genuine cultural commentary on late 19th-century Europe from an American perspective.
+"""
+
+Notes = """
+Published in 1880, this is the first edition. This Project Gutenberg text appears to be Part 1 of the work, as indicated in the title. The full book was published in multiple volumes or parts in some editions. The year 1880 represents both composition and initial publication.
+"""
+</result>

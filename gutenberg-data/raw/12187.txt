@@ -1,0 +1,15 @@
+<result>
+Title = "The Mystery of 31 New Inn"
+Author = "R. Austin Freeman"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Mystery of 31 New Inn" is a detective novel by R. Austin Freeman featuring his series character Dr. John Thorndyke, one of the earliest scientific detectives in fiction. Freeman was a pioneer of the "inverted detective story" format and is known for his meticulous attention to forensic detail. This novel follows Dr. Thorndyke as he investigates mysterious circumstances surrounding a medical case at the titular address. Freeman's work is notable for its emphasis on scientific method and logical deduction, predating and influencing later detective fiction. The novel showcases early 20th-century forensic science and medical knowledge woven into an engaging mystery plot.
+"""
+
+Notes = """
+This work was first published in 1912. R. Austin Freeman (1862-1943) was a British writer who created the forensic detective Dr. Thorndyke. The novel represents the "Golden Age" precursors of detective fiction, emphasizing rationalism and scientific investigation. While Freeman was not a Catholic author, his works are generally wholesome detective stories appropriate for family reading, focused on intellectual puzzles rather than graphic content.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Unknown"
+Author = "W. W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Unknown" is a short story by W. W. Jacobs, part of his collection "Night Watches" (1914). Jacobs was an English author famous for his humorous short stories about sailors and dockside life, as well as his classic horror story "The Monkey's Paw." This story features his recurring character, the night-watchman, who tells tales in dialect about life, romance, and the misadventures of handsome men. The story appears to be a humorous yarn about the troubles that come with good looks, told in Jacobs' characteristic style with working-class London dialect and wry observations about human nature.
+"""
+
+Notes = """
+"Night Watches" was published in 1914 as a collection of short stories. The subtitle "Night Watches, Part 7" indicates this is the seventh story in that collection. Jacobs wrote numerous collections featuring the night-watchman as narrator throughout the early 1900s.
+"""
+</result>

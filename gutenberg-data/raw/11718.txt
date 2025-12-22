@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly "The Camp Fire Girls at School, or, The Wohelo Weavers" by Hildegard G. Frey, published in 1916 as stated in the text itself. This is part of the Camp Fire Girls series, which was a popular early 20th-century series of books for young girls associated with the Camp Fire Girls organization (a youth organization founded in 1910).
+
+<result>
+Title = "The Camp Fire Girls at School, or, The Wohelo Weavers"
+Author = "Hildegard G. Frey"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the Camp Fire Girls series by Hildegard G. Frey, which follows the adventures of a group of girls who are members of the Camp Fire Girls organization. This particular volume focuses on the Winnebago Camp Fire Girls as they return to school after their summer camping adventures. The story opens with the girls at a Work Meeting, where Gladys Evans shows off a beaded band diary chronicling their summer experiences. The Camp Fire Girls series was popular in the early 20th century and promoted outdoor activities, crafts, and character development for young women. The series features recurring characters including Sahwah Brewster, Gladys Evans, Dorothy Bradford (Hinpoha), and their Guardian, Nyoda.
+"""
+
+Notes = """
+The publication year of 1916 is explicitly stated in the front matter of the text. The Camp Fire Girls organization was founded in 1910 as a sister organization to the Boy Scouts, and these books were written to support and promote the organization's values. "Wohelo" in the subtitle stands for Work, Health, and Love, the organization's motto.
+"""
+</result>

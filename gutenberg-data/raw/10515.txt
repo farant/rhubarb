@@ -1,0 +1,15 @@
+<result>
+Title = "Rhymes of a Roughneck"
+Author = "Pat O'Cotter"
+Year = 1918
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"Rhymes of a Roughneck" is a collection of poems by Pat O'Cotter that captures the harsh realities and colorful character of life in early 20th century Alaska during the gold rush era. Written in rough, colloquial verse, O'Cotter's work depicts the brutal conditions, dreams of wealth, and often tragic fates of prospectors and frontiersmen in Alaska. The dedication itself sets the tone - describing Alaska as "the graveyard of ambitions" and "the by-word for hell." O'Cotter was himself a participant in Alaskan frontier life, and his poetry reflects firsthand experience with the gold rush culture, the difficult climate, and the colorful characters who populated the territory during this period. The work is notable for its unvarnished, cynical perspective on frontier life, contrasting sharply with more romanticized depictions of the American West and Alaska.
+"""
+
+Notes = """
+The year 1918 is clearly stated on the title page. This appears to be the original publication date. Pat O'Cotter was an actual Alaska gold rush participant who turned his experiences into verse, making this both a literary work and a historical document of sorts, though categorized primarily as poetry/fiction rather than non-fiction due to its form and approach.
+"""
+</result>

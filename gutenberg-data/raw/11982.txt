@@ -1,0 +1,15 @@
+<result>
+Title = "Eighty Years and More: Reminiscences 1815-1897"
+Author = "Elizabeth Cady Stanton"
+Year = 1898
+
+Tags = ["non-fiction", "autobiography", "historical-document"]
+
+Summary = """
+Elizabeth Cady Stanton's autobiography covering her life from 1815 to 1897. Stanton was one of the most prominent leaders of the women's rights movement in the United States and a key organizer of the 1848 Seneca Falls Convention. This memoir provides firsthand accounts of the early women's suffrage movement, her collaboration with Susan B. Anthony, her work on The Woman's Bible, and her reflections on the social and political struggles for women's equality throughout the 19th century. The work offers invaluable historical insight into the first wave of American feminism and the intellectual and activist life of one of its most influential figures.
+"""
+
+Notes = """
+The work was first published in 1898, shortly after the period it covers (1815-1897). While Stanton was raised in a Presbyterian household and was influenced by Christianity, she became increasingly critical of organized religion's treatment of women, particularly in her controversial work "The Woman's Bible." Her theological views were heterodox and often in conflict with Catholic teaching, so the 'catholic' tag is not appropriate.
+"""
+</result>

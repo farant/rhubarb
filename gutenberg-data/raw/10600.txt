@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, and other details.
+
+<result>
+Title = "A General History and Collection of Voyages and Travels, Arranged in Systematic Order"
+Author = "Robert Kerr"
+Year = 1811
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Robert Kerr's ambitious multi-volume compilation of historical voyages and travels of discovery. The work is organized into four main parts covering different historical periods: medieval voyages from Alfred the Great to Don Henry of Portugal; the age of discovery from 1412 to 1760; scientific voyages during the reign of George III; and a historical survey of navigation, discovery, and commerce throughout human history. Kerr's collection was an important early attempt to create a comprehensive, systematically organized anthology of exploration literature, bringing together primary source accounts of voyages spanning from the Viking era through the late 18th century. The work served as an invaluable reference for historians and geographers in the 19th century.
+"""
+
+Notes = """
+This collection was published in Edinburgh starting in 1811-1824 (various editions exist). The work represents the culmination of Enlightenment-era efforts to comprehensively catalog human geographical knowledge. While Kerr was the editor/compiler rather than the original author of the voyage accounts, he organized and often translated or edited the original texts. The date 1811 represents the initial publication of the collection, which is the most historically significant year for this work.
+"""
+</result>

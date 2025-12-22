@@ -1,0 +1,17 @@
+The file appears to be empty or very short. Based on the text you provided directly in your message, I can identify this work:
+
+<result>
+Title = "La Maison Tellier"
+Author = "Guy de Maupassant"
+Year = 1881
+
+Tags = ["fiction", "literature"]
+
+Summary = """
+"La Maison Tellier" is one of Guy de Maupassant's most celebrated short stories (or novella), first published in 1881. It tells the story of Madame Tellier, who runs a brothel in a Norman port town, and what happens when she temporarily closes the establishment so that she and her workers can attend her niece's first communion in the countryside. The work is notable for Maupassant's sympathetic and humanizing portrayal of the women, his naturalistic style, and his keen observations of French provincial society. It's considered a masterpiece of 19th-century French realism.
+"""
+
+Notes = """
+The work was first published in 1881 as the title story of a collection. The dedication to Ivan Turgenev reflects Maupassant's friendship with and admiration for the Russian writer. While the 1891 date appears in the text you provided, this likely refers to a later edition. The original publication year of 1881 is more historically significant as it marks Maupassant's rise to fame following his earlier success with "Boule de Suif" (1880).
+"""
+</result>

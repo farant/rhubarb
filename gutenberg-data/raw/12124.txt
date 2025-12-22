@@ -1,0 +1,17 @@
+I recognize this work! This is "The Lady of the Barge and Other Stories" by W. W. Jacobs, a collection of short stories published in 1902. Jacobs was an English author known for his humorous nautical tales and horror stories (most famously "The Monkey's Paw," which is included in this collection). "The Well" is one of the darker stories in the collection.
+
+<result>
+Title = "The Lady of the Barge and Other Stories"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "short-stories", "horror", "suspense"]
+
+Summary = """
+A collection of short stories by English author W. W. Jacobs, best known for containing "The Monkey's Paw," one of the most famous horror stories in English literature. The collection includes both Jacobs' characteristic humorous tales of maritime life and darker supernatural fiction. "The Well," the story beginning in this excerpt, is a suspenseful tale of jealousy and murder set in an English country house. The collection showcases Jacobs' range from light comedy to psychological horror, demonstrating his skill in both genres during the Edwardian era.
+"""
+
+Notes = """
+First published in 1902. This collection is particularly significant for including "The Monkey's Paw," which has become a classic of horror literature and has been adapted numerous times for stage, radio, film, and television. W. W. Jacobs (1863-1943) was primarily known during his lifetime for humorous stories about dock workers and sailors, but his supernatural tales have proven more enduring. This work is not Catholic in nature - Jacobs was an English Protestant writer working in the popular fiction market of the early 20th century.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, year, and provide relevant metadata.
+
+<result>
+Title = "Stickeen"
+Author = "John Muir"
+Year = 1909
+
+Tags = ["non-fiction", "appropriate-for-children", "nature-writing", "memoir"]
+
+Summary = """
+'Stickeen' is John Muir's beloved short memoir about his adventure with a small dog during a dangerous glacier exploration in Alaska. The story recounts Muir's 1880 expedition on the Taylor Glacier (near present-day Juneau) with Stickeen, a seemingly indifferent little dog who proved to have extraordinary courage when the two became stranded on a glacier during a storm. The narrative explores themes of companionship, courage, and the bonds between humans and animals in wild nature. It is considered one of the finest dog stories in American literature and showcases Muir's characteristic reverence for wilderness and his gift for nature writing. The book was published separately in 1909, though the story had appeared in earlier forms.
+"""
+
+Notes = """
+The year 1909 represents the first separate book publication of 'Stickeen' by Houghton Mifflin. The actual glacier adventure occurred in 1880 during Muir's Alaska travels, and he had published versions of the story earlier in periodicals and in his 1901 book 'Our National Parks.' The 1909 edition is the definitive version dedicated to his daughter Helen. The poem by J.G. Holland serves as a prefatory piece to Muir's narrative.
+"""
+</result>

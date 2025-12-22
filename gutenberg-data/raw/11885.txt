@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early to mid-19th century. It featured illustrated articles on a wide variety of topics including architecture, history, natural history, literature, and general knowledge. The publication aimed to educate and entertain a broad readership with accessible writing and engravings. This particular issue (Vol. XIX, No. 534, February 18, 1832) features an article about Our Lady's Chapel at St. Saviour's Church in Southwark, discussing the controversy over whether to restore or demolish this medieval chapel following street improvements for the approach to New London Bridge.
+"""
+
+Notes = """
+The year 1832 is clearly indicated as this specific issue's publication date. This is a periodical rather than a single-author book, hence 'Various' for the author field. While individual articles may have had named contributors, The Mirror typically did not attribute pieces to specific writers. This was a weekly magazine that ran from 1822 to 1849, making it a serial publication rather than a standalone literary work.
+"""
+</result>

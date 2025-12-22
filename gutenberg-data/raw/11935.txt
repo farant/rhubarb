@@ -1,0 +1,15 @@
+<result>
+Title = "Mysticism in English Literature"
+Author = "Caroline F. E. Spurgeon"
+Year = 1913
+
+Tags = ["non-fiction", "literary-criticism", "philosophy", "theology"]
+
+Summary = """
+This is a scholarly work by Caroline F. E. Spurgeon examining philosophical mysticism as it appears in the works of major English writers. Spurgeon focuses specifically on mysticism that deals with questions of ultimate reality, analyzing how this tradition manifests in English literature. The work excludes American literature despite its rich mystical tradition. The book draws on material previously published in the Quarterly Review and the Cambridge History of English Literature, and discusses various English mystical writers including Thomas Traherne, Richard Jefferies, Coventry Patmore, and Francis Thompson.
+"""
+
+Notes = """
+The publication year of 1913 is clearly stated in the author's preface dated April 1913. Caroline F. E. Spurgeon (1869-1942) was a pioneering literary scholar, one of the first women professors in England, and is particularly known for her work on Shakespeare's imagery and on mysticism in literature. This work represents early 20th-century academic literary criticism examining the mystical tradition in English letters.
+"""
+</result>

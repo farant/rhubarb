@@ -1,0 +1,15 @@
+<result>
+Title = "Struwwelpeter (Merry Stories and Funny Pictures)"
+Author = "Heinrich Hoffmann"
+Year = 1845
+
+Tags = ["fiction", "children's-literature", "appropriate-for-children"]
+
+Summary = """
+Struwwelpeter (Slovenly Peter) is a famous German children's book consisting of illustrated cautionary tales with moral lessons. Written and illustrated by Heinrich Hoffmann, a Frankfurt physician, it became one of the most popular German children's books and has been translated into many languages. The book features memorable characters like Shock-headed Peter (whose hair and nails are never cut) and other children who meet various fates due to their misbehavior. Despite its sometimes dark humor and Victorian-era moralizing, the book has remained influential in children's literature for nearly two centuries.
+"""
+
+Notes = """
+The transcriber's note indicates the book was first published in German in 1844 and in English translation in 1848. However, the original German edition "Der Struwwelpeter" was actually first published for Christmas 1845 (though dated 1845, it appeared in late 1844). Since this is the English translation and the work is primarily known by its 1845 publication date, I've chosen 1845 as the historically most accurate year. This is not a Catholic work - Hoffmann was a German Protestant physician and psychiatrist.
+"""
+</result>

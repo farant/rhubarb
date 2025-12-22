@@ -1,0 +1,17 @@
+I recognize this work! This is one of the "Boy Allies" series of juvenile adventure novels that were popular during World War I. Let me provide the information:
+
+<result>
+Title = "The Boy Allies At Jutland; or, The Greatest Naval Battle of History"
+Author = "Ensign Robert L. Drake"
+Year = 1917
+
+Tags = ["fiction", "historical-fiction", "war-story", "appropriate-for-children"]
+
+Summary = """
+This is part of the "Boy Allies" series of juvenile adventure novels written during World War I. The series follows young protagonists involved in various naval battles and adventures during the Great War. This particular installment focuses on the Battle of Jutland (May 31-June 1, 1916), which was the largest naval battle of World War I between the British Grand Fleet and the German High Seas Fleet in the North Sea. The series was designed to appeal to young readers and foster patriotic sentiment during the war, combining adventure with historical events. The books featured fast-paced action and were part of a broader genre of boys' adventure series popular in the early 20th century.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page as the publication date. The Battle of Jutland itself occurred in 1916, but this fictional account was published the following year, likely to capitalize on interest in the historic naval engagement. The "Ensign Robert L. Drake" byline was likely a pseudonym used by the Stratemeyer Syndicate or a similar publisher of juvenile series books, as was common practice for this genre at the time.
+"""
+</result>

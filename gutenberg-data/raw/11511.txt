@@ -1,0 +1,15 @@
+<result>
+Title = "Robinson Crusoe"
+Author = "Daniel Defoe"
+Year = 1719
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Robinson Crusoe is Daniel Defoe's famous novel about a man shipwrecked on a remote island who must survive alone for years using his ingenuity and resourcefulness. First published in 1719, it is considered one of the first English novels and a foundational work of the adventure genre. This particular text is an Esperanto translation made by Pastor A. Krafft in 1908, part of early efforts to promote Esperanto as an international auxiliary language. The novel follows Crusoe's extraordinary adventures, his solitary life on the island, his eventual discovery of Friday, and his ultimate rescue and return to civilization.
+"""
+
+Notes = """
+The year 1719 represents the original publication date of Defoe's novel in English. While this Project Gutenberg text is an Esperanto translation from 1908, the work itself is fundamentally Defoe's 1719 original. The translation was undertaken as part of the Esperanto movement's efforts to create a body of literature in the constructed international language, as evidenced by the preface discussing Esperanto's goals of universal communication.
+"""
+</result>

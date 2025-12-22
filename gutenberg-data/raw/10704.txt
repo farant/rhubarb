@@ -1,0 +1,17 @@
+I recognize this work - it's Theodor Mommsen's famous *History of Rome* (Römische Geschichte), specifically Book IV which covers the period of the Roman Revolution. Mommsen was a German historian and classical scholar who won the Nobel Prize in Literature in 1902.
+
+<result>
+Title = "The History of Rome, Book IV: The Revolution"
+Author = "Theodor Mommsen"
+Year = 1856
+
+Tags = ["non-fiction", "history", "ancient-rome", "classical-studies"]
+
+Summary = """
+Theodor Mommsen's *The History of Rome* is a monumental work of classical scholarship that revolutionized the study of Roman history in the 19th century. Book IV, subtitled "The Revolution," covers the tumultuous period of the late Roman Republic, including the Gracchi reforms, the Social War, and the conflicts that led to the fall of the Republic. Mommsen's work was groundbreaking in its use of primary sources, including inscriptions and legal documents, and in treating Roman history as a living political and social phenomenon rather than merely a chronicle of events. His scholarship was so influential that he was awarded the Nobel Prize in Literature in 1902, primarily for this work. This English translation by William Purdie Dickson was authorized by Mommsen himself.
+"""
+
+Notes = """
+The original German work 'Römische Geschichte' was published in multiple volumes between 1854-1856, with Book IV appearing in 1856. English translations followed in the 1860s-1870s. I've chosen 1856 as it represents the original publication date of this specific volume in German. The work remains a classic of Roman historiography, though modern scholarship has naturally revised some of Mommsen's interpretations.
+"""
+</result>

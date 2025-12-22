@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as an academic work from the Johns Hopkins University Studies series. The document is clearly marked as "THE ELIZABETHAN PARISH IN ITS ECCLESIASTICAL AND FINANCIAL ASPECTS" by Sedley Lynch Ware, published in July-August 1908.
+
+<result>
+Title = "The Elizabethan Parish in its Ecclesiastical and Financial Aspects"
+Author = "Sedley Lynch Ware"
+Year = 1908
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+This is a scholarly historical study published as part of the Johns Hopkins University Studies in Historical and Political Science series. The work examines the Elizabethan parish system in England, focusing on its ecclesiastical (church-related) and financial structures. The author notes that this represents only part of a larger intended work on parish government during the Elizabethan period (roughly 1558-1603). Ware argues there was a need for comprehensive study of parish institutions from this era, as existing works were either outdated, written to defend particular theories (like Toulmin Smith's), or focused on later periods (like the Webb's history which dealt mainly with post-1688 parishes). The work appears to be based on extensive archival research in England.
+"""
+
+Notes = """
+The year 1908 is straightforward as this is an original scholarly work, not a translation or republication of an earlier text. The preface indicates it was published monthly in the July-August 1908 issue of the Johns Hopkins series.
+"""
+</result>

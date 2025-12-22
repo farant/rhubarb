@@ -1,0 +1,15 @@
+<result>
+Title = "A Spinner in the Sun"
+Author = "Myrtle Reed"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'A Spinner in the Sun' is a novel by American author Myrtle Reed, published in 1906. Reed was a popular early 20th-century American novelist and poet known for her romantic fiction and domestic novels. This work is characteristic of her gentle, romantic style that was popular during the era. The story appears to involve characters named Miss Mehitable, Araminta, Ralph, and Undine, and deals with themes of love, redemption, and personal transformation, as suggested by chapter titles like "Forgiveness," "Redeemed," and "The Lifting of the Veil." Reed's novels typically featured strong female characters and explored themes of love, duty, and moral development within domestic settings.
+"""
+
+Notes = """
+The year 1906 is clearly stated on the title page of the Project Gutenberg text. Myrtle Reed (1874-1911) was a prolific American author during the early 1900s. While she came from a Protestant background (her father was a minister), this particular work is romantic fiction rather than religious literature, so it does not receive the 'catholic' tag.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Apology"
+Author = "Xenophon"
+Year = -381
+
+Tags = ["non-fiction", "philosophy", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Xenophon's "Apology of Socrates" is a shorter alternative account to Plato's more famous "Apology," describing Socrates' defense at his trial in Athens in 399 B.C. and his態度 toward death. Written by the historian and soldier Xenophon, who was a student of Socrates but was not present at the trial (being away on his famous march with the Ten Thousand), this work presents Socrates as viewing his execution not as a tragedy but as a timely escape from the infirmities of old age. The text emphasizes Socrates' noble bearing and his conviction that dying with dignity at the height of his mental powers was preferable to living into senility. Xenophon's account complements Plato's version while offering a different perspective on Socrates' final days and his philosophical approach to mortality.
+"""
+
+Notes = """
+I chose approximately 381 B.C. (written as -381 in astronomical year numbering) as the composition date. Socrates was executed in 399 B.C., and Xenophon likely wrote this work sometime after returning from his eastern campaigns and while in exile from Athens. Most scholars date Xenophon's "Apology" to the 380s or 370s B.C., making it roughly contemporary with or slightly later than his "Memorabilia." The negative year notation reflects the B.C. dating system for computational purposes in historical timelines.
+"""
+</result>

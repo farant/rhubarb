@@ -1,0 +1,15 @@
+<result>
+Title = "The Old Violin"
+Author = "Daniel Higham"
+Year = 1900
+
+Tags = ["audio-recording", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an early audio recording from the Edison National Historic Site, directed by Daniel Higham. 'The Old Violin' represents one of the pioneering audio recordings from the Edison era, likely a musical performance or spoken word piece featuring violin music. These early Edison recordings are significant historical artifacts documenting the dawn of recorded sound technology and early 20th century audio entertainment.
+"""
+
+Notes = """
+The exact year is difficult to pinpoint from the provided text. Given that this comes from the Edison National Historic Site and represents Edison-era recording technology, it likely dates from roughly 1890-1910. Thomas Edison's phonograph work was most active in this period, with commercial recordings becoming more common around 1900. I've chosen 1900 as a representative year for this era of Edison recordings, though the actual recording could be slightly earlier or later. The 2003 date in the eBook refers to the Project Gutenberg digital publication, not the original recording date.
+"""
+</result>

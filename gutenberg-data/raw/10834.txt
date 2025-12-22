@@ -1,0 +1,15 @@
+<result>
+Title = "The History of Insects"
+Author = "Various"
+Year = 1813
+
+Tags = ["non-fiction", "appropriate-for-children", "natural-history", "educational"]
+
+Summary = """
+This is an early 19th-century educational children's book about insects, published by Samuel Wood in New York. Wood was a prominent publisher of juvenile literature in the early American republic, producing affordable educational books for children. This work would have been part of the broader natural history educational movement of the period, which sought to teach children about God's creation through the study of nature. The book includes illustrations and was designed to be accessible to young readers, as evidenced by the inclusion of alphabet primers at the beginning. Such works were common in the early 1800s as part of moral and scientific education for children, often framing natural history within a religious context (as indicated by the Genesis epigraph).
+"""
+
+Notes = """
+The year 1813 is clearly stated on the title page as the publication date. This is not a translation or reprint of an older work, but rather an original publication from this period. Samuel Wood (1760-1844) was a well-known New York publisher who specialized in affordable children's educational books in the early American republic. The work fits squarely within the early American juvenile literature tradition that combined moral instruction with natural history education.
+"""
+</result>

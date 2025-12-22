@@ -1,0 +1,15 @@
+<result>
+Title = "Semper Fidelis March"
+Author = "John Philip Sousa"
+Year = 1888
+
+Tags = ["historical-document", "music", "appropriate-for-children"]
+
+Summary = """
+"Semper Fidelis" is one of John Philip Sousa's most famous marches, composed in 1888 while he was the director of the United States Marine Band. The title is Latin for "Always Faithful," which is the motto of the United States Marine Corps. This march became Sousa's personal favorite among all his compositions and remains one of the most recognizable American military marches. The piece exemplifies Sousa's mastery of the march form with its stirring melodies and precise rhythmic structure. This Project Gutenberg entry represents an audio recording performed by the United States Marine Band from the Edison National Historic Site collection.
+"""
+
+Notes = """
+While the Project Gutenberg entry credits the United States Marine Band as author, the actual composer is John Philip Sousa, who wrote this march in 1888. Sousa served as director of the Marine Band from 1880-1892 and composed "Semper Fidelis" during this tenure. The year 1888 represents the original composition date. This particular recording appears to be a historic Edison recording, though the exact recording date is not specified in the provided text. For timeline purposes, the 1888 composition date is most historically significant.
+"""
+</result>

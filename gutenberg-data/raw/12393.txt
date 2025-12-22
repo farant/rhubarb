@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 99, September 6, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+This is an issue of Punch, the famous British weekly magazine of humor and satire that was published from 1841 to 1992 (and briefly revived later). Known for its political cartoons, satirical articles, and social commentary, Punch was a significant cultural institution in Victorian and Edwardian Britain. This particular issue from September 6, 1890 includes a piece from the "Modern Types" series by "Mr. Punch's Own Type Writer" focusing on "The Undomestic Daughter," which satirizes the social expectations placed on young women in late Victorian society. The magazine was influential in shaping public opinion and popularizing terms like "cartoon" in its modern sense.
+"""
+
+Notes = """
+The year 1890 is straightforward as this is a periodical issue with a specific publication date. "Various" is listed as the author because Punch was a collaborative magazine with multiple contributors, though individual pieces were often written under pseudonyms or house names like "Mr. Punch's Own Type Writer."
+"""
+</result>

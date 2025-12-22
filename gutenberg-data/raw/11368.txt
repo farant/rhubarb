@@ -1,0 +1,15 @@
+<result>
+Title = "Stories of Inventors: The Adventures of Inventors and Engineers"
+Author = "Russell Doubleday"
+Year = 1904
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of true incidents and personal experiences documenting the adventures of inventors and engineers from the turn of the 20th century. Written by Russell Doubleday and published in 1904, the book appears to profile various inventors and their groundbreaking work, including Guglielmo Marconi (as evidenced by the frontispiece illustration). The work captures the excitement and innovation of the Second Industrial Revolution era, presenting stories of technological advancement in an accessible, narrative format suitable for popular audiences and younger readers interested in science and invention.
+"""
+
+Notes = """
+Year 1904 is clearly stated on the title page as the publication date. This work represents early 20th-century popular science writing aimed at inspiring interest in technological progress and the men behind major inventions of the era.
+"""
+</result>

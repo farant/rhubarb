@@ -1,0 +1,17 @@
+I recognize this work! "Aunt Jane's Nieces" was written under the pseudonym Edith Van Dyne, which was one of L. Frank Baum's pen names. Baum is best known for "The Wonderful Wizard of Oz," but he wrote this popular series of books for young girls under this pseudonym.
+
+<result>
+Title = "Aunt Jane's Nieces"
+Author = "L. Frank Baum (as Edith Van Dyne)"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Aunt Jane's Nieces' is the first book in a popular series written by L. Frank Baum under the pseudonym Edith Van Dyne. The novel follows three teenage cousins—Beth, Patsy, and Louise—who are summoned to visit their wealthy, reclusive Aunt Jane at her estate. The girls, who come from different backgrounds and have never met, compete for their aunt's favor and potential inheritance. The story explores themes of family, wealth, character, and what truly matters in life. The book was part of Baum's attempt to create a successful series for young female readers, similar to how his Oz books appealed to children of both genders. The series was quite popular in its time and continued for ten books.
+"""
+
+Notes = """
+The year 1906 is the original publication date clearly stated in the text. This was Baum's first foray into writing specifically for teenage girls, and he produced this series alongside his Oz books.
+"""
+</result>

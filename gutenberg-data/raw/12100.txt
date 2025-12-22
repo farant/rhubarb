@@ -1,0 +1,19 @@
+I recognize this work! Let me analyze it for you.
+
+This is a collection of short stories/romances by William Dean Howells, published in 1907. Howells was a prominent American realist writer and editor who, while not Catholic himself, was an important literary figure of his era. The collection contains several romantic tales, with "Editha" being one of his most well-known anti-war stories.
+
+<result>
+Title = "Between the Dark and the Daylight"
+Author = "William Dean Howells"
+Year = 1907
+
+Tags = ["fiction", "short-stories", "romance"]
+
+Summary = """
+A collection of seven romantic short stories by William Dean Howells, one of America's leading realist writers and editor of The Atlantic Monthly. The collection includes 'Editha,' one of Howells' most famous anti-war stories about a young woman who romanticizes war and pushes her fiancé to enlist, with tragic consequences. The other stories explore themes of memory, identity, love, and psychological phenomena through Howells' characteristic realist lens and gentle irony. The title comes from Longfellow and suggests the liminal, uncertain spaces where these romantic and psychological dramas unfold.
+"""
+
+Notes = """
+Published in 1907, the same year as the book's copyright. Howells was not a Catholic author - he was raised in a Swedenborgian household and later became agnostic with socialist sympathies. While his work is morally serious and psychologically astute, it would not receive a nihil obstat or imprimatur. The stories deal with romantic and psychological themes in a manner typical of American literary realism of the period.
+"""
+</result>

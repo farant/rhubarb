@@ -1,0 +1,15 @@
+<result>
+Title = "So Runs the World"
+Author = "Henryk Sienkiewicz"
+Year = 1898
+
+Tags = ["non-fiction", "essays", "literary-criticism"]
+
+Summary = """
+"So Runs the World" is a collection of essays by Polish Nobel laureate Henryk Sienkiewicz, best known for his novel "Quo Vadis." This volume includes literary and philosophical essays exploring various topics including discussions of other writers (notably Émile Zola), moral questions, and social commentary. The collection showcases Sienkiewicz's talents beyond fiction, revealing his perspectives on literature, society, and human nature. The essays are characterized by the same eloquent prose style that made his novels famous, offering insights into the intellectual climate of late 19th-century Europe.
+"""
+
+Notes = """
+The essays in this collection were written during the 1890s, with the collection published around 1898. Sienkiewicz won the Nobel Prize in Literature in 1905. While he was Catholic and his most famous work "Quo Vadis" dealt with early Christianity, this particular collection is primarily literary criticism and social commentary rather than explicitly Catholic apologetics, so I have not tagged it as 'catholic' despite the author's faith. The year 1898 represents the approximate publication date of the Polish original collection.
+"""
+</result>

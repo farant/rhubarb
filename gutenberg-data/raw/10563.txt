@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a work by W.W. Jacobs, specifically from his "Ship's Company" collection. The text shows his characteristic style - a frame narrative with a night-watchman telling humorous stories in dialectal English about his misadventures. The story "Good Intentions" is one of several tales in this collection.
+
+W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author known for his maritime humorous short stories and his famous horror story "The Monkey's Paw." He was not a Catholic author - he was English and his work is secular fiction with comedic focus.
+
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children", "humor", "maritime"]
+
+Summary = """
+Ship's Company is a collection of humorous short stories by W.W. Jacobs featuring a night-watchman narrator who tells tales of life along the waterfront. The stories typically involve comedic misunderstandings, domestic troubles, and the foibles of sailors and dock workers. Jacobs was master of the English dialect story and specialized in gentle, character-driven humor set in maritime England. This particular excerpt is from "Good Intentions," a story about jealousy and the narrator's troubles stemming from innocent interactions with women that are misinterpreted by his suspicious wife. Jacobs' work was immensely popular in the early 20th century for its warmth, wit, and vivid portrayal of working-class English life.
+"""
+
+Notes = """
+Ship's Company was published in 1907. Jacobs published several collections with similar formats throughout his career. The stories are generally considered wholesome entertainment suitable for all ages, featuring mild domestic comedy rather than anything objectionable. While humorous, they offer genuine insight into Edwardian-era working-class English culture and speech patterns.
+"""
+</result>

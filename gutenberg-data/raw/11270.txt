@@ -1,0 +1,15 @@
+<result>
+Title = "A Practical Illustration of 'Woman's Right to Labor'; or, A Letter from Marie E. Zakrzewska, M.D."
+Author = "Marie E. Zakrzewska, edited by Caroline H. Dall"
+Year = 1860
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a biographical letter written by Marie E. Zakrzewska (1829-1902), a pioneering German-American physician, edited by Caroline H. Dall, a prominent women's rights activist and author. The text serves as a practical demonstration of women's capability to work in professions traditionally reserved for men, particularly medicine. Zakrzewska, who had trained in Berlin and emigrated to the United States, became one of the first female physicians in America and a founder of the New England Hospital for Women and Children. The work is part of the broader 19th-century women's rights movement, advocating for women's access to professional education and employment. It provides both autobiographical insight into Zakrzewska's struggles and achievements, and serves as propaganda for the cause of women's right to labor in skilled professions.
+"""
+
+Notes = """
+The year 1860 is clearly stated on the title page. This represents the original publication date of this edition. The work is explicitly connected to Caroline H. Dall's earlier work "Woman's Right To Labor" and is dedicated to Samuel E. Sewall, a supporter of the New England Female Medical College, providing clear historical context for the women's medical education movement in mid-19th century America.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics: Masterpieces of German Literature, Volume VIII"
+Author = "Various (Berthold Auerbach, Jeremias Gotthelf, Fritz Reuter, Adalbert Stifter, Wilhelm Heinrich Riehl)"
+Year = 1914
+
+Tags = ["non-fiction", "fiction", "anthology", "translation"]
+
+Summary = """
+This is Volume VIII of "The German Classics," a multi-volume anthology series published in 1914 that presents masterpieces of German literature translated into English. This particular volume focuses on the novel of provincial life and includes works by five significant 19th-century German-language authors: Berthold Auerbach, Jeremias Gotthelf, Fritz Reuter, Adalbert Stifter, and Wilhelm Heinrich Riehl. The volume contains Auerbach's "Little Barefoot" (translated by H.W. Dulcken and revised by Paul Bernard Thomas) along with an introductory essay by Edwin C. Roedder on the novel of provincial life. These authors were known for their realistic portrayals of rural and regional life in German-speaking lands during the 19th century.
+"""
+
+Notes = """
+1914 is the publication year of this anthology/translation collection. While the individual works included (such as Auerbach's "Little Barefoot") were originally published in the mid-19th century, the year 1914 is most appropriate here as this is a curated scholarly collection meant to introduce English-speaking audiences to German literature. The date represents when this educational/reference work was made available, which is most relevant for a historical timeline context.
+"""
+</result>

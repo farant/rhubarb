@@ -1,0 +1,15 @@
+<result>
+Title = "Roddy McCorley"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["audio-recording", "folk-music", "irish-ballad", "historical-subject"]
+
+Summary = """
+This is an audio recording by Roger McGuinn (founder of The Byrds) performing the traditional Irish folk ballad "Roddy McCorley." The song commemorates Roddy McCorley, an Irish rebel who was executed in 1800 for his participation in the United Irishmen rebellion of 1798. The ballad itself was written by Ethna Carbery (pen name of Anna MacManus) in the late 19th/early 20th century. This particular recording is part of McGuinn's Folk Den project, where he recorded and shared folk songs online.
+"""
+
+Notes = """
+Year chosen is 2001, which is when this specific recording/performance was copyrighted according to the Project Gutenberg metadata. While the ballad "Roddy McCorley" is a traditional Irish song dating from around 1902 (when Ethna Carbery wrote it), and commemorates events from 1800, this particular work is Roger McGuinn's 2001 audio performance. The historical subject matter relates to Irish Catholic rebellion, but the work itself is a folk music performance rather than a religious or literary text, so I did not tag it as 'catholic'.
+"""
+</result>

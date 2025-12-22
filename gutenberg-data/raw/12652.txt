@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and extract the requested information.
+
+<result>
+Title = "George Washington"
+Author = "Henry Cabot Lodge"
+Year = 1889
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+This is a two-volume biography of George Washington written by Henry Cabot Lodge, published as part of the American Statesmen series in its Standard Library Edition. Lodge was a prominent American historian and politician who wrote extensively on American history. This work provides a comprehensive account of Washington's life, from his ancestry (including newly verified genealogical research by Mr. Waters) through his death. The biography was part of a well-regarded series on American political figures and is considered one of the important late 19th-century treatments of Washington's life. This edition includes revisions made by Lodge in 1898, incorporating recent scholarship including Waters' genealogical research and Lear's complete memoranda about Washington's final moments.
+"""
+
+Notes = """
+The year 1889 represents the original publication date of this work. The preface indicates this is a revised edition from February 7, 1898, but the original publication was 1889 as shown on the title page. I chose the original publication year as it represents when this particular scholarly work entered the historical record. The work is not tagged as 'catholic' as Lodge was not a Catholic author, and the work is not tagged as 'appropriate-for-children' as it is a serious scholarly biography intended for adult readers.
+"""
+</result>

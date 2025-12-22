@@ -1,0 +1,17 @@
+I recognize this as the play "A King and No King" by Francis Beaumont and John Fletcher. This is one of their celebrated tragicomedies from the Jacobean era.
+
+<result>
+Title = "A King and No King"
+Author = "Francis Beaumont, John Fletcher"
+Year = 1611
+
+Tags = ["fiction", "drama", "play"]
+
+Summary = """
+'A King and No King' is a tragicomedy written by the famous English dramatist duo Francis Beaumont and John Fletcher during the Jacobean period. The play tells the story of Arbaces, King of Iberia, who returns victorious from war against Armenia, bringing the defeated King Tigranes as his captive. The plot centers on Arbaces' apparent incestuous passion for his sister Panthea, creating intense dramatic tension. The play is known for its elaborate rhetoric, exploration of extreme passions, and ultimately a surprising resolution that resolves the seemingly impossible moral dilemma. It was one of the most popular plays of its era and remained in the repertory well into the Restoration period. The work exemplifies the collaborators' skill in blending tragic and comic elements, psychological complexity, and theatrical spectacle.
+"""
+
+Notes = """
+First performed circa 1611 and first published in quarto in 1619. This is considered one of Beaumont and Fletcher's most successful collaborations. The date 1611 represents the approximate date of first performance and composition, which is the most historically significant date for understanding the work's place in English Renaissance drama.
+"""
+</result>

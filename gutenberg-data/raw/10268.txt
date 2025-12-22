@@ -1,0 +1,15 @@
+<result>
+Title = "Patty At Home"
+Author = "Carolyn Wells"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Patty At Home" is part of Carolyn Wells' popular Patty Fairfield series, a collection of books for young readers following the adventures of a girl named Patty. This installment focuses on Patty's domestic life and social activities, including setting up a home, dealing with servants, and participating in a tea club with friends. The book exemplifies early 20th-century American children's literature, particularly the domestic fiction genre popular among young female readers of that era. Carolyn Wells was a prolific American author who wrote numerous series for children as well as mystery novels and poetry for adults.
+"""
+
+Notes = """
+The year 1904 is clearly indicated on the title page as the publication year. This appears to be the original publication date for this specific work in the Patty Fairfield series.
+"""
+</result>

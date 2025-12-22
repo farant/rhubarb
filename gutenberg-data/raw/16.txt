@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly J.M. Barrie's "Peter Pan" (also known as "Peter and Wendy"), one of the most famous children's fantasy novels. The text mentions it matches the 1911 original publication.
+
+<result>
+Title = "Peter Pan (Peter and Wendy)"
+Author = "J. M. Barrie"
+Year = 1911
+
+Tags = ["fiction", "fantasy", "appropriate-for-children", "classic-literature"]
+
+Summary = """
+Peter Pan, or Peter and Wendy, is J.M. Barrie's classic children's fantasy novel about the boy who never grows up. The story follows Wendy Darling and her brothers John and Michael as they are whisked away to Neverland by Peter Pan, where they encounter pirates led by the villainous Captain Hook, mermaids, fairies (including Tinker Bell), and the Lost Boys. The novel explores themes of childhood, imagination, adventure, and the inevitable passage into adulthood. Originally derived from Barrie's 1904 stage play "Peter Pan, or The Boy Who Wouldn't Grow Up," this 1911 novel version became the definitive literary form of the story and has remained one of the most beloved children's classics in the English language.
+"""
+
+Notes = """
+The year 1911 represents the first publication of the novel form. Barrie had previously created Peter Pan as a character in "The Little White Bird" (1902) and then as the protagonist of his extremely successful stage play in 1904. The 1911 novel "Peter and Wendy" (later republished simply as "Peter Pan") is considered the canonical literary version. This Project Gutenberg edition is based on that 1911 first edition and is now in the public domain in the US.
+"""
+</result>

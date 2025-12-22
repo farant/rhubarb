@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the text, this appears to be "Hurrah for New England! or The Virginia Boy's Vacation" - a children's book from the mid-19th century. The content shows it's written in an epistolary format (letters from "Pidgie" to his cousin "Bennie"), with the first letter dated July 1st, 1846 from Marblehead, Massachusetts. The book describes a Virginia boy's travels and experiences in New England.
+
+The author is listed as "the author of 'The Boy of Spirit' and 'When Are We Happiest?'" - this anonymity was common for some children's literature of the period. Without additional context, I cannot definitively identify the specific author's name, though this appears to be a work from the 1840s-1850s based on the internal dating and style.
+
+<result>
+Title = "Hurrah for New England! or The Virginia Boy's Vacation"
+Author = "Anonymous (Author of 'The Boy of Spirit')"
+Year = 1847
+
+Tags = ["fiction", "appropriate-for-children", "travel", "educational"]
+
+Summary = """
+An epistolary children's novel following a Virginia boy nicknamed 'Pidgie' who travels to New England, particularly Massachusetts, for vacation. The story is told through letters to his cousin Bennie. The narrative explores regional differences between the American South and New England in the 1840s, with educational content about New England geography, history, and culture. The book includes visits to Boston, tours of Cunard steamers, and encounters with various New England characters, designed to broaden the perspective of young Southern readers about the North.
+"""
+
+Notes = """
+Year chosen as 1847 based on the internal date of July 1846 in the first letter, suggesting publication shortly after. This type of didactic children's travel literature was popular in antebellum America, often designed to foster national unity by familiarizing readers from different regions with each other's cultures. The work is not Catholic in nature despite being appropriate for children.
+"""
+</result>

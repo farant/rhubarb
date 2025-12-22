@@ -1,0 +1,15 @@
+<result>
+Title = "The Lure of San Francisco: A Romance Amid Old Landmarks"
+Author = "Elizabeth Gray Potter, Mabel Thayer Gray"
+Year = 1915
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+A romantic novel set in San Francisco that weaves its narrative around the city's historic landmarks and Spanish colonial heritage. Published in 1915, the work aims to awaken appreciation for California's history beyond the Gold Rush era, emphasizing the Spanish missions, the Presidio, and other landmarks that preceded the 1849 boom. The authors use romance as a vehicle to educate readers about San Francisco's deeper historical roots, from its Spanish colonial period through its Mexican era to American statehood. The book appears designed for both residents who may take their city's heritage for granted and visitors who might only see California's history as beginning with the Gold Rush.
+"""
+
+Notes = """
+Year is straightforward from the copyright page (1915). This appears to be an early 20th century effort to promote historical awareness of San Francisco's Spanish and Mexican heritage during a period when the city was rapidly modernizing after the 1906 earthquake and fire. The preface explicitly laments that Californians are "too busy with today's interests" to appreciate their Spanish heritage, suggesting this was written during San Francisco's reconstruction boom.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Inferno (The Divine Comedy, Part 1)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "theology", "medieval-literature"]
+
+Summary = """
+The Inferno is the first part of Dante Alighieri's epic poem The Divine Comedy, one of the greatest works of world literature. Written in Italian vernacular rather than Latin, it describes Dante's journey through Hell, guided by the Roman poet Virgil. The work is structured as an allegory of the soul's journey toward God, with Hell depicted as nine circles of suffering corresponding to different categories of sin. Along the way, Dante encounters historical and mythological figures, explores medieval Catholic theology and philosophy, and creates one of the most influential visions of the afterlife in Western culture. The Inferno combines personal, political, and theological themes, reflecting Dante's own exile from Florence and his deep engagement with scholastic thought. This translation by Rev. H. F. Cary was one of the most popular English versions in the 19th century.
+"""
+
+Notes = """
+Date chosen: The Inferno was completed around 1314-1320, with scholarly consensus generally placing completion around 1320. The entire Divine Comedy was completed by Dante's death in 1321. This is a foundational work of Catholic literature and medieval theology, deeply informed by Thomistic philosophy and Church doctrine. The work received widespread ecclesiastical approval and has been a cornerstone of Catholic literary tradition for seven centuries.
+"""
+</result>

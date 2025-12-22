@@ -1,0 +1,15 @@
+<result>
+Title = "History of the American Clock Business for the Past Sixty Years, and Life of Chauncey Jerome"
+Author = "Chauncey Jerome"
+Year = 1860
+
+Tags = ["non-fiction", "historical-document", "autobiography"]
+
+Summary = """
+This is an autobiography by Chauncey Jerome, a pioneering American clockmaker who played a central role in transforming clock manufacturing from a small craft industry into one of America's major industrial enterprises. Written in 1860, the book chronicles Jerome's 45+ years in the clock business and documents the revolutionary transition from wooden to metal clock movements that began around 1838. Jerome details his innovations in manufacturing processes and machinery that made clocks cheaper and more durable, helping establish Connecticut as the center of American clock production. The book notably includes discussion of P.T. Barnum's involvement in the Yankee clock business, providing a firsthand historical account of American industrial development in the 19th century.
+"""
+
+Notes = """
+The year 1860 is clearly stated on the title page as the publication date. Jerome was entering his 67th year when he wrote this, placing his birth around 1793. This is a primary historical source documenting American industrial innovation and the specific technical and business evolution of clock manufacturing in New England during the first half of the 19th century.
+"""
+</result>

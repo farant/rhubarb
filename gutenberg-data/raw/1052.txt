@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Based on the text, this appears to be "Step by Step; or, Tidy's Way to Freedom," a book published by the American Tract Society in 1862. The American Tract Society was known for publishing religious and moral literature, particularly abolitionist works during this period. The epigraph from Whittier (an abolitionist Quaker poet) condemning oppression, combined with the subtitle "Tidy's Way to Freedom" and the 1862 publication date (during the Civil War), strongly suggests this is an anti-slavery narrative, likely fiction aimed at children and families.
+
+The work appears to be anonymous or the author's name isn't included in this excerpt. American Tract Society publications often didn't prominently feature author names, focusing instead on the moral message.
+
+<result>
+Title = "Step by Step; or, Tidy's Way to Freedom"
+Author = "Unknown"
+Year = 1862
+
+Tags = ["fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+An abolitionist narrative published during the American Civil War by the American Tract Society. The story follows a character named Tidy on their journey to freedom, likely depicting the experiences of enslaved people seeking liberty. The work includes an epigraph from abolitionist poet John Greenleaf Whittier condemning the oppression of enslaved people. The American Tract Society was a prominent publisher of religious and moral literature, and during the 1860s produced numerous works supporting the abolitionist cause and educating readers about the evils of slavery.
+"""
+
+Notes = """
+Published in 1862, the same year as the Emancipation Proclamation. The author is not identified in the available text, which was common for American Tract Society publications. Not tagged as 'catholic' as the American Tract Society was an interdenominational Protestant organization, though their moral teachings on slavery would align with Catholic opposition to the institution.
+"""
+</result>

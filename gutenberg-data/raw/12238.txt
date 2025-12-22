@@ -1,0 +1,17 @@
+I can help you identify this work! This is a well-known historical cookbook that was influential in the health food movement.
+
+<result>
+Title = "Science in the Kitchen"
+Author = "Mrs. E. E. Kellogg"
+Year = 1893
+
+Tags = ["non-fiction", "practical-manual", "health", "cookery"]
+
+Summary = """
+This is a comprehensive cookbook and dietary manual by Ella Eaton Kellogg, wife of Dr. John Harvey Kellogg of Battle Creek Sanitarium fame. The book represents a scientific approach to cooking and nutrition that was part of the health reform movement of the late 19th century. It combines principles of healthful cookery with nutritional science of the era, emphasizing vegetarianism and the temperance movement's dietary principles. Mrs. Kellogg was Superintendent of the Sanitarium School of Cookery and served on the World's Fair Committee on Food Supplies for Michigan. The book includes detailed explanations of food properties, cooking principles, and numerous recipes designed to be both palatable and healthful according to the dietary philosophy promoted at Battle Creek Sanitarium.
+"""
+
+Notes = """
+The publication year is clearly stated as 1893 in the title page. This work is historically significant as it represents the scientific cookery movement and the Kellogg family's influence on American dietary habits. While the Kelloggs were Seventh-day Adventists (not Catholic), I did not tag this as 'catholic' as it represents a different Christian tradition's approach to health and diet.
+"""
+</result>

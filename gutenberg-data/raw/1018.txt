@@ -1,0 +1,15 @@
+<result>
+Title = "The Water-Babies: A Fairy Tale for a Land-Baby"
+Author = "Charles Kingsley"
+Year = 1863
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Water-Babies is a children's novel by Anglican clergyman Charles Kingsley, first published serially in Macmillan's Magazine in 1862-1863 and as a complete book in 1863. It tells the story of Tom, a young chimney sweep who drowns and is transformed into a "water-baby," embarking on an underwater adventure of moral and spiritual education. The book combines fantasy, social commentary on child labor conditions in Victorian England, and Christian allegory. It was hugely popular in its time and became a classic of Victorian children's literature, notable for blending entertainment with moral instruction and social reform advocacy. This edition is illustrated by political cartoonist Linley Sambourne and was published by Macmillan in 1889.
+"""
+
+Notes = """
+Choosing 1863 as this is the year of the first complete book publication. While this particular edition is from 1889, the work itself dates to 1863. Kingsley was an Anglican clergyman, not Catholic, so the 'catholic' tag is not applicable despite the work's Christian themes. The book reflects Christian morality but from a Protestant/Anglican perspective.
+"""
+</result>

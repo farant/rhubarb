@@ -1,0 +1,21 @@
+Looking at this text, I can identify this as Volume 4 of Theodore Roosevelt's multi-volume historical work "The Winning of the West," which covers American frontier history. Let me analyze the details:
+
+The work is clearly identified as "The Winning of the West" by Theodore Roosevelt, Volume Four, subtitled "Louisiana and the Northwest, 1791-1807." This volume was part of a larger series Roosevelt wrote in the 1890s.
+
+Theodore Roosevelt published "The Winning of the West" in four volumes between 1889 and 1896. Volume Four specifically was published in 1896. This is a historical work analyzing the westward expansion of the United States during the period 1791-1807.
+
+<result>
+Title = "The Winning of the West, Volume Four: Louisiana and the Northwest, 1791-1807"
+Author = "Theodore Roosevelt"
+Year = 1896
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+Volume Four of Theodore Roosevelt's comprehensive historical work on American westward expansion. This volume covers the critical period from 1791 to 1807, documenting the United States Government's wars against Northwestern Indian tribes, the rise of Western political power in the Union, and the acquisition and exploration of territories beyond the Mississippi River. Roosevelt chronicles General Wayne's campaigns in the north, frontier conflicts in Tennessee and Georgia, the establishment of Kentucky, Tennessee, and Ohio as states, and the creation of Louisiana, Indiana, and Mississippi territories. The work examines how this era of rapid territorial expansion and population growth transformed the American West from frontier to a powerful force in national politics, culminating in the first sustained peace along the border in fifty years.
+"""
+
+Notes = """
+Year chosen represents the publication date of this specific volume (1896). The four-volume series "The Winning of the West" was published between 1889-1896 and remains one of Roosevelt's most significant historical works, written before his presidency. The volume is dedicated to Francis Parkman, the distinguished American historian.
+"""
+</result>

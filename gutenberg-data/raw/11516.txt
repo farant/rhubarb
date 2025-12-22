@@ -1,0 +1,21 @@
+I'll help you identify this work and extract the information you need.
+
+Looking at this text, I can see it's from **The Mirror of Literature, Amusement, and Instruction**, which was a popular British weekly magazine published in the early-to-mid 19th century. This particular issue is Volume 14, Number 380, dated Saturday, July 11, 1829.
+
+The Mirror was a periodical that published short articles, engravings, poetry, and educational content for a general audience. It was not written by a single author but had various contributors and was edited/compiled by editorial staff.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 380"
+Author = "Various Contributors"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century that provided educational and entertaining content to a general readership. Each issue contained illustrated articles on architecture, history, literature, poetry, and various topics of cultural interest. This particular issue from July 1829 features an article on Mercers' Hall and Cheapside in London, discussing the architectural and historical significance of the location, including its connection to Thomas Becket and the medieval mercers' trade guilds.
+"""
+
+Notes = """
+The year 1829 is straightforward as this is the specific publication date (July 11, 1829) printed in the issue. This is a periodical rather than a single authored work, so the date reflects when this particular issue was published rather than when a complete work was finished.
+"""
+</result>

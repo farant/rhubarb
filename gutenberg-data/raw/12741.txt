@@ -1,0 +1,15 @@
+<result>
+Title = "Risen from the Ranks, or, Harry Walton's Success"
+Author = "Horatio Alger, Jr."
+Year = 1874
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Risen from the Ranks" is a sequel to "Bound to Rise" and continues the story of Harry Walton. This is one of Horatio Alger Jr.'s many "rags to riches" novels that were immensely popular in late 19th-century America. Alger's works typically follow young protagonists who rise from poverty to middle-class respectability through hard work, determination, honesty, and good moral character. The novels were intended to inspire young readers with the message that success in America was achievable through virtue and perseverance, embodying the American Dream ideal of the era.
+"""
+
+Notes = """
+The publication year of 1874 is clearly stated on the title page. This work is part of Alger's larger body of juvenile fiction that promoted moral values and the Protestant work ethic to young American readers during the Gilded Age.
+"""
+</result>

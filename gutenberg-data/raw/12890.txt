@@ -1,0 +1,15 @@
+<result>
+Title = "Elizabethan Demonology: An Essay in Illustration of the Belief in the Existence of Devils"
+Author = "Thomas Alfred Spalding"
+Year = 1880
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This scholarly essay examines the belief in devils and demonic powers during the Reformation period and immediately following, with particular focus on how these beliefs manifest in Shakespeare's works. Originally presented as two papers to the New Shakspere Society in 1877-1878 (one on the witches in Macbeth, the other on Shakespeare's demonology more broadly), the work was expanded into this book. It provides historical and theological context for understanding the supernatural elements in Elizabethan drama and literature, particularly Shakespeare's plays. The work is dedicated to Robert Browning, who was then president of the New Shakspere Society.
+"""
+
+Notes = """
+The year 1880 represents the publication date of this specific work. While the essay discusses the Reformation period (16th-17th centuries) and Shakespeare's era (late 16th-early 17th centuries), this is a Victorian scholarly analysis of that earlier period, not a primary source from the Elizabethan era itself. The author, Thomas Alfred Spalding, was a barrister and Honorary Treasurer of the New Shakspere Society, writing during the height of Victorian Shakespeare scholarship.
+"""
+</result>

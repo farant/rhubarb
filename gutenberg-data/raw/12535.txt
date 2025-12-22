@@ -1,0 +1,15 @@
+<result>
+Title = "The Witness for the Defence"
+Author = "A.E.W. Mason"
+Year = 1913
+
+Tags = ["fiction", "mystery", "romance"]
+
+Summary = """
+'The Witness for the Defence' is a novel by British author A.E.W. Mason, known for his adventure and mystery fiction (including 'The Four Feathers'). The novel follows Henry Thresk and involves a murder trial in colonial India with romantic and legal intrigue. The story moves between England and British India, exploring themes of love, honor, and justice within the context of the British Empire. Mason was skilled at combining romance with suspense and exotic settings, and this work exemplifies his ability to weave together personal drama with broader imperial themes.
+"""
+
+Notes = """
+The copyright date shown in the Gutenberg text is 1914, which likely represents the American publication date. However, the novel was first published in Britain in 1913, which is the more historically accurate date for the original publication. A.E.W. Mason (Alfred Edward Woodley Mason, 1865-1948) was a popular British novelist of the early 20th century.
+"""
+</result>

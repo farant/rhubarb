@@ -1,0 +1,17 @@
+I recognize this work! "The House of a Thousand Candles" is a mystery/adventure novel by American author Meredith Nicholson, and the text itself helpfully provides the publication year of 1905.
+
+<result>
+Title = "The House of a Thousand Candles"
+Author = "Meredith Nicholson"
+Year = 1905
+
+Tags = ["fiction", "mystery", "adventure", "appropriate-for-children"]
+
+Summary = """
+"The House of a Thousand Candles" is an early 20th-century American mystery novel by Meredith Nicholson. The story revolves around John Glenarm, who must fulfill the unusual conditions of his grandfather's will by living for a year in a remote mansion on the shore of an Indiana lake - a house illuminated by a thousand candles. The novel combines elements of mystery, romance, and adventure as the protagonist encounters strange occurrences, secret passages, and a mysterious young woman. Nicholson was a popular Indiana author of the early 1900s, and this became one of his most successful novels, capturing the imagination of readers with its atmospheric setting and engaging plot.
+"""
+
+Notes = """
+The publication year of 1905 is clearly stated in the frontmatter of this Project Gutenberg text. This was one of Nicholson's breakthrough works that established him as a popular American novelist. The book was illustrated by Howard Chandler Christy, a well-known illustrator of the period.
+"""
+</result>

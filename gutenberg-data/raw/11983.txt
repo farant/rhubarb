@@ -1,0 +1,15 @@
+<result>
+Title = "Poetic Sketches; A Collection of Miscellaneous Poetry"
+Author = "Thomas Gent"
+Year = 1808
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+A collection of miscellaneous poetry by Thomas Gent, an English poet and printer who lived from 1693-1778 (though this appears to be a later posthumous edition from 1808). Thomas Gent was a York-based printer and writer who is perhaps best known for his autobiography "The Life of Mr. Thomas Gent, Printer, of York." This volume represents the second edition of his collected poetic works, dedicated to George Canning, who was a prominent British statesman and served as Foreign Secretary. The collection showcases various poetic compositions in the style typical of 18th-century English verse.
+"""
+
+Notes = """
+The year 1808 is taken from the title page as this is marked as the "Second Edition" published in that year. While Thomas Gent himself died in 1778, this posthumous edition was prepared 30 years after his death. For timeline purposes, 1808 represents when this particular collection entered circulation, though some individual poems may have been written much earlier in the 18th century.
+"""
+</result>

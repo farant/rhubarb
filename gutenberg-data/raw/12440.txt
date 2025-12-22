@@ -1,0 +1,17 @@
+I recognize this work - it's a historical novel set during the War of 1812 by Irving Bacheller, who was a popular American novelist known for his tales of pioneer life in northern New York State.
+
+<result>
+Title = "D'ri and I: A Tale of Daring Deeds in the Second War with the British"
+Author = "Irving Bacheller"
+Year = 1901
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+D'ri and I is a historical novel by Irving Bacheller set during the War of 1812, narrated as the memoirs of Colonel Ramon Bell. The story follows the adventures of pioneers in northern New York State, near the St. Lawrence River and the Great Lakes region, during the early 19th century. The novel depicts the rugged frontier life of American settlers who were clearing the wilderness and establishing farms, while also serving in the war against the British. The character D'ri (likely a dialectical rendering of "Darius") is the narrator's companion in these adventures. Bacheller was known for his romanticized but detailed portrayals of American frontier life, and this novel became one of his popular works following his earlier success with "Eben Holden."
+"""
+
+Notes = """
+The publication year of 1901 is clearly stated on the title page. This is a work of historical fiction set during the War of 1812 (1812-1815), written nearly 90 years after those events. The novel reflects turn-of-the-century American interest in frontier history and pioneer narratives.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Cuba, Old and New"
+Author = "Albert Gardner Robinson"
+Year = 1915
+
+Tags = ["non-fiction"]
+
+Summary = """
+A historical and descriptive account of Cuba written by American journalist and author Albert Gardner Robinson. Published in 1915, this work examines Cuban society, culture, history, and politics during a transitional period following Cuba's independence from Spain (1898) and during the early years of the Cuban Republic. Robinson provides observations on Cuban life, institutions, and the island's development in the early 20th century, offering an American perspective on the island nation during this formative period.
+"""
+
+Notes = """
+The year 1915 is clearly indicated in the title page of the work. This was published during the early Republican period of Cuba, after independence from Spain but during a time when Cuba was still under significant American influence following the Spanish-American War and the Platt Amendment era.
+"""
+</result>

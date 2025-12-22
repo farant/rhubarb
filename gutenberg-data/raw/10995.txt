@@ -1,0 +1,15 @@
+<result>
+Title = "Two Years Ago"
+Author = "Charles Kingsley"
+Year = 1857
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"Two Years Ago" is a social novel by Charles Kingsley, published in 1857. The novel addresses contemporary Victorian social issues, including public health, cholera epidemics, and the Crimean War. Kingsley was known for his Christian socialist views and social reform advocacy. The story follows multiple characters and their experiences during a cholera outbreak in England, exploring themes of duty, sacrifice, and social responsibility. This work is part of Kingsley's broader literary project of using fiction to address pressing social problems of his era.
+"""
+
+Notes = """
+The novel was first published in 1857. This appears to be from a 1901 edition (as indicated on the title page), which was a later printing. Charles Kingsley (1819-1875) was an Anglican clergyman and novelist, not Catholic, so the 'catholic' tag is not included despite his Christian themes.
+"""
+</result>
