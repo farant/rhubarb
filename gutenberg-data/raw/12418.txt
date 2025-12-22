@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Land of Deepening Shadow: Germany-at-War"
+Author = "D. Thomas Curtin"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'The Land of Deepening Shadow' is a firsthand account of Germany during World War I, written by British-American journalist D. Thomas Curtin. The book provides a critical examination of German society, propaganda, military operations, and civilian life during the war years. Curtin offers observations on various aspects of wartime Germany including censorship, propaganda machinery, submarine warfare, treatment of occupied territories, and the suppression of dissent. The work is dedicated to Lord Northcliffe, the influential British newspaper magnate who was instrumental in British wartime propaganda efforts. It represents Allied wartime journalism aimed at exposing conditions in Germany to English-speaking audiences.
+"""
+
+Notes = """
+The publication year of 1917 is straightforward as it appears on the title page. This work was written and published during World War I itself, making it a contemporaneous account rather than a historical retrospective. Curtin's observations were made while the war was still ongoing, giving the work immediate propaganda value for the Allied cause. The book is clearly not appropriate for children given its wartime subject matter and propagandistic nature. It is not tagged as 'catholic' as there is no indication the author was Catholic or that the work has any particular Catholic perspective—it is primarily political/journalistic war reporting.
+"""
+</result>

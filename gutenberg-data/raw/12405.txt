@@ -1,0 +1,25 @@
+I need to identify this work by Harry Castlemon. Let me analyze what I can see:
+
+The text shows this is "Frank the Young Naturalist" by Harry Castlemon (pen name of Charles Austin Fosdick), which is the first book in the "Gun-Boat Series" (also called "Frank and Archie Series"). 
+
+The page shows a publication year of 1892, though this series was originally published during the American Civil War era (1860s). Harry Castlemon was a prolific American author of boys' adventure stories. The Gun-Boat Series was one of his most popular, dealing with Civil War naval adventures and outdoor life.
+
+Based on my knowledge, "Frank the Young Naturalist" was first published in 1864. The 1892 date shown is likely a reprint edition. For historical timeline purposes, 1864 would be the more educationally accurate date as it represents when this work entered American literature and culture.
+
+This is juvenile fiction written for boys, featuring adventure and nature themes. While Castlemon may have been Christian, these are secular adventure stories, not specifically Catholic literature.
+
+<result>
+Title = "Frank the Young Naturalist"
+Author = "Harry Castlemon"
+Year = 1864
+
+Tags = ["fiction", "appropriate-for-children", "adventure", "juvenile-literature", "american-civil-war-era"]
+
+Summary = """
+'Frank the Young Naturalist' is the first book in Harry Castlemon's popular 'Gun-Boat Series' (also known as the 'Frank and Archie Series'). Harry Castlemon was the pen name of Charles Austin Fosdick (1842-1915), a prolific American author who wrote adventure stories for boys in the late 19th century. This series follows the adventures of Frank Nelson, a young naturalist, through various Civil War-era adventures including naval service on Union gunboats and outdoor expeditions. The series was enormously popular with young readers and helped establish the genre of American boys' adventure fiction. Castlemon himself served in the Union Navy during the Civil War, lending authenticity to his naval adventure stories.
+"""
+
+Notes = """
+The text shows a publication date of 1892, which is likely a reprint edition. The original publication was in 1864 during the American Civil War. I've chosen 1864 as it represents the work's original entry into American literature and is more historically significant for timeline purposes. This is secular juvenile fiction, not Catholic literature.
+"""
+</result>

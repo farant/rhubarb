@@ -1,0 +1,15 @@
+<result>
+Title = "Troilus and Cressida"
+Author = "William Shakespeare"
+Year = 1602
+
+Tags = ["fiction", "drama", "historical"]
+
+Summary = """
+Troilus and Cressida is one of William Shakespeare's problem plays, set during the Trojan War. The play interweaves two storylines: the tragic love affair between the Trojan prince Troilus and Cressida, and the Greek siege of Troy, featuring famous warriors like Achilles, Ajax, and Hector. The work is notable for its cynical tone, questioning traditional heroic values and romantic ideals. It explores themes of honor, betrayal, time's destructive power, and the gap between reputation and reality. The play presents war as futile and love as unstable, making it one of Shakespeare's most philosophically complex and tonally ambiguous works.
+"""
+
+Notes = """
+The exact date of composition is debated, but most scholars place it between 1601-1603. The First Folio was published in 1623, but there was an earlier quarto edition in 1609. I've chosen 1602 as a reasonable middle estimate for when the play was likely written and first performed. This text appears to be from an early printing, likely the First Folio given the distinctive typography and spelling conventions (long 's', 'ſ' characters, etc.). The play was not categorized as 'appropriate-for-children' due to its mature themes and cynical treatment of love and war. It is not tagged as 'catholic' as Shakespeare's religious affiliations remain historically ambiguous and this work does not have explicitly Catholic themes.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Śakuntalā or The Lost Ring"
+Author = "Kālidāsa"
+Year = 400
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Śakuntalā (also transliterated as Shakuntala) is the most famous Sanskrit drama by the ancient Indian poet Kālidāsa. It tells the story of Shakuntala, a forest-dwelling maiden who falls in love with King Dushyanta. After they marry in secret, the king returns to his kingdom promising to send for her. However, due to a curse, he forgets her entirely when she arrives at court. The "lost ring" of the title is the token of their marriage that eventually restores his memory. The play is considered one of the masterpieces of world literature and was instrumental in introducing Indian classical drama to the West. This translation by Sir Monier Monier-Williams was first published in 1855 and went through multiple editions, becoming one of the most influential English versions of the work.
+"""
+
+Notes = """
+Kālidāsa's dates are uncertain, but scholarly consensus generally places him in the 4th-5th century CE (around 400 CE is a common estimate). The exact composition date of Śakuntalā is unknown, but this approximate date reflects when the work was likely written. This is significantly earlier than this particular translation (1855), but since the request is for when the work was originally authored rather than when this edition was published, I've chosen the historical composition date. The play has been translated numerous times since being introduced to Europe by Sir William Jones in 1789.
+"""
+</result>

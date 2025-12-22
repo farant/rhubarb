@@ -1,0 +1,17 @@
+I can identify this work from the title and author information clearly provided at the beginning of the text. This is August Bebel's autobiography "Aus meinem Leben" (From My Life).
+
+<result>
+Title = "Aus meinem Leben (From My Life)"
+Author = "August Bebel"
+Year = 1910
+
+Tags = ["non-fiction", "autobiography", "political-history"]
+
+Summary = """
+"Aus meinem Leben" is the autobiography of August Bebel (1840-1913), one of the founders and leaders of the German Social Democratic Party (SPD). Bebel was a turner by trade who became one of the most prominent socialist politicians in Imperial Germany. This first volume covers his childhood, youth, apprenticeship years as a craftsman, his entry into the workers' movement and public life, his encounters with Ferdinand Lassalle and Wilhelm Liebknecht, and the development of the German labor movement through the turbulent period of German unification in the 1860s. The work provides invaluable insight into the early German socialist movement and working-class life in 19th century Germany from the perspective of one of its key leaders.
+"""
+
+Notes = """
+The publication year 1910 is clearly stated in the original text. This is the first volume (Erster Teil) of Bebel's autobiography. A second and third volume were published in subsequent years. Bebel was not a Catholic author - he was a prominent socialist and critic of organized religion, so this work does not receive a 'catholic' tag.
+"""
+</result>

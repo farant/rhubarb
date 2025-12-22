@@ -1,0 +1,23 @@
+I'll analyze this text to identify the work, author, and relevant details.
+
+This is clearly "Growth of the Soil" (original Norwegian title "Markens Grøde") by Knut Hamsun, translated by W.W. Worster. The text explicitly states this information at the beginning.
+
+Knut Hamsun was a Norwegian Nobel Prize-winning author. "Growth of the Soil" was originally published in 1917 in Norwegian. The novel is considered one of Hamsun's masterpieces and depicts pioneer life in rural Norway, following a man who settles in the wilderness and builds a farm from nothing.
+
+Regarding the Catholic tag: While Hamsun was Norwegian (predominantly Lutheran/Protestant cultural context) and this is not a Catholic work, it does explore themes of man's relationship with nature and land that have some universal spiritual dimensions. However, it would not qualify for a nihil obstat or imprimatur, so I will not include the 'catholic' tag.
+
+<result>
+Title = "Growth of the Soil"
+Author = "Knut Hamsun"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Growth of the Soil" (Markens Grøde) is Knut Hamsun's epic novel about pioneer life in rural Norway. The story follows Isak, a solitary man who settles in the wilderness and through immense labor transforms uncultivated land into a productive farm. The novel traces his life as he builds a home, cultivates the soil, and eventually raises a family in the harsh but beautiful landscape. Hamsun won the Nobel Prize in Literature in 1920, and this novel is considered one of his greatest achievements. It celebrates the relationship between man and nature, the dignity of agricultural labor, and the primal connection between human beings and the earth. The work is notable for its lyrical prose and deep reverence for the land and those who work it.
+"""
+
+Notes = """
+The original Norwegian publication was in 1917. The English translation by W.W. Worster also appeared in 1917 or shortly thereafter. This date represents the original composition and publication of the work.
+"""
+</result>

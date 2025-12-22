@@ -1,0 +1,15 @@
+<result>
+Title = "Color Images from Mars Rovers"
+Author = "Bob Webster"
+Year = 2004
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of color photographs from the Mars rovers Spirit and Opportunity, compiled by Bob Webster from NASA/JPL raw image data. The work involves combining images taken with different colored filters by the Mars rovers to create color photographs of the Martian surface. This is a documentation project making NASA's Mars exploration imagery more accessible to the public by processing the raw black and white filtered images into composite color photographs.
+"""
+
+Notes = """
+Year chosen is 2004, which is when this eBook was released to Project Gutenberg (April 19, 2004). This coincides with the active mission period of both Spirit and Opportunity rovers, which landed on Mars in January 2004. This is a contemporary compilation work rather than a historical text, so the publication year is the most appropriate date.
+"""
+</result>

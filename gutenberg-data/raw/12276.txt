@@ -1,0 +1,19 @@
+I'll help you identify this text and provide the structured information in TOML format.
+
+Based on the content, this is clearly "Viajes por Filipinas: De Manila á Tayabas" (Travels through the Philippines: From Manila to Tayabas) by Juan Álvarez Guerra. The title page indicates this is the second edition published in Madrid in 1887.
+
+<result>
+Title = "Viajes por Filipinas: De Manila á Tayabas"
+Author = "Juan Álvarez Guerra"
+Year = 1887
+
+Tags = ["non-fiction", "travel-literature", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a travel narrative describing a journey through the Philippines, specifically from Manila to Tayabas province. Written by Spanish author Juan Álvarez Guerra, the work documents his three years spent in Tayabas during the Spanish colonial period. The book provides detailed observations of Filipino geography, rivers (particularly the Pasig River), towns, landmarks, and daily life during the late 19th century Spanish colonial era. It represents valuable historical documentation of the Philippines under Spanish rule, written with attention to the veracity of the observations as the author emphasizes in his dedication to Sr. D. Cristino Martos.
+"""
+
+Notes = """
+Year chosen is 1887 as indicated on the title page - this is explicitly marked as the second edition (Segunda Edición) published by Imprenta de Fortanet in Madrid. While there was presumably an earlier first edition, 1887 is the most appropriate date for this particular text. The work reflects Spanish colonial perspectives and attitudes of the period.
+"""
+</result>

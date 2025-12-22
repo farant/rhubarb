@@ -318,47 +318,50 @@ _extrahere_annus(StmlNodus* liber)
 hic_manens vacuum
 _ordinare_per_annum(StmlNodus* radix, Piscina* piscina)
 {
-    StmlNodus** libri;
-    i32 numerus = 0;
-    i32 capacitas = 128;
+    Xar* libri;
+    i32 numerus;
     StmlNodus* liber;
     s32 i;
     s32 j;
 
     /* Colligere omnes liberos */
-    libri = (StmlNodus**)piscina_allocare(piscina, (i32)sizeof(StmlNodus*) * capacitas);
+    libri = xar_creare(piscina, magnitudo(StmlNodus*));
 
     liber = stml_primus_liberum(radix);
     dum (liber != NIHIL) {
-        si (numerus >= capacitas) {
-            frange;
-        }
-        libri[numerus++] = liber;
+        StmlNodus** slot = (StmlNodus**)xar_addere(libri);
+        *slot = liber;
         liber = stml_frater_proximus(liber);
     }
 
+    numerus = xar_numerus(libri);
     si (numerus <= 1) {
         redde;
     }
 
     /* Insertion sort per annum */
     per (i = 1; i < (s32)numerus; i++) {
-        StmlNodus* insertandus = libri[i];
+        StmlNodus* insertandus = *(StmlNodus**)xar_obtinere_s(libri, i);
         s32 annus_insertandi = _extrahere_annus(insertandus);
         j = i - 1;
 
-        dum (j >= 0 && _extrahere_annus(libri[j]) > annus_insertandi) {
-            libri[j + 1] = libri[j];
+        dum (j >= 0 && _extrahere_annus(*(StmlNodus**)xar_obtinere_s(libri, j)) > annus_insertandi) {
+            StmlNodus** slot_j1 = (StmlNodus**)xar_obtinere_s(libri, j + 1);
+            StmlNodus** slot_j = (StmlNodus**)xar_obtinere_s(libri, j);
+            *slot_j1 = *slot_j;
             j--;
         }
-        libri[j + 1] = insertandus;
+        {
+            StmlNodus** slot = (StmlNodus**)xar_obtinere_s(libri, j + 1);
+            *slot = insertandus;
+        }
     }
 
     /* Vacare liberos et readdere in ordine */
     stml_vacare_liberos(radix);
 
     per (i = 0; i < (s32)numerus; i++) {
-        stml_liberum_addere(radix, libri[i]);
+        stml_liberum_addere(radix, *(StmlNodus**)xar_obtinere_s(libri, i));
     }
 }
 

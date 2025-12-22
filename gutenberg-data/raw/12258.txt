@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the information in TOML format.
+
+Based on the text, this is clearly a French historical work about the French Revolution by Adolphe Thiers. Let me provide the structured information:
+
+<result>
+Title = "Histoire de la Révolution française"
+Author = "Adolphe Thiers"
+Year = 1823
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Adolphe Thiers' monumental multi-volume history of the French Revolution, one of the most influential historical works of the 19th century. This particular volume (Tome IX) covers the Directory period (Directoire) in the winter of Year V (1797), including the political situation, the characters and divisions among the five Directors (Barras, Carnot, Rewbell, Letourneur, and Larévellière-Lépaux), public opinion, royalist intrigues, and the military situation following victories at Rivoli and the capture of Mantua. Thiers' work was groundbreaking for its use of primary sources and its relatively sympathetic treatment of the revolutionary period. It established him as a major historian and political figure in France.
+"""
+
+Notes = """
+The work was originally published between 1823-1827 in ten volumes. This appears to be from the ninth edition (neuvième édition), indicating its popularity and continued republication throughout the 19th century. I've chosen 1823 as the year since this represents the original publication date of this historical work, which is most appropriate for a historical timeline. While Thiers was raised Catholic, this is a secular historical work and would not be considered for nihil obstat/imprimatur, so I have not included the 'catholic' tag.
+"""
+</result>

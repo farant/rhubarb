@@ -1,0 +1,21 @@
+I'll help you identify this work. Let me analyze the text you've provided.
+
+This is clearly "The City of Dreadful Night" by James Thomson (often designated as "B.V." - Bysshe Vanolis, his pen name). This is one of the most famous Victorian poems dealing with despair and religious doubt.
+
+Based on my knowledge of this work, let me provide you with the structured information:
+
+<result>
+Title = "The City of Dreadful Night"
+Author = "James Thomson (B.V.)"
+Year = 1874
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+'The City of Dreadful Night' is a long Victorian poem by James Thomson (writing as B.V., for Bysshe Vanolis), first published serially in the National Reformer in 1874. The poem is considered one of the most powerful expressions of philosophical pessimism and religious doubt in Victorian literature. It depicts a nightmarish, allegorical city where the inhabitants wander in despair, having lost all hope of divine salvation or transcendent meaning. The work is influenced by Dante's Inferno (hence the epigraph 'Per me si va nella citta dolente' - 'Through me you enter the sorrowful city') and by Leopardi's philosophical pessimism. Thomson's dark vision reflects his own struggles with alcoholism, depression, and loss of faith. The poem is a cornerstone of Victorian atheistic and nihilistic literature, expressing profound alienation and existential despair.
+"""
+
+Notes = """
+The poem was first published in serial form in the National Reformer magazine from March to May 1874, and this is the date most commonly associated with the work. It was later published in book form in 1880. Thomson (1834-1882) was a Scottish poet who adopted the pen name B.V. in honor of Shelley (Bysshe) and Novalis. The work stands in stark contrast to Catholic literature and represents Victorian crisis of faith.
+"""
+</result>

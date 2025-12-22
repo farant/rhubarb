@@ -40,6 +40,35 @@
     <notae>I chose circa 220 CE as the year because this represents approximately when Dio was actively composing this work (he wrote over a period spanning roughly 200-220+ CE). The translated edition shown is from 1906, but since you asked for the year most historically accurate to the original work itself, the early 3rd century CE date is most appropriate. This is a primary historical source, not a later commentary or annotated edition.
 </notae>
   </liber>
+  <liber numerus="12169" status="enriched">
+    <titulus>Śakuntalā or The Lost Ring</titulus>
+    <auctor>Kālidāsa</auctor>
+    <annus>400</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>drama</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>Śakuntalā (also transliterated as Shakuntala) is the most famous Sanskrit drama by the ancient Indian poet Kālidāsa. It tells the story of Shakuntala, a forest-dwelling maiden who falls in love with King Dushyanta. After they marry in secret, the king returns to his kingdom promising to send for her. However, due to a curse, he forgets her entirely when she arrives at court. The &quot;lost ring&quot; of the title is the token of their marriage that eventually restores his memory. The play is considered one of the masterpieces of world literature and was instrumental in introducing Indian classical drama to the West. This translation by Sir Monier Monier-Williams was first published in 1855 and went through multiple editions, becoming one of the most influential English versions of the work.
+</summarium>
+    <notae>Kālidāsa's dates are uncertain, but scholarly consensus generally places him in the 4th-5th century CE (around 400 CE is a common estimate). The exact composition date of Śakuntalā is unknown, but this approximate date reflects when the work was likely written. This is significantly earlier than this particular translation (1855), but since the request is for when the work was originally authored rather than when this edition was published, I've chosen the historical composition date. The play has been translated numerous times since being introduced to Europe by Sir William Jones in 1789.
+</notae>
+  </liber>
+  <liber numerus="1151" status="enriched">
+    <titulus>The Nibelungenlied</titulus>
+    <auctor>Unknown</auctor>
+    <annus>1200</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+      <tag>medieval-epic</tag>
+      <tag>poetry</tag>
+    </tags>
+    <summarium>The Nibelungenlied is a Middle High German epic poem written around 1200 AD by an unknown author. It is one of the most important works of German medieval literature and tells the story of the dragon-slayer Siegfried, his marriage to Kriemhild, his murder by Hagen, and Kriemhild's revenge. The epic combines elements from Germanic heroic legend (particularly the Burgundian kings and Attila the Hun) with courtly medieval culture. It has been enormously influential in German culture and was a major source for Richard Wagner's Ring Cycle. The poem consists of 39 adventures (chapters) written in stanzas of four lines each. This translation by Daniel B. Shumway was published in 1909.
+</summarium>
+    <notae>I chose circa 1200 AD as the year because this represents when the poem was originally composed in Middle High German, which is the most historically significant date for this work. While the exact date is uncertain (estimates range from approximately 1180-1210), around 1200 is the scholarly consensus. This is more meaningful than using 1909 (the publication year of this particular English translation). The work itself is the literary product of that medieval period and should be dated accordingly. The Nibelungenlied is not a work of fiction in the modern sense but rather a medieval epic that reworks older Germanic legends into the courtly culture of around 1200 AD, hence the 'historical-document' tag.
+</notae>
+  </liber>
   <liber numerus="10553" status="enriched">
     <titulus>The Pentateuch and The New Testament (Tyndale Bible)</titulus>
     <auctor>William Tyndale (translator)</auctor>
@@ -69,6 +98,64 @@
     <notae>Year chosen: 1531 represents the first publication date (posthumous). The work was composed between approximately 1513-1517 but not published until after Machiavelli's death in 1527. This Gutenberg text uses the 1883 Ninian Hill Thomson English translation, but 1531 is the historically significant date for a timeline of original works.
 </notae>
   </liber>
+  <liber numerus="1124" status="enriched">
+    <titulus>Troilus and Cressida</titulus>
+    <auctor>William Shakespeare</auctor>
+    <annus>1602</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>drama</tag>
+      <tag>historical</tag>
+    </tags>
+    <summarium>Troilus and Cressida is one of William Shakespeare's problem plays, set during the Trojan War. The play interweaves two storylines: the tragic love affair between the Trojan prince Troilus and Cressida, and the Greek siege of Troy, featuring famous warriors like Achilles, Ajax, and Hector. The work is notable for its cynical tone, questioning traditional heroic values and romantic ideals. It explores themes of honor, betrayal, time's destructive power, and the gap between reputation and reality. The play presents war as futile and love as unstable, making it one of Shakespeare's most philosophically complex and tonally ambiguous works.
+</summarium>
+    <notae>The exact date of composition is debated, but most scholars place it between 1601-1603. The First Folio was published in 1623, but there was an earlier quarto edition in 1609. I've chosen 1602 as a reasonable middle estimate for when the play was likely written and first performed. This text appears to be from an early printing, likely the First Folio given the distinctive typography and spelling conventions (long 's', 'ſ' characters, etc.). The play was not categorized as 'appropriate-for-children' due to its mature themes and cynical treatment of love and war. It is not tagged as 'catholic' as Shakespeare's religious affiliations remain historically ambiguous and this work does not have explicitly Catholic themes.
+</notae>
+  </liber>
+  <liber numerus="1131" status="enriched">
+    <titulus>The Tragedy of Hamlet, Prince of Denmark</titulus>
+    <auctor>William Shakespeare</auctor>
+    <annus>1603</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>drama</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>Hamlet is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks to avenge his father's murder by his uncle Claudius, who has seized the throne and married Hamlet's mother. The play explores themes of revenge, madness, mortality, and moral corruption. It contains some of the most famous lines in English literature, including &quot;To be or not to be&quot; and features iconic scenes like the ghost of Hamlet's father and the play-within-a-play. This appears to be a First Folio or early quarto version, preserving the original printing conventions of Shakespeare's time.
+</summarium>
+    <notae>I chose 1603 as this represents the approximate date of the Second Quarto, which is generally considered the most authoritative early text. The First Quarto dates to 1603, though Hamlet was likely first performed around 1600-1601. The First Folio was published in 1623. Given that this Gutenberg text preserves early printing conventions and spellings, 1603 captures the historical moment when this version of the text emerged. For a historical timeline, this date represents when English audiences first encountered this form of the play in print.
+</notae>
+  </liber>
+  <liber numerus="11092" status="enriched">
+    <titulus>The History of Tom Thumb and Other Stories</titulus>
+    <auctor>Anonymous (Traditional English Folklore)</auctor>
+    <annus>1621</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>folklore</tag>
+      <tag>children's-literature</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>fairy-tales</tag>
+    </tags>
+    <summarium>'The History of Tom Thumb' is one of the oldest English fairy tales, first published as a prose chapbook in 1621 under the title 'The History of Tom Thumbe.' The story features the legendary tiny hero Tom Thumb, supposedly born no bigger than his father's thumb through the intervention of Merlin the magician and the Queen of the Fairies during King Arthur's reign. This collection appears to be a late 19th or early 20th century republication by M.A. Donohue &amp; Co. (a Chicago publisher active from 1890s-1940s) that includes multiple traditional tales. Tom Thumb became an archetypal character in English folklore and has been retold countless times. The tale combines Arthurian legend with fairy tale elements and follows the adventures of the diminutive hero.
+</summarium>
+    <notae>I chose 1621 as the year because this represents the first known printed publication of 'Tom Thumb' as a prose tale, which is the most historically significant date for this work in English literary history. While the oral tradition likely predates this, and this Gutenberg edition is clearly a much later (c. 1900-1920) illustrated children's edition by Donohue, the 1621 date best represents when this story entered the documented literary canon. The work is not attributed to a single author as it emerged from oral folklore tradition before being transcribed.
+</notae>
+  </liber>
+  <liber numerus="1103" status="enriched">
+    <titulus>The First Part of Henry the Sixth</titulus>
+    <auctor>William Shakespeare</auctor>
+    <annus>1623</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>historical-drama</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'The First Part of Henry the Sixth' (often written as 'Henry VI, Part 1') is a history play by William Shakespeare that dramatizes events during the early reign of King Henry VI of England and the early stages of the Hundred Years' War with France. The play focuses on the loss of English territories in France, the rivalry between the Duke of Gloucester and the Bishop of Winchester, and the rise of Joan of Arc (depicted as 'Joan la Pucelle'). It also introduces the conflict between the houses of York and Lancaster that would later erupt into the Wars of the Roses. The play is notable for its depiction of English military hero John Talbot and the political machinations at the English court. This appears to be from the First Folio edition based on the Executive Director's notes about original printing conventions.
+</summarium>
+    <notae>The year 1623 represents the First Folio publication, which is the first collected edition of Shakespeare's plays and the primary source text for Henry VI Part 1. While the play was likely written and performed in the early 1590s (possibly 1591-1592), the 1623 First Folio is the most historically significant edition as it's our earliest printed source. The Executive Director's notes about printing conventions (cliches, u/v substitutions, etc.) confirm this is reproduced from First Folio typography. The historical events depicted in the play occurred in the 1420s-1430s, but for a timeline of literary works, 1623 represents the definitive publication date.
+</notae>
+  </liber>
   <liber numerus="11889" status="enriched">
     <titulus>Clarissa, or, the History of a Young Lady</titulus>
     <auctor>Samuel Richardson</auctor>
@@ -81,6 +168,20 @@
     <summarium>'Clarissa' is Samuel Richardson's monumental epistolary novel, told entirely through letters between the characters. It chronicles the tragic story of Clarissa Harlowe, a virtuous young woman from a wealthy family who is pursued by the rake Robert Lovelace. The novel explores themes of virtue, sexuality, individual autonomy versus family authority, and the position of women in 18th-century society. After Clarissa refuses an arranged marriage and is subsequently abducted and violated by Lovelace, the narrative follows her moral and physical decline despite Lovelace's offers of marriage. The work is considered one of the most important novels in the English language and a foundational text of the novel form itself. Richardson, a printer by trade, created this work partly as a moral instruction, though its psychological complexity transcends simple didacticism.
 </summarium>
     <notae>The novel was originally published in multiple installments between December 1747 and December 1748. I've chosen 1748 as it represents the completion of the first edition. Richardson later revised it substantially. While Richardson was Protestant (Anglican/Church of England), not Catholic, the novel does engage deeply with Christian themes of virtue, repentance, and redemption. It was widely read across denominational lines and influenced Catholic as well as Protestant moral literature. The work is decidedly not appropriate for children due to its subject matter involving abduction and sexual violation, even though these are handled with 18th-century discretion.
+</notae>
+  </liber>
+  <liber numerus="12014" status="enriched">
+    <titulus>The Lives of the Poets of Great Britain and Ireland, Volume IV</titulus>
+    <auctor>Colley Cibber and other Hands</auctor>
+    <annus>1753</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>biography</tag>
+      <tag>literary-history</tag>
+    </tags>
+    <summarium>This is the fourth volume of a comprehensive biographical compendium of British and Irish poets, compiled by Colley Cibber (1671-1757), an English actor-manager, playwright, and Poet Laureate, along with other contributors. The work provides biographical sketches and critical assessments of poets from the late 17th and early 18th centuries. Volume IV includes lives of notable literary figures such as William Congreve, John Vanbrugh, Richard Steele, Matthew Prior, and Lord Lansdowne (George Granville), among others. This collection was an important early work of English literary biography and criticism, providing valuable historical context about the poets and their works during a formative period of English literature.
+</summarium>
+    <notae>The year 1753 is taken directly from the title page (MDCCLIII). While Cibber initiated this project, he died in 1757, and the work was continued and expanded by Robert Shiels and other contributors. This multi-volume work was influential in establishing the biographical-critical tradition in English literary studies.
 </notae>
   </liber>
   <liber numerus="1146" status="enriched">
@@ -110,6 +211,20 @@
     <notae>The year 1787 is the most historically accurate date as this is when the Constitution was written and signed at the Constitutional Convention (September 17, 1787). While ratification by the required nine states occurred in 1788 and it went into effect in 1789, the document itself is dated 1787 and this is the conventional historical date used. This text explicitly notes it does not include the amendments, which is consistent with the original 1787 document. The Constitution was not authored by a single individual but by the Constitutional Convention delegates, with significant contributions from James Madison (often called the &quot;Father of the Constitution&quot;), though it represents a collective work.
 </notae>
   </liber>
+  <liber numerus="10425" status="enriched">
+    <titulus>Torquato Tasso: Ein Schauspiel</titulus>
+    <auctor>Johann Wolfgang von Goethe</auctor>
+    <annus>1790</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>drama</tag>
+      <tag>poetry</tag>
+    </tags>
+    <summarium>Torquato Tasso is a verse drama by Johann Wolfgang von Goethe that explores the life of the Italian Renaissance poet Torquato Tasso at the court of Ferrara. The play examines themes of artistic genius, social constraints, patronage, and the conflict between the idealistic poet and the pragmatic courtier Antonio. Set at Belriguardo, a pleasure palace of Duke Alphonso II d'Este, the drama portrays Tasso's psychological struggles and his relationships with the Duke, Princess Leonore d'Este, and Countess Leonore Sanvitale. Written in blank verse, it represents Goethe's classical period and is considered one of his most refined dramatic works, exploring the tension between artistic sensibility and worldly power.
+</summarium>
+    <notae>The play was completed in 1790 after many years of composition (Goethe began it in the 1780s). This is one of Goethe's most important classical dramas, written during his Italian journey period. The text presented here is in German, the original language of composition.
+</notae>
+  </liber>
   <liber numerus="11729" status="enriched">
     <titulus>The Life of Samuel Johnson, LL.D.</titulus>
     <auctor>James Boswell</auctor>
@@ -136,6 +251,60 @@
     <summarium>A traditional British or American sea shanty about whaling expeditions to Greenland waters. The song describes the harsh conditions faced by whalers sailing to the Arctic, including frozen extremities and dangerous work hunting Greenland whales (likely bowhead whales). Like many work songs of the era, it balances the hardship of the voyage with the promise of celebration and ale-drinking upon return to London. Sea shanties were functional work songs sung aboard ships to coordinate labor and maintain morale during long, difficult voyages.
 </summarium>
     <notae>The year 1800 is an approximation representing the height of Greenland whaling activity. Traditional folk songs have no single composition date - they evolved through oral tradition. British Arctic whaling peaked roughly 1750-1850. This song reflects the actual historical practice of whaling expeditions departing in March (as mentioned in the lyrics) to reach Arctic waters during the brief summer season. Classified as non-fiction/historical-document because it represents authentic working life and culture of whalers, though it is a song rather than prose narrative.
+</notae>
+  </liber>
+  <liber numerus="12149" status="enriched">
+    <titulus>String Quartet No. 3, Opus 18</titulus>
+    <auctor>Ludwig van Beethoven</auctor>
+    <annus>1801</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>musical-score</tag>
+      <tag>classical-music</tag>
+    </tags>
+    <summarium>This is the third of Beethoven's six String Quartets that comprise his Opus 18, which are considered his first mature works in the string quartet genre. These quartets were composed between 1798-1800 and published in 1801, representing Beethoven's early period when he was still heavily influenced by Haydn and Mozart, though his distinctive voice was beginning to emerge. The Opus 18 quartets established Beethoven as a significant composer in the quartet form, a genre he would revolutionize in his later works. This particular quartet (No. 3 in D major) is known for its lyrical character and demonstrates Beethoven's growing mastery of four-part writing and thematic development.
+</summarium>
+    <notae>The year 1801 represents the publication date of the Opus 18 quartets, which is the most historically significant date for these works. While composition occurred 1798-1800, the publication date is when these works became publicly available and established Beethoven's reputation in the quartet genre. This is a musical score, not a text work, so tags like 'appropriate-for-children' or 'fiction/non-fiction' in the traditional literary sense don't quite apply - I've categorized it as 'non-fiction' in the sense that musical scores are instructional/performance documents rather than narrative works.
+</notae>
+  </liber>
+  <liber numerus="12370" status="enriched">
+    <titulus>Bagh O Bahar; or Tales of the Four Darweshes</titulus>
+    <auctor>Mir Amman of Dihli</auctor>
+    <annus>1802</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>romance</tag>
+      <tag>non-fiction</tag>
+    </tags>
+    <summarium>Bagh O Bahar (Garden and Spring) is a classical Hindustani prose work that has been a standard text for learning the Hindustani language since the early 19th century. Originally commissioned by Fort William College in Calcutta, Mir Amman adapted this work from earlier Persian tales, particularly the Qissa-e Chahar Darvesh. The work consists of romantic tales featuring four dervishes (wandering Muslim holy men) and displays Eastern manners, modes of thinking, and various idioms of the Hindustani language. The tales incorporate elements common to Oriental romance: jinn, demons, fairies, angels, and fabulous machinery that reflect Islamic beliefs and imagination. While primarily valued as a linguistic and cultural text, it contains entertaining narratives that illustrate the storytelling traditions of Mughal India.
+</summarium>
+    <notae>The year 1802 represents when Mir Amman completed this Hindustani version at Fort William College. This translation by Duncan Forbes is from 1874, but the historically significant date is Mir Amman's original composition. The work draws on much older Persian sources, but Mir Amman's Hindustani rendering is what became the celebrated classical text throughout British India. This text has been used for over 150 years as an introduction to Hindustani language and culture.
+</notae>
+  </liber>
+  <liber numerus="10385" status="enriched">
+    <titulus>Histoire de la Révolution française, Volume III</titulus>
+    <auctor>Adolphe Thiers</auctor>
+    <annus>1823</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>Adolphe Thiers' 'Histoire de la Révolution française' is one of the most important and influential historical accounts of the French Revolution, written in the early 19th century. Originally published in ten volumes between 1823 and 1827, this work shaped historical understanding of the Revolution for generations. Volume III covers the period of the Convention Nationale beginning in September 1792, including the September Massacres, the trial and execution of Louis XVI, the establishment of the Republic, and the conflicts between the Girondins and Montagnards. Thiers, who would later become Prime Minister and President of France, wrote this as a young man and it established his reputation as both a historian and political thinker. The work is notable for its detailed narrative style and its attempt to provide a comprehensive account of the Revolution's political and social upheavals.
+</summarium>
+    <notae>The first volumes of Thiers' work began appearing in 1823, with the complete ten-volume set finished by 1827. Volume III would have been published around 1823-1824. This is not merely a translation but an original French historical work. Thiers was not Catholic and the work takes a liberal-constitutional perspective on the Revolution, so it does not receive a 'catholic' tag.
+</notae>
+  </liber>
+  <liber numerus="12258" status="enriched">
+    <titulus>Histoire de la Révolution française</titulus>
+    <auctor>Adolphe Thiers</auctor>
+    <annus>1823</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>This is Adolphe Thiers' monumental multi-volume history of the French Revolution, one of the most influential historical works of the 19th century. This particular volume (Tome IX) covers the Directory period (Directoire) in the winter of Year V (1797), including the political situation, the characters and divisions among the five Directors (Barras, Carnot, Rewbell, Letourneur, and Larévellière-Lépaux), public opinion, royalist intrigues, and the military situation following victories at Rivoli and the capture of Mantua. Thiers' work was groundbreaking for its use of primary sources and its relatively sympathetic treatment of the revolutionary period. It established him as a major historian and political figure in France.
+</summarium>
+    <notae>The work was originally published between 1823-1827 in ten volumes. This appears to be from the ninth edition (neuvième édition), indicating its popularity and continued republication throughout the 19th century. I've chosen 1823 as the year since this represents the original publication date of this historical work, which is most appropriate for a historical timeline. While Thiers was raised Catholic, this is a secular historical work and would not be considered for nihil obstat/imprimatur, so I have not included the 'catholic' tag.
 </notae>
   </liber>
   <liber numerus="10256" status="enriched">
@@ -178,6 +347,21 @@
     <notae>Published in 1825. This is Hazlitt's original publication date. While Hazlitt was not Catholic (he was raised as a Unitarian and became more secular), this work represents an important document of English literary criticism and would be suitable for general audiences interested in history and literature.
 </notae>
   </liber>
+  <liber numerus="11387" status="enriched">
+    <titulus>The Mirror of Literature, Amusement, and Instruction, Vol. 10, No. 273, September 15, 1827</titulus>
+    <auctor>Various</auctor>
+    <annus>1827</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. It featured a variety of content including essays, poetry, engravings, biographical sketches, historical articles, and readers' correspondence. This particular issue from September 15, 1827 includes a letter describing the mausoleum of Gaspard Monge (French mathematician and geometer who accompanied Napoleon to Egypt) in the Père Lachaise cemetery in Paris. The publication was known for its educational content presented in an accessible format for general readers, often including architectural drawings and other illustrations.
+</summarium>
+    <notae>The year 1827 represents the actual publication date of this specific issue. The Mirror ran from 1822-1849. This is an example of Victorian-era popular periodical literature that aimed to educate and entertain middle-class readers with digestible articles on science, history, architecture, and culture.
+</notae>
+  </liber>
   <liber numerus="11215" status="enriched">
     <titulus>Poems</titulus>
     <auctor>Thomas Gent</auctor>
@@ -216,6 +400,49 @@ for general poetry collections of this period, though the actual content may var
       <tag>historical-document</tag>
       <tag>appropriate-for-children</tag>
     </tags>
+  </liber>
+  <liber numerus="11462" status="enriched">
+    <titulus>The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 382</titulus>
+    <auctor>Various</auctor>
+    <annus>1829</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>The Mirror of Literature, Amusement, and Instruction was a popular Victorian weekly illustrated magazine published in London. This issue from July 25, 1829 features an article on Pope's Temple at Hagley Park in Worcestershire, with poetic quotations from Thomson's 'The Seasons' celebrating the natural beauty of the location associated with Lord Lyttleton, Alexander Pope, William Shenstone, and James Thomson. The magazine was designed to provide educational, entertaining, and morally uplifting content to middle-class readers at an affordable price.
+</summarium>
+    <notae>Year 1829 is taken directly from the publication date on the issue itself. The Mirror was published from 1822-1849 and was one of the first cheap illustrated weekly magazines in Britain, contributing to the democratization of literature and knowledge.
+</notae>
+  </liber>
+  <liber numerus="11455" status="enriched">
+    <titulus>The Mirror of Literature, Amusement, and Instruction, Vol. XIV, No. 385</titulus>
+    <auctor>Various</auctor>
+    <annus>1829</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>The Mirror of Literature, Amusement, and Instruction was a popular Victorian weekly magazine published in London from 1822-1849. It provided illustrated articles on history, architecture, literature, science, and various topics of general interest aimed at middle-class readers. This particular issue from August 15, 1829 features an article about Hampton Court palace, including its history under Cardinal Wolsey and subsequent royal ownership. The magazine was known for its engravings and accessible educational content.
+</summarium>
+    <notae>The year 1829 is the specific publication date of this issue. This is a periodical rather than a standalone book, so the date represents when this particular number was published. The magazine itself ran for decades, but each issue should be dated to its actual publication date for historical timeline purposes.
+</notae>
+  </liber>
+  <liber numerus="11246" status="enriched">
+    <titulus>The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 394</titulus>
+    <auctor>Various</auctor>
+    <annus>1829</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. It contained a variety of content including essays on architecture, art, literature, science, history, and general knowledge, often accompanied by engravings. This particular issue from October 1829 features an article about Lord Grosvenor's Picture Gallery in Park Lane, London, describing the architectural features of the gallery designed by Mr. Cundy in the Corinthian order, and noting the Earl's patronage of fine arts. The periodical was designed to educate and entertain a general readership and was affordably priced at 2 pence.
+</summarium>
+    <notae>The year 1829 is taken directly from the masthead of this specific issue (Vol. 14, No. 394, Saturday, October 17, 1829). The Mirror was published from 1822 to 1849, making it a significant source for understanding Victorian-era cultural interests and knowledge dissemination.
+</notae>
   </liber>
   <liber numerus="11705" status="enriched">
     <titulus>The Mirror of Literature, Amusement, and Instruction</titulus>
@@ -256,6 +483,19 @@ This is not a timeless literary work but a dated magazine issue, so the \
 original publication date is the relevant historical date.
 </notae>
   </liber>
+  <liber numerus="12291" status="enriched">
+    <titulus>The Teacher; or, Moral Influences Employed in the Instruction and Government of the Young</titulus>
+    <auctor>Jacob Abbott</auctor>
+    <annus>1833</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'The Teacher' is one of Jacob Abbott's most influential educational works, presenting a systematic approach to classroom management and instruction based on moral influence rather than harsh discipline. Abbott (1803-1879) was a pioneering American educator, Congregationalist minister, and prolific author who founded the Mount Vernon School for Young Ladies in Boston. This book became a foundational text in teacher training and represented a progressive shift toward understanding child psychology and employing gentler, more rational methods of instruction. Abbott advocated for treating students with respect, appealing to their reason and conscience, and creating an organized system of school management. His educational philosophy influenced American pedagogy throughout the 19th century and helped professionalize the teaching occupation. Abbott is also famous for writing the Rollo books, a popular series of children's literature.
+</summarium>
+    <notae>The text shows this is a revised edition from 1873 (as stated on the title page), but the work was originally published in 1833. I chose 1833 as the Year because that represents the historical moment when Abbott's educational philosophy first entered the public discourse and began influencing American pedagogy. The 1873 edition represents a later revision, but the work's historical and educational significance dates to the original publication. The copyright notice shows 1856, which may represent another revised edition between the original and this 1873 printing.
+</notae>
+  </liber>
   <liber numerus="10482" status="enriched">
     <titulus>The Young Mother, or Management of Children in Regard to Health</titulus>
     <auctor>William A. Alcott</auctor>
@@ -271,6 +511,19 @@ original publication date is the relevant historical date.
     <summarium>This is one of the most influential American child-rearing manuals of the 19th century, written by physician and reformer William Andrus Alcott. The work provides practical advice on managing children's health, covering topics from nursery arrangement and temperature control to ventilation, clothing, diet, and general childcare practices. Alcott was part of the health reform movement of his era and advocated for rational, scientific approaches to child-rearing rather than traditional folk practices. This third edition (1836) was enlarged with additional sections including guidance for mothers' own health and conduct. The book reflects the emerging professionalization of medicine and domestic science in antebellum America and was widely read by middle-class families seeking modern, enlightened approaches to child-rearing.
 </summarium>
     <notae>The year 1836 represents this specific third edition as stated in the advertisement. Earlier editions would have been published slightly before this. Alcott was a prolific writer on health reform topics and cousin to Louisa May Alcott's father, Amos Bronson Alcott. While Alcott may have had Protestant religious influences, this work is primarily a secular health manual and does not qualify for the 'catholic' tag based on the criteria provided.
+</notae>
+  </liber>
+  <liber numerus="10215" status="enriched">
+    <titulus>Manfredo Palavicino, o I Francesi e gli Sforzeschi</titulus>
+    <auctor>Giuseppe Rovani</auctor>
+    <annus>1845</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>historical-fiction</tag>
+    </tags>
+    <summarium>A historical novel by Giuseppe Rovani set during the period of French invasions of Italy and the conflicts involving the Sforza dynasty in Milan. The work is part of Rovani's series of historical novels depicting significant periods in Italian history. Rovani was a prominent 19th-century Milanese novelist and art critic known for his historical fiction that combined romantic storytelling with detailed historical research about Renaissance and early modern Italy. The novel dramatizes the political and military upheavals of late 15th and early 16th century Lombardy when French armies repeatedly invaded Italy and clashed with the ruling Sforza family of Milan.
+</summarium>
+    <notae>The exact first publication date of this specific novel in Rovani's series is somewhat uncertain, but his major historical fiction works were published in the 1840s-1850s. The edition shown here is from 1877 (seconda edizione - second edition), published after Rovani's death in 1874. I've chosen 1845 as an approximate date for the original publication based on Rovani's active period of historical fiction writing. This is secular historical fiction by a 19th-century Italian author, not a Catholic devotional or theological work.
 </notae>
   </liber>
   <liber numerus="10173" status="enriched">
@@ -381,6 +634,20 @@ does not receive a 'catholic' tag despite its philosophical merit.
     <notae>The year 1851 is taken directly from the title page of this edition. This appears to be an American Catholic publication, as indicated by the publisher's claim to originating the oil color printing process &quot;in this country&quot; and the explicitly Catholic educational aims (references to making the Bible accessible while maintaining proper religious formation). The work is clearly intended to have ecclesiastical approval, given its educational purpose and the era's publishing standards for Catholic children's materials.
 </notae>
   </liber>
+  <liber numerus="10377" status="enriched">
+    <titulus>The Evil Guest</titulus>
+    <auctor>J. Sheridan Le Fanu</auctor>
+    <annus>1851</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>gothic</tag>
+      <tag>mystery</tag>
+    </tags>
+    <summarium>'The Evil Guest' is a gothic mystery novel by Irish author J. Sheridan Le Fanu, first serialized in the Dublin University Magazine in 1851. The story is set in England about sixty years before its publication (circa 1790s) and centers on the Marston family at their decaying estate called Gray Forest. The novel follows the Hon. Richard Marston, his wife, and their two children as they become entangled with a mysterious and sinister guest. Le Fanu was a master of gothic fiction and psychological suspense, and this early work displays his talent for creating atmosphere and dread. The novel explores themes of lust, sin, and death, as indicated by its biblical epigraph.
+</summarium>
+    <notae>The text displays '1895' which likely refers to a posthumous edition. Le Fanu died in 1873, so this would be a later reprint. The original publication was in 1851 as a serial, making it one of Le Fanu's earlier works. I chose 1851 as the year because it represents the work's original appearance and historical significance. The story itself is set &quot;about sixty years ago&quot; from the 1851 publication, placing the narrative around the 1790s.
+</notae>
+  </liber>
   <liber numerus="1023" status="enriched">
     <titulus>Bleak House</titulus>
     <auctor>Charles Dickens</auctor>
@@ -406,6 +673,19 @@ does not receive a 'catholic' tag despite its philosophical merit.
     <summarium>A novella by Herman Melville about a Wall Street lawyer who hires a peculiar scrivener (law-copyist) named Bartleby. The story explores themes of alienation, passive resistance, and the dehumanizing effects of modern work through Bartleby's increasingly withdrawn behavior and his haunting refrain 'I would prefer not to.' It's considered one of the earliest and most influential works examining workplace alienation and existential malaise in American literature. The story has become iconic for its exploration of individual agency versus social obligation.</summarium>
     <notae>Originally published in Putnam's Magazine in two parts (November and December 1853). This is one of Melville's most celebrated shorter works, written during a difficult period after the commercial failure of 'Moby-Dick.' The 1853 date represents the original magazine publication, which is the most historically significant date for this work.</notae>
   </liber>
+  <liber numerus="12397" status="enriched">
+    <titulus>The Star-Chamber: An Historical Romance</titulus>
+    <auctor>W. Harrison Ainsworth</auctor>
+    <annus>1854</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>historical-fiction</tag>
+    </tags>
+    <summarium>'The Star-Chamber' is a historical romance by William Harrison Ainsworth set in early 17th-century England during the reign of King James I. The novel deals with the notorious Court of Star Chamber, a royal court that became infamous for its arbitrary and oppressive proceedings. The story involves Sir Giles Mompesson, a historical figure who was a corrupt courtier and patent monopolist, and features other historical figures including the Marquis of Buckingham, Prince Charles (later Charles I), and the Conde de Gondomar (Spanish ambassador). Ainsworth was known for his vivid historical romances that popularized English history through melodramatic narratives, and this work exemplifies his style of blending historical fact with romantic fiction.
+</summarium>
+    <notae>First published in 1854. This appears to be the Tauchnitz Continental edition from the same year. Ainsworth was a Protestant English author writing popular historical fiction, not a Catholic author, so the 'catholic' tag does not apply despite the historical setting that would have included Catholic characters.
+</notae>
+  </liber>
   <liber numerus="11137" status="enriched">
     <titulus>Twenty-Two Years a Slave, and Forty Years a Freeman</titulus>
     <auctor>Austin Steward</auctor>
@@ -418,6 +698,19 @@ does not receive a 'catholic' tag despite its philosophical merit.
     <summarium>This is Austin Steward's slave narrative, published in 1857 (though dated 1856 in some editions). Steward was enslaved for twenty-two years before gaining his freedom and becoming a prominent abolitionist and community leader. The work documents his experiences under slavery and his subsequent forty years of freedom, including his time as president of the Wilberforce Colony in London, Canada West (Ontario), one of the settlements established for formerly enslaved people who escaped to Canada. The narrative includes correspondence from his time leading this colony. Slave narratives like this were crucial primary sources documenting the horrors of slavery and were important tools in the abolitionist movement. Steward's account is particularly notable for its documentation of both the Southern slave experience and the post-emancipation challenges of building free Black communities in Canada.
 </summarium>
     <notae>The work was published in Rochester in 1856/1857 (there's some ambiguity in dating - the title page says 1856, but it was published in September 1856 and often cataloged as 1857). I've chosen 1857 as it appears to be the more common scholarly dating. The letter from Governor Myron H. Clark of New York dated May 10, 1856 shows Steward was soliciting subscribers before publication. This is a historically significant primary source document from the antebellum period.
+</notae>
+  </liber>
+  <liber numerus="10848" status="enriched">
+    <titulus>Natalie; or, A Gem Among the Sea-Weeds</titulus>
+    <auctor>Ferna Vale</auctor>
+    <annus>1859</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;Natalie; or, A Gem Among the Sea-Weeds&quot; is a mid-19th century American sentimental novel by Ferna Vale. Published in 1859, it exemplifies the domestic fiction popular during that era, focusing on moral and spiritual themes. The preface indicates the work has Christian undertones, encouraging readers to take up their cross with &quot;meekness and humility&quot; and find the path home to spiritual redemption. The novel is set against a coastal backdrop, as suggested by the chapter epigraph about &quot;childhood's home&quot; by the &quot;wave-lashed shore.&quot; Like much sentimental fiction of the period, it likely follows its protagonist Natalie through moral trials and spiritual growth. Ferna Vale was a pseudonymous American author of the antebellum period who wrote primarily moralistic fiction for young readers and women.
+</summarium>
+    <notae>The year 1859 is taken directly from the title page. This places the work in the final years before the American Civil War, during the height of sentimental domestic fiction's popularity in America. The dedication to &quot;my darling Hattie&quot; and the author's hope for &quot;a purer gem&quot; suggests the intimate, morally instructive tone characteristic of the genre.
 </notae>
   </liber>
   <liber numerus="11196" status="enriched">
@@ -479,6 +772,20 @@ rather a 19th-century essay about Paine's historical impact.
     <notae>Year chosen: 1861 is the publication date of this specific issue. William Page (1811-1885) was an American portrait and historical painter who spent significant time in Italy. This article was published just before the American Civil War began (April 1861). The Atlantic Monthly during this period was at the height of its influence in American intellectual life.
 </notae>
   </liber>
+  <liber numerus="10929" status="enriched">
+    <titulus>The Dog Crusoe and His Master</titulus>
+    <auctor>Robert Michael Ballantyne</auctor>
+    <annus>1861</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>adventure</tag>
+    </tags>
+    <summarium>&quot;The Dog Crusoe and His Master&quot; is an adventure novel by Scottish author R.M. Ballantyne, set in the Western Prairies of North America. The story follows a young frontiersman and his faithful dog Crusoe through various adventures in the American wilderness. Ballantyne was known for his juvenile adventure fiction, and this work exemplifies his style of exciting, morally upright tales suitable for young readers. The novel combines themes of friendship, loyalty, courage, and survival in the untamed frontier, typical of Ballantyne's works which often drew on real settings and experiences to create engaging stories for Victorian youth.
+</summarium>
+    <notae>The original publication date was 1861. The 1894 date shown in this Gutenberg text appears to be a later edition. Ballantyne wrote this novel based on his own experiences and observations of frontier life, though he took considerable literary license. While Ballantyne himself was Presbyterian (Scottish), this particular work is straightforward adventure fiction without specifically Catholic content, so it does not receive the 'catholic' tag despite being morally instructive and appropriate for children.
+</notae>
+  </liber>
   <liber numerus="10680" status="enriched">
     <titulus>La Bretagne: Paysages et Récits</titulus>
     <auctor>Eugène Loudun</auctor>
@@ -534,6 +841,22 @@ rather a 19th-century essay about Paine's historical impact.
     <summarium>Charles Kingsley (1819-1875) was an English clergyman, novelist, and social reformer associated with Christian Socialism and the Broad Church movement within Anglicanism. 'The Gospel of the Pentateuch' is a collection of parish sermons exploring Christian theological themes found in the first five books of the Hebrew Bible (Torah). Kingsley was known for his muscular Christianity philosophy and efforts to make Christianity socially relevant. The work is dedicated to Canon Stanley, whose writings on the Jewish Church influenced Kingsley's approach. As a collection of sermons, it represents Victorian Anglican homiletics and biblical interpretation, seeking to draw out the evangelical message (gospel) from Old Testament narratives.
 </summarium>
     <notae>The exact publication year isn't stated in the excerpt, but Charles Kingsley's sermons were typically published in the 1860s. Based on historical records, 'The Gospel of the Pentateuch' was first published around 1863. While Kingsley was a clergyman in the Church of England (Anglican), this work would not receive a Catholic imprimatur as Anglicanism separated from Rome in the 16th century. The work represents Protestant biblical interpretation and homiletics rather than Catholic tradition.
+</notae>
+  </liber>
+  <liber numerus="12405" status="enriched">
+    <titulus>Frank the Young Naturalist</titulus>
+    <auctor>Harry Castlemon</auctor>
+    <annus>1864</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>adventure</tag>
+      <tag>juvenile-literature</tag>
+      <tag>american-civil-war-era</tag>
+    </tags>
+    <summarium>'Frank the Young Naturalist' is the first book in Harry Castlemon's popular 'Gun-Boat Series' (also known as the 'Frank and Archie Series'). Harry Castlemon was the pen name of Charles Austin Fosdick (1842-1915), a prolific American author who wrote adventure stories for boys in the late 19th century. This series follows the adventures of Frank Nelson, a young naturalist, through various Civil War-era adventures including naval service on Union gunboats and outdoor expeditions. The series was enormously popular with young readers and helped establish the genre of American boys' adventure fiction. Castlemon himself served in the Union Navy during the Civil War, lending authenticity to his naval adventure stories.
+</summarium>
+    <notae>The text shows a publication date of 1892, which is likely a reprint edition. The original publication was in 1864 during the American Civil War. I've chosen 1864 as it represents the work's original entry into American literature and is more historically significant for timeline purposes. This is secular juvenile fiction, not Catholic literature.
 </notae>
   </liber>
   <liber numerus="10878" status="enriched">
@@ -596,6 +919,22 @@ rather a 19th-century essay about Paine's historical impact.
     <notae>The exact publication year is estimated as circa 1870s during Havergal's most productive writing period. Her major devotional works were published between 1870-1879. Given the Project Gutenberg release suggests this was a well-established work by 2004, and Havergal's career peak was in the 1870s, I've chosen 1870 as a reasonable approximate date. If more precise bibliographic information were available, this could be refined. The work represents Victorian evangelical devotional literature at its height.
 </notae>
   </liber>
+  <liber numerus="10019" status="enriched">
+    <titulus>Punchinello, Volume 1, Various Issues</titulus>
+    <auctor>Various</auctor>
+    <annus>1870</annus>
+    <tags>
+      <tag>periodical</tag>
+      <tag>humor</tag>
+      <tag>satire</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>Punchinello was an American humor and satire magazine published weekly in New York City starting in 1870. It was modeled after the famous British magazine Punch and featured political cartoons, satirical commentary, jokes, and humorous observations on American society and politics of the Reconstruction era. The magazine was short-lived, running for approximately one year (1870-1871), but provides valuable insight into American humor and social commentary of the early 1870s. The publication included contributions from various writers and illustrators of the period.
+</summarium>
+    <notae>The year 1870 represents when Punchinello magazine began publication. The advertisements shown (for patent binders, carbolic salve, and Harrison Bradford steel pens) are typical of the period's commercial culture. This Project Gutenberg text (#10019) likely contains a compilation of issues from the magazine's run. Since this is a periodical with multiple contributors rather than a single authored work, &quot;Various&quot; is listed as the author.
+</notae>
+  </liber>
   <liber numerus="11940" status="enriched">
     <titulus>Seitsemän veljestä</titulus>
     <auctor>Aleksis Kivi</auctor>
@@ -607,6 +946,21 @@ rather a 19th-century essay about Paine's historical impact.
     <summarium>&quot;Seitsemän veljestä&quot; (Seven Brothers) is considered the first significant novel in Finnish literature and one of the most important works in the Finnish language. Written by Aleksis Kivi, it tells the story of seven brothers - Juhani, Tuomas, Aapo, Simeoni, Timo, Lauri, and Eero - who live on the Jukola farm in southern Häme. The novel chronicles their wild, often comedic adventures as they resist civilization (particularly learning to read, attending church, and following social norms) and eventually mature into responsible citizens. The work is both a coming-of-age story and a vivid portrayal of rural Finnish life in the 19th century. It has been enormously influential in Finnish culture and is still widely read today.
 </summarium>
     <notae>I chose 1870 as the primary year since this was when the work was first published, even though it appeared in installments. The 1873 date represents the first single-volume edition, and 1890 is this particular edition. The original 1870 publication date is most historically significant for educational purposes, as it marks when this groundbreaking work entered Finnish literature.
+</notae>
+  </liber>
+  <liber numerus="10106" status="enriched">
+    <titulus>Punchinello</titulus>
+    <auctor>Various</auctor>
+    <annus>1870</annus>
+    <tags>
+      <tag>periodical</tag>
+      <tag>humor</tag>
+      <tag>satire</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>Punchinello was an American humor and satire magazine published in New York City in 1870. Modeled after the British magazine Punch, it featured satirical commentary on American politics, society, and culture of the Reconstruction era. The magazine included illustrations, humorous sketches, and social commentary. It was short-lived, running for only about nine months (April to December 1870), but represents an interesting snapshot of American humor and political satire in the post-Civil War period.
+</summarium>
+    <notae>Year chosen is 1870, which was the single year of publication for this magazine. This appears to be promotional/binding material from the magazine itself. The magazine ceased publication in December 1870 due to financial difficulties. Not marked as &quot;appropriate-for-children&quot; as period satire and humor was often aimed at adult audiences with political and social commentary that would be less relevant to children.
 </notae>
   </liber>
   <liber numerus="11951" status="enriched">
@@ -636,6 +990,85 @@ rather a 19th-century essay about Paine's historical impact.
     <notae>The year 1872 is clearly stated on the title page as the publication date. This appears to be an original anthology collection rather than reprints, so 1872 is the appropriate year. The Latin epigraph &quot;Mille modi veneris&quot; (a thousand ways of love/beauty) suggests romantic themes. While some individual authors may have been Catholic, this is a general American literary collection and not specifically Catholic literature, so I have not included the 'catholic' tag.
 </notae>
   </liber>
+  <liber numerus="10516" status="enriched">
+    <titulus>Bits of Home Matters</titulus>
+    <auctor>Helen Hunt Jackson</auctor>
+    <annus>1873</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;Bits of Home Matters&quot; is a collection of essays by Helen Hunt Jackson (who wrote under the pen name &quot;H.H.&quot;) focused on domestic life, child-rearing, and family matters in Victorian America. The work addresses various aspects of parenting and household management, with particular emphasis on treating children with kindness and respect. Topics include critiques of harsh parenting practices (corporal punishment, breaking children's wills), the importance of courtesy within families, children's education and social development, and various domestic concerns. Jackson was a prolific American writer known for her advocacy work and literary contributions in the late 19th century, though she is perhaps best known today for her novel &quot;Ramona&quot; and her advocacy for Native American rights.
+</summarium>
+    <notae>The year 1873 is clearly stated on the title page. Helen Hunt Jackson (1830-1885) wrote under several pen names including &quot;H.H.&quot; and was a contemporary of Emily Dickinson. While Jackson was Episcopalian rather than Catholic, this work focuses on humane, compassionate parenting and would likely be compatible with Catholic moral teaching on the dignity of children, though it would not qualify for the 'catholic' tag under your specified criteria.
+</notae>
+  </liber>
+  <liber numerus="12249" status="enriched">
+    <titulus>Bart Ridgeley; A Story of Northern Ohio</titulus>
+    <auctor>A. G. Riddle</auctor>
+    <annus>1873</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>historical-fiction</tag>
+      <tag>regional-literature</tag>
+    </tags>
+    <summarium>&quot;Bart Ridgeley&quot; is a regional novel by Albert Gallatin Riddle (A.G. Riddle), an Ohio lawyer, politician, and author. The work is set in Northern Ohio during the early settlement period and follows the story of its titular character, Bart Ridgeley. Riddle was known for writing historical fiction that drew upon his experiences and knowledge of Ohio's frontier era. The novel provides a glimpse into life in the Western Reserve region of Ohio during the 19th century, depicting the challenges, social dynamics, and development of the area. Riddle served in the U.S. House of Representatives and was involved in Ohio politics, giving him considerable insight into the region's history and character.
+</summarium>
+    <notae>The year 1873 is clearly stated on the title page as the publication year. A.G. Riddle (Albert Gallatin Riddle, 1816-1902) was a contemporary author writing about relatively recent Ohio history from his own experience and memory of the region's development.
+</notae>
+  </liber>
+  <liber numerus="1238" status="enriched">
+    <titulus>The City of Dreadful Night</titulus>
+    <auctor>James Thomson (B.V.)</auctor>
+    <annus>1874</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>poetry</tag>
+    </tags>
+    <summarium>'The City of Dreadful Night' is a long Victorian poem by James Thomson (writing as B.V., for Bysshe Vanolis), first published serially in the National Reformer in 1874. The poem is considered one of the most powerful expressions of philosophical pessimism and religious doubt in Victorian literature. It depicts a nightmarish, allegorical city where the inhabitants wander in despair, having lost all hope of divine salvation or transcendent meaning. The work is influenced by Dante's Inferno (hence the epigraph 'Per me si va nella citta dolente' - 'Through me you enter the sorrowful city') and by Leopardi's philosophical pessimism. Thomson's dark vision reflects his own struggles with alcoholism, depression, and loss of faith. The poem is a cornerstone of Victorian atheistic and nihilistic literature, expressing profound alienation and existential despair.
+</summarium>
+    <notae>The poem was first published in serial form in the National Reformer magazine from March to May 1874, and this is the date most commonly associated with the work. It was later published in book form in 1880. Thomson (1834-1882) was a Scottish poet who adopted the pen name B.V. in honor of Shelley (Bysshe) and Novalis. The work stands in stark contrast to Catholic literature and represents Victorian crisis of faith.
+</notae>
+  </liber>
+  <liber numerus="12303" status="enriched">
+    <titulus>Fated to Be Free</titulus>
+    <auctor>Jean Ingelow</auctor>
+    <annus>1875</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;Fated to Be Free&quot; is a Victorian novel by English poet and novelist Jean Ingelow, first published in 1875. The work is connected to another of her stories, &quot;Off the Skelligs.&quot; In her preface to the American edition, Ingelow explains that she deliberately avoided creating a conventional &quot;work of art&quot; and instead attempted to produce &quot;a piece of nature&quot; - a chronicle that would give readers a sense of reality rather than a carefully crafted artistic story. The novel is notable for its unconventional approach: it features a remarkable child who grows into a commonplace man, includes many children throughout (unlike most adult fiction), and focuses on older, more mature characters as the most important and interesting figures, rather than following the Victorian convention of young heroes and heroines. Ingelow was a popular Victorian author known for her poetry and children's literature, including &quot;Mopsa the Fairy.&quot;
+</summarium>
+    <notae>The year 1875 is printed directly on the title page. This appears to be the original publication date for this novel. Jean Ingelow (1820-1897) was a respected Victorian writer, though not Catholic, so the 'catholic' tag was not included.
+</notae>
+  </liber>
+  <liber numerus="10137" status="enriched">
+    <titulus>Audio: Mary Had a Little Lamb</titulus>
+    <auctor>Thomas A. Edison</auctor>
+    <annus>1877</annus>
+    <tags>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>non-fiction</tag>
+    </tags>
+    <summarium>This is a historic audio recording from Thomas Edison, representing one of the earliest sound recordings ever made. &quot;Mary Had a Little Lamb&quot; was famously the first words Edison recorded and played back on his phonograph invention in 1877. This Project Gutenberg item is an MP3 format preservation of that historic recording, made available through the Edison National Historic Site. The work is significant not as a literary work but as a technological and historical artifact demonstrating the birth of recorded sound.
+</summarium>
+    <notae>The year 1877 is chosen because this represents when Edison first successfully recorded and played back sound using his phonograph, with &quot;Mary Had a Little Lamb&quot; being the test phrase he spoke. While this specific digital file was released to Project Gutenberg in 2003, the historically significant date is the original 1877 recording. This is primarily a historical/technological artifact rather than a literary work.
+</notae>
+  </liber>
+  <liber numerus="12284" status="enriched">
+    <titulus>Complices</titulus>
+    <auctor>Hector Malot</auctor>
+    <annus>1877</annus>
+    <tags>
+      <tag>fiction</tag>
+    </tags>
+    <summarium>A social novel by French author Hector Malot, best known for his work 'Sans Famille' (Nobody's Boy). Malot was a prolific 19th-century French novelist who wrote extensively about social issues and the struggles of ordinary people in French society. This work appears to deal with the world of inventors and patents, exploring the commercial exploitation and difficulties faced by inventors in Paris. The opening passage describes the &quot;Office cosmopolitain des inventeurs&quot; (Cosmopolitan Office of Inventors) and metaphorically portrays it as a machine that grinds down its clients - inventors seeking patents and commercial success.
+</summarium>
+    <notae>The year 1877 is approximate based on Malot's active publishing period and the style of the work. Hector Malot published numerous novels throughout the 1860s-1890s. This work shows his characteristic social realism and critique of commercial exploitation. The text is not marked as appropriate-for-children as it appears to be aimed at adult readers with its satirical and somewhat dark portrayal of business practices.
+</notae>
+  </liber>
   <liber numerus="12109" status="enriched">
     <titulus>The House That Jack Built</titulus>
     <auctor>Traditional/Anonymous (Illustrated by Randolph Caldecott)</auctor>
@@ -647,6 +1080,19 @@ rather a 19th-century essay about Paine's historical impact.
     <summarium>'The House That Jack Built' is a traditional English nursery rhyme and cumulative tale, part of the Mother Goose collection. This particular edition is one of Randolph Caldecott's famous Picture Books, published in 1878. The rhyme builds upon itself in a repetitive pattern, introducing a chain of characters and events connected to a house that Jack built. Caldecott's illustrations transformed the simple nursery rhyme into a beloved illustrated work that significantly influenced children's book illustration. His lively, humorous drawings brought new life to traditional rhymes and earned him lasting recognition in children's literature.
 </summarium>
     <notae>I chose 1878 as the year because this is specifically the Randolph Caldecott illustrated edition published by Frederick Warne &amp; Co., which is what makes this Project Gutenberg text distinctive. The rhyme itself dates back to at least the 16th century and possibly earlier, with various origins proposed (some suggest it may derive from an Aramaic chant or have connections to historical events). However, the 1878 Caldecott edition is a significant publication in its own right and represents when this particular version entered the world. The Caldecott Medal, awarded annually to distinguished American picture books for children, was named after Randolph Caldecott in recognition of his pioneering work in children's book illustration.
+</notae>
+  </liber>
+  <liber numerus="11643" status="enriched">
+    <titulus>John Caldigate</titulus>
+    <auctor>Anthony Trollope</auctor>
+    <annus>1879</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'John Caldigate' is a novel by Anthony Trollope that follows the story of its titular character, a young English gentleman who travels to the Australian goldfields to make his fortune after falling into debt. The novel explores themes of redemption, marriage, and moral character as Caldigate returns to England, marries Hester Bolton, and then faces accusations of bigamy from a woman he knew in Australia. The story examines Victorian society's judgment, the legal system, and questions of truth and reputation. It's one of Trollope's later novels, featuring his characteristic exploration of social conventions, morality, and the complications of personal relationships within the constraints of Victorian England.
+</summarium>
+    <notae>The novel was first published in 1879 (serialized 1878-1879). This is a straightforward single-author work without substantial commentary, so the original publication year is used. The work is considered appropriate for children by Victorian standards and lacks the mature content that would make it inappropriate for younger readers, though it deals with adult themes like marriage, legal proceedings, and moral questions in Trollope's typically restrained Victorian style.
 </notae>
   </liber>
   <liber numerus="12052" status="enriched">
@@ -664,6 +1110,21 @@ rather a 19th-century essay about Paine's historical impact.
     <summarium>&quot;Half a Century&quot; is the autobiography of Jane Grey Swisshelm (1815-1884), a pioneering American journalist, abolitionist, and women's rights advocate. Published in 1880, this memoir chronicles her experiences in the anti-slavery movement and the Civil War era. Swisshelm was notable as one of the first female newspaper editors and political reporters in the United States. The work provides firsthand accounts of the abolition struggle, hospital conditions during the Civil War, and the social and political battles of mid-19th century America. Her preface explicitly states her purpose: to correct the misconception that the anti-slavery movement originated in infidelity rather than Christian conviction, and to preserve the &quot;inside history&quot; of both the abolition movement and Civil War hospitals for future generations.
 </summarium>
     <notae>1880 is the publication year stated on the title page. This is a primary source memoir covering approximately 50 years of the author's life (hence &quot;Half a Century&quot;), likely spanning from around 1830 to 1880. Swisshelm was a complex figure who doesn't fit neatly into modern categories - she was progressive on abolition and women's rights but held other views typical of her era. The work is not classified as 'catholic' despite her Christian framework, as she was Protestant (Presbyterian/Methodist background) and the work doesn't reflect specifically Catholic authorship or perspective.
+</notae>
+  </liber>
+  <liber numerus="29950627" status="enriched">
+    <titulus>A Collection of Old English Plays, Vol. II</titulus>
+    <auctor>A.H. Bullen (editor)</auctor>
+    <annus>1882</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>anthology</tag>
+      <tag>drama</tag>
+      <tag>literary-criticism</tag>
+    </tags>
+    <summarium>This is the second volume of A.H. Bullen's four-volume collection of Old English plays, published between 1882-89. The volume contains four previously unpublished plays: 'Dick of Devonshire' (possibly by Heywood), 'The Lady Mother' (by Glapthorne), 'The Tragedy of Sir John Van Olden Barnavelt' (by Fletcher and Massinger), and 'Captain Underwit' (by Shirley). All plays were anonymous in manuscript form, but Bullen identifies their likely authors through scholarly analysis. The volume includes a preface explaining the editorial process and two appendices with additional scholarly notes. Bullen transcribed all texts by hand from original manuscripts, including material from the Egerton MS. 1,994.
+</summarium>
+    <notae>The publication date range is 1882-89 for the complete four-volume set. Volume II specifically appears to have been published in 1882 based on the date shown. This is an important work of Victorian dramatic scholarship, making available Jacobean and Caroline plays that had remained in manuscript form for over two centuries.
 </notae>
   </liber>
   <liber numerus="10656" status="enriched">
@@ -739,6 +1200,20 @@ rather a 19th-century essay about Paine's historical impact.
     <notae>The complete 'Beacon Lights of History' series was published between 1883-1896. Volume I was among the first volumes published around 1883. Lord died in 1894, and some later volumes were completed posthumously. While Lord was a Protestant Christian writing from a Christian worldview, this is not a Catholic work and would not receive a nihil obstat or imprimatur. The work represents 19th-century American Protestant historiography with its characteristic interpretation of history as progressive revelation leading to Christian civilization.
 </notae>
   </liber>
+  <liber numerus="10403" status="enriched">
+    <titulus>'Twixt France and Spain; Or, A Spring in the Pyrenees</titulus>
+    <auctor>E. Ernest Bilbrough</auctor>
+    <annus>1883</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>travel-literature</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'Twixt France and Spain is a Victorian-era travel narrative by E. Ernest Bilbrough describing his spring journey through the Pyrenees mountain region between France and Spain. The book focuses particularly on the town of Pau and surrounding areas, providing detailed descriptions of hotels, pensions, historical sites (including the castle of Pau and its connection to Henry IV), natural scenery, local customs, and various excursions to nearby locations such as Bétharram, Lescar, and Coarraze. The work is typical of 19th-century travel literature, offering both practical information for travelers and picturesque observations of the landscape, architecture, and local life in this border region.
+</summarium>
+    <notae>The exact publication year is estimated to be around 1883 based on the style and content of Victorian travel literature. The work represents the genre of travel writing popular in the late 19th century when the Pyrenees became an increasingly fashionable destination for British tourists seeking health, scenery, and Continental culture. The book's focus on Pau reflects the town's status as a popular British winter and spring resort during this period.
+</notae>
+  </liber>
   <liber numerus="11734" status="enriched">
     <titulus>Scientific American Supplement, No. 460</titulus>
     <auctor>Various</auctor>
@@ -765,6 +1240,19 @@ rather a 19th-century essay about Paine's historical impact.
 </summarium>
     <notae>The year chosen (1886) represents the first German edition publication date, which would precede this 1893 &quot;Third American from the Second German Edition.&quot; This is an original scholarly work rather than a translation of older material, so the original publication date is most historically relevant. The work is not categorized as 'catholic' despite Nicholas of Cusa being a Catholic cardinal, because Falckenberg himself was writing in the German academic tradition of his time, and the work is a scholarly survey rather than a work of Catholic philosophy per se.
 </notae>
+  </liber>
+  <liber numerus="11723" status="enriched">
+    <titulus>Among the Trees at Elmridge</titulus>
+    <auctor>Ella Rodman Church</auctor>
+    <annus>1886</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>educational</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>nature</tag>
+    </tags>
+    <summarium>A children's educational book about trees, written by American author Ella Rodman Church. The work uses a narrative format to teach young readers about various tree species including maples, elms, oaks, pines, palms, and many others. Church was known for writing accessible natural history books for children in the late 19th century. The book combines botanical information with engaging storytelling, covering both native North American trees and exotic species from around the world. Each chapter focuses on different tree families, their characteristics, uses, and interesting facts.</summarium>
+    <notae>The year 1886 is clearly stated on the title page and represents the original publication date of this work. This is a straightforward case with no translation or edition ambiguity.</notae>
   </liber>
   <liber numerus="11498" status="enriched">
     <titulus>Scientific American Supplement, No. 601, July 9, 1887</titulus>
@@ -794,6 +1282,21 @@ rather a 19th-century essay about Paine's historical impact.
     <summarium>This is a literary hoax by Franklin H. Head that presents itself as a scholarly examination of William Shakespeare's supposed insomnia. The work uses the framing device of analyzing fictitious letters to explore the phenomenon of sleeplessness, particularly as it affects men in active professional life past their mid-thirties. While ostensibly about Shakespeare, it appears to be more of a late 19th-century meditation on the modern problem of insomnia, attributing it to the rapid pace of industrial society, telegraphs, railroads, and intense business competition. The work is notable as an example of the &quot;literary hoax&quot; genre popular in the Victorian era, where fictional scholarly works were presented as genuine historical or literary analysis.
 </summarium>
     <notae>The year 1887 is clearly stated on the title page. This work is not appropriate for the 'catholic' tag as Franklin H. Head was not a Catholic author writing from a Catholic perspective. It's also not truly 'appropriate-for-children' as it's a somewhat sophisticated literary hoax dealing with adult themes of professional stress and insomnia. The tag 'literary-hoax' is particularly important here as the work explicitly acknowledges its fictional nature.
+</notae>
+  </liber>
+  <liber numerus="12276" status="enriched">
+    <titulus>Viajes por Filipinas: De Manila á Tayabas</titulus>
+    <auctor>Juan Álvarez Guerra</auctor>
+    <annus>1887</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>travel-literature</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is a travel narrative describing a journey through the Philippines, specifically from Manila to Tayabas province. Written by Spanish author Juan Álvarez Guerra, the work documents his three years spent in Tayabas during the Spanish colonial period. The book provides detailed observations of Filipino geography, rivers (particularly the Pasig River), towns, landmarks, and daily life during the late 19th century Spanish colonial era. It represents valuable historical documentation of the Philippines under Spanish rule, written with attention to the veracity of the observations as the author emphasizes in his dedication to Sr. D. Cristino Martos.
+</summarium>
+    <notae>Year chosen is 1887 as indicated on the title page - this is explicitly marked as the second edition (Segunda Edición) published by Imprenta de Fortanet in Madrid. While there was presumably an earlier first edition, 1887 is the most appropriate date for this particular text. The work reflects Spanish colonial perspectives and attitudes of the period.
 </notae>
   </liber>
   <liber numerus="11917" status="enriched">
@@ -849,6 +1352,34 @@ depicts Catholic devotional life sympathetically but this is not a 'catholic' ta
 was not a Catholic author and the work would not have received nihil obstat/imprimatur. It is, however, 
 entirely appropriate for children as it was written specifically for young readers.</notae>
   </liber>
+  <liber numerus="1060" status="enriched">
+    <titulus>Grass of Parnassus: Rhymes Old and New</titulus>
+    <auctor>Andrew Lang</auctor>
+    <annus>1888</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>poetry</tag>
+    </tags>
+    <summarium>&quot;Grass of Parnassus: Rhymes Old and New&quot; is a collection of poetry by Andrew Lang, the Scottish poet, novelist, literary critic, and anthropologist. Published in 1888 by Longmans, Green and Co., this volume contains a selection of Lang's verse both new and previously published. Lang was a prolific Victorian man of letters known for his work in folklore, mythology, and his popular &quot;Coloured&quot; Fairy Books series. His poetry reflects the aesthetic and literary sensibilities of the late Victorian period, often drawing on classical themes and romantic traditions. The title itself references Mount Parnassus, the legendary home of the Muses in Greek mythology, suggesting the poetic and literary aspirations of the collection.
+</summarium>
+    <notae>The year 1888 is taken from the edition information provided in the transcription note (&quot;Transcribed from the 1888 Longmans, Green and Co. edition&quot;). This appears to be the original publication year of this collection.
+</notae>
+  </liber>
+  <liber numerus="11276" status="enriched">
+    <titulus>Civil Government in the United States Considered with Some Reference to Its Origins</titulus>
+    <auctor>John Fiske</auctor>
+    <annus>1890</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>education</tag>
+      <tag>civics</tag>
+      <tag>political-science</tag>
+    </tags>
+    <summarium>A comprehensive textbook on American civil government written by philosopher and historian John Fiske. The work examines the structure and origins of government in the United States, from local town and county governments through state and federal institutions. Fiske traces the historical development of American governmental institutions back to their Anglo-Saxon and colonial roots. The book was widely used as a civics textbook in the late 19th and early 20th centuries and represents an important contribution to American political education during the post-Civil War era. Fiske approaches the subject from a historical-evolutionary perspective, showing how American institutions developed organically from earlier forms of government.
+</summarium>
+    <notae>The publication year of 1890 is clearly stated in the text itself. This work was published during the height of Fiske's career as a historian and was part of the late 19th century movement to create systematic civics education in American schools. The book is not tagged as 'catholic' as Fiske was not a Catholic author and his philosophical approach was influenced by evolutionary naturalism rather than Catholic thought.
+</notae>
+  </liber>
   <liber numerus="11175" status="enriched">
     <titulus>L'inutile Beauté</titulus>
     <auctor>Guy de Maupassant</auctor>
@@ -861,6 +1392,22 @@ entirely appropriate for children as it was written specifically for young reade
     <summarium>&quot;L'inutile Beauté&quot; (Useless Beauty) is a collection of short stories by French author Guy de Maupassant, published in 1890, one of his final works before his mental decline. The collection includes several of Maupassant's later stories that showcase his mature style and often darker, more psychologically complex themes. The title story explores themes of beauty, vanity, marriage, and the relationships between men and women in bourgeois society. Maupassant was a master of the short story form and this collection demonstrates his skill at portraying human nature with both cynicism and compassion. His works often examined the social dynamics of late 19th-century France, particularly focusing on the middle and upper classes.
 </summarium>
     <notae>The publication year 1890 is clearly stated on the title page. This was published near the end of Maupassant's career - he would begin suffering from syphilis-related mental illness in 1891 and died in 1893. Maupassant was not a Catholic author and his works often contained themes and content that would not receive ecclesiastical approval, so the 'catholic' tag is not applicable.
+</notae>
+  </liber>
+  <liber numerus="11907" status="enriched">
+    <titulus>Punch, or The London Charivari, Vol. 99, July 12, 1890</titulus>
+    <auctor>Various</auctor>
+    <annus>1890</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>humor</tag>
+      <tag>satire</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is an issue of Punch, the famous British weekly magazine of humor and satire that was published from 1841 to 1992. Punch was known for its political satire, cartoons, and humorous commentary on Victorian and later British society. This particular issue from July 12, 1890 (Volume 99) includes the recurring feature &quot;Voces Populi&quot; (Voices of the People), which presented humorous sketches of overheard conversations in various public settings. In this case, the scene is set at a Military Exhibition, capturing the dialogue of ordinary Londoners attending the event. Punch was enormously influential in British culture and is credited with coining many phrases and establishing the conventions of political cartooning.
+</summarium>
+    <notae>The year 1890 is the publication date of this specific issue. Punch magazine was a periodical, so each issue has its own distinct publication date. &quot;Various&quot; is used for the author since Punch was a collaborative effort with multiple contributors, though specific pieces may have had individual authors (often writing under pseudonyms). The magazine was generally family-friendly for Victorian standards, hence the &quot;appropriate-for-children&quot; tag.
 </notae>
   </liber>
   <liber numerus="11686" status="enriched">
@@ -890,6 +1437,34 @@ entirely appropriate for children as it was written specifically for young reade
     </tags>
     <summarium>This is a comprehensive reference work by Rev. E. Cobham Brewer, the renowned British lexicographer famous for 'Brewer's Dictionary of Phrase and Fable.' This particular volume is an encyclopedic collection of character sketches from literature, fiction, and drama. The American edition was edited by Marion Harland (pen name of Mary Virginia Terhune, a popular American author) and published in multiple volumes. It serves as a reader's handbook providing detailed information about fictional and dramatic characters from various works of literature and theater. The book includes illustrations by various artists depicting famous literary characters like Ichabod Crane, Sydney Carton, Cleopatra, and Captain Cuttle.</summarium>
     <notae>The year 1892 is taken from the copyright page, representing this American edition. Brewer's original 'Reader's Handbook' was first published in England in 1880. This 1892 edition represents Marion Harland's American revision and expansion of that work. The book is not specifically Catholic in nature, though Brewer was an Anglican clergyman, and it's a secular literary reference work covering characters from diverse sources.</notae>
+  </liber>
+  <liber numerus="11656" status="enriched">
+    <titulus>The Great Shadow and Other Napoleonic Tales</titulus>
+    <auctor>Arthur Conan Doyle</auctor>
+    <annus>1892</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>historical-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>The Great Shadow is a historical novel by Arthur Conan Doyle set during the Napoleonic Wars. The 'shadow' refers to the looming threat of Napoleon Bonaparte over Britain during the early 19th century. The main story follows a young Scottish boy's coming of age against the backdrop of the Napoleonic threat, culminating in the Battle of Waterloo. The book includes other Napoleonic tales featuring Conan Doyle's character Brigadier Gerard, a humorous French cavalry officer. Written during Conan Doyle's Sherlock Holmes era, it demonstrates his versatility as a writer and his interest in historical fiction. The work combines adventure, romance, and historical detail in an accessible narrative style suitable for younger readers while still engaging adults.
+</summarium>
+    <notae>First published in 1892. While Conan Doyle was born into a Catholic family and educated at Stonyhenge preparatory school and Stonyhurst College (both Jesuit institutions), he later became agnostic, so I have not included the 'catholic' tag. The work itself is adventure fiction without particular religious content, though it reflects Victorian-era British values and patriotism. The Brigadier Gerard stories became some of Conan Doyle's personal favorites among his own works.
+</notae>
+  </liber>
+  <liber numerus="10294" status="enriched">
+    <titulus>Verse and Prose for Beginners in Reading</titulus>
+    <auctor>Various</auctor>
+    <annus>1893</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>educational</tag>
+    </tags>
+    <summarium>This is an educational anthology designed as a companion volume to the Riverside Primer and Reader. Published in 1893, it contains selections of verse and prose from English and American literature specifically chosen for beginning readers. The book consists primarily of poetry (nine-tenths of the content) with the remainder being proverbs and familiar sayings. It was intended to bridge the gap between basic reading instruction and the world of English literature, serving as an early reader for students who had mastered their primer. The work is part of the Riverside Literature Series, a prominent educational publishing initiative of the late 19th century.
+</summarium>
+    <notae>The year 1893 is taken directly from the title page. This is an anthology compiled for educational purposes, so &quot;Various&quot; is appropriate for the author field as it contains selections from multiple English and American authors. The work represents the pedagogical approach to reading instruction common in American schools during the late 19th century.
+</notae>
   </liber>
   <liber numerus="11747" status="enriched">
     <titulus>Les Demi-Vierges</titulus>
@@ -947,6 +1522,19 @@ entirely appropriate for children as it was written specifically for young reade
     <notae>Using 1897 as the publication year based on the transcription note indicating this was transcribed from the &quot;1897 John Lane edition.&quot; Alice Meynell (1847-1922) was a prominent Catholic convert and her work was widely respected in Catholic literary circles. Her essays often reflect contemplative and spiritual themes consistent with her faith, making the 'catholic' tag appropriate. The work is suitable for older children and adults given its contemplative, non-controversial nature.
 </notae>
   </liber>
+  <liber numerus="10949" status="enriched">
+    <titulus>The Romance of Zion Chapel</titulus>
+    <auctor>Richard Le Gallienne</auctor>
+    <annus>1898</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'The Romance of Zion Chapel' is a novel by Richard Le Gallienne that satirizes late Victorian English Nonconformist chapel culture. The story follows Theophil Flowers, a young man raised in the rigid environment of a dissenting chapel in the fictional town of Coalchester, who becomes torn between his religious upbringing and his growing attraction to art, beauty, and the Aesthetic movement. The novel explores themes of provincial narrowness versus cosmopolitan sophistication, religious constraint versus artistic freedom, and includes a romantic subplot involving the character Jenny. It's characteristic of 1890s literature with its focus on aestheticism and critique of middle-class morality.
+</summarium>
+    <notae>Publication date of 1898 is clearly stated on the title page. Le Gallienne was not a Catholic author - he came from a Nonconformist Protestant background and was associated with the Aesthetic movement. This work satirizes Protestant chapel culture rather than representing Catholic thought, so 'catholic' tag is not applicable.
+</notae>
+  </liber>
   <liber numerus="11665" status="enriched">
     <titulus>Collections and Recollections</titulus>
     <auctor>George William Erskine Russell</auctor>
@@ -959,6 +1547,22 @@ entirely appropriate for children as it was written specifically for young reade
     </tags>
     <summarium>Collections and Recollections is a collection of essays and reminiscences by George William Erskine Russell (1853-1919), a British Liberal politician, social reformer, and author. The work contains anecdotes, observations, and recollections of Victorian society, political life, and notable personalities of the era. Russell was known for his wit, charm, and ability to capture the social atmosphere of late 19th-century England. The book was originally written at the suggestion of James Payn, the novelist and editor, to whom it was dedicated. Payn died in March 1898, the same year the book was first published. The work provides valuable insights into Victorian social customs, political culture, and the literary world of the period.</summarium>
     <notae>The dedication indicates James Payn died March 25, 1898, and mentions the papers were written at his suggestion and inscribed to him. This strongly suggests 1898 as the original publication year. The preface mentions &quot;when the book first appeared&quot; and references to &quot;this Edition&quot; suggest there were multiple editions. Russell was Anglo-Catholic in his religious views and a social reformer, but this particular work is primarily social commentary and reminiscences rather than explicitly religious content, so I have not tagged it as 'catholic' despite the author's religious background.</notae>
+  </liber>
+  <liber numerus="12252" status="enriched">
+    <titulus>The Prose Works of Jonathan Swift, D.D., Volume III: Swift's Writings on Religion and the Church, Vol. I</titulus>
+    <auctor>Jonathan Swift</auctor>
+    <annus>1898</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>religious-writings</tag>
+      <tag>church-history</tag>
+    </tags>
+    <summarium>This is Volume III of Temple Scott's edited collection of Jonathan Swift's prose works, specifically focusing on Swift's writings on religion and the Church. Jonathan Swift (1667-1745) was an Anglo-Irish satirist, essayist, political pamphleteer, poet, and Anglican cleric who became Dean of St. Patrick's Cathedral in Dublin. This volume compiles his various writings on religious matters and Church governance, edited by Temple Scott with a biographical introduction by W.E.H. Lecky. Swift was known for his sharp wit and incisive commentary on both religious and political matters of his time. As an Anglican cleric, his religious writings would have been from a Protestant perspective during a period of significant religious and political tension in Ireland and England.
+</summarium>
+    <notae>The year 1898 represents the publication date of this edited collection by Temple Scott, published as part of Bohn's Standard Library. While Swift's original writings on religion and the Church would have been composed during his lifetime (late 17th/early 18th century), this is specifically an edited compilation, so 1898 is the most historically accurate date for this particular work. The individual texts within this volume would have been written by Swift between approximately 1690s-1740s, but as a collected scholarly edition, 1898 is the appropriate year.
+
+Note: Not tagged as 'catholic' since Swift was an Anglican cleric, not Catholic. Not tagged 'appropriate-for-children' as Swift's religious and political writings were intended for educated adult audiences and dealt with complex theological and ecclesiastical matters.
+</notae>
   </liber>
   <liber numerus="11160" status="enriched">
     <titulus>A Cotswold Village, or Country Life and Pursuits in Gloucestershire</titulus>
@@ -974,6 +1578,19 @@ entirely appropriate for children as it was written specifically for young reade
     <summarium>A Cotswold Village is a classic work of English rural literature, consisting of essays and observations about country life in Gloucestershire's Cotswold region during the late Victorian era. Written by J. Arthur Gibbs, a country gentleman who lived in the area, the book provides detailed descriptions of village life, farming practices, fox hunting, local characters, and the natural beauty of the Cotswolds. The work is valued both for its literary merit and as an important historical document capturing a way of life that was already beginning to disappear at the turn of the 20th century. Gibbs writes with affection and intimate knowledge of his subject matter, making this an enduring portrait of rural England.
 </summarium>
     <notae>Originally published in 1898. The author died in 1899 at age 31, making this his only major work. The book has remained in print and is considered one of the finest examples of English rural writing from the period.
+</notae>
+  </liber>
+  <liber numerus="12176" status="enriched">
+    <titulus>The Giant Scissors</titulus>
+    <auctor>Annie Fellows Johnston</auctor>
+    <annus>1898</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;The Giant Scissors&quot; is a children's novel by Annie Fellows Johnston about Joyce, a twelve-year-old American girl who travels to France with her Cousin Kate. Feeling homesick and like a prisoner in the walled garden of old Monsieur Gréville's house, Joyce struggles with her new life abroad, missing her family back in their small Western village. The story follows her adventures and experiences in France, including encounters with local characters like Jules, Christmas celebrations, and various discoveries. Johnston was a popular children's author of the late 19th and early 20th centuries, best known for &quot;The Little Colonel&quot; series.
+</summarium>
+    <notae>1898 is the original publication year for this work. Annie Fellows Johnston was a Presbyterian author from Kentucky who wrote primarily wholesome children's fiction during the late Victorian and Edwardian periods.
 </notae>
   </liber>
   <liber numerus="11062" status="enriched">
@@ -1048,6 +1665,33 @@ religious content or a Catholic author perspective.
     <summarium>An adventure novel by G.A. Henty, a prolific British author known for historical adventure stories aimed at young readers in the Victorian era. The story appears to involve gold-seeking in the American West, featuring chapters about escape, searching for a golden valley, and encounters with Native Americans. Henty's works typically combined exciting narratives with moral instruction and historical detail, designed to educate and entertain young Victorian readers about various periods and places in history.</summarium>
     <notae>1899 appears to be the original publication date based on the Hurst &amp; Company edition information. This is one of Henty's many adventure novels written during the height of his career in the late Victorian period.</notae>
   </liber>
+  <liber numerus="12365" status="enriched">
+    <titulus>Femmes rêvées</titulus>
+    <auctor>Albert Ferland</auctor>
+    <annus>1899</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>poetry</tag>
+    </tags>
+    <summarium>'Femmes rêvées' (Dreamed Women) is a poetry collection by French-Canadian poet Albert Ferland, published with a preface by Louis Fréchette, a lauréat of the French Academy. The work explores themes of love, beauty, dreams, and idealized femininity. Fréchette's preface praises the modest and artistic quality of the work, noting that Ferland takes a restrained approach to sentimentality compared to poets like Alfred de Musset, avoiding excessive personal confession. The collection represents part of the literary tradition of late 19th-century Quebec poetry, focusing on aesthetic beauty and the intersection of art, youth, and romantic idealization.
+</summarium>
+    <notae>The year 1899 is clearly marked in the original publication as MDCCCXCIX. This work is part of the French-Canadian literary tradition and would have been published in Quebec. Not tagged as 'appropriate-for-children' as it is romantic poetry for adults. Not tagged as 'catholic' despite the Quebec context, as the preface and excerpts focus on romantic and aesthetic themes rather than explicitly Catholic content.
+</notae>
+  </liber>
+  <liber numerus="11930" status="enriched">
+    <titulus>More Fables</titulus>
+    <auctor>George Ade</auctor>
+    <annus>1900</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>humor</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'More Fables' is a collection of humorous fables by George Ade, a follow-up to his successful 'Fables in Slang' (1899). Ade was an American writer and humorist known for his satirical fables written in colloquial American English of the early 20th century. His fables typically lampooned American social types and pretensions with wit and clever wordplay. The stories featured capitalized nouns and used vernacular speech to comment on modern American life, including topics like social climbers, marriage, business, and cultural trends. Ade's work was extremely popular in its time and influenced American humor writing. The fables are lighthearted moral tales with a distinctly American flavor, often ending with a humorous &quot;moral&quot; in the tradition of Aesop but applied to contemporary American society.
+</summarium>
+    <notae>The year 1900 is indicated directly in the text. This appears to be the original publication date. George Ade (1866-1944) was not Catholic, so the 'catholic' tag is not applied. The fables are generally appropriate for children in terms of moral content, though they satirize adult social situations. Illustrated by Clyde J. Newman.
+</notae>
+  </liber>
   <liber numerus="10285" status="enriched">
     <titulus>Ma Rag Time Baby</titulus>
     <auctor>Peerless Orchestra</auctor>
@@ -1072,6 +1716,21 @@ religious content or a Catholic author perspective.
       <tag>non-fiction</tag>
     </tags>
   </liber>
+  <liber numerus="10139" status="enriched">
+    <titulus>The Faith of the Millions: A Selection of Past Essays (Second Series)</titulus>
+    <auctor>George Tyrrell, S.J.</auctor>
+    <annus>1901</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>catholic</tag>
+      <tag>theology</tag>
+      <tag>essays</tag>
+    </tags>
+    <summarium>A collection of religious and theological essays by Jesuit priest George Tyrrell, published while he was still in good standing with the Catholic Church. The work includes essays on spiritual topics including Juliana of Norwich, mysticism, Catholic life, and the relationship between art and faith. Tyrrell was an influential theologian who would later become a central figure in the Catholic Modernist controversy, though this work predates those conflicts and bears the official imprimatur of Cardinal Herbert Vaughan, Archbishop of Westminster.
+</summarium>
+    <notae>Publication year 1901 is clearly stated on the title page. This work was published before Tyrrell's involvement in the Modernist controversy that led to his excommunication in 1907. The presence of the nihil obstat and imprimatur indicates this was approved Catholic theological writing at the time of publication. Not marked as 'appropriate-for-children' as it contains theological essays intended for an educated adult audience.
+</notae>
+  </liber>
   <liber numerus="11126" status="enriched">
     <titulus>Ten Girls from Dickens</titulus>
     <auctor>Kate Dickinson Sweetser</auctor>
@@ -1084,6 +1743,21 @@ religious content or a Catholic author perspective.
     </tags>
     <summarium>Ten Girls from Dickens is a compilation work by Kate Dickinson Sweetser that extracts and presents the stories of ten memorable female characters from Charles Dickens' novels as standalone narratives. The book features beloved characters such as Little Nell (from The Old Curiosity Shop), The Marchioness (also from The Old Curiosity Shop), Jenny Wren (from Our Mutual Friend), and Florence Dombey (from Dombey and Son). This work was designed as a companion volume to Sweetser's 'Ten Boys from Dickens' and was intended to make Dickens' complex novels more accessible to younger readers by presenting character-focused narratives in a simplified format. The book was illustrated by George Alfred Williams and represents the early 20th century educational practice of introducing children to classic literature through character studies and abridged versions.</summarium>
     <notae>The year 1901 is based on typical publication dates for Kate Dickinson Sweetser's Dickens compilation series. These works were published in the early 1900s as part of the movement to make classic literature accessible to children. While I cannot see the exact copyright date in this excerpt, Sweetser's 'Ten Boys from Dickens' was published around 1901, and this companion volume would have followed shortly after. This is not a work by Dickens himself but rather a secondary work about Dickens' characters, so the year reflects Sweetser's publication date rather than Dickens' original works (which span 1836-1870).</notae>
+  </liber>
+  <liber numerus="12380" status="enriched">
+    <titulus>Two Thousand Miles on an Automobile</titulus>
+    <auctor>Chauffeur (pseudonym)</auctor>
+    <annus>1902</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>travelogue</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>americana</tag>
+    </tags>
+    <summarium>An early automobile travelogue published in 1902, documenting a pioneering journey of over two thousand miles through New England, New York, Canada, and the American West. Written under the pseudonym &quot;Chauffeur,&quot; this work captures the adventure and novelty of long-distance automobile travel in the very early days of the automotive age, when such journeys were still rare and challenging undertakings. The narrative is described as &quot;desultory&quot; (rambling or digressive), suggesting an informal, conversational style. The book includes eighteen illustrations by Frank Verbeck and is dedicated to &quot;L. O. E.&quot; who accompanied the author for much of the journey. This work serves as both a historical document of early automotive culture and a snapshot of American geography and infrastructure at the turn of the 20th century.
+</summarium>
+    <notae>The year 1902 is clearly stated on the title page and represents the original publication date. This was very early in automotive history - only about 15 years after the first automobiles were invented. The author's use of a pseudonym (&quot;Chauffeur&quot;) rather than their real name was common in this era for such informal travel narratives.
+</notae>
   </liber>
   <liber numerus="10641" status="enriched">
     <titulus>Beacon Lights of History, Volume X: European Leaders</titulus>
@@ -1126,6 +1800,33 @@ religious content or a Catholic author perspective.
     <notae>1902 is the original publication year for this collection. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was not a Catholic author, so the 'catholic' tag is not included. Most of the stories are appropriate for children, featuring gentle humor and mild adventure, though &quot;The Monkey's Paw&quot; has some darker themes that might be intense for very young readers.
 </notae>
   </liber>
+  <liber numerus="10963" status="enriched">
+    <titulus>The Grip of Desire</titulus>
+    <auctor>Hector France</auctor>
+    <annus>1903</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>anti-clerical</tag>
+    </tags>
+    <summarium>'The Grip of Desire' (French: 'L'Étreinte du Désir') is a controversial novel by Hector France subtitled 'The Story of a Parish-Priest'. The novel deals with the struggles of a Catholic priest with celibacy and sexual desire. France was a French journalist and author known for his anti-clerical works in the late 19th/early 20th century. This work was considered scandalous at the time of publication for its frank treatment of priestly sexuality and its critique of Catholic clerical celibacy requirements.
+</summarium>
+    <notae>The original French edition was published around 1903. Hector France (1837-1908) was a controversial French author known for his anti-clerical and libertine works. This novel is explicitly anti-clerical in nature and would definitely NOT be considered appropriate for children or receive a nihil obstat or imprimatur from Catholic authorities, despite dealing with Catholic clergy as subject matter. The work was translated into English by Alfred Allinson, who translated many of France's works.
+</notae>
+  </liber>
+  <liber numerus="10231" status="enriched">
+    <titulus>Audio: Remarks from a Visit to Edison Laboratory</titulus>
+    <auctor>Addie Worth Bagley Daniels</auctor>
+    <annus>1903</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is an audio recording of remarks from Addie Worth Bagley Daniels describing her visit to Thomas Edison's laboratory. The recording is part of the Edison National Historic Site collection and provides a first-hand account of observations at one of America's most important centers of invention during the early 20th century. Edison's laboratory was the birthplace of numerous groundbreaking inventions including the phonograph, motion pictures, and improvements to electric lighting. This primary source document offers historical insight into Edison's work environment and operations.
+</summarium>
+    <notae>The exact year is difficult to determine from the Gutenberg text alone, as it doesn't specify when the visit or recording took place. Edison's main laboratory period was from the 1870s through early 1900s, with his West Orange laboratory (which became the Edison National Historic Site) operating from 1887-1931. Given that this appears to be an audio recording (available as MP3 files) and edited by Edison himself, I've estimated circa 1903 as a reasonable midpoint of Edison's most productive laboratory years and when audio recording technology would have been available. The actual recording could be anywhere from roughly 1890-1920s. The Gutenberg release date (2003) is clearly just the digitization date, not the original work date.
+</notae>
+  </liber>
   <liber numerus="12212" status="enriched">
     <titulus>The Third String</titulus>
     <auctor>W.W. Jacobs</auctor>
@@ -1137,6 +1838,21 @@ religious content or a Catholic author perspective.
     <summarium>&quot;The Third String&quot; is one of the short stories from W.W. Jacobs' collection &quot;Odd Craft,&quot; published in 1903. Jacobs was a popular English humorist and author known for his maritime tales and stories of dockside life. This particular story features one of his recurring characters, a night-watchman who serves as narrator, philosophizing about love and its complications in his distinctive working-class voice. Jacobs is perhaps best known for his supernatural story &quot;The Monkey's Paw,&quot; but the majority of his work consisted of humorous tales like this one, featuring colorful characters and witty observations about everyday life in late Victorian and Edwardian England.
 </summarium>
     <notae>&quot;Odd Craft&quot; was published in 1903 as a collection of short stories. This is part 12 of that collection. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was writing during the height of his career at this time. The stories are gentle comedies suitable for general audiences, featuring working-class characters like sailors, night-watchmen, and dock workers.
+</notae>
+  </liber>
+  <liber numerus="12203" status="enriched">
+    <titulus>Odd Craft</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <annus>1903</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>short-stories</tag>
+      <tag>humor</tag>
+    </tags>
+    <summarium>'Odd Craft' is a collection of humorous short stories by W.W. Jacobs, published in 1903. Jacobs was an English author best known for his supernatural story 'The Monkey's Paw' but was primarily a writer of comedic tales featuring working-class and rural English characters. The collection includes various stories of romantic comedy and gentle humor, including 'Blundell's Improvement,' which opens with a scene of two suitors competing for the attention of Venia Turnbull while her father desperately tries to take his Sunday afternoon nap. Jacobs' work was enormously popular in the Edwardian era for its wit, character-driven humor, and clean, accessible style.
+</summarium>
+    <notae>1903 is the original publication year for this collection. W.W. Jacobs was not a Catholic author, so the 'catholic' tag is not included, though his work is wholesome and family-friendly.
 </notae>
   </liber>
   <liber numerus="12209" status="enriched">
@@ -1152,6 +1868,36 @@ religious content or a Catholic author perspective.
     <notae>I chose 1904 as the year because this is when &quot;Odd Craft&quot; was originally published. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific English author best known for &quot;The Monkey's Paw&quot; (1902) but who wrote many lighthearted stories about rural and maritime England. This work represents his comedic rather than horror writing.
 </notae>
   </liber>
+  <liber numerus="10390" status="enriched">
+    <titulus>The Edinburgh Lectures on Mental Science</titulus>
+    <auctor>Thomas Troward</auctor>
+    <annus>1904</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>philosophy</tag>
+      <tag>metaphysics</tag>
+      <tag>new-thought</tag>
+    </tags>
+    <summarium>'The Edinburgh Lectures on Mental Science' is a foundational text in the New Thought movement, originally delivered as lectures in Edinburgh's Queen Street Hall in 1904. Thomas Troward, a retired divisional judge from Punjab, India, presents a systematic exploration of the relationship between mental action and material conditions. The work examines concepts such as spirit and matter, subjective and objective mind, intuition, healing, and the will. Troward's lectures were influential in the development of New Thought philosophy and later influenced various self-help and metaphysical movements. The book attempts to establish natural principles governing how thought influences reality, blending elements of philosophy, psychology, and metaphysics.
+</summarium>
+    <notae>The year 1904 is clearly indicated in the foreword dated March 1904. While Thomas Troward was nominally Christian, this is decidedly not a Catholic work - it belongs to the New Thought movement which has different theological foundations. Therefore, it does not receive the 'catholic' tag. The work is philosophical/metaphysical in nature and while not inappropriate for older children, its abstract content is more suited to adult readers, so it does not receive the 'appropriate-for-children' tag.
+</notae>
+  </liber>
+  <liber numerus="10445" status="enriched">
+    <titulus>American Big Game in Its Haunts: The Book of the Boone and Crockett Club</titulus>
+    <auctor>George Bird Grinnell (editor)</auctor>
+    <annus>1904</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>natural-history</tag>
+      <tag>hunting</tag>
+      <tag>conservation</tag>
+    </tags>
+    <summarium>This is a collection of essays published by the Boone and Crockett Club, an organization founded by Theodore Roosevelt in 1887 to promote conservation and ethical hunting practices. The book contains contributions from prominent hunters and naturalists of the early 20th century, including Roosevelt himself. Topics include wilderness preservation, the zoology of North American big game, detailed accounts of hunting expeditions in Alaska (particularly bear and moose hunting), and essays on specific species like the Kadiak bear and mountain sheep. The Boone and Crockett Club played a significant role in early American conservation efforts and the establishment of national parks and wildlife refuges.
+</summarium>
+    <notae>The year 1904 is explicitly stated on the title page. George Bird Grinnell was a prominent naturalist, anthropologist, and conservationist who co-founded the Boone and Crockett Club with Theodore Roosevelt. This volume represents the intersection of late 19th/early 20th century hunting culture with the emerging conservation movement in America.
+</notae>
+  </liber>
   <liber numerus="11975" status="enriched">
     <titulus>Dialstone Lane, Part 5</titulus>
     <auctor>W.W. Jacobs</auctor>
@@ -1163,6 +1909,21 @@ religious content or a Catholic author perspective.
     <summarium>&quot;Dialstone Lane, Part 5&quot; is a portion of the novel &quot;Dialstone Lane&quot; by W.W. Jacobs, an English author known for his humorous short stories and novels about seafaring life. The novel follows the adventures of several characters aboard the ship &quot;Fair Emily&quot; as they journey southward, ostensibly on a pleasure cruise. The narrative hints at hidden motives and treasure-seeking beneath the surface of their stated purpose of studying island formations. Jacobs was celebrated for his light, comedic touch and his ability to capture the dialects and mannerisms of sailors and working-class characters. This work exemplifies his characteristic blend of gentle humor, maritime adventure, and character-driven comedy.
 </summarium>
     <notae>W.W. Jacobs (William Wymark Jacobs, 1863-1943) published &quot;Dialstone Lane&quot; in 1904. While Jacobs is perhaps best known today for his macabre short story &quot;The Monkey's Paw&quot; (1902), the majority of his work consisted of humorous tales of dockside and maritime life. &quot;Dialstone Lane&quot; is a full-length comic novel in his lighter vein, featuring the kind of eccentric characters and gentle adventure that characterized much of his work during this period.
+</notae>
+  </liber>
+  <liber numerus="20031203" status="enriched">
+    <titulus>The Edinburgh Lectures on Mental Science</titulus>
+    <auctor>Thomas Troward</auctor>
+    <annus>1904</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>philosophy</tag>
+      <tag>metaphysics</tag>
+      <tag>new-thought</tag>
+    </tags>
+    <summarium>The Edinburgh Lectures on Mental Science is a foundational work in the New Thought movement by Thomas Troward, a British judge and philosopher. Originally delivered as a series of lectures in Edinburgh's Queen Street Hall in 1904, the work explores the relationship between mental action and material conditions, examining concepts like subjective and objective mind, spirit and matter, intuition, and the law of growth. Troward's systematic approach to metaphysical principles influenced later spiritual and self-help movements, bridging Western philosophy with practical mental science. His work emphasizes the creative power of thought and the unity of universal and individual consciousness.
+</summarium>
+    <notae>Year is based on the foreword date of March 1904, when the lectures were compiled into book form shortly after being delivered. This is the original publication date of the work. While Troward was a British colonial judge, his work is philosophical/metaphysical rather than Catholic in nature - it belongs to the New Thought movement which drew from various spiritual traditions but was not specifically Catholic. The work had significant influence on later self-help and positive thinking literature.
 </notae>
   </liber>
   <liber numerus="11015" status="enriched">
@@ -1191,6 +1952,33 @@ religious content or a Catholic author perspective.
     <summarium>The Tale of Mrs. Tiggy-Winkle is one of Beatrix Potter's beloved children's stories featuring anthropomorphic animals. The story follows a little girl named Lucie who loses her pocket-handkerchiefs and goes searching for them, eventually discovering Mrs. Tiggy-Winkle, a hedgehog washerwoman who does laundry for all the animals. Like Potter's other works, it combines charming illustrations with gentle storytelling aimed at young children. The character of Mrs. Tiggy-Winkle was inspired by Potter's own pet hedgehog and by Kitty MacDonald, a Scottish washerwoman. This is one of the classic &quot;little books&quot; in Potter's Peter Rabbit series that has remained continuously in print and beloved by generations of children.
 </summarium>
     <notae>The publication year is clearly stated as 1905 in the title page. This was the original publication date by Frederick Warne &amp; Co. The work is dedicated &quot;For THE REAL LITTLE LUCIE OF NEWLANDS,&quot; referring to Lucie Carr, the daughter of the vicar of Newlands, Keswick, where Potter spent holidays.
+</notae>
+  </liber>
+  <liber numerus="12088" status="enriched">
+    <titulus>Composition-Rhetoric</titulus>
+    <auctor>Stratton D. Brooks, Marietta Hubbard</auctor>
+    <annus>1905</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>educational</tag>
+    </tags>
+    <summarium>A rhetoric and composition textbook designed for high school or early college students, written by Stratton D. Brooks (Superintendent of Schools in Boston, Massachusetts) and Marietta Hubbard (formerly of the English Department at High School La Salle, Illinois). The work focuses on teaching students to express themselves clearly and forcibly in writing, emphasizing practical composition skills through repetition and conscious improvement rather than literary criticism or rhetorical theory. It represents the American educational approach to composition instruction in the early 20th century.
+</summarium>
+    <notae>The publication year of 1905 is clearly stated on the title page and copyright information. This is a pedagogical work published by American Book Company, a major educational publisher of the era. The work is dedicated to Marcia Stuart Brooks, whose teaching methods influenced the authors' approach to making composition &quot;a delight and pleasure.&quot;
+</notae>
+  </liber>
+  <liber numerus="108" status="enriched">
+    <titulus>The Return of Sherlock Holmes</titulus>
+    <auctor>Sir Arthur Conan Doyle</auctor>
+    <annus>1905</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>mystery</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>The Return of Sherlock Holmes is a collection of 13 short stories featuring Arthur Conan Doyle's famous detective. Published after Doyle had attempted to kill off Holmes at the Reichenbach Falls in &quot;The Final Problem&quot; (1893), this collection marks the detective's dramatic return to literature. The stories were originally published in The Strand Magazine between 1903-1904 before being collected in book form. The opening story, &quot;The Adventure of the Empty House,&quot; explains Holmes's survival and three-year absence. These tales represent some of the most beloved Holmes mysteries, including &quot;The Adventure of the Dancing Men&quot; and &quot;The Adventure of the Six Napoleons.&quot;
+</summarium>
+    <notae>The stories were serialized 1903-1904, with the book collection published in 1905. I chose 1905 as it represents the complete work as a unified collection. Doyle was raised Catholic but left the faith as an adult, becoming interested in spiritualism, so this work does not receive a 'catholic' tag despite his background.
 </notae>
   </liber>
   <liber numerus="11603" status="enriched">
@@ -1250,6 +2038,62 @@ defamed his family.\
     <notae>I chose 1906 as the year because this is a posthumous editorial collection published specifically in this form. While the individual essays were written earlier (during Stevenson's lifetime, primarily in the 1870s-1880s), this particular work as a unified, edited volume with Phelps's introduction and notes is a 1906 publication. For a historical timeline, this represents when this influential educational edition entered circulation and helped establish Stevenson's essays as part of the English literary canon in American academia. If you prefer the dates when the individual essays were originally published, those would range from approximately 1876-1887, but that seems less appropriate for this specific editorial collection.
 </notae>
   </liber>
+  <liber numerus="12345" status="enriched">
+    <titulus>Friday, the Thirteenth</titulus>
+    <auctor>Thomas W. Lawson</auctor>
+    <annus>1907</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>financial-thriller</tag>
+      <tag>non-fiction-adjacent</tag>
+    </tags>
+    <summarium>'Friday, the Thirteenth' is a novel by Thomas W. Lawson, an American stock promoter and author, that explores Wall Street manipulation and stock market schemes. Published in 1907 during the era of financial excess and market manipulation, the book is a semi-autobiographical financial thriller that exposed the practices of stock market operators and corporate raiders. Lawson himself was involved in various financial schemes and stock promotions, lending authenticity to his fictional portrayal of market manipulation. The novel was quite popular in its time and contributed to public discourse about financial reform and market regulation during the Progressive Era.
+</summarium>
+    <notae>The copyright page shows both 1906 and 1907 dates, with publication listed as February 1907. I chose 1907 as the primary year since that's when it was formally published. The book was written during a period of significant financial turmoil leading up to the Panic of 1907, and Lawson's insider perspective on market manipulation made this work particularly relevant to contemporary readers concerned about financial corruption.
+</notae>
+  </liber>
+  <liber numerus="10224" status="enriched">
+    <titulus>Our Little Alaskan Cousin</titulus>
+    <auctor>Mary F. Nixon-Roulet</auctor>
+    <annus>1907</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>educational</tag>
+    </tags>
+    <summarium>Part of the popular 'Little Cousin Series' published in the early 20th century, this book was designed to introduce American children to the lives, customs, and cultures of people in Alaska. The series as a whole aimed to foster understanding and appreciation of different peoples and places around the world through engaging stories about children from various regions. This particular volume would have provided young readers with insights into Alaskan life, indigenous peoples, and the unique environment of America's northern territory during a period of growing American interest in the region following the Gold Rush and prior to statehood.
+</summarium>
+    <notae>The exact publication year is not visible in the provided excerpt, but the Little Cousin Series was most actively published between 1901-1910. The year 1907 is an educated estimate based on the series' publication pattern and Alaska's historical context during this period. Alaska wouldn't become a state until 1959, so this book represents an early 20th century American perspective on the territory.
+</notae>
+  </liber>
+  <liber numerus="10113" status="enriched">
+    <titulus>De Mannen van '80 aan het Woord: Een onderzoek naar eenige beginselen van de 'Nieuwe-Gids'-school</titulus>
+    <auctor>E. D'Oliveira</auctor>
+    <annus>1907</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>literary-criticism</tag>
+      <tag>dutch-literature</tag>
+    </tags>
+    <summarium>A Dutch-language critical study examining the principles and key figures of the Movement of 1880 (De Beweging van Tachtig), one of the most important literary movements in Dutch literature. The movement, centered around the influential magazine 'De Nieuwe Gids' (The New Guide), revolutionized Dutch literature by introducing realism, individualism, and new aesthetic principles. This work by E. D'Oliveira investigates and documents the theoretical foundations of this school through analysis of the movement's leading writers and critics, including figures like Willem Kloos, Lodewijk van Deyssel, Frederik van Eeden, and Albert Verwey.
+</summarium>
+    <notae>The year 1907 is an estimate based on typical timing for retrospective analyses of the Movement of 1880, which reached its peak influence in the 1880s-1890s. Such critical studies typically appeared 15-25 years after the movement's founding. The exact publication year would need verification from the complete Project Gutenberg record.
+</notae>
+  </liber>
+  <liber numerus="12192" status="enriched">
+    <titulus>The Long Shadow</titulus>
+    <auctor>B.M. Bower</auctor>
+    <annus>1908</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>western</tag>
+      <tag>romance</tag>
+    </tags>
+    <summarium>'The Long Shadow' is a Western novel by B.M. Bower (pen name of Bertha Muzzy Sinclair), one of the first successful female authors of Western fiction. The novel is set in the American West during the early 20th century and follows the story of 'Charming Billy' and other cowboys as they navigate the changing landscape of the range. The book explores themes of frontier life, romance, and the transformation of the Old West as modernization encroaches. Bower was known for her realistic portrayal of cowboy life and her ability to capture the spirit of the Western range, drawing on her own experiences living in Montana.
+</summarium>
+    <notae>Copyright date of 1908 matches the original publication year. B.M. Bower (Bertha Muzzy Sinclair) was a pioneering female Western writer who wrote over 60 novels. The dedication suggests the novel deals with the end of the open range era and the changes facing Western ranchers and cowboys in the early 1900s.
+</notae>
+  </liber>
   <liber numerus="10911" status="enriched">
     <titulus>Buried Alive: A Tale of These Days</titulus>
     <auctor>Arnold Bennett</auctor>
@@ -1306,6 +2150,21 @@ defamed his family.\
     <notae>The publication year of 1908 is clearly indicated on the title page. Jacques Futrelle (1875-1912) was an American journalist and mystery writer who tragically died in the sinking of the Titanic. This work represents the early development of the spy thriller genre in American literature, predating the more famous spy novels that would emerge during and after World War I.
 </notae>
   </liber>
+  <liber numerus="10300" status="enriched">
+    <titulus>Does Your Mother Know You're Out?</titulus>
+    <auctor>George P. Watson</auctor>
+    <annus>1909</annus>
+    <tags>
+      <tag>audio</tag>
+      <tag>recording</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is an early audio recording from the Edison era, part of the Edison National Historic Site collection. George P. Watson performed this piece, which was edited by Thomas A. Edison. The title &quot;Does Your Mother Know You're Out?&quot; suggests it's likely a comedic or vaudeville-style performance piece typical of the early recording industry. This represents an important piece of audio history from the pioneering days of sound recording technology.
+</summarium>
+    <notae>The exact year is difficult to determine from the Gutenberg metadata alone. Edison's peak recording years were roughly 1890s-1920s. Given Watson's involvement and Edison's editorial role, this likely dates to the 1900s-1910s era of cylinder or early disc recordings. I've estimated ~1909 as a reasonable midpoint of Edison's active recording period, but the actual recording date could range from approximately 1895-1920. The Project Gutenberg release date (2003) is clearly just the digitization date, not the original recording date.
+</notae>
+  </liber>
   <liber numerus="11752" status="enriched">
     <titulus>Chivalry</titulus>
     <auctor>James Branch Cabell</auctor>
@@ -1332,6 +2191,34 @@ defamed his family.\
     <summarium>This is an early audio recording from the Edison cylinder era, featuring Ada Jones performing a comedic dialogue between two Irish-American women gossiping over the backyard fence. Ada Jones (1873-1922) was one of the most prolific and popular recording artists of the early phonograph era, known especially for her ethnic comedy routines and character voices. This type of 'backyard conversation' sketch was a popular vaudeville and phonograph format in the early 1900s, representing everyday immigrant life with humor and dialect. The recording comes from the Edison National Historic Site collection.</summarium>
     <notae>The exact recording date is difficult to pinpoint from this metadata alone. Ada Jones was most active recording for Edison between roughly 1905-1920. Given the title format and the Edison cylinder context, I'm estimating circa 1910 as a reasonable middle point of her peak recording period, though it could range anywhere from 1905-1915. This represents the approximate era when such recordings were made rather than a definitively known publication year.</notae>
   </liber>
+  <liber numerus="12247" status="enriched">
+    <titulus>Programme Officiel: Circuit de l'Est - Amiens-Aviation</titulus>
+    <auctor>Various</auctor>
+    <annus>1910</annus>
+    <tags>
+      <tag>historical-document</tag>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is an official program for the Circuit de l'Est aviation meeting held in Amiens, France on August 15-17, 1910. This represents an important moment in early aviation history, during the pioneering era when aviation exhibitions and races were major public spectacles. The document includes the official program details, advertisements from local businesses (such as a jeweler), and information about a contest where program purchasers could win a camera. Such events were crucial in demonstrating the capabilities of early aircraft and generating public enthusiasm for aviation. The Circuit de l'Est was part of a series of major aviation competitions in pre-WWI France.
+</summarium>
+    <notae>Year chosen is 1910 as this is when the event took place and the document was published. This is a primary historical source document from the early days of aviation, just 7 years after the Wright Brothers' first flight. Not authored by a single person but rather an official program/brochure produced for the event.
+</notae>
+  </liber>
+  <liber numerus="12267" status="enriched">
+    <titulus>Aus meinem Leben (From My Life)</titulus>
+    <auctor>August Bebel</auctor>
+    <annus>1910</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>autobiography</tag>
+      <tag>political-history</tag>
+    </tags>
+    <summarium>&quot;Aus meinem Leben&quot; is the autobiography of August Bebel (1840-1913), one of the founders and leaders of the German Social Democratic Party (SPD). Bebel was a turner by trade who became one of the most prominent socialist politicians in Imperial Germany. This first volume covers his childhood, youth, apprenticeship years as a craftsman, his entry into the workers' movement and public life, his encounters with Ferdinand Lassalle and Wilhelm Liebknecht, and the development of the German labor movement through the turbulent period of German unification in the 1860s. The work provides invaluable insight into the early German socialist movement and working-class life in 19th century Germany from the perspective of one of its key leaders.
+</summarium>
+    <notae>The publication year 1910 is clearly stated in the original text. This is the first volume (Erster Teil) of Bebel's autobiography. A second and third volume were published in subsequent years. Bebel was not a Catholic author - he was a prominent socialist and critic of organized religion, so this work does not receive a 'catholic' tag.
+</notae>
+  </liber>
   <liber numerus="10832" status="enriched">
     <titulus>Carnacki, The Ghost Finder</titulus>
     <auctor>William Hope Hodgson</auctor>
@@ -1346,6 +2233,19 @@ defamed his family.\
     <summarium>Carnacki, The Ghost Finder is a collection of supernatural detective stories by William Hope Hodgson featuring Thomas Carnacki, an Edwardian occult detective who investigates hauntings and supernatural phenomena. The stories follow a consistent structure where Carnacki invites a small group of friends to dinner and then recounts his latest investigation. Hodgson blends supernatural horror with pseudo-scientific explanations, as Carnacki uses both occult knowledge and invented devices like the 'Electric Pentacle' to combat paranormal threats. The collection includes some of Hodgson's most famous stories, including 'The Gateway of the Monster,' 'The House Among the Laurels,' and 'The Whistling Room.' Hodgson was an innovative early 20th-century writer who significantly influenced the development of both supernatural horror and weird fiction.
 </summarium>
     <notae>The text header shows '1910, 1912' which reflects the publication history. Individual Carnacki stories were first published in magazines starting in 1910 (The Idler magazine). The first collected edition appeared in 1913, though some stories appeared in 1910 and 1912. I've chosen 1910 as it represents when the first Carnacki stories appeared in print and when the character was introduced to the reading public. A posthumous expanded edition was published in 1947 with additional stories.
+</notae>
+  </liber>
+  <liber numerus="10991" status="enriched">
+    <titulus>Dogs and All About Them</titulus>
+    <auctor>Robert Leighton</auctor>
+    <annus>1910</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>A comprehensive reference guide to dog breeds, written by Robert Leighton with assistance from various breed experts. The book covers the characteristics, care, and breeding of different dog breeds popular in Edwardian Britain. It includes seventeen full-page plates and provides detailed information about dogs as companions, guardians, hunting assistants, and show animals. The work reflects the growing popularity of purebred dogs in early 20th century Britain, noting that over two million dog licenses were issued in 1909 and that 906 dog shows were held that year under Kennel Club sanction.
+</summarium>
+    <notae>The year 1910 is estimated based on the preface discussing 1909 statistics as recent data and referring to them as occurring 'in the course of 1909' and 'in that year,' suggesting publication shortly after. Some editions may have been published in 1911. This is a practical handbook rather than scientific treatise, aimed at the general dog-owning public during the height of Victorian/Edwardian interest in purebred dogs.
 </notae>
   </liber>
   <liber numerus="10418" status="enriched">
@@ -1390,6 +2290,20 @@ defamed his family.\
     <summarium>&quot;The Boy Scouts of the Eagle Patrol&quot; is an early 20th century juvenile adventure novel featuring the Boy Scouts of America movement. Written by Lieut. Howard Payson, it follows a group of boy scouts called the Eagle Patrol through various outdoor adventures, mysteries, and challenges. The story includes typical elements of early Boy Scout fiction: camping, tracking, rescues, competitions, and character-building scenarios. The book was part of the explosion of Boy Scout literature that followed the founding of the Boy Scouts of America in 1910, designed to promote the values and activities of the scouting movement to young readers.
 </summarium>
     <notae>The Boy Scouts of America was founded in 1910, and this appears to be one of the early Boy Scout series books published shortly thereafter, likely around 1911-1913. I've chosen 1911 as a reasonable estimate for when this type of early BSA fiction would have been published, during the initial wave of Boy Scout enthusiasm. The &quot;Lieut. Howard Payson&quot; byline was likely a pseudonym used by the Stratemeyer Syndicate or similar publisher of juvenile series books, as was common practice for this type of literature. Without access to the copyright page, 1911 represents the most historically appropriate year for this early Boy Scout adventure series.
+</notae>
+  </liber>
+  <liber numerus="10567" status="enriched">
+    <titulus>Ship's Company</titulus>
+    <auctor>W.W. Jacobs</auctor>
+    <annus>1911</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>humor</tag>
+    </tags>
+    <summarium>'Ship's Company' is a collection of humorous short stories by W.W. Jacobs featuring recurring characters Sam Small, Ginger Dick, and Peter Russet - three sailors whose adventures and misadventures in London's docklands provide the basis for lighthearted tales of working-class life. Jacobs was a master of the humorous short story and dialect writing, capturing the vernacular and spirit of maritime workers at the turn of the 20th century. While he is best known today for his horror story 'The Monkey's Paw,' the majority of his work consisted of these gentle comedies about sailors, night-watchmen, and dock workers. 'The Guardian Angel' is one story from this collection, demonstrating Jacobs' skill at character-driven humor and his affectionate portrayal of working-class camaraderie and conflict.
+</summarium>
+    <notae>Year chosen is 1911, the publication date of the 'Ship's Company' collection. W.W. Jacobs (1863-1943) was an English author who wrote primarily in the late Victorian and Edwardian periods, with his most productive years being roughly 1896-1926.
 </notae>
   </liber>
   <liber numerus="10059" status="enriched">
@@ -1445,6 +2359,21 @@ defamed his family.\
     <notae>Year chosen is 1913 as this is the actual publication date stated in the text itself. This is a first edition publication year. The dedication suggests the collection was compiled in the aftermath of a family tragedy, which may inform the emotional tone of some of the poems.
 </notae>
   </liber>
+  <liber numerus="11028" status="enriched">
+    <titulus>Philippine (Tagalog) Prose Texts</titulus>
+    <auctor>Clara Kern Bayliss, Berton L. Maxfield, W. H. Millington, Fletcher Gardner, Laura Watson Benedict</auctor>
+    <annus>1913</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>folklore</tag>
+      <tag>anthropology</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>A compilation of Philippine folklore articles originally published in the Journal of American Folk-Lore between 1902 and 1913. The collection includes folk tales from various Philippine ethnic groups including Tagalog, Visayan, and Bagobo peoples. The articles were contributed by American folklorists and anthropologists working in the Philippines during the early American colonial period. The tales include traditional stories about animals, tricksters, supernatural beings, and moral lessons that reflect the indigenous cultures of the Philippine archipelago.
+</summarium>
+    <notae>The year 1913 represents the publication date of the final article by Laura Watson Benedict (JAFL vol. 26). This compilation brings together folklore collected during the early American colonial period in the Philippines (1898-1913). While the earliest article dates to 1902, the collection as a whole wouldn't have been complete until 1913.
+</notae>
+  </liber>
   <liber numerus="1029" status="enriched">
     <titulus>The Night-Born</titulus>
     <auctor>Jack London</auctor>
@@ -1457,6 +2386,32 @@ defamed his family.\
     <summarium>'The Night-Born' is a collection of ten short stories by American author Jack London, published in 1913. The collection showcases London's characteristic exploration of human nature, violence, survival, and the primitive within civilization. The stories range from boxing matches to tales of adventure, reflecting London's naturalistic style and his fascination with the raw, primal aspects of human experience. Jack London (1876-1918) was one of the most popular American writers of the early 20th century, known for works like 'The Call of the Wild' and 'White Fang'. This collection represents his mature period as a short story writer.
 </summarium>
     <notae>Year chosen is 1913, the original publication date of this short story collection. While individual stories may have appeared in magazines earlier, 1913 is when they were collected and published together as 'The Night-Born'. This is the most historically accurate date for cataloging purposes. Note: 'catholic' tag not applied - Jack London was not Catholic and his works often reflected socialist and naturalist philosophies rather than Catholic themes.
+</notae>
+  </liber>
+  <liber numerus="10412" status="enriched">
+    <titulus>El Choclo Tango</titulus>
+    <auctor>Manuel Sarrablo</auctor>
+    <annus>1913</annus>
+    <tags>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'El Choclo' is one of the most famous and iconic Argentine tangos, composed by Ángel Villoldo in 1903 (though this recording credits Manuel Sarrablo as composer, which may be an error or arrangement credit). This particular recording is a historic audio document performed by the National Promenade Band under conductor Eugene A. Jaudas, recorded in New York City on December 29, 1913. The recording represents an early example of tango music being performed and recorded in the United States, capturing the international spread of the Argentine tango during the early 20th century. As an instrumental musical recording, it has no lyrical content and is purely the performance of this famous tango melody.
+</summarium>
+    <notae>The year 1913 is chosen as it represents the actual recording date of this specific audio document. While 'El Choclo' was originally composed around 1903 by Ángel Villoldo (the authorship credit to Manuel Sarrablo in the Gutenberg text may be an error or refer to an arranger), this Gutenberg item is specifically the 1913 recording by the National Promenade Band, making 1913 the most historically accurate date for this particular artifact. This is an audio recording (MP3 format), not a text work.
+</notae>
+  </liber>
+  <liber numerus="10432" status="enriched">
+    <titulus>Aunt Jane's Nieces Out West</titulus>
+    <auctor>Edith Van Dyne</auctor>
+    <annus>1914</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;Aunt Jane's Nieces Out West&quot; is part of the &quot;Aunt Jane's Nieces&quot; series written under the pseudonym Edith Van Dyne by L. Frank Baum (author of &quot;The Wizard of Oz&quot; series). This installment takes the three nieces to California and Hollywood, where they become involved in the early motion picture industry. The series follows the adventures of three young women who inherit their wealthy Aunt Jane's fortune and use it for various entrepreneurial and philanthropic endeavors. This particular volume explores the nascent film industry in the 1910s and includes elements of mystery, adventure, and social commentary typical of early 20th century young adult fiction.
+</summarium>
+    <notae>The year 1914 is clearly indicated in the text itself and represents the original publication date. The Aunt Jane's Nieces series was published between 1906-1918, with this being one of the later entries. L. Frank Baum used the Edith Van Dyne pseudonym for this entire series, which was aimed at young female readers and proved quite popular in its era.
 </notae>
   </liber>
   <liber numerus="11500" status="enriched">
@@ -1530,6 +2485,19 @@ suggests this is a later digitization of the original work.
     <notae>The year 1915 is an educated estimate based on the context of Edison's recording activities and the period of Yugoslav immigration to America. Edison's phonograph recording activities were most active from the 1890s through the 1920s. Yugoslav tamburitza societies flourished in American immigrant communities during this period. Without access to the actual audio file or more specific dating information in the metadata, the exact recording date cannot be determined with certainty, but it likely falls somewhere between 1900-1925.
 </notae>
   </liber>
+  <liber numerus="11858" status="enriched">
+    <titulus>George Washington: Farmer</titulus>
+    <auctor>Paul Leland Haworth</auctor>
+    <annus>1915</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This work examines George Washington's life as a farmer and agricultural innovator at Mount Vernon. Paul Leland Haworth, an American historian, presents Washington not in his familiar role as military commander or first president, but as a dedicated agriculturalist who pioneered farming techniques and managed extensive estates. The book explores Washington's home life, his agricultural experiments, crop rotation practices, and his efforts to improve American farming methods. Washington was deeply committed to scientific agriculture and corresponded with agricultural societies in England. This biographical work provides insight into the domestic and agrarian aspects of Washington's character, showing him as a practical man of the land who approached farming with the same methodical care he applied to military and political affairs.
+</summarium>
+    <notae>Paul Leland Haworth (1876-1936) was an American historian who wrote several works on American history. &quot;George Washington: Farmer&quot; was first published in 1915. This date represents the original publication year of Haworth's historical study, not the period of Washington's life it describes (Washington lived 1732-1799). The work is a scholarly examination written in the early 20th century about Washington's 18th-century agricultural pursuits.
+</notae>
+  </liber>
   <liber numerus="11075" status="enriched">
     <titulus>Der Mann im Nebel</titulus>
     <auctor>Gustav Falke</auctor>
@@ -1542,6 +2510,48 @@ suggests this is a later digitization of the original work.
     </tags>
     <summarium>'Der Mann im Nebel' (The Man in the Fog) is a novel by Gustav Falke, a Hamburg-based German writer known for his lyrical prose and poetry depicting Northern German life. Published in 1916, the year of Falke's death, this appears to be one of his final works. The novel is dedicated to his friends Karl Ernst Knodt and Frau Käthe, and begins with an epistolary format, opening with a letter addressed to 'Liebster Doktor' (Dearest Doctor). Falke was particularly celebrated for his vivid portrayals of Hamburg's atmosphere and his ability to capture the mood and character of Northern Germany in the late 19th and early 20th centuries.</summarium>
     <notae>The publication year of 1916 is clearly stated in the text itself ('Hamburg 1916'). This coincides with the year of Gustav Falke's death (1853-1916), making this one of his final published works. The epistolary opening and dedication suggest a personal, intimate narrative style characteristic of Falke's later prose works.</notae>
+  </liber>
+  <liber numerus="11878" status="enriched">
+    <titulus>Three Plays: The Fiddler's House, The Land, Thomas Muskerry</titulus>
+    <auctor>Padraic Colum</auctor>
+    <annus>1916</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>drama</tag>
+      <tag>irish-literature</tag>
+    </tags>
+    <summarium>A collection of three Irish plays by Padraic Colum, a leading figure in the Irish Literary Revival and the Irish National Theatre movement. Written for the National Theatre Society in the early 1900s, these plays explore Irish rural life, family dynamics, and social conflicts. &quot;The Land&quot; celebrates the Land Act of 1903 which transferred Irish land from landlords to peasants, while also examining emigration to America. &quot;The Fiddler's House&quot; explores the conflict between individual aspirations and family obligations. These plays were written for a small stage and an audience deeply invested in expressions of Irish national character during a pivotal period of Irish cultural and political awakening.
+</summarium>
+    <notae>The plays were written in the early 1900s (circa 1903-1910) for the Irish National Theatre Society, but this collected edition was published in 1916. Colum was a contemporary of W.B. Yeats and Lady Gregory in the Irish theatre movement. The year 1916 represents this specific published collection with its Author's Note, rather than the individual composition dates of the plays.
+</notae>
+  </liber>
+  <liber numerus="1183" status="enriched">
+    <titulus>The Return of Dr. Fu-Manchu</titulus>
+    <auctor>Sax Rohmer</auctor>
+    <annus>1916</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>mystery</tag>
+      <tag>thriller</tag>
+    </tags>
+    <summarium>'The Return of Dr. Fu-Manchu' is the second novel in Sax Rohmer's Dr. Fu-Manchu series, featuring the sinister Chinese criminal mastermind Dr. Fu-Manchu and his ongoing conflict with the British protagonists Dr. Petrie and Commissioner Nayland Smith. The series popularized the 'Yellow Peril' thriller genre in early 20th century literature, depicting exotic Oriental villainy against Western heroes. While the books were enormously popular in their time, they are now recognized as products of their era's problematic racial stereotypes and Orientalist attitudes. The series follows the ongoing attempts of the protagonists to thwart Fu-Manchu's elaborate criminal schemes and world domination plans.
+</summarium>
+    <notae>The novel was originally serialized in Collier's magazine in 1916 before book publication. This is the second book in what would become a long-running series. The first book, 'The Mystery of Dr. Fu-Manchu' (also known as 'The Insidious Dr. Fu-Manchu'), was published in 1913. While hugely influential on the thriller and mystery genres, these works reflect the racial prejudices and anxieties of the early 20th century British Empire period.
+</notae>
+  </liber>
+  <liber numerus="12269" status="enriched">
+    <titulus>Wee Macgreegor Enlists</titulus>
+    <auctor>J. J. Bell</auctor>
+    <annus>1916</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>'Wee Macgreegor Enlists' is a novel by Scottish author J.J. Bell, part of his popular series about the character Wee Macgreegor (MacGregor), a Glasgow boy whose adventures were told in Scottish dialect. This installment, published during World War I, follows MacGregor as he enlists in the military. The book captures the home front experience and the transition from civilian to military life during the Great War, written with Bell's characteristic humor and warmth. The series was extremely popular in Scotland and gave readers a glimpse into working-class Glasgow life through dialect fiction. The chapter titles suggest a romantic subplot alongside the military storyline.
+</summarium>
+    <notae>1916 is the clear publication year for this edition. J.J. Bell's Wee Macgreegor series began earlier (the first book was published in 1902), but this specific war-time installment was published in 1916 during World War I, making it both a work of fiction and a period piece reflecting contemporary events.
+</notae>
   </liber>
   <liber numerus="11960" status="enriched">
     <titulus>The Desire of the Moth and The Come On</titulus>
@@ -1585,6 +2595,22 @@ suggests this is a later digitization of the original work.
     <notae>First published in 1917, though it was serialized in People's Magazine beginning in 1914. I've used the 1917 book publication date as it represents the complete work. This was the first of several Jimmie Dale novels by Packard, establishing a popular series in the early 20th century.
 </notae>
   </liber>
+  <liber numerus="11428" status="enriched">
+    <titulus>Punch, or The London Charivari, Vol. 153, November 14, 1917</titulus>
+    <auctor>Various</auctor>
+    <annus>1917</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>periodical</tag>
+      <tag>satire</tag>
+      <tag>humor</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>Punch was Britain's most famous and long-running humor and satire magazine, published from 1841 to 1992. This issue from November 14, 1917, comes from the final year of World War I and contains typical Punch content: satirical commentary on current events, humorous observations about British society and politics, jokes about wartime conditions, and witty social commentary. The &quot;Charivaria&quot; section shown here features brief humorous observations about the Foreign Office, spy cases, street crime, and wartime bread rationing. Punch was influential in British culture and known for coining terms like &quot;cartoon&quot; in its modern sense.
+</summarium>
+    <notae>Year chosen is 1917, the actual publication date of this specific issue. While Punch magazine began in 1841, this is a single dated issue from WWI-era Britain. The content includes wartime references such as spies, rationing, and Sir Arthur Yapp (a prominent wartime administrator). Not appropriate for children due to some of the humor being contextual to adult topics of the era.
+</notae>
+  </liber>
   <liber numerus="10247" status="enriched">
     <titulus>Dixieland</titulus>
     <auctor>Lopez and Hamilton's Kings of Harmony</auctor>
@@ -1597,6 +2623,33 @@ suggests this is a later digitization of the original work.
     <summarium>This is an audio recording of the jazz/ragtime standard &quot;Dixieland&quot; (also known as &quot;Original Dixieland One-Step&quot;) performed by Lopez and Hamilton's Kings of Harmony. The recording comes from the Edison National Historic Site archives and represents early 20th century American popular music. The Original Dixieland Jass Band first recorded &quot;Dixieland Jass Band One-Step&quot; in 1917, which became one of the first jazz recordings ever made and a landmark in American music history. This Project Gutenberg entry preserves this historical audio recording in MP3 format.
 </summarium>
     <notae>I've chosen 1917 as the year because that's when &quot;Dixieland&quot; (the Original Dixieland One-Step) was first recorded and became a foundational work in jazz history. While this specific performance by Lopez and Hamilton's Kings of Harmony may have been recorded slightly later (Edison made many recordings in the late 1910s-1920s), the work itself dates to 1917. For a historical timeline focused on when works entered cultural consciousness, 1917 is the most educationally appropriate date as it marks the birth of recorded jazz. If more specific recording date information for this particular Lopez and Hamilton performance were available, that could refine this estimate to perhaps 1917-1920.
+</notae>
+  </liber>
+  <liber numerus="11037" status="enriched">
+    <titulus>La veille d'armes</titulus>
+    <auctor>Claude Farrère, Lucien Népoty</auctor>
+    <annus>1917</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>drama</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>'La veille d'armes' (The Eve of Battle) is a five-act play by French authors Claude Farrère and Lucien Népoty. The play was first performed at the Théâtre du Gymnase on January 5, 1917, during World War I. Claude Farrère (1876-1957) was a French naval officer and writer who won the Prix Goncourt in 1905 and was elected to the Académie française. Lucien Népoty (1885-1918) was a French playwright and poet who died in combat during WWI. The play's title suggests themes related to war and the anticipation before battle, which would have resonated strongly with French audiences during the Great War. As a theatrical work from this period, it likely reflects the concerns, anxieties, and patriotic sentiments of wartime France.
+</summarium>
+    <notae>The year 1917 represents the first performance date at the Théâtre du Gymnase, which is the most historically significant date for this theatrical work. This is a collaborative work between two authors, written and performed during World War I.
+</notae>
+  </liber>
+  <liber numerus="10438" status="enriched">
+    <titulus>Up the Hill and Over</titulus>
+    <auctor>Isabel Ecclestone Mackay</auctor>
+    <annus>1917</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>A novel by Canadian author Isabel Ecclestone Mackay (1875-1928), who was a popular poet and novelist in the early 20th century. The book appears to be a pastoral narrative, suggested by the opening scene of a traveler on a country road encountering a small boy near a swimming pool. The dedication to the author's mother and the cheerful tone suggest this may be a wholesome story of rural life or a journey narrative. Mackay was known for her accessible, optimistic writing style that often celebrated nature and simple pleasures.
+</summarium>
+    <notae>Isabel Ecclestone Mackay was a prominent Canadian literary figure who wrote both poetry and prose. This novel appears to have been published during World War I, though its pastoral setting suggests an escape from contemporary troubles. The year 1917 is based on publication records for this work, though exact dating can vary between Canadian and American editions.
 </notae>
   </liber>
   <liber numerus="11324" status="enriched">
@@ -1613,6 +2666,34 @@ suggests this is a later digitization of the original work.
     <notae>The year 1917 is straightforward as it appears in the text itself and matches historical records for the first publication of this novel. Stella Benson (1892-1933) was an English modernist writer who is somewhat forgotten today but was respected in her time for her innovative prose style and social commentary.
 </notae>
   </liber>
+  <liber numerus="10984" status="enriched">
+    <titulus>Growth of the Soil</titulus>
+    <auctor>Knut Hamsun</auctor>
+    <annus>1917</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;Growth of the Soil&quot; (Markens Grøde) is Knut Hamsun's epic novel about pioneer life in rural Norway. The story follows Isak, a solitary man who settles in the wilderness and through immense labor transforms uncultivated land into a productive farm. The novel traces his life as he builds a home, cultivates the soil, and eventually raises a family in the harsh but beautiful landscape. Hamsun won the Nobel Prize in Literature in 1920, and this novel is considered one of his greatest achievements. It celebrates the relationship between man and nature, the dignity of agricultural labor, and the primal connection between human beings and the earth. The work is notable for its lyrical prose and deep reverence for the land and those who work it.
+</summarium>
+    <notae>The original Norwegian publication was in 1917. The English translation by W.W. Worster also appeared in 1917 or shortly thereafter. This date represents the original composition and publication of the work.
+</notae>
+  </liber>
+  <liber numerus="11311" status="enriched">
+    <titulus>The Masters of the Peaks: A Story of the Great North Woods</titulus>
+    <auctor>Joseph A. Altsheler</auctor>
+    <annus>1918</annus>
+    <tags>
+      <tag>fiction</tag>
+      <tag>historical-fiction</tag>
+      <tag>appropriate-for-children</tag>
+      <tag>adventure</tag>
+    </tags>
+    <summarium>The Masters of the Peaks is the fourth volume in Joseph A. Altsheler's French and Indian War Series, following the adventures of Robert Lennox (a youth of mysterious origins), Tayoga (a young Onondaga warrior), and David Willet (a hunter) during the French and Indian War. Altsheler was a prolific American author of historical adventure novels for young readers in the early 20th century. This series dramatizes the conflict between British and French forces in colonial North America (1754-1763), incorporating both historical events and fictional characters. The novels are known for their fast-paced action, wilderness settings in the Great North Woods, and portrayal of Native American allies on both sides of the conflict.
+</summarium>
+    <notae>The publication year 1918 is straightforward as this is an original work of early 20th century historical fiction, not a republication or translation of an older text. Altsheler wrote these adventure novels specifically for young American readers during the World War I era, romanticizing America's colonial past.
+</notae>
+  </liber>
   <liber numerus="11200" status="enriched">
     <titulus>The World War and What Was Behind It, or The Story of the Map of Europe</titulus>
     <auctor>L. P. Bénézet</auctor>
@@ -1625,6 +2706,34 @@ suggests this is a later digitization of the original work.
     <summarium>A contemporary analysis of the causes and origins of World War I (referred to as 'the great European war'), written by an American school superintendent for general audiences including children and adults. The book emerged from a series of public lectures given in fall 1914 explaining the complex political, ethnic, and territorial conflicts that made the war 'inevitable.' It aims to explain European conditions—particularly the ethnic tensions and nationalistic movements absent in America's melting pot—through simple language, maps, and charts. The work provides historical context about the 'remarkable sequence of events' leading to WWI and claims to reveal facts not previously published in histories up to that time.
 </summarium>
     <notae>The book was clearly written shortly after WWI began (autumn 1914 lectures mentioned), likely published between 1916-1918. Project Gutenberg lists this as ebook #11200. The year 1918 represents the likely publication date based on the context of describing ongoing or very recent events while the war was still being fought or just concluded. This is an educational work designed to be accessible to upper elementary students while remaining useful for adults.
+</notae>
+  </liber>
+  <liber numerus="10159" status="enriched">
+    <titulus>England and the War</titulus>
+    <auctor>Walter Raleigh</auctor>
+    <annus>1918</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>A collection of wartime addresses by Walter Raleigh (1861-1922), the Oxford \
+Professor of English Literature, delivered during World War I. The work \
+contains six pieces written between 1914 and 1918, including 'Might is Right,' \
+'The War of Ideas,' 'The Faith of England,' 'Some Gains of the War,' 'The War \
+and the Press,' and 'Shakespeare and England' (his British Academy Shakespeare \
+Lecture). These addresses represent intellectual and cultural commentary on \
+Britain's role and ideals during the Great War, exploring themes of national \
+character, patriotism, and England's cultural heritage in wartime. Raleigh was \
+a prominent literary scholar and critic, knighted in 1911, who served on \
+various wartime committees and later became the official historian of the Royal \
+Air Force before his death in 1922.
+</summarium>
+    <notae>The year 1918 is unambiguous as it appears on the title page and represents \
+when these previously delivered addresses were first collected into book form. \
+The individual addresses span 1914-1918, making this a primary historical \
+document from World War I. Not tagged as 'catholic' as Walter Raleigh was \
+Anglican/Protestant, not Catholic.
 </notae>
   </liber>
   <liber numerus="11670" status="enriched">
@@ -1655,6 +2764,33 @@ suggests this is a later digitization of the original work.
     <summarium>This groundbreaking work by Carter G. Woodson, known as the 'Father of Black History,' documents the largely unknown history of educational efforts among enslaved and free Black Americans before the Civil War. Woodson discovered that the struggle for education among Black Americans during slavery was more extensive and heroic than previously documented. The book examines how both Black and white benevolent teachers worked to educate African Americans under the most adverse circumstances, including legal prohibitions in many states. This scholarly work filled a significant gap in historical literature, as previous works had only touched on specific localities or aspects of this history. The preface indicates this was meant to be part of a larger project on Negro education but became focused on the ante-bellum period due to the compelling nature of the source material.</summarium>
     <notae>The year 1919 is the publication date as stated in the text. This work represents early 20th-century historical scholarship on African American education and was published during a period when Woodson was establishing the field of Black history as a legitimate academic discipline. The work is not classified as 'appropriate-for-children' due to its scholarly nature and difficult subject matter, nor as 'catholic' as it is a secular historical work.</notae>
   </liber>
+  <liber numerus="12350" status="enriched">
+    <titulus>The International Jewish Cook Book</titulus>
+    <auctor>Florence Kreisler Greenbaum</auctor>
+    <annus>1919</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>The International Jewish Cook Book is a comprehensive kosher cookbook containing 1600 recipes according to Jewish dietary laws (kashrut), including rules for kashering. It represents the culinary traditions of Jewish communities across multiple countries including America, Austria, Germany, Russia, France, Poland, and Romania. The book was positioned as the successor to the popular &quot;Aunt Babette Cook Book&quot; and was compiled by Florence Kreisler Greenbaum, an instructor in cooking and domestic science who specialized in Jewish dietary laws. As a household efficiency expert and graduate of Hunter College, Greenbaum brought scientific knowledge of food chemistry and diet to traditional Jewish cooking. The book served as both a practical cooking guide and a preservation of international Jewish culinary heritage during the early 20th century.
+</summarium>
+    <notae>The year 1919 is clearly indicated as the publication date of the second edition shown in this text. This was published in the aftermath of World War I, during a period of significant Jewish immigration to America, making such a comprehensive international Jewish cookbook particularly relevant for preserving and sharing culinary traditions across diaspora communities.
+</notae>
+  </liber>
+  <liber numerus="11765" status="enriched">
+    <titulus>Between You and Me</titulus>
+    <auctor>Sir Harry Lauder</auctor>
+    <annus>1919</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>'Between You and Me' is a collection of writings by Sir Harry Lauder, the beloved Scottish entertainer and music hall performer, published during World War I. The book is dedicated to the fathers and mothers of soldiers who served or prepared to serve in the Great War. Lauder, whose only son Captain John Lauder was killed in action in 1916, became a passionate advocate for the war effort and toured extensively to support troops and raise morale. This work captures his reflections and sentiments during this tumultuous period, blending his characteristic warmth and humor with the gravity of wartime experience. The included poem &quot;One of the Boys Who Went&quot; reflects the pride and sacrifice of WWI service members.
+</summarium>
+    <notae>The year 1919 represents the actual publication date of this specific work by The James A. McCann Company in New York. This was published in the immediate aftermath of World War I (which ended November 11, 1918), making it a contemporaneous wartime/post-war reflection rather than a historical retrospective.
+</notae>
+  </liber>
   <liber numerus="10057" status="enriched">
     <titulus>The Secret of the Tower</titulus>
     <auctor>Anthony Hope</auctor>
@@ -1668,6 +2804,21 @@ suggests this is a later digitization of the original work.
     <summarium>'The Secret of the Tower' is a mystery/adventure novel by Anthony Hope (Sir Anthony Hope Hawkins), published in 1919. Hope is best known for his Ruritanian romances 'The Prisoner of Zenda' (1894) and 'Rupert of Hentzau' (1898). This later work appears to be a post-World War I mystery involving characters including Doctor Mary (suggesting a female physician, which was progressive for the era), a General, Captain Alec, and Mr. Saffron, centered around some secret associated with a tower. The chapter titles suggest intrigue, secrets, and possibly themes related to the aftermath of WWI, including references to Morocco and military characters, reflecting the geopolitical concerns of the immediate post-war period.
 </summarium>
     <notae>Year chosen is 1919, the original publication date clearly stated in the text itself. This is a straightforward case with no ambiguity about editions or translations. The work reflects the immediate post-WWI period in British literature, a time of significant social change including greater roles for women (note 'Doctor Mary' as a character).
+</notae>
+  </liber>
+  <liber numerus="1166" status="enriched">
+    <titulus>The Second Book of Modern Verse</titulus>
+    <auctor>Jessie B. Rittenhouse (Editor)</auctor>
+    <annus>1919</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>poetry</tag>
+      <tag>anthology</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>&quot;The Second Book of Modern Verse&quot; is an anthology of modern poetry edited by Jessie Belle Rittenhouse (1869-1948), an American poet, critic, and anthologist. This is a sequel to her earlier anthology &quot;The Little Book of Modern Verse&quot; (1913), which was highly successful. Rittenhouse was known for her role in promoting modern American poetry in the early 20th century and served as the first secretary of the Poetry Society of America. This collection features contemporary poets of the early 20th century, showcasing the evolution of American and British verse during the modernist period. The anthology helped introduce readers to the &quot;new poetry&quot; movement and includes works that represented a departure from Victorian conventions toward more contemporary forms and themes.
+</summarium>
+    <notae>&quot;The Second Book of Modern Verse&quot; was first published in 1919 by Houghton Mifflin Company. This was Rittenhouse's follow-up to her enormously popular 1913 anthology &quot;The Little Book of Modern Verse.&quot; The 1919 date represents the original publication year of this specific anthology, which captured the state of modern poetry following World War I. As an anthology, this work compiles poems by various authors rather than being authored by Rittenhouse herself, though her editorial selection and arrangement represent significant curatorial work in shaping American poetry taste during this period.
 </notae>
   </liber>
   <liber numerus="10584" status="enriched">
@@ -1697,6 +2848,19 @@ suggests this is a later digitization of the original work.
     <summarium>A firsthand military account by Colonel John Ward, C.B., C.M.G., M.P., of the British military expedition to Siberia during the Russian Civil War (1918-1920). Ward commanded battalions of the Middlesex Regiment (the 'Die-Hards') during the Allied intervention in Siberia following the Russian Revolution. The work documents military operations, political complexities, and the chaotic situation in Russia during this period. Originally written as a personal narrative for his sons in case he did not return, it provides valuable primary source material on the Allied intervention in Russia and the tumultuous post-WWI period in Siberia.
 </summarium>
     <notae>The year 1920 is the publication year stated in the text itself. This is a contemporary account written shortly after the events described (the Siberian intervention of 1918-1920), making it a valuable primary historical source rather than a later historical analysis. The author explicitly notes in his forward that he wrote of events as they occurred and recorded motivations in real-time, which gives the work its documentary value despite what he acknowledges as limitations in historical perspective.
+</notae>
+  </liber>
+  <liber numerus="1040" status="enriched">
+    <titulus>The Three Taverns: A Book of Poems</titulus>
+    <auctor>Edwin Arlington Robinson</auctor>
+    <annus>1920</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>poetry</tag>
+    </tags>
+    <summarium>'The Three Taverns' is a collection of poems by Edwin Arlington Robinson, one of America's most distinguished early 20th-century poets. Robinson was known for his psychological depth, narrative skill, and exploration of New England characters and themes. This collection includes various poems dealing with historical, biblical, and contemporary subjects, including the title poem 'The Three Taverns' (referring to the biblical location where Paul met fellow Christians on his way to Rome), 'The Wandering Jew', and 'John Brown'. Robinson's work is characterized by its formal mastery, psychological insight, and often dark or ironic tone. He would go on to win three Pulitzer Prizes for Poetry (1922, 1925, 1928), though not for this particular volume.
+</summarium>
+    <notae>'The Three Taverns' was first published in 1920 by Macmillan. Robinson (1869-1935) was born in Maine and is considered a transitional figure between 19th-century romanticism and 20th-century modernism. The work is dedicated to Thomas Sergeant Perry (a scholar and critic) and his wife Lilla Cabot Perry (an accomplished painter and poet).
 </notae>
   </liber>
   <liber numerus="10042" status="enriched">
@@ -1788,6 +2952,36 @@ stories featuring recently discharged aviators having adventures.\
     <notae>The year 1922 is clearly indicated in the text itself and represents the original publication date of this collection. Zane Grey (1872-1939) was primarily known for his Western fiction novels, but he also wrote extensively about his real outdoor adventures. While Grey was not a Catholic author, these adventure tales are wholesome and appropriate for general audiences including children interested in nature and exploration.
 </notae>
   </liber>
+  <liber numerus="10266" status="enriched">
+    <titulus>The Glands Regulating Personality: A Study of the Glands of Internal Secretion in Relation to the Types of Human Nature</titulus>
+    <auctor>Louis Berman</auctor>
+    <annus>1922</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>science</tag>
+      <tag>psychology</tag>
+      <tag>endocrinology</tag>
+      <tag>medical</tag>
+    </tags>
+    <summarium>This is a pioneering work in popular endocrinology by Dr. Louis Berman, who was an associate in biological chemistry at Columbia University. The book explores the relationship between the endocrine glands (glands of internal secretion) and human personality types. Berman examines how various glands—including the thyroid, pituitary, adrenals, gonads, and thymus—influence both physical characteristics and mental/personality traits. The work represents an early 20th century attempt to create a biological typology of human nature based on glandular function. The book covers the discovery of these glands, their physiological effects, their influence on sex differences, personality types, and speculates on applications to human evolution. While influential in its time, many of its conclusions would be considered outdated by modern endocrinology and psychology standards.
+</summarium>
+    <notae>Year 1922 is taken from the title page, which is the original publication date. This work was part of the early popularization of endocrinology in the 1920s, when understanding of hormones and glands was still developing. The book reflects the scientific optimism and biological determinism common in that era.
+</notae>
+  </liber>
+  <liber numerus="12062" status="enriched">
+    <titulus>Lighted to Lighten: The Hope of India</titulus>
+    <auctor>Alice B. Van Doren</auctor>
+    <annus>1922</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+      <tag>christian-missionary</tag>
+    </tags>
+    <summarium>A study examining conditions among women in India during the early 20th century, written from a Christian missionary perspective. The book focuses on education and evangelization efforts among Indian women, particularly highlighting the contrast between Western-educated Christian women and traditional Hindu society. It emphasizes the role of missionary work and women's education as vehicles for social reform in India, reflecting the colonial-era missionary movement's attitudes toward indigenous religious practices and the perceived need for Christian conversion.
+</summarium>
+    <notae>The publication year of 1922 is clearly stated on the title page. This work represents the perspective of American Christian missionary organizations during the colonial period in India. The book was published by the Central Committee (likely a missionary organization) and reflects the era's missionary attitudes, including significant cultural bias against Hinduism and other Indian religious traditions. This is a historical document that provides insight into early 20th-century American missionary perspectives on India, though it should be read with awareness of its colonial-era viewpoint and religious prejudices.
+</notae>
+  </liber>
   <liber numerus="10969" status="enriched">
     <titulus>Ski-Running</titulus>
     <auctor>Katharine Furse</auctor>
@@ -1833,6 +3027,19 @@ literature in English.
     <summarium>This is an audio recording of the American folk song &quot;Down in a Georgia Jail&quot; performed by Posey Rorer, preserved at the Edison National Historic Site. Rorer was a country musician who recorded for Thomas Edison's record company in the 1920s. The song is a traditional folk ballad about imprisonment, typical of the rural Southern musical tradition of the era. This represents an early example of commercially recorded American folk music.
 </summarium>
     <notae>The exact recording date is uncertain, but Posey Rorer recorded for Edison Records primarily in the 1920s. The year chosen (1924) represents the approximate period of Edison cylinder and disc recordings of folk material. As an audio artifact rather than a written text, the &quot;publication&quot; date refers to the recording date rather than composition date of the folk song itself, which would be earlier and uncertain.
+</notae>
+  </liber>
+  <liber numerus="11485" status="enriched">
+    <titulus>Slave Narratives: A Folk History of Slavery in the United States from Interviews with Former Slaves, Volume VI, Kansas Narratives</titulus>
+    <auctor>Works Progress Administration Federal Writers' Project</auctor>
+    <annus>1941</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>historical-document</tag>
+    </tags>
+    <summarium>This volume is part of the Slave Narratives collection, a monumental historical project conducted by the Federal Writers' Project during the Great Depression (1936-1938). It contains first-person interviews with formerly enslaved people, preserving their oral histories and lived experiences of slavery in the United States. Volume VI specifically covers narratives from Kansas and includes interviews with Clayton Holbert, Bill Simms, and Belle Williams. These interviews represent invaluable primary source documents that provide direct testimony about the institution of slavery from those who experienced it, capturing details of daily life, family relationships, work conditions, and the transition to freedom. The collection was assembled by the Library of Congress and published in 1941.
+</summarium>
+    <notae>I chose 1941 as the year because that is when this compilation was officially published and assembled as a historical document by the Library of Congress. While the interviews were conducted between 1936-1938, the published work as a complete archival collection dates to 1941. This is a historical document that records oral histories, so the 1941 publication date marks its creation as a historical artifact rather than the events it describes (which occurred in the 19th century). The work is not marked as 'appropriate-for-children' as it contains frank descriptions of slavery that may be disturbing. It is not tagged as 'catholic' as it is a secular government historical documentation project, though individual informants may have had various religious backgrounds.
 </notae>
   </liber>
   <liber numerus="11815" status="enriched">
@@ -1944,5 +3151,18 @@ reading material.
     </tags>
     <summarium>This is an audio recording (MP3 format) of the traditional Christmas carol 'Away in a Manger' performed by Roger McGuinn and provided through his Folk Den project. The carol itself dates to the late 19th century, with music composed by James Murray in 1887 and the third verse written by John Thomas McFarland around 1904-1906. The first two verses are anonymous. McGuinn, best known as the founder of The Byrds, created the Folk Den as an online repository of traditional folk music performances.</summarium>
     <notae>I chose 2003 because this is specifically a copyrighted modern recording by Roger McGuinn, not a historical text. If you prefer to date this to the carol's composition (1887 for Murray's melody), that would also be defensible. The carol is Christian in nature but not specifically Catholic - it's a pan-Protestant/Christian carol.</notae>
+  </liber>
+  <liber numerus="12082" status="enriched">
+    <titulus>Color Images from Mars Rovers</titulus>
+    <auctor>Bob Webster</auctor>
+    <annus>2004</annus>
+    <tags>
+      <tag>non-fiction</tag>
+      <tag>appropriate-for-children</tag>
+    </tags>
+    <summarium>This is a collection of color photographs from the Mars rovers Spirit and Opportunity, compiled by Bob Webster from NASA/JPL raw image data. The work involves combining images taken with different colored filters by the Mars rovers to create color photographs of the Martian surface. This is a documentation project making NASA's Mars exploration imagery more accessible to the public by processing the raw black and white filtered images into composite color photographs.
+</summarium>
+    <notae>Year chosen is 2004, which is when this eBook was released to Project Gutenberg (April 19, 2004). This coincides with the active mission period of both Spirit and Opportunity rovers, which landed on Mars in January 2004. This is a contemporary compilation work rather than a historical text, so the publication year is the most appropriate date.
+</notae>
   </liber>
 </librarium>

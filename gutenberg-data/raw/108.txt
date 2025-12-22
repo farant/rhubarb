@@ -1,0 +1,15 @@
+<result>
+Title = "The Return of Sherlock Holmes"
+Author = "Sir Arthur Conan Doyle"
+Year = 1905
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+The Return of Sherlock Holmes is a collection of 13 short stories featuring Arthur Conan Doyle's famous detective. Published after Doyle had attempted to kill off Holmes at the Reichenbach Falls in "The Final Problem" (1893), this collection marks the detective's dramatic return to literature. The stories were originally published in The Strand Magazine between 1903-1904 before being collected in book form. The opening story, "The Adventure of the Empty House," explains Holmes's survival and three-year absence. These tales represent some of the most beloved Holmes mysteries, including "The Adventure of the Dancing Men" and "The Adventure of the Six Napoleons."
+"""
+
+Notes = """
+The stories were serialized 1903-1904, with the book collection published in 1905. I chose 1905 as it represents the complete work as a unified collection. Doyle was raised Catholic but left the faith as an adult, becoming interested in spiritualism, so this work does not receive a 'catholic' tag despite his background.
+"""
+</result>

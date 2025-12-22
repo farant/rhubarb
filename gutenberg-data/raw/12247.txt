@@ -1,0 +1,17 @@
+This is a program/brochure for an early aviation event in France - specifically the "Circuit de l'Est" aviation meeting in Amiens, August 15-17, 1910. This is a historical document from the pioneering days of aviation rather than a traditional literary work. Let me provide the structured output:
+
+<result>
+Title = "Programme Officiel: Circuit de l'Est - Amiens-Aviation"
+Author = "Various"
+Year = 1910
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an official program for the Circuit de l'Est aviation meeting held in Amiens, France on August 15-17, 1910. This represents an important moment in early aviation history, during the pioneering era when aviation exhibitions and races were major public spectacles. The document includes the official program details, advertisements from local businesses (such as a jeweler), and information about a contest where program purchasers could win a camera. Such events were crucial in demonstrating the capabilities of early aircraft and generating public enthusiasm for aviation. The Circuit de l'Est was part of a series of major aviation competitions in pre-WWI France.
+"""
+
+Notes = """
+Year chosen is 1910 as this is when the event took place and the document was published. This is a primary historical source document from the early days of aviation, just 7 years after the Wright Brothers' first flight. Not authored by a single person but rather an official program/brochure produced for the event.
+"""
+</result>

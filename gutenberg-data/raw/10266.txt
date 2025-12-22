@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the structured information in TOML format.
+
+Based on the title page and contents, this is clearly "The Glands Regulating Personality" by Louis Berman, M.D., published in 1922. This was a popular science book that explored the then-emerging field of endocrinology and its relationship to human personality and behavior. The work represents early 20th century attempts to understand human nature through biological science, specifically through the study of the endocrine system.
+
+<result>
+Title = "The Glands Regulating Personality: A Study of the Glands of Internal Secretion in Relation to the Types of Human Nature"
+Author = "Louis Berman"
+Year = 1922
+
+Tags = ["non-fiction", "science", "psychology", "endocrinology", "medical"]
+
+Summary = """
+This is a pioneering work in popular endocrinology by Dr. Louis Berman, who was an associate in biological chemistry at Columbia University. The book explores the relationship between the endocrine glands (glands of internal secretion) and human personality types. Berman examines how various glands—including the thyroid, pituitary, adrenals, gonads, and thymus—influence both physical characteristics and mental/personality traits. The work represents an early 20th century attempt to create a biological typology of human nature based on glandular function. The book covers the discovery of these glands, their physiological effects, their influence on sex differences, personality types, and speculates on applications to human evolution. While influential in its time, many of its conclusions would be considered outdated by modern endocrinology and psychology standards.
+"""
+
+Notes = """
+Year 1922 is taken from the title page, which is the original publication date. This work was part of the early popularization of endocrinology in the 1920s, when understanding of hormones and glands was still developing. The book reflects the scientific optimism and biological determinism common in that era.
+"""
+</result>

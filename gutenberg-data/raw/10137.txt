@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Mary Had a Little Lamb"
+Author = "Thomas A. Edison"
+Year = 1877
+
+Tags = ["historical-document", "appropriate-for-children", "non-fiction"]
+
+Summary = """
+This is a historic audio recording from Thomas Edison, representing one of the earliest sound recordings ever made. "Mary Had a Little Lamb" was famously the first words Edison recorded and played back on his phonograph invention in 1877. This Project Gutenberg item is an MP3 format preservation of that historic recording, made available through the Edison National Historic Site. The work is significant not as a literary work but as a technological and historical artifact demonstrating the birth of recorded sound.
+"""
+
+Notes = """
+The year 1877 is chosen because this represents when Edison first successfully recorded and played back sound using his phonograph, with "Mary Had a Little Lamb" being the test phrase he spoke. While this specific digital file was released to Project Gutenberg in 2003, the historically significant date is the original 1877 recording. This is primarily a historical/technological artifact rather than a literary work.
+"""
+</result>

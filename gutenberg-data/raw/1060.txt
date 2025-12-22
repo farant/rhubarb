@@ -1,0 +1,15 @@
+<result>
+Title = "Grass of Parnassus: Rhymes Old and New"
+Author = "Andrew Lang"
+Year = 1888
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"Grass of Parnassus: Rhymes Old and New" is a collection of poetry by Andrew Lang, the Scottish poet, novelist, literary critic, and anthropologist. Published in 1888 by Longmans, Green and Co., this volume contains a selection of Lang's verse both new and previously published. Lang was a prolific Victorian man of letters known for his work in folklore, mythology, and his popular "Coloured" Fairy Books series. His poetry reflects the aesthetic and literary sensibilities of the late Victorian period, often drawing on classical themes and romantic traditions. The title itself references Mount Parnassus, the legendary home of the Muses in Greek mythology, suggesting the poetic and literary aspirations of the collection.
+"""
+
+Notes = """
+The year 1888 is taken from the edition information provided in the transcription note ("Transcribed from the 1888 Longmans, Green and Co. edition"). This appears to be the original publication year of this collection.
+"""
+</result>

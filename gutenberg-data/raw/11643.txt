@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly "John Caldigate" by Anthony Trollope, as indicated by the title page. Let me provide the structured information:
+
+<result>
+Title = "John Caldigate"
+Author = "Anthony Trollope"
+Year = 1879
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'John Caldigate' is a novel by Anthony Trollope that follows the story of its titular character, a young English gentleman who travels to the Australian goldfields to make his fortune after falling into debt. The novel explores themes of redemption, marriage, and moral character as Caldigate returns to England, marries Hester Bolton, and then faces accusations of bigamy from a woman he knew in Australia. The story examines Victorian society's judgment, the legal system, and questions of truth and reputation. It's one of Trollope's later novels, featuring his characteristic exploration of social conventions, morality, and the complications of personal relationships within the constraints of Victorian England.
+"""
+
+Notes = """
+The novel was first published in 1879 (serialized 1878-1879). This is a straightforward single-author work without substantial commentary, so the original publication year is used. The work is considered appropriate for children by Victorian standards and lacks the mature content that would make it inappropriate for younger readers, though it deals with adult themes like marriage, legal proceedings, and moral questions in Trollope's typically restrained Victorian style.
+"""
+</result>

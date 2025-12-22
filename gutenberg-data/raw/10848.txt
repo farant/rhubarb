@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the text, this is clearly "Natalie; or, A Gem Among the Sea-Weeds" by Ferna Vale, published in 1859. This appears to be a 19th-century American sentimental novel with Christian themes, as evidenced by the preface's reference to "take up their Cross in meekness and humility."
+
+<result>
+Title = "Natalie; or, A Gem Among the Sea-Weeds"
+Author = "Ferna Vale"
+Year = 1859
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Natalie; or, A Gem Among the Sea-Weeds" is a mid-19th century American sentimental novel by Ferna Vale. Published in 1859, it exemplifies the domestic fiction popular during that era, focusing on moral and spiritual themes. The preface indicates the work has Christian undertones, encouraging readers to take up their cross with "meekness and humility" and find the path home to spiritual redemption. The novel is set against a coastal backdrop, as suggested by the chapter epigraph about "childhood's home" by the "wave-lashed shore." Like much sentimental fiction of the period, it likely follows its protagonist Natalie through moral trials and spiritual growth. Ferna Vale was a pseudonymous American author of the antebellum period who wrote primarily moralistic fiction for young readers and women.
+"""
+
+Notes = """
+The year 1859 is taken directly from the title page. This places the work in the final years before the American Civil War, during the height of sentimental domestic fiction's popularity in America. The dedication to "my darling Hattie" and the author's hope for "a purer gem" suggests the intimate, morally instructive tone characteristic of the genre.
+"""
+</result>

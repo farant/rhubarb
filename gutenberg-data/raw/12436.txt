@@ -1,0 +1,15 @@
+<result>
+Title = "The Night Horseman"
+Author = "Max Brand"
+Year = 1920
+
+Tags = ["fiction", "western"]
+
+Summary = """
+The Night Horseman is a Western novel by Max Brand (pseudonym of Frederick Faust), one of the most prolific and popular Western writers of the early 20th century. This novel is part of a trilogy featuring the character Dan Barry (along with "The Untamed" and "Trailin'"). The story follows the mysterious and enigmatic Dan Barry, a wild, almost supernatural figure who has an uncanny connection with his horse and a wolf. The novel explores themes of civilization versus wildness, human nature, and the mythic Western frontier. Max Brand's work was known for its romantic, larger-than-life characters and adventure-driven plots that helped define the Western genre in popular fiction.
+"""
+
+Notes = """
+The copyright date of 1920 is clearly stated in the text header. Max Brand was the most famous pen name of Frederick Schiller Faust (1892-1944), who wrote prolifically in multiple genres but is best remembered for his Westerns. While Faust himself was raised Catholic, his popular Western fiction was commercial genre work rather than explicitly Catholic literature, so the 'catholic' tag is not applied.
+"""
+</result>

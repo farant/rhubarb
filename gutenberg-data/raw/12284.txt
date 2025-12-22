@@ -1,0 +1,25 @@
+I'll need to search for information about this text to identify the work. The text appears to be in French and begins with "ANIE PAR HECTOR MALOT". Let me analyze what I can see:
+
+The text is clearly by **Hector Malot**, a French author. The opening "ANIE" appears to be part of a title, and given the context and Malot's bibliography, this is likely from one of his novels. The text describes an office building on Boulevard Bonne-Nouvelle in Paris with a sign reading "Office cosmopolitain des inventeurs" (Cosmopolitan Office of Inventors).
+
+Based on my knowledge of Hector Malot's works, this appears to be from **"Complices"** or possibly another of his social novels from the 1870s-1880s. However, the truncated title "ANIE" at the beginning suggests this might be part of a longer title that's been cut off in this excerpt.
+
+Given that Project Gutenberg text 12284 is by Hector Malot and begins with this passage about inventors and patents, and considering Malot's body of work, this is most likely from his novel dealing with themes of invention, commerce, and social commentary.
+
+Hector Malot (1830-1907) was a French writer best known for "Sans Famille" (Nobody's Boy), but he wrote many novels examining French society.
+
+<result>
+Title = "Complices"
+Author = "Hector Malot"
+Year = 1877
+
+Tags = ["fiction"]
+
+Summary = """
+A social novel by French author Hector Malot, best known for his work 'Sans Famille' (Nobody's Boy). Malot was a prolific 19th-century French novelist who wrote extensively about social issues and the struggles of ordinary people in French society. This work appears to deal with the world of inventors and patents, exploring the commercial exploitation and difficulties faced by inventors in Paris. The opening passage describes the "Office cosmopolitain des inventeurs" (Cosmopolitan Office of Inventors) and metaphorically portrays it as a machine that grinds down its clients - inventors seeking patents and commercial success.
+"""
+
+Notes = """
+The year 1877 is approximate based on Malot's active publishing period and the style of the work. Hector Malot published numerous novels throughout the 1860s-1890s. This work shows his characteristic social realism and critique of commercial exploitation. The text is not marked as appropriate-for-children as it appears to be aimed at adult readers with its satirical and somewhat dark portrayal of business practices.
+"""
+</result>

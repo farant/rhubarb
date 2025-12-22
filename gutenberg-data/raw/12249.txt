@@ -1,0 +1,15 @@
+<result>
+Title = "Bart Ridgeley; A Story of Northern Ohio"
+Author = "A. G. Riddle"
+Year = 1873
+
+Tags = ["fiction", "historical-fiction", "regional-literature"]
+
+Summary = """
+"Bart Ridgeley" is a regional novel by Albert Gallatin Riddle (A.G. Riddle), an Ohio lawyer, politician, and author. The work is set in Northern Ohio during the early settlement period and follows the story of its titular character, Bart Ridgeley. Riddle was known for writing historical fiction that drew upon his experiences and knowledge of Ohio's frontier era. The novel provides a glimpse into life in the Western Reserve region of Ohio during the 19th century, depicting the challenges, social dynamics, and development of the area. Riddle served in the U.S. House of Representatives and was involved in Ohio politics, giving him considerable insight into the region's history and character.
+"""
+
+Notes = """
+The year 1873 is clearly stated on the title page as the publication year. A.G. Riddle (Albert Gallatin Riddle, 1816-1902) was a contemporary author writing about relatively recent Ohio history from his own experience and memory of the region's development.
+"""
+</result>

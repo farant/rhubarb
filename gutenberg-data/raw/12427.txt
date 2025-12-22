@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Neutral Rights and Obligations in the Anglo-Boer War"
+Author = "Robert Granville Campbell"
+Year = 1908
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly work examining questions of international law and neutrality during the Anglo-Boer War (1899-1902). Originally prepared as part of graduate work at Johns Hopkins University's Political Science Seminary, the study analyzes how the United States and European powers fulfilled their neutral obligations during the conflict. The work focuses particularly on the evolution of Great Britain's recognition of the conflict's belligerent status and examines the divergence between English practice and Continental/American interpretations of international law regarding neutral commerce. It draws heavily on British Blue Books, U.S. Foreign Relations documents, and Congressional records.
+"""
+
+Notes = """
+Year chosen is the publication date clearly stated on the title page (1908). This appears to be a Johns Hopkins University dissertation or academic study published shortly after the Anglo-Boer War concluded (1902). The work represents early 20th-century American scholarship on international law and neutrality.
+"""
+</result>

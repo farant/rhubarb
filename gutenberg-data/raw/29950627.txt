@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This appears to be a collection of old English plays edited by A.H. Bullen, published between 1882-89. This is Volume II of a four-volume set. The collection includes previously unpublished plays including "Dick of Devonshire," "The Lady Mother," "The Tragedy of Sir John Van Olden Barnavelt," and "Captain Underwit."
+
+<result>
+Title = "A Collection of Old English Plays, Vol. II"
+Author = "A.H. Bullen (editor)"
+Year = 1882
+
+Tags = ["non-fiction", "anthology", "drama", "literary-criticism"]
+
+Summary = """
+This is the second volume of A.H. Bullen's four-volume collection of Old English plays, published between 1882-89. The volume contains four previously unpublished plays: 'Dick of Devonshire' (possibly by Heywood), 'The Lady Mother' (by Glapthorne), 'The Tragedy of Sir John Van Olden Barnavelt' (by Fletcher and Massinger), and 'Captain Underwit' (by Shirley). All plays were anonymous in manuscript form, but Bullen identifies their likely authors through scholarly analysis. The volume includes a preface explaining the editorial process and two appendices with additional scholarly notes. Bullen transcribed all texts by hand from original manuscripts, including material from the Egerton MS. 1,994.
+"""
+
+Notes = """
+The publication date range is 1882-89 for the complete four-volume set. Volume II specifically appears to have been published in 1882 based on the date shown. This is an important work of Victorian dramatic scholarship, making available Jacobean and Caroline plays that had remained in manuscript form for over two centuries.
+"""
+</result>

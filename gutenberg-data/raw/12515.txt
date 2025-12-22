@@ -1,0 +1,25 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly an anthology of letters, not a single authored work. The text shows:
+- Title: "Selected English Letters (XV-XIX Centuries)"
+- Editors: M. Duckitt & H. Wragg
+- Publication year: 1913
+- It's a collection of English letters spanning from the 15th to 19th centuries
+
+Since this is an editorial compilation from 1913, that's the appropriate year. The work is a historical anthology of correspondence intended for educational and literary appreciation.
+
+<result>
+Title = "Selected English Letters (XV-XIX Centuries)"
+Author = "M. Duckitt and H. Wragg (editors)"
+Year = 1913
+
+Tags = ["non-fiction", "historical-document", "anthology", "appropriate-for-children"]
+
+Summary = """
+An anthology of English letters spanning five centuries (15th-19th), compiled by M. Duckitt and H. Wragg. The collection presents a diverse range of correspondence including 'gay, grave, frivolous, homely, religious, sociable, refined, philosophic, and feminine' letters, intended to showcase both the development of epistolary art and provide 'the proper study of mankind' through personal correspondence. The editors selected letters to present complete portraits of writers and to illuminate features of different ages, manners, and points of view. The collection traces the evolution of letter-writing from early formalities through the grace of the Augustan age to the more individualistic and sincere expression of later periods.
+"""
+
+Notes = """
+1913 is the publication year of this anthology. Three letters in the collection were originally written in Latin. The editors modernized spelling and punctuation in some cases. This is an educational compilation rather than an original authored work.
+"""
+</result>

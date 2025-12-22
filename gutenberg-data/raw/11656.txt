@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the structured information you're looking for.
+
+This is clearly "The Great Shadow and Other Napoleonic Tales" by Arthur Conan Doyle. Let me provide you with the details in the TOML format you requested:
+
+<result>
+Title = "The Great Shadow and Other Napoleonic Tales"
+Author = "Arthur Conan Doyle"
+Year = 1892
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+The Great Shadow is a historical novel by Arthur Conan Doyle set during the Napoleonic Wars. The 'shadow' refers to the looming threat of Napoleon Bonaparte over Britain during the early 19th century. The main story follows a young Scottish boy's coming of age against the backdrop of the Napoleonic threat, culminating in the Battle of Waterloo. The book includes other Napoleonic tales featuring Conan Doyle's character Brigadier Gerard, a humorous French cavalry officer. Written during Conan Doyle's Sherlock Holmes era, it demonstrates his versatility as a writer and his interest in historical fiction. The work combines adventure, romance, and historical detail in an accessible narrative style suitable for younger readers while still engaging adults.
+"""
+
+Notes = """
+First published in 1892. While Conan Doyle was born into a Catholic family and educated at Stonyhenge preparatory school and Stonyhurst College (both Jesuit institutions), he later became agnostic, so I have not included the 'catholic' tag. The work itself is adventure fiction without particular religious content, though it reflects Victorian-era British values and patriotism. The Brigadier Gerard stories became some of Conan Doyle's personal favorites among his own works.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to extract the information you need.
+
+<result>
+Title = "Anthem"
+Author = "Ayn Rand"
+Year = 1938
+
+Tags = ["fiction", "dystopian", "philosophical"]
+
+Summary = """
+Anthem is a dystopian novella by Ayn Rand, first published in 1938. It tells the story of a future dark age where individuality has been eliminated and humanity lives in a collectivist society where the word "I" has been abolished. The protagonist, Equality 7-2521, rediscovers individualism and the concept of self. The novella explores Rand's philosophy of individualism versus collectivism and is considered a precursor to her later, more developed philosophical novels. It's a short but powerful work that presents her early ideas about the importance of individual achievement and the dangers of totalitarian collectivism.
+"""
+
+Notes = """
+Anthem was originally published in 1938 in England, and then in revised form in the United States in 1946. I've chosen 1938 as it represents the original publication date and the work's entry into literary history. The text notes that US copyright was not renewed, which is why it entered the public domain in the United States, though it remained under copyright in Canada at the time of this Gutenberg edition.
+"""
+</result>

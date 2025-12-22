@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Wee Macgreegor Enlists" by J.J. Bell, published in 1916. This was one of several books Bell wrote about the character "Wee Macgreegor" (a Glasgow boy), and this particular installment deals with the character enlisting during World War I. J.J. Bell was a Scottish author known for his humorous stories written in Glasgow dialect about working-class Scottish life.
+
+<result>
+Title = "Wee Macgreegor Enlists"
+Author = "J. J. Bell"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+'Wee Macgreegor Enlists' is a novel by Scottish author J.J. Bell, part of his popular series about the character Wee Macgreegor (MacGregor), a Glasgow boy whose adventures were told in Scottish dialect. This installment, published during World War I, follows MacGregor as he enlists in the military. The book captures the home front experience and the transition from civilian to military life during the Great War, written with Bell's characteristic humor and warmth. The series was extremely popular in Scotland and gave readers a glimpse into working-class Glasgow life through dialect fiction. The chapter titles suggest a romantic subplot alongside the military storyline.
+"""
+
+Notes = """
+1916 is the clear publication year for this edition. J.J. Bell's Wee Macgreegor series began earlier (the first book was published in 1902), but this specific war-time installment was published in 1916 during World War I, making it both a work of fiction and a period piece reflecting contemporary events.
+"""
+</result>

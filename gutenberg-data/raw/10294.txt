@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the title, author, and publication details.
+
+Looking at the text, I can see this is clearly a reading instruction textbook from 1893. The title page states "VERSE AND PROSE FOR BEGINNERS IN READING" and it's "SELECTED FROM ENGLISH AND AMERICAN LITERATURE" with the date 1893. The preface mentions it's designed as a companion to the "Riverside Primer and Reader."
+
+This appears to be an anthology/reader compiled for educational purposes rather than a work by a single author. It's part of the Riverside Literature Series, which was a popular educational series published by Houghton Mifflin in the late 19th century.
+
+<result>
+Title = "Verse and Prose for Beginners in Reading"
+Author = "Various"
+Year = 1893
+
+Tags = ["non-fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+This is an educational anthology designed as a companion volume to the Riverside Primer and Reader. Published in 1893, it contains selections of verse and prose from English and American literature specifically chosen for beginning readers. The book consists primarily of poetry (nine-tenths of the content) with the remainder being proverbs and familiar sayings. It was intended to bridge the gap between basic reading instruction and the world of English literature, serving as an early reader for students who had mastered their primer. The work is part of the Riverside Literature Series, a prominent educational publishing initiative of the late 19th century.
+"""
+
+Notes = """
+The year 1893 is taken directly from the title page. This is an anthology compiled for educational purposes, so "Various" is appropriate for the author field as it contains selections from multiple English and American authors. The work represents the pedagogical approach to reading instruction common in American schools during the late 19th century.
+"""
+</result>

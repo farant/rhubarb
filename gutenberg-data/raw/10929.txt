@@ -1,0 +1,17 @@
+I can help you identify this work and provide the structured information you're looking for.
+
+<result>
+Title = "The Dog Crusoe and His Master"
+Author = "Robert Michael Ballantyne"
+Year = 1861
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+"The Dog Crusoe and His Master" is an adventure novel by Scottish author R.M. Ballantyne, set in the Western Prairies of North America. The story follows a young frontiersman and his faithful dog Crusoe through various adventures in the American wilderness. Ballantyne was known for his juvenile adventure fiction, and this work exemplifies his style of exciting, morally upright tales suitable for young readers. The novel combines themes of friendship, loyalty, courage, and survival in the untamed frontier, typical of Ballantyne's works which often drew on real settings and experiences to create engaging stories for Victorian youth.
+"""
+
+Notes = """
+The original publication date was 1861. The 1894 date shown in this Gutenberg text appears to be a later edition. Ballantyne wrote this novel based on his own experiences and observations of frontier life, though he took considerable literary license. While Ballantyne himself was Presbyterian (Scottish), this particular work is straightforward adventure fiction without specifically Catholic content, so it does not receive the 'catholic' tag despite being morally instructive and appropriate for children.
+"""
+</result>

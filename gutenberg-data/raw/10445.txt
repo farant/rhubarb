@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the content, this is clearly "American Big Game in Its Haunts" edited by George Bird Grinnell, published by the Boone and Crockett Club in 1904. This is a collection of essays on big game hunting and conservation, featuring contributions from Theodore Roosevelt (founder of the Boone and Crockett Club) and other prominent hunters and naturalists of the era.
+
+<result>
+Title = "American Big Game in Its Haunts: The Book of the Boone and Crockett Club"
+Author = "George Bird Grinnell (editor)"
+Year = 1904
+
+Tags = ["non-fiction", "natural-history", "hunting", "conservation"]
+
+Summary = """
+This is a collection of essays published by the Boone and Crockett Club, an organization founded by Theodore Roosevelt in 1887 to promote conservation and ethical hunting practices. The book contains contributions from prominent hunters and naturalists of the early 20th century, including Roosevelt himself. Topics include wilderness preservation, the zoology of North American big game, detailed accounts of hunting expeditions in Alaska (particularly bear and moose hunting), and essays on specific species like the Kadiak bear and mountain sheep. The Boone and Crockett Club played a significant role in early American conservation efforts and the establishment of national parks and wildlife refuges.
+"""
+
+Notes = """
+The year 1904 is explicitly stated on the title page. George Bird Grinnell was a prominent naturalist, anthropologist, and conservationist who co-founded the Boone and Crockett Club with Theodore Roosevelt. This volume represents the intersection of late 19th/early 20th century hunting culture with the emerging conservation movement in America.
+"""
+</result>

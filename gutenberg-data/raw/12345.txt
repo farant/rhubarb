@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "Friday, the Thirteenth" by Thomas W. Lawson, published in 1907. This was a popular novel about Wall Street manipulation and stock market schemes. Thomas W. Lawson was an American stock promoter and author who wrote this as an exposé-style financial thriller.
+
+<result>
+Title = "Friday, the Thirteenth"
+Author = "Thomas W. Lawson"
+Year = 1907
+
+Tags = ["fiction", "financial-thriller", "non-fiction-adjacent"]
+
+Summary = """
+'Friday, the Thirteenth' is a novel by Thomas W. Lawson, an American stock promoter and author, that explores Wall Street manipulation and stock market schemes. Published in 1907 during the era of financial excess and market manipulation, the book is a semi-autobiographical financial thriller that exposed the practices of stock market operators and corporate raiders. Lawson himself was involved in various financial schemes and stock promotions, lending authenticity to his fictional portrayal of market manipulation. The novel was quite popular in its time and contributed to public discourse about financial reform and market regulation during the Progressive Era.
+"""
+
+Notes = """
+The copyright page shows both 1906 and 1907 dates, with publication listed as February 1907. I chose 1907 as the primary year since that's when it was formally published. The book was written during a period of significant financial turmoil leading up to the Panic of 1907, and Lawson's insider perspective on market manipulation made this work particularly relevant to contemporary readers concerned about financial corruption.
+"""
+</result>

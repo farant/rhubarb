@@ -1,0 +1,15 @@
+<result>
+Title = "A Selection from the Comedies of Marivaux"
+Author = "Pierre Carlet de Chamblain de Marivaux"
+Year = 1730
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+This is a selection of comedies by Pierre Carlet de Chamblain de Marivaux (1688-1763), one of the most important French playwrights of the 18th century. Marivaux wrote approximately 40 plays, primarily sophisticated romantic comedies known for their witty dialogue and psychological insight into love and social relationships. His works are characterized by what became known as "marivaudage" - a subtle, refined style of conversation and flirtation. His most famous plays include "Le Jeu de l'amour et du hasard" (The Game of Love and Chance) and "Les Fausses Confidences" (False Confidences). This edition was edited by Everett Ward Olmsted for educational purposes, containing both French text and English notes.
+"""
+
+Notes = """
+Marivaux wrote his comedies primarily between 1720-1740, with his most productive period in the 1730s. Since this is a selection of his works rather than a single play, I've chosen 1730 as a representative midpoint of his theatrical career when he was at his peak. This edition was published in 1901 by Macmillan for English-speaking students learning French, but the works themselves date to the early-to-mid 18th century.
+"""
+</result>

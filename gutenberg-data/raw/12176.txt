@@ -1,0 +1,23 @@
+I'll help you identify this text. Let me read through it to gather the key information.
+
+From what I can see, this appears to be "The Giant Scissors" based on the title page and chapter structure. The text shows it's a children's story about a girl named Joyce who is in France, feeling homesick. The narrative style and content suggest this is a work of children's fiction from the late 19th or early 20th century.
+
+Let me search my knowledge about this work to provide accurate publication information.
+
+Based on the text and my knowledge, this appears to be "The Giant Scissors" by Annie Fellows Johnston, published in 1898. Johnston was an American author known for her children's books, particularly "The Little Colonel" series. "The Giant Scissors" was one of her standalone works that told the story of an American girl's adventures in France.
+
+<result>
+Title = "The Giant Scissors"
+Author = "Annie Fellows Johnston"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Giant Scissors" is a children's novel by Annie Fellows Johnston about Joyce, a twelve-year-old American girl who travels to France with her Cousin Kate. Feeling homesick and like a prisoner in the walled garden of old Monsieur Gréville's house, Joyce struggles with her new life abroad, missing her family back in their small Western village. The story follows her adventures and experiences in France, including encounters with local characters like Jules, Christmas celebrations, and various discoveries. Johnston was a popular children's author of the late 19th and early 20th centuries, best known for "The Little Colonel" series.
+"""
+
+Notes = """
+1898 is the original publication year for this work. Annie Fellows Johnston was a Presbyterian author from Kentucky who wrote primarily wholesome children's fiction during the late Victorian and Edwardian periods.
+"""
+</result>

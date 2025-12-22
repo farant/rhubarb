@@ -1,0 +1,19 @@
+I recognize this as "Civil Government in the United States Considered with Some Reference to Its Origins" by John Fiske. This is a well-known civics textbook and political treatise from the late 19th century. The work includes the publication date of 1890 right in the text itself.
+
+John Fiske (1842-1901) was an American philosopher and historian, known for his work in evolutionary philosophy and American history. He was not Catholic - he was actually influenced by Herbert Spencer's evolutionary philosophy and was more of a philosophical naturalist/agnostic in his worldview.
+
+<result>
+Title = "Civil Government in the United States Considered with Some Reference to Its Origins"
+Author = "John Fiske"
+Year = 1890
+
+Tags = ["non-fiction", "education", "civics", "political-science"]
+
+Summary = """
+A comprehensive textbook on American civil government written by philosopher and historian John Fiske. The work examines the structure and origins of government in the United States, from local town and county governments through state and federal institutions. Fiske traces the historical development of American governmental institutions back to their Anglo-Saxon and colonial roots. The book was widely used as a civics textbook in the late 19th and early 20th centuries and represents an important contribution to American political education during the post-Civil War era. Fiske approaches the subject from a historical-evolutionary perspective, showing how American institutions developed organically from earlier forms of government.
+"""
+
+Notes = """
+The publication year of 1890 is clearly stated in the text itself. This work was published during the height of Fiske's career as a historian and was part of the late 19th century movement to create systematic civics education in American schools. The book is not tagged as 'catholic' as Fiske was not a Catholic author and his philosophical approach was influenced by evolutionary naturalism rather than Catholic thought.
+"""
+</result>

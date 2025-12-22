@@ -1,0 +1,15 @@
+<result>
+Title = "El Choclo Tango"
+Author = "Manuel Sarrablo"
+Year = 1913
+
+Tags = ["historical-document", "appropriate-for-children"]
+
+Summary = """
+'El Choclo' is one of the most famous and iconic Argentine tangos, composed by Ángel Villoldo in 1903 (though this recording credits Manuel Sarrablo as composer, which may be an error or arrangement credit). This particular recording is a historic audio document performed by the National Promenade Band under conductor Eugene A. Jaudas, recorded in New York City on December 29, 1913. The recording represents an early example of tango music being performed and recorded in the United States, capturing the international spread of the Argentine tango during the early 20th century. As an instrumental musical recording, it has no lyrical content and is purely the performance of this famous tango melody.
+"""
+
+Notes = """
+The year 1913 is chosen as it represents the actual recording date of this specific audio document. While 'El Choclo' was originally composed around 1903 by Ángel Villoldo (the authorship credit to Manuel Sarrablo in the Gutenberg text may be an error or refer to an arranger), this Gutenberg item is specifically the 1913 recording by the National Promenade Band, making 1913 the most historically accurate date for this particular artifact. This is an audio recording (MP3 format), not a text work.
+"""
+</result>

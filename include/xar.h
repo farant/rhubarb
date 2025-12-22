@@ -120,6 +120,16 @@ xar_obtinere(
 		constans Xar* xar,
 		         i32  index);
 
+/* Xar Obtinere Signatum - Obtinere cum indice signato
+ * "Pro iterationibus cum decrementis"
+ *
+ * Redde: Index ad elementum, vel NIHIL si invalidus vel negativus
+ */
+vacuum*
+xar_obtinere_s(
+		constans Xar* xar,
+		         s32  index);
+
 /* Xar Obtinere Vel Creare - Obtinere elementum vel creare si necessarium
  * "Obtinere elementum vel creare si necessarium"
  *

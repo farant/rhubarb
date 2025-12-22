@@ -1,0 +1,17 @@
+I'll analyze this text to identify the title, author, and other requested information.
+
+<result>
+Title = "Lighted to Lighten: The Hope of India"
+Author = "Alice B. Van Doren"
+Year = 1922
+
+Tags = ["non-fiction", "historical-document", "christian-missionary"]
+
+Summary = """
+A study examining conditions among women in India during the early 20th century, written from a Christian missionary perspective. The book focuses on education and evangelization efforts among Indian women, particularly highlighting the contrast between Western-educated Christian women and traditional Hindu society. It emphasizes the role of missionary work and women's education as vehicles for social reform in India, reflecting the colonial-era missionary movement's attitudes toward indigenous religious practices and the perceived need for Christian conversion.
+"""
+
+Notes = """
+The publication year of 1922 is clearly stated on the title page. This work represents the perspective of American Christian missionary organizations during the colonial period in India. The book was published by the Central Committee (likely a missionary organization) and reflects the era's missionary attitudes, including significant cultural bias against Hinduism and other Indian religious traditions. This is a historical document that provides insight into early 20th-century American missionary perspectives on India, though it should be read with awareness of its colonial-era viewpoint and religious prejudices.
+"""
+</result>

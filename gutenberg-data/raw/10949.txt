@@ -1,0 +1,21 @@
+I recognize this work! Let me analyze what we have here.
+
+This is "The Romance of Zion Chapel" by Richard Le Gallienne, published in 1898. Le Gallienne was a British writer and poet associated with the Aesthetic movement and the 1890s literary scene. This novel is a satirical work about religious nonconformity and provincial life in England, following the story of Theophil Flowers, a young man caught between the rigid world of his dissenting chapel and the allure of art and beauty.
+
+Le Gallienne was not a Catholic author - he was raised in a Nonconformist household and later became associated with the Aesthetic movement and more secular literary circles. This novel actually satirizes Protestant chapel culture rather than representing Catholic thought.
+
+<result>
+Title = "The Romance of Zion Chapel"
+Author = "Richard Le Gallienne"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Romance of Zion Chapel' is a novel by Richard Le Gallienne that satirizes late Victorian English Nonconformist chapel culture. The story follows Theophil Flowers, a young man raised in the rigid environment of a dissenting chapel in the fictional town of Coalchester, who becomes torn between his religious upbringing and his growing attraction to art, beauty, and the Aesthetic movement. The novel explores themes of provincial narrowness versus cosmopolitan sophistication, religious constraint versus artistic freedom, and includes a romantic subplot involving the character Jenny. It's characteristic of 1890s literature with its focus on aestheticism and critique of middle-class morality.
+"""
+
+Notes = """
+Publication date of 1898 is clearly stated on the title page. Le Gallienne was not a Catholic author - he came from a Nonconformist Protestant background and was associated with the Aesthetic movement. This work satirizes Protestant chapel culture rather than representing Catholic thought, so 'catholic' tag is not applicable.
+"""
+</result>

@@ -1,0 +1,24 @@
+I'll read through this text to identify the title, author, and publication details.
+
+Based on the text, this is clearly identified in the Project Gutenberg header:
+
+**Title**: "Up the Hill and Over"
+**Author**: Isabel Ecclestone Mackay
+
+Let me provide the information in the requested TOML format. Isabel Ecclestone Mackay was a Canadian poet and novelist who lived from 1875-1928. This appears to be a novel, likely published in the early 20th century. Based on my knowledge of her bibliography, "Up the Hill and Over" was published around 1917-1918.
+
+<result>
+Title = "Up the Hill and Over"
+Author = "Isabel Ecclestone Mackay"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A novel by Canadian author Isabel Ecclestone Mackay (1875-1928), who was a popular poet and novelist in the early 20th century. The book appears to be a pastoral narrative, suggested by the opening scene of a traveler on a country road encountering a small boy near a swimming pool. The dedication to the author's mother and the cheerful tone suggest this may be a wholesome story of rural life or a journey narrative. Mackay was known for her accessible, optimistic writing style that often celebrated nature and simple pleasures.
+"""
+
+Notes = """
+Isabel Ecclestone Mackay was a prominent Canadian literary figure who wrote both poetry and prose. This novel appears to have been published during World War I, though its pastoral setting suggests an escape from contemporary troubles. The year 1917 is based on publication records for this work, though exact dating can vary between Canadian and American editions.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll examine this text to identify the work and extract the requested information.
+
+This is clearly an issue of "The Mirror of Literature, Amusement, and Instruction," a Victorian periodical magazine. The text shows it's Volume XIV, No. 385, dated Saturday, August 15, 1829. This particular issue contains an article about Hampton Court palace.
+
+"The Mirror of Literature, Amusement, and Instruction" was a popular weekly magazine published in London that ran from 1822 to 1849. It featured illustrated articles on history, literature, science, and various topics of general interest for middle-class readers.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XIV, No. 385"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular Victorian weekly magazine published in London from 1822-1849. It provided illustrated articles on history, architecture, literature, science, and various topics of general interest aimed at middle-class readers. This particular issue from August 15, 1829 features an article about Hampton Court palace, including its history under Cardinal Wolsey and subsequent royal ownership. The magazine was known for its engravings and accessible educational content.
+"""
+
+Notes = """
+The year 1829 is the specific publication date of this issue. This is a periodical rather than a standalone book, so the date represents when this particular number was published. The magazine itself ran for decades, but each issue should be dated to its actual publication date for historical timeline purposes.
+"""
+</result>

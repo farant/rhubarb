@@ -1,0 +1,15 @@
+<result>
+Title = "The International Jewish Cook Book"
+Author = "Florence Kreisler Greenbaum"
+Year = 1919
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+The International Jewish Cook Book is a comprehensive kosher cookbook containing 1600 recipes according to Jewish dietary laws (kashrut), including rules for kashering. It represents the culinary traditions of Jewish communities across multiple countries including America, Austria, Germany, Russia, France, Poland, and Romania. The book was positioned as the successor to the popular "Aunt Babette Cook Book" and was compiled by Florence Kreisler Greenbaum, an instructor in cooking and domestic science who specialized in Jewish dietary laws. As a household efficiency expert and graduate of Hunter College, Greenbaum brought scientific knowledge of food chemistry and diet to traditional Jewish cooking. The book served as both a practical cooking guide and a preservation of international Jewish culinary heritage during the early 20th century.
+"""
+
+Notes = """
+The year 1919 is clearly indicated as the publication date of the second edition shown in this text. This was published in the aftermath of World War I, during a period of significant Jewish immigration to America, making such a comprehensive international Jewish cookbook particularly relevant for preserving and sharing culinary traditions across diaspora communities.
+"""
+</result>

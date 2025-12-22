@@ -1,0 +1,17 @@
+I recognize this as "The Three Taverns" by Edwin Arlington Robinson. Let me analyze this for you.
+
+<result>
+Title = "The Three Taverns: A Book of Poems"
+Author = "Edwin Arlington Robinson"
+Year = 1920
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+'The Three Taverns' is a collection of poems by Edwin Arlington Robinson, one of America's most distinguished early 20th-century poets. Robinson was known for his psychological depth, narrative skill, and exploration of New England characters and themes. This collection includes various poems dealing with historical, biblical, and contemporary subjects, including the title poem 'The Three Taverns' (referring to the biblical location where Paul met fellow Christians on his way to Rome), 'The Wandering Jew', and 'John Brown'. Robinson's work is characterized by its formal mastery, psychological insight, and often dark or ironic tone. He would go on to win three Pulitzer Prizes for Poetry (1922, 1925, 1928), though not for this particular volume.
+"""
+
+Notes = """
+'The Three Taverns' was first published in 1920 by Macmillan. Robinson (1869-1935) was born in Maine and is considered a transitional figure between 19th-century romanticism and 20th-century modernism. The work is dedicated to Thomas Sergeant Perry (a scholar and critic) and his wife Lilla Cabot Perry (an accomplished painter and poet).
+"""
+</result>

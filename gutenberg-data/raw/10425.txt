@@ -1,0 +1,19 @@
+I'll read through this text to identify the work, author, and relevant details.
+
+This is clearly Johann Wolfgang von Goethe's play "Torquato Tasso," which is a verse drama about the Italian Renaissance poet Torquato Tasso. The text is in German, as noted in the Project Gutenberg header.
+
+<result>
+Title = "Torquato Tasso: Ein Schauspiel"
+Author = "Johann Wolfgang von Goethe"
+Year = 1790
+
+Tags = ["fiction", "drama", "poetry"]
+
+Summary = """
+Torquato Tasso is a verse drama by Johann Wolfgang von Goethe that explores the life of the Italian Renaissance poet Torquato Tasso at the court of Ferrara. The play examines themes of artistic genius, social constraints, patronage, and the conflict between the idealistic poet and the pragmatic courtier Antonio. Set at Belriguardo, a pleasure palace of Duke Alphonso II d'Este, the drama portrays Tasso's psychological struggles and his relationships with the Duke, Princess Leonore d'Este, and Countess Leonore Sanvitale. Written in blank verse, it represents Goethe's classical period and is considered one of his most refined dramatic works, exploring the tension between artistic sensibility and worldly power.
+"""
+
+Notes = """
+The play was completed in 1790 after many years of composition (Goethe began it in the 1780s). This is one of Goethe's most important classical dramas, written during his Italian journey period. The text presented here is in German, the original language of composition.
+"""
+</result>

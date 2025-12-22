@@ -1,0 +1,21 @@
+I'll read through this text to identify the work, author, and publication details.
+
+From the text, I can see this is clearly an essay collection published by the Society for Pure English (S.P.E.), Tract No. V, published by Clarendon Press in 1921 (MDCCCCXXI). The primary essay visible here is "The Englishing of French Words" or "French Words in the English Language" by Brander Matthews, with another piece on dialectal words by Robert Bridges.
+
+Let me provide the structured information:
+
+<result>
+Title = "French Words in the English Language (S.P.E. Tract No. V)"
+Author = "Brander Matthews, Robert Bridges"
+Year = 1921
+
+Tags = ["non-fiction", "linguistics", "language-study"]
+
+Summary = """
+This is a collection of scholarly essays published as Tract No. V by the Society for Pure English (S.P.E.). The primary work is Brander Matthews' essay on the incorporation of French words into English, which explores how the English language has absorbed vocabulary from French over nearly a millennium. Matthews uses the metaphor of English as an "Inn of Strange Meetings" to describe how words from various origins have been integrated into the language. The tract also includes Robert Bridges' work on dialectal words in Blunden's poems. The S.P.E. was an influential early 20th-century organization dedicated to studying and preserving the English language, and their tracts were scholarly contributions to linguistic discussion.
+"""
+
+Notes = """
+The publication year of 1921 is clearly stated in the Roman numeral date MDCCCCXXI on the title page. This is a publication of original early 20th-century linguistic scholarship, not a reprint or translation of older work.
+"""
+</result>

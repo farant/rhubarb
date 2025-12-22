@@ -1,0 +1,15 @@
+<result>
+Title = "Ten Years Later"
+Author = "Alexandre Dumas, Père"
+Year = 1848
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"Ten Years Later" is part of the D'Artagnan Romances by Alexandre Dumas, specifically forming the middle section of "The Vicomte de Bragelonne," the third and final novel in the series following "The Three Musketeers" (1844) and "Twenty Years After" (1845). The story continues the adventures of d'Artagnan and the musketeers during the reign of Louis XIV, covering events from 1660-1661. This portion focuses on political intrigue at the French court, romantic entanglements, and the aging musketeers' continued loyalty and adventures. The complete Vicomte de Bragelonne cycle is often split into multiple parts, with "Ten Years Later" representing chapters 76-140 of the larger work, though this Project Gutenberg edition (1258) includes chapters 1-104, overlapping with other editions. The series culminates in the famous "Man in the Iron Mask" storyline.
+"""
+
+Notes = """
+The year 1848 represents when "Le Vicomte de Bragelonne" was originally serialized and published in French. The entire work was published between 1847-1850, with 1848 being a reasonable median date for this middle section. The various Project Gutenberg editions reflect different English translation and publishing traditions that split Dumas's massive final D'Artagnan novel into 3-4 separate volumes. While the story is set in 1660-1661, the work itself is a mid-19th century historical novel.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as "Second April" by Edna St. Vincent Millay, a celebrated collection of poetry first published in 1921. Millay was one of the most prominent American poets of the early 20th century, known for her lyrical style and exploration of themes like love, death, nature, and the passage of time.
+
+<result>
+Title = "Second April"
+Author = "Edna St. Vincent Millay"
+Year = 1921
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+'Second April' is Edna St. Vincent Millay's second major poetry collection, published in 1921. The collection showcases Millay's mastery of both traditional and modern poetic forms, including sonnets, elegies, and free verse. The poems explore themes of mortality, loss, the transience of beauty, the passage of seasons, and the tension between earthly beauty and deeper spiritual or existential needs. The opening poem "Spring" famously declares "Beauty is not enough," setting the tone for a collection that grapples with disillusionment and the search for meaning beyond aesthetic pleasure. The work was dedicated to her friend Caroline B. Dow, who had been instrumental in supporting Millay's education at Vassar College. This collection helped establish Millay as one of the foremost American poets of her generation.
+"""
+
+Notes = """
+Edna St. Vincent Millay (1892-1950) was awarded the Pulitzer Prize for Poetry in 1923, becoming the third woman to receive this honor. While she was not a Catholic author, her work is widely considered appropriate for general audiences and has been studied extensively in educational settings.
+"""
+</result>

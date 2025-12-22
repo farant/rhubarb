@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+Based on the text, this is clearly "Between You and Me" by Sir Harry Lauder, published in 1919. Harry Lauder was a famous Scottish music hall entertainer and comedian. The book appears to be written during or just after World War I, evidenced by the dedication to parents of soldiers and the included poem about WWI service.
+
+Harry Lauder was indeed a practicing Presbyterian (not Catholic), and this work appears to be a collection of his writings/reflections, likely related to his experiences during WWI (his previous book mentioned is "A Minstrel in France"). His only son, Captain John Lauder, was killed in action on December 28, 1916, which deeply affected him and influenced his wartime writings and patriotic work.
+
+<result>
+Title = "Between You and Me"
+Author = "Sir Harry Lauder"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+'Between You and Me' is a collection of writings by Sir Harry Lauder, the beloved Scottish entertainer and music hall performer, published during World War I. The book is dedicated to the fathers and mothers of soldiers who served or prepared to serve in the Great War. Lauder, whose only son Captain John Lauder was killed in action in 1916, became a passionate advocate for the war effort and toured extensively to support troops and raise morale. This work captures his reflections and sentiments during this tumultuous period, blending his characteristic warmth and humor with the gravity of wartime experience. The included poem "One of the Boys Who Went" reflects the pride and sacrifice of WWI service members.
+"""
+
+Notes = """
+The year 1919 represents the actual publication date of this specific work by The James A. McCann Company in New York. This was published in the immediate aftermath of World War I (which ended November 11, 1918), making it a contemporaneous wartime/post-war reflection rather than a historical retrospective.
+"""
+</result>

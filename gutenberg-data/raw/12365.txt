@@ -1,0 +1,21 @@
+I can help you identify this work. Let me analyze the text.
+
+This appears to be a French poetry collection called "Femmes rêvées" (Dreamed Women) by Albert Ferland, with a preface written by Louis Fréchette. The publication year shown is MDCCCXCIX (1899).
+
+Albert Ferland was a French-Canadian poet from Quebec, and Louis Fréchette was a prominent Quebec poet who won recognition from the French Academy (as noted: "Lauréat de l'Académie française").
+
+<result>
+Title = "Femmes rêvées"
+Author = "Albert Ferland"
+Year = 1899
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+'Femmes rêvées' (Dreamed Women) is a poetry collection by French-Canadian poet Albert Ferland, published with a preface by Louis Fréchette, a lauréat of the French Academy. The work explores themes of love, beauty, dreams, and idealized femininity. Fréchette's preface praises the modest and artistic quality of the work, noting that Ferland takes a restrained approach to sentimentality compared to poets like Alfred de Musset, avoiding excessive personal confession. The collection represents part of the literary tradition of late 19th-century Quebec poetry, focusing on aesthetic beauty and the intersection of art, youth, and romantic idealization.
+"""
+
+Notes = """
+The year 1899 is clearly marked in the original publication as MDCCCXCIX. This work is part of the French-Canadian literary tradition and would have been published in Quebec. Not tagged as 'appropriate-for-children' as it is romantic poetry for adults. Not tagged as 'catholic' despite the Quebec context, as the preface and excerpts focus on romantic and aesthetic themes rather than explicitly Catholic content.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the title page, this is "The Long Shadow" by B.M. Bower (B.M. Sinclair), illustrated by Clarence Rowe, with a copyright date of 1908. 
+
+B.M. Bower was the pen name of Bertha Muzzy Sinclair (1871-1940), an American author who wrote popular Western fiction novels. "The Long Shadow" was one of her earlier works. The dedication "To Those Who Have Watched The Shadow Fall Upon The Range" and the chapter titles (including phrases like "Charming Billy" and Western colloquialisms) confirm this is a Western novel set during the transition period of the American West.
+
+<result>
+Title = "The Long Shadow"
+Author = "B.M. Bower"
+Year = 1908
+
+Tags = ["fiction", "western", "romance"]
+
+Summary = """
+'The Long Shadow' is a Western novel by B.M. Bower (pen name of Bertha Muzzy Sinclair), one of the first successful female authors of Western fiction. The novel is set in the American West during the early 20th century and follows the story of 'Charming Billy' and other cowboys as they navigate the changing landscape of the range. The book explores themes of frontier life, romance, and the transformation of the Old West as modernization encroaches. Bower was known for her realistic portrayal of cowboy life and her ability to capture the spirit of the Western range, drawing on her own experiences living in Montana.
+"""
+
+Notes = """
+Copyright date of 1908 matches the original publication year. B.M. Bower (Bertha Muzzy Sinclair) was a pioneering female Western writer who wrote over 60 novels. The dedication suggests the novel deals with the end of the open range era and the changes facing Western ranchers and cowboys in the early 1900s.
+"""
+</result>

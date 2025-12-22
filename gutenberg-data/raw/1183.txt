@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg for you.
+
+<result>
+Title = "The Return of Dr. Fu-Manchu"
+Author = "Sax Rohmer"
+Year = 1916
+
+Tags = ["fiction", "mystery", "thriller"]
+
+Summary = """
+'The Return of Dr. Fu-Manchu' is the second novel in Sax Rohmer's Dr. Fu-Manchu series, featuring the sinister Chinese criminal mastermind Dr. Fu-Manchu and his ongoing conflict with the British protagonists Dr. Petrie and Commissioner Nayland Smith. The series popularized the 'Yellow Peril' thriller genre in early 20th century literature, depicting exotic Oriental villainy against Western heroes. While the books were enormously popular in their time, they are now recognized as products of their era's problematic racial stereotypes and Orientalist attitudes. The series follows the ongoing attempts of the protagonists to thwart Fu-Manchu's elaborate criminal schemes and world domination plans.
+"""
+
+Notes = """
+The novel was originally serialized in Collier's magazine in 1916 before book publication. This is the second book in what would become a long-running series. The first book, 'The Mystery of Dr. Fu-Manchu' (also known as 'The Insidious Dr. Fu-Manchu'), was published in 1913. While hugely influential on the thriller and mystery genres, these works reflect the racial prejudices and anxieties of the early 20th century British Empire period.
+"""
+</result>

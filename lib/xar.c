@@ -346,6 +346,20 @@ xar_obtinere(
 	redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
 }
 
+/* Xar Obtinere Signatum
+ * "Pro iterationibus cum decrementis"
+ */
+vacuum*
+xar_obtinere_s(
+    constans Xar* xar,
+             s32  index)
+{
+	si (index < ZEPHYRUM) {
+		redde NIHIL;
+	}
+	redde xar_obtinere(xar, (i32)index);
+}
+
 /* Xar Obtinere Vel Creare
  * "Utile pro tabulis dispersis"
  */

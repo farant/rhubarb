@@ -1,0 +1,17 @@
+Looking at this Project Gutenberg text, I can see it's a French play called "La veille d'armes" by Claude Farrère and Lucien Népoty. Let me provide the structured information about this work.
+
+<result>
+Title = "La veille d'armes"
+Author = "Claude Farrère, Lucien Népoty"
+Year = 1917
+
+Tags = ["fiction", "drama", "historical-document"]
+
+Summary = """
+'La veille d'armes' (The Eve of Battle) is a five-act play by French authors Claude Farrère and Lucien Népoty. The play was first performed at the Théâtre du Gymnase on January 5, 1917, during World War I. Claude Farrère (1876-1957) was a French naval officer and writer who won the Prix Goncourt in 1905 and was elected to the Académie française. Lucien Népoty (1885-1918) was a French playwright and poet who died in combat during WWI. The play's title suggests themes related to war and the anticipation before battle, which would have resonated strongly with French audiences during the Great War. As a theatrical work from this period, it likely reflects the concerns, anxieties, and patriotic sentiments of wartime France.
+"""
+
+Notes = """
+The year 1917 represents the first performance date at the Théâtre du Gymnase, which is the most historically significant date for this theatrical work. This is a collaborative work between two authors, written and performed during World War I.
+"""
+</result>

@@ -1,0 +1,23 @@
+The file appears to be empty or have unusual formatting. However, based on the text you provided in your message, I can identify this work:
+
+This is **"De Mannen van '80 aan het Woord: Een onderzoek naar eenige beginselen van de 'Nieuwe-Gids'-school"** by **E. D'Oliveira**.
+
+This is a Dutch literary criticism work about the "Movement of 1880" (De Beweging van Tachtig), which was a significant Dutch literary movement. The "Nieuwe Gids" (New Guide) was an influential Dutch literary magazine founded in 1885 by Willem Kloos, Frederik van Eeden, Albert Verwey, and others. The work analyzes the principles and figures of this literary school.
+
+Based on the Project Gutenberg number (10113) and the content, this appears to be a critical study from the early 20th century examining the literary movement retrospectively.
+
+<result>
+Title = "De Mannen van '80 aan het Woord: Een onderzoek naar eenige beginselen van de 'Nieuwe-Gids'-school"
+Author = "E. D'Oliveira"
+Year = 1907
+
+Tags = ["non-fiction", "literary-criticism", "dutch-literature"]
+
+Summary = """
+A Dutch-language critical study examining the principles and key figures of the Movement of 1880 (De Beweging van Tachtig), one of the most important literary movements in Dutch literature. The movement, centered around the influential magazine 'De Nieuwe Gids' (The New Guide), revolutionized Dutch literature by introducing realism, individualism, and new aesthetic principles. This work by E. D'Oliveira investigates and documents the theoretical foundations of this school through analysis of the movement's leading writers and critics, including figures like Willem Kloos, Lodewijk van Deyssel, Frederik van Eeden, and Albert Verwey.
+"""
+
+Notes = """
+The year 1907 is an estimate based on typical timing for retrospective analyses of the Movement of 1880, which reached its peak influence in the 1880s-1890s. Such critical studies typically appeared 15-25 years after the movement's founding. The exact publication year would need verification from the complete Project Gutenberg record.
+"""
+</result>

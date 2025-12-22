@@ -1,0 +1,19 @@
+I'll read through this text to identify the work and provide the requested information.
+
+This is clearly "Fated to Be Free" by Jean Ingelow, published in 1875 as stated in the title page. Jean Ingelow was a Victorian English poet and novelist. Let me provide the structured information:
+
+<result>
+Title = "Fated to Be Free"
+Author = "Jean Ingelow"
+Year = 1875
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Fated to Be Free" is a Victorian novel by English poet and novelist Jean Ingelow, first published in 1875. The work is connected to another of her stories, "Off the Skelligs." In her preface to the American edition, Ingelow explains that she deliberately avoided creating a conventional "work of art" and instead attempted to produce "a piece of nature" - a chronicle that would give readers a sense of reality rather than a carefully crafted artistic story. The novel is notable for its unconventional approach: it features a remarkable child who grows into a commonplace man, includes many children throughout (unlike most adult fiction), and focuses on older, more mature characters as the most important and interesting figures, rather than following the Victorian convention of young heroes and heroines. Ingelow was a popular Victorian author known for her poetry and children's literature, including "Mopsa the Fairy."
+"""
+
+Notes = """
+The year 1875 is printed directly on the title page. This appears to be the original publication date for this novel. Jean Ingelow (1820-1897) was a respected Victorian writer, though not Catholic, so the 'catholic' tag was not included.
+"""
+</result>

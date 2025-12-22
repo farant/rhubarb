@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly **Bagh O Bahar** (or "Tales of the Four Darweshes"), a famous Hindustani prose work. The text shows it was translated by Duncan Forbes in 1874, but the original work has an interesting history.
+
+The original **Bagh O Bahar** was written by **Mir Amman of Delhi** (Mir Amman Dihlawi) in 1801-1802 at the Fort William College in Calcutta. It was commissioned as a textbook for teaching Hindustani to British officials. Mir Amman adapted it from earlier Persian tales, particularly the "Qissa-e Chahar Darvesh" (Tale of Four Dervishes).
+
+For the year, I'll use **1802** as this represents when Mir Amman created this specific Hindustani version, which became the classical work referenced in the preface. While the story has Persian antecedents going back centuries, Mir Amman's version is what made "Bagh O Bahar" famous as a Hindustani literary classic.
+
+<result>
+Title = "Bagh O Bahar; or Tales of the Four Darweshes"
+Author = "Mir Amman of Dihli"
+Year = 1802
+
+Tags = ["fiction", "romance", "non-fiction"]
+
+Summary = """
+Bagh O Bahar (Garden and Spring) is a classical Hindustani prose work that has been a standard text for learning the Hindustani language since the early 19th century. Originally commissioned by Fort William College in Calcutta, Mir Amman adapted this work from earlier Persian tales, particularly the Qissa-e Chahar Darvesh. The work consists of romantic tales featuring four dervishes (wandering Muslim holy men) and displays Eastern manners, modes of thinking, and various idioms of the Hindustani language. The tales incorporate elements common to Oriental romance: jinn, demons, fairies, angels, and fabulous machinery that reflect Islamic beliefs and imagination. While primarily valued as a linguistic and cultural text, it contains entertaining narratives that illustrate the storytelling traditions of Mughal India.
+"""
+
+Notes = """
+The year 1802 represents when Mir Amman completed this Hindustani version at Fort William College. This translation by Duncan Forbes is from 1874, but the historically significant date is Mir Amman's original composition. The work draws on much older Persian sources, but Mir Amman's Hindustani rendering is what became the celebrated classical text throughout British India. This text has been used for over 150 years as an introduction to Hindustani language and culture.
+"""
+</result>

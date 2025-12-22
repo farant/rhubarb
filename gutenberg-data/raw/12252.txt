@@ -1,0 +1,17 @@
+<result>
+Title = "The Prose Works of Jonathan Swift, D.D., Volume III: Swift's Writings on Religion and the Church, Vol. I"
+Author = "Jonathan Swift"
+Year = 1898
+
+Tags = ["non-fiction", "religious-writings", "church-history"]
+
+Summary = """
+This is Volume III of Temple Scott's edited collection of Jonathan Swift's prose works, specifically focusing on Swift's writings on religion and the Church. Jonathan Swift (1667-1745) was an Anglo-Irish satirist, essayist, political pamphleteer, poet, and Anglican cleric who became Dean of St. Patrick's Cathedral in Dublin. This volume compiles his various writings on religious matters and Church governance, edited by Temple Scott with a biographical introduction by W.E.H. Lecky. Swift was known for his sharp wit and incisive commentary on both religious and political matters of his time. As an Anglican cleric, his religious writings would have been from a Protestant perspective during a period of significant religious and political tension in Ireland and England.
+"""
+
+Notes = """
+The year 1898 represents the publication date of this edited collection by Temple Scott, published as part of Bohn's Standard Library. While Swift's original writings on religion and the Church would have been composed during his lifetime (late 17th/early 18th century), this is specifically an edited compilation, so 1898 is the most historically accurate date for this particular work. The individual texts within this volume would have been written by Swift between approximately 1690s-1740s, but as a collected scholarly edition, 1898 is the appropriate year.
+
+Note: Not tagged as 'catholic' since Swift was an Anglican cleric, not Catholic. Not tagged 'appropriate-for-children' as Swift's religious and political writings were intended for educated adult audiences and dealt with complex theological and ecclesiastical matters.
+"""
+</result>

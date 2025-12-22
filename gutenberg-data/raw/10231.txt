@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Remarks from a Visit to Edison Laboratory"
+Author = "Addie Worth Bagley Daniels"
+Year = 1903
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of remarks from Addie Worth Bagley Daniels describing her visit to Thomas Edison's laboratory. The recording is part of the Edison National Historic Site collection and provides a first-hand account of observations at one of America's most important centers of invention during the early 20th century. Edison's laboratory was the birthplace of numerous groundbreaking inventions including the phonograph, motion pictures, and improvements to electric lighting. This primary source document offers historical insight into Edison's work environment and operations.
+"""
+
+Notes = """
+The exact year is difficult to determine from the Gutenberg text alone, as it doesn't specify when the visit or recording took place. Edison's main laboratory period was from the 1870s through early 1900s, with his West Orange laboratory (which became the Edison National Historic Site) operating from 1887-1931. Given that this appears to be an audio recording (available as MP3 files) and edited by Edison himself, I've estimated circa 1903 as a reasonable midpoint of Edison's most productive laboratory years and when audio recording technology would have been available. The actual recording could be anywhere from roughly 1890-1920s. The Gutenberg release date (2003) is clearly just the digitization date, not the original work date.
+"""
+</result>
