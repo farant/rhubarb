@@ -1,0 +1,25 @@
+I'll analyze this text to identify the work, author, and publication details.
+
+This is clearly a scholarly edition of Coleridge's poetry, specifically focusing on "The Ancient Mariner and Select Poems." The key information I can extract:
+
+1. **Title**: This is "Coleridge's Ancient Mariner and Select Poems" - it's an educational edition published as part of the Scribner English Classics series
+2. **Author**: The poems are by Samuel Taylor Coleridge (1772-1834), though this particular edition was edited by H.M.B. (with prefatory material) and the series was edited by Frederick H. Sykes
+3. **Year**: The edition itself was published in 1908 (as noted in the text). However, Coleridge's "The Rime of the Ancient Mariner" was originally published in 1798 in "Lyrical Ballads"
+
+For your historical timeline purposes, since this is an educational edition rather than the original work, I would recommend using 1798 as the primary date (when the most famous poem, "The Ancient Mariner," was first published), but noting this is a 1908 educational edition.
+
+<result>
+Title = "The Ancient Mariner and Select Poems"
+Author = "Samuel Taylor Coleridge"
+Year = 1798
+
+Tags = ["non-fiction", "poetry", "educational-edition"]
+
+Summary = """
+This is an educational edition of Samuel Taylor Coleridge's poetry, focusing on his most famous work "The Rime of the Ancient Mariner" along with a selection of his other poems. Coleridge (1772-1834) was a major English Romantic poet, philosopher, and literary critic. "The Ancient Mariner," first published in 1798 in the collaborative volume "Lyrical Ballads" with William Wordsworth, is a supernatural tale of a sailor who kills an albatross and suffers the consequences. The poem is renowned for its vivid imagery, exploration of guilt and redemption, and innovative use of archaic language. This particular edition is part of the Scribner English Classics series, intended for educational use, with scholarly apparatus including introduction and notes.
+"""
+
+Notes = """
+The year 1798 represents the original publication of "The Rime of the Ancient Mariner" in Lyrical Ballads, which is the most historically significant date for this work. This Project Gutenberg text is actually a 1908 educational edition edited for students, but since the primary content is Coleridge's original poetry (with "The Ancient Mariner" being the centerpiece), 1798 is the most appropriate date for a historical timeline. The edition uses the J. Dykes Campbell Globe edition text.
+"""
+</result>

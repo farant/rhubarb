@@ -1,0 +1,17 @@
+I recognize this as "The Moon Rock" by Arthur J. Rees. This is a mystery/detective novel published in 1922, which appears to be a first edition given the copyright notice at the beginning of the text. Arthur J. Rees was a British-Australian crime fiction writer who collaborated with John R. Watson on several mystery novels and also wrote independently. This particular work is a standalone mystery novel set in Cornwall, England, featuring detective elements and Gothic atmosphere characteristic of early 20th-century British mystery fiction.
+
+<result>
+Title = "The Moon Rock"
+Author = "Arthur J. Rees"
+Year = 1922
+
+Tags = ["fiction", "mystery", "detective-fiction"]
+
+Summary = """
+The Moon Rock is a mystery novel by Arthur J. Rees set in Cornwall, England. The story begins with the funeral of Mrs. Turold, a woman of humble origins who married above her station. Her husband lingers at the graveside, a man marked by care and unhappiness. The novel follows the investigation of mysterious events in this bleak Cornish setting, combining elements of detective fiction with Gothic atmosphere characteristic of early 20th-century British crime writing. Rees was known for his mystery novels during this period, both in collaboration with John R. Watson and as a solo author.
+"""
+
+Notes = """
+The year 1922 is clearly stated on the title page and represents the original publication date. Arthur J. Rees (1872-1942) was a British-Australian journalist and crime fiction writer who was particularly active in the 1910s and 1920s.
+"""
+</result>

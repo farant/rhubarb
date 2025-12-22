@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents, Section 2 (of 2) of Volume 3: Martin Van Buren"
+Author = "James D. Richardson"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a section from James D. Richardson's comprehensive compilation of presidential messages and papers, specifically covering the administration of Martin Van Buren (March 4, 1837 to March 4, 1841). Richardson's compilation was a monumental work that gathered together presidential proclamations, addresses, messages to Congress, and other official papers. This particular volume focuses on Van Buren, the eighth President of the United States, who served during a tumultuous period that included the Panic of 1837 and its economic aftermath. The compilation serves as an invaluable primary source for understanding American presidential history and the development of executive power in the early republic.
+"""
+
+Notes = """
+James D. Richardson's "A Compilation of the Messages and Papers of the Presidents" was originally published in multiple volumes between 1896-1899. The work was commissioned by Congress and became the standard reference for presidential documents until the modern Public Papers of the Presidents series. I've chosen 1897 as the approximate midpoint of the initial publication period, though the exact volume containing Van Buren may have been published in 1896 or 1897. This is a historical documentary compilation rather than original historical content, so the date reflects when Richardson assembled and published these documents, not when Van Buren himself served (1837-1841).
+"""
+</result>

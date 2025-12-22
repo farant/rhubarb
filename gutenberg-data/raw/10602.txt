@@ -1,0 +1,15 @@
+<result>
+Title = "The Poetical Works of Edmund Spenser, Volume V"
+Author = "Edmund Spenser"
+Year = 1590
+
+Tags = ["poetry", "non-fiction", "catholic"]
+
+Summary = """
+This is the fifth volume of Edmund Spenser's collected poetical works, containing his "Complaints" and other miscellaneous poems. The collection includes some of Spenser's most significant shorter works beyond The Faerie Queene, such as "The Ruines of Time," "The Teares of the Muses," "Mother Hubberds Tale," and "Muiopotmos." It also contains his famous sonnet sequence "Amoretti" and the wedding poem "Epithalamion" (written for his own marriage in 1594), as well as "Prothalamion" and the "Fowre Hymnes." These works showcase Spenser's range as a poet, from allegorical complaint poetry to pastoral, from classical translations to deeply personal love poetry. Spenser (c. 1552-1599) was one of the greatest English poets of the Elizabethan era and a committed Protestant, though his work draws heavily on medieval Catholic literary traditions.
+"""
+
+Notes = """
+The year 1590 represents the publication of "Complaints," the main collection in this volume, though individual works span 1579-1596. The "Amoretti" and "Epithalamion" were published together in 1595. This particular collected edition appears to be from 1860 (M.DCCC.LX). I should note that while Spenser was Protestant (not Catholic), his work is deeply rooted in medieval Catholic literary tradition and allegory. Given your criteria about Catholic authors with nihil obstat/imprimatur potential, I've included the 'catholic' tag with some reservation - his work embodies Christian virtue and medieval Catholic literary forms, though he himself was Anglican and wrote during the English Reformation.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Gentleman from Everywhere"
+Author = "James Henry Foss"
+Year = 1903
+
+Tags = ["non-fiction", "autobiography", "appropriate-for-children"]
+
+Summary = """
+"The Gentleman from Everywhere" is an autobiographical work by James Henry Foss, published in 1903. The book chronicles Foss's life journey through various experiences and adventures. Based on the chapter titles, it appears to cover his childhood, education, career as a teacher and preacher, travels, and eventual marriage. The work seems to be written in a memoir style, reflecting on both joyful and difficult periods of the author's life, with the stated hope of providing encouragement to others facing hardship ("that by its perusal, many sailing o'er life's solemn main, forlorn and shipwrecked brothers, may take heart again"). The illustrated nature and chapter titles suggest a narrative that moves from childhood through various vocations and geographical locations, ending with marriage.
+"""
+
+Notes = """
+The publication year of 1903 is clearly stated on the title page. This appears to be a straightforward autobiography published during the author's lifetime. James Henry Foss is not a widely known historical figure, and this work appears to be a personal memoir rather than a literary classic. The dedication suggests the book may have been written later in life, reflecting back on his experiences.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Renascence and Other Poems"
+Author = "Edna St. Vincent Millay"
+Year = 1917
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is the first published collection of poems by Edna St. Vincent Millay, one of the most celebrated American poets of the early 20th century. The title poem "Renascence" was written when Millay was only 19 years old and caused a sensation when it was published in an anthology in 1912. The poem is known for its spiritual and transcendent themes, exploring death, rebirth, and cosmic consciousness. The collection established Millay as a major poetic voice and showcased her lyrical talent, technical skill, and emotional intensity. The other poems in the collection cover themes of nature, love, sorrow, and mortality with the romantic and modernist sensibilities that would characterize her work throughout her career.
+"""
+
+Notes = """
+The collection was first published in 1917 by Mitchell Kennerley. "Renascence," the signature poem, was actually written in 1912 when Millay was a teenager and first published in an anthology called "The Lyric Year," where it finished fourth in a poetry contest but generated significant controversy as many felt it should have won. This collection launched Millay's career and she would go on to win the Pulitzer Prize for Poetry in 1923, becoming the third woman to receive that honor.
+"""
+</result>

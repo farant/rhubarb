@@ -1,0 +1,15 @@
+<result>
+Title = "Klondyke Nuggets: A Brief Description of the Great Gold Regions in the Northwest Territories and Alaska"
+Author = "Joseph Ladue"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a promotional pamphlet written by Joseph Ladue, founder of Dawson City in the Yukon Territory (then Northwest Territories), during the height of the Klondike Gold Rush. Written in September 1897, just as news of the gold discoveries was spreading worldwide and creating unprecedented excitement, Ladue wrote this brief work to respond to the overwhelming number of inquiries he received about the gold fields. The pamphlet serves as both a description of the Klondike region and an advertisement for his larger forthcoming book "Klondyke Facts." As someone who had lived in the region since 1882 and was directly involved in the gold rush (founding the city that became the main hub of the rush), Ladue provides a firsthand account meant to inform prospective miners and emigrants about the territory. This document is a primary source from one of the most famous gold rushes in North American history.
+"""
+
+Notes = """
+The year 1897 is clearly stated in the preface as the date of publication (September 1897), and this timing is historically significant as it coincides with the beginning of the Klondike Gold Rush fever that swept North America and beyond. The gold was discovered in August 1896, but news didn't reach the outside world until July 1897 when ships arrived in San Francisco and Seattle carrying successful miners with their gold, sparking the massive rush. Ladue's pamphlet was thus written and published during the initial explosive phase of public interest.
+"""
+</result>

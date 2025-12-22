@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+<result>
+Title = "Legal Status of Women in Iowa"
+Author = "Jennie L. Wilson"
+Year = 1894
+
+Tags = ["non-fiction", "legal", "women's-rights", "historical-document"]
+
+Summary = """
+This is a legal compilation and guidebook written by Jennie L. Wilson, LL.B., a member of the Polk County Bar in Iowa. The book was designed to provide women in Iowa with accessible information about laws directly affecting them, including marriage, divorce, child custody, property rights, guardianship, and relevant criminal law. Wilson presents both common law principles and Iowa statute law, recognizing that in an age of increasing literacy and women's legal participation, women needed to understand their rights and obligations under the law. This work is significant as it was written by a female lawyer in the late 19th century, during a period of growing advocacy for women's legal rights and education.
+"""
+
+Notes = """
+The publication date of 1894 is clearly stated on the title page. Jennie L. Wilson was a pioneering female attorney in Iowa at a time when few women practiced law. This work represents both legal scholarship and women's rights advocacy, providing practical legal information to women who were increasingly seeking education about their legal status. The book reflects the progressive spirit of the late 19th century women's movement while maintaining a practical, educational focus.
+"""
+</result>

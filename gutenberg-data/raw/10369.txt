@@ -1,0 +1,17 @@
+<result>
+Title = "Memoir and Diary of John Yeardley, Minister of the Gospel"
+Author = "John Yeardley"
+Year = 1860
+
+Tags = ["non-fiction", "autobiography", "religious", "appropriate-for-children"]
+
+Summary = """
+This is a memoir and diary of John Yeardley, a Quaker (Religious Society of Friends) minister who traveled extensively in his evangelical work. The book was edited by Charles Tylor and published posthumously, documenting Yeardley's spiritual journey, ministerial work, and reflections on faith and universal brotherhood. As a Quaker minister, Yeardley's writings would have emphasized the Inner Light, simplicity, peace testimony, and Christian devotion characteristic of the Friends tradition.
+"""
+
+Notes = """
+The year 1860 represents the publication date of this collected memoir and diary, which is the most appropriate date for this work since it is a posthumous compilation edited by Charles Tylor rather than a work written and published during Yeardley's lifetime. While Yeardley's diary entries would have been written earlier, the work as we have it was assembled and published in 1860.
+
+Note: This is not a Catholic work - John Yeardley was a Quaker minister, and Quaker theology differs significantly from Catholic teaching, so this would not receive a nihil obstat or imprimatur. Therefore 'catholic' is not included in the tags.
+"""
+</result>

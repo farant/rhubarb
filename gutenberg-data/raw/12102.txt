@@ -1,0 +1,15 @@
+<result>
+Title = "Darrel of the Blessed Isles"
+Author = "Irving Bacheller"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Darrel of the Blessed Isles' is a novel by Irving Bacheller, published in 1903. Bacheller was a popular American author and journalist, best known for his novels set in rural America, particularly upstate New York. This work follows his successful novels 'Eben Holden' (1900) and 'D'ri and I' (1901). The novel portrays the life of a learned man of humble circumstances in the fictional town of Hillsborough, exploring themes of character, obscurity, and the changing nature of American society. Bacheller's work is characterized by its nostalgic portrayal of rural American life and its examination of the transition from older, simpler ways of living to the modern era. The book was illustrated by Arthur I. Keller and is dedicated to the memory of the author's father.
+"""
+
+Notes = """
+The year 1903 is clearly indicated on the title page. This is the original publication year. The novel represents Bacheller's continuing exploration of rural American character types and the social changes affecting late 19th/early 20th century America.
+"""
+</result>

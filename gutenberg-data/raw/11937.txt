@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Symbolism of Freemasonry" by Albert G. Mackey, M.D. The title page shows a publication year of 1882, with a copyright date of 1869. Albert Gallatin Mackey (1807-1881) was a prominent American Freemason and medical doctor who wrote extensively on Masonic history and philosophy. This is one of his most significant works on Masonic symbolism and interpretation.
+
+<result>
+Title = "The Symbolism of Freemasonry: Illustrating and Explaining Its Science and Philosophy, its Legends, Myths and Symbols"
+Author = "Albert G. Mackey"
+Year = 1869
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is Albert G. Mackey's comprehensive examination of Freemasonry's symbolic system, exploring the philosophical and historical foundations of Masonic ritual, legend, and symbolism. Mackey was one of the most influential American Masonic scholars of the 19th century, and this work represents his effort to provide a systematic analysis of Masonic symbols and their meanings, drawing connections to ancient mystery traditions and philosophical systems. The book examines various aspects of Masonic ritual and symbolism, interpreting them through historical, philosophical, and allegorical lenses.
+"""
+
+Notes = """
+I chose 1869 as the publication year based on the copyright date shown on the title page ("Entered, according to Act of Congress, in the year 1869"). While the transcription mentions 1882, this appears to be a later edition or printing. The 1869 copyright represents the original publication of this work. The book is dedicated to General John C. Fremont. This work is about Freemasonry, which is not a Catholic organization, so it does not receive a 'catholic' tag. It's also not appropriate to mark as 'appropriate-for-children' as it's a scholarly work on esoteric symbolism.
+"""
+</result>

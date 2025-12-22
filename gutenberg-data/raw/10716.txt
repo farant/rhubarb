@@ -1,0 +1,19 @@
+Let me examine this text to identify the work and provide the structured information you requested.
+
+This is clearly "The Epic: an Essay" by Lascelles Abercrombie, published in 1914. This is a work of literary criticism that examines epic poetry as a literary form.
+
+<result>
+Title = "The Epic: an Essay"
+Author = "Lascelles Abercrombie"
+Year = 1914
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A scholarly essay examining epic poetry as a species of literature rather than as a subject for sociological or archaeological study. Abercrombie distinguishes his literary approach from the scientific/anthropological approaches of scholars like Gilbert Murray and Andrew Lang. The work analyzes epic poetry's literary qualities and draws on contemporary scholarship including J.W. Mackail's lectures on Greek poetry and H.M. Chadwick's "The Heroic Age." This essay represents early 20th-century Anglo-American formalist literary criticism applied to the epic tradition.
+"""
+
+Notes = """
+The publication year of 1914 is explicitly stated in the text. Lascelles Abercrombie (1881-1938) was a British poet and literary critic, part of the Georgian poetry movement. This work is not tagged as 'appropriate-for-children' as it is academic literary criticism requiring substantial background knowledge. Not tagged as 'catholic' - while Abercrombie was writing in Christian Britain, there's no indication he was Catholic or that this work would receive an imprimatur.
+"""
+</result>

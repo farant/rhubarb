@@ -1,0 +1,17 @@
+I recognize this work! This is "Dope" by Sax Rohmer, the British author best known for creating the Fu Manchu character. This novel deals with London's drug underworld in the early 20th century.
+
+<result>
+Title = "Dope"
+Author = "Sax Rohmer"
+Year = 1919
+
+Tags = ["fiction", "mystery", "crime"]
+
+Summary = """
+"Dope" is a crime thriller by Sax Rohmer (pseudonym of Arthur Henry Sarsfield Ward), the creator of the famous Fu Manchu series. Published in 1919, the novel explores London's opium dens and the illegal drug trade in the post-World War I era. The story follows Chief Inspector Kerry as he investigates a drug syndicate operating in London's East End, particularly around Limehouse, which was known for its Chinese immigrant community and associated with the opium trade in popular imagination of the time. The narrative involves the mysterious Kazmah, a "dream-reader," and various characters entangled in the dangerous world of narcotics trafficking. Like much of Rohmer's work, it combines elements of mystery, exoticism, and the "yellow peril" themes common in early 20th century pulp fiction.
+"""
+
+Notes = """
+First published in 1919. This novel reflects the moral panic and legislative concerns about drug use in Britain following World War I, which led to the Dangerous Drugs Act of 1920. While the work is historically significant as a period piece about early drug enforcement and cultural attitudes, it contains racial stereotypes typical of its era that modern readers should approach critically.
+"""
+</result>

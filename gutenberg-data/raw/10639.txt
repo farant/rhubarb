@@ -1,0 +1,15 @@
+<result>
+Title = "Phrases for Public Speakers and Paragraphs for Study"
+Author = "Grenville Kleiser"
+Year = 1910
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A practical handbook compiled by Grenville Kleiser for students of public speaking and oratory. The work provides collections of ready-made phrases that experienced public speakers use repeatedly, along with paragraphs excerpted from notable speeches for study and analysis. The book emphasizes practical exercises including daily oral reading practice, phrase analysis, and studying rhetorical techniques like climax. Kleiser positions this as a work of practice rather than theory, designed to help students develop fluency and readiness in public speaking through systematic study of phrases and paragraph construction.
+"""
+
+Notes = """
+The year 1910 is clearly stated on the title page. Grenville Kleiser (1868-1953) was a prolific American author who specialized in books about public speaking, vocabulary development, and personal improvement. This work fits within the early 20th century tradition of rhetoric and elocution handbooks that were popular for self-improvement and professional development.
+"""
+</result>

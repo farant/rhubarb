@@ -1,0 +1,15 @@
+<result>
+Title = "The Mountains of California"
+Author = "John Muir"
+Year = 1894
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+'The Mountains of California' is John Muir's classic naturalist work documenting his extensive explorations and observations of the Sierra Nevada mountain range. The book covers a wide range of topics including glaciers, forests, wildlife (particularly the Douglas squirrel and water ouzel), mountain passes, lakes, meadows, storms, and the ecological systems of the California mountains. Muir's vivid and poetic prose combines scientific observation with spiritual reverence for nature, helping to establish him as one of America's most influential naturalists and conservationists. This work was instrumental in building public support for the preservation of wilderness areas and the establishment of national parks.
+"""
+
+Notes = """
+First published in 1894 by The Century Company. This is one of Muir's most famous and influential works, written after decades of exploration in the Sierra Nevada. The book draws on his journals and articles written over many years of living in and studying the California mountains, particularly the Yosemite region. Muir (1838-1914) was a Scottish-American naturalist, author, and early advocate for wilderness preservation. While Muir had deep spiritual reverence for nature and was raised Presbyterian, he would not be considered a Catholic author, so the 'catholic' tag is not included.
+"""
+</result>

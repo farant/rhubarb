@@ -1,0 +1,17 @@
+I recognize this work from the details provided. This is a historical account by Dr. Ulysse Chevalier about a tournament held in Romans, France in 1484. The text describes Guy Allard's 1673 romantic tale about Zizim (Cem Sultan, an Ottoman prince who was exiled in France) and Philippine de Sassenage, from which Chevalier extracted a description of a chivalric tournament.
+
+<result>
+Title = "Un Tournoi à Romans en 1484"
+Author = "Ulysse Chevalier"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a historical study by Dr. Ulysse Chevalier examining a tournament that allegedly took place in Romans, France during Pentecost (June 6-8) 1484, celebrating the marriage of Antoine de Montchenu and Louise de Clermont. Chevalier extracted an archaic description of this tournament from Guy Allard's 1673 romance novel about Zizim (Cem Sultan), an Ottoman prince, and Philippine de Sassenage. While the romantic tale was fictional, Chevalier provides historical and biographical notes demonstrating that the locations, events, and persons mentioned conform to historical truth. The work describes the setting of the tournament on the Grande Place in Romans and the chivalric festivities of the period.
+"""
+
+Notes = """
+Published in Romans in 1888. The work is a scholarly historical analysis extracting factual elements from a 17th-century romance, rather than fiction itself. Zizim (Cem Sultan, 1459-1495) was a real Ottoman prince who spent time in exile in France after losing a succession struggle with his brother Bayezid II.
+"""
+</result>

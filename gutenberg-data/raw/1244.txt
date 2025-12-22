@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Love for Love"
+Author = "William Congreve"
+Year = 1695
+
+Tags = ["fiction", "drama", "restoration-comedy"]
+
+Summary = """
+Love for Love is a Restoration comedy by William Congreve, first performed in 1695 at the Lincoln's Inn Fields Theatre. It is considered one of Congreve's finest works and a masterpiece of Restoration comedy. The play follows Valentine Legend, a young man who has squandered his fortune and must either sign over his inheritance to his younger brother or marry a woman chosen by his father. Valentine feigns madness to avoid the dilemma, while pursuing the witty Angelica, who tests his love through various stratagems. The play is known for its brilliant wit, complex plot involving multiple romantic entanglements, and sharp satirical commentary on marriage, money, and social pretensions in late 17th-century English society. It features memorable characters including the superstitious Foresight and the blunt sailor Ben Legend.
+"""
+
+Notes = """
+The play was first performed and published in 1695. While this Project Gutenberg edition is transcribed from an 1895 Methuen publication, the year 1695 represents the original composition and first performance date, which is most relevant for a historical timeline. Congreve (1670-1729) was not a Catholic author; he was an English playwright of the Restoration period known for comedies of manners. The play contains adult themes, sexual innuendo, and satirical content typical of Restoration comedy, making it not appropriate for children.
+"""
+</result>

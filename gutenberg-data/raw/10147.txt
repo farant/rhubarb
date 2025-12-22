@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "America's War for Humanity: Pictorial History of the World War for Liberty"
+Author = "Thomas H. Russell"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a pictorial history of World War I written from an American perspective, documenting America's participation in the Great War. The work covers the American military experience on the Western Front, including famous battles such as Chateau Thierry where American forces, particularly the Marine Corps, achieved significant victories against German forces. The book combines narrative history with photographs documenting American troops, artillery, trenches, and battle scenes. As a contemporary account written by a member of the American Historical Association, it provides both historical documentation and patriotic perspective on America's role in the war "for liberty" and democracy.
+"""
+
+Notes = """
+The year 1919 is chosen as this appears to be a contemporary or near-contemporary account of World War I, likely published shortly after the war's conclusion in November 1918. The language, patriotic tone, and references to recent battles suggest it was written and published while the war was still fresh in public memory. Books of this type were typically rushed to publication in 1918-1919 to capitalize on public interest in the war. The photographic captions reference "U.S. Official Photos" and contemporary news services, indicating this was compiled from wartime materials and published soon after.
+"""
+</result>

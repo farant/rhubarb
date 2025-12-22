@@ -1,0 +1,19 @@
+I recognize this text from The Atlantic Monthly from October 1860. This is an essay by Nathaniel Hawthorne about visiting Scotland and the haunts of Robert Burns. The piece is written with Hawthorne's characteristic wry humor, as indicated by the subtitle "By a Tourist Without Imagination or Enthusiasm."
+
+This essay later became part of Hawthorne's posthumously published travel book "Our Old Home" (1863), which collected his English and Scottish travel sketches from his time as American consul in Liverpool (1853-1857).
+
+<result>
+Title = "The Atlantic Monthly, Vol. VI, October 1860, No. XXXVI"
+Author = "Various (Nathaniel Hawthorne and others)"
+Year = 1860
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+This is an issue of The Atlantic Monthly magazine from October 1860. The text excerpt provided is from an essay by Nathaniel Hawthorne titled "Some of the Haunts of Burns," written with ironic self-deprecation as he describes visiting the Scottish homes and haunts of poet Robert Burns. Hawthorne served as American consul in Liverpool from 1853-1857, and during this time traveled throughout Britain, recording his observations with characteristic wit and psychological insight. This essay, like many of his British travel sketches, would later be collected in his book "Our Old Home" (1863). The Atlantic Monthly was a prestigious American literary magazine founded in 1857 that published major writers of the era.
+"""
+
+Notes = """
+Year chosen is 1860, the publication date of this specific magazine issue. While Hawthorne likely visited Burns's haunts during his consulship (1853-1857), the text is dated to this magazine publication. Hawthorne himself was not Catholic, so the 'catholic' tag is not included, though he had complex religious views and wrote extensively about Puritan psychology.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Hindu Tales from the Sanskrit"
+Author = "S. M. Mitra (translator), Mrs. Arthur Bell (adapter)"
+Year = 1919
+
+Tags = ["fiction", "folklore", "appropriate-for-children"]
+
+Summary = """
+A collection of Hindu folk tales translated from Sanskrit by S. M. Mitra and adapted by Mrs. Arthur Bell. The tales include stories such as "The Magic Pitcher," "A Royal Thief-Catcher," and "The Hermit's Daughter." These narratives, drawn from ancient Indian classics and oral traditions passed down through generations, were traditionally used by teachers in India to illustrate Hindu philosophy and ethics, particularly the concept of self-realization. The work represents an effort to make Hindu cultural stories accessible to English-speaking children while demonstrating the connections between different branches of the Aryan race.
+"""
+
+Notes = """
+The year 1919 represents the publication date of this specific English adaptation. While the individual tales themselves may date back centuries or even millennia in their original Sanskrit forms and oral traditions, this compilation and English translation was published in 1919. This is the most historically accurate date for this particular work, as it represents a specific cultural bridge-building effort between India and the West in the early 20th century.
+"""
+</result>

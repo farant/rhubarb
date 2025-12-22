@@ -1,0 +1,19 @@
+I recognize this as "Voyage au centre de la Terre" (Journey to the Center of the Earth) by Jules Verne. The Dutch title "Naar Het Middelpunt der Aarde" confirms this. The text shows the beginning of the novel with Professor Otto Lidenbrock returning home on Sunday, May 25, 1863, with his housekeeper Martha and nephew Axel.
+
+The original French version was first published in 1864. Even though this is a Dutch translation, I'll use the original publication year since that's most historically accurate for educational purposes about when Verne wrote this foundational work of science fiction.
+
+<result>
+Title = "Naar Het Middelpunt der Aarde (Journey to the Center of the Earth)"
+Author = "Jules Verne"
+Year = 1864
+
+Tags = ["fiction", "appropriate-for-children", "science-fiction", "adventure"]
+
+Summary = """
+Journey to the Center of the Earth is one of Jules Verne's most famous scientific romances. The story follows Professor Otto Lidenbrock, his nephew Axel, and their guide Hans as they descend into an Icelandic volcano to explore the interior of the Earth. Beginning with the discovery of a mysterious runic manuscript, the expedition encounters prehistoric creatures, vast underground oceans, and geological marvels. This pioneering work of science fiction combines adventure with Verne's characteristic attention to scientific detail (as understood in the 1860s), and helped establish many conventions of the genre. The novel exemplifies Verne's fascination with exploration and the unknown frontiers of science.
+"""
+
+Notes = """
+This is a Dutch translation titled "Wonderreizen" (Wonder Journeys). The original French "Voyage au centre de la Terre" was first published in 1864. While Verne was Catholic, this is a work of scientific adventure fiction rather than a religious work, so I have not included the 'catholic' tag.
+"""
+</result>

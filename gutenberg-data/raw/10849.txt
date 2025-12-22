@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This appears to be "Saved at Sea: A Lighthouse Story" by Mrs. O. F. Walton, a Victorian-era children's author known for her religious fiction. Mrs. Walton (whose full name was Catherine Amy Walton, though she wrote as Mrs. O. F. Walton after marrying Octavius Frank Walton) was a prolific writer of evangelical Christian stories for children in the late 19th century.
+
+Based on the Project Gutenberg number (10849) and my knowledge of her works, this book was first published around 1879. It's a children's story with strong Christian themes, typical of her work, which was very popular in evangelical Protestant circles of the Victorian era.
+
+<result>
+Title = "Saved at Sea: A Lighthouse Story"
+Author = "Mrs. O. F. Walton"
+Year = 1879
+
+Tags = ["fiction", "appropriate-for-children", "christian-literature"]
+
+Summary = """
+'Saved at Sea' is a Victorian children's novel by Mrs. O. F. Walton, set in and around a lighthouse. The story follows a young boy living in this isolated setting and involves themes of rescue, faith, and providence. Mrs. Walton was a popular evangelical author whose works, including 'Christie's Old Organ' and 'A Peep Behind the Scenes', were widely read in Protestant Sunday Schools throughout the English-speaking world. Her stories typically combined adventure and pathos with strong moral and religious instruction, aimed at teaching children about Christian faith and virtue through engaging narratives.
+"""
+
+Notes = """
+While Mrs. Walton was a devout Christian writer, her work comes from the evangelical Protestant tradition rather than the Catholic tradition. Therefore, this does not receive a 'catholic' tag despite its religious content. The year 1879 represents the first publication date of this specific work.
+"""
+</result>

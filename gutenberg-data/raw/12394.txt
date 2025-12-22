@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, September 13, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["periodical", "humor", "satire", "non-fiction"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire established in 1841. It became one of the most influential magazines of the Victorian era, known for its political cartoons, comic essays, and social commentary. This particular volume (Vol. 99, September 13, 1890) contains humorous pieces typical of Punch, including "Out for a Holiday" - a satirical travel piece describing a disappointing visit to St. Margaret's Bay. The magazine featured contributions from numerous writers and illustrators, and was a staple of middle-class British culture for over 150 years until its closure in 1992 (with a brief revival from 1996-2002).
+"""
+
+Notes = """
+The year 1890 is straightforward as this is the publication date clearly stated in the issue. Punch was a periodical with multiple contributors per issue, hence "Various" as the author. While individual pieces may have been written by specific authors, Gutenberg often attributes Punch volumes collectively. The content is humorous social commentary rather than fiction or substantial non-fiction works, and is not appropriate for young children due to the satirical nature and Victorian-era cultural references that would not be accessible to them.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "One Hundred Best Books: With Commentary and an Essay on Books and Reading"
+Author = "John Cowper Powys"
+Year = 1916
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a literary guide by John Cowper Powys, a Welsh-American philosopher, lecturer, and novelist. The book presents Powys's personal selection of one hundred books he considered essential reading, distinguished from other "best books" lists of the era by being frankly subjective rather than academically prescriptive. Powys aimed to recommend books for the pleasure of reading rather than for the cultivation of "standard learning." The work includes not only the list itself but also commentary on each selection and an essay on the art of books and reading. Powys was known for his passionate advocacy of literature and his ability to inspire readers to engage deeply with great works.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page. This date is historically significant as it was published during World War I. John Cowper Powys (1872-1963) was a prolific author and charismatic lecturer who spent much of his early career giving popular lectures on literature throughout America and Britain. While Powys came from an Anglican background (his father was a clergyman), he was not Catholic, so the 'catholic' tag is not included.
+"""
+</result>

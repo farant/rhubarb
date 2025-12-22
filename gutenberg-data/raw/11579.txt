@@ -1,0 +1,15 @@
+<result>
+Title = "Scott's Last Expedition"
+Author = "Robert Falcon Scott"
+Year = 1913
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Scott's Last Expedition is the published journal and scientific reports from Captain Robert Falcon Scott's Terra Nova Expedition (1910-1913) to Antarctica. The work documents Scott's ill-fated journey to reach the South Pole, where his party arrived on January 17, 1912, only to discover that Norwegian explorer Roald Amundsen had reached it first. Scott and his four companions perished on the return journey. The expedition's journals were found with their bodies eight months later and were published as this two-volume work. Volume I contains Scott's personal journals, while Volume II includes scientific reports from Dr. E. A. Wilson and other surviving expedition members. The work stands as both a significant scientific document and a tragic testament to the heroic age of polar exploration.
+"""
+
+Notes = """
+The year 1913 reflects the publication date of these journals, which is the most historically significant date for this work. While the expedition itself took place from 1910-1913, the journals were discovered in November 1912 and published in 1913. This publication date is appropriate because the work's historical impact and the narrative as we know it comes from this edited and arranged publication by Leonard Huxley, rather than from any earlier drafts. The journals themselves were written between 1910-1912, but the complete work as a historical document dates to 1913.
+"""
+</result>

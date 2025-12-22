@@ -1,0 +1,15 @@
+<result>
+Title = "The Moon-Voyage (From the Earth to the Moon and Round the Moon)"
+Author = "Jules Verne"
+Year = 1865
+
+Tags = ["fiction", "science-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a combined edition of two of Jules Verne's pioneering science fiction novels: "From the Earth to the Moon" (De la Terre à la Lune, 1865) and its sequel "Round the Moon" (Autour de la Lune, 1870). The story follows the Gun Club of Baltimore, led by President Barbicane, as they undertake an ambitious project to launch a projectile to the Moon. The narrative explores the scientific and engineering challenges of space travel decades before it became reality, showcasing Verne's remarkable vision and his ability to combine scientific plausibility with adventure. These novels are considered foundational works of science fiction and inspired generations of scientists and writers, including those who would later make actual space travel possible.
+"""
+
+Notes = """
+I've chosen 1865 as the year because that's when the first novel "From the Earth to the Moon" was originally published in French. While "Round the Moon" wasn't published until 1870, this combined "Moon-Voyage" edition treats them as a unified narrative, and 1865 marks the beginning of this story. This English translation with illustrations by Henry Austin came later, but 1865 represents the most historically significant date for this work's cultural impact.
+"""
+</result>

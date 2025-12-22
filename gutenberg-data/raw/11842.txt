@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Third Series, Volume 24, Part 1, Number 1"
+Author = "United States Copyright Office"
+Year = 1970
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office publication listing renewal registrations for books, pamphlets, serials, and periodical contributions during a specific period in 1970. It represents part of the official record of copyright renewals in the United States, arranged alphabetically by author or issuing body. These catalogs served as the primary public record of copyright activity before digital databases.
+"""
+
+Notes = """
+The year 1970 is chosen based on the renewal dates visible in the entries (e.g., "31Dec70; R497555"). This is a government document from the Library of Congress Copyright Office's ongoing series of copyright catalogs. The "Third Series" refers to the format used from 1947-1977. This particular volume (24, Part 1, Number 1) appears to cover renewals processed in late 1970/early 1971. While the works being renewed are from 1943 (due to the 28-year copyright term requiring renewal), the document itself is a 1970 publication.
+"""
+</result>

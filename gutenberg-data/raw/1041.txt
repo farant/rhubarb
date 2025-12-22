@@ -1,0 +1,15 @@
+<result>
+Title = "The Sonnets"
+Author = "William Shakespeare"
+Year = 1609
+
+Tags = ["poetry", "fiction", "appropriate-for-children"]
+
+Summary = """
+Shakespeare's Sonnets is a collection of 154 poems written by William Shakespeare, first published in 1609. The sonnets explore themes of love, beauty, mortality, and time. The first 126 sonnets are addressed to a young man (often called the "Fair Youth"), while sonnets 127-152 are addressed to a mysterious "Dark Lady." The final two sonnets (153-154) are allegorical treatments of Cupid. These sonnets are considered among the greatest love poetry in the English language and have been the subject of endless scholarly debate and interpretation regarding their autobiographical nature and the identities of the addressees.
+"""
+
+Notes = """
+1609 is the year of first publication, though the sonnets were likely composed over a period of years in the 1590s and early 1600s. The 1609 quarto published by Thomas Thorpe is the primary authoritative text. While Shakespeare himself was likely baptized Catholic and had family connections to Catholicism, his published works were products of Protestant England and the sonnets are not considered Catholic works in the theological sense, so I have not included the 'catholic' tag.
+"""
+</result>

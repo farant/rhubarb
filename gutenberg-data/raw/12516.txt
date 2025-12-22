@@ -1,0 +1,15 @@
+<result>
+Title = "The Way of an Eagle"
+Author = "E.M. Dell"
+Year = 1911
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+"The Way of an Eagle" is a romantic novel by Ethel M. Dell, one of the most popular British romance novelists of the early 20th century. The story is set against the backdrop of British colonial India and centers on the dramatic relationship between Muriel Roscoe, the daughter of a British general, and Nick Ratcliffe, an unconventional and resourceful soldier. The novel begins with a tense military situation and follows the characters through themes of duty, honor, sacrifice, and an intense, complex romance. Dell was known for her passionate, melodramatic storytelling and her heroes who were often physically unprepossessing but possessed magnetic personalities and unwavering determination. This novel was one of her most successful works and helped establish her reputation as a bestselling author of romantic fiction.
+"""
+
+Notes = """
+1911 is the year of first publication clearly stated on the title page. This was Dell's debut novel and became an immediate bestseller, establishing her career as a popular romance writer. The novel's colonial Indian setting and military themes were typical of British popular fiction of the Edwardian era.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Poets and Poetry of Cecil County, Maryland"
+Author = "George Johnston"
+Year = 1887
+
+Tags = ["non-fiction", "poetry", "anthology", "local-history"]
+
+Summary = """
+This is a collection of poems and biographical sketches of poets from Cecil County, Maryland, compiled and edited by George Johnston, who also authored a history of Cecil County. The anthology was published to honor the memory of David Scott, a late School Commissioner, and was initiated by teachers and pupils from public schools in the northeastern part of Cecil County. It represents a regional literary anthology documenting the poetic output of a specific Maryland county during the 19th century.
+"""
+
+Notes = """
+The year 1887 is straightforward as this is when the work was published and copyrighted. This is an original compilation by Johnston, not a translation or edition of earlier works. The work reflects the late 19th-century American tradition of regional literary anthologies celebrating local culture and history.
+"""
+</result>

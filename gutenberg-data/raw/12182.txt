@@ -1,0 +1,21 @@
+<result>
+Title = "Veneh'ojalaiset"
+Author = "Arvid Järnefelt"
+Year = 1909
+
+Tags = ["fiction", "social-realism", "historical"]
+
+Summary = """
+'Veneh'ojalaiset' is a Finnish social realist novel by Arvid Järnefelt (1861-1932) published in 1909. The work depicts the lives of a distinctive rural community called the Veneh'ojalaiset (people of Veneh'oja) in western Häme, Finland. The novel explores themes of land ownership, tenant farming, evictions, and the pressures on rural communities during the turn of the 20th century. The narrative traces characters from the village of Veneh'oja to distant lands including Siberia and America. Järnefelt was known as an ideological writer and strong realist who addressed contemporary social issues through his fiction, though his works also contain philosophical elements. The novel examines how external economic and social forces impact traditional communities and individual identity.
+"""
+
+Notes = """
+Published in 1909, this appears to be the first part of a multi-part work ('ENSIMÄINEN OSA' = First Part). The historical context involves Finland's agrarian struggles during the early 20th century, particularly concerning tenant farmers' rights and land ownership disputes.
+"""
+</result>
+
+Sources:
+- [Veneh'ojalaiset by Arvid Järnefelt | Project Gutenberg](https://www.gutenberg.org/ebooks/12182)
+- [Veneh'ojalaiset | SKS verkkokauppa](https://kirjat.finlit.fi/sivu/tuote/veneh-ojalaiset/126485)
+- [1909 Veneh'ojalaiset : romaani. 1 / Arvid Järnefelt., s. 1](https://digi.kansalliskirjasto.fi/teos/binding/1906951)
+- [Kai Laitinen on the moral imperative in the work of Arvid Järnefelt | Books from Finland](https://www.booksfromfinland.fi/1993/03/a-writer-and-his-conscience/)

@@ -1,0 +1,15 @@
+<result>
+Title = "The White Devil"
+Author = "John Webster"
+Year = 1612
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+The White Devil is a revenge tragedy by English playwright John Webster. The play is based on the real-life events surrounding the scandalous murder of Vittoria Accoramboni, Duchess of Bracciano, in 1585. It is one of Webster's most famous works, known for its dark themes, moral ambiguity, and powerful female protagonist. The tragedy explores themes of corruption, manipulation, passion, and revenge in the Italian Renaissance court. Webster's play is characterized by its complex characters, particularly Vittoria Corombona (the "white devil" of the title - appearing innocent while being sinful), and its examination of evil and moral decay among the aristocracy. The play is considered one of the masterpieces of Jacobean drama, notable for its psychological depth and poetic language.
+"""
+
+Notes = """
+The play was first performed around 1612 and published in quarto in 1612. Webster's preface "To the Reader" (included in this text) famously complains about the poor reception of the first performance, which took place in winter at an "open and black" theatre before an unappreciative audience. This is not a Catholic work - Webster was writing in Protestant England during the Jacobean period, and while the play is set in Catholic Italy, it is a dark revenge tragedy rather than a devotional or Catholic theological work.
+"""
+</result>

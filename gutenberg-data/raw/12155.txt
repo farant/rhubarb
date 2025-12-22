@@ -1,0 +1,20 @@
+<result>
+Title = "Stepping Backwards"
+Author = "W.W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Stepping Backwards" is a short humorous story by W.W. Jacobs, the fifth piece in his 1911 collection "Night Watches." William Wymark Jacobs (1863-1943) was an English author known for his humorous maritime stories set in London's East End docklands, as well as for his horror story "The Monkey's Paw." His stories typically feature working-class characters and gentle, comedic situations. "Stepping Backwards" appears to be a lighthearted tale involving Mr. Simpson's new dentures and the domestic comedy that ensues. Jacobs' work was popular in the early 20th century for its accessible humor and character-driven narratives.
+"""
+
+Notes = """
+"Night Watches" was published in 1911 in the United Kingdom. While Jacobs was not a Catholic author and his work would not carry an imprimatur, his stories are generally wholesome, working-class comedies suitable for general audiences including children.
+"""
+</result>
+
+Sources:
+- [The Project Gutenberg eBook of Night Watches, by W.W. Jacobs](https://www.gutenberg.org/files/12161/12161-h/12161-h.htm)
+- [Jacobs, W W: Night Watches (1911)](http://www.mobileread.mobi/forums/showthread.php?t=332143)
+- [Night Watches: A Suspenseful Short Story Collection by W.W. Jacobs | Goodreads](https://www.goodreads.com/book/show/182770491-night-watches)

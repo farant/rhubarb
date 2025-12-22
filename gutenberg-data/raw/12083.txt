@@ -1,0 +1,15 @@
+<result>
+Title = "Eric, or Little by Little: A Tale of Roslyn School"
+Author = "Frederic W. Farrar"
+Year = 1858
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+"Eric, or Little by Little" is a Victorian moral novel set in an English boarding school called Roslyn School. Written by Frederic W. Farrar, a clergyman and schoolmaster, the book follows the moral decline of its protagonist Eric Williams from an innocent boy to one who succumbs to various temptations and vices of school life. The novel was enormously popular in its time and is considered one of the quintessential examples of Victorian moral literature for youth. It deals with themes of peer pressure, moral corruption, bullying, and redemption, written with the explicit didactic purpose of warning young readers about the slippery slope of moral compromise. The phrase "little by little" in the title refers to the gradual nature of Eric's moral decline. Despite its melodramatic style by modern standards, it was highly influential in shaping Victorian attitudes toward education and youth morality.
+"""
+
+Notes = """
+First published in 1858. Farrar (1831-1904) was Dean of Canterbury and a prominent Anglican clergyman, though not Catholic. While the work has strong Christian moral themes, it is Anglican rather than Catholic in perspective, so I have not included the 'catholic' tag. The edition shown here (1902) is a later printing with illustrations by George A. Traver, but the original publication date of 1858 is most historically relevant for timeline purposes.
+"""
+</result>

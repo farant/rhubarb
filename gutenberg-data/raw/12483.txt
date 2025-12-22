@@ -1,0 +1,15 @@
+<result>
+Title = "Reminiscences of Scottish Life and Character"
+Author = "E. B. Ramsay"
+Year = 1858
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Written by Edward Bannerman Ramsay, Dean of Edinburgh, this is a celebrated collection of anecdotes and observations about Scottish culture, character, and customs in the 18th and early 19th centuries. The work preserves stories about Scottish religious life, conviviality, domestic servants, and social customs during a period of significant cultural change in Scotland. Ramsay's affectionate and humorous portrayal of Scottish life became immensely popular, going through numerous editions during and after his lifetime. The book is valued both as entertainment and as a historical record of Scottish manners and dialect from an earlier era.
+"""
+
+Notes = """
+The first edition was published in 1858. This particular text is from the 22nd edition (1874), published after Ramsay's death (1872) and including additions and a memoir by Cosmo Innes. Given the context of a historical timeline, 1858 is the most appropriate year as it marks when the work first entered Scottish literary culture. E.B. Ramsay (1793-1872) was an Episcopal clergyman in Scotland, not Roman Catholic, so the 'catholic' tag is not included.
+"""
+</result>

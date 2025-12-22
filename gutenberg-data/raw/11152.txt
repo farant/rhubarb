@@ -1,0 +1,15 @@
+<result>
+Title = "Nummisuutarit"
+Author = "Aleksis Kivi"
+Year = 1864
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Nummisuutarit (The Heath Cobblers) is a classic Finnish comedy play by Aleksis Kivi, considered the father of Finnish literature. The play is a five-act comedy that depicts the lives of rural Finnish cobblers in Häme. It centers on Topias, a shoemaker master, his family, and various colorful characters in their community. The work is celebrated for its humor, vivid characterization, and its portrayal of Finnish rural life in the 19th century. It remains one of the most beloved and frequently performed plays in Finnish theater, known for its comedic situations and warm humanity. The play showcases Kivi's mastery of dialogue and his ability to capture the essence of Finnish rural character and culture.
+"""
+
+Notes = """
+The play was first published in 1864, though this edition appears to be from 1919. Aleksis Kivi (1834-1872) is Finland's national author, and Nummisuutarit is one of his most enduring works. I've chosen 1864 as the year since that represents the original composition and publication, which is most historically significant for understanding the work's place in Finnish literary history and the development of Finnish-language literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Swift and His Wizard Camera; or, Thrilling Adventures While Taking Moving Pictures"
+Author = "Victor Appleton"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is one of the books in the Tom Swift series, a popular early 20th-century American juvenile science fiction series. The Tom Swift books follow the adventures of a young inventor and his friends as they create various technological marvels and travel the world having adventures. In this particular installment, Tom Swift invents a "wizard camera" for taking moving pictures and travels to exotic locations including India to film exciting events like elephant stampedes, lion fights, avalanches, volcanic eruptions, and native battles. The series was hugely influential in shaping American attitudes toward technology and invention, and inspired many future scientists and engineers. "Victor Appleton" was a house pseudonym used by the Stratemeyer Syndicate, with various ghostwriters producing the books.
+"""
+
+Notes = """
+The Tom Swift series began in 1910, and "Tom Swift and His Wizard Camera" was the 14th book in the original series, published in 1912. This was during the era when motion picture technology was still relatively new and exciting to the public imagination. The year 1912 represents the first publication of this specific adventure.
+"""
+</result>

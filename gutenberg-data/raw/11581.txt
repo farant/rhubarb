@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "From Out the Vasty Deep" by Mrs. Belloc Lowndes, published in 1921 (as stated in the header). Marie Belloc Lowndes was a prolific British novelist known for her mystery and thriller novels.
+
+<result>
+Title = "From Out the Vasty Deep"
+Author = "Mrs. Belloc Lowndes"
+Year = 1921
+
+Tags = ["fiction", "mystery"]
+
+Summary = """
+A mystery novel by Marie Belloc Lowndes (Mrs. Belloc Lowndes), a British author known for her crime fiction and thrillers. Lowndes was particularly famous for "The Lodger" (1913), based on the Jack the Ripper case. "From Out the Vasty Deep" is one of her many psychological thrillers, likely involving supernatural or mysterious elements given the title's reference to Shakespeare's Henry IV, where Glendower claims he can "call spirits from the vasty deep." The novel is dedicated to A.H. Fass, "owner of the real Wyndfell Hall," suggesting it may be set in a country house with an atmospheric, possibly gothic tone typical of early 20th-century British mystery fiction.
+"""
+
+Notes = """
+The publication year 1921 is clearly stated on the title page. Marie Belloc Lowndes (1868-1947) was the sister of Catholic writer Hilaire Belloc, though her own fiction was primarily mystery/thriller genre rather than explicitly Catholic literature. The Shakespeare epigraph sets a tone of skepticism about the supernatural, which was a common theme in mysteries of this era.
+"""
+</result>

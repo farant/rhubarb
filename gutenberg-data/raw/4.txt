@@ -1,0 +1,15 @@
+<result>
+Title = "The Gettysburg Address"
+Author = "Abraham Lincoln"
+Year = 1863
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+The Gettysburg Address is one of the most famous speeches in American history, delivered by President Abraham Lincoln on November 19, 1863, during the dedication of the Soldiers' National Cemetery in Gettysburg, Pennsylvania. The speech was given four months after the Union armies defeated Confederate forces at the Battle of Gettysburg during the American Civil War. In just 272 words, Lincoln redefined the Civil War as a struggle not merely for the Union, but as a test of whether a nation founded on the principles of liberty and equality could survive. The speech's closing words—"government of the people, by the people, for the people"—have become synonymous with democratic ideals and have resonated through history as a profound statement of American values.
+"""
+
+Notes = """
+The year 1863 reflects when the speech was actually delivered on November 19, 1863. This is the most historically accurate date as the Gettysburg Address is fundamentally tied to this specific moment in history during the American Civil War. The speech was delivered approximately four and a half months after the pivotal Battle of Gettysburg (July 1-3, 1863).
+"""
+</result>

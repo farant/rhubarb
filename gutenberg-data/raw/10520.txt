@@ -1,0 +1,17 @@
+Based on the text you've provided, I can identify this work. This is "The Compleat Cook," published in 1658. This is a historical English cookbook from the 17th century. It was printed as part of a volume called "The Queens Closet Opened" (referring to Queen Henrietta Maria).
+
+<result>
+Title = "The Compleat Cook"
+Author = "Anonymous"
+Year = 1658
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A 17th-century English cookbook providing recipes and cooking instructions in Italian, Spanish, and French styles. Originally published as part of 'The Queens Closet Opened,' this work contains practical culinary advice for preparing flesh, fish, sauces, and pastry. The recipes reflect the cooking methods and aristocratic tastes of Restoration-era England, with instructions attributed to notable figures such as the Earl of Arundel. This is a significant historical document of English culinary practice during the period.
+"""
+
+Notes = """
+The year 1658 is the publication date clearly stated on the title page. The work was printed by E.B. for Nathaniel Brook at the Angel in Cornhill, London. The author is anonymous, which was common for practical works of this nature in the period. This is not appropriate for children given it's a technical cookbook of historical interest rather than children's literature. It is not tagged as 'catholic' as there is no clear indication of Catholic authorship or religious content, despite being from a period with significant Catholic-Protestant tensions in England.
+"""
+</result>

@@ -13,6 +13,7 @@
 #include "thema_visus.h"
 #include "sputnik_syntaxis.h"
 #include "biblia_visus.h"
+#include "librarium_visus.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -62,10 +63,12 @@ nomen structura {
     ThemaVisus* thema_visus;          /* Theme viewer widget */
     SputnikSyntaxis* sputnik_syntaxis; /* Syntax reference widget */
     BibliaVisus* biblia_visus;        /* Bible viewer widget */
+    LibrariumVisus* librarium_visus;  /* Library viewer widget */
     b32 modus_arx_caeli;              /* VERUM = cards mode */
     b32 modus_thema_visus;            /* VERUM = theme viewer mode */
     b32 modus_sputnik_syntaxis;       /* VERUM = syntax reference mode */
     b32 modus_biblia_visus;           /* VERUM = Bible viewer mode */
+    b32 modus_librarium;              /* VERUM = library viewer mode */
 } Schirma;
 
 /* Controller schirmarum */
@@ -174,6 +177,16 @@ schirmata_commutare_ad_sputnik_syntaxis(
 vacuum
 schirmata_commutare_ad_biblia_visus(
     Schirmata* schirmata);
+
+/* Commutare ad modus librarium (library viewer)
+ *
+ * schirmata: controller
+ * quaestio: optional search query (NIHIL = none)
+ */
+vacuum
+schirmata_commutare_ad_librarium(
+    Schirmata*          schirmata,
+    constans character* quaestio);
 
 
 /* ==================================================

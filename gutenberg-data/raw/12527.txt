@@ -1,0 +1,15 @@
+<result>
+Title = "Kimono"
+Author = "John Paris"
+Year = 1922
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+"Kimono" is a novel by John Paris (pseudonym of Frank Ashton-Gwatkin, a British diplomat) published in 1922. The novel explores the complexities of an Anglo-Japanese marriage and the cultural tensions between East and West during the early 20th century. Through its chapters, the work examines themes of cross-cultural relationships, the lives of geisha and women in the Yoshiwara district, and the challenges faced by mixed-race individuals (referenced in the chapter on "Eurasia" and "The Half-Caste Girl"). The novel provides a window into Japanese society as seen through Western eyes during the Taisho period, touching on traditional Japanese culture including family altars, dwarf trees, and geisha entertainment, while also addressing the difficult realities of cultural integration and identity.
+"""
+
+Notes = """
+The year 1922 is taken from the publication date shown in the text. This was published during the Taisho period in Japan (1912-1926), a time of significant cultural exchange and tension between Japan and Western powers. The novel deals with sensitive racial and cultural themes that reflect the attitudes and concerns of its era.
+"""
+</result>

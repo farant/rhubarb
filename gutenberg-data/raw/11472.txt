@@ -1,0 +1,15 @@
+<result>
+Title = "Paying Off"
+Author = "W.W. Jacobs"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Paying Off" is a short story by W.W. Jacobs, part of his collection "Deep Waters." Jacobs was an English humorist and master of the short story form, particularly known for his tales of dockside life and seamen. This story features his recurring character, the night-watchman, who serves as narrator for many of his tales. In typical Jacobs fashion, the night-watchman reflects humorously on his life experiences, in this case lamenting how his "good nature" has been his downfall. The story combines gentle humor with observations about human nature, told in the vernacular dialect of London's working-class waterfront. Jacobs was especially popular in the early 20th century for these character-driven, gently comic tales of ordinary working people.
+"""
+
+Notes = """
+"Deep Waters" was published as a collection in 1919. W.W. Jacobs (1863-1943) published prolifically from the 1890s through the 1920s. While he is perhaps most famous today for his horror story "The Monkey's Paw" (1902), the vast majority of his work consisted of light, humorous tales of maritime and dockside life. His stories were considered wholesome entertainment suitable for family reading, with gentle comedy rather than anything scandalous or inappropriate. The year 1919 reflects the original publication of the "Deep Waters" collection in which "Paying Off" appeared.
+"""
+</result>

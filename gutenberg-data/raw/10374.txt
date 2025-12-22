@@ -1,0 +1,15 @@
+<result>
+Title = "The Ramblin' Kid"
+Author = "Earl Wayland Bowman"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Ramblin' Kid" is an American Western novel by Earl Wayland Bowman, published in 1920. It tells the story of life in the American West, featuring cowboys, ranches, and the adventures typical of early 20th-century Western fiction. The novel captures the spirit of the frontier and cowboy culture during this period, with elements of romance, adventure, and the rugged individualism characteristic of Western literature. Bowman's work represents the popular Western genre of its era, offering entertainment through tales of life on the range.
+"""
+
+Notes = """
+The year 1920 is clearly indicated in the frontmatter of the Project Gutenberg text. This appears to be the original publication date. Earl Wayland Bowman was an American Western author active in the early 20th century, and this novel represents the popular Western genre of that period.
+"""
+</result>

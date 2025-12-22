@@ -1,0 +1,17 @@
+<result>
+Title = "The Best Letters of Charles Lamb"
+Author = "Charles Lamb"
+Year = 1892
+
+Tags = ["non-fiction", "letters", "literature"]
+
+Summary = """
+This is a collection of correspondence by Charles Lamb (1775-1834), one of the most beloved English essayists and letter writers. Lamb is best known for his "Essays of Elia" and his extensive correspondence, which reveals his wit, humanity, and literary sensibility. This particular edition was compiled and edited by Edward Gilpin Johnson in 1892, selecting what the editor considered the finest examples of Lamb's letter-writing. The collection features primarily letters to Samuel Taylor Coleridge, Lamb's close friend and fellow Romantic poet. Lamb's letters are celebrated for their charm, humor, and intimate glimpses into early 19th century literary life. The introduction includes high praise from A.C. Swinburne and W.C. Hazlitt, suggesting these letters would outlast many more ambitious literary works of the period.
+"""
+
+Notes = """
+I chose 1892 as the year because this is specifically an edited collection published in that year by Edward Gilpin Johnson, not the original letters themselves. The letters were written by Lamb primarily in the late 18th and early 19th centuries (he lived 1775-1834), but since this is a curated anthology with editorial apparatus, the publication date of the collection is most appropriate. This is comparable to how we would date an anthology or selected works—by when the collection was assembled, not when the individual pieces were created.
+
+I did not include 'appropriate-for-children' as these are adult literary letters. I did not include 'catholic' as Charles Lamb, while a deeply humane writer, was not a Catholic author and his work would not have carried ecclesiastical approval.
+"""
+</result>

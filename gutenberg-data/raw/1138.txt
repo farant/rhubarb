@@ -1,0 +1,15 @@
+<result>
+Title = "The Research Magnificent"
+Author = "H. G. Wells"
+Year = 1915
+
+Tags = ["fiction", "philosophical-fiction"]
+
+Summary = """
+The Research Magnificent is a philosophical novel by H. G. Wells published in 1915. The novel follows the life of William Benham, a man dedicated to the pursuit of aristocracy in its truest sense - not as a matter of birth or wealth, but as a personal quest for nobility of character and the conquest of fear. The narrative is structured as a prelude followed by six books that trace Benham's development from boyhood through his marriage to Amanda and his various adventures and philosophical investigations. The work explores Wells's ideas about what constitutes true aristocracy and how one might live a life of genuine nobility and purpose, examining themes of fear, courage, social responsibility, and the nature of the "good life." It represents Wells's engagement with questions of human potential and self-improvement during the World War I era.
+"""
+
+Notes = """
+The publication year of 1915 is clearly indicated in the Project Gutenberg text. This novel was written during World War I and reflects Wells's preoccupation with questions about human nature, leadership, and the possibility of a better society through individual moral and intellectual development.
+"""
+</result>

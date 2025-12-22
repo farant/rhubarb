@@ -1,0 +1,15 @@
+<result>
+Title = "A Century of Negro Migration"
+Author = "Carter G. Woodson"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work by Carter G. Woodson, the pioneering African American historian known as the "Father of Black History," examines the migration patterns of African Americans from the South to other regions of the United States. Written during or shortly after the Great Migration, the book analyzes the motivations, experiences, and challenges faced by Black Americans seeking to escape oppression and find better opportunities. Woodson approaches this topic with scholarly rigor, documenting how African Americans exercised their freedom of movement in search of asylum and opportunity, while also acknowledging the deceptions and obstacles they encountered. The work is an important historical document that captures a pivotal moment in African American history.
+"""
+
+Notes = """
+Carter G. Woodson published "A Century of Negro Migration" in 1918, during the height of the Great Migration when hundreds of thousands of African Americans were leaving the rural South for industrial cities in the North and Midwest. Woodson (1875-1950) was the second African American to receive a Ph.D. from Harvard University and founded the Association for the Study of Negro Life and History in 1915. This work represents early scholarly attention to African American migration patterns and is written from a contemporary perspective, as Woodson notes the migration "has just begun." The year 1918 is the original publication date.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Divine Office: A Study of the Roman Breviary"
+Author = "Rev. E.J. Quigley"
+Year = 1920
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+This is a manual and introductory study of the Roman Breviary, intended primarily for seminarians and priests. The book provides historical, liturgical, and theological commentary on the Divine Office - the official daily prayer of the Catholic Church recited by priests and religious. It covers the structure of the canonical hours, the history of the Breviary, collects, hymns like the Te Deum, and anthems of the Blessed Virgin Mary. The author's goal is to help readers understand and pray the Divine Office with greater devotion and attention, addressing a gap in seminary education where liturgical studies often receive less attention than dogmatic and moral theology.
+"""
+
+Notes = """
+The year 1920 is clearly stated on the title page and represents the original publication date of this work. This is not a translation or edition of an older work, but an original 20th-century composition by Father Quigley designed as a practical manual for understanding the Breviary.
+"""
+</result>

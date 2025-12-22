@@ -1,0 +1,15 @@
+<result>
+Title = "Railway Shop Up to Date"
+Author = "Edited by Maham H. Haig"
+Year = 1903
+
+Tags = ["non-fiction", "technical", "industrial"]
+
+Summary = """
+'Railway Shop Up to Date' is a technical manual edited by Maham H. Haig that covers modern (for its time) railway workshop practices, machinery, and manufacturing techniques used in railway maintenance and construction. The work represents early 20th century industrial engineering practices in the railroad industry, documenting the state of railway shop technology during the height of railroad expansion in America.
+"""
+
+Notes = """
+The exact publication year is not explicitly stated in the Project Gutenberg header, but based on the editor Maham H. Haig and the title suggesting contemporary "up to date" practices, this appears to be from approximately 1903. Haig was known for editing technical railway publications in the early 1900s. The year 1903 is an educated estimate based on the historical context of railway technical literature of that era.
+"""
+</result>

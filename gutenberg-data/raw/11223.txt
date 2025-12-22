@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Big Timber: A Story of the Northwest"
+Author = "Bertrand W. Sinclair"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Big Timber is a novel by Canadian-American author Bertrand W. Sinclair set in the Pacific Northwest timber country. The story follows themes of logging camp life, romance, and the rugged frontier existence of those working in the timber industry during the early 20th century. Sinclair was known for his adventure and western novels that depicted life in the Canadian and American wilderness, particularly British Columbia and the Northwest. This work exemplifies his focus on working-class characters making their way in the challenging environment of the logging industry, combining elements of labor, romance, and regional character.
+"""
+
+Notes = """
+The year 1916 is clearly indicated on the title page as the publication date. This appears to be the first edition of the work. Bertrand W. Sinclair (1881-1972) was a prolific writer of western and adventure fiction during the early-to-mid 20th century. The novel's chapter titles suggest a romantic plot involving marriage and various conflicts typical of frontier fiction of this era.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work. It's a collection of letters and manuscripts about George Washington's private life, compiled by Richard Rush, who was the son of Benjamin Rush (a signer of the Declaration of Independence) and himself served in various government positions including Secretary of the Treasury and Attorney General.
+
+<result>
+Title = "Washington in Domestic Life: From Original Letters and Manuscripts"
+Author = "Richard Rush"
+Year = 1857
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This work by Richard Rush presents previously unpublished letters and manuscripts that illuminate George Washington's private and domestic life. Rush, who had personal connections to the founding generation through his father Benjamin Rush (a signer of the Declaration of Independence), compiled these documents to reveal a more intimate portrait of Washington beyond his public military and presidential roles. The work includes correspondence and personal papers that shed light on Washington's character, daily life, relationships, and personal concerns. Rush's dedication indicates proceeds would support the Washington Monument Fund, reflecting the mid-19th century reverence for Washington and efforts to commemorate his legacy.
+"""
+
+Notes = """
+The year 1857 is clearly stated in the publication information and the dated letter from Rush to his publishers. This was published during a period of intense interest in Washington's legacy, just before the Civil War, when Americans were looking back to the founding generation for moral and political guidance.
+"""
+</result>

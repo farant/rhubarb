@@ -1,0 +1,15 @@
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Ship's Company" is a collection of humorous short stories by W.W. Jacobs, the English author best known for "The Monkey's Paw." This particular volume contains tales of everyday life, often featuring working-class characters in England dealing with domestic situations, romantic entanglements, and comedic misunderstandings. "The Bequest" is one of the stories in this collection, depicting the ironic situation of a man who waited thirty years for his romantic rival to die, only to inherit the rival's widow as per the deceased's wishes. Jacobs was a master of gentle, ironic humor and his stories typically feature clever plot twists and wry observations about human nature.
+"""
+
+Notes = """
+"Ship's Company" was published in 1922. W.W. Jacobs (1863-1943) was a prolific writer of short stories, primarily known for his humorous tales of dockside and maritime life, though he also wrote supernatural fiction. While Jacobs was writing during a period when England was still predominantly Christian, his works are secular comedies of manners and social situations rather than religious literature, so this does not receive a 'catholic' tag.
+"""
+</result>

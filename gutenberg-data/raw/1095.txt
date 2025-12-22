@@ -1,0 +1,19 @@
+I need to identify this work by reading the text provided. This is clearly "The Light of Western Stars" by Zane Grey based on the title page and table of contents.
+
+Let me provide you with the structured information about this work:
+
+<result>
+Title = "The Light of Western Stars"
+Author = "Zane Grey"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Light of Western Stars is a Western romance novel by Zane Grey, one of his most popular works. It tells the story of Madeline Hammond, a wealthy New York socialite who travels to New Mexico to visit her brother and becomes involved in ranch life on the frontier. The novel explores themes of transformation, as the sophisticated Eastern woman adapts to the rugged Western landscape and falls in love with a cowboy. Grey vividly depicts the American Southwest, including ranch operations, encounters with bandits and guerrillas along the Mexican border, and the clash between Eastern refinement and Western frontier values. The book exemplifies Grey's romanticized vision of the Old West and helped establish many conventions of the Western genre.
+"""
+
+Notes = """
+First published in 1914. Zane Grey (1872-1939) was one of the most commercially successful Western writers of the early 20th century. This novel represents the height of his popularity and is considered one of his best works. The story is set during the period of border conflicts with Mexico in the early 1910s.
+"""
+</result>

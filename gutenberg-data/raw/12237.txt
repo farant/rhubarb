@@ -1,0 +1,15 @@
+<result>
+Title = "String Quartet No. 16 in F major, Op. 135"
+Author = "Ludwig van Beethoven"
+Year = 1826
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Beethoven's String Quartet No. 16 in F major, Op. 135, is the last complete string quartet composed by Ludwig van Beethoven. Written in October 1826, just a few months before his death in March 1827, it is considered one of the late quartets and represents the culmination of his chamber music output. The quartet is notable for its relatively lighter character compared to some of the other late quartets, and features the famous inscription "Muss es sein? Es muss sein!" (Must it be? It must be!) in the final movement. This is a musical score rather than a literary text, representing one of the most significant works in the chamber music repertoire.
+"""
+
+Notes = """
+Year chosen is 1826, the composition date. The quartet was premiered posthumously in March 1828. This Project Gutenberg entry contains the musical score in digital format rather than a text narrative. As a musical composition, it does not fit categories like 'fiction' vs 'non-fiction' in the traditional literary sense, nor 'appropriate-for-children' or 'catholic' tags. Tagged as 'historical-document' as it represents an important historical musical manuscript.
+"""
+</result>

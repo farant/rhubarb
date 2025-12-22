@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "Bullets & Billets" by Bruce Bairnsfather, published in 1916. This is a memoir of Bairnsfather's experiences as a British officer in World War I, particularly focusing on his time in the trenches. Bairnsfather was famous for creating the cartoon character "Old Bill" and his humorous drawings of trench life. The book is notable for its firsthand account of the famous Christmas Truce and provides a soldier's perspective on the Western Front with both humor and realism.
+
+<result>
+Title = "Bullets & Billets"
+Author = "Bruce Bairnsfather"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+A firsthand memoir by British Army officer and cartoonist Bruce Bairnsfather about his experiences in the trenches during World War I. The book covers his arrival in France, service on the Western Front (particularly around Ploegsteert or "Plugstreet"), and includes a famous account of the Christmas Truce of 1914. Bairnsfather, who would later become renowned for his cartoons featuring the character "Old Bill," provides a soldier's perspective on trench warfare that combines humor with the grim realities of the Great War. The work is both a valuable historical document and an engaging personal narrative of life in the mud and danger of the Western Front.
+"""
+
+Notes = """
+The year 1916 is when this work was first published. The events described in the book take place during 1914-1915, particularly focusing on the early months of WWI and the Christmas Truce of December 1914. Bairnsfather wrote this memoir shortly after his experiences while recovering from wounds.
+"""
+</result>

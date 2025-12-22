@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1959
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office catalog documenting renewal registrations for copyrighted works during a specific period in 1959. It lists books, pamphlets, serials, and periodical contributions that had their copyrights renewed, arranged alphabetically by author or issuing body. Each entry provides information about both the original copyright registration (typically from the early 1930s, as copyrights required renewal after 28 years at that time) and the renewal registration made in 1959. This type of catalog served as an official government record of copyright renewals and was essential for establishing continued copyright protection under the law as it existed before the Copyright Act of 1976 changed renewal requirements.
+"""
+
+Notes = """
+The year 1959 is chosen as this represents when this particular catalog was published and when these renewal registrations were processed. The document references original copyrights from 1931-1932 being renewed in 1959, which aligns with the 28-year renewal requirement that existed under U.S. copyright law prior to 1978. Project Gutenberg ID 11819 corresponds to this specific volume of the copyright renewal catalog.
+"""
+</result>

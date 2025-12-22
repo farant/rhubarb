@@ -1,0 +1,15 @@
+<result>
+Title = "A Fairy Tale in Two Acts, Taken from Shakespeare"
+Author = "George Colman (adapter), William Shakespeare (source material)"
+Year = 1763
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+This is George Colman the Elder's theatrical adaptation of Shakespeare's "A Midsummer Night's Dream," performed at the Theatre-Royal Drury Lane in London. The work condenses Shakespeare's beloved comedy into a two-act "fairy tale" format suitable for 18th-century theatrical presentation. It features the famous mechanicals (the amateur acting troupe led by Bottom the Weaver) and the fairy court of Oberon and Titania, focusing on the magical and comedic elements of Shakespeare's original play.
+"""
+
+Notes = """
+The year 1763 is clearly indicated on the title page as MDCCLXIII. This is the publication date of this specific theatrical adaptation by George Colman, not Shakespeare's original play (which was written circa 1595-1596). Since this is a distinct 18th-century theatrical work with its own artistic choices (condensation to two acts, specific casting, etc.), the 1763 date is historically accurate for this version.
+"""
+</result>

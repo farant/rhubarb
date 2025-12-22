@@ -1,0 +1,15 @@
+<result>
+Title = "An Essence of the Dusk"
+Author = "F. W. Bain"
+Year = 1902
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+'An Essence of the Dusk' is one of F. W. Bain's series of purported translations from Sanskrit manuscripts, presenting romantic tales set in ancient India. Bain (1863-1940) was a British scholar and author who created a popular series of these works, which he claimed to translate from Sanskrit originals but which were largely his own literary creations in the style of Indian romantic literature. The stories typically feature themes of love, beauty, and Eastern philosophy, written in an ornate, lyrical style that appealed to Victorian and Edwardian audiences interested in Oriental romance. This particular work explores themes of love and rejection, as suggested by the epigraph about scorned beauty turning to venom.
+"""
+
+Notes = """
+F. W. Bain published a series of these "translations" between 1902 and the 1920s. 'An Essence of the Dusk' was first published around 1902 (the "5th Edition" notation in the Project Gutenberg text indicates this was a popular work that went through multiple printings). While Bain presented these as authentic translations, they are now understood to be his own romantic fiction inspired by Indian literature and philosophy. The year 1902 represents the original publication date of this specific work in the series.
+"""
+</result>

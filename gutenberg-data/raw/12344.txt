@@ -1,0 +1,19 @@
+I'll help you identify this work and extract the requested information in TOML format.
+
+Based on the text provided, this is a biography of Sir Robert Hart written by his niece Juliet Bredon. Sir Robert Hart (1835-1911) was a British diplomat who served as Inspector-General of China's Imperial Maritime Custom Service for nearly half a century. This particular work was published in its second edition in 1910.
+
+<result>
+Title = "Sir Robert Hart: The Romance of a Great Career"
+Author = "Juliet Bredon"
+Year = 1910
+
+Tags = ["non-fiction", "biography", "historical-document"]
+
+Summary = """
+This is a biography of Sir Robert Hart (1835-1911), written by his niece Juliet Bredon. Hart was a remarkable British diplomat and administrator who served as Inspector-General of China's Imperial Maritime Custom Service for nearly fifty years. The book chronicles his extraordinary career in China, including his early years at Ningpo, his work with the Allied Commission, his relationship with figures like Sir Harry Parkes and General Charles "Chinese" Gordon, and his role in modernizing China's customs system. Hart became one of the most influential foreigners in China during the late Qing Dynasty, playing a crucial role in China's international relations and fiscal administration. The biography provides insight into both Hart's personal life and the broader context of Western involvement in China during this transformative period.
+"""
+
+Notes = """
+I chose the year 1910 as this is the publication date of the second edition as clearly stated on the title page. The first edition would have been published shortly before this. While the book covers events from Hart's birth (1835) through his career in China, the work itself as a published biography dates to 1910, near the end of Hart's life.
+"""
+</result>

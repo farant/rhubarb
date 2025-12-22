@@ -1,0 +1,15 @@
+<result>
+Title = "Clair de Lune"
+Author = "Guy de Maupassant"
+Year = 1884
+
+Tags = ["fiction", "short-story"]
+
+Summary = """
+"Clair de Lune" is a short story by Guy de Maupassant, the renowned French naturalist writer known for his masterful short fiction. The story centers on l'abbé Marignan, a zealous and rigid priest who believes he can understand God's will and intentions with certainty. The narrative explores themes of religious dogmatism, the conflict between spiritual rigidity and natural human emotions, and the beauty of nature as experienced through moonlight. Maupassant, a master of irony and psychological insight, uses this story to critique religious fanaticism and explore the tension between doctrine and sensual experience. The work is characteristic of Maupassant's style: concise, psychologically acute, and often subtly subversive of conventional morality.
+"""
+
+Notes = """
+The year 1884 is clearly indicated in the text as the publication date in Paris. This appears to be part of an illustrated edition published by various artists. Maupassant wrote prolifically during the 1880s, and this story fits within his mature period of short story composition. The story is not appropriate for children given its adult themes and critique of religious authority. Maupassant was raised Catholic but became increasingly skeptical and critical of organized religion, so while he had Catholic cultural background, his works would not receive ecclesiastical approval.
+"""
+</result>

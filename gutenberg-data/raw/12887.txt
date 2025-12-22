@@ -1,0 +1,15 @@
+<result>
+Title = "Laugh and Live"
+Author = "Douglas Fairbanks"
+Year = 1917
+
+Tags = ["non-fiction", "self-help", "appropriate-for-children"]
+
+Summary = """
+"Laugh and Live" is a motivational self-help book by Douglas Fairbanks, the legendary silent film star and one of the founders of United Artists. Written at the height of his early Hollywood career, the book reflects Fairbanks' famous optimistic philosophy and boundless energy. It offers practical advice on personal development, character building, physical fitness, and maintaining a positive attitude. The book embodies the can-do American spirit of the early 20th century and reflects Fairbanks' own persona as an athletic, eternally optimistic adventurer both on and off screen. The chapters cover topics ranging from energy and success to honesty, cleanliness, self-education, and what Fairbanks calls "physical and mental preparedness."
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page as the publication date. This was during World War I and shortly before Fairbanks would become one of Hollywood's biggest stars in the 1920s. The book's emphasis on "preparedness" reflects the wartime context of its writing.
+"""
+</result>

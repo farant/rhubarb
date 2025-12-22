@@ -1,0 +1,15 @@
+<result>
+Title = "Four Famous American Writers: Washington Irving, Edgar Allan Poe, James Russell Lowell, Bayard Taylor"
+Author = "Sherwin Cody"
+Year = 1899
+
+Tags = ["non-fiction", "biography", "appropriate-for-children", "literary-criticism"]
+
+Summary = """
+This is a biographical work by Sherwin Cody (1868-1959), an American writer and educator who specialized in creating educational materials about English language and literature. Published in 1899 with the subtitle "A Book For Young Americans," this volume presents biographical sketches of four prominent 19th-century American authors: Washington Irving, Edgar Allan Poe, James Russell Lowell, and Bayard Taylor. The work was designed as an educational text to introduce young readers to these major figures in American literature through accessible biographical narratives. Cody was known for his pedagogical approach to literature and language instruction, and this book fits within that mission of making American literary heritage accessible to younger audiences.
+"""
+
+Notes = """
+The year 1899 is clearly stated on the title page. This appears to be a straightforward case - it's an original work of literary biography published at the end of the 19th century, not a translation or edition of an earlier work. Sherwin Cody later became famous for his mail-order English instruction courses in the early 20th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Government and Rebellion"
+Author = "E. E. Adams"
+Year = 1861
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A sermon delivered by Reverend E. E. Adams at the North Broad Street Presbyterian Church in Philadelphia on April 28, 1861, just weeks after the outbreak of the American Civil War (Fort Sumter was attacked on April 12, 1861). The sermon addresses the theological and moral dimensions of rebellion against legitimate government authority, arguing from a biblical perspective that rebellion is a sin that merits divine judgment. Adams uses Proverbs 17:11 as his text to argue that God sanctions lawful government and condemns those who rebel against it. The sermon was published by request in 1861, reflecting the intense political and religious debates of the early Civil War period about the legitimacy of secession and the Union cause.
+"""
+
+Notes = """
+The year 1861 is both the composition and publication date. This is a primary historical document from the American Civil War era, representing Northern Protestant religious perspectives on the conflict. While Adams was a Presbyterian minister (a predominantly Protestant denomination), this would not qualify as a 'catholic' work in the sense specified (written by a Catholic author, eligible for nihil obstat/imprimatur). The sermon is a clear example of Civil War-era political theology and provides insight into how religious leaders framed the sectional crisis in moral and theological terms.
+"""
+</result>

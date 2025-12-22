@@ -1,0 +1,15 @@
+<result>
+Title = "Captains All"
+Author = "W. W. Jacobs"
+Year = 1905
+
+Tags = ["fiction", "short-stories", "humorous", "maritime", "appropriate-for-children"]
+
+Summary = """
+'Captains All' is a collection of humorous short stories by W. W. Jacobs, the popular English author known for his tales of dockside life and seamen. The collection features stories about sailors, night-watchmen, and characters from the seafaring world, told with Jacobs' characteristic wit and gentle humor. Jacobs was particularly skilled at capturing the dialect and mannerisms of working-class maritime characters, and these stories showcase his talent for comedy and keen observation of human nature. While he is perhaps best known today for his horror story "The Monkey's Paw," Jacobs was primarily celebrated in his time for lighthearted maritime tales like those in this collection.
+"""
+
+Notes = """
+First published in 1905. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was at the height of his popularity during the Edwardian era. The stories are family-friendly and appropriate for general audiences, featuring gentle humor rather than controversial content.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information in TOML format.
+
+This appears to be a biography of Russell H. Conwell written by Agnes Rush Burr, published in 1905. The book includes his famous lectures "Acres of Diamonds" and "Personal Glimpses of Celebrated Men and Women." Russell Conwell was a Baptist minister, lawyer, and founder of Temple University, best known for founding the "institutional church" concept in America and for his "Acres of Diamonds" lecture which he delivered thousands of times.
+
+<result>
+Title = "Russell H. Conwell: Founder of the Institutional Church in America"
+Author = "Agnes Rush Burr"
+Year = 1905
+
+Tags = ["non-fiction", "biography", "appropriate-for-children"]
+
+Summary = """
+This is a biography of Russell Herman Conwell (1843-1925), the prominent Baptist minister, lawyer, writer, and founder of Temple University in Philadelphia. Conwell is best known for founding the institutional church movement in America at Grace Baptist Church (later Baptist Temple) and for his famous lecture "Acres of Diamonds," which he delivered over 6,000 times. The book includes both a biographical account by Agnes Rush Burr and the full text of two of Conwell's most celebrated lectures. Conwell's institutional church model emphasized serving the community through education, social services, and outreach beyond traditional Sunday worship. The work celebrates his extraordinary dedication to helping working-class people access education and improve their lives.
+"""
+
+Notes = """
+The 1905 publication date is clearly stated on the title page. While Conwell was a Baptist minister and the book is dedicated to Grace Baptist Church, this is not classified as 'catholic' since it concerns Protestant/Baptist religious work rather than Catholic authorship or content.
+"""
+</result>

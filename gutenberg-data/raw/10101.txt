@@ -1,0 +1,15 @@
+<result>
+Title = "A Little Boy Lost"
+Author = "W. H. Hudson"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Little Boy Lost is a children's fantasy novel by W. H. Hudson, the British-Argentine naturalist and author best known for his novel Green Mansions. The story follows a young boy named Martin who wanders away from his home on the great plain and embarks on a series of fantastical adventures. He encounters various mysterious peoples and creatures, including the People of the Mirage, forest savages, the Lady of the Hills, and the Little People Underground. The narrative has an allegorical, dreamlike quality typical of late Victorian/Edwardian children's literature, blending Hudson's deep knowledge of nature with imaginative storytelling. The work reflects Hudson's philosophical interests in childhood consciousness and humanity's relationship with the natural world.
+"""
+
+Notes = """
+Published in 1905 by Duckworth in London. This is Hudson's only full-length children's book, though he wrote other works that appealed to younger readers. The year 1905 represents the first edition publication date.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Whig Against Tory: Or, The Military Adventures of a Shoemaker"
+Author = "Author Unknown"
+Year = 1851
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+A historical tale for children about Enoch Crosby, a shoemaker who served as a spy during the American Revolutionary War. The story is framed as General P. telling his son William about Crosby's adventures, including his enlistment as a soldier, his work for the Committee of Safety, his captures and escapes, and various dangerous encounters. Enoch Crosby was a real historical figure who worked as a secret agent for the American cause and is believed to have inspired James Fenimore Cooper's character Harvey Birch in "The Spy" (1821).
+"""
+
+Notes = """
+The year 1851 is taken from the publication date shown in the text. This appears to be a children's book published in the mid-19th century about Revolutionary War events that occurred in the 1770s-1780s. The book is explicitly labeled "FOR CHILDREN" and uses a narrative frame of a father telling stories to his son to make the historical material more accessible to young readers.
+"""
+</result>

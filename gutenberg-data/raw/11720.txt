@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Fenton's Quest" by M. E. Braddon (Mary Elizabeth Braddon), a Victorian sensation novelist best known for "Lady Audley's Secret." Based on my knowledge, "Fenton's Quest" was first published in 1871.
+
+<result>
+Title = "Fenton's Quest"
+Author = "M. E. Braddon"
+Year = 1871
+
+Tags = ["fiction", "victorian-literature", "sensation-novel"]
+
+Summary = """
+"Fenton's Quest" is a sensation novel by Mary Elizabeth Braddon, one of the most popular and prolific Victorian novelists. Braddon was best known for her groundbreaking work "Lady Audley's Secret" (1862), which helped establish the "sensation novel" genre—a style of Victorian fiction that combined elements of Gothic romance, melodrama, and mystery with contemporary settings and social issues. "Fenton's Quest" follows this tradition, featuring themes of love, mystery, and social intrigue typical of Braddon's work. The novel explores Victorian society's complexities through a plot involving romantic pursuit and suspense. Braddon's novels were immensely popular with middle-class readers and were staples of circulating libraries throughout the Victorian era.
+"""
+
+Notes = """
+The publication year of 1871 refers to the original serialization and first book publication. M. E. Braddon was a highly successful commercial author whose works were widely distributed through circulating libraries and railway bookstalls, as evidenced by the publisher's advertisement in this edition. While Braddon was likely Anglican rather than Catholic, and her sensation novels would not have received ecclesiastical approval, her work is significant as a document of Victorian literary and social history.
+"""
+</result>

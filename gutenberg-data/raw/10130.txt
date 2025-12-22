@@ -1,0 +1,24 @@
+Let me look at what you've pasted. Based on the text you provided, this is a collected edition of children's works by Charles and Mary Lamb, edited by E.V. Lucas. Looking at the evidence:
+
+1. The book is explicitly titled "BOOKS FOR CHILDREN BY CHARLES AND MARY LAMB" edited by E.V. Lucas
+2. The introduction mentions this volume contains "all the stories and verses for children" by the Lambs
+3. It references specific works like "The Poetry for Children" and "Prince Dorus"
+4. The introduction mentions using first or second editions and Andrew W. Tuer's facsimiles
+
+The most famous children's work by Charles and Mary Lamb is "Tales from Shakespeare" (1807), but this appears to be a collected edition edited by E.V. Lucas. E.V. Lucas edited several collected editions of the Lambs' work in the early 20th century, most notably his multi-volume "Works of Charles and Mary Lamb" published around 1903-1905.
+
+<result>
+Title = "Books for Children"
+Author = "Charles Lamb, Mary Lamb"
+Year = 1903
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collected edition of children's literature by Charles and Mary Lamb, edited by E.V. Lucas. The Lamb siblings were English writers best known for their children's book 'Tales from Shakespeare' (1807), which retold Shakespeare's plays in prose suitable for young readers. This volume gathers all known stories and verses for children by the Lambs, including 'Poetry for Children' and 'Prince Dorus'. Charles Lamb (1775-1834) was also famous for his 'Essays of Elia'. Mary Lamb (1764-1847) collaborated with her brother on several works. The collection preserves the original illustrations and presents texts from first or second editions.
+"""
+
+Notes = """
+The year 1903 is chosen as this appears to be E.V. Lucas's comprehensive collected edition of the Lambs' children's works, published as part of his editorial work on the complete works of Charles and Mary Lamb during 1903-1905. While the original works date from 1807 onwards, this is a scholarly collected edition rather than the original publications.
+"""
+</result>

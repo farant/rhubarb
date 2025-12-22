@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This appears to be Volume VII of "The German Classics: Masterpieces of German Literature Translated into English," which is a multi-volume anthology series. The volume contains works by multiple German authors from the 19th century including Hegel, Bettina von Arnim, Immermann, Gutzkow, and several poets.
+
+This anthology series was edited by Kuno Francke and William Guild Howard and published around 1913-1914 by the German Publication Society in New York. While the individual works span from the late 18th through mid-19th centuries, the anthology itself as a collection was published in the early 20th century.
+
+<result>
+Title = "The German Classics: Masterpieces of German Literature Translated into English, Volume VII"
+Author = "Various (Edited by Kuno Francke and William Guild Howard)"
+Year = 1913
+
+Tags = ["non-fiction", "anthology", "literary-criticism", "poetry", "philosophy"]
+
+Summary = """
+This is the seventh volume of a comprehensive twenty-volume anthology series presenting masterpieces of German literature translated into English. This particular volume focuses on prominent 19th-century German writers and thinkers, including the philosopher Georg Wilhelm Friedrich Hegel, the Romantic writer Bettina von Arnim, and several important poets of the period such as Nikolaus Lenau, Eduard Mörike, Annette von Droste-Hülshoff, and Ferdinand Freiligrath. The anthology was designed to make German literary classics accessible to English-speaking audiences and represents a significant scholarly undertaking in cross-cultural literary transmission. The series covers German literature from its earliest periods through the 19th century.
+"""
+
+Notes = """
+The anthology itself was published 1913-1914, though the individual works contained within span roughly 1800-1850. I chose 1913 as the year since this is an editorial collection and the historical/educational value lies in understanding it as an early 20th-century American scholarly project to introduce German literature to English readers, rather than as any single original work. The editors Kuno Francke (Harvard professor) and William Guild Howard were prominent figures in German-American literary scholarship.
+"""
+</result>

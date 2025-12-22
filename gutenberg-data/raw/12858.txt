@@ -1,0 +1,15 @@
+<result>
+Title = "The Lilac Girl"
+Author = "Ralph Henry Barbour"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Lilac Girl" is a romantic novel by Ralph Henry Barbour, an American author known for his light romantic fiction and boys' adventure stories in the early 20th century. Barbour was a prolific writer who produced numerous novels, many featuring pastoral or idyllic settings with romantic themes. This work follows the pattern of his other similarly-titled novels like "Kitty of the Roses" and "An Orchard Princess," suggesting a light romantic story likely set in a rural or garden setting. The book was published with color illustrations by Clarence F. Underwood, a well-known illustrator of the period who specialized in depicting beautiful women, which was typical for popular romantic fiction of the era.
+"""
+
+Notes = """
+The year 1909 is clearly indicated on the title page as the publication year. This is the original publication date of this work.
+"""
+</result>

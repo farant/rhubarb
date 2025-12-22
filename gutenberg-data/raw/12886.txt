@@ -1,0 +1,21 @@
+I'll read through this text to identify the work, author, and publication details.
+
+This appears to be "The Coquette's Victim" (also known as "Dora Thorne" in some editions) by Charlotte M. Braeme (sometimes spelled Brame). Charlotte M. Braeme was a prolific British romance novelist who wrote in the late 19th century under various pseudonyms. She was born in 1836 and died in 1884.
+
+Based on the text and my knowledge of Braeme's work, this appears to be from the 1870s-1880s period when she was most active. "The Coquette's Victim" was one of her many popular sensation novels. Given the publication style and the "Everyday Life Library" imprint mentioned, this is likely from around 1873-1880.
+
+<result>
+Title = "The Coquette's Victim"
+Author = "Charlotte M. Braeme"
+Year = 1876
+
+Tags = ["fiction", "romance", "victorian-literature"]
+
+Summary = """
+A Victorian sensation novel by prolific British author Charlotte M. Braeme (also known as Charlotte Mary Brame, 1836-1884). Braeme was one of the most popular romance novelists of her era, writing numerous melodramatic tales of love, betrayal, and social intrigue. 'The Coquette's Victim' tells a story beginning with a trial scene presided over by magistrate Mr. Kent, suggesting themes of crime, judgment, and moral consequence typical of Victorian sensation fiction. The novel would have been marketed to middle and working-class readers through cheap library editions like the 'Everyday Life Library' series.
+"""
+
+Notes = """
+The exact publication year is difficult to pinpoint as Braeme published prolifically in the 1870s-1880s and her works were frequently reprinted in various formats. 1876 is an approximate date based on her peak publishing period. This work was part of the popular 'sensation fiction' genre that captivated Victorian readers with dramatic plots involving crime, passion, and social transgression.
+"""
+</result>

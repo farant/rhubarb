@@ -1,0 +1,17 @@
+I recognize this text as an issue of *The Atlantic Monthly* magazine from June 1859, featuring essays on literature and art. This is a periodical publication rather than a single-authored book. The specific essay visible here is on Shakespeare's art.
+
+<result>
+Title = "The Atlantic Monthly, Vol. III, June 1859, No. XX"
+Author = "Various"
+Year = 1859
+
+Tags = ["non-fiction", "periodical", "literary-criticism"]
+
+Summary = """
+This is an issue of The Atlantic Monthly magazine from June 1859, described as "A Magazine of Literature, Art, and Politics." The visible content includes an essay on "Shakspeare's Art" which examines Shakespeare's relationship to nature and his artistic method, arguing that Shakespeare's greatness lies not just in natural genius but in his skillful mastery of language and artistic technique. The essay opens with a quote from Ben Jonson and explores how Shakespeare should be studied both for his poetic powers and his deliberate artistry.
+"""
+
+Notes = """
+Year chosen is the publication date of this specific issue (June 1859). The Atlantic Monthly was founded in 1857 and remains in publication today. This is a periodical rather than a standalone work, so "Various" is appropriate for the author field as magazines typically contain contributions from multiple writers. The essay on Shakespeare appears to be unsigned, which was common practice in 19th-century periodicals.
+"""
+</result>

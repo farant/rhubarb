@@ -1,0 +1,15 @@
+<result>
+Title = "In the Days of My Youth"
+Author = "Amelia B. Edwards"
+Year = 1873
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"In the Days of My Youth" is a Victorian novel by Amelia B. Edwards, an English novelist, journalist, and Egyptologist. The novel is a coming-of-age story that follows the narrator's recollections of their youth, beginning with descriptions of their birthplace in the picturesque hamlet of Saxonholme. Edwards was known for her vivid descriptive prose and her ability to capture English rural life. While she later became famous for her Egyptological work and travel writing, her earlier career was marked by successful novels like this one. The work is characteristic of Victorian domestic fiction, exploring themes of memory, place, and personal development through detailed observation of English countryside and society.
+"""
+
+Notes = """
+The text shows a publication date of 1874, which appears to be the edition date. However, the novel was first published in 1873, which is the more historically accurate date for when the work entered the public sphere. I've chosen 1873 as it represents the original publication year. Amelia B. Edwards (1831-1892) was a prolific Victorian author who later became a pioneering Egyptologist and founded the Egypt Exploration Fund.
+"""
+</result>

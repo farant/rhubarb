@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is "Organic Syntheses" edited by James Bryant Conant. This is a scientific reference work that was originally published as an annual series starting in 1921. James Bryant Conant (who later became president of Harvard) was the editor-in-chief of the early volumes. The series provides detailed, tested procedures for organic chemical synthesis.
+
+Given the context that this is Volume 1 of the series (based on typical Gutenberg cataloging and the early etext number #1234), and knowing that Conant began editing this series in 1921, I'll use that as the year.
+
+<result>
+Title = "Organic Syntheses, Volume 1"
+Author = "James Bryant Conant (Editor)"
+Year = 1921
+
+Tags = ["non-fiction", "scientific", "chemistry", "reference"]
+
+Summary = """
+Organic Syntheses is a highly respected annual publication series that provides detailed, tested procedures for synthesizing organic chemical compounds. The series was founded in 1921 with James Bryant Conant (who later became president of Harvard University and a key figure in the Manhattan Project) as editor-in-chief. Each volume contains step-by-step synthetic procedures that have been carefully checked and verified, making it an essential reference work for organic chemists. The procedures include specific reagents, conditions, apparatus, and expected yields, serving as a practical laboratory manual for researchers and students in organic chemistry.
+"""
+
+Notes = """
+I've assigned 1921 as the year for Volume 1 of Organic Syntheses, which was when the series began publication under Conant's editorship. The Gutenberg text includes a caveat that OCR errors may exist in chemical quantities and numbers, which is important for anyone attempting to use these procedures. This is definitively not appropriate for children given the technical nature and laboratory safety concerns. This is a scientific reference work rather than Catholic literature, so the 'catholic' tag does not apply despite Conant having some religious background.
+"""
+</result>

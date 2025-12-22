@@ -113,6 +113,63 @@ _concha_command_biblia(
 }
 
 
+/* $library command - switch to library viewer with optional search query
+ *
+ * Usage: $library              - open categories menu
+ *        $library The History  - search for "The History"
+ */
+interior b32
+_concha_command_library(
+    ContextusCommandi* ctx)
+{
+    Schirmata* schirmata;
+    character argumentum[CXXVIII];
+    i32 col;
+    i32 idx;
+    character c;
+
+    schirmata = (Schirmata*)ctx->datum_registratus;
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    /* Legere argumentum post commandum (skip leading space) */
+    idx = ZEPHYRUM;
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < CXXVI; col++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
+
+        /* Skip leading spaces */
+        si (idx == ZEPHYRUM && c == ' ')
+        {
+            perge;
+        }
+
+        /* Stop at end of line or null */
+        si (c == '\0' || c == '\n')
+        {
+            frange;
+        }
+
+        argumentum[idx++] = c;
+    }
+    argumentum[idx] = '\0';
+
+    /* Commutare ad librarium visus */
+    si (idx > ZEPHYRUM)
+    {
+        schirmata_commutare_ad_librarium(schirmata, argumentum);
+    }
+    alioquin
+    {
+        schirmata_commutare_ad_librarium(schirmata, NIHIL);
+    }
+
+    redde VERUM;
+}
+
+
 /* $date command - insert/update current date in output region */
 interior b32
 _concha_command_date(
@@ -329,6 +386,7 @@ concha_creare(ConchaConfiguratio* config)
     registrum_commandi_registrare(reg_commandi, "thema", _concha_command_thema, schirmata);
     registrum_commandi_registrare(reg_commandi, "sputnik-syntax", _concha_command_sputnik_syntax, schirmata);
     registrum_commandi_registrare(reg_commandi, "bible", _concha_command_biblia, schirmata);
+    registrum_commandi_registrare(reg_commandi, "library", _concha_command_library, schirmata);
 
     /* Configurare fenestram */
     fenestra_config.titulus = config->titulus ? config->titulus : "Concha";

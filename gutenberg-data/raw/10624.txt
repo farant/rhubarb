@@ -1,0 +1,15 @@
+<result>
+Title = "John Silence: Physician Extraordinary"
+Author = "Algernon Blackwood"
+Year = 1908
+
+Tags = ["fiction", "horror", "supernatural"]
+
+Summary = """
+This is a collection of short stories featuring Dr. John Silence, a "psychic doctor" who investigates and treats supernatural ailments and disturbances. Algernon Blackwood's John Silence stories are pioneering works in the occult detective genre, featuring a protagonist who uses both scientific reasoning and psychic abilities to confront paranormal phenomena. The three stories included are "A Psychical Invasion," "Ancient Sorceries," and "The Nemesis of Fire." Blackwood was a master of weird fiction and these tales blend psychological horror with the supernatural in sophisticated ways that influenced later writers in the genre.
+"""
+
+Notes = """
+The book was first published in 1908 under the full title "John Silence: Physician Extraordinary." This Project Gutenberg edition appears to contain three of the five stories from the original collection. Blackwood (1869-1951) was a prolific British author known for his supernatural fiction and was a major influence on later horror writers including H.P. Lovecraft.
+"""
+</result>

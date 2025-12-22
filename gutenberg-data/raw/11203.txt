@@ -1,0 +1,15 @@
+<result>
+Title = "Narrative of a Survey of the Intertropical and Western Coasts of Australia"
+Author = "Phillip Parker King"
+Year = 1827
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a detailed account of the maritime survey expeditions conducted by Captain Phillip Parker King along the northern and western coastlines of Australia between 1818 and 1822. King, a Royal Navy officer and the son of the third Governor of New South Wales, undertook these surveys to chart previously unexplored coastal regions of the Australian continent. The work represents an important historical document of early Australian exploration and maritime cartography, providing detailed observations of geography, natural history, and indigenous peoples encountered during the voyages. King's surveys were crucial in filling gaps in European knowledge of the Australian coastline and contributed significantly to the mapping of the continent.
+"""
+
+Notes = """
+The surveys were conducted 1818-1822, but this narrative was published in 1827 in London. The 1827 publication date is chosen as it represents when this comprehensive account became available to the public, though the events described occurred earlier. This is a primary historical source document of Australian exploration.
+"""
+</result>

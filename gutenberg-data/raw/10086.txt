@@ -1,0 +1,15 @@
+<result>
+Title = "The Minute Boys of the Mohawk Valley"
+Author = "James Otis"
+Year = 1911
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children", "american-revolution"]
+
+Summary = """
+"The Minute Boys of the Mohawk Valley" is a historical adventure novel by James Otis (pen name of James Otis Kaler), part of his popular "Minute Boys" series aimed at young readers. The book is set during the American Revolutionary War in New York's Mohawk Valley, a region that saw significant conflict between Loyalist forces (often allied with Native American tribes) and Patriot settlers. The story follows young protagonists involved in the defense of their communities, likely touching on historical events such as the Siege of Fort Stanwix and the Battle of Oriskany (1777). James Otis was a prolific author of juvenile historical fiction who wrote numerous series about American history, particularly focusing on the Revolutionary War and colonial period. His works were designed to teach young Americans about their heritage through exciting adventure narratives.
+"""
+
+Notes = """
+The year 1911 represents the publication date of this specific work. While the story is set during the American Revolution (1775-1783), this is clearly a historical fiction novel published in the early 20th century rather than a primary historical document from the Revolutionary period itself. The publication date of 1911 is the most historically accurate for cataloging purposes, as this represents when James Otis created this particular narrative work.
+"""
+</result>

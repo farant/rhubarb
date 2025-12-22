@@ -1,0 +1,17 @@
+I can identify this work from the text. This appears to be "Le Socialisme en Danger" (Socialism in Danger) by Jean Grave, a French anarchist writer and theorist. The work was published in 1897, as indicated by the deposit date at the Ministry of Interior mentioned in the text.
+
+<result>
+Title = "Le Socialisme en Danger"
+Author = "Jean Grave"
+Year = 1897
+
+Tags = ["non-fiction", "political-theory", "anarchism"]
+
+Summary = """
+'Le Socialisme en Danger' (Socialism in Danger) is a work by French anarchist theorist Jean Grave, examining critiques and concerns about the socialist movement at the end of the 19th century. Grave was a prominent anarchist writer and propagandist who published numerous works through his Bibliothèque Sociologique series. This work appears in the context of debates within anarchist and socialist circles during a period of significant political ferment in France, following the Paris Commune and during the rise of various socialist and anarchist movements. The work reflects Grave's particular anarchist-communist perspective and his engagement with the broader socialist movement of his time.
+"""
+
+Notes = """
+The year 1897 is confirmed by the deposit notice at the Ministry of Interior mentioned in the front matter. Jean Grave (1854-1939) was a leading French anarchist theorist whose works were widely read in anarchist circles. Several of his other works are listed in the Bibliothèque Sociologique catalog shown in this text, including 'La Société Mourante et l'Anarchie' (which was banned), 'La Société Future', and 'La Grande Famille'. This work does not receive the 'appropriate-for-children' or 'catholic' tags as it is a theoretical political work from an anarchist perspective.
+"""
+</result>

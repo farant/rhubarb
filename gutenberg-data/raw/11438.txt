@@ -1,0 +1,15 @@
+<result>
+Title = "The Willows"
+Author = "Algernon Blackwood"
+Year = 1907
+
+Tags = ["fiction", "horror", "supernatural"]
+
+Summary = """
+"The Willows" is a classic supernatural horror novella by Algernon Blackwood, widely considered one of the finest works in the genre. The story follows two friends on a canoe trip down the Danube River who become stranded on a small island in a remote, desolate region covered with willow bushes. As they camp for the night, they begin to experience increasingly disturbing and inexplicable phenomena, sensing the presence of otherworldly forces. The story builds a profound sense of cosmic dread and explores themes of humanity's insignificance before incomprehensible supernatural powers. H.P. Lovecraft praised it as one of the greatest weird tales ever written. Blackwood, a master of atmospheric horror, uses the liminal space of the willow-covered marshes to create an overwhelming sense of isolation and terror.
+"""
+
+Notes = """
+The year 1907 is when "The Willows" was first published in "The Listener and Other Stories." This is Blackwood's most celebrated work and a landmark in supernatural fiction. The story is not appropriate for children due to its intense psychological horror and existential dread. Blackwood was not Catholic (he was involved in various occult and mystical traditions), so the 'catholic' tag does not apply.
+"""
+</result>

@@ -1,0 +1,23 @@
+Looking at this text, I can identify this as a Finnish play. The title page clearly shows:
+
+**KULLERVO** - A play in five acts ("Näytelmä viidessä näytöksessä") by **Aleksis Kivi**, with a publication date of 1919 shown.
+
+However, there's important historical context here. Aleksis Kivi (1834-1872) was Finland's national author who wrote this play much earlier. "Kullervo" was written around 1860 and first published in 1864. The 1919 date appears to be a later edition/printing.
+
+The play is based on the tragic Kullervo story from the Kalevala (Finnish national epic). It features characters from Finnish mythology including Väinämöinen, Ilmarinen, and Lemminkäinen, with Kullervo as the tragic protagonist.
+
+<result>
+Title = "Kullervo"
+Author = "Aleksis Kivi"
+Year = 1864
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Kullervo is a five-act tragic play by Aleksis Kivi, Finland's national author, based on the Kullervo cycle from the Kalevala. The play tells the story of Kullervo, a tragic hero born into a cursed family feud between Kalervo and Untamoinen. The drama features characters from Finnish mythology including Väinämöinen, Ilmarinen, and Lemminkäinen. It explores themes of fate, vengeance, and the tragic consequences of family conflict. This work is considered one of Kivi's major dramatic works and an important piece of Finnish national literature.
+"""
+
+Notes = """
+While the Gutenberg text shows 1919, this appears to be a later edition. The play was originally written around 1860 and first published in 1864. Using 1864 as the historically significant date for a timeline of literary works. Not marked 'catholic' as this is Finnish mythology-based literature from a Lutheran cultural context.
+"""
+</result>

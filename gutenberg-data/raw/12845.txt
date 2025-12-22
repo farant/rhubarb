@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "The World's Greatest Books" edited by Arthur Mee and J.A. Hammerton, specifically Volume XII on Modern History. This was a famous compilation series published in the early 20th century that provided condensed versions of important works across various subjects.
+
+<result>
+Title = "The World's Greatest Books, Vol. XII: Modern History"
+Author = "Arthur Mee, J.A. Hammerton (editors)"
+Year = 1910
+
+Tags = ["non-fiction", "history", "reference", "anthology"]
+
+Summary = """
+This volume is part of 'The World's Greatest Books' series, a popular early 20th-century compilation that aimed to provide educated readers with condensed versions of important works across all fields of knowledge. Volume XII focuses on Modern History and includes abbreviated versions of major historical works covering America, England, and France. The anthology features summaries of classics like Prescott's histories of the conquests of Mexico and Peru, Macaulay's History of England, Voltaire's Age of Louis XIV, and other significant historical texts. The series was designed to make great works accessible to a broad audience during the era of self-improvement and popular education movements.
+"""
+
+Notes = """
+The World's Greatest Books series was first published around 1910 and became quite popular in the English-speaking world. While exact publication dates can vary by edition, 1910 is the commonly cited date for the initial publication of this compilation series. This is an editorial anthology rather than an original historical work, and therefore the year reflects when the compilation was published, not the original dates of the individual works it contains.
+"""
+</result>

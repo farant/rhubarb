@@ -1,0 +1,15 @@
+<result>
+Title = "How to Teach"
+Author = "George Drayton Strayer, Naomi Norsworthy"
+Year = 1917
+
+Tags = ["non-fiction", "education", "pedagogy", "psychology"]
+
+Summary = """
+"How to Teach" is an educational text that presents the principles of psychology as applied to teaching methods. Written by George Drayton Strayer and Naomi Norsworthy, the book aims to make psychological principles accessible to teachers by using clear, non-technical language. It covers the aims of education, teaching methods, measurement of student achievement, and the social purpose of education. The work is grounded in contemporary (early 20th century) scientific research in psychology and education, emphasizing the measurement of outcomes and the relationship between mental development and classroom practice. The authors stress both the unity and diversity of mental processes in children while providing practical guidance for classroom instruction.
+"""
+
+Notes = """
+The preface is dated February 1917 and the authors dated their preface November 15, 1916, making 1917 the clear publication year. This work represents early 20th-century progressive education theory, particularly the scientific measurement movement in education. George Drayton Strayer was a prominent education administrator and reformer, while Naomi Norsworthy was a pioneering female psychologist and educator who died young in 1916, making this likely one of her final works.
+"""
+</result>

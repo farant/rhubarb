@@ -1,0 +1,15 @@
+<result>
+Title = "Balcony Stories"
+Author = "Grace King"
+Year = 1892
+
+Tags = ["fiction", "short-stories", "regional-literature", "american-literature"]
+
+Summary = """
+"Balcony Stories" is a collection of short stories by Grace King, a prominent New Orleans writer known for her portrayal of Louisiana Creole culture and society. The collection features interconnected tales told from the vantage point of a balcony, a characteristic architectural feature of New Orleans homes. King's stories explore themes of Southern womanhood, racial complexities, class distinctions, and the unique social fabric of post-Civil War Louisiana. Her work is noted for its realistic depiction of Creole life, dialect, and the changing dynamics of the South during the Reconstruction era. The collection includes memorable stories such as "The Little Convent Girl" and "La Grande Demoiselle," which showcase King's skill in character development and her nuanced understanding of Southern society.
+"""
+
+Notes = """
+The year 1892 is clearly indicated in the table of contents as the original publication date of this collection. Grace King (1852-1932) was a significant figure in American regional literature and Louisiana literary history, though she was not a Catholic author in terms of writing explicitly Catholic literature that would receive imprimatur.
+"""
+</result>

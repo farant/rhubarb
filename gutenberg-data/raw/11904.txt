@@ -1,0 +1,15 @@
+<result>
+Title = "Ailsa Paige"
+Author = "Robert W. Chambers"
+Year = 1910
+
+Tags = ["fiction", "historical-fiction", "romance"]
+
+Summary = """
+"Ailsa Paige" is a historical romance novel by Robert W. Chambers set during the American Civil War. The story follows the titular character Ailsa Paige, a young woman in New York society, as she becomes involved in nursing wounded soldiers and experiences love and loss during the war. Chambers was known for his romantic fiction and historical novels, and this work combines both elements, depicting the social and personal upheavals of the Civil War era through the lens of its characters' relationships and experiences. The novel portrays the transformation of civilians into participants in the war effort and explores themes of duty, sacrifice, and romance against the backdrop of one of America's most tumultuous periods.
+"""
+
+Notes = """
+The publication year is straightforward - 1910, as indicated by both the copyright notice and publication date in the frontmatter. Robert W. Chambers (1865-1933) was an American artist and fiction writer, best known for "The King in Yellow" (1895) but who also wrote numerous popular romance and historical novels. While Chambers was raised in a culturally mixed Protestant/Catholic household, his works were primarily commercial fiction and would not qualify for the 'catholic' tag as they were not explicitly Catholic literature written from that perspective.
+"""
+</result>

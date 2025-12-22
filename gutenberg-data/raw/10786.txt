@@ -1,0 +1,15 @@
+<result>
+Title = "Odd Man Out"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Odd Man Out" is a short story that is part of W.W. Jacobs' collection "Sailor's Knots" published in 1909. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author known for his humorous maritime tales and short stories. This particular story features his recurring character, the night watchman, who offers philosophical musings on friendship and recounts tales from his experiences. Jacobs was a master of the short story form and is perhaps best known for his horror story "The Monkey's Paw," though most of his work consisted of light, comedic tales of life along the Thames waterfront and sailors' adventures. His stories are characterized by cockney dialect, dry humor, and gentle satire of working-class life in turn-of-the-century England.
+"""
+
+Notes = """
+The year 1909 is clearly indicated in the text as the publication date of the "Sailor's Knots" collection, of which "Odd Man Out" is Part 6. This is the original publication year for this work.
+"""
+</result>

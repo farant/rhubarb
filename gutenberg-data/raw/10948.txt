@@ -1,0 +1,15 @@
+<result>
+Title = "The Stories of the Three Burglars"
+Author = "Frank R. Stockton"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of humorous short stories by Frank R. Stockton, an American writer known for his whimsical and fantastical tales. Stockton was a popular 19th-century author whose work often featured clever plot twists and lighthearted adventure. He is perhaps best known for "The Lady, or the Tiger?" This particular collection involves stories told by three burglars, featuring Stockton's characteristic wit and entertaining narrative style. The work exemplifies the genteel humor and storytelling popular in American literature of the late Victorian era.
+"""
+
+Notes = """
+The year 1889 is clearly indicated in the original publication information from the text itself. Frank R. Stockton (1834-1902) was a Protestant American writer, so the 'catholic' tag is not applicable. His work is generally considered appropriate for children and family audiences, featuring moral lessons delivered through entertaining and non-violent narratives.
+"""
+</result>

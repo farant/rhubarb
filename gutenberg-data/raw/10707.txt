@@ -1,0 +1,19 @@
+The text you provided appears to be the complete content. Based on the title page information visible, this is "A Christmas Mystery: The Story of Three Wise Men" by William J. Locke, illustrated by Blendon Campbell, published in 1910.
+
+William J. Locke (1863-1930) was an English novelist and playwright who wrote popular fiction in the early 20th century. This appears to be a Christmas-themed short story or novella. From the list of other works by the author (Idols, Septimus, The Beloved Vagabond, etc.), Locke was primarily a fiction writer known for romantic and sentimental novels.
+
+<result>
+Title = "A Christmas Mystery: The Story of Three Wise Men"
+Author = "William J. Locke"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Christmas-themed story by William J. Locke, an English novelist popular in the early 20th century. Locke was known for romantic and sentimental fiction with a light touch. This work, subtitled "The Story of Three Wise Men," appears to be a Christmas tale that likely plays on the biblical theme of the Three Wise Men visiting the infant Jesus, reimagined in a contemporary or allegorical setting. The epigraph "I cannot tell how the truth may be: I say the tale as 'twas said to me" suggests a storytelling frame that adds mystery and folklore quality to the narrative.
+"""
+
+Notes = """
+The year 1910 is clearly marked on the title page as the publication date. This appears to be the original publication year for this specific work. William J. Locke was not a Catholic author - he was English but not known as a Catholic writer, so the 'catholic' tag was not applied.
+"""
+</result>

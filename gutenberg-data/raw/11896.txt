@@ -1,0 +1,17 @@
+Looking at this Project Gutenberg text, I can identify it clearly:
+
+<result>
+Title = "Citizen Bird: Scenes from Bird-Life in Plain English for Beginners"
+Author = "Mabel Osgood Wright, Elliott Coues"
+Year = 1897
+
+Tags = ["non-fiction", "appropriate-for-children", "natural-history", "educational"]
+
+Summary = """
+'Citizen Bird' is an educational natural history book designed to introduce children and beginners to North American bird life. Written by nature writer Mabel Osgood Wright and ornithologist Elliott Coues, with illustrations by the renowned bird artist Louis Agassiz Fuertes, the book presents bird biology, behavior, and identification in accessible language. It was part of the late 19th-century nature study movement that sought to foster appreciation for wildlife and encourage conservation. The book uses a narrative approach to teach children about different bird species, their habits, and their ecological importance.
+"""
+
+Notes = """
+First published in 1897 by Macmillan. This was an important work in the early American conservation and nature education movement. Elliott Coues (1842-1899) was a prominent ornithologist, while Mabel Osgood Wright (1859-1934) was a pioneering nature writer and conservationist who helped found the Connecticut Audubon Society. Louis Agassiz Fuertes (1874-1927) was one of the most celebrated bird illustrators of his era. The book's approach of teaching children to observe and appreciate living birds rather than collecting specimens was progressive for its time.
+"""
+</result>

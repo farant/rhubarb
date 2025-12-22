@@ -1,0 +1,15 @@
+<result>
+Title = "Le pilote du Danube"
+Author = "Jules Verne"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Le pilote du Danube" (The Danube Pilot) is an adventure novel by French author Jules Verne, one of the pioneers of science fiction and adventure literature. The story is set along the Danube River and takes place in August 1876, involving a competition at Sigmaringen. Like many of Verne's works, it combines adventure, geography, and human drama in a European setting. The novel showcases Verne's characteristic attention to geographical detail and his ability to weave exciting narratives around real locations and historical contexts.
+"""
+
+Notes = """
+This work was originally published in 1908 as part of the "Voyages Extraordinaires" series. The date "1920" that appears in the Project Gutenberg text is likely referring to a specific edition or reprint, not the original publication. Jules Verne (1828-1905) was one of the most translated authors in the world, and this is one of his lesser-known later works. The story's setting in 1876 (the year events take place in the narrative) should not be confused with the publication date.
+"""
+</result>

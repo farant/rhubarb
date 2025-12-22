@@ -1,0 +1,15 @@
+<result>
+Title = "The Tale of Peter Rabbit"
+Author = "Beatrix Potter"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Tale of Peter Rabbit is a classic children's picture book by Beatrix Potter that tells the story of a mischievous young rabbit named Peter who disobeys his mother and ventures into Mr. McGregor's garden, where he encounters danger and narrowly escapes. First published privately by Potter in 1901 and then commercially in 1902 by Frederick Warne & Co., it became one of the best-selling children's books of all time. The story combines gentle moral lessons about obedience with charming watercolor illustrations and has been beloved by generations of children worldwide. It was the first of many Tales by Beatrix Potter featuring anthropomorphic animals.
+"""
+
+Notes = """
+1902 is the year of the first commercial publication by Frederick Warne & Co., which is generally considered the canonical publication date. Potter had self-published a small edition in 1901, but the 1902 Warne edition is the version that became the famous classic we know today with Potter's iconic watercolor illustrations.
+"""
+</result>

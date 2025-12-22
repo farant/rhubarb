@@ -1,0 +1,15 @@
+<result>
+Title = "Laughing Bill Hyde and Other Stories"
+Author = "Rex Beach"
+Year = 1917
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+"Laughing Bill Hyde and Other Stories" is a collection of short stories by Rex Beach, an American novelist and short story writer known for his adventure tales set in Alaska and the American West. The title story follows William Hyde, a criminal recently released from Montana's Deer Lodge Penitentiary, whose experiences in prison have left him physically weakened but unchanged in character. Beach was a popular writer of his era, known for works like "The Spoilers" (1906), and his stories often featured colorful characters, frontier settings, and adventure themes typical of early 20th century American popular fiction.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page as the publication date. Rex Beach (1877-1949) was a bestselling author during the early 20th century, though his work is less well-known today. His writing style reflects the popular adventure fiction of the pre-WWI and WWI era.
+"""
+</result>

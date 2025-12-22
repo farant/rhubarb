@@ -1,0 +1,21 @@
+I need to examine this text more carefully to identify the work. Let me read through what's provided.
+
+This appears to be a Spanish language textbook called "Páginas Sudamericanas" (South American Pages) by Helen Phipps, who was an instructor in Spanish at the University of Texas. The book was published in New York in 1920.
+
+This is clearly an educational textbook designed for teaching Spanish, with content adapted from Pan American Union bulletins and articles. It's meant for use with the direct method of language instruction.
+
+<result>
+Title = "Páginas Sudamericanas"
+Author = "Helen Phipps"
+Year = 1920
+
+Tags = ["non-fiction", "educational", "language-textbook"]
+
+Summary = """
+A Spanish language textbook designed for intermediate students, adapted largely from bulletins and articles issued by the Pan American Union. The work provides conversation and composition material about South American countries, intended for use with the direct method of language instruction. Written by Helen Phipps, an instructor in Spanish at the University of Texas, the book includes readings about Latin American geography, culture, and society, with a Spanish-English vocabulary section. It was designed to follow or accompany other Spanish textbooks and aimed to generate interest in Latin American countries among American students during the early 20th century.
+"""
+
+Notes = """
+This is straightforward to date as it explicitly states "New York, 1920" on the title page. The work is a pedagogical text rather than a literary or philosophical work, representing the educational materials of the early Pan-American movement period when there was growing interest in fostering better understanding between the United States and Latin American nations.
+"""
+</result>

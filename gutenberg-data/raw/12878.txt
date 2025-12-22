@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Radio Boys in the Thousand Islands; or, The Yankee-Canadian Wireless Trail"
+Author = "J. W. Duffield"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Radio Boys in the Thousand Islands" is part of the popular "Radio Boys" series of adventure novels published in the early 1920s. These books capitalized on the excitement surrounding the new technology of radio communication, which was revolutionizing society at the time. The series follows young protagonists who use radio equipment to solve mysteries and have adventures. This particular installment is set in the Thousand Islands region along the U.S.-Canadian border in the St. Lawrence River, where the boys follow a "wireless trail" involving radio technology. The Radio Boys series was aimed at young male readers and combined technical information about radio with adventure storytelling, typical of the juvenile adventure fiction popular in the interwar period.
+"""
+
+Notes = """
+The year 1922 is clearly stated in the text itself. J. W. Duffield wrote several books in the Radio Boys series during the early 1920s, including other titles listed here like "Radio Boys in the Secret Service," "Radio Boys in the Flying Service," and "Radio Boys in the Rockies." These were part of the broader tradition of boys' series books that were extremely popular in American children's literature from the late 19th through mid-20th century.
+"""
+</result>

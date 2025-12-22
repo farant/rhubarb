@@ -1,0 +1,17 @@
+Based on the text excerpt you've provided, I can identify this work:
+
+<result>
+Title = "Contes littéraires du Bibliophile Jacob à ses petits-enfants"
+Author = "Paul Lacroix (Bibliophile Jacob)"
+Year = 1876
+
+Tags = ["fiction", "appropriate-for-children", "literary-tales"]
+
+Summary = """
+This is a collection of literary tales by Paul Lacroix (1806-1884), who wrote under the pseudonym "Bibliophile Jacob." Lacroix was a prolific French author, librarian, and historian. This particular work, "Contes littéraires" (Literary Tales), was written for his grandchildren and contains illustrated stories aimed at young readers. The work demonstrates the 19th-century French tradition of moral and educational literature for children, written in an engaging narrative style. Lacroix was known for his extensive knowledge of French history and literature, which often informed his storytelling. The book was illustrated by P. Kauffmann and published in Paris.
+"""
+
+Notes = """
+The text indicates this is a "DEUXIÈME ÉDITION" (second edition) from 1897, but the original first edition was published in 1876. I've chosen 1876 as the primary year since that represents when the work was originally published and first made available to readers. The dedication to Edmond Ferdinand Perier suggests this was a personal work with sentimental value to the author, written specifically for the younger generation.
+"""
+</result>

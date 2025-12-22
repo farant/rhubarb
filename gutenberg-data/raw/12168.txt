@@ -1,0 +1,15 @@
+<result>
+Title = "Min Gamle Kammerat: En novelle fra Stille Eksistenser"
+Author = "Herman Bang"
+Year = 1884
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Min Gamle Kammerat" (My Old Comrade) is a novella by Danish author Herman Bang, part of his collection "Stille Eksistenser" (Quiet Existences). The work is characteristic of Bang's literary style, which focuses on subtle psychological portraits and the inner lives of ordinary people. The story depicts a chance reunion between two old friends who have drifted apart over the years, exploring themes of memory, friendship, and the passage of time. Bang was one of Denmark's most important literary figures of the late 19th century, known for his impressionistic prose style and his sensitive portrayal of human relationships and social outsiders.
+"""
+
+Notes = """
+"Stille Eksistenser" was published in 1886, but some of the novellas in the collection, including "Min Gamle Kammerat," may have been written or published separately earlier. I've chosen 1884 as a reasonable estimate for the original composition or first publication of this particular novella, though 1886 (the collection date) would also be defensible. Herman Bang (1857-1912) was a significant figure in Danish literature and an early practitioner of literary impressionism in Scandinavia.
+"""
+</result>

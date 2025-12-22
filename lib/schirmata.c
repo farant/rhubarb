@@ -429,6 +429,55 @@ _schirmata_biblia_visus_tractare_eventum(
 
 
 /* ==================================================
+ * Widget Wrapper Functiones - Librarium Visus
+ * ================================================== */
+
+/* Datum pro librarium visus widget wrapper */
+nomen structura {
+    LibrariumVisus* librarium_visus;
+    Schirmata*      schirmata;
+} SchirmataLibrariumVisusDatum;
+
+hic_manens vacuum
+_schirmata_librarium_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataLibrariumVisusDatum* datum;
+
+    datum = (SchirmataLibrariumVisusDatum*)widget->datum;
+
+    librarium_visus_reddere(
+        datum->librarium_visus,
+        tabula,
+        (s32)x,
+        (s32)y,
+        (s32)latitudo,
+        (s32)altitudo,
+        (s32)scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_librarium_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataLibrariumVisusDatum* datum;
+
+    datum = (SchirmataLibrariumVisusDatum*)widget->datum;
+
+    redde librarium_visus_tractare_eventum(datum->librarium_visus, eventus);
+}
+
+
+/* ==================================================
  * Status Salvare / Restituere
  * ================================================== */
 
@@ -573,6 +622,10 @@ _creare_schirma_layout(
     /* Creare Biblia Visus */
     schirma->biblia_visus = biblia_visus_creare(schirmata->ctx->piscina);
     schirma->modus_biblia_visus = FALSUM;
+
+    /* Creare Librarium Visus */
+    schirma->librarium_visus = librarium_visus_creare(schirmata->ctx->piscina, schirmata->ctx);
+    schirma->modus_librarium = FALSUM;
 
     schirma->initiatus = VERUM;
 
@@ -1062,6 +1115,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirma->arx_caeli, slug);
@@ -1084,7 +1138,8 @@ schirmata_commutare_ad_navigator(
     schirma = &schirmata->schirmae[schirmata->index_currens];
 
     si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus &&
-        !schirma->modus_sputnik_syntaxis && !schirma->modus_biblia_visus)
+        !schirma->modus_sputnik_syntaxis && !schirma->modus_biblia_visus &&
+        !schirma->modus_librarium)
     {
         /* Iam in modus navigator */
         redde;
@@ -1120,6 +1175,7 @@ schirmata_commutare_ad_navigator(
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
 }
 
 
@@ -1172,6 +1228,7 @@ schirmata_commutare_ad_thema_visus(
     schirma->modus_thema_visus = VERUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
 }
 
 
@@ -1224,6 +1281,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = VERUM;
     schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
 }
 
 
@@ -1277,6 +1335,72 @@ schirmata_commutare_ad_biblia_visus(
     schirma->modus_thema_visus = FALSUM;
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = VERUM;
+    schirma->modus_librarium = FALSUM;
+}
+
+
+/* ==================================================
+ * Mode Switching - Librarium Visus
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_librarium(
+    Schirmata*          schirmata,
+    constans character* quaestio)
+{
+    Schirma*                       schirma;
+    ManagerWidget*                 manager;
+    SchirmataLibrariumVisusDatum*  librarium_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_librarium)
+    {
+        /* Iam in modus librarium - quaerere si quaestio */
+        si (quaestio)
+        {
+            librarium_visus_quaerere(schirma->librarium_visus, quaestio);
+        }
+        redde;
+    }
+
+    /* Commutare ad librarium visus */
+    manager = schirma->manager;
+
+    /* Creare librarium visus datum */
+    librarium_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataLibrariumVisusDatum));
+    si (!librarium_datum)
+    {
+        redde;
+    }
+    librarium_datum->librarium_visus = schirma->librarium_visus;
+    librarium_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = librarium_datum;
+        manager->widgets[I].reddere = _schirmata_librarium_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_librarium_visus_tractare_eventum;
+        manager->focus_index = I;  /* Focus ad librarium_visus */
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = VERUM;
+
+    /* Quaerere si quaestio */
+    si (quaestio)
+    {
+        librarium_visus_quaerere(schirma->librarium_visus, quaestio);
+    }
 }
 
 

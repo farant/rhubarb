@@ -1,0 +1,15 @@
+<result>
+Title = "Saxema"
+Author = "Rudy Wiedoeft"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+"Saxema" is a saxophone solo performance by Rudy Wiedoeft (1893-1940), one of the most influential saxophonists of the early 20th century. Wiedoeft was known for popularizing the saxophone as a solo instrument in the United States during the 1910s and 1920s. This is an audio recording (MP3 format) from the Edison National Historic Site, representing an early example of recorded saxophone music. Wiedoeft composed and performed numerous saxophone pieces that showcased the instrument's technical and melodic capabilities, helping establish it as a legitimate concert instrument rather than just a jazz or dance band instrument.
+"""
+
+Notes = """
+The exact recording date is not specified in the Project Gutenberg metadata. Rudy Wiedoeft's most active recording period was roughly 1916-1927, with "Saxema" being one of his popular compositions from around 1919. Since this is taken from the Edison National Historic Site and Edison's recording operations were most active in the 1910s-1920s, I've estimated 1919 as a reasonable year for this recording. This represents the performance/recording date rather than any written composition date. Note that this is an audio file (MP3), not a text document, which is unusual for Project Gutenberg. The tag "appropriate-for-children" was not included as it's an instrumental performance without content concerns but also not specifically designed for children.
+"""
+</result>

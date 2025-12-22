@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly a historical account of the English colony in New South Wales (early Australia) by David Collins, published in London in 1798. Collins was the Judge Advocate and Secretary of the colony, making this a primary historical source about early Australian colonization and indigenous peoples.
+
+<result>
+Title = "An Account of the English Colony in New South Wales, Volume I"
+Author = "David Collins"
+Year = 1798
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a foundational historical account of the early British colonization of New South Wales (Australia) written by David Collins, who served as Judge Advocate and Secretary of the colony. The work documents the establishment and early years of the penal colony, including observations on the indigenous Aboriginal inhabitants, their customs, dispositions, and manners. Volume I also includes material on New Zealand compiled from the manuscripts of Lieutenant-Governor King. As a firsthand account by a colonial administrator, this represents an important primary source for understanding early Australian colonial history, the convict transportation system, and European-Indigenous contact in the late 18th century. The work is dedicated to Lord Sydney, after whom the city of Sydney was named.
+"""
+
+Notes = """
+Published in 1798 in London by T. Cadell Jun. and W. Davies. This is Volume I of a multi-volume work. The date is certain as it appears clearly in the title page. While Collins was presumably a member of the Church of England as a British colonial official, this is a secular historical/administrative account rather than a religious work, so the 'catholic' tag does not apply. Not appropriate for children due to historical subject matter involving penal colonies and colonial violence.
+"""
+</result>

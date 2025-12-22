@@ -1,0 +1,27 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and publication details.
+
+This is clearly a Finnish literary work. Based on the text, I can see:
+
+- Title: "VAARALLA" (with subtitle "Kuvia laitakaupungilta" - Pictures from the Outskirts)
+- Author: Teuvo Pakkala
+- Year shown: 1891
+
+Teuvo Pakkala (1862-1925) was a Finnish realist author and playwright known for his depictions of working-class life. "Vaaralla" is one of his notable works describing life in the poor outskirts of a Finnish town. The text describes the Nikkilä family's modest home and circumstances with realistic detail characteristic of Pakkala's style.
+
+The year 1891 appears in the text itself and aligns with Pakkala's early period of realistic prose writing about Finnish working-class life.
+
+<result>
+Title = "Vaaralla: Kuvia laitakaupungilta"
+Author = "Teuvo Pakkala"
+Year = 1891
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+"Vaaralla" (On the Outskirts) is a work by Finnish realist author Teuvo Pakkala (1862-1925), subtitled "Pictures from the Outskirts." The work depicts life among the working poor in the outer districts of a Finnish town, focusing on families like the Nikkiläs who live in modest, aging homes. Pakkala was known for his realistic portrayals of Finnish working-class life in the late 19th century, writing with sympathy and detail about the struggles and resilience of ordinary people. This work exemplifies the social realism movement in Finnish literature of the period.
+"""
+
+Notes = """
+The year 1891 is explicitly stated in the original publication. This represents Pakkala's early period of realistic prose fiction focusing on Finnish social conditions. The work appears to be a collection of sketches or vignettes ("kuvia" = pictures) rather than a novel, which was a common form in Nordic realism of this era.
+"""
+</result>

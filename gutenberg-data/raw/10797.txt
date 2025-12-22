@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title page, this is clearly "The Wits and Beaux of Society" by Grace and Philip Wharton, edited by Justin Huntly McCarthy, M.P. This is Volume II of a two-volume work published in 1890.
+
+This work is a collection of biographical essays about notable society figures from 18th and early 19th century England. The contents page shows it includes chapters on figures like Horace Walpole and others. The Whartons (Grace Wharton was a pseudonym used by Katharine Thomson, and Philip Wharton was her son) wrote popular biographical and historical works in the Victorian era.
+
+<result>
+Title = "The Wits and Beaux of Society, Volume II"
+Author = "Grace Wharton, Philip Wharton"
+Year = 1890
+
+Tags = ["non-fiction", "biography", "history", "appropriate-for-children"]
+
+Summary = """
+'The Wits and Beaux of Society' is a Victorian biographical work that profiles notable figures from English high society during the 18th and early 19th centuries. This second volume includes biographical sketches of famous wits, socialites, and cultural figures, including Horace Walpole. Written in an entertaining style, the work provides insights into the manners, customs, and personalities of Georgian and Regency era England. The Whartons specialized in popular historical and biographical works that brought past eras to life for Victorian readers. The work was edited by Justin Huntly McCarthy, M.P., and includes original illustrations by H.K. Browne and James Godwin.
+"""
+
+Notes = """
+The year 1890 is taken directly from the title page and represents the publication date of this edition. This is not a historical primary source but rather a Victorian-era biographical collection about earlier historical figures.
+"""
+</result>

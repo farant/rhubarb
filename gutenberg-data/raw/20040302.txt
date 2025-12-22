@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and extract the requested information.
+
+This appears to be "Sappho: One Hundred Lyrics" by Bliss Carman, published in 1907. This is not an ancient work by Sappho herself, but rather a modern (early 20th century) poetic work inspired by or about Sappho, the ancient Greek poet. The introduction discusses Sappho's poetry and legacy, with Bliss Carman being a Canadian poet who created this collection.
+
+<result>
+Title = "Sappho: One Hundred Lyrics"
+Author = "Bliss Carman"
+Year = 1907
+
+Tags = ["non-fiction", "poetry", "literary-criticism"]
+
+Summary = """
+This is a collection of one hundred lyrics by Canadian poet Bliss Carman (1861-1929), published in 1907. The work includes an introduction that discusses the poetry and legacy of Sappho, the ancient Greek lyric poet from Lesbos (c. 630-570 BCE). Carman was part of the Confederation Poets movement and this work represents his engagement with classical themes. The book contains both original poetry inspired by Sappho and literary commentary on her enduring influence and supremacy as "the chief lyrist of all lyrists." The introduction reflects on how Sappho's fragmentary surviving works continue to captivate readers despite most of her poetry being lost to time.
+"""
+
+Notes = """
+The year 1907 is clearly stated on the title page as the publication date. This is a modern work about/inspired by Sappho, not a translation of ancient Sappho fragments. Bliss Carman was a Protestant Canadian poet, not a Catholic author, so the 'catholic' tag does not apply.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Caesar Dies" by Talbot Mundy, a historical fiction novel set during the reign of Roman Emperor Commodus (late 2nd century AD). Talbot Mundy was a British writer known for his adventure and historical fiction, particularly works set in ancient Rome and India. He was not a Catholic author, and this is a work of historical fiction rather than a historical document or religious text.
+
+The novel was originally published in the 1920s. Let me provide the structured output:
+
+<result>
+Title = "Caesar Dies"
+Author = "Talbot Mundy"
+Year = 1924
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'Caesar Dies' is a historical adventure novel by Talbot Mundy set during the reign of the Roman Emperor Commodus (180-192 AD). The novel opens in Antioch, then a major city of the Roman Empire, and explores themes of Roman politics, intrigue, and the clash between Roman and Eastern cultures. Mundy was known for his vivid historical fiction that combined adventure with philosophical elements, often depicting the decline of empires and conflicts between different worldviews. The novel portrays the luxury, decadence, and political tensions of late 2nd-century Rome through the lens of characters in the cosmopolitan city of Antioch.
+"""
+
+Notes = """
+Published in 1924 as a serial before book publication. Talbot Mundy (1879-1940) was a British-American author who wrote primarily adventure and historical fiction. While the novel is set in ancient Rome circa 180-192 AD during Commodus's reign, the publication year reflects when Mundy wrote it, not the historical period depicted. This is secular historical fiction, not a work with Catholic perspective despite its Roman historical setting.
+"""
+</result>

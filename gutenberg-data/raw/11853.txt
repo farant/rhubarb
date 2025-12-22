@@ -1,0 +1,15 @@
+<result>
+Title = "Copyright Renewal Records"
+Author = "United States Copyright Office"
+Year = 1976
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a page from the United States Copyright Office renewal records, specifically from 1976. It contains administrative records of copyright renewals for various books and pamphlets from 1947-1948, including works like "A History of Medicine" by Arturo Castiglioni, short stories by Samuel H. Adams published in The New Yorker, and other literary works. These records document the legal extension of copyright protection for works whose original copyright terms were expiring.
+"""
+
+Notes = """
+Year chosen: 1976, as indicated by the page header '1976_h1/A/3099'. This appears to be part of Project Gutenberg's digitization of public domain government documents. This is not a literary work but rather an administrative record from the Copyright Office showing renewal registrations. The original works referenced date from 1947-1948, but this document itself is from 1976.
+"""
+</result>

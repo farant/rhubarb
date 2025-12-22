@@ -1,0 +1,15 @@
+<result>
+Title = "The Jewish Manual; or, Practical Information in Jewish and Modern Cookery"
+Author = "Anonymous (edited by a Lady)"
+Year = 1846
+
+Tags = ["non-fiction", "appropriate-for-children", "jewish"]
+
+Summary = """
+The Jewish Manual is the first known Jewish cookbook published in England, appearing in 1846. Edited anonymously by "a Lady" (likely Judith Cohen Montefiore, though this attribution is debated), this groundbreaking work filled a significant gap in culinary literature by providing recipes and household advice specifically tailored to Jewish dietary laws (kashrut). The book includes traditional Jewish recipes passed down through generations, as well as adaptations of English and French cuisine made kosher. Beyond recipes, it contains advice on household management and personal care ("hints relating to the toilette"). This cookbook represents an important historical document showing how Anglo-Jewish families in Victorian England navigated between traditional religious observance and integration into broader British society. It demonstrates the domestic life of the emerging Jewish middle class in 19th-century Britain.
+"""
+
+Notes = """
+The year 1846 is clearly stated on the title page as the publication date in London. This represents the original and only historical edition of this work, making the date unambiguous. While the editor's identity remains officially anonymous, modern scholarship has suggested Judith Cohen Montefiore (wife of Sir Moses Montefiore) as a likely candidate, though this cannot be confirmed with certainty. I did not tag this as 'catholic' as it is specifically a Jewish work, though it would certainly be of historical and cultural interest to anyone studying religious dietary practices and 19th-century domestic life.
+"""
+</result>

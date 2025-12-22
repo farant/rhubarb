@@ -1,0 +1,21 @@
+I can analyze this Project Gutenberg text for you. Let me examine the content and provide the structured information.
+
+Based on the text, this is clearly a Victorian-era children's moral tale. The title page indicates it was published in 1850 and is attributed to "The Author Of 'Nothing At All,' Etc." This is a pseudonymous attribution style common in that era. The full title given is "The Extraordinary Adventures Of Poor Little Bewildered Henry, Who was shut up in an old Abbey for Three Weeks - A Story Founded On Fact."
+
+While I cannot identify the specific author with certainty (the attribution to "The Author Of 'Nothing At All'" was a common publishing convention), this appears to be a British children's cautionary tale from the mid-Victorian period.
+
+<result>
+Title = "Little Bewildered Henry; or, The Extraordinary Adventures Of Poor Little Bewildered Henry, Who was shut up in an old Abbey for Three Weeks"
+Author = "Anonymous (Author of 'Nothing At All')"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children", "victorian-literature", "moral-tale"]
+
+Summary = """
+A Victorian-era children's story about a three-year-old boy named Henry who becomes separated from his mother after being tricked by a naughty village boy named Bill Boldface. The subtitle indicates Henry ends up shut in an old abbey for three weeks. Published as "A Story Founded On Fact," this is typical of 19th-century moral and cautionary tales for children that aimed to teach lessons through dramatic scenarios. The work was published anonymously with attribution only to "The Author of 'Nothing At All,'" a common Victorian publishing practice.
+"""
+
+Notes = """
+The year 1850 is taken directly from the title page of the work. The author remains genuinely anonymous - the attribution to "The Author of 'Nothing At All'" was a marketing device referring to another work by the same unknown author. This type of pseudonymous attribution was extremely common in Victorian children's literature publishing.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Lady and Sada San"
+Author = "Frances Little"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Lady and Sada San" is a sequel to "The Lady of the Decoration" by Frances Little (a pseudonym for Fannie Caldwell Macaulay), published in 1912. The work is part of a popular series of novels set in Japan and the Orient that depicted cross-cultural encounters between Western women and Japanese culture in the early 20th century. The story continues the epistolary format of its predecessor, following the adventures and observations of Western characters in Japan. Frances Little's works were known for their accessible, entertaining portrayal of Japanese life and customs for American audiences during a period of growing American interest in Asian cultures.
+"""
+
+Notes = """
+The publication year of 1912 is clearly stated in the copyright page. Frances Little was a pseudonym used by Fannie Caldwell Macaulay, an American author who lived in Japan and wrote popular fiction about East-West cultural encounters in the early 1900s. Her works were commercially successful and helped shape American perceptions of Japanese culture during this period.
+"""
+</result>

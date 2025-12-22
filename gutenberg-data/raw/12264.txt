@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text for you.
+
+<result>
+Title = "Father Payne"
+Author = "Arthur Christopher Benson"
+Year = 1915
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+"Father Payne" is a biographical/memorial work by Arthur Christopher Benson about a mentor figure whom he and others affectionately called "Father Payne." The book is a portrait of a man described as having a "rich personality," someone who was "a man of ideas rather than of performance, suggestive rather than active." Benson wrote this during World War I, having found himself with unwanted leisure time when his professional occupations were suspended. He compiled the work from old papers, notes of conversations, and personal reminiscences from the three years he spent with Father Payne. The work appears to be a character study and philosophical memoir rather than a conventional biography or novel.
+"""
+
+Notes = """
+The year 1915 is clearly stated in the text itself as the publication date. This is also confirmed by the work being written during WWI, which the preface explicitly mentions. Arthur Christopher Benson (1862-1925) was an English essayist, poet, and author, the son of Edward White Benson, Archbishop of Canterbury. He was Master of Magdalene College, Cambridge. The work seems to straddle the line between memoir and biographical essay, combining philosophical reflection with personal reminiscence.
+"""
+</result>

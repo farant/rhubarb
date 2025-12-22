@@ -1,0 +1,15 @@
+<result>
+Title = "From the Lyrical Poems of Robert Herrick"
+Author = "Robert Herrick"
+Year = 1591
+
+Tags = ["poetry", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a selection from the lyrical poems of Robert Herrick (1591-1674), arranged with an introduction by Francis Turner Palgrave. Herrick was an English lyric poet and cleric, best known for his book "Hesperides" (1648), which contains his collected poems. His work is characterized by its celebration of English countryside life, love poems, and religious verse. He is famous for poems like "To the Virgins, to Make Much of Time" (containing the line "Gather ye rosebuds while ye may"). This edition represents a curated selection of his work, made more accessible for general readers through modernization and careful curation. Palgrave's preface addresses the editorial choices involved in presenting historical poetry to contemporary audiences, including concerns about selection, modernization, and accessibility.
+"""
+
+Notes = """
+The year chosen (1591) is Herrick's birth year, as indicated in the text. While his major work "Hesperides" was published in 1648, this Project Gutenberg edition is itself a later selection/anthology edited by Francis Turner Palgrave (likely late 19th century given Palgrave's active period). For a timeline of literary history, Herrick's birth year serves as the most historically accurate anchor point for understanding when this poet lived and worked. His productive period was mainly in the first half of the 17th century. The work is marked as appropriate for children as Palgrave explicitly mentions that selections were made to exclude material that had "lapsed into the indecorous" by Victorian standards.
+"""
+</result>

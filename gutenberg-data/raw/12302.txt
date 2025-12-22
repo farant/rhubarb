@@ -1,0 +1,15 @@
+<result>
+Title = "All In It: 'K(1)' Carries On"
+Author = "Ian Hay"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'All In It: K(1) Carries On' is a World War I memoir by Ian Hay (pen name of John Hay Beith), published in 1917. This work is a sequel to his famous 'The First Hundred Thousand' (1915) and continues chronicling the experiences of Kitchener's Army volunteers, specifically the K(1) battalion, during the Great War. Ian Hay was a Scottish novelist and playwright who served as a captain in the Argyll and Sutherland Highlanders during WWI. The book provides a firsthand account of trench warfare and military life on the Western Front, written with Hay's characteristic humor and humanity. The dedication 'To All Second Lieutenants' reflects the heavy casualties suffered by junior officers during the war.
+"""
+
+Notes = """
+The publication year of 1917 is clearly stated on the title page. This is a contemporary war memoir written during the conflict itself, not a retrospective work. Ian Hay wrote several books about his WWI experiences, making him one of the most popular military writers of the period.
+"""
+</result>
