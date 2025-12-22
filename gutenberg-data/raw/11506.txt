@@ -1,0 +1,15 @@
+<result>
+Title = "The Old Bell of Independence; or, Philadelphia in 1776"
+Author = "Henry C. Watson"
+Year = 1851
+
+Tags = ["non-fiction", "historical", "appropriate-for-children", "american-revolution"]
+
+Summary = """
+This is a historical work by Henry C. Watson focused on the American Revolution, particularly centering on Philadelphia in 1776 and the Liberty Bell (referred to as "The Old Bell of Independence"). The book is part of "The Young American's Library" series and contains stories about the patriots and heroes of the War of Independence. Watson structures the narrative around veteran storytellers sharing accounts of the Revolution's chief figures, using the Liberty Bell as a symbolic rallying point. The work aims to instill veneration for the founding fathers and inspire emulation of their example in young Americans. Watson also authored other works about the American Revolution including "The Camp-Fires of the American Revolution" and "The Yankee Tea-Party, or Boston in 1773."
+"""
+
+Notes = """
+The publication year of 1851 is taken from the copyright notice in the text itself. This is a mid-19th century patriotic historical work written for educational purposes, particularly aimed at young readers, about events that occurred 75 years earlier during the founding of the United States.
+"""
+</result>

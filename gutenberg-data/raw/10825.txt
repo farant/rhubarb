@@ -1,0 +1,15 @@
+<result>
+Title = "La Navidad en las Montañas"
+Author = "Ignacio Manuel Altamirano"
+Year = 1871
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+"La Navidad en las Montañas" (Christmas in the Mountains) is a classic Mexican short novel by Ignacio Manuel Altamirano, one of Mexico's most important 19th-century writers. The work presents an idyllic and romantic portrayal of rural Mexican life, specifically focusing on Christmas celebrations in remote mountain villages. Rather than depicting life in large cities, Altamirano offers readers a vivid picture of the customs, traditions, and social dynamics of rural Mexico during the Christmas season. The story is noted for its humanitarian spirit and its portrayal of Mexican culture and values during this period. Altamirano, though a liberal politician and reformer, wrote with deep appreciation for Mexican popular Catholicism and traditional customs.
+"""
+
+Notes = """
+I've chosen 1871 as the original publication year, which is when "La Navidad en las Montañas" was first published in Mexico. This edition you have (from Project Gutenberg #10825) is the English language edition prepared by Edith A. Hill and Mary Joy Lombard, published in 1917 for American students learning Spanish. While Altamirano was a liberal reformer and not strictly orthodox in his Catholicism, this particular work depicts traditional Catholic Christmas celebrations with respect and warmth, and the story's moral and spiritual tone would likely have been acceptable to Catholic audiences of the era, hence the 'catholic' tag.
+"""
+</result>

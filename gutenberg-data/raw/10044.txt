@@ -1,0 +1,15 @@
+<result>
+Title = "The Father of British Canada: A Chronicle of Carleton"
+Author = "William Wood"
+Year = 1916
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+This is a biographical chronicle of Guy Carleton (later Baron Dorchester), who served as governor of Quebec and played a crucial role in shaping British Canada during the late 18th century. Part of the "Chronicles of Canada" series edited by George M. Wrong and H. H. Langton, this volume traces Carleton's life from his birth in 1724 through his various roles including his governorship during the American Revolutionary War, his protection of Loyalists fleeing the American colonies, and his foundational work in establishing modern Canada's governmental structures. The book covers key periods including the Quebec Act of 1774, the American invasion of 1775-1776, and the settlement of Loyalist refugees after the Revolutionary War.
+"""
+
+Notes = """
+The year 1916 is when this historical chronicle was published in Toronto as part of a 32-volume series on Canadian history. While the subject matter covers events from 1724-1808 (Carleton's lifetime), the work itself is a 20th-century historical account rather than a primary source document.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The History of Rome"
+Author = "Theodor Mommsen"
+Year = 1854
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+Theodor Mommsen's monumental "The History of Rome" (Römische Geschichte) is one of the most influential works of Roman historiography ever written. This comprehensive five-volume work traces Roman history from its earliest legendary period through the establishment of the military monarchy under Julius Caesar. Mommsen, a German classical scholar who won the Nobel Prize in Literature in 1902, combined rigorous historical scholarship with vivid narrative style. The work covers: Book I - The period before the abolition of the monarchy; Book II - From the abolition of the monarchy to the union of Italy; Book III - From the union of Italy to the subjugation of Carthage and the Greek states; Book IV - The Revolution; and Book V - The establishment of the military monarchy. This English translation by William Purdie Dickson was made with the author's sanction and became the standard English version of this classic work.
+"""
+
+Notes = """
+The original German "Römische Geschichte" was published in volumes between 1854-1856 (Books I-III) and 1885 (Book V). Book IV on the Imperial period was never completed. I've chosen 1854 as it marks the beginning of the work's publication and its historical impact. Mommsen notably did not continue beyond Caesar, leaving the Empire period unwritten, which is why Book V concerns the "establishment" rather than the full imperial period.
+"""
+</result>

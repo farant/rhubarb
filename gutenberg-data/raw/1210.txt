@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Kwaidan: Stories and Studies of Strange Things" by Lafcadio Hearn. This is a collection of Japanese ghost stories and supernatural tales that Hearn compiled during his time in Japan. The work was first published in 1904, shortly before Hearn's death.
+
+Lafcadio Hearn (1850-1904), also known by his Japanese name Koizumi Yakumo, was a Greek-Irish writer who became a Japanese citizen and is famous for his collections of Japanese legends and ghost stories. While Hearn himself was not Catholic (he had a complex religious background and eventually embraced Buddhism), this is a work of collected folklore and supernatural fiction.
+
+<result>
+Title = "Kwaidan: Stories and Studies of Strange Things"
+Author = "Lafcadio Hearn"
+Year = 1904
+
+Tags = ["fiction", "folklore", "supernatural", "japanese-literature"]
+
+Summary = """
+Kwaidan is a collection of Japanese ghost stories and supernatural tales compiled by Lafcadio Hearn, a Western writer who immigrated to Japan and became deeply immersed in Japanese culture. The book contains haunting stories drawn from Japanese folklore and Buddhist traditions, including the famous tale of Mimi-nashi-Hōïchi (Hōïchi the Earless). Hearn's retellings preserve the eerie atmosphere of traditional Japanese kaidan (ghost story) literature while making them accessible to Western readers. The work is considered a masterpiece of cross-cultural literary translation and has had lasting influence on Western perceptions of Japanese supernatural traditions.
+"""
+
+Notes = """
+Published in 1904, the same year as Hearn's death. The title uses the older romanization 'Kwaidan' which reflects pre-modern Japanese pronunciation; in modern Japanese it would be romanized as 'Kaidan' (怪談), meaning 'ghost story' or 'strange tale'.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Song of Myself"
+Author = "Walt Whitman"
+Year = 1855
+
+Tags = ["poetry", "non-fiction"]
+
+Summary = """
+'Song of Myself' is the longest and most famous poem in Walt Whitman's groundbreaking collection 'Leaves of Grass'. It is a sweeping celebration of the self, democracy, nature, and the American experience. The poem consists of 52 numbered sections that explore themes of individuality, transcendence, the body, death, and the interconnectedness of all people and things. Whitman's free verse style and bold subject matter revolutionized American poetry and influenced generations of poets worldwide. This Project Gutenberg edition contains audio recordings of selections from the work.
+"""
+
+Notes = """
+'Song of Myself' was first published in 1855 as part of the first edition of 'Leaves of Grass'. Whitman revised and republished the collection multiple times throughout his life (the final "deathbed edition" was in 1891-92), but 1855 represents the original publication date of this seminal work and is the most historically significant date for understanding its impact on American literature.
+"""
+</result>

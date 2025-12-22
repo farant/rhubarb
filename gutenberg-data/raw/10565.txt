@@ -1,0 +1,15 @@
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Ship's Company is a collection of humorous short stories by W.W. Jacobs, the English author best known for "The Monkey's Paw." This collection features Jacobs' characteristic style of comedic tales often set in maritime or rural English settings, focusing on the everyday adventures and misadventures of sailors, villagers, and other working-class characters. The stories are known for their wit, clever plot twists, and gentle social satire. "Watch-Dogs," the story excerpted here, appears to be a typical Jacobs tale featuring an "oldest inhabitant" narrator telling a humorous story about a well-meaning but misguided gentleman from London and the chaos that ensues from his excessive kindness to animals.
+"""
+
+Notes = """
+Ship's Company was originally published in 1911. W.W. Jacobs (1863-1943) was a prolific writer of short stories during the late Victorian and Edwardian periods. While he's most famous today for his horror story "The Monkey's Paw," the vast majority of his work consisted of lighthearted, humorous tales like those in Ship's Company. These stories were extremely popular in their time and are still enjoyed for their accessible humor and skillful storytelling.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Aziyad�"
+Author = "Pierre Loti"
+Year = 1879
+
+Tags = ["fiction", "romance", "orientalist"]
+
+Summary = """
+Aziyad� is Pierre Loti's first novel, a semi-autobiographical romance set in Constantinople (Istanbul) during the Russo-Turkish War of 1877-1878. The novel is framed as the diary and letters of a British naval lieutenant who enters Turkish service and falls in love with a young Turkish woman named Aziyad�. The work explores themes of forbidden love across cultural boundaries, the exotic allure of the Ottoman Empire, and the tragic consequences of war. Loti (pen name of Julien Viaud) was himself a French naval officer who spent time in Constantinople, and the novel draws heavily on his own experiences and romantic encounters there. The book established Loti as a major figure in French literature and exemplifies the Orientalist literary tradition of the late 19th century.
+"""
+
+Notes = """
+Aziyad� was first published in 1879. This was Loti's literary debut and brought him immediate fame in France. The subtitle indicates it is presented as extracts from the notes and letters of an English naval lieutenant who entered Turkish service on May 10, 1876 and was killed in the walls of Kars on October 27, 1877. This framing device gave the novel a documentary quality, though it is a work of fiction based on Loti's own experiences during his time in Constantinople in 1876-1877.
+"""
+</result>

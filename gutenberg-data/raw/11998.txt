@@ -1,0 +1,19 @@
+I need to identify this work and gather information about it. Based on the text provided, this is "Sight to the Blind" by Lucy Furman, published in 1914.
+
+Let me provide the structured information:
+
+<result>
+Title = "Sight to the Blind"
+Author = "Lucy Furman"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+"Sight to the Blind" is a novel by Lucy Furman that tells the story of settlement work in the Appalachian Mountains of Kentucky. Furman, who worked at the Hindman Settlement School, wrote several books documenting the lives, culture, and challenges of the mountain people of eastern Kentucky in the early 20th century. The book includes an introduction by Ida Tarbell, the famous muckraking journalist. Furman's works are known for their sympathetic and detailed portrayal of Appalachian life and the educational and social work being done in isolated mountain communities. The title "Sight to the Blind" likely refers to bringing education, healthcare, and opportunity to a region that had been largely isolated from modern developments.
+"""
+
+Notes = """
+The publication year of 1914 is clearly stated on the title page. Lucy Furman (1870-1958) was not a Catholic author; she was a Protestant settlement worker. Therefore, this work does not receive the 'catholic' tag. Her works are valued as historical documents of Appalachian life and early 20th century settlement work. The book was dedicated to Harriet Butler and included an introduction by the renowned journalist Ida M. Tarbell.
+"""
+</result>

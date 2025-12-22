@@ -1,0 +1,15 @@
+<result>
+Title = "On the Banks of the Ohio"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["non-fiction", "audio", "music", "american-folk"]
+
+Summary = """
+This is an audio recording by Roger McGuinn, the legendary folk-rock musician best known as the founder and lead guitarist of The Byrds. "On the Banks of the Ohio" is a traditional American folk song that has been recorded by numerous artists over the years. The song tells a dark murder ballad story typical of Appalachian folk tradition. McGuinn's Folk Den project, which this recording is likely part of, was an ambitious effort to preserve and share traditional folk songs through digital means, making them freely available to the public.
+"""
+
+Notes = """
+I've chosen 2001 as the year based on the copyright notice in the file (Copyright (C) 2001 McGuinn Music). While "On the Banks of the Ohio" is a traditional folk song with origins likely in the 19th century, this particular recording and digital release by Roger McGuinn was created in 2001. This represents McGuinn's folk preservation work rather than the original composition date of the traditional song itself. This is an audio file (MP3 format) rather than a text work.
+"""
+</result>

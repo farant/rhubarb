@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Queen of the Air: Being a Study of the Greek Myths of Cloud and Storm"
+Author = "John Ruskin"
+Year = 1869
+
+Tags = ["non-fiction", "mythology", "classical-studies", "philosophy"]
+
+Summary = """
+"The Queen of the Air" is John Ruskin's profound study of Greek mythology, specifically focused on the goddess Athena and her symbolic relationships to natural phenomena, particularly storms and clouds. The work is divided into three lectures examining Athena in different aspects: in the heavens (Chalinitis), in the earth (Keramitis), and in the heart (Ergane). Ruskin explores Greek myths not merely as ancient stories but as profound expressions of natural and spiritual truths. The work reflects Ruskin's characteristic blend of art criticism, natural observation, and moral philosophy, examining how the Greeks understood and represented fundamental forces of nature and human consciousness through their mythology. It represents Victorian-era scholarship's serious engagement with classical mythology as a subject worthy of deep philosophical and aesthetic study.
+"""
+
+Notes = """
+The lecture that forms the first part was given at University College, London on March 9, 1869, and the book was published the same year. This is one of Ruskin's major works on classical mythology and aesthetics from his mature period. While Ruskin was deeply influenced by Christian thought, this particular work is a scholarly study of Greek paganism rather than a Catholic text, so it is not tagged as 'catholic'.
+"""
+</result>

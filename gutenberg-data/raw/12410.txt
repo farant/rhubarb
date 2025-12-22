@@ -1,0 +1,17 @@
+I recognize this as Marco Polo's famous travel account describing his journeys through Asia in the 13th century. This appears to be the renowned Yule-Cordier edition, which is the scholarly standard. Let me provide the structured information:
+
+<result>
+Title = "The Travels of Marco Polo"
+Author = "Marco Polo"
+Year = 1298
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Travels of Marco Polo is one of the most famous travel narratives in history, documenting the Venetian merchant's extensive journeys through Central Asia, China, and other parts of the Mongol Empire from approximately 1271-1295. Written down by Rustichello da Pisa while Marco Polo was imprisoned in Genoa, the work provides a detailed European account of Asian geography, culture, commerce, and the court of Kublai Khan. This particular text is the authoritative Yule-Cordier edition, featuring extensive scholarly annotations by Henry Yule (first published 1871, third edition 1903) and later revised and expanded by Henri Cordier (with additional notes in 1920). The work profoundly influenced European understanding of Asia and inspired subsequent exploration and cartography.
+"""
+
+Notes = """
+I've chosen 1298 as the composition year when Marco Polo dictated his travels to Rustichello da Pisa while both were prisoners in Genoa. Alternative dates could be argued: his actual travels (1271-1295) or various manuscript dates, but 1298 represents the historical moment when this work entered recorded history. The Yule-Cordier edition shown here (1903/1920) is the scholarly apparatus, not the original composition. I did not tag this as 'catholic' despite Marco Polo being Venetian/Catholic because the work is primarily a secular travel account and commercial/geographical description rather than religious literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Morgesons"
+Author = "Elizabeth Stoddard"
+Year = 1862
+
+Tags = ["fiction", "novel", "american-literature"]
+
+Summary = """
+"The Morgesons" is a pioneering American novel by Elizabeth Stoddard, originally published in 1862. It is considered an important early work of American realism and a precursor to the later regionalist and psychological novels of the late 19th century. The novel tells the story of Cassandra Morgeson, a young woman from a New England coastal village, and her coming-of-age journey marked by passion, transgression, and self-discovery. The work explores themes of female independence, desire, sexuality, and the constraints of 19th-century society on women. Stoddard's frank treatment of female sexuality and psychology was considered daring for its time, and the novel was largely overlooked during the author's lifetime, only to be rediscovered and celebrated by feminist literary scholars in the 20th century for its radical portrayal of female experience.
+"""
+
+Notes = """
+The text indicates this edition is from 1901, which was a revised reissue of the novel. However, "The Morgesons" was originally published in 1862. Since the use case is for a historical timeline and understanding the work's historical significance, I've chosen 1862 as the most historically accurate year—this marks when the novel first appeared and made its (initially modest) impact on American literature. The 1901 edition represented Stoddard's attempt to revive interest in her work near the end of her life.
+"""
+</result>

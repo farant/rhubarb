@@ -1,0 +1,15 @@
+<result>
+Title = "Government and Administration of the United States"
+Author = "Westel W. Willoughby and William F. Willoughby"
+Year = 1891
+
+Tags = ["non-fiction"]
+
+Summary = """
+This work is part of the Johns Hopkins University Studies in Historical and Political Science series, edited by Herbert B. Adams. Written by the Willoughby brothers (Westel W. Willoughby, a Fellow in History, and William F. Willoughby of the U.S. Department of Labor), it provides a systematic examination of the structure, government, and administration of the United States. The work was part of the influential Johns Hopkins series that helped establish political science as an academic discipline in America during the late 19th century. This text would have served as both an academic treatise and educational resource for understanding American governmental institutions during the period.
+"""
+
+Notes = """
+The year 1891 is chosen based on this being from the Ninth Series of the Johns Hopkins University Studies in Historical and Political Science. The series began in 1883, and the Ninth Series was published in 1891. While the title page shows "1801" this appears to be a typographical error or OCR mistake, as the Johns Hopkins series did not exist in 1801, and the institutional affiliations of the authors (including the U.S. Department of Labor, which was not established until 1884/1888 depending on how you count it) make 1891 the correct publication year.
+"""
+</result>

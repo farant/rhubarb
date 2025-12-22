@@ -1,0 +1,15 @@
+<result>
+Title = "The Old Man in the Corner"
+Author = "Baroness Orczy"
+Year = 1908
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+'The Old Man in the Corner' is a collection of mystery short stories by Baroness Orczy, featuring an unnamed elderly man who sits in the corner of a London tea shop solving crimes through pure deduction. He relates the cases to a young journalist named Polly Burton, unraveling complex mysteries without ever leaving his seat. The stories are early examples of the 'armchair detective' genre, where the detective solves cases through logical reasoning rather than physical investigation. Baroness Orczy is best known as the author of 'The Scarlet Pimpernel,' and this work showcases her talent for crafting intricate puzzle mysteries. The stories originally appeared in magazines before being collected in book form.
+"""
+
+Notes = """
+The dedication is dated October 1908, which aligns with the original publication date of this collection. Some of the individual stories appeared earlier in magazines (starting around 1901), but 1908 represents the publication of the complete collection as a book.
+"""
+</result>

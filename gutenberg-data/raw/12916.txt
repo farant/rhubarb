@@ -1,0 +1,21 @@
+I'll read through this text to identify the work, author, and relevant publication details.
+
+This is clearly Procopius's "Secret History" (also known as "Anecdota"), which is his infamous exposé of the Emperor Justinian and Empress Theodora's court. The text shows this is a 1896 English translation published by the Athenian Society.
+
+Procopius was a 6th-century Byzantine historian who wrote this work as a scandalous counterpoint to his official histories. The Secret History was written around 550-558 CE but was kept hidden during his lifetime and only discovered and published centuries later.
+
+<result>
+Title = "The Secret History of the Court of Justinian"
+Author = "Procopius"
+Year = 550
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The Secret History (Anecdota) is Procopius's scandalous exposé of the Byzantine Emperor Justinian I and Empress Theodora, written as a counterpoint to his official histories. As a court insider and advisor to General Belisarius, Procopius had intimate knowledge of the imperial court. This work, which he kept hidden during his lifetime, contains shocking allegations about the personal lives, moral character, and alleged crimes of Justinian and Theodora, as well as criticism of their policies and governance. It provides a fascinating, if sensational, glimpse into 6th-century Byzantine politics and court life from someone who witnessed it firsthand.
+"""
+
+Notes = """
+Year chosen as approximate composition date (circa 550-558 CE). The work was written during Justinian's reign but kept secret, only discovered and published posthumously. This translation is from 1896. Not appropriate for children due to explicit sexual content and adult themes. Not tagged 'catholic' as Procopius, while Christian, wrote in the Eastern Orthodox Byzantine tradition and this particular work contains scandalous, gossipy material that would not receive ecclesiastical approval.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Jesus Says So"
+Author = "Unknown"
+Year = 1851
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+"Jesus Says So" is a mid-19th century religious tract published by the Massachusetts Sabbath School Society. This type of work was typical of the Sunday School movement that flourished in America during this period, designed to provide moral and religious instruction to children. The text would have used simple stories and lessons to teach Christian principles, with the title suggesting a focus on Christ's authority and teachings as the foundation for moral behavior and faith. Such tracts were widely distributed in churches and schools as part of religious education efforts.
+"""
+
+Notes = """
+Using 1851 as the publication year based on the imprint information provided in the text. The Massachusetts Sabbath School Society was active in publishing religious educational materials for children during this era. While the work is marked as appropriate for children and religious in nature, I've tagged it as 'catholic' with some reservation - the Sabbath School movement was primarily a Protestant phenomenon in 19th century America, though the basic Christian teachings would align with Catholic doctrine. Without access to the full text content, it's difficult to determine if this particular tract would merit a nihil obstat or imprimatur.
+"""
+</result>

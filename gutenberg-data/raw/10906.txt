@@ -1,0 +1,15 @@
+<result>
+Title = "Quinze Jours en Égypte"
+Author = "Fernand Neuray"
+Year = 1908
+
+Tags = ["non-fiction", "travel-literature"]
+
+Summary = """
+This is a travel account by Belgian journalist Fernand Neuray describing his fifteen-day journey to Egypt in December 1907. Neuray was part of a group of journalists invited to witness the construction of the new Héliopolis (a planned city being built near Cairo in the desert). The work contains Neuray's travel impressions originally published in the newspaper "XXe Siècle" in January and February 1908, later compiled into book form. The volume is illustrated with photographs of famous Egyptian monuments, many taken by Jean Capart, the assistant curator of the Cinquantenaire Museum in Brussels, who conducted scientific missions in Egypt for the Belgian government.
+"""
+
+Notes = """
+The year 1908 is clearly established as the publication date in Bruxelles (Brussels). This is a firsthand travel account written immediately after the journey, making the publication year the appropriate historical date. The work is notable for documenting the early construction of Héliopolis, a significant urban development project in early 20th century Egypt.
+"""
+</result>

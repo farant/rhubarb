@@ -1,0 +1,17 @@
+The file appears to be empty. However, based on the text you provided in your message, I can identify the work:
+
+<result>
+Title = "Liza (A Nest of Nobles)"
+Author = "Ivan S. Turgenev"
+Year = 1859
+
+Tags = ["fiction", "appropriate-for-children", "russian-literature"]
+
+Summary = """
+'Liza' (also known as 'A Nest of Nobles' or 'Home of the Gentry' from the Russian 'Dvoryanskoe Gnyezdo') is a novel by Ivan Turgenev, one of the great Russian novelists of the 19th century. The novel tells the story of Liza Kalitina, a young woman from the Russian nobility who falls in love with Lavretsky, a nobleman who believes his wife has died. When his wife reappears, Liza's moral and religious convictions lead her to renounce their love and enter a convent. The work is considered one of Turgenev's finest, depicting the spiritual struggles of the Russian nobility and exploring themes of love, duty, faith, and redemption. This translation by W.R.S. Ralston was published in 1873.
+"""
+
+Notes = """
+The novel was originally published in Russian in 1859. The date chosen (1859) reflects the original publication of Turgenev's work rather than this 1873 English translation, as this is most historically accurate for understanding the work's place in Russian literature and 19th-century European fiction. Turgenev (1818-1883) was one of the first Russian writers to gain widespread acclaim in the West.
+"""
+</result>

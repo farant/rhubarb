@@ -1,0 +1,15 @@
+<result>
+Title = "Go to Sea Once More"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["folk-music", "audio-recording", "sea-shanty", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording from Roger McGuinn's Folk Den, a digital archive project by the co-founder of The Byrds. "Go to Sea Once More" is a traditional sea shanty that McGuinn recorded and shared as part of his effort to preserve and distribute folk music through the internet. McGuinn's Folk Den was an early digital music project (started in 1995) where he recorded and released one traditional folk song per month, making folk music accessible to a new generation through the web.
+"""
+
+Notes = """
+The year 2001 is based on the copyright date listed in the file (Copyright (C) 2001 McGuinn Music). While "Go to Sea Once More" itself is a traditional folk song with origins likely in the 19th century, this particular recording and arrangement by Roger McGuinn dates to 2001. This is not a literary text but rather an audio file (MP3 format) released through Project Gutenberg's multimedia collection.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Tamburlaine the Great, Part I"
+Author = "Christopher Marlowe"
+Year = 1590
+
+Tags = ["fiction", "drama", "historical-drama"]
+
+Summary = """
+Tamburlaine the Great is a Renaissance tragedy in blank verse by Christopher Marlowe, depicting the rise of the Central Asian conqueror Timur (Tamerlaine/Tamburlaine) from Scythian shepherd to mighty emperor. The play was groundbreaking for its use of blank verse in English drama and for its portrayal of an anti-hero protagonist whose ambition and military prowess are presented with both admiration and horror. Part I follows Tamburlaine's conquests, his love for Zenocrate, and his transformation into "the Scourge of God." The work is considered one of the most important plays of the Elizabethan era and established Marlowe as a major dramatist. It explores themes of power, ambition, rhetoric, and divine will through spectacular violence and soaring poetry.
+"""
+
+Notes = """
+The play was likely first performed around 1587-1588 and published in 1590. I've chosen 1590 as it represents the first printed edition. The play was immensely popular and influential on the development of English drama, particularly influencing Shakespeare. This edition was edited by Alexander Dyce, a 19th-century scholar, but the year reflects Marlowe's original work. Not tagged as appropriate-for-children due to violent content and mature themes. Not tagged as Catholic - Marlowe was not Catholic and the work contains elements that would not receive Catholic approval (glorification of a non-Christian conqueror, ambiguous treatment of Providence, etc.).
+"""
+</result>

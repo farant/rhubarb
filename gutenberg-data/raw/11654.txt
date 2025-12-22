@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Confessions of a Young Man"
+Author = "George Moore"
+Year = 1888
+
+Tags = ["non-fiction", "memoir", "literary-criticism"]
+
+Summary = """
+"Confessions of a Young Man" is a semi-autobiographical work by Irish author George Moore, documenting his bohemian years in Paris during the 1870s and early 1880s. The book chronicles Moore's artistic education, his encounters with French Impressionist painters and Symbolist writers, and his rebellion against Victorian literary conventions. Written in a confessional style influenced by the French Decadent movement, it details Moore's aesthetic and intellectual development as he absorbed influences from Baudelaire, Zola, Balzac, and the Impressionist painters. The work is considered a landmark document of the late 19th-century revolt against Victorian morality and literary traditions, introducing French naturalism and aestheticism to English readers. This edition includes an introduction by Floyd Dell, an American writer and critic.
+"""
+
+Notes = """
+The first edition was published in 1888. George Moore (1852-1933) was an Irish novelist and short-story writer who spent formative years in Paris and became a key figure in introducing French literary movements to the English-speaking world. While Moore was raised Catholic, he abandoned the faith and became an outspoken critic of Catholicism, so this work does not receive a 'catholic' tag. The work is decidedly not appropriate for children due to its frank discussion of sensuality, bohemian lifestyle, and anti-Victorian sentiments.
+"""
+</result>

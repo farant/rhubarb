@@ -1,0 +1,17 @@
+I recognize this work! "The Courage of Captain Plum" by James Oliver Curwood, published in 1912. Let me provide the structured information you requested.
+
+<result>
+Title = "The Courage of Captain Plum"
+Author = "James Oliver Curwood"
+Year = 1912
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+An adventure novel by James Oliver Curwood, one of the most popular American action-adventure writers of the early 20th century. Set in 1856 on Lake Michigan, the story follows Captain Nathaniel Plum, master of the sloop Typhoon, as he becomes entangled in events involving a mysterious island community. Curwood was known for his stories set in the Canadian wilderness and Great Lakes region, often featuring themes of courage, survival, and romance. This novel combines maritime adventure with frontier drama in the tradition of popular early 20th-century American adventure fiction.
+"""
+
+Notes = """
+The year 1912 represents the original publication date clearly indicated on the title page. Curwood was a prolific writer whose works were widely read during his lifetime (1878-1927). While Curwood was himself Catholic, this particular work is a secular adventure novel rather than explicitly Catholic literature, so it does not receive the 'catholic' tag per your criteria.
+"""
+</result>

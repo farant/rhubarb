@@ -1,0 +1,15 @@
+<result>
+Title = "Treasure Island"
+Author = "Robert Louis Stevenson"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Treasure Island is a classic adventure novel that follows young Jim Hawkins who discovers a treasure map and sets sail on the Hispaniola to find buried pirate gold. The story features one of literature's most memorable villains, Long John Silver, and includes pirates, mutiny, and adventure on a tropical island. Originally serialized in the children's magazine Young Folks from 1881-1882 under the title "The Sea Cook," it was published as a book in 1883. The novel essentially created the popular image of pirates in popular culture, including treasure maps marked with an X, tropical islands, and one-legged seamen with parrots. It's considered one of the greatest adventure stories ever written and has remained continuously in print since publication.
+"""
+
+Notes = """
+First published in book form in 1883 by Cassell and Company. The work was originally serialized 1881-1882, but 1883 is the standard publication date used for the complete novel. This is Stevenson's first major success and one of the most influential adventure novels in English literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Outdoor Girls of Deepdale; Or, Camping and Tramping for Fun and Health"
+Author = "Laura Lee Hope"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Outdoor Girls of Deepdale' is the first book in the Outdoor Girls series by Laura Lee Hope, a pseudonym used by the Stratemeyer Syndicate. The series follows a group of young female friends who engage in various outdoor adventures including camping, tramping (hiking), and other wholesome activities. The books were designed to appeal to young girls in the early 20th century and promoted themes of friendship, independence, healthy outdoor recreation, and adventure. The Outdoor Girls series was part of the broader tradition of girls' series books that flourished in the early 1900s, similar to the Bobbsey Twins and other Stratemeyer Syndicate productions. These stories emphasized both fun and personal character development through outdoor activities, which was particularly progressive for the era in encouraging girls to be active and adventurous.
+"""
+
+Notes = """
+The year 1913 is clearly stated on the title page and represents the original publication date. Laura Lee Hope was a house pseudonym used by the Stratemeyer Syndicate, with various ghostwriters contributing to books under this name. The Syndicate was a prolific book packaging company that created many popular children's series in the early 20th century.
+"""
+</result>

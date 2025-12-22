@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly a scholarly religious work about the Bible and Israel's history. From the title page, I can see it's "The Bible's Message to Modern Life: Twelve Studies on The Making of a Nation - The Beginnings of Israel's History" by Charles Foster Kent and Jeremiah Whipple Jenks, published in 1912.
+
+Charles Foster Kent (1867-1925) was a prominent American biblical scholar and professor at Yale University, known for his work on biblical history and education. Jeremiah Whipple Jenks (1856-1929) was an economist and political scientist. This appears to be an educational/scholarly work applying biblical studies to modern social questions.
+
+<result>
+Title = "The Bible's Message to Modern Life: Twelve Studies on The Making of a Nation"
+Author = "Charles Foster Kent, Jeremiah Whipple Jenks"
+Year = 1912
+
+Tags = ["non-fiction", "biblical-studies", "historical", "educational"]
+
+Summary = """
+This is a scholarly work of biblical studies focusing on the early history of Israel and its relevance to modern life. Written by Charles Foster Kent, a prominent Yale biblical scholar, and Jeremiah Whipple Jenks, an economist, this book presents twelve studies examining the formation of the Israelite nation and drawing lessons for contemporary society. The work reflects the early 20th century biblical scholarship movement that sought to make scripture accessible and relevant to modern readers, particularly in the context of nation-building, citizenship, and social reform. The prefatory quotes from Garibaldi, Joseph Choate, and Bishop Butler emphasize themes of freedom, education, and progressive understanding of scripture.
+"""
+
+Notes = """
+Year chosen is straightforward as this is an original work from 1912. This is not a Catholic work - Kent was a Protestant biblical scholar associated with the liberal Protestant movement of biblical criticism. While it deals with biblical topics, it would not receive a nihil obstat or imprimatur, so the 'catholic' tag is not included.
+"""
+</result>

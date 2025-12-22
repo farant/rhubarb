@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a Camp Fire Girls series book - a popular early 20th century American series about the Camp Fire Girls organization (founded 1910). Based on the title page shown and the writing style, this appears to be from the 1910s-1920s era when these books were most popular.
+
+<result>
+Title = "The Camp Fire Girls At Camp Keewaydin; Or, Down Paddles"
+Author = "Hildegard G. Frey"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children", "girls-adventure", "camp-fire-girls-series"]
+
+Summary = """
+This is a book from the Camp Fire Girls series by Hildegard G. Frey, part of the popular early 20th century American youth literature movement. The Camp Fire Girls was a real organization founded in 1910 as a counterpart to the Boy Scouts, focusing on outdoor skills, domestic arts, and character development for girls. This particular installment follows a group of Camp Fire Girls (including characters named Hinpoha, Agony, Sahwah, Migwan, Katherine, and others) as they travel to Camp Keewaydin for a summer camping adventure. The series was known for promoting outdoor activities, friendship, and personal development among young girls. These books were immensely popular during the 1910s-1920s and captured the spirit of the progressive era's emphasis on youth organizations and outdoor education.
+"""
+
+Notes = """
+The Camp Fire Girls series was published primarily between 1912-1930s. While the exact publication year for this specific title would require verification, 1916 is a reasonable estimate based on the series timeline and the style of writing. These books were secular but promoted wholesome values and character development consistent with mainstream American Protestant culture of the era.
+"""
+</result>

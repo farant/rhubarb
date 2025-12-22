@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information in TOML format.
+
+This is clearly "The Wrong Twin" by Harry Leon Wilson, published in 1921 as indicated in the text itself. Harry Leon Wilson was an American novelist and dramatist known for his humorous works. This is a work of fiction, and while Wilson was a successful popular author of his era, this would be classified as general fiction rather than specifically Catholic literature.
+
+<result>
+Title = "The Wrong Twin"
+Author = "Harry Leon Wilson"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Wrong Twin" is a novel by Harry Leon Wilson, an American humorist and novelist best known for works like "Ruggles of Red Gap" and "Merton of the Movies." This novel tells the story of twin brothers with contrasting personalities, as suggested by the opening description of their photograph in the Foto Art Shop window - one composed and proper, the other rebellious and scowling. Wilson was a popular author of the early 20th century who specialized in satirical and humorous fiction about American life. The novel explores themes of identity, family, and the different paths individuals take in life.
+"""
+
+Notes = """
+The year 1921 is clearly stated in the book's front matter. Harry Leon Wilson (1867-1939) was a prominent American author during the early 20th century, though not a Catholic writer. This appears to be a humorous novel suitable for general audiences including older children, typical of Wilson's accessible writing style.
+"""
+</result>

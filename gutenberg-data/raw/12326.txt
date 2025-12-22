@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of My Life: Recollections and Reflections"
+Author = "Ellen Terry"
+Year = 1908
+
+Tags = ["non-fiction", "autobiography", "theater", "appropriate-for-children"]
+
+Summary = """
+This is the autobiography of Dame Ellen Terry (1847-1928), one of the most celebrated British actresses of the Victorian era and early 20th century. Terry was renowned for her Shakespearean roles and her long professional partnership with actor-manager Henry Irving at the Lyceum Theatre. In this memoir, she recounts her extraordinary life in the theater, her experiences with the greatest actors and playwrights of her time, and reflections on her art and career. The work provides valuable insight into Victorian and Edwardian theater culture and the life of one of the stage's most iconic figures.
+"""
+
+Notes = """
+The copyright page indicates multiple copyright dates (1907, 1908) and the title page shows publication by Doubleday, Page & Co. in 1909 (MCMIX), but the work was clearly written and first published in 1908 based on the copyright information. I've chosen 1908 as the most historically accurate publication year for this first edition of her autobiography.
+"""
+</result>

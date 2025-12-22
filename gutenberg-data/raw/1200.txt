@@ -1,0 +1,15 @@
+<result>
+Title = "Gargantua and Pantagruel"
+Author = "François Rabelais"
+Year = 1532
+
+Tags = ["fiction", "satire", "inappropriate-for-children", "catholic"]
+
+Summary = """
+Gargantua and Pantagruel is a pentalogy of novels written by François Rabelais in the 16th century. The work chronicles the adventures of two giants, Gargantua and his son Pantagruel, and is considered one of the masterpieces of the French Renaissance. Written in a bawdy, satirical style, Rabelais uses the frame of these fantastical tales to engage in social, religious, and political commentary. The work is known for its exuberant use of language, encyclopedic range of knowledge, and humanist philosophy. While Rabelais himself was a Franciscan and later Benedictine monk (and thus Catholic), the work's irreverent humor and satire of church corruption led to its condemnation by the Sorbonne and it would certainly not receive an imprimatur. This particular text is the famous English translation begun by Sir Thomas Urquhart in 1653 and completed by Peter Antony Motteux in 1693-1708.
+"""
+
+Notes = """
+The first book (Pantagruel) was published in 1532, followed by Gargantua in 1534. The books were published over the period 1532-1564. I've chosen 1532 as it marks the beginning of the work's publication. Though Rabelais was a Catholic cleric, this work is marked as 'catholic' with caution - while written by a Catholic author deeply engaged with humanist Christianity, the work's satirical and scatological content would preclude it from receiving ecclesiastical approval. It should not be considered appropriate devotional or educational reading from a Catholic perspective, despite the author's religious vocation.
+"""
+</result>

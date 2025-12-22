@@ -1,0 +1,15 @@
+<result>
+Title = "A Concise Dictionary of Middle English"
+Author = "A. L. Mayhew, Walter W. Skeat"
+Year = 1888
+
+Tags = ["non-fiction", "reference", "linguistics", "scholarly"]
+
+Summary = """
+A scholarly dictionary of Middle English compiled by two prominent philologists and medievalists of the Victorian era. Rev. A. L. Mayhew of Wadham College, Oxford, and Rev. Walter W. Skeat, the Elrington and Bosworth Professor of Anglo-Saxon at Cambridge University, created this concise reference work to document the vocabulary of Middle English (roughly 1150-1500 CE). Skeat was one of the most important English philologists of the 19th century, known for his etymological work and editions of Chaucer and Piers Plowman. This dictionary served as an important scholarly tool for students and researchers studying medieval English literature and language.
+"""
+
+Notes = """
+The publication year of 1888 is clearly indicated on the title page as 'M DCCC LXXXVIII' (Roman numerals). Published by Oxford University Press at the Clarendon Press. Both authors were Anglican clergymen as well as distinguished scholars. While the authors were Christians, this is a secular academic reference work on historical linguistics, not religious literature.
+"""
+</result>

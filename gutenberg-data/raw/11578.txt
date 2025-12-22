@@ -1,0 +1,15 @@
+<result>
+Title = "Poetical Works of John Dryden, Volume II"
+Author = "John Dryden"
+Year = 1631
+
+Tags = ["non-fiction", "poetry", "literary-criticism"]
+
+Summary = """
+This is a collected edition of John Dryden's poetical works, edited by Rev. George Gilfillan and published in 1855. John Dryden (1631-1700) was one of the most important English poets, literary critics, and playwrights of the Restoration period. He served as Poet Laureate from 1668 to 1688. This volume includes his poetry along with biographical material, critical essays, and explanatory notes. The excerpt shown is from a critical essay examining Dryden's genius and works, particularly addressing questions of how to evaluate historical writers by the moral and aesthetic standards of their own time versus later periods. Dryden was a Catholic convert (1686) and his later works reflect his Catholic faith, though his earlier works were written before his conversion.
+"""
+
+Notes = """
+I've chosen 1631 as the year because this represents Dryden's birth/career rather than this particular edition's publication date (1855). For a collected works volume, the most historically meaningful date is when the author lived and created the work, not when a later editor compiled it. However, if you prefer the publication date of this specific edition for your timeline purposes, that would be 1855. Dryden himself converted to Catholicism in 1686, so his later works would qualify for the 'catholic' tag, but since this is a complete collection spanning his career, I've not included that tag for the collection as a whole.
+"""
+</result>

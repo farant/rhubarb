@@ -1,0 +1,15 @@
+<result>
+Title = "String Quartet No. 11 in F minor, Opus 95"
+Author = "Ludwig van Beethoven"
+Year = 1810
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Beethoven's String Quartet No. 11 in F minor, Op. 95, also known as "Serioso" or "Quartetto serioso." It is one of Beethoven's most compact and intense chamber works, written during his middle period. The quartet is notable for its dramatic character, economy of material, and emotional intensity. It consists of four movements and represents a departure from the more expansive style of his earlier quartets, anticipating some of the concentrated power of his late period works.
+"""
+
+Notes = """
+Beethoven completed this quartet in 1810, though it was not published until 1816. The work is sometimes dated to 1810-1811 depending on the source, but 1810 is generally accepted as the primary composition date. This Project Gutenberg file contains a musical score in Finale .MUS format rather than text, which is why the encoding is listed as "Finale .MUS" rather than standard text.
+"""
+</result>

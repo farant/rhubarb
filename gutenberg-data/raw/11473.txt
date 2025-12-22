@@ -1,0 +1,15 @@
+<result>
+Title = "Made to Measure"
+Author = "W.W. Jacobs"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Made to Measure" is a short story by W.W. Jacobs, part of his collection "Deep Waters" published in 1919. Jacobs was a prolific English humorist and short story writer, best known for his maritime stories and tales of dockside life in London. While he is most famous for his horror story "The Monkey's Paw," the majority of his work consists of light, humorous tales featuring working-class characters, longshoremen, and night watchmen. His stories typically feature gentle comedy, misunderstandings, and the foibles of ordinary people. "Made to Measure" appears to be one of these characteristic light comedic stories, opening with Mr. Mott bringing his niece home from London to a quieter town setting.
+"""
+
+Notes = """
+"Deep Waters" was published in 1919, making this the most appropriate date. While individual stories from collections may have appeared earlier in magazines, the book publication date is the standard reference point. This is characteristic Jacobs humor - gentle, accessible social comedy rather than his rare forays into the macabre.
+"""
+</result>

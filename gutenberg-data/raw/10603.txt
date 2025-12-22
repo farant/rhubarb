@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "With Kelly to Chitral" by Lieutenant W.G.L. Beynon, as stated in the title page. This is a firsthand military account of the 1895 Chitral Relief Expedition, where Colonel James Kelly led a force to relieve the besieged garrison at Chitral Fort in what is now Pakistan. The expedition was part of the "Great Game" - the strategic rivalry between the British and Russian Empires in Central Asia. The book was published in 1896, shortly after the events it describes (which took place in early 1895).
+
+<result>
+Title = "With Kelly to Chitral"
+Author = "W.G.L. Beynon"
+Year = 1896
+
+Tags = ["non-fiction", "historical-document", "military-history"]
+
+Summary = """
+A firsthand military account by Lieutenant W.G.L. Beynon, who served as staff officer to Colonel Kelly's Relief Force during the 1895 Chitral Expedition. The book describes the daily life, hardships, and experiences of British officers and Indian troops during this frontier military campaign in the Hindu Kush region (present-day Pakistan). The expedition was part of the larger context of the "Great Game" - the strategic competition between the British and Russian Empires in Central Asia. Rather than focusing on heroic narratives, Beynon provides a detailed chronicle of the practical realities of military life on campaign: marches through difficult terrain, provisions, weather conditions, and the mundane details that filled each day of the expedition.
+"""
+
+Notes = """
+Published in 1896, immediately following the events of early 1895. The Chitral Relief Expedition was a significant military operation where Colonel Kelly led forces to relieve a besieged British garrison at Chitral Fort. This is a primary source document written by a direct participant.
+"""
+</result>

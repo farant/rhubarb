@@ -1,0 +1,15 @@
+<result>
+Title = "The Existence of God"
+Author = "François de Salignac de La Mothe-Fénelon"
+Year = 1713
+
+Tags = ["non-fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+This is a philosophical and theological treatise by François Fénelon (1651-1715), the renowned French Catholic archbishop, theologian, and spiritual writer. The work presents arguments for the existence of God through natural theology, examining the order and design evident in creation. Fénelon was one of the most influential Catholic thinkers of his era, known for his gentle approach to apologetics and his emphasis on divine love. As Archbishop of Cambrai and a member of the Académie française, his works consistently received ecclesiastical approval. This treatise is characteristic of his accessible yet profound style, making complex theological arguments comprehensible to educated lay readers while maintaining rigorous intellectual standards.
+"""
+
+Notes = """
+Fénelon wrote this work late in his life, likely around 1712-1713, though it was published posthumously. I've chosen 1713 as this appears to be when the work was completed or first circulated. Fénelon died in 1715. The work is solidly within Catholic apologetic tradition and would certainly have carried nihil obstat/imprimatur approval. This English edition was edited by Henry Morley in the 19th century as part of broader efforts to make continental Catholic thought available to English readers.
+"""
+</result>

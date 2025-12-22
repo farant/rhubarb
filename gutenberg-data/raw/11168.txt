@@ -1,0 +1,27 @@
+I need to analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Looking at the text, this is a scholarly edition from the Irish Texts Society (Comann na Sgríbheann Gaedhilge), Volume XVI, published in 1914. It contains two medieval Irish hagiographies: the Life of St. Declan of Ardmore and the Life of St. Mochuda of Lismore, edited with translation and notes by Rev. P. Power.
+
+This is an academic/scholarly work rather than the original medieval texts themselves. The original lives would have been written in Middle Irish centuries earlier (likely 12th-13th centuries for these particular recensions), but this is a modern scholarly edition with English translation and commentary.
+
+Given your instruction about choosing the most historically accurate and educational year, I need to consider: this is a scholarly edition with substantial editorial apparatus (introduction, translation, notes), not just a raw text. The value here is the 1914 scholarly work by Rev. Power, making it accessible to modern readers. However, these are hagiographies of early medieval Irish saints.
+
+St. Declan is traditionally dated to the 5th century (pre-Patrician), and St. Mochuda (also known as Carthage) to the 7th century. The actual composition of these particular Latin lives would be medieval (probably 12th-13th century).
+
+I think the most appropriate approach is to use 1914 as the year, since this is fundamentally a scholarly edition and the educational/historical value is in Rev. Power's work making these texts accessible.
+
+<result>
+Title = "Life of St. Declan of Ardmore and Life of St. Mochuda of Lismore"
+Author = "Rev. P. Power (editor and translator)"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is a scholarly edition published by the Irish Texts Society containing two medieval Irish hagiographies: the Life of St. Declan of Ardmore and the Life of St. Mochuda of Lismore. St. Declan was an early Christian missionary in Ireland, traditionally considered pre-Patrician (5th century), while St. Mochuda (also known as St. Carthage) was a 7th-century Irish saint and abbot. The volume includes critical editions of the Latin texts from manuscripts in Brussels and Dublin, along with English translations, introduction, and scholarly notes by Rev. P. Power, M.R.I.A. of University College, Cork. These hagiographies are important sources for understanding early Irish Christianity, monastic life, and the development of saints' cults in medieval Ireland.
+"""
+
+Notes = """
+The original lives were composed in Middle Irish/Latin during the medieval period (likely 12th-13th centuries), but this is a 1914 scholarly edition with substantial editorial apparatus. I chose 1914 as the year because this represents the scholarly work making these texts accessible with translation and commentary, which is the primary educational value of this particular text.
+"""
+</result>

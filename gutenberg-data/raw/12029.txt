@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+<result>
+Title = "George Washington's Rules of Civility: Traced to their Sources and Restored"
+Author = "Moncure D. Conway"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This work by Moncure D. Conway examines and restores the "Rules of Civility and Decent Behaviour in Company and Conversation" copied by a young George Washington in 1745 when he was fourteen or fifteen years old. The rules were found among Washington's manuscript books preserved in the State Archives. Conway traces these rules to their historical sources and provides scholarly commentary on this fascinating artifact of Washington's youth. The work offers insight into the education and character formation of America's first president, revealing the moral and social instruction that shaped his legendary conduct.
+"""
+
+Notes = """
+The year 1890 is clearly stated on the title page as the publication date of Conway's scholarly work. While the Rules of Civility themselves were copied by Washington in 1745, this is Conway's 1890 analysis and restoration of those rules. The work is historical scholarship rather than a primary historical document, though it deals with primary source material. Tagged as appropriate for children given the subject matter (rules of good behavior) and accessibility. Not tagged as 'catholic' as Conway was a Unitarian minister and freethinker, not a Catholic author.
+"""
+</result>

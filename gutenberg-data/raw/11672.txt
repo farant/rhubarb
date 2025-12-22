@@ -1,0 +1,15 @@
+<result>
+Title = "A Short History of Women's Rights: From the Days of Augustus to the Present Time"
+Author = "Eugene A. Hecker"
+Year = 1914
+
+Tags = ["non-fiction", "history", "womens-rights", "legal-history", "social-history"]
+
+Summary = """
+This is a historical survey of women's legal and political rights from ancient Rome (the era of Augustus Caesar) through the early 20th century, with particular focus on England and the United States. Written by Eugene A. Hecker, the work traces the evolution of women's legal status, civil rights, and the suffrage movement. The second revised edition, published in 1914, includes an updated chapter on the equal suffrage contest, noting the rapid progress made in the years leading up to publication. The author explicitly states this was an attempt to fill a gap in English-language scholarship on the topic, as no comprehensive account existed except for Laboulaye's 1843 French work. This book provides historical context for understanding women's rights movements and legal reforms.
+"""
+
+Notes = """
+I chose 1914 as the year because this is explicitly marked as the "Second Edition Revised, with Additions" dated August 1914 in Cambridge, Massachusetts. While there was presumably a first edition earlier, the 1914 edition represents the most complete version of the work with updated suffrage information. The author notes that the summary on pages 175-235 was already "largely obsolete" by 1914 due to "rapid progress made during the last four years," indicating the dynamic nature of women's suffrage activism in the 1910s leading up to the 19th Amendment (1920 in the US).
+"""
+</result>

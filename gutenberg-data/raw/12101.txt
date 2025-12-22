@@ -1,0 +1,15 @@
+<result>
+Title = "A Social History of the American Negro: Being a History of the Negro Problem in the United States Including a History and Study of the Republic of Liberia"
+Author = "Benjamin Brawley"
+Year = 1921
+
+Tags = ["non-fiction", "history", "social-history", "race-relations", "african-american-studies"]
+
+Summary = """
+A Social History of the American Negro is a comprehensive historical study by Benjamin Brawley examining the history of African Americans in the United States and the development of Liberia. Published in 1921, this work provides an early 20th-century scholarly perspective on what was then termed "the Negro problem" in America. Brawley (1882-1939) was an important African American educator, writer, and literary critic who taught at Morehouse College and Howard University. The book is dedicated to Norwood Penrose Hallowell, a white abolitionist and Union Army officer who commanded the famous 54th Massachusetts Regiment (one of the first African American units in the Civil War) after Robert Gould Shaw's death. This dedication reflects the work's engagement with the Civil War era and the interracial cooperation of the abolitionist movement. The book represents an important early contribution to African American historiography during the post-Reconstruction era.
+"""
+
+Notes = """
+The publication year of 1921 is clearly stated in the document. Benjamin Brawley was not a Catholic author, so the 'catholic' tag is not included. While the work deals with serious historical subject matter, it is an academic/scholarly text rather than being specifically appropriate for children. The dedication to Hallowell, a Quaker abolitionist who served with distinction in the Union Army, provides important context about the book's perspective and the progressive networks of the early 20th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Account of a Tour in Normandy, Volume I"
+Author = "Dawson Turner"
+Year = 1820
+
+Tags = ["non-fiction", "travel", "architecture", "history"]
+
+Summary = """
+This is a travelogue by British antiquarian and botanist Dawson Turner, documenting his three tours of Normandy undertaken in 1815, 1818, and 1819. The work takes the form of letters addressed to Rev. James Layton and focuses primarily on investigating the architectural antiquities of the Duchy of Normandy, with additional observations on the region's history, landscape, and inhabitants. The book was published with numerous engravings to illustrate the architectural features discussed. Turner was a noted scholar and collector who made significant contributions to the study of medieval architecture and manuscripts in Normandy during a period when English antiquarians were rediscovering Norman heritage following the Napoleonic Wars.
+"""
+
+Notes = """
+The publication year of 1820 is clearly stated in the title page and represents when this first volume was published in London. This work is part of the early 19th-century antiquarian movement that sought to document and preserve knowledge of medieval architecture and history. The tours themselves took place in 1815, 1818, and 1819, with the 1818 tour being cut short due to a domestic calamity mentioned in the preface.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Third Series, Volume 24, Part 1A, Number 1 - Books and Pamphlets, Including Serials and Contributions to Periodicals (January-June 1970): Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1970
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office catalog documenting copyright renewal registrations for books, pamphlets, serials, and periodical contributions during a period in 1970. These catalogs were official government publications that recorded copyright transactions and renewals, serving as the public record of copyright claims in the United States. This particular volume appears to be the renewal registrations section, which tracked works whose copyrights were being renewed (under the old copyright law, works required renewal after their initial term to maintain copyright protection). The excerpt shows alphabetically arranged entries with information about both original and renewal registrations.
+"""
+
+Notes = """
+The year 1970 is clearly indicated in the document itself (visible in references like "11Feb70" and the page identifier "1970_h1/A/1417"). This is a government publication, not authored by an individual, so "United States Copyright Office" is listed as the institutional author. These catalogs are important historical documents for understanding copyright history and the publication landscape of different eras. The "appropriate-for-children" tag was not included as this is a technical reference work. This predates the Copyright Act of 1976 which eliminated renewal requirements for most works.
+"""
+</result>

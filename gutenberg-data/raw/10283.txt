@@ -1,0 +1,15 @@
+<result>
+Title = "Dinah Polka"
+Author = "Charles P. Lowe"
+Year = 1890
+
+Tags = ["historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of "Dinah Polka" performed on xylophone by Charles P. Lowe. The recording was edited by Thomas A. Edison and comes from the Edison National Historic Site collection. It represents an early example of recorded music from the Edison cylinder era, capturing a popular polka performance from the late 19th century. The polka was a popular dance and musical form during this period in American history.
+"""
+
+Notes = """
+The exact year is difficult to determine from the Gutenberg text alone. Edison began commercial production of cylinder recordings in the late 1880s, with significant activity through the 1890s and early 1900s. Given that this appears to be from the Edison National Historic Site archives and represents the cylinder recording era, I've estimated circa 1890 as a representative year for this type of recording, though it could range anywhere from approximately 1888-1905. The polka form itself was extremely popular in American music during the 1880s-1900s.
+"""
+</result>

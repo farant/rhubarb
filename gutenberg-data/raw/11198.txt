@@ -1,0 +1,15 @@
+<result>
+Title = "Christianity and Islam"
+Author = "C.H. Becker"
+Year = 1909
+
+Tags = ["non-fiction", "comparative-religion", "historical-scholarship"]
+
+Summary = """
+This scholarly work by C.H. Becker examines the historical connections and interactions between Christianity and Islam. The book analyzes several key areas: Muhammad's relationship with Christianity and Christians during Islam's founding period, the influence of Christian thought on early Islamic development, the treatment of Christians under Islamic rule, and the parallels between Christian and Muslim metaphysical thought during the medieval period. Written by a professor of Oriental history, this comparative religious study represents early 20th-century European academic scholarship on Islam and its relationship to Christianity.
+"""
+
+Notes = """
+The year 1909 is clearly indicated on the title page as the publication date of this English translation. This represents the original publication date of the English edition translated by Rev. H.J. Chaytor. The work is an academic historical and comparative religious study rather than a devotional or theological text from within either tradition.
+"""
+</result>

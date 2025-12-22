@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+<result>
+Title = "De Jongere Generatie"
+Author = "E. D'Oliveira"
+Year = 1903
+
+Tags = ["non-fiction", "literary-criticism", "historical-document"]
+
+Summary = """
+"De Jongere Generatie" (The Younger Generation) is a Dutch literary-critical work by E. D'Oliveira, serving as a sequel to his earlier work "De Mannen van '80" (The Men of 1880). The book consists of conversations with representatives of the newer direction in Dutch literature, functioning as an inquiry into certain principles of Dutch national intellectual life. It examines the generation of Dutch writers who followed the famous Movement of Eighty (Beweging van Tachtig), which revolutionized Dutch literature in the 1880s. The work includes an illustrated introduction noting that some representative figures, including Henriëtte Roland Holst and Herman Gorter, declined to participate in the interviews.
+"""
+
+Notes = """
+The year 1903 is an educated estimate based on the context. "De Mannen van '80" was published around 1901-1902, and this work is explicitly a sequel ("VERVOLG OP"). The reference to a "second printing" of the earlier work and the mention of contemporary literary figures like Louis Couperus (whose portrait appears in the illustration) suggests publication in the early 1900s. The work documents the generation following the Movement of Eighty, which would place it in the first decade of the 20th century. Without access to definitive publication data, 1903 represents a reasonable estimate for when such a sequel would have appeared.
+"""
+</result>

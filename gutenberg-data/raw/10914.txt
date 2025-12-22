@@ -1,0 +1,15 @@
+<result>
+Title = "Die Brüder Wright: Eine Studie über die Entwicklung der Flugmaschine von Lilienthal bis Wright"
+Author = "Alfred Hildebrandt"
+Year = 1909
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a German-language study of the Wright Brothers and the development of the airplane from Otto Lilienthal to the Wright Brothers. Written by Alfred Hildebrandt, a retired German military captain (Hauptmann a.D.), this work examines the technical and historical progression of powered flight. The book covers the pioneering aviation experiments and achievements that led to the Wright Brothers' successful flights at Kitty Hawk in 1903 and their subsequent developments. It represents an early contemporary account of aviation history, written during the formative years of flight when the Wright Brothers' achievements were still fresh and revolutionary.
+"""
+
+Notes = """
+The original German edition was likely published around 1909-1910, during the period when the Wright Brothers were actively demonstrating their aircraft in Europe and aviation was transitioning from experimental curiosity to practical technology. This represents one of the early technical-historical assessments of the Wright Brothers' work by a European military observer. The Project Gutenberg release date of 2004 is just the digitization date.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the 19th century. This particular issue (Vol. XIX, No. 538) from March 17, 1832, features an article on the arbalest (cross-bow), discussing its historical significance in warfare and archery tradition, particularly in England. The periodical was known for providing educational content, illustrations, and articles on history, literature, and general knowledge to a broad Victorian audience.
+"""
+
+Notes = """
+Year chosen is 1832, the publication date of this specific issue as stated in the header. The Mirror was a periodical rather than a single-authored work, so "Various" is used for the author field. While individual issues contained articles by different contributors, the periodical itself was the primary work being published.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work - it's "The Haunted Baronet" by Joseph Sheridan Le Fanu, one of his supernatural tales. Let me provide the structured information you requested.
+
+<result>
+Title = "The Haunted Baronet"
+Author = "Joseph Sheridan Le Fanu"
+Year = 1871
+
+Tags = ["fiction", "gothic", "supernatural", "ghost-story"]
+
+Summary = """
+'The Haunted Baronet' is a Gothic ghost story by Irish writer Joseph Sheridan Le Fanu, first published in 1871. Le Fanu was a master of Victorian supernatural fiction, and this novella exemplifies his atmospheric style. The story is set in the picturesque town of Golden Friars by a lake, surrounded by mountains, and centers on the mysterious happenings at the George and Dragon inn. Le Fanu was known for his psychological depth and his ability to create mounting dread through suggestion and atmosphere rather than explicit horror. This work contains the Gothic elements typical of his fiction: isolated settings, ancestral guilt, and supernatural manifestations that blur the line between the psychological and the paranormal.
+"""
+
+Notes = """
+The text explicitly states this was published in 1871, which appears in the Project Gutenberg header. Le Fanu was Irish Protestant, not Catholic, so the 'catholic' tag is not applicable. While Le Fanu's works are literary classics, the supernatural and Gothic themes make this not appropriate for children.
+"""
+</result>

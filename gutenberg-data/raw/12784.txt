@@ -1,0 +1,19 @@
+Looking at this Project Gutenberg text, I can see this is a volume listing/catalog page for a collected works edition of Jonathan Swift, rather than a single work itself. This appears to be from the front matter of one of the volumes in Temple Scott's edition of Swift's prose works.
+
+However, since you're asking me to identify the work based on the Gutenberg text ID (12784), let me provide information about what this specific volume would be:
+
+<result>
+Title = "The Prose Works of Jonathan Swift, D.D."
+Author = "Jonathan Swift, edited by Temple Scott"
+Year = 1897
+
+Tags = ["non-fiction", "collected-works", "literary", "religious", "political", "historical"]
+
+Summary = """
+This is a comprehensive collected edition of Jonathan Swift's prose works, edited by Temple Scott and published in multiple volumes starting in the late 1890s. Swift (1667-1745) was an Anglo-Irish satirist, essayist, and clergyman, best known for works like "Gulliver's Travels" and "A Tale of a Tub." This edition includes his religious writings, political tracts, the famous "Drapier's Letters," "The Journal to Stella," and various other works. Swift was one of the foremost prose satirists in the English language, and his works often combined biting political commentary with religious themes. He served as Dean of St. Patrick's Cathedral in Dublin.
+"""
+
+Notes = """
+The year 1897 reflects when this Temple Scott edition was being published, as this appears to be the front matter/catalog page from one of the volumes. Swift himself lived from 1667-1745, so his works span that earlier period. I've chosen the publication year of this specific edition since what we're looking at is the editorial collection rather than an original Swift work. Swift was Anglican (Church of Ireland), not Catholic, so I have not included the 'catholic' tag despite his extensive religious writings.
+"""
+</result>

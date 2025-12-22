@@ -1,0 +1,17 @@
+I recognize this as an issue of **Punch, or The London Charivari**, the famous British humor and satire magazine. This particular issue is from May 14, 1919, as stated in the text itself.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 156, May 14, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari, was Britain's premier humor and satire magazine, published from 1841 to 2002. Known for its wit, political cartoons, and social commentary, Punch was an influential voice in Victorian and Edwardian Britain and beyond. This May 1919 issue captures the immediate post-World War I period, with satirical commentary on the Treaty of Versailles peace negotiations (referencing Count Brockdorff-Rantzau's conduct at the Peace Conference), Bolshevik Russia's Soviet Government, and various aspects of British domestic life. The magazine's "Charivaria" section featured brief humorous observations on current events, demonstrating the publication's characteristic blend of political awareness and light-hearted mockery.
+"""
+
+Notes = """
+The year 1919 is certain as it appears directly in the publication date. Punch was a collaborative effort with many contributors, so "Various" is appropriate for the author field. The content is generally family-friendly satire, hence the "appropriate-for-children" tag. While Punch had contributors of various religious backgrounds throughout its history, it was not specifically a Catholic publication, so I have not included that tag.
+"""
+</result>

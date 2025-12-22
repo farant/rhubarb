@@ -1,0 +1,15 @@
+<result>
+Title = "The Flying Legion"
+Author = "George Allan England"
+Year = 1920
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+"The Flying Legion" is an adventure novel by George Allan England, an American author and explorer known for his science fiction and adventure stories in the early 20th century. Published in 1920, this novel follows a daring aerial expedition led by a mysterious figure known as "the Master" who assembles a group of skilled aviators and adventurers for an audacious mission. The story involves exotic locations, air travel (which was still relatively new and thrilling at the time), and romantic adventure elements typical of the pulp fiction era. England was known for incorporating contemporary technological advances like aviation into his adventure narratives, making them exciting to readers of the period.
+"""
+
+Notes = """
+The publication year is clearly stated as July 1920, which matches the original publication date. This is an early aviation adventure story written shortly after World War I when flight was still a relatively new and exciting technology. George Allan England was a prolific writer of adventure and science fiction during this period.
+"""
+</result>

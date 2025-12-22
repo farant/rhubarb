@@ -1,0 +1,15 @@
+<result>
+Title = "A Reading of Life, with Other Poems"
+Author = "George Meredith"
+Year = 1901
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+A Reading of Life is a collection of poems by George Meredith (1828-1905), one of the major English poets and novelists of the Victorian era. Meredith was known for his complex, philosophical poetry that explored themes of nature, evolution, human psychology, and the relationship between humanity and the natural world. His poetic style was characterized by dense metaphor, intellectual rigor, and a naturalistic philosophy influenced by Darwin's theory of evolution. This collection represents his mature poetic work from the turn of the 20th century, reflecting his lifelong engagement with questions of life, death, and humanity's place in nature.
+"""
+
+Notes = """
+The year 1901 reflects the publication date of this specific collection by Archibald Constable & Co. This appears to be the original publication date for this particular volume of poetry, representing Meredith's later work when he was in his seventies.
+"""
+</result>

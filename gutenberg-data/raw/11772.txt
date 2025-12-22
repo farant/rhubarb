@@ -1,0 +1,15 @@
+<result>
+Title = "Narrative of a Voyage to Senegal in 1816"
+Author = "J.B. Henry Savigny"
+Year = 1818
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+This is the firsthand account of the catastrophic shipwreck of the French naval frigate Méduse (Medusa) off the coast of West Africa in 1816. The narrative details one of the most tragic maritime disasters in history, where 150 people were placed on a hastily constructed raft after the ship ran aground. Over thirteen days adrift, only 15 survived, enduring starvation, dehydration, madness, and reportedly cannibalism. The work, written by one of the survivors, surgeon J.B. Henry Savigny (often co-authored with another survivor, Alexandre Corréard, though only Savigny is named in this edition), became a major scandal in France, exposing incompetence and cowardice among French naval officers. The account also includes observations about the West African coast and French colonial activities in Senegal.
+"""
+
+Notes = """
+The shipwreck occurred in July 1816, and the original French publication appeared in 1817-1818. This English translation was likely published shortly after (circa 1818). The disaster inspired Théodore Géricault's famous 1819 painting "The Raft of the Medusa." The full work is often attributed to both Savigny and Corréard, though this edition credits only Savigny. I've chosen 1818 as the year representing the original publication date of the narrative rather than the date of the disaster itself, as this is a published account rather than a historical document from 1816.
+"""
+</result>

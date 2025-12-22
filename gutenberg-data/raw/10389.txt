@@ -1,0 +1,15 @@
+<result>
+Title = "Northern Trails: Book I"
+Author = "William J. Long"
+Year = 1905
+
+Tags = ["non-fiction", "natural-history", "appropriate-for-children"]
+
+Summary = """
+"Northern Trails" is a natural history work by William J. Long, the sixth book in his Wood Folk Series. The book presents observations of animal life and behavior in the northern wilderness, written in a narrative style that connects individual observations into coherent stories. Long emphasizes that every incident recorded is based on personal and accurate observation of animal life and habits. The work includes notable accounts of wolves, caribou, and salmon, among other wildlife. The book was controversial in its time, as Long's anthropomorphic approach and claims about animal intelligence challenged prevailing scientific orthodoxy, particularly the mechanistic view of animal behavior associated with Descartes. Long was part of the "nature faker" controversy of the early 1900s, defending his field observations against critics who held more rigid views of animal behavior.
+"""
+
+Notes = """
+The publication year of 1905 is clearly stated in the document. William J. Long (1866-1952) was an American writer, naturalist, and minister who became embroiled in the "nature faker" controversy with President Theodore Roosevelt and naturalist John Burroughs, who accused him and other popular nature writers of attributing too much intelligence and human-like reasoning to animals. The preface excerpt shows Long defending his observations, particularly regarding wolf hunting behavior, against critics who claimed his accounts were "mathematical impossibilities."
+"""
+</result>

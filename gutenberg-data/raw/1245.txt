@@ -1,0 +1,15 @@
+<result>
+Title = "Night and Day"
+Author = "Virginia Woolf"
+Year = 1919
+
+Tags = ["fiction", "literary-fiction", "romance", "modernist"]
+
+Summary = """
+Night and Day is Virginia Woolf's second novel, published in 1919. It follows the intertwining lives of Katharine Hilbery, descendant of a famous poet, and Mary Datchet, a suffragette worker, as they navigate love, marriage, and personal ambition in Edwardian London. The novel explores themes of romantic relationships, social conventions, women's independence, and the tension between public duty and private desire. Unlike Woolf's later experimental works, this novel employs a more traditional narrative structure while still showcasing her psychological depth and interest in the inner lives of her characters. The work is dedicated to Woolf's sister, Vanessa Bell, a prominent artist in the Bloomsbury Group.
+"""
+
+Notes = """
+Published in 1919, making it one of Woolf's earlier works before her more experimental modernist novels like Mrs Dalloway (1925) and To the Lighthouse (1927). This novel is more conventional in structure compared to her later stream-of-consciousness technique.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Poems by Emily Dickinson, Third Series"
+Author = "Emily Dickinson"
+Year = 1896
+
+Tags = ["poetry", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is the third series of Emily Dickinson's poetry, edited by Mabel Loomis Todd. Emily Dickinson (1830-1886) was an American poet who lived most of her life in reclusive isolation in Amherst, Massachusetts. She wrote nearly 1,800 poems during her lifetime, though only a handful were published before her death. Her work is characterized by short lines, slant rhyme, unconventional capitalization and punctuation, and profound insights into death, immortality, nature, and the inner life. This third series was published after the successful reception of the first two volumes of her collected poems, which introduced her unique voice to the American literary landscape. The poems are known for their compression, emotional intensity, and their exploration of psychological and spiritual themes.
+"""
+
+Notes = """
+Emily Dickinson died in 1886. The First Series of her poems was published in 1890, the Second Series in 1891, and this Third Series in 1896, all edited by Mabel Loomis Todd (with Thomas Wentworth Higginson editing the first two series). Since this is a posthumous collection rather than an original composition, I've chosen 1896 as the year—when this particular volume was published and made available to readers. The poems themselves were written throughout Dickinson's life, primarily between the 1850s and 1880s, but for a historical timeline context, the publication year of this specific edition seems most appropriate as it represents when these particular poems entered the public consciousness.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Jazz de Luxe"
+Author = "Earl Fuller's Famous Jazz Band"
+Year = 1917
+
+Tags = ["historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of jazz music performed by Earl Fuller's Famous Jazz Band, preserved from the Edison National Historic Site collection. Earl Fuller led one of the early jazz bands that recorded for Thomas Edison's record label in the late 1910s. Fuller's band was part of the first wave of jazz recordings that helped popularize the genre beyond New Orleans. The recording represents an important artifact of early jazz history and the commercial music industry of the WWI era.
+"""
+
+Notes = """
+Dating jazz recordings from this era can be complex. Earl Fuller's Famous Jazz Band was most active recording for Edison between 1917-1919. Without access to the specific tracks in this collection, I've chosen 1917 as a representative year for Fuller's peak recording period with Edison. This would be the earliest likely date for these recordings. The actual recordings could range from 1917-1920. The significance is more about the historical period than a specific composition date, as these were commercial recordings rather than published written works.
+"""
+</result>

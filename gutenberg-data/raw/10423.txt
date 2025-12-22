@@ -1,0 +1,15 @@
+<result>
+Title = "Triplets"
+Author = "George Hamilton Green"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+"Triplets" is a xylophone performance piece composed and performed by George Hamilton Green, one of the most influential xylophone virtuosos of the early 20th century. This is an audio recording (not a text work) that showcases Green's exceptional technical skill and musicianship on the xylophone. The piece demonstrates the triplet technique - a fundamental percussive pattern where three notes are played in the time normally occupied by two. Green was instrumental in elevating the xylophone from a novelty instrument to a serious concert instrument, and his compositions and recordings from this era are considered foundational to the development of modern mallet percussion.
+"""
+
+Notes = """
+The year 1919 is based on the explicit recording date mentioned in the Project Gutenberg metadata: "This recording was made in October of 1919 in New York City." This was edited by Thomas Edison, indicating it was part of Edison's recording company catalog. This is an audio artifact rather than a literary work, so the traditional author/publication paradigm doesn't quite fit, but 1919 represents both the composition's recording and its historical moment.
+"""
+</result>

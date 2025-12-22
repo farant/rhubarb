@@ -1,0 +1,19 @@
+I'll read through this text to identify the work, author, and provide the requested information.
+
+This is clearly the **First Folio** edition of William Shakespeare's plays, specifically the 1623 printing. The executive notes discuss the original printing conventions of that era, including the common letter substitutions (u for v, v for u) and the concept of "cliches" (set type blocks). The mention of "Hamlet" with its distinctive First Folio spelling ("vnfold", "liue") and the discussion of textual variants that Shakespeare scholars debate confirms this is from the First Folio collection.
+
+<result>
+Title = "Mr. William Shakespeares Comedies, Histories, & Tragedies (First Folio)"
+Author = "William Shakespeare"
+Year = 1623
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the First Folio, the first collected edition of William Shakespeare's plays, published in 1623, seven years after his death. Compiled by his fellow actors John Heminges and Henry Condell, it contains 36 of Shakespeare's plays, 18 of which had never been published before and would have been lost without this collection. The First Folio is one of the most important books in English literature, preserving works like Macbeth, Julius Caesar, Twelfth Night, The Tempest, and many others. This edition preserves the original printing conventions and spelling variations of the 17th-century printing process, including the use of 'u' for 'v' and vice versa, long 's', and various other typographical practices that differ from modern standards.
+"""
+
+Notes = """
+The year 1623 represents the publication date of the First Folio itself, rather than when the individual plays were written (which ranged from approximately 1589-1613). This date is most historically significant as it marks the preservation of Shakespeare's dramatic works in collected form. While the plays themselves were written earlier, the First Folio as a historical document and publishing event is properly dated to 1623. The editorial notes in this Gutenberg edition discuss the preservation of original printing errors and conventions, which are considered part of the "canon" by many Shakespeare scholars.
+"""
+</result>

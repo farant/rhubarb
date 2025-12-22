@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents, Volume III"
+Author = "James D. Richardson"
+Year = 1902
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume III of James D. Richardson's comprehensive compilation of presidential messages and papers, published by authority of Congress. This volume covers eight years of American history (1833-1841), including the second term of President Andrew Jackson (1833-1837) and the full term of President Martin Van Buren (1837-1841). The volume contains significant historical documents including Jackson's arguments for removing deposits from the United States Bank, his Farewell Address, and Van Buren's recommendation for the independent treasury system (subtreasury), which led to what was called "the divorce of the bank and state" in federal fiscal affairs. It also includes correspondence regarding the northeastern boundary controversy with Great Britain. This compilation serves as an important primary source for understanding executive branch communications and policy during this formative period of American democracy.
+"""
+
+Notes = """
+The year 1902 is chosen as it appears on the title page as the publication date by authority of Congress (though the copyright notice shows 1897, the 1902 publication date is more prominent and likely represents this specific authorized edition). This is a documentary compilation rather than original authorship - Richardson served as the compiler and editor of these presidential papers while representing Tennessee in Congress.
+"""
+</result>

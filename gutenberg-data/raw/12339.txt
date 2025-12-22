@@ -1,0 +1,27 @@
+I need to analyze this text from Project Gutenberg to identify the title, author, year, and other metadata.
+
+Looking at the text, I can see:
+- The author is clearly stated: "Herman Bang"
+- The title is: "HENDES HØJHED" (Her Highness)
+- This is Danish text
+- It's dedicated "Til Max Eisfeld"
+
+Let me identify this work. Herman Bang was a Danish author (1857-1912), and "Hendes Højhed" is one of his novels. This novel was first published in 1898. It's a work of fiction about court life and social dynamics in a small German principality.
+
+Herman Bang was not a Catholic author - he was Danish and lived in a predominantly Lutheran country. His works often dealt with social outsiders and had modernist, realist characteristics.
+
+<result>
+Title = "Hendes Højhed"
+Author = "Herman Bang"
+Year = 1898
+
+Tags = ["fiction", "danish-literature"]
+
+Summary = """
+'Hendes Højhed' (Her Highness) is a novel by Danish author Herman Bang, published in 1898. The work is a satirical portrayal of court life in a small German principality, focusing on the social dynamics, pretensions, and petty intrigues surrounding a minor royal figure. Bang was known for his impressionistic style and his sympathetic treatment of marginalized characters. This novel demonstrates his keen eye for social observation and his ability to capture the subtle tensions and hierarchies of aristocratic society. The excerpt shows a birthday committee visiting 'Her Highness' (Hendes Durchlaucht), with various court officials and their wives engaging in the elaborate rituals and gossip of court protocol.
+"""
+
+Notes = """
+Herman Bang was a Danish writer associated with the Modern Breakthrough movement in Scandinavian literature. This novel was published in 1898. Bang was not a Catholic author - Denmark was predominantly Lutheran. The text is in Danish and deals with themes of social class and court life typical of Bang's realistic, psychologically nuanced fiction.
+"""
+</result>

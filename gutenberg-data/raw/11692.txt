@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics: Masterpieces of German Literature, Volume III - Friedrich von Schiller"
+Author = "Friedrich von Schiller"
+Year = 1914
+
+Tags = ["non-fiction", "poetry", "literature", "anthology"]
+
+Summary = """
+This is Volume III of "The German Classics," a twenty-volume English translation series of German literary masterpieces published by The German Publication Society. This volume focuses on Friedrich von Schiller (1759-1805), one of Germany's greatest poets, playwrights, and philosophers. The volume includes a biography of Schiller by Calvin Thomas and translations of Schiller's poems (including "To the Ideal"). Schiller was a central figure of Weimar Classicism alongside Goethe, known for his dramatic works like "Wilhelm Tell" and "Die Räuber," as well as his philosophical poetry and aesthetic writings. His work explored themes of freedom, human dignity, and the conflict between idealism and reality.
+"""
+
+Notes = """
+The year 1914 represents the publication date of this English translation anthology by The German Publication Society, not Schiller's original composition dates (which span primarily 1780s-1805). Since this is specifically a translation/anthology project rather than an original work by Schiller, and the request was for the most historically accurate year for educational purposes, I chose 1914 as it represents when this particular scholarly collection was made available to English readers. The individual works contained within would have their own earlier composition dates.
+"""
+</result>

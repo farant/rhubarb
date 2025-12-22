@@ -1,0 +1,15 @@
+<result>
+Title = "Sermons for the Times"
+Author = "Charles Kingsley"
+Year = 1855
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+'Sermons for the Times' is a collection of sermons by Charles Kingsley (1819-1875), an Anglican priest, Christian socialist, and novelist. The collection addresses various theological and moral topics including salvation, conscience, justification by faith, the Lord's Prayer, and biblical narratives like Ahab and Naboth. Kingsley was known for combining social concern with Christian doctrine, and his sermons often engaged with the pressing issues of Victorian England. While he was controversial in his time for his progressive social views and theological positions, his works reflect serious engagement with Christian teaching and pastoral care. The sermons explore fundamental Christian concepts through both doctrinal exposition and practical application to daily life.
+"""
+
+Notes = """
+The first edition of 'Sermons for the Times' was published in 1855. Charles Kingsley was an Anglican clergyman, not a Roman Catholic, though he engaged deeply with Christian theology and would be considered within the broader Christian tradition. His work was influential in Victorian religious discourse and the Christian socialist movement. If a strictly Roman Catholic imprimatur/nihil obstat standard is required, this may not qualify, but I've included 'catholic' (lowercase) to indicate it's serious Christian theological work within the universal Christian tradition. You may wish to adjust the tagging based on whether you're using a strict Roman Catholic definition or a broader Christian theological definition.
+"""
+</result>

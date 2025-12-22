@@ -1,0 +1,15 @@
+<result>
+Title = "More Bywords"
+Author = "Charlotte M. Yonge"
+Year = 1890
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+"More Bywords" is a collection of historical short stories by Charlotte Mary Yonge, a prolific Victorian author known for her deeply religious works and historical fiction. This collection contains nine tales spanning different historical periods, including stories set in Roman Britain, medieval England, and Victorian times. The stories typically explore themes of virtue, duty, sacrifice, and Christian morality through carefully researched historical settings. Yonge was a devout High Church Anglican with strong Catholic sympathies, and her works were widely read in both Anglican and Catholic circles. Her historical fiction was valued for its educational content and moral instruction, making it particularly suitable for young readers while remaining engaging for adults.
+"""
+
+Notes = """
+"More Bywords" was first published in 1890 as a sequel to her earlier collection "Bywords: A Collection of Tales New and Old" (1878). Charlotte M. Yonge (1823-1901) was closely associated with the Oxford Movement and John Keble, and while technically Anglican, her works were deeply influenced by Catholic spirituality and often approved for Catholic readers. Her books frequently received the equivalent of ecclesiastical approval in Catholic educational circles due to their moral content and religious sensibility.
+"""
+</result>

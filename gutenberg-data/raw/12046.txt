@@ -1,0 +1,15 @@
+<result>
+Title = "Narrative of a Survey of the Intertropical and Western Coasts of Australia, Volume 2"
+Author = "Phillip Parker King"
+Year = 1827
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the second volume of Captain Phillip Parker King's comprehensive survey of Australia's northern and western coastlines, conducted between 1818 and 1822. King was a British Royal Navy officer who led extensive hydrographic surveys of previously uncharted Australian waters aboard HMS Mermaid and later HMS Bathurst. The work contains detailed observations of coastal geography, natural history specimens, indigenous peoples encountered, and nautical information crucial for future navigation. The surveys were part of Britain's efforts to thoroughly map the Australian continent and understand its resources. This volume includes technical appendices on hydrography and natural history, and is considered an important primary source for early 19th-century Australian exploration.
+"""
+
+Notes = """
+The survey work was conducted 1818-1822, but the published narrative appeared in 1827 through John Murray in London. I've chosen 1827 as the publication year since this is when the work became publicly available and historically significant as a published document. King was the son of Philip Gidley King, the third Governor of New South Wales, and his surveys were foundational to understanding Australia's coastline.
+"""
+</result>

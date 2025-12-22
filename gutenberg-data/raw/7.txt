@@ -1,0 +1,15 @@
+<result>
+Title = "The Mayflower Compact"
+Author = "Pilgrims of the Mayflower"
+Year = 1620
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+The Mayflower Compact is one of the foundational documents of American democracy and self-governance. Signed by 41 male passengers aboard the Mayflower on November 11, 1620 (November 21 in the old style calendar), before landing at Plymouth, Massachusetts, this compact established a "civil Body Politick" and a framework for self-government among the Plymouth Colony settlers. The signers, who included both Separatist Puritans and other colonists, agreed to create and abide by laws for the good of the colony. The document is significant as an early example of a social contract and democratic principles in what would become the United States. Notable signers include William Bradford, who became governor of Plymouth Colony, and Miles Standish, the military leader of the colony.
+"""
+
+Notes = """
+Year 1620 chosen as this is when the compact was actually signed and went into effect. This is the original creation date of the historical document itself. The compact represents a moment of political founding rather than a later published work, so the year of its signing is the most historically accurate date.
+"""
+</result>

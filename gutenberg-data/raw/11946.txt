@@ -1,0 +1,23 @@
+The file appears to be empty or nearly empty. However, based on the text you provided in your message, I can analyze this work:
+
+This is **"La Tontine"** (or "The Tontine" in English), a one-act play by **Alain-René Lesage** (often spelled Le Sage). The text indicates it was translated and adapted by Frank J. Morlock in 1986, but the original work is by Lesage.
+
+Alain-René Lesage (1668-1747) was a French novelist and playwright, best known for "Gil Blas." "La Tontine" is one of his theatrical works, likely written in the early 18th century (he was most active as a playwright between 1700-1735).
+
+A tontine was a type of investment scheme popular in the 17th and 18th centuries where subscribers pooled money and the last survivor took all - often creating darkly comic situations in literature.
+
+<result>
+Title = "La Tontine"
+Author = "Alain-René Lesage"
+Year = 1708
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+La Tontine is a one-act comedy by French playwright Alain-René Lesage (1668-1747), best known for his novel Gil Blas. The play revolves around the concept of a tontine, an investment scheme popular in 17th and 18th century Europe where subscribers would pool their money, and the last surviving member would receive the entire fund. This financial arrangement often created darkly comedic scenarios in literature as participants had perverse incentives regarding each other's mortality. Lesage was a prolific playwright and novelist who excelled at satirical comedies of manners depicting French society. This translation was made by Frank J. Morlock in 1986, adapting the character names to English equivalents.
+"""
+
+Notes = """
+Dating Lesage's theatrical works precisely can be challenging. He wrote prolifically for the Théâtre de la Foire (Fair Theaters) from approximately 1712-1735, and many of his one-act plays were produced during this period. I've chosen 1708 as a representative date from his early theatrical period, though the exact premiere date of La Tontine may vary. Lesage was not particularly known as a Catholic author in the sense of writing devotional or theological works - he was primarily a satirist and comic playwright - so the 'catholic' tag is not included.
+"""
+</result>

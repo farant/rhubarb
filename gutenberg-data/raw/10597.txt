@@ -1,0 +1,15 @@
+<result>
+Title = "Four Early Pamphlets"
+Author = "William Godwin"
+Year = 1783
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of four early political and educational pamphlets written by William Godwin in 1783, before he became famous for his philosophical works like "Political Justice" (1793) and his novel "Caleb Williams" (1794). The pamphlets include "A Defense of the Rockingham Party, in Their Late Coalition with the Right Honorable Frederic Lord North," "Instructions to a Statesman," "An Account of the Seminary," and "The Herald of Literature." These early works show Godwin's engagement with contemporary British politics during a turbulent period, particularly the controversial coalition between the Rockingham Whigs and Lord North's faction in 1783. At this time, Godwin had not yet developed the radical anarchist and utilitarian philosophy for which he would later become known. These pamphlets represent his early career as a political writer and provide insight into late 18th-century British political discourse.
+"""
+
+Notes = """
+1783 is the publication year stated on the title page and represents when these pamphlets were originally published. William Godwin (1756-1836) was not a Catholic author - he was raised as a Calvinist minister and later became a prominent atheist and radical philosopher. Therefore, this work does not receive a 'catholic' tag. The pamphlets deal with complex political matters and would not be considered appropriate for children.
+"""
+</result>

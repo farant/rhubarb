@@ -1,0 +1,15 @@
+<result>
+Title = "Illustrated Alphabet of Birds"
+Author = "Various"
+Year = 1851
+
+Tags = ["non-fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+'Illustrated Alphabet of Birds' is a Victorian-era children's educational book that teaches the alphabet through bird illustrations and simple rhyming verses. Each letter of the alphabet is associated with a different bird species, accompanied by a small illustration and a short poem describing the bird. This type of alphabet book was popular in the mid-19th century as a pedagogical tool to teach children both literacy and natural history simultaneously. The book represents the Victorian fascination with natural history and the era's approach to children's education through combining instruction with entertainment.
+"""
+
+Notes = """
+The year 1851 is clearly stated on the title page of the work. This book is part of the Baldwin Library collection at the University of Florida, which specializes in historical children's literature. The format and style are typical of mid-Victorian children's educational literature.
+"""
+</result>

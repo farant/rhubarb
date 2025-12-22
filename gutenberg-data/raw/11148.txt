@@ -1,0 +1,15 @@
+<result>
+Title = "Aunt Harding's Keepsakes: Or, The Two Bibles"
+Author = "Daniel P. Kidder"
+Year = 1851
+
+Tags = ["fiction", "appropriate-for-children", "christian-literature"]
+
+Summary = """
+A children's religious instructional tale published in 1851, revised by Daniel P. Kidder, a prominent Methodist minister and editor. The story revolves around two sisters who receive Bibles as keepsakes from their Aunt Harding before she departs, likely for missionary work in India (based on the chapter title "Letters from India"). The narrative appears to be a moral tale designed to teach children about the importance of Scripture, Christian character, and proper use of resources. Such works were common in 19th-century Protestant children's literature, using simple narratives to convey religious lessons. Daniel P. Kidder was known for his missionary work and religious publishing, particularly within Methodist circles.
+"""
+
+Notes = """
+The year 1851 is clearly marked in the text itself. While this is a Christian religious work intended for moral instruction, it is not specifically Catholic—Daniel P. Kidder was a Methodist minister, so the 'catholic' tag has not been applied. The work represents typical Protestant evangelical children's literature of the mid-19th century American religious publishing movement.
+"""
+</result>

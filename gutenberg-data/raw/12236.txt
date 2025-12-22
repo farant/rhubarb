@@ -1,0 +1,15 @@
+<result>
+Title = "Death Valley in '49"
+Author = "William Lewis Manly"
+Year = 1894
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a first-hand account by William Lewis Manly, one of the survivors of the ill-fated Death Valley party of 1849. The book chronicles Manly's life from his humble origins in Vermont through his journey westward during the California Gold Rush. Most significantly, it provides a detailed eyewitness account of the harrowing ordeal experienced by a group of pioneers who became trapped in Death Valley during the winter of 1849-1850, giving the valley its ominous name. Manly and another man, John Rogers, heroically left the stranded party to seek help, walking across the Mojave Desert to reach settlements in Southern California, then returning to rescue the survivors. This autobiography is an important primary source for California pioneer history and the Gold Rush era, documenting both the hardships of westward migration and the resilience of the pioneers.
+"""
+
+Notes = """
+The year 1894 represents the publication date of this autobiography, which Manly wrote in his later years to document his experiences from 45 years earlier. While the events described took place primarily in 1849-1850, the work itself is dated 1894 as shown in the copyright notice. This is the appropriate year for cataloging purposes as it represents when Manly's reflections and account were formally published, making it a late 19th-century historical memoir of mid-19th-century events.
+"""
+</result>

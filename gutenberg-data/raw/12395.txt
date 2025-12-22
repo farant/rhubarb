@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, October 18, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["periodical", "humor", "satire", "non-fiction"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire established in 1841. It became one of the most influential and long-running humor publications in England, known for its political cartoons, social commentary, and satirical sketches of Victorian and later British life. This particular volume (99) from October 18, 1890 includes the satirical piece "How It's Done: A Handbook to Honesty, No. 11 - The Straight 'Tip,'" which appears to be a humorous take on business practices and workplace negotiations in a Victorian wholesale house. The magazine was famous for coining the term "cartoon" in its modern sense and for its sharp wit directed at politics, society, and culture of the day.
+"""
+
+Notes = """
+The year 1890 is straightforward as this is a dated periodical issue. Punch was published weekly from 1841 to 1992, then briefly revived 1996-2002. This volume represents the magazine during its Victorian heyday. While individual contributors were often anonymous or pseudonymous during this period, "Various" is appropriate as Punch was a collaborative effort of multiple writers, artists, and editors.
+"""
+</result>

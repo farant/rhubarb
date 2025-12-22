@@ -1,0 +1,15 @@
+<result>
+Title = "Spoon River Anthology"
+Author = "Edgar Lee Masters"
+Year = 1915
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+Spoon River Anthology is a collection of free verse epitaphs told from the perspective of former residents of the fictional small town of Spoon River, Illinois. The deceased speakers reveal the hidden truths, disappointments, scandals, and interconnected lives of the townspeople, offering a realistic and often dark portrait of American small-town life in the late 19th and early 20th centuries. Masters drew inspiration from Greek Anthology and created over 200 character portraits that collectively paint a comprehensive picture of the human condition, exploring themes of hypocrisy, unfulfilled dreams, social constraints, and the gap between public persona and private reality. The work is considered a masterpiece of American poetry and a significant contribution to the literary movement toward realism.
+"""
+
+Notes = """
+First published in 1915. The poems originally appeared in Reedy's Mirror (a St. Louis literary magazine) in 1914-1915 before being collected in book form. I've used 1915 as the definitive publication year when it appeared as a complete anthology. This is a secular work by an American poet who was critical of religious and social conventions, so it does not qualify for the 'catholic' or 'appropriate-for-children' tags.
+"""
+</result>

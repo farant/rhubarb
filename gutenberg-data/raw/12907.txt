@@ -1,0 +1,25 @@
+I need to analyze this text from Project Gutenberg to identify the work, author, and publication details.
+
+This is clearly a Finnish work by **Aleksis Kivi** (1834-1872), one of Finland's most important national authors. The title "RUNOT; LYHYET KERTOMUKSET" translates to "Poems; Short Stories." Looking at the contents page, this appears to be a collection of Kivi's poetry.
+
+The publication year shown is 1916, which is a posthumous collection (Kivi died in 1872). His individual poems were written during his lifetime in the 1860s-1870s. The collection "Kanervala" was published in 1866, and many of these poems are from that work.
+
+For the historical timeline purpose you described, I believe **1866** is the most appropriate year, as that's when his major poetry collection "Kanervala" was published, which comprises a significant portion of this compilation. However, the 1916 date represents this particular collected edition.
+
+Aleksis Kivi was Lutheran (the dominant church in Finland), not Catholic. He wrote in Finnish and is considered the founder of Finnish-language literature. His works include both poetry and prose, most famously the novel "Seven Brothers."
+
+<result>
+Title = "Runot; Lyhyet Kertomukset (Poems; Short Stories)"
+Author = "Aleksis Kivi"
+Year = 1866
+
+Tags = ["fiction", "non-fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by Aleksis Kivi (1834-1872), the father of Finnish literature and one of Finland's most important national authors. The collection includes poems from his famous work "Kanervala" (1866), as well as other pieces published in literary journals. The poems cover themes of nature, rural Finnish life, seasons, family, and national identity. Kivi wrote during Finland's national awakening in the 19th century and was instrumental in establishing Finnish (rather than Swedish) as a literary language. His poetry is characterized by its vivid depictions of Finnish landscape and rural life, combining romanticism with realism.
+"""
+
+Notes = """
+The compilation itself was published in 1916, decades after Kivi's death in 1872. However, the core work "Kanervala" was published in 1866, which represents the primary historical significance of these poems. Individual poems were written throughout the 1860s-1870s. The year 1866 best represents the historical educational value for a timeline, as this marks Kivi's major poetry collection and his contribution to Finnish national literature.
+"""
+</result>

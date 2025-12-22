@@ -1,0 +1,23 @@
+Salve Fran! I see the text in your message appears to be complete - it looks like a Project Gutenberg text about Roman history. Let me analyze what you've provided:
+
+This is clearly "The Gracchi, Marius and Sulla" by A.H. Beesley, part of the "Epochs of Ancient History" series. The preface indicates this is a historical work about the revolutionary era of the Roman Republic, covering the Gracchi brothers, Gaius Marius, and Lucius Cornelius Sulla.
+
+The events covered in this book occurred roughly between 133 BC (when Tiberius Gracchus was tribune) and 78 BC (Sulla's death). However, the book itself was published in 1921 according to the title page you've shown.
+
+For the Year field, since this is a modern historical analysis rather than a primary source or translation of ancient texts, I would use 1921 - the year of this edition's publication.
+
+<result>
+Title = "The Gracchi, Marius and Sulla"
+Author = "A.H. Beesley"
+Year = 1921
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+A historical analysis of the revolutionary period of the Roman Republic, focusing on three key figures and movements: the Gracchi brothers (Tiberius and Gaius Gracchus), Gaius Marius, and Lucius Cornelius Sulla. This work examines the political reforms, social conflicts, and military transformations that marked the decline of the Roman Republic from approximately 133-78 BC. Part of the 'Epochs of Ancient History' series, Beesley's account draws on both primary ancient sources and the modern historical analyses of George Long and Theodor Mommsen, while offering his own interpretations of this crucial transitional period in Roman history.
+"""
+
+Notes = """
+Year reflects the publication date of this edition (1921) rather than the historical period covered (c. 133-78 BC), as this is a modern historical analysis rather than a primary source. The preface indicates significant engagement with both Long's 'Decline of the Roman Republic' and Mommsen's 'History of Rome,' suggesting this represents early 20th century scholarship on Roman republican history.
+"""
+</result>

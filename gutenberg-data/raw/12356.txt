@@ -1,0 +1,15 @@
+<result>
+Title = "Voyage de J. Cartier au Canada: Relation originale de Jacques Cartier"
+Author = "Jacques Cartier"
+Year = 1545
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is Jacques Cartier's original account of his second voyage to Canada in 1535-1536. Cartier was a French explorer commissioned by King Francis I of France to explore the northern coasts of North America and search for a passage to Asia. This narrative describes his explorations of the St. Lawrence River, his encounters with Indigenous peoples (particularly the Iroquoians at Stadacona and Hochelaga), the harsh winter his crew endured, and his claiming of the territory for France. Cartier's voyages were foundational to French colonial ambitions in North America and provide invaluable historical documentation of early European-Indigenous contact in what would become Canada. This Project Gutenberg edition is based on the rare 1545 Lyon printing, with variants from manuscripts held in the Bibliothèque Impériale.
+"""
+
+Notes = """
+The Year 1545 represents the original publication date of "Bref récit et succincte narration" in Lyon, France. While the voyages themselves took place in 1535-1536, the printed relation appeared in 1545 and became the primary historical source document. This is the appropriate date for a historical timeline as it marks when this account entered the historical record and became accessible to readers. Cartier was Catholic and sailed under the Catholic French monarchy during this period of exploration.
+"""
+</result>

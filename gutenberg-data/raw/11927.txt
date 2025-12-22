@@ -1,0 +1,15 @@
+<result>
+Title = "Aventures du Capitaine Hatteras - Première Partie: Les Anglais au Pôle Nord"
+Author = "Jules Verne"
+Year = 1866
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+This is the first part of Jules Verne's "The Adventures of Captain Hatteras," originally titled "Voyages et aventures du capitaine Hatteras." The novel follows the mysterious expedition of the Forward, a ship departing from Liverpool for an unknown destination under the command of Captain Hatteras. This first part, "The English at the North Pole," chronicles the dangerous Arctic voyage as the crew gradually discovers their true mission: to reach the North Pole. It is one of Verne's "Extraordinary Voyages" series, combining scientific knowledge with adventure fiction in his characteristic style.
+"""
+
+Notes = """
+First published in serialized form in 1864-1865 in the Magasin d'Éducation et de Récréation, and in book form in 1866. The work consists of two parts: "Les Anglais au Pôle Nord" (The English at the North Pole) and "Le Désert de glace" (The Field of Ice). I chose 1866 as it represents the first complete book publication. This is classic Jules Verne adventure fiction from his most productive period, following the success of "Journey to the Center of the Earth" (1864).
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as the poetry collection by the Brontë sisters, published under their pseudonyms Currer, Ellis, and Acton Bell (Charlotte, Emily, and Anne Brontë respectively). This was their first published work.
+
+<result>
+Title = "Poems by Currer, Ellis, and Acton Bell"
+Author = "Charlotte Brontë, Emily Brontë, Anne Brontë"
+Year = 1846
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+This is the first published work of the Brontë sisters - Charlotte, Emily, and Anne - who wrote under the masculine pseudonyms Currer, Ellis, and Acton Bell to avoid the prejudices against female writers in Victorian England. Published at the sisters' own expense, the collection contains poems by all three sisters. Though it sold only two copies initially, it marked the literary debut of three of the 19th century's most significant English novelists. The poems showcase their distinct voices and themes - Charlotte's dramatic narratives, Emily's mystical and nature-focused verses, and Anne's religious and moral reflections. "Pilate's Wife's Dream" is one of Charlotte's contributions, a dramatic monologue exploring the biblical figure's perspective on the crucifixion of Christ.
+"""
+
+Notes = """
+The collection was published in May 1846. While the Brontë sisters were raised in a Church of England household and their works contain Christian themes, they would not be classified as specifically 'catholic' authors in the sense of Roman Catholic literature, so that tag is not included. The poetry is mature in theme and style, so 'appropriate-for-children' tag is not included.
+"""
+</result>

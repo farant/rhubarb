@@ -1,0 +1,15 @@
+<result>
+Title = "Woman's Journal and Suffrage News"
+Author = "Various (Founded by Lucy Stone and Henry B. Blackwell, Edited by Alice Stone Blackwell)"
+Year = 1870
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Woman's Journal was a pioneering American women's suffrage periodical founded in 1870 by Lucy Stone and Henry B. Blackwell. It served as one of the most important publications of the women's suffrage movement, advocating for women's educational, industrial, legal, and political equality, with a particular focus on women's right to vote. The journal was edited for many years by Alice Stone Blackwell (daughter of the founders) and featured contributions from prominent suffragists and writers of the era. It continued publication until 1931, merging with other suffrage publications along the way. This particular issue appears to be from the later period of the journal's publication, given the editorial staff listed.
+"""
+
+Notes = """
+I chose 1870 as the year because this represents the founding date of the publication itself, which is the most historically significant marker for this periodical. The specific issue represented by Gutenberg text 12071 would have been published later (likely early 20th century based on the editorial staff), but for timeline purposes, the founding date provides the most educational context about when this influential suffrage publication entered the historical record. The Woman's Journal merged with other publications to become the Woman's Journal and Suffrage News in the early 1900s.
+"""
+</result>

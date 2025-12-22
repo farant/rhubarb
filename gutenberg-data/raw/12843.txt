@@ -1,0 +1,15 @@
+<result>
+Title = "Poems"
+Author = "Ralph Waldo Emerson"
+Year = 1847
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+This is a collection of poetry by Ralph Waldo Emerson (1803-1882), one of the most influential American philosophers, essayists, and poets of the 19th century. Emerson was a central figure in the Transcendentalist movement, which emphasized individualism, nature, and the inherent goodness of people and the natural world. His poetry reflects these philosophical concerns, exploring themes of nature, the oversoul, self-reliance, and the relationship between the individual and the divine. His poetic style often features aphoristic wisdom, natural imagery, and spiritual insight. The collection went through multiple editions during and after his lifetime (as noted in the preface: 1867, 1876, 1883, 1895, 1904, and 1911), with poems being added and removed in various editions.
+"""
+
+Notes = """
+I've chosen 1847 as the year because that's when Emerson's first major collection titled "Poems" was originally published. This Gutenberg edition appears to be based on a later "Household Edition" that went through multiple printings (1867-1911), but the work itself as a collection first appeared in 1847. The preface mentions this is a compilation that includes poems from the original "Poems" volume as well as "May-Day" (published 1867) and other pieces, some previously unpublished. For historical timeline purposes, 1847 marks the debut of Emerson as a significant published poet, though individual poems may have appeared earlier in journals or later in subsequent collections.
+"""
+</result>

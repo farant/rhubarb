@@ -1,0 +1,19 @@
+I'll read through this text to identify the work and extract the requested information.
+
+This is clearly an issue of "The Mirror of Literature, Amusement, and Instruction," a British periodical from the early 19th century. This specific issue is No. 379, dated Saturday, July 4, 1829.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, No. 379"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early-to-mid 19th century. It featured a mixture of educational articles, literary extracts, engravings of notable buildings and landmarks, historical anecdotes, and general knowledge pieces aimed at middle-class readers. This particular issue (No. 379, July 4, 1829) opens the Fourteenth Volume with a new typeface and features an article on Milan Cathedral, describing its Gothic architecture, white marble construction, and impressive dimensions. The periodical was designed to provide accessible education and entertainment to a broad readership.
+"""
+
+Notes = """
+This is issue number 379 from July 4, 1829, which explicitly marks the commencement of the Fourteenth Volume. The year is clearly stated in the document itself. The Mirror was a weekly publication that ran from 1822 to 1849, making it one of the successful popular magazines of its era. The content was aimed at general audiences and would have been considered family-friendly.
+"""
+</result>

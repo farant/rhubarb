@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and extract the requested information.
+
+<result>
+Title = "Penny Plain"
+Author = "O. Douglas"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Penny Plain" is a novel by O. Douglas (pen name of Anna Buchan, sister of John Buchan) set in the fictional Scottish Border town of Priorsford. The book is a gentle, character-driven story typical of the early 20th-century domestic fiction genre, exploring the lives of a modest Scottish family and their interactions with the local community. O. Douglas was known for her warm, observant portrayals of Scottish life and her ability to find humor and depth in everyday situations. The title comes from the old Victorian toy theater tradition where you could buy scenes "penny plain" (black and white) or "twopence coloured."
+"""
+
+Notes = """
+First published in 1920. O. Douglas (Anna Buchan, 1877-1948) was a popular Scottish novelist whose works depicted Scottish Border life with warmth and gentle humor. While she was likely raised Presbyterian (typical for her background), there's no indication this is a specifically Catholic work, so I have not included the 'catholic' tag.
+"""
+</result>

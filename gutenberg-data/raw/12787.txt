@@ -1,0 +1,15 @@
+<result>
+Title = "An Introductory Course of Quantitative Chemical Analysis"
+Author = "Henry P. Talbot"
+Year = 1904
+
+Tags = ["non-fiction", "textbook", "chemistry", "science"]
+
+Summary = """
+This is a laboratory textbook on quantitative chemical analysis by Henry P. Talbot, Professor of Inorganic Chemistry at the Massachusetts Institute of Technology. The work is designed as an introductory course for students who have completed qualitative analysis, providing detailed instructions for quantitative chemical experiments and analyses. The book includes explanatory notes and chemical equations to guide students through laboratory procedures. This represents the sixth edition, which was completely rewritten from earlier versions.
+"""
+
+Notes = """
+The first edition of this textbook was published in 1899. This appears to be the sixth edition, which based on the edition progression and the fact that Gutenberg ebook 12787 was likely added in the early 2000s from works in the public domain, would place this edition somewhere between 1904-1910. I've chosen 1904 as a reasonable estimate for this sixth edition, though the exact publication year of this specific edition would require verification. The work represents late 19th/early 20th century chemistry pedagogy at MIT.
+"""
+</result>

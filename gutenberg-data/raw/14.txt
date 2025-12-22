@@ -1,0 +1,15 @@
+<result>
+Title = "The World Factbook 1990"
+Author = "Central Intelligence Agency"
+Year = 1990
+
+Tags = ["non-fiction", "reference", "government-document"]
+
+Summary = """
+The World Factbook is an annual reference publication produced by the Central Intelligence Agency (CIA) of the United States. It provides comprehensive country-by-country data on geography, demographics, government, economy, communications, transportation, military, and transnational issues for all countries and territories in the world. The 1990 edition covers 249 nations, dependent areas, and other entities. Originally created for use by U.S. government officials, it has become one of the most widely used reference works globally, offering standardized statistical and factual information about every nation and territory on Earth.
+"""
+
+Notes = """
+The year 1990 is clearly stated in the title and represents the edition year of this particular publication. This edition is particularly historically significant as it captures the world at a pivotal moment - during the final days of the Cold War, just after the fall of the Berlin Wall in 1989 but before the dissolution of the Soviet Union in 1991. The World Factbook has been published annually since the 1960s, but this specific edition documents the geopolitical landscape at this crucial transitional period in world history.
+"""
+</result>

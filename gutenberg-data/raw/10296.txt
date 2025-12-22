@@ -1,0 +1,15 @@
+<result>
+Title = "Swing Low, Sweet Chariot"
+Author = "Fisk University Jubilee Quartette"
+Year = 1871
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Swing Low, Sweet Chariot" is a traditional African-American spiritual that was popularized by the Fisk University Jubilee Singers (here performed by the Fisk University Jubilee Quartette). The Fisk Jubilee Singers first toured in 1871, introducing spirituals to a wider American and European audience and raising funds for Fisk University, a historically black university in Nashville, Tennessee founded shortly after the Civil War. These spirituals emerged from the enslaved African-American experience, carrying both coded messages of escape and profound expressions of Christian faith and hope. "Swing Low, Sweet Chariot" specifically uses the imagery of Elijah being taken to heaven in a chariot as a metaphor for spiritual deliverance and, in some interpretations, escape from slavery via the Underground Railroad. This recording represents the preservation and dissemination of an essential part of American cultural and musical heritage.
+"""
+
+Notes = """
+I chose 1871 as the year because that marks when the Fisk Jubilee Singers first began their tours, which was the historically significant moment when these spirituals were formally introduced to broader audiences and documented. The spiritual itself predates this (originating during slavery, likely in the mid-19th century), but the Fisk Jubilee Singers' performances represent the definitive moment of cultural preservation and historical impact. This particular recording is from the Edison National Historic Site, making it an early audio recording (likely late 1890s-early 1900s), but the musical and cultural significance dates to 1871.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Paths of Glory: Impressions of War Written At and Near the Front"
+Author = "Irvin S. Cobb"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A first-hand journalistic account of World War I by American humorist and journalist Irvin S. Cobb, who served as a war correspondent for The Saturday Evening Post. The book presents a series of impressions and observations from the Western Front during the fall and early winter of 1914, covering his experiences in Belgium, Germany, France, and England during the first three months of the war. Cobb's reporting provides an American perspective on the early stages of the Great War, written while events were still unfolding. The book is dedicated to the author's relative, Major Robert Cobb of the Confederate Army.
+"""
+
+Notes = """
+The publication year of 1915 is based on the author's own dating in the note ("January, 1915"). While the observations were made in 1914, the book was compiled and published in early 1915. This represents immediate wartime journalism turned into book form, making it a valuable primary source document from World War I.
+"""
+</result>

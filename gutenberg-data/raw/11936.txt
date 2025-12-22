@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly a children's story titled "The Wise Mamma Goose" by Charlotte B. Herr, with illustrations/designs by Frances Beem. The text itself shows it was published in 1913. This appears to be an original early 20th-century children's picture book, not a translation or reprint of an older work.
+
+<result>
+Title = "The Wise Mamma Goose"
+Author = "Charlotte B. Herr"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Wise Mamma Goose' is an early 20th-century children's picture book by Charlotte B. Herr with illustrations by Frances Beem. The story follows Mamma Goose, a proud mother of twelve fluffy yellow goslings, as she tries to solve a mysterious problem in the barnyard. Something has been coming at night and carrying away chickens, and Mamma Goose is worried about the safety of her beloved babies. The narrative emphasizes Mamma Goose's maternal pride in her goslings, who can swim and find their own food better than the chickens of little Red Hen. The story appears to be a gentle mystery tale designed for young children, with the characteristic anthropomorphic barnyard animals common to children's literature of this period.
+"""
+
+Notes = """
+The year 1913 is clearly stated in the original publication and represents the first edition of this work. This is not a translation or adaptation but an original American children's story from the early 20th century. Charlotte B. Herr appears to have been an author of children's literature active in this period, though she is not among the most well-known authors of the era.
+"""
+</result>

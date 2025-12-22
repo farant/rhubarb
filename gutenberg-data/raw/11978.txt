@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+<result>
+Title = "Brave Tom, or The Battle That Won"
+Author = "Edward S. Ellis"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Brave Tom is an adventure novel by Edward S. Ellis, part of his "Brave and Honest Series." The story centers on Tom Gordon, a young boy living in rural Pennsylvania with his widowed mother and aunt. Ellis was a prolific 19th-century American author known for writing popular boys' adventure fiction, particularly frontier and wilderness stories. His works typically featured young protagonists displaying courage, honesty, and moral virtue, aimed at providing both entertainment and character-building lessons for young readers. The book exemplifies the juvenile fiction genre of the late Victorian era, which emphasized moral development alongside adventure.
+"""
+
+Notes = """
+The publication year of 1894 is clearly stated on the title page of the text. Edward S. Ellis (1840-1916) was one of the most popular writers of dime novels and boys' adventure stories in the late 19th century. This work is the first in his "Brave and Honest Series" and follows the typical formula of his adventure fiction aimed at young male readers of that era.
+"""
+</result>

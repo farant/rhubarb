@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is a biography of Frederick Douglass written by Charles Chesnutt (Charles W. Chesnutt), published in 1899 as part of the Beacon Biographies series. The text makes this clear in the header information.
+
+<result>
+Title = "Frederick Douglass"
+Author = "Charles W. Chesnutt"
+Year = 1899
+
+Tags = ["non-fiction", "biography", "historical-document"]
+
+Summary = """
+This is a biography of Frederick Douglass written by Charles W. Chesnutt and published in 1899 as part of the Beacon Biographies of Eminent Americans series. Chesnutt's work examines the life and legacy of Frederick Douglass, the prominent abolitionist, orator, writer, and statesman who escaped from slavery to become one of the most influential African American leaders of the 19th century. The biography covers Douglass's emergence from slavery, his struggles against prejudice as a freeman, and his significant contributions to the abolitionist movement and American history. Chesnutt, himself an important African American author, provides insight into Douglass's role as both champion of an oppressed race and exemplar of its possibilities.
+"""
+
+Notes = """
+Charles W. Chesnutt (1858-1932) was a pioneering African American author and civil rights activist. This biography was published just four years before Douglass's death in 1895 (the "1899" in the header likely refers to the publication date). The work is notably not tagged as 'appropriate-for-children' due to its discussion of slavery's harsh realities, nor as 'catholic' as neither Chesnutt nor Douglass were Catholic writers.
+"""
+</result>

@@ -1,0 +1,23 @@
+I need to identify this work. Let me analyze the text carefully.
+
+This is "Shanty the Blacksmith; A Tale of Other Times" by Mrs. Sherwood, published in 1852 (as shown in the text itself). 
+
+Mrs. Sherwood was Mary Martha Sherwood (1775-1851), a prolific English writer of children's literature and evangelical fiction. She was known for her didactic tales with strong moral and religious themes. While she was Anglican (Church of England), her works had a strong evangelical Christian character. Given that this appears to be published in 1852 but Mrs. Sherwood died in 1851, this may have been a posthumous publication or the date in the text refers to something else.
+
+This appears to be a historical fiction tale set in the border country between England and Scotland during the 18th century (as indicated by "last century" before the "spirit of revolution"). The story centers on a character named Shanty who is a blacksmith.
+
+<result>
+Title = "Shanty the Blacksmith; A Tale of Other Times"
+Author = "Mrs. Sherwood (Mary Martha Sherwood)"
+Year = 1852
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+A historical tale by Mrs. Sherwood set in the border country between England and Scotland during the 18th century. The story takes place at an ancient castle called Dymock's tower, once belonging to powerful border reivers (free-booters) but now fallen into decline. Mrs. Sherwood (1775-1851) was a prolific English writer known for her children's literature and moral tales with strong evangelical Christian themes. Her works often contained didactic elements aimed at instructing young readers in virtue and piety.
+"""
+
+Notes = """
+The publication year of 1852 is taken from the text itself. However, Mrs. Sherwood died in 1851, suggesting this may have been a posthumous publication. While Mrs. Sherwood was Anglican rather than Catholic, she was deeply religious and her works reflect Christian moral teachings. The story is set in the Anglo-Scottish border region during the 18th century, before the French Revolution.
+"""
+</result>

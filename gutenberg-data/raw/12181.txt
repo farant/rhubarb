@@ -1,0 +1,23 @@
+Let me read through this text to identify the work, author, and publication details.
+
+This is clearly a work by Mrs. Humphry Ward (Mary Augusta Ward), a prominent Victorian novelist. The text shows this is a collection containing two works: "Fenwick's Career" and "The Story of Bessie Costrell."
+
+Based on the copyright information and the text provided, "The Story of Bessie Costrell" appears to be the primary work shown here. Mrs. Humphry Ward was a British novelist (1851-1920) who was indeed connected to Anglican circles rather than Catholic ones, though she engaged with religious themes.
+
+Looking at the copyright dates shown (1895, 1905, 1906, 1910) and knowing Mrs. Humphry Ward's publication history, "The Story of Bessie Costrell" was originally published in 1895.
+
+<result>
+Title = "The Story of Bessie Costrell"
+Author = "Mrs. Humphry Ward"
+Year = 1895
+
+Tags = ["fiction", "victorian-literature"]
+
+Summary = """
+'The Story of Bessie Costrell' is a novella by Mrs. Humphry Ward (Mary Augusta Ward, 1851-1920), one of the most successful British novelists of the late Victorian era. Ward was known for her novels exploring moral, social, and religious themes. This work, set in rural England on an August evening, follows the story of Bessie Costrell. Ward was the niece of Matthew Arnold and granddaughter of Thomas Arnold of Rugby, and she engaged deeply with the religious and social questions of her time. Though she eventually moved away from orthodox Christianity, her works often grappled with faith, duty, and moral choices within English society.
+"""
+
+Notes = """
+The text shows copyright dates of 1895, 1905, 1906, and 1910, with the Houghton Mifflin edition being from 1910. The original publication was 1895. Mrs. Humphry Ward was not Catholic; she was raised Anglican and later became agnostic, so this does not receive a 'catholic' tag. The work appears to be adult literary fiction rather than children's literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Five Bachelors"
+Author = "Ramsay (Director)"
+Year = 1900
+
+Tags = ["audio-recording", "historical-document"]
+
+Summary = """
+This is an early audio recording from the Edison National Historic Site, directed by someone named Ramsay. It appears to be one of the early phonograph cylinder or disc recordings produced during Thomas Edison's era of audio experimentation and commercial recording. The work represents an important artifact from the early history of recorded sound technology. The specific content of "The Five Bachelors" is not clear from this metadata file, but it was likely either a dramatic reading, comedy sketch, or musical performance typical of early 20th century recordings.
+"""
+
+Notes = """
+The exact year is uncertain from this Project Gutenberg metadata file. Given that it's from the Edison National Historic Site and Edison's phonograph recording business was most active from the 1890s through the early 1900s, I've estimated circa 1900. The actual recording could range anywhere from approximately 1890-1920. This is an MP3 conversion of what was originally likely a wax cylinder or early disc recording. Without hearing the actual audio or having more detailed catalog information, pinpointing the exact year is speculative.
+"""
+</result>

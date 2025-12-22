@@ -1,0 +1,15 @@
+<result>
+Title = "String Quartet in C minor, Op. 18, No. 4"
+Author = "Ludwig van Beethoven"
+Year = 1801
+
+Tags = ["non-fiction", "musical-score", "classical-music"]
+
+Summary = """
+This is the musical score for Beethoven's String Quartet in C minor, Op. 18, No. 4, one of six string quartets in his Opus 18 collection. The Op. 18 quartets were Beethoven's first major contribution to the string quartet genre, composed early in his career when he was establishing himself in Vienna. These quartets show the influence of Haydn and Mozart while beginning to display Beethoven's distinctive voice. The C minor quartet (No. 4) is particularly notable for its dramatic character and emotional intensity, especially in the outer movements. This Project Gutenberg edition contains the complete score as well as individual parts for Violin I, Violin II, Viola, and Violoncello.
+"""
+
+Notes = """
+The Op. 18 quartets were composed between 1798-1800 and published in 1801. I've chosen 1801 as the year since that represents when the work became publicly available through publication, which is the most historically significant date for a musical composition's impact on culture and the timeline of classical music. The quartets were dedicated to Prince Lobkowitz.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "The World of Waters" by Mrs. David Osborne, published in 1852. Based on the contents and structure, this is a geographical/educational work that takes readers on a journey across various bodies of water and locations around the world, presented in a narrative format typical of 19th-century educational literature for families.
+
+<result>
+Title = "The World of Waters, or, A Peaceful Progress o'er the Unpathed Sea"
+Author = "Mrs. David Osborne"
+Year = 1852
+
+Tags = ["non-fiction", "educational", "geography", "appropriate-for-children", "travel-literature"]
+
+Summary = """
+'The World of Waters' is a 19th-century educational geography book that presents knowledge about the world's seas, oceans, and maritime locations through a narrative framework following the Wilton family. The work combines geographical information with stories, maritime history, and moral tales in the style popular during the Victorian era. It covers various bodies of water including the Mediterranean, Adriatic, North Sea, and Baltic, along with notable locations like Malta, Venice, and various British coastal areas. The book includes discussions of naval history, lighthouse construction, maritime disasters, and even touches on the slave trade. It's written in an accessible, story-based format designed to educate young readers and families about world geography and maritime topics through entertaining narrative.
+"""
+
+Notes = """
+The publication year of 1852 is clearly stated in the title page. Mrs. David Osborne was a Victorian-era author who wrote educational works for children and families. This type of "conversational geography" was a popular genre in the mid-19th century, designed to make learning about the world engaging for young readers through fictional family discussions and travels.
+"""
+</result>

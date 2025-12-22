@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XII"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This volume (Vol. XII) from 1828 represents the completion of the publication's sixth year. The periodical contained a diverse mix of content including original essays, historical narratives, biographical memoirs, sketches of society, topographical descriptions, novels and tales, anecdotes, poetry (both original and selected), extracts from new publications, scientific discoveries, and domestic advice. It was designed to be an accessible and educational publication for a general audience, combining entertainment with instruction in the spirit of early Victorian periodical literature.
+"""
+
+Notes = """
+The year 1828 is clearly stated in the publication itself as the year of this volume. This is a periodical compilation/magazine rather than a single-authored work, hence "Various" for the author field. The Mirror was part of the popular "useful knowledge" movement of the early 19th century that sought to provide affordable, educational reading material to a broad middle-class audience.
+"""
+</result>

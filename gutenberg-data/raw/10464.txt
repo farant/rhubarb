@@ -1,0 +1,15 @@
+<result>
+Title = "The Child's Anti-Slavery Book: Containing a Few Words about American Slave Children and Stories of Slave-Life"
+Author = "Various"
+Year = 1859
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Child's Anti-Slavery Book is an abolitionist anthology published in the years leading up to the American Civil War. It contains multiple stories and narratives designed to educate children about the horrors and injustices of slavery in America. The book presents accounts of enslaved children and families, including stories of family separations, the slave trade, and the brutal conditions of slavery. Works like this were part of the broader abolitionist movement's effort to build moral opposition to slavery by appealing to the sympathies of young readers and their families. The book includes ten illustrations depicting scenes from slave life to reinforce its anti-slavery message.
+"""
+
+Notes = """
+The Child's Anti-Slavery Book was published in 1859 in New York, during the height of pre-Civil War abolitionist activism. This was a period when anti-slavery literature, including works aimed at children, proliferated in the Northern states. The book was edited by an anonymous group and included contributions from multiple authors. 1859 is historically significant as it was the same year as John Brown's raid on Harpers Ferry, representing a peak of tensions over slavery that would lead to the Civil War in 1861. This work is not marked as 'catholic' as it appears to be a general Protestant abolitionist publication rather than specifically Catholic in origin or orientation.
+"""
+</result>

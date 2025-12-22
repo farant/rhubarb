@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "California Sketches, New Series" by O. P. Fitzgerald, published in 1883. O. P. Fitzgerald (Oscar Penn Fitzgerald) was a Methodist minister and author who wrote about life in California during the Gold Rush era and its aftermath. He later became a Methodist bishop.
+
+<result>
+Title = "California Sketches, New Series"
+Author = "O. P. Fitzgerald"
+Year = 1883
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+California Sketches, New Series is a collection of sketches and observations about life in California during and after the Gold Rush era, written by Methodist minister O. P. Fitzgerald. The book follows an earlier successful volume of California Sketches (which had six editions), and contains real-life accounts of the "bearded men in rude attire" and the "women few but fair and sweet" who populated California in its frontier days. Fitzgerald notes that his sketches are drawn from real life and often touch on both joy and tragedy. The work provides valuable historical insight into California society in the latter half of the 19th century, written with both nostalgia and honesty about the hardships of the time. The book includes an introduction by Bishop George F. Pierce.
+"""
+
+Notes = """
+The year 1883 is taken from the clear date marking in the original text. This is the publication date of this "New Series" volume, which was Fitzgerald's second collection of California sketches. The author was a Methodist minister (not Catholic), so this work does not receive the 'catholic' tag despite being written by a religious figure.
+"""
+</result>

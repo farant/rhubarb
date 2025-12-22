@@ -1,0 +1,17 @@
+I recognize this work by Laurence Housman. Let me analyze the text to provide you with the structured information you requested.
+
+<result>
+Title = "Angels and Ministers and Other Victorian Plays"
+Author = "Laurence Housman"
+Year = 1921
+
+Tags = ["non-fiction", "drama", "historical-document"]
+
+Summary = """
+A collection of historical plays by Laurence Housman depicting notable figures from the Victorian era. The work includes dramatizations of Victorian personalities and events, written with the intimate perspective of someone who lived through that period. The introduction reflects on the author's position as a Victorian writing about Victorians, attempting to capture the era before it becomes too distant from living memory. Housman seeks to illuminate Victorian characters "under this rose-shaded lamp of history" before the passage of time renders them completely foreign to contemporary audiences.
+"""
+
+Notes = """
+The work was first published in 1921. Laurence Housman (1865-1959) was an English playwright, writer, and illustrator who lived through the Victorian era himself. The introduction mentions Mr. Strachey, likely referring to Lytton Strachey's influential 'Eminent Victorians' (1918), which provides context for the dating. The plays dramatize Victorian historical figures with an insider's perspective that Housman argues will be lost to future generations. Not marked as 'appropriate-for-children' as these are sophisticated historical dramas. Not marked 'catholic' as Housman was not a Catholic author.
+"""
+</result>

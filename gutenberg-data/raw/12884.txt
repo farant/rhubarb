@@ -1,0 +1,15 @@
+<result>
+Title = "Reed Anthony, Cowman: An Autobiography"
+Author = "Andy Adams"
+Year = 1907
+
+Tags = ["fiction", "historical-fiction", "autobiography", "western", "cattle-driving"]
+
+Summary = """
+Reed Anthony, Cowman is a semi-autobiographical novel by Andy Adams that chronicles the life of a Texas cattleman from the trail-driving era. The book follows Reed Anthony's career in the cattle industry during the late 19th century, depicting the challenges and adventures of moving cattle herds from Texas to northern markets. Adams, who himself spent eight years trail-driving cattle during the 1880s and 1890s, drew heavily from his firsthand experiences to create an authentic portrayal of cowboy life and the American cattle industry during its formative years. The work is valued for its realistic depiction of the Old West, avoiding the romanticized tropes common in Western fiction of that era.
+"""
+
+Notes = """
+The year 1907 is clearly stated in the text itself. While the book is labeled as "An Autobiography," it is actually a semi-fictional work - a novel written in autobiographical form. Andy Adams used his real experiences as a trail driver to create the fictional character Reed Anthony, making it historical fiction based on authentic experience rather than a true autobiography. This work is part of Adams' broader contribution to Western American literature, where he sought to document the reality of cowboy life with accuracy and authenticity.
+"""
+</result>

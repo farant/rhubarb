@@ -1,0 +1,15 @@
+<result>
+Title = "The Game and Playe of the Chesse"
+Author = "William Caxton"
+Year = 1474
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is William Caxton's 1474 translation and adaptation of "Liber de Ludo Scachorum" (also known as "Liber de moribus hominum et officiis nobilium sive super ludo scachorum"), originally written by Jacobus de Cessolis in the late 13th century. Caxton's work was the second book printed in the English language. Rather than being a manual on how to play chess, it is an allegorical work that uses the chess pieces and their movements as metaphors for medieval social hierarchy and moral instruction. Each chess piece represents different ranks of society (king, queen, knights, bishops, rooks as judges, and pawns as common workers), and the text discusses the duties, virtues, and proper conduct expected of each station. This verbatim reprint from 1883 includes an introduction by William E.A. Axon and preserves the Middle English language and spelling of the original 1474 edition.
+"""
+
+Notes = """
+I chose 1474 as the year because this is specifically Caxton's English translation and printing, which is the historically significant work being presented (the first edition printed by Caxton in England). While the original Latin work by Jacobus de Cessolis dates to around 1275-1300, this English version is notable as one of the first books printed in English and represents a distinct historical artifact. The reprint edition shown here is from 1883, but the text itself is Caxton's 1474 original.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Pretty Lady"
+Author = "Arnold Bennett"
+Year = 1918
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+"The Pretty Lady" is a novel by Arnold Bennett published in 1918 during World War I. The story centers on Christine, a French prostitute who has fled to London during the war, and her relationship with G.J. Hoape, a middle-aged English gentleman. The novel explores themes of morality, class, wartime London society, and the complexities of virtue and vice. Bennett examines the social upheaval caused by the Great War and questions conventional Victorian morality through the lens of his characters' relationships. The work was considered somewhat scandalous at the time for its frank treatment of prostitution and sexual morality, though Bennett handles the subject matter with considerable sympathy and psychological insight.
+"""
+
+Notes = """
+The year 1918 is straightforward as this is when the novel was first published. The epigraph from Samuel Butler that opens the work sets the tone for Bennett's examination of conventional morality. This is not a work that would receive Catholic imprimatur given its subject matter, despite Bennett's sympathetic treatment of his characters.
+"""
+</result>

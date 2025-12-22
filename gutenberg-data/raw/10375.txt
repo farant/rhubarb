@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the information you requested. Let me analyze the text.
+
+This is clearly "England's Antiphon" by George MacDonald, originally published in 1868. George MacDonald was a Scottish author, poet, and Christian minister who wrote extensively on religious topics and was also known for his fantasy works. This particular book is a study of English religious poetry through history.
+
+<result>
+Title = "England's Antiphon"
+Author = "George MacDonald"
+Year = 1868
+
+Tags = ["non-fiction", "literary-criticism", "religious-poetry", "appropriate-for-children"]
+
+Summary = """
+England's Antiphon is a literary and historical survey of English religious poetry by George MacDonald, first published in 1868. The work traces the development of devotional and sacred verse throughout English literary history, examining how religious feeling and thought expressed itself through poetry across different periods. MacDonald seeks to mediate understanding between readers and the religious poets he discusses, while also touching on broader themes of religious history in England. The title 'Antiphon' refers to a form of responsive or alternating sacred music/verse, suggesting the book examines how England has 'sung back' to God through its poetic tradition. MacDonald also expresses his hope that studying this shared religious poetic heritage might help heal denominational divisions (schism) among Christians.
+"""
+
+Notes = """
+George MacDonald (1824-1905) was a Scottish Congregationalist minister and prolific author who influenced writers like C.S. Lewis, J.R.R. Tolkien, and G.K. Chesterton. While MacDonald was Protestant rather than Catholic, his broad Christian mysticism and rejection of strict Calvinist doctrine made him somewhat controversial in his time. The work is scholarly but accessible, suitable for general readers interested in religious poetry and literary history.
+"""
+</result>

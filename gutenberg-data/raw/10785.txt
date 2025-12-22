@@ -1,0 +1,15 @@
+<result>
+Title = "Matrimonial Openings"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Matrimonial Openings" is a short story by W.W. Jacobs, published as part of his collection "Sailor's Knots" in 1909. Jacobs was a popular English humorist and short story writer known for his tales of dockside life and working-class characters, often featuring comedic situations involving sailors, families, and domestic life. This particular story explores the theme of marriage through the lens of the Dowson family, with Mrs. Dowson concerned about her daughter Flora potentially following in her sister Jenny's footsteps by marrying a man she'll have to support. Jacobs is perhaps best known for his macabre tale "The Monkey's Paw," but much of his work consists of lighthearted, humorous stories about ordinary people in early 20th century England.
+"""
+
+Notes = """
+The year 1909 is clearly stated in the Gutenberg metadata as the publication year of the "Sailor's Knots" collection. This story was Part 5 of that collection.
+"""
+</result>

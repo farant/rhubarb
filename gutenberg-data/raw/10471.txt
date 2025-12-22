@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly an anthology/collection rather than a single work. It's "The World's Greatest Books, Volume I: Fiction," edited by Arthur Mee and J.A. Hammerton. The table of contents shows it contains summaries or excerpts from various classic works of fiction.
+
+Based on the publication mark "MCMX" (1910 in Roman numerals) and my knowledge of this series, this anthology was published in the early 20th century as an educational reference work.
+
+<result>
+Title = "The World's Greatest Books, Vol. I: Fiction"
+Author = "Arthur Mee, J. A. Hammerton (editors)"
+Year = 1910
+
+Tags = ["non-fiction", "anthology", "literary-criticism", "reference", "appropriate-for-children"]
+
+Summary = """
+This is the first volume of 'The World's Greatest Books' series, focusing on fiction. Edited by Arthur Mee (founder of the Book of Knowledge) and J.A. Hammerton (editor of Harmsworth's Universal Encyclopaedia), this anthology presents summaries, analyses, or condensed versions of classic works of fiction from various authors and time periods. The collection ranges from ancient works like Apuleius's 'The Golden Ass' and 'Arabian Nights' to 19th-century classics by authors such as Jane Austen, Honoré de Balzac, and Hans Christian Andersen. It served as an educational reference work to introduce readers to the essential plots and themes of major literary works.
+"""
+
+Notes = """
+The year 1910 is indicated by the Roman numeral 'MCMX' on the title page. This series was part of the early 20th-century movement to make great literature accessible to a broader audience through condensed formats. While the individual works summarized span from ancient times to the 19th century, the anthology itself was compiled and published in 1910.
+"""
+</result>

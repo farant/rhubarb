@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, I can clearly see this is "Fenwick's Career" by Mrs. Humphry Ward, published in 1910. Mrs. Humphry Ward (Mary Augusta Ward) was a prominent Victorian/Edwardian novelist known for her serious literary fiction exploring social, religious, and moral themes.
+
+<result>
+Title = "Fenwick's Career"
+Author = "Mrs. Humphry Ward"
+Year = 1910
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+"Fenwick's Career" is a novel by Mrs. Humphry Ward (Mary Augusta Ward, 1851-1920), a prominent British novelist of the late Victorian and Edwardian periods. Ward was known for her serious literary fiction that explored social, religious, and moral questions of her time. She was the niece of Matthew Arnold and achieved considerable success with novels like "Robert Elsmere" (1888). This particular work, published in 1910, appears to be dedicated to her sister J.F.H. and includes a prefatory note discussing the relationship between imagination, romance, and the use of real-life material in fiction. The novel likely deals with the career and life of a character named Fenwick, examining themes typical of Ward's work such as personal ambition, social change, and moral dilemmas in Edwardian England.
+"""
+
+Notes = """
+The year 1910 is clearly stated on the title page as the publication date. The dedication is dated May 1906, suggesting the work may have been written over several years before publication. Mrs. Humphry Ward was not a Catholic author - she came from a prominent Anglican family and her works often dealt with religious doubt and modernism from a Protestant perspective, so the 'catholic' tag is not applicable.
+"""
+</result>

@@ -1,0 +1,21 @@
+I can see this is from Punch magazine, which was a British satirical weekly publication. Let me analyze what you've provided:
+
+This is from **Punch, or The London Charivari**, Volume 99, dated August 16, 1890. It's part of a series called "Modern Types" by "Mr. Punch's Own Type Writer" - which was a regular satirical feature in the magazine. This particular installment is No. XVII, titled "The Spurious Sportsman."
+
+Punch was a collaborative publication with many contributors, so authorship is typically attributed to the magazine itself or listed as "Various" for these kinds of regular features. The "Type Writer" byline was a humorous pseudonym used for this particular column series.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, August 16, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["non-fiction", "satire", "periodical", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari, was Britain's premier satirical magazine, published weekly from 1841 to 1992 (and revived later). This volume from 1890 contains the magazine's characteristic blend of political satire, social commentary, humorous essays, cartoons, and observations on Victorian life. This particular issue includes an installment of "Modern Types," a recurring series that satirized various social characters of the era. The featured piece, "The Spurious Sportsman," lampoons the pretentious individual who fabricates or exaggerates his sporting achievements to gain social status.
+"""
+
+Notes = """
+The year 1890 is straightforward as this is a periodical with a specific publication date. Punch was a collaborative effort with many contributors, so "Various" is the appropriate author attribution. While individual pieces might have identifiable authors, the magazine format itself represents collective authorship.
+"""
+</result>

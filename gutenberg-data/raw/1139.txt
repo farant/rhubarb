@@ -1,0 +1,20 @@
+<result>
+Title = "Fisherman's Luck and Some Other Uncertain Things"
+Author = "Henry van Dyke"
+Year = 1899
+
+Tags = ["non-fiction", "essays", "appropriate-for-children"]
+
+Summary = """
+A collection of essays by Presbyterian minister and Princeton professor Henry van Dyke, combining reflections on fishing with broader meditations on life, nature, love, and fortune. The book is written in an elegant, contemplative style and includes essays such as "Fisherman's Luck," "The Thrilling Moment," "Talkability," and "A Norwegian Honeymoon." Van Dyke was an accomplished essayist and poet who served as U.S. Ambassador to the Netherlands and Luxembourg. This work exemplifies the late 19th-century tradition of genteel outdoor writing, blending natural observation with philosophical reflection. The dedication to "My Lady Graygown" (his wife) reveals the personal, affectionate tone that pervades the collection.
+"""
+
+Notes = """
+First published in October 1899 by Charles Scribner's Sons, New York. The book was immediately popular and went through multiple printings within months. While Van Dyke was a Presbyterian minister rather than Catholic, the work is marked by Christian themes and moral reflection characteristic of his broader literary output.
+"""
+</result>
+
+**Sources:**
+- [Fisherman's Luck and Some Other Uncertain Things by Henry Van Dyke | Project Gutenberg](https://www.gutenberg.org/ebooks/1139)
+- [Amazon.com: Fisherman's Luck and Some Other Uncertain Things: -1899](https://www.amazon.com/Fishermans-Luck-Other-Uncertain-Things/dp/B002MKNPLC)
+- [Fisherman's Luck by Henry Van Dyke | Goodreads](https://www.goodreads.com/en/book/show/12007643-fisherman-s-luck)

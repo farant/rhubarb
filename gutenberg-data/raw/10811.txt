@@ -1,0 +1,15 @@
+<result>
+Title = "De La Salle Fifth Reader"
+Author = "Brothers of the Christian Schools"
+Year = 1922
+
+Tags = ["non-fiction", "educational", "appropriate-for-children", "catholic"]
+
+Summary = """
+The De La Salle Fifth Reader is an educational textbook produced by the Brothers of the Christian Schools (De La Salle Christian Brothers), a Catholic teaching order founded by St. John Baptist de La Salle in the late 17th century. This reader was part of a graded series of textbooks used in Catholic schools across the United States in the early 20th century. As a "fifth reader," it would have been designed for students in approximately fifth grade, containing selections of literature, moral lessons, and educational content appropriate for that level. The De La Salle readers were widely used in Catholic parochial schools and were known for combining academic instruction with moral and religious formation.
+"""
+
+Notes = """
+I selected 1922 as the year based on the explicit notation "(REVISED EDITION, 1922)" on the title page. While earlier editions of this reader likely existed, this revised 1922 edition represents a specific publication date. The work was produced at two De La Salle institutions: St. Joseph's Normal Institute in Pocantico Hills, NY and La Salle Institute in Glencoe, MO. The inclusion of William McKinley's image (President 1897-1901) suggests the reader contained American historical and civic content alongside its literary selections.
+"""
+</result>

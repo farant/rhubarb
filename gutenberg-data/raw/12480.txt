@@ -1,0 +1,15 @@
+<result>
+Title = "Clairvoyance and Occult Powers"
+Author = "Swami Panchadasi"
+Year = 1916
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is an early 20th century occult text written by Swami Panchadasi (likely a pseudonym used by William Walker Atkinson, a prolific New Thought/occultism author). The book is a comprehensive guide to various psychic and paranormal phenomena, covering topics such as clairvoyance (in its various forms - past, present, and future), astral projection, telepathy, psychometry, crystal gazing, psychic healing, and other occult practices. It represents the Western fascination with Eastern mysticism and occult practices that was popular during this period, part of the broader New Thought and Theosophy movements of the early 1900s.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page. "Swami Panchadasi" was a pen name used by William Walker Atkinson (1862-1932), an American attorney, merchant, publisher, and author who wrote extensively on occultism, New Thought, and pseudoscientific topics under various pseudonyms. This work should not be considered Catholic or aligned with Catholic teaching, as it deals with occult practices that would be contrary to Catholic doctrine. Not appropriate for children due to occult content.
+"""
+</result>

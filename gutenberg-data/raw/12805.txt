@@ -1,0 +1,17 @@
+I can identify this work from the text provided. This is clearly from "The Boy Allies" series, a popular young adult adventure series from World War I era.
+
+<result>
+Title = "The Boy Allies in the Balkan Campaign, or The Struggle to Save a Nation"
+Author = "Clair W. Hayes"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "adventure", "world-war-i"]
+
+Summary = """
+This is part of "The Boy Allies" series, a collection of adventure novels written during World War I for young readers. The series follows young protagonists Hal Paine and Chester Crawford (and their comic sidekick Mr. Stubbs) through various theaters of the Great War. This particular volume is set in the Balkans during WWI, focusing on the complex military and political situations in that region. The series was designed to appeal to young boys interested in military adventure and patriotic themes, presenting a romanticized view of the war through the eyes of teenage heroes who find themselves in various dangerous situations across different fronts of the conflict.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page as the publication date. "Clair W. Hayes" was likely a pseudonym used by the Burt Company publishers for this series. The Boy Allies series was part of a broader genre of juvenile war fiction popular during WWI, designed to build support for the war effort among young readers while providing exciting adventure stories.
+"""
+</result>

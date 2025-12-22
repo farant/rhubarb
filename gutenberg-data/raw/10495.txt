@@ -1,0 +1,15 @@
+I recognize this as "Under King Constantine" by Katrina Trask, published in 1893. This is a collection of poetic tales set in the Arthurian legendary period, specifically after King Arthur's death during King Constantine's reign. Katrina Trask (1853-1922) was an American poet and philanthropist who, along with her husband Spencer Trask, founded Yaddo, the famous artists' retreat in Saratoga Springs, New York.
+
+<result>
+Title = "Under King Constantine"
+Author = "Katrina Trask"
+Year = 1893
+
+Tags = ["fiction", "poetry", "arthurian-legend"]
+
+Summary = """
+A collection of narrative poems set in the legendary Arthurian period, specifically during the reign of King Constantine who succeeded King Arthur. The work draws from Malory's 'Le Morte d'Arthur' and imagines tales from this obscure transitional period in legendary British history. Written in blank verse, these poems explore themes of chivalry, courtly love, and medieval romance through original stories without direct legendary sources. The author creates an atmospheric portrayal of the court of King Constantine with its knights, ladies, and adventures."""
+
+Notes = """
+This is the third edition published in 1893, which was also the original publication year. Katrina Trask was an American poet, not Catholic, so this work does not receive a 'catholic' tag despite its medieval setting. The work is romantic Arthurian poetry rather than children's literature, though it lacks explicit inappropriate content."""
+</result>

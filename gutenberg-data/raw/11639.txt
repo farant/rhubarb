@@ -1,0 +1,15 @@
+<result>
+Title = "Figures of Earth: A Comedy of Appearances"
+Author = "James Branch Cabell"
+Year = 1921
+
+Tags = ["fiction", "fantasy"]
+
+Summary = """
+"Figures of Earth" is a fantasy novel by James Branch Cabell, part of his "Biography of the Life of Manuel" series. The novel follows the adventures of Manuel, a swineherd who rises from humble origins to become Count of Poictesme. It is a satirical work that explores themes of ambition, appearance versus reality, and the construction of identity and reputation. The book is written in Cabell's characteristic ironic style, blending medieval romance conventions with modernist skepticism. It was published during Cabell's period of greatest fame in the 1920s, when his elaborate prose style and sophisticated cynicism were much admired. The work includes illustrations by Frank C. Papé and features an epigraph in Provençal that translates roughly to "Each mirrors himself in young Manuel, who was of the world the most valiant of the brave."
+"""
+
+Notes = """
+The year 1921 is clearly indicated on the title page of this Project Gutenberg edition, and this appears to be the original publication date of the work. This is a first edition publication, not a translation or later annotated version.
+"""
+</result>

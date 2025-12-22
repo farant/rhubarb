@@ -1,0 +1,17 @@
+I recognize this work by the author's name and the distinctive title. Let me analyze the text provided.
+
+<result>
+Title = "The Doomswoman: An Historical Romance of Old California"
+Author = "Gertrude Atherton"
+Year = 1893
+
+Tags = ["fiction", "historical-fiction", "romance"]
+
+Summary = """
+"The Doomswoman" is a historical romance novel by Gertrude Atherton set in Old California during the Spanish/Mexican period (likely 1830s-1840s based on the reference to Governor Alvarado). The novel explores the relationships and conflicts between prominent Californio families, particularly involving the character Chonita (an Iturbi y Moncada) and Diego Estenega. Atherton was known for her novels depicting California history and society, particularly the Spanish colonial and Mexican periods. This work is characteristic of her interest in portraying strong female characters and the tensions between old Spanish California families during a period of significant historical transition.
+"""
+
+Notes = """
+The novel was first published in 1893, though this Project Gutenberg edition notes 1900, which likely refers to a later edition or reprint. I've chosen 1893 as the original publication date since that represents the work's first appearance and historical significance. Gertrude Atherton (1857-1948) was a prominent California author who wrote extensively about California history and society during the Spanish and Mexican periods.
+"""
+</result>

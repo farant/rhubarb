@@ -1,0 +1,17 @@
+Looks like the file is empty. Based on the text you provided directly in your message, I can identify this work:
+
+<result>
+Title = "365 Foreign Dishes: A Foreign Dish for Every Day in the Year"
+Author = "Various"
+Year = 1908
+
+Tags = ["non-fiction", "cookbook", "appropriate-for-children"]
+
+Summary = """
+This is a cookbook published in 1908 containing 365 international recipes, one for each day of the year. The collection features dishes from various countries and cultures including Austrian, East Indian, English, and Turkish cuisines. It represents the early 20th century American interest in international cooking and reflects the cosmopolitan culinary trends of the era. The recipes are practical and designed for home cooks, offering a way to experience "foreign" flavors in the domestic kitchen.
+"""
+
+Notes = """
+The year 1908 is stated directly in the text header. This type of daily recipe collection was popular in the early 1900s as Americans became increasingly interested in international cuisine. The author is listed as "Various" since these recipe collections were often compiled from multiple sources or contributors rather than being the work of a single identified author.
+"""
+</result>

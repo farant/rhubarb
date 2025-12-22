@@ -1,0 +1,17 @@
+Based on the text excerpt you provided, I can identify this work:
+
+<result>
+Title = "Lady into Fox"
+Author = "David Garnett"
+Year = 1922
+
+Tags = ["fiction", "fantasy", "novella"]
+
+Summary = """
+'Lady into Fox' is a fantasy novella by David Garnett that tells the story of Mrs. Silvia Tebrick, who suddenly transforms into a vixen. The work follows her husband Richard Tebrick as he attempts to cope with this supernatural transformation and maintain his relationship with his wife despite her animal form. The novella is written in a matter-of-fact style that treats the fantastic premise with literary seriousness. It was Garnett's first published work of fiction and won the Hawthornden Prize and the James Tait Black Memorial Prize. The book features wood engravings by R. A. Garnett (the author's father, Ray Garnett, who used the name 'R.A. Garnett' professionally).
+"""
+
+Notes = """
+The year 1922 is clearly stated on the title page of this edition. This was the original publication year of the work. David Garnett was associated with the Bloomsbury Group and this novella became his most famous work. The dedication 'To Duncan Grant' refers to the prominent Bloomsbury artist who was Garnett's lover and close friend.
+"""
+</result>

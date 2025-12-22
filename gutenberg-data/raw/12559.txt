@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Automobile Girls at Washington" by Laura Dent Crane, part of the "Automobile Girls" series - early 20th century juvenile fiction aimed at young girls. The copyright date shown is 1913, which appears to be the original publication date for this volume in the series.
+
+<result>
+Title = "The Automobile Girls at Washington; or, Checkmating the Plots of Foreign Spies"
+Author = "Laura Dent Crane"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children", "juvenile-fiction", "adventure", "mystery"]
+
+Summary = """
+'The Automobile Girls at Washington' is part of the popular 'Automobile Girls' series written by Laura Dent Crane in the early 1910s. This installment follows a group of young women who travel to Washington D.C., where they become entangled in a mystery involving foreign spies and international intrigue. The series was part of the early automobile adventure genre that capitalized on the novelty and excitement of motor car travel in the early 20th century. These books combined travel adventure with mystery elements and were marketed primarily to young female readers, offering them adventurous heroines at a time when such representations were relatively uncommon in children's literature. The Washington setting allows for encounters at notable locations including the White House and the Chinese Embassy, as suggested by the chapter titles.
+"""
+
+Notes = """
+1913 is the original publication date as indicated on the title page. This is part of a series that includes other titles like 'The Automobile Girls at Newport,' 'The Automobile Girls in the Berkshires,' etc. These books represent early 20th century girls' adventure fiction and reflect the period's fascination with automobile travel as a symbol of modernity and independence.
+"""
+</result>

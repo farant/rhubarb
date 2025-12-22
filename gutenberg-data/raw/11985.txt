@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Looking at the content, this is clearly **"Russian Lyrics: Songs of Cossack, Lover, Patriot and Peasant"** translated/adapted by Martha Gilbert Dickinson Bianchi, published in 1916 by Duffield and Company (with copyright from 1910).
+
+This is a collection of Russian poetry translations, not original works. Martha Gilbert Dickinson Bianchi (1866-1943) was an American author and poet, notably the niece of Emily Dickinson. She translated various Russian folk songs and poems into English verse.
+
+<result>
+Title = "Russian Lyrics: Songs of Cossack, Lover, Patriot and Peasant"
+Author = "Various (translated by Martha Gilbert Dickinson Bianchi)"
+Year = 1916
+
+Tags = ["non-fiction", "poetry", "translation"]
+
+Summary = """
+A collection of Russian folk songs and lyrical poetry translated into English verse by Martha Gilbert Dickinson Bianchi. The anthology includes songs from Cossacks, love poems, patriotic verses, and peasant songs, representing various aspects of Russian cultural and emotional life in the late 19th/early 20th century. Bianchi, niece of Emily Dickinson and an accomplished poet herself, sought to capture the spirit and passion of Russian lyrical tradition for English-speaking audiences.
+"""
+
+Notes = """
+Using 1916 as the primary publication year, though copyright is dated 1910. Since this is a translation anthology of various Russian folk songs and poems from different periods and authors, there is no single original composition date. The year reflects when this particular English translation collection was made available to the public.
+"""
+</result>

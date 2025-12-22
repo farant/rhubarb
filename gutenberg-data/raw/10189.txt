@@ -1,0 +1,15 @@
+<result>
+Title = "Three Rubes Seeing New York"
+Author = "Edison Vaudeville Company"
+Year = 1906
+
+Tags = ["fiction", "audio-drama", "comedy", "appropriate-for-children"]
+
+Summary = """
+This is an early audio recording produced by the Edison Vaudeville Company, part of Thomas Edison's entertainment ventures in the early 20th century. It represents a comedy sketch featuring three country folk ("rubes") experiencing New York City, a popular vaudeville comedy trope of the era. The work is significant as an example of early recorded entertainment and the vaudeville tradition that predated radio and film comedy. Edison's company produced numerous such recordings as part of the emerging phonograph entertainment industry.
+"""
+
+Notes = """
+The exact year is difficult to pinpoint from the Gutenberg metadata alone. Edison began producing entertainment recordings in the 1890s, with the vaudeville-style recordings becoming popular in the 1900s-1910s. I've estimated 1906 as a reasonable midpoint for Edison Vaudeville Company productions, though the actual recording could range anywhere from approximately 1903-1912. This represents the height of Edison's phonograph entertainment business before it was eclipsed by radio. The work would have been distributed on wax cylinders or early disc recordings.
+"""
+</result>

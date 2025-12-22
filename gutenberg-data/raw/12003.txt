@@ -1,0 +1,17 @@
+I can identify this as "Extaze" (also known as "Ecstasy"), a novel by the Dutch author Louis Couperus. Let me provide you with the structured information:
+
+<result>
+Title = "Extaze: Een Boek van Geluk"
+Author = "Louis Couperus"
+Year = 1892
+
+Tags = ["fiction", "literary-fiction"]
+
+Summary = """
+'Extaze' (Ecstasy) is a novel by Dutch author Louis Couperus, subtitled "Een Boek van Geluk" (A Book of Happiness). It is the first part of a diptych about marriage, followed by "Eene Illuzie" (An Illusion). The novel explores the psychological and emotional life of its protagonist Dolf van Attema and deals with themes of happiness, marriage, and the complexities of human relationships. Couperus was one of the most important Dutch authors of the late 19th and early 20th centuries, known for his psychological realism and literary style that bridged naturalism and symbolism. The novel was written during Couperus's period in Italy and reflects his interest in exploring human consciousness and emotional states.
+"""
+
+Notes = """
+The dedication at the beginning states "Hilversum, Jan.'92" which indicates the novel was completed in January 1892. This was published as part of Project Gutenberg as ebook #12003. Couperus was not a Catholic author (he came from a Protestant background), so the 'catholic' tag does not apply. The novel is adult literary fiction dealing with mature themes of marriage and psychology, so 'appropriate-for-children' does not apply.
+"""
+</result>

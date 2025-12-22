@@ -1,0 +1,15 @@
+<result>
+Title = "The Three Sisters"
+Author = "W.W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "short-story", "appropriate-for-children"]
+
+Summary = """
+"The Three Sisters" is a short story by W.W. Jacobs, part of his collection "Night Watches" (1914). Jacobs was an English author best known for his horror story "The Monkey's Paw" (1902), though he primarily wrote humorous maritime tales and ghost stories. This particular story appears to be a Gothic tale set in a gloomy household called Mallett's Lodge, opening with a deathbed scene involving three sisters on the marshes. Jacobs was a master of atmospheric storytelling, often blending dark humor with elements of the macabre. His work was popular in the late Victorian and Edwardian periods, and he remains well-regarded for his economical prose and ability to create unsettling scenarios.
+"""
+
+Notes = """
+The year 1914 reflects the publication date of the "Night Watches" collection, which this story is explicitly noted as being "Part 6" of. While the Project Gutenberg release date is 2004, the original publication would have been circa 1914 during Jacobs' most productive period. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was not a Catholic author, so the 'catholic' tag is not applicable.
+"""
+</result>

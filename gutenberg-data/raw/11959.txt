@@ -1,0 +1,15 @@
+<result>
+Title = "A Brief Memoir with Portions of the Diary, Letters, and Other Remains, of Eliza Southall, Late of Birmingham, England"
+Author = "Eliza Southall"
+Year = 1855
+
+Tags = ["non-fiction", "memoir", "religious", "appropriate-for-children"]
+
+Summary = """
+This is a Victorian-era spiritual memoir and diary of Eliza Southall of Birmingham, England. The work contains excerpts from her personal diary, letters, and other writings, compiled and edited after her death. The memoir traces the spiritual development and religious life of a young woman who "early and earnestly sought the Lord." Originally published in 1855 for private circulation in England, it was later expanded and published in America in 1869. The work is characteristic of 19th-century evangelical Protestant devotional literature, focusing on personal piety, divine grace, and spiritual introspection.
+"""
+
+Notes = """
+I chose 1855 as the year because that's when the first edition appeared in England, which represents the original compilation and publication of her writings. The 1869 date on the title page represents the American expanded edition. Eliza Southall herself died before 1855. This work appears to be from the Quaker or evangelical Protestant tradition based on the language and emphasis on "Divine grace" and personal spiritual experience. It is not tagged as 'catholic' as it appears to be from the Protestant evangelical tradition rather than Catholic authorship.
+"""
+</result>

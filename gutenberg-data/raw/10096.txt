@@ -1,0 +1,19 @@
+I see the file is quite short (1 line). Let me work with the text you've provided directly.
+
+Based on the text you've shown me, this is Gilbert Murray's 1915 translation of Euripides' "The Trojan Women" (originally "Troades" in Greek). The play was first performed in 415 BC.
+
+<result>
+Title = "The Trojan Women"
+Author = "Euripides"
+Year = -415
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+The Trojan Women (Troades) is one of Euripides' great tragedies, first performed in Athens in 415 BC. The play depicts the aftermath of the fall of Troy, focusing on the suffering of the Trojan women - Hecuba, Andromache, Cassandra, and Helen - as they await their fates as slaves to the victorious Greeks. This translation by Gilbert Murray (1915) was published during World War I, giving new resonance to Euripides' anti-war message. The play is remarkable for its static dramatic structure - one situation with little movement - yet it powerfully conveys the pathos and horror of war's consequences for the defeated. Euripides presents war not as glorious but as bringing misery to victors and vanquished alike, a message that Murray notes remains as relevant to modern audiences as it was to ancient Athens.
+"""
+
+Notes = """
+I've chosen -415 (415 BC) as the year, representing when Euripides first staged the play in Athens. While this Project Gutenberg text is specifically Gilbert Murray's 1915 English translation, the work itself is Euripides' original drama. Murray's translation is historically significant as it was published during World War I, when its anti-war themes had particular contemporary resonance.
+"""
+</result>

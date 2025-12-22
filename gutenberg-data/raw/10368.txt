@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+<result>
+Title = "The Vizier of the Two-Horned Alexander"
+Author = "Frank R. Stockton"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Vizier of the Two-Horned Alexander" is a fantasy adventure novel by American author Frank R. Stockton, published in 1899. The story is based on legendary history from the chronicles of the 9th-century Islamic historian Tabari (Abou-djafar Mohammed Tabari). The narrative follows El Khoudr (or El Kroudhr), who served as Vizier to the "Two-Horned Alexander," a legendary monarch from the time of Abraham (not to be confused with Alexander the Great). Stockton was known for his imaginative fiction and fairy tales, including "The Lady, or the Tiger?" This work blends historical legend with Victorian-era speculative fiction, creating an adventure story based on ancient Middle Eastern chronicles and mythology.
+"""
+
+Notes = """
+The year 1899 is clearly stated in the prefatory material. Frank R. Stockton (1834-1902) was a popular American author of humorous and fantastical fiction. The work draws on the chronicles of Islamic historian Tabari (838-839 CE) but is itself a work of Victorian fiction rather than a translation or scholarly work. The "Two-Horned Alexander" refers to a legendary ruler from Abraham's era, not Alexander the Great (356-323 BCE), making this a work of fantasy fiction based on ancient legends rather than historical fact.
+"""
+</result>

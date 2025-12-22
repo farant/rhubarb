@@ -1,0 +1,15 @@
+<result>
+Title = "The Bars of Iron"
+Author = "Ethel M. Dell"
+Year = 1916
+
+Tags = ["fiction", "romance", "appropriate-for-children"]
+
+Summary = """
+"The Bars of Iron" is a romance novel by Ethel M. Dell, one of the most popular British romance writers of the early 20th century. Dell was known for her melodramatic stories featuring passionate romance, social class tensions, and moral redemption. Her novels were immensely popular during the 1910s-1930s, though they fell out of favor with critics who considered them overly sentimental. The title comes from Psalm 107:16, suggesting themes of liberation and breaking free from constraints, likely both literal and metaphorical in the context of the story. Dell's works typically featured strong emotional conflicts and were particularly beloved by female readers of the era.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page as the publication date. This appears to be the original publication year for this novel. Ethel M. Dell was at the height of her popularity during World War I, and her romantic novels provided escapist reading during a difficult period.
+"""
+</result>

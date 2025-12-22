@@ -1,0 +1,15 @@
+<result>
+Title = "The Youthful Wanderer; or An Account of a Tour through England, France, Belgium, Holland, Germany and the Rhine, Switzerland, Italy, and Egypt"
+Author = "George H. Heffner"
+Year = 1876
+
+Tags = ["non-fiction", "travel", "appropriate-for-children"]
+
+Summary = """
+A 19th-century American travel guide written by George H. Heffner, documenting his tour through Europe and Egypt. The work is specifically adapted for young Americans taking their first trips to the Old World. The author aimed to demonstrate that educational travel to Europe was more accessible than commonly believed, requiring less time and money than the typical assumption of one to two years and thousands of dollars. The book reflects the democratization of European travel made possible by steam-powered navigation, and was written partly to encourage other Americans, particularly students and those of more modest means, to undertake similar educational journeys abroad.
+"""
+
+Notes = """
+The publication year of 1876 is clearly stated on the title page. This work represents a transitional period in American travel writing, when European tours were becoming more accessible to middle-class Americans due to improvements in transatlantic steam navigation. The book's focus on economy and efficiency, as well as its target audience of "Young Americans," distinguishes it from the more leisurely and expensive Grand Tour tradition of earlier eras.
+"""
+</result>

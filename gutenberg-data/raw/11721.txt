@@ -1,0 +1,15 @@
+<result>
+Title = "O. Henry Memorial Award Prize Stories of 1920"
+Author = "Various"
+Year = 1920
+
+Tags = ["fiction", "anthology", "short-stories"]
+
+Summary = """
+This is the first edition of what would become an annual anthology series honoring O. Henry (William Sydney Porter), the celebrated American short story writer who died in 1910. The O. Henry Awards were established to recognize excellence in the American short story form. This 1920 collection was chosen by the Society of Arts and Sciences and edited by Blanche Colton Williams, a professor at Hunter College and Columbia University who was a prominent scholar of short fiction. The anthology includes thirteen prize-winning short stories from various American authors, including F. Scott Fitzgerald's "The Camel's Back" and works by other early 20th-century writers. The series would continue for over a century, becoming one of the most prestigious awards in American literature.
+"""
+
+Notes = """
+Year 1920 is used as this is the publication year of the anthology itself. While individual stories may have been published slightly earlier in magazines, 1920 marks the collection's publication as the inaugural O. Henry Memorial Award volume. F. Scott Fitzgerald was 24 at the time and just beginning his career.
+"""
+</result>

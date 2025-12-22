@@ -1,0 +1,15 @@
+<result>
+Title = "Sous les marronniers: Contes et récits"
+Author = "Eugène Muller"
+Year = 1870
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Sous les marronniers' (Under the Chestnut Trees) is a collection of short stories and narratives by French author Eugène Muller. The work appears to be a series of tales set in provincial France, capturing scenes of everyday life with warmth and attention to detail. The opening story, 'La Fête du Maître d'École' (The Schoolmaster's Celebration), presents a vivid portrait of an aging village schoolmaster, M. Bidard, recalled through the narrator's childhood memories. The collection exemplifies 19th-century French literary realism, focusing on common people and rural settings with gentle humor and nostalgia.
+"""
+
+Notes = """
+Eugène Muller was a 19th-century French author who wrote primarily for young readers and family audiences. The exact publication date is difficult to pinpoint with certainty, but based on the style, subject matter, and the author's active period, this work likely dates to around 1870, during the Third Republic era when there was a strong emphasis on education and literacy in France. The work reflects the pastoral, educational literature popular in France during this period. If more precise publication information were available, the date could be adjusted, but circa 1870 represents the most likely historical context for this collection.
+"""
+</result>

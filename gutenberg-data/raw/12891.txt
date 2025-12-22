@@ -1,0 +1,17 @@
+I recognize this work. Let me analyze it for you.
+
+<result>
+Title = "Running Water"
+Author = "A. E. W. Mason"
+Year = 1907
+
+Tags = ["fiction", "romance", "adventure"]
+
+Summary = """
+"Running Water" is a novel by A. E. W. Mason, the British author best known for "The Four Feathers" (1902). This romance and adventure novel involves mountaineering in the Alps and explores themes of love, courage, and personal transformation. The story centers around Sylvia Thesiger and her relationship with her parents, as well as the romantic and adventurous elements involving characters in the Alpine setting. Mason was known for combining adventure with psychological depth and romantic elements, and this novel exemplifies that approach with its mountain climbing scenes and character development.
+"""
+
+Notes = """
+The year 1907 is clearly stated on the title page of this Project Gutenberg edition and represents the original publication date. A. E. W. Mason (Alfred Edward Woodley Mason, 1865-1948) was a popular British author of the early 20th century who wrote adventure and detective fiction. While Mason himself was not a Catholic author, and this appears to be a secular romance/adventure novel, hence no 'catholic' tag is included.
+"""
+</result>

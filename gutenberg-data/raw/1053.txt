@@ -1,0 +1,15 @@
+<result>
+Title = "Within the Tides: Tales"
+Author = "Joseph Conrad"
+Year = 1915
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+"Within the Tides" is a collection of four short stories by Joseph Conrad, first published in 1915. The collection includes "The Planter of Maltu," "The Partner," "The Inn of the Two Witches," and "Because of the Dollars." These tales showcase Conrad's characteristic themes of moral ambiguity, human psychology under pressure, and the complexities of colonial encounters in exotic locales. The stories are set in various maritime and tropical settings, reflecting Conrad's own experiences at sea and in distant lands. Conrad's dense, psychological prose style and his exploration of human nature in extreme circumstances are evident throughout the collection.
+"""
+
+Notes = """
+This collection was first published in 1915 by J. M. Dent and Sons in London. Joseph Conrad (1857-1924) was a Polish-British writer who is regarded as one of the greatest novelists in the English language, despite English being his third language after Polish and French. While Conrad had Catholic cultural background (he was born Józef Teodor Konrad Korzeniowski in Poland), his mature works are not explicitly Catholic in nature and would not generally be considered for imprimatur. The stories in this collection are typical of his later period, dealing with moral and psychological themes in colonial and maritime settings.
+"""
+</result>

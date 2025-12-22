@@ -1,0 +1,15 @@
+<result>
+Title = "Old Lady Number 31"
+Author = "Louise Forsslund"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Old Lady Number 31" is a novel by American author Louise Forsslund, published in 1909. The story centers around elderly characters living in what appears to be an almshouse or similar institution for the poor and elderly, where residents are identified by numbers rather than names. The narrative explores themes of dignity, aging, love, and community in the face of poverty and institutional life. Forsslund was known for her sentimental and uplifting stories that often focused on ordinary people facing hardship with grace and humor. This work is characteristic of early 20th-century American regional fiction that dealt sympathetically with the lives of common people.
+"""
+
+Notes = """
+The year 1909 is clearly stated on the title page as the publication date. This appears to be the original publication year for this novel. Louise Forsslund was a popular American novelist of the early 1900s whose works were well-received for their warmth and human interest.
+"""
+</result>

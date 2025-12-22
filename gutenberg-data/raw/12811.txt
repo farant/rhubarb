@@ -1,0 +1,13 @@
+<result>
+Title = "The Human Machine"
+Author = "Arnold Bennett"
+Year = 1908
+
+Tags = ["non-fiction", "self-improvement", "psychology", "philosophy"]
+
+Summary = """
+"The Human Machine" is a self-help and philosophical work by English novelist Arnold Bennett, exploring practical approaches to self-improvement and the art of living. The book examines how individuals can take control of their mental faculties and develop better habits through concentration and deliberate practice. Bennett applies a systematic, almost mechanical approach to understanding human psychology and behavior, treating the mind as a machine that can be optimized and improved through conscious effort. The work reflects the early 20th-century fascination with efficiency, self-mastery, and rational approaches to personal development."""
+
+Notes = """
+Year chosen is 1908, the date of first publication as indicated in the text itself ("First Published November 1908"). Arnold Bennett (1867-1931) was an English novelist and writer, not a Catholic author. While he wrote on philosophical and practical topics, his work would not qualify for the 'catholic' tag as it represents a secular, rationalist approach to self-improvement rather than Catholic spiritual formation."""
+</result>

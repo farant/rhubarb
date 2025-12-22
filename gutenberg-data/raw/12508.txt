@@ -1,0 +1,19 @@
+Looking at this text, I can identify it as "The Meaning of Good" by G. Lowes Dickinson, a philosophical dialogue. Based on the title page showing "THIRD EDITION" and "1900", and my knowledge of Dickinson's work, the original publication was in 1900 (this appears to be the third edition from the same year, which was common in popular works of the period).
+
+G. Lowes Dickinson (1862-1947) was a British political scientist, historian, and philosopher at King's College, Cambridge. He was not a Catholic author - he was associated with the Bloomsbury Group and had humanist/rationalist leanings. This is a work of moral philosophy exploring the nature of goodness through philosophical dialogue.
+
+<result>
+Title = "The Meaning of Good: A Dialogue"
+Author = "G. Lowes Dickinson"
+Year = 1900
+
+Tags = ["non-fiction", "philosophy", "moral-philosophy"]
+
+Summary = """
+A philosophical dialogue by Cambridge scholar G. Lowes Dickinson exploring the nature and meaning of goodness. Written in the Socratic dialogue tradition, the work examines fundamental questions of ethics and moral philosophy. Dickinson was a influential figure in early 20th century British intellectual life, known for his humanistic philosophy and political thought. The work attempts to make philosophical discussion accessible to a broader audience beyond professional philosophers, addressing both theoretical and practical dimensions of moral questions.
+"""
+
+Notes = """
+The text shows this is the third edition from 1900, the same year as original publication, indicating it was quite popular. The dedication poem and preface reveal Dickinson's intention to use the dialogue form to make philosophy more accessible while grappling with complex questions about the nature of good. Not included in 'catholic' tag as Dickinson was not a Catholic author and the work reflects humanist/rationalist rather than Catholic philosophical traditions.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Diverting History of John Gilpin"
+Author = "William Cowper"
+Year = 1782
+
+Tags = ["fiction", "poetry", "appropriate-for-children", "humorous"]
+
+Summary = """
+'The Diverting History of John Gilpin' is a comic ballad written by William Cowper, one of the most popular English poets of the 18th century. The poem tells the humorous tale of John Gilpin, a London linen draper, whose planned celebratory ride to Edmonton goes hilariously awry when his borrowed horse runs away with him, carrying him far beyond his intended destination. The narrative poem became enormously popular and is considered one of Cowper's most accessible and entertaining works. This particular edition features illustrations by Randolph Caldecott from 1878, which became the definitive visual interpretation of the poem.
+"""
+
+Notes = """
+The poem was originally published in 1782, though this Gutenberg edition features Randolph Caldecott's famous illustrations from 1878. I chose 1782 as the year because that represents when Cowper wrote and published the original work, which is the historically significant date for understanding this text in a timeline of literature. Cowper wrote the poem based on a story told to him by Lady Austen, and it became an immediate success, one of the most popular comic poems in English literature.
+"""
+</result>

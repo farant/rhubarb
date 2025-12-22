@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Out of Doors: California and Oregon" by J. A. Graves, published in 1912. The text clearly shows this is a collection of outdoor essays and hunting/nature stories focused on California and Oregon, with the author dedicating the work to his deceased sons who were nature lovers.
+
+<result>
+Title = "Out of Doors: California and Oregon"
+Author = "J. A. Graves"
+Year = 1912
+
+Tags = ["non-fiction", "appropriate-for-children", "nature-writing", "outdoors", "california-history", "hunting"]
+
+Summary = """
+A collection of outdoor essays and narratives by J. A. Graves documenting adventures in California and Oregon in the early 20th century. The book includes accounts of motor trips through San Diego's back country, hunting expeditions, quail shooting, and an automobile journey through the Sierra mountains. The work captures the California outdoor experience during a period of transition when automobiles were beginning to make remote wilderness areas more accessible. Profusely illustrated with photographs of Southern California mountain scenes, including Mount Pitt, Cuyamaca Lake, Palomar Mountain, and views from Grossmont. The author dedicated this work to the memory of his two sons, both described as nature lovers.
+"""
+
+Notes = """
+The publication year of 1912 is clearly stated in the text itself. This represents original publication date. The work is characteristic of early 20th century outdoor/sporting literature and provides historical documentation of California landscapes and outdoor recreation during this period.
+"""
+</result>

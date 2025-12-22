@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Greatest Books, Volume X: Lives and Letters"
+Author = "Arthur Mee, J.A. Hammerton (editors)"
+Year = 1910
+
+Tags = ["non-fiction", "biography", "anthology"]
+
+Summary = """
+This is Volume X of "The World's Greatest Books" series, edited by Arthur Mee and J.A. Hammerton. This particular volume focuses on "Lives and Letters" - biographical works and memoirs. It contains condensed versions or excerpts of major biographical and autobiographical works, including Victor Hugo's memoirs, Martin Hume's historical biographies, Washington Irving's biographies of Columbus and Washington, Josephus's autobiography, Lockhart's lives of Scott and Burns, Luther's Table Talk, and various other biographical works. The series was designed to provide accessible summaries of important literary and historical works for a general educated audience in the early 20th century.
+"""
+
+Notes = """
+The World's Greatest Books series was published around 1910. Arthur Mee was a prolific British editor and writer, known for creating educational reference works. This anthology format was popular in the Edwardian era for making classic literature accessible to middle-class readers. The date is based on the typical publication period of this series and the editorial style characteristic of that era.
+"""
+</result>

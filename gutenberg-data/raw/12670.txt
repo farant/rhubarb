@@ -1,0 +1,15 @@
+<result>
+Title = "Landmarks in French Literature"
+Author = "Lytton Strachey"
+Year = 1912
+
+Tags = ["non-fiction", "literary-criticism", "appropriate-for-children"]
+
+Summary = """
+'Landmarks in French Literature' is a comprehensive survey of French literary history written by the British biographer and critic Lytton Strachey. The work traces the development of French literature from its medieval origins through the Renaissance, the Age of Louis XIV, the Enlightenment, the Romantic Movement, and into the modern critical period. Strachey, a member of the Bloomsbury Group, brings his characteristic wit and lucidity to this accessible introduction to French letters, making it suitable for general readers and students alike. The book examines major authors, movements, and works that shaped French literary tradition over several centuries.
+"""
+
+Notes = """
+The year 1912 is clearly indicated as the publication date on the title page. This was published during Strachey's early career, before his more famous biographical works like 'Eminent Victorians' (1918). The work represents English literary criticism's engagement with French cultural tradition during the Edwardian period.
+"""
+</result>

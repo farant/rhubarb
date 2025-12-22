@@ -1,0 +1,21 @@
+Salve fran! Reading "The Lady of the Barge and Other Stories" by W. W. Jacobs (William Wymark Jacobs).
+
+This is a collection of short stories that was first published in 1902. W. W. Jacobs was an English author best known for his horror story "The Monkey's Paw" (which appears in this collection) as well as his humorous maritime tales. The collection includes both his characteristic humorous stories about life on the Thames and around English villages, as well as some darker supernatural tales.
+
+The excerpt you provided is from "Cupboard Love," one of the lighter, more comedic stories in the collection involving rural English life and domestic mysteries.
+
+<result>
+Title = "The Lady of the Barge and Other Stories"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "short-stories", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by English author W. W. Jacobs, first published in 1902. The collection is notable for including "The Monkey's Paw," one of the most famous horror stories in English literature about a cursed talisman that grants wishes with tragic consequences. The collection also features Jacobs' characteristic humorous tales of English rural and maritime life, including stories about Thames bargemen, village characters, and domestic comedies. Jacobs was known for his skillful blend of gentle humor, social observation, and occasional forays into the supernatural.
+"""
+
+Notes = """
+The collection was first published in 1902 by Harper & Brothers. While some of the individual stories may have appeared in periodicals earlier, 1902 marks the first publication of the complete collection. W. W. Jacobs (1863-1943) was primarily known during his lifetime for his humorous stories, though today he is perhaps most remembered for "The Monkey's Paw."
+"""
+</result>

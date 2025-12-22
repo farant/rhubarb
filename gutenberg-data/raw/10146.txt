@@ -1,0 +1,15 @@
+<result>
+Title = "Reminiscences of Pioneer Days in St. Paul"
+Author = "Frank Moore"
+Year = 1900
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of articles written by Frank Moore for the Daily Pioneer Press, documenting the early history of newspapers in St. Paul, Minnesota. The work focuses particularly on the struggles and developments of pioneer-era journalism, comparing the primitive hand presses and manual typesetting of the 1850s with the technological advances of the late 19th century. Moore provides first-hand accounts of incidents and events connected with St. Paul's early daily newspapers, beginning with references to James M. Goodhue (founder of Minnesota's first newspaper, the Minnesota Pioneer, in 1849) and describing the 1857 constitutional convention. The work serves as valuable primary source material for understanding both the history of Minnesota journalism and the broader development of newspaper technology in frontier America.
+"""
+
+Notes = """
+The exact publication year is uncertain from this excerpt alone, but based on internal evidence (referring to "the latter half of the past century" and "fifty years ago" when discussing the 1850s), this was likely published around 1900-1907. I've chosen 1900 as a representative date for the turn of the century when these reminiscences would have been compiled. The work was serialized in the Daily Pioneer Press before being collected. Frank Moore was a St. Paul journalist writing from personal experience about the transformation of newspaper production between the 1850s frontier era and the modern industrial methods of his own time.
+"""
+</result>

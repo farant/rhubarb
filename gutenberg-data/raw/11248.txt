@@ -1,0 +1,17 @@
+I can identify this work based on the distinctive Latin title and the author's name.
+
+<result>
+Title = "The Delights of Wisdom Pertaining to Conjugial Love"
+Author = "Emanuel Swedenborg"
+Year = 1768
+
+Tags = ["non-fiction", "theology", "spiritualism"]
+
+Summary = """
+'The Delights of Wisdom Pertaining to Conjugial Love' (original Latin: 'Delitiae Sapientiae de Amore Conjugiali') is one of Emanuel Swedenborg's major theological works. Written after his spiritual awakening, Swedenborg presents his mystical visions and teachings about marriage, conjugial (marital) love, and the nature of relationships in both the earthly and heavenly realms. The work is based on what Swedenborg claimed were his experiences in the spiritual world over 25 years, during which he believed he could consciously interact with angels and spirits while remaining awake. The text includes theological doctrine interwoven with visionary 'Memorable Relations' describing scenes from heaven. It's a central work in Swedenborgian theology and had significant influence on various religious and philosophical movements. The work also includes a contrasting section on 'scortatory' (illicit) love.
+"""
+
+Notes = """
+The year 1768 refers to the original Latin publication in Amsterdam ('Amstelodami 1768'), which is explicitly mentioned in the text. The Project Gutenberg edition appears to be based on an 1850 English translation (as noted: 'Published A.D. 1850'). For historical and educational purposes, 1768 is the most appropriate year as it represents when Swedenborg originally published this work. Note: This is not a Catholic work - Swedenborg founded his own theological system (Swedenborgianism/The New Church) which diverged significantly from Catholic doctrine, so the 'catholic' tag was not included despite the religious subject matter.
+"""
+</result>

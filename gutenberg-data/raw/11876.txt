@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This is clearly "The Three Sisters" by May Sinclair, published in 1914, as stated in the opening. May Sinclair was an English writer known for her modernist psychological novels. This particular novel is notable for its use of stream-of-consciousness technique and its exploration of the lives of three sisters living in a Yorkshire village.
+
+<result>
+Title = "The Three Sisters"
+Author = "May Sinclair"
+Year = 1914
+
+Tags = ["fiction", "modernist-literature"]
+
+Summary = """
+'The Three Sisters' is a modernist psychological novel by May Sinclair set in the isolated Yorkshire village of Garth in Garthdale. The novel explores the interior lives and psychological struggles of three sisters living in a vicarage in this bleak, remote setting. Sinclair was an important early 20th-century British writer who pioneered stream-of-consciousness techniques and psychological realism in her fiction. The novel examines themes of isolation, repression, desire, and the limited options available to unmarried women in early 20th-century rural England. The atmospheric opening establishes the oppressive, desolate landscape that mirrors the psychological constraints faced by the characters.
+"""
+
+Notes = """
+1914 is the original publication year of this work. May Sinclair (1863-1946) was not a Catholic author; she came from an Evangelical background and later became interested in philosophy and psychoanalysis. The novel is considered an important work of British modernism and psychological fiction.
+"""
+</result>

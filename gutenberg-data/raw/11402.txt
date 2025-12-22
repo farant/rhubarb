@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Sky Line of Spruce"
+Author = "Edison Marshall"
+Year = 1922
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+"The Sky Line of Spruce" is an adventure novel by Edison Marshall, an American author known for his wilderness and outdoor adventure stories. Marshall was a popular writer of the early 20th century who specialized in tales set in the American and Canadian wilderness. This novel, like his other works such as "The Strength of the Pines" and "The Snowshoe Trail," typically features themes of survival, nature, and the frontier experience. Marshall's stories often focused on rugged individualism, conflicts in remote settings, and man's relationship with the natural world. His works were accessible adventure fiction that appealed to a broad audience including younger readers interested in outdoor adventure stories.
+"""
+
+Notes = """
+The year 1922 is clearly stated in the frontmatter of this edition and appears to be the original publication date. Edison Marshall was a prolific writer of adventure fiction in the early-to-mid 20th century, and this work fits squarely in that period of his career.
+"""
+</result>

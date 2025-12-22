@@ -1,0 +1,15 @@
+<result>
+Title = "Alias The Lone Wolf"
+Author = "Louis Joseph Vance"
+Year = 1921
+
+Tags = ["fiction", "mystery", "adventure"]
+
+Summary = """
+"Alias The Lone Wolf" is a thriller/mystery novel by Louis Joseph Vance featuring his popular character Michael Lanyard, known as "The Lone Wolf." The series follows a reformed gentleman jewel thief and burglar who becomes entangled in various criminal intrigues and adventures. Vance's Lone Wolf character was extremely popular in the early 20th century and spawned multiple books, films, and adaptations. The novels typically blend elements of crime fiction, romance, and adventure as the protagonist navigates a world of thieves, high society, and international intrigue.
+"""
+
+Notes = """
+Louis Joseph Vance (1879-1933) was an American novelist who created the Lone Wolf character in 1914 with "The Lone Wolf." "Alias The Lone Wolf" was published in 1921 as part of the continuing series. While the Project Gutenberg release date is 2003, this represents the digitization date, not the original publication year.
+"""
+</result>

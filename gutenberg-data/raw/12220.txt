@@ -1,0 +1,17 @@
+I'll analyze this text for you.
+
+<result>
+Title = "Rada: A Drama of War in One Act"
+Author = "Alfred Noyes"
+Year = 1913
+
+Tags = ["fiction", "drama", "war"]
+
+Summary = """
+"Rada" is a one-act drama by Alfred Noyes set during the Balkan Wars. The play takes place on Christmas Eve in a Balkan village that has just been captured by enemy forces. It centers on Rada, the wife of a village doctor, who must navigate the dangerous situation of having two hostile soldiers quartered in her house while protecting her twelve-year-old daughter Subka. Alfred Noyes (1880-1958) was an English poet and playwright, best known for his narrative poem "The Highwayman." He was noted for his traditionalist poetry and later converted to Catholicism in 1927. This work reflects the turmoil of the Balkan Wars (1912-1913) and explores themes of war, humanity, and survival in occupied territory.
+"""
+
+Notes = """
+The year 1913 appears on the title page and represents the original publication date of this dramatic work. This was published during or shortly after the First Balkan War (1912-1913), making it a contemporary response to those conflicts. While Noyes later became Catholic (1927), this work predates his conversion by over a decade, so it does not receive the 'catholic' tag.
+"""
+</result>

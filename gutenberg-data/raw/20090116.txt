@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Greatest Books, Vol. X: Lives and Letters"
+Author = "Arthur Mee, J.A. Hammerton"
+Year = 1910
+
+Tags = ["non-fiction", "anthology", "biography"]
+
+Summary = """
+This is Volume X of "The World's Greatest Books" series, edited by Arthur Mee and J.A. Hammerton. This particular volume focuses on biographical works and correspondence ("Lives and Letters"). The series was a popular early 20th-century compilation that presented condensed versions or summaries of significant literary and historical works. This volume includes biographical works about and by notable historical figures including Victor Hugo, Christopher Columbus, George Washington, Martin Luther, Lord Byron, and others. The series aimed to make important works accessible to a general readership by providing abridged versions of lengthy texts.
+"""
+
+Notes = """
+The World's Greatest Books series was published around 1910. While this volume contains works originally written across many centuries (from ancient times with Josephus to the 19th century), the compilation itself was published in the early 20th century. I've used 1910 as the date for this particular editorial compilation, as that represents when this curated collection was assembled and published, rather than the dates of the individual biographical works contained within it.
+"""
+</result>

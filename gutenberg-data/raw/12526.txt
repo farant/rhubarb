@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a Boy Scouts adventure novel by Major Archibald Lee Fletcher, published in Chicago in 1913. This appears to be part of a series of Boy Scout adventure stories that were popular in the early 20th century during the height of the Boy Scouts movement in America (the Boy Scouts of America was founded in 1910).
+
+<result>
+Title = "Boy Scouts in Northern Wilds; Or, The Signal from the Hills"
+Author = "Major Archibald Lee Fletcher"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+'Boy Scouts in Northern Wilds' is an early 20th-century adventure novel written during the initial boom of Boy Scouts literature in America. Part of a series by Major Archibald Lee Fletcher, the story follows Boy Scouts on an expedition in the northern wilderness (likely northern United States or Canada, given references to Moose River). The plot involves wilderness survival, mystery elements (including a "little brass god"), encounters with trappers and a half-breed character, dangerous wildlife (bears), and the use of Boy Scout skills including signaling techniques. These novels were designed to promote Boy Scout values of outdoor skills, resourcefulness, and moral character while providing exciting adventure stories for young readers. Fletcher was a prolific author of Boy Scout fiction during this era, writing numerous titles in similar wilderness adventure settings.
+"""
+
+Notes = """
+The publication year of 1913 is explicitly stated in the text. This places the work just three years after the founding of the Boy Scouts of America (1910), during the organization's early explosive growth period. These adventure novels served both as entertainment and as promotion for the Boy Scouts movement.
+"""
+</result>

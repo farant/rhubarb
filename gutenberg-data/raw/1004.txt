@@ -1,0 +1,17 @@
+I recognize this immediately as Dante Alighieri's *Divina Commedia*, translated by Henry Wadsworth Longfellow. This is one of the most important works in Western literature and a cornerstone of Catholic medieval literature.
+
+<result>
+Title = "The Divine Comedy"
+Author = "Dante Alighieri (translated by Henry Wadsworth Longfellow)"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "medieval", "theology", "philosophy"]
+
+Summary = """
+The Divine Comedy is an epic poem written by Dante Alighieri between approximately 1308 and 1320. It is widely considered one of the greatest works of world literature and the preeminent work in Italian literature. The poem describes Dante's journey through Hell (Inferno), Purgatory (Purgatorio), and Paradise (Paradiso), guided first by the Roman poet Virgil and then by Beatrice. It is an allegory of the soul's journey toward God, incorporating medieval theology, philosophy, and cosmology. The work presents a comprehensive vision of the Christian afterlife and contains profound meditations on sin, redemption, virtue, and divine love. This translation by Henry Wadsworth Longfellow (published 1867-1870) was the first complete American translation and remains one of the most literal and scholarly English renderings.
+"""
+
+Notes = """
+I chose 1320 as the year because this represents when Dante completed the work shortly before his death in 1321. The composition spanned roughly 1308-1320, with Inferno likely completed around 1314, Purgatorio around 1319, and Paradiso finished around 1320. The Longfellow translation was published much later (1867-1870), but for historical timeline purposes, the original composition date is most appropriate since this is fundamentally Dante's work. The Divine Comedy received ecclesiastical approval and has been studied and revered by the Church for centuries, making it quintessentially 'catholic' in the taxonomy requested.
+"""
+</result>

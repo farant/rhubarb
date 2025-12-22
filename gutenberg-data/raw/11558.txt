@@ -1,0 +1,17 @@
+I recognize this as "Poems" by Samuel Griswold Goodrich, published in 1851. Goodrich was an American author better known by his pseudonym "Peter Parley," and he was a prolific writer of children's literature and poetry in the 19th century.
+
+<result>
+Title = "Poems"
+Author = "Samuel Griswold Goodrich (S.G. Goodrich)"
+Year = 1851
+
+Tags = ["poetry", "appropriate-for-children", "non-fiction"]
+
+Summary = """
+A collection of poems by Samuel Griswold Goodrich (1793-1860), better known by his pseudonym 'Peter Parley.' Goodrich was a highly influential American author and publisher who pioneered children's literature in the United States during the 19th century. This 1851 collection includes nature-themed poetry and illustrated verses about fairies, Native Americans, and the American landscape. The work reflects the Romantic sensibilities of mid-19th century American literature, with themes of nature, imagination, and moral instruction typical of children's poetry of the era.
+"""
+
+Notes = """
+The year 1851 is taken directly from the title page as this appears to be an original publication rather than a reprint or translation. Goodrich's 'Peter Parley' books were enormously popular and sold millions of copies, making him one of the most widely-read American authors of his time. The illustrations by artists including Billings and Croome, engraved by Lossing & Barrett and others, were characteristic of the high-quality children's book production of Putnam publishing house in this period.
+"""
+</result>

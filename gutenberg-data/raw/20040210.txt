@@ -1,0 +1,15 @@
+<result>
+Title = "Library of the World's Best Literature, Ancient and Modern, Volume I"
+Author = "Charles Dudley Warner (editor), Hamilton Wright Mabie, Lucia Gilbert Runkle, George Henry Warner (associate editors)"
+Year = 1896
+
+Tags = ["non-fiction", "anthology", "literary-criticism", "reference"]
+
+Summary = """
+This is the first volume of a comprehensive multi-volume anthology compiled and edited by Charles Dudley Warner, a prominent American author and editor. The work represents an ambitious attempt to create a universal anthology drawing from all world literatures across time periods and cultures. The collection includes selections from ancient and modern works, accompanied by critical essays and interpretations by scholars. It was published as part of the "Connoisseur Edition" and was designed to provide American households with accessible exposure to the world's great literary works and intellectual traditions. The anthology includes both the literary selections themselves and scholarly commentary providing context and analysis.
+"""
+
+Notes = """
+The Library of the World's Best Literature was published by R.S. Peale & Co. beginning in 1896. Charles Dudley Warner (1829-1900) was a well-known American essayist and novelist, perhaps best known for co-authoring "The Gilded Age" with Mark Twain. This anthology was one of several comprehensive literary collections published in the late 19th century during an era of increased access to education and popular culture. The year 1896 represents the initial publication date of the first volumes of this series.
+"""
+</result>

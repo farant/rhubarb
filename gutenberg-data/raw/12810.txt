@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+<result>
+Title = "Uncle Sam's Boys with Pershing's Troops; or, Dick Prescott at Grips with the Boche"
+Author = "H. Irving Hancock"
+Year = 1918
+
+Tags = ["fiction", "appropriate-for-children", "historical-context"]
+
+Summary = """
+This is part of H. Irving Hancock's "Uncle Sam's Boys" series, a collection of military adventure novels for young readers written during World War I. The book follows Dick Prescott and his companions as they train at Camp Berry and then deploy to France to fight alongside General Pershing's American Expeditionary Forces. The narrative includes typical WWI adventure elements: training camp life, dealing with spies and conscientious objectors, crossing the Atlantic while evading German U-boats, trench warfare, and behind-enemy-lines exploits. The series was designed to inspire patriotism and support for the American war effort among young readers during the Great War.
+"""
+
+Notes = """
+The book was published during or immediately after World War I (1918-1919). The reference to "Pershing's Troops" and the AEF deployment to France places the narrative in 1917-1918. H. Irving Hancock was a prolific author of boys' adventure series, and this particular series capitalized on contemporary events of WWI. The term "Boche" in the subtitle was a common Allied slang term for German soldiers during the war. Given the patriotic, propagandistic nature of the work and its publication during wartime, 1918 is the most likely publication year.
+"""
+</result>

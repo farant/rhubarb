@@ -1,0 +1,15 @@
+<result>
+Title = "The Snow-Drop: A Holiday Gift"
+Author = "Sarah S. Mower"
+Year = 1851
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+'The Snow-Drop' is a collection of writings by Sarah S. Mower, published as a holiday gift book in 1851. The work was written by the author during a prolonged illness that confined her to her father's home near the Androscoggin River for over six years. The preface describes how the book was created to "beguile tedious time" during her confinement, with inspiration drawn from nature—winds, birds, and the river. These holiday gift books were popular in mid-19th century America, often containing poetry, moral tales, and religious sentiment. The work was published by friends to provide some return for the author's efforts and to share her "artless strains of nature" with a wider audience.
+"""
+
+Notes = """
+The year 1851 is clearly stated on the title page and represents the original publication date. This is part of the American holiday gift book tradition of the mid-19th century. The preface indicates the author had been confined by disease for over six years before publication, suggesting the work was composed during the late 1840s. The book was preserved through the project for Preservation and Access for American and British Children's Literature, 1850-1869, indicating it was considered children's literature of the period.
+"""
+</result>

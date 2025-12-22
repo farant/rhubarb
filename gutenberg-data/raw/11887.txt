@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 20, No. 568"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This particular issue (Volume 20, Number 568) was published on September 29, 1832. The magazine contained a mixture of biographical sketches, historical articles, literary pieces, and general knowledge content aimed at educating and entertaining a middle-class Victorian readership. This issue features an article about the birthplace of the Earl of Eldon (John Scott), who was born in Newcastle-upon-Tyne in 1751 and served as Lord Chancellor of Great Britain.
+"""
+
+Notes = """
+The year 1832 is the publication date of this specific issue. The Mirror of Literature, Amusement, and Instruction ran from 1822 to 1849 and was one of many popular Victorian-era periodicals that brought literature, news, and educational content to a growing literate public. Since this is a periodical compilation by various authors rather than a single cohesive work, the publication date of this specific issue is the most appropriate year to use.
+"""
+</result>
