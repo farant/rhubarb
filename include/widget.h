@@ -23,12 +23,27 @@
  *
  * ================================================== */
 
+/* Callback pro commutare widget in schirmata
+ *
+ * schirmata_datum: datum opacum schirmata
+ * widget_titulus: nomen widget (e.g., "biblia", "librarium")
+ * argumentum: argumentum optionale (e.g., "Genesis 3", search query)
+ */
+nomen vacuum (*FunctioCommutareWidget)(
+    vacuum*             schirmata_datum,
+    constans character* widget_titulus,
+    constans character* argumentum);
+
 nomen structura {
     Piscina*             piscina;
     InternamentumChorda* intern;
     EntitasRepositorium* repo;          /* NIHIL si non requiritur */
     RegistrumCommandi*   reg_commandi;  /* NIHIL si non requiritur */
     RegistrumWidget*     reg_widget;    /* NIHIL si non requiritur */
+
+    /* Pro mode switching - widgets vocant hunc callback ad commutare */
+    FunctioCommutareWidget commutare_widget;  /* NIHIL si non requiritur */
+    vacuum*                schirmata_datum;   /* Datum opacum pro callback */
 } ContextusWidget;
 
 /* Creare contextum widget
@@ -38,16 +53,20 @@ nomen structura {
  * repo: repositorium entitatum (potest esse NIHIL)
  * reg_commandi: registrum commandi (potest esse NIHIL)
  * reg_widget: registrum widget factories (potest esse NIHIL)
+ * commutare_widget: callback pro mode switching (potest esse NIHIL)
+ * schirmata_datum: datum opacum pro callback (potest esse NIHIL)
  *
  * Redde: ContextusWidget* si successus, NIHIL si error
  */
 ContextusWidget*
 contextus_widget_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    EntitasRepositorium* repo,
-    RegistrumCommandi*   reg_commandi,
-    RegistrumWidget*     reg_widget);
+    Piscina*               piscina,
+    InternamentumChorda*   intern,
+    EntitasRepositorium*   repo,
+    RegistrumCommandi*     reg_commandi,
+    RegistrumWidget*       reg_widget,
+    FunctioCommutareWidget commutare_widget,
+    vacuum*                schirmata_datum);
 
 
 /* ==================================================

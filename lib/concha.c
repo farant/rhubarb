@@ -352,7 +352,7 @@ concha_creare(ConchaConfiguratio* config)
     layout_registrare_defalta(reg_widget);
 
     /* Creare contextum widget */
-    ctx = contextus_widget_creare(piscina, intern, repositorium, reg_commandi, reg_widget);
+    ctx = contextus_widget_creare(piscina, intern, repositorium, reg_commandi, reg_widget, NIHIL, NIHIL);
     si (!ctx)
     {
         imprimere("Concha: non potest creare contextum widget\n");

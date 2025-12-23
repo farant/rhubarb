@@ -65,9 +65,71 @@ registrum_widget_registrare(
     /* Addere introitus */
     reg->introitus[reg->numerus].titulus = titulus_intern;
     reg->introitus[reg->numerus].factory = factory;
+    reg->introitus[reg->numerus].init = NIHIL;
     reg->numerus++;
 
     redde VERUM;
+}
+
+b32
+registrum_widget_registrare_cum_init(
+    RegistrumWidget*     reg,
+    constans character*  titulus,
+    FunctioWidgetFactory factory,
+    FunctioWidgetInit    init)
+{
+    chorda* titulus_intern;
+
+    si (!reg || !titulus || !factory)
+    {
+        redde FALSUM;
+    }
+
+    si (reg->numerus >= REGISTRUM_WIDGET_MAXIMUS)
+    {
+        redde FALSUM;  /* Plenum */
+    }
+
+    /* Internare titulus */
+    titulus_intern = chorda_internare_ex_literis(reg->intern, titulus);
+    si (!titulus_intern)
+    {
+        redde FALSUM;
+    }
+
+    /* Addere introitus */
+    reg->introitus[reg->numerus].titulus = titulus_intern;
+    reg->introitus[reg->numerus].factory = factory;
+    reg->introitus[reg->numerus].init = init;
+    reg->numerus++;
+
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Initiatio
+ * ================================================== */
+
+vacuum
+registrum_widget_initiare_omnes(
+    RegistrumWidget*    reg,
+    structura ContextusWidget* ctx)
+{
+    s32 i;
+
+    si (!reg || !ctx)
+    {
+        redde;
+    }
+
+    per (i = ZEPHYRUM; i < reg->numerus; i++)
+    {
+        si (reg->introitus[i].init)
+        {
+            reg->introitus[i].init(ctx);
+        }
+    }
 }
 
 

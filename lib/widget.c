@@ -8,11 +8,13 @@
 
 ContextusWidget*
 contextus_widget_creare(
-    Piscina*             piscina,
-    InternamentumChorda* intern,
-    EntitasRepositorium* repo,
-    RegistrumCommandi*   reg_commandi,
-    RegistrumWidget*     reg_widget)
+    Piscina*               piscina,
+    InternamentumChorda*   intern,
+    EntitasRepositorium*   repo,
+    RegistrumCommandi*     reg_commandi,
+    RegistrumWidget*       reg_widget,
+    FunctioCommutareWidget commutare_widget,
+    vacuum*                schirmata_datum)
 {
     ContextusWidget* ctx;
 
@@ -32,6 +34,8 @@ contextus_widget_creare(
     ctx->repo = repo;
     ctx->reg_commandi = reg_commandi;
     ctx->reg_widget = reg_widget;
+    ctx->commutare_widget = commutare_widget;
+    ctx->schirmata_datum = schirmata_datum;
 
     redde ctx;
 }

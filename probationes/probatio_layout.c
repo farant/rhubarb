@@ -35,7 +35,7 @@ s32 principale(vacuum)
     }
 
     /* Creare contextum sine repositorium pro probationes simplices */
-    ctx_sine_repo = contextus_widget_creare(piscina, intern, NIHIL, NIHIL, NIHIL);
+    ctx_sine_repo = contextus_widget_creare(piscina, intern, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL);
     si (!ctx_sine_repo)
     {
         imprimere("FRACTA: contextus_widget_creare\n");
@@ -113,7 +113,7 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(repo);
 
         /* Creare contextum cum repositorium */
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
         CREDO_NON_NIHIL(ctx);
 
         /* Creare layout cum navigator */
@@ -146,7 +146,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -259,7 +259,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -291,7 +291,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -333,7 +333,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -367,7 +367,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -419,7 +419,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -457,7 +457,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         /* Duo declarationes pro eadem entitas */
         dom = layout_creare(ctx,
@@ -505,7 +505,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -544,7 +544,7 @@ s32 principale(vacuum)
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
 
         /* Entitas sine genus - debet ignorari */
         dom = layout_creare(ctx,

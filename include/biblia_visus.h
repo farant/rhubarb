@@ -5,6 +5,8 @@
 #include "piscina.h"
 #include "fenestra.h"
 #include "biblia.h"
+#include "widget.h"
+#include "entitas_repositorium.h"
 
 /* ==================================================
  * BIBLIA VISUS - Douay-Rheims Bible Viewer Widget
@@ -136,6 +138,49 @@ b32
 biblia_visus_navigare_ad(
     BibliaVisus* visus,
     constans character* referentia);
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Vocatur per registrum_widget_initiare_omnes()
+ */
+vacuum
+biblia_visus_init(
+    ContextusWidget* ctx);
+
+/* Salvare status ad entitas
+ *
+ * visus: Bible viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "BibliaStatus::0")
+ *
+ * Salvat: in_toc, liber_currens, capitulum_currens, index_paginae
+ */
+vacuum
+biblia_visus_salvare_status(
+    BibliaVisus*         visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+/* Carcare status ex entitas
+ *
+ * visus: Bible viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "BibliaStatus::0")
+ *
+ * Carcat: in_toc, liber_currens, capitulum_currens, index_paginae
+ */
+vacuum
+biblia_visus_carcare_status(
+    BibliaVisus*         visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
 
 
 #endif /* BIBLIA_VISUS_H */

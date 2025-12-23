@@ -6,6 +6,9 @@
 #include "chorda.h"
 #include "internamentum.h"
 
+/* Forward declaration */
+structura ContextusWidget;
+
 /* ==================================================
  * REGISTRUM WIDGET - Factory Registry pro Widgets
  *
@@ -45,10 +48,20 @@ nomen b32 (*FunctioWidgetFactory)(
     vacuum* dom,
     vacuum* nodus);
 
+/* Functio init pro widgets
+ *
+ * Vocatur post widget creatur pro registrare commandi, etc.
+ *
+ * ctx: contextus widget cum servitia (piscina, repo, reg_commandi, etc)
+ */
+nomen vacuum (*FunctioWidgetInit)(
+    structura ContextusWidget* ctx);
+
 /* Introitus in registrum */
 nomen structura {
     chorda*              titulus;   /* Tag name e.g. "pagina" */
     FunctioWidgetFactory factory;   /* Factory function */
+    FunctioWidgetInit    init;      /* Init function (potest esse NIHIL) */
 } RegistrumWidgetIntroitus;
 
 /* Registrum widget */
@@ -94,6 +107,40 @@ registrum_widget_registrare(
     RegistrumWidget*     reg,
     constans character*  titulus,
     FunctioWidgetFactory factory);
+
+/* Registrare widget factory cum init
+ *
+ * reg: registrum widget
+ * titulus: nomen tag (e.g. "biblia", "librarium")
+ * factory: functio quae creat widget
+ * init: functio quae initiat widget (registrat commandi, etc)
+ *
+ * Redde: VERUM si successus, FALSUM si plenum vel error
+ */
+b32
+registrum_widget_registrare_cum_init(
+    RegistrumWidget*     reg,
+    constans character*  titulus,
+    FunctioWidgetFactory factory,
+    FunctioWidgetInit    init);
+
+
+/* ==================================================
+ * Initiatio
+ * ================================================== */
+
+/* Initiare omnes widgets
+ *
+ * Vocat init functio pro omni widget registrato.
+ * Usare post omnes widgets registratae sunt.
+ *
+ * reg: registrum widget
+ * ctx: contextus widget pro passare ad init functiones
+ */
+vacuum
+registrum_widget_initiare_omnes(
+    RegistrumWidget*           reg,
+    structura ContextusWidget* ctx);
 
 
 /* ==================================================

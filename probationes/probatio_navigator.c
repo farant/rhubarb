@@ -130,7 +130,7 @@ main(void)
     {
         ContextusWidget* ctx;
 
-        ctx = contextus_widget_creare(piscina, intern, repositorium, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repositorium, NIHIL, NIHIL, NIHIL, NIHIL);
         si (!ctx)
         {
             imprimere("Fractura: non potest creare contextum\n");

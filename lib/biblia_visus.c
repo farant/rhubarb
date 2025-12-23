@@ -3,8 +3,12 @@
 #include "color.h"
 #include "delineare.h"
 #include "chorda.h"
+#include "widget.h"
+#include "registrum_commandi.h"
+#include "entitas_repositorium.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* ==================================================
  * Constantae
@@ -1132,4 +1136,168 @@ biblia_visus_navigare_ad(
     }
 
     redde VERUM;
+}
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Command handler pro $bible
+ *
+ * Legit argumentum post commandum et vocat commutare_widget callback.
+ */
+interior b32
+_biblia_command_handler(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+    character argumentum[LXIV];
+    i32 col;
+    i32 idx;
+    character c;
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+    si (!widget_ctx || !widget_ctx->commutare_widget)
+    {
+        redde FALSUM;
+    }
+
+    /* Legere argumentum post commandum (skip leading space) */
+    idx = ZEPHYRUM;
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
+
+        /* Skip leading spaces */
+        si (idx == ZEPHYRUM && c == ' ')
+        {
+            perge;
+        }
+
+        /* Stop at end of line or null */
+        si (c == '\0' || c == '\n')
+        {
+            frange;
+        }
+
+        argumentum[idx++] = c;
+    }
+    argumentum[idx] = '\0';
+
+    /* Vocare callback ad commutare widget */
+    widget_ctx->commutare_widget(
+        widget_ctx->schirmata_datum,
+        "biblia",
+        idx > ZEPHYRUM ? argumentum : NIHIL);
+
+    redde VERUM;
+}
+
+vacuum
+biblia_visus_init(
+    ContextusWidget* ctx)
+{
+    si (!ctx || !ctx->reg_commandi)
+    {
+        redde;
+    }
+
+    /* Registrare $bible command */
+    registrum_commandi_registrare(ctx->reg_commandi, "bible", _biblia_command_handler, ctx);
+}
+
+vacuum
+biblia_visus_salvare_status(
+    BibliaVisus*         visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    character valor[XXXII];
+
+    si (!visus || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Scaffoldare entitas (creat si non existit) */
+    entitas = repo->entitas_scaffoldare(repo->datum, "BibliaStatus", entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Salvare in_toc */
+    sprintf(valor, "%d", visus->in_toc ? I : ZEPHYRUM);
+    repo->proprietas_ponere(repo->datum, entitas, "in_toc", valor);
+
+    /* Salvare liber_currens */
+    sprintf(valor, "%d", visus->liber_currens);
+    repo->proprietas_ponere(repo->datum, entitas, "liber_currens", valor);
+
+    /* Salvare capitulum_currens */
+    sprintf(valor, "%d", visus->capitulum_currens);
+    repo->proprietas_ponere(repo->datum, entitas, "capitulum_currens", valor);
+
+    /* Salvare index_paginae */
+    sprintf(valor, "%d", visus->index_paginae);
+    repo->proprietas_ponere(repo->datum, entitas, "index_paginae", valor);
+}
+
+vacuum
+biblia_visus_carcare_status(
+    BibliaVisus*         visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    chorda* valor;
+    chorda* clavis;
+
+    si (!visus || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Obtinere entitas */
+    entitas = repo->entitas_scaffoldare(repo->datum, "BibliaStatus", entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Carcare in_toc */
+    clavis = chorda_internare_ex_literis(internamentum_globale(), "in_toc");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        visus->in_toc = (valor->datum[ZEPHYRUM] == '1') ? VERUM : FALSUM;
+    }
+
+    /* Carcare liber_currens */
+    clavis = chorda_internare_ex_literis(internamentum_globale(), "liber_currens");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        visus->liber_currens = (i32)atoi((character*)valor->datum);
+        visus->cache_liber = (i32)(-1);  /* Force recalculation */
+    }
+
+    /* Carcare capitulum_currens */
+    clavis = chorda_internare_ex_literis(internamentum_globale(), "capitulum_currens");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        visus->capitulum_currens = (i32)atoi((character*)valor->datum);
+        visus->cache_capitulum = (i32)(-1);  /* Force recalculation */
+    }
+
+    /* Carcare index_paginae */
+    clavis = chorda_internare_ex_literis(internamentum_globale(), "index_paginae");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        visus->index_paginae = (i32)atoi((character*)valor->datum);
+    }
 }
