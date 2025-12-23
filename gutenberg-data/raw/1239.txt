@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Spirit of the Border" by Zane Grey, published in 1906. This was Grey's second novel and is part of his frontier trilogy about the Ohio Valley. It's a historical adventure novel set during the late 18th century on the American frontier, focusing on pioneer life and conflicts with Native Americans.
+
+<result>
+Title = "The Spirit of the Border: A Romance of the Early Settlers in the Ohio Valley"
+Author = "Zane Grey"
+Year = 1906
+
+Tags = ["fiction", "historical-fiction", "adventure", "western", "frontier"]
+
+Summary = """
+'The Spirit of the Border' is Zane Grey's second novel and part of his Ohio River Valley trilogy. Set in the late 18th century, it depicts the harsh realities of frontier life as American pioneers settled the Ohio Valley. The novel follows the adventures of early settlers and their conflicts with Native Americans during the westward expansion. Grey based the work on historical material from the journal of Colonel Ebenezer Zane, one of the prominent hunter-pioneers of the era. The book is known for its realistic portrayal of the violence and struggles of border life during this formative period of American history.
+"""
+
+Notes = """
+The year 1906 is clearly stated on the title page of this edition. This is not a translation or later edition - it's the original publication year of Grey's novel. While the story is set in the late 1700s (approximately 100 years before publication, as Grey mentions), the work itself is a historical fiction novel from 1906, not a primary historical document from that earlier era.
+"""
+</result>

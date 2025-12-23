@@ -1,0 +1,19 @@
+I can help analyze this text to determine its bibliographic information.
+
+Based on the frontmatter, this is clearly "Peck's Bad Boy with the Circus" by George W. Peck. Let me provide the structured information:
+
+<result>
+Title = "Peck's Bad Boy with the Circus"
+Author = "George W. Peck"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children", "humor"]
+
+Summary = """
+This is part of the popular 'Peck's Bad Boy' series by George W. Peck, an American author and politician who served as Governor of Wisconsin. The series follows the misadventures of a mischievous boy and his father ('Pa'). In this installment, the Bad Boy and his father travel with a circus, where the boy plays elaborate pranks on everyone from the clown to the manager, and involving all the circus animals from monkeys to elephants. The Peck's Bad Boy stories were enormously popular in late 19th and early 20th century America, representing a distinctly American brand of humor centered on boyish pranks and slapstick comedy. George W. Peck (1840-1916) created the character based on real-life observations and his own journalistic humor writing.
+"""
+
+Notes = """
+The copyright page shows two dates: 1905 (Joseph B. Bowles) and 1906 (Thompson & Thomas). I've chosen 1906 as it appears to be the publication date of this specific edition. The Peck's Bad Boy series began in the 1880s and continued into the early 1900s, with this circus-themed entry being one of the later installments in the popular franchise.
+"""
+</result>

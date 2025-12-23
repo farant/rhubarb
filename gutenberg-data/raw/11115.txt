@@ -1,0 +1,15 @@
+<result>
+Title = "Frank Merriwell at Yale"
+Author = "Burt L. Standish"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Frank Merriwell at Yale is part of the immensely popular Frank Merriwell series of dime novels written by Gilbert Patten under the pseudonym Burt L. Standish. The series, which began in 1896, follows the adventures of Frank Merriwell, an idealized All-American hero who exemplifies courage, athletic prowess, and moral virtue. This particular volume follows Frank's exploits at Yale University, featuring athletic competitions, mysteries, and moral dilemmas. The Frank Merriwell stories were enormously influential in shaping early 20th century American youth culture and the concept of the "college hero." The series ran for decades and sold millions of copies, making Frank Merriwell one of the most recognizable fictional characters of his era.
+"""
+
+Notes = """
+The year 1903 is taken from the copyright date shown in the book itself. The Frank Merriwell series began in 1896 in the weekly story paper Tip Top Weekly, and various books were compiled and published over the years. This specific volume appears to be a book compilation published in 1903.
+"""
+</result>

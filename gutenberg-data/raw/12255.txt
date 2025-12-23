@@ -1,0 +1,15 @@
+<result>
+Title = "The Egyptian Conception of Immortality"
+Author = "George Andrew Reisner"
+Year = 1911
+
+Tags = ["non-fiction", "academic", "historical"]
+
+Summary = """
+This is the Ingersoll Lecture delivered at Harvard University in 1911 by George Andrew Reisner, a prominent American Egyptologist and archaeologist. The lecture explores ancient Egyptian beliefs about the afterlife and immortality. Reisner was one of the most important archaeologists working in Egypt and Sudan during the early 20th century, known for his meticulous excavation methods and scholarship. The Ingersoll Lectureship was established at Harvard to provide annual lectures on the subject of human immortality, and this particular lecture examines how the ancient Egyptians conceived of life after death, including their elaborate burial practices, beliefs about the soul (ka and ba), and the journey through the underworld.
+"""
+
+Notes = """
+The year 1911 is clearly indicated as this is the Ingersoll Lecture for that year. The text includes the extract from Caroline Haskell Ingersoll's will establishing the lectureship, which provides context for this annual Harvard lecture series on immortality.
+"""
+</result>

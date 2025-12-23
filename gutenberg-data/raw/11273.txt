@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Examiner, Part 3 of 4"
+Author = "American Anti-Slavery Society"
+Year = 1839
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The Anti-Slavery Examiner was a periodical publication produced by the American Anti-Slavery Society during the antebellum period. This particular part (3 of 4) from 1839 contains several significant abolitionist works, most notably "American Slavery As It Is: Testimony of a Thousand Witnesses," which was one of the most influential anti-slavery documents of its era. Compiled primarily by Theodore Dwight Weld, Angelina Grimké Weld, and Sarah Grimké, this work gathered firsthand testimonies, newspaper advertisements, and documented evidence of the brutal realities of slavery in the American South. The Examiner also includes political speeches and constitutional analysis arguing against slavery. These publications were crucial in shaping Northern public opinion about slavery in the decades leading up to the Civil War.
+"""
+
+Notes = """
+The year 1839 is clearly stated in the document. The American Anti-Slavery Society was founded in 1833, and The Anti-Slavery Examiner was one of their primary publication vehicles for abolitionist literature. "American Slavery As It Is" (published in this issue) became one of the most widely-circulated abolitionist documents and significantly influenced Harriet Beecher Stowe's "Uncle Tom's Cabin." While individual contributors like Theodore Dwight Weld wrote specific pieces, the publication is properly attributed to the American Anti-Slavery Society as the organizational author. This is not tagged as 'catholic' as it was a Protestant-dominated abolitionist organization, though Catholics were also involved in anti-slavery movements. Not tagged as 'appropriate-for-children' due to the graphic testimonies of slavery's brutality contained within.
+"""
+</result>

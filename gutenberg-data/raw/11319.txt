@@ -1,0 +1,15 @@
+<result>
+Title = "The Fairy Godmothers and Other Tales"
+Author = "Mrs. Alfred Gatty"
+Year = 1851
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of fairy tales and moral stories by Margaret Gatty (Mrs. Alfred Gatty), a popular Victorian children's author. Gatty was known for her didactic but entertaining stories that combined fantasy elements with moral instruction, typical of mid-19th century children's literature. She was also a naturalist and writer who contributed significantly to children's periodicals of her era, including founding "Aunt Judy's Magazine." This collection represents the Victorian tradition of using fairy tale narratives to convey lessons about virtue, duty, and proper behavior to young readers.
+"""
+
+Notes = """
+Mrs. Alfred Gatty (Margaret Gatty, 1809-1873) first published "The Fairy Godmothers and Other Tales" in 1851. While she was married to an Anglican clergyman and wrote from a Christian perspective, she was not Catholic, so the 'catholic' tag was not included. The work is part of the Victorian children's literature tradition that falls within the 1850-1869 period indicated by the Project Gutenberg metadata.
+"""
+</result>

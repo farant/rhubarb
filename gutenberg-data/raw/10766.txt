@@ -1,0 +1,15 @@
+<result>
+Title = "Enquire Within Upon Everything"
+Author = "Anonymous"
+Year = 1856
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Enquire Within Upon Everything" is a Victorian-era household encyclopedia and domestic manual that became one of the most popular reference books of the 19th century. First published in 1856, it was designed as a comprehensive guide to Victorian domestic life, covering an enormous range of practical topics including cooking recipes, household management, etiquette, medical remedies, legal advice, games, crafts, and general knowledge. The book's ambitious subtitle "The Great Victorian Domestic Standby" reflects its role as an essential reference work in Victorian homes. It was wildly successful, selling over 3 million copies by the end of the century. The work represents a fascinating window into Victorian-era domestic concerns, social conventions, and practical knowledge, covering everything from how to write a letter properly to how to remove stains, treat common ailments, and manage servants.
+"""
+
+Notes = """
+The first edition was published in 1856 by Houlston and Sons in London. The book went through numerous editions and updates throughout the Victorian era and into the early 20th century, with various editions adding or revising content to reflect changing times. 1856 represents the original publication year and the most historically significant date for this work. The book was published anonymously, though it was edited by Robert Kemp Philp. It became such a cultural phenomenon that it inspired the name of Tim Berners-Lee's first web software in 1989, which he called "Enquire" after this book.
+"""
+</result>

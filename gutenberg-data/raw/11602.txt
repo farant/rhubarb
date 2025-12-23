@@ -1,0 +1,17 @@
+I recognize this as "The World of Ice" by R.M. Ballantyne, a Scottish author known for his adventure novels for young people. This is a whaling adventure story set in the Arctic, first published in 1860 (though the edition shown here is from 1893).
+
+<result>
+Title = "The World of Ice, or The Whaling Cruise of 'The Dolphin'"
+Author = "Robert Michael Ballantyne"
+Year = 1860
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+'The World of Ice' is an adventure novel by R.M. Ballantyne that follows the whaling cruise of the ship 'The Dolphin' and its crew's adventures in the polar regions. Ballantyne (1825-1894) was a Scottish author who wrote numerous adventure stories for young readers, drawing on his own experiences working for the Hudson's Bay Company in Canada. This novel combines maritime adventure with Arctic exploration, characteristic of Victorian-era adventure literature for boys. The story features whaling expeditions, survival in harsh polar conditions, and the dangers of Arctic exploration during the height of the whaling industry in the 19th century.
+"""
+
+Notes = """
+The text shows an 1893 edition, but the novel was originally published in 1860. I've chosen 1860 as it represents the work's original publication date. Ballantyne was known for writing adventure stories based on careful research and sometimes personal experience, making his works both entertaining and educational for young Victorian readers. This book is part of his extensive catalog of adventure novels including 'The Coral Island' (1858) and 'The Dog Crusoe' (1861).
+"""
+</result>

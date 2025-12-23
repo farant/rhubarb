@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, July 19, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["periodical", "humor", "satire", "historical-document"]
+
+Summary = """
+This is an issue of Punch, the famous British weekly magazine of humor and satire that was published from 1841 to 1992 (and briefly revived later). Punch was known for its witty commentary on politics, society, and culture, as well as its cartoons and illustrations. This particular issue from July 19, 1890 includes a review/commentary on Oscar Wilde's "The Picture of Dorian Gray" (which had just been published in Lippincott's Monthly Magazine that summer), along with other satirical content typical of the magazine. Punch was an important cultural institution in Victorian and Edwardian Britain, often setting the tone for public discourse and featuring contributions from many notable writers and artists.
+"""
+
+Notes = """
+The year 1890 is straightforward as this is the actual publication date of this specific issue. This is a periodical issue rather than a standalone book. The review of "Dorian Gray" is historically significant as it represents contemporary Victorian reaction to Wilde's controversial novel, which caused quite a scandal upon publication. "The Baron" was a recurring character/pseudonym used by Punch for book reviews.
+"""
+</result>

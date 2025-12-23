@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Examiner"
+Author = "The American Anti-Slavery Society"
+Year = 1836
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The Anti-Slavery Examiner was a periodical publication by the American Anti-Slavery Society, one of the most prominent abolitionist organizations in the United States during the antebellum period. This collection contains various issues from 1836, featuring essays, appeals, biblical arguments against slavery, narratives of enslaved people, and correspondence addressing the institution of slavery. Notable pieces include appeals to Christian women of the South, theological arguments examining slavery through biblical texts, discussions of Congressional power over slavery in the District of Columbia, and reports on emancipation in the West Indies. The publication was part of the broader abolitionist movement's efforts to use moral, religious, and political arguments to challenge the legitimacy of slavery in America.
+"""
+
+Notes = """
+The year 1836 is indicated directly in the document as the publication date. The American Anti-Slavery Society was founded in 1833, and The Anti-Slavery Examiner was one of their key publications during the height of the abolitionist movement. This appears to be a compilation of multiple issues/numbers from that year. Not tagged as 'appropriate-for-children' due to the serious and potentially disturbing historical content regarding slavery. Not tagged as 'catholic' as the American Anti-Slavery Society was a primarily Protestant organization, though it drew on Christian arguments more broadly.
+"""
+</result>

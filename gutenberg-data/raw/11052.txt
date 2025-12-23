@@ -1,0 +1,15 @@
+<result>
+Title = "The Custom of the Country"
+Author = "Edith Wharton"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Custom of the Country is a novel by Edith Wharton that follows Undine Spragg, a beautiful and ambitious young woman from the Midwest who moves to New York City and seeks to climb the social ladder. The novel is a satirical critique of American materialism, social climbing, and the newly wealthy class of the Gilded Age and early 20th century. Undine goes through multiple marriages in her quest for status and wealth, each time discarding her previous life when a better opportunity presents itself. Wharton uses Undine's story to explore themes of American values, the clash between old and new money, European versus American society, and the moral emptiness of pure social ambition. The novel is considered one of Wharton's masterpieces and a sharp social commentary on American culture.
+"""
+
+Notes = """
+The year 1913 is clearly stated in the text itself as the publication date. This was the original publication year of the novel, which was serialized in Scribner's Magazine before being published as a book. Edith Wharton was not Catholic; she was born into a wealthy Protestant New York family. The novel is generally appropriate for older children/young adults, though it deals with mature themes like marriage, divorce, and social ambition in a sophisticated manner.
+"""
+</result>

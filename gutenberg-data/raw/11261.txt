@@ -1,0 +1,15 @@
+<result>
+Title = "Cyclopedia of Philosophy"
+Author = "Sam Vaknin"
+Year = 2007
+
+Tags = ["non-fiction"]
+
+Summary = """
+This appears to be a contemporary philosophical reference work or encyclopedia compiled by Sam Vaknin. Based on the copyright date and release information, this is a modern work (2007) rather than a historical philosophical text. Sam Vaknin is known for work in psychology and philosophy, particularly regarding personality disorders and narcissism. Without access to the actual content of the cyclopedia, this appears to be a reference work covering various philosophical topics, concepts, and possibly biographical entries on philosophers. The work is copyrighted rather than in the public domain, which is unusual for Project Gutenberg but permissible under their copyright guidelines when authors grant permission.
+"""
+
+Notes = """
+Year chosen is 2007, which is both the copyright year and the Project Gutenberg release date. This is a contemporary work, not a historical philosophical text. The file note indicates the actual content is in RTF format rather than plain text, which explains why the text file itself is minimal. This is copyrighted material made available through Project Gutenberg with permission from copyright holder Lidija Rangelovska.
+"""
+</result>

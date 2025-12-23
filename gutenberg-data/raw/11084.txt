@@ -1,0 +1,15 @@
+<result>
+Title = "Sonny, A Christmas Guest"
+Author = "Ruth McEnery Stuart"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Sonny, A Christmas Guest" is a collection of stories by Ruth McEnery Stuart, a Southern American author known for her dialect stories and depictions of life in Louisiana and the American South. The book centers around a character named Sonny and follows various episodes in his life, from his christening through his schooling, graduation, courtship, and wedding. Stuart was popular in the late 19th and early 20th centuries for her gentle humor and authentic portrayals of Southern characters and customs. The stories are written with regional dialect and capture the warmth and traditions of Southern family life during this period. With illustrations by Fanny Y. Cory, the work was aimed at a general audience including families and children.
+"""
+
+Notes = """
+The publication year of 1911 is clearly stated on the title page of this Project Gutenberg edition. Ruth McEnery Stuart (1849-1917) was a well-known American fiction writer of her era, though she is less remembered today. She was not a Catholic author, and her work would not fall under the 'catholic' tag criteria.
+"""
+</result>

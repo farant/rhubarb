@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "Lord Dolphin" by Harriet A. Cheever, published in 1903. This appears to be a children's book written from the perspective of a dolphin character, which was part of a series of animal narration books popular in the early 20th century.
+
+<result>
+Title = "Lord Dolphin"
+Author = "Harriet A. Cheever"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Lord Dolphin' is a children's book written from the first-person perspective of a dolphin who narrates his adventures in the ocean. The book is part of a genre popular in the late 19th and early 20th centuries where animals serve as narrators to educate and entertain young readers about the natural world. Harriet A. Cheever wrote several books in this style, including 'The Strange Adventures of Billy Trill,' 'Madame Angora,' and 'Mother Bunny.' The chapters suggest Lord Dolphin takes readers on a tour of his underwater world, including coral groves, caves, gardens, and treasure grounds, likely mixing natural history with imaginative storytelling to appeal to children's curiosity about ocean life.
+"""
+
+Notes = """
+The year 1903 appears directly in the title page of the text. Harriet A. Cheever was an American author who specialized in children's literature featuring animal protagonists during the turn of the 20th century. This book does not appear to have Catholic connections despite the author's surname - it's secular children's fiction focused on natural history education through storytelling.
+"""
+</result>

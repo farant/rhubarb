@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title page, this is clearly "A Ride to India Across Persia and Baluchistán" by Harry de Windt, F.R.G.S. (Fellow of the Royal Geographical Society), published in 1891. This is a travel narrative describing de Windt's journey from Europe to India through Persia (modern-day Iran) and Baluchistan.
+
+Harry de Windt (1856-1933) was a British travel writer and explorer known for his adventurous journeys and travel books in the late 19th and early 20th centuries. This particular work documents his overland journey to India, which was a notable expedition during the period of British imperial interest in Central Asia and the "Great Game" between British and Russian empires.
+
+<result>
+Title = "A Ride to India Across Persia and Baluchistán"
+Author = "Harry de Windt"
+Year = 1891
+
+Tags = ["non-fiction", "travel", "historical-document"]
+
+Summary = """
+A travel narrative by British explorer Harry de Windt (1856-1933), Fellow of the Royal Geographical Society, documenting his overland journey from Europe to India through Persia (modern-day Iran) and Baluchistan. Written during the height of the British Empire and the "Great Game" era of Anglo-Russian competition in Central Asia, this work provides a firsthand account of the landscapes, peoples, and challenges encountered on this ambitious expedition. De Windt was known for his adventurous spirit and numerous travel books that captured the imagination of Victorian-era readers interested in exploration and imperial geography.
+"""
+
+Notes = """
+The publication year 1891 is taken directly from the title page. This represents the original publication date of this travel account, which would have been written shortly after de Windt completed his journey. The work is characteristic of Victorian-era travel literature and provides historical insight into the regions described during a significant period of colonial history.
+"""
+</result>

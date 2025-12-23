@@ -1,0 +1,15 @@
+<result>
+Title = "Jerry of the Islands"
+Author = "Jack London"
+Year = 1917
+
+Tags = ["fiction", "adventure"]
+
+Summary = """
+"Jerry of the Islands" is an adventure novel by Jack London set in the Solomon Islands. The story follows Jerry, an Irish terrier, through various adventures in the South Pacific. London wrote this novel based on his own experiences and observations during his travels in the South Seas. The book explores themes of loyalty, survival, and the relationship between humans and animals against the backdrop of colonial-era Melanesia. It was one of London's later works, published the year after his death. The novel is paired with a companion book, "Michael, Brother of Jerry," which tells a parallel story.
+"""
+
+Notes = """
+Published in 1917 by Mills & Boon. This was one of Jack London's final novels, published posthumously (London died in November 1916). The 1917 publication date represents the original edition release. Not tagged as "appropriate-for-children" due to mature themes including depictions of violence and colonialism that reflect early 20th century attitudes. Not tagged as "catholic" - Jack London was not a Catholic author and his works would not typically carry ecclesiastical approval.
+"""
+</result>

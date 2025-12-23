@@ -1,0 +1,17 @@
+Based on the Project Gutenberg text you've provided, I can identify this work:
+
+<result>
+Title = "The Red Thumb Mark"
+Author = "R. Austin Freeman"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Red Thumb Mark' is the first novel featuring Dr. John Thorndyke, one of the earliest forensic detectives in literature. Published in 1907, this mystery novel is notable for its scientific approach to crime-solving and its exploration of fingerprint evidence, which was still a relatively new forensic technique at the time. The story revolves around a criminal case involving fingerprint evidence, and Freeman uses the narrative to examine both the value and potential misuse of this new forensic technology. R. Austin Freeman was a British physician and writer who pioneered the 'inverted detective story' and emphasized scientific methodology in detective fiction. His character Dr. Thorndyke is considered a precursor to many modern forensic crime investigators in literature.
+"""
+
+Notes = """
+1907 is the original publication year of 'The Red Thumb Mark' by Ward, Lock & Co. in London. This was Freeman's first Thorndyke novel and one of the earliest works of detective fiction to feature forensic science prominently. The author's preface makes clear this was a contemporary work addressing then-current misunderstandings about fingerprint evidence, which had only been adopted by Scotland Yard in 1901.
+"""
+</result>

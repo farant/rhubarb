@@ -1,0 +1,15 @@
+<result>
+Title = "Dave Darrin's First Year at Annapolis: Two Plebe Midshipmen at the United States Naval Academy"
+Author = "H. Irving Hancock"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of H. Irving Hancock's popular early 20th century series of juvenile adventure novels focused on American military academy life. The book follows Dave Darrin and his friend Dan Dalzell as plebe (first-year) midshipmen at the United States Naval Academy in Annapolis. The series was designed to inspire young American boys with stories of honor, duty, and military service. Hancock wrote multiple series following young protagonists through various military academies and adventures. This particular series, the "Annapolis Series" or "Dave Darrin Series," romanticized naval academy life and was part of a broader genre of military school fiction popular in the early 1900s.
+"""
+
+Notes = """
+The book was published around 1910 as part of Hancock's Annapolis series (also called the Dave Darrin series). This was during the height of American naval expansion and public fascination with military institutions. Hancock wrote similar series for West Point and other military settings. The exact publication year appears to be 1910 based on the series chronology and publication patterns of his works during this period.
+"""
+</result>

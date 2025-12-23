@@ -1,0 +1,17 @@
+I can identify this work based on the title page information provided in the text itself.
+
+<result>
+Title = "Greek in a Nutshell: An Outline of Greek Grammar with Brief Reading Lessons"
+Author = "James Strong"
+Year = 1876
+
+Tags = ["non-fiction", "educational", "religious-study", "language-learning"]
+
+Summary = """
+This is a brief instructional manual on Greek grammar designed specifically for beginners studying the New Testament. Written by James Strong (the same scholar famous for Strong's Concordance), this compact textbook was originally prepared for the Normal Class journal and for use at the Chautauqua Sunday-School Assembly. The work presents the fundamental elements of Greek grammar in twelve concise lessons of two pages each, with reading exercises. While not comprehensive, it aims to provide students with a solid foundation in New Testament Greek, covering what Strong considered "all the real difficulties of the original tongue of the New Testament."
+"""
+
+Notes = """
+The copyright page clearly states 1876 as the publication year. James Strong (1822-1894) was a Methodist biblical scholar and theologian best known for his exhaustive concordance of the Bible. This educational work reflects the 19th-century Protestant emphasis on biblical literacy and original language study. While Strong was Protestant (Methodist), not Catholic, this is a scholarly linguistic work rather than theological commentary.
+"""
+</result>

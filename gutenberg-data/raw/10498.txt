@@ -1,0 +1,15 @@
+<result>
+Title = "Ain't No More Cane on the Brazos"
+Author = "Traditional (Anonymous)"
+Year = 1904
+
+Tags = ["historical-document", "non-fiction", "music"]
+
+Summary = """
+"Ain't No More Cane on the Brazos" is a traditional African American work song and chain gang song from the Texas prison system, specifically associated with the Brazos River bottom plantations where convict leasing occurred. The song depicts the brutal conditions of convict labor in the sugarcane fields along the Brazos River in Texas during the early 20th century. It references "Old Hannah" (the sun), the grinding of sugarcane into molasses, and the harsh treatment of prisoners. The song became part of the American folk music canon and was later recorded by numerous artists including Lead Belly and Odetta. It represents an important piece of African American musical heritage and documentation of the convict leasing system that followed Reconstruction.
+"""
+
+Notes = """
+The year 1904 is chosen based on the internal reference in the lyrics "Oughta come on de river in nineteen-O-fo'" which suggests this as a significant date for the song's setting and likely composition period. The song references conditions from 1904-1910 specifically. While the exact composition date is unknown as it is a traditional work song that evolved orally, 1904 represents the earliest historical period explicitly mentioned in the text and captures the era when these conditions were documented. This is a folk song collected and preserved rather than a work with a single author, hence "Traditional" as the author attribution.
+"""
+</result>

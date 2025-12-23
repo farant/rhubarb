@@ -1,0 +1,15 @@
+<result>
+Title = "Bayard: The Good Knight Without Fear and Without Reproach"
+Author = "Christopher Hare"
+Year = 1911
+
+Tags = ["non-fiction", "biography", "historical", "appropriate-for-children", "catholic"]
+
+Summary = """
+This is a biographical work about Pierre Terrail, Seigneur de Bayard (1473-1524), known as "the knight without fear and without reproach" (le chevalier sans peur et sans reproche). Bayard was a French knight who served under Charles VIII, Louis XII, and Francis I, and became the epitome of chivalric ideals. Christopher Hare's book retells the story of Bayard's life based on the chronicle written by the "Loyal Servitor" (now believed to be Jacques de Mailles), who was Bayard's companion-at-arms and possibly his secretary. The original chronicle was written around 1524-1527, shortly after Bayard's death in 1524. Bayard is remembered as one of the last great knights of the medieval tradition, embodying the virtues of courage, loyalty, and honor. He fought in the Italian Wars and was mortally wounded while defending France against the Imperial army.
+"""
+
+Notes = """
+The year 1911 is an estimate for this particular edition by Christopher Hare with illustrations by Herbert Cole, as this appears to be an early 20th century popular biography for younger readers. The original chronicle by the "Loyal Servitor" (Jacques de Mailles) was published in 1527. Bayard himself lived 1473-1524. This work is marked as potentially Catholic because Bayard was a devout Catholic knight serving Catholic French kings, and his story exemplifies Catholic chivalric virtues, though this particular retelling by Christopher Hare is a secular historical biography.
+"""
+</result>

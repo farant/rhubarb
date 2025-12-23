@@ -1,0 +1,15 @@
+<result>
+Title = "The Little Book of Modern Verse"
+Author = "Jessie B. Rittenhouse (Editor)"
+Year = 1913
+
+Tags = ["non-fiction", "poetry", "anthology", "appropriate-for-children"]
+
+Summary = """
+'The Little Book of Modern Verse' is a poetry anthology edited by Jessie Belle Rittenhouse, an influential American poet, critic, and anthologist. This collection presents modern American and British poetry from the late 19th and early 20th centuries, showcasing the transition from Victorian poetry to modernist forms. Rittenhouse was known for her work in promoting contemporary poetry and making it accessible to general readers. The anthology includes works by poets who were considered "modern" at the time of publication, representing new voices and experimental styles that departed from traditional forms.
+"""
+
+Notes = """
+The first edition of 'The Little Book of Modern Verse' was published in 1913 by Houghton Mifflin. This anthology was quite popular and went through multiple editions and printings. Jessie B. Rittenhouse (1869-1948) was a significant figure in early 20th-century American poetry circles, serving as the first secretary of the Poetry Society of America. The anthology is not a Catholic work - it's a secular literary collection representing the broader American and British poetic traditions of the modern period.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Golden Venture"
+Author = "W.W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"A Golden Venture" is a humorous short story by W.W. Jacobs, part of his collection "The Lady of the Barge and Others" published in 1902. Jacobs was an English author best known for his maritime humor stories and his famous horror tale "The Monkey's Paw." His work typically features working-class characters in late Victorian/Edwardian England, often involving dockworkers, sailors, and their families. The stories are characterized by clever plotting, dry wit, and comic misunderstandings. "A Golden Venture" follows this pattern, depicting the Tidger family and presumably their involvement in some scheme or misadventure, told with Jacobs' characteristic warmth and humor toward ordinary people and their foibles.
+"""
+
+Notes = """
+I chose 1902 as this is when "The Lady of the Barge and Others" was first published. This collection is one of Jacobs' most famous works, containing "The Monkey's Paw" along with other stories. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was a popular writer of his era, and his work remains readable and entertaining today.
+"""
+</result>

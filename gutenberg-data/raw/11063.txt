@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "A Man of Mark" by Anthony Hope, published in 1895. Anthony Hope (pseudonym of Sir Anthony Hope Hawkins) was an English novelist best known for "The Prisoner of Zenda." This is a comic adventure novel set in the fictional South American republic of Aureataland.
+
+<result>
+Title = "A Man of Mark"
+Author = "Anthony Hope"
+Year = 1895
+
+Tags = ["fiction", "adventure", "comedy", "appropriate-for-children"]
+
+Summary = """
+A Man of Mark is a comic adventure novel by Anthony Hope, set in the fictional South American republic of Aureataland. The story follows a British diplomat who becomes entangled in the political intrigues and revolutionary movements of this unstable nation. Written in Hope's characteristic witty style, it combines humor with adventure, featuring political machinations, romantic complications, and satirical observations on diplomacy and revolution. Though less famous than his "Ruritanian" novels (The Prisoner of Zenda series), it showcases Hope's talent for light adventure fiction with a comedic twist.
+"""
+
+Notes = """
+1895 is the original publication year for this novel. Anthony Hope was not a Catholic author, so the 'catholic' tag is not included. The novel is generally appropriate for older children and young adults, featuring adventure and humor without graphic content typical of Victorian-era popular fiction.
+"""
+</result>

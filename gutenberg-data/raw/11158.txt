@@ -1,0 +1,19 @@
+I can see this is an essay about wild apples from The Atlantic Monthly. Let me identify this work for you.
+
+This is "Wild Apples" by Henry David Thoreau, published posthumously in The Atlantic Monthly in November 1862. Thoreau died in May 1862, and this essay was published later that year. The essay is part of his nature writing exploring the history and significance of apple trees in America.
+
+<result>
+Title = "Wild Apples"
+Author = "Henry David Thoreau"
+Year = 1862
+
+Tags = ["non-fiction", "nature-writing", "essay"]
+
+Summary = """
+"Wild Apples" is an essay by Henry David Thoreau exploring the natural and cultural history of apple trees, particularly wild and uncultivated varieties. The essay traces the apple's connection to human civilization from ancient times through various cultures (Germanic, Greek, Roman, Scandinavian), examines its mythological and symbolic significance, and celebrates the wild apple as superior to cultivated varieties. This work represents Thoreau's characteristic blend of natural history, cultural observation, and philosophical reflection on humanity's relationship with the natural world.
+"""
+
+Notes = """
+Published posthumously in The Atlantic Monthly in November 1862, several months after Thoreau's death in May 1862. While the publication year is 1862, this represents when it was made public rather than when it was written. However, 1862 is the appropriate year for historical timeline purposes as it marks when the work entered public consciousness and became part of the literary canon.
+"""
+</result>

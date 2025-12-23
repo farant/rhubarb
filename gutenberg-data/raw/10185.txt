@@ -1,0 +1,15 @@
+<result>
+Title = "Minstrel Potpourri"
+Author = "Edison Minstrels"
+Year = 1920
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording of a minstrel show performance by the Edison Minstrels, taken from the Edison National Historic Site. Minstrel shows were a form of American entertainment popular in the 19th and early 20th centuries, typically featuring music, comedy, and variety acts. The Edison Minstrels were performers who recorded for Thomas Edison's phonograph company. This represents an early example of recorded entertainment from the Edison catalog.
+"""
+
+Notes = """
+The exact recording date is not specified in the Gutenberg metadata. Edison's minstrel recordings were produced roughly between 1890-1929, with the peak era being 1900-1920. Given this is described as coming from the Edison National Historic Site archives and represents a "potpourri" (compilation), I've estimated circa 1920 as a reasonable midpoint of the Edison cylinder/disc recording era. The actual recording could be anywhere from 1895-1925. This is an audio artifact rather than a text work.
+"""
+</result>

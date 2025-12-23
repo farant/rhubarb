@@ -1,0 +1,15 @@
+<result>
+Title = "Joy and Power: Three Messages with One Meaning"
+Author = "Henry van Dyke"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+Joy and Power is a collection of three sermons delivered by Presbyterian minister and author Henry van Dyke in 1903. The messages were given at significant occasions: the opening of the Presbyterian General Assembly in Los Angeles, and Baccalaureate Sundays at Princeton and Harvard Universities. Though delivered to different audiences, van Dyke recognized that all three addresses conveyed the same essential message about Christian living, urging a particular course of action and appealing to consistent spiritual motives. Van Dyke was a prominent American author, educator, and clergyman who served as a Princeton professor and later as U.S. ambassador to the Netherlands. His works emphasized the joy and practical application of Christian faith in daily life.
+"""
+
+Notes = """
+The year 1903 is clearly stated in both the title page and preface. While van Dyke was Presbyterian rather than Roman Catholic, I've included 'catholic' (lowercase intended) in the tags as this represents broadly Christian devotional literature that would likely have been acceptable across Christian denominations in the early 20th century. However, if the 'catholic' tag is meant strictly for Roman Catholic authors with nihil obstat/imprimatur potential, this tag should be removed as van Dyke was Protestant.
+"""
+</result>

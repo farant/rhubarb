@@ -1,0 +1,15 @@
+<result>
+Title = "At Last: A Christmas in the West Indies"
+Author = "Charles Kingsley"
+Year = 1871
+
+Tags = ["non-fiction", "travel", "appropriate-for-children"]
+
+Summary = """
+"At Last: A Christmas in the West Indies" is a travel narrative by Charles Kingsley, an Anglican clergyman, novelist, and social reformer. The book recounts his journey to the West Indies, particularly Trinidad, during the winter of 1869-1870. Kingsley describes the natural beauty, geography, flora, and fauna of the Caribbean islands, as well as observations about the colonial society and peoples he encountered. The work combines natural history writing with personal travelogue, reflecting Victorian-era perspectives on tropical landscapes and colonial life. Kingsley was known for works like "The Water-Babies" and was an influential figure in Victorian literature and social thought.
+"""
+
+Notes = """
+The book was first published in 1871, based on Kingsley's actual visit to the West Indies in 1869-1870. The dedication to Sir Arthur Gordon, who was Governor of Trinidad at the time and later Governor of Mauritius, indicates the personal connections that made the journey possible. While Kingsley was an Anglican clergyman rather than Catholic, this is a straightforward travel narrative without specifically Catholic themes.
+"""
+</result>

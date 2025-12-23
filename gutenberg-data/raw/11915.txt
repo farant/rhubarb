@@ -1,0 +1,15 @@
+<result>
+Title = "The Adventures of Mr. Mocker"
+Author = "Thornton W. Burgess"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Adventures of Mr. Mocker" is one of Thornton W. Burgess's beloved animal stories set in the Green Meadows and the Green Forest. Burgess (1874-1965) was an American children's author and naturalist who wrote numerous tales featuring anthropomorphized woodland creatures. This book follows the adventures of Mr. Mocker (a mockingbird), who causes mischief and confusion among the other animal residents like Sammy Jay, Peter Rabbit, Unc' Billy Possum, Bobby Coon, and others through his ability to mimic their voices. The story teaches lessons about honesty, friendship, and understanding while introducing children to nature and wildlife behavior. Burgess's stories were enormously popular in the early 20th century and helped generations of children develop an appreciation for nature and animal life.
+"""
+
+Notes = """
+The year 1914 is clearly stated on the title page as the publication date. This appears to be the original publication year. The book was illustrated by Harrison Cady, who was Burgess's long-time illustrator and whose distinctive artwork helped define the visual identity of these beloved characters.
+"""
+</result>

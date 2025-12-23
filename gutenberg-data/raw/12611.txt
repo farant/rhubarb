@@ -1,0 +1,15 @@
+<result>
+Title = "The Regent: A Five Towns Story of Adventure in London"
+Author = "Arnold Bennett"
+Year = 1913
+
+Tags = ["fiction", "not-appropriate-for-children"]
+
+Summary = """
+The Regent is a novel by Arnold Bennett, one of his Five Towns series set in the Potteries region of Staffordshire, England. This particular novel follows the adventures of its protagonist in London's theatrical world. Bennett was known for his realistic portrayals of life in industrial England and his keen observations of social manners and ambitions. The book deals with themes of business, theater management, and the collision between provincial and metropolitan life. The novel's subtitle indicates it chronicles adventures in London's entertainment industry, likely involving the protagonist's involvement with theater management or ownership.
+"""
+
+Notes = """
+The year 1913 is taken directly from the title page and represents the original publication date. Arnold Bennett (1867-1931) was not a Catholic author - he came from a Methodist background and later became agnostic/secular in outlook. Therefore, the 'catholic' tag is not applied. The work is sophisticated adult fiction dealing with business and romantic themes, making it not particularly appropriate for children.
+"""
+</result>

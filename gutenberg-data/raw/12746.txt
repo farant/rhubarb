@@ -1,0 +1,21 @@
+Looking at this Project Gutenberg text, I can identify this as Volume IV of Jonathan Swift's collected prose works, specifically the second volume of his writings on religion and the church, edited by Temple Scott with an introduction by W.E.H. Lecky, published by George Bell and Sons in 1898.
+
+This is a compilation/edition rather than a single original work. Swift lived from 1667-1745, and his religious writings span much of his career. Since this is an editorial collection from 1898, I need to consider what year best serves your historical timeline purpose.
+
+Given that this is primarily a collection of Swift's religious writings (not a heavily annotated scholarly work with substantial new commentary), and the purpose is for a historical timeline of works, I think attributing this to Swift's active period makes most sense. His major religious writings were produced roughly between 1704-1742. However, since this is specifically labeled as a collected edition, I'll note 1898 as it represents when this particular compilation was made available.
+
+<result>
+Title = "The Prose Works of Jonathan Swift, D.D., Vol. IV: Writings on Religion and the Church, Vol. II"
+Author = "Jonathan Swift"
+Year = 1898
+
+Tags = ["non-fiction", "religion", "historical-document"]
+
+Summary = """
+This is the fourth volume of Jonathan Swift's collected prose works, edited by Temple Scott with a biographical introduction by W.E.H. Lecky. This particular volume contains the second part of Swift's writings on religion and the church. Jonathan Swift (1667-1745) was an Anglo-Irish satirist, essayist, and clergyman who served as Dean of St. Patrick's Cathedral in Dublin. His religious writings include sermons, tracts, and essays on church matters, reflecting his role as a churchman in the Church of Ireland (Anglican) and his engagement with the religious controversies of his time.
+"""
+
+Notes = """
+Year chosen reflects the publication date of this collected edition (1898) rather than the original composition dates of Swift's individual religious writings, which would span roughly 1704-1742. Swift was Anglican (Church of Ireland), not Catholic, so the 'catholic' tag is not applicable despite his clerical status. This is part of Bohn's Standard Library series.
+"""
+</result>

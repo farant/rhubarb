@@ -1,0 +1,15 @@
+<result>
+Title = "'Twixt Land and Sea: Tales"
+Author = "Joseph Conrad"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Twixt Land and Sea is a collection of three sea tales by Joseph Conrad, published in 1912. The collection includes "A Smile of Fortune," "The Secret Sharer," and "Freya of the Seven Isles." These stories exemplify Conrad's masterful maritime fiction, exploring themes of isolation, moral ambiguity, identity, and the psychological complexities of life at sea. "The Secret Sharer" is particularly renowned as one of Conrad's finest short works, dealing with a young captain's encounter with a fugitive and the resulting psychological drama. Conrad draws on his own extensive experience as a merchant seaman to create atmospheric and psychologically penetrating narratives set in exotic maritime settings.
+"""
+
+Notes = """
+Year chosen is 1912, the first edition publication date shown on the title page. While Conrad was Polish-born and raised Catholic, his adult works are primarily literary fiction exploring moral and psychological themes rather than explicitly Catholic literature, so I have not included the 'catholic' tag. The stories deal with mature psychological themes but do not contain overtly inappropriate content for older children/young adults, hence the appropriate-for-children tag is included with the understanding this refers to mature readers.
+"""
+</result>

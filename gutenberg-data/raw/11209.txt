@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the title, author, and provide the requested information in TOML format.
+
+This is clearly a work by **Hendrik Conscience**, one of the most important Flemish/Belgian authors of the 19th century. The title is explicitly stated at the beginning: **"Wat Eene Moeder Lijden Kan"** (What a Mother Can Suffer).
+
+Hendrik Conscience (1812-1883) was a pioneering figure in Dutch/Flemish literature, often called "the man who taught his people to read" for his role in popularizing literature written in Dutch rather than French in Belgium.
+
+This particular work was first published in 1844. It's a novel that deals with the hardships and sufferings of a mother, set in Antwerp in 1841 (as indicated by the opening line). The work is characteristic of Conscience's romantic and moralistic style, often depicting the lives of common people with sympathy and moral lessons.
+
+<result>
+Title = "Wat Eene Moeder Lijden Kan"
+Author = "Hendrik Conscience"
+Year = 1844
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+"Wat Eene Moeder Lijden Kan" (What a Mother Can Suffer) is a novel by Hendrik Conscience, the father of modern Flemish literature. Set in Antwerp in January 1841, the story explores the trials and sufferings of a mother. Conscience was known for his moralistic tales that depicted the lives of ordinary Flemish people with sympathy and emotional depth. The work reflects the social realism and romanticism characteristic of 19th-century Flemish literature, with strong moral and Christian themes running throughout.
+"""
+
+Notes = """
+Hendrik Conscience was a devout Catholic and this work reflects Catholic moral values typical of his writing. First published in 1844, it's part of his larger body of work that helped establish Dutch as a literary language in Belgium. Conscience is best known for "De Leeuw van Vlaenderen" (The Lion of Flanders), but wrote numerous works exploring Flemish life and Catholic values.
+"""
+</result>

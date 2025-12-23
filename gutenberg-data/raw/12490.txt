@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement No. 492"
+Author = "Various"
+Year = 1885
+
+Tags = ["non-fiction", "science", "technology", "engineering", "periodical"]
+
+Summary = """
+Scientific American Supplement was a weekly scientific and technical publication that accompanied the main Scientific American magazine. This particular issue (No. 492) from June 6, 1885, contains various articles covering topics in engineering, mechanics, artillery, metallurgy, steam engines, bridge construction, pumping machinery, and other technological subjects typical of late 19th century industrial advancement. The Supplement series provided more in-depth technical articles than the main magazine, aimed at engineers, inventors, and technically-minded readers during the height of the Industrial Revolution.
+"""
+
+Notes = """
+Year is straightforward - this issue was published June 6, 1885, as clearly stated in the text. "Various" is used for the author field as this is a periodical compilation with multiple contributors. The issue includes contributions from named authors like L. Tetmajer, A. Trappen, A.E. Seaton, and E.D. Leavitt. Did not include 'appropriate-for-children' tag as the technical content would be advanced for most children, though older children with strong interest in science and engineering might find it accessible.
+"""
+</result>

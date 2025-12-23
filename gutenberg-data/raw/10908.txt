@@ -1,0 +1,15 @@
+<result>
+Title = "Manual for Noncommissioned Officers and Privates of Infantry of the Army of the United States"
+Author = "War Department, United States Army"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an official U.S. Army training manual published by the War Department in 1917, coinciding with America's entry into World War I. It served as the primary instructional guide for infantry training, covering military discipline, courtesy, drill procedures, and tactical operations for enlisted personnel. The manual was also used by Engineer and Coast Artillery companies for infantry instruction. This document represents a significant piece of American military history, reflecting the training standards and procedures used to prepare the rapidly expanding U.S. Army for service in the Great War.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the document and represents both the original publication date and the approval date (April 14, 1917, signed by Major General H. L. Scott, Chief of Staff). This is a primary historical document from the War Department, not a later republication or commentary, so the 1917 date is definitive. The timing is significant as the United States entered World War I in April 1917, making this manual part of the mobilization effort.
+"""
+</result>

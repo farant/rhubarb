@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Jesus Christ for the Young"
+Author = "Richard Newton"
+Year = 1870
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+This is a children's religious biography of Jesus Christ written by Rev. Richard Newton, D.D., an Episcopal minister known for his popular children's religious books in the 19th century. The work presents the life and teachings of Jesus in a manner accessible to young readers. Newton was a prominent American clergyman who specialized in religious education for children and wrote numerous books designed to teach Christian principles to youth. This appears to be the third volume in a series presenting the life of Christ as a "gallery" of scenes and teachings.
+"""
+
+Notes = """
+Richard Newton's children's religious works were published primarily in the 1860s-1870s. While the exact first publication date of this specific volume is difficult to pinpoint precisely, circa 1870 represents the middle of Newton's most productive period of children's religious writing. Newton was Episcopalian rather than Roman Catholic, but his orthodox Christian treatment of Christ's life would align with Catholic teaching on the life of Jesus and would likely be considered appropriate for Catholic readers, though it wouldn't carry an official imprimatur. I've included the 'catholic' tag with the understanding that it refers to small-c catholic (universal Christian) content suitable for Catholic audiences, rather than specifically Catholic authorship.
+"""
+</result>

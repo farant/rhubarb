@@ -1,0 +1,17 @@
+I recognize this work by Bradford Torrey, a naturalist and writer known for his nature writing and ornithological observations in the late 19th century. This particular work documents his travels and natural history observations in Florida.
+
+<result>
+Title = "A Florida Sketch-Book"
+Author = "Bradford Torrey"
+Year = 1894
+
+Tags = ["non-fiction", "appropriate-for-children", "nature-writing", "travelogue"]
+
+Summary = """
+A Florida Sketch-Book is a collection of nature essays by Bradford Torrey, an American naturalist and ornithologist. The work documents Torrey's travels through various locations in Florida, including observations of birds, landscapes, and natural environments. Torrey was known for his accessible, contemplative writing style that combined careful natural history observation with personal reflection. The book includes chapters describing different Florida locations such as the flat-woods, marshes, the beach at Daytona, the Hillsborough River, and the St. Augustine area. It represents the tradition of 19th-century nature writing that sought to educate and inspire readers about the natural world through first-hand observation and literary craftsmanship.
+"""
+
+Notes = """
+The year 1894 is clearly indicated in the transcription and represents the original publication date. This work fits into the genre of late 19th-century American nature writing, alongside contemporaries like John Burroughs and John Muir.
+"""
+</result>

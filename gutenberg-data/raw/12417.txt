@@ -1,0 +1,21 @@
+I'll help you identify this work and create the structured output. Let me analyze the text carefully.
+
+This is clearly "Fishin' Jimmy" by Annie Trumbull Slosson. This is a short story (or sketch) that was quite popular in the late 19th century. Annie Trumbull Slosson (1838-1926) was an American author and entomologist known for her dialect stories set in New England/New Hampshire. 
+
+The text shows this is the "Author's Edition" from 1889, and this appears to be the original publication date or very close to it. The story is set in Franconia, New Hampshire, and tells the tale of a simple fisherman named Jimmy who becomes a teacher and friend to the narrator's family. It's a gentle, sentimental story typical of the period's local color literature.
+
+<result>
+Title = "Fishin' Jimmy"
+Author = "Annie Trumbull Slosson"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Fishin' Jimmy' is a short story by Annie Trumbull Slosson, first published in 1889. Set in the village of Franconia, New Hampshire, it tells the story of a simple, humble fisherman named Jimmy who befriends a family vacationing in the White Mountains. Through his love of fishing and his gentle wisdom, Jimmy teaches the narrator's boys both the practical art of angling and deeper spiritual lessons about life, nature, and faith. The story is written in the 'local color' style popular in late 19th-century American literature, celebrating rural New England character and dialect. It's a sentimental but touching portrait of an ordinary man with extraordinary kindness and insight.
+"""
+
+Notes = """
+The text indicates 'Author's Edition' with the date 1889, which appears to be the original publication year. Slosson was known for her sketches of New Hampshire life and characters, and this became one of her most popular works. The story was often anthologized and reprinted.
+"""
+</result>

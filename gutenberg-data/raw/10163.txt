@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+Based on the text, this is clearly "Mohammedanism: Lectures on Its Origin, Its Religious and Political Growth, and Its Present State" by C. Snouck Hurgronje. This was part of the American Lectures on the History of Religions series from 1914-1915, published in 1916.
+
+Christiaan Snouck Hurgronje (1857-1936) was a Dutch scholar and one of the foremost Western authorities on Islam in his time. He was particularly known for his deep knowledge of Indonesian Islam and his time spent in Mecca.
+
+<result>
+Title = "Mohammedanism: Lectures on Its Origin, Its Religious and Political Growth, and Its Present State"
+Author = "C. Snouck Hurgronje"
+Year = 1916
+
+Tags = ["non-fiction", "academic", "religious-studies", "history"]
+
+Summary = """
+This work is a series of academic lectures on Islam delivered as part of the American Lectures on the History of Religions series (1914-1915). Written by C. Snouck Hurgronje, a distinguished Dutch Arabist and professor at the University of Leiden, the book examines the origins of Islam, its religious and political development, and its state in the early 20th century. Hurgronje was one of the leading Western scholars of Islam in his era, known for his extensive fieldwork and deep understanding of Islamic societies, particularly in Southeast Asia. The lectures represent a scholarly examination of Islamic history and theology from a Western academic perspective of the early 1900s.
+"""
+
+Notes = """
+The year 1916 reflects the publication date of these lectures, which were delivered in 1914-1915. This is the most appropriate date as the work represents Hurgronje's contemporary analysis of Islam rather than a historical text from earlier centuries. The term 'Mohammedanism' was commonly used in Western academic circles at this time, though it is now considered outdated and potentially offensive, as Muslims do not worship Muhammad but rather worship God (Allah).
+"""
+</result>

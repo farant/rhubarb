@@ -1,0 +1,17 @@
+I recognize this as Guy de Maupassant's novel "Pierre et Jean" (Pierre and Jean), which includes his famous preface "Le Roman" - an essay on the art of novel writing. This is one of Maupassant's most celebrated works, first published in 1888.
+
+<result>
+Title = "Pierre et Jean"
+Author = "Guy de Maupassant"
+Year = 1888
+
+Tags = ["fiction", "psychological-novel"]
+
+Summary = """
+'Pierre et Jean' is a psychological novel by French author Guy de Maupassant, first published in 1888. The story follows two brothers, Pierre and Jean Roland, whose relationship becomes strained when Jean unexpectedly inherits a fortune from a family friend. Pierre begins to suspect that his younger brother may be the illegitimate son of their mother and the deceased benefactor. The novel explores themes of jealousy, family secrets, legitimacy, and the painful process of confronting uncomfortable truths. The work is particularly notable for its preface, "Le Roman," in which Maupassant presents his literary manifesto on the art of novel writing and defends the psychological realism movement against critics who had narrow definitions of what constitutes a proper novel. This preface has become one of the most important theoretical texts in French literary criticism.
+"""
+
+Notes = """
+The year 1888 is when the novel was first published in serial form in the Nouvelle Revue (January 1888) and then as a book. Maupassant was not a Catholic author - he was known for his naturalist and realist approach to literature, influenced by Flaubert and Zola. His works often dealt with human psychology and social realities in a secular, sometimes cynical manner. Therefore, this work would not qualify for the 'catholic' tag as it would not receive a nihil obstat or imprimatur.
+"""
+</result>

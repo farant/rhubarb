@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be a specific issue of **Punch, or The London Charivari** magazine - specifically Volume 100, dated January 3, 1891. This is a periodical publication rather than a single authored work.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 100, January 3, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "historical-document"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire established in 1841. It became one of the most influential magazines in Victorian Britain, known for its political cartoons, social commentary, and witty writing. This particular issue is from Volume 100, published January 3, 1891, representing the magazine's 50th year of publication. Punch was famous for coining the term "cartoon" in its modern sense and for its iconic mascot Mr. Punch. The magazine featured contributions from many writers and illustrators, making it a collaborative work. It ceased publication in 1992 after 150 years, then briefly revived 1996-2002.
+"""
+
+Notes = """
+Year chosen is 1891 as this is a specific dated issue of a periodical. Since Punch was a collaborative magazine with rotating contributors, "Various" is used for the author field. The magazine is not marked as "appropriate-for-children" as Victorian Punch often contained sophisticated political satire and social commentary aimed at adult readers. It is also not marked "catholic" as Punch was a broadly British publication without specific religious affiliation, though it represented mainstream Victorian British culture.
+"""
+</result>

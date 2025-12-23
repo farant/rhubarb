@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text for you.
+
+Based on the title page information provided, this is "Probable Sons" by Amy Le Feuvre (also spelled Lefeuvre), published in 1896. Amy Le Feuvre was a prolific British author of Christian children's literature in the late 19th and early 20th centuries. She was known for writing moralistic fiction with strong Christian themes, often featuring children as protagonists who influence adults toward faith and redemption.
+
+The biblical quotations ("A little child shall lead them" from Isaiah 11:6 and references to the Prodigal Son parable) indicate this is a Christian moral tale. Amy Le Feuvre was a devout Christian writer whose works were popular in evangelical Protestant circles, though she herself was not Catholic.
+
+<result>
+Title = "Probable Sons"
+Author = "Amy Le Feuvre"
+Year = 1896
+
+Tags = ["fiction", "appropriate-for-children", "christian-literature"]
+
+Summary = """
+"Probable Sons" is a Christian children's novel by Amy Le Feuvre, a British author known for her moralistic fiction with evangelical Protestant themes. The story appears to involve themes of redemption and the influence of children on adults, as suggested by the biblical quotations used as epigraphs: "A little child shall lead them" (Isaiah 11:6) and references to the Prodigal Son parable. Le Feuvre's works typically featured young protagonists who, through their innocent faith and moral example, lead others (often wayward or hardened adults) to Christian conversion and better behavior. Her books were extremely popular in late Victorian and Edwardian England among religious families.
+"""
+
+Notes = """
+The year 1896 is clearly stated on the title page as the publication date. Amy Le Feuvre was a Protestant (not Catholic) author, so the 'catholic' tag is not applicable despite the Christian religious content.
+"""
+</result>

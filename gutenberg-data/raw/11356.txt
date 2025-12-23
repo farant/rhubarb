@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+Based on the content, this is a collection of journalistic papers about Birmingham's development and municipal history at the turn of the 20th century. The text clearly identifies itself as "A Tale of One City: The New Birmingham" by Thomas Anderton, published in 1900, consisting of papers reprinted from the "Midland Counties Herald."
+
+<result>
+Title = "A Tale of One City: The New Birmingham"
+Author = "Thomas Anderton"
+Year = 1900
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a collection of papers originally published in the "Midland Counties Herald" newspaper, examining the transformation of Birmingham from a town into a major city during the 19th century. The author, Thomas Anderton, documents Birmingham's political, social, and municipal development, particularly noting its recent rapid advancement and its emerging status as "the centre of activity and influence in Mid-England." The work provides a contemporary account of Birmingham's metamorphosis from "Brummagem" or the "Hardware Village" into what was being called "the best governed city in the world" at the dawn of the 20th century. It captures the civic pride and dramatic urban transformation characteristic of the Victorian and Edwardian eras.
+"""
+
+Notes = """
+The year 1900 is straightforward as it appears on the title page. This is a primary historical document offering contemporary perspective on late Victorian municipal development and urban history in England.
+"""
+</result>

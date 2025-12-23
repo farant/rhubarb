@@ -1,0 +1,15 @@
+<result>
+Title = "Strawberry Acres"
+Author = "Grace S. Richmond"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Strawberry Acres is a novel by Grace S. Richmond, a popular American author of the early 20th century known for her wholesome domestic fiction. Richmond (1866-1959) wrote numerous novels that focused on family life, home-making, and the values of middle-class American life. This work, published in 1911, likely follows her typical pattern of exploring themes of family, domesticity, and the joys and challenges of home life. Based on the chapter titles referencing "Five Miles Out," "Telephones and Tents," and "The Lanes and the Acres," the story appears to involve a family's relationship with a property in the country, possibly depicting their adventures in moving from city life to a rural setting or managing a country estate. Richmond's works were characterized by their optimistic tone and moral uplift, making them popular family reading during the Progressive Era.
+"""
+
+Notes = """
+The year 1911 is clearly indicated in the Project Gutenberg text as the publication date. Grace S. Richmond was a prolific writer whose works were widely read in the early 1900s and often serialized in magazines before book publication. Her fiction typically celebrated traditional family values and simple pleasures, making her books appropriate for family reading.
+"""
+</result>

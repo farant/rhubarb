@@ -1,0 +1,17 @@
+I recognize this work! This is Roget's Thesaurus, one of the most important reference works in the English language.
+
+<result>
+Title = "Roget's Thesaurus of English Words and Phrases"
+Author = "Peter Mark Roget"
+Year = 1852
+
+Tags = ["non-fiction", "reference", "appropriate-for-children"]
+
+Summary = """
+Roget's Thesaurus is a landmark reference work that organizes English words and phrases by conceptual categories rather than alphabetically. Created by British physician and lexicographer Peter Mark Roget, it groups words into six main classes (Abstract Relations, Space, Matter, Intellect, Volition, and Affections), with numerous subdivisions. The thesaurus was revolutionary in its systematic classification of language, helping writers find the precise word they need by navigating through related concepts. It remains one of the most widely used reference books in English and has been continuously revised and expanded since its original publication.
+"""
+
+Notes = """
+The first edition was published in 1852 when Roget was 73 years old, though he had been working on the classification system since 1805. This appears to be from the original structure with its distinctive numbered sections and Latin terminology. The work has been in continuous publication and revision ever since, with various editions and updates, but 1852 marks the original publication date that is most historically significant.
+"""
+</result>

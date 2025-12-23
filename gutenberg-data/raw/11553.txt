@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This appears to be a collection of testimonies about answered prayers, compiled from various Christian sources including George Müller, D.L. Moody, Charles Spurgeon, and others. The title page clearly states it was published in 1885 as a "NEW EDITION. REVISED BY D.W. WHITTLE."
+
+This is a Protestant evangelical work focused on prayer testimonies, not a Catholic work, though it does represent Christian devotional literature from the 19th century.
+
+<result>
+Title = "Facts Stranger Than Fiction: The Wonders of Prayer"
+Author = "Various (compiled/revised by D.W. Whittle)"
+Year = 1885
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of authenticated testimonies and accounts of answered prayers, compiled from numerous Protestant evangelical leaders and figures including George Müller, D.L. Moody, Charles Spurgeon, Bishop Simpson, Martin Luther, John Knox, Abraham Lincoln, and others. The work presents these accounts as evidence of the power of persevering faith and demonstrates what the compiler views as God's intimate involvement in the lives of believers. Originally published in the late 19th century during the height of Protestant revivalism in America, this revised edition was compiled by D.W. Whittle in 1885.
+"""
+
+Notes = """
+The year 1885 is taken directly from the title page as the date of this revised edition. D.W. Whittle (1840-1901) was a prominent American evangelist and hymn writer who worked closely with D.L. Moody. This is a Protestant evangelical work, not a Catholic text, so it would not receive a nihil obstat or imprimatur.
+"""
+</result>

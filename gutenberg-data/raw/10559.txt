@@ -1,0 +1,3 @@
+Vale Fran! I need to fetch that URL to identify the work, but I need your permission first. Can I use WebFetch to retrieve the Project Gutenberg page at https://www.gutenberg.org/ebooks/413 to identify the title and author?
+
+Alternatively, if you know the eBook number is 413, that's actually Aeschylus's "Prometheus Bound" (translated by various translators over the years, but commonly by E.H. Plumptre or George Gilbert Aimé Murray). If you'd like, I can provide the metadata based on that identification, though I'd prefer to verify it first by checking the actual Gutenberg page.

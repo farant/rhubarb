@@ -1,0 +1,17 @@
+I recognize this as H.G. Wells' novel "Love and Mr. Lewisham," which was his first published work focusing on realistic social themes rather than scientific romance. This is an early realistic novel from Wells about a young teacher's struggles between his educational ambitions and romantic life.
+
+<result>
+Title = "Love and Mr. Lewisham"
+Author = "H. G. Wells"
+Year = 1900
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Love and Mr. Lewisham' is H.G. Wells' first realistic social novel, published in 1900. It tells the story of a young, ambitious schoolteacher named Mr. Lewisham who has carefully planned out his career path toward scholarly success. His plans are disrupted when he falls in love with Ethel Henderson, a young woman entangled with a fraudulent spiritualist. The novel explores the conflict between personal ambition and romantic love, depicting Lewisham's struggle as he must choose between his carefully constructed career plans and his growing affection for Ethel. The work is semi-autobiographical, drawing on Wells' own experiences as a struggling young teacher and student. It's a departure from Wells' more famous science fiction works, offering instead a realistic portrayal of lower-middle-class Victorian life, the challenges of social mobility, and the compromises that love and marriage often require.
+"""
+
+Notes = """
+The novel was first published in 1900 by Harper & Brothers. This represents Wells' transition from his earlier scientific romances (The Time Machine, The War of the Worlds) to more realistic social fiction, though he would continue to work in both genres throughout his career.
+"""
+</result>

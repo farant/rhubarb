@@ -1,0 +1,15 @@
+<result>
+Title = "Heave Away"
+Author = "Traditional"
+Year = 1800
+
+Tags = ["folk-song", "historical-document", "appropriate-for-children", "non-fiction"]
+
+Summary = """
+"Heave Away" is a traditional sea shanty sung by sailors during the age of sail, typically used as a capstan shanty or hauling song to coordinate labor while raising anchor or hauling ropes. The song references various maritime destinations including New York Town, France, and the Bengal Bay (likely referring to whaling expeditions in the Indian Ocean). It mentions Kingston and St. Andrew's Dock, suggesting British origins. Sea shanties like this were working songs that helped sailors maintain rhythm during physically demanding tasks and provided entertainment during long voyages. This particular shanty reflects the life of merchant sailors and whalers in the 18th and 19th centuries.
+"""
+
+Notes = """
+The year 1800 is an approximation representing the height of the age of sail when such shanties were actively sung aboard ships. Traditional folk songs like this were transmitted orally for generations before being written down, so pinpointing an exact composition date is impossible. The references to whaling in the Bengal Bay and the general maritime trade routes suggest this shanty was in use during the late 18th to mid-19th century. I chose 1800 as a representative date for the historical period when this would have been a living work song rather than a later collection date.
+"""
+</result>

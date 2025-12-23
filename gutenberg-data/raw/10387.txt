@@ -1,0 +1,15 @@
+<result>
+Title = "The Real America in Romance, Volume 6: A Century Too Soon (A Story of Bacon's Rebellion)"
+Author = "John R. Musick"
+Year = 1909
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+This is Volume 6 of John R. Musick's historical fiction series "The Real America in Romance." This particular volume, subtitled "A Century Too Soon" and "The Age of Tyranny," tells the story of Bacon's Rebellion, which occurred in colonial Virginia in 1676. Nathaniel Bacon led an armed rebellion against the rule of Governor William Berkeley, and the conflict is considered one of the most significant uprisings in colonial American history, highlighting tensions between frontier settlers and the colonial government. Musick was a popular American historical novelist of the late 19th and early 20th centuries who wrote romanticized accounts of American history aimed at general audiences.
+"""
+
+Notes = """
+The work was published in 1909 as indicated on the title page. This is a fictionalized historical account rather than a historical document or scholarly work. While it deals with real historical events (Bacon's Rebellion of 1676), it is presented as romantic historical fiction typical of the period's popular literature.
+"""
+</result>

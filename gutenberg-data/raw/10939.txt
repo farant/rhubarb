@@ -1,0 +1,15 @@
+<result>
+Title = "After Waterloo: Reminiscences of European Travel 1815-1819"
+Author = "Major W.E. Frye"
+Year = 1815
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a first-hand travel memoir by Major W.E. Frye documenting his experiences traveling through Europe in the immediate aftermath of the Battle of Waterloo (1815) through 1819. The work provides eyewitness accounts and observations of post-Napoleonic Europe during a crucial period of restoration and rebuilding. The manuscript was edited and published posthumously in 1908 by Salomon Reinach, a member of the Institute of France. Major Frye lived out his later years in Saint-Germain-en-Laye, France, where he died in 1858. The manuscript was preserved by his hostess and passed down through friends before being rediscovered and published nearly fifty years after his death.
+"""
+
+Notes = """
+The year 1815 represents the beginning of the travel period documented in this work, starting immediately after the Battle of Waterloo (June 18, 1815). While the book itself was not published until 1908, dating it to 1815 captures the historical moment being documented and is most relevant for a historical timeline. The travels extended through 1819, covering the critical years of European restoration following Napoleon's final defeat.
+"""
+</result>

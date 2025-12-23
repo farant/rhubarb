@@ -1,0 +1,17 @@
+I recognize this immediately as Dante Alighieri's *La Divina Commedia* (The Divine Comedy), specifically the *Purgatorio* (Purgatory) section. This is one of the most significant works in Western literature.
+
+<result>
+Title = "La Divina Commedia: Purgatorio"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["fiction", "poetry", "catholic", "epic"]
+
+Summary = """
+The Divine Comedy is an epic poem by Dante Alighieri, written between approximately 1308 and 1320. It is divided into three parts: Inferno (Hell), Purgatorio (Purgatory), and Paradiso (Paradise). The Purgatorio is the second cantica, depicting Dante's journey through Purgatory, guided by the Roman poet Virgil. In this section, souls undergo purification to become worthy of ascending to Heaven. The work is considered one of the greatest achievements of medieval literature and had profound influence on Western theology, philosophy, and literature. It is fundamentally a Catholic work, presenting Catholic theology and cosmology through an allegorical journey of the soul toward God.
+"""
+
+Notes = """
+The year 1320 represents when Dante completed the entire Divine Comedy, though Purgatorio was likely completed around 1314-1319. Some scholars date the entire work's completion to 1321 (the year of Dante's death), but 1320 is the more commonly accepted completion date. The work was written during Dante's exile from Florence and represents the culmination of medieval Catholic thought, synthesizing theology, philosophy, and poetry. This is definitively a Catholic work that presents Church doctrine and would certainly have received ecclesiastical approval in its theological content.
+"""
+</result>

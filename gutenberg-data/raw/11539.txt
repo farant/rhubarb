@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular Victorian periodical published in London. This particular issue from February 25, 1832 (Volume XIX, No. 535) features articles about the Zoological Gardens in Regent's Park, including descriptions and illustrations of the Polar Bear, the Tunnel, and Monkey Cage. The publication was designed as an educational and entertaining weekly magazine for general audiences, combining literary content, scientific articles, and moral instruction typical of the period. These periodicals were instrumental in bringing knowledge about natural history, zoology, and other sciences to the broader British public during the early Victorian era.
+"""
+
+Notes = """
+The year 1832 is clearly stated in the publication itself. This is a periodical issue rather than a standalone book. The Zoological Gardens in Regent's Park had opened in 1828, making this article part of early reporting on this important London attraction. Listed as 'Various' for author as periodicals typically featured multiple contributors, though specific article authors are often not identified in such publications.
+"""
+</result>

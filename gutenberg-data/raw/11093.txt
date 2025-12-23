@@ -1,0 +1,15 @@
+<result>
+Title = "Trailin'!"
+Author = "Max Brand"
+Year = 1919
+
+Tags = ["fiction", "western", "appropriate-for-children"]
+
+Summary = """
+'Trailin'!' is a Western novel by Max Brand (pen name of Frederick Faust), published in 1919. The story follows Anthony Bard, an educated Easterner who journeys West to find his father, John Bard. Along the way, Anthony must adapt to the rugged Western lifestyle and confront various challenges. Max Brand was one of the most prolific writers of Western fiction, creating memorable characters and fast-paced adventure stories that helped define the genre in the early 20th century. This novel exemplifies his early work in establishing the Western as a popular literary form.
+"""
+
+Notes = """
+The year 1919 is clearly stated in the text itself, making this straightforward. Max Brand (Frederick Faust) was not Catholic and his Westerns are secular adventure fiction, so the 'catholic' tag is not applicable despite some of his works having moral themes.
+"""
+</result>

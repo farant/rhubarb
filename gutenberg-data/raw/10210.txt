@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Wolves of the Sea: Being a Tale of the Colonies"
+Author = "Randall Parrish"
+Year = 1918
+
+Tags = ["fiction", "historical-fiction", "adventure", "pirates", "colonial-america"]
+
+Summary = """
+"Wolves of the Sea" is a historical adventure novel by American author Randall Parrish, set during the colonial period. The story is framed as the manuscript of Geoffry Carlyle, a seaman who recounts his adventures aboard the pirate craft "Namur." The novel was presented as being "edited" from a 1687 manuscript supposedly passed down through nine generations of the Carlyle family, until it came into the possession of Anson Carlyle, who died at Vimy Ridge in World War I. This framing device was a popular literary technique of the era. Parrish was a prolific writer of historical adventure fiction, particularly stories set on the American frontier and in the colonial period. The novel combines elements of piracy, romance, and colonial American history.
+"""
+
+Notes = """
+The publication year of 1918 is clearly stated on the title page. While the story is framed as a 17th-century manuscript (1687), this is a fictional device. Randall Parrish (1858-1923) was an American author who specialized in historical adventure novels set in the American colonial and frontier periods. The work is not classified as "appropriate-for-children" due to its pirate adventure themes and likely violence typical of the genre and era.
+"""
+</result>

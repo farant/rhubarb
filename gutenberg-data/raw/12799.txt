@@ -1,0 +1,15 @@
+<result>
+Title = "Quiet Talks with World Winners"
+Author = "S. D. Gordon"
+Year = 1904
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Quiet Talks with World Winners" is part of S. D. Gordon's popular "Quiet Talks" series of Christian devotional and instructional books. Samuel Dickey Gordon (1859-1936) was an American Christian author and speaker associated with the evangelical movement of the late 19th and early 20th centuries. This particular volume focuses on Christian missions and evangelism - the concept of "world winning" referring to spreading the Christian gospel globally. The book examines the motivation, strategy, and necessity of missionary work from an evangelical Protestant perspective. Gordon's "Quiet Talks" series was widely read in evangelical circles and known for its accessible, conversational style aimed at encouraging Christian spiritual growth and action.
+"""
+
+Notes = """
+The exact publication year is not stated in this Project Gutenberg header, but S. D. Gordon's "Quiet Talks" series began around 1901-1904. "Quiet Talks on Power" (mentioned as another work by the author) was published in 1903, and most sources indicate "Quiet Talks with World Winners" was published in 1904 or shortly thereafter. The work reflects the strong missionary emphasis of American Protestantism during this period. Not tagged as 'catholic' as S. D. Gordon was an evangelical Protestant author whose theological perspective would differ significantly from Catholic teaching, particularly regarding ecclesiology and missionary approach.
+"""
+</result>

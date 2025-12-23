@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "Travels through the Empire of Morocco" by John Buffa, M.D., published in London in 1810. This is a travel narrative/geographical work describing Buffa's journey through Morocco while serving as a physician to the British forces.
+
+<result>
+Title = "Travels through the Empire of Morocco"
+Author = "John Buffa"
+Year = 1810
+
+Tags = ["non-fiction", "travel-narrative", "historical-document"]
+
+Summary = """
+A firsthand account of travels through Morocco by John Buffa, a British military physician, published in 1810. The work describes Buffa's journey through the Moroccan Empire during the early 19th century, undertaken while he served as Physician to His Majesty's Forces. The narrative provides geographical, cultural, and observational details about Morocco during this period. Buffa's journey was prompted by his reassignment from the Army Medical Board in 1805 and subsequent appointment considerations related to Gibraltar. The work represents an important early 19th-century European perspective on North Africa and contributes to the travel literature of the Napoleonic era.
+"""
+
+Notes = """
+The year 1810 is clearly stated as the publication date in London. This is an original work of travel writing, not a translation, so the publication year and composition year are essentially contemporaneous. The work falls into the category of early 19th-century British travel literature about North Africa and the Islamic world.
+"""
+</result>

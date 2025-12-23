@@ -1,0 +1,15 @@
+<result>
+Title = "The Iron Puddler: My Life in the Rolling Mills and What Came of It"
+Author = "James J. Davis"
+Year = 1922
+
+Tags = ["non-fiction", "autobiography", "labor-history", "appropriate-for-children"]
+
+Summary = """
+'The Iron Puddler' is the autobiography of James J. Davis, who rose from working as an iron puddler in steel mills to become U.S. Secretary of Labor under Presidents Harding, Coolidge, and Hoover. The book chronicles his journey from brutal working conditions in peon camps to cabinet-level service, written when he was only 48 years old. Davis also founded Mooseheart, an innovative educational institution for orphaned children. The introduction is by Joseph G. Cannon, former Speaker of the U.S. House of Representatives. The work provides valuable insight into early 20th-century American labor conditions, social mobility, and the immigrant experience in industrial America.
+"""
+
+Notes = """
+James J. Davis (1873-1947) served as Secretary of Labor from 1921-1930, making him one of the longest-serving cabinet members in that position. The book was published in 1922, shortly after his appointment to the cabinet. Davis was Welsh-born and his firsthand account of working in steel mills provides important historical documentation of labor conditions during America's industrial era. He later served as U.S. Senator from Pennsylvania (1930-1945).
+"""
+</result>

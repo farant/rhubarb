@@ -1,0 +1,17 @@
+I'll read through this text to identify the work and provide the requested information.
+
+<result>
+Title = "Deccan Nursery Tales: or Fairy Tales from the South"
+Author = "C.A. Kincaid"
+Year = 1914
+
+Tags = ["fiction", "folklore", "appropriate-for-children"]
+
+Summary = """
+A collection of Marathi folktales from the Deccan region of southern India, translated into English by C.A. Kincaid. The stories were originally published in the Times of India newspaper before being compiled into book form. Kincaid translated these tales as literally as possible from the original Marathi, though he made some adaptations for English readers, particularly regarding descriptions of Hindu rites and ceremonies. The book was dedicated to his son Dennis, whose interest in the stories prompted their publication. The work includes explanatory material about Hindu mythology and deities to help Western readers understand the cultural context of the tales.
+"""
+
+Notes = """
+The year 1914 is clearly stated on the title page as the publication date. This represents when Kincaid compiled and published these traditional tales, not when the oral stories originated (which would be much earlier and impossible to date precisely). C.A. Kincaid held the title C.V.O. (Commander of the Royal Victorian Order), indicating he was a British colonial administrator in India. The book serves as an early example of folklore collection and cross-cultural literary transmission during the British Raj period.
+"""
+</result>

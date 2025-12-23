@@ -1,0 +1,15 @@
+<result>
+Title = "Abroad with the Jimmies"
+Author = "Lilian Bell"
+Year = 1902
+
+Tags = ["fiction", "travel", "appropriate-for-children"]
+
+Summary = """
+"Abroad with the Jimmies" is a travel novel by American author Lilian Bell, continuing the adventures of characters Mr. and Mrs. Jimmie and Bee that she introduced in her earlier work "As Seen by Me." The book chronicles the humorous observations and experiences of these American characters traveling abroad. Lilian Bell (1867-1929) was a popular American novelist and travel writer at the turn of the 20th century, known for her witty, light-hearted fiction that often featured American characters encountering European society. This work is part of her series following these recurring characters through their travels and social adventures.
+"""
+
+Notes = """
+The book appears to have been published around 1902, based on it being a sequel to "As Seen by Me" (1900) and the publishing patterns of Lilian Bell's works during this period. The London publisher Ward, Lock & Co. was active in publishing popular fiction during the Edwardian era. Bell was known for her serialized travel narratives that were compiled into book form.
+"""
+</result>

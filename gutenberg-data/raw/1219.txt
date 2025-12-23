@@ -1,0 +1,15 @@
+<result>
+Title = "An Essay on Comedy and the Uses of the Comic Spirit"
+Author = "George Meredith"
+Year = 1877
+
+Tags = ["non-fiction", "literary-criticism", "philosophy"]
+
+Summary = """
+George Meredith's influential essay on the theory of comedy and the comic spirit was originally published in The New Quarterly Magazine in April 1877. This work is a significant contribution to literary criticism and aesthetic theory, examining the nature of comedy as a genre and exploring how the "comic spirit" functions in literature and society. Meredith argues for comedy as a civilizing force that uses wit and laughter to expose folly, pretension, and social absurdities. The essay is considered one of the most important Victorian statements on the theory of comedy and has influenced subsequent literary criticism. Meredith was a prominent Victorian novelist and poet known for his psychological insight and complex prose style.
+"""
+
+Notes = """
+Using 1877 as the year of original publication in The New Quarterly Magazine. While this text is transcribed from an 1897 book edition by Archibald Constable and Company, the essay itself was first published twenty years earlier in 1877, which is the historically accurate date for this work's appearance.
+"""
+</result>

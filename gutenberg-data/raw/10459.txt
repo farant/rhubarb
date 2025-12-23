@@ -1,0 +1,15 @@
+<result>
+Title = "The Celtic Twilight"
+Author = "W. B. Yeats"
+Year = 1893
+
+Tags = ["non-fiction", "folklore", "irish-mythology", "literary-essays"]
+
+Summary = """
+The Celtic Twilight is a collection of essays and stories by Irish poet W. B. Yeats, exploring Irish folklore, mythology, and supernatural beliefs. The work draws on Yeats's experiences collecting folk tales in the West of Ireland and his deep interest in Celtic mythology, spiritualism, and the mystical traditions of the Irish people. The book includes accounts of fairies, ghosts, and the Sidhe (the fairy folk of Irish mythology), along with Yeats's reflections on the spiritual world that he believed existed just beyond ordinary perception. This work was instrumental in the Irish Literary Revival and helped establish Yeats as a leading figure in Celtic mysticism and Irish cultural nationalism.
+"""
+
+Notes = """
+First published in 1893, though it was revised and expanded in 1902. I chose 1893 as it represents the original publication date and the work's initial impact on the Celtic Revival movement. The book's title gave its name to the entire literary movement of the Irish Literary Revival, sometimes called the "Celtic Twilight" period.
+"""
+</result>

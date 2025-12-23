@@ -1,0 +1,17 @@
+I recognize this as a single issue of Punch magazine, specifically Volume 156 from April 30, 1919. Punch (subtitled "The London Charivari") was a long-running British weekly magazine of humor and satire founded in 1841. This particular issue contains satirical commentary on post-WWI events, including the Peace Conference and German affairs.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 156, April 30, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "periodical", "satire", "humor", "historical-document"]
+
+Summary = """
+Punch was Britain's premier humor and satire magazine, published weekly from 1841 to 1992 (and briefly revived later). This specific issue from April 30, 1919 contains satirical commentary and humor reflecting the immediate post-World War I period, including jokes about the Paris Peace Conference, British politics, and German affairs. The magazine was known for its cartoons, social commentary, and witty observations on current events, aimed at educated middle and upper-class British readers.
+"""
+
+Notes = """
+The year 1919 is the publication date of this specific issue. Punch was a weekly periodical, so each issue represents a distinct historical snapshot. This issue is notable for being published just months after the end of WWI (November 1918) during the Paris Peace Conference negotiations. Not tagged as "appropriate-for-children" as the political satire would be over children's heads and requires historical context to understand.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is a poetry collection by John L. Stoddard from 1913. Stoddard (1850-1931) was an American writer and lecturer, best known for his travel lectures and later conversion to Catholicism. The dedication "CONJUGI CARISSIMAE" (To my dearest wife) and the 1913 publication date are clearly stated in the text.
+
+<result>
+Title = "Poems"
+Author = "John L. Stoddard"
+Year = 1913
+
+Tags = ["fiction", "poetry", "catholic"]
+
+Summary = """
+A collection of poems by John L. Stoddard, the American travel lecturer and writer who converted to Catholicism later in his life. This 1913 collection is dedicated to his wife and includes various poems, beginning with "Proem" - a meta-poetic piece about an old violinist playing a silent bow, serving as a metaphor for poets whose work may go unheard or unappreciated. The collection appears to be a more personal, reflective work from Stoddard's later years, different from his famous travel lectures and writings.
+"""
+
+Notes = """
+John L. Stoddard converted to Catholicism in 1922, nine years after this collection was published, so this work predates his conversion. However, I've included the 'catholic' tag because of his later conversion and the likelihood that these poems, published in his mature years, may reflect spiritual searching that led to his eventual conversion. The work is tagged as 'fiction' per poetry convention, though poetry exists in its own category distinct from prose fiction.
+"""
+</result>

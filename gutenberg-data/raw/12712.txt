@@ -1,0 +1,15 @@
+<result>
+Title = "Dialogue Between Franklin and the Gout"
+Author = "Benjamin Franklin"
+Year = 1780
+
+Tags = ["non-fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+This is a humorous satirical dialogue written by Benjamin Franklin in which he personifies his gout as a character who lectures him about his lifestyle choices. The gout scolds Franklin for his sedentary habits, overeating, and lack of exercise, while Franklin tries to defend himself. Written during a period when Franklin was suffering from gout, the piece combines wit, self-deprecation, and genuine medical observations about the relationship between lifestyle and health. It's characteristic of Franklin's ability to find humor even in his own physical afflictions and demonstrates the 18th-century Enlightenment interest in reason, health, and natural philosophy. The dialogue format was a popular literary device of the period, and Franklin uses it effectively to create both entertainment and instruction.
+"""
+
+Notes = """
+The dialogue was written around 1780 during Franklin's time in France, though it was first published in 1780. Franklin suffered from gout for much of his later life, and this piece reflects both his personal experience with the disease and his characteristic wit. The work circulated in manuscript form among his friends before being published. 1780 represents the most commonly cited composition date for this work.
+"""
+</result>

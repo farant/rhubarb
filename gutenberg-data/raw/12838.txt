@@ -1,0 +1,17 @@
+I can see this is a Finnish text - "Kirot" (The Curses) by Johannes Linnankoski, published in 1908. This is a dramatic work written in Finnish with character names and appears to be a nine-part dream/fantasy play.
+
+<result>
+Title = "Kirot: Yhdeksän-katkelmainen unelma"
+Author = "Johannes Linnankoski"
+Year = 1908
+
+Tags = ["fiction", "drama", "finnish-literature"]
+
+Summary = """
+'Kirot' (The Curses) is a nine-part dramatic work by Finnish author Johannes Linnankoski, subtitled "A Nine-Fragment Dream." Linnankoski (1869-1913) was a prominent Finnish writer during the national romantic period. This appears to be a verse drama or fantasy play with a cast of characters including warriors (mervi), leaders, and mystical figures. The work features characters like Urmas (leader of the Mervians), his mother Orpa, his wife Heljä, and various other tribal figures including elders, servants, and mystical seers. The dramatic structure and character names suggest a work exploring Finnish mythology and national themes during a period of Finnish cultural awakening under Russian rule.
+"""
+
+Notes = """
+1908 is the publication year clearly stated in the text. Linnankoski was an important figure in Finnish literature, best known for his novel 'The Song of the Blood-Red Flower' (1905). This dramatic work appears to be less well-known internationally than his prose fiction. Not tagged as 'appropriate-for-children' as the themes and dramatic format suggest adult literary content. Not tagged as 'catholic' as Linnankoski was not a Catholic author and Finland's literary tradition during this period was predominantly Lutheran/secular nationalist.
+"""
+</result>

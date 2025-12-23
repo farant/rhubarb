@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text for you.
+
+Based on the title page, this is "Affairs of State" by Burton E. Stevenson, published in 1906. The subtitle indicates it's about "Certain Surprising Adventures Which Befell an American Family in the Land of Windmills" (likely referring to the Netherlands/Holland). Burton E. Stevenson (1872-1962) was an American author known for his mystery and adventure novels.
+
+<result>
+Title = "Affairs of State"
+Author = "Burton E. Stevenson"
+Year = 1906
+
+Tags = ["fiction", "adventure", "mystery"]
+
+Summary = """
+'Affairs of State' is an adventure novel by Burton E. Stevenson published in 1906. The story follows an American family who encounters surprising adventures in "the Land of Windmills" (the Netherlands/Holland). Stevenson was a prolific American author of the early 20th century, known for mystery and adventure novels including 'The Marathon Mystery' and 'The Holladay Case.' The work appears to be a lighthearted adventure story involving international intrigue, as suggested by the chapter titles which reference "wiles," "adventures," and mysterious elements like "Pelletan's Skeleton."
+"""
+
+Notes = """
+The year 1906 is taken directly from the title page and represents the original publication date of this work. Burton E. Stevenson was not a Catholic author - he was an American librarian and author who compiled reference works and wrote popular fiction of his era.
+"""
+</result>

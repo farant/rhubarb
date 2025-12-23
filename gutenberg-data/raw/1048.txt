@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "The Ruling Passion" by Henry van Dyke, which appears to be a collection of tales. Henry van Dyke (1852-1933) was an American author, educator, and clergyman who was indeed Presbyterian, not Catholic. This work was first published in 1901.
+
+The text shows a prayer/request from a writer to his Master (God), followed by a preface that discusses the concept of "ruling passions" in human life beyond just romantic love.
+
+<result>
+Title = "The Ruling Passion: Tales of Nature and Human Nature"
+Author = "Henry van Dyke"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children", "nature-stories", "moral-tales"]
+
+Summary = """
+'The Ruling Passion' is a collection of short stories by Henry van Dyke, an American Presbyterian minister, author, and professor at Princeton. The book explores the concept that every life has a "ruling passion" that defines it - not always romantic love, but other driving forces like devotion to nature, duty, faith, or other human impulses. Van Dyke was known for his nature writing and morally uplifting tales that combined outdoor settings with human character studies. His work often reflected his religious sensibilities while maintaining a gentle, accessible literary style. The collection includes both nature tales and studies of human nature, written in Van Dyke's characteristic clear, thoughtful prose.
+"""
+
+Notes = """
+First published in 1901. Henry van Dyke was a Presbyterian minister and author, not Catholic, so the 'catholic' tag was not applied. His work, while Christian in orientation, reflects Protestant theological perspectives. The book was very popular in its time and represents the tradition of American nature writing combined with moral philosophy.
+"""
+</result>

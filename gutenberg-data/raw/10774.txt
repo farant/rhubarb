@@ -1,0 +1,15 @@
+<result>
+Title = "Récits d'un soldat"
+Author = "Amédée Achard"
+Year = 1871
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+'Récits d'un soldat' (Stories of a Soldier) is a memoir by French author Amédée Achard documenting his experiences as a volunteer soldier during the Franco-Prussian War of 1870-1871. The work is divided into parts, including 'Une armée prisonnière' (A Captive Army) and 'Une campagne devant Paris' (A Campaign Before Paris). Achard presents firsthand accounts of the French military disasters, writing from the perspective of an ordinary soldier rather than offering strategic analysis. The preface explains these are notes from a volunteer's notebook, focusing on what he saw, did, and felt amid the collapsing French armies. This is a primary historical source documenting one of France's most devastating military defeats, which led to the fall of the Second Empire and the establishment of the Third Republic.
+"""
+
+Notes = """
+The publication year of 1871 is clear from the title page. This work was published immediately after or during the final stages of the Franco-Prussian War (July 1870 - May 1871), making it a contemporary account. The war resulted in French defeat, the siege of Paris, and ultimately the proclamation of the German Empire. Amédée Achard (1814-1875) was a French journalist and novelist who volunteered to fight despite being in his mid-50s during the conflict.
+"""
+</result>

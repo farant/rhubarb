@@ -1,0 +1,17 @@
+I recognize this work from the clear attribution on the title page. Let me analyze this text from Project Gutenberg.
+
+<result>
+Title = "The Lonely Dancer and Other Poems"
+Author = "Richard Le Gallienne"
+Year = 1913
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+'The Lonely Dancer and Other Poems' is a collection of poetry by Richard Le Gallienne, an English author and poet associated with the Aesthetic movement and the 1890s literary scene. Le Gallienne was known for his romantic and lyrical verse, as well as his criticism and essays. This collection was published in 1913 and includes a dedication to Irma, with a frontispiece portrait by Irma Le Gallienne (his daughter, who became a renowned actress). The dedication poem reflects themes of time, memory, loss, and enduring love that likely permeate the collection. Le Gallienne's work often explored beauty, romance, and the passage of time with elegant, musical language characteristic of late Victorian and Edwardian poetry.
+"""
+
+Notes = """
+The year 1913 is clearly stated on the title page as the publication date. Richard Le Gallienne (1866-1947) was part of the Aesthetic movement and known for his association with figures like Oscar Wilde. The dedication to 'Irma' refers to his daughter Irma Le Gallienne, who created the frontispiece portrait and later became a famous stage actress. This is original work, not a translation, so 1913 is the appropriate year for this collection's first publication.
+"""
+</result>

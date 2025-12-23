@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Reminiscences of a Pioneer"
+Author = "William Thompson"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'Reminiscences of a Pioneer' is a first-hand account by Colonel William Thompson, a newspaper editor and pioneer settler in California and Oregon. The book chronicles his experiences in the American West during the mid-to-late 19th century, including Indian conflicts, vigilante justice, and frontier life. Notable sections include detailed accounts of the Modoc War (including the famous Battle of the Lava Beds), the Bannock War, and various other conflicts between settlers and Native American tribes in Oregon and California. Thompson's perspective represents that of a white settler and journalist documenting the violent period of westward expansion and displacement of indigenous peoples. The work provides historical documentation of specific events like the Ben Wright Massacre, peace commission negotiations, and vigilante activities in frontier communities.
+"""
+
+Notes = """
+The year 1912 is clearly stated as the publication date in San Francisco. This appears to be the original publication of Thompson's memoirs, written later in his life reflecting on events from the 1850s-1870s. The work is a primary historical source document rather than a literary work, and reflects the perspective and attitudes of its era regarding Native American conflicts and frontier settlement.
+"""
+</result>

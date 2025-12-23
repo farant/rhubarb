@@ -1,0 +1,15 @@
+<result>
+Title = "The Port of Adventure"
+Author = "Charles Norris Williamson, Alice Muriel Williamson"
+Year = 1913
+
+Tags = ["fiction", "romance", "appropriate-for-children"]
+
+Summary = """
+'The Port of Adventure' is a romantic adventure novel by the prolific husband-and-wife writing team of Charles Norris Williamson and Alice Muriel Williamson. Published in 1913, it was also released in Great Britain under the title 'The Love Pirate'. The Williamsons were known for their popular early 20th-century romance novels, many of which featured travel, automobiles, and adventure as central themes. Their works often combined romantic plots with travelogue elements, appealing to readers interested in both love stories and exotic locations. This novel fits within their broader body of work that includes other popular titles like 'The Lightning Conductor' and 'The Motor Maid'.
+"""
+
+Notes = """
+The publication year of 1913 is clearly stated on the title page of the Project Gutenberg edition. The Williamsons were particularly popular in the Edwardian era and early 20th century, producing numerous collaborative novels that were commercial successes in their time.
+"""
+</result>

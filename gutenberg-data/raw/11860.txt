@@ -1,0 +1,21 @@
+Based on the text provided, this is clearly **Black Beauty** by Anna Sewell. This is one of the most famous animal welfare novels ever written. The text identifies itself as the "Young Folks' Edition" from 1902, though the original work was published in 1877.
+
+For the year, I'll use 1877 - the original publication date - since this is the historically significant date for this work, even though this particular edition is from 1902. The "Young Folks' Edition" is essentially an abridged version of the original novel, not a substantially different work.
+
+Black Beauty is told from the perspective of a horse and was revolutionary in its time for promoting animal welfare and humane treatment of horses. Anna Sewell was Quaker, not Catholic, so it would not receive the "catholic" tag.
+
+<result>
+Title = "Black Beauty (Young Folks' Edition)"
+Author = "Anna Sewell"
+Year = 1877
+
+Tags = ["fiction", "appropriate-for-children", "animal-welfare", "classic-literature"]
+
+Summary = """
+Black Beauty is an autobiographical novel told from the perspective of a horse named Black Beauty. The story follows the horse through various owners and circumstances, from a pleasant early life to harder times pulling cabs in London, before finding a good home again. Written by Anna Sewell and published in 1877, it became one of the most influential animal welfare novels ever written. The book helped raise awareness about the humane treatment of horses and influenced legislation regarding animal cruelty. This "Young Folks' Edition" from 1902 is an abridged version of the original novel, adapted for younger readers.
+"""
+
+Notes = """
+Year chosen is 1877, the original publication date of Black Beauty. While this particular edition is marked as 1902 (Young Folks' Edition), the work's historical significance is tied to its original 1877 publication. Anna Sewell was a Quaker who wrote this as her only novel, and it was published just months before her death. The novel was groundbreaking in being written from an animal's perspective and had enormous influence on animal welfare movements in England and beyond.
+"""
+</result>

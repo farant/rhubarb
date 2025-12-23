@@ -1,0 +1,17 @@
+I recognize this work from the Project Gutenberg header and the biblical epigraph about peacemakers. This is "Emilie the Peacemaker" by Mrs. Thomas Geldart, a Victorian children's book with strong Christian moral themes.
+
+<result>
+Title = "Emilie the Peacemaker"
+Author = "Mrs. Thomas Geldart"
+Year = 1851
+
+Tags = ["fiction", "appropriate-for-children", "christian-moral-tale"]
+
+Summary = """
+'Emilie the Peacemaker' is a Victorian children's moral tale by Mrs. Thomas Geldart, published in the mid-19th century. The book follows the character of Emilie, who embodies Christian virtues, particularly peacemaking, as emphasized by the biblical epigraph from Matthew 5:9: 'Blessed are the peacemakers: for they shall be called the children of God.' The work is characteristic of Victorian didactic literature aimed at teaching children proper Christian behavior and moral conduct through narrative example. Mrs. Geldart was a prolific author of children's educational and moral literature during this period, and this book exemplifies the genre's focus on character formation through religious and ethical instruction.
+"""
+
+Notes = """
+The year 1851 (MDCCCLI) is clearly indicated in the original publication information. While the Project Gutenberg note references 'American and British Children's Literature, 1850-1869,' the Roman numerals in the book itself provide the specific publication date. This work represents the Victorian evangelical children's literature tradition that was popular in both Britain and America during this era.
+"""
+</result>

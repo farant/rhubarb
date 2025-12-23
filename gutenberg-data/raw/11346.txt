@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This is clearly "The Saint's Tragedy" by Charles Kingsley, a Victorian-era Anglican clergyman and writer. The work is a dramatic play about St. Elizabeth of Hungary, a 13th-century Catholic saint. Kingsley wrote this in 1848, as evidenced by the preface date by F.D. Maurice.
+
+<result>
+Title = "The Saint's Tragedy"
+Author = "Charles Kingsley"
+Year = 1848
+
+Tags = ["non-fiction", "drama", "historical"]
+
+Summary = """
+'The Saint's Tragedy' is a dramatic play by Charles Kingsley about St. Elizabeth of Hungary (1207-1231), a Catholic saint who renounced worldly life after her husband's death to live in poverty and service. Written by an Anglican clergyman during the Victorian era, the work explores themes of religious devotion, sacrifice, and the tension between earthly love and spiritual calling. The play was part of the broader Victorian interest in medieval spirituality and hagiography, though Kingsley's Protestant perspective shaped his interpretation of Catholic sanctity. The work includes a notable preface by F.D. Maurice discussing the nature and purpose of drama.
+"""
+
+Notes = """
+Year chosen is 1848, the publication date indicated in F.D. Maurice's preface. This is a Victorian dramatic work about a medieval Catholic saint, not a Catholic work itself. Charles Kingsley was an Anglican priest and Christian Socialist, known for works like 'The Water-Babies' and 'Westward Ho!'. His treatment of Catholic sanctity would reflect 19th-century Protestant perspectives. Therefore, this does NOT qualify for the 'catholic' tag despite its subject matter being a Catholic saint.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Sam's Ghost"
+Author = "W.W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Sam's Ghost" is a short story by W.W. Jacobs, part of his collection "Deep Waters." Jacobs was an English humorist and author best known for "The Monkey's Paw," but he wrote many humorous stories about sailors, dockers, and night-watchmen. This story features one of his recurring characters, a night-watchman who tells tales from his wharf. In typical Jacobs fashion, it combines working-class humor with supernatural elements, as the night-watchman reflects on ghosts and the eerie atmosphere of his nighttime job by the river, particularly after men have drowned nearby.
+"""
+
+Notes = """
+"Deep Waters" was published in 1911. W.W. Jacobs (1863-1943) wrote prolifically in the late Victorian and Edwardian periods. While he's most famous for his horror story "The Monkey's Paw" (1902), most of his work consisted of humorous tales about life among the working classes in English ports and docks. This story is characteristic of his lighter, comedic work rather than his horror writing, despite the ghostly subject matter.
+"""
+</result>

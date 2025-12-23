@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Greatest Books, Vol. II: Fiction"
+Author = "Arthur Mee, J. A. Hammerton"
+Year = 1910
+
+Tags = ["non-fiction", "anthology", "literary-criticism", "appropriate-for-children"]
+
+Summary = """
+This is Volume II of "The World's Greatest Books," a multi-volume anthology series edited by Arthur Mee and J. A. Hammerton, focusing on fiction. The volume contains condensed summaries and excerpts of major works of English literature, serving as an introduction to classic novels and their authors. The table of contents shows it includes works by George Borrow, M.E. Braddon, the Brontë sisters, John Bunyan, Fanny Burney, and other notable authors. This type of anthology was popular in the early 20th century as a way to make classic literature more accessible to general readers through abridgment and summary.
+"""
+
+Notes = """
+The year 1910 is indicated by the Roman numerals "MCMX" on the title page. This was part of a larger educational project typical of the Edwardian era, when there was a strong movement to bring classic literature to broader audiences. Arthur Mee was particularly known for educational works aimed at families and young readers.
+"""
+</result>

@@ -1,0 +1,21 @@
+I recognize this as "Grettis saga" (The Saga of Grettir the Strong), one of the great Icelandic sagas. This translation by Eiríkr Magnússon and William Morris was published in 1900, though the original saga dates from around the 14th century (approximately 1320-1330). The saga tells the story of Grettir Ásmundarson, an outlaw hero of medieval Iceland.
+
+Given your stated purpose of creating a historical timeline that's educationally meaningful, I need to consider which date is most appropriate. Since this is a specific translation with substantial literary merit (Morris was a major Victorian poet and this translation itself is historically significant), and you mentioned that heavily annotated or substantively different versions should use their publication year, I believe 1900 is the most appropriate choice here - this Morris translation is a notable work in its own right in the history of saga translation into English.
+
+However, if you're more interested in the original composition date for your timeline, that would be approximately 1320-1330.
+
+<result>
+Title = "The Story of Grettir the Strong"
+Author = "Anonymous (translated by Eiríkr Magnússon and William Morris)"
+Year = 1900
+
+Tags = ["fiction", "historical-document", "saga"]
+
+Summary = """
+Grettis saga (The Saga of Grettir the Strong) is one of the great Icelandic family sagas, telling the story of Grettir Ásmundarson, a complex hero who becomes Iceland's most famous outlaw. The saga combines historical events from 11th-century Iceland with folklore elements, depicting Grettir's great strength and courage alongside his ill-fortune and eventual tragic fate. This translation by William Morris and Eiríkr Magnússon was one of the first major English renderings of the saga and helped introduce Victorian audiences to Old Norse literature.
+"""
+
+Notes = """
+Using 1900 as the year of this specific Morris/Magnússon translation, which is itself a significant work in the history of saga translation. The original Icelandic saga was composed circa 1320-1330. If you prefer to date works by their original composition rather than translation date, you would use approximately 1325 instead.
+"""
+</result>

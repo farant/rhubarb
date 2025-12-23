@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and provide the requested information in TOML format.
+
+Based on the text, this is clearly "Les Chasseurs de Chevelures" (The Scalp Hunters) by Captain Mayne Reid, translated into French by Allyre Bureau. Mayne Reid was an Irish-American novelist who wrote adventure novels, and "The Scalp Hunters" was one of his most famous works, originally published in English in 1851. This appears to be a French translation of that work.
+
+The work is an adventure novel set in the American West, dealing with frontier themes. While Mayne Reid was adventurous and wrote exciting tales, his works often contain period-typical attitudes about indigenous peoples and violence that would not be appropriate for children by modern standards.
+
+<result>
+Title = "Les Chasseurs de Chevelures"
+Author = "Captain Mayne Reid (translated by Allyre Bureau)"
+Year = 1851
+
+Tags = ["fiction", "adventure", "western"]
+
+Summary = """
+"The Scalp Hunters" (Les Chasseurs de Chevelures) is an adventure novel by Irish-American author Captain Mayne Reid, originally published in English in 1851 and translated into French by Allyre Bureau. The novel is set in the American Southwest and follows adventures in the wilderness beyond the western frontier, depicting the untamed landscapes of North America. Reid was known for his vivid descriptions of frontier life and his adventure tales based on his own experiences in the American West and the Mexican-American War. This work exemplifies the 19th-century adventure novel genre, with elaborate descriptions of the natural landscape and frontier life.
+"""
+
+Notes = """
+Year chosen is 1851, the original English publication date. While this is a French translation, the work itself dates to 1851. The novel contains period-typical depictions of violence and attitudes toward indigenous peoples that reflect 19th-century perspectives, making it historically significant but not appropriate for children by modern standards.
+"""
+</result>

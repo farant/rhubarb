@@ -1,0 +1,27 @@
+I need to analyze this text from Project Gutenberg to identify the title, author, year, and other relevant information.
+
+From the text, I can see:
+- The title is clearly "Tine"
+- The author is "Herman Bang"
+- The publication year stated is 1889 (published October 18-24, 1889)
+- This is a Danish novel
+
+Herman Bang was a Danish author and journalist (1857-1912), one of the most prominent Danish realist writers. "Tine" is one of his major works, a historical novel set during the Second Schleswig War (1864). The work deals with themes of loss, suffering, and the impact of war on ordinary people, particularly women.
+
+The text shows this is the original Danish publication with dedication "Til Erindring om min Moder" (To the Memory of My Mother), which is a touching personal dedication from Bang to his mother.
+
+<result>
+Title = "Tine"
+Author = "Herman Bang"
+Year = 1889
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Tine is a historical novel by Danish realist author Herman Bang, first published in October 1889. The novel is set during and after the Second Schleswig War of 1864, which resulted in Denmark's loss of the duchies of Schleswig and Holstein to Prussia and Austria. The story focuses on the impact of war on ordinary people, particularly exploring themes of loss, suffering, and endurance through the experiences of its characters. Bang was known for his impressionistic style and psychological depth, and Tine is considered one of his major works. The novel is dedicated to the memory of the author's mother.
+"""
+
+Notes = """
+This is the original Danish publication from 1889. The text includes publishing details showing it was released October 18-24, 1889, cost 5 kr. (6.50 kr. in composed binding), and contains XX + 287 pages. The dedication 'Til Erindring om min Moder' (To the Memory of My Mother) shows this is a deeply personal work for Bang.
+"""
+</result>

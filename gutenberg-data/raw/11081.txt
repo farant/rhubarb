@@ -1,0 +1,15 @@
+<result>
+Title = "Grammar of the Mutsun Language, Spoken at the Mission of San Juan Bautista, Alta California"
+Author = "Father Felipe Arroyo de la Cuesta"
+Year = 1816
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is a grammatical study of the Mutsun language, an indigenous language spoken by the Native Americans at Mission San Juan Bautista in Alta California (now California). The work was composed by Father Felipe Arroyo de la Cuesta, a Franciscan missionary who served at the mission. This represents an important example of the linguistic documentation undertaken by Catholic missionaries in the Spanish missions of California during the early 19th century. The Mutsun language, part of the Ohlone/Costanoan language family, is now extinct, making this grammar one of the few surviving records of the language. The work was published in Shea's Library of American Linguistics series in 1861, but represents the missionary's linguistic work from his time at the mission.
+"""
+
+Notes = """
+The work was originally composed in 1816 when Father Arroyo de la Cuesta was serving as minister at Mission San Juan Bautista, though it was not published until 1861 as part of Shea's Library of American Linguistics series. I've chosen 1816 as the year because that represents when the actual linguistic and ethnographic work was done, and the historical/educational value lies in understanding the documentation of this indigenous language during the mission period. This is a scholarly linguistic work rather than devotional material, but was undertaken by a Catholic missionary as part of the mission's work, hence the 'catholic' tag is appropriate.
+"""
+</result>

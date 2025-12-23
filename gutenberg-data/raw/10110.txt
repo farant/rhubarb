@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, publication year, and provide appropriate metadata.
+
+<result>
+Title = "The Postmaster's Daughter"
+Author = "Louis Tracy"
+Year = 1916
+
+Tags = ["fiction", "mystery", "detective", "appropriate-for-children"]
+
+Summary = """
+'The Postmaster's Daughter' is a detective mystery novel by Louis Tracy, a prolific British author known for his adventure and mystery fiction. Tracy was particularly popular in the early 20th century for his engaging plots and well-crafted narratives. This novel features police constable Robinson and detectives Winter and Furneaux (characters Tracy used in other works) investigating a mystery that appears to involve the postmaster's daughter. The story is set in England just before World War I, during June 1914, and contains the characteristic elements of Edwardian detective fiction with its focus on careful investigation and social observation. Tracy was known for creating intricate plots with multiple suspects and red herrings, making his works popular with readers who enjoyed traditional mystery stories.
+"""
+
+Notes = """
+The publication year 1916 is clearly stated in the text itself. The novel is set in June 1914, just before WWI ('before war-clouds darkened the summer sky'), but was published during the war in 1916. This was one of Tracy's later detective novels, part of his mystery series featuring the investigative team of Winter and Furneaux.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This appears to be "The World's Greatest Books," a reference/anthology compilation edited by Arthur Mee and J.A. Hammerton. This is Volume XI focusing on Ancient and Medieval History. Based on my knowledge, this series was published in the early 20th century, with the main publication occurring around 1910.
+
+<result>
+Title = "The World's Greatest Books, Vol. XI: Ancient and Medieval History"
+Author = "Arthur Mee, J.A. Hammerton (editors)"
+Year = 1910
+
+Tags = ["non-fiction", "reference", "history", "anthology"]
+
+Summary = """
+This is Volume XI of 'The World's Greatest Books' series, a comprehensive reference work edited by Arthur Mee and J.A. Hammerton in the early 20th century. This particular volume focuses on ancient and medieval history, presenting condensed summaries of major historical works. The volume includes classical histories covering ancient Egypt (Maspero's works), Jewish history (Josephus and Milman), and Greek history (Herodotus, Thucydides, and Xenophon). The series was designed to make the world's most important literature and scholarship accessible to general readers through carefully edited synopses and excerpts.
+"""
+
+Notes = """
+The World's Greatest Books series was published around 1910 (with some volumes appearing 1910-1912). This was a popular reference work of the Edwardian era that aimed to provide educated summaries of important works across all fields. Arthur Mee was a prolific editor known for educational publications, and this series represents early 20th-century efforts to democratize access to classical learning.
+"""
+</result>

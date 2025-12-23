@@ -1,0 +1,17 @@
+Based on the text provided, I can identify this work:
+
+<result>
+Title = "Cattle Brands: A Collection of Western Camp-fire Stories"
+Author = "Andy Adams"
+Year = 1906
+
+Tags = ["fiction", "western", "short-stories", "appropriate-for-children"]
+
+Summary = """
+Cattle Brands is a collection of fourteen Western short stories by Andy Adams, published in 1906. Adams (1859-1935) was an American writer known for his authentic portrayals of cowboy life and cattle drives in the American West. Unlike many romanticized Western stories of his era, Adams' work was praised for its realism and accurate depiction of ranch life, drawing from his own experiences as a cowboy in Texas and the cattle country. This collection features tales set around camp-fires, capturing the oral storytelling tradition of cowboys on the range, with stories of cattle drives, ranch life, and frontier experiences.
+"""
+
+Notes = """
+The year 1906 is clearly stated on the title page as the publication year. Two of the stories ("The Passing of Peg-Leg" and "A Question of Possession") were previously published in Leslie's Monthly magazine before being collected in this volume.
+"""
+</result>

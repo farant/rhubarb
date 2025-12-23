@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "De Profundis! Episode Maritime"
+Author = "Charles Durand (Carolus)"
+Year = 1865
+
+Tags = ["fiction", "non-fiction", "historical-document"]
+
+Summary = """
+This appears to be a maritime narrative by Charles Durand (writing under the pen name Carolus), dedicated to H. Gourdon de Genouillac. The work opens with a salute to victims of maritime duty under the motto "SAUVER OU PÉRIR!" (Save or Perish!), listing names of what appear to be sailors or rescuers who died in the line of duty. The narrative begins with a dramatic storm scene at Le Havre, setting up what seems to be a tale of maritime heroism and tragedy. The title "De Profundis" (Latin for "from the depths") is a reference to Psalm 130 and is traditionally associated with prayers for the dead, suggesting this is a memorial work about a maritime disaster or rescue attempt.
+"""
+
+Notes = """
+The exact publication year is difficult to determine with certainty. Based on the style, the dedication format, and the nautical disaster memorial genre popular in mid-19th century France, I estimate this work was published circa 1865. The dedication to Gourdon de Genouillac (a known French historian and author active in the 1860s-1880s) provides some chronological context. This appears to be a work memorializing actual French maritime rescuers who died in service, possibly based on a specific historical incident. The work straddles fiction and non-fiction as it appears to be a literary treatment of real events.
+"""
+</result>

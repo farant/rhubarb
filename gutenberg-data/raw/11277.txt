@@ -1,0 +1,15 @@
+<result>
+Title = "Egyptian Ideas of the Future Life"
+Author = "E. A. Wallis Budge"
+Year = 1899
+
+Tags = ["non-fiction", "academic", "egyptology", "religious-studies"]
+
+Summary = """
+This is Volume I of a series on Egypt and Chaldea written by E. A. Wallis Budge, who served as Keeper of Egyptian and Assyrian Antiquities at the British Museum. The work examines ancient Egyptian beliefs about death, the afterlife, and the journey of the soul after death. Budge was a prolific Egyptologist whose translations and writings, while sometimes criticized by modern scholars for their interpretations, were foundational in making Egyptian religious texts accessible to English-speaking audiences. This volume explores Egyptian eschatology, including concepts of judgment, the afterlife realms, and the fate of the soul.
+"""
+
+Notes = """
+E. A. Wallis Budge published multiple works on Egyptian religion in the 1890s. 'Egyptian Ideas of the Future Life' was first published in 1899 as part of his 'Books on Egypt and Chaldea' series. This represents his scholarly work during his tenure at the British Museum, where he had access to primary sources and artifacts. The year 1899 is chosen as the original publication date for this specific work in the series.
+"""
+</result>

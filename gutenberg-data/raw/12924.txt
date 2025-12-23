@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Best Poetry, Volume VIII: National Spirit"
+Author = "Bliss Carman (Editor-in-Chief), John Vance Cheney, Charles G.D. Roberts, Charles F. Richardson, Francis H. Stoddard (Associate Editors)"
+Year = 1904
+
+Tags = ["non-fiction", "poetry", "anthology", "appropriate-for-children"]
+
+Summary = """
+The World's Best Poetry is a comprehensive ten-volume anthology of poetry published in 1904, edited by Bliss Carman as Editor-in-Chief with several distinguished associate editors. Volume VIII focuses specifically on poems expressing national spirit and patriotic themes. The collection was part of an ambitious early 20th-century effort to compile and organize the finest poetry in the English language by thematic categories, including Home & Friendship, Love, Sorrow & Consolation, The Higher Life, Nature, and others. This volume would contain poems celebrating national identity, patriotism, and civic virtue from various poets. The work begins with an essay "The Study of Poetry" by Francis Hovey Stoddard, one of the associate editors.
+"""
+
+Notes = """
+The year 1904 is clearly stated on the title page as the publication date of this anthology. This is not a translation or edition of an older work, but an original editorial compilation from the early 20th century. The collection represents the literary tastes and canonical judgments of the Edwardian era regarding what constituted the "best" poetry in English.
+"""
+</result>

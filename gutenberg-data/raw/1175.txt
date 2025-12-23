@@ -1,0 +1,19 @@
+I recognize this work. Let me analyze the text and provide the structured information you requested.
+
+This is Xenophon's "Hiero" (also known as "Hiero, or On Tyranny"), a Socratic dialogue between the tyrant Hiero of Syracuse and the poet Simonides of Ceos. The text indicates it's translated by H. G. Dakyns.
+
+<result>
+Title = "Hiero"
+Author = "Xenophon"
+Year = -374
+
+Tags = ["non-fiction", "philosophy", "historical-document"]
+
+Summary = """
+Hiero is a Socratic dialogue by Xenophon, written around 374 BC. It presents an imaginary conversation between Hiero I, the tyrant of Syracuse (who ruled c. 478-467 BC), and the famous poet Simonides of Ceos. The dialogue explores the nature of tyranny and whether a tyrant can ever truly be happy. Hiero laments the burdens and isolation of absolute power, while Simonides suggests ways a tyrant might gain genuine affection from his subjects. The work is considered one of the earliest sustained examinations of the problems of autocratic rule and has been studied throughout history as a philosophical meditation on power, happiness, and statecraft. Xenophon (c. 431-354 BC) was an Athenian historian, soldier, and student of Socrates who spent much of his life in Sparta and wrote extensively on politics, philosophy, and military matters.
+"""
+
+Notes = """
+The dialogue is set around 474 BC (when both historical figures could have met), but was written by Xenophon much later, likely in the 370s or 360s BC. I've chosen approximately 374 BC as a reasonable estimate for the composition date. The negative year notation (-374) represents 374 BC in ISO 8601 format. This translation by H. G. Dakyns was published in the late 19th century as part of his four-volume "Works of Xenophon" series.
+"""
+</result>

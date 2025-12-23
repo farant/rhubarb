@@ -1,0 +1,15 @@
+<result>
+Title = "Are You A Bromide? or, The Sulphitic Theory"
+Author = "Gelett Burgess"
+Year = 1906
+
+Tags = ["non-fiction", "humor", "social-commentary"]
+
+Summary = """
+A humorous and satirical work by American humorist Gelett Burgess that introduces the concepts of "Bromides" (people who speak in clichés and platitudes) and "Sulphites" (their creative, original counterparts). The book is a tongue-in-cheek psychological taxonomy that playfully categorizes people based on their conversational habits and originality of thought. Burgess coined the term "bromide" (from the sedative medication) to describe boring, conventional people who rely on tired expressions and predictable responses. The work includes examples of "bromidioms" - the stereotypical phrases used by such individuals. It was quite popular in its time and contributed several terms to American slang.
+"""
+
+Notes = """
+Published in 1906, this was one of Gelett Burgess's most popular works. Burgess (1866-1951) was best known for creating the "Purple Cow" quatrain and for coining numerous neologisms. This work represents American humor writing from the early 20th century and reflects the Progressive Era's interest in amateur psychology and social classification systems.
+"""
+</result>

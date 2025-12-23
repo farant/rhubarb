@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1968
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a government document from the United States Copyright Office listing renewal registrations for copyrighted works. It appears to be from 1968 based on the page notation and the renewal dates listed (works originally copyrighted in 1940 being renewed 28 years later, which matches the copyright term requirements of that era). The document provides bibliographic information for books, pamphlets, serials, and periodical contributions that had their copyright renewed during a specific registration period. Each entry includes details about both the original copyright registration and the renewal claim.
+"""
+
+Notes = """
+The year 1968 is determined from internal evidence - the page notation shows '1968_h1/A/1241' and the renewal registration dates all show 1968 (such as '21May68', '22Apr68'). This represents when this particular catalog volume was published. Under U.S. copyright law at the time, works needed to be renewed after 28 years to maintain copyright protection, which is why works originally copyrighted around 1940 are being renewed in 1968.
+"""
+</result>

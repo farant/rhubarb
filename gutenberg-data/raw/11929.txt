@@ -1,0 +1,17 @@
+I can help you identify this work. This is actually a periodical rather than a single authored book.
+
+<result>
+Title = "Notes and Queries: A Medium of Inter-communication for Literary Men, Artists, Antiquaries, Genealogists, Etc."
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "historical-document", "scholarly"]
+
+Summary = """
+Notes and Queries was a long-running British periodical founded in 1849 by William John Thoms. It served as a scholarly forum for literary researchers, historians, antiquaries, and genealogists to pose questions and share knowledge on a wide variety of topics including literature, history, folklore, etymology, and antiquarian subjects. The publication featured queries from readers seeking information on obscure topics, along with responses and notes from other scholars. It became an important resource for Victorian scholarship and continued publication for over 150 years. This particular issue is No. 15 from February 9, 1850, featuring articles on topics ranging from historical wages to Shakespeare scholarship.
+"""
+
+Notes = """
+The year chosen is 1850, which is the publication date of this specific issue. While the periodical was founded in 1849, this is Issue No. 15 from February 1850. For periodicals, the publication date of the specific issue is most appropriate for a historical timeline. William John Thoms, the founder and editor, is often credited as the originator of the term "folklore."
+"""
+</result>

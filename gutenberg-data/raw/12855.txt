@@ -1,0 +1,19 @@
+I'll read through this text to identify the work and provide the requested information.
+
+This is a historical work by William Wood about Elizabethan sea exploration and naval history, specifically focusing on Sir Francis Drake and the English seafarers of Elizabeth I's reign. The text clearly states it was published in 1918 and is titled "Elizabethan Sea-Dogs: A Chronicle of Drake and His Companions."
+
+<result>
+Title = "Elizabethan Sea-Dogs: A Chronicle of Drake and His Companions"
+Author = "William Wood"
+Year = 1918
+
+Tags = ["non-fiction", "history", "appropriate-for-children"]
+
+Summary = """
+This is a historical chronicle by Canadian historian William Wood examining the Elizabethan era of English maritime exploration and naval warfare. The book focuses on Sir Francis Drake and his fellow English sailors (known as 'Sea-Dogs') who won command of the seas during Queen Elizabeth I's reign. Wood traces how these seafarers broke Spain's monopoly on the New World and secured English access to the Americas, establishing the maritime foundation for later English colonization and Anglo-American history. The work is part of the Chronicles of America series and covers topics including England's early maritime ventures, Henry VIII's naval developments, life aboard Tudor ships, Drake's circumnavigation of the globe, and the broader conflict with Spanish naval power.
+"""
+
+Notes = """
+William Wood (1867-1954) was a Canadian historian and author who wrote extensively on military and naval history. This work was published in 1918 as part of the Chronicles of America series. The date is straightforward as this is an early 20th-century historical work about the Elizabethan period (1558-1603), not a primary source from that era.
+"""
+</result>

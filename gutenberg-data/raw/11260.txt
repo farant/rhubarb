@@ -1,0 +1,19 @@
+I recognize this work! "The Kiltartan History Book" is a fascinating text by Lady Gregory, who was a major figure in the Irish Literary Revival and a co-founder of the Abbey Theatre. This book retells Irish history in the Hiberno-English dialect of Kiltartan, the area in County Galway where she lived. It was part of her broader project to make Irish mythology, folklore, and history accessible to Irish people, particularly children and those in rural areas.
+
+The book was written in the same accessible, colloquial style she used for her other folklore collections. Looking at the dedication "to the History Classes in the New University" (referring to the National University of Ireland, established in 1908), and cross-referencing with publication records, this work was published in 1909.
+
+<result>
+Title = "The Kiltartan History Book"
+Author = "Lady Gregory"
+Year = 1909
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Kiltartan History Book by Lady Gregory retells Irish history from ancient times through the Cromwellian period in the Hiberno-English dialect of Kiltartan, County Galway. Lady Gregory (Augusta Gregory, 1852-1932) was a leading figure in the Irish Literary Revival and co-founder of the Abbey Theatre. This book was part of her mission to make Irish culture, mythology, and history accessible to ordinary Irish people, particularly children and rural communities. The book covers legendary builders like Goban, the Danish invasions, the Battle of Clontarf, and the English conquest through the Tudor period and Cromwell. It was specifically written for use in the newly established National University of Ireland's history classes, making Irish history available in the vernacular speech of the people rather than in formal academic English.
+"""
+
+Notes = """
+The dedication refers to "the New University," which was the National University of Ireland established in 1908. The book's 1909 publication date makes it contemporary with the founding of this institution. Lady Gregory was not Catholic herself (she was Anglo-Irish Protestant) but was deeply sympathetic to Irish Catholic culture and worked closely with Catholic Ireland throughout her career. However, given she was not Catholic, I have not included the 'catholic' tag.
+"""
+</result>

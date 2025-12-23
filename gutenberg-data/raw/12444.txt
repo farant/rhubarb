@@ -1,0 +1,17 @@
+I recognize this as "Toaster's Handbook: Jokes, Stories, and Quotations," a compilation of humorous material and toasts compiled by Peggy Edmund and Harold Workman Williams, published in 1916. This was a popular reference book for public speakers and toastmasters in the early 20th century.
+
+<result>
+Title = "Toaster's Handbook: Jokes, Stories, and Quotations"
+Author = "Peggy Edmund and Harold Workman Williams"
+Year = 1916
+
+Tags = ["non-fiction", "appropriate-for-children", "humor", "reference"]
+
+Summary = """
+Toaster's Handbook is a comprehensive collection of jokes, stories, quotations, and humorous anecdotes compiled specifically for public speakers, toastmasters, and anyone called upon to give speeches or respond to toasts. Published in 1916, this reference work was designed to help speakers overcome the anxiety of public speaking by providing them with ready-made witty material, appropriate quotations, and examples of successful toasts. The book includes an introduction by Mary Katharine Reely on the importance of possessing a sense of humor, along with practical guidance on the art of toasting and public speaking. It represents an interesting glimpse into early 20th-century American humor and social customs around formal dinners and public speaking occasions.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page. This work was published during the Progressive Era in American history, when public speaking clubs, dinner societies, and formal toasting were common social practices. The book served as a practical reference guide for an era when impromptu speaking at social gatherings was a valued skill.
+"""
+</result>

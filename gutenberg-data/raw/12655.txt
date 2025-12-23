@@ -1,0 +1,15 @@
+<result>
+Title = "The Boy Mechanic, Vol. 1: 700 Things for Boys to Do"
+Author = "Popular Mechanics Company"
+Year = 1913
+
+Tags = ["non-fiction", "appropriate-for-children", "educational", "historical-document"]
+
+Summary = """
+"The Boy Mechanic" is a comprehensive DIY project book published by Popular Mechanics, containing 700 hands-on projects with 800 illustrations designed to teach boys practical mechanical skills, crafts, and scientific experiments. The book covers a wide range of topics including woodworking, metalworking, electrical projects, magic tricks, toys, kites, photography, and various household devices. It represents early 20th-century attitudes toward education, self-sufficiency, and hands-on learning, though many projects involve materials and methods now considered unsafe (such as working with gunpowder, mercury, acids, and other hazardous substances). The book remains historically significant as a snapshot of youth education and recreational activities in the 1910s era.
+"""
+
+Notes = """
+The year 1913 is chosen as the original publication date. While the transcriber notes indicate "August 1916" and there's a handwritten note "Jan 28, 1938," these appear to be later edition dates or ownership inscriptions. The first volume of "The Boy Mechanic" was originally published by Popular Mechanics in 1913. This is not attributed to a single author but was a compilation produced by the Popular Mechanics Company editorial staff. The transcriber correctly notes that many projects reflect the "cavalier attitude toward environment and health in 1913," with hazardous materials that would not be appropriate by modern safety standards.
+"""
+</result>

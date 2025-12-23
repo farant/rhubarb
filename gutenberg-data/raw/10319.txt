@@ -1,0 +1,15 @@
+<result>
+Title = "Dave Darrin's Third Year at Annapolis; or, Leaders of the Second Class Midshipmen"
+Author = "H. Irving Hancock"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the third book in H. Irving Hancock's Dave Darrin series about life at the United States Naval Academy at Annapolis. The series follows Dave Darrin and his classmates through their years as midshipmen, focusing on their training, adventures, and development as future naval officers. This installment covers their third year (second class year) at the Academy. Hancock wrote numerous juvenile adventure series in the early 20th century, including military academy stories that were popular with young readers of the era. The books typically feature themes of honor, duty, athletic competition (particularly football), and friendship while providing glimpses into naval academy life and training.
+"""
+
+Notes = """
+The year 1911 is clearly stated on the title page as the publication date. H. Irving Hancock (1868-1922) was a prolific American author of juvenile fiction and boys' adventure stories, particularly military-themed series. This work is not tagged as 'catholic' as Hancock was not a Catholic author and these are secular adventure novels for boys.
+"""
+</result>

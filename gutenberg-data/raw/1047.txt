@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the information you requested.
+
+This is clearly "The New Machiavelli" by H. G. Wells. This is a semi-autobiographical novel published in 1911. It's a political novel that follows the life of Richard Remington, a politician who reflects on his career and personal life, particularly focusing on his marriages and political ideals. The novel was controversial at the time for its treatment of adultery and its political commentary.
+
+<result>
+Title = "The New Machiavelli"
+Author = "H. G. Wells"
+Year = 1911
+
+Tags = ["fiction", "political-novel"]
+
+Summary = """
+The New Machiavelli is a semi-autobiographical political novel by H. G. Wells that traces the life and career of Richard Remington, an ambitious British politician. The narrative is presented as Remington's memoir, written in exile, reflecting on his political ideals, his pursuit of social reform, and the personal relationships that ultimately led to his downfall. The novel explores themes of political philosophy, social reform movements in Edwardian England, and the conflict between public duty and private passion. It contains strong Machiavellian political theory influences and examines the tensions between idealism and pragmatism in politics. The work was controversial upon publication due to its frank treatment of adultery and was initially banned by several libraries.
+"""
+
+Notes = """
+Published in 1911. The novel is divided into four books tracing Remington's life from childhood through his political career and eventual scandal. Wells drew heavily on his own experiences in the Fabian Society and his relationships, making this one of his most personal works. The title references Niccolò Machiavelli's political philosophy, which the protagonist attempts to apply to modern British politics.
+"""
+</result>

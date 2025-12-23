@@ -1,0 +1,15 @@
+<result>
+Title = "Write It Right: A Little Blacklist of Literary Faults"
+Author = "Ambrose Bierce"
+Year = 1909
+
+Tags = ["non-fiction", "reference", "language", "writing-guide"]
+
+Summary = """
+'Write It Right' is a prescriptive style guide by American journalist and satirist Ambrose Bierce, published in 1909. The book serves as a manual identifying common errors in English usage, grammar, and word choice. Bierce, known for his wit and acerbic style (also famous for 'The Devil's Dictionary'), compiled this "little blacklist of literary faults" to teach precision in writing. The work reflects his belief that clear thinking made visible requires careful word choice and the exclusion of ambiguous or inaccurate terms. Unlike comprehensive dictionaries, Bierce focuses on what he considers the single "literal and serviceable meaning" of words, rejecting both pedantic etymologies and loose popular usage. The book uses illustrative examples rather than technical grammatical exposition, making it accessible to general readers seeking to improve their prose.
+"""
+
+Notes = """
+Year is straightforward - 1909 is when Bierce published this work. Not marked 'appropriate-for-children' as it's a technical reference work requiring sophistication with language. Not marked 'catholic' - while Bierce was raised in a religious household, he became known as a skeptic and satirist rather than a Catholic writer, and this work is purely secular in nature.
+"""
+</result>

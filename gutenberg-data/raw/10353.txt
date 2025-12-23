@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "Satyros oder Der vergötterte Waldteufel" (Satyros, or The Deified Wood-Devil) by Johann Wolfgang von Goethe, written in German. This is one of Goethe's early dramatic works from his Sturm und Drang period.
+
+Based on my knowledge, this dramatic satire was written around 1773 during Goethe's early period. It's a satirical piece that deals with religious fanaticism and false prophets, featuring a satyr who deceives people into worshipping him. The text clearly identifies itself at the beginning, and the HTML version notes it comes from the Hamburger Ausgabe (Hamburg Edition) of Goethe's works, specifically volume 4 "Dramen II."
+
+<result>
+Title = "Satyros oder Der vergötterte Waldteufel"
+Author = "Johann Wolfgang von Goethe"
+Year = 1773
+
+Tags = ["fiction", "drama", "non-fiction"]
+
+Summary = """
+'Satyros, or The Deified Wood-Devil' is an early dramatic work by Goethe from his Sturm und Drang period. It is a satirical drama that critiques religious fanaticism and false prophets. The play features a satyr (woodland creature from mythology) who deceives people into worshipping him as a divine being. The work begins with a Hermit (Einsiedler) who has retreated from society, complaining about the hypocrisy and flattery of city life. The play reflects Goethe's youthful rebellious spirit and his criticism of both social pretension and religious charlatanism. It's written in verse form and showcases the dramatic experimentation characteristic of Goethe's early period.
+"""
+
+Notes = """
+This work was written around 1773 during Goethe's Sturm und Drang period, though it was not published until later. The exact composition date is generally agreed to be 1773. The text here is from the Hamburger Ausgabe (1982), a standard scholarly edition of Goethe's complete works. This is a relatively minor early work compared to Goethe's later masterpieces, but it's significant for understanding his development as a dramatist.
+"""
+</result>

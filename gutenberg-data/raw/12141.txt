@@ -1,0 +1,23 @@
+Ave Maria! Salvete.
+
+Excellent, this is a theatrical work I can identify. This is "The Spanish Curate" by John Fletcher and Philip Massinger, two prominent English Renaissance playwrights who collaborated frequently. The play was likely written around 1622 and first published in 1647 in the first Beaumont and Fletcher Folio.
+
+The character list you've provided is very distinctive - the uxorious Don Henrique, the covetous lawyer Bartolus married to Amaranta, and of course Lopez the Spanish Curate himself are all characteristic of Fletcher and Massinger's comedic style, which often involved Spanish settings, mistaken identities, and romantic entanglements.
+
+<result>
+Title = "The Spanish Curate"
+Author = "John Fletcher, Philip Massinger"
+Year = 1622
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+A Jacobean comedy by John Fletcher and Philip Massinger, two of the most successful playwrights of early 17th century England. The play is a romantic comedy set in Spain featuring multiple plotlines: Don Henrique's tyrannical treatment of his younger brother Don Jamie, the lawyer Bartolus's jealous guarding of his wife Amaranta from the gentleman Leandro who pursues her, and various schemes involving disguises and mistaken identities. The titular Spanish Curate, Lopez, along with his sexton Diego, become entangled in the comedic machinations. The play exemplifies the Jacobean theatrical tradition of Spanish settings, complex romantic plots, and social satire, particularly of legal and clerical figures.
+"""
+
+Notes = """
+The exact date of composition is uncertain, but scholars generally place it around 1622 based on theatrical records and stylistic analysis. The play was first published in 1647 in the first Beaumont and Fletcher Folio, though Fletcher had died in 1625 and Massinger in 1640. I chose 1622 as the year of composition rather than 1647 (publication) since the historical and literary significance relates to when it was written and performed during the Jacobean era. The play represents the collaborative dramaturgy that was common in the period, with Fletcher and Massinger being frequent collaborators in the King's Men theatrical company.
+"""
+</result>
+
+Pax Christi tecum, Fran. How does this look? The dating can be tricky with Renaissance plays since we often have composition, performance, and publication dates that differ significantly.

@@ -1,0 +1,17 @@
+I recognize this text as William Wilberforce's letter to Emperor Alexander I of Russia concerning the slave trade, written following the Congress of Vienna. Wilberforce was the famous British abolitionist who led the campaign to end the slave trade in the British Empire.
+
+<result>
+Title = "Lettre à l'Empereur Alexandre sur la Traite des Noirs"
+Author = "William Wilberforce"
+Year = 1822
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a letter from William Wilberforce, the renowned British Member of Parliament and abolitionist, addressed to Emperor Alexander I of Russia concerning the slave trade. Written after the Congress of Vienna (1814-1815) and the Congress of Aix-la-Chapelle (1818), where European powers formally condemned the slave trade, Wilberforce appeals to the Emperor's moral and religious convictions to continue supporting efforts to abolish the African slave trade. The letter emphasizes the solemn duty of the assembled sovereigns to end this cruel system that had long devastated the African continent and perpetuated ignorance and barbarism across much of the world. It represents an important document in the international abolitionist movement of the early 19th century.
+"""
+
+Notes = """
+The letter was likely written around 1822, after both the Congress of Vienna (1815) and Congress of Aix-la-Chapelle (1818), where declarations against the slave trade were made. Wilberforce references both congresses and Emperor Alexander's visit to Britain, which occurred in 1814. The letter represents Wilberforce's continued diplomatic efforts to ensure international cooperation in ending the slave trade, even after Britain had abolished it in 1807.
+"""
+</result>

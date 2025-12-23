@@ -1,0 +1,15 @@
+<result>
+Title = "Vanished Arizona: Recollections of the Army Life by a New England Woman"
+Author = "Martha Summerhayes"
+Year = 1908
+
+Tags = ["non-fiction", "memoir", "historical-document", "appropriate-for-children"]
+
+Summary = """
+'Vanished Arizona' is a memoir by Martha Summerhayes, a New England woman who married a second lieutenant in the U.S. Army and accompanied him to remote military posts in Arizona Territory during the 1870s. The book provides a vivid firsthand account of frontier military life from a woman's perspective, describing the harsh conditions, dangerous travel, encounters with Native Americans, and the daily challenges faced by army families stationed in the American Southwest during the Indian Wars period. Written at the request of her children, particularly her son Harry who shared those experiences, the memoir preserves personal impressions and stories from letters she wrote during that time. It offers valuable social and historical insight into both military life and women's experiences on the American frontier during the post-Civil War era.
+"""
+
+Notes = """
+The book was first published in 1908, though it recounts events from the 1870s. The preface indicates this is based on the second edition. Martha Summerhayes married her husband, Lieutenant (later General) John Wyer Summerhayes of the 8th Infantry, after the Civil War ended, and this memoir covers her experiences following him to Arizona Territory posts during the Apache Wars period. The year 1908 represents when she compiled and published these recollections, making them available to a wider audience beyond her family.
+"""
+</result>

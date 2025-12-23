@@ -1,0 +1,15 @@
+<result>
+Title = "Mémoires du Sergent Bourgogne (1812-1813)"
+Author = "Adrien Bourgogne"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The memoirs of Sergeant Adrien Bourgogne, a French soldier who served in Napoleon's Imperial Guard during the catastrophic Russian campaign of 1812-1813. These memoirs provide a firsthand account of one of the most disastrous military campaigns in history, particularly the devastating retreat from Moscow. Bourgogne's narrative is notable for its vivid, personal perspective on the hardships endured by Napoleon's Grande Armée, including the brutal winter conditions, starvation, and losses suffered during the retreat. The work is considered one of the most important primary sources on the Napoleonic Wars and offers invaluable historical insight into the human experience of this campaign. This edition was edited and published by Paul Cottin and Maurice Hénault.
+"""
+
+Notes = """
+While Bourgogne wrote his memoirs based on his experiences in 1812-1813, the work was not published until 1898-1899. The year 1899 represents the publication date of this edited version by Cottin and Hénault. Since this is a memoir that serves as a historical document about the Napoleonic campaigns, the publication year is most relevant for scholarly and timeline purposes, as this is when the work became available to historians and the public. The memoirs themselves recount events from 1812-1813, but for a historical timeline of published works, 1899 is the appropriate date.
+"""
+</result>

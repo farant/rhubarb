@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The United Empire Loyalists: A Chronicle of the Great Migration"
+Author = "W. Stewart Wallace"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is part of the Chronicles of Canada series, a comprehensive 32-volume historical collection edited by George M. Wrong and H. H. Langton. Volume 13 focuses on the United Empire Loyalists - American colonists who remained loyal to the British Crown during the American Revolution and subsequently migrated to British North America (primarily what is now Canada) following American independence. The book chronicles their persecution in the Thirteen Colonies, their military service, the peace settlement, and their mass exodus and resettlement in Nova Scotia, New Brunswick, Prince Edward Island, Quebec, and western territories. It examines both their hardships and the compensation they received, as well as the lasting impact of this migration on Canadian identity and development.
+"""
+
+Notes = """
+The year 1914 is clearly stated as the publication year in Toronto. This is a primary historical source written relatively close to the events (about 130 years after the Loyalist migration of the 1780s). The work is not tagged as 'appropriate-for-children' as it appears to be a scholarly historical chronicle intended for general adult readers. It is not tagged as 'catholic' - while Wallace may have been writing in a predominantly Christian society, there's no indication this is a specifically Catholic work or that it carries ecclesiastical approval.
+"""
+</result>

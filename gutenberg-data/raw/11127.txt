@@ -1,0 +1,15 @@
+<result>
+Title = "The Case of Jennie Brice"
+Author = "Mary Roberts Rinehart"
+Year = 1913
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+A mystery novel by Mary Roberts Rinehart, one of America's most popular early 20th-century mystery writers. The story is narrated by Mrs. Pitman, a boarding house keeper in Pittsburgh's Allegheny district, who becomes embroiled in a mysterious disappearance during a flood. When her tenant Mr. Ladley's wife, actress Jennie Brice, vanishes during a flood that inundates the first floor of the boarding house, Mrs. Pitman suspects foul play. The novel combines Rinehart's characteristic domestic setting with suspense and detective work, predating her later famous works. Rinehart was known for creating the "Had I But Known" school of mystery writing and was one of the best-selling authors of her time.
+"""
+
+Notes = """
+The publication year is clearly stated on the title page as 1913. This was relatively early in Mary Roberts Rinehart's career, following her successful debut with "The Circular Staircase" (1908) and "The Man in Lower Ten" (1909), both of which are referenced in the book's front matter. The novel is set in Pittsburgh, Rinehart's hometown, and draws on the city's history of periodic flooding in the lower-lying districts near the rivers.
+"""
+</result>

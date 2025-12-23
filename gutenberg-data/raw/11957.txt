@@ -1,0 +1,15 @@
+<result>
+Title = "The Wing-and-Wing; or, Le Feu-Follet"
+Author = "James Fenimore Cooper"
+Year = 1842
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Wing-and-Wing (also known as Le Feu-Follet) is a maritime adventure novel by James Fenimore Cooper set during the French Revolutionary Wars. The story follows Raoul Yvard, a French privateer captain, and his ship Le Feu-Follet (The Will-o'-the-Wisp) as he eludes British naval forces in the Mediterranean. The novel explores themes of faith, skepticism, and redemption against the backdrop of naval warfare, with Cooper examining the religious and philosophical upheaval of the Revolutionary period. The preface reveals Cooper's concern with the period's religious skepticism and the conflict between blind faith and presumptuous doubt that characterized the era.
+"""
+
+Notes = """
+First published in 1842. This is one of Cooper's later sea novels, written after his famous Leatherstocking Tales. The novel reflects Cooper's mature perspective on religion and his concerns about the religious skepticism that emerged from the French Revolution. The preface strongly suggests this work deals with questions of faith and unbelief during the revolutionary period.
+"""
+</result>

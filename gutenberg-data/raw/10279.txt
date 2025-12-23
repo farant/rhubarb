@@ -1,0 +1,15 @@
+<result>
+Title = "Uncle Tom's Cabin"
+Author = "Harriet Beecher Stowe"
+Year = 1852
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+Uncle Tom's Cabin is a landmark anti-slavery novel by Harriet Beecher Stowe that had profound impact on American attitudes toward slavery in the years leading up to the Civil War. The novel follows the lives of enslaved African Americans, particularly Uncle Tom, as they endure the cruelties of slavery. The book depicts the human suffering caused by the institution of slavery and was instrumental in galvanizing abolitionist sentiment in the North. President Lincoln allegedly greeted Stowe with "So you're the little woman who wrote the book that started this great war." This Project Gutenberg entry is an audio recording/dramatization by Len Spencer and others, edited by Thomas Edison, but the underlying work is Stowe's novel.
+"""
+
+Notes = """
+The year 1852 reflects the original publication date of Harriet Beecher Stowe's novel, which is the historically significant date for this work. This particular Project Gutenberg entry is an audio recording from Edison's company (likely early 20th century), but the proper historical attribution is to Stowe's original novel. The 'Author' field lists Stowe rather than Len Spencer since Spencer was performing/narrating the existing work rather than creating original content. The work is not tagged as 'catholic' as Stowe was Protestant (Congregationalist). While the novel has moral and Christian themes, it does not represent Catholic literature specifically. Not tagged 'appropriate-for-children' due to depictions of violence, family separation, and other traumatic content related to slavery.
+"""
+</result>

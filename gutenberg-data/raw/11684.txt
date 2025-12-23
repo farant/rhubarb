@@ -1,0 +1,19 @@
+I recognize this as "Il sogno di Scipione" (The Dream of Scipio) by Pietro Metastasio, one of the most celebrated opera librettists of the 18th century. This is a theatrical work (azione teatrale) that was first performed in 1735 with music by Luca Antonio Predieri at the Imperial Favorita palace in Vienna for Emperor Charles VI's birthday.
+
+The work is based on Cicero's famous philosophical dialogue "Somnium Scipionis" (Dream of Scipio) from his "De Re Publica," where Scipio Africanus the Younger has a vision featuring his grandfather Scipio Africanus and his father Aemilius Paullus, along with allegorical figures representing Constancy and Fortune.
+
+<result>
+Title = "Il sogno di Scipione"
+Author = "Pietro Metastasio"
+Year = 1735
+
+Tags = ["fiction", "drama", "catholic", "appropriate-for-children"]
+
+Summary = """
+"Il sogno di Scipione" (The Dream of Scipio) is an azione teatrale (theatrical work/opera libretto) by Pietro Metastasio, one of the greatest Italian librettists of the 18th century. Based on Cicero's philosophical dialogue "Somnium Scipionis," the work presents a dream vision of Scipio Africanus the Younger, who encounters his adoptive grandfather Publio Cornelio Scipione (Scipio Africanus the Elder) and his father Emilio (Aemilius Paullus), along with the allegorical figures of Constancy (La Costanza) and Fortune (La Fortuna). The work explores themes of virtue, duty, and the proper conduct of a hero through this classical framework. It was commissioned by Empress Elisabeth to celebrate Emperor Charles VI's birthday and allegorically referenced the unfortunate military campaigns of Austrian arms in Italy.
+"""
+
+Notes = """
+First performed October 1, 1735, at the Imperial Favorita palace in Vienna with music by Luca Antonio Predieri. The year 1735 represents both the composition and first performance date. This is a dramatic/operatic work rather than a prose text. Metastasio was the imperial court poet in Vienna and a devout Catholic whose works were considered morally edifying.
+"""
+</result>

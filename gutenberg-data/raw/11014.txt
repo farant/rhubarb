@@ -1,0 +1,15 @@
+<result>
+Title = "Christmas in Legend and Story: A Book for Boys and Girls"
+Author = "Elva S. Smith, Alice I. Hazeltine"
+Year = 1915
+
+Tags = ["non-fiction", "appropriate-for-children", "anthology"]
+
+Summary = """
+An anthology of Christmas stories and legends compiled by two librarians, Elva S. Smith of Carnegie Library in Pittsburgh and Alice I. Hazeltine of the Public Library in St. Louis. The book is a collection designed for young readers, featuring traditional Christmas tales, legends, and stories that would have been popular in the early 20th century. It's illustrated with reproductions of famous paintings and opens with the well-known Shakespeare quote from Hamlet about the Christmas season. This type of seasonal anthology was common during this period, bringing together various Christmas narratives for family reading.
+"""
+
+Notes = """
+The year 1915 is clearly marked on the title page as the publication date. This is an original compilation work, not a translation or reprint, so 1915 is the appropriate historical date for this anthology.
+"""
+</result>

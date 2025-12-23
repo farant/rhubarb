@@ -1,0 +1,15 @@
+<result>
+Title = "Consuelo"
+Author = "George Sand"
+Year = 1843
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Consuelo is a major historical novel by George Sand (pen name of Amantine Lucile Aurore Dupin), one of the most prominent French Romantic writers of the 19th century. The novel tells the story of a young singer named Consuelo and is set in the 18th century, weaving together themes of art, philosophy, and mysticism. It explores the world of opera, European society, and enlightenment-era intellectual currents. The work was followed by a sequel, "La Comtesse de Rudolstadt." Sand was known for her prolific output, progressive social views, and novels that often featured strong female protagonists. Consuelo is considered one of her most ambitious works, blending historical detail with romantic adventure.
+"""
+
+Notes = """
+The novel was originally published serially in the Revue indépendante starting in 1842, with the complete work appearing in 1843. This particular edition appears to be from 1861. Sand's own notice in this text acknowledges the work's sprawling nature, which she attributes to writing it serially without a predetermined plan, producing chapters rapidly to meet the demands of journal publication. The year 1843 represents the first complete publication of the work as a unified novel.
+"""
+</result>

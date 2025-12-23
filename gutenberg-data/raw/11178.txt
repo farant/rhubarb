@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "La Sagesse et la Destinée" (Wisdom and Destiny) by Maurice Maeterlinck, a Belgian symbolist writer who won the Nobel Prize in Literature. The text shows it's dedicated to Madame Georgette Leblanc and dated 1908, which is the publication year.
+
+Maeterlinck was indeed Catholic (Belgian Catholic background) and this is a philosophical essay on wisdom, destiny, justice, happiness and love - clearly a work of moral philosophy. While Maeterlinck's mystical and philosophical works were generally well-regarded, I should note that his symbolist approach was somewhat heterodox, though this particular work on wisdom and morality would likely have been acceptable to Catholic readers of the era.
+
+<result>
+Title = "La Sagesse et la Destinée"
+Author = "Maurice Maeterlinck"
+Year = 1898
+
+Tags = ["non-fiction", "philosophy", "catholic"]
+
+Summary = """
+'Wisdom and Destiny' is a philosophical essay by Belgian Nobel Prize-winning author Maurice Maeterlinck. The work explores themes of wisdom, fate, justice, happiness, and love from a mystical and moral philosophy perspective. Maeterlinck addresses the apparent paradox of discussing wisdom and happiness in a world filled with visible suffering and injustice. The book examines how the sage finds inner peace and meaning despite external circumstances, drawing on classical philosophy (including references to Epictetus) while developing Maeterlinck's own symbolist and spiritual philosophy. It represents his mature thought on moral and metaphysical questions.
+"""
+
+Notes = """
+The text shows '1908' on the title page, but this is likely a later edition. 'La Sagesse et la Destinée' was originally published in 1898, which is the historically significant date for this work. The 1908 date may represent a reprint or new edition. For a historical timeline of works, 1898 is the more appropriate year as it marks when this philosophical work first entered the intellectual discourse of the late 19th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Iranian Influence on Moslem Literature, Part I"
+Author = "M. Inostranzev"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This scholarly work examines the significant influence of Iranian (Persian/Zoroastrian) literary traditions on early Islamic Arabic literature during and after the Sasanian period. The author, M. Inostranzev, was a Russian orientalist who studied the cultural transmission from pre-Islamic Persia to the Islamic world. The work explores how Pahlavi (Middle Persian) texts and Iranian ethical-didactic traditions were preserved, translated, and integrated into Arabic adab (belles-lettres) literature. It examines the role of Parsi clergy in preserving these traditions, the translation movement from Pahlavi to Arabic, and specific works like the Pahlavi Rushnar Nameh. This translation by G.K. Nariman from Russian includes supplementary appendices drawing from Arabic sources, providing additional context on Zoroastrian princes who ruled in Tabaristan after the Arab conquest.
+"""
+
+Notes = """
+The year 1918 reflects the publication date of this English translation. This is an academic historical work examining cultural transmission during the early Islamic period (7th-10th centuries CE), particularly focusing on how Sasanian Persian literature influenced the development of Islamic literary traditions. The work is significant for understanding the continuity of Persian culture through the Arab conquest and the sophisticated intellectual exchange between Zoroastrian and Muslim scholars.
+"""
+</result>

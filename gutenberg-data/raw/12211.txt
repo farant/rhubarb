@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "Odd Craft" by W.W. Jacobs, a collection of humorous short stories. The text shows the beginning of one of the stories in the collection, "A Spirit of Avarice."
+
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "short-stories", "humor", "appropriate-for-children"]
+
+Summary = """
+Odd Craft is a collection of humorous short stories by W.W. Jacobs, an English author known for his maritime tales and comedic stories about working-class life in turn-of-the-century England. The collection features Jacobs' characteristic wit and his keen observations of human nature, particularly among dock workers, sailors, and ordinary Londoners. The stories are light, entertaining narratives that often involve misunderstandings, social mishaps, and the foibles of everyday people. While Jacobs is perhaps best known for his horror story "The Monkey's Paw," his comedic works like Odd Craft showcase his talent for gentle satire and character-driven humor.
+"""
+
+Notes = """
+Published in 1903 by Methuen & Co. in London. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific English author whose stories were immensely popular in the early 20th century. This collection represents his comedic style rather than his occasional ventures into horror and supernatural fiction.
+"""
+</result>

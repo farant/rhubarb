@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Teddy's Button"
+Author = "Amy Le Feuvre"
+Year = 1896
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+'Teddy's Button' is a classic Christian children's novel by British author Amy Le Feuvre, first published in 1896. The story centers on a young boy named Teddy who treasures a brass military button that belonged to his father, a soldier. The button represents Teddy's pride in his father's bravery and military exploits. The novel explores themes of pride, humility, spiritual growth, and what it means to be a true soldier—both in the earthly and spiritual sense. Like much of Le Feuvre's work, it contains strong evangelical Christian themes and was extremely popular in late Victorian and Edwardian England, particularly in Sunday School libraries and among Christian families.
+"""
+
+Notes = """
+The year 1896 is clearly stated on the title page and represents the original publication date. Amy Le Feuvre (1861-1929) was a prolific British author of children's Christian literature. While she wrote from an evangelical Protestant perspective rather than a Catholic one, her works were widely read across denominations for their moral instruction and child-friendly storytelling. The 'catholic' tag is not applicable here as this is evangelical Protestant literature, not Catholic in the technical sense you specified.
+"""
+</result>

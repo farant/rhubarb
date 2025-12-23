@@ -1,0 +1,17 @@
+I recognize this work - it's a collection of lectures on art by the American painter Washington Allston, edited by Richard Henry Dana Jr.
+
+<result>
+Title = "Lectures on Art"
+Author = "Washington Allston"
+Year = 1850
+
+Tags = ["non-fiction", "art-theory", "aesthetics"]
+
+Summary = """
+A collection of lectures on art theory and aesthetics by Washington Allston (1779-1850), one of America's most important Romantic painters and early art theorists. The work was published posthumously and edited by Richard Henry Dana Jr. Allston was a pioneering figure in American art, known for his Romantic landscape paintings and his theoretical writings on beauty, imagination, and the nature of art. These lectures represent his mature reflections on artistic principles, the creative process, and aesthetic philosophy. The preface indicates this was originally intended to be part of a larger two-volume work including Allston's biography, correspondence, and poems, but the lectures and poems were published separately due to delays in preparing the biographical material.
+"""
+
+Notes = """
+The date MDCCCL appears on the title page, which is 1850 in Roman numerals. This was the year of posthumous publication - Allston died in 1843, and his papers were edited and published by Richard Henry Dana Jr. (the author of 'Two Years Before the Mast') seven years later. The year 1850 represents when this collection became available to the public, which is historically significant for understanding the development of American art theory in the mid-19th century.
+"""
+</result>

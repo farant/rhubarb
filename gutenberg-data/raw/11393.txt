@@ -1,0 +1,17 @@
+I recognize this as a Dutch translation of Jules Verne's famous novel "Twenty Thousand Leagues Under the Sea" (originally "Vingt mille lieues sous les mers"). The title in Dutch is "20.000 Mijlen onder Zee" and this appears to be the second part ("Westelijk Halfrond" / Western Hemisphere).
+
+<result>
+Title = "20.000 Mijlen onder Zee (Westelijk Halfrond)"
+Author = "Jules Verne"
+Year = 1870
+
+Tags = ["fiction", "adventure", "science-fiction", "appropriate-for-children"]
+
+Summary = """
+Twenty Thousand Leagues Under the Sea is one of Jules Verne's most famous novels, following Professor Aronnax, his servant Conseil, and harpooner Ned Land as they are taken aboard the submarine Nautilus by the enigmatic Captain Nemo. This Dutch translation shows the second part of the novel (Western Hemisphere), covering their journey through the Indian Ocean, Red Sea, Mediterranean, Atlantic, and eventually to the South Pole and beyond. The novel is a classic of early science fiction, featuring detailed descriptions of marine life and undersea exploration that were remarkably prescient for the time.
+"""
+
+Notes = """
+The original French novel was published in 1869-1870 (serialized first, then as a book). I've chosen 1870 as the publication year for the completed work. This Dutch translation appears to be split into two volumes (Eastern and Western Hemispheres), which was common for translations of this lengthy novel. The chapter list begins with XXV (25), confirming this is the second volume.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this collection! Let me provide the structured information you requested:
+
+<result>
+Title = "The Green Flag and Other Stories of War and Sport"
+Author = "Arthur Conan Doyle"
+Year = 1900
+
+Tags = ["fiction", "short-stories", "adventure", "war-stories"]
+
+Summary = """
+A collection of short stories by Arthur Conan Doyle, best known as the creator of Sherlock Holmes. This collection showcases Doyle's versatility beyond detective fiction, featuring tales of military adventure, boxing, historical intrigue, and exotic locales. The stories range from the title story about an Irish soldier's conflicted loyalties in the British Army, to tales of pirates like Captain Sharkey, to archaeological mysteries like "The New Catacomb." The collection demonstrates Doyle's interest in themes of honor, courage, and adventure across various historical periods and settings, from ancient Rome to contemporary colonial conflicts in Africa and beyond.
+"""
+
+Notes = """
+"The Green Flag and Other Stories" was first published as a collection in 1900, though some individual stories appeared earlier in magazines. This represents Doyle's work during his most prolific period, when he was writing across multiple genres including historical fiction, adventure tales, and supernatural stories alongside his famous detective fiction.
+"""
+</result>

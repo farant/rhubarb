@@ -1,0 +1,15 @@
+<result>
+Title = "Charaktere und Schicksale"
+Author = "Hermann Heiberg"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Charaktere und Schicksale" (Characters and Destinies) is a novel by German author Hermann Heiberg, published in Berlin in 1901. The work appears to be a social novel examining themes of ambition, social climbing, and class distinctions in turn-of-the-century German bourgeois society. The opening scene depicts a conversation between Friedrich Andreas Knoop, a printing press owner and newspaper proprietor, and his wife Fanny, discussing their differing views on the pursuit of titles, honors, and advantageous marriages for their daughter Margarete. The novel explores the tensions between genuine substance and social appearances, material success versus philosophical depth, and the various motivations that drive people's actions in society.
+"""
+
+Notes = """
+The year 1901 is clearly stated on the title page as the publication year in Berlin. Hermann Heiberg was a German novelist active in the late 19th and early 20th centuries. This work is not Catholic in nature - it appears to be a secular social novel typical of German Realist fiction of the period, examining middle-class life and values in Wilhelmine Germany.
+"""
+</result>

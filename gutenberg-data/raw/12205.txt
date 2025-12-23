@@ -1,0 +1,17 @@
+I recognize this work immediately. "Odd Craft" is a collection of humorous short stories by W.W. Jacobs, the English author best known for "The Monkey's Paw." This particular collection showcases his talent for maritime and rural comedy, featuring tales of sailors, country folk, and their various misadventures.
+
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children", "short-stories", "humor"]
+
+Summary = """
+'Odd Craft' is a collection of humorous short stories by W.W. Jacobs, the English author famous for 'The Monkey's Paw.' Published in 1903, this collection showcases Jacobs' talent for gentle comedy and character-driven narratives. The stories feature a variety of settings and characters, from rural villages to maritime scenes, all told with Jacobs' characteristic wit and attention to human foibles. 'Lawyer Quince,' the opening story excerpted here, is typical of his style—featuring colorful country characters engaged in legal disputes and schemes, told with warmth and humor. Jacobs was a master of the short story form and his works were extremely popular in the early 20th century.
+"""
+
+Notes = """
+1903 is the original publication year for this collection. W.W. Jacobs (1863-1943) was one of the most popular short story writers of his era, though today he is primarily remembered for his horror story 'The Monkey's Paw.' His humorous works, like 'Odd Craft,' were widely read and appreciated for their gentle satire and memorable characters.
+"""
+</result>

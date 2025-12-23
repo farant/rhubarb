@@ -1,0 +1,15 @@
+<result>
+Title = "I Heard the Bells on Christmas Day"
+Author = "Henry Wadsworth Longfellow"
+Year = 1863
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children", "catholic"]
+
+Summary = """
+"I Heard the Bells on Christmas Day" is a Christmas poem written by Henry Wadsworth Longfellow during the American Civil War. The poem was written on Christmas Day 1863, reflecting the profound despair Longfellow felt during one of America's darkest periods. His son Charles had been severely wounded in battle, and Longfellow himself was still grieving the tragic death of his wife Frances two years earlier in a fire. The poem moves from darkness to hope, capturing a moment of spiritual crisis where the poet questions whether peace is possible, before the bells themselves seem to answer with divine reassurance. It was later set to music by John Baptiste Calkin (to the tune "Waltham") and has become one of the most enduring Christmas carols, expressing both the sorrow of a broken world and the Christian hope of redemption and peace.
+"""
+
+Notes = """
+I chose 1863 as the year because this is when Longfellow wrote the original poem "Christmas Bells." While the musical setting by Calkin came later, the work itself - the text that carries the meaning and historical significance - dates to Christmas Day 1863. Longfellow was a practicing Episcopalian with deep Christian faith, and this poem is explicitly Christian in its theology and message, making it appropriate for the 'catholic' tag in the broad sense of Christian orthodoxy that would receive ecclesiastical approval.
+"""
+</result>

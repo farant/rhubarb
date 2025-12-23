@@ -1,0 +1,17 @@
+I recognize this work! This is "Les Chants de Maldoror" by Comte de Lautréamont (pseudonym of Isidore Lucien Ducasse), one of the most influential works of proto-surrealist literature.
+
+<result>
+Title = "Les Chants de Maldoror"
+Author = "Comte de Lautréamont (Isidore Lucien Ducasse)"
+Year = 1869
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+Les Chants de Maldoror is a poetic novel written by Isidore Ducasse under the pseudonym Comte de Lautréamont. The work consists of six cantos that follow the exploits of Maldoror, a figure of absolute evil who has renounced humanity and God. Written in a unique prose-poetry style, the work is characterized by violent imagery, nightmarish visions, and transgressive themes. The text employs extended metaphors, sudden shifts in tone, and disturbing metamorphoses. Though largely ignored upon publication, it became highly influential in the 20th century, particularly among the Surrealists who adopted Lautréamont as a predecessor. André Breton and the Surrealists valued the work for its automatic writing-like qualities, its liberation of the imagination, and its revolt against conventional morality and literary forms.
+"""
+
+Notes = """
+The work was completed and printed in 1869 by publisher Albert Lacroix (to whom it is dedicated), but was not released for sale due to fears of prosecution under the Second Empire for its violent and transgressive content. The author died suddenly in 1870 at age 24, and the work remained largely unknown until its rediscovery by the Surrealists in the early 20th century. While some passages were written earlier (Canto I was published separately in 1868), the complete work dates to 1869.
+"""
+</result>

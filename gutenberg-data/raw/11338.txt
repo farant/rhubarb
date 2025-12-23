@@ -1,0 +1,25 @@
+I can identify this work based on the text provided. Let me analyze what we have here:
+
+This is clearly from "The Mirror of Literature, Amusement, and Instruction," which was a Victorian periodical. The specific content is a review/supplementary piece about Sir Walter Scott's novel "Anne of Geierstein, or The Maiden of the Mist."
+
+However, I need to clarify what we're actually cataloging here:
+- The **periodical itself** (The Mirror of Literature, Amusement, and Instruction, Vol. 13, No. 373)
+- Or the **novel being reviewed** (Anne of Geierstein by Sir Walter Scott)
+
+Based on your description that this is "a text from project gutenberg," I believe you're asking about the periodical issue itself, not Scott's novel. The Mirror was published from 1822-1849 in London. Vol. 13, No. 373 would be from around 1829, which aligns with the publication date of "Anne of Geierstein" (1829).
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 13, No. 373, Supplementary Number"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "literary-criticism", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in London from 1822 to 1849. This supplementary issue from Volume 13 contains a review and summary of Sir Walter Scott's novel 'Anne of Geierstein, or The Maiden of the Mist.' The periodical was designed to provide accessible literature, educational content, and entertainment to a broad Victorian readership. This particular issue focuses on literary criticism, offering contemporary commentary on Scott's work set in Switzerland during turbulent historical times.
+"""
+
+Notes = """
+Dated to 1829 based on the review of 'Anne of Geierstein,' which was published that year. The Mirror was known for making literature and knowledge accessible to middle-class Victorian readers at an affordable price (2 pence, as noted in the header).
+"""
+</result>

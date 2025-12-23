@@ -1,0 +1,15 @@
+<result>
+Title = "The Book of Dreams and Ghosts"
+Author = "Andrew Lang"
+Year = 1897
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+Andrew Lang's 'The Book of Dreams and Ghosts' is a collection and examination of supernatural phenomena, ghost stories, and paranormal experiences. Lang (1844-1912) was a Scottish poet, novelist, literary critic, and collector of folk and fairy tales. This work represents his interest in psychical research and folklore, examining various accounts of dreams, apparitions, second sight, and other supernatural occurrences from a somewhat scholarly perspective. Lang approaches the material with both curiosity and critical analysis, documenting numerous anecdotes and attempting to categorize and understand these experiences. The book reflects the late Victorian era's fascination with spiritualism and the paranormal.
+"""
+
+Notes = """
+Year chosen is 1897, the first edition publication date as mentioned in the preface. This appears to be a new impression from 1904 (based on the Project Gutenberg eBook date referencing June 14, 2004 as release date #12621, though the preface mentions the first edition appeared in 1897). Lang was not a Catholic author - he was Scottish Presbyterian by background, though his work on folklore and fairy tales was broad and scholarly rather than religious in nature.
+"""
+</result>

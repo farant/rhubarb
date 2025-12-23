@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the content, this appears to be a World War I-era document about German war crimes, published in 1917. The structure (table of contents focusing on atrocities, robbery, murder, outrages, etc.) and the dedication to relief work in Lorraine, plus the explicit date of 1917, indicates this is likely a propaganda or documentary work from WWI documenting alleged German atrocities during the war.
+
+Given the translation note "from the French" and the focus on Lorraine (a contested Franco-German border region), this appears to be part of Allied war propaganda efforts. Without seeing the full text including any title page or attribution, and given only "THEIR CRIMES" as the header, this seems to be a compilation or report rather than a single-author work.
+
+<result>
+Title = "Their Crimes"
+Author = "Various" 
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A World War I documentary work published in 1917, translated from French, cataloging alleged German atrocities during the Great War. The work covers various categories of war crimes including robbery, incendiarism, murder, outrages against women and children, killing of wounded soldiers, and the treatment of civilian prisoners. It includes both accusations and addresses German defenses. Profits were designated for The League of Remembrance and relief work in Lorraine, indicating its purpose as both documentation and fundraising for war relief efforts.
+"""
+
+Notes = """
+Year 1917 is explicitly stated in the text. This appears to be wartime propaganda/documentation from the Allied perspective during WWI. The focus on Lorraine and translation from French suggests French or Belgian origin. Without access to a full title page, authorship attribution remains unclear - likely a committee or organization rather than individual author.
+"""
+</result>

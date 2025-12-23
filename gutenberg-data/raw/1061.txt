@@ -1,0 +1,15 @@
+<result>
+Title = "Myths and Myth-Makers: Old Tales and Superstitions Interpreted by Comparative Mythology"
+Author = "John Fiske"
+Year = 1872
+
+Tags = ["non-fiction"]
+
+Summary = """
+"Myths and Myth-Makers" is a work of comparative mythology by American philosopher and historian John Fiske. The book examines folklore, legends, and superstitions through the lens of comparative mythology, drawing on the scholarship of figures like the Brothers Grimm, Max Müller, and others. Fiske attempts to trace the origins and meanings of various myths, folk tales, and supernatural beliefs (werewolves, trolls, nixies) by comparing them across cultures and analyzing their underlying patterns. The work is part of the 19th-century scholarly movement that applied scientific and philological methods to the study of mythology and folklore. Fiske's approach seeks to make these academic findings accessible to a general audience, avoiding overly technical philological discussions while presenting the conclusions of contemporary mythological scholarship.
+"""
+
+Notes = """
+First published in 1872. John Fiske (1842-1901) was an American philosopher and historian who popularized evolutionary theory and comparative mythology in the United States. This work reflects the Victorian-era interest in folklore studies and the "science" of mythology that emerged in the 19th century. The book is dedicated to William Dean Howells, the prominent American realist author and editor.
+"""
+</result>

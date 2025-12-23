@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the 19th century. This particular issue from October 3, 1829 (Volume XIV, No. 392) contains an illustrated article about the Duke's Theatre in Dorset Gardens, London. The periodical was known for providing educational and entertaining content to a general audience, featuring articles on history, architecture, literature, and various other topics of cultural interest. It was designed to be accessible and informative for middle-class Victorian readers seeking both instruction and amusement.
+"""
+
+Notes = """
+This is a periodical publication, so the year reflects the specific issue date (1829) rather than an original composition date. The article itself discusses theatrical history from the 1670s-1700s, but the publication date of this particular issue is what's most historically relevant for cataloging purposes. This was a weekly publication, hence the very specific date of October 3, 1829.
+"""
+</result>

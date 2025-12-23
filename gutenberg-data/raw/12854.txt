@@ -1,0 +1,15 @@
+<result>
+Title = "The Master's Indwelling"
+Author = "Andrew Murray"
+Year = 1895
+
+Tags = ["non-fiction", "christian-spirituality", "protestant"]
+
+Summary = """
+"The Master's Indwelling" is a classic work of Christian devotional literature by Andrew Murray, a South African pastor and influential writer on the spiritual life. The book originated as a series of addresses delivered at the renowned Northfield Conference in 1895, later revised for publication. Murray explores themes central to his theological emphasis: the indwelling presence of Christ, surrender, spiritual rest, and the work of the Holy Spirit in the believer's life. The work addresses the challenge of moving from a "carnal" Christian life to one of deeper spiritual maturity and communion with God. Murray's writings have been influential across Protestant denominations, particularly in Reformed, holiness, and evangelical circles, emphasizing practical spirituality and complete consecration to God.
+"""
+
+Notes = """
+I chose 1895 as the year because this is when the addresses were originally delivered at the Northfield Conference, which represents the true composition date of the work, even though the publication in book form came later (the 1953 date appears to be a reprint edition). Andrew Murray (1828-1917) was a Dutch Reformed minister in South Africa and one of the most prolific Christian authors of the late 19th/early 20th century. While deeply Christian, Murray was Protestant/Reformed rather than Catholic, so I did not include a 'catholic' tag.
+"""
+</result>

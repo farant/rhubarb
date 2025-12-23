@@ -1,0 +1,15 @@
+<result>
+Title = "Lawn Tennis for Ladies"
+Author = "Mrs. Lambert Chambers"
+Year = 1910
+
+Tags = ["non-fiction", "sports", "appropriate-for-children"]
+
+Summary = """
+A tennis instructional book written by Dorothea Lambert Chambers (Mrs. Lambert Chambers), one of the most accomplished female tennis players of the early 20th century. She won seven Wimbledon singles titles between 1903 and 1914. This book was written during the height of her career and represents one of the early comprehensive guides to lawn tennis specifically aimed at women and girls. It covers topics including athletics for girls, practice techniques, competitive play, and practical matters like equipment, courts, dress codes, and training. The work is notable for promoting women's participation in competitive sports during the Edwardian era, a time when women's athletics were still gaining social acceptance.
+"""
+
+Notes = """
+The year 1910 is clearly stated as the publication date in the Project Gutenberg text ("First published in 1910, London"). This was during Mrs. Chambers' prime competitive years - she had already won multiple Wimbledon titles and would continue to dominate women's tennis through 1914. The book represents a historical document of women's sports instruction from the Edwardian period.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as the Project Gutenberg edition of Shakespeare's "Hamlet." The executive notes discussing the printing peculiarities (like "u" for "v" substitutions and the concept of "cliche" in printing) are characteristic of early Project Gutenberg texts explaining the quirks of early modern printing.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Tragedy of Hamlet, Prince of Denmark is one of Shakespeare's most famous tragedies, written around 1599-1601. The play follows Prince Hamlet as he seeks to avenge his father's murder by his uncle Claudius, who has married Hamlet's mother and seized the throne. The play explores themes of revenge, madness (both real and feigned), mortality, and moral corruption. It features some of Shakespeare's most famous lines including "To be or not to be" and has been one of the most performed and studied plays in the English language.
+"""
+
+Notes = """
+The year 1603 represents the date of the Second Quarto (Q2), which is generally considered the most authoritative early text of Hamlet. The play was likely written and first performed around 1599-1601. The First Quarto (Q1) appeared in 1603, and Q2 also in 1603. The First Folio version appeared in 1623. This Project Gutenberg text appears to preserve the original early modern English printing conventions, including the substitution patterns common in early 17th-century printing houses.
+"""
+</result>

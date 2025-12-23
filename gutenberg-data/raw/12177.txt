@@ -1,0 +1,21 @@
+I'll help you identify this work. Let me analyze the text provided.
+
+Based on the opening content, this is clearly "The Precipice" by Elia W. Peattie, published in 1914 by Houghton Mifflin Company. The text itself provides the publication information directly.
+
+Elia W. Peattie (full name Elia Wilkinson Peattie, 1862-1935) was an American author, journalist, and critic. "The Precipice" is one of her novels that dealt with the "New Woman" movement and women's suffrage themes of the early 20th century, as suggested by the opening epigraph about women listening to "a fanfare of trumpets."
+
+<result>
+Title = "The Precipice"
+Author = "Elia W. Peattie"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Precipice' is a novel by American author Elia W. Peattie, published during the height of the women's suffrage movement. The novel follows Kate Barrington, a young woman who has just graduated with honors from a Chicago university, as she navigates the changing social landscape for women in early 20th century America. The opening epigraph references the 'fanfare of trumpets' calling women to action, suggesting the novel explores themes of women's independence, the 'New Woman' movement, and the tension between traditional roles and emerging opportunities for educated women. Peattie was a journalist and author known for addressing social issues of her time, and this work reflects the cultural upheaval surrounding women's rights and social reform in the Progressive Era.
+"""
+
+Notes = """
+The publication year of 1914 is clearly stated on the title page. This was published during a pivotal moment in American women's history, six years before the ratification of the 19th Amendment granting women's suffrage. The novel's themes reflect the contemporary debates about women's roles in society.
+"""
+</result>

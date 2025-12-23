@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Tragedy of Hamlet is one of William Shakespeare's most famous plays and perhaps the most celebrated work in English literature. It tells the story of Prince Hamlet of Denmark, who seeks to avenge his father's murder by his uncle Claudius, who has usurped the throne and married Hamlet's mother Gertrude. The play explores themes of revenge, madness (both feigned and real), mortality, betrayal, and moral corruption. It contains some of Shakespeare's most famous lines, including "To be or not to be" and features iconic scenes such as Hamlet's encounter with his father's ghost and the play-within-a-play. The work is renowned for its psychological depth, philosophical complexity, and poetic language.
+"""
+
+Notes = """
+The year 1603 represents the approximate date of the Second Quarto (Q2) publication, which is generally considered the most authoritative early text. The First Quarto was published in 1603, and the play was likely written and first performed between 1599-1601. The text described in the executive notes appears to be based on one of the early quartos or the First Folio (1623), given the archaic spelling conventions mentioned (u/v substitutions, etc.). These early printed editions are highly valued by scholars for their proximity to Shakespeare's original manuscript, despite - or perhaps because of - their "errors" and printing idiosyncrasies, which this particular Project Gutenberg edition has preserved.
+"""
+</result>

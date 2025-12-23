@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+This appears to be Volume IV of "The Philippine Islands, 1493-1898," a comprehensive historical documentary collection edited by Emma Helen Blair and James Alexander Robertson. This is a monumental 55-volume series that compiled primary source documents about the Spanish colonial period in the Philippines.
+
+<result>
+Title = "The Philippine Islands, 1493-1898, Volume IV, 1576-1582"
+Author = "Emma Helen Blair, James Alexander Robertson (editors)"
+Year = 1903
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is Volume IV of the comprehensive 55-volume documentary series "The Philippine Islands, 1493-1898" edited by Emma Helen Blair and James Alexander Robertson. Published between 1903-1909, this scholarly work compiled and translated primary source documents relating to the Spanish colonial period in the Philippines. Volume IV covers the years 1576-1582 and includes contemporaneous reports, letters, and papal bulls documenting early Spanish exploration, governance, and Catholic missionary activities in the Philippine Islands. The documents include relations by Governor Francisco de Sande, papal bulls from Gregory XIII establishing the Manila diocese, and various administrative decrees. This series remains one of the most important English-language documentary collections on Philippine colonial history.
+"""
+
+Notes = """
+The year 1903 represents the beginning of the publication series (1903-1909). While the documents contained within date from 1576-1582, the work itself is an early 20th century scholarly compilation and translation project. This timing is historically significant as it occurred shortly after the United States acquired the Philippines from Spain (1898), making these historical documents particularly relevant to American administrators and scholars seeking to understand their new territory.
+"""
+</result>

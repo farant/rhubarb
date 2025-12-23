@@ -1,0 +1,26 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a book *about* Pragmatism written by D.L. Murray, with a preface by F.C.S. Schiller. This is a secondary philosophical work analyzing the pragmatist movement, not a primary pragmatist text itself.
+
+Based on the context:
+- D.L. Murray was a British philosopher who wrote about pragmatism in the early 20th century
+- F.C.S. Schiller (Ferdinand Canning Scott Schiller) was a prominent British pragmatist philosopher
+- This appears to be from a series called "Philosophies Ancient and Modern"
+- The preface references Murray's "youthful modesty," suggesting this was an early-career work
+- This book was likely published around 1912 based on the Project Gutenberg ID and historical context
+
+<result>
+Title = "Pragmatism"
+Author = "D.L. Murray"
+Year = 1912
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+This is an expository work on Pragmatism, the philosophical movement that emphasizes the practical consequences of ideas and the role of human action in determining truth. Written by D.L. Murray with a preface by F.C.S. Schiller (himself a leading British pragmatist), the book examines the genesis and development of pragmatist thought, covering topics including the new psychology, the role of will in cognition, problems of truth and error, and critiques of formal logic and intellectualism. It appears to be part of a series called "Philosophies Ancient and Modern" designed to make philosophical movements accessible to a broader audience.
+"""
+
+Notes = """
+The exact publication year is estimated as 1912 based on historical context and the Project Gutenberg catalog number. This is a secondary work analyzing pragmatism rather than a primary pragmatist text. F.C.S. Schiller was a major figure in British pragmatism and his involvement as preface-writer lends authority to Murray's exposition.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "English Poets of the Eighteenth Century"
+Author = "Ernest Bernbaum"
+Year = 1918
+
+Tags = ["non-fiction", "anthology", "poetry", "literary-criticism"]
+
+Summary = """
+This is an anthology of English poetry from the 18th century, selected and edited by Ernest Bernbaum, who was a Professor of English at the University of Illinois. The collection presents authentic, unabridged texts of various poets from that era, with modernized spelling and formatting (except where archaic conventions are essential to the poet's purpose, such as in works like 'The Castle of Indolence' or Chatterton's poems). The anthology includes works from various 18th-century English poets and provides a glossary for dialect words and a comprehensive table of contents for reference. Bernbaum aimed to make the poetry accessible to general readers without pedantic scholarly apparatus, while maintaining textual authenticity.
+"""
+
+Notes = """
+The year 1918 is clear from the title page of the work itself. This is the publication date of this particular anthology, not the dates of the original poems included (which would all be from the 1700s). Since this is an editorial work/anthology rather than a translation or edition of a single historical text, the publication date of the anthology itself is the most appropriate choice.
+"""
+</result>

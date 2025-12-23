@@ -1,0 +1,19 @@
+I recognize this as "The Triple Alliance: Its Trials and Triumphs" by Harold Avery. This is a British school story, part of the popular genre of boys' adventure fiction that was extremely popular in the late Victorian and Edwardian periods. Harold Avery (1867-1943) was a prolific writer of these types of stories.
+
+"The Triple Alliance" was first published in 1897. It follows the adventures of three schoolboys at boarding school who form an alliance and face various challenges and adventures together. This was typical of the genre that included works by authors like Thomas Hughes ("Tom Brown's School Days") and Talbot Baines Reed.
+
+<result>
+Title = "The Triple Alliance: Its Trials and Triumphs"
+Author = "Harold Avery"
+Year = 1897
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A classic British school story following three boys at boarding school who form 'The Triple Alliance' and experience various adventures, rivalries, and challenges together. The book includes episodes involving conflicts with other students (the 'Philistines'), school matches, secret clubs, and the typical trials of boarding school life in Victorian England. Harold Avery was a prolific author of boys' adventure stories and school tales during the late Victorian and Edwardian periods, and this was one of his most popular works in the genre.
+"""
+
+Notes = """
+First published in 1897. This belongs to the genre of British school stories that were immensely popular during this period, aimed at young readers (primarily boys) and emphasizing themes of loyalty, fair play, and character development through school life adventures.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Beacon Lights of History, Volume V"
+Author = "John Lord"
+Year = 1883
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+John Lord (1810-1894) was an American historian and popular lecturer who created the "Beacon Lights of History" series, which comprises biographical and historical lectures covering significant figures and movements from ancient to modern times. Volume V focuses on the Renaissance and Reformation period, examining key figures who shaped this transformative era in European history. Lord was known for his engaging lecture style and his ability to make historical figures and events accessible to general audiences. The series was widely popular in the late 19th century and was used both for public lectures and educational purposes.
+"""
+
+Notes = """
+The Beacon Lights of History series was initially delivered as public lectures beginning in the 1860s-1870s, and was published in book form starting in 1883-1884. The series went through multiple editions with varying volume numbers and arrangements. Volume V in the later edition corresponds to Volume III, Part 1 in an earlier arrangement (as noted in the Project Gutenberg editorial note). The year 1883 represents the approximate initial publication date of the complete series in book form, though individual volumes and editions appeared at various times in the 1880s-1890s.
+"""
+</result>

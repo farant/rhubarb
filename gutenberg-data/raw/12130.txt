@@ -1,0 +1,15 @@
+<result>
+Title = "An Adulteration Act"
+Author = "W.W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"An Adulteration Act" is a short story by W.W. Jacobs, part of his collection "The Lady of the Barge and Others" published in 1902. Jacobs was an English author known for his humorous short stories about dockside and rural life, though he's perhaps most famous for his horror story "The Monkey's Paw." This particular story appears to be a light, comedic tale involving Dr. Frank Carson and his thirst for a cooling beverage. Jacobs was a master of situational comedy and ironic twists, often featuring ordinary people in mildly absurd circumstances. His work was immensely popular in the early 20th century and remains appreciated for its wit and accessible style.
+"""
+
+Notes = """
+I chose 1902 as the publication year because that's when "The Lady of the Barge and Others" collection was first published. While the Project Gutenberg release date is 2004, that's just the digital publication date. The original collection came out in 1902 and this story "An Adulteration Act" is specifically noted as "Part 10" of that collection.
+"""
+</result>

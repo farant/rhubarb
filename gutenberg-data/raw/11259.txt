@@ -1,0 +1,15 @@
+<result>
+Title = "Polly and the Princess"
+Author = "Emma C. Dowd"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Polly and the Princess" is the third book in Emma C. Dowd's Polly series, following "Polly of the Hospital Staff" and "Polly of Lady Gay Cottage". This early 20th-century children's novel continues the adventures of Polly, a spirited and kind-hearted young girl. Based on the chapter titles, the story appears to involve characters at what may be a residential facility or institution (references to Miss Major, Mrs. Dick, and Miss Sniffen suggest an institutional setting), with themes of friendship, adventure, and social activities like hiking clubs and moonshine parties (innocent social gatherings of the era, not related to alcohol). The book captures the wholesome, optimistic tone typical of early 20th-century American children's literature.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page as the publication date. This was published during World War I, though American children's literature of this period often maintained an innocent, domestic focus. Emma C. Dowd was a popular children's author of the early 1900s, and her Polly series was well-received during this era.
+"""
+</result>

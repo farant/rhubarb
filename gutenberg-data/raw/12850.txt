@@ -1,0 +1,15 @@
+<result>
+Title = "A Philological Essay Concerning the Pygmies of the Ancients"
+Author = "Edward Tyson, edited by Bertram C. A. Windle"
+Year = 1699
+
+Tags = ["non-fiction", "anthropology", "historical-document"]
+
+Summary = """
+This is Edward Tyson's pioneering work on pygmies, originally published in 1699. Tyson (1650-1708) was an English physician and anatomist who is considered one of the founders of comparative anatomy. This particular edition was later edited with an introduction by Bertram C. A. Windle in the late 19th or early 20th century. The work examines pygmy races through the lens of classical literature and myth, attempting to understand ancient accounts of these peoples. Tyson was famous for his comparative anatomical studies, and this essay represents an early attempt at what we would now call physical anthropology, examining the legends and historical accounts of pygmy peoples from ancient sources. The edition includes Windle's scholarly introduction which adds context and additional research on pygmy peoples, drawing on 19th century anthropological knowledge.
+"""
+
+Notes = """
+The original work by Edward Tyson dates to 1699, making it a significant early work in comparative anatomy and proto-anthropology. This Project Gutenberg edition is clearly a later scholarly edition edited by Bertram C. A. Windle (1858-1929), an anatomist and archaeologist who was active in the late 19th and early 20th centuries. The prefatory note mentions obligations to M. De Quatrefage's work on Pigmies and acknowledgments to various late 19th/early 20th century professors, placing Windle's edition likely in the 1890s-1900s. However, since the core intellectual content is Tyson's original 1699 essay, I've chosen that year as the primary date for historical timeline purposes. Windle was a Catholic scholar who converted from Anglicanism and wrote extensively on faith and science, though this particular work is scientific/anthropological rather than theological in nature.
+"""
+</result>

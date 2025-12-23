@@ -1,0 +1,15 @@
+<result>
+Title = "Through the Brazilian Wilderness"
+Author = "Theodore Roosevelt"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+An account of Theodore Roosevelt's 1913-1914 scientific expedition through the Brazilian wilderness, undertaken jointly with Brazilian explorer Colonel Cândido Rondon. The expedition, officially titled "Expedição Científica Roosevelt-Rondon," combined zoological research for the American Museum of Natural History with geographic exploration. The journey is famous for Roosevelt's exploration of the previously unmapped Rio da Dúvida (River of Doubt), later renamed Rio Roosevelt in his honor. The expedition was dangerous and grueling, with Roosevelt contracting malaria and suffering injuries that affected his health for the remainder of his life. The book combines natural history observations, geographic discovery, and adventure narrative from one of America's most notable presidents during his post-presidency years.
+"""
+
+Notes = """
+Published in 1914, as indicated by the preface dated September 1, 1914 at Sagamore Hill (Roosevelt's home). The expedition itself took place in 1913-1914. This represents both a zoological reconnaissance and an account of significant geographic exploration in South America.
+"""
+</result>

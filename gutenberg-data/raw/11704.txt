@@ -1,0 +1,17 @@
+I can see this is from a Project Gutenberg text, but this appears to be an issue of *Punch* magazine rather than a traditional book. Let me provide the structured information:
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 153, July 25, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "historical-document"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humor and satire established in 1841. It was hugely influential in British culture and politics for over 150 years until it ceased regular publication in 1992 (with a brief revival 1996-2002). This particular issue is from July 25, 1917, during World War I, and contains the magazine's characteristic blend of political commentary, social satire, jokes, and cartoons. The "Charivaria" section shown here contains brief humorous observations on current events, including references to Sir Eric Geddes' appointment as First Lord of the Admiralty, wartime shortages in Germany, and the ongoing Mesopotamian campaign.
+"""
+
+Notes = """
+Year chosen is 1917 as this is a weekly periodical issue, not a timeless work. Punch had many contributors over its run, so 'Various' is most accurate for authorship. This issue provides historical insight into British humor and concerns during WWI. Not tagged as 'appropriate-for-children' as the humor and references are adult-oriented and topical. Not tagged as 'catholic' as Punch was a secular publication with diverse contributors.
+"""
+</result>

@@ -1,0 +1,23 @@
+I'll help you identify this text. Let me analyze what we have here.
+
+This is clearly a children's adventure novel from the early aviation era. The text shows it's "The Aeroplane Boys on the Wing" by John Luther Langworthy, with a copyright/publication date of 1912 visible in the text itself.
+
+John Luther Langworthy was a pseudonymous author who wrote numerous boys' adventure series in the early 20th century. This particular series capitalized on the public's fascination with early aviation. These were formulaic adventure stories aimed at young boys, typical of the era's juvenile fiction.
+
+The work is clearly not Catholic in the sense you've defined (not written by a Catholic author for Catholic formation or likely to receive nihil obstat/imprimatur). It's standard secular commercial juvenile fiction from the early 1900s.
+
+<result>
+Title = "The Aeroplane Boys on the Wing; or, Aeroplane Chums in the Tropics"
+Author = "John Luther Langworthy"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children", "adventure", "aviation"]
+
+Summary = """
+An early 20th century boys' adventure novel part of "The Aeroplane Boys" series. These books were written during the pioneering days of aviation to capitalize on public fascination with flight. The series follows young aviators having adventures, in this case apparently traveling to tropical locations. Typical of the era's juvenile fiction, these were formulaic adventure stories designed to excite young readers about modern technology and exploration. The series included multiple volumes following the "Bird Boys" or "Aeroplane Boys" through various escapades.
+"""
+
+Notes = """
+The year 1912 is stated directly in the text. This was during the golden age of boys' series books, shortly after the Wright Brothers' first flight (1903), when aviation was still novel and exciting to the public.
+"""
+</result>

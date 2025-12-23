@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "The Oxford Movement: Twelve Years 1833-1845" by R.W. Church (Richard William Church), who was Dean of St. Paul's Cathedral and a Fellow of Oriel College, Oxford. The text includes an advertisement/preface explaining that this work was being prepared for publication at the time of Church's death, and was completed by others based on his notes and drafts.
+
+The Oxford Movement was a significant religious movement within the Church of England that sought to restore certain Catholic traditions and doctrines. Church was a contemporary participant in the movement and wrote this as a historical memoir of those twelve pivotal years.
+
+<result>
+Title = "The Oxford Movement: Twelve Years 1833-1845"
+Author = "R.W. Church"
+Year = 1891
+
+Tags = ["non-fiction", "catholic", "historical-document"]
+
+Summary = """
+This work is a historical memoir of the Oxford Movement (also known as the Tractarian Movement), written by Richard William Church, Dean of St. Paul's Cathedral and a contemporary participant in the movement. The Oxford Movement (1833-1845) was a significant religious revival within the Church of England that sought to restore Catholic traditions, emphasize apostolic succession, and reinvigorate Anglican spirituality. Led by figures such as John Henry Newman, John Keble, and Edward Pusey, the movement profoundly influenced Anglican theology and practice. Church's account provides an insider's perspective on this "scene of religious earnestness and aspiration," documenting the intellectual and spiritual fervor of the period. The work was completed posthumously based on Church's drafts and notes.
+"""
+
+Notes = """
+The book was published in 1891, though Church died before completing the final revisions. The advertisement notes that most chapters had received their final form, while the last few were completed by editors working from his pencilled notes. Church wrote this as a "contemporary memorial" rather than a comprehensive history, preserving his firsthand observations of a movement that profoundly shaped Victorian religious life and eventually led to Newman's conversion to Roman Catholicism in 1845.
+"""
+</result>

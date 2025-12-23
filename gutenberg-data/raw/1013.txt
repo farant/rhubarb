@@ -1,0 +1,17 @@
+Looking at this text, I can identify it clearly as H.G. Wells' science fiction novel "The First Men in the Moon." Let me provide the structured information you requested.
+
+<result>
+Title = "The First Men in the Moon"
+Author = "H. G. Wells"
+Year = 1901
+
+Tags = ["fiction", "science-fiction", "appropriate-for-children"]
+
+Summary = """
+'The First Men in the Moon' is a scientific romance novel by H.G. Wells that tells the story of two Englishmen who travel to the Moon using an anti-gravity substance called Cavorite. The narrator, Mr. Bedford, a failed businessman, meets the eccentric scientist Mr. Cavor in Lympne, Kent. Together they build a spherical spacecraft and journey to the Moon, where they discover an underground civilization of insect-like creatures called Selenites. The novel explores themes of imperialism, scientific hubris, and alien civilization through Wells' characteristic blend of adventure and social commentary. It was one of the early works of science fiction dealing with space travel and extraterrestrial life, and remains influential in the genre.
+"""
+
+Notes = """
+First published in 1901 (serialized in The Strand Magazine from December 1900 to August 1901, then published as a book in November 1901). This is one of Wells' major scientific romances, following 'The Time Machine' (1895), 'The Island of Doctor Moreau' (1896), 'The Invisible Man' (1897), and 'The War of the Worlds' (1898). Wells was not a Catholic author, so the 'catholic' tag does not apply.
+"""
+</result>

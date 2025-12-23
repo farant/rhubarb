@@ -1,0 +1,17 @@
+I recognize this work from the title page and publication details. This is Joseph Sturge's account of his travels to the United States to observe and report on slavery and the abolitionist movement.
+
+<result>
+Title = "A Visit to the United States in 1841"
+Author = "Joseph Sturge"
+Year = 1842
+
+Tags = ["non-fiction", "historical-document", "anti-slavery"]
+
+Summary = """
+Joseph Sturge (1793-1859) was a prominent English Quaker abolitionist, businessman, and social reformer. In 1841, he traveled to the United States to observe firsthand the conditions of slavery and meet with American abolitionists. This book, published in 1842, is his detailed account of that journey. Sturge visited various states, both free and slave, documenting the institution of slavery, meeting with both enslaved people and abolitionists, and examining the work of various anti-slavery societies. The work includes extensive appendices covering Quaker (Friends) efforts against slavery, the Amistad case, and other contemporary issues including the Opium War with China. The book was an important contribution to transatlantic abolitionist discourse and helped strengthen ties between British and American anti-slavery movements.
+"""
+
+Notes = """
+Published in 1842, immediately following his 1841 visit, making this a contemporary account. The Boston edition was published by Dexter S. King. While Sturge was a Quaker and the work reflects Quaker values and includes extensive documentation of Quaker anti-slavery efforts, I have not tagged it as 'catholic' as it is explicitly a Quaker/Friends perspective rather than a Catholic one.
+"""
+</result>

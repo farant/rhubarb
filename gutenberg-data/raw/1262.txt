@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text for you.
+
+This is clearly "The Heritage of the Desert" by Zane Grey, one of his early Western novels. Let me provide the structured information you requested:
+
+<result>
+Title = "The Heritage of the Desert"
+Author = "Zane Grey"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Heritage of the Desert is an early Western novel by Zane Grey, first published in 1910. It tells the story of Jack Hare, a tubercular Easterner who travels to the Utah desert for his health and is rescued by Mormon rancher August Naab. The novel explores themes of redemption, survival, and romance against the backdrop of the American Southwest desert landscape. It features Grey's characteristic vivid descriptions of the desert terrain, conflicts between ranchers and rustlers, and the clash between civilization and wilderness. This was one of Grey's first successful novels and helped establish him as a major figure in Western fiction.
+"""
+
+Notes = """
+First published in 1910, this was Zane Grey's second published novel and his first significant commercial success in the Western genre. The book was based on Grey's own experiences traveling through the Southwest, particularly Utah and Arizona. While Grey (1872-1939) was raised in a religious household, he was not Catholic, so this work does not receive a 'catholic' tag. The novel is generally considered appropriate for older children and young adults, featuring adventure and romance without explicit content.
+"""
+</result>

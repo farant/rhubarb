@@ -1,0 +1,15 @@
+<result>
+Title = "Buena Nueva de acuerdo a Lucas (The Gospel According to Luke)"
+Author = "Traditional (Biblical text, translated by evangelios-dp group)"
+Year = 80
+
+Tags = ["non-fiction", "religious", "biblical", "catholic", "historical-document"]
+
+Summary = """
+This is a Spanish translation of the Gospel of Luke, one of the four canonical Gospels in the New Testament. The Gospel of Luke narrates the life, ministry, death, and resurrection of Jesus Christ, with particular emphasis on Jesus's compassion for the poor and marginalized, his parables, and his universal mission of salvation. This specific version is a public domain Spanish translation based on the World English Bible, created by a collaborative group (evangelios-dp) and released to the public domain to make Scripture freely available in Spanish.
+"""
+
+Notes = """
+The year chosen (circa 80 AD) represents the approximate date of composition of the original Greek Gospel of Luke, as this is the most historically and educationally relevant date for a biblical text. While this particular Spanish translation was published to Project Gutenberg in 2004, the work itself is the Gospel of Luke, and dating it to its original composition provides proper historical context. The Gospel of Luke was likely written between 80-90 AD, with 80 being a commonly cited date among biblical scholars. This text has full Catholic acceptance as part of the biblical canon.
+"""
+</result>

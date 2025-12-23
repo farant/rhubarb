@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedie of Hamlet, Prince of Denmarke"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+This is one of the early printings of Shakespeare's Hamlet, likely based on the First Quarto (Q1, 1603) or Second Quarto (Q2, 1604-5) edition, given the archaic spelling conventions and printing practices described in the introduction. Hamlet is Shakespeare's longest and most philosophically complex tragedy, telling the story of Prince Hamlet of Denmark who seeks to avenge his father's murder by his uncle Claudius. The play explores themes of revenge, madness, mortality, and the corruption of power. It contains some of the most famous lines in English literature, including "To be or not to be" and Hamlet's instructions to the players. This particular edition preserves the original printing conventions of the early modern period, including the interchangeable use of 'u' and 'v', 'i' and 'j', and other typographical practices that resulted from the physical limitations of early printing presses.
+"""
+
+Notes = """
+I chose 1603 as this represents the First Quarto publication date, which appears to be the type of early printing this text represents based on the Executive Director's notes about original spelling and printing conventions. The First Folio was published in 1623, but the quartos came earlier. The play was likely written and first performed around 1600-1601, but 1603 marks its first appearance in print. This is a historically significant edition as it preserves the authentic printing practices of Shakespeare's time, including the use of 'cliches' (pre-set blocks of type) and character substitutions due to limited typeface availability.
+"""
+</result>

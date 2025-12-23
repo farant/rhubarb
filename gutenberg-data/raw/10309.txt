@@ -1,0 +1,15 @@
+<result>
+Title = "The Lost Chord"
+Author = "Arthur Sullivan"
+Year = 1877
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+'The Lost Chord' is a famous song composed by Arthur Sullivan in 1877, with lyrics by Adelaide Anne Procter. This Project Gutenberg entry is an audio recording from the Edison National Historic Site, representing one of the early phonograph recordings. The song became one of the most popular pieces of Victorian parlor music and remained a staple of classical vocal repertoire well into the 20th century. The lyrics describe a musician seeking a transcendent chord heard once but never recaptured, exploring themes of faith, loss, and divine beauty.
+"""
+
+Notes = """
+I chose 1877 as this is when Sullivan composed the piece, which is the historically significant date for this work. The actual Edison recording would be from the late 1890s or early 1900s (Edison's phonograph era), but the composition date is more appropriate for a historical timeline of works. Sullivan was Anglican, not Catholic, so I did not include a 'catholic' tag. This is classified as a historical document given it represents both Victorian musical culture and early recording technology history.
+"""
+</result>

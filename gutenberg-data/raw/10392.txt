@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly the reminiscences/memoirs of Sir Henry Hawkins, who became Baron Brampton. The text shows this is his autobiography, edited by Richard Harris, K.C. The preface is dated August 17, 1904, from Harrogate, which indicates the publication year.
+
+Sir Henry Hawkins (1817-1907) was a famous English judge known for his work on the Tichborne case and his long career in the British legal system. This would be a Victorian-era legal memoir.
+
+<result>
+Title = "The Reminiscences of Sir Henry Hawkins (Baron Brampton)"
+Author = "Henry Hawkins (edited by Richard Harris)"
+Year = 1904
+
+Tags = ["non-fiction", "memoir", "legal-history", "victorian-era"]
+
+Summary = """
+The memoirs of Sir Henry Hawkins (1817-1907), who became Baron Brampton, one of the most celebrated English judges and barristers of the Victorian era. Edited by Richard Harris, K.C., these reminiscences provide an insider's view of the English legal system in the 19th century. Hawkins was particularly famous for his role in the Tichborne case, one of the longest and most sensational trials in English legal history. The work offers personal reflections on his long career in advocacy and on the bench, written with the assistance of his friend Harris, who had previously written about Hawkins' work in "Illustrations in Advocacy."
+"""
+
+Notes = """
+Year chosen is 1904 based on the preface date (August 17, 1904). This represents when Hawkins, in his late 80s, published his memoirs with the help of editor Richard Harris. The work is a primary historical source for understanding Victorian legal practice and the English bar in the 19th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Autobiography of a Slander"
+Author = "Edna Lyall"
+Year = 1890
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Autobiography of a Slander' is a Victorian moral tale by Edna Lyall (pseudonym of Ada Ellen Bayly, 1857-1903), a popular English novelist of the late 19th century. The story is narrated from the unique perspective of a slander itself, personifying a piece of malicious gossip as it spreads from person to person, causing harm and destruction in its wake. The novella traces how a simple misunderstanding or deliberate falsehood can grow and damage reputations, relationships, and lives as it passes through society. Lyall was known for her religious and moral themes, and this work serves as a cautionary tale about the dangers of gossip, the importance of truth, and the Christian duty to resist participating in or spreading unverified rumors. The story was quite popular in its time and was often used for moral instruction.
+"""
+
+Notes = """
+The year 1890 is clearly indicated in the transcription note as the edition date from 'Longmans, Green, and Co.' This appears to be the original publication date of this work. Edna Lyall was a devout Christian writer whose works often contained strong moral and religious themes, though she was Anglican rather than Catholic, so the 'catholic' tag was not applied.
+"""
+</result>

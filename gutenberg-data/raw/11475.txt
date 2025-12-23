@@ -1,0 +1,15 @@
+<result>
+Title = "The Convert"
+Author = "W.W. Jacobs"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Convert" is a short story by W.W. Jacobs, part of his collection "Deep Waters" published in 1919. W.W. Jacobs (1863-1943) was an English author known for his humorous short stories about dockside and seafaring life, as well as his famous horror story "The Monkey's Paw." This story appears to be one of his characteristic humorous tales featuring working-class characters, likely set in the maritime communities of London where much of his fiction takes place. Jacobs was celebrated for his witty dialogue and gentle satire of human nature.
+"""
+
+Notes = """
+"Deep Waters" was published as a collection in 1919. While this is labeled as "Part 5" of Deep Waters, it refers to it being the fifth story in that collection. W.W. Jacobs was one of the most popular English short story writers of the early 20th century, known for his lighthearted tales of everyday people, particularly sailors and dockworkers.
+"""
+</result>

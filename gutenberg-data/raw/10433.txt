@@ -1,0 +1,15 @@
+<result>
+Title = "A Flock of Girls and Boys"
+Author = "Nora Perry"
+Year = 1895
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Flock of Girls and Boys is a children's book by American author and poet Nora Perry (1831-1896), published in 1895. Perry was a popular writer of the late 19th century known for her poetry, children's literature, and sentimental fiction. This work appears to be a collection of stories or sketches featuring young people, fitting into the genre of wholesome American children's literature popular during the Victorian era. Perry was also known for her works "Hope Benham," "Lyrics and Legends," and "A Rosebud Garden of Girls," as mentioned on the title page. The book was illustrated by Charlotte Tiffany Parker and would have been aimed at middle-grade readers of the time.
+"""
+
+Notes = """
+The publication year 1895 is clearly stated on the title page of this edition. This appears to be the original publication date for this work.
+"""
+</result>

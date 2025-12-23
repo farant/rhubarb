@@ -1,0 +1,15 @@
+<result>
+Title = "The Virginia Housewife, or Methodical Cook"
+Author = "Mary Randolph"
+Year = 1824
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+The Virginia Housewife is one of the most influential American cookbooks of the 19th century, written by Mary Randolph (1762-1828), a Virginia socialite and expert on household management. First published in 1824, this cookbook was groundbreaking in its systematic approach to cooking, being one of the first American cookbooks to use precise measurements rather than vague instructions. The book combines practical recipes with advice on household management, reflecting the domestic ideals of the antebellum South. It includes recipes for traditional Virginia and Southern dishes, as well as instructions for preserving food, managing servants, and running an efficient household. The work is significant both as a culinary text and as a historical document reflecting early American domestic life and foodways.
+"""
+
+Notes = """
+The text header indicates '1860' which likely refers to a later edition or reprint. However, The Virginia Housewife was originally published in 1824, which is the historically significant date for this work. The 1824 date represents when this influential cookbook first appeared and began shaping American culinary practices. Subsequent editions were published throughout the 19th century due to its popularity, with the 1860 edition being one of these reprints. For historical and educational purposes, 1824 is the most appropriate year as it marks the original contribution of this work to American cookbook literature.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work, author, and provide the requested information in TOML format.
+
+This is clearly a French literary work. Based on the title page showing "ARSENE HOUSSAYE" and "LES DOUZE NOUVELLES NOUVELLES" (The Twelve New Tales), and the beginning of the first story "Mademoiselle Salomé," this is a collection of short stories by French author Arsène Houssaye.
+
+Arsène Houssaye (1815-1896) was a 19th-century French novelist, poet, and man of letters. "Les Douze Nouvelles Nouvelles" is one of his works of fiction, a collection of romantic tales typical of Second Empire French literature.
+
+<result>
+Title = "Les Douze Nouvelles Nouvelles"
+Author = "Arsène Houssaye"
+Year = 1883
+
+Tags = ["fiction", "short-stories", "french-literature", "romance"]
+
+Summary = """
+A collection of twelve short stories by Arsène Houssaye, a prominent 19th-century French author, poet, and director of the Comédie-Française. The work exemplifies the romantic fiction of Second Empire France, with tales that explore themes of love, society, and human nature. The first story, 'Mademoiselle Salomé,' opens with a ballroom scene depicting a passionate waltz between a young woman and Arthur Dupont, an auditor at the Council of State with an unfortunately common name. Houssaye was known for his elegant prose style and his chronicles of Parisian society and artistic life.
+"""
+
+Notes = """
+The exact publication year of 'Les Douze Nouvelles Nouvelles' is 1883. Houssaye was a prolific writer who produced numerous novels, poetry collections, and essays throughout his long career in the French literary world. This work represents his mature period as a storyteller.
+"""
+</result>

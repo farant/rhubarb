@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents, Volume VI"
+Author = "James D. Richardson"
+Year = 1902
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume VI of James D. Richardson's comprehensive compilation of presidential papers, published by authority of Congress. This particular volume covers the period from March 4, 1861, to March 4, 1869, encompassing the administrations of Presidents Abraham Lincoln and Andrew Johnson. The work contains official state papers, messages, and documents from these two presidents during one of the most tumultuous periods in American history—the Civil War and Reconstruction era. Richardson was a U.S. Representative from Tennessee who undertook this massive documentary project to preserve and organize presidential papers for historical and governmental reference. The compilation became an authoritative source for presidential documentation and was widely used by historians, scholars, and government officials.
+"""
+
+Notes = """
+The year 1902 represents the publication date of this compilation volume, which is the appropriate date for this work since it is Richardson's editorial compilation rather than original source material. While the documents contained within date from 1861-1869 (Lincoln and Johnson administrations), the historical significance of this work lies in Richardson's effort to systematically compile and publish these presidential papers under Congressional authority at the turn of the 20th century.
+"""
+</result>

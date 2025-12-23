@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Ceres' Runaway and Other Essays" by Alice Meynell. Based on the transcription note, this is from the 1909 Constable & Co. Ltd. edition. Alice Meynell (1847-1922) was a British poet, essayist, and editor who converted to Catholicism and was a prominent Catholic intellectual of her time. She was highly regarded in literary circles and her work often reflected her Catholic faith and contemplative nature.
+
+<result>
+Title = "Ceres' Runaway and Other Essays"
+Author = "Alice Meynell"
+Year = 1909
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+A collection of essays by Alice Meynell, one of the leading Catholic intellectuals and literary figures of the late Victorian and Edwardian periods. Meynell was a poet, essayist, and editor known for her refined prose style and contemplative approach to both literary and spiritual subjects. This collection includes essays on various topics ranging from classical mythology ("Ceres' Runaway") to observations on human nature ("Laughter"), literature ("Harlequin Mercutio"), and philosophical reflections. Her essays are characterized by their elegant style, careful observation, and often subtle integration of her Catholic worldview.
+"""
+
+Notes = """
+The 1909 date represents the original publication of this specific collection by Constable & Co. Ltd. Alice Meynell was a convert to Catholicism and a respected voice in Catholic literary circles, corresponding with figures like Francis Thompson and Coventry Patmore. Her work would likely have been considered appropriate for the imprimatur, though this was an era when such requirements were less universally enforced for literary essays. Not appropriate-for-children due to the sophisticated literary nature of the content.
+"""
+</result>

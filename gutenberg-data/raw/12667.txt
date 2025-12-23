@@ -1,0 +1,15 @@
+<result>
+Title = "Travels of Richard and John Lander, Into the Interior of Africa, for the Discovery of the Course and Termination of the Niger"
+Author = "Robert Huish"
+Year = 1836
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a comprehensive account of the expeditions of Richard and John Lander into the interior of Africa, specifically their successful mission to trace the course and termination of the Niger River. Published in 1836, this work draws from unpublished documents belonging to Captain John William Fullerton and includes a prefatory analysis of previous African explorations by notable figures such as Mungo Park, Denham, Clapperton, Adams, Lyon, and Ritchie. The Lander brothers' expedition (1830-1831) was historically significant as they successfully traced the Niger River to its delta in the Gulf of Guinea, solving one of the great geographical mysteries of the era. Robert Huish compiled and authored this account, which chronicles both the Landers' achievements and provides context through earlier exploration attempts.
+"""
+
+Notes = """
+Year chosen is 1836, the publication date shown on the title page. This is appropriate as this is a contemporary account compiled shortly after the Landers' expedition (1830-1831). The work is primarily a historical and geographical account rather than the explorers' own firsthand narrative, though it draws on original documents. Not marked as appropriate-for-children due to likely descriptions of hardships, dangers, and potentially disturbing content typical of 19th-century African exploration narratives. Not tagged as Catholic despite author being English, as this is a geographical/exploration work without religious focus.
+"""
+</result>

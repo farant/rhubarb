@@ -1,0 +1,23 @@
+I'll analyze this text to identify the title, author, and publication details.
+
+This is clearly a Swedish literary work. The title is explicitly stated at the beginning: "Eros' begravning" (The Burial of Eros) by Hjalmar Bergman, with the date 1922 shown on the page.
+
+Hjalmar Bergman (1883-1931) was a prominent Swedish author known for his novels and plays. "Eros' begravning" is one of his notable works, published in 1922. The text appears to be fiction - it opens with a scene describing Fru Olga Janselius at her bedroom window, and contains narrative elements typical of a novel.
+
+The work is by a Swedish author writing in the early 20th century. Given the mature themes and sophisticated literary style, this would not be considered appropriate for children. It is not a Catholic work - Bergman was a Swedish writer working in a predominantly Lutheran cultural context.
+
+<result>
+Title = "Eros' begravning"
+Author = "Hjalmar Bergman"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+Eros' begravning (The Burial of Eros) is a novel by Swedish author Hjalmar Bergman, one of Sweden's most important early 20th-century writers. Bergman was known for his psychological insight and his ability to depict the complexities of human relationships and desires. This work, whose title suggests themes of love and death, is characteristic of Bergman's literary style which often explored the darker and more complicated aspects of human nature. The excerpt shows his attention to realistic detail and social observation in depicting Swedish society of the period.
+"""
+
+Notes = """
+The year 1922 is explicitly stated in the text itself and represents the original publication date. Hjalmar Bergman was a significant figure in Swedish literature, contemporary with other Scandinavian modernist writers of the early 20th century.
+"""
+</result>

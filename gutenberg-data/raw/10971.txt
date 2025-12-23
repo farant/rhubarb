@@ -1,0 +1,28 @@
+I'll help you identify this text. Let me analyze what I can see from the excerpt.
+
+This is clearly a Dutch text, and from the opening I can identify several key details:
+
+- Title: "De Zoon van Dik Trom" (The Son of Dik Trom)
+- Author: C. Joh. Kieviet (Cornelis Johannes Kieviet)
+- This mentions it's the "Twaalfde, Goedkoope Druk" (Twelfth, Cheap Edition)
+- Publisher: Amersfoort--Valkhoff & Co.
+
+This is a sequel to the famous Dutch children's book "Dik Trom" by C. Joh. Kieviet. The original "Dik Trom" was published in 1891, and "De Zoon van Dik Trom" (The Son of Dik Trom) was first published in 1904. This is a beloved Dutch children's book series about the adventures of a rotund boy named Dik Trom.
+
+Kieviet (1858-1931) was a Dutch teacher and author who wrote many popular children's books. The Dik Trom series became iconic in Dutch children's literature.
+
+<result>
+Title = "De Zoon van Dik Trom"
+Author = "C. Joh. Kieviet"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'De Zoon van Dik Trom' (The Son of Dik Trom) is a sequel to the beloved Dutch children's novel 'Dik Trom' by C. Joh. Kieviet. The story continues the adventures of the Trom family, focusing on Dik Trom's son. The opening chapter describes how the old Trom family grocery store has prospered, with young Dik delivering goods with his horse and wagon to customers outside the village. Kieviet was a Dutch teacher and prolific children's author, and the Dik Trom series became one of the most popular and enduring works of Dutch children's literature, beloved for its humor and depiction of Dutch village life.
+"""
+
+Notes = """
+First published in 1904 as a sequel to 'Dik Trom' (1891). This Project Gutenberg text indicates it's from the twelfth edition published by Valkhoff & Co. in Amersfoort. The series remained popular throughout the 20th century in the Netherlands.
+"""
+</result>

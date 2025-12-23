@@ -1,0 +1,15 @@
+<result>
+Title = "Dick Prescott's Second Year at West Point; or, Finding the Glory of the Soldier's Life"
+Author = "H. Irving Hancock"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the second book in H. Irving Hancock's West Point series, following the adventures of Dick Prescott during his second year (yearling year) at the United States Military Academy. The series was part of the popular early 20th-century genre of boys' adventure fiction set in military academies. The book follows Prescott and his classmates as they navigate hazing controversies, court-martial proceedings, athletics (including baseball), and various challenges of cadet life. Like other books in Hancock's military academy series (which also included Annapolis stories), these were intended as wholesome, character-building adventures for young male readers that promoted values of honor, duty, and patriotism.
+"""
+
+Notes = """
+H. Irving Hancock wrote multiple series of books for boys in the early 1900s, including the West Point series (of which this is the second volume), the Annapolis series, and various other adventure series. The Dick Prescott West Point books were published around 1910-1911. While I cannot determine the exact publication year from the text alone, 1911 is the most commonly cited publication date for this specific volume in the series.
+"""
+</result>

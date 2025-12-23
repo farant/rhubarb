@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "Contes Anecdotes et Récits Canadiens" by A. Filiatreault, published in Montreal in 1910. The title page clearly shows this information. This is a collection of humorous tales and anecdotes written in French-Canadian vernacular ("dans le langage du terroir" - in the language of the land/soil).
+
+Based on the table of contents, this is a collection of comic stories with titles like "Baptiste's Pants," "The Cremation," "The Rooster of the Mother Superior," etc. The preface mentions "Gallic gaieties though Canadian," suggesting humorous folk tales in the French tradition but with a distinctly Canadian flavor.
+
+<result>
+Title = "Contes Anecdotes et Récits Canadiens dans le Langage du Terroir"
+Author = "A. Filiatreault"
+Year = 1910
+
+Tags = ["fiction", "folk-tales", "humor", "canadian-literature", "french-canadian"]
+
+Summary = """
+A collection of humorous tales, anecdotes, and Canadian stories written in French-Canadian vernacular (the language of the terroir). Published in Montreal in 1910 with illustrations by René Béliveau, this work captures the folk humor and storytelling traditions of French-Canadian culture. The stories include comical episodes with titles like "Baptiste's Pants," "The Rooster of the Mother Superior," and various other humorous situations drawn from rural Quebec life. The preface describes these as "Gallic gaieties though Canadian," placing them in the French comic tradition while celebrating their distinctly Canadian character.
+"""
+
+Notes = """
+The year 1910 is taken directly from the title page. This appears to be the first edition published by I. Filiatreault in Montreal. The work is written in colloquial French-Canadian dialect ("langage du terroir"), which was an important movement in preserving and celebrating French-Canadian linguistic and cultural identity in the early 20th century.
+"""
+</result>

@@ -1,0 +1,17 @@
+I can see this is a Dutch language work titled "Ons Vaderland van de vroegste tijden tot de 15de eeuw" (Our Fatherland from the earliest times to the 15th century) by M. Lievevrouw-Coopman, published in 1904. This appears to be a historical educational text written for children about the Low Countries/Belgium.
+
+<result>
+Title = "Ons Vaderland van de vroegste tijden tot de 15de eeuw"
+Author = "M. Lievevrouw-Coopman"
+Year = 1904
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a Dutch-language educational history textbook about the Low Countries (Belgium/Netherlands region) covering the period from earliest times to the 15th century. Written by M. Lievevrouw-Coopman, identified as a head teacher (hoofdonderwijzeres), with illustrations by E. Roelant. The work was designed as a pedagogical text for children to learn about their national history, beginning with a narrative approach about children living in primitive huts, making it accessible to young readers.
+"""
+
+Notes = """
+The year 1904 is clearly stated in the original publication information. The author's designation as 'hoofdonderwijzeres' (head teacher) indicates this was an educational text meant for schoolchildren. The narrative beginning with 'Er waren eens twee kinderen' (There were once two children) suggests a story-based pedagogical approach common in early 20th century children's history textbooks.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Game"
+Author = "Jack London"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Game" is a novella by Jack London, first published in 1905. It tells the story of Joe Fleming, a young boxer, and his relationship with Genevieve, a young woman who loves him but fears the brutality of his profession. The narrative explores themes of love, masculine pride, and the dangers of boxing in the early 20th century. The story builds to a tragic climax during a pivotal boxing match. London, known for his naturalistic writing style, portrays the working-class world of professional boxing with stark realism. The novella is relatively short and accessible, dealing with universal themes of love and the consequences of violence.
+"""
+
+Notes = """
+"The Game" was originally published in 1905. The text here indicates it was transcribed from a 1913 William Heinemann edition, but that's a later printing. The original publication year of 1905 is the most historically accurate date for timeline purposes. Jack London was not a Catholic author, so the 'catholic' tag does not apply. The work is relatively short and, while dealing with boxing and containing some violence, is generally considered appropriate for older children/young adults given its literary merit and relatively restrained treatment of its subject matter.
+"""
+</result>

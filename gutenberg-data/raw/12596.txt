@@ -1,0 +1,17 @@
+I recognize this as "The Purple Heights" by Marie Conway Oemler. This was an American novel published in 1920 (as shown in the copyright page). Marie Conway Oemler was a Southern writer known for her novels set in the American South, though she herself was not specifically known as a Catholic author despite the Catholic dedication in your CLAUDE.md file's influence.
+
+<result>
+Title = "The Purple Heights"
+Author = "Marie Conway Oemler"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Purple Heights" is a novel by Marie Conway Oemler, an American author known for her Southern fiction. Published in 1920, this work comes from the same author who wrote "Slippy McGee" and "A Woman Named Smith." The novel appears to follow a coming-of-age or life journey narrative, as suggested by chapter titles like "At Grips with Life," "Where the Road Divided," and "Kismet!" The Purple Heights likely refers to an aspirational goal or idealized state that the protagonist seeks to reach. Oemler was known for writing accessible, morally-grounded fiction that often explored themes of personal growth, social class, and the American South in the early 20th century.
+"""
+
+Notes = """
+The year 1920 is clearly stated on the title page and represents the original publication date by the New York publisher. This is a straightforward case with no translation or edition ambiguity.
+"""
+</result>

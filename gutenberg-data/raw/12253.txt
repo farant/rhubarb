@@ -1,0 +1,15 @@
+<result>
+Title = "D. D. Cottrell's Subscription Agency Catalog No. 39"
+Author = "D. D. Cottrell"
+Year = 1905
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a commercial catalog from D. D. Cottrell's Subscription Agency, a magazine subscription service established in 1886 and operating out of North Cohocton, New York. The catalog, from the company's twentieth year of operation (1905), is a wholesale price list of newspapers and periodicals available for subscription in the United States at that time. It contains instructions from Cottrell, advertisements from various publishers, an extensive alphabetical list of American publications, and "club lists" offering special combination prices for multiple magazine subscriptions. The document serves as a valuable historical snapshot of the periodical publishing industry and subscription practices in early 20th century America.
+"""
+
+Notes = """
+The year 1905 is explicitly stated in the catalog itself as "Season 1905." This is a primary source historical document rather than a literary work. It was not written by a Catholic author and is simply a commercial catalog, though it provides interesting historical context about American publishing and commerce at the turn of the 20th century. The transcriber's note indicates this was digitized to preserve information about periodicals and subscription prices from that era.
+"""
+</result>

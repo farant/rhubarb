@@ -1,0 +1,15 @@
+<result>
+Title = "Sei Forse L'Angelo Fedele"
+Author = "Claudia Muzio"
+Year = 1920
+
+Tags = ["historical-document", "non-fiction"]
+
+Summary = """
+This is an audio recording of the Italian soprano Claudia Muzio performing "Sei Forse L'Angelo Fedele" (Are You Perhaps the Faithful Angel), taken from the Edison National History Site. Claudia Muzio (1889-1936) was one of the most celebrated Italian opera singers of the early 20th century, known for her dramatic interpretations and beautiful voice. This appears to be a historical audio recording, likely from an Edison phonograph cylinder or early disc recording. The song title suggests a romantic or religious art song or aria from the Italian repertoire.
+"""
+
+Notes = """
+The year 1920 is an estimate based on Claudia Muzio's active recording period with Edison Records, which was primarily in the late 1910s and early 1920s. Edison Records was particularly active in recording opera singers during this era. Without access to the actual audio file metadata or more specific information about the recording session, the exact year is uncertain, but this falls within her prime recording years with Edison. Note that the Project Gutenberg metadata incorrectly lists the language as "Russian" when the title is clearly Italian.
+"""
+</result>

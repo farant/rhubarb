@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly Volume VI of François Guizot's comprehensive history of France. The table of contents shows it covers the reigns of Louis XIV, XV, and XVI (approximately 1711-1789), ending just before the French Revolution.
+
+<result>
+Title = "A Popular History of France from the Earliest Times, Volume VI"
+Author = "François Guizot"
+Year = 1869
+
+Tags = ["non-fiction", "history", "appropriate-for-children"]
+
+Summary = """
+This is the sixth and final volume of François Guizot's monumental "A Popular History of France from the Earliest Times" (L'Histoire de France racontée à mes petits-enfants). Originally written in French for his grandchildren, this work became one of the most widely-read histories of France in the 19th century. Volume VI covers the final century of the Ancien Régime, from the death of Louis XIV through the reigns of Louis XV and Louis XVI, ending with the convocation of the States-General in 1789 on the eve of the French Revolution. The volume includes chapters on court life, colonial affairs, the Seven Years' War, the Enlightenment philosophers, and the growing fiscal and political crisis that would lead to revolution. Guizot (1787-1874) was a prominent French historian, orator, and statesman who served as Prime Minister under King Louis-Philippe.
+"""
+
+Notes = """
+The complete work was published between 1870-1876, but Guizot began working on it in the late 1860s. I've chosen 1869 as it represents when the final volumes were being prepared. The French original was titled "L'Histoire de France racontée à mes petits-enfants" (History of France told to my grandchildren). This English translation by Robert Black was published shortly after in the early 1870s. Guizot was a moderate conservative and Protestant, not Catholic, so the 'catholic' tag does not apply despite the work covering extensively Catholic France.
+"""
+</result>

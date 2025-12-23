@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and extract the requested information.
+
+Based on the content, this is clearly "Manners, Customs, and Dress During the Middle Ages, and During the Renaissance Period" by Paul Lacroix (also known as Bibliophile Jacob), who was Curator of the Imperial Library of the Arsenal in Paris. The work is a historical study with extensive illustrations examining European medieval and Renaissance culture.
+
+The first edition of this work was published in French in the 1870s, and the English translation appeared around 1874-1876. Given that this is a scholarly historical work rather than a primary historical document, I'll use the original publication date of the work itself.
+
+<result>
+Title = "Manners, Customs, and Dress During the Middle Ages, and During the Renaissance Period"
+Author = "Paul Lacroix (Bibliophile Jacob)"
+Year = 1874
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A comprehensive illustrated study of European social history covering the Middle Ages and Renaissance period. Written by Paul Lacroix, curator of the Imperial Library of the Arsenal in Paris, this work examines the daily life, customs, clothing, and cultural practices of medieval and Renaissance society. The book features extensive illustrations including chromolithographic prints and hundreds of wood engravings, making it an accessible introduction to medieval and Renaissance culture for general readers. It represents 19th-century scholarship attempting to make historical knowledge available beyond academic circles.
+"""
+
+Notes = """
+The original French edition was published in the 1870s, with the English translation appearing around 1874-1876. I've chosen 1874 as representing the approximate date of the English edition's publication. This is a secondary historical work analyzing the medieval and Renaissance periods, not a primary source from those eras. Paul Lacroix was a prolific French historian and bibliophile of the 19th century who wrote extensively on cultural history.
+"""
+</result>

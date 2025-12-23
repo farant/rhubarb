@@ -1,0 +1,15 @@
+<result>
+Title = "Beacon Lights of History, Volume VI"
+Author = "John Lord"
+Year = 1883
+
+Tags = ["non-fiction", "history", "appropriate-for-children"]
+
+Summary = """
+"Beacon Lights of History" is a multi-volume series of historical lectures by John Lord (1810-1894), an American historian and lecturer. Volume VI focuses on the Renaissance and Reformation period, covering major figures and movements that shaped European history during this transformative era. Lord was known for his engaging biographical approach to history, presenting the lives and achievements of great individuals as a way to illuminate broader historical trends. The series was widely popular in the late 19th and early 20th centuries as educational reading for general audiences.
+"""
+
+Notes = """
+The complete "Beacon Lights of History" series was published between 1883-1896. The lectures were delivered earlier but the written volumes began publication in 1883. This particular volume focuses on Renaissance and Reformation figures. While Project Gutenberg notes some confusion about volume numbering (this was originally Volume III, Part 2 in an earlier arrangement), the content deals with 16th-century historical figures and events. I've chosen 1883 as it represents the beginning of the series' publication in book form.
+"""
+</result>

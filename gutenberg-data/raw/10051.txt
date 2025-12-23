@@ -1,0 +1,21 @@
+I recognize this work! This is "The Little Pilgrim" by Margaret Oliphant, specifically what appears to be "The Little Pilgrim in the Seen and Unseen" which is part of a series of spiritual allegories she wrote. Margaret Oliphant was a prolific Scottish Victorian writer who wrote both fiction and non-fiction, and she was indeed from a Presbyterian background but had deep interest in spiritual and theological matters.
+
+Let me read a bit more to be certain of the specific work and dating...
+
+This is "The Little Pilgrim in the Seen and Unseen" published in 1889, which was actually a sequel to her earlier work "A Little Pilgrim in the Unseen" (1882). The text mentions "whose story has been told in another place" which confirms this is the continuation.
+
+<result>
+Title = "The Little Pilgrim: Further Experiences (The Little Pilgrim in the Seen and Unseen)"
+Author = "Margaret Oliphant"
+Year = 1889
+
+Tags = ["fiction", "religious-allegory", "appropriate-for-children"]
+
+Summary = """
+This is the second in Margaret Oliphant's "Little Pilgrim" series, a spiritual allegory following a recently deceased soul in heaven who, despite her own joy and peace, feels deep compassion for those still suffering on earth. The Little Pilgrim questions why God does not immediately relieve all earthly suffering, and longs to return to tell her earthly brethren about the light and joy that awaits them. The work explores themes of divine providence, suffering, mercy, and the relationship between the seen earthly world and the unseen heavenly realm. Written in a gentle, accessible style, it reflects Victorian Protestant spiritual sensibility and was popular as devotional reading.
+"""
+
+Notes = """
+Margaret Oliphant (1828-1897) was a Scottish writer who produced over 120 works. While not Catholic (she was Presbyterian), this work deals with Christian theological themes in an orthodox manner focused on heaven, divine providence, and compassion. The "Little Pilgrim" series was influenced by Bunyan's "Pilgrim's Progress" and Dante's "Divine Comedy." I chose 1889 as the publication year for this specific sequel, though the first Little Pilgrim story appeared in 1882.
+"""
+</result>

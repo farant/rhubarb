@@ -1,0 +1,15 @@
+<result>
+Title = "Joe Tilden's Recipes for Epicures"
+Author = "Joseph Tilden"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a cookbook compiled from the recipes of Major Joseph Tilden, a renowned Bohemian and epicurean of the Pacific Coast in the late 19th and early 20th centuries. After his death, his culinary secrets were collected from one of his intimate companions and published. The book contains recipes for soups, chowders, and presumably other dishes that made Tilden's meals famous among his circle in San Francisco. The work represents a piece of American culinary history from the Golden Age of San Francisco's dining culture.
+"""
+
+Notes = """
+The year 1907 is clearly indicated on the title page and in the introductory note as the publication date. This appears to be the original publication year, published in San Francisco shortly after Major Tilden's death. The recipes themselves would have been developed in the decades prior, during Tilden's lifetime in the late 1800s and early 1900s.
+"""
+</result>

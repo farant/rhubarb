@@ -1,0 +1,15 @@
+<result>
+Title = "The Song of the Stone Wall"
+Author = "Helen Keller"
+Year = 1910
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+A poem by Helen Keller dedicated to Dr. Edward Everett Hale, reflecting on the stone walls of New England and the men who built them. The work connects the physical labor and traditions of New England's founders with their spiritual and moral heritage, exploring themes of American identity, Puritan values, and the ideals of freedom, equality, and brotherhood. Keller uses the stone walls as a metaphor for the enduring legacy of the region's early settlers.
+"""
+
+Notes = """
+The copyright page shows 1909-1910, with publication in October 1910. I chose 1910 as the primary year since that's when it was published. The dedication was written after Dr. Edward Everett Hale's death in 1909, as Keller mentions he "was still among us" when she began the work but writes of him in past tense. Helen Keller (1880-1968) was the famous deaf-blind author and activist. This appears to be a lesser-known poetic work from relatively early in her writing career.
+"""
+</result>

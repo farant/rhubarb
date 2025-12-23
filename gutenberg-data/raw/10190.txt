@@ -1,0 +1,21 @@
+Looking at this Project Gutenberg text, I can see this is an audio collection titled "Audio: A Bunch of Nonsense" edited by Thomas A. Edison, with Murray K. Hill listed as author. This appears to be a collection of early audio recordings from the Edison National Historic Site.
+
+However, this is a somewhat unusual Project Gutenberg entry - it's actually a collection of MP3 audio files rather than a traditional text work. The title "A Bunch of Nonsense" and the fact it's from Edison's archives suggests this is likely a collection of experimental or test recordings from Edison's phonograph work.
+
+Given the historical context of Edison's phonograph work (primarily 1870s-1890s for the major developments) and that these are archival recordings from the Edison National Historic Site, I'll estimate this represents recordings from around the 1890s, though the exact date is uncertain.
+
+<result>
+Title = "Audio: A Bunch of Nonsense"
+Author = "Murray K. Hill, edited by Thomas A. Edison"
+Year = 1890
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is a collection of audio recordings from the Edison National Historic Site, presented as MP3 files by Project Gutenberg. The work represents early phonograph recordings associated with Thomas Edison's laboratory. The title "A Bunch of Nonsense" suggests these may be experimental or test recordings rather than formal performances, offering insight into the early development of audio recording technology.
+"""
+
+Notes = """
+Year is estimated based on Edison's peak phonograph work in the 1880s-1890s. The exact recording dates are not specified in the provided text. This is an unusual Project Gutenberg entry as it's an audio collection rather than a traditional text work. The actual recordings could span multiple years from Edison's laboratory work.
+"""
+</result>

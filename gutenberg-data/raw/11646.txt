@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work, its authors, publication details, and provide appropriate context.
+
+<result>
+Title = "Noa Noa"
+Author = "Paul Gauguin, Charles Morice"
+Year = 1901
+
+Tags = ["non-fiction", "memoir", "art", "travel-literature", "polynesian-culture"]
+
+Summary = """
+Noa Noa is a collaborative work between French Post-Impressionist artist Paul Gauguin and French Symbolist poet Charles Morice. The book combines Gauguin's memoir of his first stay in Tahiti (1891-1893) with Morice's poetic interludes and literary embellishments. The work describes Gauguin's experience in Tahiti, his relationship with his young Tahitian wife Téhura (Teha'amana), and his immersion in Polynesian culture and spirituality. It represents Gauguin's attempt to escape Western civilization and find artistic and spiritual renewal in what he perceived as a more "primitive" and authentic culture. The title "Noa Noa" means "fragrant" in Tahitian. The work is significant for understanding Gauguin's artistic vision and the cultural context of his famous Tahitian paintings.
+"""
+
+Notes = """
+The first edition was published in 1901 in Paris, though Gauguin began writing it in 1893. The collaboration between Gauguin and Morice was complex—Morice heavily edited and poeticized Gauguin's original manuscript, adding verse and literary flourishes. This Gutenberg edition appears to be based on the French 1901 publication by La Plume. While Gauguin was baptized Catholic and had Catholic education, this work is more anthropological/artistic memoir than religious text, so it does not receive the 'catholic' tag. Not appropriate for children due to frank discussions of sexuality and colonialism.
+"""
+</result>

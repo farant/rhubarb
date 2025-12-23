@@ -1,0 +1,15 @@
+<result>
+Title = "The House of Whispers"
+Author = "William Le Queux"
+Year = 1910
+
+Tags = ["fiction", "mystery", "thriller"]
+
+Summary = """
+"The House of Whispers" is a mystery/thriller novel by William Le Queux, a prolific British author known for his spy novels and sensational fiction. Le Queux was one of the most popular writers of his era, specializing in stories involving espionage, international intrigue, and mysterious conspiracies. Set in Scotland (as indicated by references to "The Laird of Glencardine" and Scottish place names like "Connachan"), this novel likely follows Le Queux's typical formula of suspense, secrets, and dramatic revelations. The chapter titles suggest a Gothic atmosphere with mysterious elements, hidden secrets, and romantic entanglements typical of Edwardian-era popular fiction.
+"""
+
+Notes = """
+The year 1910 is clearly stated on the title page of this Gutenberg edition and appears to be the original publication date. William Le Queux (1864-1927) was an Anglo-French journalist and writer who published extensively during the late Victorian and Edwardian periods. While Le Queux was a popular entertainer of his time, his works were sensational fiction rather than literary classics, and would not qualify for Catholic imprimatur designation.
+"""
+</result>

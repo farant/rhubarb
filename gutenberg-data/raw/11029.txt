@@ -1,0 +1,17 @@
+I recognize this as "American Hero-Myths: A Study in the Native Religions of the Western Continent" by Daniel G. Brinton, published in 1882. This is an anthropological and comparative religion study examining Native American mythology and religious beliefs from various indigenous tribes across the Americas.
+
+<result>
+Title = "American Hero-Myths: A Study in the Native Religions of the Western Continent"
+Author = "Daniel G. Brinton"
+Year = 1882
+
+Tags = ["non-fiction", "anthropology", "comparative-religion", "native-american-studies"]
+
+Summary = """
+An early anthropological work by Daniel G. Brinton examining the mythologies and religious beliefs of indigenous peoples across the Americas. The book attempts to apply comparative religious study methods to Native American hero-myths and fundamental religious conceptions. Brinton was a pioneering American anthropologist and ethnologist who sought to distinguish between myth and historical tradition in Native American cultures, arguing against the then-common practice of treating mythological figures as historical chiefs or attempting to trace tribal migrations through mythological similarities.
+"""
+
+Notes = """
+The publication year 1882 is clearly stated on the title page. This work represents 19th-century anthropological scholarship and reflects the methodological approaches and limitations of that era. Brinton was an important figure in early American anthropology, though his interpretations would be considered outdated by modern standards.
+"""
+</result>

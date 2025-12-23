@@ -1,0 +1,15 @@
+<result>
+Title = "Hohe Sommertage: Neue Gedichte"
+Author = "Gustav Falke"
+Year = 1902
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"Hohe Sommertage" (High Summer Days) is a collection of new poems by Gustav Falke, a German poet and writer associated with naturalism and impressionism. Published in Hamburg by Alfred Janssen in 1902, the collection explores themes of nature, love, memory, and introspection through lyric poetry. The poems capture moments of summer beauty, melancholy, and human emotion with titles like "Der Parkteich" (The Park Pond), "Waldgang" (Forest Walk), "Mondlicht" (Moonlight), and "Musik" (Music). Falke was known for his accessible, melodic verse that often depicted everyday life and nature with sensitivity and emotional depth. The collection is dedicated to his dear friends Karl and Elisabeth Schütze.
+"""
+
+Notes = """
+The year 1902 is clearly stated on the title page as the publication date. Gustav Falke (1853-1916) was a significant figure in German literature around the turn of the 20th century, though less known internationally than some of his contemporaries. This work represents his mature period as a poet.
+"""
+</result>

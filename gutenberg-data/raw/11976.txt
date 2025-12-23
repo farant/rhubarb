@@ -1,0 +1,15 @@
+<result>
+Title = "Dialstone Lane"
+Author = "W. W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Dialstone Lane" is a humorous novel by W. W. Jacobs, the English author best known for his maritime tales and comedic short stories, including the famous horror story "The Monkey's Paw." Published in 1911, this novel represents Jacobs' characteristic style of gentle comedy and adventure. The work typically features his trademark wit, eccentric characters, and light-hearted storytelling that made him one of the most popular English authors of the early 20th century. Jacobs specialized in tales of everyday life, often involving sailors, boarding houses, and provincial English settings, usually with comedic misunderstandings and romantic subplots.
+"""
+
+Notes = """
+The year 1911 is clearly stated in the Project Gutenberg text as the publication date. This appears to be the original publication year of the work. W. W. Jacobs (1863-1943) was primarily known for his humorous short stories and novels, though he is most remembered today for "The Monkey's Paw" (1902), which is uncharacteristic of his generally comedic output.
+"""
+</result>

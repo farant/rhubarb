@@ -1,0 +1,15 @@
+<result>
+Title = "The Experiences of a Barrister, and Confessions of an Attorney"
+Author = "Samuel Warren"
+Year = 1852
+
+Tags = ["fiction", "legal-fiction", "non-fiction"]
+
+Summary = """
+This is a collection of legal tales and stories by Samuel Warren, a British lawyer and novelist who practiced law before becoming a successful writer. The work combines fictional narratives with authentic legal experiences, offering readers insight into the Victorian legal system through dramatized case studies. Warren was known for blending his legal knowledge with storytelling, and this collection features various cases involving marriage disputes, criminal evidence, legal documents, and the complexities of British law in the 19th century. The stories are told from the perspectives of both barristers (trial lawyers) and attorneys (solicitors), providing different viewpoints on the legal profession.
+"""
+
+Notes = """
+While the Project Gutenberg text shows 1880, this appears to be a reprint date. "The Experiences of a Barrister" was originally published serially in Blackwood's Magazine starting in the 1840s, with the first collected edition appearing around 1852. Samuel Warren (1807-1877) was the author of the popular "Ten Thousand a Year" and combined his legal career with literary pursuits. I've chosen 1852 as it represents the approximate date of the first book publication of this collection, which is more historically significant than later reprints. The work is primarily legal fiction rather than pure non-fiction, though it draws heavily on Warren's actual legal experience.
+"""
+</result>

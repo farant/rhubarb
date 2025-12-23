@@ -1,0 +1,23 @@
+Looking at this Project Gutenberg text, I can see from the title page and preface that this is "Roman Farm Management: The Treatises of Cato and Varro" translated into English with notes by "A Virginia Farmer" (identified as F.H. with signature at Belvoir), published in 1918. However, you're asking about the original works.
+
+The treatises being translated are:
+1. **Cato the Elder's "De Agri Cultura"** (On Agriculture) - written around 160 BCE
+2. **Varro's "Rerum Rusticarum"** (On Agriculture) - written around 37 BCE
+
+Since this is a translation of two distinct classical works without being a heavily annotated scholarly edition (it's described as a translation "with notes of modern instances" by a Virginia farmer for general readers), I believe the most appropriate year would be **37 BCE**, the later of the two works, as both treatises are presented together as a unified collection about Roman farm management.
+
+<result>
+Title = "Roman Farm Management: The Treatises of Cato and Varro"
+Author = "Cato the Elder, Marcus Terentius Varro"
+Year = -37
+
+Tags = ["non-fiction", "agriculture", "historical-document", "classical-antiquity"]
+
+Summary = """
+This work contains English translations of two foundational texts of Roman agriculture. Cato the Elder's "De Agri Cultura" (circa 160 BCE) is the oldest surviving complete work of Latin prose, providing practical advice on running a Roman farm. Varro's "Rerum Rusticarum" (37 BCE) is a more comprehensive and systematic treatment of agriculture, written in dialogue form. Together, these treatises preserve ancient Roman knowledge about farming, viticulture, animal husbandry, and estate management. This 1918 translation was made by "A Virginia Farmer" who sought to make these classical agricultural texts accessible to English readers, particularly those with an appreciation for rural life.
+"""
+
+Notes = """
+Year chosen as 37 BCE, when Varro completed his work at age 80. Since this is a straightforward translation without extensive modern commentary, dating to the original composition seems most appropriate. Cato's work predates Varro's by about 123 years, but they are presented as a unified collection on Roman farm management.
+"""
+</result>

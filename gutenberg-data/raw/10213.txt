@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+<result>
+Title = "The Everlasting Whisper"
+Author = "Jackson Gregory"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Everlasting Whisper" is an adventure novel set in the California Sierra Nevada wilderness during springtime. Written by Jackson Gregory, a popular early 20th-century American author known for his Western and outdoor adventure novels, this work exemplifies his characteristic vivid descriptions of the American West. Gregory was a prolific writer who specialized in tales of frontier life, romance, and adventure in the wild landscapes of California and the American West. The novel is known for its detailed natural descriptions and captures the beauty and grandeur of the Sierra Nevada mountains.
+"""
+
+Notes = """
+Jackson Gregory published "The Everlasting Whisper" in 1922. Gregory (1882-1943) was a contemporary of Zane Grey and wrote numerous popular Western novels and adventure stories during the early-to-mid 20th century. The book was published by Charles Scribner's Sons, as indicated by the dedication to Maxwell E. Perkins, who was a famous editor at Scribner's and worked with many notable American authors. This is clearly adventure/Western fiction appropriate for general audiences, not a Catholic work despite Gregory's Irish-American background.
+"""
+</result>

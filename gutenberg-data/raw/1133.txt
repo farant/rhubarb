@@ -1,0 +1,21 @@
+Looking at this Project Gutenberg text, I can identify this is **Hamlet** by William Shakespeare. The distinctive formatting and printer's notes about the original spelling (particularly the exchange of "u" for "v" and "v" for "u" in words like "liue" for "live") indicate this is based on one of the early Quarto or Folio editions.
+
+The opening lines "Barnardo. Who's there? / Fran. Nay answer me: Stand & vnfold your selfe / Bar. Long liue the King" are the famous opening of Hamlet.
+
+For dating, Hamlet was likely written between 1599-1601, with first performance around 1600-1601. The First Quarto was published in 1603, the Second Quarto (generally considered superior) in 1604, and the First Folio in 1623. Given this appears to be presenting early printing conventions, I'll use 1600 as the approximate composition date, which is most educationally useful for a historical timeline.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1600
+
+Tags = ["fiction", "drama", "tragedy", "appropriate-for-children"]
+
+Summary = """
+Hamlet is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks revenge against his uncle Claudius for murdering his father, marrying his mother, and usurping the throne. The play explores themes of revenge, madness, mortality, and moral corruption. It contains some of the most famous lines in English literature, including "To be, or not to be" and features the iconic scenes with the ghost, the play-within-a-play, Ophelia's madness, and the final deadly duel. This Project Gutenberg edition preserves original early printing conventions, including archaic spelling and typographical peculiarities from the early modern printing process.
+"""
+
+Notes = """
+Date chosen: c. 1600 represents the approximate composition/first performance date. The play exists in multiple early editions (First Quarto 1603, Second Quarto 1604, First Folio 1623) with textual variations. This Gutenberg edition appears to preserve early printing conventions with intentional "errors" like u/v substitutions that reflect the printing practices of Shakespeare's era, not modern editorial standardization.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Marrow of Tradition"
+Author = "Charles W. Chesnutt"
+Year = 1901
+
+Tags = ["fiction", "historical"]
+
+Summary = """
+"The Marrow of Tradition" is a historical novel by Charles W. Chesnutt that depicts racial tensions in a fictional North Carolina city called Wellington, closely based on the 1898 Wilmington Race Riot (also known as the Wilmington Massacre). The novel explores themes of racial violence, white supremacy, and the post-Reconstruction South through interconnected storylines involving both white and Black families. Chesnutt, one of the first African American fiction writers to gain national prominence, uses this work to examine the destructive effects of racism and the manipulation of racial fears for political gain. The narrative follows multiple characters as tensions escalate toward a violent climax that mirrors the actual historical events in Wilmington, where white supremacists orchestrated a coup d'état and massacre against the Black community.
+"""
+
+Notes = """
+The year 1901 is straightforward as this is when the novel was first published. The work is a fictionalized account of events that occurred in 1898, published just three years after the actual Wilmington Race Riot. This is not appropriate for children due to themes of racial violence and mature content. While Chesnutt addresses important moral themes, he was not a Catholic author and the work would not have received Catholic imprimatur.
+"""
+</result>

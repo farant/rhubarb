@@ -1,0 +1,15 @@
+<result>
+Title = "For Gold or Soul? The Story of a Great Department Store"
+Author = "Lurana W. Sheldon"
+Year = 1900
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"For Gold or Soul?" is a social reform novel by Lurana W. Sheldon that explores the harsh working conditions and moral challenges faced by employees in large department stores during the Gilded Age. The novel focuses on the exploitation of workers, particularly young women, in the rapidly growing retail industry of turn-of-the-century America. It examines themes of labor rights, economic justice, and the tension between profit-seeking and human dignity. The work is part of the Progressive Era's literature that sought to expose social injustices and advocate for reform.
+"""
+
+Notes = """
+The publication year of 1900 is clearly stated in the text itself. This novel belongs to the genre of "muckraking" or social problem fiction that was popular during the Progressive Era, addressing labor conditions and social inequality. While Sheldon was writing from a moral and social justice perspective that may have aligned with Christian values, this does not appear to be a specifically Catholic work and would not likely have carried an imprimatur or nihil obstat.
+"""
+</result>

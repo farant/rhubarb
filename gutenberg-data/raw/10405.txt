@@ -1,0 +1,15 @@
+<result>
+Title = "Clarinet Squawk"
+Author = "Louisiana Five (Anton Lada, Alcide 'Yellow' Nunez, Joe Cawley)"
+Year = 1918
+
+Tags = ["audio", "music", "jazz", "instrumental", "appropriate-for-children"]
+
+Summary = """
+'Clarinet Squawk' is an early jazz recording by the Louisiana Five, a pioneering jazz band active during the late 1910s. The piece was composed by band members Anton Lada (drummer), Alcide 'Yellow' Nunez (clarinet), and Joe Cawley (piano). The Louisiana Five was one of the first white jazz bands to record in the Dixieland style, featuring the distinctive New Orleans sound that was emerging during this period. The band played an important role in popularizing jazz beyond New Orleans and making it accessible to wider audiences through recordings. This is an audio recording, not a text work.
+"""
+
+Notes = """
+The Louisiana Five was most active recording between 1918-1920. While this specific recording's exact date isn't provided in the header, the band's recordings generally date from this period. 1918 represents the beginning of their most productive recording years. This is an instrumental jazz piece, so the 'appropriate-for-children' tag applies as there is no potentially objectionable content. This is notably an audio file (MP3), not a traditional text, which is unusual for Project Gutenberg's catalog.
+"""
+</result>

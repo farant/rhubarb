@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as Florence Nightingale's groundbreaking work on nursing from the mid-19th century.
+
+<result>
+Title = "Notes on Nursing: What It Is, and What It Is Not"
+Author = "Florence Nightingale"
+Year = 1859
+
+Tags = ["non-fiction", "medical", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Florence Nightingale's pioneering work on nursing care and public health, published during the Victorian era. This book revolutionized nursing as a profession and introduced systematic sanitary principles that dramatically improved patient outcomes. Written for both professional nurses and ordinary women who would care for family members, it emphasizes that nursing is fundamentally about creating conditions for health and recovery rather than merely administering medicine. The work covers practical topics including ventilation, cleanliness, noise management, and patient observation. Nightingale's emphasis on sanitation and environmental factors laid the foundation for modern nursing practice and public health initiatives.
+"""
+
+Notes = """
+The original first edition was published in 1859 (London: Harrison). The Project Gutenberg text appears to be from an 1898 American edition by D. Appleton and Company, but the historically significant date is the original 1859 publication, which came shortly after Nightingale's experiences in the Crimean War (1853-1856) where she established her reputation. This work had immediate and lasting influence on medical care and public health policy.
+"""
+</result>

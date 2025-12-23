@@ -1,0 +1,15 @@
+<result>
+Title = "The Velvet Glove"
+Author = "Henry Seton Merriman"
+Year = 1901
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'The Velvet Glove' is a historical novel by Henry Seton Merriman (pseudonym of Hugh Stowell Scott), a popular British author of adventure and historical fiction in the late Victorian and Edwardian periods. Merriman was known for his sophisticated plots often set against European historical and political backgrounds. This novel, like much of his work, features intrigue, adventure, and complex characters navigating political and social tensions of the era. Merriman's works were particularly popular in the early 20th century for their combination of romance, adventure, and historical detail.
+"""
+
+Notes = """
+Henry Seton Merriman (Hugh Stowell Scott, 1862-1903) was a prolific novelist whose works were widely read in his time. 'The Velvet Glove' was published in 1901, two years before his death. The phrase "the velvet glove" traditionally refers to the idiom "an iron fist in a velvet glove," suggesting gentle appearance masking firm control or force, which likely reflects themes in the novel. While Merriman was a popular writer of his era, his works are less well-known today compared to his contemporary adventure writers.
+"""
+</result>

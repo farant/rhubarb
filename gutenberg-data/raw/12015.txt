@@ -1,0 +1,17 @@
+I recognize this work from the Project Gutenberg text. Let me analyze the information provided.
+
+<result>
+Title = "Love Under Fire"
+Author = "Randall Parrish"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "romance", "american-civil-war"]
+
+Summary = """
+'Love Under Fire' is a historical romance novel by Randall Parrish set during the American Civil War. Parrish was a prolific American author who specialized in historical fiction and adventure stories, particularly those set during the Civil War era and the American frontier. This novel combines military adventure with romantic elements, following a protagonist who becomes entangled in espionage and encounters a romantic interest amid the conflict. The chapter titles suggest a narrative involving military operations, capture, escape attempts, and interactions between Union and Confederate forces. Parrish was known for his action-packed plots and his ability to weave romance into historical settings.
+"""
+
+Notes = """
+The year 1911 is clearly stated on the title page as the publication year. This appears to be the original publication date for this work. Parrish was an active writer in the early 20th century, and many of his Civil War novels were published during this period, capitalizing on the still-recent memory of the conflict and the popularity of historical romance fiction.
+"""
+</result>

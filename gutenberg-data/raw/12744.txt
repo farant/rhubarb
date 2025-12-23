@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This appears to be "In His Image" by William Jennings Bryan (note: there's a typo in the text showing "RYAN" but it should be "BRYAN" - William Jennings Bryan was a famous American politician, orator, and religious figure). This was published as part of the James Sprunt Lectures series.
+
+William Jennings Bryan delivered these lectures at Union Theological Seminary in Virginia in 1921, and the book was published in 1922. The work deals with religion, Christianity, evolution, and Bryan's religious views. Bryan was a Presbyterian and a prominent opponent of Darwinian evolution, and this book was part of his religious and anti-evolution advocacy.
+
+<result>
+Title = "In His Image"
+Author = "William Jennings Bryan"
+Year = 1922
+
+Tags = ["non-fiction", "religion", "christian", "theology"]
+
+Summary = """
+'In His Image' is a collection of lectures delivered by William Jennings Bryan as part of the James Sprunt Lectures series. The work explores Bryan's religious convictions and his views on Christianity, the Bible, and the relationship between faith and science. Bryan, best known as a three-time Democratic presidential candidate and the prosecutor in the Scopes "Monkey Trial," was a devout Presbyterian and a leading voice against the teaching of evolution. This book presents his arguments for biblical literalism and his belief that humans were created in God's image, not descended from lower animals through evolution. The lectures reflect the religious fundamentalism and anti-modernist sentiment that characterized much of Bryan's later career.
+"""
+
+Notes = """
+The book was published in 1922, shortly after Bryan delivered the James Sprunt Lectures. While Bryan was a prominent Christian and Presbyterian, this would not be considered a 'catholic' work as he was Protestant, not Catholic. The work is significant as it predates the famous 1925 Scopes Trial by a few years and shows Bryan's developing arguments against evolutionary theory.
+"""
+</result>

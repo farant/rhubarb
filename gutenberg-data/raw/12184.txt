@@ -1,0 +1,17 @@
+I'll read through this text to identify the work, author, and publication details.
+
+<result>
+Title = "Abroad with the Jimmies"
+Author = "Lilian Bell"
+Year = 1902
+
+Tags = ["fiction", "travelogue", "humor", "appropriate-for-children"]
+
+Summary = """
+"Abroad with the Jimmies" is a humorous travelogue novel by American author Lilian Bell, following the adventures of Mr. and Mrs. Jimmie and their companion Bee as they travel abroad. This book is a sequel to Bell's earlier work "As Seen by Me" and continues chronicling the travels and misadventures of these characters. Lilian Bell (1867-1929) was a popular American novelist and travel writer known for her witty observations of American tourists in Europe and her light, entertaining style. Her works often featured humorous takes on social customs and the experiences of Americans traveling internationally during the Gilded Age and early 20th century.
+"""
+
+Notes = """
+The book was first published in 1902. Lilian Bell was a popular writer of her era, known for works like "The Love Affairs of an Old Maid" (1893) and "The Expatriates" (1900). The preface references this being a sequel to "As Seen by Me," written due to reader demand for more adventures of these characters. The work represents the genre of humorous American travel literature popular in the late Victorian and Edwardian periods.
+"""
+</result>

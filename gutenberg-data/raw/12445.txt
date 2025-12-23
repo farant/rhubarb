@@ -1,0 +1,15 @@
+<result>
+Title = "The Water-Witch; or, The Skimmer of the Seas"
+Author = "James Fenimore Cooper"
+Year = 1830
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Water-Witch is a maritime adventure novel by James Fenimore Cooper, one of America's first major novelists. Set in the early 18th century around New York harbor and the Atlantic coast, the story involves smuggling, mysterious ships, and romance during the colonial period. It features Cooper's characteristic nautical expertise and explores themes of law versus personal freedom, with the enigmatic smuggling vessel "Water-Witch" and her captain, the "Skimmer of the Seas," at the center of the plot. The novel combines historical fiction with elements of mystery and the supernatural, set against the backdrop of British colonial trade restrictions.
+"""
+
+Notes = """
+The novel was originally published in 1830, though this Project Gutenberg text appears to be from an 1871 edition. Cooper wrote this during his most productive period, following the success of his Leatherstocking Tales. While not as famous as The Last of the Mohicans or The Deerslayer, it represents Cooper's extensive knowledge of maritime life and early American history. The 1830 date represents the original composition and first publication of the work.
+"""
+</result>

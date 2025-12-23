@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children", "architecture", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This particular issue (Vol. 13, No. 353) from January 24, 1829, features illustrated articles about architectural subjects, specifically focusing on villas in Regent's Park in London. The publication was designed to provide educational and entertaining content to a general readership, combining literature, cultural commentary, architectural appreciation, and various topics of interest. It represented the Victorian era's appetite for self-improvement and cultural refinement through accessible periodical literature. The magazine included engravings and descriptions of notable buildings, landscapes, and other subjects of cultural interest.
+"""
+
+Notes = """
+This is a periodical issue rather than a standalone book, so the year 1829 represents the publication date of this specific issue as printed on the cover. The Mirror of Literature was a serial publication that ran for many years in the early-to-mid 19th century. Author listed as 'Various' because periodicals typically had multiple contributors and editors rather than a single author.
+"""
+</result>

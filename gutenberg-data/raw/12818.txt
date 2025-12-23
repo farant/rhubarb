@@ -1,0 +1,15 @@
+<result>
+Title = "Heathen Slaves and Christian Rulers"
+Author = "Elizabeth Andrew, Katharine Bushnell"
+Year = 1907
+
+Tags = ["non-fiction", "historical-document", "christian", "social-reform"]
+
+Summary = """
+This is a social reform work published in 1907 by Elizabeth Andrew and Katharine Bushnell, focusing on the Chinese slave trade in California, particularly the trafficking and exploitation of Chinese girls and women in America. The book is dedicated to Miss Margaret Culbertson and other women who fought to rescue enslaved girls in California's Chinatowns. The authors document the conditions of what they term "heathen slaves" living under "Christian rulers" - critiquing American Christians and governmental authorities for allowing human trafficking and slavery to persist on American soil despite the nation's Christian identity. The work appears to be an exposé and advocacy piece aimed at raising awareness and prompting action against this injustice.
+"""
+
+Notes = """
+The year 1907 is clearly stated in the text as the publication year. This appears to be a first edition based on the "PREFACE TO THE FIRST EDITION" heading. While the authors were likely Protestant Christian reformers rather than Catholic, the work deals with Christian social responsibility and could be considered aligned with Christian moral teaching on human dignity and opposition to slavery. However, I have not tagged it as 'catholic' since the authors do not appear to be Catholic and the work is not written from an explicitly Catholic perspective.
+"""
+</result>

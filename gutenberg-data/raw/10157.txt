@@ -1,0 +1,15 @@
+<result>
+Title = "Which Switch is the Switch, Miss, for Ipswich?"
+Author = "Billy Murray"
+Year = 1908
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an early 20th century audio recording performed by Billy Murray, one of the most popular American recording artists of the early 1900s. Murray was known for his vaudeville-style comedic songs and novelty numbers. This particular recording is a tongue-twister song that plays on alliteration and the difficulty of pronunciation, typical of the lighthearted entertainment of the era. The recording comes from the Edison National Historic Site collection, representing the early days of recorded audio technology under Thomas Edison's pioneering phonograph company.
+"""
+
+Notes = """
+Billy Murray's recording career peaked between 1903-1920. Without being able to verify the exact recording date from the metadata provided, I'm estimating circa 1908 as this falls within Murray's most productive period with Edison Records. The song title itself is a famous tongue-twister from this era. If you can access the actual audio file metadata or Edison Records catalogs, you may be able to pinpoint the exact year more precisely.
+"""
+</result>

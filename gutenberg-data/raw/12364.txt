@@ -1,0 +1,15 @@
+<result>
+Title = "The United States in the Light of Prophecy; or, An Exposition of Rev. 13:11-17"
+Author = "Uriah Smith"
+Year = 1874
+
+Tags = ["non-fiction", "religious", "prophecy", "seventh-day-adventist"]
+
+Summary = """
+This is a prophetic interpretation work by Uriah Smith, a prominent Seventh-day Adventist theologian and editor. The book presents an interpretation of Revelation 13:11-17, arguing that the United States plays a significant role in biblical end-times prophecy. Smith was one of the most influential Adventist writers of the 19th century and served as editor of the Review and Herald. This work represents a key text in Adventist prophetic interpretation, specifically the doctrine identifying America as the "beast from the earth" in Revelation 13. The book reflects the eschatological concerns of post-Civil War America and the Adventist movement's distinctive approach to biblical prophecy.
+"""
+
+Notes = """
+Year chosen is 1874 as indicated on the title page. This appears to be the original publication date. Uriah Smith (1832-1903) was not Catholic but rather a leading figure in Seventh-day Adventism, so the 'catholic' tag does not apply. The work represents a specific Protestant millennial interpretation that would be at odds with Catholic eschatology. Not tagged as appropriate for children due to complex theological content.
+"""
+</result>

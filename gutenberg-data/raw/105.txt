@@ -1,0 +1,15 @@
+<result>
+Title = "Persuasion"
+Author = "Jane Austen"
+Year = 1817
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Persuasion is Jane Austen's last completed novel, often considered her most mature and emotionally nuanced work. The story follows Anne Elliot, a woman of twenty-seven who years earlier was persuaded to break off her engagement to Captain Frederick Wentworth due to his lack of fortune and prospects. When Wentworth returns to her social circle, now wealthy and successful, Anne must confront her feelings and the consequences of her earlier decision. The novel explores themes of second chances, constancy, the value of persuasion versus stubbornness, and the tension between social class and personal merit. Set against the backdrop of post-Napoleonic War England, it offers Austen's characteristic wit and social observation while presenting a more autumnal, reflective tone than her earlier works.
+"""
+
+Notes = """
+Though published posthumously in 1818, Persuasion was completed in 1816 and is generally dated to 1817 as its effective completion/composition date. Since this is a historical timeline focused on when works were actually written rather than published, 1817 represents the year the work entered the world in its final form, even though Austen died before seeing it in print. This dating choice reflects the creative/historical moment of the work rather than the publication circumstance.
+"""
+</result>

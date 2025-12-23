@@ -1,0 +1,15 @@
+<result>
+Title = "The Young Engineers in Mexico; or, Fighting the Mine Swindlers"
+Author = "H. Irving Hancock"
+Year = 1913
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+This is part of H. Irving Hancock's "Young Engineers" series, a collection of early 20th-century boys' adventure novels. The series follows young American engineers on various technical and adventurous exploits. In this installment, the protagonists travel to Mexico where they encounter mine swindlers and must use their engineering skills and integrity to navigate dangerous situations involving mining fraud. The book reflects the popular juvenile literature of its era, emphasizing themes of American ingenuity, honesty, and technical competence in exotic foreign settings.
+"""
+
+Notes = """
+H. Irving Hancock (1868-1922) was a prolific American author of juvenile adventure fiction. The "Young Engineers" series was published in the 1910s, with this Mexico volume appearing around 1913. This was during a turbulent period in Mexican history (the Mexican Revolution), though such books typically featured romanticized adventure rather than historical accuracy. The year 1913 is based on the typical publication timeline of Hancock's series works and the Project Gutenberg book number (12778) which correlates with works from this era.
+"""
+</result>

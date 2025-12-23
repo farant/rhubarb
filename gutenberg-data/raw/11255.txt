@@ -1,0 +1,15 @@
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States, Volume II, Arkansas Narratives, Part I"
+Author = "Federal Writers' Project"
+Year = 1941
+
+Tags = ["non-fiction", "historical-document", "oral-history"]
+
+Summary = """
+This volume is part of a comprehensive collection of interviews with formerly enslaved people conducted by the Federal Writers' Project between 1936-1938, a New Deal program under the Works Progress Administration. The project documented the firsthand accounts and memories of former slaves across the United States, capturing their experiences, stories, and perspectives before this generation passed away. This particular volume focuses on narratives collected in Arkansas. These interviews provide invaluable primary source material for understanding the lived experience of slavery in America and represent one of the most significant oral history projects ever undertaken in the United States.
+"""
+
+Notes = """
+The year 1941 reflects the publication date when these interviews were assembled and published by the Library of Congress, though the actual interviews were conducted between 1936-1938. This is the appropriate date to use as it represents when this historical work became a complete, published document. The interviews themselves capture memories of slavery from the 1860s and earlier, but 1941 is the year this important historical compilation was made available to the public.
+"""
+</result>

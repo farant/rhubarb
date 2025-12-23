@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is a collection of ghost stories by Joseph Sheridan Le Fanu, an Irish writer known for his gothic and supernatural fiction. Based on the text, this appears to be Volume 4 of a collection of his ghostly tales, containing four stories with dates ranging from 1838 to 1851.
+
+The excerpt shown is from "Ghost Stories of Chapelizod" (1851). Le Fanu was a prominent 19th-century Irish writer, and while he was from a Protestant family, his gothic fiction was widely read. These are clearly fictional ghost stories, though they reference real Irish locations like Chapelizod (a village near Dublin).
+
+<result>
+Title = "J. S. Le Fanu's Ghostly Tales, Volume 4"
+Author = "Joseph Sheridan Le Fanu"
+Year = 1851
+
+Tags = ["fiction", "gothic", "ghost-stories", "irish-literature"]
+
+Summary = """
+This is the fourth volume of a collection of ghost stories by Joseph Sheridan Le Fanu, one of the most significant writers of Victorian gothic fiction. The volume contains four supernatural tales: "Ghost Stories of Chapelizod" (1851), "The Drunkard's Dream" (1838), "The Ghost and the Bone-setter" (1838), and "The Mysterious Lodger" (1850). Le Fanu was an Irish author known for his masterful handling of atmosphere and psychological horror. His work influenced later writers like M.R. James and helped establish the ghost story as a serious literary form. The stories blend Irish folklore and settings with Victorian sensibilities about the supernatural.
+"""
+
+Notes = """
+I chose 1851 as the year because it appears to be the date of the latest story in the collection ("Ghost Stories of Chapelizod"), and likely represents when this particular volume was compiled. Le Fanu was Protestant Irish rather than Catholic, so I did not include a 'catholic' tag. These are atmospheric ghost stories meant for adult readers, so 'appropriate-for-children' was not included. The stories are set in real Irish locations but are entirely fictional supernatural tales.
+"""
+</result>

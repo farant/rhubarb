@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly the Flemish translation of Charles de Coster's famous novel about Till Eulenspiegel (Tijl Uilenspiegel). The original French title is "La Légende et les Aventures héroïques, joyeuses et glorieuses d'Ulenspiegel et de Lamme Goedzak au Pays de Flandres et ailleurs" (often shortened to "La Légende d'Ulenspiegel" or "Thyl Ulenspiegel").
+
+<result>
+Title = "De legende en de heldhaftige, vroolijke en roemrijke daden van Uilenspiegel en Lamme Goedzak in Vlaanderenland en elders"
+Author = "Charles de Coster"
+Year = 1867
+
+Tags = ["fiction", "historical-fiction", "flemish-culture", "catholic"]
+
+Summary = """
+This is the Flemish translation of Charles de Coster's masterpiece, originally published in French as "La Légende d'Ulenspiegel" (1867). The novel reimagines the medieval folk hero Till Eulenspiegel as a symbol of Flemish resistance against Spanish tyranny during the 16th century Dutch Revolt. De Coster transforms the traditional trickster figure into a freedom fighter alongside his companion Lamme Goedzak. The work is considered the national epic of Belgium and a foundational text of Belgian literature, blending folklore, history, and social commentary. De Coster (1827-1879) was a Belgian author who spent years researching Flemish culture and the period of the Spanish Netherlands to create this monumental work.
+"""
+
+Notes = """
+The year 1867 reflects the original French publication date. This Gutenberg text is a Flemish translation by Richard Delbecq (prose) and René de Clercq (songs), third edition from 1919. While De Coster was Belgian and the work has Catholic cultural context, it's marked 'catholic' with some reservation as it contains anti-Spanish Inquisition themes, though this was standard in 19th-century Belgian patriotic literature. The work would likely not be considered appropriate for children due to mature themes.
+"""
+</result>

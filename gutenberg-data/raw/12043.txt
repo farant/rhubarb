@@ -1,0 +1,17 @@
+I can identify this as an issue of Punch magazine from August 1, 1917. Let me provide the structured information:
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 153, August 1, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "periodical", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari, was Britain's leading satirical magazine, published weekly from 1841 to 1992 (and briefly revived later). This particular issue from August 1, 1917 captures British humor during World War I, with satirical commentary on wartime events including Bulgaria's imperial ambitions, air-raid warnings, industrial unrest in Scotland, Austrian political crises, and various absurdities of wartime British life. The magazine was famous for its cartoons, social commentary, and gentle mockery of politics, society, and current events. This issue exemplifies the British tradition of maintaining humor and wit even during the difficult circumstances of the Great War.
+"""
+
+Notes = """
+The year 1917 is straightforward as this is a periodical issue with a specific publication date (August 1, 1917). Punch was published weekly, so each issue represents a specific moment in time rather than a work with multiple editions. The content references contemporary WWI events like King Ferdinand of Bulgaria's territorial ambitions and wartime restrictions in Britain, firmly anchoring it to its 1917 publication date.
+"""
+</result>

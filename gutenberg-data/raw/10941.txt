@@ -1,0 +1,19 @@
+Looking at this text, I can see it's a Finnish translation of Dante's Divine Comedy (specifically Inferno/Hell), translated by Eino Leino and first published in 1912.
+
+Let me provide the structured output:
+
+<result>
+Title = "Jumalainen näytelmä: Helvetti (The Divine Comedy: Inferno)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "epic"]
+
+Summary = """
+This is Dante Alighieri's Inferno (Hell), the first part of his masterwork La Divina Commedia (The Divine Comedy). Written in the early 14th century, it is one of the greatest works of world literature and a cornerstone of Italian literature. The poem describes Dante's journey through Hell, guided by the Roman poet Virgil, as an allegory of the soul's journey toward God. It presents a vivid and theologically profound vision of the afterlife, organized into nine circles of suffering corresponding to different sins. This Finnish translation was completed by the renowned Finnish poet Eino Leino and published in 1912, with support from the Finnish Literary Advancement Fund.
+"""
+
+Notes = """
+I chose 1320 as the year because that's approximately when Dante completed the Inferno (he worked on the Divine Comedy roughly from 1308-1320, with his death in 1321). While the exact completion date is debated by scholars, around 1320 represents when the work reached its final form. This is clearly a Catholic work - Dante's theological vision is deeply rooted in Catholic doctrine and medieval scholasticism, particularly the theology of Thomas Aquinas. The work would certainly have received ecclesiastical approval in its time and remains a foundational text in Catholic literature and theology.
+"""
+</result>

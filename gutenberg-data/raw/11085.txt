@@ -1,0 +1,15 @@
+<result>
+Title = "M. or N. 'Similia similibus curantur.'"
+Author = "G.J. Whyte-Melville"
+Year = 1869
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"M. or N." is a Victorian novel by George John Whyte-Melville, a popular 19th-century British novelist known for his sporting novels and tales of adventure and romance. The Latin subtitle "Similia similibus curantur" means "Like cures like" (the homeopathic principle), suggesting themes of poetic justice or parallel circumstances in the plot. Whyte-Melville was a cavalry officer and his works often featured hunting scenes, military life, and upper-class society. This novel follows his characteristic style of combining romance, adventure, and social observation of Victorian England.
+"""
+
+Notes = """
+The novel was first published in 1869. Whyte-Melville (1821-1882) was a prolific and popular novelist during the Victorian era, though his works are less well-known today. He died in a hunting accident in 1878.
+"""
+</result>

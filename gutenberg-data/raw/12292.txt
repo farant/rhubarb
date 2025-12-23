@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly an issue of *Punch, or The London Charivari*, a famous British weekly magazine of humor and satire that ran from 1841 to 1992 (with later revivals). The text explicitly states it's from Volume 99, July 26, 1890.
+
+However, this presents a question: should I catalog this as the magazine itself, or as this specific article "Modern Types - The Hurlingham Girl"? Given that you're processing individual Gutenberg texts and building a timeline, I think the most useful approach is to treat this as representing *Punch* magazine generally, since this is just one issue/article from a long-running periodical.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, July 26, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["periodical", "humor", "satire", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari was Britain's premier humor and satire magazine, published weekly from 1841 to 1992. It was enormously influential in British culture, known for its cartoons, political satire, and social commentary. This particular issue from July 26, 1890 includes an installment of "Modern Types" - a satirical series examining various Victorian social archetypes. The featured piece lampoons "The Hurlingham Girl," a young woman of the upper classes more interested in fashionable society events, horse racing, and polo matches at venues like Hurlingham Club than in traditional academic education. The satire gently mocks the priorities of privileged Victorian society women who valued social calendar knowledge over historical or geographical learning.
+"""
+
+Notes = """
+Year is straightforward as this is a dated periodical issue from 1890. Punch was known for coining the term "cartoon" in its modern sense and was read across the British Empire. The Hurlingham Club referenced was (and remains) an exclusive private members' club in London, famous for polo. This type of light social satire was characteristic of Punch's style during the Victorian era.
+"""
+</result>

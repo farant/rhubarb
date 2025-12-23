@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and extract the requested information.
+
+<result>
+Title = "Northumberland Yesterday and To-day"
+Author = "Jean F. Terry"
+Year = 1913
+
+Tags = ["non-fiction", "travel", "history", "regional-history", "appropriate-for-children"]
+
+Summary = """
+This is a regional history and travel guide of Northumberland, England, written by Jean F. Terry, L.L.A. (St. Andrews). The book explores the geography, history, and culture of Northumberland, covering topics including the coastline, the River Tyne, Newcastle-upon-Tyne, the Elswick works and its founder (likely Lord Armstrong), the Cheviot Hills, Hadrian's Roman Wall, local streams, military history, regional tales and legends, and traditional ballads and poetry. It represents a comprehensive portrait of this historically significant northern English county at the beginning of the 20th century.
+"""
+
+Notes = """
+The year 1913 is clearly stated in the publication information at the beginning of the text. This appears to be the original publication date. The book is dedicated to Sir Francis Douglas Blake, described as "an eminent Northumbrian." Jean F. Terry's credential "L.L.A. (St. Andrews)" indicates a Lady Literate in Arts degree from the University of St. Andrews.
+"""
+</result>

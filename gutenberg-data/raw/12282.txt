@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "The Right and Wrong Uses of the Bible" by R. Heber Newton (Richard Heber Newton), an Episcopal clergyman who was a prominent figure in liberal Protestant theology in late 19th century America. Based on the copyright date of 1883 shown in the text, this appears to be the original publication year. Newton was known for his progressive biblical criticism and his efforts to reconcile faith with modern scholarship.
+
+<result>
+Title = "The Right and Wrong Uses of the Bible"
+Author = "R. Heber Newton"
+Year = 1883
+
+Tags = ["non-fiction"]
+
+Summary = """
+A work of biblical criticism and theology by R. Heber Newton, an Episcopal clergyman and prominent liberal Protestant theologian of the late 19th century. The book addresses how to properly understand and interpret Scripture in light of modern biblical scholarship and critical methods. Newton was part of the broader movement of liberal Christianity that sought to reconcile traditional faith with historical-critical approaches to the Bible. The work is divided into seven chapters examining both misconceptions about the Bible ('The Unreal Bible') and proper methods for critical, historical, ethical, and spiritual engagement with Scripture.
+"""
+
+Notes = """
+The copyright date of 1883 is clearly stated in the text, indicating original publication. R. Heber Newton was an Episcopal priest, not a Catholic author, and his liberal Protestant biblical criticism would not have received Catholic imprimatur. The work represents 19th century Protestant modernism's attempt to address challenges posed by biblical criticism while maintaining religious faith.
+"""
+</result>

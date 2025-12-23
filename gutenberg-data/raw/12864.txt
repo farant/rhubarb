@@ -1,0 +1,21 @@
+I need to examine this text to identify the work, author, and publication details.
+
+This is clearly "A Collection of College Words and Customs" by B.H. Hall. The text shows this is a revised and enlarged edition, with the copyright entered in 1856. The author B.H. Hall compiled collegiate slang and customs from American colleges, particularly Harvard and Yale.
+
+Based on the text, the first edition was compiled during Hall's senior year of college, and this revised edition was copyrighted in 1856. Benjamin Homer Hall (1818-1894) was a Harvard graduate who compiled this early dictionary of American college slang and customs.
+
+<result>
+Title = "A Collection of College Words and Customs"
+Author = "Benjamin Homer Hall"
+Year = 1856
+
+Tags = ["non-fiction", "reference", "linguistics", "historical-document"]
+
+Summary = """
+An early dictionary and compilation of American college slang, phrases, and customs, primarily from Harvard and Yale. Benjamin Homer Hall compiled this work as a lexicographic study of collegiate language and traditions in mid-19th century America. This represents one of the first systematic attempts to document American student vernacular and university customs. The revised and enlarged edition expands upon Hall's original compilation from his senior year at Harvard.
+"""
+
+Notes = """
+The copyright was entered in 1856 for this revised and enlarged edition. While Hall began compiling the material during his senior year (likely 1854-1855), the published revised edition date of 1856 is used as the most historically accurate year for this version of the work. This is a reference work rather than a literary or religious text, so Catholic classification does not apply. Not marked as appropriate for children as it's an academic reference work.
+"""
+</result>

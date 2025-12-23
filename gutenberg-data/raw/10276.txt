@@ -1,0 +1,19 @@
+Looking at this Project Gutenberg entry, this is an audio recording rather than a traditional text. It's a recording of the "Gloria" - a specific part of the Catholic Mass liturgy - performed by a Gregorian Choir. The recording comes from the Edison National Historic Site, suggesting it's a historical recording made by Thomas Edison's company.
+
+The "Gloria" is an ancient liturgical text (the "Gloria in Excelsis Deo") that dates back to early Christianity, but since this is specifically a Gregorian chant recording archived by Edison, it's likely from the early phonograph era (roughly 1890s-1920s). Without more specific information about which Edison recording this is, I'll estimate based on Edison's active recording period.
+
+<result>
+Title = "Audio: Gloria (Gregorian Chant)"
+Author = "Gregorian Choir"
+Year = 1910
+
+Tags = ["non-fiction", "historical-document", "catholic", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of the Gloria from the Catholic Mass, performed in Gregorian chant style. The Gloria (full title: "Gloria in Excelsis Deo" - Glory to God in the Highest) is one of the oldest and most important hymns of the Christian liturgy, dating to early Christianity. This particular recording comes from the Edison National Historic Site and represents an early phonograph recording of sacred music. Gregorian chant is the central tradition of Western plainchant, a form of monophonic, unaccompanied sacred song of the Roman Catholic Church.
+"""
+
+Notes = """
+The year 1910 is an estimate based on Thomas Edison's active period of phonograph recordings. Edison's company was particularly active in recording various musical genres from the 1890s through the 1920s. The actual Gloria text itself dates to the early centuries of Christianity (4th-5th century), but this entry represents a specific historical audio recording rather than the liturgical text itself. Without more specific catalog information, the exact recording date cannot be determined with certainty.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Crime: Its Cause and Treatment"
+Author = "Clarence Darrow"
+Year = 1922
+
+Tags = ["non-fiction", "criminology", "legal-philosophy", "psychology"]
+
+Summary = """
+This is a treatise on criminal justice and the causes of criminal behavior by Clarence Darrow, one of America's most famous defense attorneys. Written after over forty years of courtroom experience, Darrow examines crime through the lens of biology, psychology, and philosophy, arguing for a scientific and deterministic understanding of human conduct. The work reflects early 20th century thinking about criminal behavior, rejecting purely moral explanations in favor of environmental, biological, and psychological factors. Darrow was known for his opposition to capital punishment and his belief that criminals were products of their circumstances rather than purely evil actors deserving of punishment. This book represents his mature thinking on these subjects and was influential in Progressive Era debates about criminal justice reform.
+"""
+
+Notes = """
+The year 1922 is clearly stated as the publication date in the text itself. Clarence Darrow (1857-1938) was a prominent American lawyer known for defending unpopular causes and clients, including his role in the Scopes "Monkey Trial" and the Leopold and Loeb case. This work is not tagged as 'appropriate-for-children' as it deals with complex criminological and philosophical concepts. It is not tagged as 'catholic' - while Darrow was raised in a religious household, he became an agnostic and his deterministic views on crime and punishment would not align with Catholic moral theology regarding free will and moral responsibility.
+"""
+</result>

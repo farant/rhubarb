@@ -1,0 +1,15 @@
+<result>
+Title = "The Essays of Arthur Schopenhauer: Religion, A Dialogue, Etc."
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+This collection of essays by German philosopher Arthur Schopenhauer includes "Religion: A Dialogue," "A Few Words on Pantheism," "On Books and Reading," "On Physiognomy," "Psychological Observations," and "The Christian System." Schopenhauer (1788-1860) was one of the most influential pessimistic philosophers of the 19th century, known for his accessible prose style and his metaphysical system centered on the concept of "will" as the fundamental reality. These essays represent his mature philosophical thought on religion, literature, and human nature, translated by T. Bailey Saunders. Schopenhauer's philosophy was influenced by Kant and Eastern philosophy, particularly Buddhism, and he is noted for his clear, vigorous writing style that made philosophical ideas accessible to general readers.
+"""
+
+Notes = """
+Dating Schopenhauer's essays is complex as many were published in different collections at different times. The major collection "Parerga and Paralipomena" (which contained many of his essays including some in this volume) was published in 1851, which represents the most historically significant date for these mature works. This was the publication that finally brought Schopenhauer widespread recognition after decades of obscurity. Individual essays may have been written earlier, but 1851 marks their appearance in the work that established his reputation.
+"""
+</result>

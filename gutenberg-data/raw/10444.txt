@@ -1,0 +1,15 @@
+<result>
+Title = "The Peace Negotiations: A Personal Narrative"
+Author = "Robert Lansing"
+Year = 1921
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Robert Lansing served as U.S. Secretary of State under President Woodrow Wilson from 1915 to 1920. This work is his personal account of the Paris Peace Conference of 1919 following World War I, where the Treaty of Versailles was negotiated. Lansing provides an insider's perspective on the creation of the League of Nations, President Wilson's role and decisions at the conference, and the various diplomatic tensions and philosophical disagreements that shaped the post-war settlement. The memoir is particularly notable for Lansing's critiques of Wilson's approach and his concerns about the League of Nations' structure. This is a significant primary source document for understanding American diplomacy and the complicated negotiations that reshaped Europe after WWI.
+"""
+
+Notes = """
+"The Peace Negotiations" was published in 1921, shortly after Lansing's resignation as Secretary of State in February 1920. The book was controversial at the time because it was critical of President Wilson's handling of the peace negotiations and was published while Wilson was still alive (though no longer in office). The events described took place in 1919, but 1921 represents the year this particular historical account became available to the public.
+"""
+</result>

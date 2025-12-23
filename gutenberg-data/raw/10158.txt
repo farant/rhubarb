@@ -1,0 +1,15 @@
+<result>
+Title = "Daybreak at Calamity Farm"
+Author = "Gilbert Girard"
+Year = 1920
+
+Tags = ["fiction", "audio-recording", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording from the Edison National History Site, edited by Thomas A. Edison. "Daybreak at Calamity Farm" by Gilbert Girard appears to be an early 20th century work that was recorded as part of Edison's phonograph cylinder or early audio recording experiments. The work itself is likely a humorous or dramatic sketch typical of the entertainment recordings of the Edison era, when such recordings were used for home entertainment before radio became widespread.
+"""
+
+Notes = """
+The exact original publication/recording year is difficult to determine from the text provided. Thomas Edison's recording activities were most active from the 1890s through the 1920s. Without being able to identify this specific work definitively, I've estimated circa 1920 as a reasonable midpoint for Edison-edited recordings, though it could range anywhere from approximately 1900-1929. The work was clearly intended for the phonograph/audio format rather than print, which was innovative for its time.
+"""
+</result>

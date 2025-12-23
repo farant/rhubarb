@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and publication details.
+
+This is clearly identified in the text as "Between Whiles" by Helen Jackson (who wrote under the pen name H. H.). Helen Hunt Jackson was a prominent 19th-century American author, best known for her novel "Ramona" (1884) and her advocacy for Native American rights in "A Century of Dishonor" (1881).
+
+The text shows a publication date of 1888, which appears to be the original publication year for this collection of stories. "Between Whiles" is a collection of short stories/tales, as evidenced by the table of contents listing stories like "The Inn of the Golden Pear," "The Mystery of Wilhelm Rütter," etc.
+
+Helen Hunt Jackson was indeed a Catholic convert (she converted in 1875), which influenced some of her later work, though this particular collection appears to be general fiction rather than explicitly religious writing.
+
+<result>
+Title = "Between Whiles"
+Author = "Helen Hunt Jackson (H. H.)"
+Year = 1888
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of short stories by Helen Hunt Jackson, published under her pen name H. H. Jackson was a prominent American author of the late 19th century, best known for her novel 'Ramona' and her advocacy work for Native American rights. 'Between Whiles' contains six stories including 'The Inn of the Golden Pear,' 'The Mystery of Wilhelm Rütter,' 'Little Bel's Supplement,' 'The Captain of the Heather Bell,' 'Dandy Steve,' and 'The Prince's Little Sweetheart.' The collection showcases Jackson's narrative skills across various character-driven tales.
+"""
+
+Notes = """
+1888 is the original publication year shown in the text. While Helen Hunt Jackson converted to Catholicism in 1875, this collection appears to be general literary fiction rather than explicitly Catholic devotional or theological work, so I did not include the 'catholic' tag. The content appears to be adult literary fiction rather than children's literature.
+"""
+</result>

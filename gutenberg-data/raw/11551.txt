@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the 19th century. This particular issue (Vol. 19, No. 546, dated May 12, 1832) features an article on St. Pancras (Old) Church, describing the historic church and parish located north of London. The periodical was designed to provide educational content, illustrations, and general interest articles to a broad middle-class readership during the Victorian era. It included historical sketches, architectural descriptions, literary pieces, and various instructional content aimed at both entertainment and edification.
+"""
+
+Notes = """
+This is a serial publication rather than a single authored work. The year 1832 represents the publication date of this specific issue. The Mirror was published from 1822 to 1849, making it one of the more successful illustrated periodicals of its time. Since this is a periodical issue rather than a complete work, the author is listed as 'Various' as these publications typically featured contributions from multiple writers, though often anonymously or pseudonymously.
+"""
+</result>

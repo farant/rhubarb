@@ -1,0 +1,15 @@
+<result>
+Title = "A Lover's Complaint"
+Author = "William Shakespeare"
+Year = 1609
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"A Lover's Complaint" is a narrative poem attributed to William Shakespeare, first published in 1609 as part of the same quarto volume that contained Shakespeare's Sonnets. The poem consists of 329 lines in rhyme royal stanzas (seven-line stanzas in iambic pentameter). It tells the story of a young woman who has been seduced and abandoned by a young man, lamenting her fate to an old man by a river. The poem explores themes of betrayal, seduction, false promises, and the corrupting power of beauty and eloquence. The speaker overhears the woman's complaint as she tears up letters and breaks rings, symbols of the broken promises made to her. The authorship has been debated by scholars over the centuries, with some questioning whether Shakespeare actually wrote it, though it was published under his name.
+"""
+
+Notes = """
+The year 1609 reflects the first publication date in the quarto "SHAKE-SPEARES SONNETS" printed by Thomas Thorpe. While the poem may have been composed earlier (possibly in the 1590s or early 1600s), 1609 is the most historically accurate publication date for timeline purposes. The poem was likely written sometime between 1600-1609 based on stylistic analysis.
+"""
+</result>

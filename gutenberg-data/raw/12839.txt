@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a work of early 20th century American children's fiction. The copyright page states "Copyright, 1921" which gives us a definitive publication year. The book is part of a series about a young wireless operator and is dedicated to Gifford Pinchot, the famous American forester and conservationist.
+
+<result>
+Title = "The Young Wireless Operator--As a Fire Patrol"
+Author = "Lewis E. Theiss"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is an adventure story for young readers about a wireless (radio) amateur who becomes a fire patrol officer. Published in 1921, it's part of the "Young Wireless Operator" series by Lewis E. Theiss. The book reflects the early 20th century fascination with radio technology (then called "wireless") and conservation efforts. It's dedicated to Gifford Pinchot, the founder of the U.S. Forest Service and a pioneering conservationist, indicating the book's themes of forestry and fire prevention. The story follows young characters including Charley and Lew as they use wireless technology in forest fire detection and prevention work.
+"""
+
+Notes = """
+The year 1921 is taken directly from the copyright notice. This was the era when radio was still called "wireless" and was an exciting new technology. The dedication to Gifford Pinchot (who served as Chief Forester 1905-1910 and later as Pennsylvania's Commissioner of Forestry) places this firmly in the context of early American conservation movements.
+"""
+</result>

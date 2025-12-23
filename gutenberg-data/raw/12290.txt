@@ -1,0 +1,17 @@
+I recognize this as "The Church and Modern Life" by Washington Gladden, a prominent American Congregationalist minister and leading figure in the Social Gospel movement. This work was published in 1908, as indicated in the text itself.
+
+<result>
+Title = "The Church and Modern Life"
+Author = "Washington Gladden"
+Year = 1908
+
+Tags = ["non-fiction", "theology", "social-gospel"]
+
+Summary = """
+"The Church and Modern Life" is a work by Washington Gladden, one of the leading voices of the Social Gospel movement in early 20th century American Protestantism. The book addresses the challenges facing the Christian church during a period of rapid social and industrial change. Gladden argues that while the church faces legitimate criticism both from outsiders and from within its own ranks, it has a vital future role to play as "the light of the world." The work examines how the church needs to adapt and free itself from entanglements in order to fulfill its mission in the modern era. Gladden was known for applying Christian ethics to social problems, particularly issues of labor, economics, and social justice.
+"""
+
+Notes = """
+The year 1908 is clearly stated in the publication information. Washington Gladden (1836-1918) was a influential progressive Protestant minister who helped establish the Social Gospel movement, which emphasized social justice and the application of Christian principles to social problems. While Gladden was a Christian minister, this is not a Catholic work and would not carry a nihil obstat or imprimatur - it represents mainline Protestant progressive theology of the early 20th century.
+"""
+</result>

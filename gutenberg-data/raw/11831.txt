@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1965
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a catalog of copyright renewal registrations published by the United States Copyright Office. It lists books, pamphlets, serials, and periodical contributions for which copyright renewals were filed during a specific period in 1965. The catalog is arranged alphabetically by author or issuing body, providing information about both the original copyright registration (from 1937 in the entries shown) and the renewal registration. This type of publication served as an official government record of intellectual property rights and was essential for tracking copyright status during the era when U.S. copyright law required explicit renewal to maintain protection beyond the initial term.
+"""
+
+Notes = """
+The year 1965 is chosen as this represents when this particular catalog volume was published and when the renewal registrations listed were processed. The entries shown reference original copyrights from 1937, which is consistent with the 28-year renewal period that was standard under U.S. copyright law before the 1976 Copyright Act. This is not a creative work by a single author but rather a government publication documenting copyright renewals.
+"""
+</result>

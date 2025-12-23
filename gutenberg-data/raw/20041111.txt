@@ -1,0 +1,23 @@
+I recognize this work from its distinctive content and historical period. Let me analyze what we have here.
+
+This is a firsthand account of the French Revolution written by an English woman who resided in France during some of its most tumultuous years (1792-1795). The work was prepared for publication by John Gifford in 1797. While the author is described as "an English Lady," this is actually Helen Maria Williams, a well-known English writer and supporter-turned-critic of the French Revolution who lived in Paris during this period and wrote extensively about her experiences.
+
+However, I notice the editor's name is John Gifford, and the style and political orientation (clearly counter-revolutionary) suggest this might actually be a different work. Let me reconsider - this appears to be a Royalist/conservative account given Gifford's involvement and the critical tone toward the Revolution evident in the preliminary remarks.
+
+After reflection, without being able to identify the specific "English Lady" author with certainty from this excerpt alone, I'll provide what information I can determine:
+
+<result>
+Title = "A Residence in France, During the Years 1792, 1793, 1794, and 1795"
+Author = "An English Lady (editor: John Gifford)"
+Year = 1797
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+A firsthand account of life in France during the height of the French Revolution, written by an anonymous English woman who resided in the country from 1792-1795. The work takes the form of letters describing the author's observations of revolutionary France, with particular attention to French character and manners during this turbulent period. Edited and prepared for press by John Gifford, a conservative writer known for his anti-revolutionary stance, the work presents a critical perspective on the Revolution and its advocates. The account provides valuable primary source material about daily life, social conditions, and political events during the Reign of Terror and Thermidorian Reaction.
+"""
+
+Notes = """
+Published in 1797, shortly after the events described. The year reflects the publication date as this is when the work became available to the public. The author's identity was kept anonymous as "An English Lady," which was common for women writers of the period, though this may also have been for safety reasons given the sensitive political content. John Gifford was a prominent conservative polemicist who wrote against the French Revolution, which likely influenced the editorial perspective of this work.
+"""
+</result>

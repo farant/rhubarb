@@ -1,0 +1,26 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly Xenophon's "The Polity of the Lacedaemonians" (also known as "The Constitution of the Lacedaemonians" or "Lacedaemoniorum Respublica"). The text mentions it's translated by H. G. Dakyns.
+
+Based on my knowledge:
+- Xenophon wrote this work around 370s-360s BC, though there's scholarly debate about the exact date
+- The work describes the Spartan political and social system established by Lycurgus
+- Xenophon lived c. 431-354 BC as the introduction states
+- This is a historical/political treatise, not fiction
+- While not specifically Catholic (predates Christianity), it's a classical work of political philosophy that has been studied in Western education for centuries
+
+<result>
+Title = "The Polity of the Lacedaemonians"
+Author = "Xenophon"
+Year = -375
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A treatise by the ancient Greek historian and soldier Xenophon describing the unique political constitution and social institutions of Sparta. The work focuses on the laws and customs attributed to the legendary Spartan lawgiver Lycurgus, examining how Spartan citizens were trained and organized from birth through old age. Xenophon, who had lived among the Spartans after being exiled from Athens, provides an insider's account of Spartan military training, education system, social organization, and the distinctive way of life that made Sparta one of the most formidable city-states in ancient Greece. The work is an important primary source for understanding Spartan society and ancient Greek political thought.
+"""
+
+Notes = """
+The exact date of composition is debated by scholars, with estimates ranging from 388 BC to the 360s BC. I've chosen approximately 375 BC as a reasonable middle estimate for when Xenophon likely wrote this work, during his period of exile when he was living on his estate at Scillus granted by Sparta. The negative year notation (-375) indicates 375 BC.
+"""
+</result>

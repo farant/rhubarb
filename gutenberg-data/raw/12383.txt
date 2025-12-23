@@ -1,0 +1,15 @@
+<result>
+Title = "The Poetical Works of William Wordsworth, Vol. III"
+Author = "William Wordsworth"
+Year = 1770
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is the third volume of a collected edition of William Wordsworth's poetical works, edited by William Knight. Wordsworth (1770-1850) was one of the most important English Romantic poets, known for works like "Lines Composed a Few Miles above Tintern Abbey," "Ode: Intimations of Immortality," and "The Prelude." Along with Samuel Taylor Coleridge, he helped launch the Romantic Age in English literature with their joint publication "Lyrical Ballads" (1798). Wordsworth's poetry is characterized by its focus on nature, emotion, common life, and the relationship between humanity and the natural world. This collected edition would contain a selection of his poems organized by theme or chronological period.
+"""
+
+Notes = """
+The year 1770 represents Wordsworth's birth year, which serves as the most historically significant date for his body of work. While individual poems were published throughout his long career (roughly 1793-1850), and this particular collected edition edited by William Knight was published posthumously in the late 19th century, using his birth year provides the most educationally useful anchor point for understanding when Wordsworth lived and wrote. If you prefer to use the approximate mid-point of his creative output, 1807-1815 would be his most productive and influential period, but the birth year seems most appropriate for a timeline of works spanning his entire poetic career.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Sesame and Lilies"
+Author = "John Ruskin"
+Year = 1865
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+'Sesame and Lilies' is a collection of two influential lectures by Victorian art critic and social thinker John Ruskin. The first lecture, 'Of Kings' Treasuries,' discusses the value of books and reading, emphasizing how literature serves as a treasury of human wisdom and thought. The second lecture, 'Of Queens' Gardens,' addresses the role and education of women in society, presenting Ruskin's Victorian ideals about complementary gender roles and women's moral influence. Despite its dated gender perspectives, the work remains notable for its eloquent prose and Ruskin's passionate advocacy for education, moral improvement, and the transformative power of literature. The book was widely read and influential in Victorian England and shaped discussions about education and social reform.
+"""
+
+Notes = """
+First published in 1865, though this transcription is from an 1894 edition. The work originated as two lectures delivered in 1864 (the first at Rusholme Town Hall in Manchester, the second in support of a school in Ancoats). A third lecture, 'The Mystery of Life and Its Arts,' was added in later editions. The 1865 date represents the original publication of the first two essays in book form.
+"""
+</result>

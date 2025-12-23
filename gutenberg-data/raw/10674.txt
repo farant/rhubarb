@@ -1,0 +1,15 @@
+<result>
+Title = "How to Use Your Mind: A Psychology of Study"
+Author = "Harry D. Kitson"
+Year = 1921
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a manual on study psychology written by Harry D. Kitson, a professor of psychology at Indiana University. The book is designed for both students and teachers to improve study methods and supervised learning. The second edition (1921) includes expanded content with new chapters on active imagination and developing interest in subjects, as well as exercises, readings, and practical guidance for effective studying. It represents early 20th-century educational psychology's effort to apply scientific principles to the learning process, making it accessible to a general student audience.
+"""
+
+Notes = """
+The year 1921 is given in the preface as the date of the second edition, which is the version presented in this text. While there was a first edition prior to this, the 1921 date is the most appropriate as it represents the expanded and revised version that the author considered definitive at that time. This is an early work in the field of educational psychology and study skills methodology.
+"""
+</result>

@@ -1,0 +1,17 @@
+I can identify this work from the text provided. This is "Gunman's Reckoning" by Max Brand (the pen name of Frederick Faust), a Western fiction novel.
+
+<result>
+Title = "Gunman's Reckoning"
+Author = "Max Brand"
+Year = 1921
+
+Tags = ["fiction", "western", "adventure"]
+
+Summary = """
+"Gunman's Reckoning" is a Western novel by Max Brand (pen name of Frederick Faust, 1892-1944), one of the most prolific writers of Western fiction. The novel follows the story of a protagonist traveling by freight train through the American West, featuring the classic elements of Brand's Western tales: gunfighters, frontier justice, and the rugged landscape of the Western territories. Max Brand was known for his fast-paced action, complex characters, and romanticized portrayals of the Old West. He wrote over 500 novels and numerous short stories, becoming one of the most influential Western writers of the 20th century.
+"""
+
+Notes = """
+The year 1921 is indicated directly in the text header. Max Brand (Frederick Faust) was a prolific pulp fiction writer who wrote primarily Westerns, though he also wrote in other genres. This work is typical of the Western fiction popular in the early 20th century. Not marked as "appropriate-for-children" as Western gunfighter fiction typically contains violence, though it would have been considered relatively tame by modern standards. Not marked as "catholic" as Brand was not known as a Catholic writer and this is secular Western fiction.
+"""
+</result>

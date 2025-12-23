@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and extract the requested information.
+
+This is clearly a biography of Edmund Burke written by John Morley. The title page and note provide explicit information about the publication details. Let me extract the structured information:
+
+<result>
+Title = "Burke"
+Author = "John Morley"
+Year = 1879
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+This is a biographical study of Edmund Burke (1729-1797), the Irish-born British statesman, political theorist, and philosopher who became one of the most influential voices in 18th-century British politics. Written by John Morley (later Viscount Morley of Blackburn), a prominent Liberal statesman and man of letters, this work was part of the "English Men of Letters" series. The book focuses on Burke's life and career rather than purely critical analysis, covering his contributions to political thought, his work in Parliament, his opposition to the French Revolution, and his enduring influence on conservative political philosophy. Morley notes in his preface that this biographical work differs from his earlier critical study published twenty years prior, being more narrative in approach.
+"""
+
+Notes = """
+The publication history is complex: Morley wrote an earlier critical study circa 1868, then this biographical work for the "English Men of Letters" series (first edition likely 1879), with this Library Edition showing printings in 1888, 1892, 1897, 1902, and 1907. I've chosen 1879 as the original publication year for this particular biographical work in the series, though the text shown is from the 1888 printing. The year represents when Morley's biographical approach to Burke was first published, distinguishing it from his earlier purely critical study.
+"""
+</result>

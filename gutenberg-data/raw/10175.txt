@@ -1,0 +1,15 @@
+<result>
+Title = "Prelude in C Sharp Minor, Op. 3, No. 2"
+Author = "Sergei Rachmaninoff"
+Year = 1892
+
+Tags = ["non-fiction", "historical-document", "music"]
+
+Summary = """
+This is an audio recording of Sergei Rachmaninoff's famous Prelude in C Sharp Minor, Op. 3, No. 2, one of the most recognizable and frequently performed piano pieces in the classical repertoire. The prelude is characterized by its dramatic opening chords and haunting melodic lines. This particular recording appears to be a historical recording taken from the Edison National Historic Site, suggesting it may be an early phonograph recording. The work became so popular that Rachmaninoff grew tired of being asked to perform it at every concert, yet it remains one of his most enduring compositions.
+"""
+
+Notes = """
+The Prelude in C Sharp Minor was composed in 1892 when Rachmaninoff was only 19 years old. It was part of a set of five pieces (Morceaux de fantaisie, Op. 3) and became an instant success. The piece is actually titled "Prelude in C-sharp minor, Op. 3, No. 2" but is commonly referred to simply as "The Prelude." This Project Gutenberg entry is for an audio recording rather than sheet music, and the reference to Edison suggests it's a historical phonograph recording, which would be of significant musicological interest. The year 1892 represents the composition date, which is the most historically significant date for this work.
+"""
+</result>

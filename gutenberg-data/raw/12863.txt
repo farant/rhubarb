@@ -1,0 +1,15 @@
+<result>
+Title = "Campaign of the Indus: In a Series of Letters from an Officer of the Bombay Division"
+Author = "Anonymous Officer of the Bombay Division, edited by A.H. Holdsworth"
+Year = 1839
+
+Tags = ["non-fiction", "historical-document", "military-history"]
+
+Summary = """
+This work is a firsthand account of the First Anglo-Afghan War (1839-1842), specifically detailing the Campaign of the Indus. Written as a series of letters by a British officer serving with the Bombay Division, the book chronicles the extraordinary military expedition in which British forces marched through Central Asia—regions not traversed by European armies since Alexander the Great. The campaign was part of Britain's effort to install a friendly ruler in Afghanistan and counter Russian influence in the region. The letters provide detailed observations of the hardships endured by British and Indian troops as they marched through deserts and mountains, facing extreme weather conditions and occasional combat. Published in 1840, these letters were originally written for the officer's family and later compiled by his father, A.H. Holdsworth, who introduces the collection. The work offers valuable historical insight into British imperial military operations and the conditions of 19th-century warfare in Asia.
+"""
+
+Notes = """
+The year 1839 represents when the campaign itself began, though the book was published in 1840. Since this is a contemporary account of events that occurred in 1839-1840, I've chosen 1839 as the most historically significant date, marking the beginning of the First Anglo-Afghan War and the Campaign of the Indus itself. The author is technically anonymous (described only as an officer of the Bombay Division), with A.H. Holdsworth serving as editor and father of the letter writer.
+"""
+</result>

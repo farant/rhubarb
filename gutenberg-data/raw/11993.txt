@@ -1,0 +1,21 @@
+I'll read through this text to identify the work and provide the requested information.
+
+This is clearly "A Residence in France During the Years 1792, 1793, 1794, and 1795" by an English lady, prepared for the press by John Gifford. Based on the publication information and my knowledge, this is a famous work by Helen Maria Williams, an English writer who lived in France during the French Revolution. The work was originally published in 1795-1796 (in volumes), with this being a second edition from 1797 prepared by John Gifford.
+
+Helen Maria Williams was a noted English novelist, poet, and radical who witnessed the French Revolution firsthand. This epistolary work (written as letters) provides a valuable historical account of life in Revolutionary France from an English perspective.
+
+<result>
+Title = "A Residence in France, During the Years 1792, 1793, 1794, and 1795"
+Author = "Helen Maria Williams"
+Year = 1795
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+This is an epistolary work (series of letters) by Helen Maria Williams, an English writer who lived in France during the tumultuous years of the French Revolution. The work provides a firsthand account of life in Revolutionary France, including the Terror, from the perspective of an educated English woman. Williams was initially sympathetic to the Revolution but became increasingly critical as events unfolded. The letters offer valuable historical insight into daily life, political events, and social conditions during one of history's most significant periods. The work includes observations on French character and manners, making it both a political document and a cultural commentary.
+"""
+
+Notes = """
+The work was originally published in volumes starting in 1795-1796. This text indicates it is a "Second Edition" from 1797, prepared by John Gifford. I've chosen 1795 as the year since that represents when the work first appeared and is the most historically significant date for placing this work in context. Helen Maria Williams was a controversial figure - politically radical and sympathetic to republican ideals, which is why her work was edited by John Gifford (a conservative) for the second edition.
+"""
+</result>

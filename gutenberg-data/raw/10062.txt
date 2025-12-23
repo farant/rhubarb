@@ -1,0 +1,15 @@
+<result>
+Title = "The Iron Game: A Tale of the War"
+Author = "Henry F. Keenan"
+Year = 1891
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"The Iron Game" is a novel by Henry F. Keenan set during the American Civil War. Published in the late 19th century, it is a work of historical fiction that dramatizes the conflict between North and South. The title metaphorically refers to the war as an "iron game," evoking the deadly, mechanistic nature of modern warfare with its use of artillery, ironclad ships, and industrial-scale combat. The novel appears to explore themes of manliness, nobility, and the human experiences within the broader context of the Civil War. Keenan, writing approximately 30 years after the war's conclusion, would have had access to extensive historical records and veteran accounts, allowing for a more reflective perspective on the conflict.
+"""
+
+Notes = """
+The publication year is based on the dedication date of March 25, 1891, and the copyright date of 1898 shown in the Project Gutenberg text. Since the dedication is dated 1891 and typically comes from the first edition, I've chosen 1891 as the original publication year, with 1898 possibly representing a later edition or reprint. The novel is a work of fiction about the Civil War rather than a historical document or memoir, so it is dated to when Keenan wrote it, not to the 1860s war period it depicts.
+"""
+</result>

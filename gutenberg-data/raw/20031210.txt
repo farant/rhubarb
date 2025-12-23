@@ -1,0 +1,15 @@
+<result>
+Title = "For Luncheon and Supper Guests"
+Author = "Alice Bradley"
+Year = 1923
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A practical cookbook by Alice Bradley, Principal of Miss Farmer's School of Cookery, containing ten menus and over one hundred recipes designed for entertaining guests. The book focuses on modern, simplified entertaining with meals of fewer courses, suitable for company luncheons, Sunday night suppers, afternoon parties, automobile picnics, and commercial establishments like tea rooms and motor inns. Bradley was a prominent culinary educator in early 20th century America, associated with the Boston Cooking School tradition established by Fannie Farmer.
+"""
+
+Notes = """
+The year 1923 is clearly stated in the publication information. This represents a transitional period in American entertaining, as noted in the introduction's emphasis on simplicity over elaborate multi-course meals, reflecting the changing social dynamics of the post-World War I era.
+"""
+</result>

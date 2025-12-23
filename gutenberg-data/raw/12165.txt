@@ -1,0 +1,35 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This text is in Finnish, and based on the content, I can identify:
+
+- **Title**: "Salatiedettä omin päin" (which translates roughly to "Secret Science on One's Own" or "Occult Science Independently")
+- **Subtitle**: "Seitsemän esitelmää" (Seven Lectures)
+- **Author**: Pekka Ervast
+- **Publication Year**: 1914 (clearly stated in the text)
+
+Pekka Ervast (1875-1934) was a Finnish theosophist, translator, and writer who was a prominent figure in the Finnish Theosophical Society. This work consists of seven lectures he gave in 1913, published in book form in 1914.
+
+The content description indicates this is about theosophy and spiritual development, with lectures covering topics like:
+1. First conditions
+2. Before initiation
+3. God
+4. Intellectual and moral purification
+5. Supersensible life
+6. Rebirth in Christ
+7. Yoga independently
+
+<result>
+Title = "Salatiedettä omin päin: Seitsemän esitelmää"
+Author = "Pekka Ervast"
+Year = 1914
+
+Tags = ["non-fiction", "theosophy", "spirituality", "philosophy"]
+
+Summary = """
+A collection of seven lectures on theosophy and spiritual development by Finnish theosophist Pekka Ervast. The lectures were delivered in 1913 (six in Helsinki in autumn, one at the Theosophical Society's annual meeting in summer) and published in 1914. The work covers practical esoteric psychology and spiritual development, including topics such as preparation for initiation, the nature of God, moral and intellectual purification, supersensible life, rebirth in Christ, and independent practice of yoga. Ervast emphasizes that "secret science" (salatiede) is practical psychology dealing with humanity's deepest spiritual and religious experiences, not to be confused with "secret sciences" (salaiset tieteet).
+"""
+
+Notes = """
+1914 is the publication year stated in the original text. Pekka Ervast was a leading figure in Finnish Theosophy and translated numerous theosophical works into Finnish. This work reflects the theosophical movement's influence in early 20th century Finland.
+"""
+</result>

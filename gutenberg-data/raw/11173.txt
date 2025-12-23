@@ -1,0 +1,17 @@
+I can see this is from The Atlantic Monthly magazine, Volume V, January 1860, Issue 27. This appears to be an article titled "Our Artists in Italy" with a focus on sculptor Hiram Powers. However, this is a magazine issue/anthology rather than a single authored work.
+
+<result>
+Title = "The Atlantic Monthly, Volume V, January 1860, No. XXVII"
+Author = "Various"
+Year = 1860
+
+Tags = ["non-fiction", "periodical", "art-criticism", "appropriate-for-children"]
+
+Summary = """
+This is an issue of The Atlantic Monthly magazine from January 1860. The Atlantic Monthly was founded in 1857 in Boston and became one of America's most prestigious literary and cultural magazines. This particular issue includes an article on American artists working in Italy, specifically featuring sculptor Hiram Powers. The magazine typically contained essays, poetry, fiction, and commentary on literature, art, and politics during this period, reflecting American intellectual life in the antebellum era.
+"""
+
+Notes = """
+The year 1860 is taken directly from the publication date of this specific magazine issue. The Atlantic Monthly was a serial publication with contributions from various authors. This appears to be the complete issue or at least the beginning of it, starting with an art criticism piece about American sculptors in Italy, particularly Hiram Powers who was famous for works like "The Greek Slave."
+"""
+</result>

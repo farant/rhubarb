@@ -1,0 +1,15 @@
+<result>
+Title = "Jack's Ward; or, The Boy Guardian"
+Author = "Horatio Alger, Jr."
+Year = 1875
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Jack's Ward" is one of Horatio Alger Jr.'s classic "rags-to-riches" stories that became enormously popular with young readers in the late 19th and early 20th centuries. The novel follows Jack, a young boy who becomes the guardian and protector of a ward (likely a younger child or dependent). Like most Alger novels, it emphasizes themes of honesty, hard work, self-improvement, and moral virtue as the path to success in American society. The story typically features a poor but virtuous boy who through determination, good character, and often a fortunate encounter with a benefactor, improves his station in life. Alger's works were particularly influential in shaping American ideas about upward mobility and the "self-made man" during the Gilded Age.
+"""
+
+Notes = """
+The publication date shown in the text is 1910, which appears to be the date of this particular edition. However, "Jack's Ward" was originally published in 1875. I've chosen 1875 as the historically accurate year for the work's first publication, as this would be most appropriate for a historical timeline of literary works. The 1910 date likely represents a reprint edition released after Alger's death in 1899, when his works were being republished to meet continued demand.
+"""
+</result>

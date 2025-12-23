@@ -1,0 +1,17 @@
+Looking at this Project Gutenberg text, I can identify the work from its title page and dedication.
+
+<result>
+Title = "A Holiday in the Happy Valley with Pen and Pencil"
+Author = "T. R. Swinburne"
+Year = 1907
+
+Tags = ["non-fiction", "travel", "appropriate-for-children"]
+
+Summary = """
+A travelogue documenting Major T. R. Swinburne's journey through Kashmir, India, particularly the Kashmir Valley (often called "the Happy Valley"). The work combines written descriptions with 24 colored illustrations, chronicling his travels from Karachi through various regions including Abbotabad, Srinagar, the Lolab Valley, the Lidar Valley, and Gangabal. As a travel narrative from the British Raj period, it offers both artistic and written perspectives on the landscape, culture, and experiences of visiting Kashmir in the early 20th century. The epigraph from Arthur Hugh Clough sets a romantic, adventurous tone for the journey.
+"""
+
+Notes = """
+The year 1907 is clearly stated on the title page. The author was a Major in the R.M.A. (Royal Military Academy or Royal Marine Artillery). "The Happy Valley" was a common English nickname for the Kashmir Valley during the British Raj period. The Jhelum River illustration mentioned runs through Srinagar, the capital of Kashmir.
+"""
+</result>

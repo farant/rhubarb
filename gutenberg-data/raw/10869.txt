@@ -1,0 +1,15 @@
+<result>
+Title = "The Abandoned Room"
+Author = "Wadsworth Camp"
+Year = 1917
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+"The Abandoned Room" is a mystery novel by American author Wadsworth Camp, published in 1917. Camp was known for his mystery and suspense fiction during the early 20th century, including works like "The House of Fear" and "War's Dark Frame." This book is a classic locked-room mystery that follows the investigation of a suspicious death at a place called "The Cedars." The story involves a character named Bobby who becomes a suspect, and features atmospheric elements typical of early 20th-century mystery fiction, including an abandoned room, mysterious lights, and shadowy courtyard meetings. The novel exemplifies the golden age detective fiction style that was popular during this era.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page of this Project Gutenberg edition and appears to be the original publication date. This work represents early American mystery fiction from the World War I era, when the detective/mystery genre was gaining significant popularity in the United States.
+"""
+</result>

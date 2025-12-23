@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work, author, and other details.
+
+This is clearly an editorial collection of old English plays rather than a single authored work. The text shows this is Volume III of "A Collection of Old English Plays" edited by A.H. Bullen, published between 1882-1889.
+
+Since this is an editorial collection containing multiple Renaissance/Jacobean era plays (Sir Gyles Goosecappe, The Wisdome of Dr. Dodypoll, The Distracted Emperor, The Tryall of Chevalry), the appropriate metadata should reflect this as an anthology/collection rather than a single authored work.
+
+<result>
+Title = "A Collection of Old English Plays, Vol. III"
+Author = "Various (edited by A.H. Bullen)"
+Year = 1885
+
+Tags = ["non-fiction", "historical-document", "drama-anthology"]
+
+Summary = """
+This is the third volume of A.H. Bullen's scholarly collection of old English plays from the Renaissance and Jacobean periods, published between 1882-1889. The volume contains four plays: Sir Gyles Goosecappe, The Wisdome of Dr. Dodypoll, The Distracted Emperor, and The Tryall of Chevalry. Bullen's collection was an important scholarly effort to preserve and make available rare English Renaissance drama, some printed for the first time. The preface indicates collaboration with F.G. Fleay and acknowledgment of Alfred Henry Huth's library collection.
+"""
+
+Notes = """
+The publication dates span 1882-1889 for the four-volume set. I've chosen 1885 as a mid-point estimate for Volume III specifically, though the exact year isn't stated in this excerpt. This is a scholarly editorial work rather than creative authorship, containing Renaissance plays by various (often anonymous) playwrights. Not marked as appropriate-for-children due to the scholarly nature and adult themes typical of Renaissance drama.
+"""
+</result>

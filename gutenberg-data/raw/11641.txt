@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a work by Arnold Bennett about World War I, specifically his observations of the Western Front. The text is from "Over There: War Scenes on the Western Front," which was published in 1915. Arnold Bennett was an English novelist who visited France during WWI and wrote this collection of essays/sketches about his experiences observing the war zone.
+
+The passage describes Paris during wartime, with Bennett reflecting on French culture and civilization while observing the contrast between the mundane (a young couple playing a ball game) and the profound historical and cultural significance of the surroundings. The phrase "all this escaped" refers to Paris having been spared from German occupation during the war.
+
+<result>
+Title = "Over There: War Scenes on the Western Front"
+Author = "Arnold Bennett"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'Over There: War Scenes on the Western Front' is a collection of essays and observations by English novelist Arnold Bennett documenting his visit to France during World War I. Bennett, already an established literary figure, traveled to the Western Front and wrote vivid descriptions of the war zone, French society under wartime conditions, and reflections on French civilization and culture. The work combines war reportage with cultural commentary, offering an outsider's perspective on France during one of its most critical historical moments. Bennett's prose style brings his novelist's eye for detail to bear on the realities of modern warfare and its impact on European civilization.
+"""
+
+Notes = """
+Published in 1915, during the middle of World War I. This was written after the German advance on Paris had been halted at the Battle of the Marne in 1914, hence Bennett's relief that the cultural treasures of Paris "escaped" destruction. Arnold Bennett was not Catholic, so this work does not receive the 'catholic' tag.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Samuel F.B. Morse: His Letters and Journals"
+Author = "Samuel F.B. Morse, edited by Edward Lind Morse"
+Year = 1914
+
+Tags = ["non-fiction", "biography", "historical-document"]
+
+Summary = """
+This is a two-volume biographical work containing the personal letters and journals of Samuel Finley Breese Morse (1791-1872), the American inventor best known for co-developing the telegraph and Morse code. The work was edited and supplemented by his son, Edward Lind Morse, and published in 1914. The volumes include reproductions of Morse's paintings (he was also an accomplished artist before turning to invention) and technical notes and diagrams related to his invention of the telegraph. This collection provides primary source material documenting Morse's life, thoughts, and the development of one of the most important communications technologies of the 19th century.
+"""
+
+Notes = """
+The year 1914 is the publication date of this edited collection, which is the appropriate date for this work as it is a posthumous compilation rather than an original work by Morse himself. While Morse lived from 1791-1872, this editorial work bringing together his correspondence and journals was completed and published by his son Edward Lind Morse in 1914.
+"""
+</result>

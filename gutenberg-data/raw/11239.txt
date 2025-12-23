@@ -1,0 +1,15 @@
+<result>
+Title = "The Life and Adventures of Robinson Crusoe"
+Author = "Daniel Defoe"
+Year = 1719
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Robinson Crusoe is one of the earliest and most famous English novels, telling the story of a man shipwrecked on a remote island who survives through ingenuity and determination for 28 years. The novel is presented as an autobiography of Robinson Crusoe, detailing his adventures, his relationship with Friday (a native he rescues), and his eventual rescue. Written by Daniel Defoe, it explores themes of survival, providence, self-reliance, and colonialism. The work has been continuously in print since its first publication and is considered a foundational text in the development of the English novel. It has been beloved by children and adults alike for over three centuries and spawned numerous adaptations and sequels.
+"""
+
+Notes = """
+The work was first published on April 25, 1719. This Project Gutenberg text appears to be from an 1812 edition published by C. Whittingham. While Defoe himself was a Protestant Dissenter (as noted in the biographical introduction), the novel itself is not specifically Catholic and would not carry an imprimatur. The date chosen (1719) reflects the original publication year, as this is the most historically significant date for understanding the work's place in literary history and its influence on the development of the novel form.
+"""
+</result>

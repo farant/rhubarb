@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents: James Madison"
+Author = "James D. Richardson"
+Year = 1896
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a volume from James D. Richardson's comprehensive compilation of presidential messages and papers, focusing on the presidency of James Madison (1809-1817). Richardson's compilation was a massive undertaking authorized by Congress to collect and publish the official messages, proclamations, and correspondence of U.S. Presidents. This particular volume would include Madison's State of the Union addresses, war messages (including the War of 1812), diplomatic correspondence, and other official presidential communications. The work serves as an essential primary source for understanding Madison's presidency and early American governance. Madison, often called the "Father of the Constitution," served as the fourth President of the United States during a tumultuous period that included the War of 1812 with Britain.
+"""
+
+Notes = """
+Richardson's compilation was published in multiple editions starting in 1896-1899. The year 1896 represents the initial publication of this comprehensive work, which was commissioned by Congress and became the standard reference for presidential papers of the 19th century. While the documents themselves date from Madison's presidency (1809-1817), the compilation as a scholarly work is properly dated to its publication year.
+"""
+</result>

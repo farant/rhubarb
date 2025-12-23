@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+Based on the title page, this is clearly a collection of poems by Helen Maria Williams, published in 1786 (MDCCLXXXVI in Roman numerals). Helen Maria Williams (1761-1827) was an English poet, novelist, and radical intellectual who later became known for her writings on the French Revolution.
+
+This appears to be her collected poems from the mid-1780s, which would have included her celebrated works from that period. Williams was not a Catholic author - she came from a Dissenting Protestant background and held liberal/radical political views. Her poetry from this period focused on sensibility, humanitarian themes, and emotional expression characteristic of the late 18th-century Romantic sensibility.
+
+<result>
+Title = "Poems, by Helen Maria Williams"
+Author = "Helen Maria Williams"
+Year = 1786
+
+Tags = ["poetry", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a two-volume collection of poems by Helen Maria Williams, an English poet of the late 18th century. Williams was known for her poetry of sensibility and humanitarian themes. This 1786 collection represents her early poetic work, published when she was gaining recognition in literary circles. The dedication to "Her Majesty" (Queen Charlotte) indicates royal patronage. Williams would later become famous for her eyewitness accounts of the French Revolution, but this work predates that period and focuses on the sentimental and humanitarian poetry that made her reputation in the 1780s.
+"""
+
+Notes = """
+The publication year 1786 is clearly stated on the title page in Roman numerals (MDCCLXXXVI). This is Williams's original collected poems, not a translation or later edition. Williams was not a Catholic author - she came from a Dissenting Protestant background and held liberal political views, so the 'catholic' tag is not applicable.
+"""
+</result>

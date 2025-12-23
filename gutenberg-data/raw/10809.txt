@@ -1,0 +1,15 @@
+<result>
+Title = "Why We Are at War: Great Britain's Case"
+Author = "Members of the Oxford Faculty of Modern History"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This book was written by members of the Oxford Faculty of Modern History at the outbreak of World War I in 1914. It presents Great Britain's justification for entering the war, analyzing the causes and principles at stake from a historical and diplomatic perspective. The work includes extensive documentary evidence, including the British White Book (Parliamentary Paper Cd. 7467) and the complete German White Book with its official apology and supporting documents. The authors, representing different schools of political thought, applied their expertise in handling historic evidence to explain Britain's position. The second edition was revised to include the Russian Orange Book. This represents an important primary source for understanding how British academics and intellectuals framed their nation's entry into the First World War.
+"""
+
+Notes = """
+The year 1914 is clearly stated as the publication date on the title page. This book was published during the early months of World War I (which began in August 1914) as a contemporary defense of British involvement. The "Second Edition Revised (fourth impression)" indicates it went through multiple printings quickly, suggesting significant public interest. The work is explicitly dated to the war's outbreak and serves as a historical document of that moment rather than a retrospective analysis.
+"""
+</result>

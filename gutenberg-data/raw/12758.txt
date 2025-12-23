@@ -1,0 +1,15 @@
+<result>
+Title = "Library of the World's Best Mystery and Detective Stories"
+Author = "Edited by Julian Hawthorne"
+Year = 1907
+
+Tags = ["fiction", "anthology"]
+
+Summary = """
+An anthology of 101 mystery and detective stories collected and edited by Julian Hawthorne (son of Nathaniel Hawthorne) and published in six volumes. The collection draws from famous authors across different cultures and nations, including American, English, Scottish, Irish, French, Italian, German, Russian, and Oriental writers. This represents a comprehensive survey of the mystery and detective genre as it existed in the early 20th century, bringing together both Western and Eastern traditions of mystery storytelling. Julian Hawthorne was himself a prolific writer and journalist, and this editorial work showcases his role in popularizing detective fiction during its golden age.
+"""
+
+Notes = """
+The year 1907 is clearly stated as the publication date in the frontmatter. This is the original publication date of this anthology collection by The Review of Reviews Company in New York. While the individual stories within would have various earlier publication dates, 1907 represents when this curated collection was assembled and published.
+"""
+</result>

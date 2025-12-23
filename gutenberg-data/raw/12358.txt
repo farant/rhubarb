@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This appears to be the first tract of the Society for Pure English (S.P.E.), an organization founded in 1913 by Robert Bridges (the Poet Laureate) and other literary figures to study and guide the English language. This is essentially an organizational document announcing the society's formation and listing its members.
+
+<result>
+Title = "Society for Pure English, Tract No. I: Preliminary Announcement & List of Members"
+Author = "Society for Pure English (founded by Robert Bridges et al.)"
+Year = 1919
+
+Tags = ["non-fiction", "linguistic", "historical-document"]
+
+Summary = """
+This is the inaugural tract of the Society for Pure English (S.P.E.), founded in 1913 by Robert Bridges (Poet Laureate) along with other prominent literary and academic figures. The society aimed to study the English language and provide guidance on its proper use, though not in a prescriptive or xenophobic manner. The document explains that the society's activities were suspended due to World War I shortly after its founding, and this October 1919 publication marks its official launch. It includes preliminary announcements about the society's purpose and methods, clarifies that "Pure English" does not mean rejecting foreign loanwords, and provides a list of founding members. The S.P.E. went on to publish numerous tracts on English language usage throughout the 1920s and beyond.
+"""
+
+Notes = """
+The year 1919 is clearly stated as the publication date (MDCCCCXIX in Roman numerals on the title page, and "Oct. 1919" in the heading). While the society was founded in 1913, this tract represents its first actual publication after the war interrupted its initial plans.
+"""
+</result>

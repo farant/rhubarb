@@ -1,0 +1,15 @@
+<result>
+Title = "Within the Deep"
+Author = "R. Cadwallader Smith"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children", "natural-history", "marine-biology"]
+
+Summary = """
+'Within the Deep' is part of Cassell's "Eyes and No Eyes" educational series, which was designed to teach children about natural history through observation and engaging narrative. This particular volume (Book VIII in the series) focuses on marine life and ocean environments. The book covers topics including various fish species, seals, whales, sharks ("Tigers of the Sea"), coral reefs, and other ocean creatures and phenomena. The "Eyes and No Eyes" series was popular in Edwardian Britain for making natural science accessible and interesting to young readers, following the pedagogical principle that children learn best through careful observation of the natural world. R. Cadwallader Smith was known for his nature writing for children during this period.
+"""
+
+Notes = """
+The publication date is approximate, based on the style and format of Cassell's "Eyes and No Eyes" series, which was published in the early 1900s. The series was part of the broader Victorian and Edwardian tradition of natural history education for children. The exact first publication date of this specific volume is not definitively known from this excerpt alone, but circa 1903-1910 is the likely range based on the series publication history. I've chosen 1903 as a reasonable estimate for the middle of this series' publication period.
+"""
+</result>

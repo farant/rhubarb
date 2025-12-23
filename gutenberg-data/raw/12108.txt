@@ -1,0 +1,15 @@
+<result>
+Title = "Der Tod in Venedig"
+Author = "Thomas Mann"
+Year = 1912
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+'Death in Venice' (Der Tod in Venedig) is a novella by German author Thomas Mann, originally published in 1912. It tells the story of Gustav von Aschenbach, an aging writer who travels to Venice and becomes obsessed with a beautiful young Polish boy named Tadzio. The work explores themes of beauty, desire, artistic perfection, decay, and death, set against the backdrop of Venice during a cholera epidemic. It is considered one of Mann's masterpieces and a landmark of early 20th-century literature, reflecting the decadent and psychological concerns of the period.
+"""
+
+Notes = """
+The year 1912 corresponds to the first publication by Hyperionverlag Hans von Weber in Munich, as indicated in the text itself. This is the original German publication date and the most historically accurate date for this work.
+"""
+</result>

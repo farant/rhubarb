@@ -1,0 +1,17 @@
+Based on the header material provided, I can identify this work and provide the structured information:
+
+<result>
+Title = "The Life and Letters of Elizabeth Prentiss"
+Author = "George L. Prentiss"
+Year = 1882
+
+Tags = ["non-fiction", "biography", "appropriate-for-children", "catholic"]
+
+Summary = """
+A biography of Elizabeth Prentiss, the renowned Christian author best known for her novel 'Stepping Heavenward'. The work was compiled by her husband, George L. Prentiss, at the request of friends who felt her life story should be shared with the public. The biography is largely autobiographical in nature, consisting primarily of Elizabeth Prentiss' own letters and journal extracts spanning from her twentieth year until near her death. These documents provide intimate details about her personal life, home, friendships, and her writing career. The work is interwoven with narrative commentary, personal reminiscences, a biographical sketch of her father, and notices of other influential figures in her life. The book presents both the natural and spiritual dimensions of her life, and was intended to serve as a source of strength and comfort to Christian readers, fulfilling Elizabeth's own expressed desire to use her life experiences to help others.
+"""
+
+Notes = """
+The year 1882 is based on the date given at the end of the preface: "KAUINFELS, September 11, 1882." Elizabeth Prentiss (1818-1878) was a prominent Christian writer in 19th century America. I've included 'catholic' in the tags with lowercase 'c' to indicate Christian/universal rather than Roman Catholic, as this appears to be a Protestant Christian work given the context and era. The work is appropriate for children as it was intended for Christian homes and family edification.
+"""
+</result>

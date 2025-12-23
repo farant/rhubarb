@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "The Merchant of Berlin" by L. Mühlbach (pen name of Clara Mundt, a German author). This is a historical novel set during the Seven Years' War, focusing on Berlin during the Russian and Austrian occupation in 1760.
+
+<result>
+Title = "The Merchant of Berlin"
+Author = "L. Mühlbach (Clara Mundt)"
+Year = 1860
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'The Merchant of Berlin' is a historical novel by L. Mühlbach (pseudonym of German author Clara Mundt, 1814-1873) set during the Seven Years' War (1756-1763). The novel depicts life in Berlin during the Russian and Austrian occupation of the city in 1760, focusing on the experiences of a merchant family and the civilian population during this tumultuous period. Mühlbach was known for her popular historical novels that dramatized European history, and this work exemplifies her style of combining fictional characters with real historical events. The novel explores themes of patriotism, survival, and human relationships during wartime occupation.
+"""
+
+Notes = """
+The original German publication was around 1860. This English translation by Amory Coffin was published in 1910 according to the title page. I've chosen 1860 as the year because that represents when Mühlbach originally wrote and published the work in German, which is the historically significant date for the creation of this literary work. L. Mühlbach was a prolific writer of historical fiction in 19th century Germany, and her works were widely translated and popular in both Europe and America.
+"""
+</result>

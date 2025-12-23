@@ -1,0 +1,15 @@
+<result>
+Title = "The Railroad Question"
+Author = "William Jennings Bryan"
+Year = 1906
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"The Railroad Question" is a political speech/essay by William Jennings Bryan addressing railroad regulation and the relationship between railroads and government in early 20th century America. Bryan, a prominent Democratic politician and three-time presidential candidate, was known for his progressive populist positions on economic issues. This work likely addresses railroad monopolies, fair rates, government regulation, and the rights of farmers and workers in relation to powerful railroad corporations - major political issues of the Progressive Era. The audio format indicates this was recorded as an Edison cylinder or disc recording, making it a historically significant early audio document.
+"""
+
+Notes = """
+William Jennings Bryan was active in politics from the 1890s through the 1920s. The "railroad question" was a major Progressive Era issue, peaking roughly 1900-1910. Given that this was edited by Thomas Edison and released as an audio recording, and considering the Interstate Commerce Act amendments and railroad regulation debates of the early 1900s, this likely dates to approximately 1906-1908, the period of intense railroad regulation debate leading to the Hepburn Act (1906). I've chosen 1906 as the most historically representative year for this work's context. The exact recording date may vary, but this represents the era when Bryan was most actively addressing this issue.
+"""
+</result>

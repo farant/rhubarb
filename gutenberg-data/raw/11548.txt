@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly an article/chapter from McClure's Magazine about Abraham Lincoln, written by Ida M. Tarbell. This is part of her famous serialized biography of Lincoln that was later published as a complete book.
+
+<result>
+Title = "Abraham Lincoln (McClure's Magazine Serialization)"
+Author = "Ida M. Tarbell"
+Year = 1895
+
+Tags = ["non-fiction", "historical-document", "biography", "appropriate-for-children"]
+
+Summary = """
+This is an installment from Ida M. Tarbell's groundbreaking serialized biography of Abraham Lincoln, published in McClure's Magazine starting in 1895. This particular chapter (Part II) covers Lincoln's formative years in Indiana from ages 7-21, his character development, the influence of his mother and stepmother, his move to Illinois, and his early ventures including building a flatboat, traveling to New Orleans, and working as a grocery clerk in New Salem. Tarbell's work was revolutionary for its use of primary sources and extensive research, and it helped establish Lincoln's place in American mythology. The series was later compiled into a full biography published in 1900.
+"""
+
+Notes = """
+I chose 1895 as this is the specific publication date of this magazine issue (Vol. VI, December 1895, No. 1). While Tarbell's complete book 'The Life of Abraham Lincoln' was published in 1900, this serialized format in McClure's Magazine represents the original form in which this groundbreaking work reached the American public. The serialization itself was a significant historical event in Lincoln scholarship and American journalism.
+"""
+</result>

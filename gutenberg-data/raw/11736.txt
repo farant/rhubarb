@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement, No. 586, March 26, 1887"
+Author = "Various"
+Year = 1887
+
+Tags = ["non-fiction", "periodical", "science", "technology", "appropriate-for-children"]
+
+Summary = """
+This is an issue of Scientific American Supplement, a weekly publication that accompanied the main Scientific American magazine (established 1845). The Supplement provided additional technical and scientific content, including detailed articles on engineering, chemistry, physics, natural history, and industrial processes. Each issue typically featured illustrated articles on contemporary scientific discoveries, technological innovations, and practical applications across various fields. These supplements were valued resources for professionals, educators, and scientifically-minded readers of the late 19th century.
+"""
+
+Notes = """
+Year is straightforward - this is the publication date of this specific issue (March 26, 1887). As a periodical, each issue represents a snapshot of scientific and technical knowledge from that specific moment in history.
+"""
+</result>

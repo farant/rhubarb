@@ -1,0 +1,15 @@
+<result>
+Title = "Mike and Psmith"
+Author = "P.G. Wodehouse"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Mike and Psmith" (originally published as "The Lost Lambs" in The Captain magazine in 1909, then in book form as "Mike" which was later split into "Mike at Wrykyn" and "Mike and Psmith") is a school story by P.G. Wodehouse. It follows Mike Jackson, a talented cricketer forced to leave his beloved Wrykyn school and transfer to the less prestigious Sedleigh, where he meets the eccentric and unflappable Rupert Psmith (the 'p' is silent). Psmith becomes Mike's friend and ally as they navigate school politics, house rivalries, and various comic misadventures. The novel is notable for introducing Psmith, one of Wodehouse's most memorable early characters, who would appear in several subsequent novels. This is classic Wodehouse school-boy humor, mixing cricket, pranks, and the distinctive comedic voice that would make him one of the 20th century's greatest humorists.
+"""
+
+Notes = """
+Copyright shows 1909, which matches the original serialization in The Captain magazine and the first book publication. The novel was later republished in 1953 as two separate books: "Mike at Wrykyn" and "Mike and Psmith" (or "Enter Psmith" in some editions), with this being the second half. However, 1909 represents the original complete work's publication date.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Heart of Man" by George Edward Woodberry, published in 1899 as indicated by the copyright notice. Woodberry was an American literary critic, poet, and professor of comparative literature at Columbia University. He was known for his humanistic approach to literature and his essays on aesthetics and culture.
+
+<result>
+Title = "The Heart of Man"
+Author = "George Edward Woodberry"
+Year = 1899
+
+Tags = ["non-fiction", "essays", "literary-criticism", "philosophy"]
+
+Summary = """
+The Heart of Man is a collection of essays by George Edward Woodberry, an influential American literary critic and poet who taught at Columbia University. The work explores humanistic themes related to culture, literature, and the nature of humanity. The book includes essays such as "Taormina" (previously published in Century Magazine) and other new works. Woodberry was part of the American Renaissance of letters and was known for his idealistic approach to literary criticism, emphasizing the moral and spiritual dimensions of literature. The dedication to his friend Eugene Montgomery and the epigraph from Wordsworth ("Deep in the general heart of man") suggest the work's focus on universal human experiences and values.
+"""
+
+Notes = """
+The year 1899 is taken directly from the copyright notice on the title page. This appears to be the original publication year by The Macmillan Company. The work represents late 19th-century American literary humanism and cultural criticism.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Anssin Jukka ja Härmän Häät"
+Author = "Otto Pyykkönen"
+Year = 1900
+
+Tags = ["fiction", "audio-recording"]
+
+Summary = """
+This is an audio recording of a Finnish work "Anssin Jukka ja Härmän Häät" (Jukka of Ansi and the Wedding at Härmä) by Otto Pyykkönen. The work appears to be a Finnish narrative or story that was recorded on Edison phonograph cylinders and later digitized by Project Gutenberg. Otto Pyykkönen was a Finnish author/performer whose works were among those recorded on early Edison cylinders in the early 20th century. The title suggests it's a story about a character named Jukka from Ansi and a wedding in Härmä (a region in Finland).
+"""
+
+Notes = """
+The exact original composition date is uncertain. The year 1900 is an approximation based on the era when Edison cylinders were being produced and Finnish literary works of this type were being recorded. The Edison recording technology and the preservation at Edison National Historic Site suggests this recording dates from roughly 1890-1910. Without access to more detailed Finnish literary records, 1900 serves as a reasonable estimate for when this work was either written or recorded. This is an audio format rather than a traditional text, which is unusual for Project Gutenberg materials.
+"""
+</result>

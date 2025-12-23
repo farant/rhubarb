@@ -1,0 +1,15 @@
+<result>
+Title = "The Pilgrims of New England: A Tale of the Early American Settlers"
+Author = "Mrs. J. B. Webb"
+Year = 1850
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+A historical novel by Mrs. J. B. Webb that illustrates the manners, habits, trials, and difficulties of the earliest Puritan settlers in New England during their first years in America. The work weaves authentic historical incidents into a narrative that portrays both the virtues and failings of these religious emigrants, including their piety and courage as well as their descent into fanaticism and intolerance. The author aims to provide a balanced view of the Puritans, acknowledging their devotion to religious freedom while also documenting how quickly some communities forgot to practice the tolerance they themselves had sought when fleeing England.
+"""
+
+Notes = """
+The exact publication year is estimated as circa 1850 based on the author's active period and the style of the work. Mrs. J. B. Webb (Jane Bower Webb, later Mrs. Loudon after remarriage) was a British author who wrote historical fiction and educational works primarily in the mid-19th century. This work appears to be aimed at a general audience, including younger readers, to educate them about early American colonial history from a British perspective. While the author was likely Anglican/Church of England rather than Catholic, the work is not tagged as 'catholic' as it is historical fiction about Puritans rather than a Catholic work.
+"""
+</result>

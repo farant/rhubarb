@@ -1,0 +1,15 @@
+<result>
+Title = "The Cruise of the Dazzler"
+Author = "Jack London"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Cruise of the Dazzler is an early adventure novel by Jack London, written for young readers. The story follows Joe Bronson, a middle-class boy from San Francisco who runs away from home and finds himself aboard the Dazzler, a sloop involved in oyster piracy in San Francisco Bay. Through his adventures with the boat's crew, including the dangerous Red Nelson and the young 'Frisco Kid, Joe learns valuable lessons about responsibility, courage, and choosing the right path in life. The novel reflects London's own experiences as a youth in the San Francisco Bay Area and his time as an oyster pirate. It's a coming-of-age story that deals with themes of adventure, morality, and self-discovery.
+"""
+
+Notes = """
+The text clearly states publication year as 1902, which is the original publication date. This is one of Jack London's earlier works, written before his more famous novels like The Call of the Wild (1903) and White Fang (1906). The foreword indicates this was later republished as part of the Boy Scouts of America's "Every Boy's Library" series, but the original work dates to 1902.
+"""
+</result>

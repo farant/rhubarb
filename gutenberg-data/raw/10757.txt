@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is an audio recording/folk song performance by Roger McGuinn of the traditional Appalachian folk ballad "Pretty Saro" (also known as "Pretty Sarah" or "Down in Some Lone Valley"). This is not a book but rather a digital audio file distributed through Project Gutenberg's collection, recorded as part of McGuinn's Folk Den project.
+
+Since this is a traditional folk song (origins unknown, passed down orally through generations in Appalachia), and Roger McGuinn is the performer/arranger rather than the original author, I'll structure the metadata accordingly:
+
+<result>
+Title = "Pretty Saro"
+Author = "Traditional (performed by Roger McGuinn)"
+Year = 1740
+
+Tags = ["folk-song", "historical-document", "appropriate-for-children", "traditional-music"]
+
+Summary = """
+'Pretty Saro' is a traditional Appalachian folk ballad of uncertain origin, likely brought to America by Scottish or English immigrants in the 18th century. The song tells the story of a lonely immigrant who arrived in America in 1749 and longs for his lost love, Saro. It's a classic example of Anglo-American folk music, featuring themes of exile, longing, and unrequited love. This particular version was performed and recorded by Roger McGuinn (founder of The Byrds) as part of his Folk Den project, which preserves and shares traditional folk songs. The song has been recorded by numerous artists and remains a staple of American folk music.
+"""
+
+Notes = """
+The year 1740 is approximate and based on the song's internal reference to 1749 ("seventeen-forty-nine"). The actual composition date is unknown as this is an oral tradition folk song, but it likely originated in the mid-18th century among Appalachian settlers. This Project Gutenberg entry is from 2004 and represents McGuinn's audio performance, not the original composition. For historical timeline purposes, using circa 1740-1750 represents the era the song describes and likely originated in.
+"""
+</result>

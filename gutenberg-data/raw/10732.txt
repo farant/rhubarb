@@ -1,0 +1,17 @@
+I recognize this work as Arthur Schopenhauer's "Studies in Pessimism," which is a collection of essays translated by T. Bailey Saunders. Schopenhauer originally published these essays as part of his "Parerga and Paralipomena" in 1851, though this particular arrangement and translation came later. Since you're asking for the most historically accurate and educationally relevant year, I'll use 1851, when the source material was originally published in German, as this represents when Schopenhauer's philosophical ideas in these essays entered the historical record.
+
+<result>
+Title = "Studies in Pessimism"
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+"Studies in Pessimism" is a collection of essays by German philosopher Arthur Schopenhauer, selected from his larger work "Parerga and Paralipomena." The essays explore Schopenhauer's pessimistic philosophy, examining topics such as human suffering, the vanity of existence, suicide, immortality, education, women, and various psychological observations. Schopenhauer was one of the most influential philosophers of the 19th century, known for his pessimistic worldview that emphasized the primacy of will and the inherent suffering in human existence. His philosophy influenced later thinkers including Nietzsche, Freud, and various existentialist philosophers. This particular collection, translated by T. Bailey Saunders, presents some of Schopenhauer's most accessible and provocative writings on the human condition.
+"""
+
+Notes = """
+The year 1851 represents when Parerga and Paralipomena was originally published in German. This collection "Studies in Pessimism" is an English arrangement of selected essays from that work, translated by T. Bailey Saunders (likely late 19th or early 20th century), but the philosophical content dates to 1851. Not tagged as "appropriate-for-children" due to mature philosophical themes including suicide and pessimism. Not tagged as "catholic" - Schopenhauer was influenced by Eastern philosophy and was critical of Western religious traditions.
+"""
+</result>

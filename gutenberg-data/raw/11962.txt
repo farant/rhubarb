@@ -1,0 +1,15 @@
+<result>
+Title = "A Mind That Found Itself: An Autobiography"
+Author = "Clifford Whittingham Beers"
+Year = 1908
+
+Tags = ["non-fiction", "autobiography", "mental-health", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A pioneering autobiography by Clifford Whittingham Beers documenting his personal experience with mental illness and recovery during a period from his twenty-fourth to twenty-sixth year. This groundbreaking work, first published in 1908, is considered one of the foundational texts of the mental hygiene movement in America. Beers describes his descent into mental illness, his experiences in mental institutions, and his eventual recovery. The book played a crucial role in reforming mental health care in the early 20th century and led to Beers founding the National Committee for Mental Hygiene (now Mental Health America). His candid account helped reduce stigma around mental illness and advocated for more humane treatment of psychiatric patients.
+"""
+
+Notes = """
+I chose 1908 as the year because this is when the first edition was originally published, which is the most historically significant date for this work. The text shows evidence of multiple revised editions (1910, 1913, 1917, 1921), but the 1908 first publication marks when this revolutionary work first entered public consciousness and began influencing mental health reform. This Project Gutenberg text appears to be based on one of the later revised editions given the publication history listed in the front matter.
+"""
+</result>

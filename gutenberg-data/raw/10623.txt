@@ -1,0 +1,15 @@
+<result>
+Title = "Trifles"
+Author = "Susan Glaspell"
+Year = 1916
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+'Trifles' is a one-act play by American playwright Susan Glaspell, first performed by the Provincetown Players in 1916. The play is a pioneering work of feminist drama that explores themes of gender roles, justice, and the invisibility of women's work and perspectives in early 20th-century America. Set in a farmhouse kitchen, the play follows a sheriff, county attorney, and a neighboring farmer as they investigate the murder of John Wright, while their wives make subtle discoveries that the men overlook as mere "trifles." The play is notable for its critique of male-dominated legal and social systems and its exploration of women's solidarity. Glaspell later adapted the play into the short story "A Jury of Her Peers." It remains a frequently studied work in American literature and drama courses.
+"""
+
+Notes = """
+The year 1916 is clearly established as this is when the play was first performed and published. This collection appears to include multiple Glaspell plays (Trifles, The Outside, The Verge, and Inheritors), but the primary work being presented first is Trifles from 1916.
+"""
+</result>

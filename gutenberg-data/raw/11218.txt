@@ -1,0 +1,15 @@
+<result>
+Title = "Highroads of Geography"
+Author = "Anonymous"
+Year = 1904
+
+Tags = ["non-fiction", "educational", "appropriate-for-children"]
+
+Summary = """
+"Highroads of Geography" is an educational geography textbook from the Royal School Series, designed for children in the early 20th century British educational system. The work presents geographical information about various regions of the world, illustrated with reproductions of paintings by notable artists of the period including J.M.W. Turner and others. As was common for educational texts of this era, it combined factual geographical instruction with moral and imperial perspectives characteristic of Edwardian Britain. The book would have been used to teach students about different countries, peoples, and landscapes through both text and visual art.
+"""
+
+Notes = """
+The Project Gutenberg release date is 2004, but this is a modern digitization. Based on the style, the Royal School Series branding, the artists referenced (many active in the late Victorian/Edwardian period), and the overall format, this textbook was most likely originally published circa 1900-1910. I've estimated 1904 as a reasonable publication year for this educational text, though the exact original publication date is not specified in the provided excerpt. The anonymous authorship was common for school textbooks of this period, which were often collaborative works or house publications.
+"""
+</result>

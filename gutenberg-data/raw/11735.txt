@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement, No. 481, March 21, 1885"
+Author = "Various"
+Year = 1885
+
+Tags = ["non-fiction", "periodical", "science", "technology", "appropriate-for-children"]
+
+Summary = """
+This is an issue of the Scientific American Supplement, a weekly periodical that accompanied the main Scientific American magazine. Scientific American, established in 1845, was one of the oldest and most respected popular science publications in the United States. The Supplement series provided additional technical and scientific content beyond what appeared in the main magazine, often featuring detailed engineering drawings, patents, scientific discoveries, and technical articles on topics ranging from physics and chemistry to industrial processes and inventions. These supplements were aimed at engineers, inventors, scientists, and educated lay readers interested in the technological advances of the industrial age.
+"""
+
+Notes = """
+The year 1885 is straightforward here as this is a dated periodical issue. Scientific American Supplement was published from 1876 to 1919 as a companion to the main Scientific American magazine, providing more in-depth technical content. The 'appropriate-for-children' tag is included as Scientific American has historically been accessible to younger readers interested in science, though some technical content may be challenging.
+"""
+</result>

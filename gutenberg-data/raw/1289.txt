@@ -1,0 +1,15 @@
+<result>
+Title = "Three Ghost Stories"
+Author = "Charles Dickens"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of three supernatural tales by Charles Dickens. 'The Haunted House' is part of Dickens's 1859 Christmas story collaboration, featuring a narrator who rents a supposedly haunted house and examines the nature of ghost stories and superstition. 'The Trial for Murder' (1865) is a supernatural courtroom drama where a murdered man's ghost appears to ensure justice is served. 'The Signal-Man' (1866), perhaps the most famous of the three, is a chilling railway ghost story about a troubled railway worker haunted by supernatural warnings of impending disasters. These stories showcase Dickens's masterful ability to blend psychological horror with social commentary and atmospheric storytelling.
+"""
+
+Notes = """
+The transcription is from an 1894 Chapman and Hall edition of 'Christmas Stories,' which is a posthumous collection. However, these three stories were originally published separately: 'The Haunted House' (1859), 'The Trial for Murder' (1865), and 'The Signal-Man' (1866). I chose 1894 as the year since this represents the specific collected edition being transcribed for Project Gutenberg, which provides historical context for how these stories were packaged and distributed in the Victorian era. The individual stories date from Dickens's mature period and were originally published in his periodicals 'All the Year Round' and 'Household Words.'
+"""
+</result>

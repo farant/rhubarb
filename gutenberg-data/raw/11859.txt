@@ -1,0 +1,19 @@
+I can identify this work based on the title page information provided. Let me analyze what we have:
+
+This is a biography of Isaac T. Hopper written by L. Maria Child (Lydia Maria Child), published in 1853. Isaac T. Hopper was a prominent Quaker abolitionist who helped countless enslaved people escape to freedom through the Underground Railroad. L. Maria Child was a well-known abolitionist, women's rights activist, and author.
+
+<result>
+Title = "Isaac T. Hopper: A True Life"
+Author = "L. Maria Child"
+Year = 1853
+
+Tags = ["non-fiction", "biography", "historical-document"]
+
+Summary = """
+This is a biography of Isaac Tatem Hopper (1771-1852), a Quaker abolitionist who dedicated his life to helping enslaved people escape to freedom. Written by prominent abolitionist author L. Maria Child, the work documents Hopper's extensive humanitarian efforts in Philadelphia and New York, where he provided legal assistance, shelter, and protection to fugitive slaves. Hopper was a key figure in the Underground Railroad and spent decades challenging the institution of slavery through direct action and legal advocacy. Child's biography serves as both a tribute to Hopper's character and a documentation of the abolitionist movement's practical operations in the antebellum period.
+"""
+
+Notes = """
+The publication year of 1853 is clearly stated on the title page. This was published shortly after Hopper's death in 1852, making it a contemporaneous biographical account. While neither Hopper nor Child were Catholic (both were Quakers/Unitarian), this is an important historical document about the abolitionist movement. The work is not tagged as 'appropriate-for-children' due to the serious subject matter involving slavery, though it was written in a relatively accessible style for its era.
+"""
+</result>

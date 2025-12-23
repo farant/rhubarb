@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "An Illustrated History of Furniture: From the Earliest to the Present Time" by Frederick Litchfield, published in 1893. This is a well-known reference work on the history of decorative furniture and woodwork.
+
+<result>
+Title = "An Illustrated History of Furniture: From the Earliest to the Present Time"
+Author = "Frederick Litchfield"
+Year = 1893
+
+Tags = ["non-fiction", "history", "art-history", "reference"]
+
+Summary = """
+A comprehensive historical survey of decorative furniture and woodwork from ancient times through the late 19th century. The work traces the evolution of furniture design across different nations and periods, examining how social changes, customs, and historical events influenced furniture styles. The book includes numerous illustrations from authenticated examples found in museums and private collections, along with interior scenes showing how furniture was arranged in various periods. Written as an accessible overview rather than an exhaustive academic treatise, it aimed to provide both general readers and those with particular interests in furniture history with a chronological "panorama" of the subject.
+"""
+
+Notes = """
+1893 is the publication year of this first edition. Frederick Litchfield was a British furniture expert and this became one of the standard reference works on furniture history in the late Victorian period. The work is not tagged as 'appropriate-for-children' as it is a scholarly reference work, though it contains nothing inappropriate. It is also not tagged as 'catholic' - while Litchfield may have discussed furniture from various religious contexts including Catholic periods and locations, this is a secular art history text.
+"""
+</result>

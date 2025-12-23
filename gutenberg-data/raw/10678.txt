@@ -1,0 +1,26 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and provide the requested information.
+
+This is clearly a French historical work about the French Revolution. The text shows:
+
+- Title: "Histoire de la Révolution Française" (History of the French Revolution)
+- Author: M.A. Thiers (Adolphe Thiers)
+- This is Volume 4 (Tome Quatrième)
+- It covers the National Convention period, specifically Chapter VII dealing with military defeats, Dumouriez's betrayal, and events in the Vendée
+
+Adolphe Thiers was a French politician and historian who wrote this comprehensive history of the French Revolution. The work was first published between 1823-1827. Given this is a mature multi-volume work covering detailed events of 1793, I'll use 1825 as a reasonable midpoint year for this volume.
+
+<result>
+Title = "Histoire de la Révolution Française, Tome Quatrième"
+Author = "Adolphe Thiers"
+Year = 1825
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the fourth volume of Adolphe Thiers' monumental History of the French Revolution, one of the most influential historical works of the 19th century. Thiers (1797-1877) was a French statesman, journalist, and historian who later became President of France. This volume covers the period of the National Convention, focusing on France's military reversals in 1793, General Dumouriez's betrayal and defection to the Austrians, the beginning of the Vendée uprising, and the increasingly revolutionary decrees passed by the Convention. Thiers' work was groundbreaking for its extensive use of primary sources and eyewitness accounts, though it reflects a liberal rather than radical perspective on the Revolution.
+"""
+
+Notes = """
+The complete work was published 1823-1827. Volume 4 likely appeared around 1825. This is a historical analysis written three decades after the events, not a contemporary document. Not tagged as appropriate-for-children due to the violent subject matter (war, execution, civil conflict). Not tagged as Catholic - Thiers wrote from a secular, liberal political perspective.
+"""
+</result>

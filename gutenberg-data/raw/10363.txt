@@ -1,0 +1,15 @@
+<result>
+Title = "The Bravo: A Tale"
+Author = "James Fenimore Cooper"
+Year = 1831
+
+Tags = ["fiction", "historical-fiction", "political-fiction"]
+
+Summary = """
+'The Bravo' is a historical novel by James Fenimore Cooper set in 18th-century Venice. It is the first book of Cooper's "European Trilogy" and represents a significant departure from his famous Leatherstocking Tales. The novel explores themes of republicanism, corruption, and the abuse of power within the Venetian Republic. Cooper uses the story of Jacopo Frontoni, a bravo (hired assassin), to critique oligarchic government and examine how republics can become as tyrannical as monarchies when power is concentrated in the hands of a few. The book was written during Cooper's seven-year residence in Europe (1826-1833) and reflects his disillusionment with European political systems, while also serving as a warning about the dangers facing American democracy. The novel features detailed descriptions of Venetian society, its ceremonies, and the machinations of the Council of Ten.
+"""
+
+Notes = """
+The work was originally published in 1831, though this Project Gutenberg edition appears to be from an 1872 printing. Cooper wrote this novel while living in Europe and it was part of his more politically engaged fiction of the 1830s. The year 1831 represents the first publication and the historically significant date when this work entered the literary and political discourse of its time.
+"""
+</result>

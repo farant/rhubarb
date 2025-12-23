@@ -1,0 +1,19 @@
+I recognize this work as "Le Pays de l'Or" (The Land of Gold) by Henri Conscience, a Flemish-Belgian author who wrote extensively in both Dutch and French. This appears to be a novel set during the 1849 California Gold Rush period, as evidenced by the date mentioned in the opening and the reference to finding gold nuggets. Henri Conscience (1812-1883) was one of the most important Flemish authors of the 19th century, though he was not a Catholic author in the sense of writing religious or devotional works, despite being from a Catholic cultural background.
+
+Based on the opening, this is a fictional adventure/historical novel about a young clerk dreaming of fortune during the Gold Rush era. The work was likely published in the mid-to-late 19th century, probably around the 1850s-1860s given the topical nature of the Gold Rush setting.
+
+<result>
+Title = "Le Pays de l'Or"
+Author = "Henri Conscience"
+Year = 1862
+
+Tags = ["fiction", "historical-fiction", "adventure"]
+
+Summary = """
+"Le Pays de l'Or" (The Land of Gold) is a novel by Flemish-Belgian author Henri Conscience set during the California Gold Rush of 1849. The story follows a young clerk named Victor working in an Antwerp commercial office who dreams of leaving his mundane life to seek fortune in the goldfields of California. The opening scene depicts him reading newspaper accounts of gold discoveries while his colleague Jean announces his decision to abandon his clerk position for adventure. Conscience was one of the most celebrated Flemish authors of the 19th century, known for historical novels that helped establish Dutch/Flemish literature. This work combines adventure narrative with the historical context of the Gold Rush era that captivated European imaginations.
+"""
+
+Notes = """
+The novel was likely published around 1862, though exact publication dates for some of Conscience's French-language works can be difficult to pinpoint. The story is set explicitly in May 1849, during the height of Gold Rush fever. While Conscience came from a Catholic Flemish background, his novels were primarily historical and adventure fiction rather than religious works, so this does not receive a 'catholic' tag.
+"""
+</result>

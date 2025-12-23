@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is "The Boats of the 'Glen Carrig'" by William Hope Hodgson, published in 1907. The text itself provides this information directly - it's a maritime adventure/horror novel presented as a manuscript account from 1757.
+
+<result>
+Title = "The Boats of the 'Glen Carrig'"
+Author = "William Hope Hodgson"
+Year = 1907
+
+Tags = ["fiction", "horror", "adventure", "maritime"]
+
+Summary = """
+'The Boats of the Glen Carrig' is an early 20th-century nautical horror/adventure novel by William Hope Hodgson, one of the pioneers of weird fiction and cosmic horror. The novel is framed as a manuscript written by John Winterstraw in 1757, recounting the harrowing adventures of survivors from the ship Glen Carrig after it sinks upon striking a hidden rock in unknown southern seas. The survivors face various supernatural and nightmarish encounters as they navigate strange and dangerous waters in their lifeboats. Hodgson was known for his sea-based horror stories, drawing on his own experiences as a sailor to create atmospheres of isolation and dread. This work is considered one of his major novels, alongside 'The House on the Borderland' and 'The Night Land.'
+"""
+
+Notes = """
+The year 1907 represents the actual publication date of the novel. While the narrative is framed as a historical account from 1757, this is a fictional device. Hodgson (1877-1918) was an English author who specialized in horror and fantastic fiction with maritime themes. He died in World War I. The work is notable for its archaic narrative style, mimicking 18th-century prose to enhance the authenticity of the framed narrative.
+"""
+</result>

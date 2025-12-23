@@ -1,0 +1,15 @@
+<result>
+Title = "Motion Pictures of the Apollo 11 Lunar Landing"
+Author = "United States"
+Year = 1969
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of motion picture footage documenting the historic Apollo 11 lunar landing mission. On July 20, 1969, astronauts Neil Armstrong and Buzz Aldrin became the first humans to land on the Moon, while Michael Collins orbited above in the Command Module. The Apollo 11 mission represented one of humanity's greatest technological achievements and fulfilled President Kennedy's goal of landing a man on the Moon before the end of the 1960s. This Project Gutenberg item consists of video files (.avi and .mpeg formats) containing footage from the mission, including the lunar landing itself.
+"""
+
+Notes = """
+The year 1969 is chosen as this is when the Apollo 11 mission took place (July 16-24, 1969, with the lunar landing occurring on July 20, 1969). While this particular Project Gutenberg release was published in 1994, the historical significance and educational value of the content relates to the original 1969 event. This is not a traditional text document but rather a collection of motion picture files, which is unusual for Project Gutenberg but reflects the historical importance of preserving this footage.
+"""
+</result>

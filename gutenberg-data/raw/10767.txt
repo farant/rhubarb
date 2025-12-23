@@ -1,0 +1,17 @@
+I recognize this work - it's a famous rectorial address delivered by J.M. Barrie (the author of Peter Pan) at St. Andrews University in Scotland in 1922. This is a significant historical speech about courage, delivered during the aftermath of World War I.
+
+<result>
+Title = "Courage"
+Author = "J. M. Barrie"
+Year = 1922
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the text of a rectorial address delivered by Scottish novelist and playwright J.M. Barrie at St. Andrews University on May 3rd, 1922. Barrie, best known as the creator of Peter Pan, was elected Rector of the University and gave this speech on the theme of courage to the students. The address was delivered in the aftermath of World War I, a period when many young men had been lost and the survivors were grappling with an uncertain future. Barrie reflects on different forms of courage - not just physical bravery in war, but the everyday courage needed to face life's challenges, disappointments, and the long march of ordinary existence. The speech is considered one of the most memorable and moving rectorial addresses ever delivered at a British university.
+"""
+
+Notes = """
+The year 1922 is when the speech was delivered and first published. This is a historical document tied to a specific moment in time, so the composition and publication dates are the same. The address takes on particular poignancy given the context of post-WWI Britain and the 'lost generation' of young men who died in the war.
+"""
+</result>

@@ -1,0 +1,21 @@
+I can see this is a table of contents from "The World's Greatest Books" anthology, Volume VIII on Fiction, edited by Arthur Mee and J.A. Hammerton, published in 1910 (MCMX in Roman numerals).
+
+However, this is not a single work with a single author - it's an anthology/collection of summaries or excerpts from multiple classic fiction works by different authors (Scott, Shelley, Sidney, Smollett, Staël, Stendhal, Sterne, Stowe, Sue, etc.).
+
+Let me provide the metadata for this anthology itself:
+
+<result>
+Title = "The World's Greatest Books, Volume VIII: Fiction"
+Author = "Arthur Mee, J.A. Hammerton"
+Year = 1910
+
+Tags = ["non-fiction", "anthology", "literary-criticism"]
+
+Summary = """
+This is Volume VIII of 'The World's Greatest Books' series, edited by Arthur Mee (founder of the Book of Knowledge) and J.A. Hammerton (editor of Harmsworth's Universal Encyclopaedia). This volume focuses on fiction and contains condensed versions or summaries of classic works of literature from various authors including Sir Walter Scott, Mary Shelley, Tobias Smollett, Laurence Sterne, Harriet Beecher Stowe, and others. The anthology was designed to give readers accessible overviews of major literary works.
+"""
+
+Notes = """
+This is an anthology/reference work rather than an original literary work. The year 1910 is taken from the Roman numeral date MCMX shown in the text. This type of compilation was popular in the early 20th century as a way to make classic literature more accessible to general readers. Note: This would not be tagged as 'appropriate-for-children' as it contains summaries of adult literature, nor 'catholic' as it's a secular literary anthology covering works from various traditions.
+"""
+</result>

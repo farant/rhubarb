@@ -1,0 +1,15 @@
+<result>
+Title = "The Insurrection in Dublin"
+Author = "James Stephens"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is James Stephens' firsthand account of the Easter Rising of 1916 in Dublin, Ireland. Written by the acclaimed Irish poet and novelist, the book documents the week-long rebellion against British rule in Ireland that took place in April 1916. Stephens, who was living in Dublin at the time, provides an eyewitness narrative of the events as they unfolded, capturing the atmosphere, chaos, and significance of this pivotal moment in Irish history. The Easter Rising, though initially unsuccessful, became a defining event in the Irish independence movement and ultimately led to the establishment of the Irish Free State. Stephens' account is valued both as a literary work and as a historical document, offering personal observations and reflections on the rebellion from someone who experienced it directly.
+"""
+
+Notes = """
+The year 1916 is clearly indicated on the title page as the publication year, and this matches the year of the actual Easter Rising (April 24-29, 1916). This book was published very soon after the events it describes, making it a contemporaneous historical account. While James Stephens was Irish and wrote during a period when Ireland was predominantly Catholic, this particular work is a secular historical/journalistic account rather than a Catholic religious work, so it does not receive the 'catholic' tag.
+"""
+</result>

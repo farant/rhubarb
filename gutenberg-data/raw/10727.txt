@@ -1,0 +1,15 @@
+<result>
+Title = "A Set of Rogues"
+Author = "Frank Barrett"
+Year = 1895
+
+Tags = ["fiction", "adventure", "historical-fiction"]
+
+Summary = """
+A Set of Rogues is a picaresque adventure novel by Frank Barrett, an English novelist and music critic of the late Victorian era. The full title describes it as a tale of Christopher Sutton, John Dawson, Don Sanchez del Castillo de Castelana, and Moll Dawson - a band of rogues whose wicked conspiracy leads them through various travels and adventures. The narrative follows their schemes, including the marriage of Moll Dawson through "sinful means" to a worthy gentleman, her subsequent fall and remorse, and a second expedition with her roguish companions. Written in a mock-historical style that mimics earlier picaresque literature, the novel is characteristic of Barrett's work combining adventure, humor, and period settings. Barrett was a prolific writer of popular fiction during the 1890s and early 1900s.
+"""
+
+Notes = """
+Frank Barrett published A Set of Rogues in 1895. Barrett (1848-1926) was a contemporary of Arthur Conan Doyle and wrote numerous adventure novels, though he is less remembered today. The novel's subtitle and mock-archaic framing device give it the flavor of an 18th-century picaresque tale, though it was written in the late Victorian period. The 1895 date represents the original publication.
+"""
+</result>

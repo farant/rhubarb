@@ -1,0 +1,23 @@
+I'll analyze this text from Project Gutenberg to identify the work, author, and provide the requested information.
+
+This appears to be a personal memoir or essay about visiting Lafayette in Paris after his famous 1824-1825 tour of the United States. The narrative voice is clearly American, describing a visit to Lafayette's residence at Rue d'Anjou in Paris. The reference to "Vol. VIII--December, 1861--No. L" indicates this was published in The Atlantic Monthly magazine in December 1861.
+
+The specific essay is "The Home of Lafayette" and based on the style, timeframe, and context, this appears to be written by an American who visited Lafayette as a young man. Without more of the text, I cannot definitively identify the specific author, though The Atlantic Monthly's archives would list the contributor.
+
+The work describes Lafayette's post-1824 hospitality to American visitors and the author's youthful visit to Lafayette's home in Paris. Given the publication date of 1861 and the retrospective nature (describing events from the 1820s when the author was 16), this is a historical reminiscence published during the American Civil War era.
+
+<result>
+Title = "The Home of Lafayette"
+Author = "Unknown (published in The Atlantic Monthly)"
+Year = 1861
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A personal memoir published in The Atlantic Monthly in December 1861, recounting an American's visit to the Marquis de Lafayette's residence in Paris following Lafayette's triumphant 1824-1825 tour of the United States. The essay describes the generous hospitality Lafayette extended to American visitors and provides a firsthand account of approaching his home at Rue d'Anjou as a sixteen-year-old traveler. The piece offers historical insight into Franco-American relations and the reverence Americans held for Lafayette in the decades following the Revolutionary War.
+"""
+
+Notes = """
+Year chosen as 1861, the publication date in The Atlantic Monthly (Vol. VIII, December 1861, No. L). While the events described occurred in the 1820s, the work itself is this 1861 essay reflecting on those earlier experiences. The author's identity is not revealed in this excerpt.
+"""
+</result>

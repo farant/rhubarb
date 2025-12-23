@@ -1,0 +1,17 @@
+I recognize this as E. Alexander Powell's war correspondence work about his experiences with Belgian forces during World War I. Let me provide the structured information:
+
+<result>
+Title = "Fighting In Flanders"
+Author = "E. Alexander Powell"
+Year = 1914
+
+Tags = ["non-fiction", "war-correspondence", "historical-document"]
+
+Summary = """
+"Fighting In Flanders" is a firsthand account by E. Alexander Powell, who served as a special correspondent for The New York World during World War I. Powell accompanied Belgian forces in the field during the German invasion of Belgium in 1914, documenting the early stages of the war. The book provides eyewitness observations of the Belgian resistance, including military operations, civilian experiences, and the defense of Belgian territory during the opening months of the Great War. Powell's account is considered an important primary source for understanding the Belgian experience during the German advance through the Low Countries.
+"""
+
+Notes = """
+The book was published in 1914 or early 1915, documenting events from the opening months of World War I (August-November 1914). I've chosen 1914 as the year since that's when the events described took place and when Powell was actively reporting from the field. The work includes photographs by Donald Thompson, who was also documenting the war. This is war journalism/correspondence rather than a retrospective history.
+"""
+</result>

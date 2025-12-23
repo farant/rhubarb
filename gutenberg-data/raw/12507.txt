@@ -1,0 +1,17 @@
+I recognize this work immediately - it's Thomas Clarkson's monumental historical account of the British abolitionist movement.
+
+<result>
+Title = "The History of the Rise, Progress, and Accomplishment of the Abolition of the African Slave-Trade by the British Parliament"
+Author = "Thomas Clarkson"
+Year = 1808
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Thomas Clarkson's definitive two-volume history of the British movement to abolish the transatlantic slave trade, published the same year Parliament's 1807 Act banning the trade took full effect. Clarkson was one of the primary activists and organizers of the abolitionist movement, working alongside William Wilberforce and others for over two decades. This work chronicles the tireless efforts of the abolition committee, the gathering of evidence, parliamentary debates, and the political battles that ultimately led to Britain's historic decision to end its participation in the slave trade. The book serves both as historical documentation and as Clarkson's personal account of a movement he helped lead, detailing the formation of committees, collection of testimony from sailors and witnesses, and the systematic opposition they faced from slave trade interests.
+"""
+
+Notes = """
+1808 is the original publication year. This is a primary historical source written by one of the movement's key figures immediately after their victory. While Clarkson was Anglican rather than Catholic, the abolitionist movement had significant Christian motivation across denominations. The work documents one of the great moral achievements in British parliamentary history.
+"""
+</result>

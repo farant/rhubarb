@@ -1,0 +1,15 @@
+<result>
+Title = "The Beautiful Necessity: Seven Essays on Theosophy and Architecture"
+Author = "Claude Bragdon"
+Year = 1922
+
+Tags = ["non-fiction", "architecture", "theosophy", "philosophy"]
+
+Summary = """
+'The Beautiful Necessity' is a collection of seven essays by American architect Claude Bragdon that explores the intersection of Theosophical philosophy and architectural theory. The work examines fundamental principles such as unity, polarity, and geometric harmony as they relate to building design. Bragdon was a prominent figure in American architecture and an advocate of fourth-dimensional geometry in design. The book reflects early 20th-century interest in mysticism and its application to the arts, presenting architecture as a manifestation of spiritual and mathematical truths. The essays cover topics including "The Art of Architecture," "Unity and Polarity," "Changeless Change," "The Bodily Temple," "Latent Geometry," "The Arithmetic of Beauty," and "Frozen Music."
+"""
+
+Notes = """
+The year 1922 is indicated by the Roman numerals 'MCMXXII' on the title page. This appears to be the original publication date of this edition. Bragdon (1866-1946) was both a practicing architect (F.A.I.A. - Fellow of the American Institute of Architects) and a writer deeply influenced by Theosophy, a spiritual movement that was quite popular in the early 20th century.
+"""
+</result>

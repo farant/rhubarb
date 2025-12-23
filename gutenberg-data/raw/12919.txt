@@ -1,0 +1,15 @@
+<result>
+Title = "A Texas Matchmaker"
+Author = "Andy Adams"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'A Texas Matchmaker' is a novel by Andy Adams, author of the acclaimed 'The Log of a Cowboy'. Set in Texas during the 1870s (primarily 1876-1877 based on the chapter titles), the novel follows the character Lance Lovelace and depicts life on the Las Palomas ranch. The book portrays the daily activities, adventures, and romantic entanglements of cowboys and ranchers in South Texas during the post-Civil War era. Adams was known for his authentic portrayals of cowboy life based on his own experiences as a cattleman, and this work continues in that tradition, offering a realistic and entertaining glimpse into frontier Texas culture, including cattle ranching, hunting expeditions, holiday celebrations, and the social dynamics of ranch life.
+"""
+
+Notes = """
+The year 1904 is clearly stated on the title page and represents the original publication date. Andy Adams (1859-1935) was an American writer who worked as a cowboy and cattle driver before becoming an author. His works are valued for their historical accuracy and authentic depiction of Western life, in contrast to the more romanticized 'Wild West' fiction of his era. This particular novel is set during the Reconstruction period in Texas (mid-1870s) and provides valuable insight into that historical period.
+"""
+</result>

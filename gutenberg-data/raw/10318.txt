@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Based on the title page, this is "Damon and Delia: A Tale" published in London in 1784 (M,DCC,LXXXIV in Roman numerals). This is an early novel by William Godwin, the political philosopher and novelist who would later write "Caleb Williams" and become known as the father of Mary Shelley (author of Frankenstein).
+
+"Damon and Delia" was Godwin's first published novel, a sentimental romance written before he developed his more radical philosophical views. The Latin epigraph "Neque semper arcum tendit Apollo" translates to "Apollo does not always keep his bow bent" (from Horace), suggesting a lighter work.
+
+<result>
+Title = "Damon and Delia: A Tale"
+Author = "William Godwin"
+Year = 1784
+
+Tags = ["fiction", "romance", "sentimental-novel"]
+
+Summary = """
+'Damon and Delia' is William Godwin's first published novel, a sentimental romance written early in his career before he became famous as a political philosopher and radical thinker. Published in 1784, this work follows the conventions of 18th-century sentimental fiction, telling a romantic tale in the style popular during that period. It predates Godwin's more famous philosophical novel 'Caleb Williams' (1794) and his influential political treatise 'An Enquiry Concerning Political Justice' (1793). The novel represents Godwin's early literary efforts and shows him working within the established conventions of contemporary fiction, quite different from the radical social criticism that would characterize his later work.
+"""
+
+Notes = """
+The publication year of 1784 is clearly stated on the title page in Roman numerals (M,DCC,LXXXIV). This was Godwin's debut novel, published when he was 28 years old. The work is not tagged as 'catholic' - Godwin came from a Dissenting Protestant background and later became known for his atheistic and anarchist philosophical views. The work is also not tagged as 'appropriate-for-children' as it is an 18th-century sentimental romance aimed at adult readers of the period.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text for you.
+
+<result>
+Title = "My Strangest Case"
+Author = "Guy Boothby"
+Year = 1901
+
+Tags = ["fiction", "mystery", "adventure"]
+
+Summary = """
+"My Strangest Case" is a mystery/adventure novel by Guy Boothby, an Australian author popular in the late Victorian era. Boothby was known for his sensational adventure fiction, particularly his Dr. Nikola series featuring an occult villain. This novel, set partially in Singapore, follows the pattern of Boothby's adventure fiction with exotic locations, mysterious circumstances, and dramatic incidents. The story appears to involve a complex mystery case, as suggested by the title and the illustrative descriptions mentioning danger, confrontations, and intrigue. Boothby's works were widely read in the 1890s-1900s and helped establish the adventure-mystery genre that would later influence writers like John Buchan and Ian Fleming.
+"""
+
+Notes = """
+The year 1901 is clearly stated in the text as "Originally Published 1901." Guy Boothby (1867-1905) was a prolific Australian author who produced numerous adventure novels in a short career. He died young at age 37, and this was published relatively late in his brief but productive writing life. The work is typical of late Victorian popular fiction—adventure-oriented with exotic settings and melodramatic incidents.
+"""
+</result>

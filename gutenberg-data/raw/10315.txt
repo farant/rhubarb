@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This appears to be an introduction to a compilation of Persian literature, specifically Volume 1 of a revised edition from 1909. The introduction is written by Richard J. H. Gottheil, Ph.D., and the compilation includes major works of Persian literature: the Sháh Námeh (by Firdusi), the Rubáiyát (by Omar Khayyám), the Divan (by Háfiz), and the Gulistan (by Sa'di).
+
+<result>
+Title = "Persian Literature, comprising The Sháh Námeh, The Rubáiyát, The Divan, and The Gulistan"
+Author = "Various (Firdusi, Omar Khayyám, Háfiz, Sa'di); Introduction by Richard J. H. Gottheil"
+Year = 1909
+
+Tags = ["non-fiction", "poetry", "anthology", "appropriate-for-children"]
+
+Summary = """
+This is a revised anthology of major works of Persian literature published in 1909, with an introduction by scholar Richard J. H. Gottheil. The volume compiles four foundational works of Persian literary tradition: the Sháh Námeh (Book of Kings) by Firdusi, an epic of Persian kings and heroes; the Rubáiyát by Omar Khayyám, philosophical quatrains; the Divan by Háfiz, mystical poetry; and the Gulistan (Rose Garden) by Sa'di, a collection of stories and moral tales. Gottheil's introduction emphasizes the romantic and enduring appeal of Persian literature to Western audiences, noting how Persian poets have earned a place alongside canonical Western writers.
+"""
+
+Notes = """
+The year 1909 reflects the publication date of this specific anthology/compilation rather than the original works, which span from the 10th-14th centuries CE. This appears to be part of a larger series presenting Persian literature to English-speaking audiences during the early 20th century wave of Orientalist scholarship and translation.
+"""
+</result>

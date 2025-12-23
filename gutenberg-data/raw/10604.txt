@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly Goethe's "Les Affinités Électives" (Die Wahlverwandtschaften in German), translated into French by Mme A. de Carlowitz. The original German novel was published in 1809. This is one of Goethe's major novels, exploring complex relationships and human chemistry through the metaphor of chemical affinities.
+
+<result>
+Title = "Les Affinités Électives (Die Wahlverwandtschaften)"
+Author = "Johann Wolfgang von Goethe"
+Year = 1809
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+Die Wahlverwandtschaften (Elective Affinities) is one of Goethe's major novels, first published in 1809. The work explores complex human relationships through the metaphor of chemical affinities - the tendency of certain chemical substances to combine with certain others. The novel follows Eduard, a wealthy baron, his wife Charlotte, and two other characters (the Captain and Ottilie) as their relationships shift and recombine like chemical elements. The work is a profound meditation on marriage, passion, ethics, and the tension between social duty and personal desire. It combines elements of romance, philosophy, and social commentary, and is considered one of the masterpieces of German Romantic literature. This French translation is by Mme A. de Carlowitz and includes a selection of Goethe's thoughts.
+"""
+
+Notes = """
+The year 1809 represents the original German publication date. While this is a French translation (likely from the mid-19th century based on the translator), the historically significant date is when Goethe wrote and published the original work. Goethe (1749-1832) was not Catholic but rather Protestant/influenced by various philosophical and spiritual traditions, so this does not receive a 'catholic' tag.
+"""
+</result>

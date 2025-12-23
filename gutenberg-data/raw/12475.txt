@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a poetry collection by Isabel Ecclestone Mackay, a Canadian poet. The book states it was "First published by McClelland & Stewart, Limited, Toronto, 1922." This is the original publication date, not a reprint or translation. The collection includes poems previously published in various magazines and journals.
+
+Isabel Ecclestone Mackay (1875-1928) was a Canadian poet and novelist. "Fires of Driftwood" was one of her well-known poetry collections, published in the early 1920s.
+
+<result>
+Title = "Fires of Driftwood"
+Author = "Isabel Ecclestone Mackay"
+Year = 1922
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"Fires of Driftwood" is a collection of lyric poetry by Canadian poet Isabel Ecclestone Mackay (1875-1928). The collection brings together poems previously published in prominent magazines of the era including Harper's Magazine, Scribner's Magazine, McClure's Magazine, and others. The poems cover a range of themes including nature, memory, spirituality, and Canadian landscapes. Notable poems include "Lake Louise," which celebrates the famous Canadian Rockies landmark, "The Homesteader," reflecting pioneer life, and the title poem "Fires of Driftwood." Mackay was one of Canada's most popular poets in the early 20th century, known for her accessible yet sophisticated verse. The book features decorations by J.E.H. MacDonald, a member of the Group of Seven and prominent Canadian artist.
+"""
+
+Notes = """
+The year 1922 is clearly stated as the first publication date by McClelland & Stewart in Toronto. This is the original publication, not a translation or later edition. The book represents a collection of poems written over a period of years but published together for the first time in 1922.
+"""
+</result>

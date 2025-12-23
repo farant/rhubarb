@@ -1,0 +1,19 @@
+Looking at this text from Project Gutenberg, this is clearly an anthology rather than a single work by a single author. This is "The World's Best Poetry" - a ten-volume collection of poetry compiled and edited by Bliss Carman and others, published in 1904. This particular volume (Vol. X) focuses on "Poetical Quotations" and includes an essay "After All, What Is Poetry" by John R. Howard (the managing editor).
+
+Since this is an anthology/compilation rather than an original work, I should represent it as such:
+
+<result>
+Title = "The World's Best Poetry, Volume X: Poetical Quotations"
+Author = "Bliss Carman (Editor-in-Chief), John R. Howard (Managing Editor), et al."
+Year = 1904
+
+Tags = ["non-fiction", "poetry", "anthology", "appropriate-for-children"]
+
+Summary = """
+A comprehensive ten-volume anthology of poetry compiled under the editorial direction of Bliss Carman, with associate editors John Vance Cheney, Charles G.D. Roberts, Charles F. Richardson, and Francis H. Stoddard. This is Volume X, titled "Poetical Quotations," which contains notable poetic excerpts and quotations, along with an essay by managing editor John R. Howard titled "After All, What Is Poetry." The complete series covers themes including Home and Friendship, Love, Sorrow and Consolation, The Higher Life, Nature, Fancy and Sentiment, Descriptive and Narrative poetry, National Spirit, and Tragedy and Humor. This was a significant early 20th-century effort to collect and organize the English-speaking world's greatest poetry in an accessible format.
+"""
+
+Notes = """
+The year 1904 is clearly stated in the text. As an anthology, this work collected poetry from various time periods and authors. Tagged as appropriate-for-children given its educational/anthology nature and broad appeal. Not tagged as 'catholic' despite potential inclusion of some Catholic poets, as this is a general anthology of English poetry.
+"""
+</result>

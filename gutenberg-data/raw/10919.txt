@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents, Volume II"
+Author = "James D. Richardson"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the second volume of James D. Richardson's comprehensive compilation of presidential documents, including messages to Congress, proclamations, inaugural addresses, veto messages, and executive orders. This particular volume focuses on the administration of President James Monroe. Richardson, who served as a U.S. Representative from Tennessee, undertook this ambitious project to collect and organize official presidential communications from the founding of the republic. The work was authorized by Congress and became an important reference work for scholars and government officials studying American executive history. The first volume was published in 1896 and was well-received, prompting Congress to order 15,000 additional copies of the entire publication.
+"""
+
+Notes = """
+The year 1897 is clearly stated on the title page. While this is a compilation work rather than original historical documents, the publication date of 1897 is the appropriate year for this specific volume, as it represents when this scholarly reference work was made available to Congress and the public. The actual documents contained within span the presidency of James Monroe (1817-1825), but the compilation itself is a late 19th-century historical reference work.
+"""
+</result>

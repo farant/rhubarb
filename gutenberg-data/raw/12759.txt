@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Best Poetry, Volume IV: The Higher Life"
+Author = "Various (edited by Bliss Carman)"
+Year = 1904
+
+Tags = ["poetry", "anthology", "appropriate-for-children", "non-fiction"]
+
+Summary = """
+"The World's Best Poetry" is a comprehensive ten-volume anthology of poetry compiled and edited by Bliss Carman (1861-1929), a Canadian poet and editor, along with associate editors including John Vance Cheney, Charles G.D. Roberts, Charles F. Richardson, and Francis H. Stoddard. Volume IV focuses on "The Higher Life," containing poems that explore spiritual, moral, and philosophical themes. This collection was part of an ambitious early 20th-century effort to compile the finest poetry from English and American literature, organized thematically across the ten volumes. The anthology was designed to be both educational and accessible to general readers, covering topics from home and friendship to nature, tragedy, humor, and national spirit.
+"""
+
+Notes = """
+The publication year of 1904 is clearly stated in the text. This is an anthology, so "Various" is listed as the author with the editor-in-chief credited. While this collection may contain some works by Catholic poets, the anthology itself is a secular literary collection and not specifically a Catholic work, so the 'catholic' tag was not included. The "appropriate-for-children" tag is included as poetry anthologies of this era were generally considered suitable family reading, though individual poems within would vary in content.
+"""
+</result>

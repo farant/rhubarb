@@ -1,0 +1,15 @@
+<result>
+Title = "Theory of the Earth, Volume I (With Proofs and Illustrations, in Four Parts)"
+Author = "James Hutton"
+Year = 1795
+
+Tags = ["non-fiction", "science", "geology", "historical-document"]
+
+Summary = """
+James Hutton's 'Theory of the Earth' is a foundational work in the field of geology, originally published in 1795. Hutton, often called the "father of modern geology," presents his revolutionary theory of uniformitarianism - the idea that the Earth's geological features were formed by continuous processes operating over immense periods of time, rather than by catastrophic events. This work examines the composition, dissolution, and restoration of land, the consolidation of strata, and the cyclical nature of geological processes. The book includes Hutton's responses to critics, including Mr. Kirwan's objections to the igneous (volcanic) origin of certain rocks. This work fundamentally challenged prevailing catastrophist theories and biblical chronologies of the Earth's age, proposing instead that the Earth is far older than previously believed, with "no vestige of a beginning, no prospect of an end."
+"""
+
+Notes = """
+The year 1795 is when this volume was published. Hutton had earlier presented his theory to the Royal Society of Edinburgh in 1785, and published an initial version in the Transactions of the Royal Society of Edinburgh in 1788, but this 1795 publication represents the expanded, full treatment of his theory. This is a landmark scientific text from the Scottish Enlightenment.
+"""
+</result>

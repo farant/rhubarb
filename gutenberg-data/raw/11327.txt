@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a scholarly work on English literature from the Home University Library series. Based on the title page and preface, this is "English Literature: Modern" by G. H. Mair, first published in 1911 (with a revised edition in 1914).
+
+<result>
+Title = "English Literature: Modern"
+Author = "G. H. Mair"
+Year = 1911
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an introductory survey of modern English literature from the Home University Library of Modern Knowledge series. Written by G. H. Mair, a scholar of Christ Church, Oxford, the book focuses on ideas and literary tendencies rather than biographical facts and dates. It aims to provide a general introduction to stimulate readers to explore the primary works themselves. The author acknowledges debts to influential teachers including Professor Grierson at Aberdeen University and Sir Walter Raleigh at Oxford, as well as Professor Herford and Gilbert Murray. The work represents early 20th-century academic literary criticism aimed at a general educated audience.
+"""
+
+Notes = """
+I chose 1911 as the publication year since this represents the first printing (October 1911), though a revised edition appeared in February 1914. For historical and educational purposes, the original publication date is most appropriate. This is part of the Home University Library series, which was an influential early 20th-century educational publishing initiative aimed at making scholarly knowledge accessible to a broader audience.
+"""
+</result>

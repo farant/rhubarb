@@ -1,0 +1,17 @@
+I recognize this work! "The Rising of the Red Man" is a historical novel by John Mackie about the North-West Rebellion of 1885 (also known as the Louis Riel Rebellion). Let me provide the structured information:
+
+<result>
+Title = "The Rising of the Red Man: A Romance of the Louis Riel Rebellion"
+Author = "John Mackie"
+Year = 1904
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+"The Rising of the Red Man" is a historical adventure novel set during the North-West Rebellion of 1885 in Canada, led by Louis Riel and the Métis people against the Canadian government. The novel dramatizes events of this uprising in the Saskatchewan territories, including the siege of Battleford and the Battle of Cut-Knife Hill under Cree Chief Poundmaker. John Mackie was a British author who wrote popular adventure fiction in the late 19th and early 20th centuries, often set in colonial contexts. The book presents a romanticized, adventure-focused narrative of these historical events from a settler-colonial perspective typical of the Edwardian era, featuring dramatic escapes, battles, and frontier life in the "Great Lone Land" of the Canadian prairies.
+"""
+
+Notes = """
+The novel was first published in 1904. While the historical events it depicts occurred in 1885, the publication date of 1904 is the appropriate year for this work as it is a fictionalized account written nearly two decades after the rebellion. The book reflects early 20th-century British imperial adventure fiction conventions and perspectives on the Canadian frontier.
+"""
+</result>

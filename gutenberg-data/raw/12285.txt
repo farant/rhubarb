@@ -1,0 +1,17 @@
+I can identify this as a serialized chapter from Harriet Beecher Stowe's novel "Agnes of Sorrento," published in The Atlantic Monthly in June 1861. The novel was later published in book form in 1862, though these chapters were appearing in serial form throughout 1861.
+
+<result>
+Title = "Agnes of Sorrento"
+Author = "Harriet Beecher Stowe"
+Year = 1862
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Agnes of Sorrento' is a historical romance novel by Harriet Beecher Stowe, set in 15th-century Italy during the time of Savonarola. The story follows Agnes, a young Italian girl living with her grandmother Elsie near Sorrento, and explores themes of faith, love, and the conflict between earthly desires and religious devotion. The novel incorporates Stowe's interest in Italian culture and Catholic religious life, while maintaining her Protestant American perspective. This particular text is from a serialized chapter published in The Atlantic Monthly in June 1861, before the complete novel appeared in book form.
+"""
+
+Notes = """
+I chose 1862 as the publication year because that's when the complete novel was published in book form, which is the more standard reference date. However, the text provided is from the June 1861 Atlantic Monthly serialization. The work is not tagged as 'catholic' because while Stowe wrote sympathetically about Catholic settings and characters, she was herself a Protestant (daughter of Lyman Beecher) and the work doesn't represent Catholic theological perspectives in the way that would merit a nihil obstat or imprimatur.
+"""
+</result>

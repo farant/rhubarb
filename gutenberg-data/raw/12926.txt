@@ -1,0 +1,15 @@
+<result>
+Title = "The Morris Book: A History of Morris Dancing"
+Author = "Cecil J. Sharp, Herbert C. Macilwaine"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+The Morris Book is a foundational work on English Morris dancing by folklorist Cecil Sharp and Herbert Macilwaine. Published in 1907, this represents part of Cecil Sharp's pioneering efforts to document and preserve traditional English folk dances and music during the English Folk Revival. The book provides both historical context for Morris dancing—a form of English folk dance with ancient roots—and practical descriptions of eleven dances as performed by traditional Morris-men of England. Sharp's work was crucial in preventing these traditions from being lost during the industrialization of England, and his documentation became the standard reference for Morris dancing revivals throughout the 20th century. The book was issued in connection with companion volumes of Morris Dance Tunes and was dedicated to the members of the Espérance Girls' Club, reflecting Sharp's commitment to teaching these traditions to new generations.
+"""
+
+Notes = """
+The year 1907 is clearly stated on the title page as the publication date. This is Part I of a two-part work. Cecil Sharp (1859-1924) was one of the most important figures in English folk music and dance collection, and this work represents one of his earliest and most influential publications on Morris dancing.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Odd Craft" is a collection of humorous short stories by W.W. Jacobs, a British author known for his tales of dockside life and his masterful use of irony and wit. While Jacobs is perhaps best remembered for his horror story "The Monkey's Paw," most of his work consisted of amusing tales about sailors, dockworkers, and working-class characters in English coastal towns and London. The stories in "Odd Craft" are typical of his lighter fare, featuring colorful characters, clever plot twists, and gentle social comedy. Jacobs had a gift for dialogue and character, and his stories often revolve around schemes, misunderstandings, and the foibles of ordinary people. The opening story "Odd Charges" introduces readers to the kind of quaint, engaging characters and situations that populate the collection.
+"""
+
+Notes = """
+"Odd Craft" was first published in 1903. W.W. Jacobs (1863-1943) was at the height of his career during this period, producing popular collections of short stories that were widely read in both Britain and America. While Jacobs was not a Catholic author (he was English and secular in outlook), his stories are generally wholesome and appropriate for family reading, containing gentle humor rather than anything objectionable.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Pierre Nozière"
+Author = "Anatole France"
+Year = 1899
+
+Tags = ["fiction", "non-fiction", "memoir", "appropriate-for-children"]
+
+Summary = """
+Pierre Nozière is a semi-autobiographical work by French Nobel laureate Anatole France (pen name of Jacques Anatole François Thibault, 1844-1924). The work blends memoir and fiction, recounting childhood memories and experiences in Paris during the mid-19th century. It is written in an elegant, nostalgic style characteristic of France's literary approach, exploring themes of innocence, memory, and the formation of consciousness. The work begins with the narrator's earliest impressions of the universe formed through an old illustrated Bible, and continues through various childhood episodes that shaped his understanding of the world. The title character Pierre Nozière serves as France's literary alter ego for these reminiscences.
+"""
+
+Notes = """
+The work was originally published in 1899. Anatole France was baptized Catholic but became skeptical and rationalist in his adult life, eventually being placed on the Index of Forbidden Books by the Catholic Church in 1922. While he was raised Catholic and demonstrates familiarity with Catholic culture and Biblical imagery in this work, his mature writings often contained anticlerical themes. Therefore, this would not qualify for the 'catholic' tag as it would not likely receive a nihil obstat or imprimatur despite the author's Catholic upbringing.
+"""
+</result>

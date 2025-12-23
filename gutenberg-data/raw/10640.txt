@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a volume from John Lord's "Beacon Lights of History" series - specifically Volume IX focusing on European Statesmen. The text shows it's a collection of biographical lectures on significant historical figures, starting with Mirabeau and the French Revolution.
+
+John Lord (1810-1894) was an American historian and lecturer known for this multi-volume series. Based on the publication patterns of his works and the fact that Project Gutenberg ebook numbers in the 10000+ range typically correspond to works from the mid-to-late 19th century, this volume was likely published in the 1880s-1890s period of Lord's career.
+
+<result>
+Title = "Beacon Lights of History, Volume IX: European Statesmen"
+Author = "John Lord"
+Year = 1883
+
+Tags = ["non-fiction", "history", "biography", "appropriate-for-children"]
+
+Summary = """
+This is the ninth volume of John Lord's comprehensive "Beacon Lights of History" series, focusing on European Statesmen. Lord was a popular American historian and lecturer in the 19th century who created this multi-volume work to provide accessible biographical studies of great figures throughout history. This volume covers important European political figures and movements, beginning with Mirabeau and the French Revolution, and examining the lives and impacts of major statesmen who shaped European history. Lord's approach combined historical narrative with moral and philosophical reflection, making complex historical events accessible to general audiences. The series was widely used in American schools and homes as an educational resource.
+"""
+
+Notes = """
+The "Beacon Lights of History" series was published in multiple volumes throughout the 1880s and early 1890s. Volume IX specifically on European Statesmen appears to have been published around 1883-1888. I chose 1883 as a representative year for when this volume likely first appeared, though exact publication dates varied between different volumes in the series and different editions. Lord's lectures were initially delivered orally before being compiled into book form.
+"""
+</result>

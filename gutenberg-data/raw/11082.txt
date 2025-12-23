@@ -1,0 +1,15 @@
+<result>
+Title = "Old Saint Paul's: A Tale of the Plague and the Fire"
+Author = "William Harrison Ainsworth"
+Year = 1841
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Old Saint Paul's is a historical novel by William Harrison Ainsworth set during two of London's greatest catastrophes: the Great Plague of 1665 and the Great Fire of 1666. The novel follows the story of a grocer in Wood Street who attempts to protect his family by shutting them up in their house during the plague. Ainsworth was a popular Victorian novelist known for his historical romances, and this work combines factual historical events with fictional narrative. The author drew inspiration from what he believed to be a rare work by Daniel Defoe titled "Preparations against the Plague, both of Soul and Body," though modern scholarship has questioned this attribution. The novel is part of Ainsworth's series of historical romances about London and was popular in its time for its vivid depiction of the plague-ravaged city and the destruction of Old St. Paul's Cathedral in the Great Fire.
+"""
+
+Notes = """
+The year 1841 is chosen as this is when Ainsworth completed the novel, as evidenced by the preface dated "November 30, 1841" from Kensal Manor House. The novel was published in serial form and then as a complete book around 1841. This is a work of historical fiction set in 1665-1666, but the creation date is what's most relevant for a timeline of literary works.
+"""
+</result>

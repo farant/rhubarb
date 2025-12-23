@@ -1,0 +1,15 @@
+<result>
+Title = "The Hunting of the Snark"
+Author = "Lewis Carroll"
+Year = 1876
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+'The Hunting of the Snark' is a nonsense poem by Lewis Carroll (Charles Lutwidge Dodgson) written in 1874 and published in 1876. Subtitled 'An Agony in Eight Fits', it describes the misadventures of a bizarre crew of tradesmen and one Beaver as they set out to hunt the mysterious Snark. The poem is a masterpiece of Victorian nonsense literature, employing Carroll's characteristic wordplay, logical paradoxes, and whimsical characters. The crew includes a Bellman, a Boots, a Bonnet-maker, a Barrister, a Broker, a Billiard-marker, a Banker, a Beaver, a Baker, and a Butcher. The poem culminates in the chilling discovery that the Snark is actually a Boojum, causing the Baker to 'softly and suddenly vanish away'. While ostensibly a children's poem, it has been subject to numerous interpretations and analyses, with some seeing it as an existential allegory or commentary on various philosophical and social themes of Victorian England.
+"""
+
+Notes = """
+The poem was first published in 1876 by Macmillan, with illustrations by Henry Holiday. Carroll began writing it in 1874. This is one of Carroll's major works alongside 'Alice's Adventures in Wonderland' (1865) and 'Through the Looking-Glass' (1871). While Carroll was Anglican (Church of England), not Catholic, the work is included as appropriate for children and as a significant work of English literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "L'Art de la Mise en Scène: Essai d'Esthétique Théâtrale"
+Author = "L. Becq de Fouquières"
+Year = 1884
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is a treatise on the art of theatrical staging and direction written by French scholar L. Becq de Fouquières. The work is significant as one of the first comprehensive theoretical studies of mise-en-scène (theatrical staging) as an aesthetic discipline. In the preface, Fouquières acknowledges that no comprehensive work on staging existed before his, which is why he modestly titled it an "Essay." He distinguishes between dramatic art (the work of the playwright) and theatrical art (the collective work of all those who contribute to a performance), while acknowledging their interpenetration. The book explores staging not merely as a material question of costume richness and spectacle, but as a complex art form that is intimately connected to dramatic art itself.
+"""
+
+Notes = """
+The year 1884 is straightforward - this is the original publication date by the Paris publisher G. Charpentier et Cie. This work represents an important early contribution to theatrical theory and the systematic study of stage direction as an art form.
+"""
+</result>

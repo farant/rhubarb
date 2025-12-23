@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1956
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a catalog published by the United States Copyright Office listing renewal registrations for copyrighted works (books, pamphlets, serials, and contributions to periodicals) during a specific period in 1956. It serves as an official government record of copyright renewals, arranged alphabetically by author or issuing body. The document shows entries for works originally copyrighted in 1928-1929 that were being renewed for an additional term of protection under the copyright law in effect at that time.
+"""
+
+Notes = """
+The year 1956 is chosen as this represents when this particular catalog volume was published, documenting the renewal registrations processed during that period. This is a government document rather than a creative or scholarly work, so the publication date of the catalog itself is the most historically accurate date. The catalog references works originally copyrighted in 1928-1929 (as seen in entries like "© 18Jan29"), but the catalog document itself dates from 1956. This would be part of a regular series of catalogs published by the Copyright Office.
+"""
+</result>

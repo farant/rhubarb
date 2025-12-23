@@ -1,0 +1,15 @@
+<result>
+Title = "The Lair of the White Worm"
+Author = "Bram Stoker"
+Year = 1911
+
+Tags = ["fiction", "horror"]
+
+Summary = """
+The Lair of the White Worm is a horror novel by Bram Stoker, published in 1911 near the end of his life. It tells the story of Adam Salton, who is invited by his grand-uncle to visit England. There he becomes entangled with Lady Arabella March, who is revealed to be an ancient supernatural creature - a monstrous white worm that dwells in a subterranean lair. The novel combines elements of folklore, Victorian Gothic horror, and psychological thriller as Adam and his allies attempt to destroy the creature. This was Stoker's final novel, published a year before his death, and is considered one of his more eccentric and experimental works, less polished than Dracula but still displaying his fascination with ancient evil and supernatural horror.
+"""
+
+Notes = """
+The text clearly indicates this was transcribed from the 1911 W. Foulsham & Co. Ltd. edition, which matches the original publication year. This is one of Bram Stoker's lesser-known works compared to Dracula (1897), but historically significant as his last completed novel before his death in 1912. Not tagged as appropriate-for-children due to horror themes. Not tagged as catholic - while Stoker was born into a Protestant Irish family, this is Gothic horror fiction rather than explicitly religious literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Thirty Years in the Itinerancy"
+Author = "W.G. Miller"
+Year = 1875
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a memoir by Reverend W.G. Miller, D.D., documenting his thirty years of service as an itinerant Methodist minister in the Wisconsin Conference. The book provides a historical record of the charges (pastoral appointments) and ministers of the Wisconsin Conference, structured around the author's own ministerial travels and labors. Written in 1875, it offers valuable insight into 19th-century American Methodist circuit riding and church organization in Wisconsin during a formative period of settlement and religious establishment in the state.
+"""
+
+Notes = """
+The publication year of 1875 is stated directly in the text and represents when Miller compiled his reflections after three decades of ministry. This is both the year of original publication and the year the work was completed, as indicated in the preface where Miller mentions preparing the pages "in the midst of the taxing labors of the Ministerial calling."
+"""
+</result>

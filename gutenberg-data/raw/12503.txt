@@ -1,0 +1,15 @@
+<result>
+Title = "Buena Nueva de acuerdo a Juan (Gospel According to John)"
+Author = "Traditional (Apostle John)"
+Year = 90
+
+Tags = ["non-fiction", "religious-text", "catholic", "appropriate-for-children"]
+
+Summary = """
+This is the Gospel of John (Evangelio según San Juan), the fourth book of the New Testament of the Christian Bible. It presents a theological account of the life, ministry, death, and resurrection of Jesus Christ, traditionally attributed to John the Apostle. This particular text is a Spanish translation released into the public domain, based primarily on the World English Bible. The Gospel of John is distinctive among the four Gospels for its high Christology, theological depth, and focus on the divine nature of Christ. It includes unique content such as the prologue about the Word (Logos), the "I Am" statements of Jesus, and extended discourses on faith, light, and love.
+"""
+
+Notes = """
+Year chosen (circa 90-100 AD) represents the traditional scholarly consensus for when the Gospel of John was originally composed in Greek, rather than the 2004 date of this particular Spanish translation. As one of the four canonical Gospels, this text is definitively Catholic/Christian Scripture and would bear ecclesiastical approval. The text itself notes it is a public domain translation effort based on the World English Bible, acknowledging it may contain translation imperfections and inviting collaborative improvements.
+"""
+</result>

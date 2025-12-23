@@ -1,0 +1,17 @@
+I recognize this as Anatole France's "The Aspirations of Jean Servien" (originally "Les Désirs de Jean Servien"). Let me provide the structured information:
+
+<result>
+Title = "The Aspirations of Jean Servien"
+Author = "Anatole France"
+Year = 1882
+
+Tags = ["fiction", "literary-fiction"]
+
+Summary = """
+'The Aspirations of Jean Servien' (originally 'Les Désirs de Jean Servien') is a semi-autobiographical novel by French Nobel laureate Anatole France. The story follows Jean Servien, born to a humble bookbinder in Paris, who grows up with romantic aspirations shaped by his mother's dreams for him. The novel traces his development from childhood through young adulthood, exploring themes of class, ambition, romantic idealism, and the conflict between dream and reality in 19th-century Paris. It is considered one of France's earlier works that established his reputation as a master of psychological realism and social observation.
+"""
+
+Notes = """
+The novel was originally published in 1882 in French. Anatole France (1844-1924) was raised Catholic and educated in Catholic schools, but became skeptical and eventually critical of the Church in his later life and writing. While he had Catholic formation, his mature work often contained ironic or skeptical perspectives on religion, so this would not qualify for the 'catholic' tag as it would not likely receive nihil obstat or imprimatur. The work contains mature themes and psychological complexity not particularly suitable for children.
+"""
+</result>

@@ -1,0 +1,17 @@
+Looking at this text, I can identify it from the title page information provided. This is "Analyzing Character" by Katherine M. H. Blackford, M.D. and Arthur Newcomb, published in 1922. This appears to be a work on character analysis and vocational guidance - essentially an early 20th-century attempt at personality typing and career counseling.
+
+<result>
+Title = "Analyzing Character: The New Science of Judging Men; Misfits in Business, the Home and Social Life"
+Author = "Katherine M. H. Blackford, Arthur Newcomb"
+Year = 1922
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is an early 20th-century work on character analysis and vocational guidance. Katherine Blackford was a medical doctor who developed theories about physiognomy and personality typing - attempting to correlate physical characteristics with mental and emotional traits. The book aims to help identify "misfits" in business and social life by analyzing character types based on physical attributes. This work is part of a now-discredited pseudoscientific movement that attempted to determine personality, ability, and suitability for various roles based on physical appearance and body type. While popular in its time, such theories have been thoroughly debunked by modern psychology and are now recognized as having no scientific validity.
+"""
+
+Notes = """
+The year 1922 is clearly stated on the title page. This work represents the pseudoscientific character analysis movement of the early 1900s. Not appropriate for children due to complexity and outdated theories that could be misleading. Not tagged as 'catholic' as there's no indication the authors were Catholic or that the work has any particular Catholic perspective - it appears to be a secular business/psychology text.
+"""
+</result>

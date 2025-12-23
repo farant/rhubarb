@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "Miss Lulu Bett" by Zona Gale, as stated in the title page. The text shows "1921" which is when this novel was published. Zona Gale was an American author who won the Pulitzer Prize for Drama in 1921 for the dramatized version of this novel. The novel itself was published in 1920, but the edition shown here appears to be from 1921.
+
+Let me provide the structured information:
+
+<result>
+Title = "Miss Lulu Bett"
+Author = "Zona Gale"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Miss Lulu Bett is a novel by American author Zona Gale, published in 1920. It tells the story of Lulu Bett, a spinster who lives with her sister's family, the Deacons, serving essentially as their unpaid domestic servant. The novel explores themes of women's independence, social constraints, and the search for personal identity in early 20th century American small-town life. The work was groundbreaking for its realistic portrayal of a woman trapped by family obligations and social expectations. Gale adapted the novel into a play, which won the Pulitzer Prize for Drama in 1921, making her the first woman to win the award. The story is considered an early feminist work and a significant contribution to American realist literature.
+"""
+
+Notes = """
+While the text shows 1921, the novel was originally published in 1920. The 1921 date likely refers to this particular edition, possibly coinciding with the Pulitzer Prize-winning play adaptation. I've used 1920 as the year since that represents the original publication and is most historically accurate for educational purposes.
+"""
+</result>

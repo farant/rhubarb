@@ -1,0 +1,25 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title page, this is clearly "Bred in the Bone; or, Like Father, Like Son" published in New York in 1872. The author is identified only as "THE AUTHOR OF" followed by several other works including "A Beggar on Horseback," "Gwendoline's Harvest," etc.
+
+Let me search my knowledge to identify this author and provide accurate information about this work.
+
+This is a novel by James Payn (1830-1898), a prolific English novelist and editor. "Bred in the Bone" was indeed published in 1872. Payn was a popular Victorian novelist who wrote sensation novels and domestic fiction. He was not a Catholic author, and his works were typical Victorian three-volume novels focused on middle and upper-class English life.
+
+The novel appears to be a sensation novel about heredity and family traits (suggested by the subtitle "Like Father, Like Son"), set in the English Midlands, focusing on a character named Carew of Crompton who is described as an eccentric hunting squire.
+
+<result>
+Title = "Bred in the Bone; or, Like Father, Like Son"
+Author = "James Payn"
+Year = 1872
+
+Tags = ["fiction", "victorian-novel"]
+
+Summary = """
+A Victorian sensation novel by James Payn, a prolific English novelist and magazine editor. The story explores themes of heredity and family resemblance (as suggested by the subtitle "Like Father, Like Son"). Set in the English Midlands in "Breakneckshire," the novel centers around Carew of Crompton, an eccentric sporting squire known for his reckless hunting exploits and his famous black horse Trebizond. The novel likely follows typical Victorian sensation fiction patterns, examining how traits and characteristics pass from one generation to the next. Payn was a popular novelist of his era who wrote numerous three-volume novels dealing with English middle and upper-class life.
+"""
+
+Notes = """
+Published in 1872 in New York with illustrations. James Payn was editor of Chambers's Journal and later Cornhill Magazine. He was a contemporary of Wilkie Collins and wrote in the sensation fiction genre popular in the 1860s-1870s. Not a Catholic author.
+"""
+</result>

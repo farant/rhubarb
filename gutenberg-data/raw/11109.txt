@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 156, February 12, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+This is an issue of Punch magazine, the famous British weekly magazine of humor and satire that was published from 1841 to 1992 (and briefly revived later). Founded in London, Punch was known for its witty commentary on current events, political cartoons, and social satire. Each issue contained a mix of humorous articles, satirical pieces, jokes, and illustrations. This particular issue from February 12, 1919 would have been published shortly after the end of World War I (which ended in November 1918), and the content reflects post-war British society, including references to Army officers, demobilization issues, and the aftermath of the war. The magazine was an influential voice in British culture and politics throughout its run.
+"""
+
+Notes = """
+The year 1919 is straightforward here as this is a dated periodical issue. Punch was published weekly, and each issue was clearly dated. This is not a literary work with publication ambiguity but rather a magazine issue from a specific date.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work, author, and other details.
+
+This is clearly a biography of Count Camillo Benso di Cavour, the architect of Italian unification. The text is written by Countess Evelyn Martinengo-Cesaresco and was published in 1898 (as stated on the title page). The preface discusses Cavour's three-point plan for Italian unification and his relationship with various powers including Austria, Napoleon III, and England.
+
+<result>
+Title = "Cavour"
+Author = "Evelyn Martinengo-Cesaresco"
+Year = 1898
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+A biography of Count Camillo Benso di Cavour (1810-1861), the brilliant statesman who was the chief architect of Italian unification. The book examines Cavour's strategic vision and political acumen in creating a unified Italy, including his three-point plan: making Piedmont the lever for raising Italy, delivering a decisive blow to Austrian power in Italy, and preventing Continental Powers from blocking Italian Unity. Written by Countess Evelyn Martinengo-Cesaresco, this work provides insight into one of the most important figures in 19th-century European history.
+"""
+
+Notes = """
+The year 1898 is taken from the title page. This is a biographical work about a historical figure rather than a primary historical document. While Cavour himself was involved in complex relationships with the Catholic Church and the Papacy during the Risorgimento (Italian unification often put him at odds with Papal temporal power), this is a secular historical biography and not a Catholic work per se.
+"""
+</result>

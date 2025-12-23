@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Folk Tales from the Russian"
+Author = "Verra Xenophontovna Kalamatiano de Blumenthal"
+Year = 1903
+
+Tags = ["fiction", "folklore", "appropriate-for-children"]
+
+Summary = """
+This is a collection of Russian folk tales retold by Verra Xenophontovna Kalamatiano de Blumenthal. The book preserves traditional Russian folklore stories that were being passed down orally through traveling peasant bards and "nyanyas" (beloved nurses). The author compiled these tales, which she notes were being set down in print for the first time, with the intention of sharing Russian folklore with American children and preserving these stories before they disappeared due to modernization. The work captures "the last echoes of the nation's early joys and sufferings, hopes and fears" from the old Slavic tradition.
+"""
+
+Notes = """
+The first edition of this work was published in 1903 by Rand McNally & Company in Chicago. While the exact original publication date isn't stated in this excerpt, the book represents folklore collection work from the early 20th century when such preservation efforts were becoming urgent due to modernization in Russia. The work is a retelling/compilation rather than original folklore, making the publication date the most historically relevant marker for this particular text.
+"""
+</result>

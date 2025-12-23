@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "The Shadow of the Cathedral" (La Catedral in Spanish) by Vicente Blasco Ibáñez. The introduction by William Dean Howells provides context about the work and author. Let me determine the appropriate year and other details.
+
+The novel was originally published in Spanish as "La Catedral" in 1903. The translation by Mrs. W.A. Gillespie was published in 1919 (as shown in the text). Since this is the translation with Howells' introduction, the 1919 date is appropriate for this edition, though I'll note the original Spanish publication in the Notes field.
+
+This is a work of fiction by a Spanish author known for his anticlerical views. While the novel deals with cathedral life and religious themes, Blasco Ibáñez was a republican and anticlerical writer, so this would not be considered a "catholic" work in the sense of having a nihil obstat or imprimatur.
+
+<result>
+Title = "The Shadow of the Cathedral"
+Author = "Vicente Blasco Ibáñez"
+Year = 1903
+
+Tags = ["fiction", "not-appropriate-for-children"]
+
+Summary = """
+"The Shadow of the Cathedral" (La Catedral) is a novel set in and around the Cathedral of Toledo, Spain. The work explores the lives of those who live in the shadow of the great cathedral, examining themes of faith, social change, and the decline of religious influence in modern Spain. Blasco Ibáñez, known for his naturalistic and anticlerical approach, uses the cathedral as a protagonist to explore the tension between tradition and modernity in Spanish society. The novel is part of Ibáñez's broader body of work examining Spanish social and political issues through a realist lens. William Dean Howells, in his introduction to this 1919 English translation, praises Ibáñez as "the first of living European novelists" of his time and places this work among the author's most significant achievements.
+"""
+
+Notes = """
+Year chosen is 1903, the original Spanish publication date of "La Catedral." This English translation by Mrs. W.A. Gillespie with introduction by W.D. Howells was published in 1919. The original publication date is more historically significant for timeline purposes. This is not tagged as "catholic" despite its cathedral setting, as Blasco Ibáñez was known for his anticlerical views and republican politics.
+"""
+</result>

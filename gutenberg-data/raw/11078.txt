@@ -1,0 +1,15 @@
+<result>
+Title = "What Dress Makes of Us"
+Author = "Dorothy Quigley"
+Year = 1897
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A late 19th-century social commentary and advice book about fashion, clothing, and personal appearance by Dorothy Quigley. The work explores how clothing choices affect perception and dignity, examining the sometimes comical effects of fashion on both men and women. Written during the Victorian era, it reflects the period's concerns with propriety and proper dress while offering observations on the social significance of attire. The book was originally published in 1897 and includes illustrations by Annie Blakeslee. Some of the content was previously published as articles in the New York Sun and New York Journal.
+"""
+
+Notes = """
+The year 1897 is clearly stated on the title page of the Project Gutenberg text. This appears to be the original publication date. The work is a collection that includes previously published newspaper articles compiled into book form.
+"""
+</result>

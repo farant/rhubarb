@@ -1,0 +1,27 @@
+I need to read through this Project Gutenberg text to identify the work, author(s), and publication year. Let me analyze what I can see:
+
+The text is clearly identified in the header as "HISTORIE VAN MEJUFFROUW SARA BURGERHART" by "BETJE WOLFF en AAGJE DEKEN". This is a famous Dutch epistolary novel.
+
+The introduction mentions this edition was edited/shortened by J.B. MEERKERK and provides biographical dates for both authors:
+- Elisabeth Wolff-Bekker (1738-1804)
+- Aagje Deken (1741-1804)
+
+The text discusses how "Sara Burgerhart" was significant as the first Dutch work to gain international recognition, having been translated into French. The introduction references Busken Huet and discusses how fundamentally Dutch the work is.
+
+Based on my knowledge, "De Historie van Mejuffrouw Sara Burgerhart" was originally published in 1782 and is considered the first Dutch novel in the modern sense. It's an epistolary novel (told through letters) that was groundbreaking for Dutch literature.
+
+<result>
+Title = "Historie van Mejuffrouw Sara Burgerhart"
+Author = "Betje Wolff, Aagje Deken"
+Year = 1782
+
+Tags = ["fiction", "epistolary-novel"]
+
+Summary = """
+'Historie van Mejuffrouw Sara Burgerhart' is widely considered the first modern Dutch novel. Written as an epistolary novel (composed of letters between characters), it tells the story of Sara Burgerhart and was groundbreaking for Dutch literature. The work was significant enough to be translated into French, making it one of the first Dutch literary works to gain international recognition. Written by two women authors working in collaboration, Betje Wolff and Aagje Deken, the novel is noted for being quintessentially Dutch in character and style, capturing the manners and society of 18th century Holland in a way that contemporary critics like Busken Huet praised as difficult to translate or fully appreciate outside of Dutch culture.
+"""
+
+Notes = """
+The original work was published in 1782. This particular edition appears to be an abridged version edited by J.B. Meerkerk, likely published much later. The 1782 date reflects the original publication, which is the historically significant date for understanding this work's place in Dutch literary history as the first modern Dutch novel.
+"""
+</result>

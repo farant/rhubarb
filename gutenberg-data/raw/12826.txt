@@ -1,0 +1,15 @@
+<result>
+Title = "The Air Trust"
+Author = "George Allan England"
+Year = 1915
+
+Tags = ["fiction", "science-fiction", "social-commentary"]
+
+Summary = """
+"The Air Trust" is a dystopian science fiction novel by George Allan England that explores the logical extreme of monopolistic capitalism. The story imagines a scenario where capitalists discover a way to monopolize the atmosphere itself, controlling access to breathable air. Written during the Progressive Era when trust-busting and concerns about industrial monopolies were at their height, the novel serves as social commentary on unchecked corporate power and economic inequality. England, a socialist writer and supporter of Eugene Debs (to whom the book is dedicated), uses this speculative premise to critique the monopolistic practices of his time, such as Standard Oil, U.S. Steel, and the beef trust. The work is part of the tradition of early 20th-century socialist science fiction that used fantastical scenarios to illuminate real social and economic injustices.
+"""
+
+Notes = """
+The year 1915 is clearly stated on the title page and represents the original publication date. George Allan England was a prolific early science fiction and adventure writer who was also politically active in socialist causes. His dedication to Eugene V. Debs, the prominent American socialist leader, signals the novel's political intent. The book emerged during a period of intense debate about monopolies and trusts in American society, following the Sherman Antitrust Act and various trust-busting efforts of the Theodore Roosevelt and Woodrow Wilson administrations.
+"""
+</result>

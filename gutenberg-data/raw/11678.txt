@@ -1,0 +1,19 @@
+I recognize this text as "La Belle Gabrielle" by Auguste Maquet. This is a historical novel about Gabrielle d'Estrées, the famous mistress of King Henri IV of France. The excerpt describes the abjuration (conversion from Protestantism to Catholicism) of Henri IV at Saint-Denis on July 25, 1593 - the famous occasion when he reportedly said "Paris is worth a Mass."
+
+Auguste Maquet (1813-1888) was a French author best known as the primary collaborator of Alexandre Dumas. He co-wrote many of Dumas's famous works including "The Three Musketeers" and "The Count of Monte Cristo."
+
+<result>
+Title = "La Belle Gabrielle"
+Author = "Auguste Maquet"
+Year = 1891
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"La Belle Gabrielle" is a historical novel by Auguste Maquet about Gabrielle d'Estrées, the celebrated mistress and great love of King Henri IV of France. The novel dramatizes the tumultuous period of the French Wars of Religion, focusing on Henri IV's abjuration of Protestantism in 1593 ("Paris is worth a Mass") and his relationship with Gabrielle, who was considered by many to be the unofficial queen of France. Maquet, best known as Alexandre Dumas's primary collaborator, brings his talent for historical romance to this portrayal of one of French history's most fascinating figures. The work explores the political intrigue, religious conflicts, and romantic drama of late 16th-century France.
+"""
+
+Notes = """
+The text clearly indicates this is volume II published in 1891. Auguste Maquet wrote extensively on French history after his collaboration with Dumas ended. While Maquet was a prolific historical novelist, this work would not be considered a Catholic text in the sense of having ecclesiastical approval, despite dealing with Catholic historical themes.
+"""
+</result>

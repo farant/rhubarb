@@ -1,0 +1,27 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a Dutch translation of Jules Verne's famous novel "Around the World in Eighty Days" (originally "Le Tour du monde en quatre-vingts jours"). The text shows:
+
+1. The title in Dutch: "DE REIS OM DE WERELD IN 80 DAGEN"
+2. Attribution to Jules Verne
+3. Note that it's translated from the 30th French edition by Gerard Keller
+4. Opening chapter introducing Phileas Fogg and Passepartout
+5. Reference to the year 1872 and the address in Saville Row
+
+The original French novel was first published in 1872-1873 (serialized in Le Temps from November 1872 to December 1873, and in book form in 1873). Since this is a straightforward translation without substantial commentary, I'll use 1873 as the most historically accurate year for the original work.
+
+<result>
+Title = "De Reis om de Wereld in 80 Dagen"
+Author = "Jules Verne"
+Year = 1873
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+'Around the World in Eighty Days' is one of Jules Verne's most famous adventure novels. It tells the story of Phileas Fogg, an eccentric English gentleman, who makes a wager at the Reform Club that he can circumnavigate the globe in 80 days. Accompanied by his French valet Passepartout, Fogg embarks on an extraordinary journey using various means of transportation available in the Victorian era. The novel combines elements of adventure, comedy, and a race against time, while showcasing Verne's characteristic attention to technological and geographical detail. This is a Dutch translation by Gerard Keller from the 30th French edition.
+"""
+
+Notes = """
+The original French novel was serialized from November 1872 to December 1873 and published in book form in 1873. I've chosen 1873 as the publication year for the original work. This Project Gutenberg text (11318) is a Dutch translation, not the original French version.
+"""
+</result>

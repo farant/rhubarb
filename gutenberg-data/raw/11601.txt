@@ -1,0 +1,17 @@
+I recognize this as a historical biography by Julia Pardoe. Let me provide the structured information:
+
+<result>
+Title = "The Life of Marie de Medicis, Queen of France, Volume III"
+Author = "Julia Pardoe"
+Year = 1852
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+This is the third volume of Julia Pardoe's comprehensive biography of Marie de' Medici (1575-1642), Queen of France as consort of Henri IV and Regent during the minority of Louis XIII. Marie de' Medici was a member of the powerful Florentine Medici family who became one of the most influential figures in early 17th-century French politics. The work covers her tumultuous regency period, her conflicts with Cardinal Richelieu, and her eventual exile. Julia Pardoe was a prolific 19th-century English author known for her historical biographies of European royalty and her detailed accounts of court life.
+"""
+
+Notes = """
+The original publication date was around 1852, though this appears to be an 1890 edition/printing. Julia Pardoe (1806-1862) wrote this three-volume biography in the mid-19th century as part of her series on French royalty. The year 1852 represents the original publication of this work, which became one of the standard English-language biographies of Marie de' Medici during the Victorian era.
+"""
+</result>

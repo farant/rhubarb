@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a Dutch translation of Charles de Coster's famous work about Till Eulenspiegel (Tijl Uilenspiegel). The title page indicates this is a translation by Richard Delbecq and René de Clercq, third edition from 1919, but the original work is what matters for dating purposes.
+
+Charles de Coster's "La Légende et les Aventures héroïques, joyeuses et glorieuses d'Ulenspiegel et de Lamme Goedzak au Pays de Flandres et ailleurs" (or "De Coster's Uilenspiegel" as it's commonly known) was originally published in French in 1867. This is considered one of the masterpieces of Belgian literature and a foundational work of Flemish cultural identity, depicting the struggle against Spanish occupation in the 16th century through the folk hero Tijl Uilenspiegel.
+
+<result>
+Title = "De legende en de heldhaftige, vroolijke en roemrijke daden van Uilenspiegel en Lamme Goedzak in Vlaanderenland en elders"
+Author = "Charles de Coster"
+Year = 1867
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+This is the Flemish/Dutch translation of Charles de Coster's masterwork about Till Eulenspiegel (Tijl Uilenspiegel) and his companion Lamme Goedzak. Originally written in French and published in 1867, this epic novel is considered one of the greatest works of Belgian literature. It tells the legendary adventures of Uilenspiegel, a folk hero representing Flemish resistance and freedom during the Spanish occupation of the Low Countries in the 16th century. The work combines historical events (particularly the period of the Duke of Alba's brutal repression) with folklore, humor, and patriotic themes. De Coster's novel became a symbol of Belgian and Flemish cultural identity and national consciousness.
+"""
+
+Notes = """
+The year 1867 refers to the original French publication. This particular edition is a Dutch translation from 1919 (third printing) by Richard Delbecq (prose) and René de Clercq (songs), with illustrations by Jules Gondry. De Coster (1827-1879) was a Belgian author who wrote in French but chose Flemish subjects and themes.
+"""
+</result>

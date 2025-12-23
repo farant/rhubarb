@@ -1,0 +1,15 @@
+<result>
+Title = "A Discourse Upon The Origin And The Foundation Of The Inequality Among Mankind"
+Author = "Jean-Jacques Rousseau"
+Year = 1755
+
+Tags = ["non-fiction", "philosophy", "political-theory"]
+
+Summary = """
+This is Rousseau's second major discourse, written in response to a question posed by the Academy of Dijon: "What is the origin of inequality among men, and is it authorized by natural law?" In this work, Rousseau develops his theory of the state of nature and argues that inequality among humans is not natural but rather a product of civilization and the development of private property. He distinguishes between natural inequality (physical differences) and moral/political inequality (differences in privilege, wealth, and power), arguing that the latter has no basis in natural law. This discourse laid crucial groundwork for his later political philosophy, particularly "The Social Contract," and became foundational to Enlightenment political thought and the intellectual background of the French Revolution.
+"""
+
+Notes = """
+The discourse was written for the 1754 Academy of Dijon competition and published in 1755. While Rousseau's first discourse (on sciences and arts) won the prize in 1750, this second discourse did not win but was published and became even more influential. The year 1755 represents the original publication date when this work entered public discourse and began its profound influence on political philosophy.
+"""
+</result>

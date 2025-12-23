@@ -1,0 +1,15 @@
+<result>
+Title = "Punchinello"
+Author = "Various"
+Year = 1870
+
+Tags = ["periodical", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+Punchinello was an American humor and satire magazine published weekly in New York City from April to December 1870. Modeled after the British magazine Punch, it featured humorous commentary on politics, society, and culture of the Reconstruction era, along with cartoons, jokes, and literary parodies. The magazine was short-lived, lasting only about 9 months (roughly 40 issues), but represents an interesting artifact of post-Civil War American humor writing. Contributors included various writers and illustrators of the period. This appears to be an individual issue of the magazine, as evidenced by the advertisements for binders to preserve the publication and various patent medicines and products typical of the era.
+"""
+
+Notes = """
+The year 1870 is chosen as this was the only year Punchinello was published (April-December 1870). The presence of advertisements for "Conant's Patent Binders for Punchinello" and the Nassau Street address in New York City are consistent with this dating. This is clearly a single issue from the magazine's brief run rather than a collected volume. The exact issue number would require more content from the actual magazine text.
+"""
+</result>

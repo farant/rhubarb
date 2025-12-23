@@ -1,0 +1,17 @@
+I recognize this work from the author's name and the distinctive title. Benjamin Ward Richardson was a prominent Victorian physician and public health reformer who wrote extensively on sanitary science. "Hygeia: A City of Health" is his most famous work - a utopian vision of an ideally healthy city designed according to the best sanitary science of his time.
+
+<result>
+Title = "Hygeia: A City of Health"
+Author = "Benjamin Ward Richardson"
+Year = 1876
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Hygeia: A City of Health is a utopian treatise by Victorian physician and public health reformer Benjamin Ward Richardson, M.D., F.R.S. Originally delivered as an address and dedicated to Edwin Chadwick (a pioneering sanitary reformer), the work presents Richardson's vision of an ideally planned city designed according to the principles of sanitary science. The book describes in detail how such a city would be constructed to maximize public health - covering everything from sewage systems and water supply to housing design, street layout, and social organization. Written during the height of the Victorian public health movement, it reflects the era's optimism about the ability of scientific planning and engineering to create healthier living conditions and prevent disease. Richardson's imaginary city became influential in urban planning discussions and represented the aspirations of 19th-century sanitary reformers who sought to address the dire health conditions of industrial cities through systematic, scientifically-informed urban design.
+"""
+
+Notes = """
+The year 1876 is clearly stated on the title page and represents the original publication date. This was during the height of the Victorian sanitary reform movement, following major public health legislation in Britain and reflecting growing understanding of disease prevention through environmental improvements (though still largely pre-germ theory).
+"""
+</result>

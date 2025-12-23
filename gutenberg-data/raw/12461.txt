@@ -1,0 +1,15 @@
+<result>
+Title = "Castles in the Air"
+Author = "Baroness Emmuska Orczy"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Castles in the Air" is a novel by Baroness Emmuska Orczy, best known for creating "The Scarlet Pimpernel." This work features Hector Ratichon, a roguish and morally dubious character who narrates his own adventures during a turbulent period in French history. Despite being a self-admitted liar, thief, and forger, Ratichon is portrayed with humor and geniality. The novel is structured as Ratichon's autobiography, presenting his misadventures and schemes with an "unblushing" candor that makes him simultaneously reprehensible and entertaining. The foreword acknowledges the character's lack of scruples while asking readers to find sympathy for this engaging rogue. Orczy's style blends adventure, historical fiction, and comedy through this unconventional protagonist.
+"""
+
+Notes = """
+First published in 1921. Baroness Orczy was a Hungarian-born British novelist who achieved fame with "The Scarlet Pimpernel" (1905). "Castles in the Air" represents her continued exploration of historical adventure fiction set during periods of French history, often featuring clever, morally ambiguous protagonists. The work is lighter in tone than some of her other novels.
+"""
+</result>

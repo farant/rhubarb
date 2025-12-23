@@ -1,0 +1,17 @@
+I can see this is from John Lord's "Beacon Lights of History, Volume III" focusing on Ancient Achievements. Let me provide the structured information:
+
+<result>
+Title = "Beacon Lights of History, Volume III: Ancient Achievements"
+Author = "John Lord"
+Year = 1883
+
+Tags = ["non-fiction", "history", "educational"]
+
+Summary = """
+This is the third volume of John Lord's comprehensive lecture series "Beacon Lights of History," which covers ancient civilizations and their achievements. This particular volume focuses on ancient governments, laws, and jurisprudence, with special attention to Greek and Roman legal systems. Lord (1810-1894) was an American historian and popular lecturer who delivered these talks throughout the United States. The series was designed to present the great figures and movements of history in an accessible, educational format. This volume examines the development of legal systems from Oriental laws through Lycurgus and Solon's reforms in Greece, to the comprehensive Roman legal tradition including the Twelve Tables and the later codification under Justinian.
+"""
+
+Notes = """
+John Lord's "Beacon Lights of History" was published in multiple volumes between 1883-1902. Volume III on Ancient Achievements was among the earlier volumes published around 1883-1884. Lord was a popular lecturer in the 19th century, and these volumes were compiled from his extensive lecture series. The work was widely used in educational settings and represents a late 19th-century perspective on ancient history and legal development.
+"""
+</result>

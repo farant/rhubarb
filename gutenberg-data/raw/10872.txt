@@ -1,0 +1,15 @@
+<result>
+Title = "At Sunwich Port"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"At Sunwich Port" is a novel by W. W. Jacobs, a popular English humorist and short story writer known for his tales of dockside life and his classic horror story "The Monkey's Paw." This work is a humorous novel set in the fictional English port town of Sunwich, following the misadventures and romantic entanglements of its characters, particularly involving the Hardy family and local maritime community. Jacobs was celebrated for his gentle comedy, dialect humor, and vivid portrayal of working-class English life at the turn of the 20th century. The story features his characteristic wit and observations of small-town provincial life.
+"""
+
+Notes = """
+W. W. Jacobs (William Wymark Jacobs, 1863-1943) published "At Sunwich Port" in 1902. This Project Gutenberg text is Part 2 (Chapters 6-10) of the complete novel. The work represents Jacobs during his most productive period of comic fiction writing about English maritime and dockside communities. While Jacobs was likely Anglican rather than Catholic, his fiction is generally wholesome and appropriate for family reading.
+"""
+</result>

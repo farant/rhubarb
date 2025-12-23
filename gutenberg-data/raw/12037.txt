@@ -1,0 +1,17 @@
+I recognize this as G.K. Chesterton's first published collection of poetry. Let me provide the structured information:
+
+<result>
+Title = "The Wild Knight and Other Poems"
+Author = "Gilbert Keith Chesterton"
+Year = 1900
+
+Tags = ["poetry", "non-fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+This is G.K. Chesterton's first published book of poetry, released in 1900 when he was 26 years old. The collection includes early works, some written during his student days, as noted in his preface where he mentions many poems are "juvenile." The volume showcases Chesterton's characteristic blend of philosophical depth, paradox, and spiritual insight, even in these early works. Notable poems include "The Donkey," which would become one of his most famous poems. The collection demonstrates the Christian philosophical perspective that would define his later career, though he did not formally convert to Catholicism until 1922. The poems explore themes of creation, wonder, redemption, and the spiritual significance of ordinary things.
+"""
+
+Notes = """
+The year 1900 is clearly stated on the title page. While Chesterton did not convert to Catholicism until 1922, I've included the 'catholic' tag because his worldview was deeply Christian and sacramental even in his Anglican years, and his work is widely read and celebrated in Catholic circles. He is considered one of the great Catholic writers of the 20th century, and this early work shows the theological and philosophical foundations that would lead to his conversion. His later reception of the faith made all his works, including these early poems, part of the Catholic literary tradition.
+"""
+</result>

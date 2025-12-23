@@ -1,0 +1,15 @@
+<result>
+Title = "Punchinello, Vol. 1, No. 5, April 30, 1870"
+Author = "Various"
+Year = 1870
+
+Tags = ["periodical", "satire", "humor", "historical-document", "non-fiction"]
+
+Summary = """
+Punchinello was an American weekly satirical magazine published in New York from 1870. It was modeled after the famous British satirical magazine Punch, and featured humorous commentary on contemporary events, politics, and society. The magazine included illustrations, cartoons, short stories, and satirical articles. This is the fifth issue of the first volume, published on April 30, 1870. The magazine had a relatively short run, lasting less than a year despite ambitious beginnings and quality content. It represents an interesting snapshot of American humor and social commentary during the Reconstruction era.
+"""
+
+Notes = """
+The year 1870 is clearly indicated as the publication date of this specific issue. This is a periodical/magazine rather than a book, so the publication date is straightforward. As a satirical humor magazine with various contributors, it's not appropriate to tag as suitable for children or as Catholic material.
+"""
+</result>

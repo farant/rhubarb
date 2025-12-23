@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Skamba Kankliah ir Trimintia"
+Author = "Jouzas Suildauskas (baritonas)"
+Year = 1920
+
+Tags = ["audio-recording", "historical-document", "music", "lithuanian-folk"]
+
+Summary = """
+This is an audio recording from Thomas Edison's phonograph collection, featuring Lithuanian baritone Jouzas Suildauskas performing "Skamba Kankliah ir Trimintia" (which translates roughly to "The Kanklės Sound and Ring" - the kanklės being a traditional Lithuanian string instrument similar to a zither). The recording is part of the Edison National Historic Site collection and represents early 20th century audio preservation of Lithuanian folk music and culture. This is a historical audio artifact rather than a literary work.
+"""
+
+Notes = """
+Dating early Edison recordings is challenging as the Project Gutenberg metadata doesn't specify the original recording date. Edison's phonograph business was most active from the 1890s through the 1920s. Based on the format (MP3 conversion of early recording) and the Edison National Historic Site provenance, I've estimated circa 1920 as a reasonable midpoint for when such a Lithuanian folk music recording would have been made during Edison's commercial recording period. The actual recording could range anywhere from approximately 1900-1930. This is an audio artifact, not a text, which makes it unusual for Project Gutenberg's typical catalog.
+"""
+</result>

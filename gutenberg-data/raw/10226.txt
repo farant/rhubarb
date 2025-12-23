@@ -1,0 +1,15 @@
+<result>
+Title = "Beautiful Joe: An Autobiography"
+Author = "Marshall Saunders"
+Year = 1893
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Beautiful Joe is a pioneering animal welfare novel told from the perspective of a dog. Written by Canadian author Margaret Marshall Saunders (who published as Marshall Saunders), the book was inspired by the true story of a dog that had been abused and rescued. The novel follows Joe's life experiences, detailing both the cruelty he suffered and the kindness he later received, serving as a vehicle for promoting humane treatment of animals. The book became enormously popular and is often credited with helping to advance the animal welfare movement in North America. It was one of the first books to use an animal narrator to convey moral lessons about compassion and responsibility toward animals. The work was endorsed by prominent humane societies of the era and won a prize in a competition sponsored by the American Humane Education Society.
+"""
+
+Notes = """
+The edition shown here is from 1903, but Beautiful Joe was first published in 1893. I've chosen 1893 as the historically significant date since that was when the work originally appeared and began its cultural impact on the animal welfare movement. The book was written in response to a contest held by George Thorndike Angell's American Humane Education Society, which explains the dedication. It was modeled after Anna Sewell's "Black Beauty" (1877) but focused on dogs rather than horses.
+"""
+</result>

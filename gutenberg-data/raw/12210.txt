@@ -1,0 +1,17 @@
+I recognize this work from the opening and style. This is "Odd Craft" by W.W. Jacobs, a collection of humorous short stories featuring his characteristic cockney-dialect night-watchman narrator. W.W. Jacobs (William Wymark Jacobs) was an English author known for his maritime humor stories and is most famous for "The Monkey's Paw."
+
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "short-stories", "humor", "appropriate-for-children"]
+
+Summary = """
+'Odd Craft' is a collection of humorous short stories by W.W. Jacobs, featuring his beloved night-watchman narrator who tells tales in cockney dialect. The stories typically involve sailors, dockworkers, and other maritime characters in comedic situations, often exploring themes of domestic life, misunderstandings, and human folly. 'Dixon's Return' is one of the stories in this collection, depicting the tale of a hen-pecked publican. Jacobs was a master of humor and dialect writing, and while he's most famous today for the horror story 'The Monkey's Paw,' his maritime humor stories were immensely popular in their time and showcase his talent for character and comic situation.
+"""
+
+Notes = """
+The book was first published in 1903. W.W. Jacobs (1863-1943) wrote primarily in the late Victorian and Edwardian periods. His stories are generally family-friendly, relying on situational comedy and character quirks rather than anything inappropriate. The cockney dialect adds authenticity and humor to the narratives.
+"""
+</result>

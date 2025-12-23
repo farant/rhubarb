@@ -1,0 +1,15 @@
+<result>
+Title = "The Healthy Life Cook Book"
+Author = "Florence Daniel"
+Year = 1915
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+The Healthy Life Cook Book is a practical vegetarian cookbook compiled by Florence Daniel, aimed at beginners who need to prepare economical vegetarian dishes without previous cooking experience. The book was created by special request and stands out for its consideration of various dietary restrictions, particularly for those who avoid milk and eggs. All recipes were well-tested by the author in her own household. This cookbook is part of the early 20th century movement toward vegetarianism and health-conscious eating that was gaining traction in England during this period.
+"""
+
+Notes = """
+The year 1915 is clearly stated as the publication date of the Second Edition on the title page. This cookbook represents an interesting historical document of early vegetarian cooking practices in England during World War I. The inclusion of Robinson's branded products (Patent Groats and Patent Barley) reflects the commercial health food market that was developing in the early 1900s.
+"""
+</result>

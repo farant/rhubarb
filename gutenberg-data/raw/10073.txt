@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Century Vocabulary Builder" by Garland Greever and Joseph M. Bachelor. Based on the context, this appears to be part of The Century Handbook Series, which was a popular series of educational reference books published in the early 20th century.
+
+<result>
+Title = "The Century Vocabulary Builder"
+Author = "Garland Greever, Joseph M. Bachelor"
+Year = 1922
+
+Tags = ["non-fiction", "educational", "reference"]
+
+Summary = """
+The Century Vocabulary Builder is an educational reference work designed to help readers improve their English vocabulary and word usage. Published as part of The Century Handbook Series, it was created during the early 20th century when there was significant interest in self-improvement and educational materials for the general public. The book focuses on systematic vocabulary development, providing methods and exercises for building a more extensive and precise command of the English language. Garland Greever was a prominent English professor and editor who collaborated on several volumes in The Century Handbook Series, working with various co-authors including Joseph M. Bachelor and Easley S. Jones.
+"""
+
+Notes = """
+The Century Handbook Series was published by The Century Company in the 1920s. While exact publication dates can vary by edition, 1922 is the commonly cited original publication year for The Century Vocabulary Builder. The dedication to Dana H. Ferrin suggests this individual played a significant role in the book's creation, possibly as an editor or benefactor.
+"""
+</result>

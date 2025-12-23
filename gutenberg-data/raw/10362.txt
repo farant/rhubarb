@@ -1,0 +1,15 @@
+<result>
+Title = "Sketches of the East Africa Campaign"
+Author = "Robert V. Dolbey"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a firsthand account of the East Africa Campaign during World War I, written by Captain Robert V. Dolbey of the Royal Army Medical Corps (R.A.M.C.). The work consists of sketches and letters originally written home during the campaign, later compiled for publication. The East Africa Campaign (1914-1918) was a series of battles and guerrilla actions fought in German East Africa (modern-day Tanzania, Rwanda, and Burundi) between Allied forces and German colonial troops led by Paul von Lettow-Vorbeck. As a medical officer, Dolbey provides unique perspectives on the medical and daily experiences of the campaign. The book includes illustrations from captured German photographs.
+"""
+
+Notes = """
+The year 1918 is taken from the publication date stated in the text itself. This appears to be the original publication year, written immediately after or near the end of the East Africa Campaign. The preface is dated February 1918 from Italy, where Dolbey was stationed at the time of compilation.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This appears to be "The King's Cup-Bearer" by Mrs. O.F. Walton, a Victorian-era children's author known for evangelical Christian fiction. The chapter titles and the illustration reference to "Nehemiah's Midnight Survey" indicate this is a fictionalized or devotional retelling of the biblical story of Nehemiah, who served as cup-bearer to the Persian king and later rebuilt the walls of Jerusalem.
+
+Mrs. O.F. Walton (Amy Catherine Walton, who wrote as Mrs. Octavius Frank Walton) was a prolific British author of children's religious literature in the late 19th century, best known for "Christie's Old Organ" (1874).
+
+<result>
+Title = "The King's Cup-Bearer"
+Author = "Mrs. O.F. Walton"
+Year = 1890
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children", "christian", "biblical-retelling"]
+
+Summary = """
+A devotional retelling of the biblical story of Nehemiah for children, written by Victorian evangelical author Mrs. O.F. Walton. The book follows Nehemiah's journey from serving as cup-bearer to the Persian King Artaxerxes to his mission of rebuilding the walls of Jerusalem. Known for her accessible religious instruction aimed at young readers, Walton presents this Old Testament narrative with moral and spiritual lessons. The chapter titles reference key events from the Book of Nehemiah, including the midnight survey of Jerusalem's ruined walls and the famous image of workers building with "the sword and the trowel."
+"""
+
+Notes = """
+The exact publication year is estimated as circa 1890 based on Mrs. O.F. Walton's publishing period and the Gutenberg catalog number sequence. Walton was most active in the 1870s-1890s. While the biblical events depicted occurred around 445 BC, the year reflects this specific devotional work's publication. Tagged as both fiction and non-fiction due to its nature as a fictionalized/devotional treatment of historical biblical narrative.
+"""
+</result>

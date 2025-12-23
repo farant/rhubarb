@@ -1,0 +1,21 @@
+I can help you identify this work. Let me analyze the text.
+
+This is clearly "Social Life at Rome in the Age of Cicero" by W. Warde Fowler. From the prefatory note, I can see this is a scholarly work about Roman social history during the late Republic period. The work references Marquardt's *Privatleben der Römer* and Professor Dill's volumes on Roman social life, which helps date it.
+
+W. Warde Fowler (1847-1921) was a distinguished English historian and ornithologist who specialized in Roman religion and social history. This particular work was first published in 1908 by Macmillan as part of their archaeological handbooks series (though the preface mentions the original plan for that series was abandoned).
+
+<result>
+Title = "Social Life at Rome in the Age of Cicero"
+Author = "W. Warde Fowler"
+Year = 1908
+
+Tags = ["non-fiction", "history", "classical-studies"]
+
+Summary = """
+A comprehensive examination of daily life, customs, education, morals, and religion in Rome during the late Republic, particularly the era of Cicero (1st century BCE). Drawing heavily on Cicero's correspondence of over 900 contemporary letters, Fowler provides detailed insights into the social fabric of this critical period in Graeco-Roman civilization. The work addresses a gap in English-language scholarship by focusing on the manners and social conditions of the Republican era, as distinct from the better-documented Augustan and Imperial periods.
+"""
+
+Notes = """
+Year chosen is 1908, the original publication date. Though the book discusses events from approximately 106-43 BCE (Cicero's lifetime), it is a modern scholarly work of historical analysis rather than a primary source from antiquity.
+"""
+</result>

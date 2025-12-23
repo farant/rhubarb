@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be a political pamphlet about the "Manchester Martyrs" - three Irish republicans (William Philip Allen, Michael Larkin, and Michael O'Brien) who were executed in Manchester on November 23, 1867, for their role in the rescue of two Fenian prisoners. The pamphlet was published by A.M. Sullivan in Dublin in 1868 and deals with the subsequent funeral procession held in Ireland and the government's prosecution of those who participated in it.
+
+A.M. Sullivan (Alexander Martin Sullivan) was a prominent Irish journalist, politician, and nationalist who edited *The Nation* newspaper. This pamphlet is a primary historical document from the Fenian period in Irish history.
+
+<result>
+Title = "The 'Wearing of the Green,' or The Prosecuted Funeral Procession"
+Author = "A.M. Sullivan"
+Year = 1868
+
+Tags = ["non-fiction", "historical-document", "political-pamphlet"]
+
+Summary = """
+This is a political pamphlet published in Dublin in 1868 by A.M. Sullivan (Alexander Martin Sullivan), a prominent Irish nationalist journalist and editor of The Nation newspaper. The work documents and protests the British government's prosecution of participants in funeral processions held in Ireland to commemorate the "Manchester Martyrs" - three Irish republicans executed in Manchester, England on November 23, 1867. The executions and subsequent funeral demonstrations became a rallying point for Irish nationalism and are memorialized in the folk song "The Wearing of the Green." Sullivan's pamphlet is a primary source document from the Fenian period of Irish history, capturing the immediate reaction and political climate following these controversial executions.
+"""
+
+Notes = """
+The year 1868 reflects the publication date shown on the title page. This is appropriate as the work is a contemporary response to events of late 1867. While A.M. Sullivan was Catholic, this is primarily a political/historical document rather than a religious work, so I have not included the 'catholic' tag. The work is not appropriate for children given its subject matter of executions and political conflict.
+"""
+</result>

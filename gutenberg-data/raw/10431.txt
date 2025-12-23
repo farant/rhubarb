@@ -1,0 +1,17 @@
+I recognize this text as "Thirty Years a Slave: From Bondage to Freedom" by Louis Hughes. This is an autobiography published in 1897 that recounts Hughes's experiences as an enslaved person and his eventual journey to freedom.
+
+<result>
+Title = "Thirty Years a Slave: From Bondage to Freedom"
+Author = "Louis Hughes"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document", "autobiography", "appropriate-for-children"]
+
+Summary = """
+This is the autobiography of Louis Hughes, recounting his experiences as an enslaved person in the American South. The narrative provides a first-hand account of life under slavery, including detailed descriptions of plantation life, the relationship between enslaved people and plantation owners, and Hughes's eventual path to freedom. Published after the Civil War and the abolition of slavery, the work serves as an important historical document about the institution of slavery in America. Hughes's account is considered valuable for its detailed observations about the daily operations of slavery, the treatment of enslaved people, and the social and economic structures that supported the institution.
+"""
+
+Notes = """
+The year 1897 reflects the publication date of this autobiography. This is appropriate as the work represents Hughes's reflective account written decades after emancipation, rather than being a contemporary document from the slavery period itself. The narrative's value lies in its post-slavery perspective on the institution.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text for you.
+
+Based on the content, this appears to be a collection of children's stories edited by Watty Piper, published in 1922. The text shows "Little Red Riding Hood" as one of the stories in the collection titled "Children's Hour with Red Riding Hood and Other Stories."
+
+"Little Red Riding Hood" is a classic fairy tale with origins in European folklore, with the most famous literary versions being Charles Perrault's 1697 French version and the Brothers Grimm's German version from 1812. However, this specific text is a 1922 compilation edited by Watty Piper (a pseudonym used by publishers Platt & Munk).
+
+<result>
+Title = "Children's Hour with Red Riding Hood and Other Stories"
+Author = "Edited by Watty Piper"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of classic children's stories edited by Watty Piper and published in 1922. The collection includes 'Little Red Riding Hood' among other traditional fairy tales. Watty Piper was a house pseudonym used by the publishing firm Platt & Munk, and this editor is best known for 'The Little Engine That Could.' The book features illustrated versions of beloved children's stories, making classic tales accessible to young readers of the early 20th century. 'Little Red Riding Hood' itself is one of the most enduring European fairy tales, telling the story of a young girl who encounters a wolf on her way to visit her grandmother.
+"""
+
+Notes = """
+The year 1922 reflects this specific compilation's publication date. While 'Little Red Riding Hood' as a tale has much older origins (Perrault 1697, Grimm 1812), this is a 20th-century children's book collection, so the compilation date is most appropriate for cataloging purposes.
+"""
+</result>

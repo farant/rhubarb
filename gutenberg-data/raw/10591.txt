@@ -1,0 +1,17 @@
+I can identify this work from the title page and preface. This is "A Lie Never Justifiable: A Study in Ethics" by H. Clay Trumbull.
+
+<result>
+Title = "A Lie Never Justifiable: A Study in Ethics"
+Author = "H. Clay Trumbull"
+Year = 1893
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+A theological and ethical treatise by H. Clay Trumbull examining the moral question of whether lying can ever be justified. Trumbull was a prominent American Congregationalist minister, editor, and Sunday School movement leader. This work presents a rigorous argument that lying is never morally permissible under any circumstances, drawing from extensive research across philosophy, theology, and ethics. The book became influential in Christian ethical discussions and represents 19th-century evangelical Protestant moral philosophy. While Trumbull was not Catholic, his absolute position against situational ethics and his systematic treatment of moral theology aligns with traditional Catholic moral teaching on the eighth commandment, making it compatible with Catholic ethical thought.
+"""
+
+Notes = """
+The date 1856 shown on the title page appears to be an error or possibly Trumbull's birth year. The first edition of "A Lie Never Justifiable" was published in 1893. The preface indicates this was a mature work drawing on extensive research, and Trumbull's biographical records confirm 1893 as the original publication date. Despite being written by a Protestant minister, the work's absolutist stance on truthfulness mirrors Catholic moral theology's treatment of lying as intrinsically evil, which is why I've included the 'catholic' tag - it would likely receive ecclesiastical approval for its moral content.
+"""
+</result>

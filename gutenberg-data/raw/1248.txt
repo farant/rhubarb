@@ -1,0 +1,15 @@
+<result>
+Title = "Last of the Great Scouts: The Life Story of William F. Cody [Buffalo Bill]"
+Author = "Helen Cody Wetmore"
+Year = 1899
+
+Tags = ["non-fiction", "biography", "american-history"]
+
+Summary = """
+This is a biographical work about William F. Cody, better known as Buffalo Bill, written by his sister Helen Cody Wetmore. The book chronicles the life of one of the most famous figures of the American West, including his work as a scout, buffalo hunter, and later as a showman with his Wild West show. The biography provides an intimate family perspective on Buffalo Bill's life and adventures during the settlement and expansion of the American frontier. The excerpt shown includes a genealogical section tracing the Cody family lineage back to ancient Irish royalty.
+"""
+
+Notes = """
+The book was first published in 1899. The genealogical section was compiled in 1897, as noted in the text. This work is one of the primary biographical sources on Buffalo Bill, written by someone with direct family knowledge. The book is considered a key text in understanding both the real person behind the Buffalo Bill legend and the mythology that grew up around frontier figures in late 19th century America.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly "Stories of Great Americans for Little Americans" by Edward Eggleston, published in 1895 according to the title page. This is a collection of biographical stories about American historical figures written for children. Eggleston was a well-known American historian and author who wrote educational materials for young readers.
+
+<result>
+Title = "Stories of Great Americans for Little Americans"
+Author = "Edward Eggleston"
+Year = 1895
+
+Tags = ["non-fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+A collection of short biographical stories about notable figures in early American history, written specifically for young readers. The book includes tales of colonial leaders like William Penn and John Winthrop, explorers like Marquette, founding fathers like Benjamin Franklin and George Washington, Revolutionary War heroes like Israel Putnam and Francis Marion, and frontier figures like Daniel Boone. Edward Eggleston was a prominent 19th-century American historian and author who specialized in making American history accessible and engaging for children through narrative storytelling rather than dry historical facts.
+"""
+
+Notes = """
+The year 1895 is clearly stated on the title page. Edward Eggleston (1837-1902) was a Methodist minister, novelist, and historian who became famous for his educational works on American history for young people. This book represents the popular 19th-century genre of patriotic biographical stories designed to instill civic virtue and historical knowledge in children. The book is not Catholic in nature despite Eggleston's religious background as a Protestant minister.
+"""
+</result>

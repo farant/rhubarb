@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title page and contents, this is clearly "Beacon Lights of History, Volume II: Jewish Heroes and Prophets" by John Lord, LL.D. This is a historical and biographical work examining figures from Jewish history, starting with Abraham.
+
+John Lord (1810-1894) was an American historian and lecturer who wrote the multi-volume "Beacon Lights of History" series in the latter half of the 19th century. The series was published in the 1880s-1890s, with this particular volume focusing on Jewish biblical figures.
+
+<result>
+Title = "Beacon Lights of History, Volume II: Jewish Heroes and Prophets"
+Author = "John Lord"
+Year = 1884
+
+Tags = ["non-fiction", "history", "biography", "religion"]
+
+Summary = """
+This is the second volume of John Lord's multi-volume 'Beacon Lights of History' series, focusing on major figures from Jewish history and the Hebrew Bible. The work presents biographical and historical lectures on figures like Abraham, examining their religious significance and historical context. Lord was a popular 19th-century American historian and lecturer known for making history accessible to general audiences through his lecture series. This volume explores the lives and religious contributions of Jewish heroes and prophets, beginning with Abraham as the father of monotheistic faith.
+"""
+
+Notes = """
+The 'Beacon Lights of History' series was published in the 1880s-1890s, with various volumes appearing at different times. Volume II was likely first published around 1884. This is a Protestant American perspective on biblical history rather than a Catholic work, so it does not receive the 'catholic' tag. While it deals with religious subjects, it is a historical-biographical work rather than devotional literature. Not tagged as appropriate for children due to its academic lecture format and complexity.
+"""
+</result>

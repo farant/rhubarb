@@ -1,0 +1,17 @@
+I recognize this text as "The Lords of the Wild" by Joseph A. Altsheler. This is the fifth book in his French and Indian War Series, a historical fiction series aimed at young readers that follows the adventures of Robert Lennox, Tayoga, and David Willet during the French and Indian War (1754-1763).
+
+<result>
+Title = "The Lords of the Wild: A Story of the Old New York Border"
+Author = "Joseph A. Altsheler"
+Year = 1919
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+'The Lords of the Wild' is the fifth novel in Joseph A. Altsheler's French and Indian War Series. Published in 1919, this historical adventure novel is set during the French and Indian War and follows the continuing adventures of Robert Lennox (a youth of mysterious origins), Tayoga (a young Onondaga warrior), and David Willet (a seasoned hunter) as they navigate the dangerous frontier of colonial New York. The series is known for its detailed historical settings, action-packed narratives, and portrayal of both European colonists and Native American characters during this pivotal period in North American history. Altsheler was a prolific author of historical fiction for young readers in the early 20th century, and this series remains one of his most popular works.
+"""
+
+Notes = """
+The publication year is clearly stated as 1919 in the text itself. This is a work of historical fiction set during the French and Indian War (1754-1763), written over 150 years after the events it depicts. Joseph A. Altsheler (1862-1919) was an American newspaper reporter and author of popular juvenile historical fiction.
+"""
+</result>

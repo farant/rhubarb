@@ -1,0 +1,17 @@
+Based on the excerpt you provided, I can identify this work and provide the requested information:
+
+<result>
+Title = "A Little Pilgrim in the Unseen"
+Author = "Margaret Oliphant"
+Year = 1882
+
+Tags = ["fiction", "religious-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+'A Little Pilgrim in the Unseen' is a spiritual allegory by Scottish author Margaret Oliphant, published in 1882. The story follows a recently deceased woman (referred to simply as "the little Pilgrim") who awakens after death to find herself in the afterlife. The narrative traces her journey through the heavenly realm as she discovers the nature of the afterlife, encounters other souls, and learns about divine mercy and judgment. Written in Oliphant's characteristic gentle, compassionate style, the work explores themes of death, redemption, and the continuation of the soul. Though fictional, it reflects Victorian spiritual concerns and Christian theology about the afterlife. The work was popular in its time for its comforting vision of what lies beyond death and its accessible, almost childlike perspective on profound theological questions.
+"""
+
+Notes = """
+Margaret Oliphant (1828-1897) was a prolific Scottish author and a devout Christian. While she was Presbyterian rather than Roman Catholic, her spiritual writings have a universal Christian appeal and deal with orthodox Christian theology. The work was first published in 1882 in Macmillan's Magazine and then as a book. I've tagged it as 'catholic' (lowercase) in the broader sense of universal Christian literature that aligns with traditional Christian teaching on the afterlife, though it should be noted she was not Roman Catholic. The work would likely have broad appeal to Christian readers of various denominations, including Catholics.
+"""
+</result>

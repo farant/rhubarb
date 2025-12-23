@@ -1,0 +1,15 @@
+<result>
+Title = "Barks and Purrs"
+Author = "Colette"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Barks and Purrs" (originally "Dialogues de bêtes") is a charming early work by the French author Colette, consisting of a series of dialogues between a French Bulldog named Toby-Chien and a cat named Kiki-la-Doucette. Through these conversations, Colette explores the inner lives, jealousies, and affections of these household pets with wit and psychological insight. The work showcases Colette's keen observation of animal behavior and her ability to anthropomorphize without sentimentality. This was one of her earlier published works, written during her first marriage to Henry Gauthier-Villars (known as "Willy"), hence the byline "Colette Willy."
+"""
+
+Notes = """
+The original French edition "Dialogues de bêtes" was published in 1904, but there was an expanded edition in 1913 titled "Barks and Purrs" that included additional dialogues. The 1913 date represents the more complete version of the work that this translation likely reflects. Colette (1873-1954) was not a Catholic author, though she was raised in rural France. Her works, while literary and often suitable for various audiences, would not be considered Catholic literature in the sense of having ecclesiastical approval.
+"""
+</result>

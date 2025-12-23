@@ -1,0 +1,15 @@
+<result>
+Title = "John Henry"
+Author = "Traditional"
+Year = 1870
+
+Tags = ["folklore", "historical-document", "appropriate-for-children"]
+
+Summary = """
+"John Henry" is an American folk ballad that tells the story of John Henry, an African-American steel driver who worked on the railroad. The song narrates his legendary contest against a steam-powered hammer during the construction of the Big Bend Tunnel on the C&O (Chesapeake and Ohio) Railroad. According to the ballad, John Henry competed to prove that a man could out-work a machine, winning the contest but dying from exhaustion immediately afterward. The song has become an enduring symbol of human dignity, labor, and the struggle against mechanization during the Industrial Revolution. It remains one of the most important pieces of American folklore and has been recorded countless times in various musical traditions.
+"""
+
+Notes = """
+The exact year is uncertain as this is a traditional folk ballad that emerged orally. The historical John Henry is believed to have worked on the Big Bend Tunnel in West Virginia in the early 1870s (the tunnel was completed in 1873). The ballad likely originated shortly after the events it describes, though it wasn't widely collected and published until the early 20th century. I've chosen 1870 as a representative date for when the legendary events would have taken place, understanding that the oral tradition preceded any written version by decades.
+"""
+</result>

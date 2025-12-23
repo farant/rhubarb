@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "Peaceless Europe"
+Author = "Francesco Saverio Nitti"
+Year = 1922
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"Peaceless Europe" is a political analysis written by Francesco Saverio Nitti, former Prime Minister of Italy (1919-1920), examining the aftermath of World War I and the Treaty of Versailles. Written in 1922, just a few years after the war's conclusion, Nitti argues that the peace treaties following WWI pose a greater threat to Europe's future than the war itself. He critiques the policies of the victorious nations and warns of Europe's decline due to the harsh terms imposed on Germany and other defeated powers. As someone who participated in post-war conferences including San Remo, Nitti provides an insider's perspective on European diplomacy and expresses concern that the peace settlement is unsustainable and dangerous for long-term stability.
+"""
+
+Notes = """
+The year 1922 is clearly stated on the title page. This work is a contemporary political commentary written shortly after WWI, reflecting the immediate post-war concerns about the Treaty of Versailles and European reconstruction. Nitti was a prominent Italian statesman who served as Prime Minister and had direct experience with the peace negotiations. The work is not tagged as 'catholic' despite Nitti being Italian, as this appears to be a secular political/economic analysis rather than a work with explicit Catholic theological content or perspective.
+"""
+</result>

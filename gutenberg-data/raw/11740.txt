@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+'The Mirror of Literature, Amusement, and Instruction' was a popular British weekly periodical published in the early 19th century. This particular issue, Vol. XIII No. 364, from April 4, 1829, features an article about the tomb of John Gower (c. 1330-1408), the medieval English poet. The publication was designed to provide readers with a mixture of literary content, historical information, architectural descriptions, and general knowledge, accompanied by illustrations. Such periodicals were widely read during the Victorian era and served an educational purpose for the middle classes, offering accessible cultural enrichment at an affordable price (2 pence per issue).
+"""
+
+Notes = """
+The year 1829 represents the actual publication date of this specific issue of the periodical, not the creation date of the content it describes (Gower's tomb dates to the early 15th century). Since this is a periodical rather than a standalone work, the publication date is the most historically accurate choice for timeline purposes. The periodical itself ran from 1822 to 1849.
+"""
+</result>

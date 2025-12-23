@@ -1,0 +1,17 @@
+I recognize this as part of James D. Richardson's compilation of presidential messages and papers, specifically the volume covering Franklin Pierce's presidency. This is a significant historical documentary collection.
+
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents: Franklin Pierce"
+Author = "James D. Richardson"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is part of James D. Richardson's comprehensive compilation of official messages, proclamations, and papers of the Presidents of the United States. This particular volume covers the presidency of Franklin Pierce (1853-1857). Richardson's compilation was commissioned by Congress and represents one of the most important documentary collections of American presidential history. The work includes biographical information about Pierce, followed by his official state papers, messages to Congress, proclamations, and other presidential documents. This compilation served as the authoritative reference for presidential papers for many decades.
+"""
+
+Notes = """
+The compilation was published in multiple volumes between 1896-1899. I've chosen 1897 as the most likely publication year for this volume covering Pierce. This is the compiled work by Richardson, not original documents by Pierce himself. The biographical sketch of Pierce shown here is introductory material that would precede his actual presidential papers. This compilation was groundbreaking as the first comprehensive collection of presidential documents and was used by scholars, government officials, and the public for reference purposes.
+"""
+</result>

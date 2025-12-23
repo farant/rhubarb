@@ -1,0 +1,17 @@
+I recognize this work! "The World Set Free" is H.G. Wells' remarkably prescient novel about atomic energy and atomic warfare, written just before World War I broke out. Wells actually predicted atomic bombs and even the concept of nuclear chain reactions, inspired by Frederick Soddy's work on radioactivity (to whom the book is dedicated).
+
+<result>
+Title = "The World Set Free"
+Author = "H.G. Wells"
+Year = 1914
+
+Tags = ["fiction", "science-fiction", "appropriate-for-children"]
+
+Summary = """
+'The World Set Free' is a science fiction novel by H.G. Wells that remarkably predicted the development of atomic energy and atomic weapons. Written in 1913 and published in early 1914 (before World War I), the novel depicts a future world war fought with atomic bombs, followed by the establishment of a world government to prevent future conflicts. Wells was inspired by Frederick Soddy's 'Interpretation of Radium' and incorporated ideas about radioactive decay and atomic energy into his narrative. The novel is notable for its prescient vision of nuclear warfare and its advocacy for international cooperation and world peace. It follows the story through several chapters including 'The New Source of Energy,' 'The Last War,' 'The Ending of War,' and 'The New Phase,' culminating with 'The Last Days of Marcus Karenin.'
+"""
+
+Notes = """
+Published in 1914, just as World War I was beginning. Wells originally imagined the atomic war would occur in 1956, which is mentioned in the preface. The dedication to Frederick Soddy's work on radioactivity is significant, as Soddy's scientific research directly inspired Wells' imaginative leap to atomic weapons. This is one of the earliest fictional treatments of atomic energy and nuclear warfare in literature.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title page, this is clearly "The Mystery of the Boule Cabinet" by Burton E. Stevenson, published in 1911 (as stated on the title page). Burton E. Stevenson was an American author and librarian known for his detective fiction in the early 20th century. This is a mystery/detective novel, part of the genre popularized during that era.
+
+<result>
+Title = "The Mystery of the Boule Cabinet"
+Author = "Burton E. Stevenson"
+Year = 1911
+
+Tags = ["fiction", "mystery", "detective-fiction"]
+
+Summary = """
+'The Mystery of the Boule Cabinet' is a detective story by Burton E. Stevenson, an American author and librarian who wrote popular mystery fiction in the early 20th century. The novel follows a mystery surrounding a boule cabinet (an ornate piece of French furniture featuring decorative inlay work). Based on the chapter titles, the story involves multiple tragedies, investigations by characters including a detective named Grady, mysterious figures including a veiled lady and an unknown Frenchman, and culminates with revelations about "Crochard, l'Invincible." The dedication to "A.B.M. Fellow-Sherlockian" suggests the work was written in the tradition of Sherlock Holmes detective stories. With illustrations by Thomas Fogarty, it represents the classic American detective fiction of the period between the original Sherlock Holmes stories and the hard-boiled detective era.
+"""
+
+Notes = """
+The year 1911 is clearly stated on the title page and represents the original publication date. Burton E. Stevenson (1872-1962) was best known for creating the character Lester Godfrey and for compiling reference works, particularly 'The Home Book of Quotations' and 'The Home Book of Verse.'
+"""
+</result>

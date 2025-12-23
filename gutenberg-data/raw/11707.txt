@@ -1,0 +1,15 @@
+<result>
+Title = "Notes and Queries: A Medium of Inter-communication for Literary Men, Artists, Antiquaries, Genealogists, etc."
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Notes and Queries was a long-running British periodical founded in 1849 by William John Thoms under the editorship of Charles Wentworth Dilke. It served as a scholarly journal and forum for literary men, antiquaries, historians, and other learned individuals to share research notes, pose questions to the community, and provide answers on topics ranging from literary criticism and historical research to genealogy, etymology, and folklore. Each issue contained notes (short articles or observations), queries (questions posed by readers), and replies to previous queries. This particular issue is No. 13 from January 26, 1850, showing it is from the periodical's first year of publication. The journal became an important resource for Victorian scholarship and continued publication for over 150 years.
+"""
+
+Notes = """
+I chose 1850 as the year because this is the specific issue date shown (January 26, 1850). While the periodical as a whole began in 1849, this particular number represents content from early 1850. The periodical itself is the historical document of interest here, not a single authored work. I did not tag this as 'appropriate-for-children' as it is scholarly material intended for adult academics and researchers. It is also not specifically 'catholic' despite having some contributors who may have been Catholic - it was a general scholarly periodical not focused on Catholic topics.
+"""
+</result>

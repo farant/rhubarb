@@ -1,0 +1,15 @@
+<result>
+Title = "Blackwood's Edinburgh Magazine, No. CCCXXX, April 1843, Vol. LIII"
+Author = "Various"
+Year = 1843
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+Blackwood's Edinburgh Magazine was one of the most influential British literary and political periodicals of the 19th century, published from 1817 to 1980. Founded by William Blackwood in Edinburgh, it featured a mix of fiction, poetry, political commentary, literary criticism, and essays on contemporary affairs. This particular issue from April 1843 contains various articles including agricultural topics, translations of Schiller's poems and ballads, serialized fiction (Caleb Stukley), coverage of British imperial affairs (Occupation of Aden), and political commentary on Lord Ellenborough and the Whigs. The magazine was known for its Tory political stance and its contributions to British Romanticism, having published works by major authors including Sir Walter Scott, John Galt, and others.
+"""
+
+Notes = """
+The year 1843 is the publication date of this specific issue. Blackwood's Magazine was typically published monthly and this represents a single issue from that year. The magazine is also known as "Maga" or "Blackwood's" colloquially.
+"""
+</result>

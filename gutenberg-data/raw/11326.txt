@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 10, No. 288"
+Author = "Various"
+Year = 1827
+
+Tags = ["non-fiction", "periodical", "literary-magazine", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This particular issue is a supplementary number from Volume 10, featuring a review titled "Spirit of the Annuals for 1828" which discusses literary annuals (gift books) published for the 1828 season. The piece highlights the contributions of female writers, particularly noting L.E.L. (Letitia Elizabeth Landon), and includes an illustration of "The Return of a Victorious Armament to a Greek City." The Mirror was known for its accessible format, combining literature, illustrations, and general interest content for a middle-class Victorian audience.
+"""
+
+Notes = """
+The year is determined as 1827 because this is reviewing annuals "for 1828" - literary annuals were typically published in the autumn of the preceding year (so autumn 1827) and dated for the upcoming year. The Mirror of Literature ran from 1822-1849 and was priced at 2 pence per issue, making it an affordable weekly periodical. L.E.L. (Letitia Elizabeth Landon) was one of the most popular poets of the 1820s-1830s.
+"""
+</result>

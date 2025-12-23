@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This appears to be "English Housewifry" by Elizabeth Moxon, a well-known 18th-century cookbook. The text clearly shows this is the 1764 edition. Elizabeth Moxon's work was first published in the 1740s (around 1741-1743), but this appears to be a later edition from 1764 as stated on the title page.
+
+<result>
+Title = "English Housewifry"
+Author = "Elizabeth Moxon"
+Year = 1764
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+English Housewifry is a practical cookbook and household management guide by Elizabeth Moxon, containing over 450 recipes and instructions for various aspects of cookery including soups, made-dishes, pastes, pickles, cakes, creams, jellies, and homemade wines. The book includes diagrams for table settings, bills of fare for each month, and an alphabetical index. Moxon presents this as the result of thirty years of practice and experience, designed to be useful for both mistresses of families and servants, with an emphasis on health, frugality, and both substantial and elegant cooking. The book also includes an appendix with approximately sixty additional recipes contributed by local gentlewomen skilled in housewifery, as well as a devotional section of spiritual letters.
+"""
+
+Notes = """
+I chose 1764 as the year because this is clearly marked as the 1764 edition on the title page. While Elizabeth Moxon's English Housewifry was first published around 1741-1743, it went through numerous editions throughout the 18th century, and this particular Gutenberg text represents the 1764 printing. For a historical timeline, using the specific edition year (1764) seems most appropriate as it represents when this particular version with its appendices was circulated.
+"""
+</result>

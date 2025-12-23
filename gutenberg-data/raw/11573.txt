@@ -1,0 +1,15 @@
+<result>
+Title = "The Crater; or, Vulcan's Peak: A Tale of the Pacific"
+Author = "James Fenimore Cooper"
+Year = 1847
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Crater; or, Vulcan's Peak is a novel by James Fenimore Cooper that tells the story of colonization and civilization-building on newly-formed volcanic islands in the Pacific Ocean. The book follows a young sailor who becomes stranded on a crater reef and gradually builds a community there. Cooper uses this adventure narrative as a vehicle to explore themes of society, government, religion, and the rise and fall of civilizations. The novel is part of Cooper's later period of writing and reflects his increasingly conservative views on democracy and social order. It combines maritime adventure with utopian fiction and philosophical reflection on the nature of human society.
+"""
+
+Notes = """
+The Crater was originally published in 1847, though this Project Gutenberg edition is from 1863 (as indicated in the header). 1847 is the historically accurate date for the work's composition and first publication. Cooper wrote this novel during a period when he was becoming more critical of American democracy and was interested in exploring themes of social organization and governance through allegorical fiction.
+"""
+</result>

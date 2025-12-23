@@ -1,0 +1,17 @@
+I recognize this work from the Project Gutenberg text you've provided.
+
+<result>
+Title = "The Claim Jumpers: A Romance"
+Author = "Stewart Edward White"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Claim Jumpers" is an adventure romance novel by American author Stewart Edward White, set in the American West during the mining frontier era. The story follows Bennington, a young man from the East who travels west and becomes involved in the rough-and-tumble world of mining claims, encountering both danger and romance. White was known for his adventure novels depicting frontier life and the American wilderness, often featuring themes of personal growth, conflict between Eastern refinement and Western ruggedness, and romantic elements. This novel is characteristic of his early work celebrating the pioneer spirit and Western expansion, written in a style that was popular in the early 20th century adventure romance genre.
+"""
+
+Notes = """
+The year 1901 is clearly stated on the title page of this edition. Stewart Edward White (1873-1936) was a prolific American author who wrote extensively about adventure and the outdoors, particularly focusing on Western themes. This novel falls into his early period of adventure romance writing, before his later interest in spiritualism and psychic phenomena.
+"""
+</result>

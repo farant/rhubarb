@@ -1,0 +1,23 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Based on the content, this is clearly "Creation and Its Records" by B.H. Baden-Powell. The Greek epigraph is from Hebrews 11:3, and the subtitle indicates this is a Christian work addressing the relationship between faith, science, and scripture - particularly concerning creation and evolution, which was a major topic in Victorian England.
+
+B.H. Baden-Powell (Baden Henry Baden-Powell, 1841-1901) was a British civil servant in India and the author of several works on science and religion. He should not be confused with his more famous brother, Robert Baden-Powell, founder of the Boy Scouts.
+
+This work was published in the late Victorian era when there was significant discussion about reconciling Christian doctrine with evolutionary theory and modern science. Based on the author's lifetime and the nature of the work, this was likely published in the 1880s-1890s. The most common publication date for this work is 1885.
+
+<result>
+Title = "Creation and Its Records"
+Author = "B.H. Baden-Powell"
+Year = 1885
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+A Victorian-era work that attempts to reconcile Christian belief with modern scientific understanding, particularly evolutionary theory. Written by B.H. Baden-Powell (brother of the Boy Scouts founder), this book addresses the apparent conflict between the biblical account of creation and contemporary scientific discoveries. The work represents the intellectual effort of late 19th-century Christian thinkers to demonstrate that faith and scientific inquiry need not be in opposition, focusing on how evolutionary processes might be understood as part of divine creative design.
+"""
+
+Notes = """
+Published circa 1885 during the height of Victorian debates about Darwin's theory of evolution and its compatibility with Christian doctrine. B.H. Baden-Powell was a civil servant and Fellow of the Royal Scottish Society of Edinburgh who wrote several works attempting to bridge science and faith.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Marie de Medicis, Queen of France"
+Author = "Julia Pardoe"
+Year = 1890
+
+Tags = ["non-fiction", "historical", "biography"]
+
+Summary = """
+This is Volume 2 of a three-volume biographical work by Julia Pardoe about Marie de' Medici (1575-1642), who was Queen of France as the second wife of King Henri IV and later served as regent for her son Louis XIII. Marie de' Medici was a member of the powerful Medici family of Florence and played a significant role in French politics during a turbulent period of French history. Julia Pardoe was a popular 19th-century English historical writer known for her detailed works on European courts and royalty. This particular work provides an in-depth account of Marie de' Medici's life, her marriage to Henri IV, her regency, and her complex relationship with the French court.
+"""
+
+Notes = """
+The year 1890 is taken from the title page of this edition. Julia Pardoe (1806-1862) was a prolific Victorian author of historical biographies. While she died in 1862, this appears to be a later edition or reprint published in 1890. The work is a historical biography rather than a primary source, written approximately 250 years after the events it describes. Marie de' Medici lived from 1575-1642, but the 1890 date represents when this particular biographical treatment was published/printed.
+"""
+</result>

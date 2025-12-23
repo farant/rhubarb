@@ -1,0 +1,17 @@
+I can see this is a German text by Johann Wolfgang von Goethe - "Die Aufgeregten" (The Agitated Ones), a political drama in five acts. Let me provide the structured information about this work.
+
+<result>
+Title = "Die Aufgeregten"
+Author = "Johann Wolfgang von Goethe"
+Year = 1793
+
+Tags = ["fiction", "drama", "non-fiction"]
+
+Summary = """
+'Die Aufgeregten' (The Agitated Ones) is a political drama in five acts by Johann Wolfgang von Goethe. Written during the tumultuous period of the French Revolution, this play deals with social and political unrest, reflecting the revolutionary atmosphere that was sweeping through Europe. The work examines tensions between different social classes - nobility, bourgeoisie, and peasantry - in a German setting. The play features characters including a Countess and her daughter Friederike, a Baron, various officials, and common people (Landleute). Like much of Goethe's dramatic work, it explores themes of social order, justice, and human relationships during times of political upheaval. The play was written but remained a fragment, never completed to Goethe's satisfaction, though it provides valuable insight into his thinking about the social and political questions of his era.
+"""
+
+Notes = """
+The play was written around 1793 during the French Revolution period, though it was left as a fragment and not published during Goethe's lifetime. It was written between 1791-1793 and first published posthumously. I've chosen 1793 as the composition date since that represents when the main creative work on this piece occurred, which is most relevant for understanding its historical and literary context in relation to the revolutionary period it addresses.
+"""
+</result>

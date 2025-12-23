@@ -1,0 +1,15 @@
+<result>
+Title = "Are Women People? A Book of Rhymes for Suffrage Times"
+Author = "Alice Duer Miller"
+Year = 1915
+
+Tags = ["non-fiction", "poetry", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A collection of satirical poetry and verse written by Alice Duer Miller in support of women's suffrage. The book uses wit and irony to expose the contradictions and absurdities in arguments against women's voting rights. Miller was a prominent American writer and advocate for women's suffrage who used her literary talents to advance the cause. The verses originally appeared in the New York Tribune and were compiled into this book during the height of the suffrage movement in the United States, just a few years before the passage of the 19th Amendment in 1920. The work is notable for its accessible, humorous approach to a serious political issue, making suffrage arguments through clever rhymes that highlighted logical inconsistencies in denying women the vote.
+"""
+
+Notes = """
+First published in 1915, during the peak of the American women's suffrage movement. This date represents the original book publication, though individual poems appeared earlier in the New York Tribune. The book was published just five years before women gained the right to vote nationally with the 19th Amendment in 1920.
+"""
+</result>

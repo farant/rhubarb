@@ -1,0 +1,15 @@
+<result>
+Title = "The Divine Comedy (Purgatorio)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "appropriate-for-children"]
+
+Summary = """
+Purgatorio is the second canticle of Dante Alighieri's Divine Comedy, following Inferno and preceding Paradiso. Written in Italian as an epic poem, it describes Dante's journey through Purgatory, guided by the Roman poet Virgil. The work depicts the mountain of Purgatory where souls undergo purification before ascending to Paradise. Through 33 cantos, Dante encounters various souls being cleansed of the seven deadly sins on different terraces of the mountain, ultimately reaching the Earthly Paradise at its summit where he meets Beatrice. This translation by Henry Wadsworth Longfellow (published 1867) was one of the most influential English versions of Dante's masterwork. The Divine Comedy is considered one of the greatest works of world literature and a cornerstone of Catholic theology and medieval philosophy.
+"""
+
+Notes = """
+The Divine Comedy was written between approximately 1308-1320. I've chosen 1320 as it represents the approximate completion date of the entire work, though Purgatorio specifically was likely completed around 1314-1319. This is clearly a Catholic work - Dante was a devout Catholic and the entire Comedy is structured around Catholic theology, cosmology, and eschatology. The work received ecclesiastical approval and has been celebrated by the Church for centuries. While "appropriate-for-children" may seem surprising for a work dealing with sin and redemption, the Divine Comedy has historically been taught to students and its allegorical nature makes it educationally valuable for understanding Catholic moral theology.
+"""
+</result>

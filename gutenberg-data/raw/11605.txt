@@ -1,0 +1,21 @@
+I'll analyze this text for you.
+
+Based on the content, this is clearly G.K. Chesterton's "The Appetite of Tyranny," a collection of essays written during World War I about the war and its causes, particularly focusing on German/Prussian aggression. The text explicitly mentions the invasion of Belgium and the European conflagration, which places it firmly in the WWI context.
+
+Chesterton wrote this work in 1915, and it includes both the main essays on the war and "Letters to an Old Garibaldian" (letters addressed to an imagined Italian correspondent). This is a work of political/philosophical non-fiction analyzing the nature of Prussian militarism and defending England's entry into WWI.
+
+<result>
+Title = "The Appetite of Tyranny: Including Letters to an Old Garibaldian"
+Author = "G.K. Chesterton"
+Year = 1915
+
+Tags = ["non-fiction", "political-philosophy", "historical-document", "catholic"]
+
+Summary = """
+A collection of essays by G.K. Chesterton written during World War I, analyzing the philosophical and moral dimensions of the conflict. The work focuses on what Chesterton saw as Prussian militarism and tyranny, defending England's entry into the war following Germany's invasion of Belgium. The book includes both the main essays on "The Appetite of Tyranny" and a series of "Letters to an Old Garibaldian," fictional letters to an Italian correspondent discussing the war's significance. Chesterton characterizes this as "the most sincere war of human history" and provides his characteristic blend of paradox, wit, and moral philosophy in examining the conflict's deeper meaning.
+"""
+
+Notes = """
+Published in 1915 during World War I. Chesterton was a prominent Catholic convert (converted 1922, but his thinking was deeply Catholic throughout his life) and this work reflects his defense of Christian civilization against what he perceived as Prussian authoritarianism.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "History of Julius Caesar"
+Author = "Jacob Abbott"
+Year = 1849
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is Jacob Abbott's biographical history of Julius Caesar, part of his famous "Makers of History" series. Abbott (1803-1879) was a prolific American author who specialized in writing educational biographies and historical works for young readers. This book presents Caesar's life, military campaigns, political career, and assassination in an accessible narrative style, covering his rise to power in Rome, the Gallic Wars, crossing of the Rubicon, civil war against Pompey, and ultimate death. Abbott's histories were designed to make classical history engaging and comprehensible for a general audience, particularly younger readers, while maintaining historical accuracy.
+"""
+
+Notes = """
+Jacob Abbott's "History of Julius Caesar" was originally published in 1849 as part of his "Makers of History" series. This series was enormously popular in 19th-century America and remained in print for decades. While Caesar himself lived from 100-44 BC, this work is Abbott's 19th-century interpretation and retelling, so 1849 represents the most historically accurate date for this particular text and its pedagogical approach.
+"""
+</result>

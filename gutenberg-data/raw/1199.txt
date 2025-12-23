@@ -1,0 +1,19 @@
+I can see this is an anthology of Australian verse edited by Bertram Stevens, with a Project Gutenberg release date of February 1998, but the file appears to only have the Project Gutenberg header. Let me check if there's more content or if I need to work with what's provided.
+
+Based on the information available in the Project Gutenberg header, I can provide the following structured information:
+
+<result>
+Title = "An Anthology of Australian Verse"
+Author = "Edited by Bertram Stevens"
+Year = 1906
+
+Tags = ["poetry", "anthology", "non-fiction"]
+
+Summary = """
+'An Anthology of Australian Verse' is a collection of Australian poetry edited by Bertram Stevens. Stevens was a significant figure in Australian literary circles in the early 20th century, and this anthology represents an important compilation of Australian poetic works from the colonial and early federation periods. The collection would have featured works from prominent Australian poets of the era, showcasing the development of a distinctive Australian voice in poetry.
+"""
+
+Notes = """
+The original publication date is estimated to be around 1906, which was when Bertram Stevens compiled several important anthologies of Australian verse. This was during a formative period for Australian literature, shortly after federation in 1901, when there was growing interest in establishing a national literary identity. The Project Gutenberg edition was released in February 1998.
+"""
+</result>

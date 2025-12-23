@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as part of the Federal Writers' Project "Slave Narratives" collection, which documented interviews with formerly enslaved people in the United States during the 1930s.
+
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States, Volume IX, Mississippi Narratives"
+Author = "Various (Federal Writers' Project interviewees and interviewers)"
+Year = 1941
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume IX (Mississippi Narratives) of the Slave Narratives collection, a significant historical documentation project conducted by the Federal Writers' Project between 1936-1938 as part of the Works Progress Administration. The collection contains first-person interviews with formerly enslaved people, preserving their testimonies and experiences of slavery in the American South. These narratives provide invaluable primary source material for understanding the lived experiences of enslaved people, their daily lives, family relationships, work conditions, and the transition to freedom following the Civil War. The Mississippi volume specifically documents the testimonies of former slaves from that state.
+"""
+
+Notes = """
+The year 1941 reflects when this volume was assembled and published by the Library of Congress, though the actual interviews were conducted between 1936-1938. Since this is a compilation work rather than a translation of an earlier historical text, the publication year is the most historically appropriate date. This collection represents the collaborative work of many interviewers and interviewees rather than a single author. The work has significant historical and educational value but deals with the difficult subject matter of slavery, so while historically important for education, it would not be appropriate for young children.
+"""
+</result>

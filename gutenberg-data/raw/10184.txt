@@ -1,0 +1,17 @@
+<result>
+Title = "Quartet in G Major, 1st Movement, Part 1"
+Author = "Roth String Quartet"
+Year = 1920
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording of a string quartet performance by the Roth String Quartet, preserved from Thomas Edison's collection at the Edison National Historic Site. The recording captures the first movement of a quartet in G major. The Roth String Quartet was active in the early 20th century and was among the ensembles whose performances were recorded and preserved by Edison's recording technology. This represents both a musical performance and a historical artifact of early audio recording technology.
+"""
+
+Notes = """
+The exact composition being performed is not specified in the metadata - "Quartet in G" could refer to works by multiple composers (Haydn, Mozart, Beethoven, and others all wrote quartets in G major). The year 1920 is an approximation based on the Roth String Quartet's active period and Edison's recording activities - Edison's recording technology was most active in the 1910s-1920s. Without being able to hear the audio or having more specific metadata, a precise year is difficult to determine. This is cataloged as a recording artifact rather than the original composition date, as the composition itself could date from the 18th or 19th century depending on which quartet is being performed.
+
+I did not include 'appropriate-for-children' as this is instrumental music with no content concerns, making the tag somewhat meaningless in this context. I also did not include 'catholic' as this is a secular musical performance with no apparent religious context.
+"""
+</result>

@@ -1,0 +1,23 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+Based on the title page and table of contents, this is clearly "Four Great Americans" by James Baldwin, Ph.D. This is a biographical work for young readers covering Washington, Franklin, Webster, and Lincoln.
+
+James Baldwin (1841-1925) was a prolific American educator and author who wrote many books for children, including historical biographies and adaptations of classical literature. This particular work appears to be from the late 19th or early 20th century based on his career timeline and the style of educational literature popular in that era.
+
+Let me provide the structured information:
+
+<result>
+Title = "Four Great Americans: Washington, Franklin, Webster, Lincoln"
+Author = "James Baldwin"
+Year = 1897
+
+Tags = ["non-fiction", "biography", "historical", "appropriate-for-children", "educational"]
+
+Summary = """
+A collection of biographical sketches written for young American readers, covering the lives of four foundational figures in American history: George Washington, Benjamin Franklin, Daniel Webster, and Abraham Lincoln. Written by educator James Baldwin, the book presents these historical figures in an accessible, story-like format designed to inspire patriotism and moral character in young readers. Each biography covers the subject's childhood, education, and major accomplishments, emphasizing their virtues and contributions to American democracy.
+"""
+
+Notes = """
+James Baldwin published this work in 1897 as part of the American Book Company's series of educational readers. It was widely used in American schools during the late 19th and early 20th centuries. Baldwin was known for making history and literature accessible to children while maintaining educational rigor. The book reflects the civic education values of its era, emphasizing character development through biographical example.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This is "Vänrikki Stoolin tarinat" (The Tales of Ensign Stål) by Johan Ludvig Runeberg, a foundational work of Finnish literature. The text shows it's a Finnish translation by Paavo Cajander. This is Runeberg's epic poetry cycle about the Finnish War (1808-1809), originally written in Swedish.
+
+<result>
+Title = "Vänrikki Stoolin tarinat (The Tales of Ensign Stål)"
+Author = "Johan Ludvig Runeberg"
+Year = 1848
+
+Tags = ["poetry", "historical", "non-fiction", "war-literature"]
+
+Summary = """
+The Tales of Ensign Stål (Fänrik Ståls sägner in Swedish, Vänrikki Stoolin tarinat in Finnish) is an epic poetry cycle by Johan Ludvig Runeberg, considered the national epic of Finland. The work consists of heroic narrative poems depicting events and characters from the Finnish War of 1808-1809, when Sweden (of which Finland was then a part) fought against Russia. Through portraits of soldiers, officers, and civilians, Runeberg celebrates courage, sacrifice, and patriotism. The first poem, "Maamme" (Our Land), became Finland's national anthem. This edition is Paavo Cajander's Finnish translation of the Swedish original, published in 1889, with this particular printing from 1918.
+"""
+
+Notes = """
+The original work was published in two parts: the first collection (Edellinen kokoelma) in 1848 and the second collection (Jälkimäinen kokoelma) in 1860. I chose 1848 as the year because that marks the original publication of the first and most significant portion of the work, which established its historical and cultural importance. While this Project Gutenberg text is Cajander's 1889 Finnish translation, the work's historical significance dates to Runeberg's original 1848 Swedish publication.
+"""
+</result>

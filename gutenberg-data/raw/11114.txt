@@ -1,0 +1,15 @@
+<result>
+Title = "Debate on Woman Suffrage in the Senate of the United States"
+Author = "Henry W. Blair, Joseph E. Brown, Joseph N. Dolph, George G. Vest, George F. Hoar"
+Year = 1887
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a transcript of the official Congressional debate on woman suffrage that took place in the United States Senate during the second session of the 49th Congress on December 8, 1886, and January 25, 1887. The debate centers on Senate Joint Resolution 5, which proposed a constitutional amendment to extend voting rights to women. The document features speeches by five senators: Henry W. Blair (New Hampshire) who introduced and supported the resolution, and senators Brown, Dolph, Vest, and Hoar who presented various perspectives on the issue. This debate represents a significant moment in the long struggle for women's suffrage in America, which would not be achieved nationally until the 19th Amendment was ratified in 1920. The document captures the political, social, and philosophical arguments both for and against women's voting rights as articulated by leading senators of the period.
+"""
+
+Notes = """
+The year 1887 reflects the publication date of this official government document, which is the most historically accurate date for this particular record. While the debates themselves occurred in December 1886 and January 1887, the document was compiled and published by the government in 1887 as indicated on the title page.
+"""
+</result>

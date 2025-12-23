@@ -1,0 +1,15 @@
+<result>
+Title = "A Popular History of France From The Earliest Times, Volume III"
+Author = "François Pierre Guillaume Guizot"
+Year = 1869
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+This is Volume III of François Guizot's comprehensive six-volume popular history of France, covering French history from its earliest times through the medieval period. This particular volume focuses on the Hundred Years' War, including the reigns of Charles VI and Charles VII, the role of the Dukes of Burgundy, and the remarkable story of Joan of Arc (1422-1461). Guizot (1787-1874) was a prominent French historian and statesman who served as Prime Minister under King Louis-Philippe. His multi-volume history of France became one of the most influential and widely-read historical works of the 19th century, combining scholarly rigor with narrative accessibility for a general audience.
+"""
+
+Notes = """
+Guizot's original French edition "Histoire de France" was published in multiple volumes starting in the 1870s, though some editions began appearing in the late 1860s. The English translation "A Popular History of France From The Earliest Times" was published around 1869-1876. I've chosen 1869 as it represents the approximate start of the English publication of this work. Guizot himself was not Catholic (he was Protestant/Huguenot), so this does not receive a 'catholic' tag despite covering Catholic France's history.
+"""
+</result>

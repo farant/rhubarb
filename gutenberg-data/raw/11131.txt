@@ -1,0 +1,17 @@
+I recognize this work - it's Guy de Maupassant's "Pierre et Jean" (Pierre and John), a psychological novel published in 1888. The text you've shared includes Maupassant's famous preface "Le Roman" (The Novel), which is a theoretical essay on the novel form. This preface is actually one of the most important pieces of French literary criticism of the 19th century.
+
+<result>
+Title = "Pierre et Jean"
+Author = "Guy de Maupassant"
+Year = 1888
+
+Tags = ["fiction", "psychological-novel"]
+
+Summary = """
+"Pierre et Jean" is a psychological novel by Guy de Maupassant, published in 1888. The story concerns two brothers, Pierre and Jean Roland, whose relationship becomes strained when Jean unexpectedly inherits a fortune from a family friend. Pierre begins to suspect that Jean may be the illegitimate son of the benefactor, leading to a psychological crisis as he grapples with this suspicion and its implications for his mother's fidelity and his own identity. The novel is considered one of Maupassant's masterpieces and a landmark of psychological realism. It is preceded by a famous preface titled "Le Roman" (The Novel), in which Maupassant articulates his theory of the novel and defends different approaches to fiction writing, arguing against narrow critical definitions of what constitutes a "proper" novel.
+"""
+
+Notes = """
+The 1888 publication date represents the original French publication. Maupassant was not a Catholic author - he was a naturalist writer in the tradition of Émile Zola and Gustave Flaubert (his mentor). The work contains mature psychological and moral themes exploring adultery and family secrets, making it inappropriate for children despite lacking explicit content. The preface "Le Roman" included in this edition is often studied separately as an important work of literary theory.
+"""
+</result>

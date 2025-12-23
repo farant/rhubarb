@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Martin Hyde: The Duke's Messenger" by John Masefield. John Masefield (1878-1967) was a renowned English poet and writer who became Poet Laureate of the United Kingdom. This is a historical adventure novel for young readers set during the Monmouth Rebellion of 1685.
+
+<result>
+Title = "Martin Hyde: The Duke's Messenger"
+Author = "John Masefield"
+Year = 1910
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+A historical adventure novel by John Masefield set during the Monmouth Rebellion of 1685 in England. The story follows young Martin Hyde who becomes a messenger for the Duke of Monmouth during his ill-fated attempt to claim the English throne from James II. The novel is written for young readers and combines historical events with adventure, featuring Martin's multiple departures from home, sea voyages, and involvement in the dramatic events surrounding the rebellion and the eventual Battle of Sedgemoor. Masefield, who would later become Poet Laureate, drew on his knowledge of English history and his own experiences at sea to create this engaging tale of loyalty, courage, and adventure during a turbulent period in British history.
+"""
+
+Notes = """
+First published in 1910. This was one of Masefield's earlier works, written before he achieved fame as Poet Laureate (appointed 1930). The novel was part of the early 20th century tradition of historical adventure fiction for young readers.
+"""
+</result>

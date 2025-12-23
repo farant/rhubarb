@@ -1,0 +1,27 @@
+I need to analyze this Project Gutenberg text to identify the work, author, and publication details.
+
+From the text, I can see:
+- This is "The Call of the North"
+- By Stewart Edward White
+- It's described as "Being a Dramatized Version of CONJURORS HOUSE: A Romance of the Free Forest"
+- The author also wrote "The Westerners" and "The Blazed Trail"
+
+Stewart Edward White was an American author known for adventure novels. "The Call of the North" was published in 1903 as a novelization/dramatization of his earlier work "The Conjuror's House" (1901). Since this is specifically the dramatized version, 1903 would be the appropriate year.
+
+This is a wilderness adventure novel set in the Canadian North, typical of White's adventure fiction. It's adventure/frontier fiction appropriate for older children and young adults, written by a non-Catholic American author.
+
+<result>
+Title = "The Call of the North"
+Author = "Stewart Edward White"
+Year = 1903
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+"The Call of the North" is a dramatized novelization of Stewart Edward White's earlier work "The Conjuror's House" (1901). Set in the remote Canadian wilderness, it tells a tale of adventure in the fur-trading frontier of the Hudson's Bay Company territory. White was an American author known for his adventure novels set in the American and Canadian wilderness, including "The Blazed Trail" and "The Westerners." His works typically featured rugged outdoor settings, frontier life, and the clash between civilization and the wild North. This particular work dramatizes the romance and danger of life in the northern forests, focusing on trappers, traders, and the harsh beauty of the wilderness.
+"""
+
+Notes = """
+This is the 1903 dramatized version rather than the original 1901 "The Conjuror's House," so 1903 is the appropriate publication year for this specific text.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as "Un Cœur Simple" (A Simple Heart/A Simple Soul) by Gustave Flaubert, one of his "Trois Contes" (Three Tales). Let me provide the structured information:
+
+<result>
+Title = "A Simple Heart"
+Author = "Gustave Flaubert"
+Year = 1877
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'A Simple Heart' (Un Cœur Simple) is one of Gustave Flaubert's 'Three Tales' (Trois Contes), published in 1877. It tells the story of Félicité, a devoted servant woman who lives a life of humble service to her mistress Madame Aubain in the Norman town of Pont-l'Évêque. The story follows Félicité's simple, faithful life over half a century, exploring themes of devotion, loss, and the nature of sanctity through the eyes of an uneducated but profoundly loyal servant. Despite experiencing numerous personal losses and disappointments, Félicité maintains her capacity for love and devotion, ultimately transferring her religious fervor to a stuffed parrot. The work is considered one of Flaubert's masterpieces, demonstrating his characteristic attention to realistic detail while showing unexpected sympathy for his humble protagonist. It's a meditation on faith, suffering, and the dignity of simple lives.
+"""
+
+Notes = """
+Published in 1877 as part of 'Trois Contes' (Three Tales), which also included 'The Legend of St. Julian the Hospitaller' and 'Herodias'. This was one of Flaubert's last works, written after the critical and commercial disappointment of some of his previous novels. The story is notable for its compassionate portrayal of working-class life and has been interpreted as Flaubert's most humane work.
+"""
+</result>

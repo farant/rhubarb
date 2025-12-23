@@ -1,0 +1,15 @@
+<result>
+Title = "On Revenues"
+Author = "Xenophon"
+Year = -355
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"On Revenues" (Greek: Poroi) is a short political and economic treatise by the ancient Greek historian and philosopher Xenophon. Written near the end of his life around 355 B.C., this work addresses the financial difficulties facing Athens and proposes practical solutions to alleviate poverty and improve the city-state's economy. Xenophon suggests various revenue-generating schemes including the development of silver mines at Laurium, encouraging foreign merchants (metics) to settle in Athens, and improving trade infrastructure. The work is notable as one of the earliest systematic economic policy proposals in Western literature. It reflects Xenophon's pragmatic approach to statecraft and his concern for social stability, arguing that economic prosperity would reduce Athens' tendency to exploit its allies unjustly.
+"""
+
+Notes = """
+I've used -355 (355 B.C.) as the year, which represents the approximate date of composition near the end of Xenophon's life. He lived from 431-354 B.C., and this work was written in his final years, likely around 355 B.C. The negative number indicates B.C./BCE dating. This is a secular classical Greek work on political economy, so it does not receive the 'catholic' tag. While it discusses important political philosophy, the technical economic content makes it less suitable for children, so I have not included 'appropriate-for-children' tag.
+"""
+</result>

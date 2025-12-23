@@ -1,0 +1,15 @@
+<result>
+Title = "Trips to the Moon"
+Author = "Lucian of Samosata"
+Year = 165
+
+Tags = ["fiction", "satire", "science-fiction", "appropriate-for-children"]
+
+Summary = """
+"Trips to the Moon" (also known as "A True History" or "Vera Historia") is a satirical work by the 2nd-century Greek-Syrian writer Lucian of Samosata. Written around 165 CE, it is one of the earliest works of science fiction in Western literature. The narrative describes fantastical adventures including a journey to the moon, encounters with alien beings, and cosmic warfare. Lucian explicitly frames the work as a satire of exaggerated travel narratives and tall tales popular in his era, openly admitting that everything in it is a lie. The work parodies historians and authors who claimed fantastic adventures were true, including Homer and the travel writers of antiquity. Despite being nearly two millennia old, it contains remarkably imaginative proto-science-fiction elements that would influence writers for centuries to come.
+"""
+
+Notes = """
+I chose circa 165 CE as the composition date, which is when Lucian is believed to have written this work during the Roman Imperial period. This is a translation by Thomas Francklin (18th century) with editing by Henry Morley (19th century), but the original Greek text dates to the 2nd century CE. For a historical timeline, the original composition date is most educationally appropriate as this represents one of the earliest works of fictional space travel in world literature.
+"""
+</result>

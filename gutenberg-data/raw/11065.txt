@@ -1,0 +1,15 @@
+<result>
+Title = "Aunt Mary's Primer"
+Author = "Unknown/Anonymous"
+Year = 1851
+
+Tags = ["non-fiction", "educational", "appropriate-for-children"]
+
+Summary = """
+Aunt Mary's Primer is an early reading primer published in 1851, designed to teach young children how to read using a specific phonetic method. The book is adorned with 120 illustrations to engage young learners and includes instructional guidance for teachers. The primer advocates for a whole-word reading approach rather than traditional spelling methods, suggesting that children learn to read more quickly by pronouncing complete words or syllables at once rather than spelling them out letter by letter. This represents an interesting pedagogical debate of the mid-19th century about the best methods for teaching literacy. The work is typical of Victorian-era educational materials for children, combining moral instruction with basic literacy skills.
+"""
+
+Notes = """
+The year 1851 is clearly stated on the title page of this edition. The author is identified only as "Aunt Mary," which was likely a pseudonym commonly used for children's educational materials in the Victorian era. The actual author's identity is unknown. This type of anonymity was common for educational primers and children's books of this period.
+"""
+</result>

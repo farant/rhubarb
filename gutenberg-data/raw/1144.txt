@@ -1,0 +1,15 @@
+<result>
+Title = "In the Cage"
+Author = "Henry James"
+Year = 1898
+
+Tags = ["fiction", "novella"]
+
+Summary = """
+"In the Cage" is a novella by Henry James that tells the story of an unnamed young telegraphist working in a London telegraph office (the "cage" of the title). The protagonist becomes fascinated by the lives of her wealthy customers, particularly a couple conducting an illicit affair, whose telegrams she processes. Through her work, she gains intimate knowledge of their private affairs and begins to imagine herself as having a deeper connection to their world than her humble position would suggest. The novella explores themes of class division, voyeurism, knowledge and power, and the limitations imposed by social position. It's a characteristic James work examining consciousness and the inner life of a character who exists on the margins of high society.
+"""
+
+Notes = """
+First published in 1898. The work was initially serialized in book form later that same year. This date represents the original publication year of the complete novella.
+"""
+</result>

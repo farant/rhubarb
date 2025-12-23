@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "The Wonderful Bed" by Gertrude Knevels, published in 1912. This appears to be a children's fantasy/fiction book with illustrations by Emily Hall Chamberlin.
+
+<result>
+Title = "The Wonderful Bed"
+Author = "Gertrude Knevels"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Wonderful Bed' is a children's fantasy story by Gertrude Knevels, illustrated by Emily Hall Chamberlin. Based on the chapter titles and illustration descriptions (featuring characters named Ann and Rudolf encountering magical objects like an angry warming-pan and visits to a goose), this appears to be an imaginative adventure tale where children interact with enchanted toys and household objects, typical of early 20th-century children's literature. The story involves Aunt Jane's old toys coming to life and leading to various magical adventures.
+"""
+
+Notes = """
+The year 1912 is clearly stated on the title page and represents the original publication date. This is an American children's book from the early 20th century, during a golden age of illustrated children's literature.
+"""
+</result>

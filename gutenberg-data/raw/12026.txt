@@ -1,0 +1,15 @@
+<result>
+Title = "Poems New and Old"
+Author = "John Freeman"
+Year = 1920
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poetry by John Freeman (1880-1929), an English poet, essayist, and literary critic associated with the Georgian Poetry movement. Freeman was known for his contemplative nature poetry and philosophical verse. The collection includes both new works and previously published poems, showcasing his distinctive style characterized by "lofty ardours," "desolate landscapes," and "strange, though beautiful, rhythms and forms of verse" as noted by contemporary reviewers. The press notices included in the front matter indicate this was a well-received collection, with reviewers praising Freeman's individualistic approach to nature poetry and the autobiographical spiritual quality of his work. Freeman was considered one of the significant poets of his generation, writing during the early 20th century period of English poetry.
+"""
+
+Notes = """
+The year 1920 is straightforward as it appears as the publication date in the book itself (published by Selwyn and Blount, Ltd.). This represents the actual publication year of this particular collection.
+"""
+</result>

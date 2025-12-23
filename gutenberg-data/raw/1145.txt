@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "Rupert of Hentzau"
+Author = "Anthony Hope"
+Year = 1898
+
+Tags = ["fiction", "adventure", "romance"]
+
+Summary = """
+Rupert of Hentzau is the sequel to Anthony Hope's famous novel The Prisoner of Zenda (1894). The story continues the adventures in the fictional kingdom of Ruritania, following the aftermath of the events in the first novel. Narrated by Fritz von Tarlenheim, the novel deals with the consequences of the conspiracy involving the Duke of Strelsau and King Rudolf. The book is a classic of the adventure romance genre and helped establish the "Ruritanian romance" subgenre of adventure fiction set in fictional European kingdoms. Anthony Hope (born Anthony Hope Hawkins, 1863-1933) was an English novelist and playwright who gained fame with his Ruritanian novels.
+"""
+
+Notes = """
+First published in 1898, three years after The Prisoner of Zenda. This date represents the original publication year of the novel. While Hope was raised in the Church of England tradition, this is adventure fiction rather than religious literature, so it does not receive a 'catholic' tag. The novel is generally considered appropriate adventure fiction but deals with mature themes of political intrigue, romance, and conflict, so I have not tagged it as appropriate-for-children.
+"""
+</result>

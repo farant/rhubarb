@@ -1,0 +1,15 @@
+<result>
+Title = "Purple Springs"
+Author = "Nellie L. McClung"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Purple Springs is a novel by Nellie L. McClung, a prominent Canadian suffragist, social activist, and author. The book is part of her "Pearlie Watson" trilogy, following the earlier novels "Sowing Seeds in Danny" (1908) and "The Second Chance" (1910). Purple Springs continues the story of Pearlie Watson and her community, exploring themes of women's rights, social reform, and rural Canadian life in the early 20th century. McClung was one of the Famous Five who successfully campaigned for women to be recognized as "persons" under Canadian law. Her fiction often incorporated her progressive social views while maintaining an accessible, often humorous narrative style that appealed to a broad readership.
+"""
+
+Notes = """
+The year 1921 is clearly stated in the Project Gutenberg text as the publication date. This was published during the height of McClung's career as both an author and activist, shortly after women gained the right to vote in Canada (1918 federally, though Manitoba where McClung was active granted suffrage in 1916).
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work from the Project Gutenberg header and the author information. This is a collection of Algonquin folklore tales compiled by missionary Egerton Ryerson Young, who worked extensively with Indigenous peoples in Canada during the late 19th century.
+
+<result>
+Title = "Algonquin Indian Tales"
+Author = "Egerton R. Young"
+Year = 1903
+
+Tags = ["non-fiction", "folklore", "anthropology", "appropriate-for-children", "indigenous-stories"]
+
+Summary = """
+'Algonquin Indian Tales' is a collection of traditional stories and folklore from the Algonquin (Ojibway/Ojibwe) people of Canada, compiled by Methodist missionary Egerton Ryerson Young. Young spent many years living among Indigenous communities in Manitoba and Ontario, learning their languages and customs. The collection includes traditional tales featuring characters like Nanahboozhoo (Nanabozho), a central figure in Algonquin mythology. The book is prefaced by a letter from Chief Charles Big Canoe (Keche Chemon) of the Ojibways at Georgina Island, Lake Simcoe, endorsing Young's effort to preserve these oral traditions in written form. These tales represent an important early documentation of Algonquin oral tradition, though filtered through Young's missionary perspective.
+"""
+
+Notes = """
+The year 1903 is clearly stated on the title page. While Young was a Christian missionary whose work was part of the broader colonial context, this collection represents an early ethnographic effort to preserve Indigenous oral traditions that might otherwise have been lost. The endorsement by Chief Big Canoe suggests some level of Indigenous approval of the preservation effort, though the stories are presented through Young's cultural lens.
+"""
+</result>

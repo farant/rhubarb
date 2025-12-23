@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Sacred and Profane Love" by Arnold Bennett, published in 1905 as indicated in the title page. Arnold Bennett was an English novelist, and this particular work is one of his earlier novels.
+
+<result>
+Title = "Sacred and Profane Love: A Novel in Three Episodes"
+Author = "Arnold Bennett"
+Year = 1905
+
+Tags = ["fiction", "romance", "literary-fiction"]
+
+Summary = """
+"Sacred and Profane Love" is an early novel by Arnold Bennett, the English writer known for his realistic portrayals of life in the Staffordshire Potteries region. This novel, structured in three episodes, explores themes of romantic love, passion, and the contrast between idealized spiritual love and earthly desire. The work is dedicated to fellow novelist Eden Phillpotts and includes an epigraph from Guy de Maupassant about the immortality of the kiss, suggesting the novel's focus on romantic and sensual themes. Bennett was part of the realist movement in English literature and was known for his psychological insight into characters and relationships.
+"""
+
+Notes = """
+The year 1905 is clearly stated on the title page as the publication date. Arnold Bennett (1867-1931) was not a Catholic author, so the 'catholic' tag is not included. The novel deals with adult themes of romantic and sexual love, as suggested by the Maupassant epigraph, so it is not marked as appropriate for children.
+"""
+</result>

@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Lake" by George Moore, an Irish novelist. The text includes a French dedicatory epistle dated August 17, 1905, addressed to Édouard Dujardin. The publication date shown is 1921 (London: William Heinemann), but this appears to be a later edition.
+
+"The Lake" was originally published in 1905. The novel tells the story of Father Oliver Gogarty, a Catholic priest in Ireland who experiences a crisis of faith and eventually leaves the priesthood. It's a psychological novel exploring themes of religion, doubt, desire, and personal freedom.
+
+George Moore (1852-1933) was an Irish writer, though he was not a practicing Catholic in his later life and was actually quite critical of the Catholic Church. While he was born into a Catholic family, his works often critiqued religious institutions, so this would not qualify as a "catholic" work in the sense of having a nihil obstat or imprimatur.
+
+<result>
+Title = "The Lake"
+Author = "George Moore"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+The Lake is a psychological novel by Irish writer George Moore, first published in 1905. It tells the story of Father Oliver Gogarty, a Catholic priest in rural Ireland who experiences a profound crisis of faith. After driving away a young schoolteacher from his parish due to his harsh judgment of her perceived moral failings, he begins to question his vocation and the constraints of his priesthood. The novel explores his inner turmoil, his growing sense of isolation, and his ultimate decision to leave the priesthood in search of personal freedom and authenticity. Written in a stream-of-consciousness style that was innovative for its time, the work examines themes of religious doubt, repression, desire, and the conflict between duty and individual self-realization.
+"""
+
+Notes = """
+The text shows a 1921 London edition by William Heinemann, but the work was originally published in 1905. The French dedicatory epistle is dated August 17, 1905, and is addressed to Édouard Dujardin. While George Moore was born into an Irish Catholic family, he became critical of the Catholic Church in his later life, and this novel actually critiques Catholic institutions rather than supporting them, so it does not receive the 'catholic' tag.
+"""
+</result>

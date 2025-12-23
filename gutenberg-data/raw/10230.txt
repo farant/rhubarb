@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Remarks from a Visit to Edison Laboratory"
+Author = "Josephus Daniels"
+Year = 1922
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an audio recording of remarks made by Josephus Daniels during a visit to Thomas Edison's laboratory. Daniels (1862-1948) served as Secretary of the Navy under President Woodrow Wilson from 1913-1921, during which time he worked closely with Edison on various naval projects, particularly during World War I. Edison chaired the Naval Consulting Board during the war. This recording captures Daniels' reflections on Edison's work and their collaboration. The audio is preserved as part of the Edison National Historic Site collection and provides a historical primary source document of the relationship between these two important American figures of the early 20th century.
+"""
+
+Notes = """
+The exact date of this recording is not specified in the Gutenberg metadata, but given Daniels' tenure as Secretary of the Navy (1913-1921) and the nature of naval collaboration with Edison during WWI, this likely dates from approximately 1917-1922. I've chosen 1922 as a reasonable estimate for the post-war period when such reflective remarks would have been appropriate. This is an educated estimate based on the historical context rather than a definitively documented date.
+"""
+</result>

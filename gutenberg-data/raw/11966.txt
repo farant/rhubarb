@@ -1,0 +1,15 @@
+<result>
+Title = "The Village Sunday-School: With brief Sketches of Three of Its Scholars"
+Author = "John C. Symons"
+Year = 1850
+
+Tags = ["non-fiction", "appropriate-for-children", "religious"]
+
+Summary = """
+This is a mid-19th century Sunday school narrative published by the Methodist Episcopal Church's Sunday-School Union. The book contains brief biographical sketches of three Sunday school students (James, Thomas, and George, as indicated by the frontispiece illustration) and was written to encourage Sunday school teachers in their work. The author, John C. Symons, explicitly states that the narratives are "substantially true" but names and places have been changed. The work was revised by Daniel P. Kidder, a prominent Methodist minister and educator. These types of Sunday school narratives were extremely popular in 19th century America as both educational and moral instruction tools for children and as encouragement for teachers.
+"""
+
+Notes = """
+The year 1850 is definitively established by the title page. This appears to be the first American edition, published in New York by Lane & Scott for the Methodist Episcopal Church's Sunday-School Union. While the original author John C. Symons may have written an earlier British edition (given the spelling "labour" in the preface), this particular version with Daniel P. Kidder's revisions is clearly dated 1850. I did not classify this as "catholic" despite the religious content, as it is clearly a Methodist publication and would not have received Catholic imprimatur.
+"""
+</result>

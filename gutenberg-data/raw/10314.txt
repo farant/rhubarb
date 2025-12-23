@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+From the text, I can see this is clearly "The Sonnets of Michael Angelo Buonarroti and Tommaso Campanella," translated by John Addington Symonds and published in 1878. This is a translation of sonnets by two Italian authors - the famous Renaissance artist Michelangelo Buonarroti (1475-1564) and the philosopher/poet Tommaso Campanella (1568-1639).
+
+<result>
+Title = "The Sonnets of Michael Angelo Buonarroti and Tommaso Campanella"
+Author = "Michelangelo Buonarroti, Tommaso Campanella (translated by John Addington Symonds)"
+Year = 1878
+
+Tags = ["non-fiction", "poetry", "catholic"]
+
+Summary = """
+This is John Addington Symonds' English translation of sonnets by two major Italian figures: Michelangelo Buonarroti (1475-1564), the renowned Renaissance artist, sculptor, and poet, and Tommaso Campanella (1568-1639), the Dominican friar, philosopher, and poet. Michelangelo's sonnets are deeply spiritual and philosophical works that reflect on art, beauty, divine love, and mortality. Campanella's sonnets address philosophical and theological themes. This 1878 translation by Symonds, a Victorian scholar and translator known for his work on the Italian Renaissance, was the first to render these sonnets into rhymed English verse.
+"""
+
+Notes = """
+I chose 1878 as the year because this is a significant scholarly translation work by Symonds rather than simply the original composition dates. While Michelangelo wrote his sonnets in the 16th century and Campanella in the late 16th/early 17th century, this particular work is notable as Symonds' translation achievement. Both original authors were Catholic - Michelangelo was a devout Catholic whose faith deeply informed his art and poetry, and Campanella was a Dominican friar, making this decidedly a Catholic work.
+"""
+</result>

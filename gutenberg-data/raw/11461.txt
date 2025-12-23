@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work, author, and relevant metadata.
+
+This appears to be an anthology of Armenian literature compiled and translated into English. The text shows it's from Project Gutenberg ebook #11461, with a special introduction by Robert Arnot, M.A., from a revised edition published in 1904.
+
+This is a collection/anthology work rather than a single-author original work. The compiler/editor would be Robert Arnot, and since this is a translation and compilation of various Armenian literary works spanning different periods, the appropriate year would be 1904 (the publication year of this revised edition).
+
+<result>
+Title = "Armenian Literature: Comprising Poetry, Drama, Folk-Lore, and Classic Traditions"
+Author = "Various (compiled/translated by Robert Arnot, M.A.)"
+Year = 1904
+
+Tags = ["non-fiction", "anthology", "translation", "folklore", "appropriate-for-children"]
+
+Summary = """
+This anthology represents the first English translation of Armenian literary works, including poetry, drama, folk-lore, and classic traditions. Compiled and translated by Robert Arnot, M.A., the collection aims to preserve and present Armenian cultural heritage to English-speaking audiences. The introduction discusses the ecclesiastical nature of much early Armenian literature, explaining how Christianity's arrival in Armenia in the first century AD (preached by apostles Thaddeus and Bartholomew) shaped the literary tradition. The work notes that much pre-Christian Armenian mythology and heroic poetry was destroyed by Gregory the Illuminator during Christianization, though folk traditions and ballads survived among the people into the twelfth century.
+"""
+
+Notes = """
+Year chosen is 1904, the publication date of this revised edition. This is a compilation/translation work rather than an original composition, so the date reflects when this English anthology was made available rather than when the original Armenian works were created (which span many centuries).
+"""
+</result>

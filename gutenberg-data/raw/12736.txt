@@ -1,0 +1,17 @@
+I can identify this work based on the clear title page and preface content.
+
+<result>
+Title = "Masters of the English Novel: A Study of Principles and Personalities"
+Author = "Richard Burton"
+Year = 1909
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+This is a critical study of major English novelists by Richard Burton (1861-1940), an American literary critic and professor. The book examines the principles and personalities of significant English novel writers, organizing its analysis around the two main approaches to fiction: realism and romanticism. Burton adheres to the traditional critical principle of primarily discussing deceased authors, though he makes exceptions for writers like Thomas Hardy whose fiction careers were essentially complete. The work includes studies of major Victorian and late-Victorian novelists including George Meredith, Thomas Hardy, and Robert Louis Stevenson, analyzing their contributions to the development of the English novel.
+"""
+
+Notes = """
+The book was first published in 1909. Internal evidence supports this dating: the preface mentions that Meredith "has but just passed away" (Meredith died in May 1909), Hardy had stopped writing novels over a decade earlier (his last novel "Jude the Obscure" was 1895), and Stevenson had been dead for some time (died 1894). This is a work of academic literary criticism examining the development and principles of English fiction through biographical and analytical studies of major novelists.
+"""
+</result>

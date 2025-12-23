@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "On Horsemanship"
+Author = "Xenophon"
+Year = -350
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+'On Horsemanship' (Greek: Peri Hippikes) is a treatise by the ancient Greek historian and soldier Xenophon on the selection, care, and training of horses. Written in the 4th century BC, it is one of the earliest surviving works on equestrian matters and provides practical advice on buying horses, evaluating their qualities, training them for war or display, and proper equipment for cavalry. The work reflects Xenophon's extensive military experience and his expertise in cavalry tactics. It remains a significant historical document for understanding ancient Greek horsemanship and military practices.
+"""
+
+Notes = """
+The date -350 (350 BC) is an approximation for when this work was likely written, during Xenophon's later years. Xenophon lived from approximately 431-354 BC. The work was probably composed during his exile period, potentially while he was living in Scillus or Corinth in the latter part of his life. Some scholars date it to around 360-350 BC. The negative year notation follows the astronomical year numbering convention where 1 BC = year 0, 2 BC = year -1, etc., though if you prefer the traditional "350 BC" notation that would also be appropriate for your timeline purposes.
+"""
+</result>

@@ -1,0 +1,27 @@
+I need to analyze this Project Gutenberg text to identify the title, author, year, and other metadata.
+
+From the text provided, I can see:
+
+**Title**: "Мислите в главите" (Thoughts in Heads) - this is shown both in Cyrillic and translated to English
+**Author**: Хари Стоянов (Harry Stojan/Harry Stoyanov) - a Bulgarian author
+**Copyright year**: 1976, published in Varna (Варна)
+**Language**: Bulgarian (в българско/In Bulgarian)
+**Genre**: "Гимназиален роман" (High-school Novel/Gymnasium Novel)
+
+This appears to be a Bulgarian young adult or school novel from the Communist era (1976). The title refers to "thoughts in heads" and it's described as a gymnasium (high school) novel, suggesting it deals with teenage/student life. Given the 1976 date and Bulgarian origin during the Communist period, this would not be a Catholic work. The author Хари Стоянов (Harry Stoyanov) appears to be a Bulgarian writer from that era.
+
+<result>
+Title = "Мислите в главите (Thoughts in Heads)"
+Author = "Хари Стоянов (Harry Stoyanov)"
+Year = 1976
+
+Tags = ["fiction", "young-adult", "school-novel"]
+
+Summary = """
+'Thoughts in Heads' is a Bulgarian high-school novel (gymnasium novel) by Harry Stoyanov, originally published in 1976 in Varna, Bulgaria. As a 'gymnasium novel,' it likely explores the lives, relationships, and inner experiences of high school students during the Communist era in Bulgaria. This genre typically focuses on coming-of-age themes, educational experiences, and the social dynamics of youth during that period in Bulgarian history.
+"""
+
+Notes = """
+Published in 1976 during Bulgaria's Communist period. The work is in Bulgarian and represents Bulgarian youth literature of that era. Not appropriate to tag as 'appropriate-for-children' without reading the full content, and definitely not a Catholic work given the author, time period, and cultural context.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, No. 329"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British periodical published in the 19th century that featured illustrated articles on a wide variety of topics including history, architecture, natural history, biography, poetry, and general knowledge. This particular issue (No. 329) from August 30, 1828 includes an article about a new church being built in Staines, Middlesex, along with historical notes about the town's antiquarian associations, its ancient bridge, and the reconstruction project following the partial collapse of the old Gothic church during Sunday service. The periodical was designed to educate and entertain a general audience with accessible, illustrated content.
+"""
+
+Notes = """
+This is issue No. 329 dated Saturday, August 30, 1828, as clearly stated in the text. The Mirror was a weekly periodical, so the year 1828 is definitive for this particular issue. The publication typically featured contributions from various writers and was edited during different periods by different individuals, hence "Various" for the author field.
+"""
+</result>

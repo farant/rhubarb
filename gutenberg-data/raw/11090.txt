@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Industrial Progress and Human Economics"
+Author = "James Hartness"
+Year = 1921
+
+Tags = ["non-fiction"]
+
+Summary = """
+"Industrial Progress and Human Economics" is a work by James Hartness, a prominent American mechanical engineer, inventor, and industrialist who served as Governor of Vermont (1921-1923). Published in 1921 by the State of Vermont, this book examines Vermont's human resources and labor potential, advocating for efficient industrial organization and the optimal use of human energy in manufacturing. Hartness was known for his progressive management ideas and his work in precision manufacturing. The book reflects early 20th-century progressive thought about scientific management, industrial efficiency, and the relationship between workers and economic development. It was written during a period of significant industrial change in America and represents Hartness's vision for Vermont's economic future through better organization of labor and industry.
+"""
+
+Notes = """
+The year 1921 is clearly stated in the publication itself. James Hartness was a significant figure in American manufacturing history, particularly known for his work with the Jones & Lamson Machine Company and his innovations in machine tool design. This work was published using private funds as a state-sponsored publication during his governorship or just before it.
+"""
+</result>

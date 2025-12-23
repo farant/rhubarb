@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, year, and other requested information.
+
+<result>
+Title = "The Wolf Hunters: A Tale of Adventure in the Wilderness"
+Author = "James Oliver Curwood"
+Year = 1908
+
+Tags = ["fiction", "adventure", "appropriate-for-children", "wilderness"]
+
+Summary = """
+'The Wolf Hunters' is an adventure novel by James Oliver Curwood, one of the early 20th century's most popular writers of wilderness and animal stories. The book follows young protagonists on a hunting expedition in the Canadian wilderness, where they encounter mysteries involving ancient skeletons, wolves, and dangerous adversaries called 'Woongas'. Curwood was known for his vivid depictions of the northern wilderness and his stories often featured themes of survival, friendship between different cultures, and man's relationship with nature. This appears to be one of his earlier works, written during his most productive period as an adventure novelist.
+"""
+
+Notes = """
+The year 1908 is clearly stated in the book's front matter. This was published during Curwood's early career as a wilderness adventure novelist. He would go on to become one of the highest-paid authors of the 1920s, with his works frequently adapted for film.
+"""
+</result>

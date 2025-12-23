@@ -1,0 +1,15 @@
+<result>
+Title = "Recipes Tried and True"
+Author = "Ladies' Aid Society of the First Presbyterian Church of Marion, Ohio"
+Year = 1895
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a community cookbook compiled by the Ladies' Aid Society of the First Presbyterian Church in Marion, Ohio. It represents a collection of tested recipes contributed by church members, typical of the late 19th century American church cookbook tradition. These fundraising cookbooks were popular among church groups and served both as practical kitchen resources and as social documents preserving regional culinary traditions and home economics knowledge of the era.
+"""
+
+Notes = """
+The exact publication year is not stated in the provided text excerpt. Based on the style and context of late 19th century church community cookbooks and the fact that Project Gutenberg indicates it entered the public domain, I've estimated circa 1895, though it could range from approximately 1890-1900. The Gutenberg digitization occurred in October 1997. Without access to the full text or original publication information, this year is an educated estimate based on the typical period when such church cookbooks were most popular and would now be in the public domain.
+"""
+</result>

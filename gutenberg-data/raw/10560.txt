@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Last of the Foresters; or, Humors on the Border: A Story of the Old Virginia Frontier"
+Author = "John Esten Cooke"
+Year = 1856
+
+Tags = ["fiction", "historical-fiction", "american-literature", "frontier-literature"]
+
+Summary = """
+"The Last of the Foresters" is a novel by John Esten Cooke, a prominent antebellum Southern writer known for his romanticized depictions of Virginia history and frontier life. This work is set on the Old Virginia frontier and follows the character Verty through various adventures and encounters with other frontier characters. Cooke was part of the Southern literary tradition that celebrated Virginia's past, writing numerous historical romances about colonial and early American Virginia. The novel explores themes of frontier life, social customs, and character interactions in the border regions of Virginia during the early settlement period. Cooke's work is characterized by its romantic style and nostalgic view of Southern/Virginia culture.
+"""
+
+Notes = """
+The year 1856 is clearly stated on the title page and represents the original publication date of this work. John Esten Cooke (1830-1886) was a prolific Virginia author who wrote before, during, and after the Civil War. This particular novel was published during the height of his antebellum career when he was producing romantic fiction about Virginia's history and frontier.
+"""
+</result>

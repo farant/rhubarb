@@ -1,0 +1,17 @@
+I recognize this work as a collection of tales from the Maharani Sunity Devee of Cooch Behar, a notable Indian royal figure who wrote in English during the British Raj period. Based on the content and historical context, I can provide the following information:
+
+<result>
+Title = "Bengal Dacoits and Tigers"
+Author = "Maharanee Sunity Devee"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+A collection of true stories about dacoits (bandits/robbers) and tigers in Bengal and northeastern India, written by Maharani Sunity Devee of Cooch Behar (1864-1932). The Maharani was one of the first Indian women to write an autobiography in English and was known for her progressive views and literary works. This book presents firsthand accounts and stories she collected about encounters with dangerous criminals and wild tigers in colonial India, offering valuable insights into life in Bengal during the British Raj period. The tales are divided into two parts: stories of dacoits (organized bandits who were a significant problem in rural India) and stories of man-eating or dangerous tigers.
+"""
+
+Notes = """
+The work was published around 1916. Maharani Sunity Devee was the first Maharani of Cooch Behar and mother of the famous Maharani Gayatri Devi of Jaipur. She was educated in Victorian England and wrote several books in English. While she was likely Hindu rather than Catholic, this represents an important historical document of colonial India written by an Indian royal woman, which was quite rare for the period.
+"""
+</result>

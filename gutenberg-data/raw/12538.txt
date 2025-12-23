@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Based on the content, this is clearly "Account of a Tour in Normandy, Volume II" (also published as "Letters from Normandy") by Dawson Turner. This is a travel and architectural study work from the early 19th century. Dawson Turner (1775-1858) was an English banker, botanist, and antiquary who made this tour of Normandy to study its medieval architecture and history.
+
+<result>
+Title = "Account of a Tour in Normandy, Volume II"
+Author = "Dawson Turner"
+Year = 1820
+
+Tags = ["non-fiction", "travel", "architecture", "history"]
+
+Summary = """
+This is the second volume of Dawson Turner's detailed account of his tour through Normandy, France. Written as a series of letters addressed to Rev. James Layton, the work documents Turner's investigation of the architectural antiquities of the Norman duchy, with particular focus on medieval churches, abbeys, and castles. Turner examines sites including the Abbey of Jumièges, Château Gaillard, the Cathedral of Evreux, and numerous other architectural landmarks. The work combines architectural analysis with historical observations about the region and its inhabitants, and was originally published with numerous engravings. Turner was part of the early 19th-century antiquarian movement that sought to document and preserve knowledge of medieval architecture before it was lost to time and neglect.
+"""
+
+Notes = """
+The full work was published in two volumes in 1820. This represents an important early example of architectural tourism and antiquarian scholarship, predating the Victorian Gothic Revival movement. Turner's systematic documentation of Norman architecture was influential in preserving knowledge of medieval buildings, some of which have since been damaged or destroyed.
+"""
+</result>

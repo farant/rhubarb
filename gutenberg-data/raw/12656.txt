@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Boy Allies at Liège" by Clair W. Hayes, a work of juvenile World War I adventure fiction. The text itself provides the publication year of 1915 on the title page. This appears to be part of the "Boy Allies" series, which was published during WWI as contemporary adventure fiction aimed at young readers.
+
+<result>
+Title = "The Boy Allies at Liège; Or, Through Lines of Steel"
+Author = "Clair W. Hayes"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children", "war-fiction", "adventure"]
+
+Summary = """
+'The Boy Allies at Liège' is a World War I adventure novel for young readers, part of the popular 'Boy Allies' series by Clair W. Hayes. The story follows two young American boys, Hal Paine and Chester Crawford, caught in Europe at the outbreak of World War I in 1914. The book opens with the declaration of war and follows their adventures through the German invasion of Belgium, specifically around the strategic city of Liège. These books were written as contemporary fiction during WWI and aimed to provide exciting, patriotic adventure stories for American youth during the conflict.
+"""
+
+Notes = """
+Published in 1915, this book was written as contemporary war fiction during the actual events of World War I. The series was quite popular with young American readers and multiple volumes were published throughout the war years. 'Clair W. Hayes' was likely a pseudonym used by the publisher for this series.
+"""
+</result>

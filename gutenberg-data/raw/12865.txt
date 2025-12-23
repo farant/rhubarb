@@ -1,0 +1,21 @@
+I'll help you identify this work. Let me analyze the text you've provided.
+
+This is clearly a work by George Sand (pen name of Amantine Lucile Aurore Dupin), a French Romantic writer. The text is in French and appears to be the opening of "Mattea," one of her Venetian tales. The vivid description of Venice with its gondolas, the Piazzetta, the Doge's Palace, and Saint Mark's Lion are characteristic of Sand's Italian-set stories.
+
+George Sand wrote several works set in Venice during and after her travels there in the 1830s. "Mattea" was published in 1835-1836.
+
+<result>
+Title = "Mattea"
+Author = "George Sand"
+Year = 1835
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"Mattea" is a novella by French Romantic author George Sand, set in Venice. It tells a dramatic tale of love, betrayal, and revenge in the atmospheric setting of the Venetian Republic. The story is characteristic of Sand's romantic style and her fascination with Italian settings, particularly Venice, which she visited in 1834 with Alfred de Musset. The work showcases Sand's descriptive prowess in evoking the unique atmosphere of Venice with its canals, palaces, and maritime culture. Like much of Sand's fiction, it explores themes of passion, social constraints, and human nature within a vividly realized historical and geographical setting.
+"""
+
+Notes = """
+"Mattea" was first published in 1835-1836. George Sand (1804-1876) was not Catholic despite being raised in the faith; she became quite critical of organized religion and held more progressive, secular views. Therefore this work does not receive a 'catholic' tag. The work is adult fiction dealing with mature romantic and dramatic themes, so it is not tagged as appropriate for children.
+"""
+</result>

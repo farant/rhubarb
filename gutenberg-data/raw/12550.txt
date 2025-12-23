@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as *The Mirror of Literature, Amusement, and Instruction*, a popular Victorian periodical magazine. This is specifically Volume XIX, No. 540, dated Saturday, March 31, 1832.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XIX, No. 540"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published from 1822 to 1849. It featured a mixture of literary pieces, historical articles, engravings, and general knowledge aimed at middle-class readers. This particular issue (March 31, 1832) contains an article about Bankside, the southern bank of the Thames, focusing on its historical significance as the location of Shakespeare's Globe Theatre, bear-baiting arenas, and other places of entertainment in early modern London. The periodical was known for its affordable price (2 pence) and educational content, making literature and knowledge accessible to a broader audience during the Victorian era.
+"""
+
+Notes = """
+This is a periodical publication rather than a single-author work, so "Various" is appropriate for the author field. The year 1832 is clearly stated in the masthead. The work is not marked as "appropriate-for-children" as Victorian periodicals often contained material on topics like the brothels (Stews/Bordello) mentioned in this article that would not be considered suitable for children by contemporary standards. While published in a Christian society, it's a secular periodical and doesn't warrant the "catholic" tag.
+"""
+</result>

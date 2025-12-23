@@ -1,0 +1,17 @@
+I recognize this text as "Cora" by Georges Sand (the pen name of Amantine Lucile Aurore Dupin). This is a short story/novella written by the famous French Romantic novelist. Based on the style and her active writing period, this appears to be from the 1830s-1840s era of her career. "Cora" was published in 1833.
+
+<result>
+Title = "Cora"
+Author = "Georges Sand"
+Year = 1833
+
+Tags = ["fiction"]
+
+Summary = """
+"Cora" is a short story by Georges Sand, the pen name of French novelist Amantine Lucile Aurore Dupin. The narrative begins with a first-person narrator returning from Île Bourbon (now Réunion) in difficult circumstances, who obtains a modest position in the postal administration and is sent to a small provincial French town. The story opens with the narrator's self-consciousness about his outdated colonial attire and appearance, which draws unwelcome attention in the provincial setting. Sand was one of the most prolific and influential writers of the Romantic period in France, known for her exploration of social themes, passionate characters, and challenges to conventional gender roles.
+"""
+
+Notes = """
+Georges Sand was the most famous female French novelist of the 19th century. While she was raised Catholic, her mature work reflected more complex religious and social views, including critiques of social conventions. This particular work would not typically carry a nihil obstat or imprimatur. The story was published in 1833 during her early productive period as a writer.
+"""
+</result>

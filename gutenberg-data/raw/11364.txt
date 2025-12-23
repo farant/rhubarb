@@ -1,0 +1,15 @@
+<result>
+Title = "Clarissa, or, the History of a Young Lady"
+Author = "Samuel Richardson"
+Year = 1748
+
+Tags = ["fiction", "epistolary-novel", "tragedy"]
+
+Summary = """
+Clarissa Harlowe is one of the longest novels in the English language and is considered Samuel Richardson's masterwork. Written as a series of letters (epistolary novel), it tells the tragic story of Clarissa Harlowe, a virtuous young woman from a wealthy family who is pursued by the rake Robert Lovelace. The novel explores themes of virtue, morality, family duty, and the consequences of seduction in 18th-century English society. Clarissa's family pressures her to marry a wealthy but odious suitor, leading her to fall under the influence of the charming but manipulative Lovelace. The work was enormously influential in its time and remains a landmark of English literature, known for its psychological depth and moral seriousness.
+"""
+
+Notes = """
+The novel was first published in multiple volumes between December 1747 and December 1748. I've chosen 1748 as it represents the year when the complete work became available and is most commonly cited as the publication date. This is Volume VI of the nine-volume edition shown in the Project Gutenberg text.
+"""
+</result>

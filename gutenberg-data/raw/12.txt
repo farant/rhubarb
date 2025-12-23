@@ -1,0 +1,17 @@
+I recognize this immediately as Lewis Carroll's classic sequel to Alice's Adventures in Wonderland!
+
+<result>
+Title = "Through the Looking-Glass, and What Alice Found There"
+Author = "Lewis Carroll"
+Year = 1871
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Through the Looking-Glass is the sequel to Alice's Adventures in Wonderland, written by Lewis Carroll (pen name of Charles Lutwidge Dodgson). The story follows Alice as she steps through a mirror into a fantastical world structured as a giant chess game. Alice becomes a white pawn attempting to reach the eighth rank and become a queen. Along the way she encounters memorable characters including Tweedledum and Tweedledee, Humpty Dumpty, the Red Queen, the White Queen, and the White Knight. The narrative is famously structured around chess moves, as indicated by the chess diagram at the beginning. Like its predecessor, the book is filled with wordplay, logic puzzles, and poems including "Jabberwocky" and "The Walrus and the Carpenter." It's considered one of the finest works of literary nonsense and has been beloved by children and adults alike for over 150 years.
+"""
+
+Notes = """
+First published in December 1871 (though dated 1872 by the publisher). This is a straightforward edition of Carroll's original work without substantial commentary, so the year reflects the original publication date. The chess game structure shown at the beginning is integral to understanding the narrative progression.
+"""
+</result>

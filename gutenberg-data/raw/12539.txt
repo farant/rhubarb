@@ -1,0 +1,15 @@
+<result>
+Title = "Observations upon the Windward Coast of Africa"
+Author = "Joseph Corry"
+Year = 1807
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a first-hand account by Joseph Corry documenting his observations of the Windward Coast of Africa (roughly corresponding to present-day Sierra Leone, Liberia, and surrounding coastal regions) during his travels in 1805-1806. The work describes the religion, character, customs, and practices of the native populations, particularly the Mandingo people. Corry proposes systems for "civilizing" the interior populations and details the natural and commercial resources of the region. The work includes an appendix with a letter to Lord Howick addressing the abolition of the slave trade. Published in 1807, the same year Britain abolished the slave trade, this work reflects the colonial and paternalistic attitudes of the early 19th century British imperial perspective on Africa, while also documenting valuable ethnographic and geographic information about West African societies during this period.
+"""
+
+Notes = """
+The year 1807 is the original publication date as stated on the title page. This work is a primary historical document reflecting early 19th-century British colonial attitudes and the contemporary discourse around slavery abolition. While historically significant, the work contains perspectives and language that reflect the racial prejudices and colonial ideologies of its era.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "American Negro Slavery: A Survey of the Supply, Employment and Control of Negro Labor As Determined by the Plantation Regime"
+Author = "Ulrich Bonnell Phillips"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'American Negro Slavery' is a comprehensive historical study by Ulrich Bonnell Phillips examining the institution of slavery in America from its African origins through the antebellum plantation system. The work traces the slave trade from West Africa (Guinea), analyzes the development of slavery across different regional economies (tobacco, rice, sugar, cotton), and examines the economic, social, and legal dimensions of the plantation system. Phillips was a prominent early 20th-century historian who helped establish the field of Southern history, though his interpretations have been heavily criticized by later scholars for presenting a paternalistic view of slavery that minimized its brutality and injustices. The book covers topics including the maritime slave trade, plantation management, slave labor conditions, the domestic slave trade, urban slavery, free Black populations, and the economic aspects of the institution. While historically significant as an early academic treatment of slavery, modern scholars regard it as deeply flawed and shaped by the racist assumptions of its era.
+"""
+
+Notes = """
+First published in 1918. This work was influential in early 20th-century historiography but is now considered problematic for its sympathetic portrayal of slaveholders and minimization of slavery's horrors. Phillips relied heavily on plantation records but interpreted them through a lens that modern historians have thoroughly rejected. The book is studied today primarily as an example of how historical scholarship can reflect the biases of its time rather than as a reliable account of slavery itself.
+"""
+</result>

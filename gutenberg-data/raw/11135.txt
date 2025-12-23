@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Monarch, The Big Bear of Tallac" by Ernest Thompson Seton, published in 1919 as stated on the title page. Ernest Thompson Seton was a renowned naturalist, wildlife artist, and author who wrote many popular animal stories that blended natural history with narrative. This is one of his animal biography books, following his successful pattern of telling stories about individual wild animals.
+
+<result>
+Title = "Monarch, The Big Bear of Tallac"
+Author = "Ernest Thompson Seton"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children", "animal-story", "natural-history"]
+
+Summary = """
+'Monarch, The Big Bear of Tallac' is one of Ernest Thompson Seton's animal biography stories, published in 1919 with 100 illustrations by the author. Seton was a pioneering naturalist and wildlife artist who created a popular genre of realistic animal stories that combined natural history observation with narrative storytelling. This book tells the epic tale of a grizzly bear in the Tallac region (likely referring to Mount Tallac in the Lake Tahoe area of California). The story was reportedly told to Seton by rough mountain men around a campfire, and he transformed their fragmented accounts into a cohesive narrative. Like his other works such as 'Wild Animals I Have Known' and 'Biography of a Grizzly', this book aims to portray the life and personality of an individual wild animal with both scientific accuracy and dramatic storytelling.
+"""
+
+Notes = """
+The year 1919 is clearly stated on the title page of this edition. This was the original publication year. Seton was highly influential in early nature writing and conservation movements, and his animal stories were widely read by both children and adults in the early 20th century.
+"""
+</result>

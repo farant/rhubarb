@@ -1,0 +1,15 @@
+<result>
+Title = "It Can Be Done: Poems of Inspiration"
+Author = "Joseph Morris and St. Clair Adams"
+Year = 1921
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+This is an anthology of inspirational poetry compiled by Joseph Morris and St. Clair Adams, designed to provide encouragement, courage, and motivation to readers. The collection focuses primarily on contemporary poems (for its era) written in accessible, everyday language, along with some classic works of enduring comfort. Each poem is introduced with contextual commentary to enhance understanding, and the volume includes biographical information about the contributing poets. The anthology's purpose is to serve as a practical companion for readers seeking uplift during difficult times, offering diverse perspectives on perseverance and achievement.
+"""
+
+Notes = """
+Based on the Project Gutenberg ebook number (10763) and the foreword's emphasis on "very recent poems" and "living poets," this anthology was most likely published in the early 1920s. The year 1921 is consistent with the style and approach described. This type of motivational poetry anthology was particularly popular in the post-World War I era.
+"""
+</result>

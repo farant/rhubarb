@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "American Political Ideas Viewed from the Standpoint of Universal History" by John Fiske, a collection of three lectures delivered at the Royal Institution of Great Britain in May 1880. The work was published in 1880 following lectures he gave in Boston (1879) and London (1879-1880).
+
+<result>
+Title = "American Political Ideas Viewed from the Standpoint of Universal History"
+Author = "John Fiske"
+Year = 1880
+
+Tags = ["non-fiction", "political-philosophy", "history"]
+
+Summary = """
+A collection of three lectures delivered at the Royal Institution of Great Britain in May 1880, examining fundamental ideas of American politics from the perspective of universal history. John Fiske, an American philosopher and historian, was invited to give these lectures following the success of his 1879 lectures on American discovery and colonization at University College London. The work attempts to illustrate how American political ideas relate to and emerge from the broader sweep of human history. Fiske was known for applying evolutionary theory and historical analysis to political and social development.
+"""
+
+Notes = """
+Year chosen: 1880, when the lectures were delivered and the book was published. This represents the original publication date of this specific work, following Fiske's successful lecture tour in England (1879-1880).
+"""
+</result>

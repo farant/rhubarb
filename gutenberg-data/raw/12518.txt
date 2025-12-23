@@ -1,0 +1,15 @@
+<result>
+Title = "The Adventures of a Forty-Niner: An Historic Description of California, with Events and Ideas of San Francisco and Its People in Those Early Days"
+Author = "Daniel Knower"
+Year = 1894
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a firsthand historical account by Daniel Knower, who was a participant in the California Gold Rush of 1849 (hence "Forty-Niner"). The book provides a description of California during the gold rush era, focusing particularly on San Francisco and the people who populated it during those formative early days. It covers the discovery of gold in California in 1848 and the subsequent rush that transformed the region, including discussion of other mineral resources like the Almaden quicksilver mine at San José and later the Comstock Lode silver strikes in Nevada. The work is dedicated to three prominent California pioneers: Colonel Jonathan Stevenson, Colonel John C. Frémont, and Captain John A. Sutter. This type of memoir provides valuable primary source material about one of the most significant migration events in American history.
+"""
+
+Notes = """
+The year 1894 is clearly stated on the title page as the publication date. This is when Knower, looking back on his experiences from approximately 45 years earlier, published his memoir of the gold rush period. While the events described took place primarily from 1848-1850s, the work itself is a retrospective account published in 1894.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work by James M. Beck, a prominent American lawyer and politician who served as Solicitor General of the United States. This is his influential constitutional study that was widely read in the early 20th century.
+
+<result>
+Title = "The Constitution of the United States: A Brief Study of the Genesis, Formulation and Political Philosophy of the Constitution of the United States"
+Author = "James M. Beck"
+Year = 1922
+
+Tags = ["non-fiction", "legal", "political-philosophy", "history"]
+
+Summary = """
+A comprehensive study of the United States Constitution written by James M. Beck, who served as Solicitor General of the United States. The work examines the origins, development, and philosophical underpinnings of the Constitution. Written at a time when there was significant debate about constitutional interpretation and the scope of federal power, Beck's work defended traditional constitutionalism and warned against what he saw as threats to constitutional principles. The book includes a preface by the Earl of Balfour, reflecting its international reception and Beck's connection to Gray's Inn in London, where he was an Honorary Bencher.
+"""
+
+Notes = """
+The date 1922 is clearly established by the dedication dated July 14, 1922, from Chamonix. Beck wrote this during a period of significant constitutional debate in the United States, particularly concerning the expansion of federal power during and after World War I. The work reflects conservative constitutional interpretation of its era.
+"""
+</result>

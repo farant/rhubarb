@@ -1,0 +1,17 @@
+Looking at this text from Project Gutenberg, I can identify this as a collection of essays by Charles Lamb. Let me provide the structured information:
+
+<result>
+Title = "Elia and The Last Essays of Elia"
+Author = "Charles Lamb"
+Year = 1823
+
+Tags = ["non-fiction", "essays", "appropriate-for-children"]
+
+Summary = """
+This is a collection of Charles Lamb's most famous essays, published under the pseudonym 'Elia'. The work represents Lamb's richest literary period (1820-1826) and contains personal, humorous, and nostalgic essays on various subjects including childhood memories, London life, and literary topics. Charles Lamb (1775-1834) was an English essayist and poet, best known for these essays and for his collaboration with his sister Mary Lamb on 'Tales from Shakespeare'. The Elia essays are considered masterpieces of English prose, known for their gentle humor, personal voice, and psychological insight. This volume edited by E.V. Lucas combines both 'Elia' (1823) and 'The Last Essays of Elia' (1833), representing the complete Elia collection.
+"""
+
+Notes = """
+I chose 1823 as the year because that's when the first 'Elia' collection was published, which represents the primary work and the beginning of Lamb's major literary achievement. While 'The Last Essays of Elia' appeared in 1833, the 1823 date is more historically significant as it marks when Lamb's pseudonymous essays first appeared in book form, establishing his reputation. The essays themselves were written between 1820-1826 (with one as early as 1811), but 1823 represents the pivotal publication date.
+"""
+</result>

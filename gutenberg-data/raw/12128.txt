@@ -1,0 +1,15 @@
+<result>
+Title = "A Tiger's Skin"
+Author = "W.W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"A Tiger's Skin" is a humorous short story by W.W. Jacobs, originally published as part of his collection "The Lady of the Barge and Others" (1902). Jacobs was an English author best known for his maritime tales and his famous horror story "The Monkey's Paw." This particular story is a light comedy set in the English village of Claybury, centered around the "Cauliflower" pub. Jacobs specialized in droll, understated humor depicting everyday life in English villages and along the docks, with memorable characters and gentle satire. His work was immensely popular in the late Victorian and Edwardian eras.
+"""
+
+Notes = """
+The collection "The Lady of the Barge and Others" was first published in 1902. While this Project Gutenberg edition was released in 2004, the original publication date of the work is 1902. This was during Jacobs' most productive period as a writer, when he was regularly contributing to journals like The Strand Magazine and publishing collections of his comic stories.
+"""
+</result>

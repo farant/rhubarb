@@ -1,0 +1,15 @@
+<result>
+Title = "Nan Sherwood's Winter Holidays; Or, Rescuing the Runaways"
+Author = "Annie Roe Carr"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the Nan Sherwood series, a popular girls' boarding school adventure series written by Annie Roe Carr (a pseudonym used by the Stratemeyer Syndicate). The series follows Nan Sherwood and her friends at Lakeview Hall, a boarding school in Michigan. This particular volume focuses on winter holiday adventures, including winter sports and a rescue mission involving runaways. The series was typical of early 20th century girls' literature, emphasizing friendship, adventure, and moral character development in a wholesome boarding school setting.
+"""
+
+Notes = """
+The year 1916 is clearly stated on the title page. This is a Stratemeyer Syndicate publication, part of the formula fiction that was popular for young readers in the early 20th century. Annie Roe Carr was likely a house pseudonym rather than a single author.
+"""
+</result>

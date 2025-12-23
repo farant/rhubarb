@@ -1,0 +1,17 @@
+I recognize this classic children's adventure novel! Let me provide you with the structured information about this work.
+
+<result>
+Title = "The Swiss Family Robinson; or, Adventures in a Desert Island"
+Author = "Johann David Wyss"
+Year = 1812
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Swiss Family Robinson is a classic adventure novel about a Swiss family shipwrecked on a deserted island. The story follows the family's survival, resourcefulness, and gradual transformation of the island into a comfortable home through their labor, perseverance, and ingenuity. The narrative focuses on the character development of the four sons—Fritz, Ernest, Jack, and Franz—as they face various adventures and challenges. The book became immensely popular in children's literature for its themes of family cooperation, self-reliance, and moral instruction. This edition includes a completion by Baroness de Montolieu, as the original author Johann David Wyss died before finishing the work.
+"""
+
+Notes = """
+The original German work "Der Schweizerische Robinson" was written by Johann David Wyss and first published in 1812. The work was later completed by Baroness Isabelle de Montolieu in French, and this appears to be an English translation of that complete version. While various editions and translations appeared throughout the 19th century with different publication dates, 1812 represents the original publication date of the first part, which is most historically accurate for timeline purposes.
+"""
+</result>

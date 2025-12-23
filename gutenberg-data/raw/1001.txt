@@ -1,0 +1,17 @@
+<result>
+Title = "The Divine Comedy (Inferno)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "epic", "philosophical"]
+
+Summary = """
+The Divine Comedy is one of the most important works of world literature, written by the Italian poet Dante Alighieri. The Inferno is the first part of this three-part epic poem (followed by Purgatorio and Paradiso). It describes Dante's journey through Hell, guided by the Roman poet Virgil. The work is an allegory of the soul's journey toward God, structured as a vision of the afterlife. The Inferno depicts nine circles of Hell, each punishing different sins with increasing severity as one descends deeper. This translation is by the American poet Henry Wadsworth Longfellow, first published in 1867.
+
+The Divine Comedy is not only a religious and moral work but also a masterpiece of medieval literature that synthesizes classical learning with Christian theology. It has profoundly influenced Western literature, theology, and culture. Dante wrote in the Italian vernacular rather than Latin, making the work accessible to a broader audience and helping to establish Italian as a literary language.
+"""
+
+Notes = """
+The year 1320 represents approximately when Dante completed the entire Divine Comedy (he began writing around 1308 and the Inferno was likely completed around 1314, with the full work finished shortly before his death in 1321). I chose 1320 as a reasonable mid-point for the completion of the work. This is Longfellow's English translation from the 19th century, but the appropriate historical date for a timeline would be when Dante originally composed it in the early 14th century.
+"""
+</result>

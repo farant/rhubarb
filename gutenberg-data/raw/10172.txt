@@ -1,0 +1,15 @@
+<result>
+Title = "Menuett G Flat Major and Valse Bluette"
+Author = "Kathleen Parlow (Violin), et al"
+Year = 1903
+
+Tags = ["historical-document", "audio-recording", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of classical violin pieces performed by Kathleen Parlow, a renowned Canadian violinist who was a child prodigy and became one of the most celebrated violinists of the early 20th century. The recording includes "Menuett in G Flat Major" and "Valse Bluette" (a light waltz). This appears to be an Edison cylinder or phonograph recording from the Thomas Edison collection, preserved at the Edison National Historic Site. Parlow studied with Leopold Auer and toured extensively, making numerous recordings during her career.
+"""
+
+Notes = """
+The year is approximate based on the Edison recording era and Parlow's active recording period. Kathleen Parlow (1890-1963) began making recordings as a teenager in the early 1900s. Edison's recording operations were most active from the 1890s through the 1920s. Without more specific dating information in the Gutenberg text, I've estimated circa 1903 as a reasonable date when such salon pieces would have been recorded by Edison, though it could range from 1900-1915. This is a performance/recording rather than a composed work with a single publication date.
+"""
+</result>

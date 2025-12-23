@@ -1,0 +1,15 @@
+<result>
+Title = "Hamburgische Dramaturgie"
+Author = "Gotthold Ephraim Lessing"
+Year = 1769
+
+Tags = ["non-fiction", "literary-criticism", "theater", "drama-theory"]
+
+Summary = """
+The Hamburg Dramaturgy (Hamburgische Dramaturgie) is Lessing's seminal work of dramatic theory and theatrical criticism, written during his tenure as critic and dramaturg at the Hamburg National Theatre. It consists of a series of essays analyzing contemporary theatrical productions and plays, while developing Lessing's theories about drama. The work is considered one of the most important contributions to German literary criticism and dramatic theory of the Enlightenment period. Lessing challenges French classical dramatic conventions and advocates for a more naturalistic approach to theater, heavily influenced by Aristotle's Poetics and Shakespeare's work.
+"""
+
+Notes = """
+The Hamburgische Dramaturgie was published in installments from 1767-1769, with the complete work appearing in 1769. I've chosen 1769 as it represents the completion and publication of the full work. Lessing wrote these critical essays while serving as the resident critic at Germany's first permanent German-language theater in Hamburg. The work had profound influence on German theater and literature, helping establish German dramatic tradition independent from French neoclassical models.
+"""
+</result>

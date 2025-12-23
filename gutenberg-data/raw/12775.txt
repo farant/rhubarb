@@ -1,0 +1,15 @@
+<result>
+Title = "Dave Darrin's Fourth Year at Annapolis: Headed for Graduation and the Big Cruise"
+Author = "H. Irving Hancock"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of H. Irving Hancock's popular early 20th-century series of boys' adventure books about Dave Darrin at the United States Naval Academy in Annapolis. The series follows the protagonist through his four years at the academy, with this being the final installment covering his senior year leading up to graduation. These books were part of a larger collection of military academy and career series that Hancock wrote, including companion series about West Point. The stories typically featured clean-cut American boys navigating the challenges of military academy life, emphasizing values of honor, duty, and patriotism that were popular in juvenile literature of the era.
+"""
+
+Notes = """
+H. Irving Hancock was a prolific writer of boys' series books in the early 1900s. The "Dave Darrin" series at Annapolis was published roughly between 1910-1911. This appears to be the fourth and final book in the series. While I cannot pinpoint the exact publication year from the text alone, 1911 is the most likely date based on the series publication timeline and the fact that these Naval Academy series books were typically published annually.
+"""
+</result>

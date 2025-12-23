@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+From the text, I can see this is "The Congo and Other Poems" by Vachel Lindsay (Nicholas Vachel Lindsay), first published in September 1914 in New York. The text includes an introduction by Harriet Monroe, editor of "Poetry" magazine, and mentions that Lindsay was an Illinois artist who lived from 1879-1931.
+
+<result>
+Title = "The Congo and Other Poems"
+Author = "Vachel Lindsay"
+Year = 1914
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by American poet Vachel Lindsay (1879-1931), featuring his most famous work "The Congo" along with other poems. Lindsay was known for his innovative approach to poetry, incorporating performance elements and what he called "the higher vaudeville" - poems meant to be read aloud with rhythmic, almost musical qualities. The collection includes twenty-two "moon poems" and features stage directions for oral performance. Lindsay was discovered by Harriet Monroe's influential magazine "Poetry" in 1912-1913, when his poem "General William Booth Enters into Heaven" was published. He was part of the early 20th century American poetry renaissance and brought a unique, performative style to his work that emphasized sound and rhythm. Lindsay was associated with the Midwest and Illinois specifically, and his work often celebrated American themes and figures.
+"""
+
+Notes = """
+The year 1914 represents the first edition published in New York in September of that year. This Project Gutenberg text is transcribed from a reprint of that original 1914 edition.
+"""
+</result>

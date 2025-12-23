@@ -1,0 +1,25 @@
+I need to analyze this Project Gutenberg text to identify the work and provide structured information about it.
+
+From the text, I can see:
+- Title: "The Reason Why"
+- Author: Elinor Glyn
+- Publication year shown: 1911
+- The author is noted as also writing "His Hour" and "Three Weeks"
+
+Elinor Glyn was a British novelist known for romantic fiction, often considered scandalous for her time. "The Reason Why" (1911) is one of her romance novels. She was not a Catholic author, and her works were known for being risqué by early 20th-century standards. This is clearly a work of fiction, a romantic novel that would not be appropriate for children given the passionate/romantic themes typical of Glyn's work.
+
+<result>
+Title = "The Reason Why"
+Author = "Elinor Glyn"
+Year = 1911
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+"The Reason Why" is a romantic novel by British author Elinor Glyn, published in 1911. Glyn was known for her passionate romance novels that pushed the boundaries of propriety in Edwardian England. Her works often featured intense romantic and sensual themes, making her both popular and controversial. This novel, like her other works such as "Three Weeks," explores themes of passion, attraction, and romantic relationships among the upper classes. The story appears to involve a marriage and the complex dynamics between the bride and groom, with typical Glyn themes of suppressed desire and social constraints.
+"""
+
+Notes = """
+1911 is the original publication year as indicated in the text. Elinor Glyn (1864-1943) was a pioneering writer of romantic fiction who later became a Hollywood screenwriter. Her works were considered scandalous for their frank treatment of passion and desire, though they seem tame by modern standards.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States From Interviews with Former Slaves, Volume III, Florida Narratives"
+Author = "Federal Writers' Project, Works Progress Administration"
+Year = 1941
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is part of the Federal Writers' Project's Slave Narratives collection, a massive Works Progress Administration initiative that documented first-hand accounts of formerly enslaved people during the 1930s. Between 1936-1938, WPA interviewers conducted thousands of interviews with elderly African Americans who had lived through slavery before the Civil War. Volume III specifically contains narratives from Florida. These interviews provide invaluable primary source material about the lived experience of slavery in America, including daily life, work conditions, family relationships, and the transition to freedom. The collection represents one of the most important historical documentation projects of 20th century America, preserving voices and experiences that would otherwise have been lost to history.
+"""
+
+Notes = """
+Year is 1941, when this volume was published and assembled by the Library of Congress, though the interviews themselves were conducted 1936-1938. This is a collective work compiled by the Federal Writers' Project rather than having a single author. The actual narratives are from multiple formerly enslaved individuals listed as informants (Anderson, Andrews, Austin, Berry, etc.). I've tagged it as appropriate-for-children because it's primary source historical documentation, though educators should preview content as some narratives may contain difficult subject matter about slavery.
+"""
+</result>

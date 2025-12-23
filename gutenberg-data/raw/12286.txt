@@ -1,0 +1,15 @@
+<result>
+Title = "Flowers and Flower-Gardens: With an Appendix of Practical Instructions and Useful Information Respecting the Anglo-Indian Flower-Garden"
+Author = "David Lester Richardson"
+Year = 1855
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a horticultural work by David Lester Richardson, who served as Principal of the Hindu Metropolitan College in India. The book focuses on flowers and flower gardening specifically adapted for the Anglo-Indian (British colonial India) context. Richardson, a British educator and author who spent much of his career in India, wrote several works on literary and cultural topics. This particular work combines descriptions of flowers with practical gardening advice tailored to the Indian climate and conditions faced by British residents and others maintaining gardens in colonial India during the mid-19th century.
+"""
+
+Notes = """
+The exact publication year is not stated in the Project Gutenberg header, but based on Richardson's active period in India and his other publications (he published 'Literary Leaves' and 'Literary Recreations' during the 1840s-1850s), this work likely dates to approximately 1855. Richardson was active as an educator and writer in Calcutta during the mid-19th century. The date 1855 represents a best estimate for the original publication based on his known bibliography and career timeline.
+"""
+</result>

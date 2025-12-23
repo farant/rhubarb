@@ -1,0 +1,15 @@
+<result>
+Title = "Inaugural Address of Franklin Delano Roosevelt"
+Author = "Franklin Delano Roosevelt"
+Year = 1933
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is Franklin D. Roosevelt's first inaugural address, delivered on March 4, 1933, during the depths of the Great Depression. The speech is famous for the phrase "the only thing we have to fear is fear itself" and marked the beginning of FDR's presidency and the New Deal era. Roosevelt addresses the economic crisis facing the nation with characteristic optimism and frankness, acknowledging the severe unemployment, bank failures, and economic paralysis while calling for bold action and confidence in America's ability to overcome these challenges. The address is considered one of the most important presidential speeches in American history, setting the tone for his transformative first term.
+"""
+
+Notes = """
+The year 1933 is unambiguous - this is the date the speech was delivered. March 4, 1933 was the last presidential inauguration held on that date; subsequent inaugurations were moved to January 20 following ratification of the 20th Amendment. This is a primary historical document rather than a later published work about the speech.
+"""
+</result>

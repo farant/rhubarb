@@ -1,0 +1,15 @@
+<result>
+Title = "What I Remember"
+Author = "Thomas Adolphus Trollope"
+Year = 1887
+
+Tags = ["non-fiction", "memoir", "appropriate-for-children"]
+
+Summary = """
+"What I Remember" is a two-volume memoir by Thomas Adolphus Trollope, elder brother of the famous novelist Anthony Trollope. The work chronicles his long and eventful life, including his travels throughout Europe, his literary connections, and his years living in Florence, Italy. Thomas Adolphus was a prolific writer and historian who became deeply involved in Italian affairs and culture. The memoir includes personal recollections of notable Victorian literary figures including Charles Dickens and Elizabeth Barrett Browning, as well as detailed accounts of his travels in England, France, Ireland, and Italy. The work provides valuable insights into Victorian literary society and expatriate life in 19th-century Italy.
+"""
+
+Notes = """
+The year 1887 is clearly stated on the title page as the publication date of this edition. This represents when Trollope published this memoir late in his life (he lived from 1810-1892), reflecting back on his experiences. Volume II continues his reminiscences, covering his life in Florence and his associations with major literary figures of the Victorian era.
+"""
+</result>

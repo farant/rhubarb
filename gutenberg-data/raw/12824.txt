@@ -1,0 +1,29 @@
+I'll help you identify this work. Let me analyze the text you've provided.
+
+This is a work by Aleksis Kivi (1834-1872), one of Finland's most important writers. The text shows three works in Finnish:
+
+1. "Olviretki Schleusingenissä" (A Beer Trip to Schleusingen) - a four-act dramatic sketch
+2. "Leo ja Liina" 
+3. "Alma"
+
+The publication date shown is 1916, but this appears to be a posthumous edition. "Olviretki Schleusingenissä" was written around 1866-1867 (note the play is set in "kesällä 1866" - summer 1866). However, Kivi's major dramatic works were mostly written in the 1860s.
+
+The play appears to be a comedy set during the Austro-Prussian War of 1866, involving soldiers drinking beer in Schleusingen, Germany. The character names (Patrik the captain, various soldiers, Maura the tavern keeper, etc.) and the setting suggest a comedic military farce.
+
+Given that this is Aleksis Kivi's work and was likely written in the 1860s but published posthumously, I'll use approximately 1866-1867 as the most historically accurate date for the composition of the main work.
+
+<result>
+Title = "Olviretki Schleusingenissä; Leo ja Liina; Alma"
+Author = "Aleksis Kivi"
+Year = 1867
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+A collection of three works by Aleksis Kivi, Finland's national author. The main work, "Olviretki Schleusingenissä" (A Beer Trip to Schleusingen), is a four-act comedic play set during the Austro-Prussian War of 1866 in the German town of Schleusingen. It depicts soldiers on a drinking expedition, featuring characters like Captain Patrik and various military personnel in farcical situations. The collection also includes two other works: "Leo ja Liina" and "Alma." Kivi is considered the founder of Finnish-language literature and is best known for his novel "Seven Brothers" (Seitsemän veljestä).
+"""
+
+Notes = """
+While this edition was published in 1916 (posthumously, as Kivi died in 1872), the play "Olviretki Schleusingenissä" was written circa 1866-1867, contemporaneous with the historical events it depicts. I've chosen 1867 as the composition date rather than the 1916 publication date, as this better represents the historical significance of when Kivi created the work during Finland's national awakening period.
+"""
+</result>

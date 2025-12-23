@@ -1,0 +1,15 @@
+<result>
+Title = "Chinese Literature: Comprising the Analects of Confucius, the Sayings of Mencius, the Shi-King, the Travels of Fâ-Hien, and the Sorrows of Han"
+Author = "Various (Compiled by Epiphanius Wilson)"
+Year = 1900
+
+Tags = ["non-fiction", "philosophy", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a compilation volume of classical Chinese literature edited by Epiphanius Wilson, published in 1900 as part of the Colonial Press's world literature series. The collection includes several foundational texts of Chinese philosophy and culture: the Analects of Confucius (containing the teachings and sayings of Confucius from around 479 BCE), the Sayings of Mencius (teachings of the Confucian philosopher Mencius from around 300 BCE), the Shi-King (the Classic of Poetry, one of the Five Classics of ancient Chinese literature), the Travels of Fâ-Hien (a 5th-century CE Buddhist monk's account of his pilgrimage to India), and the Sorrows of Han (likely referring to classical Chinese poetry). This anthology was designed to introduce Western readers to core texts of Chinese philosophical and literary tradition during a period of increased Western interest in Eastern thought.
+"""
+
+Notes = """
+I chose 1900 as the publication year because this is explicitly a compiled anthology with critical and biographical sketches by Wilson, making it a distinct editorial work rather than a simple translation. The individual texts span from approximately 500 BCE (Confucius) to the 5th century CE (Fâ-Hien), but the compilation itself as an educational anthology is the relevant historical artifact here. The "Revised Edition" notation indicates this 1900 version may have been an update of an earlier compilation.
+"""
+</result>

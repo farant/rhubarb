@@ -1,0 +1,15 @@
+<result>
+Title = "Andromeda and Other Poems"
+Author = "Charles Kingsley"
+Year = 1858
+
+Tags = ["poetry", "fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of poems by Charles Kingsley (1819-1875), an English clergyman, novelist, and poet. The title poem "Andromeda" is a classical narrative poem retelling the Greek myth of Perseus rescuing Andromeda. Kingsley was known for his social reform advocacy and his accessible, moralistic poetry. He was also the author of "The Water-Babies" and other Victorian literature. This collection showcases his range as a poet, from classical mythology to nature poetry and social commentary.
+"""
+
+Notes = """
+"Andromeda and Other Poems" was first published in 1858. While Kingsley was an Anglican clergyman (not Catholic), the work itself is primarily classical and nature poetry without sectarian content, hence no 'catholic' tag. The poems are generally appropriate for older children and young adults, dealing with mythological and pastoral themes typical of Victorian poetry.
+"""
+</result>

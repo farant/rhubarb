@@ -1,0 +1,15 @@
+<result>
+Title = "Fire-Tongue"
+Author = "Sax Rohmer"
+Year = 1921
+
+Tags = ["fiction", "mystery", "thriller"]
+
+Summary = """
+Fire-Tongue is a mystery thriller novel by Sax Rohmer, the British author best known for creating the villain Dr. Fu Manchu. The novel features detective Paul Harley investigating mysterious Eastern conspiracies and dangerous secret societies. It follows Rohmer's characteristic style of combining detective fiction with exotic Oriental intrigue, featuring mysterious villains, secret cults, and adventure. The story involves the investigation of the titular "Fire-Tongue" organization and includes characters like detective Paul Harley and American adventurer Nicol Brinn.
+"""
+
+Notes = """
+Fire-Tongue was first published in 1921 both in the UK and serialized in Collier's magazine in the US. This represents one of Rohmer's Paul Harley detective series, written during the height of his popularity following the success of his Fu Manchu novels. The 1921 date represents the original publication year.
+"""
+</result>

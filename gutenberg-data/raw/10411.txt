@@ -1,0 +1,15 @@
+<result>
+Title = "By the Sapphire Sea"
+Author = "Ted Snyder (music), Harry Smith and Francis Wheeler (lyrics)"
+Year = 1922
+
+Tags = ["historical-document", "music", "appropriate-for-children"]
+
+Summary = """
+'By the Sapphire Sea' is a popular song from the early 1920s with music composed by Ted Snyder and lyrics written by Harry Smith and Francis Wheeler. This Project Gutenberg entry is an audio recording of the song recorded on March 22, 1922 in New York City. Ted Snyder was a prominent Tin Pan Alley composer who co-founded the music publishing firm Waterson, Berlin & Snyder with Irving Berlin. The song represents the popular music style of the Jazz Age and early recording era.
+"""
+
+Notes = """
+Year chosen is 1922, which is the recording date mentioned in the metadata. While the song may have been published/composed slightly earlier, the 1922 recording date represents the historical artifact that Project Gutenberg is actually preserving. This is an audio recording (MP3 format) rather than a traditional text, making it an unusual Project Gutenberg entry.
+"""
+</result>

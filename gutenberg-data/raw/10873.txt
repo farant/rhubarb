@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "At Sunwich Port" by W. W. Jacobs, a British humorist known for his short stories and novels about sailors and dockside life. The text shows Part 3, Chapter XI, and mentions illustrations by Will Owen.
+
+<result>
+Title = "At Sunwich Port"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"At Sunwich Port" is a comic novel by W. W. Jacobs, set in a small English seaport town. The story involves romantic entanglements, family conflicts, and social class differences typical of Jacobs's work. The novel features the Nugent family and various colorful local characters including the Kybirds. Jacobs was a master of dialogue and situation comedy, and this work showcases his talent for depicting working-class English life with humor and sympathy. While he's most famous for his horror story "The Monkey's Paw," Jacobs primarily wrote lighthearted tales of seafaring life and small-town England.
+"""
+
+Notes = """
+First published in 1902. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific writer of humorous maritime fiction. The novel was illustrated by Will Owen, a popular illustrator of the period. This work is appropriate for children as it contains no objectionable content and features the gentle, situational humor characteristic of Edwardian-era English fiction.
+"""
+</result>

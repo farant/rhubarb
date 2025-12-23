@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of Little Black Mingo"
+Author = "Helen Bannerman"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Story of Little Black Mingo" is a children's picture book by Helen Bannerman, author of the better-known "The Story of Little Black Sambo" (1899). This book follows a similar pattern to Bannerman's other works, featuring a young Black child in what appears to be an Indian setting (Bannerman lived in India during the British Raj). The story tells of Little Black Mingo, an orphan girl who lives with a cruel woman called Black Noggy. Like Bannerman's other books, it features simple narrative and illustrations designed for young children. These works, while popular in their time, have been controversial in later years due to racial stereotyping and caricature, though Bannerman herself was Scottish and wrote them while living in India, originally creating them for her own children.
+"""
+
+Notes = """
+Helen Bannerman wrote several "Little Black" stories around the turn of the 20th century. "Little Black Sambo" was published in 1899, and "Little Black Mingo" followed shortly after, likely in 1901. The exact publication year can vary slightly in different sources, but 1901 is the most commonly cited date for this particular work. These books were products of their era and reflect the racial attitudes and artistic conventions of early 20th century colonial Britain, which modern readers find problematic. The book is not Catholic in nature - Bannerman was Scottish Presbyterian.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Hellenica"
+Author = "Xenophon"
+Year = -411
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The Hellenica is Xenophon's historical chronicle of Greek (Hellenic) history covering the period from 411 to 359 B.C. It was conceived as a continuation of Thucydides' unfinished History of the Peloponnesian War, picking up where Thucydides left off. The work transitions from continuation to Xenophon's own independent historical narrative from Book III onwards. It covers crucial events in Greek history including the final phase of the Peloponnesian War, Spartan hegemony, the rise of Thebes, and various conflicts between the Greek city-states. As a firsthand witness to many of these events and a participant in some, Xenophon provides valuable historical insight into this tumultuous period of Classical Greek history.
+"""
+
+Notes = """
+I've chosen -411 B.C. (411 B.C.) as the year because that's when the historical events chronicled in the work begin, which seems most appropriate for a historical timeline context. The work itself was likely composed later, probably in the 370s-350s B.C. during Xenophon's exile, but dating it to the start of its historical coverage makes more sense for educational purposes. Note that I'm using negative notation for B.C. dates as is standard in chronological systems. The work is not tagged as 'catholic' as it predates Christianity by several centuries, though it would certainly be considered appropriate classical education material in Catholic tradition.
+"""
+</result>

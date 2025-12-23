@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The High School Boys' Training Hike; or, Making Themselves 'Hard as Nails'"
+Author = "H. Irving Hancock"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children", "young-adult", "adventure"]
+
+Summary = """
+This is part of H. Irving Hancock's "High School Boys Series," a popular early 20th-century series of adventure novels aimed at young male readers. The series follows Dick Prescott and his friends through various adventures during their high school years in the fictional town of Gridley. This particular installment focuses on a training hike where the boys work to toughen themselves physically and mentally. Hancock was a prolific writer of juvenile fiction during the early 1900s, producing numerous series including books about West Point, Annapolis, and various high school adventures. These books were part of the "boys' books" genre that was extremely popular in American literature from roughly 1890-1930, emphasizing themes of character development, physical fitness, loyalty, and wholesome adventure.
+"""
+
+Notes = """
+The High School Boys series was published between 1910-1914. This particular volume was published in 1913 by the Henry Altemus Company. The series represents the stratemeyer syndicate-style formula fiction popular in this era, though Hancock wrote his own works rather than being part of a syndicate. These books were widely read by American boys and promoted ideals of clean living, physical fitness, and good citizenship.
+"""
+</result>

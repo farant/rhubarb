@@ -1,0 +1,15 @@
+<result>
+Title = "The Atlantic Monthly, Volume 1, Issue 2, December, 1857"
+Author = "Various"
+Year = 1857
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+This is the second issue of The Atlantic Monthly magazine, published in December 1857. The Atlantic Monthly was founded in 1857 in Boston and became one of America's most prestigious literary and cultural magazines. As a periodical, it featured a collection of essays, fiction, poetry, and commentary on literature, art, and politics from various contributors. The magazine played a significant role in American intellectual life and published works by many prominent 19th-century authors including Ralph Waldo Emerson, Henry Wadsworth Longfellow, Oliver Wendell Holmes Sr., Harriet Beecher Stowe, and many others. This early issue represents the magazine's founding era and reflects the literary and cultural concerns of mid-19th century America.
+"""
+
+Notes = """
+Year 1857 chosen as this is the actual publication date of this specific issue. The Atlantic Monthly was launched in November 1857, making this December 1857 issue only the second issue ever published. Not tagged as 'appropriate-for-children' as 19th-century literary magazines were generally aimed at educated adult audiences. Not tagged as 'catholic' as The Atlantic Monthly was a secular publication with diverse contributors, though it emerged from New England's Protestant intellectual culture.
+"""
+</result>

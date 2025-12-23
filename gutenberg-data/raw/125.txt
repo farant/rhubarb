@@ -1,0 +1,17 @@
+I recognize this as "A Girl of the Limberlost" by Gene Stratton-Porter. Let me provide the structured information:
+
+<result>
+Title = "A Girl of the Limberlost"
+Author = "Gene Stratton-Porter"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Girl of the Limberlost is a coming-of-age novel set in the Limberlost Swamp area of Indiana. The story follows Elnora Comstock, a young woman who collects moths and other specimens from the swamp to pay for her high school education. The novel explores themes of nature, perseverance, self-reliance, and the complex relationship between Elnora and her widowed mother, Mrs. Comstock, who harbors bitterness over the death of Elnora's father in the swamp. Through her love of nature and her determination to succeed, Elnora overcomes poverty and social challenges while also helping others, including Philip Ammon, discover deeper truths about life and love. Gene Stratton-Porter was known for her nature-focused novels that combined romance with natural history and conservation themes.
+"""
+
+Notes = """
+First published in 1909. This was Stratton-Porter's second novel featuring the Limberlost Swamp setting, following "Freckles" (1904). The characters Terence O'More and Mrs. O'More mentioned in the character list are references to characters from Freckles. The novel was immensely popular in its time and helped raise awareness about the Indiana wetlands before they were largely drained for agriculture.
+"""
+</result>

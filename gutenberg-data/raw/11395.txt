@@ -1,0 +1,19 @@
+I recognize this work! Let me analyze it for you.
+
+This is "Cheerful—By Request" by Edna Ferber, a collection of short stories published in 1918. Edna Ferber was an American novelist, short story writer, and playwright who won the Pulitzer Prize for Fiction in 1925. This collection represents her early work, featuring stories about ordinary American life with a focus on working-class characters, particularly women.
+
+<result>
+Title = "Cheerful—By Request"
+Author = "Edna Ferber"
+Year = 1918
+
+Tags = ["fiction", "short-stories", "appropriate-for-children"]
+
+Summary = """
+'Cheerful—By Request' is a collection of twelve short stories by Edna Ferber, published in 1918. The collection showcases Ferber's talent for portraying ordinary American life with warmth and insight. The stories focus on middle-class and working-class characters, many of them women, navigating the challenges of early 20th-century life. Ferber's writing is characterized by her sympathetic treatment of her characters and her ability to find drama and meaning in everyday situations. Stories include 'The Gay Old Dog,' 'The Eldest,' 'That's Marriage,' and 'Shore Leave,' among others. This collection helped establish Ferber as a significant voice in American literature, before she went on to write major novels like 'So Big' (Pulitzer Prize winner), 'Show Boat,' and 'Giant.'
+"""
+
+Notes = """
+The year 1918 is straightforward as this is the original publication date of this collection. While some of these stories may have been published individually in magazines prior to 1918, the collection itself was published in 1918. Edna Ferber was not a Catholic author—she was Jewish-American—so this does not receive the 'catholic' tag.
+"""
+</result>

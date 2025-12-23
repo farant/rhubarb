@@ -1,0 +1,15 @@
+<result>
+Title = "The High School Boys in Summer Camp; or, The Dick Prescott Six Training for the Gridley Eleven"
+Author = "H. Irving Hancock"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is one of the books in H. Irving Hancock's popular "High School Boys" series, which follows Dick Prescott and his friends through various adventures. This particular volume focuses on their summer camp experience while training for their high school football team, the Gridley Eleven. The series was characteristic of early 20th-century American youth literature, emphasizing themes of friendship, athleticism, moral character, and wholesome adventure. Hancock was a prolific author of boys' adventure series during this era, and his works were designed to provide entertaining yet edifying reading for young male audiences.
+"""
+
+Notes = """
+The "High School Boys" series by H. Irving Hancock was published in the early 1910s. This particular volume, "The High School Boys in Summer Camp," was part of a multi-book series that included other titles following the same characters through various school and athletic adventures. The year 1912 represents the approximate publication date for this entry in the series, which was published by Henry Altemus Company.
+"""
+</result>

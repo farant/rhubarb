@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+This is "The Soul of a Child" by Edwin Björkman, published in 1922. Based on the opening, this appears to be a novel set in Stockholm, describing the old city and its neighborhoods. Edwin Björkman (1866-1951) was a Swedish-American writer, translator, and critic who wrote both fiction and non-fiction.
+
+<result>
+Title = "The Soul of a Child"
+Author = "Edwin Björkman"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Soul of a Child' is a novel by Edwin Björkman, a Swedish-American writer and critic. The work appears to be set in Stockholm, Sweden, specifically in the oldest part of the city - a rocky island that was once the entirety of Stockholm. The narrative describes the historical and social geography of this area, from the Royal Palace to Great Square and the narrow streets lined with massive stone and brick structures. Björkman was known for his literary work bridging Swedish and American culture, and this novel seems to explore themes of childhood and place within a Swedish urban setting.
+"""
+
+Notes = """
+1922 is the publication year clearly stated on the title page. Edwin Björkman was a Swedish immigrant to America who became an influential literary figure, translator of Scandinavian literature, and writer. While Björkman was of Swedish Lutheran background rather than Catholic, this particular work appears to be a coming-of-age or childhood narrative that would be appropriate for general audiences including children.
+"""
+</result>

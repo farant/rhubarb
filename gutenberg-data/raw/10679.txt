@@ -1,0 +1,17 @@
+I recognize this work! This is Henry van Dyke's beloved Christian parable about Artaban, the "fourth" wise man who sets out to meet the infant Jesus but is delayed by acts of mercy along the way.
+
+<result>
+Title = "The Story of the Other Wise Man"
+Author = "Henry van Dyke"
+Year = 1896
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+'The Story of the Other Wise Man' is a short novel and Christian parable written by Henry van Dyke. It tells the fictional story of Artaban, a fourth Magi who, like the Three Wise Men, sees the star heralding the birth of Christ and sets out with precious gifts (sapphires, rubies, and a magnificent pearl) to find and worship the newborn King. However, Artaban is continually delayed by his compassionate acts—stopping to help the sick, buying freedom for slaves, and feeding the hungry—spending his treasures along the way. The story spans 33 years, culminating in Jerusalem at the time of Christ's crucifixion. The narrative explores themes of sacrifice, compassion, faith, and the idea that serving others is serving Christ. It has become a classic Christmas story, regularly republished and adapted for various media.
+"""
+
+Notes = """
+First published in 1896, this work has remained continuously in print for over a century. Though van Dyke was a Presbyterian minister (not Catholic), the work's deeply Christian themes and moral teaching made it widely embraced across denominations. I did not tag it as 'catholic' since van Dyke was Protestant, though the story's veneration of Christ and emphasis on mercy align with Christian virtue ethics broadly.
+"""
+</result>

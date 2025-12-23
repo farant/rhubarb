@@ -1,0 +1,15 @@
+<result>
+Title = "Crescent and Iron Cross"
+Author = "E. F. Benson"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'Crescent and Iron Cross' is a work of wartime analysis and propaganda written by E. F. Benson during World War I, examining the relationship between Germany and the Ottoman Empire, particularly focusing on German influence over Turkish affairs and the Armenian massacres. The book draws on official documents and testimony, including evidence collected by Lord Bryce and Arnold J. Toynbee regarding the Armenian genocide. Benson analyzes the political alliance between the Central Powers (symbolized by the German Iron Cross) and the Ottoman Empire (represented by the Crescent), offering a critical British perspective on Turkish-German collaboration during the war.
+"""
+
+Notes = """
+The year 1918 is chosen as the publication date. While Project Gutenberg released this in 2004, the work was written during World War I (1914-1918) as contemporary analysis of ongoing events. The references to "recent and contemporary events" and the Armenian massacres (which occurred primarily in 1915-1916) suggest this was written during or immediately after these events. E. F. Benson was better known for his fiction (particularly the Mapp and Lucia novels) but also wrote non-fiction works during WWI. The work is clearly wartime propaganda/analysis from a British perspective, examining the German-Turkish alliance.
+"""
+</result>

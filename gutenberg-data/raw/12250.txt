@@ -1,0 +1,15 @@
+<result>
+Title = "Contes choisis de la famille"
+Author = "Jacob Grimm, Wilhelm Grimm"
+Year = 1812
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a French translation of selected fairy tales by the Brothers Grimm (Les Frères Grimm). The excerpt shows "Le Loup et l'Homme" (The Wolf and the Man), one of the lesser-known Grimm tales. The Brothers Grimm collected and published German folk tales and fairy stories that became foundational texts of European folklore and children's literature. This particular tale involves a fox and a wolf discussing the strength of man, with the wolf seeking to confront a human despite the fox's warnings. The story demonstrates typical Grimm themes of animal fables with moral lessons.
+"""
+
+Notes = """
+The year 1812 represents the first edition of Kinder- und Hausmärchen (Children's and Household Tales), when the Brothers Grimm initially published their collection. This French translation appears to be from a later 19th-century edition based on the Project Gutenberg number (12250), but the most historically accurate date for educational purposes is the original German publication. The Grimm brothers published multiple editions with revisions through 1857, but 1812 marks the beginning of their influential collection. This is not a Catholic work—the Grimms were German Protestant scholars—so the 'catholic' tag is not included.
+"""
+</result>

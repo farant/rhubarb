@@ -1,0 +1,15 @@
+<result>
+Title = "The Maternal Management of Children, in Health and Disease"
+Author = "Thomas Bull"
+Year = 1840
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a medical guide written for young and inexperienced mothers in the early Victorian era. Dr. Thomas Bull, a physician specializing in midwifery and diseases of women and children, provides practical advice on managing children's health and treating common childhood ailments. The book was part of the domestic medical advice literature that emerged in the 19th century as physicians sought to educate mothers on proper childcare practices. It reflects the medical knowledge and childcare philosophy of the 1840s period, when infant and child mortality rates were high and scientific approaches to pediatric care were still developing.
+"""
+
+Notes = """
+The year 1840 is clearly stated on the title page and represents the original publication date. This is a straightforward case with no translation or edition ambiguity.
+"""
+</result>

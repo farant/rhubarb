@@ -1,0 +1,15 @@
+<result>
+Title = "Sea-Power and Other Studies"
+Author = "Admiral Sir Cyprian Bridge"
+Year = 1910
+
+Tags = ["non-fiction", "military-history", "naval-history"]
+
+Summary = """
+A collection of essays on naval history and sea-power by Admiral Sir Cyprian Bridge, a distinguished British naval officer and historian. The work examines the continuous operation of sea-power throughout history, its importance to Britain, and the relationship between naval and military history. Bridge challenges commonly accepted conclusions about naval history and explores topics including the command of the sea, lessons from warfare, the relationship between the Royal Navy and merchant service, press-gang practices, and projected invasions of Britain. The book represents an important contribution to early 20th-century naval strategic thought.
+"""
+
+Notes = """
+The year 1910 is taken from the preface, which is dated June 1910, indicating the publication year of this collection. Admiral Sir Cyprian Bridge (1839-1924) was a significant figure in British naval history and naval historical scholarship. This work was published during the naval arms race preceding World War I, making it particularly relevant to contemporary debates about sea-power and naval strategy.
+"""
+</result>

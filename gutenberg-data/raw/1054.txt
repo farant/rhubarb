@@ -1,0 +1,15 @@
+<result>
+Title = "A Collection of Ballads"
+Author = "Andrew Lang"
+Year = 1897
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+This is a collection of traditional ballads edited by Andrew Lang (1844-1912), a Scottish poet, novelist, literary critic, and anthropologist. Lang was known for his work collecting and editing folklore, fairy tales, and traditional poetry. This collection brings together various ballads from the British tradition, which are narrative poems often dealing with themes of love, adventure, the supernatural, and historical events. The ballad form was a major part of oral tradition and folk culture. Lang's editorial work helped preserve and present these traditional works for modern readers.
+"""
+
+Notes = """
+The Gutenberg metadata shows this was "Transcribed from the 1910 Chapman and Hall edition," but Lang's "A Collection of Ballads" was originally published in 1897. The 1910 edition appears to be a reprint. I've chosen 1897 as the year since that represents when Lang's editorial work was first published, which seems most appropriate for a historical timeline of works.
+"""
+</result>

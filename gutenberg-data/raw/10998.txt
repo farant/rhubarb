@@ -1,0 +1,15 @@
+<result>
+Title = "A Catechism of the Steam Engine in its Various Applications to Mines, Mills, Steam Navigation, Railways, and Agriculture"
+Author = "John Bourne"
+Year = 1856
+
+Tags = ["non-fiction", "technical", "engineering", "industrial-revolution"]
+
+Summary = """
+This is a comprehensive technical manual on steam engine technology written by civil engineer John Bourne. The work provides detailed practical instructions for the manufacture and management of steam engines across various industrial applications including mining, milling, navigation, railways, and agriculture. Written in a catechism (question-and-answer) format to make complex engineering principles accessible, it became a standard reference work during the height of the steam age. This appears to be the fourth edition, which Bourne substantially revised and updated to include the latest improvements in steam technology of his era. The work represents an important primary source for understanding Victorian-era industrial engineering and the practical application of steam power that transformed 19th century society.
+"""
+
+Notes = """
+The exact first publication date is difficult to pinpoint precisely, but John Bourne's "Catechism of the Steam Engine" was first published in the early 1850s, with this fourth edition appearing around 1856-1858. I've chosen 1856 as a representative date for the mature form of this influential work. The preface indicates this is the fourth edition with substantial revisions, suggesting the work had already gained significant recognition and gone through multiple printings. Bourne was a prominent marine engineer and one of the leading authorities on steam engine technology in Victorian Britain.
+"""
+</result>

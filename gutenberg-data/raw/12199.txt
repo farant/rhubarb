@@ -1,0 +1,21 @@
+I'll help you analyze this Project Gutenberg text. Let me examine the content to identify the work and provide the requested information.
+
+This is clearly "The Chase of Saint-Castin and Other Stories of the French in the New World" by Mary Hartwell Catherwood, published in 1894 as indicated in the title page. Mary Hartwell Catherwood (1847-1902) was an American author known for her historical romances about French colonial history in North America.
+
+The text shows this is a collection of short stories focusing on French colonial presence in the New World, particularly involving interactions with Native Americans (Abenaquis) in the Penobscot River region. Saint-Castin was a historical figure - Jean-Vincent d'Abbadie, Baron de Saint-Castin, a French military officer who lived among the Abenaki in what is now Maine during the late 17th century.
+
+<result>
+Title = "The Chase of Saint-Castin and Other Stories of the French in the New World"
+Author = "Mary Hartwell Catherwood"
+Year = 1894
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A collection of historical short stories by American author Mary Hartwell Catherwood focusing on French colonial life in North America during the 17th and 18th centuries. The title story centers on Baron de Saint-Castin, a real historical figure who was a French nobleman and military officer who lived among the Abenaki people in present-day Maine. Catherwood was known for her romanticized but well-researched historical fiction about French colonial America, particularly in the Great Lakes region and New England. These stories explore the interactions between French colonists, trappers, soldiers, and Native American peoples during the colonial period.
+"""
+
+Notes = """
+The publication year of 1894 is straightforward from the title page. Mary Hartwell Catherwood was not a Catholic author, so the 'catholic' tag does not apply despite the French colonial subject matter.
+"""
+</result>

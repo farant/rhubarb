@@ -1,0 +1,15 @@
+<result>
+Title = "Betty Zane"
+Author = "Zane Grey"
+Year = 1903
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+Betty Zane is Zane Grey's first published novel, a historical romance based on the true story of his great-great-aunt Elizabeth "Betty" Zane. The novel dramatizes the siege of Fort Henry (later Wheeling, West Virginia) in September 1782, which was the last battle of the American Revolution. The story centers on Betty Zane's heroic act during the siege when she ran through enemy fire to retrieve gunpowder from a nearby cabin, saving the fort from capture by British and Native American forces. Grey drew on family stories and his great-grandfather Col. Ebenezer Zane's notebooks to create this fictionalized account of frontier life and courage during the Revolutionary War period.
+"""
+
+Notes = """
+Betty Zane was first published in 1903. This was Zane Grey's debut novel, written before he became famous for his Western novels. Grey self-published the book initially after it was rejected by publishers. The historical events depicted occurred in 1782, but the novel itself is a work of historical fiction published in 1903, so I've chosen the publication year as the most appropriate date for a timeline of literary works.
+"""
+</result>

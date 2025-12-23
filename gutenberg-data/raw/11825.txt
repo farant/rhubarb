@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries. Third Series: 1962: January-June"
+Author = "United States Copyright Office"
+Year = 1962
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a U.S. Copyright Office catalog listing renewal registrations for copyrighted works during a specific period in 1962. It contains bibliographic entries for books, pamphlets, serials, and periodical contributions that had their copyright renewed, arranged alphabetically. Each entry provides information about both the original copyright registration and the renewal. This is part of the official government documentation of copyright renewals during this period.
+"""
+
+Notes = """
+This is a government publication from 1962, listing copyright renewals. The year reflects when this catalog volume was published. These catalogs served as official records of copyright activities in the United States before the modern digital copyright database system.
+"""
+</result>

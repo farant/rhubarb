@@ -1,0 +1,17 @@
+I can identify this work. Let me analyze what I can see from this Project Gutenberg text.
+
+<result>
+Title = "The Shadow of the North: A Story of Old New York and a Lost Campaign"
+Author = "Joseph A. Altsheler"
+Year = 1917
+
+Tags = ["fiction", "historical-fiction", "young-adult", "appropriate-for-children"]
+
+Summary = """
+"The Shadow of the North" is the second volume in Joseph A. Altsheler's French and Indian War series, following "The Hunters of the Hills." The novel is a historical adventure story set during the French and Indian War (1754-1763), featuring young protagonists Robert Lennox, the Onondaga warrior Tayoga, and the hunter David Willet. Altsheler was known for his historical fiction for young readers, particularly his series about American frontier and military history. The book follows the continuing adventures of these characters against the backdrop of the conflict between British and French forces in colonial North America, with detailed portrayals of both sides of the conflict including notable historical figures like the Marquis de Montcalm.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page as the publication date. Joseph A. Altsheler (1862-1919) was a prolific American author of historical adventure fiction aimed at young readers. This is not a Catholic work - Altsheler was a Kentucky journalist and novelist who wrote adventure stories for boys. While there are French Catholic characters depicted (including a French priest), this is secular historical fiction rather than Catholic literature.
+"""
+</result>

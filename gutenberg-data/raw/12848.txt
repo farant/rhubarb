@@ -1,0 +1,15 @@
+<result>
+Title = "Las inquietudes de Shanti Andía"
+Author = "Pío Baroja"
+Year = 1911
+
+Tags = ["fiction", "nautical-adventure"]
+
+Summary = """
+'Las inquietudes de Shanti Andía' (The Restlessness of Shanti Andía) is a maritime adventure novel by Spanish author Pío Baroja, one of the most prominent writers of the Generation of '98. The novel tells the story of Shanti Andía, a Basque sailor, and his adventures at sea, blending elements of adventure, introspection, and Baroja's characteristic exploration of the human condition. The narrative includes maritime life, exotic travels, and the contrast between the protagonist's adventurous youth and his more contemplative later years. Baroja, known for his direct prose style and existential themes, draws on the Basque seafaring tradition to create this episodic tale that reflects on restlessness, fate, and the search for meaning.
+"""
+
+Notes = """
+The Project Gutenberg text indicates an edition from 1920 with illustrations by R. Zubiaurre and R. Baroja, but the novel was originally published in 1911. I've chosen 1911 as the historically accurate date for educational purposes, as this represents the work's original publication and cultural-historical significance within the Generation of '98 literary movement.
+"""
+</result>

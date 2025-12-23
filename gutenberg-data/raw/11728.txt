@@ -1,0 +1,17 @@
+I recognize this as a biographical work about Abraham Lincoln by George Haven Putnam. The book was published in 1909 to commemorate the hundredth anniversary of Lincoln's birth in 1809. This is a historical biography/essay rather than contemporary historical documents from Lincoln's era, though it includes Lincoln's famous Cooper Union speech from 1860.
+
+<result>
+Title = "Abraham Lincoln: The People's Leader in the Struggle for National Existence"
+Author = "George Haven Putnam"
+Year = 1909
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+This is a biographical work about Abraham Lincoln written by George Haven Putnam, published for the centennial celebration of Lincoln's birth (February 12, 1809-1909). The book examines Lincoln's life and leadership during the American Civil War. It includes the text of Lincoln's famous Cooper Union speech delivered in New York on February 27, 1860, which was a pivotal moment in his rise to the presidency. The speech is accompanied by introductions and annotations by Charles C. Nott (former Chief Justice of the Court of Claims) and Cephas Brainerd. Putnam, who was also the author of works on medieval book history and church censorship, wrote this as part of nationwide commemoration exercises marking Lincoln's centennial, noting that even in the South, formerly Confederate cities like Atlanta were honoring Lincoln's memory by 1909.
+"""
+
+Notes = """
+The year 1909 is chosen as this is when Putnam's biographical work was published and presented. While the book includes historical material from Lincoln's life (1809-1865), particularly the 1860 Cooper Union speech, this is a commemorative biographical work from 1909 rather than a contemporary document from Lincoln's lifetime.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work immediately - it's a collection of H.G. Wells' short stories, with "The Country of the Blind" being the title story. This is from the introduction Wells wrote for a collected edition of his short fiction.
+
+<result>
+Title = "The Country of the Blind and Other Stories"
+Author = "H. G. Wells"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by H. G. Wells, featuring "The Country of the Blind" as the title story. This volume represents Wells' definitive collection of his short fiction, gathering thirty-three stories that he deemed worthy of preservation. The collection includes tales of science fiction, fantasy, and social commentary that Wells wrote primarily in the late 19th and early 20th centuries. In his introduction, Wells reflects on his career as a short story writer and notes that by the time of this collection, he had largely ceased writing short fiction in favor of longer, more sustained works. The stories showcase Wells' imaginative range and his skill at combining speculative ideas with human drama.
+"""
+
+Notes = """
+This collection was published in 1911 by Thomas Nelson & Sons. Wells indicates in the introduction that this is a comprehensive gathering of his short fiction (excluding the linked stories in "Tales of Space and Time"), representing work primarily from "the last century" (the 1890s-1900s). The 1911 date represents when this definitive collection was assembled, though the individual stories were written earlier. This is the most historically significant date for this particular edition as Wells frames it as a culminating, "almost obituary" collection of his short story work.
+"""
+</result>

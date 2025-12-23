@@ -1,0 +1,15 @@
+<result>
+Title = "The Eagle's Shadow"
+Author = "James Branch Cabell"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Eagle's Shadow" is an early romantic novel by James Branch Cabell, published in 1904. This was one of Cabell's first published works, before he gained fame for his later fantasy novels set in the imaginary medieval French province of Poictesme. The novel represents Cabell's early literary style, featuring romantic themes and his characteristic wit. Cabell (1879-1958) was an American author of fantasy fiction and belles lettres, who would later become known for his controversial novel "Jurgen" (1919). This early work showcases the development of his literary voice and his interest in romantic comedy before he fully embraced the fantasy and allegorical elements that would define his later career.
+"""
+
+Notes = """
+The year 1904 is clearly indicated as the publication date on the title page of the work itself. James Branch Cabell was not a Catholic author - he was from a prominent Virginia family and his works tend toward sophisticated fantasy and romantic comedy rather than religious themes.
+"""
+</result>

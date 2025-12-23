@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "The Man Against the Sky" by Edwin Arlington Robinson. Robinson was an American poet who lived from 1869-1935 and won three Pulitzer Prizes for poetry. This particular collection was first published in 1916 and is considered one of his most important works, containing several of his best-known poems.
+
+Robinson was not a Catholic author - he came from a Protestant New England background and his work reflects a more modernist, often skeptical worldview grappling with doubt and human frailty, though with deep philosophical concerns.
+
+The collection contains sophisticated poetry dealing with human psychology, failure, redemption, and the human condition. While beautifully written, the themes are complex and often melancholic, making it more suitable for mature readers rather than children.
+
+<result>
+Title = "The Man Against the Sky"
+Author = "Edwin Arlington Robinson"
+Year = 1916
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+A collection of poems by Edwin Arlington Robinson, one of the most important American poets of the early 20th century. The title poem and collection were published in 1916 and contain some of Robinson's most celebrated work, including character studies like "Flammonde," "Eros Turannos," and "Ben Jonson Entertains a Man from Stratford." Robinson's poetry is known for its psychological depth, its portraits of failed or struggling individuals, and its exploration of doubt, disappointment, and the search for meaning in a difficult world. His work bridges traditional poetic forms with modernist sensibilities.
+"""
+
+Notes = """
+1916 is the original publication year of this collection by Macmillan. Robinson would go on to win the Pulitzer Prize for Poetry three times (1922, 1925, 1928), but this 1916 collection established him as a major American poet. The work is not appropriate for children due to its sophisticated themes and complex psychological content.
+"""
+</result>

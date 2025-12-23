@@ -1,0 +1,15 @@
+<result>
+Title = "The Essays of Arthur Schopenhauer: The Art of Controversy"
+Author = "Arthur Schopenhauer"
+Year = 1896
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+This is a collection of essays by the German philosopher Arthur Schopenhauer (1788-1860), translated by T. Bailey Saunders. The volume focuses on "The Art of Controversy" (also known as "The Art of Being Right" or "Eristic Dialectic"), which explores the techniques of argumentation and debate, including both logical and rhetorical stratagems. The collection also includes other philosophical essays on aesthetics, psychology, and wisdom. These works were drawn from Schopenhauer's posthumous papers and were first published by his literary executor Julius Frauenstädt a few years after Schopenhauer's death in 1860, then later re-edited by Dr. Eduard Grisebach. Schopenhauer was known for his pessimistic philosophy and influenced later thinkers including Nietzsche and Freud.
+"""
+
+Notes = """
+The year 1896 is chosen as the approximate publication date of this English translation by T. Bailey Saunders. Schopenhauer died in 1860, and the translator's preface mentions the posthumous papers were "given to the world some three or four years after his death" (so around 1863-1864 in German), with a more recent re-edition by Dr. Eduard Grisebach. This particular English translation appears to be from the 1890s based on the translator's reference to Grisebach's edition as recent and the mention of Schopenhauer's works being available in cheap German collections. While the essays themselves were written by Schopenhauer in the mid-19th century, this specific compiled and translated volume dates to approximately 1896.
+"""
+</result>

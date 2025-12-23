@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Life's Enthusiasms" by David Starr Jordan, published in 1906 (as indicated by the MDCCCCVI Roman numerals). David Starr Jordan was a prominent American educator, ichthyologist, and peace activist who served as the founding president of Stanford University. While he was not Catholic (he was associated with Unitarianism, as evidenced by the American Unitarian Association publisher), this appears to be a collection of essays or addresses on maintaining enthusiasm and joy in life.
+
+<result>
+Title = "Life's Enthusiasms"
+Author = "David Starr Jordan"
+Year = 1906
+
+Tags = ["non-fiction", "appropriate-for-children", "philosophy", "inspirational"]
+
+Summary = """
+'Life's Enthusiasms' is a collection of essays or addresses by David Starr Jordan, the founding president of Stanford University. The work is a philosophical meditation on maintaining passion, wonder, and enthusiasm throughout life. Jordan takes as his theme a quote from Victor Cherbuliez's novel about laying up "a stock of absurd enthusiasms in our youth," and builds upon this to argue for living with open eyes, a warm heart, and swift pulses. The book advocates for doing things because we love them and loving things because we do them, essentially a call to joyful engagement with life. Published by the American Unitarian Association, it reflects the optimistic, progressive idealism of early 20th century American thought.
+"""
+
+Notes = """
+The publication year 1906 is clearly stated in Roman numerals (MDCCCCVI) on the title page. David Starr Jordan was not a Catholic author but rather was associated with Unitarian thought. He was a prominent public intellectual of his era, known for his work in biology, education, and pacifism.
+"""
+</result>

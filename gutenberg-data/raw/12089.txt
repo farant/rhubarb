@@ -1,0 +1,15 @@
+<result>
+Title = "Letters of Travel (1892-1913)"
+Author = "Rudyard Kipling"
+Year = 1920
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of travel essays and letters by Rudyard Kipling spanning over two decades of his journeys. The volume is divided into three main sections: 'From Tideway to Tideway' (1892), 'Letters to the Family' (1907), and 'Egypt of the Magicians'. These pieces originally appeared in various British publications including The Times, The Morning Post, and Nash's Magazine. The collection offers Kipling's observations on diverse locations including North America (references to Monadnock and Quebec), the British Empire's overseas territories, Egypt, and various other destinations. As travel writing, it reflects both the era of British imperialism and Kipling's particular literary perspective on the cultures and peoples he encountered during his extensive travels around the turn of the 20th century.
+"""
+
+Notes = """
+I chose 1920 as the year because this is the publication date of this collected edition by Macmillan and Co. While the individual letters span from 1892 to 1913, this represents when they were compiled and published together as a unified work. The original composition dates of the individual pieces are earlier, but this is the date of the work as a book. This is the "Dominions Edition" intended for circulation in India and the British territories overseas, not for the UK domestic market.
+"""
+</result>

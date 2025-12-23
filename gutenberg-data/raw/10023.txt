@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is "There's Pippins and Cheese to Come" by Charles S. Brooks, published in 1917 as clearly stated on the title page. The title is a reference to Shakespeare's "The Merry Wives of Windsor." Based on the table of contents, this appears to be a collection of essays on various literary and cultural topics - essays about books, reading, writing, and literary life (note the reference to "The Man of Grub Street").
+
+Charles S. Brooks (1878-1934) was an American essayist and travel writer known for his light, humorous literary essays. This is not a Catholic work, nor is it children's literature - it's sophisticated adult literary essays.
+
+<result>
+Title = "There's Pippins and Cheese to Come"
+Author = "Charles S. Brooks"
+Year = 1917
+
+Tags = ["non-fiction", "essays", "literary-criticism"]
+
+Summary = """
+A collection of literary essays by American essayist Charles S. Brooks. The book's title comes from Shakespeare's 'The Merry Wives of Windsor' and reflects the author's playful, literary approach. The essays cover topics such as book collecting ('On Buying Old Books'), reading, travel ('Roads of Morning'), and the writing life ('The Man of Grub Street Comes from His Garret'). Brooks was known for his light, humorous style and his celebration of books and literary culture. This collection represents his characteristic blend of personal reflection, literary appreciation, and gentle humor.
+"""
+
+Notes = """
+The publication year 1917 is clearly stated on the title page. This appears to be the first edition, as it references other works by Brooks that were in their third and sixth printings at the time.
+"""
+</result>

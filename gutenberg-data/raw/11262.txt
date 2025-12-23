@@ -1,0 +1,15 @@
+<result>
+Title = "Cyclopedia of Economics"
+Author = "Sam Vaknin"
+Year = 2007
+
+Tags = ["non-fiction"]
+
+Summary = """
+A cyclopedia (encyclopedia) of economics written by Sam Vaknin, a contemporary author known for his work on narcissism and various economic and psychological topics. This appears to be a reference work covering economic concepts and terminology. The work was published directly to Project Gutenberg in 2007 and is copyrighted by Lidija Rangelovska.
+"""
+
+Notes = """
+This is a modern work from 2007, originally published digitally to Project Gutenberg. Unlike many Gutenberg texts which are historical works in the public domain, this is a copyrighted contemporary work. The actual content is referenced as being in RTF format. Given the modern publication date and contemporary authorship, this is not a historical classic but rather a recent educational reference work.
+"""
+</result>

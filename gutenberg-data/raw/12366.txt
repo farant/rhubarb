@@ -1,0 +1,17 @@
+I recognize this work immediately - it's "The Cost of Shelter" by Ellen H. Richards, a pioneering work in household economics and domestic science. Ellen Richards was the first woman admitted to MIT and is considered the founder of home economics as an academic discipline. This book examines housing from a scientific and economic perspective, analyzing what constitutes rational, healthy, and economical shelter.
+
+<result>
+Title = "The Cost of Shelter"
+Author = "Ellen H. Richards"
+Year = 1905
+
+Tags = ["non-fiction"]
+
+Summary = """
+'The Cost of Shelter' by Ellen H. Richards is a pioneering work in household economics and domestic science. Richards, the first woman admitted to MIT and founder of the home economics movement, applies scientific and economic analysis to housing and domestic life. The book examines what constitutes rational, healthy, and economical shelter, analyzing the household as an economic unit and exploring the various functions and purposes of family homes. Richards brings her training in sanitary chemistry to bear on questions of domestic architecture, household management, and the efficient organization of family life. The work reflects Progressive Era concerns with scientific rationalization of domestic spaces and practices.
+"""
+
+Notes = """
+Year is definitively 1905 as stated on the title page shown. Ellen Richards (1842-1911) was a chemist and sanitary engineer who pioneered the application of scientific principles to domestic life. While not specifically Catholic, this work is appropriate for general audiences interested in household economics and domestic science from a scientific perspective.
+"""
+</result>

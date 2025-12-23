@@ -1,0 +1,15 @@
+<result>
+Title = "Man-Size"
+Author = "William MacLeod Raine"
+Year = 1922
+
+Tags = ["fiction", "western", "adventure", "appropriate-for-children"]
+
+Summary = """
+"Man-Size" is a Western novel by William MacLeod Raine, a prolific American author known for his adventure stories set in the American West and Canadian frontier. The novel appears to be set in the Canadian Northwest Territories, as suggested by the dedication to Captain Sir Cecil E. Denny, one of the original members of the North-West Mounted Police (the precursor to the Royal Canadian Mounted Police). The story likely involves frontier justice, adventure, and the law enforcement challenges of the Canadian wilderness during the late 19th or early 20th century. Raine was known for his action-packed narratives featuring strong characters, frontier justice, and the романticized version of Western life that was popular in early 20th century pulp fiction.
+"""
+
+Notes = """
+The year 1922 is clearly indicated on the title page as the publication date. William MacLeod Raine (1871-1954) was a highly popular Western writer of his era, publishing over 80 novels. This appears to be an original work from 1922, not a translation or reprinted edition. The dedication to Captain Denny (who served in the North-West Mounted Police during the 1870s-1880s) suggests the setting involves Canadian frontier history, specifically the period when the Mounted Police were establishing law and order in the western territories.
+"""
+</result>

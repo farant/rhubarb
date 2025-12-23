@@ -1,0 +1,15 @@
+<result>
+Title = "The Young Engineers in Nevada; or, Seeking Fortune on the Turn of a Pick"
+Author = "H. Irving Hancock"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Young Engineers in Nevada" is part of H. Irving Hancock's "Young Engineers" series, a collection of early 20th-century adventure novels for young readers. The series follows Tom Reade and Harry Hazelton, two young engineers who seek their fortunes in various locations across the American West. In this installment, the protagonists travel to Nevada to try their hand at mining and prospecting during the era of Western expansion. The book combines elements of adventure, frontier life, and coming-of-age themes typical of juvenile series fiction of the period. Hancock was a prolific author of boys' adventure series, including the "Grammar School Boys," "High School Boys," and "West Point" series.
+"""
+
+Notes = """
+H. Irving Hancock wrote numerous juvenile adventure series in the early 1900s-1910s. The Young Engineers series was published around 1912-1916. Based on the copyright patterns of Hancock's works and the series publication sequence, this volume was likely published around 1913. These books were popular didactic adventure stories meant to inspire young readers with themes of hard work, honesty, and American entrepreneurship during the Progressive Era.
+"""
+</result>

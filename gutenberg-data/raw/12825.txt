@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Volume 99, August 9, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire established in 1841. Known for its political cartoons and satirical commentary on British society, politics, and culture, it became one of the most influential periodicals of the Victorian era. This particular issue from August 9, 1890 (Volume 99) contains humorous sketches and observations, including a satirical piece titled "First Aid to Tommy Atkins" which humorously describes a visit to the Military Exhibition where ambulance drills were being performed. The magazine was known for coining the term "cartoon" in its modern sense and for its iconic mascot Mr. Punch. It ceased publication in 1992 after 151 years.
+"""
+
+Notes = """
+This is a weekly periodical issue, so the year 1890 represents the publication date of this specific volume. Punch was published continuously from 1841-1992 and featured contributions from many different writers and artists. "Tommy Atkins" was a generic term for British soldiers, particularly common soldiers or privates in the British Army.
+"""
+</result>

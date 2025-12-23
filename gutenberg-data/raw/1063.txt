@@ -1,0 +1,15 @@
+<result>
+Title = "The Cask of Amontillado"
+Author = "Edgar Allan Poe"
+Year = 1846
+
+Tags = ["fiction", "short-story", "horror", "gothic"]
+
+Summary = """
+"The Cask of Amontillado" is one of Edgar Allan Poe's most famous short stories, a tale of revenge and murder. The narrator, Montresor, lures his supposed friend Fortunato into the catacombs beneath his palazzo during carnival season under the pretense of verifying the authenticity of a rare wine called Amontillado. The story is a masterpiece of psychological horror and unreliable narration, exploring themes of revenge, pride, and the darkness of human nature. It has become one of the most frequently anthologized American short stories and remains a classic of Gothic literature.
+"""
+
+Notes = """
+First published in November 1846 in Godey's Lady's Book. This is one of Poe's later short stories, written during the final years of his life. The story is notable for its lack of moral clarity - we never learn what "thousand injuries" or final insult drove Montresor to his terrible revenge. The work is not appropriate for children due to its dark themes of murder and psychological manipulation. While Poe himself had some connection to Catholicism (his foster mother was Catholic), this particular work is not specifically Catholic in nature and would not receive an imprimatur - it's a work of Gothic horror fiction rather than religious or moral instruction.
+"""
+</result>

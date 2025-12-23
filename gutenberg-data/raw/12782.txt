@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+This is clearly a work by Napoleon Bonaparte - the header identifies it as "OEUVRES DE NAPOLÉON BONAPARTE" (Works of Napoleon Bonaparte), specifically Volume 2 from 1821. The content shows correspondence from Napoleon during the First Italian Campaign, dated September 1, 1797 (15 Fructidor Year 5 in the Revolutionary calendar).
+
+The work appears to be a collection of Napoleon's military correspondence and documents from his Italian campaigns. Since this is the collected works published in 1821 but containing documents from 1797, I need to consider which date is most historically educational. Given that this is a published compilation of his works (likely posthumous or near the end of his life), and the publication date of 1821 is explicitly stated on the title page, I'll use 1821 as the primary year, with a note explaining the context.
+
+<result>
+Title = "Oeuvres de Napoléon Bonaparte, Tome Deuxième: Première Campagne d'Italie"
+Author = "Napoléon Bonaparte"
+Year = 1821
+
+Tags = ["non-fiction", "historical-document", "military-history"]
+
+Summary = """
+This is the second volume of the collected works of Napoleon Bonaparte, focusing on his First Italian Campaign. It contains official correspondence, military dispatches, and administrative documents from Napoleon's campaigns in Italy during 1796-1797. This particular excerpt shows correspondence from September 1797 regarding logistical matters such as hospital administration and artillery equipment management. The work provides primary source material on Napoleon's military administration and strategic thinking during one of his most celebrated early campaigns.
+"""
+
+Notes = """
+The publication date of 1821 is used as this represents when the collected works were published. The documents within date from 1797 during the Italian Campaign, but as a compiled historical work, 1821 is the more appropriate date for cataloging purposes. This was published during or shortly after Napoleon's final exile to Saint Helena (he died in May 1821), making this one of the earliest compilations of his writings and correspondence.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics: Masterpieces of German Literature, Volume VI"
+Author = "Various (Heinrich Heine, Franz Grillparzer, Ludwig van Beethoven)"
+Year = 1914
+
+Tags = ["non-fiction", "anthology", "poetry", "literature", "translation"]
+
+Summary = """
+This is Volume VI of "The German Classics," a twenty-volume anthology published in 1914 that compiled masterpieces of German literature translated into English. This particular volume features works by and about three major German cultural figures: the poet Heinrich Heine, the dramatist Franz Grillparzer, and the composer Ludwig van Beethoven. The volume includes biographical material, poetry, and other writings, with translations by various scholars including Sir Theodore Martin and commentary by William Guild Howard. This collection was part of a major early 20th-century effort to make German literary and cultural achievements accessible to English-speaking audiences.
+"""
+
+Notes = """
+The year 1914 is chosen as this is the publication date of this specific anthology edition. While the individual works contained within (Heine's poems, etc.) date from earlier in the 19th century, this is a compiled translation volume rather than an original work. The anthology represents a significant scholarly effort to present German culture to English readers on the eve of World War I.
+"""
+</result>

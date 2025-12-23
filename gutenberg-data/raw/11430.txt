@@ -1,0 +1,23 @@
+I'll read through this Project Gutenberg text to identify the title, author, and publication year.
+
+This appears to be a Dutch work titled "Goede Vaêr Tromp, of Hoe de Vereenigde Provinciën eene Zeemogendheid Werden" (Good Weather Tromp, or How the United Provinces Became a Naval Power). It's a historical narrative for young people about the Dutch naval hero Maarten Harpertszoon Tromp, written by P. Louwerse.
+
+Based on the text, this is a biographical work about Admiral Tromp, who was a 17th-century Dutch naval commander. The author mentions being commissioned by the publisher of "Mannen van Sta-vast" (Men of Steadfastness) and initially considered writing about Michiel de Ruyter before choosing Tromp.
+
+P. Louwerse was a Dutch author who wrote educational and historical works for children in the late 19th century. This particular work was likely published in the 1870s-1880s based on Louwerse's active period and the style of the text.
+
+<result>
+Title = "Goede Vaêr Tromp, of Hoe de Vereenigde Provinciën eene Zeemogendheid Werden"
+Author = "P. Louwerse"
+Year = 1876
+
+Tags = ["non-fiction", "appropriate-for-children", "historical"]
+
+Summary = """
+A biographical historical narrative written for Dutch youth about Admiral Maarten Harpertszoon Tromp (1598-1653), one of the most important naval commanders of the Dutch Republic during the Eighty Years' War and the First Anglo-Dutch War. The book tells the story of how Tromp helped establish the United Provinces as a major naval power. Written in an educational style specifically for young readers, it emphasizes Tromp's contributions to Dutch maritime history and national identity.
+"""
+
+Notes = """
+The exact publication year is uncertain from this excerpt alone, but based on P. Louwerse's active period as a children's author (primarily 1870s-1890s) and the style of Dutch used, I've estimated 1876. The work focuses on the 17th-century subject (Tromp lived 1598-1653), but was written as an educational text for 19th-century Dutch youth. The author explicitly states he chose to write about Tromp rather than Michiel de Ruyter because Tromp was undervalued in Dutch historical memory despite his crucial role in establishing Dutch naval supremacy.
+"""
+</result>

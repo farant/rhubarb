@@ -1,0 +1,15 @@
+<result>
+Title = "Note-Book of Anton Chekhov"
+Author = "Anton Chekhov"
+Year = 1921
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of notes, themes, sketches, and diary entries by Russian playwright and short story writer Anton Chekhov. The volume was compiled posthumously from papers found among Chekhov's effects, including sheets marked "Themes, thoughts, notes, and fragments" and a personal notebook where he recorded ideas for future works and quotations. The material provides insight into Chekhov's creative process and methods of artistic production. The entries include observations about people he knew, encounters with other literary figures like Leo Tolstoy and Korolenko, and various notes he intended to develop into future works. Chekhov would cross out material in his notebooks once he had used it in his writing.
+"""
+
+Notes = """
+The year 1921 represents the publication date of this English translation by S. S. Koteliansky and Leonard Woolf, not when the notes were written. The diary entries shown are from 1896, and the notes were compiled after Chekhov's death in 1904. Since this is a posthumous collection rather than a work Chekhov himself published, I've chosen the translation publication year as the most historically relevant date for this particular edition, as it represents when this specific compilation became available to English readers.
+"""
+</result>

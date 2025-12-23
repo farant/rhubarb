@@ -1,0 +1,15 @@
+<result>
+Title = "Contes à mes petites amies"
+Author = "Jean-Nicolas Bouilly"
+Year = 1824
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+"Contes à mes petites amies" (Tales for My Young Friends) is a collection of moral tales written by French dramatist and author Jean-Nicolas Bouilly. The work consists of educational stories aimed at young readers, particularly girls, designed to instill moral virtues and proper conduct. The tale "Le Père Daniel" included in this excerpt exemplifies Bouilly's approach: teaching children not to judge people by their exterior appearance and to treat all social classes with dignity and respect. The protagonist Amélie Dorval serves as a model of Christian charity and humility. This edition was revised by E. du Chatenet. Bouilly was known for his didactic literature and his works promoting religious and moral education, making him a popular author for children's literature in early 19th century France.
+"""
+
+Notes = """
+Jean-Nicolas Bouilly (1763-1842) first published "Contes à mes petites amies" in 1824. This work became quite popular in French children's literature and saw multiple editions throughout the 19th century. The text clearly reflects Catholic moral instruction typical of the period, emphasizing charitable treatment of the poor and the equality of all souls before God. The edition note indicates this is a revised version by E. du Chatenet, suggesting this may be from a later printing, but the original publication date of 1824 is most appropriate for historical timeline purposes as it represents when Bouilly composed these tales.
+"""
+</result>

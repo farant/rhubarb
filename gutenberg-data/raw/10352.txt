@@ -1,0 +1,15 @@
+<result>
+Title = "The Works of Samuel Johnson, LL.D., Volume the Eleventh"
+Author = "Samuel Johnson"
+Year = 1825
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the eleventh volume of a collected works edition of Samuel Johnson's writings, published in 1825. Samuel Johnson (1709-1784) was one of the most celebrated English writers, lexicographers, and literary critics of the 18th century, best known for his Dictionary of the English Language. This particular volume appears to contain parliamentary debates from the 1730s-1740s, which Johnson wrote for The Gentleman's Magazine under the title "Debates in the Senate of Magna Lilliputia" (a reference to Gulliver's Travels used to avoid prosecution for reporting parliamentary proceedings, which was then illegal). These debates cover significant political matters of the period including military appropriations, trade policy, and investigations into government conduct. Johnson's parliamentary reports, though not verbatim transcripts, were highly regarded for their rhetorical quality and captured the essence of political discourse in the era of Robert Walpole's ministry.
+"""
+
+Notes = """
+The year 1825 reflects this specific collected edition's publication date (MDCCCXXV = 1825). However, the actual debates contained within were originally written by Johnson in the 1740s for The Gentleman's Magazine. Since this is primarily a posthumous collection rather than Johnson's original composition or a work with his direct involvement in editing, and given the use case is a historical timeline, 1825 represents when this particular compilation was made available. The original debates Johnson reported on occurred circa 1738-1744, during the decline of Robert Walpole's ministry.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work immediately - it's one of James Fenimore Cooper's novels from his Leatherstocking Tales era, though not part of that specific series. Let me provide the structured information:
+
+<result>
+Title = "Wyandotté; or, The Hutted Knoll"
+Author = "James Fenimore Cooper"
+Year = 1843
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+Wyandotté; or, The Hutted Knoll is a historical novel by James Fenimore Cooper set during the American Revolutionary War. The story focuses on the Willoughby family, who have established a remote settlement called the Hutted Knoll in upstate New York wilderness. The novel explores the complexities of the Revolutionary War from the perspective of a Loyalist family caught between their allegiance to the Crown and the changing political landscape. Cooper examines themes of isolation, family loyalty, frontier life, and the moral ambiguities of war. The title character, Wyandotté (also called Sassy Nick), is a Native American who plays a crucial role in the family's fate. The novel is notable for Cooper's more nuanced treatment of the Revolutionary War, acknowledging that not all who remained loyal to Britain were villains, and that the conflict had tragic dimensions for families on both sides.
+"""
+
+Notes = """
+The work was originally published in 1843, though this Project Gutenberg edition is from an 1871 printing. I chose 1843 as the historically significant date since that's when Cooper wrote and first published the novel. The preface excerpt provided actually hints at Cooper's more balanced approach to the Revolutionary War, noting that "the cause had its evil aspects, as well as all other human struggles" - a somewhat controversial stance for his time when American patriotic narratives were becoming increasingly hagiographic.
+"""
+</result>

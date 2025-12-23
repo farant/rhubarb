@@ -1,0 +1,17 @@
+I recognize this work! This is "The Wallet of Kai Lung" by Ernest Bramah, a delightful collection of stories featuring the wandering storyteller Kai Lung in a fantastical China. Let me provide the structured information:
+
+<result>
+Title = "The Wallet of Kai Lung"
+Author = "Ernest Bramah"
+Year = 1900
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Wallet of Kai Lung is a collection of fantasy stories set in an imagined China, featuring the itinerant storyteller Kai Lung. The tales are told in an elaborate, mock-formal style that parodies Victorian translations of Chinese literature. Kai Lung travels from village to village, entertaining audiences in marketplaces with his fantastical tales. The stories often feature him telling stories to escape danger or captivity, using his wit and storytelling abilities to survive. Written by English author Ernest Bramah (pen name of Ernest Brammah Smith), the book is known for its humor, ornate prose style, and charming narrative frame. It became quite popular and spawned several sequels featuring the same character.
+"""
+
+Notes = """
+First published in 1900 in England. This is Ernest Bramah's first Kai Lung book, which established the character and the distinctive narrative style. The work is purely fictional entertainment, though it draws on Western perceptions and stereotypes of China from the late Victorian/Edwardian era. It's considered a classic of early 20th-century fantasy literature and humorous fiction.
+"""
+</result>

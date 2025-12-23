@@ -1,0 +1,15 @@
+<result>
+Title = "A Collection of Short-Stories"
+Author = "L.A. Pittenger (Editor)"
+Year = 1913
+
+Tags = ["fiction", "anthology", "appropriate-for-children"]
+
+Summary = """
+This is an anthology of short stories edited by L.A. Pittenger, A.M., a critic in English at Indiana University. Published by The Macmillan Company, the collection serves as an educational text for studying the short story form. It includes an introduction covering the history, qualities, and composition of the short story, along with references and recommended collections. The anthology features ten classic stories from major 19th-century authors including Edgar Allan Poe, Nathaniel Hawthorne, Robert Louis Stevenson, Guy de Maupassant, Rudyard Kipling, Björnstjerne Björnson, and Frank R. Stockton. The stories span from 1839 to 1889 and represent various styles and traditions of the short story genre, making it a comprehensive educational resource for students of literature.
+"""
+
+Notes = """
+The book was published in November 1913 and reprinted in January 1914. I chose 1913 as the year since this is when the collection itself was first published. While the individual stories it contains were written between 1839-1889, the value and identity of this work is as an educational anthology compiled by Pittenger for academic purposes at Indiana University. The collection appears designed for teaching the craft and appreciation of short story writing.
+"""
+</result>

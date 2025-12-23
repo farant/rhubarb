@@ -1,0 +1,15 @@
+<result>
+Title = "A Man and His Money"
+Author = "Frederic S. Isham"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"A Man and His Money" is an early 20th-century novel by Frederic S. Isham, an American author known for popular romantic adventure fiction. Isham wrote several novels in the early 1900s including "Under the Rose" and "Half a Chance." This work appears to be a story that begins in a run-down music shop and likely follows themes common to Isham's work: adventure, romance, and characters navigating social circumstances. The novel was illustrated by Max J. Spero and represents the kind of popular fiction that was widely read in the pre-World War I era.
+"""
+
+Notes = """
+The year 1912 is clearly stated on the title page as the publication year. This appears to be the first edition publication date. Frederic S. Isham (1866-1922) was a popular American novelist of the early 20th century whose works were widely serialized in magazines before book publication.
+"""
+</result>

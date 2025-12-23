@@ -1,0 +1,17 @@
+I can identify this work! This is Jules Verne's "An Antarctic Mystery" (original French title "Le Sphinx des Glaces"), which is actually a sequel to Edgar Allan Poe's "The Narrative of Arthur Gordon Pym of Nantucket."
+
+<result>
+Title = "An Antarctic Mystery"
+Author = "Jules Verne"
+Year = 1897
+
+Tags = ["fiction", "adventure", "science-fiction"]
+
+Summary = """
+An Antarctic Mystery (Le Sphinx des Glaces) is Jules Verne's ambitious sequel to Edgar Allan Poe's unfinished novel "The Narrative of Arthur Gordon Pym of Nantucket" (1838). The novel follows the journey of the narrator who joins the crew of the ship Halbrane, captained by Len Guy, whose brother was aboard the ship Jane that rescued Arthur Gordon Pym in Poe's original tale. They embark on an expedition to the Antarctic to solve the mysteries left by Poe's incomplete narrative, including the fate of the Jane's crew and the enigmatic conclusion of Pym's story. The work showcases Verne's characteristic blend of scientific speculation, geographical exploration, and adventure, while attempting to provide rational explanations for the fantastical elements in Poe's original work. This translation by Mrs. Cashel Hoey was published in English in 1899.
+"""
+
+Notes = """
+Year chosen is 1897, the original French publication date. While the English translation by Mrs. Cashel Hoey appeared in 1899, the work's historical significance dates to its original composition. Jules Verne was nominally Catholic (baptized and raised in the faith), but this particular work is adventure fiction without explicit religious themes, so it does not receive the 'catholic' tag.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is "Jimgrim and Allah's Peace" by Talbot Mundy. Talbot Mundy (born William Lancaster Gribbon, 1879-1940) was a British-born American author who wrote adventure fiction, often set in the Middle East and India. This novel features his character James Schuyler Grim (Jimgrim), an American secret agent working in the British Mandate of Palestine after World War I.
+
+The text indicates it was written in 1920, as the narrator mentions "that was in 1920" when describing going to Jerusalem. This aligns with the historical setting of the British Mandate period following WWI.
+
+<result>
+Title = "Jimgrim and Allah's Peace"
+Author = "Talbot Mundy"
+Year = 1922
+
+Tags = ["fiction", "adventure", "historical-fiction"]
+
+Summary = """
+An adventure novel featuring James Schuyler Grim (Jimgrim), an American secret agent working for British intelligence in Palestine during the British Mandate period following World War I. The story is set in 1920 and involves intrigue, espionage, and adventure in Jerusalem and the surrounding region. Talbot Mundy was known for his adventure fiction set in exotic locales, particularly the Middle East and India, and his works often featured themes of cross-cultural understanding and critique of imperialism. This novel combines action, political intrigue, and insights into the complex political situation in post-WWI Palestine.
+"""
+
+Notes = """
+The novel was first published in 1922, though the story itself is set in 1920 as indicated by the narrator's opening remarks. This was originally serialized before book publication. Talbot Mundy (1879-1940) was a prolific writer of adventure fiction who spent time in British India and the Middle East, lending authenticity to his settings.
+"""
+</result>

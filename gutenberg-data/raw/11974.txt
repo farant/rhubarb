@@ -1,0 +1,21 @@
+I need to analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly from "Dialstone Lane" by W.W. Jacobs, as stated in the header. W.W. Jacobs (William Wymark Jacobs) was a popular English humorist and short story writer, best known for "The Monkey's Paw." This appears to be Part IV, Chapter XIV of the novel.
+
+Let me provide the structured information:
+
+<result>
+Title = "Dialstone Lane"
+Author = "W.W. Jacobs"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Dialstone Lane" is a humorous novel by W.W. Jacobs, the English author best known for his supernatural short story "The Monkey's Paw." This work is a comedic adventure tale involving a treasure-hunting expedition. The story follows the misadventures of several characters, including Mr. Chalk and Mr. Stobell, who embark on a voyage in search of treasure. As this excerpt shows, their wives have been cleverly left behind on shore through various stratagems by their husbands. The novel showcases Jacobs's talent for gentle humor, character comedy, and satirical observations of middle-class English life at the turn of the 20th century.
+"""
+
+Notes = """
+"Dialstone Lane" was first published in 1904. W.W. Jacobs (1863-1943) was a prolific writer of humorous fiction and sea stories. While he was not a Catholic author, his works are generally wholesome and family-friendly, appropriate for children and adults alike. The humor is light and character-driven rather than crude or offensive.
+"""
+</result>

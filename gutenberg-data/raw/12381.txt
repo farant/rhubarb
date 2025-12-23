@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as a historical Presbyterian document related to the Scottish Covenanting tradition. This is the Auchensaugh Renovation of the National Covenant and Solemn League and Covenant, which was originally renewed in Scotland in 1712 and then renovated again in Philadelphia in 1880.
+
+<result>
+Title = "The Auchensaugh Renovation of the National Covenant and Solemn League and Covenant"
+Author = "Reformed Presbytery"
+Year = 1712
+
+Tags = ["non-fiction", "historical-document", "protestant", "religious"]
+
+Summary = """
+This is a Presbyterian covenanting document that records the renewal of the Scottish National Covenant and Solemn League and Covenant at Auchensaugh, near Douglas, Scotland on July 24, 1712. The National Covenant (1638) and Solemn League and Covenant (1643) were foundational documents of Scottish Presbyterianism that bound subscribers to maintain Reformed Protestant religion and resist religious innovations. The Auchensaugh Renovation occurred during a period of persecution of Covenanters in Scotland. This particular edition was published in Philadelphia in 1880 by the Reformed Presbytery, which added their own renovation of these covenants to the American context, demonstrating the continuation of the Covenanting tradition among Scottish-descended Presbyterians in America.
+"""
+
+Notes = """
+I chose 1712 as the primary year because that is when the Auchensaugh Renovation occurred, which is the main historical event being documented. While this specific edition was published in Philadelphia in 1880, the core historical document and transaction dates to 1712. The original National Covenant dates to 1638 and the Solemn League and Covenant to 1643, but the Auchensaugh Renovation of 1712 represents a distinct historical moment in the Covenanting tradition. This is not a Catholic work but rather a Reformed Presbyterian document from a tradition that was historically opposed to episcopacy and often at odds with both Catholic and Anglican church governance.
+"""
+</result>

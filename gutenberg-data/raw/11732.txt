@@ -1,0 +1,26 @@
+I'll analyze this text to identify the title, author, year, and other details.
+
+This is clearly an issue of **Punch, or The London Charivari**, the famous British humor and satire magazine. The text shows this is Volume 156 from April 16, 1919.
+
+However, this presents a challenge for categorization since:
+- It's a periodical/magazine issue, not a book with a single author
+- Punch was a collaborative effort with multiple contributors
+- The "author" would be the editorial staff/various writers
+
+Let me structure this appropriately:
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 156, April 16, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "historical-document"]
+
+Summary = """
+Punch, or The London Charivari was Britain's premier humor and satire magazine, published from 1841 to 1992 (and briefly revived later). This issue from April 16, 1919 captures the immediate post-World War I period in Britain, with satirical commentary on contemporary issues including American Prohibition, housing shortages in London, and political matters. The magazine was known for its witty social and political commentary, cartoons, and parodies, and was influential in shaping British humor and public discourse for over 150 years. This particular issue includes the "Charivaria" section, which contained brief humorous observations and satirical news items.
+"""
+
+Notes = """
+Year is straightforward as 1919 since this is a periodical issue from that specific date. Punch was not specifically Catholic in nature - it was a secular British humor magazine. The issue reflects the social concerns of post-WWI Britain, including housing crises and the impending American Prohibition (which began in 1920).
+"""
+</result>

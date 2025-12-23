@@ -1,0 +1,15 @@
+<result>
+Title = "The Lure of the Dim Trails"
+Author = "B. M. Bower"
+Year = 1907
+
+Tags = ["fiction", "western", "appropriate-for-children"]
+
+Summary = """
+'The Lure of the Dim Trails' is a Western novel by B. M. Bower (pen name of Bertha Muzzy Sinclair), one of the earliest and most successful female writers of Western fiction. The novel follows Thurston, an Eastern writer experiencing professional frustration with his genteel fiction, who is encouraged to travel West to gain authentic experience and "local color" for the swashbuckling Western tales that are in vogue with publishers. The story explores the contrast between Eastern literary pretensions and the reality of Western life, as well as the romance and adventure of the frontier. Bower was known for her realistic portrayals of ranch life and cowboy culture, having lived in Montana herself.
+"""
+
+Notes = """
+The novel was first published in 1907. B. M. Bower (1871-1940) was a pioneering woman writer in the Western genre, and this was one of her earlier novels following her successful debut 'Chip of the Flying U' (1906). The work is notable for its self-aware treatment of Eastern writers attempting to capture Western authenticity, which was somewhat autobiographical given Bower's own experience as a Montana resident writing for Eastern publishers.
+"""
+</result>

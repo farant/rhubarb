@@ -1,0 +1,15 @@
+<result>
+Title = "William Tell Overture"
+Author = "Gioachino Rossini"
+Year = 1829
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a recording of the William Tell Overture, composed by Gioachino Rossini for his opera "Guillaume Tell" (William Tell). The overture is one of the most famous orchestral pieces in classical music, known especially for its rousing finale that has been widely used in popular culture. This particular recording is performed by Sodero's Band and was edited/produced by Thomas A. Edison, making it a historical recording from the early era of sound recording technology. The work itself tells the story of the Swiss folk hero William Tell and the Swiss struggle for independence.
+"""
+
+Notes = """
+I chose 1829 as the year because that's when Rossini's opera "Guillaume Tell" premiered in Paris, and the overture was composed as part of that opera. While this Project Gutenberg entry is actually an audio recording (not a text), and the recording itself would be from the early 20th century (Edison era), the appropriate historical date for timeline purposes is the original composition date. The overture has become far more famous than the opera itself and is considered one of Rossini's masterworks.
+"""
+</result>

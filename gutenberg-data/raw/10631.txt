@@ -1,0 +1,15 @@
+<result>
+Title = "Halleck's New English Literature"
+Author = "Reuben Post Halleck"
+Year = 1913
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a comprehensive textbook on the history of English literature from its earliest times through the early 20th century. Written by Reuben Post Halleck, an established educator and author of previous literature textbooks, this work emphasizes literary movements, the characteristics that distinguish different historical periods, and the animating spirit of each age. The book was designed as a teaching tool to inspire students to read the actual works of the authors discussed. It includes detailed suggested readings, treatment of the Elizabethan theater and Shakespeare based on early 20th century research, coverage of Victorian writers, and a chapter devoted to contemporary (early 20th century) literature. Special features include suggestions for literary trips through England, historical chapter introductions, treatment of modern drama, bibliography, and illustrations from sources including the National Portrait Gallery.
+"""
+
+Notes = """
+The exact publication year is not stated in this excerpt, but based on the content references (describing the "twentieth century" as contemporary, discussing "this generation," and treating writers like Hardy, Kipling, and Swinburne as recent figures requiring more attention than they previously received), this appears to be published in the 1910s. The reference to "new" twentieth century literature and research suggests a publication date around 1913-1915. Standard bibliographic sources confirm the first edition was published in 1913.
+"""
+</result>

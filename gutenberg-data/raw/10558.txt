@@ -1,0 +1,15 @@
+<result>
+Title = "Vanity Fair"
+Author = "William Makepeace Thackeray"
+Year = 1848
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Vanity Fair: A Novel Without a Hero is William Makepeace Thackeray's satirical masterpiece that follows the fortunes of two contrasting women - the clever and manipulative Becky Sharp and the sweet but passive Amelia Sedley - as they navigate English society during the Napoleonic Wars. The novel is a biting critique of social climbing, vanity, and the corruption of early 19th-century British society. Thackeray's narrative technique and moral ambiguity made this one of the defining works of Victorian literature, presenting characters who are neither purely heroic nor villainous but thoroughly human in their flaws and aspirations.
+"""
+
+Notes = """
+Vanity Fair was originally published in monthly serial installments from January 1847 to July 1848. I've chosen 1848 as the year since that's when the complete work was available and is the date most commonly associated with the novel's publication. This Project Gutenberg entry is specifically for an audio version (mp3 format) recorded by Mike Eschman in 2003, but the underlying work is Thackeray's original 1848 novel.
+"""
+</result>

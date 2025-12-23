@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "Sanomalehtimiesajoiltani" (From My Days as a Journalist) by Juhani Aho, a Finnish author. The text shows it was published in 1911. Juhani Aho (1861-1921) was one of Finland's most important realist writers and journalists.
+
+<result>
+Title = "Sanomalehtimiesajoiltani"
+Author = "Juhani Aho"
+Year = 1911
+
+Tags = ["non-fiction", "memoir", "journalism"]
+
+Summary = """
+'Sanomalehtimiesajoiltani' (From My Days as a Journalist) is a collection of memoirs and observations by Juhani Aho about his experiences as a newspaper journalist in Finland during the late 19th century. The work provides a firsthand account of Finnish journalism, parliamentary life during the Estates period, and political culture in Finland under Russian rule. Aho was a pioneering Finnish realist writer and an influential journalist who played a significant role in Finnish cultural and political life during a critical period of national awakening. The book includes chapters on how he became a journalist, his work at the newspaper 'Suuri Suomalainen' (The Great Finn), and vivid descriptions of the Estates Diet sessions and political life in the 1880s.
+"""
+
+Notes = """
+The year 1911 is the publication date shown on the title page. Juhani Aho was not a Catholic author - Finland was predominantly Lutheran - so the 'catholic' tag is not applicable. The work is a valuable historical document about Finnish journalism and political life during a formative period in Finnish national history.
+"""
+</result>

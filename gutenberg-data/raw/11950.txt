@@ -1,0 +1,15 @@
+<result>
+Title = "Preliminary Report of the Commission Appointed by the University of Pennsylvania to Investigate Modern Spiritualism"
+Author = "Seybert Commission (University of Pennsylvania)"
+Year = 1887
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This report documents the findings of the Seybert Commission, established by the University of Pennsylvania at the bequest of Henry Seybert to scientifically investigate claims of Spiritualism and mediumistic phenomena. The commission, led by Acting-Chairman Dr. Horace Howard Furness, conducted investigations into various spiritualist practices including slate-writing, sealed letter reading, and materialization séances. The report presents a skeptical examination of these phenomena, with detailed observations of mediums and their methods. The work was originally published in 1887 and republished in 1920 with a foreword by H.H. Furness, Jr., noting its continued relevance to psychology and psychiatry. The report was controversial at the time and drew hostile responses from spiritualist publications and practitioners.
+"""
+
+Notes = """
+Year chosen is 1887, the original publication date, as this represents when the Commission's work was completed and first made public. While this Project Gutenberg text appears to be from the 1920 republication (which included the foreword by H.H. Furness, Jr.), the substantive investigative work and the historical significance of the report date to 1887, during the height of the Spiritualism movement in America. The author is listed as the Seybert Commission rather than individual authors, though Dr. Horace Howard Furness (Acting-Chairman) and Dr. Calvin B. Knerr are specifically mentioned as contributors.
+"""
+</result>

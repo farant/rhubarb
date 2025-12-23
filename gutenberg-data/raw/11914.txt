@@ -1,0 +1,17 @@
+I can see this is a Finnish literary work by Johannes Linnankoski titled "Pakolaiset" (The Fugitives), published in 1908. Let me provide the structured information:
+
+<result>
+Title = "Pakolaiset"
+Author = "Johannes Linnankoski"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Pakolaiset' (The Fugitives) is a novel by Finnish author Johannes Linnankoski, published in 1908. Linnankoski (1869-1913) was a prominent Finnish writer during the national romantic period. The excerpt shows the opening scene with Uutelan Juha, a widower, shaving and contemplating his reflection, feeling youthful despite his age. Linnankoski is best known for his novel 'Laulu tulipunaisesta kukasta' (The Song of the Blood-Red Flower), and his works often dealt with themes of nature, human passion, and Finnish rural life during a period of national awakening.
+"""
+
+Notes = """
+The year 1908 is clearly stated in the text as the publication year ('Ilmestyi 1908'). This work is from Finland's national romantic period, when Finnish literature was flourishing as part of the broader cultural movement toward independence from Russia. Johannes Linnankoski was a pseudonym for Vihtori Peltonen.
+"""
+</result>

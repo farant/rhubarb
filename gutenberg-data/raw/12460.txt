@@ -1,0 +1,17 @@
+I recognize this work! It's "Pomona's Travels" by Frank R. Stockton, a humorous epistolary novel and sequel to his popular "Rudder Grange" series. This features the character Pomona, who was the charming and resourceful handmaiden in the original "Rudder Grange" stories.
+
+<result>
+Title = "Pomona's Travels"
+Author = "Frank R. Stockton"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children", "humor", "epistolary"]
+
+Summary = """
+'Pomona's Travels' is a humorous epistolary novel by Frank R. Stockton, presented as a series of letters written by Pomona to her former employer, the Mistress of Rudder Grange. The novel follows Pomona's adventures traveling abroad, likely in England based on references to vicarages and four-in-hand coaches. This is a sequel to Stockton's popular 'Rudder Grange' series, which began in 1879. Pomona was a beloved character known for her distinctive voice, malapropisms, and practical wisdom. Stockton was an American humorist and author best known for his fairy tale 'The Lady, or the Tiger?' His work was characterized by gentle humor, whimsy, and clever plotting.
+"""
+
+Notes = """
+The year 1894 is taken directly from the title page of the Project Gutenberg edition and represents the original publication date. This work was illustrated by A.B. Frost, a renowned illustrator of the period who frequently collaborated with Stockton.
+"""
+</result>

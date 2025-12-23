@@ -1,0 +1,15 @@
+<result>
+Title = "The Principal Navigations, Voyages, Traffiques and Discoveries of the English Nation, Volume X"
+Author = "Richard Hakluyt"
+Year = 1598
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume X of Richard Hakluyt's monumental work "The Principal Navigations, Voyages, Traffiques and Discoveries of the English Nation," one of the most important collections of English exploration narratives from the age of discovery. Hakluyt (c. 1552-1616) was an English clergyman, geographer, and editor who compiled accounts of English voyages of exploration, trade, and colonization. The complete work, published in multiple volumes between 1598-1600 (expanding on an earlier 1589 edition), includes firsthand accounts and translations of voyages to the Americas, Africa, Asia, and the Arctic. These narratives provide invaluable historical documentation of early English maritime exploration, encounters with other cultures, trade routes, and the beginnings of English colonial ambitions. The work is considered a cornerstone of English literature and history, preserving many accounts that would otherwise have been lost.
+"""
+
+Notes = """
+The original first edition was published in 1589 as a single volume. Hakluyt then greatly expanded the work, publishing it in three volumes between 1598-1600. I've chosen 1598 as the year since this represents the main expanded edition that became the standard reference. This particular text is from a 19th-century edition edited by Edmund Goldsmid, but the historical significance dates to Hakluyt's original compilation. The work is sometimes referred to as "Hakluyt's Voyages."
+"""
+</result>

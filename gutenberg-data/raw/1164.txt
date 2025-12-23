@@ -1,0 +1,15 @@
+<result>
+Title = "The Iron Heel"
+Author = "Jack London"
+Year = 1908
+
+Tags = ["fiction", "political-fiction", "dystopian", "science-fiction"]
+
+Summary = """
+The Iron Heel is a dystopian novel by Jack London, first published in 1908. It is considered one of the earliest examples of modern dystopian fiction and presents a socialist perspective on class struggle in America. The novel is framed as a manuscript written by Avis Everhard, chronicling the rise of an oligarchic tyranny in the United States and her husband Ernest Everhard's role in the revolutionary socialist movement fighting against it. The "Iron Heel" refers to the oppressive oligarchy that crushes the working class. The book presents London's Marxist views and predictions about the consolidation of corporate power and the suppression of labor movements. It influenced later dystopian works including George Orwell's 1984.
+"""
+
+Notes = """
+Year chosen is 1908, the original publication date of the novel. Jack London (1876-1937) was an American novelist and social activist known for works like The Call of the Wild and White Fang. While London had socialist political views, he was not a Catholic author, so the 'catholic' tag is not included. The novel contains political violence and mature themes, so it is not tagged as appropriate for children.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics: Masterpieces of German Literature Translated into English, Volume V"
+Author = "Various"
+Year = 1914
+
+Tags = ["non-fiction", "anthology", "translation", "literary-criticism"]
+
+Summary = """
+This is Volume V of a twenty-volume anthology series titled "The German Classics," published in 1914 as part of the Patrons' Edition. This particular volume focuses on German Romantic philosophy and later German Romanticism, featuring translations of works by various German authors and philosophers. The volume includes essays by Frank Thilly on Romantic philosophers (Fichte, Schelling, and Schleiermacher) and George H. Danton on Later German Romanticism. It also contains numerous poetic translations by Percy Mackaye, A.I. Du P. Coleman, and Margarete Münsterberg, including selections from "The Boy's Magic Horn" (Des Knaben Wunderhorn) and various German Romantic poems. This ambitious early 20th-century project aimed to make the masterpieces of German literature accessible to English-speaking audiences.
+"""
+
+Notes = """
+The year 1914 represents the publication date of this specific anthology volume, which is the most historically accurate date for this work as a collected edition. While the individual German works contained within span from the late 18th through early 19th centuries (the Romantic period), this compilation itself is a distinct editorial work from 1914. The anthology represents an important scholarly effort to introduce German Romantic literature and philosophy to American readers just before World War I would dramatically reshape cultural relations between Germany and the English-speaking world.
+"""
+</result>

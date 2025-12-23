@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work, author, and provide the requested metadata.
+
+This is the personal memoir of Daniel Drayton, who was imprisoned for his role in the Pearl incident - a famous attempted escape of enslaved people from Washington, D.C. in 1848. Drayton attempted to help 77 enslaved individuals escape on the schooner Pearl, but they were captured. This was one of the largest attempted escapes of enslaved people in U.S. history and caused significant controversy in the antebellum period.
+
+<result>
+Title = "Personal Memoir of Daniel Drayton: For Four Years and Four Months a Prisoner (For Charity's Sake) in Washington Jail"
+Author = "Daniel Drayton"
+Year = 1855
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+This memoir recounts the experiences of Daniel Drayton, a ship captain who attempted to help 77 enslaved people escape from Washington, D.C. aboard the schooner Pearl in April 1848. The escape attempt failed when the vessel was captured, and Drayton spent over four years imprisoned in Washington Jail. The Pearl incident was one of the largest attempted slave escapes in American history and became a significant flashpoint in the national debate over slavery. Drayton's memoir provides a first-hand account of the voyage, capture, imprisonment, and the legal and political aftermath of this pivotal event in antebellum American history.
+"""
+
+Notes = """
+The publication year of 1855 is taken from the title page. The copyright notice shows 1853, but the actual publication appears to be 1855 based on the title page date. This work is historically significant as a primary source document from the abolitionist movement and provides direct testimony about the conditions of slavery and the risks taken by those who assisted in escape attempts.
+"""
+</result>

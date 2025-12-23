@@ -1,0 +1,15 @@
+I'll analyze this Project Gutenberg text for you.
+
+<result>
+Title = "The Purple Cloud"
+Author = "M.P. Shiel"
+Year = 1901
+
+Tags = ["fiction", "science-fiction", "apocalyptic"]
+
+Summary = """
+'The Purple Cloud' is a science fiction novel by M.P. Shiel, published in 1901. It is considered one of the early apocalyptic novels and tells the story of Adam Jeffson, who participates in an Arctic expedition to reach the North Pole. Upon his return, he discovers that a mysterious purple cloud has killed nearly all life on Earth. The novel explores themes of isolation, fate, and the last man on Earth, and is noted for its vivid prose and philosophical undertones. Shiel was a British writer known for his supernatural and science fiction works."""
+
+Notes = """
+The year 1901 is clearly stated on the title page of this text. The novel was serialized and then published in book form in 1901. This work predates many other famous 'last man' apocalyptic narratives and influenced the development of the genre. The frame narrative structure is evident from this introduction, where a Dr. Arthur Lister Browne sends notebooks in Pitman's shorthand to the narrator in May 1900, though the book itself was published in 1901."""
+</result>

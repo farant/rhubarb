@@ -1,0 +1,15 @@
+<result>
+Title = "The Man Who Laughs: A Romance of English History"
+Author = "Victor Hugo"
+Year = 1869
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'The Man Who Laughs' (originally 'L'Homme qui rit') is a historical novel by Victor Hugo, first published in April 1869. The story is set in England during the late 17th and early 18th centuries, primarily during the reign of Queen Anne. It tells the tale of Gwynplaine, a young man whose face has been mutilated into a permanent grin by comprachicos (child traders who deformed children to make them more valuable as curiosities). Despite his disfigurement, Gwynplaine travels with a mountebank named Ursus and falls in love with a blind girl named Dea. The novel explores themes of human cruelty, social injustice, the nature of beauty and ugliness, and the corrupting influence of power and privilege. Hugo uses the grotesque story to critique aristocratic society and examine the human condition. The work is notable for its dark romanticism and social commentary, typical of Hugo's later works.
+"""
+
+Notes = """
+The novel was first published in French in April 1869. While Victor Hugo was baptized Catholic and received a Catholic education, he became increasingly anticlerical and republican throughout his life, particularly after his exile. His later works, including 'The Man Who Laughs,' contain strong criticism of social institutions including the aristocracy and established church hierarchies. Therefore, this work would not receive a nihil obstat or imprimatur and should not be tagged as 'catholic' despite Hugo's nominal religious background. The work is not appropriate for children due to its dark themes, descriptions of child mutilation, and mature content.
+"""
+</result>

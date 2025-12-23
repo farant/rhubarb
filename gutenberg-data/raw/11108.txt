@@ -1,0 +1,19 @@
+I can see this is a German literary work from the Project Gutenberg collection. Let me analyze the text to provide you with the structured information.
+
+This is "Aus dem Durchschnitt" (From the Average/From the Ordinary), a novel by Gustav Falke, published in Hamburg in 1900. The text clearly shows the publication information at the beginning. Gustav Falke was a German writer and poet associated with naturalism and impressionism in literature.
+
+<result>
+Title = "Aus dem Durchschnitt"
+Author = "Gustav Falke"
+Year = 1900
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+"Aus dem Durchschnitt" (From the Average/From the Ordinary) is a novel by Gustav Falke, a German writer and poet known for his naturalistic and impressionistic style. The work is dedicated to his brother Albert. The opening scene depicts a tragic accident in a Hamburg suburb where a carriage horse falls on icy streets and breaks both front legs, setting a tone of everyday hardship and resignation. Falke was known for his depictions of ordinary life and the struggles of common people in late 19th/early 20th century Germany.
+"""
+
+Notes = """
+The year 1900 is clearly stated on the title page as the publication date in Hamburg. Gustav Falke (1853-1916) was not a Catholic author - he was part of the German naturalist literary movement. The work depicts everyday life and social realism rather than religious themes.
+"""
+</result>

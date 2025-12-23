@@ -1,0 +1,15 @@
+<result>
+Title = "I Am a Pilgrim"
+Author = "Roger McGuinn"
+Year = 2001
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of "I Am a Pilgrim," a traditional American folk hymn performed by Roger McGuinn. McGuinn is best known as the founder and lead guitarist of The Byrds, one of the most influential rock bands of the 1960s. After The Byrds disbanded, McGuinn embarked on a solo career exploring American folk music traditions. This recording is part of his Folk Den project, which he began in 1995 to preserve and share traditional folk songs through digital distribution. "I Am a Pilgrim" is a classic gospel-influenced folk song that has been performed by numerous artists over the decades, expressing themes of spiritual journey and longing for home.
+"""
+
+Notes = """
+The year 2001 is based on the copyright date listed in the file (Copyright (C) 2001 McGuinn Music). This appears to be a recording/performance rather than a written text - it's an MP3 audio file released through Project Gutenberg's audio collection. The underlying song "I Am a Pilgrim" is a traditional folk hymn with origins likely in the 19th century, but this specific performance and recording is from 2001.
+"""
+</result>

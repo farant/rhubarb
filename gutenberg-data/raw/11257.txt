@@ -1,0 +1,15 @@
+<result>
+Title = "Little Folks Astray"
+Author = "Sophie May"
+Year = 1872
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Little Folks Astray" is part of Sophie May's popular children's book series featuring the Parlin and Clifford families. Sophie May was the pen name of Rebecca Sophia Clarke (1833-1906), a prolific American children's author who wrote numerous series including the "Little Prudy" books and "Dotty Dimple" series. Her works were immensely popular in the late 19th century and focused on the everyday adventures and moral development of middle-class children. This book appears to continue the stories of characters from her earlier works, with a focus on teaching children lessons about behavior, obedience, and respect for elders, which was typical of children's literature of that era. The dedication to "Emma Adams" and the author's note to parents indicate the didactic nature of the work, common in Victorian-era children's fiction.
+"""
+
+Notes = """
+The year 1872 is clearly indicated on the title page as the publication date. Sophie May's works were part of the moral instruction genre of children's literature popular in post-Civil War America. While her books contained Christian themes and moral lessons, they were not specifically Catholic works - Sophie May was writing from a Protestant American perspective of the period.
+"""
+</result>

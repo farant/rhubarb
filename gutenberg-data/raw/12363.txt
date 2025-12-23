@@ -1,0 +1,15 @@
+<result>
+Title = "The Botanist's Companion, or an Introduction to the Knowledge of Practical Botany"
+Author = "William Salisbury"
+Year = 1816
+
+Tags = ["non-fiction", "science", "botany", "reference"]
+
+Summary = """
+The Botanist's Companion is a comprehensive manual of practical botany by William Salisbury, of the Botanic Garden of Sloane-Street in London. This work focuses on plants growing wild in Great Britain or cultivated for agriculture, medicine, rural economy, or the arts. Unlike other botanical manuals of the period, Salisbury's work emphasizes the practical uses and applications of plants rather than purely taxonomic classification. The author conducted experiments for the Board of Agriculture over 25 years, particularly on grasses, and intended this as both a field guide and a reference work for his botanic garden. Volume II includes detailed descriptions of medicinal plants and their applications. The work represents early 19th-century British botanical science with a practical, utilitarian focus.
+"""
+
+Notes = """
+The exact publication year is 1816 based on historical records of this work. William Salisbury (c. 1758-1829) was a prominent British botanist who operated a botanic garden in Sloane Street, London, and conducted extensive research on British flora and agricultural plants. This is Volume II of a multi-volume work. The preface indicates the author had 25 years of experience at the time of writing, including work with the Board of Agriculture on grass cultivation experiments.
+"""
+</result>

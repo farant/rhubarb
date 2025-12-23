@@ -1,0 +1,15 @@
+<result>
+Title = "Ravenna: A Study"
+Author = "Edward Hutton"
+Year = 1913
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+"Ravenna: A Study" is a historical work by Edward Hutton that examines the unique importance of Ravenna in Italian and European history, particularly during the Dark Ages from the time of Alaric's invasion of Italy (early 5th century) to Charlemagne's coronation (800 AD). The book aims to explain Ravenna's crucial role in the political geography of the Roman Empire and its significance during the decline and fall of Roman administration. Ravenna served as the capital of the Western Roman Empire from 402 AD, and later became the center of Byzantine power in Italy. The work is illustrated by Harald Sund and draws on various historical sources including the scholarship of Dr. Hodgkin, Professor Diehl, and Dr. Corrado Ricci.
+"""
+
+Notes = """
+Publication year 1913 is clearly stated in the book's title page. This is a scholarly historical study written in the early 20th century, not a translation or compilation of earlier works, so the year represents the original publication date.
+"""
+</result>

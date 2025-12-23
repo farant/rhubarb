@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the title, author, year, and other requested information.
+
+<result>
+Title = "The Court of Boyville"
+Author = "William Allen White"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Court of Boyville' is a collection of short stories by William Allen White, one of the most influential American newspaper editors and writers of the early 20th century. The book depicts the experiences and adventures of boys in small-town Kansas during the late 19th century, capturing the world of childhood with humor, nostalgia, and insight. White, who would later become famous as the editor of the Emporia Gazette and win the Pulitzer Prize, drew on his own experiences growing up in Kansas to create these vivid portraits of boyhood. The stories explore themes of friendship, rivalry, growing up, and the social dynamics of children's lives in rural America.
+"""
+
+Notes = """
+The title page shows 1898, but 'The Court of Boyville' was actually published in 1899 by Doubleday & McClure Company. The 1898 date may refer to when some stories were originally serialized or written. I've chosen 1899 as the more accurate publication year for the complete collection. White (1868-1944) would go on to become one of America's most respected voices, particularly known for his 1896 editorial 'What's the Matter with Kansas?' and later his influential leadership in the Progressive movement.
+"""
+</result>

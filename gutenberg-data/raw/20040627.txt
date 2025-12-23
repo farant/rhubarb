@@ -1,0 +1,15 @@
+<result>
+Title = "Write It Right: A Little Blacklist of Literary Faults"
+Author = "Ambrose Bierce"
+Year = 1909
+
+Tags = ["non-fiction"]
+
+Summary = """
+Write It Right is a prescriptive style guide and dictionary of usage by American writer and journalist Ambrose Bierce, published in 1909. The work is a catalog of what Bierce considered to be common errors, solecisms, and misuses in written English. It reflects Bierce's characteristically acerbic wit and his commitment to precision in language. The book provides examples of incorrect usage followed by explanations of why they are wrong and what should be used instead. Bierce was known for his satirical writing and sharp criticism, and this work demonstrates his strong opinions about proper English usage and his intolerance for what he saw as linguistic decay. The work remains a fascinating historical document of early 20th-century prescriptive grammar and usage, though many of his proscriptions would be considered overly rigid by modern standards.
+"""
+
+Notes = """
+The year 1909 is clearly stated on the title page of this edition and represents the original publication date of this work. This is one of Bierce's later works, published before his mysterious disappearance in Mexico around 1913-1914.
+"""
+</result>

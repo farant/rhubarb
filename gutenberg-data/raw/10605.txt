@@ -1,0 +1,17 @@
+I recognize this work immediately - it's "Adventures in Contentment" by David Grayson (the pen name of Ray Stannard Baker), first published in 1907. This is a beloved American classic about leaving city life behind for rural simplicity and finding peace in the countryside.
+
+<result>
+Title = "Adventures in Contentment"
+Author = "David Grayson (Ray Stannard Baker)"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children", "memoir", "rural-life", "philosophy"]
+
+Summary = """
+'Adventures in Contentment' is a reflective memoir by David Grayson (pen name of journalist Ray Stannard Baker) about abandoning the hurried, stressful life of city and business to become a farmer. The book chronicles his experiences finding peace, satisfaction, and deep contentment in rural life and simple living. Written in an accessible, contemplative style, it explores themes of materialism versus spirituality, the value of slowing down, and finding joy in ordinary experiences. The work was enormously popular in early 20th century America and became part of a series of books about Grayson's farm life. It represents a quintessentially American pastoral tradition and offers timeless reflections on what constitutes a meaningful life.
+"""
+
+Notes = """
+First published in 1907. Ray Stannard Baker was a muckraking journalist and later Woodrow Wilson's press secretary, but is perhaps best remembered for this series of pastoral essays written under his Grayson pseudonym. The book resonated strongly with Progressive Era readers feeling overwhelmed by industrialization and urbanization.
+"""
+</result>

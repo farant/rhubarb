@@ -1,0 +1,34 @@
+I need to examine this text to identify the work, author, and publication details.
+
+This is a Serbian text (in Cyrillic script) from Project Gutenberg. The title page clearly shows:
+
+**Title:** "КАМЕНО ДОБА" (Kameno doba / The Stone Age)
+**Author:** "ЈОВАН ЖУЈОВИЋ" (Jovan Žujović)
+**Publisher:** Printed in Belgrade by the State Printing Office of the Kingdom of Serbia
+**Year:** 1893
+
+This is a scholarly work about the Stone Age by Serbian geologist and ethnographer Jovan Žujović. The table of contents shows it's a systematic study covering:
+- Primitive habitations
+- River dwellers (Поречани)
+- Cave dwellers (Пећинци)
+- Coastal peoples (Приморци)
+- Lake dwellers (Језерци)
+- Early city builders (Праграђани)
+
+The work discusses the divisions of the Stone Age (Old and New Stone Age), tools, living conditions, and human development during prehistoric times.
+
+<result>
+Title = "Камено доба (The Stone Age)"
+Author = "Јован Жујовић (Jovan Žujović)"
+Year = 1893
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A scholarly study of the Stone Age written in Serbian by geologist and ethnographer Jovan Žujović. Published in Belgrade in 1893 by the State Printing Office of the Kingdom of Serbia as part of the Serbian Literary Guild series (Српска Књижевна Задруга). The work systematically examines prehistoric human habitations and cultures, including river dwellers, cave dwellers, coastal peoples, lake dwellers, and early fortified settlements. It discusses the divisions of the Stone Age into Old and New periods, the development of stone tools (particularly flint implements), hunting and fishing practices, use of fire, burial customs, and the progression of human civilization through various stages of the prehistoric era.
+"""
+
+Notes = """
+This is the original publication year (1893) of this Serbian ethnographic and archaeological work. Jovan Žujović (1856-1936) was a prominent Serbian geologist, geographer, and ethnographer who contributed significantly to Serbian scientific literature in the late 19th and early 20th centuries. This work represents an important early Serbian contribution to the study of prehistoric archaeology.
+"""
+</result>

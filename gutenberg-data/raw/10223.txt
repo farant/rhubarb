@@ -1,0 +1,26 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a German reference work. From the text, I can see:
+
+1. It's from "Meyers Konversationslexikon" (Meyer's Conversational Lexicon), 4th edition, 1888-1890
+2. This is a digitization project snapshot from October 2003
+3. The text shows entries starting with "S" (Sodbrennen, Soddoma)
+4. It's an encyclopedia/reference work, not a narrative work
+
+Meyer's Konversationslexikon was one of the most important German-language encyclopedias of the 19th century, comparable to Encyclopedia Britannica in the English-speaking world.
+
+<result>
+Title = "Meyers Konversations-Lexikon, 4. Auflage, Band 14 (S)"
+Author = "Bibliographisches Institut (publisher/editor)"
+Year = 1888
+
+Tags = ["non-fiction", "reference-work", "encyclopedia"]
+
+Summary = """
+Meyers Konversations-Lexikon was one of the major German-language encyclopedias of the 19th and early 20th centuries, often considered the German equivalent of Encyclopedia Britannica. The 4th edition was published between 1885-1892 in 16 volumes plus supplements. This particular file represents Volume 14, covering entries beginning with the letter "S". The encyclopedia covered a vast range of topics including science, history, geography, biography, arts, and general knowledge, reflecting the state of human knowledge in the late 19th century. This Project Gutenberg file is from a 2003 digitization effort of the work.
+"""
+
+Notes = """
+The 4th edition (Vierte Auflage) was published from 1885-1892, with most volumes appearing 1888-1890. I chose 1888 as a representative year for this volume. This is not a work by a single author but rather a comprehensive reference work compiled by many contributors under the auspices of the Bibliographisches Institut in Leipzig. The text indicates this is an ongoing digitization project with the October 2003 snapshot representing work-in-progress.
+"""
+</result>

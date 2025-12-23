@@ -1,0 +1,17 @@
+I recognize this text as an important 18th-century French abolitionist discourse. Let me analyze it for you:
+
+<result>
+Title = "Discours sur la nécessité et les moyens de détruire l'esclavage dans les colonies"
+Author = "André-Daniel Laffon de Ladebat"
+Year = 1788
+
+Tags = ["non-fiction", "historical-document", "abolitionist"]
+
+Summary = """
+This is an anti-slavery discourse read at a public session of the Royal Academy of Sciences, Letters and Arts of Bordeaux on August 26, 1788. The author, André-Daniel Laffon de Ladebat (1746-1829), was a prominent Bordeaux merchant, economist, and member of various academies. The work addresses the necessity and means of destroying slavery in the colonies, building on Montesquieu's arguments against slavery in "The Spirit of Laws." Written on the eve of the French Revolution, this discourse represents Enlightenment thinking on human rights and was part of the growing abolitionist movement in France. Ladebat argues that the abolition of slavery is not only morally necessary but economically viable, attempting to reconcile humanitarian concerns with colonial interests. The work is significant as it came from Bordeaux, a major French port deeply involved in the slave trade, making the author's position particularly notable.
+"""
+
+Notes = """
+The year 1788 is clearly stated as the publication date and the date of the public reading. This was a pivotal moment in the abolitionist movement, just before the French Revolution. The text references the formation of abolitionist societies (likely the Société des Amis des Noirs, founded in 1788) and debates in the English Parliament about the slave trade. This is the original publication date of this specific discourse.
+"""
+</result>

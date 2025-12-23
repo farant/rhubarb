@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Examiner, Part 4 of 4"
+Author = "The American Anti-Slavery Society"
+Year = 1839
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the fourth and final part of "The Anti-Slavery Examiner," a periodical published by the American Anti-Slavery Society. This particular issue (No. 12-13) contains multiple essays arguing against slavery from religious and constitutional perspectives. The main essay, "Chattel Principle The Abhorrence of Jesus Christ and the Apostles; Or No Refuge for American Slavery in the New Testament" by Beriah Green, presents biblical arguments against slavery. It also includes essays on the condition of free Black people in the United States and whether abolitionists could participate in government under the U.S. Constitution. The Anti-Slavery Examiner was an important abolitionist publication that used moral, religious, and legal arguments to advocate for the immediate end of slavery in the United States.
+"""
+
+Notes = """
+The year 1839 is clearly stated as the publication date. While technically a periodical rather than a single-author book, this represents an important historical document from the American abolitionist movement. The American Anti-Slavery Society was founded in 1833 and published various materials advocating for immediate emancipation. This is not tagged as 'catholic' despite its religious content, as the American Anti-Slavery Society was a Protestant-dominated organization, and the New Testament arguments presented would have been from a Protestant perspective rather than Catholic theological tradition.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Turquoise Cup, and, The Desert"
+Author = "Arthur Cosslett Smith"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Turquoise Cup, and, The Desert" is a work of fiction by American author Arthur Cosslett Smith, published in 1903. The book appears to contain two separate stories or novellas: "The Turquoise Cup" and "The Desert." Based on the opening passage, "The Turquoise Cup" begins with a vivid portrait of a Cardinal Archbishop, suggesting the story may involve Catholic ecclesiastical settings or characters. Smith was known for writing adventure and romantic fiction in the early 20th century, often with exotic or historical settings.
+"""
+
+Notes = """
+The year 1903 is clearly stated on the title page of the Project Gutenberg text and represents the original publication date. While the story features a Catholic cardinal as a character, this appears to be a work of fiction rather than a devotional or theological text, so it does not receive the 'catholic' tag despite the religious subject matter.
+"""
+</result>

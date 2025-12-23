@@ -1,0 +1,17 @@
+I can identify this text from its content. This is a collection of essays from two periodical publications by Samuel Johnson and others.
+
+<result>
+Title = "The Adventurer and The Idler"
+Author = "Samuel Johnson, John Hawkesworth, and others"
+Year = 1752
+
+Tags = ["non-fiction", "essays", "periodical-literature", "appropriate-for-children"]
+
+Summary = """
+This is a collection of essays from two influential 18th-century periodicals. The Adventurer was launched in 1752 by Dr. John Hawkesworth, who admired and imitated Johnson's earlier periodical, The Rambler. Johnson himself contributed numerous essays starting in 1753, along with other notable writers including Dr. Joseph Warton, Dr. Bathurst, George Colman, Mrs. Chapone, and Hamilton Boyle. The Idler was another series of essays by Johnson published from 1758-1760. These periodical essays covered moral, social, and literary topics in the style that made Johnson one of the most influential writers of the 18th century. The essays were models of English prose style and moral reflection.
+"""
+
+Notes = """
+I chose 1752 as the year because this represents when The Adventurer first began publication (November 7, 1752), which is the earlier of the two works in this collection and marks the historical origin of the periodical. While this edition was published in 1825 (as indicated by MDCCCXXV on the title page), the original publication date is most relevant for historical timeline purposes. The Idler appeared later (1758-1760), but 1752 represents when this body of work began.
+"""
+</result>

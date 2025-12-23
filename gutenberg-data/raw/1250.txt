@@ -1,0 +1,15 @@
+<result>
+Title = "Anthem"
+Author = "Ayn Rand"
+Year = 1938
+
+Tags = ["fiction", "dystopian", "philosophy"]
+
+Summary = """
+Anthem is a dystopian novella by Ayn Rand, first published in 1938. Set in a dark future where individuality has been eradicated and collectivism is absolute, the story follows a young man named Equality 7-2521 who lives in a society where the concept of "I" has been eliminated and replaced with "we." The protagonist commits the ultimate transgression by conducting independent scientific experiments and eventually rediscovering the lost word "I" and the concept of individual identity. The novella explores themes of individualism versus collectivism, the importance of ego and self, and the dangers of totalitarianism. It serves as an early expression of Rand's Objectivist philosophy, which she would later develop more fully in works like The Fountainhead and Atlas Shrugged.
+"""
+
+Notes = """
+Originally published in 1938 in England. It was revised and republished in the United States in 1946. I chose 1938 as it represents the original publication date and the work's first appearance. The novella is Rand's shortest major work of fiction and represents her philosophical ideas in their most distilled form.
+"""
+</result>

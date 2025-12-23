@@ -1,0 +1,21 @@
+I recognize this work from the title page and author information provided. Let me analyze what I can determine:
+
+This is "Essays in Rebellion" by Henry W. Nevinson (full name: Henry Woodd Nevinson), a British journalist, war correspondent, and social activist. Based on the list of his other works mentioned (particularly "The New Spirit in India" from 1907-1908 and "Essays in Freedom" which preceded this), and my knowledge of his publishing history, "Essays in Rebellion" was published in 1913.
+
+Nevinson was known for his progressive political writings, campaigning against slavery (as evidenced by "A Modern Slavery"), and his coverage of various revolutionary movements. This collection of essays would have dealt with themes of social justice, liberty, and reform from a progressive but not explicitly Catholic perspective.
+
+<result>
+Title = "Essays in Rebellion"
+Author = "Henry W. Nevinson"
+Year = 1913
+
+Tags = ["non-fiction", "essays", "political-commentary"]
+
+Summary = """
+A collection of essays by Henry Woodd Nevinson, a prominent British journalist, war correspondent, and social reformer of the early 20th century. Nevinson was known for his progressive political views and activism against injustice, including his investigation of slavery in Portuguese Africa. This volume contains essays on themes of liberty, social reform, and resistance to oppression, reflecting the turbulent political atmosphere of pre-World War I Britain. His work combines literary style with passionate advocacy for democratic ideals and human rights.
+"""
+
+Notes = """
+The year 1913 is based on the publication date of this collection. Nevinson was active during a period of significant social upheaval in Britain, including the suffragette movement, labor unrest, and Irish Home Rule debates. While not a Catholic author, he was a humanist reformer in the tradition of British liberalism.
+"""
+</result>

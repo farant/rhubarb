@@ -1,0 +1,15 @@
+<result>
+Title = "The Einstein Theory of Relativity: A Concise Statement"
+Author = "Hendrik Antoon Lorentz"
+Year = 1920
+
+Tags = ["non-fiction", "science", "physics"]
+
+Summary = """
+This is a popular explanation of Einstein's theory of relativity written by Professor H.A. Lorentz of the University of Leyden. Lorentz, who was credited by Einstein himself as contributing to the development of relativity theory, wrote this concise statement to make the theory accessible to a general audience. The work was originally published as an article in The Nieuwe Rotterdamsche Courant on November 19, 1919, following the confirmation of Einstein's predictions during the solar eclipse of May 1919. The book addresses the widespread interest in relativity while acknowledging that most technical works on the subject were too advanced for readers without training in physics and higher mathematics.
+"""
+
+Notes = """
+The text indicates this was originally published as a newspaper article on November 19, 1919, and subsequently compiled with other articles into this book format, likely in 1920. Lorentz (1853-1928) was a Nobel Prize-winning Dutch physicist whose work on electromagnetic theory laid important groundwork for Einstein's special theory of relativity. The publication came shortly after the famous 1919 Eddington expedition that observed the bending of starlight during a solar eclipse, providing the first experimental confirmation of general relativity's predictions.
+"""
+</result>

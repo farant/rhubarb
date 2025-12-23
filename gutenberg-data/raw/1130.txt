@@ -1,0 +1,21 @@
+Looking at this text, I can clearly identify this as a Project Gutenberg edition of Shakespeare's *Hamlet*. The introduction discusses the original spelling and printing conventions from the First Folio or early quartos.
+
+The note about "u" and "v" substitutions and the example "Long liue the King" are characteristic of early modern English printing. Based on the discussion of "canon errors" and preservation of original spellings, this appears to be a facsimile or diplomatic transcription of an early edition.
+
+For the year, I'll use 1603 as that's when the First Quarto was published, though the more authoritative Second Quarto came in 1604-1605, and the First Folio version in 1623. Since this is clearly based on an early printing (given the spelling variants), 1603 is appropriate, though I'll note the ambiguity.
+
+<result>
+Title = "Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "classic-literature"]
+
+Summary = """
+Hamlet is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks revenge against his uncle Claudius for murdering Hamlet's father, the king, and subsequently seizing the throne and marrying Hamlet's mother. The play explores themes of revenge, madness (both real and feigned), mortality, betrayal, and moral corruption. It contains some of the most famous lines in English literature, including "To be or not to be" and features complex psychological characterization. This Project Gutenberg edition preserves the original early modern English spelling and printing conventions, including the u/v substitutions common in 16th-17th century printing.
+"""
+
+Notes = """
+The year 1603 represents the First Quarto publication. Other significant editions include the Second Quarto (1604-1605) and the First Folio (1623). This edition preserves original printing conventions including letter substitutions (u for v, v for u) that were common when printers ran out of certain type. The play was likely written between 1599-1601. Shakespeare himself was not Catholic, though the play's Danish setting and some scholars have debated Catholic influences in the text.
+"""
+</result>

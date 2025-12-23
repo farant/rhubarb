@@ -1,0 +1,15 @@
+<result>
+Title = "Rautatie"
+Author = "Juhani Aho"
+Year = 1884
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Rautatie" (The Railway) is a famous short story by Finnish author Juhani Aho, written in 1884. The story tells of an old couple, an ukko (old man) and an akka (old woman), who see a railway for the first time. This work is considered a masterpiece of Finnish realist literature and is notable for its impressionistic style and psychological insight. Aho captures the bewilderment and wonder of rural Finnish people encountering modern technology during the late 19th century industrial transformation. The story is often anthologized and studied as an example of early Finnish modernist prose.
+"""
+
+Notes = """
+The year 1884 is clearly stated in the text itself as the publication date. Juhani Aho (1861-1921) was one of Finland's most important authors and a pioneer of Finnish literary realism and psychological prose. This work is suitable for children as it deals with simple, relatable themes of wonder and discovery, though it contains sophisticated literary techniques. The story is not tagged as 'catholic' as Aho was a Finnish Lutheran-background writer working in the Finnish nationalist/realist literary tradition rather than the Catholic literary tradition.
+"""
+</result>

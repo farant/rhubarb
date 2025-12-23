@@ -1,0 +1,15 @@
+<result>
+Title = "The Firm of Nucingen"
+Author = "Honoré de Balzac"
+Year = 1838
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+"The Firm of Nucingen" (originally "La Maison Nucingen") is a novella by Honoré de Balzac, part of his vast series La Comédie Humaine. The work tells the story of the banker Baron de Nucingen and his financial machinations through a narrative frame of dinner conversation. It serves as a companion piece to "César Birotteau," contrasting the fortunes of an honest tradesman with those of an unscrupulous financier. The novella explores themes of financial speculation, social climbing, and moral corruption in post-Revolutionary French society. The story is notable for its cynical portrayal of the banking world and for demonstrating how wealth can be built through manipulation and fraud while maintaining social respectability.
+"""
+
+Notes = """
+"La Maison Nucingen" was first published in 1838 in France. The character Baron de Nucingen appears throughout multiple works in Balzac's La Comédie Humaine, and this work specifically examines his rise to wealth. The work is dedicated to Madame Zulma Carraud, a close friend of Balzac's, and the author explicitly notes it should be read in contrast with "César Birotteau" to understand the "social lesson" about different paths to success (or failure) in French society.
+"""
+</result>

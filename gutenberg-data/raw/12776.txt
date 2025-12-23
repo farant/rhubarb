@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "Dave Darrin at Vera Cruz: Fighting with the U.S. Navy in Mexico"
+Author = "H. Irving Hancock"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "military", "naval", "young-adult"]
+
+Summary = """
+"Dave Darrin at Vera Cruz" is part of H. Irving Hancock's "Dave Darrin Series" of naval adventure novels for young readers. The book follows Dave Darrin, a young U.S. Navy officer, during the 1914 United States occupation of Veracruz, Mexico. This was a real historical event that occurred in April 1914 when U.S. forces seized the port city during the Mexican Revolution. The novel combines fictional adventure with actual historical events, depicting naval combat, military discipline, and the experiences of American servicemen during this intervention. Hancock was a prolific author of boys' adventure series in the early 20th century, writing numerous series about military academies, naval adventures, and patriotic themes that were popular with young male readers of the era.
+"""
+
+Notes = """
+The book was published in 1914, the same year as the actual Veracruz incident it depicts (April 1914). This timing suggests it was likely written and published shortly after or even during the events to capitalize on contemporary interest in the military action. The U.S. occupation of Veracruz lasted from April to November 1914.
+"""
+</result>

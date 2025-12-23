@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work, author, and provide the requested information in TOML format.
+
+This is clearly the autobiography of Annie Besant, a prominent British socialist, theosophist, women's rights activist, writer, and orator. The text shows the title page and preface of her autobiography, first published in 1893.
+
+<result>
+Title = "An Autobiography"
+Author = "Annie Besant"
+Year = 1893
+
+Tags = ["non-fiction", "biography", "autobiography", "historical-document"]
+
+Summary = """
+Annie Besant's autobiography traces her remarkable life journey from a conventional Victorian upbringing through religious doubt, freethought activism, socialism, and eventually Theosophy. Written during her Theosophical period, the work chronicles her evolution from an Anglican minister's wife through her controversial advocacy for birth control (leading to the famous Bradlaugh-Besant trial of 1877), her work with the Fabian Society, her involvement in the 1888 matchgirls' strike, and her spiritual transformation after discovering Theosophy through Madame Blavatsky. The autobiography is notable for its candid discussion of religious doubt and intellectual transformation during the Victorian era, making it both a personal memoir and a valuable historical document of social reform movements in late 19th-century Britain.
+"""
+
+Notes = """
+The autobiography was first published in 1893, with this appearing to be from the second edition. Annie Besant (1847-1933) was not Catholic; she moved from Anglicanism through atheism/freethought to Theosophy, so the 'catholic' tag is not applicable. While her life story is historically significant and deals with serious intellectual and social issues, it would not be considered appropriate for children due to its adult themes including marital difficulties, religious apostasy, and controversial social activism.
+"""
+</result>

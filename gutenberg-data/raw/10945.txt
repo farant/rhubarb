@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information in TOML format.
+
+This is clearly "Lays of the Scottish Cavaliers" by William Edmondstoune Aytoun (W.E. Aytoun). The text itself indicates this is a verbatim reprint of the first edition from 1849. This was a very popular collection of narrative poems about Scottish history, particularly focusing on the Jacobite cause and Scottish royalist heroes.
+
+<result>
+Title = "Lays of the Scottish Cavaliers and Other Poems"
+Author = "William Edmondstoune Aytoun"
+Year = 1849
+
+Tags = ["non-fiction", "poetry", "historical"]
+
+Summary = """
+'Lays of the Scottish Cavaliers' is a collection of narrative poems by Scottish poet and humorist William Edmondstoune Aytoun, first published in 1849. The work celebrates Scottish royalist heroes and significant moments in Scottish history, including poems about the Battle of Flodden, the Marquis of Montrose, Robert the Bruce, Viscount Dundee, the Massacre of Glencoe, and Bonnie Prince Charlie. Written in a romantic, ballad style reminiscent of Sir Walter Scott, these poems were extremely popular in Victorian Britain and helped shape romantic Scottish nationalism. Aytoun was a professor of rhetoric and belles-lettres at the University of Edinburgh and a significant figure in Scottish literary circles of the mid-19th century.
+"""
+
+Notes = """
+The text explicitly states this is a verbatim reprint of the first edition from 1849, making the year straightforward. The work is dedicated to Archibald William Hamilton-Montgomerie, Earl of Eglinton and Winton. While these are historical and patriotic poems, they are literary works rather than historical documents themselves, and deal with martial themes not typically considered appropriate for young children.
+"""
+</result>

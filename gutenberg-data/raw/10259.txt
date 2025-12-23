@@ -1,0 +1,15 @@
+<result>
+Title = "Smes Esko - Slovackych Pisni (A Medley of Slovak Songs)"
+Author = "Milan Lusk (violin solo)"
+Year = 1910
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording from the Edison National Historic Site, featuring Milan Lusk performing a medley of Slovak songs on violin. The work represents early 20th century phonograph recordings made by Thomas Edison's company, which documented various musical traditions including Central European folk music. This particular recording captures Slovak musical heritage through violin performance, likely intended to serve immigrant communities and preserve folk traditions during the early recording era.
+"""
+
+Notes = """
+The exact recording date is not specified in the Project Gutenberg metadata, but based on Edison's commercial recording operations and the format, this would likely date from approximately 1905-1915. I've estimated 1910 as a reasonable midpoint for the Edison phonograph cylinder/early disc recording era. The work is categorized as a historical document rather than fiction or traditional literature since it's an audio recording. It is not marked as appropriate for children as this categorization is more relevant to textual content. The Slovak language content and folk music nature suggest cultural/historical significance rather than specifically Catholic content, though Slovakia has historically been predominantly Catholic.
+"""
+</result>

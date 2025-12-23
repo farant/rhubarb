@@ -1,0 +1,15 @@
+<result>
+Title = "The Atlantic Monthly, Volume 1, Number 6, April 1858"
+Author = "Various"
+Year = 1858
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+This is an issue of The Atlantic Monthly magazine from April 1858, containing the article "The Hundred Days: Personal Reminiscences" which recounts personal experiences during Napoleon's return from Elba in 1815 (the period between March 20 and June 28, 1815). The article is written from the perspective of someone who was a schoolboy in Paris during that dramatic historical period, describing life in the National Lyceums under Napoleon's militaristic educational system. The Atlantic Monthly was a prestigious American literary and cultural magazine founded in 1857, featuring articles on literature, art, and politics.
+"""
+
+Notes = """
+This is a periodical issue rather than a single authored work. The year 1858 represents the publication date of this specific issue. The article about the Hundred Days was published 43 years after the events it describes. The author of "The Hundred Days" article is not identified in the provided excerpt.
+"""
+</result>

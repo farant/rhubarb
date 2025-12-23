@@ -1,0 +1,15 @@
+<result>
+Title = "Jane Eyre: An Autobiography"
+Author = "Charlotte Brontë"
+Year = 1847
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Jane Eyre is one of the most famous novels in English literature, written by Charlotte Brontë and originally published in 1847 under the pseudonym "Currer Bell." The novel is a bildungsroman that follows the life of its titular character, Jane Eyre, an orphaned girl who endures a difficult childhood and eventually becomes a governess at Thornfield Hall, where she falls in love with the brooding Mr. Rochester. The novel is celebrated for its exploration of themes including morality, social class, gender relations, and the search for love and independence. It is considered a masterpiece of Victorian literature and one of the first novels to focus on the psychological and moral development of its protagonist through first-person narrative. The work is groundbreaking for its portrayal of a strong, independent female protagonist who asserts her own worth and principles.
+"""
+
+Notes = """
+The year chosen is 1847, which is when Jane Eyre was first published by Smith, Elder & Co. in London. This Project Gutenberg edition appears to be based on a later illustrated edition from 1897 published by Service & Paton with illustrations by F. H. Townsend, but the historically significant date is the original 1847 publication. The novel was published under Brontë's pseudonym "Currer Bell" and became an immediate success. Charlotte Brontë was Anglican, not Catholic, so the 'catholic' tag was not included.
+"""
+</result>

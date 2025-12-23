@@ -1,0 +1,23 @@
+I need to analyze this Project Gutenberg text to identify the work, author, and publication details.
+
+This is clearly a periodical publication - "The Mirror of Literature, Amusement, and Instruction" Volume 20, Number 571, Supplementary Number. The content is a biographical notice about Sir Walter Scott, published shortly after his death (the title says "late Sir Walter Scott").
+
+Sir Walter Scott died on September 21, 1832. Given that this is a supplementary number dedicated to notices of his life and writings published shortly after his death, this would have been published in 1832.
+
+This is not a work *by* Sir Walter Scott, but rather a commemorative publication *about* him, published in a popular periodical of the era. The Mirror of Literature, Amusement, and Instruction was a weekly magazine published in London.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 20, No. 571, Supplementary Number: Notices of the Life and Writings of the Late Sir Walter Scott, Bart."
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "biographical", "periodical", "appropriate-for-children"]
+
+Summary = """
+This is a supplementary issue of The Mirror of Literature, Amusement, and Instruction, a popular British weekly magazine, dedicated entirely to commemorating the life and works of Sir Walter Scott following his death in September 1832. The issue includes biographical notices, five engravings of locations associated with Scott (including Abbotsford, his home; his study; the armoury; his portrait; and Dryburgh Abbey where he was buried), and details of his ancestry and early life. The Mirror was an affordable periodical that brought literature, news, and education to middle-class Victorian readers.
+"""
+
+Notes = """
+Published in 1832, shortly after Sir Walter Scott's death on September 21, 1832. This is commemorative journalism rather than a standalone work. The magazine cost 2 pence and was widely circulated in Britain. This supplementary number would have been published within weeks or months of Scott's death to capitalize on public interest in the famous author's passing.
+"""
+</result>

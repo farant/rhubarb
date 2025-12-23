@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Interruptions"
+Author = "Tom Woottwell (edited by Thomas A. Edison)"
+Year = 1903
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording from the Edison National Historic Site, representing early audio recording technology. The work "Interruptions" by Tom Woottwell was edited by Thomas A. Edison and represents part of the historical collection of Edison's experimental and commercial audio recordings. This is a Project Gutenberg digital preservation of historical audio content in MP3 format.
+"""
+
+Notes = """
+The exact year is uncertain as the Project Gutenberg release date (2003) is just when it was digitized. Given that Thomas Edison was actively involved in editing/producing audio recordings primarily from the 1890s through the early 1900s, and considering this comes from the Edison National Historic Site collection, I've estimated circa 1903 as a representative date for Edison's phonograph era. This is speculative - the actual recording could range from the 1890s to 1920s. This is an unusual Project Gutenberg entry as it's an audio work rather than a text, making traditional bibliographic dating challenging.
+"""
+</result>

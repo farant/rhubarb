@@ -1,0 +1,15 @@
+<result>
+Title = "The Wolf's Long Howl"
+Author = "Stanley Waterloo"
+Year = 1899
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+"The Wolf's Long Howl" is a collection of short stories by American author Stanley Waterloo, published in 1899. Waterloo was known for his adventure tales and stories dealing with nature, the wilderness, and prehistoric themes. This collection includes five stories: "The Wolf's Long Howl," "An Ulm," "The Hair of the Dog That Bit Him," "The Man Who Fell In Love," and "A Tragedy of the Forest." Based on the titles and Waterloo's typical subject matter, these stories likely feature themes of wilderness, nature, and human encounters with the wild.
+"""
+
+Notes = """
+The year 1899 is clearly stated on the title page of the work itself, making this straightforward. Stanley Waterloo (1846-1913) was an American author and journalist best known for his novel "The Story of Ab" (1897), a tale of prehistoric humans. His work typically focused on adventure, nature, and primitive or frontier settings.
+"""
+</result>

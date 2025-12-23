@@ -1,0 +1,15 @@
+<result>
+Title = "An Essay Concerning Humane Understanding"
+Author = "John Locke"
+Year = 1690
+
+Tags = ["non-fiction", "philosophy", "epistemology"]
+
+Summary = """
+John Locke's "An Essay Concerning Human Understanding" is one of the foundational texts of British empiricism and modern philosophy. Published in 1690, this work systematically argues against the doctrine of innate ideas, proposing instead that all human knowledge derives from experience through sensation and reflection. The essay is divided into four books: Book I attacks the notion of innate principles, Book II develops Locke's theory of ideas and their origins in experience, Book III examines language and its relationship to thought, and Book IV discusses knowledge, probability, and the limits of human understanding. This work profoundly influenced the Enlightenment and subsequent philosophical thought, establishing empiricism as a major philosophical tradition and laying groundwork for modern theories of mind and knowledge.
+"""
+
+Notes = """
+The year 1690 is clearly indicated on the title page (MDCXC). This is the first edition published in London by Thomas Basset. Note the archaic spelling "Humane Understanding" rather than "Human Understanding" - this was the original title spelling in the 1690 edition. This work is not tagged as 'catholic' - while Locke was a Christian, he was Anglican/Protestant and his empiricist philosophy was often viewed with suspicion by Catholic authorities. His political and epistemological views were influential in Protestant and Enlightenment circles but would not have received ecclesiastical approval from Catholic censors. Not tagged as 'appropriate-for-children' as it is a dense philosophical treatise requiring significant intellectual maturity.
+"""
+</result>

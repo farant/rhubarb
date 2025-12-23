@@ -1,0 +1,15 @@
+<result>
+Title = "Notes and Queries, No. 23, Saturday, April 6, 1850"
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "literary", "historical-document"]
+
+Summary = """
+Notes and Queries was a Victorian-era periodical that served as "A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc." Founded in 1849 by William John Thoms, it became one of the most important scholarly journals of the 19th century, facilitating questions, answers, and discussions among researchers, writers, and scholars across various fields. This particular issue is Number 23, published on April 6, 1850, and contains articles including "Periplus of Hanno" by R.T. Hampson and "Pope Vindicated." The periodical's motto, "When found, make a note of," came from Charles Dickens's character Captain Cuttle in Dombey and Son. Notes and Queries continues publication to this day, making it one of the longest-running scholarly journals in the English language.
+"""
+
+Notes = """
+Year represents the actual publication date of this specific issue (April 6, 1850). The journal itself began publication in 1849. This is not appropriate for children as it is a scholarly periodical. While some contributors may have been Catholic and some content may relate to Catholic topics, the periodical itself was not specifically Catholic in nature, so the 'catholic' tag was not applied.
+"""
+</result>

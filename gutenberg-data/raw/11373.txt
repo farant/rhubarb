@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is "Through the Wall" by Cleveland Moffett, published in 1909. Cleveland Moffett was an American journalist and author known for his mystery and detective fiction. This appears to be a detective/mystery novel featuring a character named Coquenil.
+
+<result>
+Title = "Through the Wall"
+Author = "Cleveland Moffett"
+Year = 1909
+
+Tags = ["fiction", "mystery", "detective-fiction"]
+
+Summary = """
+"Through the Wall" is a detective mystery novel by American journalist and author Cleveland Moffett, published in 1909. The story appears to feature a detective named Coquenil working on what is described as his "greatest case." Moffett was known for his mystery and detective fiction during the early 20th century, and this work follows in that tradition. The novel was written while Moffett was living in Paris at the Villa Montmorency, as noted in his dedication to his wife. The book includes illustrations by H. Heyer and was published in New York.
+"""
+
+Notes = """
+The year 1909 is clearly stated on the title page and confirmed in the dedication dated "NEW YORK, AUGUST 1, 1909." This is the original publication year of this work.
+"""
+</result>

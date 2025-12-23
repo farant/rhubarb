@@ -1,0 +1,21 @@
+I can identify this work based on the text provided. Let me analyze it:
+
+This is clearly "The Boy Allies on the Firing Line" (also subtitled "Twelve Days Battle Along the Marne") by Clair W. Hayes, published in 1915 by A.L. Burt Company. This is part of the "Boy Allies" series, which was a popular World War I adventure series for young readers written during the war itself.
+
+The series featured two young protagonists (Hal and Chester) who have various adventures during WWI. These were typical juvenile adventure fiction of the era, published to capitalize on contemporary interest in the ongoing war.
+
+<result>
+Title = "The Boy Allies on the Firing Line; or, Twelve Days Battle Along the Marne"
+Author = "Clair W. Hayes"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children", "war-adventure", "young-adult"]
+
+Summary = """
+Part of the popular Boy Allies series written during World War I, this adventure novel follows two young protagonists, Hal and Chester, as they participate in military action during the First Battle of the Marne (September 1914). The Boy Allies series was juvenile fiction that combined patriotic themes with adventure storytelling, aimed at young readers during the war years. The series depicted various WWI theaters and battles through the eyes of young heroes, mixing historical events with fictional adventure narratives typical of early 20th-century boys' literature.
+"""
+
+Notes = """
+Published in 1915, the same year as its copyright, this book was contemporary war fiction written while WWI was ongoing. "Clair W. Hayes" was likely a house pseudonym used by the Stratemeyer Syndicate or similar publisher for producing series books. The Battle of the Marne (September 1914) was a crucial early WWI battle that halted the German advance on Paris.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "At Sunwich Port"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"At Sunwich Port" is a novel by W. W. Jacobs, an English author known for his humorous short stories and novels about working-class life, particularly involving sailors and dockside communities. This work is set in the fictional English coastal town of Sunwich Port and follows the romantic and social complications of various characters in this maritime community. Jacobs was a master of gentle comedy and character-driven narratives, and this novel exemplifies his skill at depicting small-town English life with warmth and wit. The story typically involves romantic entanglements, misunderstandings, and the social dynamics of a port town in the early 20th century.
+"""
+
+Notes = """
+"At Sunwich Port" was originally published in 1902. W. W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific English writer best known for his short story "The Monkey's Paw," though most of his work was humorous fiction about sailors and dockside life. This novel is characteristic of his lighter comedic work rather than his occasional ventures into horror. The text provided is Part 4 (Chapters 16-20) of the serialized version on Project Gutenberg.
+"""
+</result>

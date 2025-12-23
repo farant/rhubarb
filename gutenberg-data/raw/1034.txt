@@ -1,0 +1,17 @@
+I recognize this as the collected poems of Wilfred Owen, one of the most significant World War I poets. The introduction by Siegfried Sassoon is characteristic of the 1920 first edition published by Chatto & Windus, though Owen's poems were written primarily during 1917-1918 before his death in combat just one week before the Armistice in November 1918.
+
+<result>
+Title = "Poems"
+Author = "Wilfred Owen"
+Year = 1920
+
+Tags = ["poetry", "non-fiction", "war-literature"]
+
+Summary = """
+This is the first collected edition of Wilfred Owen's war poetry, published posthumously with an introduction by fellow war poet Siegfried Sassoon. Owen is considered one of the greatest poets of World War I, known for his realistic portrayals of the horror and pity of war. His innovative use of pararhyme (assonance and dissonance) influenced modern poetry significantly. The collection includes his most famous works such as 'Dulce et Decorum Est', 'Anthem for Doomed Youth', 'Strange Meeting', and 'Futility'. Owen was killed in action on November 4, 1918, exactly one week before the Armistice that ended WWI. His poetry combines technical innovation with profound compassion for soldiers' suffering, rejecting the romanticized view of war that characterized much earlier war poetry.
+"""
+
+Notes = """
+The year 1920 represents the first published collection, edited by Sassoon and Edith Sitwell. While Owen wrote these poems in 1917-1918, they were largely unknown until this posthumous publication. This date is most appropriate for a historical timeline as it marks when Owen's work entered public consciousness and began its significant influence on war literature and modern poetry. An expanded edition was published in 1931.
+"""
+</result>

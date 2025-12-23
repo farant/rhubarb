@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Greatest Books, Vol. III: Fiction"
+Author = "Arthur Mee, J. A. Hammerton"
+Year = 1910
+
+Tags = ["non-fiction", "anthology", "literary-criticism", "appropriate-for-children"]
+
+Summary = """
+This is Volume III of "The World's Greatest Books," a multi-volume anthology series edited by Arthur Mee and J. A. Hammerton, published around 1910. This particular volume focuses on Fiction and contains summaries or abridged versions of classic works of literature. The volume includes works by major 19th-century authors including Alphonse Daudet, Thomas Day, Daniel Defoe, and Charles Dickens. The series was designed to provide readers with access to the essential content of important literary works in a more condensed format, making great literature more accessible to a broader audience during the early 20th century.
+"""
+
+Notes = """
+The year 1910 is indicated by the Roman numerals "MCMX" on the title page. This is an anthology/reference work rather than an original creative work, so the year reflects when this collection was published, not when the individual works it discusses were written. The works summarized within span from the 18th century (Defoe, Day) through the 19th century (Dickens, Daudet).
+"""
+</result>

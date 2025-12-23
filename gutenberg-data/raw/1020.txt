@@ -1,0 +1,15 @@
+<result>
+Title = "Sword Blades and Poppy Seed"
+Author = "Amy Lowell"
+Year = 1914
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"Sword Blades and Poppy Seed" is a poetry collection by Amy Lowell, one of the leading figures of the Imagist movement in early 20th-century American poetry. Published in 1914, this was Lowell's second collection and marked her embrace of experimental poetic forms and techniques. The collection showcases her innovative approach to verse, including her development of "polyphonic prose" (a form she pioneered that blends prose and verse elements) and her use of vivid, concrete imagery. The title itself suggests the dual nature of her work: the sharpness and precision of "sword blades" representing clarity and modernity, contrasted with the dreamy, softer quality of "poppy seed" representing romanticism and sensuality. Lowell was a prominent member of the Boston literary establishment and became a key advocate for modern poetry in America, eventually taking over leadership of the Imagist movement from Ezra Pound.
+"""
+
+Notes = """
+The work was first published in 1914 by Macmillan. Amy Lowell (1874-1925) was a Massachusetts poet from a prominent Boston Brahmin family. She was not Catholic - she came from a distinguished New England Protestant family. The French epigraph is from Henri de Régnier's "Les Médailles d'Argile" (The Clay Medals), reflecting the cosmopolitan and francophile tendencies of early modernist American poetry.
+"""
+</result>

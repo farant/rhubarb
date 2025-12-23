@@ -1,0 +1,15 @@
+<result>
+Title = "The Tinguian: Social, Religious, and Economic Life of a Philippine Tribe"
+Author = "Fay-Cooper Cole"
+Year = 1922
+
+Tags = ["non-fiction", "anthropology", "ethnography", "academic"]
+
+Summary = """
+This is an ethnographic study of the Tinguian people (also known as Itneg), an indigenous group in the Philippines, written by anthropologist Fay-Cooper Cole. Cole served as Assistant Curator of Malayan Ethnology and conducted fieldwork among the Tinguian in the early 20th century. The work provides a comprehensive account of Tinguian social organization, religious beliefs and practices, economic systems, and daily life. This type of ethnographic documentation was typical of early 20th-century anthropology and remains a valuable historical record of indigenous Philippine cultures during the American colonial period.
+"""
+
+Notes = """
+The year 1922 is clearly indicated in the original publication. This is the first edition publication date. The work represents early American anthropological research in the Philippines during the colonial period and would be considered an important primary source for understanding Tinguian culture as it existed in the early 1900s.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Based on the title page and metadata, this is clearly "Old Cookery Books and Ancient Cuisine" by W. Carew Hazlitt, published in London in 1902. This is a non-fiction work about the history of cookery books and culinary practices.
+
+W. Carew Hazlitt (1834-1913) was an English bibliographer and writer, grandson of the essayist William Hazlitt. This particular work is a bibliographic and historical survey of early English cookery books and cooking practices. It's part of "The Book-Lovers Library" series edited by Henry B. Wheatley.
+
+<result>
+Title = "Old Cookery Books and Ancient Cuisine"
+Author = "W. Carew Hazlitt"
+Year = 1902
+
+Tags = ["non-fiction"]
+
+Summary = """
+A bibliographic and historical survey of early English cookery books and culinary practices. Written by W. Carew Hazlitt (1834-1913), a noted English bibliographer and literary scholar, this work examines the development of cookery literature and ancient cuisine traditions. Part of "The Book-Lovers Library" series edited by Henry B. Wheatley, the book represents late Victorian scholarship on culinary history and rare book collecting, combining Hazlitt's expertise in bibliography with his interest in historical domestic life and gastronomy.
+"""
+
+Notes = """
+The year 1902 is clearly stated on the title page as the publication date. This is an original work of scholarship from that year, not a reprint or translation of earlier material. W. Carew Hazlitt was the grandson of the famous essayist William Hazlitt and was known for his bibliographic work and literary collections.
+"""
+</result>

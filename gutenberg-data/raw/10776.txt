@@ -1,0 +1,15 @@
+<result>
+Title = "The Moving Picture Boys at Panama: Stirring Adventures Along the Great Canal"
+Author = "Victor Appleton"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+'The Moving Picture Boys at Panama' is part of the 'Moving Picture Boys' series, a collection of early 20th-century adventure novels for young readers. Written under the house pseudonym Victor Appleton (used by the Stratemeyer Syndicate), the series follows young protagonists who work as cameramen filming exciting events. This installment takes place during the construction of the Panama Canal, one of the most ambitious engineering projects of the era. The boys encounter various adventures while documenting the monumental construction work. The series reflects the early fascination with motion picture technology and combines it with the adventure serial format popular in juvenile fiction of the period.
+"""
+
+Notes = """
+The year 1915 is clearly indicated on the title page. Victor Appleton is a house pseudonym used by the Stratemeyer Syndicate, which produced numerous popular series books for children in the early 20th century. The actual author(s) remain anonymous, as was typical for Stratemeyer publications. The Panama Canal was completed in 1914, so this book capitalized on contemporary interest in this major historical event.
+"""
+</result>

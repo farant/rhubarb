@@ -1,0 +1,15 @@
+<result>
+Title = "The Wonderful Adventures of Nils"
+Author = "Selma Lagerlöf"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Wonderful Adventures of Nils (Swedish: Nils Holgerssons underbara resa genom Sverige) is a beloved children's novel by Swedish author Selma Lagerlöf, who later became the first woman to win the Nobel Prize in Literature (1909). Originally commissioned as a geography reader for Swedish schools, the book tells the story of Nils Holgersson, a mischievous boy who is transformed into a tiny person and travels across Sweden on the back of a goose. Through his adventures with a flock of wild geese led by the wise Akka from Kebnekaise, Nils learns important lessons about kindness, responsibility, and the geography and folklore of Sweden. The work brilliantly combines fantasy, adventure, natural history, and Swedish cultural heritage, making it both educational and enchanting for young readers.
+"""
+
+Notes = """
+The original Swedish work was published in two volumes: the first in 1906 (Nils Holgerssons underbara resa genom Sverige) and the second in 1907. This English translation by Velma Swanston Howard was published later. I've chosen 1906 as it represents the original publication date of the first volume, which is the most historically significant date for this work. The book was revolutionary in making geography education engaging for children and remains a classic of Swedish literature.
+"""
+</result>

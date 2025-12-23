@@ -1,0 +1,15 @@
+<result>
+Title = "Santa Lucia"
+Author = "Traditional Neapolitan Song"
+Year = 1849
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of "Santa Lucia," a traditional Neapolitan song, performed by His Majesty's Irish Guards Band. The recording was taken from the Edison National Historic Site archives and is provided by Project Gutenberg as an MP3 file. "Santa Lucia" is one of the most famous Neapolitan songs, celebrating the beauty of the Santa Lucia district in Naples, Italy. The song has been performed and recorded countless times since the 19th century and remains a beloved piece of Italian musical heritage.
+"""
+
+Notes = """
+I've chosen 1849 as the year because this is when "Santa Lucia" was first transcribed and published by Teodoro Cottrau, though the song likely existed in oral tradition before this date. The actual Project Gutenberg entry is an audio recording (MP3 format) from the Edison National Historic Site, performed by His Majesty's Irish Guards Band, but the work itself dates to the mid-19th century. Since you're building a historical timeline, 1849 represents the most historically accurate date for when this song entered the documented musical canon. This is a traditional folk song rather than a literary work, so I've tagged it as "historical-document" rather than fiction/non-fiction.
+"""
+</result>

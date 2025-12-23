@@ -1,0 +1,15 @@
+<result>
+Title = "The Way of the World"
+Author = "William Congreve"
+Year = 1700
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+'The Way of the World' is a Restoration comedy by William Congreve, first performed in 1700 at the Lincoln's Inn Fields theatre in London. It is considered Congreve's masterpiece and one of the finest comedies of manners in English drama. The play satirizes the pretensions and follies of fashionable London society, focusing on the witty courtship between Mirabell and Millamant as they navigate the complex social machinations and intrigues of the upper classes. The work is renowned for its brilliant dialogue, complex plot involving inheritance schemes and romantic entanglements, and its sophisticated wit. Despite initial mixed reception, it has become recognized as a pinnacle of Restoration comedy and a masterwork of theatrical literature.
+"""
+
+Notes = """
+The play was first performed in March 1700 at Lincoln's Inn Fields. This represents Congreve's final dramatic work and the culmination of Restoration comedy. The play was published in the same year as its premiere. While it initially received a lukewarm response from audiences, it is now regarded as Congreve's finest achievement and a cornerstone of English dramatic literature.
+"""
+</result>

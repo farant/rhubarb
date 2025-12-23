@@ -1,0 +1,15 @@
+<result>
+Title = "The Creative Process in the Individual"
+Author = "Thomas Troward"
+Year = 1915
+
+Tags = ["non-fiction", "philosophy", "metaphysics"]
+
+Summary = """
+'The Creative Process in the Individual' is a philosophical and metaphysical work by Thomas Troward, a prominent figure in the New Thought movement. The book explores the creative process from cosmic to personal levels, attempting to trace a logical sequence from the formation of the Earth to the potential for individual human development and evolution. Troward employs what he describes as speculative reasoning grounded in scientific facts to argue that humans can take a more active role in their own evolution by understanding and applying certain fundamental principles. The work reflects New Thought philosophy's emphasis on the power of mind and consciousness in shaping reality.
+"""
+
+Notes = """
+The year 1915 is clearly stated on the title page as the publication date. Thomas Troward (1847-1916) was a British judge in colonial India who became an influential New Thought writer. While this work discusses spiritual and philosophical themes, it represents New Thought metaphysics rather than Catholic theology. The 'catholic' tag was not applied because this work is from the New Thought movement, which developed outside traditional Christian orthodoxy despite using some Christian terminology.
+"""
+</result>

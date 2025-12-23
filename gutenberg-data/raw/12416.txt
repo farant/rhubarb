@@ -1,0 +1,15 @@
+<result>
+Title = "As Seen By Me"
+Author = "Lilian Bell"
+Year = 1900
+
+Tags = ["non-fiction", "travel-writing", "appropriate-for-children"]
+
+Summary = """
+"As Seen By Me" is a travel narrative by American author Lilian Bell, published in 1900. The book chronicles Bell's journey through Europe, Russia, and the Middle East, presented as a series of letters describing her experiences in various cities and locations including London, Paris, Vilna, St. Petersburg, Moscow, Constantinople, Cairo, the Nile, Greece, Naples, and Rome. Bell was a popular American novelist and travel writer in the late 19th and early 20th centuries, known for her witty observations and engaging prose style. This work represents the popular genre of travel literature written by Americans documenting their Grand Tour experiences abroad during the Gilded Age.
+"""
+
+Notes = """
+The year 1900 is clearly stated at the beginning of the text. Lilian Bell (1867-1929) was a prolific American author who wrote both fiction and travel narratives. This appears to be a first-person travelogue rather than fiction, despite Bell being primarily known for her novels. The dedication to her nephew "Billy" and the personal tone suggest this is based on her actual travels.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Holland: The History of the Netherlands"
+Author = "Thomas Colley Grattan"
+Year = 1830
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+This is a comprehensive history of the Netherlands written by Irish historian and novelist Thomas Colley Grattan. The work traces the history of the Low Countries from Roman times through the modern era, with a supplementary chapter on recent events by Julian Hawthorne (son of Nathaniel Hawthorne). The book covers the early tribal period, the Roman conquest, the Frankish invasions, and the subsequent development of the Netherlands as a distinct political and cultural entity. It includes detailed coverage of significant periods such as the Dutch Revolt against Spanish rule under the Duke of Alva. Grattan was a prolific writer who served as British consul in Boston and was known for his historical works on European nations.
+"""
+
+Notes = """
+The original work was first published around 1830 as part of a series on European nations. This appears to be an expanded edition with supplementary material by Julian Hawthorne added later in the 19th century. I've chosen 1830 as it represents the original publication date of Grattan's historical work, which forms the main body of the text.
+"""
+</result>

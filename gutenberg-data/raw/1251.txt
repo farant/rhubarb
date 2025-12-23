@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly **Le Morte d'Arthur** by **Sir Thomas Malory**, one of the most famous works of Arthurian literature in English. The work was completed around 1469-1470 while Malory was imprisoned, and was first printed by William Caxton in 1485. The mention of "Preface of William Caxton" in the contents confirms this is based on Caxton's edition.
+
+For the year, I'll use **1485** as this represents the first publication date and is the most historically significant date for this work entering the literary canon, even though Malory completed it earlier.
+
+<result>
+Title = "Le Morte d'Arthur"
+Author = "Sir Thomas Malory"
+Year = 1485
+
+Tags = ["fiction", "historical-document", "catholic"]
+
+Summary = """
+Le Morte d'Arthur is the most complete and influential compilation of Arthurian legends in English literature. Written by Sir Thomas Malory while imprisoned, it draws together French and English sources to tell the story of King Arthur, his Knights of the Round Table, the quest for the Holy Grail, and the eventual fall of Camelot. The work includes the tales of Lancelot, Guinevere, Merlin, the sword Excalibur, and the Round Table fellowship. It established the canonical version of the Arthurian legend in English and profoundly influenced subsequent literature. The text reflects medieval chivalric ideals and Christian values, particularly the quest for the Holy Grail which has explicit Catholic theological significance.
+"""
+
+Notes = """
+Year chosen is 1485, when William Caxton first printed the work, rather than c.1470 when Malory completed it. This is the date of first publication and when the work entered public circulation. Malory was a Catholic writing in medieval England before the Reformation, and the work contains explicitly Catholic elements, particularly in the Grail quest sections which draw on Catholic mysticism and sacramental theology.
+"""
+</result>

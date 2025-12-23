@@ -1,0 +1,15 @@
+<result>
+Title = "How John Became a Man: Life Story of a Motherless Boy"
+Author = "Isabel C. Byrum"
+Year = 1917
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+"How John Became a Man" is a Christian morality tale published in 1917 by Isabel C. Byrum. The book tells the story of a motherless boy named John and is designed as a cautionary tale to warn young boys about the dangers of forming evil habits. Written from a Christian perspective, it aims to provide moral guidance and protection from temptation. The author explicitly states her hope that the book will help boys avoid harmful behaviors that damage both body and soul. The work is based on a true story and reflects early 20th-century Protestant Christian values regarding child-rearing and moral education.
+"""
+
+Notes = """
+The year 1917 is clearly stated in the author's preface. While Isabel C. Byrum was associated with the Church of God (Anderson, Indiana) movement, which had some theological differences with Catholicism, this work does not meet the criteria for the 'catholic' tag as it represents a Protestant evangelical perspective rather than Catholic authorship or imprimatur-worthy content.
+"""
+</result>

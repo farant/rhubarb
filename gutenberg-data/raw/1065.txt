@@ -1,0 +1,15 @@
+<result>
+Title = "The Raven"
+Author = "Edgar Allan Poe"
+Year = 1845
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+'The Raven' is Edgar Allan Poe's most famous poem, a narrative work telling the story of a grieving man visited by a mysterious raven on a dark December night. The narrator, mourning the loss of his beloved Lenore, is driven to increasing desperation as the raven repeatedly responds to his questions with the single word "Nevermore." The poem is renowned for its musicality, stylized language, and supernatural atmosphere, and has become one of the most recognized poems in American literature. It explores themes of death, loss, mourning, and the descent into madness or despair.
+"""
+
+Notes = """
+'The Raven' was first published in January 1845 in the New York Evening Mirror, and later that year in the American Review. This is considered the poem's definitive publication year. Poe was already an established writer, but this poem brought him unprecedented popular acclaim. The 1845 date represents both the first publication and the moment the work entered American cultural consciousness.
+"""
+</result>

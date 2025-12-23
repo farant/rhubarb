@@ -1,0 +1,15 @@
+<result>
+Title = "Mary Wollaston"
+Author = "Henry Kitchell Webster"
+Year = 1920
+
+Tags = ["fiction"]
+
+Summary = """
+"Mary Wollaston" is a novel by American author Henry Kitchell Webster, published in 1920. Webster was a popular novelist of the early 20th century known for his stories that often dealt with contemporary social issues and the lives of professional and upper-middle-class Americans. This novel, like much of his work, likely explores themes of marriage, family dynamics, and the changing roles of women in the post-World War I era. Webster's fiction was characterized by realistic portrayals of American life and often featured strong character development and social commentary relevant to the Progressive Era and the 1920s.
+"""
+
+Notes = """
+The publication year of 1920 is clearly indicated on the title page of the Project Gutenberg text. This places the novel in the immediate post-WWI period, during the beginning of the "Roaring Twenties" when American society was undergoing significant social and cultural transformation.
+"""
+</result>

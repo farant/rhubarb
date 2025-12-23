@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a volume of collected works by Samuel Johnson (often called Dr. Johnson), one of the most important figures in 18th-century English literature. This appears to be Volume 6 from a nine-volume collected works edition published in 1825 (MDCCCXXV in Roman numerals).
+
+However, this is a compilation of Johnson's various reviews and writings, not a single work. The contents include his reviews and essays written during his lifetime (Johnson lived 1709-1784). These particular pieces were written primarily in the 1740s-1760s during his career as a literary critic and reviewer.
+
+<result>
+Title = "The Works of Samuel Johnson, LL.D., Volume the Sixth: Reviews, Political Tracts, and Lives of Eminent Persons"
+Author = "Samuel Johnson"
+Year = 1825
+
+Tags = ["non-fiction", "literary-criticism", "historical-document"]
+
+Summary = """
+This is the sixth volume of a nine-volume collected edition of Samuel Johnson's works, published in 1825. Samuel Johnson (1709-1784) was one of the most distinguished men of letters in English history - a poet, essayist, moralist, literary critic, biographer, editor and lexicographer. This volume collects his reviews, political tracts, and biographical writings, including reviews of various 18th-century works and his famous biographical essays. Johnson's critical writings were influential in shaping literary taste and standards in the Georgian era, and his biographical work pioneered modern biographical writing with its psychological insight and moral reflection.
+"""
+
+Notes = """
+I chose 1825 as the year because this is a posthumous collected edition rather than original publication dates of the individual pieces. The individual reviews and essays were written during Johnson's lifetime (1740s-1760s), but this particular compilation and presentation as "Volume the Sixth" represents the 1825 editorial work. This approach seems most appropriate since the Gutenberg text is of this specific collected edition, not the original periodical publications.
+"""
+</result>

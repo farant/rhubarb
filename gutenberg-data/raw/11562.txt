@@ -1,0 +1,15 @@
+<result>
+Title = "Inquiries into Human Faculty and Its Development"
+Author = "Francis Galton"
+Year = 1883
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is a foundational work by Francis Galton, the Victorian polymath who pioneered the study of human heredity, intelligence, and what he termed "eugenics." The book presents Galton's investigations into various aspects of human mental and physical capabilities, including studies on measurement, heredity, and individual differences. This work was highly influential in establishing the scientific study of human variation and became a starting point for the eugenics movement. Galton was a cousin of Charles Darwin and applied evolutionary thinking to human populations. This edition is the second edition from 1907, though the original work was first published in 1883.
+"""
+
+Notes = """
+The year 1883 is chosen as this is when the work was first published, as stated in the preface ("subsequent to the publication of this book in 1883"). The text is from the second edition published in 1907, but the 1883 date represents the original publication and is more historically significant for understanding when these ideas entered scientific discourse. Galton's work is historically important but his eugenic theories are now considered scientifically unsound and ethically problematic.
+"""
+</result>

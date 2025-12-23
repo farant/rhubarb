@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a work by W.W. Jacobs, a well-known English author of humorous maritime short stories. The text shows his characteristic style featuring a night-watchman narrator telling stories about sailors. "Sailors' Knots" is indeed a collection of short stories by W.W. Jacobs published in 1909, and this particular story "Peter's Pence" is one of the tales in that collection.
+
+W.W. Jacobs (William Wymark Jacobs, 1863-1943) was not a Catholic author - he was an English writer who specialized in humorous tales of dockside life and sailors, though he's perhaps most famous for his horror story "The Monkey's Paw."
+
+<result>
+Title = "Sailors' Knots"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Sailors' Knots' is a collection of humorous short stories by English author W.W. Jacobs, featuring his characteristic maritime tales narrated by a night-watchman. The stories center around the comic misadventures of sailors, particularly recurring characters like Peter Russet, Sam Small, and Ginger Dick. Jacobs was known for his gentle humor, clever dialogue written in colloquial English dialects, and affectionate portrayal of working-class dockside life in late Victorian and Edwardian England. The collection includes stories like "Peter's Pence," "Deserted," "The Constable's Move," and others that showcase Jacobs' wit and ear for vernacular speech.
+"""
+
+Notes = """
+The year 1909 is clearly stated in the Gutenberg text and represents the original publication date of this collection. W.W. Jacobs was a prolific writer of short stories, and 'Sailors' Knots' was one of many collections published during his career. While the stories are wholesome and appropriate for children, Jacobs was not a Catholic author, so the 'catholic' tag does not apply.
+"""
+</result>

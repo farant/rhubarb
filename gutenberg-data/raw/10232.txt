@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Remarks from a Visit to Edison Laboratory"
+Author = "General Nelson A. Miles"
+Year = 1900
+
+Tags = ["historical-document", "non-fiction"]
+
+Summary = """
+This is an audio recording of remarks made by General Nelson A. Miles during a visit to Thomas Edison's laboratory. General Nelson A. Miles (1839-1925) was a distinguished U.S. Army officer who served in the Civil War, Indian Wars, and Spanish-American War, eventually becoming Commanding General of the United States Army. The recording captures his observations and comments during a visit to Edison's famous laboratory in Menlo Park or West Orange, New Jersey, where Edison conducted his groundbreaking work on the phonograph, electric light, motion pictures, and other inventions. This represents an early example of audio documentation and showcases the intersection of military leadership and technological innovation at the turn of the 20th century.
+"""
+
+Notes = """
+The exact year is uncertain from the document itself. Given that Edison's major laboratory work was conducted from the 1870s through the early 1900s, and Miles served as Commanding General from 1895-1903, I've estimated circa 1900 as a reasonable approximate date for when this recording would have been made. This represents the height of both Edison's fame and Miles's military career. The recording itself is a historical artifact demonstrating early audio recording technology.
+"""
+</result>

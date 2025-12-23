@@ -1,0 +1,15 @@
+<result>
+Title = "Old Lady Mary: A Story of the Seen and the Unseen"
+Author = "Margaret Oliphant"
+Year = 1884
+
+Tags = ["fiction", "appropriate-for-children", "supernatural"]
+
+Summary = """
+'Old Lady Mary' is a novella by Margaret Oliphant that explores themes of death, the afterlife, and redemption. The story centers on an elderly woman who has lived a full life of beauty, passion, and ultimately comfortable old age, but finds herself unprepared for death. When death comes, she discovers she cannot rest peacefully until she fulfills an obligation she neglected in life - specifically regarding a young woman she was supposed to provide for. The tale examines the boundary between the seen and unseen worlds, combining Victorian sensibilities with supernatural elements and moral instruction. Oliphant was known for her ghost stories and tales exploring the spiritual realm, and this work exemplifies her ability to blend the domestic with the metaphysical.
+"""
+
+Notes = """
+Margaret Oliphant (1828-1897) was a prolific Scottish writer who produced over 120 works of fiction and non-fiction. 'Old Lady Mary' was first published in 1884. While Oliphant was Presbyterian rather than Catholic, this particular story deals with universal Christian themes of conscience, redemption, and the afterlife in a manner consistent with general Christian morality. The work would likely be considered appropriate for older children and young adults due to its moral instruction and relatively gentle treatment of supernatural themes.
+"""
+</result>

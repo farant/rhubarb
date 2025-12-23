@@ -1,0 +1,15 @@
+<result>
+Title = "Every Soul Hath Its Song"
+Author = "Fannie Hurst"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Every Soul Hath Its Song" is a collection of short stories by Fannie Hurst, an American novelist and short story writer who was one of the most popular and highly paid writers of her era. The collection explores the lives of ordinary people, particularly working-class women in early 20th century America, with themes of longing, romance, and the inner emotional lives of those struggling in urban environments. Hurst was known for her sentimental yet socially conscious style, depicting the struggles and dreams of immigrants and the working poor with empathy and emotional depth. Her work often appeared in popular magazines before being collected in book form.
+"""
+
+Notes = """
+The copyright page shows "1912, 1916" which likely indicates some stories were first published in 1912 (possibly in magazines) and the collection was published as a book in 1916. I chose 1916 as the year since that appears to be when this collection was formally published as a complete work. Fannie Hurst (1885-1968) was Jewish, not Catholic, so the 'catholic' tag is not applicable.
+"""
+</result>

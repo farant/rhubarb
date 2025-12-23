@@ -1,0 +1,17 @@
+I recognize this work! This is "Odd Craft" by W.W. Jacobs, a collection of humorous short stories. Let me provide the structured information:
+
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Odd Craft" is a collection of short stories by W.W. Jacobs, an English author best known for his humorous tales of dockside and seafaring life, as well as his famous horror story "The Monkey's Paw." This collection includes several of his characteristic stories featuring ordinary working-class characters in coastal English towns, often dealing with domestic comedy, misunderstandings, and the absurdities of everyday life. The opening story "The Castaway" shown here is typical of Jacobs' style, dealing with the return of a supposedly lost sailor to his wife's shop in Shinglesea. Jacobs was a master of dialogue and gentle comedy, writing stories that were popular in both England and America during the early 20th century.
+"""
+
+Notes = """
+First published in 1903. W.W. Jacobs (1863-1943) was at the height of his popularity during this period. While he wrote some darker tales (most famously "The Monkey's Paw"), most of his work consisted of light, humorous stories about life in English coastal towns and among sailors and dockworkers.
+"""
+</result>

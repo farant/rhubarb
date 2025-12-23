@@ -1,0 +1,15 @@
+<result>
+Title = "Ronicky Doone"
+Author = "Max Brand"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Ronicky Doone is a Western novel by Max Brand (pseudonym of Frederick Faust), one of the most prolific and popular writers of Western fiction in the early 20th century. The story follows the titular character Ronicky Doone, a cowboy hero known for his quick thinking, riding skills, and sense of justice. This novel is part of a series featuring the character and showcases the classic Western adventure formula with fast-paced action, horse chases, and frontier justice. Max Brand wrote prolifically in the pulp fiction era and helped define many conventions of the Western genre. His works were known for romanticizing the American West and creating larger-than-life heroes.
+"""
+
+Notes = """
+The publication year 1921 is clearly stated in the text itself. Max Brand (Frederick Faust, 1892-1944) was not Catholic, so the 'catholic' tag is not included. While his Westerns contain action and violence typical of the genre, they were generally considered appropriate for younger readers during their era, being adventure stories without explicit content.
+"""
+</result>

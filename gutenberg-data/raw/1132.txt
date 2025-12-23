@@ -1,0 +1,17 @@
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "tragedy", "historical-document"]
+
+Summary = """
+The Tragedy of Hamlet, Prince of Denmark is one of Shakespeare's most famous tragedies, written around 1599-1601 and first published in 1603. The play tells the story of Prince Hamlet of Denmark, who seeks to avenge his father's murder by his uncle Claudius, who has seized the throne and married Hamlet's mother Gertrude. The work explores themes of revenge, mortality, madness (both feigned and real), betrayal, and moral corruption. It is renowned for its psychological depth, philosophical soliloquies (including "To be, or not to be"), and complex characterization. This Project Gutenberg text appears to be based on one of the early quarto editions, preserving the original printer's spellings and typographical conventions of the early 17th century.
+"""
+
+Notes = """
+I chose 1603 as the year because this represents the First Quarto publication, which appears to be the basis for this edition given the Executive Director's notes about preserving original printer's errors and conventions. The play was likely written between 1599-1601, with the First Quarto published in 1603, the Second Quarto in 1604, and the First Folio in 1623. The text described here with its characteristic printer's substitutions (u for v, etc.) suggests an early quarto edition. While the composition date might be argued as more "historically accurate," the 1603 publication date represents when this particular textual tradition entered the historical record.
+
+Not marked as "appropriate-for-children" due to themes of murder, revenge, suicide, and mature philosophical content. Not marked as "catholic" as Shakespeare's religious affiliations are debated by scholars, and this is a theatrical work rather than explicitly religious literature.
+"""
+</result>

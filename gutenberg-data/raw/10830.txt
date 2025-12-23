@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "Cinderella" (also known as "Cinderella; Or, The Little Glass Slipper"), published by Hewet in their "Household Stories for Little Folks" series. The title page indicates this edition is from 1855.
+
+The version of Cinderella with the glass slipper is most famously from Charles Perrault's "Histoires ou contes du temps passé" (1697), though this appears to be an English adaptation/retelling published by Hewet. Since this is a retelling in a children's collection rather than a translation with the original author credited, and the publication clearly states 1855, I'll use that as the primary year since this specific version is what's being presented.
+
+<result>
+Title = "Cinderella; Or, The Little Glass Slipper"
+Author = "Anonymous (Hewet's Household Stories adaptation)"
+Year = 1855
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is an 1855 edition of the classic fairy tale Cinderella, published as part of Hewet's Household Stories for Little Folks series, illustrated by W. H. Thwaite. The story tells of a young girl who loses her mother at age nine and, through virtue and patience (as her mother advised), eventually finds happiness. This is the version featuring the iconic glass slipper. The tale is part of a broader European fairy tale tradition, with the most famous literary version being Charles Perrault's 1697 French telling, though versions existed in oral tradition long before.
+"""
+
+Notes = """
+I chose 1855 as the year because this is a specific English adaptation/retelling published by Hewet in that year, not a direct translation of Perrault's 1697 version. The publisher created this as part of a children's series with new illustrations. While the story originates from Perrault (1697) and even earlier folk traditions, this particular text represents a mid-19th century English children's literature adaptation, which is historically significant in its own right for understanding how fairy tales were presented to Victorian-era children.
+"""
+</result>

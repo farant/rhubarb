@@ -1,0 +1,15 @@
+<result>
+Title = "The Two Lovers of Heaven: Chrysanthus and Daria"
+Author = "Pedro Calderón de la Barca (translated by Denis Florence Mac-Carthy)"
+Year = 1660
+
+Tags = ["fiction", "drama", "catholic", "historical-document"]
+
+Summary = """
+This is an English translation of a drama by Spanish Golden Age playwright Pedro Calderón de la Barca, depicting the martyrdom of Saints Chrysanthus and Daria. The play dramatizes the lives of these early Christian martyrs in Rome during the period of persecution. Chrysanthus was a young Roman convert to Christianity who married Daria, a priestess of Minerva whom he converted. Both were eventually martyred for their faith around 283 AD. Calderón, one of Spain's greatest Catholic playwrights, wrote numerous religious dramas (autos sacramentales) and historical plays dealing with Christian themes. This translation was published in 1870 by Irish poet Denis Florence Mac-Carthy.
+"""
+
+Notes = """
+The year 1660 is an approximate date for the original Spanish composition, as Calderón wrote extensively throughout the mid-17th century (his productive period was roughly 1620s-1670s). While the exact composition date of this particular play is not definitively established, 1660 represents the middle of his mature period. The translation itself was published in 1870, but per your guidance, the historically significant date is when Calderón wrote the original Spanish work. Calderón's family motto "Por la fe moriré" (For the faith I will die) reflects the deeply Catholic nature of his work and life.
+"""
+</result>

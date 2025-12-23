@@ -1,0 +1,15 @@
+<result>
+Title = "Fourth of July at Punkin Center"
+Author = "Cal Stewart"
+Year = 1903
+
+Tags = ["fiction", "humor", "appropriate-for-children", "audio-recording"]
+
+Summary = """
+This is an audio recording of a humorous monologue by Cal Stewart, performed in his character "Uncle Josh Weathersby," a rural New England farmer. Cal Stewart (1856-1919) was a popular American vaudeville comedian who created the Uncle Josh character and recorded numerous phonograph cylinders for Edison Records in the early 1900s. The "Punkin Center" sketches were comedic tales of small-town rural American life, featuring Uncle Josh's folksy observations and misadventures. This particular recording depicts Uncle Josh's experiences at a Fourth of July celebration in his fictional hometown of Punkin Center. The recordings were extremely popular in their time and represent early American comedy and the nascent commercial recording industry.
+"""
+
+Notes = """
+Cal Stewart began recording for Edison Records around 1897-1898, and his Uncle Josh recordings were produced throughout the 1900s-1910s. Without access to the specific recording date in the metadata, I'm using circa 1903 as a representative year when Stewart was actively producing his most popular Uncle Josh material. The recording was later digitized and made available through the Edison National Historic Site. This is an audio performance piece rather than a traditional text, representing early 20th century American popular entertainment and phonograph technology.
+"""
+</result>

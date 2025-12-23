@@ -1,0 +1,15 @@
+<result>
+Title = "Walking"
+Author = "Henry David Thoreau"
+Year = 1862
+
+Tags = ["non-fiction", "philosophy", "nature-writing"]
+
+Summary = """
+"Walking" is one of Henry David Thoreau's most celebrated essays, originally delivered as a lecture and posthumously published in The Atlantic Monthly in 1862. The essay is a philosophical meditation on the spiritual and physical practice of walking in nature, advocating for wildness and absolute freedom as opposed to mere civilized existence. Thoreau explores the idea of "sauntering" as a sacred practice, connecting it to medieval pilgrims journeying to the Holy Land. The work emphasizes the importance of maintaining a connection to wilderness and nature, and argues that true freedom comes from being "part and parcel of Nature" rather than merely a member of society. This essay, along with "Civil Disobedience" and "Life Without Principle," represents some of Thoreau's most influential writing on individualism, nature, and the proper relationship between humans and the natural world.
+"""
+
+Notes = """
+"Walking" was published in June 1862 in The Atlantic Monthly, one month after Thoreau's death on May 6, 1862. However, the essay was compiled from lectures Thoreau delivered in the 1850s, particularly from 1851-1860. I chose 1862 as the year because this is when it was formally published as a complete essay in its final form, which is how it entered the literary canon and became widely influential. This is the date that would be most historically accurate for a timeline of published works, though the ideas were developed over the previous decade.
+"""
+</result>

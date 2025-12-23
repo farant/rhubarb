@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This appears to be an issue of "The Mirror of Literature, Amusement, and Instruction," which was a popular British periodical published in the early 19th century. This particular issue is Vol. 17, No. 482, dated Saturday, March 26, 1831.
+
+The text is discussing Bray Church and the famous "Vicar of Bray" - a satirical figure known for changing his religious and political positions to suit whoever was in power. This is a periodical publication containing various articles about literature, history, and general interest topics.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 17, No. 482"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. It featured illustrated articles on a wide variety of topics including history, architecture, literature, science, and general knowledge. This particular issue from March 26, 1831 includes an article about Bray Church and the famous 'Vicar of Bray' - a satirical figure who became proverbial for political and religious opportunism. The periodical was designed to educate and entertain middle-class Victorian readers with accessible, illustrated content.
+"""
+
+Notes = """
+The year 1831 is clearly stated in the publication date. This is a serial periodical rather than a single authored work, so 'Various' is appropriate for the author field. The content is generally wholesome educational material typical of Victorian-era periodicals aimed at family readership.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "Sailors' Knots" by W.W. Jacobs, published in 1909. The text explicitly states this at the beginning, and I can recognize the distinctive style and framing device (the night-watchman narrator) that Jacobs used in many of his humorous maritime short story collections.
+
+W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author famous for his humorous stories about sailors and dockside life, as well as his macabre tale "The Monkey's Paw." "Sailors' Knots" is one of his several collections featuring the night-watchman as narrator telling stories about sailors Peter Russet, Sam Small, and Ginger Dick.
+
+<result>
+Title = "Sailors' Knots"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children", "short-stories", "humorous"]
+
+Summary = """
+"Sailors' Knots" is a collection of humorous short stories by W.W. Jacobs, featuring his recurring frame narrative of a night-watchman telling tales about the adventures and misadventures of sailors, particularly the trio of Peter Russet, Sam Small, and Ginger Dick. Jacobs was a master of late Victorian and Edwardian humorous fiction, specializing in stories about working-class life along the Thames waterfront. His stories are characterized by dialect, situational comedy, and gentle satire of human nature. This particular story, "Peter's Pence," involves Peter Russet receiving a letter from an uncle he hasn't seen in twenty years, which sets up the typical comic complications that Jacobs' characters face.
+"""
+
+Notes = """
+The year 1909 is the publication date clearly stated in the text. W.W. Jacobs was at the height of his career during this period, regularly producing collections of humorous maritime stories. While Jacobs is perhaps best known today for "The Monkey's Paw" (1902), his reputation in his own time rested primarily on these lighthearted sailor stories.
+"""
+</result>

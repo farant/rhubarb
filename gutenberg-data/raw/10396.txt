@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be a children's adventure novel from the early 20th century about a boy joining a circus. Based on the title page information provided, I can see this is "Andy the Acrobat" by Peter T. Harkness, published in 1907.
+
+<result>
+Title = "Andy the Acrobat, or Out With the Greatest Show on Earth"
+Author = "Peter T. Harkness"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Andy the Acrobat' is an early 20th-century children's adventure novel that follows the story of a young protagonist who joins a traveling circus. Written by Peter T. Harkness, who also authored other circus-related works including 'Chimpanzee Hunters,' 'Circuses--Old and New,' and 'How a Great Show Travels,' this book is part of the popular juvenile adventure fiction genre of the era. The story begins with the protagonist being expelled (as indicated by Chapter I's title) and chronicles his adventures as he becomes involved with 'the Greatest Show on Earth,' learning about circus life, acrobatics, and experiencing various adventures on the road. This type of circus story was particularly popular in American children's literature during the late 19th and early 20th centuries, when traveling circuses were a major form of entertainment and held great fascination for young readers.
+"""
+
+Notes = """
+The year 1907 is clearly stated on the title page. Peter T. Harkness appears to have specialized in circus-themed adventure stories for young readers during this period.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Far from the Madding Crowd"
+Author = "Thomas Hardy"
+Year = 1874
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Far from the Madding Crowd is Thomas Hardy's fourth novel and first major literary success. Set in the fictional rural county of Wessex (based on Hardy's native Dorset), it tells the story of Bathsheba Everdene, an independent and spirited young woman who inherits a farm and becomes a successful farmer. The novel follows her relationships with three very different suitors: the faithful shepherd Gabriel Oak, the prosperous but obsessive farmer William Boldwood, and the dashing but unreliable Sergeant Troy. The work is considered one of Hardy's finest pastoral novels, combining romance, tragedy, and detailed observations of Victorian rural life and agricultural practices. Hardy's deep knowledge of farming and country customs, along with his philosophical treatment of fate and character, establish themes he would develop throughout his career. The novel was originally serialized in Cornhill Magazine in 1874 before book publication.
+"""
+
+Notes = """
+I chose 1874 as this represents both the serialization and first edition publication year. While the Project Gutenberg text indicates this is the 1895 second edition (which Hardy extensively revised), the historical and literary significance of the work is tied to its original 1874 publication, which marked Hardy's breakthrough as a major novelist. The 1874 date is most appropriate for a historical timeline of literature, as this is when the work entered the cultural consciousness and established Hardy's reputation.
+"""
+</result>

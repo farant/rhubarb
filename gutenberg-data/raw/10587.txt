@@ -1,0 +1,17 @@
+I need to identify this multi-author anthology containing works by Joseph Addison, John Gay, and William Somerville, edited by Rev. George Gilfillan and published in 1859.
+
+<result>
+Title = "The Poetical Works of Joseph Addison; Gay's Fables; and Somerville's Chase"
+Author = "Joseph Addison, John Gay, William Somerville (edited by George Gilfillan)"
+Year = 1859
+
+Tags = ["non-fiction", "poetry", "anthology"]
+
+Summary = """
+This is a Victorian-era anthology edited by Rev. George Gilfillan (1859) containing the complete poetical works of three English poets. Joseph Addison (1672-1719) was an essayist, poet, and statesman known for his work on The Spectator. John Gay (1685-1732) was best known for his Fables (1727-1738), moralistic verse tales featuring animals. William Somerville (1675-1742) wrote The Chase (1735), a georgic poem celebrating hunting. Gilfillan was a Scottish minister and critic known for his biographical and critical editions of English poets published in the mid-19th century.
+"""
+
+Notes = """
+The year 1859 (M.DCCC.LIX in Roman numerals on the title page) reflects when this particular collected edition was published. While the individual works date from the early 18th century (Addison died 1719, Gay 1732, Somerville 1742), this compilation represents a Victorian scholarly edition with Gilfillan's memoirs and critical dissertations. For a historical timeline, 1859 is most appropriate as it represents this specific editorial work rather than the original composition dates of the varied contents.
+"""
+</result>

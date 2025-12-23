@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Barbarism of Berlin"
+Author = "G.K. Chesterton"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+'The Barbarism of Berlin' is a short polemical work by G.K. Chesterton written during World War I. Published in 1914 at the outbreak of the war, it represents Chesterton's passionate defense of England's entry into the conflict against Germany. The book is structured as a series of essays examining what Chesterton perceived as the fundamental differences between English/Western civilization and German militarism. He argues that Germany's actions in the war, particularly the invasion of Belgium, represented a betrayal of fundamental principles of reciprocity, law, and civilization. The work is characteristic of Chesterton's rhetorical style, combining philosophical argument with vivid imagery and paradox. It served as wartime propaganda but also reflects Chesterton's deeper concerns about authority, tradition, and the nature of civilization.
+"""
+
+Notes = """
+The year 1914 is when this work was first published, as clearly stated on the title page. This was written in the immediate aftermath of Britain's entry into World War I (August 1914), making it one of the earliest intellectual responses to the conflict. Chesterton was a Catholic convert (converted in 1922, so technically still Anglican when this was written), but his thinking was already deeply informed by Catholic philosophy. The work has strong moral and philosophical undertones consistent with Catholic natural law thinking, even if written before his formal conversion.
+"""
+</result>

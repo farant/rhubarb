@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a play by John Fletcher (often attributed to Fletcher alone or to the Fletcher/Beaumont collaboration, though this particular play is primarily Fletcher's work). "The Humorous Lieutenant" is also known as "Demetrius and Enanthe" or "The Noble Enemies."
+
+<result>
+Title = "The Humorous Lieutenant"
+Author = "John Fletcher"
+Year = 1619
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+The Humorous Lieutenant (also known as Demetrius and Enanthe) is a tragicomedy by John Fletcher, one of the leading playwrights of the Jacobean era. The play tells the story of Demetrius, son of King Antigonus, who is in love with Celia (alias Enanthe), the daughter of Seleucus, one of his father's enemies. The "humorous lieutenant" of the title is a comic character whose courage and abilities fluctuate wildly depending on his health condition, providing comic relief throughout the military and romantic intrigue. The play combines elements of military conflict among the successor kings following Alexander the Great's empire, romantic complications between the younger generation, and bawdy comedy centered on the eccentric lieutenant character. It exemplifies Fletcher's skill at blending serious romantic drama with broad comedy.
+"""
+
+Notes = """
+The play was likely written around 1619 and was first published in the First Folio of Beaumont and Fletcher's works in 1647. The date 1619 represents the approximate composition date based on scholarly consensus. Fletcher was the primary or sole author of this play, though it appeared in collections attributed to the Beaumont and Fletcher collaboration. The play remained popular through the Restoration period due to its mix of romance, comedy, and martial themes.
+"""
+</result>

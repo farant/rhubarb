@@ -1,0 +1,15 @@
+<result>
+Title = "A Residence in France, During the Years 1792, 1793, 1794, and 1795"
+Author = "An English Lady (Helen Maria Williams)"
+Year = 1797
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a series of letters from an English woman living in France during the height of the French Revolution, covering the tumultuous years from 1792-1795. The letters provide firsthand observations of Revolutionary France, including the Reign of Terror, and offer commentary on French character and manners from a British perspective. The work was prepared for publication by John Gifford, a conservative British author and editor known for his anti-revolutionary views. These eyewitness accounts are valuable historical documents that illuminate daily life, political upheaval, and social transformation during one of history's most dramatic periods. The author's observations reflect the complex reactions of foreign observers to the Revolution's ideals versus its violent reality.
+"""
+
+Notes = """
+Year chosen is 1797, the publication date of this second edition in London. While the letters describe events from 1792-1795, the work itself as a compiled and edited volume was published in 1797. The author is likely Helen Maria Williams, a British poet and novelist who lived in Paris during the Revolution and wrote extensively about her experiences, though the work was published anonymously as being by "An English Lady." John Gifford was a prominent conservative editor who opposed the French Revolution, and his involvement in preparing the manuscript likely influenced its presentation to emphasize the dangers and excesses of revolutionary ideology.
+"""
+</result>

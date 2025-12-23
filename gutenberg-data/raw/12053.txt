@@ -1,0 +1,15 @@
+<result>
+Title = "Gladius Dei; Schwere Stunde"
+Author = "Thomas Mann"
+Year = 1903
+
+Tags = ["fiction", "literary-fiction"]
+
+Summary = """
+This is a collection of two short stories by German author Thomas Mann. "Gladius Dei" (Sword of God) was first published in 1903 as part of Mann's collection "Tristan: Sechs Novellen." The story is set in Munich and deals with themes of art, aesthetics, and religious morality, featuring a confrontation between a religious zealot and the aesthetic culture of the city. "Schwere Stunde" (A Weary Hour) depicts a difficult creative moment, often interpreted as a fictionalized portrayal of Friedrich Schiller struggling with his work. Both stories reflect Mann's recurring themes of the tension between art and life, the burden of artistic creation, and the conflict between sensuality and asceticism.
+"""
+
+Notes = """
+"Gladius Dei" was first published in 1903 in the collection "Tristan: Sechs Novellen," so 1903 is used as the primary date. "Schwere Stunde" was published slightly later in 1905, but since this Gutenberg edition presents both works together and the title leads with "Gladius Dei," 1903 is chosen as the most representative year for this collection. Thomas Mann, though culturally Protestant, was not a Catholic author, so the 'catholic' tag is not applied.
+"""
+</result>

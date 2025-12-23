@@ -1,0 +1,15 @@
+<result>
+Title = "Tenterhooks"
+Author = "Ada Leverson"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Tenterhooks is the second book in Ada Leverson's "Little Ottleys" trilogy, published in 1912. Ada Leverson (1862-1933) was an English writer and close friend of Oscar Wilde, who nicknamed her "The Sphinx." The trilogy follows the marriage of Edith and Bruce Ottley, depicting the comic struggles of their relationship in Edwardian England. Leverson was known for her witty, satirical novels that gently mocked the social conventions and domestic life of the upper-middle classes. Her writing style has been compared to Jane Austen for its sharp observations of relationships and society. The trilogy consists of "Love's Shadow" (1908), "Tenterhooks" (1912), and "Love at Second Sight" (1916).
+"""
+
+Notes = """
+1912 is the original publication year for this work, clearly stated in the Project Gutenberg text. The book was dedicated to Robert Ross, a literary journalist and close friend of Oscar Wilde. This is a work of fiction by a non-Catholic author, so it does not receive the 'catholic' tag despite being appropriate for general audiences.
+"""
+</result>

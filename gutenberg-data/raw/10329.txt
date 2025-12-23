@@ -1,0 +1,15 @@
+<result>
+Title = "Snubby Nose and Tippy Toes"
+Author = "Laura Rountree Smith"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Snubby Nose and Tippy Toes" is a children's story collection featuring anthropomorphic animal characters, including Cotton Tail stories. Laura Rountree Smith was an American author who wrote children's literature in the early 20th century. The book contains whimsical tales with characters like Grandpa Grumbles and Dr. Cottontail, featuring the kind of gentle, imaginative storytelling typical of early 20th century children's literature. The illustrations and chapter structure suggest it was designed to be read aloud to young children or for early readers.
+"""
+
+Notes = """
+The copyright notice shows both 1917 and 1922, indicating the original publication was 1917 with a possible revised or reprinted edition in 1922. I've chosen 1917 as the original publication year for historical accuracy. This appears to be secular children's fiction with no particular religious content.
+"""
+</result>

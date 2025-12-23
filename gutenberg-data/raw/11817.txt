@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations, 1958"
+Author = "United States Copyright Office"
+Year = 1958
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office catalog listing renewal registrations for books, pamphlets, serials, and contributions to periodicals. It represents an administrative record of copyright renewals processed during a specific period in 1958. The catalog is arranged alphabetically by author or issuing body, providing information about both original and renewal registrations. These catalogs serve as official government records documenting the extension of copyright protection for works originally registered approximately 28 years earlier (under the 1909 Copyright Act, the first term was 28 years, renewable for another 28 years).
+"""
+
+Notes = """
+This is clearly a U.S. Copyright Office publication from 1958, as indicated by the renewal dates throughout (R214012, R216893, etc. all from 1958) and the catalog number '1958_h1/A/0713'. The Project Gutenberg ebook number 11817 corresponds to this administrative document. This is not a creative work but rather a governmental catalog/reference document listing copyright renewal registrations processed in 1958 for works originally copyrighted around 1929-1931.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Aesop's Fables"
+Author = "Aesop"
+Year = -600
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Aesop's Fables is a collection of brief morality tales featuring anthropomorphized animals that convey practical wisdom and ethical lessons. These fables, attributed to Aesop (a slave and storyteller believed to have lived in ancient Greece around 620-564 BCE), have been passed down through oral tradition and various written collections for over two millennia. This particular edition is a 1912 translation by V. S. Vernon Jones with an introduction by G. K. Chesterton and illustrations by Arthur Rackham. The fables typically end with explicit moral lessons and have become foundational texts in Western literature, influencing countless generations with stories like "The Tortoise and the Hare," "The Boy Who Cried Wolf," and "The Fox and the Grapes."
+"""
+
+Notes = """
+The year -600 (approximately 600 BCE) represents the estimated period when Aesop lived and these fables originated, as this is most historically accurate for a timeline of works. While this specific text is a 1912 edition translated by Vernon Jones with Chesterton's introduction, the fables themselves date to ancient Greece circa 6th century BCE. The fables were transmitted orally before being compiled in various written collections throughout history, but they are fundamentally associated with Aesop's time period rather than any particular translation date.
+"""
+</result>

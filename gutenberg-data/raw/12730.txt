@@ -1,0 +1,15 @@
+<result>
+Title = "The High School Boys' Fishing Trip; or, Dick & Co. in the Wilderness"
+Author = "H. Irving Hancock"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is one of the books in H. Irving Hancock's "High School Boys Series," which follows the adventures of Dick Prescott and his friends (collectively known as "Dick & Co."). The series was popular early 20th-century juvenile fiction aimed at adolescent boys. This particular volume follows the boys on a fishing trip into the wilderness, where they encounter various adventures, mysteries, and adversaries (including recurring antagonists Dodge and Bayless). The chapter titles suggest elements of mystery, outdoor adventure, and the kind of wholesome excitement characteristic of the era's boys' adventure literature.
+"""
+
+Notes = """
+The High School Boys Series was published between approximately 1910-1914. This specific title was first published around 1912. H. Irving Hancock was a prolific author of juvenile series fiction in the early 20th century, writing multiple series including the "High School Boys," "College Boys," and military-themed series. These books were part of the broader Stratemeyer Syndicate-style phenomenon of series books for young readers, though Hancock wrote independently. The series emphasized clean adventure, friendship, and moral character-building typical of Progressive Era children's literature.
+"""
+</result>

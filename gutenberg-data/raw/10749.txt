@@ -1,0 +1,15 @@
+<result>
+Title = "The Circus Procession"
+Author = "Unknown"
+Year = 1888
+
+Tags = ["fiction", "appropriate-for-children", "poetry"]
+
+Summary = """
+"The Circus Procession" is a Victorian-era children's picture book that presents a circus parade through illustrated scenes accompanied by verse. Originally published as a novelty accordion-fold book approximately 12 feet long when fully extended, it features colorful illustrations of circus performers, animals, and wagons with four lines of verse beneath each scene. This type of elaborate fold-out children's book was popular in the late 19th century, combining visual spectacle with simple rhyming text to capture the excitement and pageantry of the traveling circus—a major form of entertainment in that era.
+"""
+
+Notes = """
+Dating anonymous Victorian children's books can be challenging. Based on the accordion-fold format, the style described, and typical production methods for this type of elaborate illustrated children's book, this likely dates from the 1880s-1890s, with circa 1888 being a reasonable estimate for the original publication. This represents the golden age of circus culture in America and the height of elaborate novelty children's book formats. The exact date is uncertain given the anonymous authorship and lack of publisher information in the Gutenberg metadata.
+"""
+</result>

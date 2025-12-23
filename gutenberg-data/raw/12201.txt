@@ -1,0 +1,15 @@
+<result>
+Title = "Odd Craft"
+Author = "W. W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Odd Craft" is a collection of humorous short stories by English author W. W. Jacobs, best known for his tales of dockside and nautical life. The stories feature working-class characters—sailors, night-watchmen, and various dockyard workers—and are told with Jacobs's characteristic gentle humor and keen observation of human nature. This collection includes "The Money-Box," among other tales, which showcase Jacobs's skill at depicting the foibles and adventures of ordinary people, particularly those connected with maritime life. His stories often revolve around schemes that go awry, misunderstandings, and the comic struggles of his characters against their own weaknesses and circumstances.
+"""
+
+Notes = """
+The text indicates this edition was published in 1909, but "Odd Craft" was originally published in 1903. Given the context that this is for a historical timeline focusing on educational and historical accuracy, I've chosen 1903 as the original publication year of the work itself, as this represents when the collection first appeared and became part of literary history. W. W. Jacobs (1863-1943) was a popular English author of the late Victorian and Edwardian periods, famous for both his humorous maritime tales and his macabre story "The Monkey's Paw."
+"""
+</result>

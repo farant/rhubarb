@@ -1,0 +1,15 @@
+<result>
+Title = "Christmas Eve on Lonesome and Other Stories"
+Author = "John Fox, Jr."
+Year = 1904
+
+Tags = ["fiction", "short-stories", "american-literature", "appalachian", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by John Fox, Jr., focusing on life in the Appalachian mountains of Kentucky. The title story, "Christmas Eve on Lonesome," is one of Fox's most beloved tales, depicting the transforming power of kindness and redemption in a remote mountain setting during Christmas. Fox was known for his sympathetic portrayals of mountain people and their culture, bringing the dialect, customs, and landscape of Appalachia to a wider American audience during the early 20th century. His stories often featured themes of honor, loyalty, and moral redemption set against the backdrop of the Cumberland Mountains.
+"""
+
+Notes = """
+The book was first published in 1904, though the Project Gutenberg edition mentions 1911, which appears to be a later edition or reprint. The original publication date of 1904 is more historically accurate for cataloging purposes. John Fox, Jr. (1862-1919) was one of the first American authors to popularize Appalachian regional fiction. While Fox himself was not Catholic, his work does not contain content that would be considered problematic for general audiences, hence the appropriate-for-children tag.
+"""
+</result>

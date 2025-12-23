@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Prince Zaleski" by M.P. Shiel (Matthew Phipps Shiel), published in 1895. This is a collection of detective stories featuring the titular character Prince Zaleski, a reclusive aristocratic detective. Shiel was an Anglo-Montserratian author known for his supernatural and detective fiction, and this was one of his early works that helped establish the "armchair detective" subgenre.
+
+<result>
+Title = "Prince Zaleski"
+Author = "M. P. Shiel (Matthew Phipps Shiel)"
+Year = 1895
+
+Tags = ["fiction", "detective", "mystery"]
+
+Summary = """
+Prince Zaleski is a collection of three detective stories by M.P. Shiel featuring the eccentric titular detective, Prince Zaleski. The prince is a reclusive, aristocratic figure who has withdrawn from society following an unfortunate love affair and exile from his homeland. He solves mysteries through pure deduction from his hermitage, establishing an early example of the "armchair detective" archetype. The collection includes three tales: "The Race of Orven," "The Stone of the Edmundsbury Monks," and "The S.S." Shiel's ornate, decadent prose style and the exotic, melancholic character of Zaleski influenced later detective fiction, and the work is considered a precursor to more famous consulting detectives in literature.
+"""
+
+Notes = """
+The publication year 1895 is clearly stated on the title page of this edition. This was Shiel's first book and one of his most enduring works, helping to establish conventions of the detective genre in the late Victorian period.
+"""
+</result>

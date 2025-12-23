@@ -1,0 +1,15 @@
+<result>
+Title = "Paradiso (The Divine Comedy, Part III)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "appropriate-for-children"]
+
+Summary = """
+Paradiso is the third and final part of Dante Alighieri's Divine Comedy, following Inferno and Purgatorio. It depicts Dante's journey through the nine celestial spheres of Heaven, guided by Beatrice, as he ascends toward the vision of God. The work is structured around medieval cosmology and Catholic theology, presenting a vision of divine justice, love, and the beatific vision. Each sphere contains souls of the blessed who achieved different levels of holiness, from those who broke vows under duress to martyrs, righteous rulers, and contemplatives. The poem culminates in Dante's direct vision of the Trinity and understanding of the Incarnation. This is Longfellow's translation, which is notable for being one of the first complete English translations and for maintaining Dante's terza rima structure. The work is considered one of the greatest achievements of world literature and a masterpiece of medieval Catholic theology in poetic form.
+"""
+
+Notes = """
+Year chosen is approximately 1320, when Paradiso was completed. The entire Divine Comedy was written between roughly 1308-1320, with Paradiso being the last section completed shortly before Dante's death in 1321. Some sources cite completion as late as 1321, but 1320 is the more commonly accepted date for when Paradiso was finished. The translator, Henry Wadsworth Longfellow, completed his translation in the 1860s.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Raven"
+Author = "Edgar Allan Poe"
+Year = 1845
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"The Raven" is one of the most famous poems in American literature, written by Edgar Allan Poe. The narrative poem tells the story of a grieving narrator who is visited by a mysterious raven at midnight. The narrator, mourning the loss of his beloved Lenore, engages with the bird, which only responds with the word "Nevermore." The poem explores themes of grief, loss, despair, and the descent into madness. It is renowned for its musicality, stylized language, and supernatural atmosphere. The poem became an immediate popular success when first published and remains Poe's most celebrated work, establishing him as a master of Gothic literature and psychological horror in verse form.
+"""
+
+Notes = """
+"The Raven" was first published in January 1845 in the New York Evening Mirror. While Poe wrote other works that could be considered more appropriate for children, "The Raven" deals with mature themes of death, grief, and psychological torment, so I have not tagged it as appropriate-for-children. Though Poe was raised in a nominally Christian household, his work is not distinctly Catholic in character and would not typically receive ecclesiastical approval, so the 'catholic' tag is not applicable.
+"""
+</result>

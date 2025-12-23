@@ -1,0 +1,15 @@
+<result>
+Title = "Alexandria and her Schools"
+Author = "Charles Kingsley"
+Year = 1854
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+'Alexandria and her Schools' is a series of lectures by Anglican clergyman and historian Charles Kingsley examining the intellectual and philosophical life of ancient Alexandria, Egypt. The work explores the famous schools of thought that flourished in this cosmopolitan city, including the Neoplatonist philosophers, early Christian theologians, and the meeting of Greek, Jewish, and Egyptian intellectual traditions. Kingsley traces the development of Christian theology and philosophy through the lens of Alexandria's unique cultural melting pot, discussing figures like Philo, Clement of Alexandria, and Origen. The lectures provide both historical analysis and reflection on how ancient Alexandrian thought influenced the development of Christian doctrine.
+"""
+
+Notes = """
+The lectures were originally delivered in 1854 and later published as part of Kingsley's 'Historical Lectures and Essays' collection. The 1902 Macmillan edition referenced in the Project Gutenberg text is a later reprint. I've chosen 1854 as the publication year since that's when Kingsley first delivered these lectures, making it the most historically accurate date for the work's creation. Kingsley was an Anglican priest and professor of history, not Catholic, so the 'catholic' tag is not applied despite the Christian theological content.
+"""
+</result>

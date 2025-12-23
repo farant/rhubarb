@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a collection of letters by Horace Walpole (1717-1797), one of the most famous English letter-writers of the 18th century. Based on the volume number (II) and the date range (1764-1795), this appears to be from a multi-volume selected edition of his correspondence edited by Charles Duke Yonge, published in 1890.
+
+For the year, I need to consider: Walpole wrote these letters during his lifetime (1764-1795 for this volume), but this is a posthumous selected edition published in 1890. Since the use case is a historical timeline and educational context, I believe the most historically significant date would be around the mid-point of the letters' composition or the publication of early complete editions of his correspondence. However, given this is a specific edition, 1890 is the publication year of this particular collection.
+
+<result>
+Title = "Letters of Horace Walpole, Volume II"
+Author = "Horace Walpole"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the second volume of a selected edition of correspondence by Horace Walpole (1717-1797), edited by Charles Duke Yonge. Walpole was an English art historian, man of letters, antiquarian, and Whig politician, famous for his voluminous correspondence which provides invaluable insights into 18th-century English society, politics, literature, and culture. His letters are considered masterpieces of the epistolary form, combining wit, gossip, political commentary, and keen observation. This volume covers the period 1764-1795 and includes letters to correspondents such as Sir Horace Mann, discussing topics ranging from French visitors to Strawberry Hill (Walpole's gothic villa) to literary matters and social observations.
+"""
+
+Notes = """
+Year chosen is 1890, the publication date of this particular edited collection by Charles Duke Yonge. The letters themselves were written between 1764-1795. An alternative dating could use the period of composition or earlier posthumous editions, but since this is a specific edition with editorial apparatus, 1890 represents this particular work's publication.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Lincoln's First Inaugural Address"
+Author = "Abraham Lincoln"
+Year = 1861
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is Abraham Lincoln's First Inaugural Address, delivered on March 4, 1861, as he assumed the presidency during one of the most critical moments in American history. The speech was given just weeks before the outbreak of the Civil War, with seven Southern states having already seceded from the Union. In this address, Lincoln attempts to reassure the Southern states that he has no intention of interfering with slavery where it already exists, while maintaining that the Union is perpetual and secession is unconstitutional. The speech is notable for its attempts at conciliation while firmly defending the integrity of the Union. It represents a crucial primary source document for understanding the immediate prelude to the American Civil War and Lincoln's initial approach to the secession crisis.
+"""
+
+Notes = """
+The date of March 4, 1861 is straightforward - this is when the address was delivered. This was Lincoln's inauguration day. The Civil War would begin just over a month later with the Battle of Fort Sumter on April 12, 1861. This is a historical document rather than a literary work, and while Lincoln was not Catholic, the speech's themes of unity, peace, and moral reasoning have universal appeal. It is appropriate for children as an educational historical document, though it requires historical context to fully understand.
+"""
+</result>

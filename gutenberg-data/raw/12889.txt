@@ -1,0 +1,17 @@
+I can identify this work based on the title page and publication information.
+
+<result>
+Title = "Promenades autour d'un village"
+Author = "George Sand"
+Year = 1857
+
+Tags = ["non-fiction", "nature-writing", "appropriate-for-children"]
+
+Summary = """
+"Promenades autour d'un village" (Walks Around a Village) is a collection of essays by George Sand that combines nature observations, rural life descriptions, and philosophical reflections. Written during her time in the Berry region of central France, the work exemplifies Sand's deep connection to the countryside and her ability to find beauty and meaning in the simple aspects of provincial life. The essays blend natural history, local customs, and personal meditations, showcasing Sand's Romantic sensibility and her progressive views on rural society. The work is characterized by its accessible style and gentle observations, making it suitable for general audiences including younger readers.
+"""
+
+Notes = """
+First published in 1857. George Sand (pen name of Amantine Lucile Aurore Dupin) was a prolific French novelist and memoirist of the Romantic era. While she was baptized Catholic and raised in a nominally Catholic environment, she became increasingly skeptical of organized religion throughout her life and held progressive, often heterodox views. Therefore, this work would not qualify for the 'catholic' tag as it would not likely receive an imprimatur or nihil obstat. The Michel Lévy collection referenced on the title page was a major French publishing house of the 19th century that published many of Sand's works.
+"""
+</result>

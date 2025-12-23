@@ -1,0 +1,15 @@
+<result>
+Title = "From Chaucer to Tennyson"
+Author = "Henry A. Beers"
+Year = 1894
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a survey of English literature covering the major periods and authors from Geoffrey Chaucer (14th century) through Alfred, Lord Tennyson (19th century). Written by Henry A. Beers, a Professor of English Literature at Yale University, this work was part of the Chautauqua Reading Circle Literature series, an educational movement that brought university-level learning to the general public. The book includes biographical and critical essays on thirty major English authors along with representative selections from their works and portraits. It serves as both a literary history and an anthology, designed to introduce readers to the development of English literature across five centuries.
+"""
+
+Notes = """
+The exact publication year is not given in this text, but Henry A. Beers published "From Chaucer to Tennyson" in 1894 as part of the Chautauqua Literary and Scientific Reading Circle series. This educational program was hugely popular in late 19th-century America for bringing structured literary and scientific education to adults in small towns across the country. Beers was a respected scholar who taught at Yale from 1880 to 1916.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Women Workers in Seven Professions: A Survey of Their Economic Conditions and Prospects"
+Author = "Edited by Edith J. Morley (for the Fabian Women's Group)"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document", "sociology", "women's studies"]
+
+Summary = """
+This is a sociological survey examining the economic conditions and career prospects of women workers in seven different professions in early 20th century Britain. Published by the Fabian Women's Group (associated with the Fabian Society, a British socialist organization), the work presents first-hand accounts from women working in various professional fields. The book was edited by Edith J. Morley and includes contributions from multiple authors with direct experience in their respective professions, including sections on medical work, nursing, and secondary school teaching. It represents an important historical document in the study of women's labor and professional opportunities during the suffrage era.
+"""
+
+Notes = """
+The year 1914 is clearly stated on the title page and represents the original publication date. This work is a product of the Fabian Society's research efforts into social and economic conditions. The Fabian Women's Group was an auxiliary organization focused on women's issues within the broader socialist Fabian movement. The book provides valuable primary source material on women's professional work immediately before World War I, which would dramatically change women's participation in the workforce.
+"""
+</result>

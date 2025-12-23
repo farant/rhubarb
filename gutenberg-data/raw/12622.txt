@@ -1,0 +1,17 @@
+I can see this is a collection of poems by Denis Florence MacCarthy, published in Dublin in 1882. Based on my knowledge of this Irish poet, let me provide the structured information:
+
+<result>
+Title = "Poems"
+Author = "Denis Florence MacCarthy"
+Year = 1882
+
+Tags = ["poetry", "non-fiction", "catholic"]
+
+Summary = """
+This is a posthumous collection of poems by Denis Florence MacCarthy (1817-1882), an Irish poet, translator, and scholar. MacCarthy was a prominent figure in 19th-century Irish literature, known for his lyric poetry celebrating Irish history, culture, and landscape, as well as his acclaimed translations of Spanish Golden Age drama, particularly the works of Calderón de la Barca. He was a devout Catholic and his work often reflected his faith. This volume was published shortly after his death and includes a memorial notice showing the widespread respect he commanded, with subscribers including Cardinal Newman and other distinguished Catholic clergy and literary figures of the time.
+"""
+
+Notes = """
+I chose 1882 as the year because this appears to be the first published collection of his complete poems after his death. The memorial notice at the beginning indicates this was published as part of commemorating his legacy. While MacCarthy wrote throughout his life (he died in 1882), this particular volume represents a posthumous collection. The list of distinguished subscribers to the Memorial Fund (including Cardinals Newman, MacCabe, and MacClosky, as well as literary figures like Archbishop Trench and Aubrey de Vere) demonstrates his standing as a respected Catholic Irish literary figure.
+"""
+</result>

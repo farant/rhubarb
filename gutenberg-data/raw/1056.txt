@@ -1,0 +1,15 @@
+<result>
+Title = "Martin Eden"
+Author = "Jack London"
+Year = 1909
+
+Tags = ["fiction", "philosophical-novel", "autobiographical"]
+
+Summary = """
+Martin Eden is a semi-autobiographical novel by Jack London about a working-class sailor who falls in love with Ruth Morse, a young woman from an educated, bourgeois family. Driven by his love for Ruth and desire for self-improvement, Martin embarks on an intense journey of self-education and becomes a successful writer. The novel explores themes of individualism, social class, the struggle for literary success, and disillusionment with both capitalism and socialism. It's considered one of London's finest works and most personal novels, reflecting his own experiences rising from poverty to become a famous author. The story ultimately becomes a tragic meditation on the isolation of success and the meaning of achievement when separated from genuine human connection.
+"""
+
+Notes = """
+Martin Eden was first published serially in The Pacific Monthly magazine from September 1908 to September 1909, and then as a book in 1909. I chose 1909 as it marks the complete publication and is the year most commonly associated with the work. This novel is notably darker than much of London's adventure fiction and contains philosophical explorations of Nietzschean ideas and critiques of American society that were controversial at the time.
+"""
+</result>

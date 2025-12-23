@@ -1,0 +1,15 @@
+<result>
+Title = "The History of England, Volume I"
+Author = "David Hume"
+Year = 1754
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+David Hume's monumental "History of England" is a comprehensive historical work covering English history from the Roman invasion under Julius Caesar through the Glorious Revolution of 1688. Volume I covers the early period of English history. Published in multiple volumes between 1754 and 1762, this work was one of the most important historical texts of the 18th century and remained a standard reference for over a century. Hume, a Scottish Enlightenment philosopher and historian, approached English history with a philosophical and analytical perspective, attempting to apply reason and skepticism to historical analysis. His work was notable for its literary style and its attempt to explain historical events through natural causes rather than divine providence. The work was controversial in its time for its treatment of religious conflicts and for what some saw as Hume's sympathies toward the Stuart monarchs.
+"""
+
+Notes = """
+The first volume of Hume's History was actually published in 1754, covering the period of the Stuart monarchs (originally titled "The History of Great Britain, Vol. I, containing the reigns of James I and Charles I"). However, Hume wrote the work backwards chronologically. The volume covering ancient Britain through the Norman Conquest (which became Volume I in the final arrangement) was published last in 1762. Since this appears to be Volume I in the final arrangement "From the Invasion of Julius Caesar," I'm using 1754 as it represents when the project began, though 1762 might be more accurate for this specific volume's content. The complete work was published 1754-1762, with this edition including "the Author's Last Corrections and Improvements" suggesting it's a later revised edition.
+"""
+</result>

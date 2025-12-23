@@ -1,0 +1,15 @@
+<result>
+Title = "Frontier Stories"
+Author = "Bret Harte"
+Year = 1886
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Frontier Stories is a collection of short stories by American author Bret Harte, featuring tales of life in the American West, particularly California during and after the Gold Rush era. The collection includes several of Harte's notable works such as "Flip: A California Romance," "Found at Blazing Star," "In the Carquinez Woods," and others. Harte was known for his vivid depictions of frontier life, colorful characters, and romantic portrayals of the California landscape and its diverse inhabitants. His stories often featured miners, gamblers, outcasts, and other denizens of mining camps and frontier towns, written with a blend of humor, sentimentality, and local color that made him one of the most popular writers of his era.
+"""
+
+Notes = """
+'Frontier Stories' as a collection was published around 1886, though individual stories were written and published earlier in various magazines. Bret Harte's most productive period was in the late 1860s through the 1880s. The year 1886 represents a reasonable publication date for this particular compilation of his frontier tales. Some of the individual stories may have appeared in periodicals earlier, but this collection format would date to the mid-to-late 1880s.
+"""
+</result>

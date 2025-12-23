@@ -1,0 +1,19 @@
+Looking at this Project Gutenberg entry, I can see this is an audio recording rather than a text. "M'appari" (full title "M'appari tutt'amor" or "When first I saw that form endearing") is a famous tenor aria from Friedrich von Flotow's opera "Martha, or The Market of Richmond" (Martha, oder Der markt zu Richmond).
+
+The performer listed is Alessandro Bonci, a renowned Italian operatic tenor, and this appears to be an Edison recording (edited by Thomas A. Edison, taken from the Edison National Historic Site).
+
+<result>
+Title = "M'appari - Martha (Audio Recording)"
+Author = "Friedrich von Flotow (composer), performed by Alessandro Bonci"
+Year = 1847
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording of the famous tenor aria "M'appari tutt'amor" from the opera "Martha, oder Der markt zu Richmond" (Martha, or The Market of Richmond) by German composer Friedrich von Flotow. The aria is performed by Alessandro Bonci, one of the great Italian tenors of the early 20th century. The recording comes from the Edison National Historic Site archives and represents an early example of recorded operatic performance preserved by Thomas Edison's phonograph technology.
+"""
+
+Notes = """
+The year 1847 reflects when Flotow's opera Martha premiered in Vienna. The actual recording by Bonci would have been made in the early 1900s (Bonci's career peaked 1900-1920s), but since this is fundamentally a performance of Flotow's 1847 composition, that date provides the most historically accurate reference point for the work itself. This is an audio artifact rather than a traditional text, so categorization differs from typical literary works.
+"""
+</result>

@@ -1,0 +1,21 @@
+Looking at this text from Project Gutenberg, I can identify this as a collection of short stories by Émile Bergerat, a French writer. The work is titled "Contes de Caliban" (Tales of Caliban) and was published in 1909 as indicated in the text itself.
+
+Émile Bergerat (1845-1923) was a French poet, playwright, and journalist, known for being Victor Hugo's son-in-law. The title "Contes Facétieux" (Facetious Tales) introduces the section, and the first story shown is "Béjarec le Faiseur d'Enfants" (Béjarec the Baby-Maker).
+
+From what I can see, this is a collection of humorous/satirical tales with adult themes. The story visible here deals with a man who helped propagate children in villages - clearly written with a satirical edge and mature subject matter, making it inappropriate for children.
+
+<result>
+Title = "Contes de Caliban"
+Author = "Émile Bergerat"
+Year = 1909
+
+Tags = ["fiction", "short-stories", "adult-content"]
+
+Summary = """
+'Contes de Caliban' (Tales of Caliban) is a collection of facetious tales by French writer Émile Bergerat, son-in-law of Victor Hugo. The work consists of humorous and satirical short stories that explore various aspects of French village life and human nature with a witty, sometimes bawdy perspective. Bergerat was known for his wit and literary connections in Belle Époque Paris. The stories blend humor with social commentary, characteristic of French literary tradition of contes facétieux (facetious or comic tales).
+"""
+
+Notes = """
+The year 1909 appears directly in the original publication text. Bergerat was a prolific writer and journalist active in late 19th/early 20th century France. The mature themes and satirical treatment of social mores make this clearly adult literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Fancy Little Nancy"
+Author = "Frank W. Wadsworth"
+Year = 1919
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is an audio recording (saxophone performance) of "Fancy Little Nancy" performed by Frank W. Wadsworth. It was recorded on September 9, 1919 in New York City and later edited/produced by Thomas A. Edison. This represents an early 20th century audio recording from the acoustic recording era, preserved as part of the Project Gutenberg audio collection. The work is a musical performance rather than a literary text.
+"""
+
+Notes = """
+The year 1919 reflects the actual recording date, which is the most historically significant date for this artifact. This is an audio recording rather than a traditional text, so it doesn't fit neatly into typical literary categories. I did not include 'appropriate-for-children' as I cannot determine the content/lyrics of the musical piece from this metadata alone. This appears to be from the Thomas Edison recording catalog from the acoustic recording era (pre-electrical recording).
+"""
+</result>

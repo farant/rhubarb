@@ -1,0 +1,17 @@
+I recognize this as "A Volunteer Poilu" by Henry Sheahan, a firsthand account of an American ambulance driver's experiences in World War I, particularly at Verdun. The work was published in 1916 (as indicated in the preface "Topsfield, September, 1916").
+
+<result>
+Title = "A Volunteer Poilu"
+Author = "Henry Sheahan"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A Volunteer Poilu is a firsthand memoir by Henry Sheahan, an American volunteer ambulance driver who served with the French army during World War I. The book recounts his experiences serving in Section II of the American Field Service, particularly at the Battle of Verdun in 1916. Sheahan and his fellow American volunteers were affectionately called "les Poilus Américains" (the American soldiers) by French troops in the Bois-le-Prêtre. The work provides a personal account of the daily life, dangers, and camaraderie experienced by volunteer ambulance drivers on the Western Front. In recognition of their service, Section II was formally adopted into the French army in October 1915. The book is dedicated to Professor Charles Townsend Copeland of Harvard University, who had encouraged Sheahan and others to volunteer in the war effort.
+"""
+
+Notes = """
+The publication year of 1916 is clearly stated in the preface. This is a primary historical document from World War I, published during the war itself. The term "poilu" was French slang for a French infantryman, roughly equivalent to "grunt" or "Tommy," and literally means "hairy one."
+"""
+</result>

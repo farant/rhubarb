@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+This is clearly "Po-no-kah: An Indian Tale of Long Ago" by Mary Mapes Dodge. Mary Mapes Dodge is best known as the author of "Hans Brinker, or The Silver Skates" and was the founding editor of St. Nicholas Magazine, a prominent children's literary magazine in the late 19th century.
+
+The text itself provides the publication year of 1903 right at the beginning. This appears to be the original publication year for this particular work. Mary Mapes Dodge (1831-1905) wrote this near the end of her life as a historical tale about pioneer life and interactions with Native Americans.
+
+<result>
+Title = "Po-no-kah: An Indian Tale of Long Ago"
+Author = "Mary Mapes Dodge"
+Year = 1903
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+Po-no-kah is a historical fiction tale by Mary Mapes Dodge set during the pioneer era of American westward expansion. The story focuses on the Hedden family, settlers living in a small community along the Ohio River during a time of frequent conflict and tension between white pioneers and Native American tribes. The narrative explores the trials and dangers faced by early American settlers in the Western territories during the 18th century, including the constant threat of Indian attacks and the challenges of carving out a home in the wilderness. Dodge, best known for her classic "Hans Brinker, or The Silver Skates," was a prominent children's author and the founding editor of St. Nicholas Magazine.
+"""
+
+Notes = """
+The year 1903 is the publication date shown in the Project Gutenberg text header and represents when this work was originally published. This was written near the end of Dodge's life (she died in 1905) and reflects the late 19th/early 20th century American interest in romanticized pioneer and frontier narratives.
+"""
+</result>

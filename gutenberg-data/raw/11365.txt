@@ -1,0 +1,15 @@
+<result>
+Title = "The Fern Lover's Companion: A Guide for the Northeastern States and Canada"
+Author = "George Henry Tilton"
+Year = 1904
+
+Tags = ["non-fiction", "appropriate-for-children", "natural-history", "botany", "field-guide"]
+
+Summary = """
+The Fern Lover's Companion is a field guide to ferns of the northeastern United States and Canada written by George Henry Tilton, A.M. This is a botanical reference work designed to help amateur naturalists and fern enthusiasts identify and appreciate the various fern species found in the region. As a field guide from the early 20th century, it represents the popular nature study movement of that era, when botanical guides were written for a general educated audience interested in natural history. The work combines scientific classification with accessible prose aimed at cultivating appreciation for ferns among the lay public.
+"""
+
+Notes = """
+The Project Gutenberg metadata shows this eBook was released in 2004, but that's just the digitization date. The original publication year of 1904 is inferred from the context of the work and typical publication patterns for such field guides from this period. Without access to the full text showing a copyright or publication date page, 1904 is an educated estimate based on the book appearing in Project Gutenberg's catalog and the style of such works. If more precise dating information appears later in the text, that should supersede this estimate.
+"""
+</result>

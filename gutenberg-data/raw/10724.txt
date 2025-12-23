@@ -1,0 +1,15 @@
+<result>
+Title = "The Store Boy"
+Author = "Horatio Alger, Jr."
+Year = 1887
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Store Boy' is one of Horatio Alger Jr.'s many novels for young readers following the classic 'rags to riches' formula that made him famous in the late 19th century. The novel follows Ben Barclay, a young protagonist who, like many Alger heroes, must overcome poverty and adversity through hard work, honesty, and moral virtue. Alger's stories typically feature young boys from humble backgrounds who achieve success through determination and upright character, embodying the American Dream ideology of the Gilded Age. These moralistic tales were immensely popular with young readers and parents seeking wholesome, character-building literature for children.
+"""
+
+Notes = """
+'The Store Boy' was published in 1887. Horatio Alger Jr. (1832-1899) was one of the most prolific and popular American authors of juvenile fiction in the 19th century, publishing over 100 novels. His formulaic but beloved stories helped shape American cultural attitudes about success, upward mobility, and moral character during the late Victorian era.
+"""
+</result>

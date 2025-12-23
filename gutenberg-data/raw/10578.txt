@@ -1,0 +1,21 @@
+I recognize this work! George MacDonald (also spelled Mac Donald in this text) was a Scottish minister, author, and poet who was a major figure in Victorian literature and a significant influence on later writers like C.S. Lewis and J.R.R. Tolkien.
+
+"A Hidden Life and Other Poems" is one of his earlier poetry collections. MacDonald was indeed a Christian writer, though he was actually a Congregationalist minister (Protestant) rather than Catholic. However, his theology was quite universalist and mystical for his time, which caused some controversy. He eventually left the ministry but continued his Christian literary work.
+
+The book shows publication date of 1864 on the title page, and this appears to be the original publication year for this collection.
+
+<result>
+Title = "A Hidden Life and Other Poems"
+Author = "George MacDonald"
+Year = 1864
+
+Tags = ["poetry", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of poems by Scottish author and minister George MacDonald, published in 1864. MacDonald was a highly influential Victorian writer whose work blended Christian mysticism with Romantic literary traditions. This volume includes the titular long poem "A Hidden Life" along with other shorter poetic works. The dedication to his father reveals MacDonald's deep gratitude for his upbringing and spiritual formation. MacDonald's poetry often explores themes of divine love, nature as revelation of God, the relationship between earthly and heavenly fatherhood, and the spiritual journey of the soul. His work significantly influenced later Christian writers including C.S. Lewis, who called MacDonald his "master," and J.R.R. Tolkien.
+"""
+
+Notes = """
+George MacDonald was a Congregationalist (Protestant) minister, not Catholic, so the 'catholic' tag was not applied despite his deeply Christian orientation. His theology was considered quite liberal and mystical for his era, emphasizing God's universal love. The epigraph is from Dante's Inferno (Canto I), showing MacDonald's engagement with Catholic literary tradition even as a Protestant writer.
+"""
+</result>

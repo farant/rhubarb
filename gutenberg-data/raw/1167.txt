@@ -1,0 +1,15 @@
+<result>
+Title = "A Strange Disappearance"
+Author = "Anna Katharine Green"
+Year = 1880
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+A Strange Disappearance is an early detective novel by Anna Katharine Green, one of the first American writers of detective fiction and often called the "mother of the detective novel." This mystery follows the investigation of a mysterious disappearance, featuring Green's characteristic attention to detail and psychological insight. Green was known for her intricate plots and was highly influential in establishing the conventions of detective fiction in America. Her work predated and influenced later mystery writers, and she was particularly notable for creating strong, intelligent characters and complex puzzles that engaged readers in the process of deduction.
+"""
+
+Notes = """
+Anna Katharine Green's "A Strange Disappearance" was first published in 1880, two years after her groundbreaking debut "The Leavenworth Case" (1878) which established her reputation. Green was writing during the Victorian era and her mysteries were considered respectable reading, appropriate for all audiences. She was not a Catholic author, so the 'catholic' tag is not included, though her works were generally moral and suitable for family reading.
+"""
+</result>
