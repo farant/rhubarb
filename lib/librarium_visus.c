@@ -2202,8 +2202,8 @@ librarium_visus_quaerere(
         redde;
     }
 
-    /* Ponere filtrum */
-    visus->filtrum_quaestio = _chorda_ex_cstr(quaestio);
+    /* Ponere filtrum - internare quaestio pro stabilitate memoriae */
+    visus->filtrum_quaestio = *chorda_internare_ex_literis(visus->ctx->intern, quaestio);
     visus->filtrum_tag.mensura = 0;
     visus->ordo = LIBRARIUM_ORDO_ALPHABETICUS;
 
@@ -2370,6 +2370,46 @@ librarium_visus_salvare_status(
     /* Salvare pagina_lectio (ex lector) */
     sprintf(valor, "%d", librarium_lector_pagina_currens(visus->lector));
     repo->proprietas_ponere(repo->datum, entitas, "pagina_lectio", valor);
+
+    /* Salvare filtrum_tag */
+    si (visus->filtrum_tag.mensura > 0)
+    {
+        character tag_buf[CXXVIII];
+        i32 len = visus->filtrum_tag.mensura;
+        si (len > CXXVII)
+        {
+            len = CXXVII;
+        }
+        memcpy(tag_buf, visus->filtrum_tag.datum, (size_t)len);
+        tag_buf[len] = '\0';
+        repo->proprietas_ponere(repo->datum, entitas, "filtrum_tag", tag_buf);
+    }
+    alioquin
+    {
+        repo->proprietas_ponere(repo->datum, entitas, "filtrum_tag", "");
+    }
+
+    /* Salvare filtrum_quaestio */
+    si (visus->filtrum_quaestio.mensura > 0)
+    {
+        character quaestio_buf[CXXVIII];
+        i32 len = visus->filtrum_quaestio.mensura;
+        si (len > CXXVII)
+        {
+            len = CXXVII;
+        }
+        memcpy(quaestio_buf, visus->filtrum_quaestio.datum, (size_t)len);
+        quaestio_buf[len] = '\0';
+        repo->proprietas_ponere(repo->datum, entitas, "filtrum_quaestio", quaestio_buf);
+    }
+    alioquin
+    {
+        repo->proprietas_ponere(repo->datum, entitas, "filtrum_quaestio", "");
+    }
+
+    /* Salvare ordo */
+    sprintf(valor, "%d", (int)visus->ordo);
+    repo->proprietas_ponere(repo->datum, entitas, "ordo", valor);
 }
 
 vacuum
@@ -2482,6 +2522,50 @@ librarium_visus_carcare_status(
         memcpy(buf, valor->datum, (size_t)len);
         buf[len] = '\0';
         visus->liber_currens = (s32)atoi(buf);
+    }
+
+    /* Carcare filtrum_tag */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "filtrum_tag");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        /* Internare filtrum_tag pro stabilitate memoriae */
+        visus->filtrum_tag = *chorda_internare(visus->ctx->intern, *valor);
+    }
+    alioquin
+    {
+        visus->filtrum_tag.mensura = 0;
+    }
+
+    /* Carcare filtrum_quaestio */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "filtrum_quaestio");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        /* Internare filtrum_quaestio pro stabilitate memoriae */
+        visus->filtrum_quaestio = *chorda_internare(visus->ctx->intern, *valor);
+    }
+    alioquin
+    {
+        visus->filtrum_quaestio.mensura = 0;
+    }
+
+    /* Carcare ordo */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "ordo");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->ordo = (LibrariumOrdo)atoi(buf);
     }
 
     /* Carcare pagina_lectio (temporarius) */
