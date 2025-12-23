@@ -1,0 +1,15 @@
+<result>
+Title = "Sailors' Knots"
+Author = "W.W. Jacobs"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Sailors' Knots" is a collection of humorous short stories by W.W. Jacobs, an English author known for his tales of dockside and seafaring life. The book features various stories about sailors, ships, and coastal characters, written in Jacobs's characteristic style that blends gentle comedy with observations of working-class maritime life. "The Head of the Family" is one of the stories in this collection, featuring Mr. Letts, a ship's carpenter turned unsuccessful cook who finds himself ashore after leaving his vessel. Jacobs is perhaps best known for his horror story "The Monkey's Paw," but the majority of his work consists of lighthearted tales of sailors and their adventures.
+"""
+
+Notes = """
+The year 1909 is clearly stated in the text itself, which appears to be the publication date of this collection. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was a prolific English author whose maritime stories were very popular in the early 20th century.
+"""
+</result>

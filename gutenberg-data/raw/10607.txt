@@ -1,0 +1,15 @@
+<result>
+Title = "The Real Mother Goose"
+Author = "Various"
+Year = 1916
+
+Tags = ["children", "poetry", "appropriate-for-children", "nursery-rhymes"]
+
+Summary = """
+"The Real Mother Goose" is a classic collection of traditional English nursery rhymes, illustrated by Blanche Fisher Wright. This compilation includes beloved children's verses such as "Little Bo-Peep," "Little Boy Blue," "Pat-a-Cake," and many others that have been passed down through oral tradition for centuries. The Mother Goose rhymes represent a folk tradition with origins dating back to the 17th and 18th centuries, though many individual rhymes are even older. This 1916 edition became one of the most influential and widely-distributed collections of these traditional verses, with Wright's illustrations becoming iconic representations of these classic rhymes. The collection serves both as entertainment and as an educational tool for young children, introducing them to rhythm, language, and traditional folklore.
+"""
+
+Notes = """
+I chose 1916 as the year because this is a specific published edition with illustrations by Blanche Fisher Wright, clearly marked with that date. While the individual rhymes within the collection date from various periods (many from the 17th-18th centuries), this particular compilation and presentation is a distinct 1916 work. The "Mother Goose" tradition itself is much older, but this edition represents a significant milestone in the standardization and popularization of these rhymes in their modern form.
+"""
+</result>

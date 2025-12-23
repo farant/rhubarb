@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Burnham Breaker" by Homer Greene, published in 1887 (as indicated by the dedication date). Homer Greene was an American author who wrote novels, particularly focusing on the lives of coal miners and their families in Pennsylvania. This appears to be a work of fiction, likely aimed at young readers, dealing with life in the coal mining regions.
+
+<result>
+Title = "Burnham Breaker"
+Author = "Homer Greene"
+Year = 1887
+
+Tags = ["fiction", "appropriate-for-children", "historical"]
+
+Summary = """
+'Burnham Breaker' is a novel by Homer Greene set in the coal mining regions of Pennsylvania. Greene was known for writing stories about the lives of coal miners and breaker boys (young workers who separated coal from slate in the breakers). The novel likely follows the adventures and challenges faced by young characters in this industrial setting, exploring themes of work, family, and perseverance in the late 19th century American coal industry. Greene's works were popular in their time for their realistic portrayal of working-class life and were considered appropriate reading for young people.
+"""
+
+Notes = """
+The year 1887 is clearly indicated in the dedication ("HONESDALE, PENN., SEPT. 29, 1887"). Homer Greene was not a Catholic author, so the 'catholic' tag is not included. The work is appropriate for children as it was written in the tradition of late 19th century youth literature.
+"""
+</result>

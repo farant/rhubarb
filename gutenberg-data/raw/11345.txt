@@ -1,0 +1,17 @@
+I recognize this work by J. Krishnamurti (referred to by his Theosophical name "Alcyone"). This is an early educational treatise from his youth, before he broke away from the Theosophical Society.
+
+<result>
+Title = "Education as Service"
+Author = "J. Krishnamurti (Alcyone)"
+Year = 1912
+
+Tags = ["non-fiction", "education", "philosophy", "theosophy"]
+
+Summary = """
+An early educational philosophy treatise by J. Krishnamurti, written when he was a young man under the tutelage of the Theosophical Society (where he was known as "Alcyone"). The work advocates for elevating the position of teachers in society and returning to traditional Hindu educational ideals, emphasizing the relationship between teacher and student as analogous to that between a Master and disciples. The book reflects on the educational system at the Central Hindu College in Benares and proposes reforms based on love, trust, and the restoration of the teacher's honored social position. This represents Krishnamurti's thinking during his early Theosophical period, before his later radical break from organized spiritual movements.
+"""
+
+Notes = """
+The publication year of 1912 is clearly stated on the title page. This is a very early work from Krishnamurti's youth, written while he was still closely associated with the Theosophical Society and before his famous 1929 dissolution of the Order of the Star in the East. The text reflects Theosophical influences and a romanticized view of Hindu educational traditions that Krishnamurti would later move away from. Not tagged as 'catholic' as this is a work rooted in Theosophical and Hindu philosophy rather than Catholic thought.
+"""
+</result>

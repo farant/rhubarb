@@ -1,0 +1,15 @@
+<result>
+Title = "Seeing Europe with Famous Authors, Volume VI: Germany, Austria-Hungary and Switzerland, Part Two"
+Author = "Various (edited by Francis W. Halsey)"
+Year = 1914
+
+Tags = ["non-fiction", "travel", "appropriate-for-children", "historical-document"]
+
+Summary = """
+This is Volume VI of the "Seeing Europe with Famous Authors" series, edited by Francis W. Halsey. The series compiled travel writings and observations from renowned authors and travelers, presenting guided literary tours of European regions. This particular volume covers Germany, Austria-Hungary, and Switzerland (Part Two), focusing on Hungary, Austria's Adriatic ports, and other Austrian scenes. Contributors include notable writers such as Edward A. Freeman, Bayard Taylor, William Cullen Bryant, Amelia B. Edwards, and others. The anthology provides historical and cultural perspectives on Central European destinations from the late 19th and early 20th centuries, written in an accessible style suitable for armchair travelers and those planning European tours.
+"""
+
+Notes = """
+The "Seeing Europe with Famous Authors" series was published around 1914 by Funk & Wagnalls. While the individual essays were written by their respective authors at various earlier dates (late 1800s to early 1900s), the compilation itself dates to approximately 1914. This year represents when this particular anthology was assembled and published, which seems most appropriate for a historical timeline as it captures the editorial moment when these diverse travel writings were curated together as a coherent work about pre-World War I Europe.
+"""
+</result>

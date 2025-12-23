@@ -1,0 +1,15 @@
+<result>
+Title = "A Woman's Journey Round the World"
+Author = "Ida Pfeiffer"
+Year = 1852
+
+Tags = ["non-fiction", "travelogue", "memoir", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A pioneering travel memoir by Ida Pfeiffer (1797-1858), an Austrian explorer who became one of the first women to travel around the world alone. This work chronicles her remarkable journey from Vienna through Brazil, Chile, Tahiti, China, India, Persia, and Asia Minor. Pfeiffer was an extraordinary figure in 19th-century exploration, undertaking her travels at a time when such adventures were virtually unheard of for women. Her detailed observations of cultures, geography, and customs made significant contributions to ethnographic knowledge of her era. She funded her travels through the sale of natural history specimens and her published accounts. This book represents both an adventure narrative and an important historical document of mid-19th century global exploration and cultural encounter.
+"""
+
+Notes = """
+The original German edition "Eine Frauenfahrt um die Welt" was published in 1850, with the first English translation appearing in 1852. I've chosen 1852 as the year for this English version. If you prefer the original publication year, 1850 would be appropriate. This was her first circumnavigation (1846-1848); she later made a second world journey (1851-1855). Pfeiffer was unusual for her time - a middle-class woman traveling independently through dangerous territories, often facing significant hardship. Her work was widely read and translated into multiple languages.
+"""
+</result>

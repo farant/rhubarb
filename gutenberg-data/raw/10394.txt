@@ -1,0 +1,15 @@
+<result>
+Title = "Stolen Treasure"
+Author = "Howard Pyle"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of adventure stories by Howard Pyle, the renowned American author and illustrator best known for his children's literature and tales of pirates, knights, and medieval adventure. Pyle (1853-1911) was a prolific writer and illustrator who helped define the Golden Age of American illustration. This work contains stories of treasure, adventure, and piracy, characteristic of Pyle's engaging storytelling style that captivated young readers while maintaining literary quality. His works often featured swashbuckling adventures and were accompanied by his own detailed illustrations.
+"""
+
+Notes = """
+The year 1907 is indicated by the Roman numerals "MCMVII" at the end of the title page. While Howard Pyle wrote many stories throughout his career that were later collected into various volumes, this particular collection was published in 1907. Pyle was not Catholic, so the 'catholic' tag is not included, though his works were generally wholesome and appropriate for children, making them widely acceptable across denominations.
+"""
+</result>

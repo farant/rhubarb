@@ -1,0 +1,15 @@
+<result>
+Title = "La Tentation de Saint Antoine"
+Author = "Gustave Flaubert"
+Year = 1874
+
+Tags = ["fiction", "literary-fiction", "philosophical", "religious-themes", "catholic"]
+
+Summary = """
+La Tentation de Saint Antoine (The Temptation of Saint Anthony) is a philosophical and literary work by Gustave Flaubert that dramatizes the temptations faced by Saint Anthony the Great during his time as a desert hermit in the Egyptian Thebaïde. The work explores themes of faith, doubt, sensuality, and spiritual struggle through a series of hallucinatory visions experienced by the saint. Flaubert worked on this text intermittently throughout his life, incorporating extensive research into ancient religions, heresies, and philosophies. The work is considered one of Flaubert's most ambitious literary experiments, blending dramatic form with encyclopedic knowledge and poetic prose.
+"""
+
+Notes = """
+Flaubert worked on three versions of this text: the first version in 1849, a second in 1856, and the final published version in 1874. I've chosen 1874 as this is the year of the definitive edition that Flaubert considered complete and authorized for publication. While Flaubert was baptized Catholic and the subject matter is a Catholic saint, the work itself is more of a literary and philosophical exploration than a devotional text, so it would not receive a nihil obstat or imprimatur. The work is dedicated to Alfred Le Poittevin, Flaubert's close friend who died in 1848.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the title, author, and other details.
+
+<result>
+Title = "Kriegsbüchlein für unsere Kinder"
+Author = "Agnes Sapper"
+Year = 1914
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+"Kriegsbüchlein für unsere Kinder" (War Booklet for Our Children) is a collection of stories written by German author Agnes Sapper during World War I in 1914. The book was dedicated to her three grandsons (Theo, Otto, and Eduard) and appears to be a series of vignettes and stories explaining the war to children from a German perspective. The table of contents suggests stories about returning from Austria, August 4th (likely Germany's entry into WWI), a parsonage in East Prussia, various war-related tales including prisoners, and general war scenes. Agnes Sapper (1852-1929) was a popular German children's book author known for her family stories and moral tales.
+"""
+
+Notes = """
+The year 1914 is explicitly stated in the text itself ("gewidmet im Kriegsjahr 1914" - dedicated in the war year 1914), making this straightforward. This appears to be a work written contemporaneously with World War I to help German children understand the conflict. Agnes Sapper was not a Catholic author specifically, so the 'catholic' tag is not included, though she wrote wholesome children's literature. The work straddles fiction and non-fiction as it contains stories but also serves as a historical document of WWI-era German children's literature.
+"""
+</result>

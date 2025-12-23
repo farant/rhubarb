@@ -1,0 +1,15 @@
+<result>
+Title = "The House of the Whispering Pines"
+Author = "Anna Katharine Green"
+Year = 1910
+
+Tags = ["fiction", "mystery", "appropriate-for-children"]
+
+Summary = """
+'The House of the Whispering Pines' is a mystery novel by Anna Katharine Green, one of the first American writers of detective fiction and often called the "mother of the detective novel." Green was a contemporary of Arthur Conan Doyle and wrote numerous popular mysteries featuring complex plots and atmospheric settings. This novel, published in 1910, is characteristic of her work with its intricate mystery structure and Gothic elements. The title suggests a mysterious house setting, typical of Green's atmospheric approach to detective fiction. Green was known for her careful plotting and attention to detail, and her works helped establish many conventions of the detective fiction genre that are still used today.
+"""
+
+Notes = """
+The year 1910 is clearly stated on the title page of the Project Gutenberg text, representing the original publication date. Anna Katharine Green (1846-1935) was a pioneering American detective fiction writer whose career spanned from 1878 to the 1920s. While Green was not a Catholic author, her works are generally wholesome and appropriate for older children and young adults, typical of mystery fiction from this era.
+"""
+</result>

@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "Ship's Company" by W.W. Jacobs, a collection of humorous short stories. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author famous for his sea stories and humorous tales of dockside life, as well as his horror story "The Monkey's Paw."
+
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Ship's Company' is a collection of humorous short stories by W.W. Jacobs, first published in 1922. The book contains various tales featuring Jacobs' characteristic wit and gentle comedy, often centered around working-class characters in English coastal towns and their domestic lives. The story 'Fine Feathers' shown in this excerpt is typical of Jacobs' style - a domestic comedy about Mr. Jobson discovering his regular clothes have been replaced with formal attire on Bank Holiday, leading to humorous complications. Jacobs was renowned for his light, entertaining stories that depicted everyday life with warmth and humor, though he's perhaps best known today for his macabre tale 'The Monkey's Paw.'
+"""
+
+Notes = """
+The year 1922 represents the original publication date of this collection by Methuen & Co. in London. While Jacobs wrote prolifically from the 1890s through the 1920s, 'Ship's Company' belongs to his later period of work. The stories are wholesome entertainment appropriate for general audiences, featuring gentle social comedy rather than risqué content.
+"""
+</result>

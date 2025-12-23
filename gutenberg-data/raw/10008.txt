@@ -1,0 +1,15 @@
+<result>
+Title = "The Mystery"
+Author = "Stewart Edward White, Samuel Hopkins Adams"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Mystery" is a maritime mystery/adventure novel co-authored by Stewart Edward White and Samuel Hopkins Adams, published in 1907. The story involves mysterious events at sea, typical of early 20th century adventure fiction. Stewart Edward White was known for his adventure novels set in various frontier and wilderness settings, while Samuel Hopkins Adams was a journalist and novelist. This collaboration produced a work that combines elements of nautical mystery with the adventure storytelling style popular during the era.
+"""
+
+Notes = """
+The year 1907 is clearly stated in the text itself and represents the original publication date of this work. This is a straightforward case where the publication date is explicitly provided.
+"""
+</result>

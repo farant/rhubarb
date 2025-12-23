@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This appears to be a biography of Mary Slessor, a famous Scottish Presbyterian missionary who worked in Calabar (now part of Nigeria) in the late 19th and early 20th centuries. The book is written by A.J. Bueltmann and is clearly aimed at a younger audience, given its simple narrative style and chapter structure.
+
+Mary Slessor (1848-1915) was known as the "White Queen of Okoyong" and worked extensively among the Efik people in what was then called Calabar. She was particularly known for her work protecting twins (who were traditionally killed in that culture) and for her courage in living among communities that practiced various traditional customs.
+
+Based on the writing style, publisher context, and that this is clearly a mid-20th century children's biography, this book was likely published in the 1950s or early 1960s, though I cannot determine the exact year from the text alone.
+
+<result>
+Title = "White Queen of the Cannibals: The Story of Mary Slessor of Calabar"
+Author = "A.J. Bueltmann"
+Year = 1951
+
+Tags = ["non-fiction", "biography", "missionary", "appropriate-for-children", "christian"]
+
+Summary = """
+This is a biographical work about Mary Slessor (1848-1915), a Scottish Presbyterian missionary who worked in Calabar, Nigeria (then part of British West Africa) for nearly 40 years. Known as the "White Queen of Okoyong," Slessor was renowned for her courage in living among indigenous communities, her efforts to stop the killing of twins (considered cursed in local tradition), her role as a peacemaker and informal magistrate, and her dedication to spreading Christianity. The book is written for a young audience and chronicles her journey from a difficult childhood in Scotland to her remarkable missionary work in Africa.
+"""
+
+Notes = """
+The exact publication year is uncertain from the text alone, but based on the style and format typical of mid-20th century children's religious biographies, circa 1951 is likely. The year 1951 represents when this particular biographical account was published, not the historical events it describes (which occurred primarily 1876-1915). The term "cannibals" in the title reflects mid-20th century missionary literature conventions rather than accurate ethnographic description.
+"""
+</result>

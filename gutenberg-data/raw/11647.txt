@@ -1,0 +1,19 @@
+I'll help you identify this work. Let me read through the text to extract the relevant information.
+
+This appears to be an issue of "Scientific American Supplement" from 1884. This is a periodical publication, not a single authored work. Let me structure the information according to your requirements:
+
+<result>
+Title = "Scientific American Supplement No. 458"
+Author = "Various"
+Year = 1884
+
+Tags = ["non-fiction", "periodical", "science", "engineering"]
+
+Summary = """
+Scientific American Supplement was a weekly periodical that accompanied the main Scientific American magazine, which was established in 1845. The Supplement provided more in-depth technical and scientific articles than the main magazine, covering topics in chemistry, metallurgy, engineering, mining, and other applied sciences. This particular issue (No. 458, Vol. XVIII) from October 11, 1884, contains articles on subjects ranging from locomotive engineering and mining practices to metallurgical processes and chemical analysis. The publication was aimed at scientists, engineers, and technically-minded readers of the late 19th century.
+"""
+
+Notes = """
+The year 1884 is clearly stated in the publication date (October 11, 1884). As a periodical with multiple contributing authors, this represents a snapshot of late 19th-century scientific and engineering knowledge. Scientific American itself was founded in 1845 and continues to this day, making it one of the oldest continuously published magazines in the United States. The Supplement series provided technical depth beyond what the main magazine could offer in its pages.
+"""
+</result>

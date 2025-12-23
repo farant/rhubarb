@@ -1,0 +1,15 @@
+<result>
+Title = "Robbery Under Arms: A Story of Life and Adventure in the Bush and in the Goldfields of Australia"
+Author = "Thomas Alexander Browne (Rolf Boldrewood)"
+Year = 1882
+
+Tags = ["fiction", "historical-fiction", "adventure", "australian-literature"]
+
+Summary = """
+'Robbery Under Arms' is a classic Australian bushranger novel narrated by Dick Marston, a young man who becomes involved in cattle theft, highway robbery, and gold theft with his brother and the notorious Captain Starlight. The novel depicts life in the Australian bush and goldfields during the colonial period, exploring themes of crime, family loyalty, and the rugged frontier life of 19th century Australia. Written by Thomas Alexander Browne under the pen name Rolf Boldrewood, it's considered one of the most important works of Australian colonial literature and helped establish the bushranger as a romantic figure in Australian cultural mythology. The author notes that much of the narrative is based on true events that can be verified by official records.
+"""
+
+Notes = """
+'Robbery Under Arms' was first serialized in the Sydney Mail from July 1882 to August 1883, then published in book form in 1888 (the date of this preface). I've chosen 1882 as the year because that represents when the work first appeared and became known to readers, which is most historically significant for a timeline of literary works. The 1888 date represents the formal book publication. The novel is based on the true stories of various bushrangers from the Australian colonial period, particularly drawing on events from the 1850s-1860s gold rush era.
+"""
+</result>

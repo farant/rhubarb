@@ -1,0 +1,15 @@
+<result>
+Title = "Family Cares"
+Author = "W.W. Jacobs"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Family Cares" is a short story by W.W. Jacobs, part of his collection "Deep Waters" published in 1919. Jacobs was a prolific English author known for his humorous short stories about dockside and sailor life, as well as his macabre tales (most famously "The Monkey's Paw"). This story appears to be in his lighter, comic vein, dealing with domestic and family situations. The opening introduces Mr. Jernshaw, a shopkeeper, who encounters Harry Barrett, a traveler who has returned home after time away. Jacobs' stories typically feature working-class characters and focus on the ironies and complications of everyday life, told with a gentle, ironic humor. His work was extremely popular in the early 20th century and he was one of the most widely-read short story writers of his era.
+"""
+
+Notes = """
+"Deep Waters" was published as a collection in 1919. While individual stories may have appeared in magazines earlier, I'm using the collection publication date as the most historically accurate reference point. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was at the height of his popularity during this period.
+"""
+</result>

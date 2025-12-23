@@ -1,0 +1,17 @@
+I recognize this work - it's part of Charles Foster Kent's influential multi-volume series "The Historical Bible" published in the early 20th century. This particular volume focuses on the post-exilic period of Jewish history, from the Babylonian exile through the Herodian era.
+
+<result>
+Title = "The Historical Bible: The Makers and Teachers of Judaism from the Fall of Jerusalem to the Death of Herod the Great"
+Author = "Charles Foster Kent"
+Year = 1911
+
+Tags = ["non-fiction", "biblical-studies", "jewish-history", "academic"]
+
+Summary = """
+This is one volume from Charles Foster Kent's ambitious "Historical Bible" series, a scholarly work that presents the Old Testament in historical context. This particular volume covers the complex post-exilic period of Jewish history, from the destruction of Jerusalem by Babylon through the death of Herod the Great - roughly 586 BCE to 4 BCE. Kent, a Yale professor and prominent biblical scholar of the early 20th century, examines how the scattered Jewish people developed their beliefs and literature during these centuries, including much of the Old Testament and Apocrypha. The work represents the historical-critical approach to biblical scholarship that was prominent in liberal Protestant academic circles of the early 1900s.
+"""
+
+Notes = """
+The year 1911 is clearly stated on the title page. Charles Foster Kent (1867-1925) was a leading figure in American biblical scholarship and produced numerous works applying historical-critical methods to biblical texts. While scholarly and respectful of the material, this work represents Protestant academic scholarship rather than Catholic theological interpretation, so it does not receive a 'catholic' tag despite dealing with biblical material.
+"""
+</result>

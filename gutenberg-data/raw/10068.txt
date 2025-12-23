@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+Based on the Project Gutenberg text, this is clearly "The Power and the Glory" by Grace MacGowan Cooke, published in 1910. This is an American novel set in the Appalachian mountains, dealing with themes of industrialization, labor struggles, and social reform in the early 20th century American South.
+
+<result>
+Title = "The Power and the Glory"
+Author = "Grace MacGowan Cooke"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction", "southern-literature", "industrial-era"]
+
+Summary = """
+'The Power and the Glory' is a novel by American author Grace MacGowan Cooke set in the Appalachian mountain region during the early industrial era. The story follows the life of a woman from birth through her involvement in the textile mill industry and labor movements of the American South. Cooke was known for her regional fiction depicting life in the Southern Appalachians, and this work explores themes of industrialization, social reform, women's independence, and the clash between traditional mountain life and modern industrial capitalism. The novel traces the protagonist's journey from childhood in the mountains through her experiences with the cotton mills that were transforming the region's economy and society.
+"""
+
+Notes = """
+The year 1910 is straightforward as it's clearly marked on the title page. Grace MacGowan Cooke was a popular American novelist in the early 20th century who specialized in regional fiction about the American South and Appalachia. While not a Catholic author (she was American Protestant), the work is considered suitable for general audiences including children, dealing with social themes in a manner appropriate for the era's standards.
+"""
+</result>

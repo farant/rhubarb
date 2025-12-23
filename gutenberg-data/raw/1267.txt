@@ -1,0 +1,17 @@
+I recognize this work! "Kai Lung's Golden Hours" by Ernest Bramah is one of the Kai Lung series of fantasy stories set in a fictional China, featuring the itinerant storyteller Kai Lung. Let me provide the structured information:
+
+<result>
+Title = "Kai Lung's Golden Hours"
+Author = "Ernest Bramah"
+Year = 1922
+
+Tags = ["fiction", "fantasy", "appropriate-for-children"]
+
+Summary = """
+'Kai Lung's Golden Hours' is the second book in Ernest Bramah's beloved Kai Lung series, following 'The Wallet of Kai Lung' (1900). The book features the wandering storyteller Kai Lung, who finds himself in various predicaments and extricates himself through the telling of elaborate, witty tales set in a fantastical version of ancient China. The stories are known for their ornate, mock-Chinese style of prose, filled with elaborate courtesy, ironic understatement, and philosophical humor. This volume includes a preface by Hilaire Belloc discussing the craft of writing. Bramah's Kai Lung stories were enormously popular in the early 20th century and influenced many fantasy writers, though they represent a very Edwardian British interpretation of Chinese culture rather than authentic Chinese literature.
+"""
+
+Notes = """
+The year 1922 is clearly indicated in the Roman numerals (MDCCCCXXII) on the title page as the publication date by Grant Richards Ltd. in London. This appears to be the first edition. Ernest Bramah (1868-1942) was an English author whose real name was Ernest Bramah Smith. While the stories have charm and literary merit, they should be understood as products of their era's Orientalist imagination rather than authentic representations of Chinese culture.
+"""
+</result>

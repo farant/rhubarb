@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The \"Goldfish\" Being the Confessions of a Successful Man"
+Author = "Arthur Train"
+Year = 1914
+
+Tags = ["fiction", "social-commentary"]
+
+Summary = """
+"The Goldfish" is a satirical novel by Arthur Train that critiques the materialistic pursuits and spiritual emptiness of the American upper-middle class in the early 20th century. Through the confessions of a financially successful but spiritually bankrupt narrator, Train explores themes of wealth, ambition, moral compromise, and the trap of materialism. The central metaphor of people as goldfish swimming in a bowl—able to see out but unable to escape—captures the protagonist's growing awareness of his imprisonment within a life of comfortable conformity. The work is structured as a series of confessional chapters examining different aspects of the narrator's life: himself, his friends, his children, his mind, his morals, and his future.
+"""
+
+Notes = """
+The publication year of 1921 appears on the title page of this edition, but "The Goldfish" was originally published in 1914. The 1914 date is more historically significant as it represents the work's first appearance and places it in the pre-World War I context that heavily influenced its critique of American materialism and social values. The 1921 edition may be a reprint or revised edition. For timeline/historical purposes, 1914 is the more appropriate date.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+<result>
+Title = "The Last Leaf: Observations, during Seventy-five Years, of Men and Events in America and Europe"
+Author = "James Kendall Hosmer"
+Year = 1912
+
+Tags = ["non-fiction", "memoir", "history", "autobiography"]
+
+Summary = """
+'The Last Leaf' is a memoir by James Kendall Hosmer, a historian, author, and librarian who lived from 1834 to 1927. Written when he was approaching his eightieth year, this work presents his personal observations and recollections spanning seventy-five years of American and European history. Hosmer was a prolific author who wrote on German literature, Jewish history, and biographies of important American figures including Samuel Adams and Thomas Jefferson. As a member of various historical societies, he was well-positioned to provide insights into the major events and personalities of the late 19th and early 20th centuries. The work represents a firsthand account from someone who lived through significant periods of American history, including the Civil War era and the Progressive Era.
+"""
+
+Notes = """
+The year 1912 is clearly stated on the title page as the publication date. This appears to be the original publication year, as Hosmer mentions he is on "the threshold of my eightieth year" (he was born in 1834, making this accurate for 1912-1914). The work is explicitly not marked as 'appropriate-for-children' as it is a scholarly memoir. While Hosmer was an American Protestant historian, there is no indication this work would carry Catholic imprimatur, so the 'catholic' tag is not included.
+"""
+</result>

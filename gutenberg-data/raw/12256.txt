@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title page, this is "Mistress Penwick" by Dutton Payne. This appears to be a historical romance novel, likely set in 17th or 18th century England based on the chapter titles referencing lords, castles, monasteries, and formal social events like balls.
+
+Dutton Payne was an American author who wrote romantic fiction in the late 19th/early 20th century. "Mistress Penwick" was published in 1897. The novel tells a romantic story involving a young woman (presumably Katherine Penwick) who leaves an Ursuline convent school and becomes involved with the Lord of Crandlemar, with various dramatic events unfolding at balls, castles, and monasteries.
+
+This is not a Catholic work in the sense you've defined (though it mentions Ursulines, a Catholic order), but rather popular romantic fiction by an author writing during the Victorian/Edwardian era.
+
+<result>
+Title = "Mistress Penwick"
+Author = "Dutton Payne"
+Year = 1897
+
+Tags = ["fiction", "romance", "historical-fiction"]
+
+Summary = """
+A historical romance novel by American author Dutton Payne, first published in 1897. The story follows a young woman who leaves an Ursuline convent school and becomes entangled in romantic intrigue with the Lord of Crandlemar. Set in what appears to be Restoration or 18th century England, the novel features typical elements of period romance including balls, castle life, and dramatic encounters in monasteries. The work exemplifies the popular romantic fiction of the late Victorian era.
+"""
+
+Notes = """
+1897 is the original publication year. While the novel mentions Ursuline nuns (a Catholic religious order), this is a secular romantic work by Dutton Payne, not Catholic literature in the theological or devotional sense.
+"""
+</result>

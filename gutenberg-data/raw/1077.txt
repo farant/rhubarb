@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Mirror of Kong Ho" by Ernest Bramah. This is a satirical epistolary novel consisting of letters written by a fictional Chinese gentleman, Kong Ho, observing and commenting on Western (particularly British) society in London. The work is a humorous satire that uses the outsider's perspective to comment on Western civilization, similar to works like Montesquieu's "Persian Letters."
+
+Ernest Bramah (1868-1942) was an English author known for his humorous and satirical works. "The Mirror of Kong Ho" was first published in 1905. The work is notable for its gentle satire and the ironic reversal of Western attitudes toward the East - Kong Ho refers to the British as "barbarians" while describing their customs with polite bewilderment.
+
+<result>
+Title = "The Mirror of Kong Ho"
+Author = "Ernest Bramah"
+Year = 1905
+
+Tags = ["fiction", "satire", "humor", "epistolary"]
+
+Summary = """
+A satirical epistolary novel consisting of letters written by Kong Ho, a fictional Chinese gentleman visiting London, to his correspondents back in China. The work humorously portrays Western civilization through the eyes of an educated Chinese observer who politely refers to the British as 'barbarians' while describing their customs, inventions (such as motor cars and pianos), and social conventions with bemused incomprehension. The satire works in multiple directions - gently mocking both Western attitudes toward the East and certain absurdities of Edwardian British society. Ernest Bramah's work is considered a classic of early 20th-century English humor and satire.
+"""
+
+Notes = """
+First published in 1905. This work follows in the tradition of epistolary satires like Montesquieu's 'Persian Letters' (1721) and Oliver Goldsmith's 'The Citizen of the World' (1760-1761), which use the literary device of a foreign visitor's observations to critique Western society. The Project Gutenberg text number is 1077.
+"""
+</result>

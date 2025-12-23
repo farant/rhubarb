@@ -1,0 +1,15 @@
+<result>
+Title = "Go Tell Aunt Rhodie"
+Author = "Traditional"
+Year = 1800
+
+Tags = ["folk-song", "appropriate-for-children", "historical-document"]
+
+Summary = """
+"Go Tell Aunt Rhodie" is a traditional American folk song that has been sung by children and families for generations. The song tells the simple story of Aunt Rhodie's old gray goose dying, and the effect this has on the goose's family (the goslings and gander). The song is notable for its repetitive structure, which makes it easy for children to learn and sing. It has been collected in various forms throughout American folk music history and remains a staple of children's folk music repertoires.
+"""
+
+Notes = """
+Dating traditional folk songs is inherently imprecise, as they typically emerge from oral tradition and evolve over time before being written down. "Go Tell Aunt Rhodie" appears to have origins in early 19th century American folk tradition, with some sources suggesting it may derive from or share melodic elements with even earlier European folk tunes. The year 1800 is chosen as an approximate historical marker for when this song likely entered American folk tradition, though it was certainly sung and modified throughout the 1800s and beyond. The version here is credited to McGuinn's Folk Den, a modern folk music collection project.
+"""
+</result>

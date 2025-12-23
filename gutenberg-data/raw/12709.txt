@@ -1,0 +1,15 @@
+<result>
+Title = "Clever Gretel"
+Author = "Brothers Grimm"
+Year = 1812
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Clever Gretel" (German: "Das kluge Gretel") is one of the fairy tales collected by Jacob and Wilhelm Grimm. It tells the story of a cook named Gretel who loves to drink and is tempted by the smell of roasting chickens she has prepared for her master's guest. Through cleverness and quick thinking, she manages to eat both chickens while manipulating both her master and his arriving guest. The tale is notable for featuring a cunning, self-serving protagonist rather than a virtuous hero, making it somewhat darker in tone than many other Grimm tales.
+"""
+
+Notes = """
+The Brothers Grimm published their first collection of fairy tales, "Kinder- und Hausmärchen" (Children's and Household Tales), in 1812. While subsequent editions were released with revisions (notably in 1857), I've chosen 1812 as it represents when their collected fairy tales first became available to the public. "Clever Gretel" was included in their collections, though it's worth noting the Grimms collected and adapted folk tales that had existed in oral tradition for much longer. For a historical timeline of literary works, 1812 is the most educationally significant date as it marks the formal publication and preservation of these German folk tales.
+"""
+</result>

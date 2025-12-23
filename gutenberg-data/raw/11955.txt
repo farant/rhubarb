@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "History of France, Volume V"
+Author = "François Guizot"
+Year = 1872
+
+Tags = ["non-fiction", "history", "appropriate-for-children", "catholic"]
+
+Summary = """
+This is Volume V of François Guizot's comprehensive "History of France" (originally "Histoire de France"). This volume covers the period from Henry IV through Louis XIV, including major figures like Richelieu, Sully, and Turenne. Guizot (1787-1874) was a French historian, orator, and statesman who served as Prime Minister under King Louis-Philippe. His multi-volume history of France became one of the most influential historical works of the 19th century, presenting a liberal Catholic perspective on French history that emphasized constitutional monarchy and the role of the middle class. The work was widely translated and remained a standard reference for generations.
+"""
+
+Notes = """
+I've chosen 1872 as the approximate publication year for the English translation, which is when Guizot's multi-volume history was being actively published and translated. The original French editions began appearing in the 1870s. Guizot was a practicing Catholic and his historical perspective reflects Catholic intellectual traditions, making this suitable for the 'catholic' tag. The work is scholarly but accessible, written in a narrative style appropriate for educated readers including older children interested in history.
+"""
+</result>

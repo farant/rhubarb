@@ -1,0 +1,15 @@
+<result>
+Title = "At Whispering Pine Lodge"
+Author = "Lawrence J. Leslie"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+At Whispering Pine Lodge is an adventure novel for young readers by Lawrence J. Leslie, part of his Outdoor Chums series. The story follows Max and his friends (including characters nicknamed "Bandy-legs," "Touch-and-Go Steve," and others) on an adventure in the Adirondacks. The boys encounter various challenges and mysteries at a lodge, including helping a character named Obed Grimes, dealing with night prowlers, and discovering the workings of a fur farm. The narrative combines outdoor adventure, friendship, and problem-solving typical of early 20th century juvenile fiction.
+"""
+
+Notes = """
+The publication year of 1919 is clearly stated in the beginning of the text. Lawrence J. Leslie was a pseudonym used by the Stratemeyer Syndicate, which produced numerous popular series for young readers in the early 20th century. This appears to be part of a series featuring recurring characters on outdoor adventures.
+"""
+</result>

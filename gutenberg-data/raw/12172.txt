@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is "Alone in London" by Hesba Stretton (pseudonym of Sarah Smith, 1832-1911), a Victorian-era Christian author known for her children's literature with strong social reform themes. Based on the chapter structure and references to her other famous works like "Jessica's First Prayer" and "Little Meg's Children," I can identify this work and provide the historical context.
+
+<result>
+Title = "Alone in London"
+Author = "Hesba Stretton"
+Year = 1869
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+"Alone in London" is a Victorian children's novel by Hesba Stretton (Sarah Smith), one of the most popular children's authors of her era. The story follows themes typical of Stretton's work: poverty, social injustice, and Christian redemption in Victorian London. The novel centers on the lives of poor children and the elderly in London's slums, exploring themes of abandonment, charity, and faith. Like her other works, it was written to raise awareness about the plight of the urban poor and advocate for social reform, particularly concerning children. Stretton was deeply involved in charitable work and was one of the founders of the London Society for the Prevention of Cruelty to Children (later the NSPCC). Her books were immensely popular in the late 19th century and were translated into many languages.
+"""
+
+Notes = """
+"Alone in London" was first published in 1869. While Hesba Stretton was a Protestant evangelical author rather than Catholic, her work focuses on Christian themes of charity, redemption, and care for the poor. The novel was part of the Religious Tract Society's publications aimed at both entertaining and morally instructing young readers while highlighting social issues of Victorian England.
+"""
+</result>

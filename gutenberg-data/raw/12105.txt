@@ -1,0 +1,17 @@
+I'll analyze this text to determine the title, author, year, and other metadata.
+
+<result>
+Title = "La Lutte pour la Santé: Essai de Pathologie Générale"
+Author = "Dr. Burlureaux"
+Year = 1908
+
+Tags = ["non-fiction", "medical", "pathology"]
+
+Summary = """
+"La Lutte pour la Santé" (The Struggle for Health) is a medical treatise on general pathology written by Dr. Burlureaux, an agrégé professor at Val-de-Grâce military medical school in Paris. The work represents an essay on general pathology, examining the broader principles of disease and health. Dr. Burlureaux was an established medical researcher who had previously published works on topics including paralytic insanity, epilepsy, antiseptic practices in contagious diseases, and tuberculosis treatment with creosote (which won the Bréant Prize from the Institut de France). The dedication to "mon cher Lucien Claude" suggests a personal connection to a colleague or student.
+"""
+
+Notes = """
+The publication year of 1908 is clearly stated on the title page. Dr. Burlureaux's credentials as "Professeur Agrégé Libre du Val-de-Grâce" indicate he was associated with the prestigious French military medical academy. His previous work on tuberculosis treatment (1894) had been honored by the Institut de France with the Prix Bréant, establishing him as a recognized medical researcher. The work mentioned as "En préparation" (in preparation) - "Psychothérapie et Morale religieuse" (Psychotherapy and Religious Morality) - was never completed or at least not found in standard bibliographic records.
+"""
+</result>

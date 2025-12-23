@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+<result>
+Title = "Snake and Sword: A Novel"
+Author = "Percival Christopher Wren"
+Year = 1914
+
+Tags = ["fiction", "adventure", "psychological", "british-literature"]
+
+Summary = """
+'Snake and Sword' is a psychological adventure novel by P.C. Wren, the author best known for 'Beau Geste' (1924). The novel follows the life of its protagonist who suffers from ophidiophobia (fear of snakes) and explores themes of psychological trauma, military life, and personal struggle. The narrative is divided into three parts: 'The Welding of a Soul,' 'The Searing of a Soul,' and 'The Saving of a Soul,' tracing the character's journey through adversity. Wren was known for his tales of adventure, particularly set in the French Foreign Legion and British colonial military contexts. The novel combines adventure with psychological depth, examining how trauma shapes and defines a person's life and relationships.
+"""
+
+Notes = """
+This novel was first published in 1914. While P.C. Wren was a Catholic convert (converting in 1911), this particular work is a psychological adventure novel rather than explicitly Catholic literature, so it does not receive the 'catholic' tag. The work predates his more famous 'Beau Geste' by a decade and shows his early interest in themes of psychological struggle combined with military adventure.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Bickerstaff-Partridge Papers"
+Author = "Jonathan Swift"
+Year = 1708
+
+Tags = ["non-fiction", "satire", "appropriate-for-children"]
+
+Summary = """
+The Bickerstaff-Partridge Papers is a satirical hoax by Jonathan Swift, originally published as a series of pamphlets beginning in 1708. Swift created the fictional persona of Isaac Bickerstaff, a supposed astrologer who published predictions for the year 1708, including the death of the real astrologer and almanac-maker John Partridge. When the predicted date arrived, Swift published accounts claiming Partridge had indeed died, despite Partridge's protests that he was still alive. The hoax became one of Swift's most famous satirical works, mocking the fraudulent practices of astrologers and almanac-makers of the period. The papers are witty, clever, and demonstrate Swift's mastery of satirical prose and his ability to sustain an elaborate practical joke that fooled many contemporaries.
+"""
+
+Notes = """
+I chose 1708 as this is the year the first pamphlet "Predictions for the Year 1708" was published, which is the foundational work of this series. This is a satirical work rather than a serious astrological treatise, and while Swift was Anglo-Irish and ordained in the Church of Ireland (Anglican), this particular work is satirical rather than devotional, so I did not include the 'catholic' tag.
+"""
+</result>

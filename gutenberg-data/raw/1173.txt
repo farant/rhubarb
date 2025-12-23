@@ -1,0 +1,15 @@
+<result>
+Title = "Oeconomicus"
+Author = "Xenophon"
+Year = -362
+
+Tags = ["non-fiction", "philosophy", "appropriate-for-children"]
+
+Summary = """
+The Oeconomicus (commonly translated as "The Economist" or "On Estate Management") is a Socratic dialogue by Xenophon written around 362 BC. The work presents a conversation between Socrates and Critobulus about the proper management of a household and estate (oikos), including practical advice on agriculture, the role of a wife in managing the home, and the qualities of good leadership. The dialogue includes an extended recollection by Socrates of a conversation with Ischomachus, an idealized Athenian gentleman-farmer. The work is valuable both as a philosophical treatise on economics and household management, and as a historical source for understanding Greek domestic life, gender roles, and agricultural practices in the 4th century BC.
+"""
+
+Notes = """
+I've chosen approximately 362 BC as the composition date, which falls in the middle period of Xenophon's literary output when he was living in Scillus. The work was written after his exile from Athens and before he moved to Corinth. The negative year notation (-362) represents 362 BC. The title is given here as "The Economist" per the Gutenberg text, though "Oeconomicus" is the more common scholarly transliteration from the Greek Οἰκονομικός. This is one of Xenophon's Socratic works, presenting his memory and interpretation of Socrates' teachings.
+"""
+</result>

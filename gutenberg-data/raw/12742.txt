@@ -1,0 +1,15 @@
+<result>
+Title = "Minstrelsy of the Scottish Border"
+Author = "Walter Scott"
+Year = 1802
+
+Tags = ["non-fiction", "poetry", "folklore", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Minstrelsy of the Scottish Border is a three-volume collection of historical and romantic ballads compiled by Sir Walter Scott, first published in 1802-1803. This foundational work of Scottish folklore scholarship gathered traditional Border ballads from oral tradition in the Scottish Borders region, preserving centuries-old songs about battles, raids, feuds, and romance. The collection includes both authentic ancient ballads and some modern compositions based on local tradition. Scott's work was instrumental in the Romantic revival of interest in folk traditions and medieval culture, and it established his literary reputation before his later success as a novelist. The collection is dedicated to the Duke of Buccleuch and includes extensive historical notes and commentary.
+"""
+
+Notes = """
+The title page shown indicates this is from the 1806 edition (third edition), but the work was originally published in 1802 (Volume 1 and 2) with Volume 3 following in 1803. I've chosen 1802 as the year since that represents the original publication date of this seminal work. While Scott was himself Scottish Episcopalian (not Catholic), this is a scholarly folklore collection rather than a theological work, so I have not included a 'catholic' tag.
+"""
+</result>

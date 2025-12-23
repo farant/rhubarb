@@ -1,0 +1,15 @@
+<result>
+Title = "Cyrano de Bergerac"
+Author = "Edmond Rostand"
+Year = 1897
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Cyrano de Bergerac is a heroic comedy in five acts written in verse by French playwright Edmond Rostand. The play tells the story of the historical Cyrano de Bergerac, a 17th-century French writer, philosopher, and duelist, reimagined as a tragic romantic hero. The protagonist is famous for his large nose and his eloquent wit, and the plot centers on his unrequited love for his cousin Roxane, whom he helps woo on behalf of the handsome but inarticulate Christian de Neuvillette. The play is celebrated for its linguistic brilliance, its exploration of themes of inner beauty versus outer appearance, and its portrayal of heroism and self-sacrifice. It premiered at the Théâtre de la Porte-Saint-Martin in Paris on December 28, 1897, and became an immediate and enduring success, establishing itself as one of the most popular plays in French theater.
+"""
+
+Notes = """
+The play premiered on December 28, 1897, as stated in the text itself. This is the original publication year and first performance date. The dedication to Coquelin refers to Benoît-Constant Coquelin, the famous French actor who played the title role in the original production. While the historical Cyrano de Bergerac lived in the 17th century (1619-1655), Rostand's play is a 19th-century romantic dramatization of his life, so 1897 is the appropriate year for this work.
+"""
+</result>

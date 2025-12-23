@@ -1,0 +1,21 @@
+Ave, Fran! The file appears to be empty (0 bytes), but based on the text you provided in your message, I can identify this work.
+
+This is "Fædra" (also spelled "Haabløse Slægter" in later editions) by Herman Bang, a Danish author. The text you've provided is the opening of this novel written in Danish.
+
+<result>
+Title = "Fædra: Brudstykker af et Livs Historie"
+Author = "Herman Bang"
+Year = 1883
+
+Tags = ["fiction"]
+
+Summary = """
+"Fædra" (later republished as "Haabløse Slægter" or "Hopeless Generations") is an early novel by Danish author Herman Bang. It tells the story of the declining aristocratic Maag family at their estate Thorsholm in Jutland, Denmark. The novel explores themes of hereditary decline, doomed love, and the decay of the old aristocracy. Bang was one of the most important Danish writers of the Modern Breakthrough period, known for his impressionistic style and psychological realism. This work, published when Bang was only 26, examines the fate of a once-powerful family through fragmented episodes and psychological portraits.
+"""
+
+Notes = """
+Year based on the copyright page shown in the excerpt which clearly states "Kjøbenhavn 1883" (Copenhagen 1883). This was Bang's first novel. The work was later revised and republished in 1884 under the title "Haabløse Slægter" (Hopeless Generations).
+"""
+</result>
+
+The file itself seems to be empty on disk, but the text you quoted is definitely the opening of Herman Bang's "Fædra" from 1883. It's worth noting this is not marked as "appropriate-for-children" as it deals with mature themes of aristocratic decline and contains tragic elements. Bang himself was a controversial figure in Danish literature, and while the work is literary fiction, it would not be considered children's literature.

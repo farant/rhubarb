@@ -1,0 +1,17 @@
+I recognize this work by Emerson Hough. Let me provide the structured information about this text.
+
+<result>
+Title = "The Purchase Price; or, The Cause of Compromise"
+Author = "Emerson Hough"
+Year = 1910
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'The Purchase Price' is a historical novel by American author Emerson Hough, known for his frontier and Western novels. This work, subtitled "The Cause of Compromise," explores themes of freedom and slavery in antebellum America. The novel is dedicated to Senator Albert J. Beveridge, described as "a progressive in the cause of actual freedom," which suggests the book engages with serious political and moral questions surrounding slavery and the tensions leading up to the Civil War. Hough was a popular writer of the early 20th century who often explored American historical themes in his fiction.
+"""
+
+Notes = """
+The year is straightforward here - the book shows 1910 as its publication date on the title page. This represents the original publication year of this novel, written during the Progressive Era when there was renewed interest in examining America's past conflicts over slavery and freedom.
+"""
+</result>

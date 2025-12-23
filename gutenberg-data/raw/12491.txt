@@ -1,0 +1,17 @@
+I'll analyze this text to identify the title, author, and other details you requested.
+
+<result>
+Title = "Twelve Types"
+Author = "G.K. Chesterton"
+Year = 1902
+
+Tags = ["non-fiction", "literary-criticism", "essays", "catholic"]
+
+Summary = """
+'Twelve Types' is an early collection of biographical and literary essays by G.K. Chesterton, originally published in 1902. The book contains critical essays on twelve prominent historical and literary figures including Charlotte Brontë, William Morris, Lord Byron, Alexander Pope, St. Francis of Assisi, Edmond Rostand, King Charles II, Robert Louis Stevenson, Thomas Carlyle, Leo Tolstoy, Savonarola, and Sir Walter Scott. These essays showcase Chesterton's characteristic wit, paradox, and insight as he examines the character and significance of each figure. The work demonstrates Chesterton's early development as a critic and essayist, displaying the philosophical and literary style that would make him one of the most influential Catholic writers of the 20th century. The papers were originally published in 'The Daily News' and 'The Speaker' before being collected in book form.
+"""
+
+Notes = """
+Year chosen is 1902, which is clearly stated as the publication date on the title page. This represents the first edition published by Arthur L. Humphreys in London. Chesterton converted to Catholicism later (1922), but this early work already shows the philosophical inclinations that would lead to his conversion. Tagged as 'catholic' because Chesterton is considered a Catholic author whose entire body of work is viewed through that lens, even works written before his formal conversion. Not tagged 'appropriate-for-children' as this is sophisticated literary criticism aimed at an educated adult audience.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work! It's part of the "Daddy" series by Howard R. Garis, who was a prolific American children's author best known for creating Uncle Wiggily. This particular book was indeed published in 1914, as indicated in the text.
+
+<result>
+Title = "Daddy Takes Us Skating"
+Author = "Howard R. Garis"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Daddy Takes Us Skating" is part of Howard R. Garis's popular "Daddy" series of children's books, which followed the Blake family - Daddy, Mother, and children Hal and Mab - through various seasonal adventures and everyday activities. In this installment, the children experience winter activities, particularly ice skating. Garis was a prolific American author who wrote for the Stratemeyer Syndicate and created the beloved Uncle Wiggily character. His "Daddy" series was designed to entertain children while gently teaching them about the world around them through the patient explanations of their father and their own discoveries. The books were characterized by simple, engaging narratives suitable for early readers and featured wholesome family values typical of early 20th century children's literature.
+"""
+
+Notes = """
+The publication year of 1914 is clearly stated in the Project Gutenberg text header. This represents the original publication date of this work, which is part of a larger series that was popular in the 1910s-1920s. Howard R. Garis wrote dozens of books in the "Daddy" series with titles like "Daddy Takes Us to the Garden," "Daddy Takes Us to the Circus," etc.
+"""
+</result>

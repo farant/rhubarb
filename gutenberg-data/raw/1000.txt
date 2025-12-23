@@ -1,0 +1,15 @@
+<result>
+Title = "La Divina Commedia"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "medieval-literature", "theology", "philosophy"]
+
+Summary = """
+The Divine Comedy (La Divina Commedia) is Dante Alighieri's masterwork and one of the most important works in world literature. Written in Italian rather than Latin, it narrates Dante's journey through the three realms of the afterlife: Inferno (Hell), Purgatorio (Purgatory), and Paradiso (Paradise). Guided first by the Roman poet Virgil and later by Beatrice, Dante encounters historical and mythological figures while exploring themes of sin, redemption, divine justice, and the soul's journey toward God. The work is a profound synthesis of medieval Christian theology, classical philosophy, and poetic innovation, structured with precise mathematical and symbolic architecture. It established Italian as a literary language and profoundly influenced Western literature, art, and theology.
+"""
+
+Notes = """
+Dante composed the Divine Comedy between approximately 1308 and his death in 1321. The year 1320 represents the approximate completion date, though 1321 (the year of Dante's death) is also commonly cited. The work was written during Dante's exile from Florence and reflects both his personal suffering and his comprehensive vision of Christian cosmology and ethics. This is definitively a Catholic work, representing medieval Catholic theology and philosophy at their height.
+"""
+</result>

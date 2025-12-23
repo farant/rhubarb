@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 99, October 11, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["periodical", "humor", "satire", "non-fiction"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire established in 1841. This particular issue from Volume 99, dated October 11, 1890, contains the series "Modern Types" (No. XX) focusing on "The Divorcée." The piece satirizes Victorian divorce law and the Divorce Court presided over by Sir James Hannen, particularly highlighting the double standards in divorce proceedings where men could divorce wives for infidelity alone, while women needed to prove additional cruelty or desertion. The satirical commentary reflects Punch's characteristic style of social criticism wrapped in humor, addressing serious issues of gender inequality in Victorian marriage law while maintaining an ironic, sardonic tone.
+"""
+
+Notes = """
+This is a periodical issue rather than a standalone book. The year 1890 is the publication date of this specific issue. Punch was published weekly from 1841 to 1992 (with a brief revival 1996-2002). The Matrimonial Causes Act of 1857 established the Divorce Court referenced in the text, with Sir James Hannen serving as President of the Probate, Divorce and Admiralty Division. The satirical piece reflects late Victorian attitudes toward divorce reform and women's rights. Not tagged as "appropriate-for-children" due to mature themes regarding divorce and infidelity, though the treatment is satirical rather than explicit.
+"""
+</result>

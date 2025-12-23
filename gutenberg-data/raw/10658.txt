@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "Hilda Lessways" by Arnold Bennett, published in 1911. Bennett was an English novelist and the date is explicitly stated in the text. "Hilda Lessways" is the second novel in Bennett's Clayhanger trilogy, which follows the life of its titular character in the Five Towns (the Staffordshire Potteries region). The novel provides a different perspective on events from the first book "Clayhanger," showing Hilda's experiences and psychology.
+
+Arnold Bennett was not Catholic - he was English and his religious background was Methodist/Wesleyan, though he became agnostic later in life. The work is realistic fiction dealing with provincial English life in the late Victorian/Edwardian period.
+
+<result>
+Title = "Hilda Lessways"
+Author = "Arnold Bennett"
+Year = 1911
+
+Tags = ["fiction"]
+
+Summary = """
+"Hilda Lessways" is the second novel in Arnold Bennett's Clayhanger trilogy, first published in 1911. The novel retells events from the first book "Clayhanger" (1910) from the perspective of Hilda Lessways, providing insight into her interior life, motivations, and experiences. Set in the Five Towns (Bennett's fictionalized version of the Staffordshire Potteries), the novel follows Hilda's journey from her start in life through various trials and her eventual relationship with Edwin Clayhanger. Bennett was a master of realist fiction, known for his detailed psychological portraits and depictions of provincial English life during the late Victorian and Edwardian periods.
+"""
+
+Notes = """
+The publication year 1911 is explicitly stated in the text and represents the original publication date. This is the middle volume of Bennett's Clayhanger trilogy, which also includes "Clayhanger" (1910) and "These Twain" (1916).
+"""
+</result>

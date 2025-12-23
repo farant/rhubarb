@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the title "Ships That Pass in the Night" and the chapter structure, I can identify this work. This is a well-known novel by Beatrice Harraden, published in 1893. It was her most famous work and became a bestseller. The novel is set in a Swiss tuberculosis sanatorium and deals with themes of illness, mortality, and human connection. The title comes from a line in Longfellow's "Tales of a Wayside Inn."
+
+<result>
+Title = "Ships That Pass in the Night"
+Author = "Beatrice Harraden"
+Year = 1893
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A romantic novel by British author Beatrice Harraden, first published in 1893. The story is set in a tuberculosis sanatorium in the Swiss Alps (Petershof) and centers on the relationship between Bernardine Holme, a young woman suffering from consumption, and Robert Allitsen, a cynical, disagreeable man who is also a patient. The novel explores themes of illness, mortality, sacrifice, and the brief but meaningful connections people make in life. The title references Longfellow's poem and the metaphor of ships that briefly encounter each other before continuing on their separate journeys. The book was enormously popular in its time and helped establish Harraden's literary reputation.
+"""
+
+Notes = """
+1893 is the original publication year. This novel was Harraden's breakthrough work and remained her most popular throughout her career. While it deals with serious themes of illness and death, it was widely read by general audiences including younger readers in the Victorian and Edwardian periods.
+"""
+</result>

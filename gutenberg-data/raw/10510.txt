@@ -1,0 +1,15 @@
+<result>
+Title = "Bill Clinton's Inaugural Address"
+Author = "William Jefferson Clinton"
+Year = 1993
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is the inaugural address delivered by William Jefferson Clinton on January 20, 1993, when he was sworn in as the 42nd President of the United States. The speech addresses themes of American renewal, the end of the Cold War era, and the challenges of a changing global economy. Clinton speaks of preserving America's founding ideals while adapting to new realities, emphasizing the need to make change "our friend and not our enemy." The address reflects the optimism of the early post-Cold War period while acknowledging economic challenges and the need for national unity.
+"""
+
+Notes = """
+The year 1993 is definitive - this is the date the speech was actually delivered. As a presidential inaugural address, this is a primary historical document from that specific moment in time. The text explicitly states it was given "from noon to 12:15 P.M., January 20, 1993."
+"""
+</result>

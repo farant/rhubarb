@@ -1,0 +1,17 @@
+I can identify this work from the opening text. This is an issue of Punch magazine, the famous British humor and satire periodical.
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 156, April 23, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["periodical", "humor", "satire", "historical-document"]
+
+Summary = """
+Punch, or The London Charivari, was Britain's most famous weekly magazine of humor and satire, published from 1841 to 1992 (and briefly revived later). Known for its witty commentary on politics, society, and culture, Punch was influential in shaping British humor and political discourse. This particular issue from April 23, 1919 contains typical Punch content: satirical commentary on post-WWI British politics (including references to Lloyd George's Coalition government), humorous observations on rationing and shortages still affecting Britain after the war, and various jokes and cartoons. The magazine was known for coining terms like "cartoon" in its modern sense and featured contributions from many of Britain's leading humorists and illustrators over its 150+ year run.
+"""
+
+Notes = """
+The year 1919 is straightforward here as this is a dated periodical issue from April 23, 1919. This issue reflects the immediate post-World War I period in Britain, with references to rationing (coupons), the Coalition government, and the ongoing adjustments to peacetime. Not tagged as 'appropriate-for-children' as the humor is adult-oriented political satire. Not tagged as 'catholic' as Punch was a general British publication without specifically Catholic content.
+"""
+</result>

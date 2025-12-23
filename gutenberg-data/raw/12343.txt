@@ -1,0 +1,15 @@
+<result>
+Title = "The Art of Iugling or Legerdemaine"
+Author = "Samuel Rid"
+Year = 1612
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an early 17th-century treatise on sleight of hand, magic tricks, and performance deception. Samuel Rid's work is one of the earliest English-language exposés of conjuring techniques and legerdemain (sleight of hand). The book explains various tricks and illusions performed by jugglers and magicians of the period, including card tricks and dice games. It serves both as an instructional manual for aspiring performers and as a cautionary guide to help readers avoid being deceived by fraudulent tricks or cheating at games. The work provides valuable insight into popular entertainment and street performance culture in early modern England.
+"""
+
+Notes = """
+"The Art of Iugling or Legerdemaine" was first published in 1612. This is one of the earliest English books on magic and conjuring tricks. The archaic spelling "Iugling" reflects Early Modern English orthography where 'j' and 'i' were often interchangeable. Samuel Rid (sometimes spelled Ridd) was an English writer known primarily for this work. The 1612 date represents the original publication and is the most historically significant date for this text, as it marks an important moment in the documentation of performance magic in English literature.
+"""
+</result>

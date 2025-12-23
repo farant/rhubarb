@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+Based on the text, this is clearly "The Positive School of Criminology" by Enrico Ferri, a series of three lectures given at the University of Naples in 1901. Ferri was an Italian criminologist and a leading figure in the positivist school of criminology. The lectures were translated by Ernest Untermann and published by Charles H. Kerr & Company in Chicago in 1908.
+
+For the year, I'll use 1901 - the year the lectures were originally delivered - as this represents the historical moment when this work was created and first presented, even though the English translation was published in 1908.
+
+<result>
+Title = "The Positive School of Criminology"
+Author = "Enrico Ferri"
+Year = 1901
+
+Tags = ["non-fiction"]
+
+Summary = """
+A collection of three lectures delivered by Italian criminologist Enrico Ferri at the University of Naples in April 1901, outlining the fundamental principles of criminal sociology and the positivist school of criminology. Ferri was one of the founders of this school of thought, which sought to apply scientific methods to the study of crime and criminal behavior, moving away from classical approaches that focused solely on free will and moral responsibility. The positivist school emphasized biological, psychological, and social factors in understanding criminality. This work represents an important contribution to the development of modern criminology and sociology.
+"""
+
+Notes = """
+Year chosen is 1901, when the lectures were originally delivered, rather than 1908 when the English translation was published. This date better represents the historical significance of the work as a primary text in criminology. Ferri (1856-1929) was a student of Cesare Lombroso and became a prominent socialist politician in addition to his criminological work.
+"""
+</result>

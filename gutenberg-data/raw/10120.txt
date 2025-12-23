@@ -1,0 +1,15 @@
+<result>
+Title = "England of My Heart--Spring"
+Author = "Edward Hutton"
+Year = 1914
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A travel and nature book by Edward Hutton celebrating the English countryside in springtime. Published with illustrations by Gordon Home, this work is part of Hutton's wider body of writing about English landscape, culture, and regional character. Hutton (1875-1969) was a prolific British travel writer and historian who wrote extensively about Italy, England, and European culture. This book captures observations and descriptions of the English spring season, likely including pastoral scenes, historical notes, and cultural commentary characteristic of early 20th-century English travel literature.
+"""
+
+Notes = """
+The year 1914 is indicated by the Roman numerals 'MCMXIV' on the title page. This publication date is particularly poignant as it marks the year World War I began, representing perhaps one of the last expressions of Edwardian pastoral romanticism before the war transformed British society and culture.
+"""
+</result>

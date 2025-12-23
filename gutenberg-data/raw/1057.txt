@@ -1,0 +1,15 @@
+<result>
+Title = "Poems"
+Author = "Oscar Wilde"
+Year = 1881
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by Oscar Wilde (1854-1900), the renowned Irish poet, playwright, and wit. The collection includes "The Ballad of Reading Gaol," one of Wilde's most famous works written after his imprisonment for "gross indecency" (homosexuality). The ballad, published in 1898, reflects on his experiences in prison and addresses themes of punishment, suffering, and human cruelty. Wilde's earlier poems showcase his aesthetic philosophy and demonstrate his mastery of verse, dealing with themes of beauty, art, love, and classical mythology. His poetic work was influential in the Aesthetic and Decadent movements of the late Victorian period.
+"""
+
+Notes = """
+Wilde's first major collection of poems was published in 1881, though this Project Gutenberg edition (edited by Robert Ross and published by Methuen in 1913) is a posthumous collection that includes "The Ballad of Reading Gaol" (1898). I've chosen 1881 as the year because it marks when Wilde first established himself as a published poet with his debut collection "Poems," which is the primary work being referenced. The Ballad of Reading Gaol, while included in this edition, was published separately later in his career after his imprisonment (1895-1897).
+"""
+</result>

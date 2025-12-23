@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+<result>
+Title = "The Three Comrades"
+Author = "Kristina Roy"
+Year = 1941
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+'The Three Comrades' is a children's novel by Slovak author Kristina Roy (pen name of Kristína Royová), originally written in Slovak and translated into English by Charles Lukesh. The story follows three orphaned friends - Petrik, Ondrejko, and their dog Fido - who find companionship and family in each other despite their difficult circumstances. Set in the mountainous regions of Slovakia (specifically referencing Stará Turá and the Gemer region), the novel explores themes of friendship, hardship, and resilience among children facing poverty and loss. Kristina Roy was a significant Slovak Catholic author who wrote primarily for children and young people, and her works often carried moral and spiritual themes consistent with Catholic values.
+"""
+
+Notes = """
+The year 1941 represents the first English edition as stated in the text ('First Edition, 3,000--November, 1941'). The original Slovak publication may have been slightly earlier, but 1941 is the most appropriate date for this translation. Kristina Roy (1860-1936) was a devout Catholic writer, and her works were known for their moral instruction suitable for Catholic education. The novel reflects the rural Slovak Catholic culture of the late 19th/early 20th century.
+"""
+</result>

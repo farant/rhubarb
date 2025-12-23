@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+Based on the title page, this is clearly "An Unwilling Maid" by Jeanie Gould Lincoln, published in 1897. This is a historical romance novel set during the American Revolution, focusing on a young woman named Betty Yorke (born Wolcott). The Romeo and Juliet epigraph and the dedication's reference to "Love is a master who laughs at place, And scoffs at both Whig and Tory" suggest this is a romance that crosses Revolutionary War battle lines.
+
+<result>
+Title = "An Unwilling Maid: Being the History of Certain Episodes during the American Revolution in the Early Life of Mistress Betty Yorke, born Wolcott"
+Author = "Jeanie Gould Lincoln"
+Year = 1897
+
+Tags = ["fiction", "historical-fiction", "romance", "american-revolution"]
+
+Summary = """
+A historical romance novel set during the American Revolution, following the story of Betty Yorke (born Wolcott). The work is a romance that appears to involve a love story crossing the political divide between Whigs and Tories during the Revolutionary War period. Jeanie Gould Lincoln was an American author who wrote historical fiction, particularly focused on early American history. The novel's subtitle and dedication suggest it explores themes of loyalty, love, and political conflict during the founding of the United States, with the Romeo and Juliet epigraph hinting at a forbidden or complicated romance."""
+
+Notes = """
+The year 1897 is the original publication date as indicated on the title page. This is a work of historical fiction written over a century after the Revolutionary War events it depicts. While set during the American Revolution (1775-1783), the novel itself is a late 19th-century romantic interpretation of that period."""
+</result>

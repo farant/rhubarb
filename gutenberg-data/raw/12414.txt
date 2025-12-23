@@ -1,0 +1,21 @@
+The file appears to be empty in the filesystem, but you've provided the text content in your message. Based on the text you've shown me, I can identify this work:
+
+**"L'Enfer" (The Inferno)** by **Henri Barbusse**, originally published in French in **1908**. This is not Dante's Inferno, but rather a controversial modernist novel by the French author Henri Barbusse, who later became famous for his WWI novel "Under Fire" (Le Feu, 1916).
+
+The text shows this is from the 1918 English translation by Edward J. O'Brien, translated from the 100th French edition. The novel is a philosophical work that caused quite a scandal when it was published due to its voyeuristic premise and frank treatment of human nature.
+
+<result>
+Title = "L'Enfer (The Inferno)"
+Author = "Henri Barbusse"
+Year = 1908
+
+Tags = ["fiction", "philosophical"]
+
+Summary = """
+L'Enfer (The Inferno) is a controversial modernist novel by Henri Barbusse, originally published in French in 1908. The novel tells the story of a solitary man who discovers a hole in the wall of his hotel room, through which he observes the lives of various occupants in the adjoining room. Through this voyeuristic lens, the protagonist witnesses the full spectrum of human experience - love, death, betrayal, joy, and suffering. The novel is deeply philosophical, exploring themes of isolation, the nature of human existence, and the limitations of observation and understanding. It caused considerable scandal upon publication due to its frank treatment of sexuality and human nature. Barbusse later became famous for his WWI novel "Under Fire" (1916), which won the Prix Goncourt.
+"""
+
+Notes = """
+Year chosen: 1908 marks the original French publication of "L'Enfer". While the text provided is from the 1918 English translation by Edward J. O'Brien (translated from the 100th French edition), the historically significant date is the original publication. The work was highly controversial and widely discussed in France, with the introduction noting it was "more widely read and discussed in France than any other realistic study since the days of Zola" and had French sales exceeding 100,000 copies in 1917 alone.
+"""
+</result>

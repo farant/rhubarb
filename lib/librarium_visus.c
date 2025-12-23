@@ -2336,6 +2336,7 @@ librarium_visus_tractare_eventum(
                     si (visus->pagina_lectio < visus->paginae_totales - 1)
                     {
                         visus->pagina_lectio++;
+                        _librarium_visus_salvare_progressum(visus);
                     }
                     redde VERUM;
 
@@ -2343,6 +2344,7 @@ librarium_visus_tractare_eventum(
                     si (visus->pagina_lectio > 0)
                     {
                         visus->pagina_lectio--;
+                        _librarium_visus_salvare_progressum(visus);
                     }
                     redde VERUM;
 

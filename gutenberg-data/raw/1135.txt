@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+This is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks revenge against his uncle Claudius for murdering his father, marrying his mother, and usurping the throne. The play explores themes of revenge, madness (both feigned and real), mortality, and moral corruption. It contains some of the most quoted lines in English literature, including "To be or not to be" and features memorable characters like Ophelia, Polonius, and the ghost of Hamlet's father. The play is renowned for its philosophical depth and psychological complexity.
+"""
+
+Notes = """
+The year 1603 represents the approximate date of the Second Quarto publication (Q2), which is considered the most authoritative early text of Hamlet. The play was likely written between 1599-1601 and first performed around 1600-1601. The First Quarto (Q1) was published in 1603, and the Second Quarto also in 1603 or 1604. The First Folio version appeared in 1623. This Project Gutenberg text appears to be based on an early quarto or folio edition given the characteristic printing conventions described in the introduction (u/v substitutions, etc.). I chose 1603 as it represents the first substantial publication of the work in a form close to what we recognize today.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Log of a Noncombatant"
+Author = "Horace Green"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"The Log of a Noncombatant" is a firsthand journalistic account of World War I written by Horace Green, a war correspondent for the New York Evening Post and Boston Journal. The book chronicles Green's personal experiences during the first year of what he calls "the War of Nations" (World War I, 1914-1915). As a noncombatant observer, Green provides civilian perspectives on the armies at war and the impact on European populations during this tumultuous period. The work is essentially a compilation of his personal journal entries and experiences that went beyond what he could include in his regular news dispatches from the Continent.
+"""
+
+Notes = """
+The year 1915 is clearly stated on the title page as the publication date. This appears to be the original publication, as the author mentions he was persuaded to publish his journal entries "before returning to the war zone," suggesting this was written and published during the early stages of WWI rather than as a retrospective work.
+"""
+</result>

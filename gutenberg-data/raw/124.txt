@@ -1,0 +1,15 @@
+<result>
+Title = "Deuterocanonical Books of the Bible (Apocrypha)"
+Author = "Various"
+Year = -200
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is a collection of the Deuterocanonical books, which are biblical texts included in the Catholic and Orthodox canons but not in most Protestant Bibles (where they are called the Apocrypha). The collection includes 1 and 2 Esdras, Tobit, Judith, additions to Esther, Wisdom of Solomon, Sirach (Ecclesiasticus), Baruch, the Letter of Jeremiah, additions to Daniel (Song of the Three Holy Children, Susanna, Bel and the Dragon), the Prayer of Manasses, and 1 and 2 Maccabees. These books were written during the intertestamental period and early Hellenistic Judaism, and have been regarded as canonical Scripture by the Catholic Church since ancient times, formally confirmed at the Council of Trent. They contain wisdom literature, historical accounts (particularly the Maccabean revolt), prayers, and additions to canonical texts.
+"""
+
+Notes = """
+Dating these texts is complex since they were written by different authors over several centuries, roughly from the 3rd century BC to the 1st century BC (with 2 Esdras possibly being later, 1st-2nd century AD). I chose -200 (200 BC) as a representative midpoint of the main composition period, particularly around when works like Sirach and portions of the Maccabees were written. The Catholic Church has always included these books in its canon (following the Septuagint tradition), though they were formally defined as deuterocanonical at the Council of Trent (1546). They are distinguished from the protocanonical books only in the sense that their canonicity was disputed by some in early Church history, but they have full canonical status in Catholic teaching.
+"""
+</result>

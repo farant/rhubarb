@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a WWI memoir written from a first-person perspective by Frances Wilson Huard, describing events at the beginning of World War I in July 1914. The author is an American woman living in France with her family at their chateau near the Marne River. The text describes the immediate lead-up to WWI, with the peaceful gathering being interrupted by the mobilization of French troops.
+
+Based on the content describing events in July 1914 and the nature of a personal account written during/after the war, this memoir was likely published around 1916-1917, during the war itself. The title "My Home in the Field of Honour" refers to the fact that her home near the Marne River became part of the battlefield zone (the "Field of Honour" being a euphemism for battlefield).
+
+<result>
+Title = "My Home in the Field of Honour"
+Author = "Frances Wilson Huard"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document", "memoir", "WWI"]
+
+Summary = """
+A first-hand memoir by American author Frances Wilson Huard describing her experiences living in France during World War I. The book begins with peaceful scenes at her family's Chateau de Villiers near the Marne River in July 1914, just before the outbreak of war, and chronicles the dramatic transformation as their home becomes situated in the war zone. Huard provides a civilian perspective on the early days of WWI, including the mobilization of French troops and life in occupied or battle-zone France. The work is valuable as a personal historical document capturing the sudden shift from peacetime to war and the daily realities of living near the front lines.
+"""
+
+Notes = """
+Published during WWI (1916), this memoir captures events beginning in July 1914. The "Field of Honour" in the title refers to the battlefield near the Marne River, where significant WWI battles occurred. The author was an American expatriate married to a Frenchman, giving her a unique perspective on the war's impact on French civilian life.
+"""
+</result>

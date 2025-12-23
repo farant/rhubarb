@@ -1,0 +1,21 @@
+I'll read through this text to identify the work and provide the structured information you requested.
+
+This is clearly Joseph Conrad's "Typhoon" - the text includes both the story title and the author's note that precedes it. "Typhoon" was first published in 1902, initially serialized in Pall Mall Magazine (January-March 1902) and then published in book form as part of the collection "Typhoon and Other Stories" in 1903. For the purposes of a historical timeline, 1902 (the year of first publication) seems most appropriate.
+
+The work is a maritime novella about a steamship captain dealing with both a typhoon and the human complications aboard his vessel. Conrad was born Józef Teodor Konrad Korzeniowski and was Catholic (Polish Catholic background), though his fiction wasn't explicitly religious in nature and wouldn't typically carry an imprimatur/nihil obstat as it's literary fiction rather than religious instruction.
+
+<result>
+Title = "Typhoon"
+Author = "Joseph Conrad"
+Year = 1902
+
+Tags = ["fiction", "maritime-literature"]
+
+Summary = """
+"Typhoon" is a maritime novella by Joseph Conrad, first published in 1902. The story follows Captain MacWhirr and the crew of the steamer Nan-Shan as they encounter a devastating typhoon while transporting Chinese coolies from Singapore to a northern Chinese port. The narrative explores themes of duty, simplicity versus complexity of character, and the intersection of natural forces with human drama. Conrad draws on his own extensive maritime experience to create a tense, realistic portrait of life at sea during a crisis. The work is considered one of Conrad's finest shorter works and a masterpiece of maritime literature.
+"""
+
+Notes = """
+First serialized in Pall Mall Magazine January-March 1902, then published in book form in the collection "Typhoon and Other Stories" (1903). The year 1902 represents first publication. While Conrad came from a Polish Catholic background, his literary fiction was secular in nature and not devotional/religious literature, so the 'catholic' tag was not applied.
+"""
+</result>

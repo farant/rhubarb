@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This particular issue (Vol. 17, No. 481, March 19, 1831) features an article about relics of Ludovico Ariosto, the celebrated Italian Renaissance poet who wrote Orlando Furioso. The piece discusses artifacts preserved in Ferrara including Ariosto's inkstand and chair, and references Lord Byron's notes from Childe Harold regarding the competing claims of Italian cities over the poet's legacy. The periodical was designed to provide educational and entertaining content for a general readership.
+"""
+
+Notes = """
+This is a periodical issue, not a single-author work. The year 1831 reflects the publication date of this specific issue. While the article discusses Ariosto (1474-1533) and quotes Byron's Childe Harold (1818), the work itself is this Victorian-era magazine issue. The Mirror was known for combining literary, historical, and cultural content in an accessible format for middle-class readers.
+"""
+</result>

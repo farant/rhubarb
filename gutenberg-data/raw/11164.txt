@@ -1,0 +1,17 @@
+The file appears to be empty or has formatting issues. Based on the text you provided in your message, I can analyze "Rough and Tumble Engineering" by James H. Maggard. This is a practical engineering manual for farm and traction engine operators.
+
+<result>
+Title = "Rough and Tumble Engineering"
+Author = "James H. Maggard"
+Year = 1900
+
+Tags = ["non-fiction", "technical-manual", "engineering"]
+
+Summary = """
+Rough and Tumble Engineering is a practical handbook written for engineers operating farm and traction engines in the field, rather than stationary engines in controlled environments. The author explicitly targets "rough and tumble engineers" who face constantly changing conditions - working in mud holes one day and dry ground the next, with highly variable workloads. The book aims to provide practical, straightforward advice without scientific jargon or complex theoretical calculations, focusing instead on real-world problem-solving for field engineers. Maggard emphasizes that reading the book alone won't make someone an engineer, but combined with practical experience and common sense, it will provide valuable guidance for those working with early 20th century steam-powered agricultural equipment.
+"""
+
+Notes = """
+The exact publication year is uncertain from the excerpt provided, but based on the context (farm traction engines, steam power, the writing style, and the Project Gutenberg number 11164), this work was likely published in the early 1900s, probably between 1898-1910. I've chosen 1900 as a representative date for this era of agricultural mechanization. The book represents an important transitional period in American agriculture when steam-powered equipment was revolutionizing farming but still required considerable skill and practical knowledge to operate effectively in field conditions.
+"""
+</result>

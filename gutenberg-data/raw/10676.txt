@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly José Rizal's "El Filibusterismo" (translated as "The Reign of Greed"), his second novel about Philippine life under Spanish colonial rule. The text shows this is Charles Derbyshire's English translation published in Manila in 1912.
+
+José Rizal wrote El Filibusterismo in 1891, completing it in Ghent, Belgium. The novel was first published in 1891 in Ghent. This is the sequel to his earlier novel "Noli Me Tangere" (1887).
+
+<result>
+Title = "El Filibusterismo (The Reign of Greed)"
+Author = "José Rizal"
+Year = 1891
+
+Tags = ["fiction", "historical-document", "catholic"]
+
+Summary = """
+El Filibusterismo (The Reign of Greed) is José Rizal's second novel depicting life in the Philippines under Spanish colonial rule. Written approximately four to five years after his first novel Noli Me Tangere, this work reflects Rizal's more mature and somber assessment of political and social conditions in the islands. The novel portrays the final days of the Spanish régime in the Philippines with a graver, less hopeful tone than its predecessor, mirroring the disappointments Rizal experienced in his reform efforts. The book is dedicated to three Filipino priests—Gomez, Burgos, and Zamora—who were executed in 1872, a dedication that later became one of the grounds for Rizal's own execution in 1896. This translation by Charles Derbyshire, published in Manila in 1912, represents the first complete English version of the work.
+"""
+
+Notes = """
+Year chosen is 1891, when Rizal completed and first published the novel in Ghent, Belgium. While this Project Gutenberg text is from the 1912 English translation by Charles Derbyshire, the work's historical significance dates to its original Spanish publication. Rizal was a Catholic but also a critic of clerical abuses in the Philippines; the work itself deals with colonial oppression and reform, making it historically significant to Catholic and Philippine history. The novel's dedication to the executed priests and its content contributed to Rizal's execution by Spanish colonial authorities in 1896.
+"""
+</result>

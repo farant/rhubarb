@@ -1,0 +1,17 @@
+I'll analyze this text for you. This appears to be "Herodias" by Gustave Flaubert, which is one of his Three Tales (Trois Contes).
+
+<result>
+Title = "Herodias"
+Author = "Gustave Flaubert"
+Year = 1877
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Herodias is one of Gustave Flaubert's Three Tales (Trois Contes), first published in 1877. The story is a retelling of the biblical account of Salome's dance and the beheading of John the Baptist (referred to as Iaokanann in the story). Set in the fortress of Machaerus overlooking the Dead Sea, it focuses on the political and personal machinations between Herod Antipas, tetrarch of Galilee, and his wife Herodias. Flaubert brings his characteristic attention to historical detail and psychological realism to this ancient narrative, exploring themes of power, desire, and religious fervor in the ancient world. The work demonstrates Flaubert's masterful prose style and his ability to recreate historical settings with archaeological precision.
+"""
+
+Notes = """
+I chose 1877 as this is when Trois Contes was first published in France. While this Project Gutenberg text is clearly an English translation, the most historically significant date for cataloging purposes is the original French publication. Flaubert wrote this work late in his career, and it was published as part of a collection that also included "A Simple Heart" and "The Legend of St. Julian the Hospitaller."
+"""
+</result>

@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Van Bibber and Others" by Richard Harding Davis, as stated in the header. The text shows publication dates of 1892 and 1920. Richard Harding Davis was a prominent American journalist and writer of fiction in the late 19th/early 20th century. The work is a collection of short stories featuring the character Cortlandt Van Bibber, a wealthy New York socialite.
+
+Based on my knowledge, the original publication was in 1892, which appears to be the first edition. The 1920 date likely represents a later edition or reprint.
+
+Richard Harding Davis was not a Catholic author in the sense you've defined (likely to receive nihil obstat/imprimatur), so I won't include that tag. The stories are light fiction about upper-class New York society life.
+
+<result>
+Title = "Van Bibber and Others"
+Author = "Richard Harding Davis"
+Year = 1892
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of short stories by Richard Harding Davis featuring Cortlandt Van Bibber, a wealthy and fashionable New York gentleman. The stories depict various episodes in the life of Van Bibber and other characters from New York's upper-class society in the Gilded Age. Davis was one of the most popular American writers and journalists of his era, known for his adventure stories and society tales. These lighthearted stories capture the manners and social dynamics of late 19th century New York aristocracy.
+"""
+
+Notes = """
+The original collection was published in 1892. The 1920 date shown in the text represents a later edition or reprint, likely published after Davis's death in 1916. For historical timeline purposes, 1892 is the appropriate year as it marks the work's original publication and cultural context.
+"""
+</result>

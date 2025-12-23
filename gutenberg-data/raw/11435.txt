@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This appears to be a children's annual publication from the mid-19th century American Sunday School movement. The text shows it's the third volume of an annual series edited by Mrs. M.H. Adams, published in 1851. The title "Small Means and Great Ends" was a common theme in Christian children's literature of this era, emphasizing how modest efforts can achieve significant spiritual results.
+
+<result>
+Title = "Small Means and Great Ends"
+Author = "Mrs. M.H. Adams (editor)"
+Year = 1851
+
+Tags = ["non-fiction", "appropriate-for-children", "christian-literature", "anthology"]
+
+Summary = """
+Small Means and Great Ends is a children's annual publication edited by Mrs. M.H. Adams, part of the American Sunday School movement of the mid-19th century. This is the third volume in the series (following successful volumes in 1845 and subsequent years). The work consists of contributed articles aimed at young readers with Christian moral and spiritual instruction. The title reflects a common Victorian Christian theme: that small, humble efforts can lead to great spiritual outcomes. The preface indicates it was a collaborative effort with multiple contributors providing educational and inspirational content for children.
+"""
+
+Notes = """
+The year 1851 is clearly stated in the original publication. This type of annual was common in the antebellum American Protestant publishing tradition, often used in Sunday Schools and for home religious education. While the content would have Christian themes, without more information about Mrs. M.H. Adams's specific denominational affiliation, I cannot definitively classify this as 'catholic' - it appears more likely to be from the broader Protestant evangelical tradition of the era.
+"""
+</result>

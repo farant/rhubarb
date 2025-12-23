@@ -1,0 +1,15 @@
+<result>
+Title = "The High School Left End; or, Dick & Co. Grilling on the Football Gridiron"
+Author = "H. Irving Hancock"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The High School Left End" is part of H. Irving Hancock's "High School Boys Series," a popular early 20th-century series of adventure stories aimed at young readers. The book follows Dick Prescott and his friends (collectively known as "Dick & Co.") through a football season at their high school. Like other books in the series, it combines sports action with mystery elements, in this case involving a character named Bert Dodge and various challenges the team faces. The story emphasizes themes of teamwork, courage, fair play, and good character that were typical of boys' literature of this era. Hancock was a prolific writer of juvenile fiction series, including books about West Point, Annapolis, and various high school adventures.
+"""
+
+Notes = """
+H. Irving Hancock published numerous books in his High School Boys Series between approximately 1910-1913. This particular volume appears to be from around 1910 based on the series publication pattern and the Project Gutenberg catalog number (12691). The series was published by Henry Altemus Company of Philadelphia and was very popular with young male readers in the early 20th century.
+"""
+</result>

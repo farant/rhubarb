@@ -1,0 +1,19 @@
+The file appears to be empty (0 bytes). However, based on the text you provided in your message, I can identify this work:
+
+**"The Soul of the War"** by **Philip Gibbs**, published in **1915**. This is a World War I memoir/reportage by British war correspondent Philip Gibbs, covering his experiences reporting from the Western Front during the early part of WWI (1914-1915).
+
+<result>
+Title = "The Soul of the War"
+Author = "Philip Gibbs"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'The Soul of the War' is the first volume of Philip Gibbs' war memoirs from World War I. Gibbs was one of the few officially accredited British war correspondents allowed on the British sector of the Western Front. Published in 1915, this book covers his experiences and observations from the beginning of the war through 1915, including mobilization, the German invasion of Belgium, the French and British military response, and the defense of Paris. The book is notable for its vivid eyewitness accounts and helped shape British public understanding of the war. Together with his later volume 'Now It Can Be Told' (1920), Gibbs' memoirs became highly influential in shaping the "Lost Generation" narrative of the 1920s.
+"""
+
+Notes = """
+Published in 1915 while the war was still ongoing. This is contemporary war reportage rather than retrospective memoir. The year 1915 represents the publication date of this specific work, covering events from 1914-1915.
+"""
+</result>

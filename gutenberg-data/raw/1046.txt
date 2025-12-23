@@ -1,0 +1,17 @@
+I recognize this as H. G. Wells' "God the Invisible King," a philosophical/theological work published in 1917. This was written during World War I and represents Wells' attempt to articulate a religious belief system that rejected orthodox Christianity while maintaining belief in a personal God. Wells was not a Catholic author - he was a progressive, secular writer known primarily for his science fiction works, though he engaged with religious and philosophical themes throughout his career.
+
+<result>
+Title = "God the Invisible King"
+Author = "H. G. Wells"
+Year = 1917
+
+Tags = ["non-fiction", "philosophy", "theology"]
+
+Summary = """
+A theological and philosophical work by H. G. Wells in which he attempts to articulate his personal religious beliefs. Wells explicitly rejects orthodox Christianity, including the doctrine of the Trinity, while maintaining a belief in what he calls a 'personal and intimate God.' The book represents Wells' effort during World War I to construct an alternative religious framework that separates itself from traditional Christian dogma while preserving a sense of the divine. It includes sections on modern religious cosmogony, heresies, the nature of God, sin and damnation, and the idea of a church.
+"""
+
+Notes = """
+Published during World War I (1917), this work reflects Wells' lifelong engagement with religious and philosophical questions despite being primarily known as a science fiction author. The work is explicitly heterodox and represents Wells' personal theological system rather than any established religious tradition. Not a Catholic work - Wells was a secular progressive writer.
+"""
+</result>

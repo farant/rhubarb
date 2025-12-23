@@ -1,0 +1,25 @@
+I'll help you identify this text. Based on the preface, this is clearly a biography of Principal John Cairns, written by someone also named Cairns (likely a relative). Let me analyze what I can determine:
+
+**Title**: "Principal Cairns" by John Cairns (referring to a biography about John Cairns, D.D., LL.D.)
+
+**Author**: The author is writing about Principal John Cairns and references their uncle William Cairns and father David Cairns. The author mentions "my brother the Rev. D.S. Cairns" - this would be David S. Cairns. Given the family connections and the references to the MacEwen biography, this is likely written by **John Cairns** (the nephew, not the subject).
+
+**Year**: The text references Professor MacEwen's "Life and Letters of John Cairns, D.D. LL.D." as already published. That work was published in 1895. This biography appears to be part of the "Famous Scots Series" and would have been published after MacEwen's work, likely around **1907** (when the Famous Scots Series was active).
+
+**Principal John Cairns** (the subject) was a prominent Scottish United Presbyterian Church leader and theologian (1818-1892).
+
+<result>
+Title = "Principal Cairns"
+Author = "John Cairns (nephew)"
+Year = 1907
+
+Tags = ["non-fiction", "biography", "religious", "scottish-history"]
+
+Summary = """
+A biography of John Cairns (1818-1892), a prominent leader and theologian of the United Presbyterian Church in Scotland who served as Principal of the United Presbyterian Divinity Hall in Edinburgh. This work, part of the Famous Scots Series, was written by his nephew (also named John Cairns) and draws heavily on family manuscripts and Professor MacEwen's earlier 'Life and Letters of John Cairns' (1895). The book chronicles Principal Cairns's life, ministry, and theological contributions to Scottish Presbyterianism.
+"""
+
+Notes = """
+Year estimated as 1907 based on the Famous Scots Series publication period and the fact it post-dates MacEwen's 1895 biography which it references extensively. The subject, Principal John Cairns, was a significant figure in 19th century Scottish church history, known for his scholarship and leadership in the United Presbyterian Church.
+"""
+</result>

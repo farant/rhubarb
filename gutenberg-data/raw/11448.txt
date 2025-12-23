@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a biographical and critical work about the Roman statesman and orator Cicero, written by Rev. W. Lucas Collins as part of the "Ancient Classics for English Readers" series. Based on the structure (biographical chapters, discussion of his works, philosophy, and religion) and the series it belongs to, this appears to be a Victorian-era educational work aimed at making classical literature accessible to English readers.
+
+The "Ancient Classics for English Readers" series was published in the 1870s-1880s by William Blackwood and Sons. Rev. W. Lucas Collins was the editor of the series and contributed several volumes, including this one on Cicero. Based on bibliographic records, this volume on Cicero was first published around 1871.
+
+<result>
+Title = "Cicero (Ancient Classics for English Readers)"
+Author = "Rev. W. Lucas Collins"
+Year = 1871
+
+Tags = ["non-fiction", "biography", "classical-studies", "appropriate-for-children"]
+
+Summary = """
+This is a biographical and critical study of Marcus Tullius Cicero, the Roman statesman, orator, and philosopher, written as part of the 'Ancient Classics for English Readers' series. The work provides an accessible introduction to Cicero's life, political career, literary works, and philosophical writings for Victorian English readers. It covers his early life, his famous prosecution of Verres, his consulship and the Catiline conspiracy, his exile and return, his relationships with Caesar and Antony, and examines his character, correspondence, philosophical essays, and religious views. The author acknowledges drawing on scholarly sources like Forsyth's 'Life of Cicero' while providing his own translations of Cicero's works.
+"""
+
+Notes = """
+The 'Ancient Classics for English Readers' series was a popular Victorian educational series designed to make classical literature accessible to general English readers. This volume on Cicero was published around 1871 by William Blackwood and Sons as part of that series. Rev. W. Lucas Collins served as both the series editor and author of several volumes, including this one.
+"""
+</result>

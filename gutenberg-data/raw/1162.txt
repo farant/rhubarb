@@ -1,0 +1,19 @@
+I'll help you identify this work and extract the information you need.
+
+This is "The Star-Rover" (also published as "The Jacket") by Jack London. Let me provide the structured information:
+
+<result>
+Title = "The Star-Rover (The Jacket)"
+Author = "Jack London"
+Year = 1915
+
+Tags = ["fiction", "philosophical-fiction"]
+
+Summary = """
+The Star-Rover (published in the UK as The Jacket) is a science fiction novel by Jack London about a death row inmate named Darrell Standing who learns to escape the brutality of prison life through astral projection. While confined in a torture device called a straitjacket (the "jacket"), Standing discovers he can enter a trance-like state and experience what he believes are memories of his past lives. The novel explores themes of consciousness, reincarnation, the nature of the self, and the resilience of the human spirit against physical confinement. Through Standing's various past-life experiences, London takes readers through different historical periods and locations, from ancient Rome to medieval Europe to the American frontier.
+"""
+
+Notes = """
+Year chosen: 1915 is when the novel was first published. It was serialized in 1914-1915 and published as a book in 1915. This was one of London's later works, written during a period when he was exploring more philosophical and metaphysical themes. The novel was inspired by the real prison experiences of Ed Morrell, a former convict who told London about the use of straitjackets as torture devices in San Quentin and Folsom prisons.
+"""
+</result>

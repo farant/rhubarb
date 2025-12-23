@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a scholarly work about troubadours (medieval poets and musicians from southern France) written by Rev. H.J. Chaytor. The title page and preface make this straightforward to identify.
+
+<result>
+Title = "The Troubadours"
+Author = "H.J. Chaytor"
+Year = 1912
+
+Tags = ["non-fiction", "literary-criticism", "medieval-history", "music-history"]
+
+Summary = """
+A scholarly introduction to troubadour literature written by Rev. H.J. Chaytor, published by Cambridge University Press. The work serves as an accessible entry point for readers without specialized knowledge of the subject, covering the most famous troubadours and their characteristics. Troubadours were medieval lyric poets and musicians who flourished in southern France from the 11th to 13th centuries, composing primarily in Occitan. This book was part of a series of Cambridge literary studies, as indicated by the reference to Chaytor's earlier work "The Troubadours of Dante."
+"""
+
+Notes = """
+The year 1912 is clearly indicated on the title page as the publication date. The preface is dated March 1912 from Plymouth. This is an original scholarly work of literary criticism, not a translation or edition of medieval texts, so 1912 is the appropriate historical date for this work.
+"""
+</result>

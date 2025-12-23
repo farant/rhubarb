@@ -1,0 +1,15 @@
+<result>
+Title = "What is Coming? A Forecast of Things after the War"
+Author = "H. G. Wells"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'What is Coming?' is a collection of essays by H. G. Wells written during World War I, attempting to forecast the social, political, and economic changes that would follow the war's conclusion. The book examines topics including the end of the war, the future of socialism in Europe, women's roles, education reform, the redrawing of European borders, and international relations between major powers. Wells applies a scientific method to prophecy, arguing that careful analysis of present conditions can reveal future trends. The work reflects the widespread belief during WWI that the conflict would fundamentally transform civilization and represents an important example of wartime intellectual discourse about post-war reconstruction.
+"""
+
+Notes = """
+The year 1916 is clearly stated in the text and represents the original publication date during World War I. This was published while the war was still ongoing (1914-1918), making it a contemporary wartime analysis rather than a post-war retrospective. Wells was one of the most prominent public intellectuals of his era, and this work captures the zeitgeist of wartime speculation about the future world order.
+"""
+</result>

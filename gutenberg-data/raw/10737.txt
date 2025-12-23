@@ -1,0 +1,15 @@
+<result>
+Title = "Book about Animals"
+Author = "Rufus Merrill"
+Year = 1850
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+An educational children's book about animals published in Concord, New Hampshire by Rufus Merrill. The work appears to be a descriptive natural history text intended for young readers, beginning with information about elephants. This type of illustrated animal book was common in mid-19th century America as educational material for children, combining factual descriptions with moral lessons typical of the period.
+"""
+
+Notes = """
+The year 1850 is clearly stated on the title page as the original publication date. This appears to be a straightforward first edition rather than a translation or annotated work.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "With the Allies" by Richard Harding Davis, a collection of war correspondence from World War I. Davis was an American journalist and war correspondent who covered the early stages of WWI, particularly from the Allied perspective. The preface references President Wilson's call for neutrality, which dates this to the early period of the war when the United States was still neutral (before 1917).
+
+Based on my knowledge, "With the Allies" was first published in 1914, documenting Davis's experiences covering the war in Belgium and France during the opening months of World War I. This would have been published shortly after the war began in August 1914.
+
+<result>
+Title = "With the Allies"
+Author = "Richard Harding Davis"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A collection of war correspondence by American journalist Richard Harding Davis from the early months of World War I. Davis, one of the most famous war correspondents of his era, provides firsthand accounts of the war from the Allied perspective, particularly covering events in Belgium and France. The work is notable for its vivid descriptions of the human cost of the war and its passionate argument against American neutrality. Davis criticizes the German military aristocracy and attempts to convey to American readers the true horror of the conflict, which he felt was inadequately communicated across the Atlantic. The book serves as both journalism and advocacy, arguing that the scale of destruction and suffering made neutrality morally untenable.
+"""
+
+Notes = """
+Published in 1914 during the early months of WWI, when the United States was still officially neutral. The preface's reference to President Wilson's call for neutrality helps date this work to 1914-1915, before American entry into the war in 1917. Richard Harding Davis died in 1916, so this represents his wartime reporting from the conflict's opening phase.
+"""
+</result>

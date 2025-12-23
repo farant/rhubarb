@@ -1,0 +1,21 @@
+I recognize this work immediately - it's a collection of romantic historical accounts about European royalty and aristocracy by Thornton Hall. Let me analyze the metadata from the title page.
+
+This appears to be "Love Affairs of the Courts of Europe" by Thornton Hall, F.S.A. (Fellow of the Society of Antiquaries). Based on the table of contents mentioning various royal love stories spanning from the 17th to 19th centuries, and given that Project Gutenberg books typically entered the public domain, I can estimate this was likely published in the early 20th century. The writing style and subject matter are consistent with popular historical romance/biography collections from the Edwardian era, roughly 1900-1920.
+
+Given Thornton Hall's other works mentioned (similar titles about aristocratic romances) and the Victorian/Edwardian fascination with European court intrigue, this was most likely first published around 1910-1920.
+
+<result>
+Title = "Love Affairs of the Courts of Europe"
+Author = "Thornton Hall"
+Year = 1910
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+A collection of romantic historical accounts and biographical sketches focusing on the love affairs, marriages, and romantic intrigues of European royalty and aristocracy. The book covers various courts across Europe from the 17th through 19th centuries, including stories about the "Bonnie Prince" (Charles Edward Stuart), various queens, empresses, princesses, and royal favorites. Written in the popular historical biography style of the Edwardian era, it presents these romantic episodes as both entertaining narratives and windows into court life and European history.
+"""
+
+Notes = """
+The exact publication year is uncertain from the text alone. 1910 is an estimate based on typical publication dates for this genre and author during the Edwardian period. The book was likely published between 1905-1920. It's not appropriate for children due to adult romantic themes and court intrigue. Not tagged as 'catholic' as it's a general historical work about various European courts rather than a specifically Catholic text.
+"""
+</result>

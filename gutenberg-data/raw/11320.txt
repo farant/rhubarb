@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular weekly British periodical published in the 19th century. This particular issue (Vol. 12, No. 331) from September 13, 1828, features an article about Charlecote Hall near Stratford-upon-Avon, encouraging readers to visit Shakespeare's birthplace. The magazine combined literary content, illustrations, educational material, and cultural commentary, making it accessible to a broad Victorian readership. It represents the kind of affordable, illustrated periodical literature that helped democratize knowledge and entertainment in early 19th-century Britain.
+"""
+
+Notes = """
+The year 1828 is clearly stated in the publication date (September 13, 1828). This is not a single authored work but a periodical magazine, hence "Various" for the author. The Mirror ran from 1822 to 1849 and was one of many similar Victorian periodicals that provided entertainment and education to the growing middle class.
+"""
+</result>

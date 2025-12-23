@@ -1,0 +1,15 @@
+<result>
+Title = "The Camp Fire Girls at Long Lake; or, Bessie King in Summer Camp"
+Author = "Jane L. Stewart"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the third volume in the Camp Fire Girls series by Jane L. Stewart, following the adventures of Bessie King, Dolly Ransom, Zara, and other members of the Manasquan Camp Fire group. The series depicts the activities and adventures of early 20th century American girls participating in the Camp Fire Girls organization, which was founded in 1910 as one of the first non-sectarian, interracial organizations for girls in America. The stories typically involve outdoor activities, character development, mystery-solving, and friendship themes that aligned with the Camp Fire Girls' emphasis on community service, outdoor skills, and personal growth. This particular volume is set at Long Lake during summer camp.
+"""
+
+Notes = """
+The year 1914 is clearly stated on the copyright page. Jane L. Stewart was a pseudonym used for this popular girls' series published by Saalfield Publishing Company. The Camp Fire Girls organization was still quite new when this book was published (founded in 1910), making this an early example of the genre of Camp Fire Girls literature that became popular in the 1910s-1920s.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Trade Union Woman"
+Author = "Alice Henry"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"The Trade Union Woman" is a landmark work in American labor history, written by Alice Henry, an Australian-born journalist and labor organizer who became a prominent figure in the American women's labor movement. The book serves as both a handbook and an advocacy piece for the trade union organization of working women in the United States and Canada during the early 20th century. Henry was deeply involved with the National Women's Trade Union League and served as editor of its magazine "Life and Labor." The book examines the conditions of working women, their participation in the labor movement, and makes the case for why women workers needed to organize collectively. Written during a period of intense labor organizing and just before women gained suffrage nationally, the work documents an important transitional moment in both labor history and women's history, addressing the "woman question" within industrial capitalism and the unique challenges women faced in factories and trades.
+"""
+
+Notes = """
+Year is straightforward - the book was published in 1915 as indicated in the frontmatter. This places it in the crucial period of the Progressive Era, shortly before American entry into World War I and five years before the 19th Amendment granted women's suffrage nationally. Alice Henry (1857-1943) was an important but now somewhat overlooked figure in labor and feminist history.
+"""
+</result>

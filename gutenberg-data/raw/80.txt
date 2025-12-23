@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly "The Cinema Murder" by E. Phillips Oppenheim, published in 1917. E. Phillips Oppenheim was a prolific British writer of thriller and spy novels, known for his international intrigue stories. This particular work is a thriller novel that involves murder, mistaken identity, and dramatic twists, typical of Oppenheim's style.
+
+<result>
+Title = "The Cinema Murder"
+Author = "E. Phillips Oppenheim"
+Year = 1917
+
+Tags = ["fiction", "thriller", "mystery"]
+
+Summary = """
+"The Cinema Murder" is a thriller novel by E. Phillips Oppenheim, a prolific British author known for his spy novels and international intrigue stories. The novel opens with Philip Romilly arriving in the industrial English town of Detton Magna, and involves themes of murder, mistaken identity, and dramatic plot twists typical of Oppenheim's style. Oppenheim was one of the most popular and highest-paid authors of his era, writing over 100 novels primarily focused on espionage, mystery, and romance set in glamorous international settings.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page of the Project Gutenberg text. This was published during World War I, when Oppenheim was at the height of his popularity as a thriller writer.
+"""
+</result>

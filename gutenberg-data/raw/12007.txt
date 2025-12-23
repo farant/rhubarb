@@ -1,0 +1,15 @@
+<result>
+Title = "Cousin Hatty's Hymns and Twilight Stories"
+Author = "Hatty (Unknown surname)"
+Year = 1850
+
+Tags = ["children's literature", "poetry", "appropriate-for-children", "non-fiction"]
+
+Summary = """
+This is a collection of simple verses and hymns written for children in mid-19th century America. The work was originally composed by the author (known as "Cousin Hatty") for a specific child with no intention of publication, but was later published in Boston in 1851 at the request of friends. The collection represents typical Christian moral instruction literature for children of the antebellum period, presented in verse form accessible to young readers.
+"""
+
+Notes = """
+The publication year is listed as 1851 on the title page, but the preface is dated December 4, 1850, suggesting the work was written in 1850 and published in early 1851. I've chosen 1850 as the year to reflect when the content was actually created. The author's full identity is unclear from this excerpt - only "Cousin Hatty" is given, which may be a pseudonym or familiar name. This type of anonymous or pseudonymous children's literature was common in the period.
+"""
+</result>

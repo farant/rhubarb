@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is "The Mirror of Literature, Amusement, and Instruction," a 19th-century British periodical magazine. This particular issue is Volume XVII, No. 477, dated Saturday, February 19, 1831. The text appears to be an article about Mount St. Michael in Normandy.
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XVII, No. 477"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in London during the early 19th century. It featured illustrated articles on a wide range of topics including history, geography, architecture, natural history, biography, and general knowledge. This particular issue from February 19, 1831, contains an article about Mount St. Michael in Normandy, describing both its geological significance as a granite formation and its historical importance in French and English history. The magazine was designed to educate and entertain middle-class Victorian readers with accessible, informative content accompanied by engravings.
+"""
+
+Notes = """
+The year 1831 is the publication date of this specific issue. The Mirror was published weekly and was priced at 2 pence, making it affordable for a broad readership. The periodical had multiple contributors and no single author, hence 'Various' as the author field. This issue mentions the potential imprisonment of Polignac, the ex-minister of France, at Mount St. Michael, providing contemporary political commentary alongside its historical and geological content.
+"""
+</result>

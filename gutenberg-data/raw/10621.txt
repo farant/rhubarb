@@ -1,0 +1,15 @@
+<result>
+Title = "Birthright"
+Author = "T.S. Stribling"
+Year = 1922
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+"Birthright" is a novel by T.S. Stribling, an American author who would later win the Pulitzer Prize for Fiction in 1933 for "The Store." Published in 1922, "Birthright" is considered one of Stribling's important early works dealing with race relations in the American South. The novel tells the story of Peter Siner, a Harvard-educated African American man who returns to his hometown in Tennessee hoping to establish a school for Black children, only to face the harsh realities of Jim Crow racism and social barriers. The work is notable for its relatively sympathetic portrayal of African American characters during a period when such representation was rare in mainstream American literature, though it has also been critiqued for certain aspects of its perspective.
+"""
+
+Notes = """
+The year 1922 is clearly indicated on the title page and matches the original publication date of this novel.
+"""
+</result>

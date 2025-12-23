@@ -1,0 +1,15 @@
+<result>
+Title = "Inaugural Address"
+Author = "John F. Kennedy"
+Year = 1961
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is President John F. Kennedy's inaugural address, delivered on January 20, 1961, at the United States Capitol in Washington, D.C. It is one of the most famous presidential inaugural addresses in American history, known for its stirring rhetoric and memorable phrases including "Ask not what your country can do for you—ask what you can do for your country." The speech addresses the challenges of the Cold War era, emphasizes American commitment to liberty and human rights both at home and abroad, and calls for cooperation among free nations. Kennedy spoke of generational change, the dangers of nuclear weapons, and America's dedication to helping developing nations while opposing tyranny.
+"""
+
+Notes = """
+The date and year are definitively 1961, as stated in the document itself (January 20, 1961, 12:11 EST). This is a primary historical document—the actual speech as delivered by President Kennedy at his inauguration. While Kennedy was Catholic (the first Catholic U.S. president), this is an official government speech rather than a work of Catholic literature, so I have not included the 'catholic' tag.
+"""
+</result>

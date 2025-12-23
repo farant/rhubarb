@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+This appears to be "Journal d'un sous-officier" (Journal of a Non-Commissioned Officer) by Amédée Delorme. The text discusses the Franco-Prussian War of 1870-1871, specifically describing the reaction in Toulouse to the early French defeats at Wissembourg, Froeschwiller (Frœschwiller), and Forbach in late July/early August 1870.
+
+Based on the content and historical context, this is a first-hand account or memoir of the Franco-Prussian War, written from the perspective of someone who experienced these events. The work would have been published sometime after the war ended in 1871, likely in the 1870s or 1880s when many such war memoirs were published.
+
+<result>
+Title = "Journal d'un sous-officier"
+Author = "Amédée Delorme"
+Year = 1870
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+A journal or memoir written by Amédée Delorme, a non-commissioned officer (sous-officier) in the French army during the Franco-Prussian War (1870-1871). This work describes the French experience during the early, disastrous phase of the war, including the defeats at Wissembourg, Froeschwiller, and Forbach in late July and early August 1870. The account captures the shock and dismay felt by French civilians, particularly in Toulouse, as news of these military defeats reached the public. It provides valuable first-hand testimony about French military unpreparedness, public sentiment, and the crisis that led to the fall of the Second Empire.
+"""
+
+Notes = """
+The year 1870 represents the events described in the journal, which took place during the Franco-Prussian War. The actual publication date would have been after the war's conclusion in 1871, likely in the mid-to-late 1870s when many war memoirs were published. Since this is a historical document recording events of 1870, that year is most historically significant for educational and timeline purposes.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Tommy and Grizel"
+Author = "J.M. Barrie"
+Year = 1900
+
+Tags = ["fiction"]
+
+Summary = """
+Tommy and Grizel is a novel by J.M. Barrie, best known as the creator of Peter Pan. This work is a sequel to his earlier novel "Sentimental Tommy" (1896) and continues the story of Tommy Sandys and Grizel. The novel explores themes of romance, self-deception, and the consequences of Tommy's sentimental and self-absorbed nature on his relationship with the devoted Grizel. It's a character study that examines the complexities of love and the tensions between imagination and reality. Barrie wrote this during his prolific period before Peter Pan, showcasing his skill at psychological characterization.
+"""
+
+Notes = """
+The copyright page shows both 1900 and 1912. The year 1900 represents the original publication date of Tommy and Grizel, which is the historically significant date for this work. The 1912 date likely represents a revised or illustrated edition (illustrated by Bernard Partridge as noted in the title page).
+"""
+</result>

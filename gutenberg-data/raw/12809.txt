@@ -1,0 +1,15 @@
+<result>
+Title = "Quiet Talks about Jesus"
+Author = "S. D. Gordon"
+Year = 1906
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Quiet Talks about Jesus" is a devotional and theological work by S. D. Gordon, part of his popular "Quiet Talks" series that also included volumes on prayer and power. The book presents a meditative exploration of Jesus Christ's life, purpose, and divine nature, organized into sections covering the purpose of Jesus' coming, His dual human and divine nature, and the major experiences of His earthly ministry (including the Jordan baptism, wilderness temptation, transfiguration, Gethsemane, crucifixion, resurrection, and ascension). Gordon was a well-known evangelical speaker and author in the early 20th century, and his "Quiet Talks" series was widely read in Protestant circles for its accessible, devotional approach to Christian doctrine and spiritual life.
+"""
+
+Notes = """
+S. D. Gordon (Samuel Dickey Gordon, 1859-1936) was a prominent American Christian author and speaker associated with the evangelical movement. "Quiet Talks about Jesus" was first published in 1906, following the success of his earlier volumes "Quiet Talks on Prayer" (1904) and "Quiet Talks on Power" (1903). While Gordon was a devout Christian writer, he was not a Catholic author, so the 'catholic' tag has not been applied. His work represents mainstream evangelical Protestant spirituality of the early 20th century.
+"""
+</result>

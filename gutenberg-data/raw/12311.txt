@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "Christ the Way, the Truth, and the Life" by John Brown of Wamphray, a Scottish Presbyterian minister who lived from 1610-1679. He wrote this work during his exile in Holland in the 1670s due to religious persecution under the Restoration government in Scotland.
+
+<result>
+Title = "Christ the Way, the Truth, and the Life"
+Author = "John Brown of Wamphray"
+Year = 1677
+
+Tags = ["non-fiction", "theology", "devotional"]
+
+Summary = """
+A theological and devotional work by Scottish Presbyterian minister John Brown of Wamphray, written during his exile in Holland in the 1670s due to religious persecution. The book is an exposition of John 14:6 ("I am the way, and the truth, and the life"), exploring how Christ serves as the means of salvation, justification, and sanctification for believers. It was a significant work of Reformed Protestant spirituality written during the period of the Scottish Covenanters' struggle against government-imposed episcopacy. The work is structured as a systematic meditation on Christ's role in the Christian life, examining theological concepts through the lens of this central biblical text.
+"""
+
+Notes = """
+The work was written during Brown's banishment in Holland (likely 1676-1677) and published posthumously. I've chosen circa 1677 as it represents the approximate time of composition during his exile. Brown was part of the Covenanter movement in Scotland and was persecuted for his Presbyterian convictions. This is a Reformed Protestant work, not Catholic, so it does not receive the 'catholic' tag. It's theological and devotional in nature, appropriate for educated Christian readers but not specifically children's literature.
+"""
+</result>

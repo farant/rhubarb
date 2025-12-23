@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1972
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a catalog of copyright renewal registrations published by the United States Copyright Office. It contains an alphabetical listing of books, pamphlets, serials, and periodical contributions for which copyright renewals were filed during a specific period (likely early to mid-1972 based on the renewal dates shown). Each entry includes information about both the original copyright registration (from 1944-1945 in the visible entries) and the renewal registration. This type of catalog served as an official public record of copyright renewals in the United States before the Copyright Act of 1976 eliminated renewal requirements for most works. These catalogs are valuable historical documents for researchers tracking copyright status and publication history.
+"""
+
+Notes = """
+The year 1972 is chosen based on the publication date visible in the document ID ('1972_h1') and the renewal registration dates (R525069, R523485, etc. from early 1972). While this appears to be a specific issue covering renewals from a particular period, 1972 represents when this catalog volume was published. Project Gutenberg ID 11845 corresponds to a volume from the Catalog of Copyright Entries series.
+"""
+</result>

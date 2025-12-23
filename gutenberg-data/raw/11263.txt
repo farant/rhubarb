@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Adventures of a Special Correspondent"
+Author = "Jules Verne"
+Year = 1892
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+The Adventures of a Special Correspondent (original French title: Claudius Bombarnac) is a travel adventure novel by Jules Verne following the exploits of journalist Claudius Bombarnac as he travels across Central Asia on the Trans-Caspian Railway. The story combines Verne's characteristic geographical detail with mystery and adventure as Bombarnac encounters various characters and races during his journey, documenting his experiences for his newspaper "The Twentieth Century." The novel showcases Verne's fascination with transportation, exotic locales, and the expanding reach of modern technology into remote regions of the world.
+"""
+
+Notes = """
+Originally published in French as "Claudius Bombarnac" in 1892. The novel was part of Verne's Voyages Extraordinaires series. The story reflects the late 19th-century European fascination with Central Asia and the expansion of railways into previously inaccessible regions. While Verne was personally Catholic (educated by priests), his adventure fiction was generally secular in nature and aimed at young readers, so this does not receive the 'catholic' tag.
+"""
+</result>

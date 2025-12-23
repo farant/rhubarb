@@ -1,0 +1,15 @@
+<result>
+Title = "On Land And Sea At The Dardanelles"
+Author = "Thomas Charles Bridges"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A historical account of the Gallipoli Campaign during World War I, specifically focusing on the Allied operations at the Dardanelles strait in 1915. Written by Thomas Charles Bridges, a prolific British author of boys' adventure books and historical narratives, this work documents the combined land and sea military operations of British, French, ANZAC (Australian and New Zealand Army Corps), and Indian forces attempting to secure the strategic waterway connecting the Mediterranean to the Black Sea. The campaign was one of the major military operations of WWI and resulted in significant casualties on both sides.
+"""
+
+Notes = """
+The book was published during or shortly after the events it describes (1915-1916). The Dardanelles/Gallipoli Campaign took place from February 1915 to January 1916. Given the Project Gutenberg release date of 2004 and the contemporaneous nature of the account (evidenced by the illustration caption mentioning "our splendid Indian troops"), this appears to be a near-contemporary account written during or immediately after WWI. I've chosen 1915 as the most historically significant year for this work, as it marks the beginning of the campaign and the likely composition/publication period. T.C. Bridges was known for writing accessible historical and adventure books for younger audiences, hence the "appropriate-for-children" tag.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "La Vampire" by Paul Féval, a French Gothic novel. The text shows the title page and opening "Avant-Propos" (foreword). Based on my knowledge of this work, it was first published in 1856 as part of Féval's Gothic horror fiction. The novel is set during the Napoleonic era (as evidenced by the references to the Duke of Rovigo, Fouché, and Napoleon's coronation period of 1802-1804) but was written in the mid-19th century.
+
+Paul Féval was a prolific French novelist known for his adventure and Gothic fiction. While he was Catholic, "La Vampire" is a Gothic horror novel and would not be considered appropriate for children nor likely to receive ecclesiastical approval due to its supernatural horror themes.
+
+<result>
+Title = "La Vampire"
+Author = "Paul Féval"
+Year = 1856
+
+Tags = ["fiction", "horror", "gothic", "vampire-fiction"]
+
+Summary = """
+La Vampire is a Gothic horror novel by French author Paul Féval, one of the pioneering vampire novels in French literature. The story is framed as being based on authentic manuscripts, particularly those of "papa Sévérin" and correspondence from the Duke of Rovigo during Napoleon's era (1802-1804). The novel blends historical settings from the Napoleonic period with supernatural horror elements, presenting what the author describes as a "strange story" that moves between the fantastic and the real. Féval was a master of serialized adventure fiction and Gothic romance, and this work represents an important contribution to 19th-century vampire literature, predating many better-known vampire stories.
+"""
+
+Notes = """
+The first edition was published in 1856. The novel is set during the Napoleonic era (specifically 1802-1804, during the transition from Consulate to Empire) but was written in the mid-19th century. While Paul Féval was Catholic, this is a Gothic horror novel with supernatural themes that would not be considered suitable for ecclesiastical approval or for children.
+"""
+</result>

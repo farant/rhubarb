@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Tragedy of Hamlet is one of Shakespeare's most famous plays and perhaps the most celebrated work in English literature. It tells the story of Prince Hamlet of Denmark, who seeks revenge against his uncle Claudius for murdering Hamlet's father, marrying his mother, and usurping the throne. The play explores themes of revenge, madness (both real and feigned), mortality, moral corruption, and the difficulty of taking action in the face of uncertainty. Famous for its philosophical soliloquies, including "To be or not to be," the play has been performed and studied continuously since its creation and has had immense influence on Western literature and culture.
+"""
+
+Notes = """
+The year 1603 represents the approximate date of the Second Quarto (Q2) publication, which is considered the most authoritative early text. The play was likely written between 1599-1601 and first performed around 1600-1601. The First Quarto appeared in 1603, and the more complete Second Quarto in 1604/1605. The First Folio version appeared in 1623. Given the textual variants mentioned in the editorial notes (with archaic spellings like "vnfold" for "unfold" and "liue" for "live"), this appears to be based on one of the early Quarto editions. I chose 1603 as a reasonable midpoint representing the play's initial publication period.
+"""
+</result>

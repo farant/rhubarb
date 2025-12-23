@@ -1,0 +1,15 @@
+<result>
+Title = "Journals of Sir John Lauder Lord Fountainhall with His Observations on Public Affairs and Other Memoranda, 1665-1676"
+Author = "Sir John Lauder (Lord Fountainhall), edited by Donald Crawford"
+Year = 1665
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of personal journals and observations by Sir John Lauder, who later became Lord Fountainhall, a Scottish judge and diarist. The journals cover the period from 1665 to 1676 and include his travels in France (1665-1667), journeys in London, Oxford, and Scotland (1667-1670), and his observations on public affairs and various memoranda. These journals provide valuable primary source material for understanding late 17th-century Scottish history, legal affairs, and the experiences of a Scottish nobleman during the Restoration period. The work was published by the Scottish History Society as Volume XXXVI in May 1900, edited with introduction and notes by Donald Crawford, Sheriff of Aberdeen, Kincardine, and Banff.
+"""
+
+Notes = """
+The year 1665 represents when Lauder began writing these journals, which seems most appropriate for a historical timeline as this is a primary source document from that period. While the scholarly edition was published in 1900, the actual historical content dates from 1665-1676. The journals themselves are the significant historical artifact, not the later scholarly publication. Lord Fountainhall (1646-1722) was an important figure in Scottish legal and political history, and these journals offer firsthand accounts of the period during and after the Restoration of Charles II.
+"""
+</result>

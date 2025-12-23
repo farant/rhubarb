@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+Based on the title page, this is clearly "Mr. Prohack" by Arnold Bennett. Arnold Bennett was a prolific English novelist who wrote this work in the early 20th century. "Mr. Prohack" was published in 1922 and is a novel about a Treasury official who suddenly comes into wealth and explores themes of money, class, and social mobility in post-WWI England.
+
+Arnold Bennett (1867-1931) was not a Catholic author - he was raised Methodist and later became agnostic, so this wouldn't qualify for the 'catholic' tag. The novel is a social comedy/satire rather than children's literature.
+
+<result>
+Title = "Mr. Prohack"
+Author = "Arnold Bennett"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+"Mr. Prohack" is a social comedy novel by Arnold Bennett published in 1922. The story follows Arthur Prohack, a successful Treasury official living modestly in post-World War I London, who unexpectedly inherits a large fortune. The novel explores how this windfall affects Mr. Prohack, his wife Eve, and their children Charlie and Sissie as they navigate the transition from genteel poverty to sudden wealth. Bennett uses the premise to satirize English social conventions, class distinctions, and attitudes toward money in the 1920s. The work is characteristic of Bennett's interest in the lives of the English middle and upper-middle classes and their social pretensions.
+"""
+
+Notes = """
+1922 is the original publication year of this novel. This was one of Bennett's later works, written after World War I during a period when he was exploring themes of social change in post-war England.
+"""
+</result>

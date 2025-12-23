@@ -1,0 +1,27 @@
+I need to analyze this Project Gutenberg text to identify the title, author, year, and other metadata.
+
+Looking at the text, I can see this is written in Serbian Cyrillic. The title page clearly shows:
+
+- Title: "СЕКУНД ВЕЧНОСТИ" (Sekund večnosti / A Second of Eternity)
+- Subtitle: "ИСТОЧЊАЧКИ РОМАН" (Istočnjački roman / Oriental Novel)
+- Author: "ДРАГУТИНА Ј. ИЛИЈЋА" (Dragutina J. Ilijića / by Dragutin J. Ilić)
+- Publication year shown: 1921
+- Publisher: Zdravko Spasojević bookstore, Belgrade
+
+This is a work by Serbian author Dragutin Ilić (1858-1926), a Serbian writer, journalist, and politician. "A Second of Eternity" is one of his novels with an Oriental/mystical theme, set in India and dealing with Hindu philosophy and mysticism. The text describes a guru named Ramaswamy at a monastery in the Himalayas.
+
+<result>
+Title = "Секунд вечности (A Second of Eternity)"
+Author = "Dragutin J. Ilić"
+Year = 1921
+
+Tags = ["fiction", "mystical", "oriental-setting"]
+
+Summary = """
+'A Second of Eternity' (Sekund večnosti) is an Oriental novel by Serbian author Dragutin J. Ilić (1858-1926), published in 1921 in Belgrade. The novel is set in India and explores Hindu mysticism and philosophy through the story of a guru named Ramaswamy at a Himalayan monastery called Nevriti-Marło (Path of Return). The work reflects the early 20th-century European fascination with Eastern spirituality and mysticism. Ilić was a prominent Serbian writer, journalist, and politician who wrote historical novels and works exploring philosophical and spiritual themes.
+"""
+
+Notes = """
+The publication year of 1921 is clearly stated on the title page and represents the first edition published by Zdravko Spasojević's bookstore in Belgrade. This appears to be the original publication date of the work. The novel is written in Serbian Cyrillic and represents the intersection of Serbian literature with Orientalist themes popular in European literature of the early 20th century.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly a French biography of Pierre Abélard (Peter Abelard), the famous medieval philosopher and theologian, written by Charles de Rémusat and published in 1845. The text shows this is the first volume (TOME PREMIER) of a biographical and philosophical study.
+
+<result>
+Title = "Abélard"
+Author = "Charles de Rémusat"
+Year = 1845
+
+Tags = ["non-fiction", "biography", "philosophy", "history", "catholic"]
+
+Summary = """
+This is a comprehensive biographical and philosophical study of Pierre Abélard (Peter Abelard, 1079-1142), the renowned medieval French philosopher, theologian, and teacher. Written by Charles de Rémusat, a French politician and philosopher, this work examines Abélard's life, character, writings, and opinions, seeking to establish his place in the history of human thought. The preface indicates that while Abélard is famous (largely due to his tragic romance with Héloïse), his actual philosophical contributions and intellectual influence on medieval scholasticism are less well known. Rémusat aims to provide a thorough account of Abélard's role in the schools of the Middle Ages, his doctrines, his talents, and his impact on the letters and the Church of his time. This is a serious intellectual biography that uses Abélard's romantic fame as an entry point to explore his more substantial philosophical legacy.
+"""
+
+Notes = """
+The year 1845 is clearly stated on the title page as the publication date of this work. This is a 19th-century French scholarly biography, not a primary source from Abélard's own time (12th century). The work is tagged as 'catholic' because it deals extensively with Catholic theological and philosophical history, and Abélard himself was a significant figure in medieval Catholic intellectual life, despite his controversial positions.
+"""
+</result>

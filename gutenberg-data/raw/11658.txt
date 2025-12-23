@@ -1,0 +1,15 @@
+<result>
+Title = "A Williams Anthology: A Collection of the Verse and Prose of Williams College 1798-1910"
+Author = "Edwin Partridge Lehman, Julian Park"
+Year = 1910
+
+Tags = ["non-fiction", "anthology", "poetry", "appropriate-for-children", "historical-document"]
+
+Summary = """
+This is an anthology compiled by two editors of Williams College's Literary Monthly in 1910, collecting verse and prose written by Williams College undergraduates from the institution's founding in 1798 through 1910. The collection aims to preserve literary works published in various college periodicals that the editors felt possessed genuine literary merit or significant historical interest. Notable inclusions range from "The Mountains" (Williams College's immortal song) to resolutions addressed to President Adams, biographical sketches of nine Williams alumni, and various student writings spanning over a century of the college's history. The work serves as both a literary collection and a historical document of American collegiate culture and writing during this period.
+"""
+
+Notes = """
+The year 1910 is chosen as this is when the anthology was compiled and published by the student editors. While the content spans from 1798-1910, the work itself as an editorial compilation dates to 1910, making this the most historically accurate publication date for cataloging purposes.
+"""
+</result>

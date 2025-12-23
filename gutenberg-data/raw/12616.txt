@@ -1,0 +1,17 @@
+Based on the excerpt you provided, I can analyze this work:
+
+<result>
+Title = "Around Old Bethany: A Story of the Adventures of Robert and Mary Davis"
+Author = "R. L. Berry"
+Year = 1925
+
+Tags = ["fiction", "non-fiction", "religious", "appropriate-for-children"]
+
+Summary = """
+"Around Old Bethany" is a didactic religious narrative that follows Robert and Mary Davis through their spiritual journey. Originally published in 1925 and reprinted in 1968 by the Church of God movement, this work traces the characters' progression from conversion to Bible salvation, through various biblical doctrines, and ultimately to establishing a New Testament-pattern Church of God congregation. The narrative serves as both a story and a theological guide, exposing what the author considers false doctrines while presenting what they view as scriptural truth. This is a "true-to-life narrative" that blends storytelling with religious instruction, typical of early 20th-century Protestant evangelical literature.
+"""
+
+Notes = """
+The year 1925 represents the original publication date as stated in the publisher's preface. The work was reprinted in 1968 by Lawrence Pruitt in Guthrie, Oklahoma, which was a center of the Church of God (Holiness) movement. This is Protestant evangelical literature, not Catholic, so it would not carry a nihil obstat or imprimatur. The work appears to be associated with the restorationist Church of God movement.
+"""
+</result>

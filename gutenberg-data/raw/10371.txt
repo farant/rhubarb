@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work, author, and provide the requested information.
+
+This is clearly "The Cinema Murder" by E. Phillips Oppenheim, published in 1917, as stated in the opening of the text itself. E. Phillips Oppenheim was a prolific British author known for his thriller and spy novels, often called "The Prince of Storytellers." This is a murder mystery/thriller novel, characteristic of his work.
+
+<result>
+Title = "The Cinema Murder"
+Author = "E. Phillips Oppenheim"
+Year = 1917
+
+Tags = ["fiction", "mystery", "thriller"]
+
+Summary = """
+'The Cinema Murder' is a mystery thriller novel by E. Phillips Oppenheim, one of the most popular and prolific British authors of spy novels and thrillers in the early 20th century. The novel follows Philip Romilly, who appears at the opening returning to the industrial town of Detton Magna. Oppenheim was known for his glamorous settings and intricate plots involving crime, espionage, and high society. He published over 100 novels during his career and was extremely popular in his time, often compared to contemporaries like John Buchan. His works typically blend mystery, romance, and international intrigue.
+"""
+
+Notes = """
+The publication year 1917 is explicitly stated in the text itself. Oppenheim was not a Catholic author, and his works were popular entertainment fiction rather than literature with religious themes, so the 'catholic' tag does not apply. While his novels were widely read, they were adult mystery/thriller fiction and would not typically be considered appropriate for children due to themes of murder and adult situations.
+"""
+</result>

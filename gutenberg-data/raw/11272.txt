@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Examiner, Part 2 of 4"
+Author = "The American Anti-Slavery Society"
+Year = 1838
+
+Tags = ["non-fiction", "historical-document", "abolitionist-literature"]
+
+Summary = """
+The Anti-Slavery Examiner was a periodical publication by the American Anti-Slavery Society, one of the most important abolitionist organizations in antebellum America. This is Part 2 of 4 of their collected examiner series from 1838. The volume contains several numbered issues addressing various aspects of the anti-slavery movement, including theological arguments against slavery from the New Testament, narratives of enslaved persons, reports on emancipation in the West Indies, and correspondence regarding slavery with prominent political figures. Issue No. 5 specifically addresses "The Power of Congress Over the District of Columbia," arguing for Congress's constitutional authority to abolish slavery in the nation's capital. These publications were crucial tools in the abolitionist movement's efforts to build moral, religious, and legal arguments against the institution of slavery.
+"""
+
+Notes = """
+The year 1838 is clearly stated on the title page and represents the original publication date of this collection. The American Anti-Slavery Society was founded in 1833 and published The Anti-Slavery Examiner as part of their campaign to educate the public and influence policy. This particular volume is notable for including the narrative of James Williams and multiple issues focused on West Indian emancipation, which was used as a contemporary example to counter pro-slavery arguments that emancipation would lead to economic disaster.
+"""
+</result>

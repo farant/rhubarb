@@ -1,0 +1,15 @@
+<result>
+Title = "A Classification and Subject Index for Cataloguing and Arranging the Books and Pamphlets of a Library"
+Author = "Melvil Dewey"
+Year = 1876
+
+Tags = ["non-fiction", "reference", "library-science"]
+
+Summary = """
+This is the original publication of the Dewey Decimal Classification system, one of the most influential and widely-used library classification systems in the world. Published by Melvil Dewey in 1876, this work established the revolutionary decimal-based system for organizing library materials that is still used in libraries worldwide today. The system divides all knowledge into ten main classes, each subdivided decimally, allowing for detailed and flexible classification. This Project Gutenberg edition appears to be a facsimile reprint published for the centennial celebration (1876-1976) of the original work.
+"""
+
+Notes = """
+The year 1876 is chosen as this is the original publication date of Dewey's groundbreaking classification system, which he developed while working as a student assistant at Amherst College Library. Though this Project Gutenberg text is from a 1976 centennial facsimile reprint, the historical and educational significance lies in the 1876 original. This work represents a pivotal moment in library science and information organization.
+"""
+</result>

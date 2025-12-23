@@ -1,0 +1,21 @@
+I recognize this work! Let me analyze the text to provide the structured information you requested.
+
+This is a collection of poetry by Elizabeth Stoddard, published in 1895. Elizabeth Stoddard (1823-1902) was an American poet and novelist, known for her literary realism and complex psychological portraits. While she wasn't widely recognized during her lifetime, she's now considered an important figure in 19th-century American literature.
+
+This 1895 collection represents her mature poetic work. Stoddard was married to poet Richard Henry Stoddard and was part of the New York literary circle. While she was raised Congregationalist and not Catholic, her work deals with themes of marriage, domesticity, nature, and psychological depth that were somewhat unconventional for her era.
+
+<result>
+Title = "Poems"
+Author = "Elizabeth Stoddard"
+Year = 1895
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+A collection of lyric poetry by American poet Elizabeth Stoddard (1823-1902), published in 1895. The poems explore themes of nature, the seasons, marriage, domesticity, youth, memory, and psychological introspection. Stoddard was known for her realistic and often unconventional treatment of women's inner lives and marital relationships. The collection includes seasonal poems, meditations on love and loss, and explorations of emotional complexity. Her work is characterized by directness, psychological depth, and a somewhat melancholic sensibility that was distinctive in 19th-century American poetry.
+"""
+
+Notes = """
+The year 1895 represents the publication date of this specific collection. While Stoddard had been writing poetry throughout her career (starting in the 1850s), this appears to be a compiled collection published late in her life. Not marked as appropriate-for-children due to mature psychological themes and adult perspectives on marriage and relationships. Not tagged as Catholic as Stoddard was not a Catholic writer.
+"""
+</result>

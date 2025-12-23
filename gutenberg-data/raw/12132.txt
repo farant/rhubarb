@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is "Three at Table" by W.W. Jacobs, a British short story writer known for his humorous tales of dockside life and his famous supernatural story "The Monkey's Paw." "Three at Table" is part of his collection "The Lady of the Barge and Others," published in 1902.
+
+<result>
+Title = "Three at Table"
+Author = "W.W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "short-story", "ghost-story", "appropriate-for-children"]
+
+Summary = """
+"Three at Table" is a short story by W.W. Jacobs from his 1902 collection "The Lady of the Barge and Others." Jacobs (1863-1943) was an English author primarily known for his humorous maritime tales and supernatural fiction. While he is most famous for "The Monkey's Paw," his body of work includes numerous short stories that blend humor with the macabre. "Three at Table" appears to be a ghost story, as indicated by the opening which describes a conversation in a coffee-room about ghosts and apparitions. Jacobs had a particular talent for combining everyday settings with supernatural elements, and his stories often featured working-class characters and settings along the Thames docklands.
+"""
+
+Notes = """
+The year 1902 represents the publication date of "The Lady of the Barge and Others" collection. This is the most historically accurate date for cataloging purposes as it represents when this particular story became available to the public. Jacobs was at the height of his creative powers during this period, and this collection includes some of his most enduring work.
+"""
+</result>

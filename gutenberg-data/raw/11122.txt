@@ -1,0 +1,15 @@
+<result>
+Title = "Choice Specimens of American Literature, and Literary Reader"
+Author = "Benjamin N. Martin"
+Year = 1874
+
+Tags = ["non-fiction", "anthology", "educational"]
+
+Summary = """
+An anthology and literary reader compiled by Professor Benjamin N. Martin of the University of the City of New York (now New York University). This work presents selections from chief American writers, originally prepared as a supplement to Shaw's "Choice Specimens of English Literature." The second edition, published in 1874, was expanded to correct deficiencies in the first edition and includes twenty years of changes in American authorship, with new names added and obsolete ones removed. The selections were derived directly from collected works of standard American authors with the assistance of several New York libraries including the Society Library, the Mercantile Library, and the Astor Library.
+"""
+
+Notes = """
+The year 1874 is clearly indicated on the title page as the publication date of this second edition. This is an educational anthology rather than an original literary work, compiled for use as a textbook or literary reader. The preface indicates this is a revised and enlarged second edition, suggesting a first edition was published earlier (date not specified in the excerpt).
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text for you.
+
+This is clearly "The Oregon Trail" by Francis Parkman, Jr., one of the classic works of American frontier literature. Let me provide the structured information you requested:
+
+<result>
+Title = "The Oregon Trail"
+Author = "Francis Parkman, Jr."
+Year = 1849
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+'The Oregon Trail' is a first-hand account of Francis Parkman's journey along the Oregon Trail in 1846. The young historian traveled from Missouri to Wyoming, living among Native American tribes (particularly the Oglala Sioux) and experiencing frontier life during the great westward migration. The work is considered a masterpiece of American travel literature and provides valuable ethnographic observations of Plains Indian culture before it was significantly altered by American expansion. Parkman's vivid descriptions of buffalo hunts, encounters with fur trappers, and life at frontier forts like Fort Laramie make this both a historical document and an adventure narrative. Despite being written from a 19th-century perspective, it remains an important primary source for understanding the American West during this pivotal period.
+"""
+
+Notes = """
+The book was first published in serial form in the Knickerbocker Magazine in 1847, then published as a complete book in 1849 under the title 'The California and Oregon Trail.' I've chosen 1849 as the publication year since that's when it first appeared as a complete book, which is the most historically significant date for the work itself. The journey it describes took place in 1846.
+"""
+</result>

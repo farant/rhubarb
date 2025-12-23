@@ -1,0 +1,15 @@
+<result>
+Title = "By-ways of Bombay"
+Author = "S. M. Edwardes"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+"By-ways of Bombay" is a collection of observational essays originally published in the Times of India under the pen name "Etonensis." Written by S. M. Edwardes, a British colonial official who served in Bombay's government (later as head of the Police Office), the book provides a firsthand account of daily life, people, and social conditions in early 20th-century Bombay (now Mumbai). The work offers insights into the "inner life" of the city during the British Raj period, including observations on various communities, social customs, and notable events. The second edition includes additional material on the Tilak Riots of 1908, reflecting the political tensions of the era.
+"""
+
+Notes = """
+The year 1912 is chosen as it represents the first edition's publication date (June 1912), which is the most historically relevant date for this particular work. This is a contemporary account written during the colonial period, not a historical work about an earlier era. S. M. Edwardes held the title C.V.O. (Commander of the Royal Victorian Order), indicating his status in the British colonial administration.
+"""
+</result>

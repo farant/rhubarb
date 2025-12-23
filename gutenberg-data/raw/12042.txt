@@ -1,0 +1,15 @@
+<result>
+Title = "The Value of a Praying Mother"
+Author = "Isabel C. Byrum"
+Year = 1911
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+A Christian parenting guide focusing on child-rearing principles through the lens of faith and prayer. The book presents practical advice for mothers and parents on developing noble character in their children, illustrated through true stories from home life in Michigan. The author emphasizes the importance of prayer and maternal devotion in successful child-training, offering both theoretical principles and real-life examples to guide parents in raising their children with Christian values.
+"""
+
+Notes = """
+The year 1911 is taken from "First Printing 1911" stated in the text. This represents the original publication date of this work. While the author, Isabel C. Byrum, was associated with the Church of God (Anderson) movement rather than the Catholic Church specifically, the book's emphasis on prayer, moral development, and traditional Christian values aligns with broad Christian parenting literature of the early 20th century. The 'catholic' tag should be reconsidered - this appears to be Protestant evangelical literature from the Gospel Trumpet Company, which was the publishing arm of the Church of God (Anderson) denomination.
+"""
+</result>

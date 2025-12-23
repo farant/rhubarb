@@ -1,0 +1,15 @@
+<result>
+Title = "Tales of Ind and Other Poems"
+Author = "T. Ramakrishna"
+Year = 1896
+
+Tags = ["fiction", "poetry", "indian-literature"]
+
+Summary = """
+A collection of narrative poems by Indian poet T. Ramakrishna, published in 1896. The work includes several tales drawn from Indian history and legend, including "Seeta and Rama" (which references the Indian famine), "The Story of Prince Désing," "The Story of Rudra," "The Story of the Royal Huntress," and "Chandra—A Tale of the Field of Tellikóta" (referring to the Battle of Talikota, 1565). The collection is dedicated to the author's deceased daughter Kamala and reflects late 19th-century Indian English poetry, blending classical Indian themes with Victorian poetic forms. The inclusion of a poem titled "Lord Tennyson" suggests influence from or homage to the British poet laureate.
+"""
+
+Notes = """
+The year 1896 is clearly stated on the title page as the publication date. This represents an important period in Indian English literature when Indian writers were adapting Western literary forms to express Indian themes and stories. The Battle of Talikota referenced in one poem was a decisive 1565 battle that led to the fall of the Vijayanagara Empire. "Ind" is an archaic/poetic term for India commonly used in Victorian-era English literature.
+"""
+</result>

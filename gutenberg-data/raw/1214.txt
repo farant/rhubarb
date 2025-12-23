@@ -1,0 +1,17 @@
+I recognize this work! "The Street of Seven Stars" is a novel by Mary Roberts Rinehart, the American author known for her mystery novels and the phrase "the butler did it."
+
+<result>
+Title = "The Street of Seven Stars"
+Author = "Mary Roberts Rinehart"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Street of Seven Stars' is a romantic novel by Mary Roberts Rinehart set in Vienna, Austria. The story follows the lives of young American music students living in a boarding house in the Austrian capital. It explores themes of love, ambition, poverty, and the struggles of artists pursuing their dreams in a foreign country. The novel depicts the bohemian life of expatriate musicians and artists in early 20th century Vienna, with its mix of high culture and financial hardship. Rinehart was one of the most popular American writers of the early 20th century, known for her mysteries but also for romantic fiction like this work.
+"""
+
+Notes = """
+The novel was first published in 1914. While Mary Roberts Rinehart was raised Presbyterian and wrote popular fiction rather than explicitly Catholic literature, this work does not qualify for the 'catholic' tag as it is secular romantic fiction without particular Catholic themes or perspectives.
+"""
+</result>

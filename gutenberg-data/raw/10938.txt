@@ -1,0 +1,17 @@
+Based on the text you provided, I can identify this work:
+
+<result>
+Title = "The Headsman; or, The Abbaye des Vignerons"
+Author = "James Fenimore Cooper"
+Year = 1833
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+'The Headsman' is a novel by James Fenimore Cooper set in Switzerland, centered around the social stigma attached to the hereditary office of executioner (headsman) and themes of inherited guilt and social injustice. The story takes place in the region around Lake Geneva (Leman) and involves the Abbaye des Vignerons, a traditional wine festival held in Vevey, Switzerland. Cooper explores themes of prejudice, honor, and the conflict between individual merit and social prejudice in European society. The novel represents Cooper's continued interest in examining social hierarchies and justice, though set in a European rather than American context.
+"""
+
+Notes = """
+The work was first published in 1833. The edition you have appears to be from 1860 based on the title page notation. I chose 1833 as the year because that represents the original publication and is most historically significant for understanding the work's place in Cooper's literary output and 19th-century fiction. This was one of Cooper's European novels written during his extended travels abroad, following his more famous Leatherstocking Tales.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Character Writings of the Seventeenth Century"
+Author = "Henry Morley (editor)"
+Year = 1891
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an anthology of "character writing" - a literary genre that flourished in the 17th century England, consisting of brief prose sketches describing various social types and personality traits. Edited by Henry Morley, a prominent Victorian scholar and professor at University College London, the collection includes both precursors to the genre (Theophrastus from ancient Greece, Thomas Harman's 16th century work on rogues, and Ben Jonson's dramatic characters) and examples from 17th century practitioners like Sir Thomas Overbury. These character sketches depict recognizable social types such as "A Courtier," "A Flatterer," "A Good Woman," etc., combining moral observation with social commentary in a witty, epigrammatic style. The genre was influential in the development of the English essay and novel.
+"""
+
+Notes = """
+The year 1891 is chosen as this is clearly the publication year of this edited collection by Henry Morley. While the anthology contains much older source material (Theophrastus from ancient Greece, 17th century writings), this is a Victorian scholarly edition, not the original works themselves. The value of this text is primarily as a curated collection and critical work from the late 19th century perspective on character writing as a literary form.
+"""
+</result>

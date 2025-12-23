@@ -1,0 +1,15 @@
+<result>
+Title = "The Grandissimes"
+Author = "George Washington Cable"
+Year = 1880
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+The Grandissimes is George Washington Cable's most famous novel, set in New Orleans during the early 19th century, shortly after the Louisiana Purchase (1803-1804). The novel explores the complex social and racial dynamics of Creole Louisiana society, examining themes of race, class, honor, and the tensions between old Creole aristocracy and the incoming American presence. The story revolves around the Grandissime family and their interactions with various characters including Joseph Frowenfeld, a German immigrant apothecary. Cable's work is notable for its sympathetic treatment of race relations and critique of the plantation system, which was controversial for its time. The novel includes the powerful story of Bras-Coupé, an enslaved African prince. Cable is considered one of the first Southern writers to critically examine the legacy of slavery and racial injustice in the post-Civil War South.
+"""
+
+Notes = """
+The novel was first serialized in Scribner's Monthly from November 1879 to October 1880, then published in book form in 1880. The Project Gutenberg text shows an 1899 edition with illustrations by Albert Herter, but the work itself was originally published in 1880, which is the date used here as it represents the work's initial appearance and historical significance in American literature.
+"""
+</result>

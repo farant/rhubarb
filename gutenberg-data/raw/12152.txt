@@ -1,0 +1,15 @@
+<result>
+Title = "Keeping Watch"
+Author = "W.W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Keeping Watch" is a short story that is part of W.W. Jacobs' collection "Night Watches" (1914). W.W. Jacobs (1863-1943) was an English author best known for his humorous short stories about dockside and seafaring life, as well as his famous horror story "The Monkey's Paw." This story features his recurring character of the night-watchman, who serves as a narrator and commentator on human nature. Jacobs' night-watchman stories are characterized by their gentle humor, keen observations of working-class life, and the watchman's philosophical musings on relationships and human behavior. These tales were immensely popular in their time and showcase Jacobs' skill at dialect and character-driven comedy.
+"""
+
+Notes = """
+"Night Watches" was published in 1914. This is the second part of that collection, as indicated by the subtitle "Night Watches, Part 2." The Project Gutenberg release date of 2004 is simply when it was digitized, not when it was originally published. The year 1914 represents the original publication date of the "Night Watches" collection.
+"""
+</result>
