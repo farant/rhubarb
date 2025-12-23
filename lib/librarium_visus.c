@@ -2437,91 +2437,61 @@ librarium_visus_carcare_status(
     /* Carcare modus */
     clavis = chorda_internare_ex_literis(visus->ctx->intern, "modus");
     valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    si (valor)
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 temp;
+        si (chorda_ut_s32(*valor, &temp))
         {
-            len = XV;
+            visus->modus = (LibrariumModus)temp;
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->modus = (LibrariumModus)atoi(buf);
     }
 
     /* Carcare categoria */
     clavis = chorda_internare_ex_literis(visus->ctx->intern, "categoria");
     valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    si (valor)
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 temp;
+        si (chorda_ut_s32(*valor, &temp))
         {
-            len = XV;
+            visus->categoria = (LibrariumCategoria)temp;
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->categoria = (LibrariumCategoria)atoi(buf);
     }
 
     /* Carcare index_paginae */
     clavis = chorda_internare_ex_literis(visus->ctx->intern, "index_paginae");
     valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    si (valor)
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 temp;
+        si (chorda_ut_s32(*valor, &temp))
         {
-            len = XV;
+            visus->index_paginae = temp;
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->index_paginae = (s32)atoi(buf);
     }
 
     /* Carcare index_selecta */
     clavis = chorda_internare_ex_literis(visus->ctx->intern, "index_selecta");
     valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    si (valor)
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 temp;
+        si (chorda_ut_s32(*valor, &temp))
         {
-            len = XV;
+            visus->index_selecta = temp;
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->index_selecta = (s32)atoi(buf);
     }
 
     /* Carcare liber_currens */
     clavis = chorda_internare_ex_literis(visus->ctx->intern, "liber_currens");
     valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    si (valor)
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 temp;
+        si (chorda_ut_s32(*valor, &temp))
         {
-            len = XV;
+            visus->liber_currens = temp;
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->liber_currens = (s32)atoi(buf);
     }
 
     /* Carcare filtrum_tag */
@@ -2553,19 +2523,13 @@ librarium_visus_carcare_status(
     /* Carcare ordo */
     clavis = chorda_internare_ex_literis(visus->ctx->intern, "ordo");
     valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    si (valor)
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 temp;
+        si (chorda_ut_s32(*valor, &temp))
         {
-            len = XV;
+            visus->ordo = (LibrariumOrdo)temp;
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->ordo = (LibrariumOrdo)atoi(buf);
     }
 
     /* Carcare pagina_lectio (temporarius) */
@@ -2573,19 +2537,9 @@ librarium_visus_carcare_status(
         s32 pagina_lectio_salvata = 0;
         clavis = chorda_internare_ex_literis(visus->ctx->intern, "pagina_lectio");
         valor = entitas_proprietas_capere(entitas, clavis);
-        si (valor && valor->mensura > ZEPHYRUM)
+        si (valor)
         {
-            character buf[XVI];
-            i32 len;
-
-            len = (i32)valor->mensura;
-            si (len > XV)
-            {
-                len = XV;
-            }
-            memcpy(buf, valor->datum, (size_t)len);
-            buf[len] = '\0';
-            pagina_lectio_salvata = (s32)atoi(buf);
+            chorda_ut_s32(*valor, &pagina_lectio_salvata);
         }
 
         /* Re-filtrare post carcare categoria */

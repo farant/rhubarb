@@ -1009,23 +1009,8 @@ libro_carcare(
             entitas,
             chorda_internare_ex_literis(libro->ctx->intern, "ordo"));
 
-        si (ordo_valor != NIHIL)
+        si (ordo_valor != NIHIL && chorda_ut_s32(*ordo_valor, &ordo))
         {
-            /* Convertere chorda ad integer */
-            ordo = ZEPHYRUM;
-            {
-                i32 j;
-                per (j = ZEPHYRUM; j < (i32)ordo_valor->mensura; j++)
-                {
-                    character c;
-                    c = (character)ordo_valor->datum[j];
-                    si (c >= '0' && c <= '9')
-                    {
-                        ordo = ordo * X + (s32)(c - '0');
-                    }
-                }
-            }
-
             si (ordo > maximus_ordo)
             {
                 maximus_ordo = ordo;
@@ -1075,24 +1060,9 @@ libro_carcare(
             entitas,
             chorda_internare_ex_literis(libro->ctx->intern, "ordo"));
 
-        si (ordo_valor == NIHIL)
+        si (ordo_valor == NIHIL || !chorda_ut_s32(*ordo_valor, &ordo))
         {
             perge;
-        }
-
-        /* Convertere ad integer */
-        ordo = ZEPHYRUM;
-        {
-            i32 j;
-            per (j = ZEPHYRUM; j < (i32)ordo_valor->mensura; j++)
-            {
-                character c;
-                c = (character)ordo_valor->datum[j];
-                si (c >= '0' && c <= '9')
-                {
-                    ordo = ordo * X + (s32)(c - '0');
-                }
-            }
         }
 
         si (ordo < ZEPHYRUM || ordo >= (s32)libro->numerus_paginarum)
@@ -1280,7 +1250,7 @@ _libro_command_goto(
     character num_buffer[XVI];
     i32 longitudo;
     s32 page_num;
-    i32 i;
+    chorda num_chorda;
 
     libro = _libro_ex_contextu(ctx);
     si (!libro)
@@ -1295,13 +1265,10 @@ _libro_command_goto(
     }
 
     /* Parse integer */
-    page_num = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < longitudo; i++)
+    num_chorda = chorda_ex_buffer((i8*)num_buffer, longitudo);
+    si (!chorda_ut_s32(num_chorda, &page_num))
     {
-        si (num_buffer[i] >= '0' && num_buffer[i] <= '9')
-        {
-            page_num = page_num * X + (s32)(num_buffer[i] - '0');
-        }
+        redde FALSUM;
     }
 
     libro_navigare_ad(libro, page_num);
