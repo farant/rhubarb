@@ -1,0 +1,14 @@
+-std=c89
+-Iinclude
+-pedantic
+-Wall
+-Wextra
+-Werror
+-Wconversion
+-Wsign-conversion
+-Wcast-qual
+-Wstrict-prototypes
+-Wmissing-prototypes
+-Wwrite-strings
+-Wno-long-long
+-Wno-overlength-strings

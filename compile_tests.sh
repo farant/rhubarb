@@ -78,6 +78,7 @@ declare -a SOURCE_FILES=(
     "lib/biblia_dr.c"
     "lib/biblia_visus.c"
     "lib/librarium_visus.c"
+    "lib/librarium_lector.c"
     "lib/iter_directoria.c"
     "lib/exemplar.c"
     "lib/toml.c"

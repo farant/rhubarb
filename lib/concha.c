@@ -230,6 +230,9 @@ concha_creare(ConchaConfiguratio* config)
     }
     concha->schirmata = schirmata;
 
+    /* Restituere status salvatum ex repository */
+    schirmata_carcare_omnes(schirmata);
+
     /* Initiare widgets - registrant suos commandi */
     biblia_visus_init(ctx);
     librarium_visus_init(ctx);
@@ -400,6 +403,9 @@ concha_currere(Concha* concha)
         /* Praesentare pixela */
         fenestra_praesentare_pixela(concha->fenestra, concha->tabula);
     }
+
+    /* Salvare status ante clausuram */
+    schirmata_salvare_omnes(concha->schirmata);
 
     /* Purgare */
     fenestra_destruere(concha->fenestra);

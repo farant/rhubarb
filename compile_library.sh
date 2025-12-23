@@ -55,6 +55,7 @@ declare -a SOURCE_FILES=(
     "lib/exemplar.c"
     "lib/toml.c"
     "lib/paginarium.c"
+    "lib/librarium_lector.c"
 )
 
 # Color codes

@@ -1482,10 +1482,16 @@ schirmata_commutare_ad_librarium(
 
     si (schirma->modus_librarium)
     {
-        /* Iam in modus librarium - quaerere si quaestio */
+        /* Iam in modus librarium */
         si (quaestio)
         {
+            /* Quaerere si quaestio provisa */
             librarium_visus_quaerere(schirmata->librarium_visus, quaestio);
+        }
+        alioquin
+        {
+            /* Sine quaestio - reset ad radix */
+            librarium_visus_reset_ad_radix(schirmata->librarium_visus);
         }
         redde;
     }
@@ -1535,4 +1541,294 @@ schirmata_libro(
     }
 
     redde schirmata->libro;
+}
+
+
+/* ==================================================
+ * Persistentia - Salvare/Carcare Omnes
+ * ================================================== */
+
+/* Convertere modus flags ad chorda */
+hic_manens constans character*
+_modus_ad_chorda(
+    Schirma* schirma)
+{
+    si (schirma->modus_arx_caeli)
+    {
+        redde "arx_caeli";
+    }
+    si (schirma->modus_biblia_visus)
+    {
+        redde "biblia";
+    }
+    si (schirma->modus_librarium)
+    {
+        redde "librarium";
+    }
+    si (schirma->modus_thema_visus)
+    {
+        redde "thema";
+    }
+    si (schirma->modus_sputnik_syntaxis)
+    {
+        redde "sputnik";
+    }
+    redde "navigator";
+}
+
+
+vacuum
+schirmata_salvare_omnes(
+    Schirmata* schirmata)
+{
+    EntitasRepositorium* repo;
+    Entitas* entitas;
+    character entitas_id[XXXII];
+    character valor[XXXII];
+    i32 i;
+
+    si (!schirmata || !schirmata->ctx || !schirmata->ctx->repo)
+    {
+        redde;
+    }
+
+    repo = schirmata->ctx->repo;
+
+    /* Salvare status globalis */
+    entitas = repo->entitas_scaffoldare(repo->datum, "SchirmataGlobal", "0");
+    si (entitas)
+    {
+        sprintf(valor, "%d", schirmata->index_currens);
+        repo->proprietas_ponere(repo->datum, entitas, "index_currens", valor);
+    }
+
+    /* Salvare status per schirma */
+    per (i = ZEPHYRUM; i < SCHIRMATA_MAXIMUS; i++)
+    {
+        Schirma* schirma;
+
+        schirma = &schirmata->schirmae[i];
+        sprintf(entitas_id, "%d", i);
+
+        entitas = repo->entitas_scaffoldare(repo->datum, "SchirmaStatus", entitas_id);
+        si (!entitas)
+        {
+            perge;
+        }
+
+        /* Salvare modus */
+        repo->proprietas_ponere(repo->datum, entitas, "modus", _modus_ad_chorda(schirma));
+
+        /* Salvare libro_status */
+        sprintf(valor, "%d", schirma->libro_status.index_paginae);
+        repo->proprietas_ponere(repo->datum, entitas, "libro_index_paginae", valor);
+
+        sprintf(valor, "%d", schirma->libro_status.cursor_linea);
+        repo->proprietas_ponere(repo->datum, entitas, "libro_cursor_linea", valor);
+
+        sprintf(valor, "%d", schirma->libro_status.cursor_columna);
+        repo->proprietas_ponere(repo->datum, entitas, "libro_cursor_columna", valor);
+
+        sprintf(valor, "%d", (i32)schirma->libro_status.modo);
+        repo->proprietas_ponere(repo->datum, entitas, "libro_modo", valor);
+
+        /* Salvare widget status */
+        _salvare_widget_status(schirmata, i);
+    }
+}
+
+
+vacuum
+schirmata_carcare_omnes(
+    Schirmata* schirmata)
+{
+    EntitasRepositorium* repo;
+    InternamentumChorda* intern;
+    Entitas* entitas;
+    chorda* valor;
+    character entitas_id[XXXII];
+    i32 i;
+
+    si (!schirmata || !schirmata->ctx || !schirmata->ctx->repo)
+    {
+        redde;
+    }
+
+    repo = schirmata->ctx->repo;
+    intern = schirmata->ctx->intern;
+
+    /* Carcare status globalis */
+    entitas = repo->entitas_scaffoldare(repo->datum, "SchirmataGlobal", "0");
+    si (entitas)
+    {
+        valor = entitas_proprietas_capere(entitas,
+            chorda_internare_ex_literis(intern, "index_currens"));
+        si (valor && valor->mensura > ZEPHYRUM)
+        {
+            i32 idx;
+            idx = ZEPHYRUM;
+            {
+                i32 j;
+                per (j = ZEPHYRUM; j < (i32)valor->mensura; j++)
+                {
+                    character c;
+                    c = (character)valor->datum[j];
+                    si (c >= '0' && c <= '9')
+                    {
+                        idx = idx * X + (i32)(c - '0');
+                    }
+                }
+            }
+            si (idx >= ZEPHYRUM && idx < SCHIRMATA_MAXIMUS)
+            {
+                schirmata->index_currens = idx;
+            }
+        }
+    }
+
+    /* Carcare status per schirma */
+    per (i = ZEPHYRUM; i < SCHIRMATA_MAXIMUS; i++)
+    {
+        Schirma* schirma;
+        chorda* modus_valor;
+
+        schirma = &schirmata->schirmae[i];
+        sprintf(entitas_id, "%d", i);
+
+        entitas = repo->entitas_scaffoldare(repo->datum, "SchirmaStatus", entitas_id);
+        si (!entitas)
+        {
+            perge;
+        }
+
+        /* Carcare libro_status */
+        valor = entitas_proprietas_capere(entitas,
+            chorda_internare_ex_literis(intern, "libro_index_paginae"));
+        si (valor && valor->mensura > ZEPHYRUM)
+        {
+            i32 v;
+            v = ZEPHYRUM;
+            {
+                i32 j;
+                per (j = ZEPHYRUM; j < (i32)valor->mensura; j++)
+                {
+                    character c;
+                    c = (character)valor->datum[j];
+                    si (c >= '0' && c <= '9')
+                    {
+                        v = v * X + (i32)(c - '0');
+                    }
+                }
+            }
+            schirma->libro_status.index_paginae = v;
+        }
+
+        valor = entitas_proprietas_capere(entitas,
+            chorda_internare_ex_literis(intern, "libro_cursor_linea"));
+        si (valor && valor->mensura > ZEPHYRUM)
+        {
+            i32 v;
+            v = ZEPHYRUM;
+            {
+                i32 j;
+                per (j = ZEPHYRUM; j < (i32)valor->mensura; j++)
+                {
+                    character c;
+                    c = (character)valor->datum[j];
+                    si (c >= '0' && c <= '9')
+                    {
+                        v = v * X + (i32)(c - '0');
+                    }
+                }
+            }
+            schirma->libro_status.cursor_linea = v;
+        }
+
+        valor = entitas_proprietas_capere(entitas,
+            chorda_internare_ex_literis(intern, "libro_cursor_columna"));
+        si (valor && valor->mensura > ZEPHYRUM)
+        {
+            i32 v;
+            v = ZEPHYRUM;
+            {
+                i32 j;
+                per (j = ZEPHYRUM; j < (i32)valor->mensura; j++)
+                {
+                    character c;
+                    c = (character)valor->datum[j];
+                    si (c >= '0' && c <= '9')
+                    {
+                        v = v * X + (i32)(c - '0');
+                    }
+                }
+            }
+            schirma->libro_status.cursor_columna = v;
+        }
+
+        valor = entitas_proprietas_capere(entitas,
+            chorda_internare_ex_literis(intern, "libro_modo"));
+        si (valor && valor->mensura > ZEPHYRUM)
+        {
+            i32 v;
+            v = ZEPHYRUM;
+            {
+                i32 j;
+                per (j = ZEPHYRUM; j < (i32)valor->mensura; j++)
+                {
+                    character c;
+                    c = (character)valor->datum[j];
+                    si (c >= '0' && c <= '9')
+                    {
+                        v = v * X + (i32)(c - '0');
+                    }
+                }
+            }
+            schirma->libro_status.modo = (ModoVim)v;
+        }
+
+        /* Carcare modus et commutare widget */
+        modus_valor = entitas_proprietas_capere(entitas,
+            chorda_internare_ex_literis(intern, "modus"));
+        si (modus_valor && modus_valor->mensura > ZEPHYRUM)
+        {
+            /* Temporarie commutare ad hac schirma */
+            i32 prior_index;
+            prior_index = schirmata->index_currens;
+            schirmata->index_currens = i;
+
+            si (chorda_aequalis_literis(*modus_valor, "arx_caeli"))
+            {
+                schirmata_commutare_ad_arx_caeli(schirmata, NIHIL);
+            }
+            alioquin si (chorda_aequalis_literis(*modus_valor, "biblia"))
+            {
+                schirmata_commutare_ad_biblia_visus(schirmata);
+            }
+            alioquin si (chorda_aequalis_literis(*modus_valor, "librarium"))
+            {
+                schirmata_commutare_ad_librarium(schirmata, NIHIL);
+            }
+            alioquin si (chorda_aequalis_literis(*modus_valor, "thema"))
+            {
+                schirmata_commutare_ad_thema_visus(schirmata);
+            }
+            alioquin si (chorda_aequalis_literis(*modus_valor, "sputnik"))
+            {
+                schirmata_commutare_ad_sputnik_syntaxis(schirmata);
+            }
+            /* "navigator" = default, nihil facere */
+
+            schirmata->index_currens = prior_index;
+        }
+
+        /* Carcare widget status */
+        _carcare_widget_status(schirmata, i);
+    }
+
+    /* Restituere libro status pro schirma currens */
+    _restituere_status(&schirmata->schirmae[schirmata->index_currens], schirmata->libro);
+
+    /* Re-carcare widget status pro schirma currens
+     * (necessarium quia loop supra superscribit singleton widgets) */
+    _carcare_widget_status(schirmata, schirmata->index_currens);
 }

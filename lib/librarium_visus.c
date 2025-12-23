@@ -541,12 +541,7 @@ librarium_visus_creare(
     visus->index_paginae = 0;
     visus->index_selecta = 0;
     visus->liber_currens = -1;
-    visus->textus_libri.mensura = 0;
-    visus->pagina_lectio = 0;
-    visus->paginae_totales = 0;
-    visus->cache_liber = -1;
-    visus->cache_latitudo = 0;
-    visus->cache_altitudo = 0;
+    visus->lector = librarium_lector_creare(piscina);
     visus->latitudo_characterum = 0;
     visus->altitudo_linearum = 0;
     visus->scala = 1;
@@ -1541,63 +1536,6 @@ _reddere_libro(
 
 
 /* ==================================================
- * Calculare Paginationem Lectionis (via paginarium)
- * ================================================== */
-
-hic_manens vacuum
-_librarium_visus_calculare_paginationem(
-    LibrariumVisus* visus,
-    i32             latitudo,
-    i32             altitudo)
-{
-    PaginariumConfig config;
-    i32 chars_disponibiles;
-    i32 lineae_disponibiles;
-
-    /* Check cache */
-    si (visus->cache_liber == visus->liber_currens &&
-        visus->cache_latitudo == (s32)latitudo &&
-        visus->cache_altitudo == (s32)altitudo)
-    {
-        redde;
-    }
-
-    visus->cache_liber = visus->liber_currens;
-    visus->cache_latitudo = (s32)latitudo;
-    visus->cache_altitudo = (s32)altitudo;
-
-    si (visus->textus_libri.mensura == 0)
-    {
-        visus->paginae_totales = 0;
-        redde;
-    }
-
-    chars_disponibiles = latitudo - (PADDING * II);
-    lineae_disponibiles = altitudo - V;  /* Header et footer */
-
-    si (chars_disponibiles < X)
-    {
-        chars_disponibiles = X;
-    }
-    si (lineae_disponibiles < V)
-    {
-        lineae_disponibiles = V;
-    }
-
-    /* Configurare paginarium */
-    config = paginarium_config_defectus();
-    config.latitudo = chars_disponibiles;
-    config.altitudo = lineae_disponibiles;
-
-    /* Paginare via paginarium */
-    visus->paginarium_resultus = paginarium_paginare(
-        visus->textus_libri, config, visus->piscina);
-
-    visus->paginae_totales = (s32)visus->paginarium_resultus.numerus_paginarum;
-}
-
-
-/* ==================================================
  * Reddere - Lectio
  * ================================================== */
 
@@ -1644,18 +1582,8 @@ _reddere_lectio(
 
     linea = y + I;
 
-    /* Calculare paginationem */
-    _librarium_visus_calculare_paginationem(visus, latitudo, altitudo);
-
-    /* Clamp pagina */
-    si (visus->pagina_lectio >= visus->paginae_totales)
-    {
-        visus->pagina_lectio = visus->paginae_totales - 1;
-    }
-    si (visus->pagina_lectio < 0)
-    {
-        visus->pagina_lectio = 0;
-    }
+    /* Calculare paginationem via lector */
+    librarium_lector_paginare(visus->lector, (s32)latitudo, (s32)altitudo);
 
     /* Header: titulus libri */
     si (visus->liber_currens >= 0)
@@ -1685,7 +1613,7 @@ _reddere_lectio(
     linea += II;
 
     /* Textus */
-    si (visus->textus_libri.mensura == 0)
+    si (!librarium_lector_habet_textum(visus->lector))
     {
         titulus = _chorda_ex_cstr("Textus non carcatus");
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
@@ -1697,9 +1625,10 @@ _reddere_lectio(
         PaginariumPagina* pagina;
         i32 numerus_linearum;
         i32 i;
+        s32 pagina_currens = librarium_lector_pagina_currens(visus->lector);
+        chorda textus_libri = librarium_lector_textus(visus->lector);
 
-        pagina = paginarium_pagina_obtinere(
-            &visus->paginarium_resultus, (i32)visus->pagina_lectio);
+        pagina = librarium_lector_pagina_obtinere(visus->lector, pagina_currens);
 
         si (pagina)
         {
@@ -1725,7 +1654,7 @@ _reddere_lectio(
 
                 /* Reddere lineam via paginarium */
                 linea_reddita = paginarium_linea_reddere(
-                    visus->textus_libri, pag_linea, visus->piscina);
+                    textus_libri, pag_linea, visus->piscina);
 
                 si (linea_reddita.mensura > 0)
                 {
@@ -1743,9 +1672,11 @@ _reddere_lectio(
     linea = y + altitudo - II;
     {
         character buffer[LXIV];
+        s32 pag_curr = librarium_lector_pagina_currens(visus->lector);
+        s32 pag_tot = librarium_lector_paginae_totales(visus->lector);
         sprintf(buffer, "Pagina %d/%d   j/k: paginae   Esc: retro",
-            visus->pagina_lectio + 1,
-            visus->paginae_totales > 0 ? visus->paginae_totales : 1);
+            pag_curr + 1,
+            pag_tot > 0 ? pag_tot : 1);
         titulus = _chorda_ex_cstr(buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
             (x + PADDING) * char_lat, linea * char_alt,
@@ -1819,130 +1750,7 @@ librarium_visus_reddere(
 
 
 /* ==================================================
- * Progressus Persistentia
- * ================================================== */
-
-/* Salvare progressum lectionis ad repositorium */
-hic_manens vacuum
-_librarium_visus_salvare_progressum(
-    LibrariumVisus* visus)
-{
-    LibrumInfo* liber;
-    Entitas* entitas;
-    character numerus_buffer[XXXII];
-    character pagina_buffer[XXXII];
-    s32 num_libri;
-
-    si (!visus || !visus->ctx || !visus->ctx->repo)
-    {
-        redde;
-    }
-
-    num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
-    si (visus->liber_currens < 0 || visus->liber_currens >= num_libri)
-    {
-        redde;
-    }
-
-    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->liber_currens);
-    si (!liber || liber->numerus.mensura == 0)
-    {
-        redde;
-    }
-
-    /* Creare titulus ex numerus */
-    {
-        s32 len = (s32)liber->numerus.mensura;
-        si (len > XXX)
-        {
-            len = XXX;
-        }
-        memcpy(numerus_buffer, liber->numerus.datum, (size_t)len);
-        numerus_buffer[len] = '\0';
-    }
-
-    /* Scaffoldare entitas */
-    entitas = visus->ctx->repo->entitas_scaffoldare(
-        visus->ctx->repo->datum,
-        "LibrumProgressus",
-        numerus_buffer);
-
-    si (!entitas)
-    {
-        redde;
-    }
-
-    /* Ponere pagina_currens */
-    sprintf(pagina_buffer, "%d", (int)visus->pagina_lectio);
-    visus->ctx->repo->proprietas_ponere(
-        visus->ctx->repo->datum,
-        entitas,
-        "pagina_currens",
-        pagina_buffer);
-}
-
-/* Carcare progressum lectionis ex repositorio */
-hic_manens vacuum
-_librarium_visus_carcare_progressum(
-    LibrariumVisus* visus)
-{
-    LibrumInfo* liber;
-    Entitas* entitas;
-    character numerus_buffer[XXXII];
-    chorda* clavis;
-    s32 pagina_salvata = 0;
-    s32 num_libri;
-
-    si (!visus || !visus->ctx || !visus->ctx->repo || !visus->ctx->intern)
-    {
-        redde;
-    }
-
-    num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
-    si (visus->liber_currens < 0 || visus->liber_currens >= num_libri)
-    {
-        redde;
-    }
-
-    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->liber_currens);
-    si (!liber || liber->numerus.mensura == 0)
-    {
-        redde;
-    }
-
-    /* Creare titulus ex numerus */
-    {
-        s32 len = (s32)liber->numerus.mensura;
-        si (len > XXX)
-        {
-            len = XXX;
-        }
-        memcpy(numerus_buffer, liber->numerus.datum, (size_t)len);
-        numerus_buffer[len] = '\0';
-    }
-
-    /* Invenire entitas (scaffoldare est idempotens) */
-    entitas = visus->ctx->repo->entitas_scaffoldare(
-        visus->ctx->repo->datum,
-        "LibrumProgressus",
-        numerus_buffer);
-
-    si (!entitas)
-    {
-        redde;
-    }
-
-    /* Capere pagina_currens */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "pagina_currens");
-    si (clavis && entitas_proprietas_capere_s32(entitas, clavis, &pagina_salvata))
-    {
-        visus->pagina_lectio = pagina_salvata;
-    }
-}
-
-
-/* ==================================================
- * Carcare Textus Libri
+ * Carcare Textus Libri (via Lector)
  * ================================================== */
 
 hic_manens vacuum
@@ -1952,19 +1760,18 @@ _librarium_visus_carcare_textum(
     LibrumInfo* liber;
     s32 num_libri;
     character via_buffer[DXII];
+    character numerus_buffer[XXXII];
 
     num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
 
     si (visus->liber_currens < 0 || visus->liber_currens >= num_libri)
     {
-        visus->textus_libri.mensura = 0;
         redde;
     }
 
     liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->liber_currens);
     si (!liber || liber->via.mensura == 0)
     {
-        visus->textus_libri.mensura = 0;
         redde;
     }
 
@@ -1979,13 +1786,22 @@ _librarium_visus_carcare_textum(
         via_buffer[len] = '\0';
     }
 
-    /* Legere filum */
-    visus->textus_libri = filum_legere_totum(via_buffer, visus->piscina);
-    visus->pagina_lectio = 0;
-    visus->cache_liber = -1;  /* Force recalc */
+    /* Costruire numerus (ID) */
+    {
+        s32 len = (s32)liber->numerus.mensura;
+        si (len > XXX)
+        {
+            len = XXX;
+        }
+        memcpy(numerus_buffer, liber->numerus.datum, (size_t)len);
+        numerus_buffer[len] = '\0';
+    }
+
+    /* Carcare via lector */
+    librarium_lector_carcare(visus->lector, via_buffer, numerus_buffer);
 
     /* Carcare progressum salvatum */
-    _librarium_visus_carcare_progressum(visus);
+    librarium_lector_carcare_progressum(visus->lector, visus->ctx->repo, visus->ctx->intern);
 }
 
 
@@ -2336,19 +2152,13 @@ librarium_visus_tractare_eventum(
             commutatio (eventus->datum.clavis.typus)
             {
                 casus 'j':
-                    si (visus->pagina_lectio < visus->paginae_totales - 1)
-                    {
-                        visus->pagina_lectio++;
-                        _librarium_visus_salvare_progressum(visus);
-                    }
+                    librarium_lector_pagina_proxima(visus->lector);
+                    librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
                     redde VERUM;
 
                 casus 'k':
-                    si (visus->pagina_lectio > 0)
-                    {
-                        visus->pagina_lectio--;
-                        _librarium_visus_salvare_progressum(visus);
-                    }
+                    librarium_lector_pagina_prior(visus->lector);
+                    librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
                     redde VERUM;
 
                 ordinarius:
@@ -2358,7 +2168,7 @@ librarium_visus_tractare_eventum(
             si (eventus->datum.clavis.clavis == CLAVIS_EFFUGIUM)
             {
                 /* Salvare progressum ante exire */
-                _librarium_visus_salvare_progressum(visus);
+                librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
 
                 /* Retro ad catalogo */
                 visus->index_paginae = visus->liber_currens;
@@ -2424,6 +2234,27 @@ librarium_visus_quaerere(
         _librarium_visus_filtrare(visus);
         visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
     }
+}
+
+vacuum
+librarium_visus_reset_ad_radix(
+    LibrariumVisus* visus)
+{
+    si (!visus)
+    {
+        redde;
+    }
+
+    /* Reset ad modus categoriae */
+    visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
+    visus->index_selecta = 0;
+    visus->index_paginae = 0;
+    visus->filtrum_tag.mensura = 0;
+    visus->filtrum_quaestio.mensura = 0;
+    visus->liber_currens = -1;
+
+    /* Re-filtrare cum categoria currens */
+    _librarium_visus_filtrare(visus);
 }
 
 
@@ -2536,8 +2367,8 @@ librarium_visus_salvare_status(
     sprintf(valor, "%d", visus->liber_currens);
     repo->proprietas_ponere(repo->datum, entitas, "liber_currens", valor);
 
-    /* Salvare pagina_lectio */
-    sprintf(valor, "%d", visus->pagina_lectio);
+    /* Salvare pagina_lectio (ex lector) */
+    sprintf(valor, "%d", librarium_lector_pagina_currens(visus->lector));
     repo->proprietas_ponere(repo->datum, entitas, "pagina_lectio", valor);
 }
 
@@ -2653,21 +2484,48 @@ librarium_visus_carcare_status(
         visus->liber_currens = (s32)atoi(buf);
     }
 
-    /* Carcare pagina_lectio */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "pagina_lectio");
-    valor = entitas_proprietas_capere(entitas, clavis);
-    si (valor && valor->mensura > ZEPHYRUM)
+    /* Carcare pagina_lectio (temporarius) */
     {
-        character buf[XVI];
-        i32 len;
-
-        len = (i32)valor->mensura;
-        si (len > XV)
+        s32 pagina_lectio_salvata = 0;
+        clavis = chorda_internare_ex_literis(visus->ctx->intern, "pagina_lectio");
+        valor = entitas_proprietas_capere(entitas, clavis);
+        si (valor && valor->mensura > ZEPHYRUM)
         {
-            len = XV;
+            character buf[XVI];
+            i32 len;
+
+            len = (i32)valor->mensura;
+            si (len > XV)
+            {
+                len = XV;
+            }
+            memcpy(buf, valor->datum, (size_t)len);
+            buf[len] = '\0';
+            pagina_lectio_salvata = (s32)atoi(buf);
         }
-        memcpy(buf, valor->datum, (size_t)len);
-        buf[len] = '\0';
-        visus->pagina_lectio = (s32)atoi(buf);
+
+        /* Re-filtrare post carcare categoria */
+        _librarium_visus_filtrare(visus);
+
+        /* Si in modus lectio, carcare textum */
+        si (visus->modus == LIBRARIUM_MODUS_LECTIO)
+        {
+            s32 num_libri;
+
+            num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
+
+            si (visus->liber_currens >= 0 && visus->liber_currens < num_libri)
+            {
+                _librarium_visus_carcare_textum(visus);
+                /* Ponere pagina ex status salvata */
+                librarium_lector_pagina_saltare(visus->lector, pagina_lectio_salvata);
+            }
+            alioquin
+            {
+                /* Index invalido - reset ad categoriae */
+                visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
+                visus->liber_currens = -1;
+            }
+        }
     }
 }

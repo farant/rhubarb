@@ -8,6 +8,7 @@
 #include "chorda.h"
 #include "widget.h"
 #include "paginarium.h"
+#include "librarium_lector.h"
 
 /* ==================================================
  * LIBRARIUM VISUS - Library Viewer Widget
@@ -109,15 +110,7 @@ nomen structura {
 
     /* Status libri / lectionis */
     s32 liber_currens;       /* Index in libri_filtrati */
-    chorda textus_libri;     /* Textus carcatus */
-    s32 pagina_lectio;       /* Pagina currens lectionis */
-    s32 paginae_totales;     /* Totales paginae in libro */
-
-    /* Paginatio via paginarium */
-    PaginariumResultus paginarium_resultus;
-    s32 cache_liber;
-    s32 cache_latitudo;
-    s32 cache_altitudo;
+    LibrariumLector* lector; /* Lector pro textus et paginatione */
 
     /* Dimensiones widget */
     s32 latitudo_characterum;
@@ -204,6 +197,16 @@ vacuum
 librarium_visus_quaerere(
     LibrariumVisus*     visus,
     constans character* quaestio);
+
+/* Reset ad radix (MODUS_CATEGORIAE)
+ *
+ * visus: library viewer
+ *
+ * Restituit modus ad CATEGORIAE, purificat filtros.
+ */
+vacuum
+librarium_visus_reset_ad_radix(
+    LibrariumVisus* visus);
 
 
 /* ==================================================

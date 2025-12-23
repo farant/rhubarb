@@ -264,4 +264,31 @@ schirmata_libro(
     Schirmata* schirmata);
 
 
+/* ==================================================
+ * Persistentia
+ * ================================================== */
+
+/* Salvare omnes schirmas ad repository
+ *
+ * Salvat status globalis (index_currens) et status per schirmam
+ * (modus, libro_status, widget status).
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_salvare_omnes(
+    Schirmata* schirmata);
+
+/* Carcare omnes schirmas ex repository
+ *
+ * Restituit status globalis et per schirmam ex repository.
+ * Vocare post schirmata_creare().
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_carcare_omnes(
+    Schirmata* schirmata);
+
+
 #endif /* SCHIRMATA_H */
