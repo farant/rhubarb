@@ -1,0 +1,21 @@
+I recognize this as "A Mere Accident" by George Moore. Let me analyze the text to provide you with the structured information you requested.
+
+This is a novel by the Irish writer George Moore, first published in 1887. Moore was associated with the Naturalist movement in literature and was influenced by French writers like Émile Zola. "A Mere Accident" is one of his earlier novels, written during a period when he was exploring psychological realism and the constraints of Victorian society.
+
+The novel deals with themes of religious devotion, sexuality, and violence, and centers on a protagonist who struggles with Catholic asceticism and celibacy. Given Moore's complex relationship with Catholicism (he was raised Catholic but became critical of the Church) and the novel's somewhat controversial treatment of religious themes, this would not be considered a work that would receive a nihil obstat or imprimatur.
+
+<result>
+Title = "A Mere Accident"
+Author = "George Moore"
+Year = 1887
+
+Tags = ["fiction"]
+
+Summary = """
+A Mere Accident is a psychological novel by Irish writer George Moore, published during his Naturalist period. The novel explores themes of religious devotion, particularly Catholic asceticism, sexuality, and violence in Victorian England. It centers on a protagonist torn between spiritual ideals and earthly existence. Moore was influenced by French Naturalism and this work reflects his interest in psychological realism and the constraints of Victorian society. The novel is set in the Sussex countryside and examines the tensions between religious conviction and human nature.
+"""
+
+Notes = """
+First published in 1887. While Moore was raised Catholic, he became increasingly critical of the Church, and this novel's treatment of Catholic themes and sexuality would not qualify it for Catholic approval (nihil obstat/imprimatur). The dedication and chapter opening show this is the fifth edition, but the original publication date was 1887.
+"""
+</result>

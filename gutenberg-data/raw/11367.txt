@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "A History of China"
+Author = "Wolfram Eberhard"
+Year = 1950
+
+Tags = ["non-fiction", "history", "scholarly"]
+
+Summary = """
+A comprehensive historical survey of China written by German sinologist Wolfram Eberhard (1909-1989). This work provides a scholarly examination of Chinese civilization from ancient times through the modern period, covering political, social, and cultural developments. Eberhard was a highly respected scholar of Chinese history and sociology who spent much of his career studying Chinese culture, minorities, and folklore. This book became one of the standard English-language histories of China and was widely used in academic settings.
+"""
+
+Notes = """
+Wolfram Eberhard's "A History of China" was first published in English in 1950 (translated and adapted from his German work). The book went through multiple editions and revisions over the decades. I've chosen 1950 as the year representing the first English edition, which is likely what this Project Gutenberg text is based on. This is not tagged as 'appropriate-for-children' as it is a scholarly academic work written for university-level readers and adults. While Eberhard was a rigorous scholar, this is a secular academic history rather than a Catholic work, so the 'catholic' tag does not apply.
+"""
+</result>

@@ -1,0 +1,25 @@
+I'll read through this Project Gutenberg text to identify the title, author, and year, then provide the structured information you requested.
+
+Based on the text, I can clearly see:
+
+- **Title**: "Towards the Great Peace"
+- **Author**: Ralph Adams Cram (with the credentials Litt.D., LL.D.)
+- **Year**: 1922 (explicitly stated in the text)
+
+Ralph Adams Cram was a prominent American architect, writer, and medievalist who was indeed Catholic (he converted to Anglo-Catholicism/Episcopalianism with strong Catholic sympathies). This appears to be a series of lectures he delivered, likely dealing with post-World War I themes of peace and social reconstruction from a Christian perspective.
+
+<result>
+Title = "Towards the Great Peace"
+Author = "Ralph Adams Cram"
+Year = 1922
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+A collection of lectures delivered by Ralph Adams Cram, the prominent American architect, writer, and medievalist, in 1922. The work reflects on the pursuit of peace in the aftermath of World War I, examining the spiritual, social, and philosophical foundations necessary for achieving what Cram calls the "Great Peace." Drawing on a prayer by 17th-century Bishop Hacket, Cram argues for the cultivation of "public souls" rather than "private-mindedness," emphasizing that lasting peace requires the daily practice of generous hearts and happy tempers rather than mechanical or political solutions alone. The work represents Cram's broader intellectual project of advocating for a return to medieval Christian social principles and his critique of modern materialism and fragmentation.
+"""
+
+Notes = """
+1922 is the publication year clearly stated in the text. Ralph Adams Cram (1863-1942) was a leading figure in the Gothic Revival movement in American architecture and a prominent Catholic intellectual. He designed numerous churches and academic buildings, and wrote extensively on architecture, religion, and social philosophy. This work fits within his larger corpus of writings advocating for traditional Christian civilization and critiquing modernity.
+"""
+</result>

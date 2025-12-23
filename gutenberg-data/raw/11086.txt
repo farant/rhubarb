@@ -1,0 +1,17 @@
+I can identify this work from the text. This is "A Surgeon in Belgium" by Henry Sessions Souttar, published in 1915. It's a memoir of his experiences serving as a surgeon during World War I with the Belgian Field Hospital.
+
+<result>
+Title = "A Surgeon in Belgium"
+Author = "H. S. Souttar (Henry Sessions Souttar)"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document", "war-memoir"]
+
+Summary = """
+A firsthand account by British surgeon Henry Sessions Souttar of his three months serving as Surgeon-in-Chief of the Belgian Field Hospital during the early months of World War I in 1914. The book describes the experiences, atmosphere, and events surrounding the medical work during the German invasion of Belgium, including the fall of Antwerp. Souttar provides a personal narrative of wartime surgery and the challenges faced by medical personnel treating wounded soldiers during one of the most dramatic periods of the Great War.
+"""
+
+Notes = """
+Published in 1915, shortly after the events described (which took place in late 1914). This is a contemporary war memoir rather than a retrospective history. The work documents the early months of WWI from a medical perspective and provides valuable historical testimony about the Belgian experience during the German invasion.
+"""
+</result>

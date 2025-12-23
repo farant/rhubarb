@@ -1,0 +1,15 @@
+<result>
+Title = "Salammbô"
+Author = "Gustave Flaubert"
+Year = 1862
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Salammbô is a historical novel by Gustave Flaubert set in ancient Carthage during the Mercenary War (241-238 BC) that followed the First Punic War. The novel centers on the fictional character Salammbô, daughter of the Carthaginian general Hamilcar Barca, and her tragic relationship with Mâtho, leader of the mercenary revolt against Carthage. Flaubert extensively researched ancient sources to create a vivid and exotic portrayal of Carthaginian civilization, religion, and warfare. The novel is known for its ornate prose style, archaeological detail, and exploration of ancient Mediterranean culture and violence.
+"""
+
+Notes = """
+First published in 1862 in France. This novel represents Flaubert's venture into historical fiction after the contemporary setting of Madame Bovary. The work was controversial upon publication due to its graphic violence and sensuality, though it demonstrated Flaubert's commitment to historical accuracy and his characteristic attention to descriptive detail.
+"""
+</result>

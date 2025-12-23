@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This appears to be a scholarly historical work about French Carolingian history, specifically covering the reigns of Robert I and Raoul of Burgundy (923-936). The author is Ph. Lauer, and the work was published in 1910 as part of a series on Carolingian French history.
+
+<result>
+Title = "Annales de l'histoire de France à l'époque carolingienne: Robert Ier et Raoul de Bourgogne, Rois de France (923-936)"
+Author = "Philippe Lauer"
+Year = 1910
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly historical work by Philippe Lauer examining the reigns of two French kings from the Carolingian period: Robert I and Raoul (Ralph) of Burgundy, who ruled from 923 to 936. Published in 1910 as the 188th fascicle of the Bibliothèque des Hautes Études, this monograph was intended to fill a gap in the 'Annales de l'histoire de France à l'époque carolingienne' series initiated by Arthur Giry. The work bridges the historical studies between the reigns of Charles the Simple and Louis d'Outre-Mer. Lauer's study built upon and corrected earlier German scholarship by W. Lippert, particularly regarding topography, diplomatics, and Lorraine affairs. It incorporates analysis of various cartularies and royal diplomas that had not been fully utilized in previous scholarship.
+"""
+
+Notes = """
+The publication year 1910 is clearly stated on the title page. This is an academic monograph in French, part of a scholarly series on Carolingian history. Not appropriate for children due to its specialized academic nature. Not tagged as 'catholic' as it is a secular historical work, though it covers a period of French history deeply intertwined with the Church.
+"""
+</result>

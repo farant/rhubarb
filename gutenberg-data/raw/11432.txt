@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+From the text, I can see this is "The Youth's Coronal" by Hannah Flagg Gould, published in 1851. Hannah Flagg Gould (1789-1865) was an American poet known for her moral and religious verse, particularly works aimed at young readers.
+
+<result>
+Title = "The Youth's Coronal"
+Author = "Hannah Flagg Gould"
+Year = 1851
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children", "moral-instruction"]
+
+Summary = """
+The Youth's Coronal is a collection of instructional poetry by American poet Hannah Flagg Gould, designed for young readers. The work aims to provide both entertainment and moral instruction, using verse to impart wisdom and values to children. Gould was a popular 19th-century American poet who specialized in didactic poetry for youth, and this collection represents her commitment to moral education through literature. The book's preface explicitly states its dual purpose: to be as pleasant as spring blossoms while reading, and to bear lasting fruit in shaping the hearts and minds of young people throughout their lives.
+"""
+
+Notes = """
+The year 1851 is clearly stated on the title page of this edition. Hannah Flagg Gould was not Catholic - she was from a New England Protestant background - so the 'catholic' tag is not applicable. This work falls into the common 19th-century genre of moral instruction literature for children, which was extremely popular in American Protestant circles during this period.
+"""
+</result>

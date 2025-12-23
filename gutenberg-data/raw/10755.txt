@@ -1,0 +1,15 @@
+<result>
+Title = "The Broken Road"
+Author = "A.E.W. Mason"
+Year = 1907
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"The Broken Road" is a novel by British author A.E.W. Mason, set primarily in British India and the North-West Frontier. Mason was known for his adventure novels and stories of empire, with "The Four Feathers" (1902) being his most famous work. "The Broken Road" deals with themes of imperialism, cultural identity, and the tensions between British colonial rule and indigenous populations on the frontier. The novel explores the life of a young man raised in England but connected to India, examining questions of duty, loyalty, and belonging in the context of the British Raj. Mason's work often featured romanticized adventure narratives typical of the Edwardian era, while also engaging with more complex questions about colonialism and cultural conflict.
+"""
+
+Notes = """
+The publication year of 1907 is clearly stated on the title page. This is the original publication date of the novel. Mason wrote during the height of the British Empire, and his works reflect both the adventure romance genre popular at the time and some of the tensions and contradictions of the colonial project in India.
+"""
+</result>

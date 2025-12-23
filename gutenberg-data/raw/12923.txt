@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "The Laird's Luck and Other Fireside Tales"
+Author = "Arthur Thomas Quiller-Couch (Q)"
+Year = 1901
+
+Tags = ["fiction", "short-stories", "gothic", "appropriate-for-children"]
+
+Summary = """
+A collection of supernatural and mystery tales by the Cornish writer Arthur Quiller-Couch, published under his famous pseudonym "Q". The title story, "The Laird's Luck", is presented as a historical mystery framed within military records of a Highland regiment, concerning a mysterious incident involving Ensign D.M.J. Mackenzie. The narrative is structured as a discovered manuscript from 1816, relating events from around the Waterloo campaign period. Quiller-Couch was known for his adventure stories, ghost tales, and his work as a literary scholar and editor. This collection showcases his talent for atmospheric storytelling and his interest in historical fiction.
+"""
+
+Notes = """
+The year 1901 is taken from the publication information shown on the title page (Charles Scribner's Sons, New York 1901). This represents the American edition. Quiller-Couch (1863-1944) was a prolific writer and later became a prominent literary critic and professor at Cambridge University. His works are generally appropriate for older children and young adults, featuring adventure and mild supernatural elements rather than explicit content.
+"""
+</result>

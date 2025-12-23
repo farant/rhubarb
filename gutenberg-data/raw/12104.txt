@@ -1,0 +1,15 @@
+<result>
+Title = "Ethelyn's Mistake"
+Author = "Mary J. Holmes"
+Year = 1869
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Ethelyn's Mistake" is a domestic fiction novel by Mary Jane Holmes, one of the most popular American authors of the 19th century. Holmes specialized in sentimental novels that explored themes of marriage, social class, and moral choices. Her works were widely read and accessible to general audiences, often focusing on young women navigating romantic relationships and societal expectations. This particular novel likely follows Holmes's typical pattern of examining the consequences of choices made in matters of the heart, with an emphasis on moral lessons and eventual redemption or growth of character. Holmes's novels were known for their readability and appeal to middle-class American readers, particularly women.
+"""
+
+Notes = """
+Mary J. Holmes was extraordinarily prolific and popular during the mid-to-late 19th century, with sales rivaling those of Harriet Beecher Stowe. "Ethelyn's Mistake" was published in 1869 by G.W. Carleton & Co. Holmes was not a Catholic author - she wrote general domestic fiction for the American Protestant middle class market. The novel deals with themes of marriage between partners of different social classes and the misunderstandings that arise from pride and miscommunication.
+"""
+</result>

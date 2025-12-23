@@ -1,0 +1,15 @@
+<result>
+Title = "O. Henry Memorial Award Prize Stories of 1921"
+Author = "Various (anthology edited by the Society of Arts and Sciences)"
+Year = 1922
+
+Tags = ["fiction", "anthology", "short-stories"]
+
+Summary = """
+This is an anthology of prize-winning short stories selected by the Society of Arts and Sciences for the O. Henry Memorial Award in 1921 (published in 1922). The O. Henry Awards were established to honor the legacy of American short story writer O. Henry (William Sydney Porter) and recognize excellence in short fiction published in American magazines. The collection includes stories from various authors including Edison Marshall, Charles Tenney Jackson, Wilbur Daniel Steele, and others, representing the best American short fiction of that period. The introduction was written by Blanche Colton Williams, a prominent literary scholar who served as editor of the O. Henry Memorial Award series during the early 1920s.
+"""
+
+Notes = """
+While the award honored stories from 1921, the anthology itself was published in 1922, which is the more appropriate date for cataloging purposes since this is when the collection became available. This is one of the early volumes in what became a prestigious annual series that continues to this day, showcasing American short fiction.
+"""
+</result>

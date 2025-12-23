@@ -1,0 +1,21 @@
+I'll read through this text to identify the work and provide the requested information.
+
+This appears to be "The High School Pitcher" by H. Irving Hancock, which is part of his "High School Boys Series." Based on the Project Gutenberg ID (12690) and the content, this is clearly a young adult adventure/sports novel focused on high school baseball.
+
+Let me provide the structured information:
+
+<result>
+Title = "The High School Pitcher; or, Dick & Co. on the Gridley Diamond"
+Author = "H. Irving Hancock"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children", "young-adult", "sports", "baseball"]
+
+Summary = """
+'The High School Pitcher' is part of H. Irving Hancock's 'High School Boys Series,' which follows the adventures of Dick Prescott and his companions at Gridley High School. This installment focuses on the baseball season, with Dick and his friends ('Dick & Co.') competing on the Gridley Diamond. The series was extremely popular in the early 20th century and exemplifies the wholesome, character-building sports fiction written for American boys during that era. These books emphasized themes of teamwork, fair play, perseverance, and moral conduct while providing exciting sports action and school-based adventures.
+"""
+
+Notes = """
+The High School Boys Series by H. Irving Hancock was published between 1910-1914. 'The High School Pitcher' was one of the earlier books in this series, published around 1910. These books were part of the broader 'boys' series' publishing phenomenon of the early 20th century, which included similar works by authors like Edward Stratemeyer and his syndicate.
+"""
+</result>

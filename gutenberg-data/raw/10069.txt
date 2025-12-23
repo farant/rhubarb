@@ -1,0 +1,21 @@
+The file appears to be empty or has formatting issues. Based on the text you provided in your message, I can identify this work:
+
+This is "An Account of the Romansh Language" by Joseph Planta, published in the Philosophical Transactions of the Royal Society in 1776 (as noted in the handwritten annotation "Phil. Trans. vol LXVI. A.D. 1776"). The letter is dated June 30, 1775, but was published in the Transactions in 1776.
+
+Joseph Planta was a Fellow of the Royal Society (F.R.S.) and this is a scholarly letter describing the Romansh language spoken in the Grisons region (modern-day Graubünden, Switzerland).
+
+<result>
+Title = "An Account of the Romansh Language"
+Author = "Joseph Planta"
+Year = 1776
+
+Tags = ["non-fiction", "scholarly", "linguistics", "philology"]
+
+Summary = """
+A scholarly letter written by Joseph Planta, F.R.S., to Sir John Pringle, President of the Royal Society, describing the Romansh language spoken in the mountainous regions of the Grisons (Graubünden), Switzerland. The work provides a detailed philological account of this Romance language, including its two main dialects (Ladin and Cialover), their geographic distribution, and characteristics. The letter was occasioned by Count de Salis presenting a Bible translation in Romansh to the Royal Society. This is an important early systematic description of the Romansh language for an English-speaking scholarly audience.
+"""
+
+Notes = """
+The letter itself is dated June 30, 1775, but was published in the Philosophical Transactions of the Royal Society, volume LXVI, in 1776. I have used 1776 as the publication year since this represents when the work entered the scholarly record and became publicly available.
+"""
+</result>

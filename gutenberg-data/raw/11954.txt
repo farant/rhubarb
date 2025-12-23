@@ -1,0 +1,15 @@
+<result>
+Title = "History of France, Volume IV"
+Author = "François Guizot"
+Year = 1872
+
+Tags = ["non-fiction", "history", "catholic"]
+
+Summary = """
+This is Volume IV of François Guizot's comprehensive "History of France" (Histoire de France), covering the tumultuous period from the reign of Francis I through Henry III (roughly 1515-1589). This volume focuses on major themes including the rivalry between Francis I and Charles V, the French Renaissance, the Protestant Reformation's impact on France, and the devastating French Wars of Religion. Guizot examines the reigns of Francis I, Henry II, Francis II, Charles IX, and Henry III, with particular attention to the religious conflicts between Catholics and Huguenots that nearly tore France apart in the latter half of the 16th century. The work includes detailed accounts of key figures like Mary Stuart, the Duke of Guise, and Diana de Poitiers.
+"""
+
+Notes = """
+François Guizot (1787-1874) was a French historian, orator, and statesman who served as Prime Minister under King Louis-Philippe. His multi-volume "History of France" was originally published in French and translated into English in the 1870s. I've chosen 1872 as the publication year for this English translation, though the French original may have appeared slightly earlier. Guizot was a Protestant in a Catholic country, but his historical work is considered balanced and scholarly, earning respect across confessional lines. While he was not Catholic himself, his rigorous historical approach and the deeply Catholic subject matter of 16th century France make this work valuable for understanding French Catholic history during the Reformation era.
+"""
+</result>

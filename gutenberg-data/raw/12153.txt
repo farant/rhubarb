@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is "The Understudy" by W.W. Jacobs, which is part of his collection "Night Watches." W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author known for his humorous short stories about dockside and seafaring life, as well as his famous horror story "The Monkey's Paw."
+
+"Night Watches" was published in 1914, and "The Understudy" is Part 3 of that collection. This is a lighthearted tale typical of Jacobs' humorous maritime fiction, featuring a night-watchman narrator - a recurring character type in many of his stories.
+
+<result>
+Title = "The Understudy"
+Author = "W.W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Understudy' is a short story by W.W. Jacobs, part of his 1914 collection 'Night Watches.' Jacobs was a popular English author known for his humorous tales of dockside and seafaring life. This story features one of his characteristic night-watchman narrators and revolves around maritime humor, in this case involving a troublesome dog left aboard a ship. Jacobs' work is characterized by its gentle humor, working-class characters, and vivid depictions of life around the London docks and English waterways. While he's best remembered today for his horror story 'The Monkey's Paw,' the bulk of his work consisted of these lighthearted maritime tales.
+"""
+
+Notes = """
+The year 1914 reflects the original publication date of the 'Night Watches' collection. W.W. Jacobs was not a Catholic author - he was an English writer of the late Victorian and Edwardian period writing secular humorous fiction.
+"""
+</result>

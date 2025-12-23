@@ -1,0 +1,17 @@
+I recognize this work! "Penrod and Sam" is a beloved novel by Booth Tarkington, one of the sequels in his Penrod series about a mischievous American boy growing up in the early 20th century.
+
+<result>
+Title = "Penrod and Sam"
+Author = "Booth Tarkington"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Penrod and Sam" is the second book in Booth Tarkington's Penrod series, following the adventures of young Penrod Schofield and his best friend Sam Williams in a fictional Midwestern town during the early 1900s. The novel chronicles their imaginative play, childhood schemes, and the humorous troubles they get into, capturing the spirit of American boyhood in that era. Tarkington won the Pulitzer Prize for Fiction twice (though not for the Penrod books), and this series became one of the most popular depictions of American youth in early 20th century literature. The stories are episodic in nature, following the boys through various adventures and misadventures that will be familiar to anyone who remembers the creative chaos of childhood.
+"""
+
+Notes = """
+"Penrod and Sam" was first published in 1916, following the original "Penrod" (1914). This is a straightforward case - it's the original publication year of the novel itself. The book was extremely popular in its time and represents an important slice of American life and childhood in the pre-WWI era.
+"""
+</result>

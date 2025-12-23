@@ -1,0 +1,15 @@
+<result>
+Title = "The Visits of Elizabeth"
+Author = "Elinor Glyn"
+Year = 1900
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Visits of Elizabeth" is an epistolary novel by British author Elinor Glyn, presented as a series of letters written by a young woman named Elizabeth to her mother. The book chronicles Elizabeth's visits to various country estates and social gatherings in late Victorian/Edwardian England, offering witty observations on aristocratic society, manners, and social customs of the time. Written in a light, humorous style, it provides satirical commentary on the British upper classes through the naive yet perceptive eyes of its young protagonist. The novel was Glyn's debut work and established her reputation as a society novelist before she became more famous for her later, more controversial romantic fiction.
+"""
+
+Notes = """
+The book was first published in 1900, though this Project Gutenberg edition indicates it's from the 22nd edition published in 1901 (Cambridge, U.S.A.). I've chosen 1900 as the publication year since that represents the original publication date when the work first appeared and entered the literary landscape.
+"""
+</result>

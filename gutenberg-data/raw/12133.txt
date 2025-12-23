@@ -1,0 +1,17 @@
+I recognize this work! This is W.W. Jacobs's famous collection of short stories, *The Lady of the Barge*, which is most renowned for containing "The Monkey's Paw" - one of the most famous horror short stories in English literature.
+
+<result>
+Title = "The Lady of the Barge and Other Stories"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "short-stories", "horror", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by English author W.W. Jacobs, first published in 1902. The collection is most famous for "The Monkey's Paw," a supernatural horror story about a magical talisman that grants three wishes with terrible consequences. The collection includes twelve stories in total, mixing horror, humor, and drama. Jacobs was primarily known for his humorous maritime tales and stories of dockside life, though "The Monkey's Paw" has become his most enduring and widely-anthologized work. The stories blend Jacobs's characteristic wit with darker themes, showcasing his range as a storyteller.
+"""
+
+Notes = """
+I chose 1902 as this is the original publication year of the collection by Harper & Brothers. While this Project Gutenberg edition shows 1911 (likely a reprint date), the work's historical and literary significance is tied to its 1902 first publication. "The Monkey's Paw" has been adapted countless times for stage, radio, film, and television since its publication.
+"""
+</result>

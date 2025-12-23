@@ -1,0 +1,15 @@
+<result>
+Title = "Rumpelstiltskin"
+Author = "The Brothers Grimm"
+Year = 1812
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Rumpelstiltskin is one of the most famous fairy tales collected by Jacob and Wilhelm Grimm (the Brothers Grimm). The story tells of a miller's daughter who is forced to spin straw into gold with the help of a mysterious imp-like creature named Rumpelstiltskin. In exchange for his magical assistance, he demands her firstborn child unless she can guess his name. The tale explores themes of deals with supernatural beings, the power of names, and cleverness triumphing over seemingly impossible situations. It has become a quintessential example of German folklore and remains widely adapted and retold across cultures.
+"""
+
+Notes = """
+The Brothers Grimm first published their collection "Kinder- und Hausmärchen" (Children's and Household Tales) in 1812, which included Rumpelstiltskin. While the tale has roots in older oral traditions, 1812 marks the year of its first scholarly publication and is the most historically significant date for this work. The Grimms collected and edited traditional folk tales rather than authoring them originally, but they are credited as the authors who preserved and popularized these stories.
+"""
+</result>

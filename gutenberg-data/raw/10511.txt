@@ -1,0 +1,19 @@
+I recognize this work from the Project Gutenberg metadata and the details provided. Let me analyze this text:
+
+This is "A Rogue by Compulsion: An Affair of the Secret Service" by Victor Bridges, published in 1915. Victor Bridges was a British author who wrote adventure and thriller novels in the early 20th century. This appears to be an adventure/spy thriller novel, given the subtitle "An Affair of the Secret Service" and chapter titles suggesting escape and intrigue.
+
+<result>
+Title = "A Rogue by Compulsion: An Affair of the Secret Service"
+Author = "Victor Bridges"
+Year = 1915
+
+Tags = ["fiction", "adventure", "thriller", "spy-fiction"]
+
+Summary = """
+'A Rogue by Compulsion' is an early 20th-century British adventure thriller by Victor Bridges. The novel follows a protagonist who appears to be on the run, as suggested by chapter titles like "A Bolt for Freedom" and "A Dubious Refuge." Set against the backdrop of secret service operations, the story involves espionage, escape, and intrigue typical of pre-WWI British adventure fiction. Victor Bridges was known for writing popular adventure novels during this period, and this work exemplifies the thriller genre of the era with its focus on secret service affairs and dramatic situations.
+"""
+
+Notes = """
+The publication year of 1915 is clearly stated on the title page. This was published during World War I, when spy fiction and secret service stories were particularly popular in Britain. The book includes illustrations by John H. Cassel and was dedicated to Hughes Massie, who was likely Bridges' literary agent.
+"""
+</result>

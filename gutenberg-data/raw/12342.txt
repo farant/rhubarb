@@ -1,0 +1,15 @@
+<result>
+Title = "The Nuttall Encyclopædia"
+Author = "James Wood"
+Year = 1900
+
+Tags = ["non-fiction", "reference"]
+
+Summary = """
+The Nuttall Encyclopædia is a concise general reference work edited by Rev. James Wood, containing over 16,000 articles covering history, biography, geography, literature, philosophy, religion, science, and art. It was designed as an affordable alternative to larger encyclopedias, providing condensed information for ordinary reference needs. The work was quite popular in its time, going through numerous editions and printings.
+"""
+
+Notes = """
+The edition shown is from 1907 (the sixty-first thousand printing), but The Nuttall Encyclopædia was first published around 1900. I've chosen 1900 as the year since that represents when this reference work was originally compiled and published, which is most relevant for a historical timeline. The work went through many editions and reprints in the early 20th century, indicating its popularity as a reference source.
+"""
+</result>

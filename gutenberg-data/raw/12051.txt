@@ -1,0 +1,17 @@
+I can identify this work from the text provided. This is Jules Verne's adventure novel about a young sailor who must take command of a ship.
+
+<result>
+Title = "Dick Sand; or, a Captain at Fifteen"
+Author = "Jules Verne"
+Year = 1878
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+Dick Sand; or, a Captain at Fifteen (Un capitaine de quinze ans) is an adventure novel by Jules Verne about a fifteen-year-old boy who must take command of a whaling ship after the captain and crew are lost. The story follows Dick Sand's leadership as he navigates dangers including shipwreck survivors, treachery, and the horrors of the African slave trade. The novel combines Verne's typical adventure elements with a strong anti-slavery message and educational content about African geography and wildlife. It's considered one of Verne's more socially conscious works, directly addressing the evils of slavery and colonialism.
+"""
+
+Notes = """
+The year 1878 reflects the original French publication date. The redactor's note indicates this American translation (by George Munro) appeared the same year as the French original, and notes that American translations were often freer from the religious and colonial bias inserted by English translators like Ellen E. Frewer. While Verne was culturally Catholic (born in Nantes, France), his works are generally secular adventure fiction rather than explicitly Catholic literature, so the 'catholic' tag is not applied.
+"""
+</result>

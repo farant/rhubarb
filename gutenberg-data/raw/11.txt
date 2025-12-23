@@ -1,0 +1,15 @@
+<result>
+Title = "Alice's Adventures in Wonderland"
+Author = "Lewis Carroll"
+Year = 1865
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Alice's Adventures in Wonderland is a classic children's fantasy novel written by English author Charles Lutwidge Dodgson under the pseudonym Lewis Carroll. The story follows young Alice as she falls down a rabbit hole into a fantastical underground world populated by peculiar anthropomorphic creatures. The tale is famous for its imaginative narrative, wordplay, logic puzzles, and whimsical characters including the White Rabbit, the Cheshire Cat, the Mad Hatter, and the Queen of Hearts. Originally told to Alice Liddell and her sisters during a boat trip, it became one of the most influential works of children's literature and has never been out of print since its original publication.
+"""
+
+Notes = """
+The work was first published by Macmillan on November 26, 1865, though it is commonly dated to 1865. Carroll (a mathematics lecturer at Christ Church, Oxford) originally wrote it as "Alice's Adventures Under Ground" in 1864 as a handwritten manuscript gift for Alice Liddell. The published version was expanded and illustrated by John Tenniel. While Carroll was Anglican (not Catholic), the work is appropriate for children and has been widely read across all Christian traditions. The Project Gutenberg text indicates this is "The Millennium Fulcrum Edition 3.0."
+"""
+</result>

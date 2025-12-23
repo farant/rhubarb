@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This appears to be an art history monograph about the Venetian Renaissance painter Titian, written by Claude Phillips, who was the Keeper of the Wallace Collection. Based on the title page, this is "The Later Work of Titian" published in 1898.
+
+<result>
+Title = "The Later Work of Titian"
+Author = "Claude Phillips"
+Year = 1898
+
+Tags = ["non-fiction", "art-history"]
+
+Summary = """
+This is an art historical monograph examining the later period of Titian's artistic career. Titian (Tiziano Vecellio, c. 1488/90-1576) was one of the most important painters of the Venetian Renaissance, known for his mastery of color and his influential portraits, religious subjects, and mythological scenes. Claude Phillips, as Keeper of the Wallace Collection in London, was a prominent art historian and critic of the late Victorian period. This work focuses specifically on Titian's mature and late style, which represented some of his most innovative and expressive painting. The book includes illustrations of Titian's works, including his self-portrait and portraits of family members.
+"""
+
+Notes = """
+1898 is the publication year clearly stated on the title page. This is a scholarly art history text from the late Victorian period when systematic art historical study was becoming established as an academic discipline. Not tagged as 'appropriate-for-children' as it is a specialized academic monograph. Not tagged as 'catholic' despite Titian painting many religious subjects, as this is a secular art historical analysis rather than a devotional or theological work by a Catholic author.
+"""
+</result>

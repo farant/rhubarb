@@ -1,0 +1,17 @@
+I'll read through this text to identify the work and gather the information you need.
+
+This is clearly "Sex and Common-Sense" by A. Maude Royden. The title and author are explicitly stated on the title page. Let me provide the structured information:
+
+<result>
+Title = "Sex and Common-Sense"
+Author = "A. Maude Royden"
+Year = 1921
+
+Tags = ["non-fiction"]
+
+Summary = """
+A progressive work on human sexuality and relationships written in the early 20th century by A. Maude Royden, a pioneering Anglican preacher and suffragist. The book addresses the "sex problem" from a moral and social perspective, arguing that sexuality is a noble rather than shameful aspect of human nature. Royden advocates for open, honest discussion of sex and relationships, moving beyond the "furtive whispers" and taboos of Victorian-era attitudes. The work reflects the post-World War I era's questioning of traditional sexual mores and seeks to establish a framework for understanding normal human sexuality within an ethical context."""
+
+Notes = """
+The preface indicates this is an American edition published after her time as Assistant Preacher at the City Temple, London (1918-1920), suggesting a publication date of 1921. A. Maude Royden (1876-1956) was a prominent Anglican lay preacher, suffragist, and social reformer. While she was Christian and progressive in her theological views, this work is not specifically Catholic and would not have received a nihil obstat or imprimatur, so the 'catholic' tag is not included."""
+</result>

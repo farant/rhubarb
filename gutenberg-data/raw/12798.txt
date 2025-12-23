@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "By Rock and Pool: On an Austral Shore" by Louis Becke, a collection of Pacific tales and sketches. Louis Becke (1855-1913) was an Australian writer known for his short stories about life in the Pacific Islands. Based on the publisher information (New Amsterdam Book Company, MCMI = 1901), this collection was published in 1901.
+
+<result>
+Title = "By Rock and Pool: On an Austral Shore"
+Author = "Louis Becke"
+Year = 1901
+
+Tags = ["fiction", "short-stories", "pacific-islands", "australian-literature"]
+
+Summary = """
+A collection of short stories and sketches by Louis Becke, an Australian author who spent much of his life in the Pacific Islands. The collection includes tales such as "Solepa," "The Fisher Folk of Nukufetau," "Mrs. Maclaggan's Billy," and "An Island Memory." Becke was known for his vivid portrayals of island life, drawing on his personal experiences as a trader and adventurer in the South Pacific. His works typically feature themes of colonial life, interactions between Europeans and Pacific Islanders, and the natural beauty and harsh realities of island existence.
+"""
+
+Notes = """
+Year is based on the publication date indicated by the Roman numerals MCMI (1901) on the title page. Louis Becke was a prolific writer in the late 19th and early 20th centuries, and this collection represents his characteristic style of Pacific Island tales. The work is not categorized as "appropriate-for-children" as Becke's stories often dealt with adult themes and the sometimes harsh realities of colonial Pacific life.
+"""
+</result>

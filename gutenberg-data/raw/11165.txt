@@ -1,0 +1,15 @@
+<result>
+Title = "Wild Wings: A Romance of Youth"
+Author = "Margaret Rebecca Piper"
+Year = 1921
+
+Tags = ["fiction", "romance", "appropriate-for-children"]
+
+Summary = """
+"Wild Wings: A Romance of Youth" is a novel by Margaret Rebecca Piper, published in 1921. Based on the chapter titles, this appears to be a romantic coming-of-age story following characters named Tony, Rosalind, Teddy, and Phil. The narrative involves youthful romance, discoveries, and emotional developments, with chapter titles suggesting drama, courtship, and relationship complications typical of early 20th-century romantic fiction. The subtitle "A Romance of Youth" and chapter titles like "When Youth Meets Youth" and "A Shadow on the Path" indicate themes of young love and the challenges faced by young people navigating relationships.
+"""
+
+Notes = """
+The year 1921 is clearly stated in the Project Gutenberg text itself, which appears to be the original publication date. Margaret Rebecca Piper was an American author who wrote popular romantic fiction in the early 20th century. This work is not by a Catholic author and would not qualify for the 'catholic' tag.
+"""
+</result>

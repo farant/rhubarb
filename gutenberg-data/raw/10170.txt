@@ -1,0 +1,15 @@
+<result>
+Title = "Stars and Stripes Forever"
+Author = "John Philip Sousa"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of "Stars and Stripes Forever," John Philip Sousa's most famous march composition, performed by Sousa's Band. The recording was edited by Thomas A. Edison and is taken from the Edison National Historic Site. "Stars and Stripes Forever" is one of the most recognizable American patriotic marches and was officially designated as the National March of the United States in 1987. The composition has become synonymous with American patriotic celebrations and military ceremonies.
+"""
+
+Notes = """
+The march was composed by John Philip Sousa in 1896 and first performed in 1897, which is the year I've chosen as it represents when the work entered public consciousness. This particular recording is a later historical document from Edison's collection, but the composition itself dates to 1897. The work is purely instrumental music without any religious or doctrinal content, so it does not receive the 'catholic' tag despite being appropriate for general audiences.
+"""
+</result>

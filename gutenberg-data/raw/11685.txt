@@ -1,0 +1,21 @@
+The file appears empty. Let me check if there's more content in the message you sent, as you included the text directly. Based on what you provided:
+
+This is **"L'Endimione"** (Endymion) by **Pietro Metastasio**, an Italian poet and librettist. This is a dramatic work (dramma per musica/opera libretto) featuring Diana, Endymion, Cupid (disguised as Alceste), and Nice as characters. 
+
+Metastasio (1698-1782) was one of the most important opera librettists of the 18th century. "L'Endimione" was written in **1721** and was one of his earlier works. It's based on the classical myth of Endymion, the shepherd loved by the moon goddess Diana (Selene in Greek mythology).
+
+<result>
+Title = "L'Endimione"
+Author = "Pietro Metastasio"
+Year = 1721
+
+Tags = ["fiction", "drama", "opera-libretto", "mythology", "appropriate-for-children", "catholic"]
+
+Summary = """
+L'Endimione is an opera libretto (dramma per musica) by Pietro Metastasio, one of the most celebrated Italian poets and librettists of the 18th century. The work dramatizes the classical myth of Endymion, the beautiful shepherd loved by Diana (the moon goddess). The libretto features Diana, Endymion, Cupid (disguised as the hunter Alceste), and Nice (Diana's companion) as interlocutors. Set on Mount Latmos in Caria, it explores themes of divine love, mortal beauty, and the conflicts between chastity and desire. Metastasio's elegant verse and dramatic structure made his librettos extremely popular throughout Europe in the 18th century, and his works were set to music by numerous composers.
+"""
+
+Notes = """
+Year chosen is 1721, when Metastasio wrote this work as a young poet. This was one of his earlier dramatic compositions before he became poet laureate to the Imperial Court in Vienna. Metastasio was Catholic and his works, while based on classical mythology, were written within the cultural context of Catholic Europe and would have been considered morally acceptable entertainment. The dramatic/poetic nature makes it generally appropriate for older children, though it's primarily adult sophisticated entertainment.
+"""
+</result>

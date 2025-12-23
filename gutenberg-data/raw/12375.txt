@@ -1,0 +1,15 @@
+<result>
+Title = "Masters of Space: Morse and the Telegraph, Thompson and the Cable, Bell and the Telephone, Marconi and the Wireless Telegraph, Carty and the Wireless Telephone"
+Author = "Walter Kellogg Towers"
+Year = 1917
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a popular science and biographical work written for young readers that chronicles the development of electrical communication technologies in the 19th and early 20th centuries. The book profiles five major figures in telecommunications history: Samuel Morse (telegraph), William Thompson/Lord Kelvin (transatlantic cable), Alexander Graham Bell (telephone), Guglielmo Marconi (wireless telegraph/radio), and John J. Carty (wireless telephone). Written during World War I, it presents these inventors as heroic figures who conquered space through their innovations in communication technology. The work is educational and inspirational in tone, designed to introduce young people to scientific achievement and the history of modern telecommunications.
+"""
+
+Notes = """
+The year 1917 is clearly stated in the frontmatter and represents the original publication date. This was published during WWI, which likely influenced the book's themes about conquering distance and connecting the world. The dedication to the author's wife Berenice Laura Towers indicates she assisted with research and preparation.
+"""
+</result>

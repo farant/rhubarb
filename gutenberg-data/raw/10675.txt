@@ -1,0 +1,17 @@
+I recognize this work! Let me analyze the text to provide you with the structured information.
+
+<result>
+Title = "Pebbles on the Shore"
+Author = "A. G. Gardiner"
+Year = 1916
+
+Tags = ["non-fiction", "essays", "appropriate-for-children"]
+
+Summary = """
+'Pebbles on the Shore' is a collection of essays written by A. G. Gardiner under the pen name "Alpha of the Plough" during World War I. The essays originally appeared as part of a causerie (informal discussion column) in The Star newspaper, where several contributors wrote under constellation-themed pseudonyms. After the other contributors departed (including "Arcturus" who went to the battlefield), Gardiner continued alone. The book represents an "informal diary of moods in a time of peril," offering reflections on everyday life, human nature, and personal observations during wartime. The essays are characterized by their gentle, contemplative style and accessibility.
+"""
+
+Notes = """
+The year 1916 is clearly stated in the text itself and represents the original publication date. A. G. Gardiner (Alfred George Gardiner, 1865-1946) was a prominent British journalist and editor who served as editor of the Daily News. His "Alpha of the Plough" essays became very popular for their warmth, humor, and humanity during the difficult war years. The pen name itself is a clever play on "A. G." (his initials) and the first letter of the Greek alphabet, combined with a humble agricultural reference.
+"""
+</result>

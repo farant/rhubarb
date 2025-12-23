@@ -1,0 +1,23 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the structured information you requested.
+
+This is clearly a collection of letters written by Jean-François Champollion (known as "Champollion le Jeune" or "Champollion the Younger") during his famous expedition to Egypt and Nubia in 1828-1829. Champollion was the renowned French scholar who deciphered Egyptian hieroglyphics using the Rosetta Stone.
+
+The text shows this is from the 1868 edition, with an introduction (Avertissement) written by his daughter explaining that these letters were originally sent to his brother and published in part in the _Moniteur universel_ during the voyage. After Champollion's early death in 1832, his brother Champollion-Figeac published a first edition in 1833, and this is a subsequent edition from 1868.
+
+The letters document Champollion's observations and impressions of Egyptian monuments and civilization during his groundbreaking archaeological expedition. The work is historically significant as it represents the firsthand observations of the father of Egyptology during his only trip to Egypt.
+
+<result>
+Title = "Lettres écrites d'Égypte et de Nubie en 1828 et 1829"
+Author = "Jean-François Champollion (Champollion le Jeune)"
+Year = 1833
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+A collection of letters written by Jean-François Champollion, the French scholar who deciphered Egyptian hieroglyphics, during his expedition to Egypt and Nubia in 1828-1829. These letters document his firsthand observations of ancient Egyptian monuments and civilization, written as daily impressions during his archaeological mission. Champollion collected artifacts that formed the foundation of the Egyptian collection at the Louvre Museum. The letters were originally sent to his brother and partially published in the Moniteur universel during the expedition. This work remains an important primary source for Egyptology, representing the observations of the founder of the field during his only visit to Egypt before his untimely death in 1832 at a young age.
+"""
+
+Notes = """
+The year 1833 represents the first book publication by his brother Champollion-Figeac, though the letters themselves were written in 1828-1829 and some appeared in newspapers during that time. The 1833 date is chosen as it marks when the complete collection became available as a unified work. This Gutenberg text is from an 1868 reprint edition. Champollion was Catholic, and this work represents serious scholarly and historical writing that would be appropriate for the "catholic" tag as a work by a Catholic scholar, though it is primarily scientific/archaeological rather than religious in nature.
+"""
+</result>

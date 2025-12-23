@@ -1,0 +1,19 @@
+<result>
+Title = "The History of the Rise, Progress, and Accomplishment of the Abolition of the Slave-Trade, by the British Parliament"
+Author = "Thomas Clarkson"
+Year = 1808
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Thomas Clarkson's comprehensive historical account of the British abolitionist movement that led to the prohibition of the slave trade by the British Parliament in 1807. Clarkson was one of the leading figures in the abolitionist movement, working alongside William Wilberforce and others. This work documents the decades-long campaign, including the formation of the Society for Effecting the Abolition of the Slave Trade in 1787, the political battles in Parliament, the gathering of evidence about the horrors of the slave trade, and the eventual passage of the Slave Trade Act of 1807. The book serves as both a historical record and a firsthand account from one of the movement's primary activists.
+"""
+
+Notes = """
+The title page shows 1839, which appears to be a later edition. However, the original work was first published in 1808, immediately following the successful passage of the Slave Trade Act of 1807. Since this is a historical account of events culminating in 1807, and the original publication was 1808, I've used 1808 as the year - this represents the first publication date and is most historically significant for understanding when this account entered the public record. The 1839 date likely represents a reprint or revised edition.
+
+Not tagged as 'catholic' as Clarkson was a Quaker and Anglican, not Catholic, though the abolitionist cause aligned with Christian moral principles broadly.
+
+Not tagged as 'appropriate-for-children' due to the serious and potentially disturbing subject matter regarding slavery, though it contains no gratuitous descriptions.
+"""
+</result>

@@ -1,0 +1,19 @@
+The file appears to be empty or not yet downloaded. However, based on the text snippet you provided in your message, I can identify this work:
+
+The text is clearly "Young Robin Hood" by G. Manville Fenn. This is a children's adventure novel that reimagines the Robin Hood legend focusing on Robin's childhood. G. Manville Fenn (1831-1909) was a prolific English writer of boys' adventure stories.
+
+<result>
+Title = "Young Robin Hood"
+Author = "G. Manville Fenn"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+Young Robin Hood is a children's adventure novel by G. Manville Fenn that reimagines the legendary outlaw Robin Hood's childhood and early years. The story follows a young boy named Robin through various adventures in medieval England, showing how he might have developed the skills and character that would later make him the famous outlaw of Sherwood Forest. Fenn was a prolific Victorian author who specialized in adventure stories for boys, and this work combines historical setting with imaginative storytelling suitable for young readers.
+"""
+
+Notes = """
+Published around 1899. G. Manville Fenn (1831-1909) was an extremely prolific English novelist, journalist, and short story writer who specialized in adventure fiction for boys during the Victorian era. This work takes the Robin Hood legend and creates an origin story appropriate for children, focusing on adventure and character development rather than the darker elements of outlaw life.
+"""
+</result>

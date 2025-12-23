@@ -1,0 +1,17 @@
+I see the file appears to only have the content you pasted. Based on what you've provided, I can identify this work:
+
+<result>
+Title = "Old and New Masters"
+Author = "Robert Lynd"
+Year = 1919
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+'Old and New Masters' is a collection of literary essays by Irish critic and essayist Robert Lynd, examining various writers spanning centuries - from medieval poet François Villon to contemporary figures like W.B. Yeats, Bernard Shaw, and G.K. Chesterton. The book includes critical appreciations of major authors including Dostoevsky, Jane Austen, Wordsworth, Keats, Browning, Henry James, Turgenev, Tchehov (Chekhov), and others. Lynd was known for his accessible, humanistic approach to literary criticism, focusing on personality and character alongside artistic achievement.
+"""
+
+Notes = """
+The year 1919 is clearly stated on the title page. Robert Lynd (1879-1949) was a prominent Irish journalist, essayist, and literary critic who wrote for publications like The New Statesman. This collection represents criticism contemporary to the modernist period, offering perspectives on both established classics and then-modern writers. The dedication is to Sylvia Lynd, who was also a writer and his wife.
+"""
+</result>

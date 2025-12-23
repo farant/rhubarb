@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "Taquisara" by F. Marion Crawford, published in 1895 as indicated in the text itself. Crawford was an American novelist who lived much of his life in Italy and wrote prolifically about Italian society and culture.
+
+<result>
+Title = "Taquisara"
+Author = "F. Marion Crawford"
+Year = 1895
+
+Tags = ["fiction", "romance", "historical-fiction"]
+
+Summary = """
+Taquisara is a novel by F. Marion Crawford set in Italy, dealing with Italian aristocratic society in the late 19th century. Crawford was an American expatriate author who specialized in Italian settings and characters. The novel opens with Princess Veronica Serra signing what appears to be a will, setting up a story that likely involves intrigue, romance, and the complexities of Italian noble life. Crawford was known for his detailed portrayals of Italian culture and society, and his works were immensely popular during his lifetime.
+"""
+
+Notes = """
+The year 1895 is explicitly stated on the title page of the work. F. Marion Crawford (1854-1909) was not Catholic himself (he was raised in various Protestant traditions), so this does not receive a 'catholic' tag despite the Italian Catholic cultural setting. The work is adult fiction dealing with themes of inheritance, society, and likely romance, so it does not receive an 'appropriate-for-children' tag.
+"""
+</result>

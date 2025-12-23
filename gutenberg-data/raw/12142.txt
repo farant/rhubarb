@@ -1,0 +1,17 @@
+Based on the excerpt you provided, I can clearly identify this work. This is a biography of Laurence Sterne written by H.D. Traill (Henry Duff Traill), published in 1882. The text is from the prefatory note of this biographical work about the famous 18th-century novelist who wrote "Tristram Shandy" and "A Sentimental Journey."
+
+<result>
+Title = "Sterne"
+Author = "H.D. Traill"
+Year = 1882
+
+Tags = ["non-fiction", "biography", "literary-criticism"]
+
+Summary = """
+This is a biography of Laurence Sterne (1713-1768), the celebrated English novelist and Anglican clergyman best known for his innovative novel 'The Life and Opinions of Tristram Shandy, Gentleman' and 'A Sentimental Journey Through France and Italy'. Written by H.D. Traill (Henry Duff Traill, 1842-1900), a British journalist, scholar, and man of letters, this work was part of the English Men of Letters series. The biography examines Sterne's life from his sparse autobiographical materials and letters, as Traill notes that materials for Sterne's biography were scarce, with most information coming from Sterne's own brief memoir written shortly before his death and his collected correspondence. The work provides both biographical detail and literary criticism of Sterne's distinctive style and contributions to English literature.
+"""
+
+Notes = """
+The year 1882 is clearly stated on the title page. This is a scholarly biography, not a work by a Catholic author. H.D. Traill was a prominent Victorian literary figure who contributed to various biographical series. The work is notable for being one of the more substantial early biographies of Sterne, as Traill mentions that Percy Fitzgerald's two-volume work from around 1864 was perhaps the first comprehensive Life of Sterne.
+"""
+</result>

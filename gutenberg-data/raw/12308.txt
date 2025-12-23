@@ -1,0 +1,15 @@
+<result>
+Title = "Winning His Spurs: A Tale of the Crusades"
+Author = "G. A. Henty"
+Year = 1882
+
+Tags = ["fiction", "historical-fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+"Winning His Spurs" is a historical adventure novel by G. A. Henty set during the time of the Third Crusade (1189-1192) and the reign of King Richard I of England. The story follows a young protagonist who earns his knighthood through courage and service during the Crusades and later adventures in England. Henty was a prolific Victorian-era author known for writing historically-based adventure novels for young readers, particularly boys, which combined exciting narratives with educational content about historical periods and events. His works typically featured young heroes who demonstrated virtues such as courage, loyalty, and honor while participating in significant historical events.
+"""
+
+Notes = """
+The copyright page shows 1895, but this appears to be a reprint or later edition. "Winning His Spurs" was originally published in 1882. G. A. Henty (1832-1902) was an extremely prolific author who wrote over 140 books, most of them historical adventures aimed at young readers. His works were designed to teach history and moral values through exciting adventure stories. The novel deals with the Third Crusade and King Richard I's return to England, touching on events like Richard's captivity and ransom. While Henty was writing for a Christian Victorian audience and his works contain period-appropriate religious and moral themes, this is adventure fiction rather than devotional literature, so I have not tagged it as 'catholic' despite its Crusades setting.
+"""
+</result>

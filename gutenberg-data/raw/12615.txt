@@ -1,0 +1,13 @@
+<result>
+Title = "The Song of our Syrian Guest"
+Author = "William Allen Knight"
+Year = 1904
+
+Tags = ["non-fiction", "religious", "biblical-commentary", "appropriate-for-children", "christian"]
+
+Summary = """
+"The Song of our Syrian Guest" is a devotional meditation on Psalm 23 ("The Lord is my shepherd") by William Allen Knight, published in 1904 with illustrations by Charles Copeland. The work interprets and reflects on this beloved psalm from the perspective of understanding ancient Syrian/Near Eastern shepherd culture and customs. Knight uses this cultural lens to illuminate the deeper meanings of the psalm's imagery for contemporary Christian readers. The book became quite popular as a devotional text and gift book in the early 20th century, helping readers understand the pastoral metaphors of Psalm 23 in their original cultural context."""
+
+Notes = """
+The year 1904 is clearly stated on the title page as the publication date of this specific work by Knight. While the work is a meditation on Psalm 23 (an ancient biblical text), this is Knight's original 20th-century devotional commentary rather than a historical document itself, so 1904 is the appropriate year. Not tagged as "catholic" since Knight appears to have been a Protestant author writing for a general Christian audience, though the content would likely be acceptable to Catholic readers as it is biblical meditation."""
+</result>

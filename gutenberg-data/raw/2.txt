@@ -1,0 +1,15 @@
+<result>
+Title = "The United States Bill of Rights"
+Author = "United States Congress"
+Year = 1791
+
+Tags = ["historical-document", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+The Bill of Rights comprises the first ten amendments to the United States Constitution. These amendments were proposed by James Madison and passed by Congress on September 25, 1789, then ratified by the states on December 15, 1791. They establish fundamental rights and civil liberties including freedom of religion, speech, press, assembly, the right to bear arms, protections against unreasonable search and seizure, rights of the accused in criminal prosecutions, and protections against self-incrimination and double jeopardy. The Bill of Rights was created to address concerns of Anti-Federalists who feared the original Constitution granted too much power to the federal government without sufficient protection of individual liberties.
+"""
+
+Notes = """
+I chose 1791 as the year since that is when the Bill of Rights was officially ratified and became part of the Constitution. While Congress passed these amendments in 1789, they did not have legal force until ratification by three-fourths of the states, which occurred on December 15, 1791. This is the historically significant date when these protections became constitutional law.
+"""
+</result>

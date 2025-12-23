@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The War and Democracy" - a collection of essays published in 1915 by multiple authors including R.W. Seton-Watson, J. Dover Wilson, Alfred E. Zimmern, and Arthur Greenwood. The work was dedicated to the Workers' Educational Association and was written during World War I to explain the democratic ideals at stake in the conflict.
+
+<result>
+Title = "The War and Democracy"
+Author = "R.W. Seton-Watson, J. Dover Wilson, Alfred E. Zimmern, Arthur Greenwood"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+'The War and Democracy' is a collection of essays written during World War I that examines the conflict through the lens of democratic principles and national self-determination. Published in 1915 and dedicated to the Workers' Educational Association, the work argues that the war represented a struggle between democratic and autocratic principles. The authors analyze the war's causes, the peoples and nations involved, and the reshaping of Europe that would be necessary after the conflict. The book reflects the progressive intellectual thought of early 20th century Britain and incorporates ideas from democratic reformers like Mazzini about national self-determination and the rights of peoples versus monarchies.
+"""
+
+Notes = """
+The year 1915 is straightforward as this is when the work was originally published during the First World War. This is not a reprint or translation but an original contemporary analysis of the ongoing conflict. The dedication to the Workers' Educational Association reflects the authors' commitment to popular education and democratic ideals.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Washington and His Colleagues: A Chronicle of the Rise and Fall of Federalism" by Henry Jones Ford, published in 1918 as part of the Yale University Press's Chronicles of America Series.
+
+<result>
+Title = "Washington and His Colleagues: A Chronicle of the Rise and Fall of Federalism"
+Author = "Henry Jones Ford"
+Year = 1918
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+This work is part of the Chronicles of America Series published by Yale University Press. Written by Henry Jones Ford, a distinguished political scientist and historian, the book examines the early years of the American republic under George Washington's presidency and the subsequent development and decline of the Federalist Party. It covers the formation of the federal government, major policy decisions, relations with foreign powers (particularly Britain, France, and the Barbary States), and the political conflicts that characterized the Federalist era through John Adams's presidency. Ford provides historical analysis of the crucial formative period of American government from Washington's inauguration through the transition to Jeffersonian democracy.
+"""
+
+Notes = """
+The publication year of 1918 is appropriate as this is when the work was originally published by Yale University Press as part of a comprehensive historical series. This is a scholarly historical work written in the early 20th century, not a primary source document from the Federalist era itself.
+"""
+</result>

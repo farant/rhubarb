@@ -1,0 +1,21 @@
+I can see from the text you provided that this is "The Open Door" by Margaret Oliphant (Margaret O. Wilson Oliphant). This is a famous Victorian ghost story, first published in 1881 as part of a collection called "Stories of the Seen and the Unseen."
+
+Margaret Oliphant (1828-1897) was a Scottish writer and historical novelist who produced over 120 works in her lifetime. "The Open Door" is considered one of her finest supernatural tales and is highly regarded in the ghost story genre.
+
+The story is about a family who moves to Brentwood house in Scotland, and their son Roland who begins to hear mysterious sounds coming from the ruins on the property - particularly the sound of someone crying "Oh, mother, let me in!" It's a compassionate ghost story with strong emotional resonance.
+
+<result>
+Title = "The Open Door, and The Portrait: Stories of the Seen and the Unseen"
+Author = "Margaret Oliphant"
+Year = 1881
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Open Door' is one of Margaret Oliphant's most famous supernatural tales, originally published in 1881 as part of 'Stories of the Seen and the Unseen.' The story follows a family returning from India who take up residence at Brentwood house in Scotland. Their son Roland, attending school in Edinburgh, becomes affected by mysterious sounds and apparitions connected to ruins on the property. The tale is notable for its compassionate treatment of the supernatural, focusing on a ghost seeking to be let in rather than terrorizing the living. Oliphant (1828-1897) was a prolific Scottish writer and historical novelist who produced over 120 works. This ghost story is considered one of her finest works and remains a classic of Victorian supernatural fiction.
+"""
+
+Notes = """
+1881 is the year of first publication for this collection. While Oliphant was Scottish and wrote during the Victorian era when many authors were at least nominally Christian, I have not tagged this as 'catholic' as she was Presbyterian rather than Catholic, and the work is Gothic fiction rather than explicitly religious literature.
+"""
+</result>

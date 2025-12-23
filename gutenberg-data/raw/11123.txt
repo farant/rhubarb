@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics of The Nineteenth and Twentieth Centuries, Volume I"
+Author = "Various"
+Year = 1913
+
+Tags = ["non-fiction", "anthology", "literary-criticism"]
+
+Summary = """
+This is the first volume of a comprehensive twenty-volume anthology series titled "The German Classics of The Nineteenth and Twentieth Centuries," published in 1913. The series was edited by Kuno Francke, a prominent German-American scholar who served as a professor at Harvard University. This particular volume contains a general introduction by Richard M. Meyer and a biography of Goethe by Calvin Thomas. The series aimed to make masterpieces of German literature accessible to English-speaking audiences through translations, covering major works from the 19th and early 20th centuries. The anthology represents an important scholarly effort to introduce German literary and cultural achievements to American readers during the pre-World War I period.
+"""
+
+Notes = """
+The publication year of 1913 is clearly stated on the title page. This is the year this anthology was published, not the year of the original German works contained within it. This was a significant multi-volume scholarly project that aimed to survey German literature for English readers. The editor, Kuno Francke (1855-1930), was a highly respected figure in German-American intellectual circles and helped establish German studies in America.
+"""
+</result>

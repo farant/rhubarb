@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly "Penelope's Experiences in Scotland" by Kate Douglas Wiggin. The text explicitly states it's from the 1913 Gay and Hancock edition. Kate Douglas Wiggin was an American author best known for "Rebecca of Sunnybrook Farm," and this work is part of her "Penelope" series of humorous travel narratives.
+
+<result>
+Title = "Penelope's Experiences in Scotland"
+Author = "Kate Douglas Wiggin"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children", "travel-humor"]
+
+Summary = """
+'Penelope's Experiences in Scotland' is a humorous travel narrative by Kate Douglas Wiggin, following the adventures of three American women—Penelope Hamilton, Francesca, and Salemina—as they explore Scotland. The book is divided into two parts: their experiences in Edinburgh (visiting Princes Street, Holyrood, attending church services, and experiencing Scottish society) and their adventures in the Scottish countryside (including stays in Fife and encounters with local characters). Written in Wiggin's characteristically witty and observant style, the book combines travelogue with gentle social commentary and romantic elements. It's part of Wiggin's popular "Penelope" series of travel books, which also included experiences in England and Ireland.
+"""
+
+Notes = """
+While the Project Gutenberg text indicates this is from a 1913 Gay and Hancock edition, 'Penelope's Experiences in Scotland' was originally published in 1898. This was the second book in Wiggin's Penelope series, following 'Penelope's English Experiences' (1893). For historical timeline purposes, 1898 represents when this work entered the literary landscape.
+"""
+</result>

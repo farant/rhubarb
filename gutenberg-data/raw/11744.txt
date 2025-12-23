@@ -1,0 +1,17 @@
+I recognize this as a historical/archaeological guide about Bibracte, the ancient Gallic oppidum on Mont Beuvray. This appears to be a 19th-century archaeological guide written in French, published in 1876 as indicated in the text itself. It was created by a member of the Société Éduenne for a scientific congress in Autun, based on notes and under the direction of J.-G. Bulliot, who explored Mont Beuvray.
+
+<result>
+Title = "L'Oppidum de Bibracte: Guide historique et archéologique au Mont Beuvray"
+Author = "J.-G. Bulliot (direction), Société Éduenne"
+Year = 1876
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a historical and archaeological guide to Mont Beuvray (ancient Bibracte), the capital of the Aedui tribe in ancient Gaul. Published for a scientific congress in Autun, it describes the archaeological exploration of this important Celtic oppidum mentioned by both Julius Caesar and Strabo. The guide presents the geography, fortifications, and historical significance of Bibracte, which was situated at a strategic location in central Gaul at the intersection of three major river basins (Loire, Seine, and Saône). The work is based on the archaeological investigations and notes of J.-G. Bulliot, who conducted excavations at the site.
+"""
+
+Notes = """
+The year 1876 is explicitly stated in the publication itself. This appears to be part of the early systematic archaeological exploration of Celtic Gaul sites in 19th-century France. The work references ancient sources including Caesar's Commentaries (referring to Bibracte as 'oppidum maximae auctoritatis') and Strabo's Geography ('Phrourion Bibrachta').
+"""
+</result>
