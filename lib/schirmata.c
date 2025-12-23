@@ -222,6 +222,10 @@ _schirmata_libro_tractare_eventum(
                     {
                         libro_pagina_prior(datum->libro);
                     }
+                    alioquin si (strcmp(link, "last") == ZEPHYRUM)
+                    {
+                        libro_pagina_ultima(datum->libro);
+                    }
                     alioquin si (link[ZEPHYRUM] >= '0' && link[ZEPHYRUM] <= '9')
                     {
                         s32 page_num = atoi(link) - I;

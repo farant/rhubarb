@@ -129,6 +129,15 @@ libro_pagina_prior(
     LibroPaginarum* libro);
 
 
+/* Navigare ad ultimam paginam (index maximus)
+ *
+ * libro: libro paginarum
+ */
+vacuum
+libro_pagina_ultima(
+    LibroPaginarum* libro);
+
+
 /* Navigare retro in historia
  *
  * libro: libro paginarum

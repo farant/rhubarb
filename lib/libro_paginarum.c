@@ -231,6 +231,22 @@ libro_pagina_prior(
 
 
 vacuum
+libro_pagina_ultima(
+    LibroPaginarum* libro)
+{
+    si (libro == NIHIL)
+    {
+        redde;
+    }
+
+    si (libro->numerus_paginarum > ZEPHYRUM)
+    {
+        libro_navigare_ad(libro, (s32)libro->numerus_paginarum - I);
+    }
+}
+
+
+vacuum
 libro_retro(
     LibroPaginarum* libro)
 {
