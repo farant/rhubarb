@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is a collection of plays by Alexander Ostrovsky, one of Russia's most important 19th-century dramatists. The specific plays included are clearly listed, and this appears to be an English translation edited by George Rapall Noyes, published in 1917.
+
+<result>
+Title = "Plays by Alexander Ostrovsky"
+Author = "Alexander Ostrovsky"
+Year = 1917
+
+Tags = ["non-fiction", "drama", "plays", "translation"]
+
+Summary = """
+This is a collection of four plays by Alexander Ostrovsky (1823-1886), the father of modern Russian realistic drama. The plays included are: 'A Protégée of the Mistress', 'Poverty Is No Crime', 'Sin and Sorrow Are Common to All', and 'It's a Family Affair--We'll Settle It Ourselves'. Ostrovsky was a prolific playwright who depicted Russian merchant class life with satirical precision and social commentary. This translation was edited by George Rapall Noyes and published in 1917, involving several collaborators including Leonard Bacon for verse translations and various translators for individual plays. Ostrovsky's works are considered foundational to Russian theatrical tradition and offer insights into 19th-century Russian society, particularly the merchant and middle classes.
+"""
+
+Notes = """
+I chose 1917 as the year because this is specifically a translated collection published that year, not the original Russian texts. The original plays by Ostrovsky were written in the mid-to-late 19th century (Ostrovsky lived 1823-1886), but since this is a specific English translation with substantial editorial work by George Rapall Noyes and multiple translators, the 1917 publication date is most appropriate for cataloging purposes. This represents when this particular English-language version became available.
+"""
+</result>

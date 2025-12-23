@@ -1,0 +1,15 @@
+<result>
+Title = "Johnny Crow's Garden"
+Author = "L. Leslie Brooke"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Johnny Crow's Garden" is a beloved children's picture book by British illustrator and author L. Leslie Brooke. It tells the whimsical story in verse of Johnny Crow, who makes a garden where various animals come to visit and engage in humorous activities. The book is known for its charming illustrations and playful rhyming text, with each animal doing something that rhymes with its name. It became a classic of early 20th century children's literature and was followed by sequels "Johnny Crow's Party" (1907) and "Johnny Crow's New Garden" (1935). The book exemplifies the golden age of illustrated children's books and has remained popular for its gentle humor and beautiful artwork.
+"""
+
+Notes = """
+First published in 1903 by Frederick Warne & Co. This is one of the earliest and most successful picture books in the modern sense, where illustrations and text work together as an integrated whole. L. Leslie Brooke (1862-1940) was one of the most important children's book illustrators of his era.
+"""
+</result>

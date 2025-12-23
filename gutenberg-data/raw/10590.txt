@@ -1,0 +1,17 @@
+I recognize this as a biography of Lady Mary Wortley Montagu, the famous 18th-century English aristocrat, letter-writer, and introducer of smallpox inoculation to England. This is a biographical work by Lewis Melville about her life and letters.
+
+<result>
+Title = "Lady Mary Wortley Montagu: Her Life and Letters (1689-1762)"
+Author = "Lewis Melville"
+Year = 1925
+
+Tags = ["non-fiction", "biography", "appropriate-for-children"]
+
+Summary = """
+This is a biographical work by Lewis Melville about Lady Mary Wortley Montagu (1689-1762), a prominent English aristocrat and writer. Lady Mary is historically significant for two main achievements: introducing smallpox inoculation from the Ottoman Empire to England, thus making an important contribution to medical history, and for her exceptional skills as a letter-writer. Her correspondence was so highly regarded that even Horace Walpole, who disliked her personally, compared her letters favorably to those of Madame de Sévigné, considered the greatest French letter-writer. Lady Mary herself was confident in the literary value of her letters, predicting they would entertain readers for generations. This biography includes illustrations and examines both her life and her extensive correspondence spanning the early to mid-18th century.
+"""
+
+Notes = """
+Lewis Melville's biography of Lady Mary Wortley Montagu was published in 1925. While the subject lived from 1689-1762, this is a 20th-century biographical work about her, so I've dated it to its publication year rather than to Lady Mary's lifetime. The book appears to be part of Project Gutenberg as item 10590.
+"""
+</result>

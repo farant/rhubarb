@@ -1,0 +1,21 @@
+I'll help you identify this text. Let me analyze what we have here.
+
+This is clearly the beginning of a novel by W. W. Jacobs titled "At Sunwich Port". W. W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author known for his humorous short stories about sailors and dockside life, as well as his famous horror story "The Monkey's Paw".
+
+"At Sunwich Port" was first published in 1902. It's a novel set in a fictional English port town, dealing with maritime life, social comedy, and romantic entanglements - typical of Jacobs' work.
+
+<result>
+Title = "At Sunwich Port"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'At Sunwich Port' is a novel by W. W. Jacobs, an English author best known for his humorous tales of dockside and seafaring life. Set in the fictional port town of Sunwich, the story follows Captain Nugent and other maritime characters through various comedic situations and romantic complications. Jacobs was a master of observational humor and dialect, and this novel showcases his talent for depicting the social life of English coastal towns in the late Victorian/Edwardian era. While he's most famous today for 'The Monkey's Paw', Jacobs was primarily known in his time for lighthearted maritime fiction like this.
+"""
+
+Notes = """
+1902 is the first publication year for this novel. Jacobs wrote prolifically during the early 20th century, and this represents his mature period as a novelist. The work is family-friendly humor typical of its era.
+"""
+</result>

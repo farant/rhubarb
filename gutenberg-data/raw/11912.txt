@@ -1,0 +1,15 @@
+<result>
+Title = "The Brown Study"
+Author = "Grace S. Richmond"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Brown Study" is a novel by Grace S. Richmond, an American author known for her wholesome domestic fiction in the early 20th century. Richmond was a popular writer of her era, producing numerous novels that focused on family life, romance, and moral values. This work, published in 1919, appears to follow the story of a character called "Brown" through various episodes and trials. Richmond's works were known for their optimistic tone and positive moral messages, making them popular family reading during the post-World War I era. She was particularly known for her "Red Pepper Burns" series, which is referenced on the title page as one of her other works.
+"""
+
+Notes = """
+The year 1919 is clearly stated on the title page. Grace S. Richmond (1866-1959) was a prolific American novelist whose works were widely read in the early-to-mid 20th century, though she is less well-known today. Her fiction typically portrayed middle-class American life with an emphasis on character development and moral integrity.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Delsarte System of Oratory"
+Author = "Various (François Delsarte, L'Abbé Delaumosne, Angélique Arnaud, Marie Géraldy, Alfred Giraudet, Francis A. Durivage, Hector Berlioz)"
+Year = 1893
+
+Tags = ["non-fiction", "performing-arts", "pedagogy"]
+
+Summary = """
+This compilation presents the Delsarte System of Oratory, a comprehensive pedagogical approach to dramatic expression, gesture, and vocal delivery developed by François Delsarte (1811-1871). Delsarte was a French teacher who created a systematic theory connecting physical movement, emotion, and spiritual expression. The system became enormously influential in late 19th century America, particularly in theater, opera, and elocution training. This collection includes writings by Delsarte himself, works by his students and interpreters (including his daughter Marie Géraldy), and commentary by notable figures like composer Hector Berlioz. The Delsarte method sought to codify the laws of human expression and became a foundational influence on early modern dance and physical theater training.
+"""
+
+Notes = """
+I chose 1893 as the year because this appears to be a compiled anthology published specifically in that year by Edgar S. Werner in New York (fourth edition). While François Delsarte's original work dates to the mid-19th century (he died in 1871), this particular collection represents a specific editorial compilation that was published decades after Delsarte's death, during the peak of American interest in his system. The work is fundamentally a late 19th century pedagogical anthology rather than an original treatise.
+"""
+</result>

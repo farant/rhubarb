@@ -1,0 +1,15 @@
+<result>
+Title = "Gossip in a Library"
+Author = "Edmund Gosse"
+Year = 1891
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+'Gossip in a Library' is a collection of literary essays by Edmund Gosse, one of the most influential English literary critics of the late Victorian and Edwardian periods. The work consists of informal, conversational pieces about rare books, forgotten authors, and literary curiosities found in Gosse's personal library. True to its title, the book adopts a gossipy, intimate tone as Gosse shares his discoveries and reflections on lesser-known literary treasures, offering readers a glimpse into the mind of a passionate bibliophile and scholar. The essays cover a wide range of authors and periods, from Renaissance poetry to 18th-century drama, showcasing Gosse's vast knowledge and enthusiasm for literary history.
+"""
+
+Notes = """
+While this Project Gutenberg edition indicates 1913, that appears to be a later printing or edition. 'Gossip in a Library' was originally published in 1891. The 1913 date likely represents a reissue or new edition. For historical timeline purposes, 1891 is the more appropriate date as it represents when the work first appeared and made its cultural impact. Edmund Gosse (1849-1928) was a prominent literary figure, librarian of the House of Lords, and friend to many major writers of his era.
+"""
+</result>

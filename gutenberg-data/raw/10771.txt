@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is a collection of Philippine folklore stories compiled by John Maurice Miller. The work is clearly identified in the text itself with the title, author, and publication year (1904) visible in the header.
+
+<result>
+Title = "Philippine Folklore Stories"
+Author = "John Maurice Miller"
+Year = 1904
+
+Tags = ["fiction", "folklore", "appropriate-for-children", "non-fiction"]
+
+Summary = """
+Philippine Folklore Stories is a collection of traditional Filipino legends and myths compiled by John Maurice Miller, published in 1904. The work was intended as an educational resource, particularly for use in Philippine schools during the American colonial period. The collection includes tales explaining natural phenomena, moral stories, and local legends from various regions of the Philippines, including stories about the volcano of Canlaon on Negros island. The preface explicitly instructs teachers to present these as myths rather than factual accounts, revealing the educational context of the early American administration in the Philippines. The stories preserve indigenous Philippine oral traditions while adapting them for a colonial educational framework.
+"""
+
+Notes = """
+The year 1904 represents the original publication date of this compilation. This work was produced during the early American colonial period in the Philippines (post-1898), and reflects the educational approaches of that era. The cautionary preface about ensuring children understand these are myths rather than truth is characteristic of the period's pedagogical concerns. The stories themselves are traditional and much older than the compilation, but 1904 represents when they were formally collected and published in this format by Miller.
+"""
+</result>

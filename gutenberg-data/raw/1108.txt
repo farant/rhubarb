@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the Executive Director's notes, this appears to be a Shakespeare play from Project Gutenberg. The note mentions "Shakespeare's The first Part of Henry the Sixt" at the end, which is *Henry VI, Part 1*.
+
+The text discusses the original printing practices and spelling variations typical of early modern English printing, particularly the First Folio era. The reference to "Hamlet" in the example is just to illustrate printing conventions of the time, not the actual work in this file.
+
+<result>
+Title = "Henry VI, Part 1"
+Author = "William Shakespeare"
+Year = 1592
+
+Tags = ["fiction", "historical-drama", "play"]
+
+Summary = """
+Henry VI, Part 1 is the first part of William Shakespeare's trilogy about King Henry VI of England. The play dramatizes the early years of Henry VI's reign and the loss of England's French territories during the Hundred Years' War. It features the heroic death of Lord Talbot and introduces Joan of Arc (Joan la Pucelle) as an antagonist. The play also depicts the beginnings of the conflict between the houses of York and Lancaster (symbolized by the plucking of red and white roses) that would eventually lead to the Wars of the Roses. This Project Gutenberg edition preserves the original spelling and printing conventions from early modern English editions.
+"""
+
+Notes = """
+The year 1592 is the approximate date of composition and first performance, though there is scholarly debate about the exact date (ranging from 1590-1592). The play was first published in the First Folio in 1623. This Gutenberg edition preserves the original spelling conventions and printing peculiarities from early editions, including u/v substitutions and other typographical variations that were common in Elizabethan printing practices.
+"""
+</result>

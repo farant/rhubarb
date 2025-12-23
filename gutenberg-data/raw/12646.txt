@@ -1,0 +1,27 @@
+Let me read through this text to identify the work, author, and publication details.
+
+This is clearly a French text from Project Gutenberg. From the opening, I can see:
+
+- Title: "LA MAISON" (The House)
+- Author: Henry Bordeaux
+- The text includes a Latin dedication: "_eorum memoriae qui domum et aedificaverunt et salvam servaverunt sacrum_" (Sacred to the memory of those who built and preserved the house)
+
+Henry Bordeaux (1870-1963) was a French writer and lawyer, member of the Académie française. He was known for his novels about family, tradition, and the French provinces, with strong Catholic themes. "La Maison" is one of his well-known works celebrating domestic life and family continuity.
+
+This novel was first published in 1913. It's a work that exemplifies Bordeaux's Catholic, traditionalist values and his focus on the importance of family and home.
+
+<result>
+Title = "La Maison"
+Author = "Henry Bordeaux"
+Year = 1913
+
+Tags = ["fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+'La Maison' (The House) is a novel by French Catholic writer Henry Bordeaux that celebrates the concept of home and family continuity. The work explores themes of tradition, domestic life, and the importance of family heritage through the lens of a house that serves as the center of family identity across generations. Bordeaux, a member of the Académie française, was known for his traditionalist and Catholic values, and this novel exemplifies his literary focus on the moral importance of family, place, and continuity in French provincial life. The opening passages establish the house as more than just a physical structure—it is 'the house' (la maison), singular and irreplaceable, the center of childhood memory and family identity.
+"""
+
+Notes = """
+First published in 1913. Henry Bordeaux (1870-1963) was a prominent Catholic writer whose works often received ecclesiastical approval. This novel fits squarely within his traditionalist, Catholic literary project of defending family values and regional French culture.
+"""
+</result>

@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Personality Plus: Some Experiences of Emma McChesney and Her Son, Jock"
+Author = "Edna Ferber"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Personality Plus" is the third book in Edna Ferber's Emma McChesney series, following the adventures of Emma McChesney, a traveling saleswoman, and her son Jock. The series was groundbreaking for its time in featuring a strong, independent businesswoman as the protagonist. Edna Ferber (1885-1968) was a Pulitzer Prize-winning American novelist and playwright, best known for works like "Show Boat," "Giant," and "So Big." The Emma McChesney stories were originally published in magazines and later collected into books, celebrating the wit, determination, and business acumen of a divorced mother making her way in the early 20th century American business world. These stories were popular for their humor and progressive portrayal of working women.
+"""
+
+Notes = """
+The year 1914 is clearly stated on the title page as the publication year by Frederick A. Stokes Company. This appears to be the first edition of this particular collection. Ferber was not a Catholic author, so the 'catholic' tag is not included.
+"""
+</result>

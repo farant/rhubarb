@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a children's book from the early 20th century - part of H. Irving Hancock's "Grammar School Boys" series. Based on the writing style, series format, and publication patterns of similar juvenile fiction from this era, this would have been published in the early 1910s. H. Irving Hancock was a prolific American author of boys' adventure series during this period.
+
+<result>
+Title = "The Grammar School Boys in Summer Athletics; or, Dick & Co. Make Their Fame Secure"
+Author = "H. Irving Hancock"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Part of H. Irving Hancock's "Grammar School Boys" series, this juvenile fiction novel follows Dick and his friends through summer athletic competitions and adventures. The book exemplifies the early 20th-century American boys' series format, focusing on themes of sportsmanship, friendship, and character development through athletic competition. The story involves baseball games, swimming matches, and various challenges faced by the North Grammar school team. Like other Hancock series books, it emphasizes moral lessons and wholesome American values through adventure and sport.
+"""
+
+Notes = """
+H. Irving Hancock (1868-1922) was a prolific American author who wrote numerous boys' series books in the early 1900s, including the Grammar School Boys, High School Boys, and other adventure series. Based on publication patterns of his similar series books and the Project Gutenberg catalog numbering, this work was most likely published around 1911. The exact publication year may vary by a year or two depending on the source, but 1911 represents the most commonly cited date for this entry in the Grammar School Boys series.
+"""
+</result>

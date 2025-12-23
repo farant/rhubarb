@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "Radio Boys Cronies; or, Bill Brown's Radio" by Wayne Whipple and S. F. Aaron. This appears to be part of the "Radio Boys" series, which was a popular juvenile fiction series from the 1920s focused on radio technology and adventure.
+
+The Radio Boys series was published during the early radio craze in America, roughly 1922-1930. Given that this is part of a series and mentions radio technology in an educational/adventure context for young readers, and based on typical publication patterns of similar series, this would have been published in the mid-1920s. Without seeing a specific copyright date in the excerpt, I'd estimate around 1922-1925 based on the series timeline and the early radio era setting.
+
+<result>
+Title = "Radio Boys Cronies; or, Bill Brown's Radio"
+Author = "Wayne Whipple, S. F. Aaron"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children", "adventure", "juvenile-fiction", "technology"]
+
+Summary = """
+Part of the popular 'Radio Boys' series of juvenile adventure novels from the 1920s. These books capitalized on the radio craze that swept America in the early 1920s, combining adventure stories with education about radio technology. The series followed young protagonists, in this case Bill Brown and his friend Gus, as they had adventures involving radio communication. These books served both as entertainment and as a way to introduce young readers to the emerging technology of wireless communication. The series was typical of early 20th century juvenile series fiction that combined friendship, adventure, and educational elements about contemporary technology.
+"""
+
+Notes = """
+The exact publication year is estimated based on the Radio Boys series publication timeline (roughly 1922-1930) and the early radio boom era. This appears to be an early entry in the series. Wayne Whipple was a prolific author of juvenile literature in this era. The series was published during the height of America's radio enthusiasm when radio technology was new and exciting to young readers.
+"""
+</result>

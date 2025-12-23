@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "Les Mémoires d'un Âne" (Memoirs of a Donkey) by Comtesse de Ségur (Sophie Rostopchine, Comtesse de Ségur). This is one of her well-known children's books where a donkey named Cadichon narrates his life story and adventures.
+
+Let me provide the structured information:
+
+<result>
+Title = "Les Mémoires d'un Âne"
+Author = "Comtesse de Ségur"
+Year = 1860
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+'Les Mémoires d'un Âne' (Memoirs of a Donkey) is a children's novel by the Comtesse de Ségur, written as an autobiography narrated by a donkey named Cadichon. The story follows Cadichon's life from his youth through various masters and experiences, teaching moral lessons about kindness, repentance, and the mistreatment of animals. Like many of Ségur's works, it combines entertainment with moral instruction, showing how the donkey was wicked in his youth, suffered for it, and through repentance became reformed and beloved. The book advocates for better treatment of animals while teaching children about virtue and redemption. It is dedicated to her grandson Henri de Ségur.
+"""
+
+Notes = """
+The Comtesse de Ségur (1799-1874) was a French writer of Russian origin who wrote primarily for children. She was a devout Catholic and her works typically received ecclesiastical approval. 'Les Mémoires d'un Âne' was first published in 1860 by Hachette in the Bibliothèque Rose series, which was specifically designed for young readers. The work is considered a classic of French children's literature and exemplifies Ségur's characteristic blend of moral instruction with engaging storytelling.
+"""
+</result>

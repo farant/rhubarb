@@ -1,0 +1,17 @@
+I recognize this work - it's an adventure/romance novel by H. Rider Haggard, the famous Victorian author best known for "King Solomon's Mines" and "She." Based on the text indicating it was "First Published 1888," that's straightforward.
+
+<result>
+Title = "Colonel Quaritch, V.C.: A Tale of Country Life"
+Author = "H. Rider Haggard"
+Year = 1888
+
+Tags = ["fiction", "romance", "victorian-literature"]
+
+Summary = """
+A Victorian-era novel by H. Rider Haggard, author of adventure classics like "King Solomon's Mines" and "She." Unlike his more famous exotic adventure tales, "Colonel Quaritch, V.C." is set in the English countryside and focuses on domestic drama, romance, and country life. The story follows Colonel Harold Quaritch, a Victoria Cross recipient, who becomes entangled in the affairs of a local squire's family facing financial ruin. The novel explores themes of honor, duty, love, and the social pressures of Victorian England, featuring elements of melodrama typical of the period including threatened foreclosures, romantic entanglements, and class conflicts.
+"""
+
+Notes = """
+Published in 1888 as indicated in the text. While Haggard is primarily remembered for his adventure fiction set in Africa and other exotic locales, this novel represents his attempt at writing about English society and rural life. It was less commercially successful than his adventure novels but demonstrates the breadth of his literary output during the height of his career in the late Victorian period.
+"""
+</result>

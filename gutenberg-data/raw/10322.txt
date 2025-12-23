@@ -1,0 +1,15 @@
+<result>
+Title = "Miss Prudence: A Story of Two Girls' Lives"
+Author = "Jennie M. Drinkwater"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Miss Prudence: A Story of Two Girls' Lives" is a late 19th-century children's novel by American author Jennie M. Drinkwater. Published in 1883, it follows the lives and moral development of two young girls, likely exploring themes common to the period's juvenile literature such as virtue, proper conduct, and Christian values. The chapter titles suggest domestic scenes and relationships that were typical of girls' literature of the era, including family life, friendships, and daily experiences that would have been relatable to young female readers of the time.
+"""
+
+Notes = """
+The publication year of 1883 is clearly stated on the title page of the Gutenberg text. This work appears to be a straightforward children's moral tale from the Victorian era, a genre that was extremely popular in America during the late 1800s. Jennie M. Drinkwater was part of the tradition of female authors writing instructive literature for young girls.
+"""
+</result>

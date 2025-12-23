@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the preface, this is clearly a scholarly/educational compilation about Norwegian (and Swedish) life, customs, and culture. The editor is Ethlyn T. Clough. The text describes it as part of a series designed for "club people" - likely reading clubs or study groups. The work is explicitly described as a compilation from multiple authors who specialized in different aspects of Norwegian life.
+
+From the content, this appears to be an early 20th century work (likely 1900s-1910s based on the writing style and references to "recent books" and "modern cities"). The pedagogical tone and mention of it being part of a series suggests it's from the era of popular educational literature for self-improvement societies.
+
+<result>
+Title = "Norwegian Life"
+Author = "Ethlyn T. Clough (editor)"
+Year = 1910
+
+Tags = ["non-fiction", "appropriate-for-children", "educational", "cultural-studies", "scandinavian-studies"]
+
+Summary = """
+An educational compilation about Norwegian and Swedish life, customs, culture, and history. The work was designed for reading clubs and study groups, providing a comprehensive yet accessible overview of Scandinavian society. The editor, Ethlyn T. Clough, compiled writings from multiple authors who each specialized in different aspects of Norwegian life, including customs, costumes, home life, literature, and history. The preface emphasizes the originality and resistance to cosmopolitan homogenization that made Norway and Sweden particularly interesting subjects for study in the early 20th century.
+"""
+
+Notes = """
+Year estimated at 1910 based on writing style, pedagogical approach typical of early 20th century self-improvement literature, and references to contemporary conditions. The work is part of a series of similar educational compilations. Without additional front matter, the exact publication year is uncertain but likely falls between 1905-1915.
+"""
+</result>
