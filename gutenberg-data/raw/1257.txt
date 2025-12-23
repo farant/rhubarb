@@ -1,0 +1,15 @@
+<result>
+Title = "The Three Musketeers"
+Author = "Alexandre Dumas, père"
+Year = 1844
+
+Tags = ["fiction", "historical-fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+The Three Musketeers (Les Trois Mousquetaires) is a historical adventure novel by Alexandre Dumas, père, set in 1625-1628 during the reign of Louis XIII of France. It follows d'Artagnan, a young man from Gascony, who travels to Paris to join the Musketeers of the Guard. He befriends three of the most formidable musketeers—Athos, Porthos, and Aramis—and together they become embroiled in court intrigues involving Cardinal Richelieu, the Duke of Buckingham, and the mysterious Milady de Winter. The novel is noted for its themes of loyalty, honor, and friendship, epitomized in the famous motto "All for one, and one for all." It is the first volume of the D'Artagnan Romances trilogy and remains one of the most beloved adventure novels in Western literature.
+"""
+
+Notes = """
+Originally serialized in the magazine Le Siècle from March to July 1844, then published in book form later that year. While Dumas is listed as sole author, the novel was written in collaboration with Auguste Maquet, though this was common practice for Dumas. The 1844 date represents the original French publication.
+"""
+</result>

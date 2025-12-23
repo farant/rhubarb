@@ -1,0 +1,17 @@
+Based on the text you provided, I can identify this work:
+
+<result>
+Title = "Arthurian Chronicles: Roman de Brut"
+Author = "Wace (translated by Eugene Mason)"
+Year = 1155
+
+Tags = ["non-fiction", "historical-document", "medieval-literature"]
+
+Summary = """
+The Roman de Brut is a Norman French verse chronicle written by the poet Wace around 1155. It is a metrical adaptation and expansion of Geoffrey of Monmouth's Historia Regum Britanniae (History of the Kings of Britain), translating the Latin prose into Old French verse. Wace's work was highly influential in spreading Arthurian legends throughout medieval Europe, particularly into French literature. It serves as an important bridge between Geoffrey's Latin chronicle and later Arthurian romances. Wace introduced several innovations to the Arthurian tradition, most notably the first mention of the Round Table. This English translation by Eugene Mason makes the medieval chronicle accessible to modern readers.
+"""
+
+Notes = """
+I chose circa 1155 as the year because that is when Wace completed the Roman de Brut (the work was written between approximately 1150-1155). The introduction mentions it was written about 1150, five years before Geoffrey of Monmouth's death. While Eugene Mason's English translation is much later (early 20th century), the historically significant date for timeline purposes is when Wace originally composed the work in Anglo-Norman French. This is a translation of a medieval chronicle rather than the original medieval text itself, but the year reflects the original composition date of the Roman de Brut.
+"""
+</result>

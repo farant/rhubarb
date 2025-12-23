@@ -1,0 +1,15 @@
+<result>
+Title = "The Magnetic North"
+Author = "Elizabeth Robins"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Magnetic North is a novel by Elizabeth Robins (published under her pseudonym C. E. Raimond) set during the Klondike Gold Rush era in the Yukon Territory. The book follows adventures and experiences of characters in the harsh northern wilderness during the Alaska-Yukon gold rush period. Robins was an American actress, playwright, novelist, and suffragette who wrote this work as part of her literary career exploring various social themes and settings. The novel captures the spirit of adventure and the challenging conditions faced by those drawn to the far north during this historic period of American expansion and gold fever.
+"""
+
+Notes = """
+The publication year of 1904 is clearly stated on the title page and represents the original publication date of this work. This appears to be a contemporary novel about the Klondike Gold Rush (1896-1899), written shortly after those events while they were still fresh in public memory.
+"""
+</result>

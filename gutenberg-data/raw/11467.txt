@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the title, author, year, and other requested information.
+
+This is clearly a Dutch historical document. The text is the famous account by Hendrik Hamel of the shipwreck of the Sperwer and the subsequent captivity of the crew in Korea from 1653-1666. This is one of the first Western accounts of Korea.
+
+<result>
+Title = "Verhaal van het vergaan van het jacht De Sperwer en van het wedervaren der schipbreukelingen op het eiland Quelpaert en het vasteland van Korea (1653-1666)"
+Author = "Hendrik Hamel"
+Year = 1668
+
+Tags = ["non-fiction", "historical-document", "travel-narrative", "appropriate-for-children"]
+
+Summary = """
+This is Hendrik Hamel's famous account of his shipwreck and thirteen-year captivity in Korea (1653-1666). Hamel was part of a Dutch East India Company expedition when their ship, the Sperwer, was wrecked off the coast of Korea near Quelpaert Island (modern-day Jeju). The survivors were held captive by Korean authorities for over a decade. This work is historically significant as one of the first detailed Western descriptions of Korea and Korean society during the Joseon Dynasty period. The narrative includes both the journal of their experiences and a description of the Korean kingdom. After escaping to Japan in 1666, Hamel eventually returned to the Netherlands and published this account, which became an important source of information about Korea for Europeans.
+"""
+
+Notes = """
+The original events occurred 1653-1666. Hamel published his account upon returning to the Netherlands in 1668, which is the year chosen here as it represents when the work became publicly available and historically influential. This 1920 edition was edited by B. Hoetink. The work is also known as "Hamel's Journal" or "The Hamel Report" and remains an important primary source for both Korean and Dutch maritime history.
+"""
+</result>

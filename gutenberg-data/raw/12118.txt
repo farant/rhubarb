@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary"
+Author = "American Missionary Association"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The American Missionary was a monthly periodical published by the American Missionary Association (AMA), a Protestant-based abolitionist group that played a major role in education and missionary work among freed slaves in the American South after the Civil War, as well as among Chinese immigrants and Native Americans. This May 1888 issue (Volume XLII, No. 5) contains articles about the AMA's educational and evangelical work in the South (including reports from Fisk University, Talladega College, and LeMoyne School), missionary efforts among Chinese communities, and discussions of Indian school policies. The AMA founded numerous schools and colleges for African Americans during Reconstruction, many of which became prominent historically black colleges and universities (HBCUs). The publication served as both a fundraising tool and a means of reporting on the Association's various missionary and educational activities across the United States.
+"""
+
+Notes = """
+Year is straightforward - this is the May 1888 issue as clearly stated in the masthead. The American Missionary Association was founded in 1846 and this periodical documented their ongoing work during the post-Reconstruction era. While the AMA had Christian (primarily Congregationalist) origins and motivations, it was a Protestant organization rather than Catholic, so the 'catholic' tag is not applied.
+"""
+</result>

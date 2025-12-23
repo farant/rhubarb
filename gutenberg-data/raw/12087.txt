@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary, Vol. XLII, April 1888, No. 4"
+Author = "American Missionary Association"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an issue of The American Missionary, a monthly periodical published by the American Missionary Association. The AMA was a Protestant-based abolitionist group founded in 1846 that played a significant role in education and missionary work, particularly focused on freedmen after the Civil War, Native Americans, and Chinese immigrants. This April 1888 issue contains articles about their educational work in the South (including Atlanta University), mountain work, Indian missions, Chinese missions, and includes a section on "The Black Woman of the South." The publication reports on the Association's various missionary and educational endeavors across the United States during the Reconstruction and post-Reconstruction era.
+"""
+
+Notes = """
+The year 1888 is clearly stated in the document header. The American Missionary Association was a significant Protestant organization (not specifically Catholic) that worked extensively in education and civil rights, particularly establishing schools and colleges for African Americans in the South after the Civil War. This periodical served as their official publication documenting their missionary and educational activities.
+"""
+</result>

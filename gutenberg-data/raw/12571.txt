@@ -1,0 +1,15 @@
+<result>
+Title = "The Boy Allies In The Trenches; or, Midst Shot and Shell along the Aisne"
+Author = "Clair W. Hayes"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a World War I adventure novel for young readers, part of the "Boy Allies" series by Clair W. Hayes. The series follows two teenage lieutenants, Hal Paine and Chester Crawford, through various adventures on different fronts of the Great War. This installment takes place along the Aisne River in France, where the boys rejoin Field Marshal Sir John French and the British Expeditionary Force after having adventures in Russia with the Cossacks. The Boy Allies series was popular juvenile fiction during and immediately after WWI, featuring young protagonists engaged in heroic military adventures.
+"""
+
+Notes = """
+The year 1915 is clearly stated on the title page. This appears to be one of several books in the Boy Allies series, following their earlier adventures "At Liège," "On the Firing Line," and "With the Cossacks." These were typical examples of patriotic youth literature published during World War I to inspire young readers.
+"""
+</result>

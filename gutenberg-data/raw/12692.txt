@@ -1,0 +1,17 @@
+The file appears to be empty or very small. Based on the text you provided in your message, I can identify this work:
+
+<result>
+Title = "The High School Captain of the Team; or, Dick & Co. Leading the Athletic Vanguard"
+Author = "H. Irving Hancock"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children", "sports", "young-adult"]
+
+Summary = """
+This is part of H. Irving Hancock's "High School Boys Series," a popular early 20th-century series of juvenile sports fiction. The book follows Dick Prescott and his companions as they navigate high school athletics, particularly football. The series was typical of the wholesome, character-building sports fiction popular in the Progressive Era, emphasizing teamwork, leadership, fair play, and moral rectitude. These books were designed to inspire young readers with tales of athletic achievement combined with good citizenship and clean living. The "Dick & Co." books were part of a larger trend of boys' series fiction that dominated American juvenile literature in the early 1900s.
+"""
+
+Notes = """
+H. Irving Hancock was a prolific author of boys' series books in the early 20th century. This particular series was published around 1910-1911. The exact publication year can vary slightly depending on the source, but 1910 is the commonly cited date for this volume in the High School Boys Series. Project Gutenberg #12692 corresponds to this work.
+"""
+</result>

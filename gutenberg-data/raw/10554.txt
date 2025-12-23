@@ -1,0 +1,19 @@
+I'll help you identify this work and provide the structured information you need.
+
+This is clearly P.G. Wodehouse's "Right Ho, Jeeves" (sometimes published as "Brinkley Manor" in the US). This is one of the classic Jeeves novels featuring Bertie Wooster and his valet Jeeves, first published in 1934.
+
+<result>
+Title = "Right Ho, Jeeves"
+Author = "P. G. Wodehouse"
+Year = 1934
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Right Ho, Jeeves is one of P.G. Wodehouse's most beloved comic novels featuring the inimitable gentleman's gentleman Jeeves and his hapless employer Bertie Wooster. The plot involves Bertie's well-intentioned but disastrous attempts to sort out the romantic entanglements of his friends without Jeeves's guidance, including the love affairs of Gussie Fink-Nottle (a newt-fancying acquaintance) and Madeline Bassett, as well as complications involving Tuppy Glossop and Angela Travers. The novel showcases Wodehouse's mastery of comic plotting, memorable characters, and his distinctive prose style full of literary allusions and inventive metaphors. It is widely considered one of the finest examples of English comic writing and represents Wodehouse at the peak of his creative powers.
+"""
+
+Notes = """
+First published in 1934 in the UK by Herbert Jenkins, and in the US under the title "Brinkley Manor" by Little, Brown and Company. The novel was serialized in The Saturday Evening Post from December 1933 to January 1934 before book publication. This is the second full-length Jeeves novel (after Thank You, Jeeves) and features the famous prize-giving speech at Market Snodsbury Grammar School, one of the most celebrated comic set-pieces in English literature.
+"""
+</result>

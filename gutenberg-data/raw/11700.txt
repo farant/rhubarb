@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is a collection of ghostly tales by Joseph Sheridan Le Fanu, a prominent Irish writer of Gothic fiction. The text indicates this is Volume 2 of a collection, containing two stories: "An Authentic Narrative of a Haunted House" (1862) and "Ultor De Lacy: A Legend of Cappercullen" (1861).
+
+Le Fanu was a leading Victorian-era writer of ghost stories and mystery novels, and these tales are characteristic of his atmospheric supernatural fiction. He lived from 1814-1873 and was most prolific in the 1860s-1870s.
+
+<result>
+Title = "J. S. Le Fanu's Ghostly Tales, Volume 2"
+Author = "Joseph Sheridan Le Fanu"
+Year = 1862
+
+Tags = ["fiction", "gothic", "supernatural", "ghost-stories"]
+
+Summary = """
+This is the second volume of a collection of supernatural tales by Joseph Sheridan Le Fanu, one of the most influential Victorian Gothic fiction writers. This volume contains two stories: "An Authentic Narrative of a Haunted House" (1862) and "Ultor De Lacy: A Legend of Cappercullen" (1861). Le Fanu was an Irish writer known for his atmospheric ghost stories and psychological horror. His work influenced later writers like M.R. James and helped establish many conventions of the ghost story genre. These tales feature his characteristic blend of supernatural phenomena, Irish settings, and carefully constructed narrative frames that lend an air of authenticity to the uncanny events described.
+"""
+
+Notes = """
+I chose 1862 as the publication year based on the later of the two stories included in this volume. Le Fanu originally published these stories in periodicals (the excerpt mentions the University Magazine) before they were collected. The stories are presented as authentic accounts, a common framing device in Victorian supernatural fiction. Le Fanu was Anglican/Protestant, not Catholic, so the 'catholic' tag does not apply.
+"""
+</result>

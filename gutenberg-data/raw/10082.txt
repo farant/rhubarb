@@ -1,0 +1,19 @@
+I recognize this work from the text provided. Let me analyze it:
+
+This is "The Hampstead Mystery" by John R. Watson (also known as John Reay Watson) and Arthur J. Rees, published in 1916. This is a British detective novel set in the Hampstead area of London.
+
+<result>
+Title = "The Hampstead Mystery"
+Author = "John R. Watson & Arthur J. Rees"
+Year = 1916
+
+Tags = ["fiction", "mystery", "detective-fiction"]
+
+Summary = """
+The Hampstead Mystery is a British detective novel featuring the investigation of the murder of Sir Horace Fewbanks, found shot through the heart in the library of his home, Riversbrook. The story involves Scotland Yard detectives, particularly Detective-Inspector Chippenfield and Inspector Seldon, as they investigate this classic locked-room style murder mystery set in the Hampstead district of London. The novel is representative of early 20th-century British detective fiction, written in the tradition that would influence later golden age mystery writers.
+"""
+
+Notes = """
+The year 1916 is definitively stated on the title page of the Project Gutenberg text. This was the original publication year of the work. John R. Watson (sometimes listed as John Reay Watson) and Arthur J. Rees co-authored this detective novel during World War I, when the detective fiction genre was gaining significant popularity in Britain.
+"""
+</result>

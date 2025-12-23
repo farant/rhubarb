@@ -1,0 +1,15 @@
+<result>
+Title = "The Cavalry General"
+Author = "Xenophon"
+Year = -362
+
+Tags = ["non-fiction", "military", "ancient-history"]
+
+Summary = """
+The Cavalry General (Hipparchicus) is a military treatise by Xenophon on the duties and responsibilities of a cavalry commander (hipparch) in Athens. Written from practical experience, it covers topics including the organization and training of cavalry forces, tactical maneuvers for both warfare and ceremonial displays, and the personal qualities required of an effective cavalry commander. Xenophon, who had extensive military experience including service with Spartan forces and the famous march of the Ten Thousand, draws on his firsthand knowledge to provide detailed advice on everything from recruitment and equipment to battlefield tactics and festival exhibitions. The work reflects the importance of cavalry in Greek warfare during the 4th century BC and serves as both a practical manual and a reflection on military leadership.
+"""
+
+Notes = """
+Dating Xenophon's works precisely is difficult. The Cavalry General was likely written during his later years, after his exile from Athens and possibly during or after his time at Scillus (circa 385-371 BC). Scholars generally date it to around 362 BC, when he would have been in his late 60s and reflecting on his extensive military experience. This date places it toward the end of his life (he died around 354 BC) and represents mature military thinking from someone who had served in various capacities across the Greek world.
+"""
+</result>

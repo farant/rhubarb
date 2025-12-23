@@ -1,0 +1,17 @@
+I recognize this text immediately - it's the opening of Honoré de Balzac's "Eugénie Grandet," one of the key works in his vast *La Comédie Humaine* series. The dedication "A Maria" and the characteristic detailed description of the provincial house in Saumur are unmistakable.
+
+<result>
+Title = "Eugénie Grandet"
+Author = "Honoré de Balzac"
+Year = 1833
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+Eugénie Grandet is one of Honoré de Balzac's masterpieces and a central work in his Comédie Humaine cycle, specifically within the "Scènes de la vie de Province" (Scenes of Provincial Life) series. The novel tells the story of Eugénie Grandet, the daughter of a miserly provincial wine merchant in the town of Saumur. Through Eugénie's tragic life, Balzac explores themes of avarice, thwarted love, provincial life versus Parisian society, and the corrupting influence of money. The novel is renowned for its detailed realist portrayal of French provincial life in the early 19th century and for its character study of Félix Grandet, one of literature's most memorable misers. Balzac's psychological insight and social observation make this a foundational text of literary realism.
+"""
+
+Notes = """
+Eugénie Grandet was first published in 1833, initially serialized in the magazine L'Europe littéraire before being published in book form. This is the date of original composition and publication, making it one of Balzac's earlier major works. The novel was revised several times by Balzac but the 1833 date represents its entry into the literary world and is the most historically significant date for placement on a timeline.
+"""
+</result>

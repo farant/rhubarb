@@ -1,0 +1,17 @@
+I recognize this as "Uncle Bernac: A Memory of the Empire" by Arthur Conan Doyle. This is a historical novel set during the Napoleonic era, specifically around the time of Napoleon's planned invasion of England from the camp at Boulogne in 1805. The novel was first published in 1897.
+
+<result>
+Title = "Uncle Bernac: A Memory of the Empire"
+Author = "Arthur Conan Doyle"
+Year = 1897
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A historical novel by Arthur Conan Doyle set during the Napoleonic era. The story follows a young Frenchman who returns from exile in England to France during Napoleon's preparations for the invasion of England at the Camp of Boulogne in 1805. The protagonist becomes entangled in political intrigue involving his uncle Bernac, who is a confidant of Napoleon. The novel provides a vivid portrayal of Napoleon Bonaparte and the atmosphere of the First French Empire, including encounters with historical figures like Josephine. Doyle, better known for his Sherlock Holmes stories, demonstrates his skill at historical fiction with detailed period atmosphere and political intrigue.
+"""
+
+Notes = """
+Published in 1897, though the story itself is set around 1805 during Napoleon's preparations at Boulogne. This is the year of publication for the novel itself, not the historical period it depicts. Conan Doyle was not Catholic (he was raised Catholic but became a Spiritualist later in life), so this work does not receive the 'catholic' tag.
+"""
+</result>

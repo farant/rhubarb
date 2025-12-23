@@ -1,0 +1,15 @@
+<result>
+Title = "The St. Louis Blues"
+Author = "W. C. Handy"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+"The St. Louis Blues" is one of the most iconic and influential compositions in American music history, written by W. C. Handy, often called the "Father of the Blues." This is an audio recording performance by Frank Ferera from the Edison National Historic Site archives. The song itself tells the story of a woman lamenting her lost love and has become a jazz and blues standard, recorded by countless artists over the decades. It helped popularize the blues genre and bridge African American musical traditions with mainstream American culture. The composition is notable for its distinctive 12-bar blues structure combined with a tango rhythm, and it has been called one of the most recorded songs of all time.
+"""
+
+Notes = """
+While this Project Gutenberg entry credits Frank Ferera (a performer) as the author and represents an audio recording from Thomas Edison's collection, the actual composition "The St. Louis Blues" was written by W. C. Handy and first published in 1914. I've chosen 1914 as the year to represent the original publication of this historically significant work, as that's when it entered American musical culture. Frank Ferera was a Hawaiian steel guitarist who made early recordings of popular music, including this blues standard. The recording itself would be from the 1910s-1920s era based on the Edison connection.
+"""
+</result>

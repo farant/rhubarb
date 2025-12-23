@@ -1,0 +1,17 @@
+I can identify this work for you. This is a highly significant early 20th-century German military-political text that had considerable influence on perceptions of German militarism leading up to World War I.
+
+<result>
+Title = "Germany and the Next War"
+Author = "Friedrich von Bernhardi"
+Year = 1911
+
+Tags = ["non-fiction", "military-history", "political-philosophy", "historical-document"]
+
+Summary = """
+"Germany and the Next War" (Deutschland und der nächste Krieg) is a controversial military treatise by German general Friedrich von Bernhardi that advocated for German expansionism and argued that war was a biological necessity for national survival and progress. The book applied Social Darwinist principles to international relations, arguing that Germany needed to assert itself through military power to achieve its rightful place as a world power. Published on the eve of World War I, it became notorious in Allied countries as evidence of German militarism and aggressive intentions, though its actual influence on German policy is debated by historians. The work discusses Germany's political position in Europe, the necessity of military preparedness, and argues for a more assertive German foreign policy, particularly regarding colonial ambitions and Germany's relationship with other European powers.
+"""
+
+Notes = """
+The original German edition was published in 1911. This English translation by Allen H. Powles was published in 1912. I've chosen 1911 as the primary year since that's when the work was originally written and published in German, which is the historically significant date. The preface references the Morocco Crisis of 1911 (the Agadir Crisis), which provides clear dating context. This work is not appropriate for children given its militaristic and complex political content, and while Bernhardi may have had some religious background, this is a secular military-political tract, not a Catholic work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Virginia: The Old Dominion"
+Author = "Frank W. Hutchins, Cortelle Hutchins"
+Year = 1910
+
+Tags = ["non-fiction", "appropriate-for-children", "history", "travel", "american-history"]
+
+Summary = """
+A historical travel narrative exploring Virginia's colonial waterway along the James River. The Hutchinses take readers on a journey through Virginia's historic sites and monuments, tracing American history from Captain John Smith's era through the early 20th century. The work is richly illustrated with 54 photographic plates (including 6 in color) taken by the authors themselves, documenting the historic landscapes and landmarks of the Old Dominion. This is a combination of travelogue and historical documentation, capturing Virginia's colonial heritage and its significance in American history.
+"""
+
+Notes = """
+The year 1910 is clearly stated in the original publication information. This appears to be a first edition work rather than a republication or translation. The book represents the genre of early 20th century illustrated travel literature combined with historical documentation, popular during that era when photography was becoming more accessible for publishing.
+"""
+</result>

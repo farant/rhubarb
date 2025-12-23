@@ -1,0 +1,15 @@
+<result>
+Title = "Representative Plays by American Dramatists: 1856-1911"
+Author = "Various (Edited by Montrose J. Moses)"
+Year = 1921
+
+Tags = ["non-fiction", "drama", "anthology", "historical-document"]
+
+Summary = """
+This is an anthology of American plays edited by Montrose J. Moses, a prominent theater historian and critic. The collection spans over half a century of American dramatic writing (1850-1911) and includes ten significant plays that represent the development of American theater during this period. The anthology features works by important American playwrights including Charles Burke's adaptation of "Rip Van Winkle," George Henry Boker's "Francesca da Rimini," Bronson Howard's "Shenandoah," Augustus Thomas's "In Mizzoura," Clyde Fitch's "The Moth and the Flame," and David Belasco's "The Return of Peter Grimm." The collection is dedicated to Brander Matthews, a distinguished drama critic and professor at Columbia University who was instrumental in establishing the study of drama as an academic discipline in America. This anthology serves as both a historical document of American theatrical development and a scholarly resource with introductions and bibliographies for each play.
+"""
+
+Notes = """
+The year 1921 represents the publication date of this anthology by Montrose J. Moses. While the individual plays span from 1850 to 1911 (as indicated in the subtitle), the collection itself as an editorial work was published in 1921. This is the most historically accurate date for this particular text, as it represents Moses's scholarly contribution to documenting and preserving American dramatic literature of the 19th and early 20th centuries.
+"""
+</result>

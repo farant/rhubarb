@@ -1,0 +1,15 @@
+<result>
+Title = "The Author's Craft"
+Author = "Arnold Bennett"
+Year = 1914
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+'The Author's Craft' is a critical essay by Arnold Bennett on the art and technique of fiction writing. Bennett, a prolific English novelist and critic, explores the methods, principles, and challenges of literary composition in this work. Drawing on his own extensive experience as a novelist, he discusses topics such as narrative technique, character development, plot construction, and the relationship between author and reader. The book serves as both a reflection on the creative process and a practical guide for aspiring writers, offering insights into Bennett's own approach to crafting fiction.
+"""
+
+Notes = """
+First published in 1914. This is a work of literary criticism and craft rather than fiction. Arnold Bennett was not a Catholic author, so the 'catholic' tag does not apply. While Bennett was a significant figure in English literature and wrote accessible prose, this is a technical/critical work aimed at writers and serious readers rather than children.
+"""
+</result>

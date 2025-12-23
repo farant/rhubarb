@@ -1,0 +1,17 @@
+I recognize this work! "Stories from the Italian Poets: With Lives of the Writers" by Leigh Hunt is a notable anthology and critical work that presents English prose adaptations of Italian epic poetry, particularly from Dante, Pulci, Boiardo, and Ariosto, along with biographical and critical essays about these poets.
+
+<result>
+Title = "Stories from the Italian Poets: With Lives of the Writers, Vol. II"
+Author = "Leigh Hunt"
+Year = 1846
+
+Tags = ["non-fiction", "literary-criticism", "poetry-adaptations", "appropriate-for-children"]
+
+Summary = """
+This is the second volume of Leigh Hunt's influential work presenting English prose narratives drawn from Italian epic poetry, along with biographical and critical essays on the poets. This volume focuses on Boiardo and Ariosto, featuring prose retellings of episodes from their chivalric romances, particularly dealing with the character Angelica and the Orlando cycle. Hunt (1784-1859) was an English critic, essayist, and poet who played a significant role in introducing Italian literature to English readers. The work combines literary criticism with accessible storytelling, making Italian Renaissance poetry available to a Victorian audience.
+"""
+
+Notes = """
+The year 1846 (MDCCCXLVI in Roman numerals) is clearly stated on the title page of this edition. This was the first edition of Hunt's work. While the original Italian poems date from the 15th-16th centuries (Boiardo's Orlando Innamorato c. 1483-1495, Ariosto's Orlando Furioso 1516-1532), this is Hunt's own work of translation/adaptation and criticism, so 1846 is the appropriate date for this text.
+"""
+</result>

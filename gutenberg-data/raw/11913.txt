@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly "Mr. Meeson's Will" by H. Rider Haggard, as stated at the beginning. H. Rider Haggard was a Victorian adventure novelist best known for "King Solomon's Mines" and "She." Let me provide the structured information:
+
+<result>
+Title = "Mr. Meeson's Will"
+Author = "H. Rider Haggard"
+Year = 1888
+
+Tags = ["fiction", "adventure", "victorian-literature"]
+
+Summary = """
+Mr. Meeson's Will is a novel by H. Rider Haggard, the famous Victorian adventure writer best known for King Solomon's Mines and She. This work tells the story of Augusta, a writer who has dealings with Mr. Meeson, a Birmingham publisher. The novel involves themes of inheritance, shipwreck, and legal drama. The plot centers around a catastrophic voyage on the R.M.S. Kangaroo, survival on Kerguelen Land, and subsequent legal battles over Meeson's will. Haggard combines adventure, romance, and satire of the Victorian publishing industry in this lesser-known work.
+"""
+
+Notes = """
+First published in 1888. This work represents Haggard's satirical take on the publishing industry of his time, combined with his signature adventure elements including shipwreck and survival. While not as famous as his other works, it showcases his versatility as a writer beyond pure adventure fiction.
+"""
+</result>

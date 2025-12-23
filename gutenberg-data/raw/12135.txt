@@ -1,0 +1,15 @@
+<result>
+Title = "The Art of Fencing, or, the Use of the Small Sword"
+Author = "L'Abbat (translated by Andrew Mahon)"
+Year = 1734
+
+Tags = ["non-fiction", "instructional", "martial-arts"]
+
+Summary = """
+This is an English translation of a French fencing manual by Monsieur L'Abbat, who was a master of fencing at the Academy of Toulouse. The work focuses on the art of smallsword fencing, which was the predominant form of civilian swordplay in the 18th century. The smallsword was a light, thrusting weapon used primarily for dueling and self-defense by gentlemen. This translation was made by Andrew Mahon, a professor of smallsword in Dublin, and represents an important historical document in the transmission of French fencing techniques to the English-speaking world. Fencing manuals like this were essential for teaching the scientific approach to swordplay that characterized the period.
+"""
+
+Notes = """
+I chose 1734 as the year because this is the publication date of this specific English translation in Dublin. While the original French work by L'Abbat predates this, the 1734 date is most historically accurate for this particular text as it exists in Project Gutenberg. L'Abbat's work was highly influential in 18th-century fencing instruction, and this translation helped spread French fencing methods to Ireland and Britain.
+"""
+</result>

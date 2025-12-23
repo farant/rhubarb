@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedie of Hamlet, Prince of Denmarke: A Study with the Text of the Folio of 1623"
+Author = "George MacDonald"
+Year = 1885
+
+Tags = ["non-fiction", "literary-criticism", "appropriate-for-children"]
+
+Summary = """
+This is a critical study and commentary on Shakespeare's Hamlet by George MacDonald (1824-1905), the Scottish author, poet, and Christian minister best known for his fantasy novels and fairy tales. Published around 1884-1885, this work represents MacDonald's literary analysis of Hamlet using the 1623 First Folio text as its foundation. MacDonald examines the play's themes, characters, and particularly focuses on Hamlet's famous soliloquies. The dedication acknowledges Alexander Stewart MacColl for helping MacDonald achieve "the true understanding of the great soliloquy." This reflects the Victorian era's deep engagement with Shakespeare scholarship and MacDonald's own theological and philosophical interests in understanding human nature and moral questions through literature.
+"""
+
+Notes = """
+The dedication is dated Christmas 1884 from Bordighera, Italy. The work was likely published in 1885. While MacDonald was a Christian writer (Scottish Congregationalist minister), this is a work of literary criticism rather than explicitly devotional writing, so I have not tagged it as 'catholic'. MacDonald actually had heterodox views that put him at odds with strict Calvinist doctrine, though his work influenced later Christian writers like C.S. Lewis. The year 1885 represents the publication of this specific study, not Shakespeare's Hamlet itself (c. 1600-1601).
+"""
+</result>

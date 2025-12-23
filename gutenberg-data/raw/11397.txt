@@ -1,0 +1,15 @@
+<result>
+Title = "The Rambler"
+Author = "Samuel Johnson"
+Year = 1750
+
+Tags = ["non-fiction", "essays", "philosophy", "appropriate-for-children"]
+
+Summary = """
+The Rambler is a series of 208 periodical essays written by Samuel Johnson and published twice weekly from 1750 to 1752. These essays cover a wide range of moral, social, and literary topics, written in Johnson's characteristic elevated prose style. The Rambler established Johnson's reputation as a moralist and prose stylist, addressing topics such as virtue, education, vanity, repentance, and the human condition. The essays were originally published anonymously but became widely recognized as Johnson's work and were frequently reprinted throughout the 18th and 19th centuries. This particular volume appears to be from an 1825 edition of Johnson's collected works.
+"""
+
+Notes = """
+I chose 1750 as the year because this marks when The Rambler essays were originally published and first appeared in periodical form. While this Gutenberg text is from an 1825 collected works edition, the essays themselves date to 1750-1752, with 1750 being the start of the series. This date is most historically accurate for understanding when Johnson wrote these works and their place in 18th-century English literature.
+"""
+</result>

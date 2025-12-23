@@ -1,0 +1,15 @@
+<result>
+Title = "Pictures of Sweden"
+Author = "Hans Christian Andersen"
+Year = 1851
+
+Tags = ["non-fiction", "travel", "appropriate-for-children"]
+
+Summary = """
+"Pictures of Sweden" is a travelogue by Danish author Hans Christian Andersen, famous for his fairy tales. The book documents Andersen's travels through Sweden, offering vivid descriptions of Swedish landscapes, cities, and culture. The work includes observations on places like Trollhätta, Stockholm, and Vadstene, as well as cultural reflections and character sketches. Written in Andersen's characteristically lyrical and accessible style, it provides a 19th-century perspective on Scandinavian life and showcases his talents beyond fairy tale writing. The book appeals to readers interested in travel literature, Scandinavian history, and Andersen's broader literary corpus.
+"""
+
+Notes = """
+1851 represents the date of this English translation published by Richard Bentley in London. The original Swedish/Danish publication may have been slightly earlier, but 1851 is the most appropriate year for this edition as it represents when this specific text became available to English readers and entered the historical record in this form.
+"""
+</result>

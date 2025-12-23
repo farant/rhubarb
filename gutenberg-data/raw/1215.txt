@@ -1,0 +1,17 @@
+The file appears to be empty or very short. However, based on the excerpt you provided in your message, I can identify this work. This is "The Elixir of Life" by Honoré de Balzac, translated by Clara Bell and James Waring.
+
+<result>
+Title = "The Elixir of Life"
+Author = "Honoré de Balzac"
+Year = 1830
+
+Tags = ["fiction", "gothic", "philosophical-fiction"]
+
+Summary = """
+"The Elixir of Life" is a philosophical tale by French novelist Honoré de Balzac, part of his vast Comédie Humaine series. In the preface, Balzac acknowledges this may be inspired by a story from German Romantic writer E.T.A. Hoffmann. The story concerns Don Juan and explores themes of mortality, filial duty, and the grotesque possibility of resuscitation. It's a darkly satirical meditation on those who profit from death—whether through life annuities, inheritances, or other financial arrangements dependent on someone's demise. Balzac uses the gothic horror framework popular in 1830 to deliver a biting social critique of 19th-century bourgeois morality and the commercialization of death.
+"""
+
+Notes = """
+The story was written around 1830 during the vogue for gothic tales. While Balzac mentions it may derive from Hoffmann (who died in 1822), this is an original Balzac work that fits into his broader examination of French society. The year 1830 represents both when Balzac wrote it and the cultural moment he explicitly references in his preface about "tales of horror."
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Electricity and Progress"
+Author = "Thomas A. Edison"
+Year = 1926
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of Thomas Edison discussing electricity and technological progress. Edison (1847-1931) was one of America's most prolific inventors, holding over 1,000 patents including the phonograph, the practical electric light bulb, and motion picture camera. This recording, preserved at the Edison National Historic Site, captures Edison's thoughts on the role of electricity in advancing civilization and improving human life. As an audio document rather than a written text, it provides a unique historical artifact - Edison's own voice discussing the technologies he helped pioneer.
+"""
+
+Notes = """
+The exact date of this recording is not provided in the Project Gutenberg metadata. Edison made numerous recordings and gave many talks throughout his later career. Given that practical audio recording technology became widespread in the 1920s and Edison remained active in promoting electricity and innovation into the late 1920s, I've estimated 1926 as a reasonable approximate date. This falls within his later years when he was an elder statesman of American innovation. The actual recording could date anywhere from roughly 1920-1930. If more precise dating information becomes available from the Edison National Historic Site archives, the year should be updated accordingly.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Starr, of the Desert"
+Author = "B. M. Bower"
+Year = 1917
+
+Tags = ["fiction", "western", "appropriate-for-children"]
+
+Summary = """
+"Starr, of the Desert" is a western novel by B. M. Bower (pen name of Bertha Muzzy Sinclair), published in 1917. Bower was a prolific author of western fiction, best known for her novel "Chip of the Flying U" (1904). This novel follows the character Starr and appears to involve mystery elements in a desert setting, typical of Bower's work which often featured strong characters navigating the American West. Bower was one of the first women to write popular western fiction and her works were known for their authentic portrayal of ranch life and cowboy culture.
+"""
+
+Notes = """
+The year 1917 is clearly stated on the title page as the publication date. B. M. Bower was a woman writer (Bertha Muzzy Sinclair, 1871-1940) who used initials to avoid gender bias in the male-dominated western genre. This appears to be a first edition publication.
+"""
+</result>

@@ -1,0 +1,19 @@
+I can help you identify this work. Let me analyze the text provided.
+
+Based on the content, this is clearly "Recollections of Calcutta for over half a century" by Montague Massey, published in 1918. The work is a memoir about Calcutta (now Kolkata) covering changes the author witnessed since arriving in the 1860s. It was published for the benefit of the Red Cross Fund during World War I and dedicated to Lady Carmichael, founder of the Bengal Women's War Fund.
+
+<result>
+Title = "Recollections of Calcutta for over half a century"
+Author = "Montague Massey"
+Year = 1918
+
+Tags = ["non-fiction", "memoir", "historical-document"]
+
+Summary = """
+A memoir by Montague Massey documenting his observations and experiences in Calcutta (now Kolkata) spanning over fifty years, from his arrival in the 1860s through 1918. The work focuses on the dramatic transformation of the city during this period, describing structural improvements, changes to streets and buildings, and the modernization of the colonial capital. Published during World War I, the book was sold for the benefit of the Red Cross Fund and dedicated to Lady Carmichael, founder of the Bengal Women's War Fund. In his introduction, Massey explicitly states the work avoids sensational revelations, instead providing a descriptive historical account of Calcutta's urban development and social changes during the British Raj.
+"""
+
+Notes = """
+The year 1918 is straightforward as it appears on the title page. This is a primary source historical document from the late British colonial period in India. The work does not qualify for the 'catholic' tag as there's no indication of Catholic authorship or content. Not marked as 'appropriate-for-children' as it's a historical memoir likely of limited interest to young readers.
+"""
+</result>

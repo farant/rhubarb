@@ -1,0 +1,19 @@
+Ah, the file is empty (0 bytes). However, based on the text you provided in your message, I can identify the work:
+
+This is **"Select Poems of Sidney Lanier"** edited by Morgan Callaway. Sidney Lanier (1842-1881) was an American poet and musician from the South. Based on the header information and my knowledge of this work:
+
+<result>
+Title = "Select Poems of Sidney Lanier"
+Author = "Sidney Lanier"
+Year = 1895
+
+Tags = ["poetry", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of selected poems by Sidney Lanier (1842-1881), an American musician and poet known for his musical theory of verse. Lanier was a Confederate soldier during the Civil War who later became a flutist in the Peabody Orchestra and a lecturer at Johns Hopkins University. His poetry is characterized by its musicality and use of sound devices, with notable works including 'The Marshes of Glynn,' 'Song of the Chattahoochee,' and 'The Symphony.' This edition was edited by Morgan Callaway and represents some of Lanier's finest poetic achievements, showcasing his unique fusion of musical principles with poetic form.
+"""
+
+Notes = """
+The year 1895 reflects when this particular edited collection was published by Morgan Callaway. Sidney Lanier died in 1881, and his complete works were published posthumously. This selection represents an early scholarly edition of his most significant poems. While individual poems were written and published during Lanier's lifetime (primarily in the 1870s), this compilation as edited by Callaway dates to 1895.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Beacon Lights of History, Volume XI: American Founders"
+Author = "John Lord"
+Year = 1883
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+This is Volume XI of John Lord's "Beacon Lights of History" series, focusing on American Founders. John Lord (1810-1894) was a popular American historian and lecturer known for his biographical lecture series on great figures throughout history. This particular volume examines the lives and contributions of America's founding fathers and key figures in early American history. Lord's "Beacon Lights" series was enormously popular in the late 19th century and aimed to present history through the lens of great individuals who shaped civilization. His approach was educational and inspirational, emphasizing moral lessons and the character of historical figures.
+"""
+
+Notes = """
+The "Beacon Lights of History" series was published in multiple volumes over several years. The first volumes began appearing in the early 1880s. Volume XI specifically deals with American history and was among the later volumes in the series. Lord died in 1894, and some volumes were published posthumously. I've selected 1883 as an approximate publication year for this volume based on the general publication timeline of the series, though the exact year for Volume XI may have been slightly different. The series was widely used in American education and self-improvement circles during the Gilded Age.
+"""
+</result>

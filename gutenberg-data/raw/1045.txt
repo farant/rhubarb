@@ -1,0 +1,15 @@
+<result>
+Title = "Venus and Adonis"
+Author = "William Shakespeare"
+Year = 1593
+
+Tags = ["fiction", "poetry", "classical-mythology"]
+
+Summary = """
+Venus and Adonis is a narrative poem by William Shakespeare, one of his earliest published works. The poem tells the classical mythological story of Venus, the goddess of love, and her unrequited passion for the mortal youth Adonis. Drawing from Ovid's Metamorphoses, Shakespeare's version depicts Venus's attempts to seduce the reluctant Adonis, who prefers hunting to love. The poem concludes tragically with Adonis's death during a boar hunt. The work is notable for its rich imagery, elaborate language, and exploration of themes including love, desire, mortality, and the relationship between beauty and death. It was dedicated to Henry Wriothesley, Earl of Southampton, and became extremely popular in Elizabethan England.
+"""
+
+Notes = """
+Venus and Adonis was first published in 1593 and is considered Shakespeare's first published work (referred to in the dedication as "the first heir of my invention"). This year is well-documented and unambiguous. The poem was entered in the Stationers' Register on April 18, 1593, and published shortly thereafter by Richard Field. It became one of Shakespeare's most popular works during his lifetime, going through numerous editions.
+"""
+</result>

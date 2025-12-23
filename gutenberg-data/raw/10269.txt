@@ -1,0 +1,15 @@
+<result>
+Title = "Pharoah's Army Got Drowned"
+Author = "Colored Quartet (unknown)"
+Year = 1902
+
+Tags = ["historical-document", "appropriate-for-children"]
+
+Summary = """
+This is an audio recording of the African American spiritual "Pharaoh's Army Got Drowned" (also known as "Mary Don't You Weep"), performed by an unnamed quartet and recorded by Thomas A. Edison. The spiritual recounts the biblical story of the Egyptian army being drowned in the Red Sea during the Exodus. This recording represents an important piece of early African American musical heritage captured during the early era of sound recording technology. Spirituals like this one were central to African American religious and cultural expression, originating during the period of slavery and continuing as a vital musical tradition into the 20th century.
+"""
+
+Notes = """
+The year 1902 is estimated based on Thomas Edison's active period of recording spirituals and African American music with his phonograph technology. Edison's recording operations were particularly active in capturing diverse musical performances from roughly 1890-1910. Without access to the specific Edison National Historic Site catalog entry, this date represents the general period when such recordings were made. The actual performance could date from anywhere in the 1890s-early 1900s range.
+"""
+</result>

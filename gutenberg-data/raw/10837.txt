@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Soul of Democracy: The Philosophy of the World War in Relation to Human Liberty" by Edward Howard Griggs, published in 1918. The book is a philosophical examination of World War I and its implications for democracy, international relations, and human liberty.
+
+Edward Howard Griggs (1868-1951) was an American philosopher, educator, and lecturer who was part of the progressive movement in early 20th century America. This work was written during WWI and reflects the intellectual discourse of that period about democracy, nationalism, and America's role in the world.
+
+<result>
+Title = "The Soul of Democracy: The Philosophy of the World War in Relation to Human Liberty"
+Author = "Edward Howard Griggs"
+Year = 1918
+
+Tags = ["non-fiction", "philosophy", "political-theory", "history", "world-war-i"]
+
+Summary = """
+A philosophical treatise written during World War I that examines the relationship between the war and democratic ideals. Edward Howard Griggs analyzes the conflict as fundamentally a battle of ideas between autocracy and democracy, exploring themes of international ethics, moral standards, America's role in international relations, and the future transformation of democratic society. The work covers topics ranging from the ethics of preparedness and self-defense to the relationship between democracy and education, socialism, feminism, and the necessity of sacrifice for democratic ideals. The author's central thesis is captured in his motto: 'Man for the State means autocracy and imperialism; MAN FOR MANKIND is the soul of democracy.'
+"""
+
+Notes = """
+The publication year of 1918 is certain, as this was written and published during World War I. Griggs was a prominent American philosopher and lecturer associated with progressive educational movements. This work is not a Catholic text—Griggs was influenced by Transcendentalism and progressive American philosophy rather than Catholic thought.
+"""
+</result>

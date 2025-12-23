@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "A Soldier of Virginia: A Tale of Colonel Washington and Braddock's Defeat"
+Author = "Burton Egbert Stevenson"
+Year = 1901
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+A historical novel set during the French and Indian War, focusing on the events surrounding General Edward Braddock's disastrous defeat in 1755. The story is told through the perspective of a young Virginian and involves Colonel George Washington, who served as an aide to Braddock during the ill-fated expedition. Burton Egbert Stevenson was an American author and librarian known for his historical fiction for young readers. The novel dramatizes one of the most significant military defeats in early American colonial history, when British and colonial forces were ambushed by French and Native American forces near Fort Duquesne (present-day Pittsburgh).
+"""
+
+Notes = """
+The publication year 1901 is clearly stated on the title page. Burton Egbert Stevenson (1872-1962) was a prolific American author who wrote numerous historical novels, particularly for younger audiences, though his works were enjoyed by readers of all ages. This appears to be historical fiction rather than a historical document, and while it deals with real historical figures and events, it's presented as a romantic adventure tale suitable for general audiences including children.
+"""
+</result>

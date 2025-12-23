@@ -1,0 +1,21 @@
+Looking at this text, I can see it's the front matter from Project Gutenberg ebook 12067, which appears to be a collection of Frank R. Stockton's works. However, this particular listing page is just advertising/catalog material for his various books.
+
+Based on the Gutenberg ID (12067) and the collection advertised, this appears to be **"The Bee-Man of Orn and Other Fanciful Tales"** by Frank R. Stockton, originally published in 1887.
+
+Let me provide the structured output:
+
+<result>
+Title = "The Bee-Man of Orn and Other Fanciful Tales"
+Author = "Frank R. Stockton"
+Year = 1887
+
+Tags = ["fiction", "appropriate-for-children", "fantasy", "short-stories"]
+
+Summary = """
+A collection of whimsical fairy tales and fanciful stories by American author Frank R. Stockton. The title story, "The Bee-Man of Orn," is a philosophical fairy tale about a man who keeps bees and is told by a sorcerer that he has been transformed from some other creature. The collection showcases Stockton's imaginative storytelling style, blending humor, fantasy, and gentle moral lessons. Stockton was best known for his short story "The Lady, or the Tiger?" and was a popular American humorist and writer of the late 19th century. His works are characterized by clever plot twists and fantastical scenarios that appeal to both children and adults.
+"""
+
+Notes = """
+Frank R. Stockton (1834-1902) was a prominent American writer during the Gilded Age. While he was of Quaker background rather than Catholic, his whimsical fairy tales were considered wholesome family entertainment. The year 1887 represents the first publication of this collection by Charles Scribner's Sons.
+"""
+</result>

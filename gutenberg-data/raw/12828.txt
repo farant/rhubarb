@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+<result>
+Title = "A Chapter in the History of a Tyrone Family"
+Author = "J. S. Le Fanu"
+Year = 1836
+
+Tags = ["fiction", "gothic", "horror"]
+
+Summary = """
+This is one of the early Gothic tales by Joseph Sheridan Le Fanu, the influential Irish writer of supernatural fiction. "A Chapter in the History of a Tyrone Family" was first published in 1836 and is presented as part of the "Legacy of the Late Francis Purcell, P.P. of Drumcoolagh" series. The story is narrated by a woman recounting dark and supernatural events from her own life in County Tyrone, Ireland. Le Fanu was a master of Gothic horror and is best known for works like "Carmilla" (1872), which predated and influenced Bram Stoker's Dracula. This early work showcases his characteristic use of Irish settings, unreliable narrators, and atmospheric supernatural elements. The story is framed as a true account passed from the narrator to a listener who then records it, a common Gothic device that adds verisimilitude to the tale.
+"""
+
+Notes = """
+The Project Gutenberg text indicates this story was "first published in 1836," so I've used that date. The text also includes "The Murdered Cousin" (1851), but the user's excerpt is specifically from the first story. Le Fanu (1814-1873) was Anglo-Irish Protestant, not Catholic, so I did not include the 'catholic' tag. While Gothic fiction of this era was often morally instructive, the supernatural horror content makes it inappropriate for young children.
+"""
+</result>

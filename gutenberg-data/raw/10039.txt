@@ -1,0 +1,19 @@
+I recognize this as Volume III of the collected works of Aphra Behn, edited by Montague Summers and published in 1915 (MCMXV). Aphra Behn was a 17th-century English playwright, poet, and novelist who lived from 1640-1689. The plays in this volume date from various years in the 1670s-1680s during her active theatrical career.
+
+For the year, I'll use 1915 as this is specifically an edited collection rather than a single original work. The collection includes multiple Restoration comedies, and Montague Summers' scholarly edition is significant in its own right for preserving and presenting Behn's theatrical works.
+
+<result>
+Title = "The Works of Aphra Behn, Vol. III"
+Author = "Aphra Behn, edited by Montague Summers"
+Year = 1915
+
+Tags = ["non-fiction", "drama", "restoration-comedy", "collected-works"]
+
+Summary = """
+Volume III of Montague Summers' scholarly edition of Aphra Behn's complete works, containing five Restoration comedies: "The Town-Fop," "The False Count," "The Lucky Chance," "The Forc'd Marriage," and "The Emperor of the Moon," along with scholarly notes. Aphra Behn (1640-1689) was one of the first English women to earn her living by writing and was a prominent playwright during the Restoration period. Her comedies are known for their wit, sexual frankness, and social commentary on marriage, gender roles, and class distinctions in 17th-century England.
+"""
+
+Notes = """
+While the individual plays were written and performed in the 1670s-1680s, this is specifically Montague Summers' 1915 scholarly edition. Summers (1880-1948) was an important editor who helped revive interest in Restoration drama. Given this is a collected works edition rather than a single original composition, the 1915 publication date is most appropriate for cataloging purposes. Note: These plays contain adult themes typical of Restoration comedy and are not appropriate for children.
+"""
+</result>

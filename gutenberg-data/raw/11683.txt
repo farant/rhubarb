@@ -1,0 +1,15 @@
+<result>
+Title = "Where the Trail Divides"
+Author = "Will Lillibridge"
+Year = 1907
+
+Tags = ["fiction", "western", "romance"]
+
+Summary = """
+"Where the Trail Divides" is a Western novel by Will Lillibridge, published in 1907. Lillibridge was an American author known for his Western fiction, including his earlier work "Ben Blair." This novel explores themes common to the Western genre of the early 20th century, including the frontier experience, conflicts between Native Americans and white settlers, and romance on the American frontier. The chapter titles suggest a narrative dealing with racial tensions ("The Red Man and the White," "The Curse of the Conquered"), destiny and choice ("Presentiment," "Fulfilment," "Fate, the Satirist"), and the psychological dimensions of frontier life ("The Voice of the Wild," "The Mystery of Solitude"). Like much popular fiction of its era, it would reflect the racial attitudes and perspectives of early 1900s America.
+"""
+
+Notes = """
+The year 1907 is clearly stated on the title page as the publication date. This represents both the original composition and publication of the work. Will Lillibridge was a popular but short-lived American author who died young in 1909. His works were typical of early 20th-century Western fiction and would not be considered appropriate for children due to likely period-typical racial content and adult themes. This is not a Catholic work.
+"""
+</result>

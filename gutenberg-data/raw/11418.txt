@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text provided, this is clearly "The Grafters" by Francis Lynde, illustrated by Arthur I. Keller. Francis Lynde (1856-1930) was an American author known for his adventure novels and railroad stories set in the American West. "The Grafters" was originally published in 1904 and deals with political corruption and railroad intrigue, typical themes in Lynde's work during the Progressive Era.
+
+<result>
+Title = "The Grafters"
+Author = "Francis Lynde"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'The Grafters' is a Progressive Era novel by Francis Lynde that explores themes of political corruption, railroad intrigue, and reform in the American West. Published during a period of significant concern about corporate monopolies and political graft, the novel follows characters navigating the complex world of railroad politics and state legislature corruption. Lynde was known for his adventure novels featuring railroads and Western settings, and this work exemplifies the muckraking spirit of early 20th century American literature that sought to expose corruption and advocate for reform.
+"""
+
+Notes = """
+1904 is the original publication year for this novel. Francis Lynde was a popular novelist of his era who wrote extensively about railroads and Western adventure, often incorporating contemporary political concerns about corruption and reform that were central to the Progressive Era.
+"""
+</result>

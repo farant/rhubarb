@@ -1,0 +1,17 @@
+I recognize this text as "Bushido: The Soul of Japan" by Inazo Nitobé. This is a seminal work explaining the ethical code of the samurai class to Western audiences. The book was first published in 1900, though this appears to be the 13th edition from 1908. For the purpose of a historical timeline, I'll use 1900 as it marks when this influential work first introduced Bushido philosophy to the English-speaking world.
+
+<result>
+Title = "Bushido: The Soul of Japan"
+Author = "Inazo Nitobé"
+Year = 1900
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+Bushido: The Soul of Japan is a groundbreaking work that introduced Western audiences to the ethical code and philosophy of the samurai warrior class. Written by Inazo Nitobé, a Japanese agricultural economist, educator, and diplomat educated in both Japan and the United States, this book explains the moral principles that governed samurai behavior - including loyalty, honor, courage, benevolence, politeness, sincerity, and self-control. Nitobé drew parallels between Bushido and Western chivalric codes, making the concepts accessible to Western readers. The work played a significant role in shaping Western understanding of Japanese culture and ethics during a period of increasing international contact. Originally written in English, it became highly influential both in the West and later in Japan itself, where it helped codify and romanticize samurai ideals during the Meiji era and beyond.
+"""
+
+Notes = """
+The first edition was published in 1900. This Project Gutenberg text is from the 13th edition (1908), which was the "Author's Edition, Revised and Enlarged." I chose 1900 as the year because it marks the original publication and historical significance of when this work first entered public consciousness. The book was written originally in English, as Nitobé was bilingual and sought specifically to explain Japanese culture to Western audiences.
+"""
+</result>

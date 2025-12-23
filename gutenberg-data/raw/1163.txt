@@ -1,0 +1,15 @@
+<result>
+Title = "Adventure"
+Author = "Jack London"
+Year = 1911
+
+Tags = ["fiction", "adventure"]
+
+Summary = """
+"Adventure" is a novel by Jack London set in the Solomon Islands during the colonial era. The story centers on David Sheldon, a copra plantation owner who is recovering from fever when Joan Lackland, a strong-willed and independent young woman, arrives at his plantation. The novel explores themes of colonialism, romance, and gender roles as Joan challenges the traditional expectations of women in the early 20th century by insisting on running her own plantation and participating in dangerous ventures typically reserved for men. The work reflects both London's adventure writing style and the racial attitudes common to the colonial period in which it was written.
+"""
+
+Notes = """
+The transcription notes indicate this is from the 1911 Thomas Nelson and Sons edition, which corresponds to the original publication year. Jack London wrote this novel during his phase of South Seas adventure stories, following his own travels to the Solomon Islands. While the adventure and survival elements are classic London, the work has been criticized for its depiction of indigenous peoples, reflecting the problematic colonial attitudes of its era.
+"""
+</result>

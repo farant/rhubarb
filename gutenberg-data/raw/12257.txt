@@ -1,0 +1,17 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+<result>
+Title = "The Go-Getter: A Story That Tells You How to Be One"
+Author = "Peter B. Kyne"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children", "business", "motivational"]
+
+Summary = """
+"The Go-Getter" is a short motivational business parable by American author Peter B. Kyne. The story follows Bill Peck, a disabled World War I veteran who demonstrates extraordinary determination and resourcefulness in completing an impossible task assigned to him by lumber magnate Cappy Ricks. The narrative centers on themes of perseverance, initiative, and loyalty in the face of obstacles. It became one of the most popular business motivation stories of the 20th century and has been widely distributed by corporations and business leaders as an inspirational text about determination and the "can-do" attitude. The story's influence extended well beyond its original publication, becoming required reading in many business contexts.
+"""
+
+Notes = """
+First published in 1921. This work was immensely popular in business circles and has been continuously reprinted since its original publication. Peter B. Kyne was a prolific American author who wrote primarily adventure and western fiction, along with this famous motivational story. The dedication references World War I, which helps date the work to the immediate post-war period.
+"""
+</result>

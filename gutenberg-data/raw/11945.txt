@@ -1,0 +1,15 @@
+<result>
+Title = "Essays of Schopenhauer"
+Author = "Arthur Schopenhauer"
+Year = 1851
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+This is a collection of essays by the German philosopher Arthur Schopenhauer (1788-1860), translated by Mrs. Rudolf Dircks. The collection includes some of Schopenhauer's most famous shorter works covering topics such as authorship, education, reading, women, suicide, and his pessimistic philosophy on the nature of existence. Schopenhauer is best known for his philosophical pessimism and his work "The World as Will and Representation." These essays showcase his distinctive literary style - clear, forceful, and often acerbic - and his views on culture, human nature, and metaphysics. Though deeply influenced by Eastern philosophy (particularly Buddhism) and Kant, Schopenhauer developed a unique philosophical system centered on the concept of "will" as the fundamental reality underlying existence.
+"""
+
+Notes = """
+The year 1851 represents the publication of "Parerga and Paralipomena," Schopenhauer's collection of essays and aphorisms from which most of these essay selections are typically drawn. This was the work that finally brought him recognition late in life. Individual essays may have been written earlier, but 1851 marks when this body of shorter philosophical works became publicly available and began to gain him the readership he had long sought. This English translation by Mrs. Rudolf Dircks came later (early 20th century), but the year given reflects the original German publication of the source material.
+"""
+</result>

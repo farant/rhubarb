@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly E.B. Havell's guidebook to Agra and the Taj Mahal. The text itself provides the publication year (1904) and full bibliographic information in the opening.
+
+<result>
+Title = "A Handbook to Agra and the Taj, Sikandra, Fatehpur-Sikri and the Neighbourhood"
+Author = "E.B. Havell"
+Year = 1904
+
+Tags = ["non-fiction", "travel-guide", "art-history", "architecture"]
+
+Summary = """
+A guidebook to the Mughal monuments of Agra, India, written by E.B. Havell, an influential British art historian and administrator who served as Principal of the Government School of Art in Calcutta. The book provides historical context for understanding the artistic achievements of the Mughal Empire, particularly focusing on the Taj Mahal and other architectural masterpieces in the Agra region. Havell was notable for his advocacy of traditional Indian art at a time when British colonial education sought to impose Western artistic standards. The work reflects his belief that Indian art should be understood and appreciated on its own terms rather than through a Eurocentric lens.
+"""
+
+Notes = """
+The year 1904 is clearly stated in the original publication. This is not a translation or edition of an earlier work, but an original guidebook written by Havell based on his expertise in Indian art and architecture during the British colonial period.
+"""
+</result>

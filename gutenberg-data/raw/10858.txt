@@ -1,0 +1,15 @@
+<result>
+Title = "Messages and Papers of the Presidents: Andrew Jackson, Volume 2, Part 3: March 4, 1829, to March 4, 1833"
+Author = "Andrew Jackson (edited by James D. Richardson)"
+Year = 1829
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a compilation of the official messages and papers of President Andrew Jackson during his first term in office (1829-1833), edited by James D. Richardson. It is part of a larger series that documented the writings and official communications of U.S. Presidents. The volume includes Jackson's presidential proclamations, messages to Congress, executive orders, and other official correspondence from this period. This was a transformative era in American politics, marking the rise of Jacksonian democracy and significant debates over states' rights, the Second Bank of the United States, and Indian removal policy. The biographical introduction provides context about Jackson's early life, military career (including his famous victory at New Orleans in 1815), and rise to the presidency.
+"""
+
+Notes = """
+I chose 1829 as the year because this represents the beginning of the period covered by this volume (Jackson's first inauguration). While the compilation itself was published later as part of Richardson's comprehensive series (late 1890s), the primary documents date from 1829-1833. For a historical timeline, 1829 is the most educationally relevant date as it marks when these presidential papers were originally written and issued. This is a government document compilation rather than a single-authored work, so it doesn't fall under 'appropriate-for-children' or 'catholic' tags.
+"""
+</result>

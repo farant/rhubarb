@@ -1,0 +1,15 @@
+<result>
+Title = "Children of the Frost"
+Author = "Jack London"
+Year = 1902
+
+Tags = ["fiction", "short-stories", "adventure"]
+
+Summary = """
+"Children of the Frost" is a collection of short stories by Jack London published in 1902. The collection focuses on the indigenous peoples of Alaska and the Yukon, presenting tales from the perspective of Native American characters. The stories explore themes of survival, cultural conflict between indigenous peoples and white settlers ("Sunlanders"), tribal customs, and the harsh realities of life in the Far North. Unlike much of London's other work which centers on white protagonists in the wilderness, these stories attempt to give voice to the Native peoples of the Arctic regions, showcasing their legends, laws, and way of life. The collection includes notable stories such as "The Law of Life," "Nam-Bok the Unveracious," and "The League of the Old Men."
+"""
+
+Notes = """
+The year 1902 is clearly indicated on the title page as the publication year. While Jack London is known for his adventure fiction set in Alaska and the Klondike, this particular collection is notable for its focus on indigenous perspectives. The stories are not marked as appropriate for children due to mature themes including death, violence, and cultural tragedy. London was not Catholic, so the 'catholic' tag does not apply. These are works of literary fiction rather than historical documents, though they do provide a window (albeit through a turn-of-the-century white author's lens) into indigenous cultures of the period.
+"""
+</result>

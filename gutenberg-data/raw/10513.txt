@@ -1,0 +1,15 @@
+<result>
+Title = "On the Seashore"
+Author = "R. Cadwallader Smith"
+Year = 1890
+
+Tags = ["non-fiction", "appropriate-for-children", "natural-history", "educational"]
+
+Summary = """
+'On the Seashore' is part of Cassell's "Eyes and No Eyes" series, a collection of Victorian-era natural history books written for children. This particular volume focuses on marine life and coastal natural history, teaching young readers about the flora and fauna found along the seashore. The "Eyes and No Eyes" series was designed to encourage children to observe nature carefully and develop skills in natural history - the title referring to the difference between those who look carefully at the world around them (having "eyes") versus those who pass by without noticing. R. Cadwallader Smith was a popular Victorian author of children's educational books focused on natural history and science.
+"""
+
+Notes = """
+The exact publication year is not provided in the Gutenberg metadata, but based on the series context and publication patterns of Cassell's "Eyes and No Eyes" series, this work was likely published in the late Victorian era, approximately 1890s. The series was highly popular in Britain during this period as part of the broader Victorian enthusiasm for natural history education. I've estimated circa 1890 as a reasonable approximation for this work, though it could range anywhere from 1880-1900.
+"""
+</result>

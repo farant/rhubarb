@@ -1,0 +1,21 @@
+I'll read through this text to identify the work, author, and other requested information.
+
+This appears to be a collection of poetry by Joseph C. Lincoln titled "Cape Cod Ballads and Other Verse," published in 1902 with illustrations by Edward W. Kemble. This is a straightforward identification from the title page.
+
+Joseph C. Lincoln (1870-1944) was an American author known for his novels and stories set on Cape Cod, Massachusetts. While Lincoln was likely from a Christian background (common in that era and region), I don't have specific evidence that he was Catholic or that this work would have religious approval markers like nihil obstat or imprimatur. His works were primarily regional humor and dialect poetry/prose about New England coastal life.
+
+<result>
+Title = "Cape Cod Ballads and Other Verse"
+Author = "Joseph C. Lincoln"
+Year = 1902
+
+Tags = ["fiction", "poetry", "appropriate-for-children", "regional-literature", "americana"]
+
+Summary = """
+A collection of humorous dialect poetry and verse depicting life in Cape Cod coastal villages at the turn of the 20th century. Joseph C. Lincoln was known for his affectionate portrayals of New England characters and coastal communities, written in vernacular dialect. The poems feature local "types" like school-committee men and village oracles, drawn from the author's boyhood memories of Cape Cod. The work was illustrated by Edward W. Kemble, known for his character illustrations. This represents early 20th century American regional literature in the tradition of dialect poetry that captured local color and vernacular speech patterns.
+"""
+
+Notes = """
+The year 1902 is taken directly from the title page and represents the original publication date. This is not a translation or annotated edition but an original work. While the author was likely Protestant (typical of Massachusetts Yankees of that era), there is no evidence Lincoln was Catholic, so the 'catholic' tag is not included.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work and extract the requested information.
+
+This appears to be a publication from the Society for Pure English (S.P.E.), specifically Tract No. III titled "A Few Practical Suggestions" by Logan Pearsall Smith, published in 1920 (as indicated by the Roman numerals MDCCCCXX).
+
+Logan Pearsall Smith (1865-1946) was an American-born British essayist and critic known for his work on the English language. The Society for Pure English was founded in 1913 by Robert Bridges and others to preserve and promote good English usage.
+
+<result>
+Title = "A Few Practical Suggestions"
+Author = "Logan Pearsall Smith"
+Year = 1920
+
+Tags = ["non-fiction", "linguistics", "language-study"]
+
+Summary = """
+This is Tract No. III from the Society for Pure English, a scholarly organization founded in 1913 dedicated to preserving and promoting good English usage. Written by Logan Pearsall Smith, an American-born British essayist and language critic, this tract provides practical guidance on applying the Society's principles for maintaining linguistic standards. The work addresses questions from members about how to implement the Society's general principles in specific cases, offering suggestions approved by leading philological scholars of the time.
+"""
+
+Notes = """
+The publication year of 1920 is clearly indicated in Roman numerals (MDCCCCXX) on the title page. This work represents early 20th-century prescriptive linguistics during a period when scholars were particularly concerned about changes in English usage. The tag 'appropriate-for-children' was not included as this is a specialized academic/professional publication intended for adult members of a scholarly society.
+"""
+</result>

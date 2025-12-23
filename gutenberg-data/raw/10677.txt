@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is a biographical work about James Oglethorpe, the founder of the colony of Georgia, written by Thaddeus Mason Harris, D.D. The work was published in 1841 (MDCCCXLI in Roman numerals shown on the title page).
+
+<result>
+Title = "Biographical Memorials of James Oglethorpe, Founder of the Colony of Georgia, in North America"
+Author = "Thaddeus Mason Harris"
+Year = 1841
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a biographical work about James Oglethorpe (1696-1785), the British soldier, philanthropist, and founder of the colony of Georgia in 1733. Written by Thaddeus Mason Harris, a distinguished scholar and member of multiple historical societies, this book documents Oglethorpe's life and his role in establishing Georgia as both a humanitarian refuge for debtors and a strategic buffer colony between British Carolina and Spanish Florida. The work was dedicated to the Georgia Historical Society and reflects 19th-century American interest in documenting the lives of colonial founders.
+"""
+
+Notes = """
+The year 1841 is taken directly from the title page (shown in Roman numerals as MDCCCXLI). This is a 19th-century biographical treatment of an 18th-century historical figure, not a primary source document from Oglethorpe's own time. Harris was a well-credentialed historian, as evidenced by his membership in numerous academic societies including the American Academy of Arts and Sciences and multiple historical societies.
+"""
+</result>

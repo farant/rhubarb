@@ -1,0 +1,23 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+From the text, I can see this is clearly **The First Folio of Hamlet** (or the First Folio version of Hamlet) published as Project Gutenberg eBook #1109. The executive notes discuss the original printing practices and spelling variations ("vnfold", "liue") characteristic of the First Folio.
+
+The First Folio was published in 1623, seven years after Shakespeare's death, and contained 36 of his plays. However, Hamlet itself was written and first performed around 1600-1601.
+
+For the year, I need to decide: do I use 1623 (First Folio publication) or circa 1600-1601 (when Hamlet was written)? Given your guidance about historical and educational value, and that this is specifically the First Folio text with its printing peculiarities (which is what makes this version notable), I'll use 1623 as it represents this specific textual tradition.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark (First Folio)"
+Author = "William Shakespeare"
+Year = 1623
+
+Tags = ["fiction", "drama", "tragedy"]
+
+Summary = """
+This is the First Folio edition of Hamlet, one of Shakespeare's most famous tragedies. The play tells the story of Prince Hamlet of Denmark, who seeks revenge against his uncle Claudius for murdering Hamlet's father, marrying his mother, and usurping the throne. The play explores themes of revenge, madness, mortality, and moral corruption. This particular text preserves the original printing conventions and spelling variations of the 1623 First Folio, including printer's substitutions of letters (u for v, etc.) due to the mechanical limitations of early printing presses.
+"""
+
+Notes = """
+Year chosen is 1623, the publication date of Shakespeare's First Folio, rather than c.1600-1601 when Hamlet was likely written. This is appropriate because this text specifically represents the First Folio printing tradition with its characteristic spelling variations and printer's conventions, which is the historical artifact being presented. The First Folio was the first collected edition of Shakespeare's plays.
+"""
+</result>

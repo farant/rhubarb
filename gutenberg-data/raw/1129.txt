@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Tragedy of Hamlet, Prince of Denmark is one of Shakespeare's most famous tragedies. The play tells the story of Prince Hamlet, who seeks to avenge his father's murder by his uncle Claudius, who has usurped the throne and married Hamlet's mother Gertrude. The play explores themes of revenge, madness, mortality, and moral corruption. It contains some of the most famous lines in English literature, including "To be or not to be" and features iconic scenes such as Hamlet's encounter with his father's ghost and the "play within a play." The work is considered one of the greatest theatrical achievements in Western literature and has been performed and adapted countless times across centuries.
+"""
+
+Notes = """
+The year 1603 represents the approximate date of the First Quarto publication, though scholars debate whether this represents the actual date of composition (which may have been 1599-1601). The note in this Gutenberg text about printer's errors and substitutions (u for v, etc.) indicates this is likely based on one of the early quartos or the First Folio (1623), which preserved the original printing conventions of Shakespeare's time. For a historical timeline, 1603 is a reasonable choice as it represents when the play first entered public circulation in print form, though performances likely preceded this date.
+"""
+</result>

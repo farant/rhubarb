@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is clearly a work by George Bernard Shaw (the Irish playwright and critic) titled "The Dark Lady of the Sonnets." The text shows it was written in 1910 as a play ("piece d'occasion") performed to raise funds for a National Theatre memorial to Shakespeare. The work deals with Shakespeare's sonnets and the identity of the "Dark Lady" mentioned in them, with Shaw discussing the theory that she was Mary Fitton.
+
+<result>
+Title = "The Dark Lady of the Sonnets"
+Author = "George Bernard Shaw"
+Year = 1910
+
+Tags = ["non-fiction", "drama", "literary-criticism"]
+
+Summary = """
+A short play by George Bernard Shaw written as a fundraiser for the establishment of a National Theatre as a memorial to Shakespeare. The work explores the identity of the mysterious "Dark Lady" referenced in Shakespeare's sonnets, with Shaw presenting the theory that she was Mistress Mary Fitton. The preface includes Shaw's characteristic wit and commentary on Shakespeare's life, works, social standing, and reputation, touching on topics like "Shakespear's Pessimism," "Shakespear and Democracy," and "The Idol of the Bardolaters." This is both a dramatic work and a piece of Shavian literary criticism.
+"""
+
+Notes = """
+Published in 1910, this is a minor but characteristic work of Shaw's middle period. Shaw was known for his iconoclastic views on Shakespeare and his willingness to challenge Victorian bardolatry. The work combines drama with extended critical commentary in the preface, typical of Shaw's published plays.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be an anthology of Arabic literature compiled and edited by Epiphanius Wilson, published in 1900. The work contains translations of classical Arabic poetry and excerpts from "The Romance of Antar" (also known as "Antar and Abla" or the "Sirat Antar"), which is a famous pre-Islamic and early Islamic Arabian epic.
+
+<result>
+Title = "Oriental Literature: The Literature of Arabia"
+Author = "Various (edited by Epiphanius Wilson)"
+Year = 1900
+
+Tags = ["non-fiction", "poetry", "historical-document", "anthology"]
+
+Summary = """
+This is an anthology of classical Arabic literature compiled and edited by Epiphanius Wilson, published in 1900 as part of a series on Oriental literature. The collection includes excerpts from 'The Romance of Antar,' one of the most famous pre-Islamic and early Islamic Arabian epic poems that tells the story of the warrior-poet Antar ibn Shaddad. The volume also contains a substantial selection of Arabian poetry, including elegies, philosophical verses, and poems addressed to various caliphs and historical figures. The work represents an early 20th-century English-language effort to make classical Arabic literary tradition accessible to Western readers, featuring critical and biographical sketches to provide context for the selections.
+"""
+
+Notes = """
+The year 1900 is chosen as this is the publication date of this specific compilation by Epiphanius Wilson. While the individual works included span centuries of Arabian literary history (from pre-Islamic times through the Abbasid Caliphate), this anthology itself is a product of turn-of-the-century Orientalist scholarship. The underlying texts vary greatly in age: the Romance of Antar dates to the 6th century CE (though compiled later), while some of the poems reference figures like Harun al-Rashid (8th-9th century CE).
+"""
+</result>

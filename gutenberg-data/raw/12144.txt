@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Looking at this text, this is clearly an anthology collection rather than a single work by a single author. The title page identifies it as "THE CONTINENTAL CLASSICS, VOLUME XVIII" focusing on "MYSTERY TALES" and was published in 1909. This is a collection of mystery stories from various European authors (primarily Russian, with some Danish/Scandinavian and Hungarian works).
+
+The collection includes notable authors like Dostoyevsky, Pushkin, Chekhov, and others. This appears to be part of a larger "Continental Classics" series that was publishing European literature for English-speaking audiences in the early 20th century.
+
+<result>
+Title = "The Continental Classics, Volume XVIII: Mystery Tales"
+Author = "Various (anthology)"
+Year = 1909
+
+Tags = ["fiction", "anthology", "mystery"]
+
+Summary = """
+This is Volume XVIII of The Continental Classics series, an anthology of mystery and crime stories from Continental European authors, primarily Russian, Danish, and Hungarian writers. The collection includes works by major Russian literary figures such as Alexander Pushkin's "The Queen of Spades," Dostoyevsky's "Crime and Punishment," and Anton Chekhov's "The Safety Match," alongside Scandinavian mystery tales by authors like Bernhard Severin Ingemann and Jörgen Wilhelm Bergsöe. The anthology represents an early 20th-century effort to bring Continental European mystery literature to English-speaking audiences, showcasing the development of the mystery genre across different European literary traditions.
+"""
+
+Notes = """
+Year chosen is 1909, which is the publication date shown on the title page of this anthology edition. While the individual stories within were originally published at various earlier dates (Pushkin's "Queen of Spades" from 1834, Dostoyevsky's "Crime and Punishment" from 1866, etc.), the year 1909 represents when this particular collection was compiled and published as part of The Continental Classics series.
+"""
+</result>

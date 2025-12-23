@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a collection of short stories by W. W. Jacobs, with "The Lady of the Barge" being the title story. W. W. Jacobs (William Wymark Jacobs) was an English author known for his humorous short stories and his famous horror story "The Monkey's Paw." The excerpt shown here appears to be from "In the Library," one of the stories in this collection.
+
+<result>
+Title = "The Lady of the Barge and Other Stories"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "short-stories", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by English author W. W. Jacobs, first published in 1902. The collection includes twelve tales, most notably "The Monkey's Paw," which has become one of the most famous horror stories in English literature. The other stories in the collection are primarily humorous tales of working-class life, sailors, and everyday people in England. Jacobs was known for his keen observations of human nature, his wit, and his ability to blend humor with darker themes. The collection showcases his range from light comedy to supernatural horror.
+"""
+
+Notes = """
+The collection was first published in 1902 by Harper & Brothers. While most of Jacobs' work is lighthearted, "The Monkey's Paw" from this collection became his most enduring and frequently anthologized work, though it represents an unusual departure into horror for the author. The story "In the Library" (shown in this excerpt) is one of the darker tales in the collection, dealing with tension between two men who jointly inherited a house and business.
+"""
+</result>

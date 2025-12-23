@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "Ethel Morton's Enterprise"
+Author = "Mabell S. C. Smith"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Ethel Morton's Enterprise" is part of the Ethel Morton series of children's books written by Mabell S. C. Smith in the early 20th century. The series follows the adventures of Ethel Morton and her cousin (both named Ethel Morton, distinguished as "Ethel Blue" and "Ethel Brown"). This particular volume focuses on the children's gardening enterprise, involving seed catalogues, flower gardens, wild flowers, and community activities. The Ethel Morton series was popular juvenile fiction that combined wholesome values, educational content about nature and gardening, and gentle adventure stories suitable for young readers of the era.
+"""
+
+Notes = """
+This appears to be from the Ethel Morton series published in the mid-1910s. Based on the Project Gutenberg catalog and publication patterns of similar juvenile series fiction from this era, 1915 is the most likely publication year for this specific volume. The series was part of the popular early 20th-century tradition of serialized children's literature featuring young protagonists engaged in educational and morally uplifting activities.
+"""
+</result>

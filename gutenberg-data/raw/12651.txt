@@ -1,0 +1,15 @@
+<result>
+Title = "The Humour of Homer and Other Essays"
+Author = "Samuel Butler"
+Year = 1913
+
+Tags = ["non-fiction", "literary-criticism", "essays"]
+
+Summary = """
+This is a collection of essays by Samuel Butler (1835-1902), the Victorian-era English author, satirist, and critic best known for his novels "Erewhon" and "The Way of All Flesh." The collection includes his essay "The Humour of Homer" along with other essays on life, art, and science. Butler was a polymathic writer who challenged Victorian conventions and wrote extensively on topics ranging from Homeric scholarship to evolutionary theory to art criticism. This particular collection was edited by R. A. Streatfeild and published posthumously, gathering Butler's diverse intellectual interests into a single volume.
+"""
+
+Notes = """
+Samuel Butler died in 1902, and this collection was compiled and edited posthumously by R. A. Streatfeild. The Project Gutenberg metadata indicates a 2004 release date for the eBook, but this is just the digitization date. The introduction mentions the essays were originally published by Grant Richards in 1904 and reissued by Fifield in 1908, with additional material added for this expanded edition. Based on the editorial history described, this complete collection with "The Humour of Homer" essay added appears to have been published around 1913-1914. I'm choosing 1913 as the publication year for this particular compilation, though the individual essays were written in the late 19th century during Butler's lifetime.
+"""
+</result>

@@ -1,0 +1,19 @@
+Looking at this text, I can see it's an Italian novel by Luciano Zùccoli titled "Il Designato" (The Designated One). Based on the publication information visible in the text, this appears to be a revised edition from 1920 (as noted in "Milano, Tip. Treves, 1920"), but the preface mentions it was first published in Milan in 1894.
+
+Let me provide the structured information:
+
+<result>
+Title = "Il Designato"
+Author = "Luciano Zùccoli"
+Year = 1894
+
+Tags = ["fiction", "italian-literature"]
+
+Summary = """
+"Il Designato" (The Designated One) is a novel by Italian author Luciano Zùccoli, first published in 1894. This was Zùccoli's second novel, following "I Lussuriosi" (The Lustful Ones). The critical preface to this revised 1920 edition notes that the work established Zùccoli as a serious literary artist rather than a mere dilettante, confirming the promise shown in his debut novel. Zùccoli (1868-1929) was an Italian novelist and journalist who wrote primarily realistic and romantic fiction exploring Italian society and human psychology in the late 19th and early 20th centuries.
+"""
+
+Notes = """
+I chose 1894 as the year because this represents the original publication date mentioned in the critical preface, which is most historically accurate for timeline purposes. While the Project Gutenberg text is based on a revised 1920 edition (the "eighth thousand" printing), the work's historical significance and cultural impact date to its original 1894 publication. The text notes this was a "nuova edizione riveduta dall'autore" (new edition revised by the author).
+"""
+</result>

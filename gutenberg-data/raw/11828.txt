@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries, Third Series: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1963
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a U.S. Copyright Office publication documenting renewal registrations for copyrighted works during a specific period in 1963. It contains an alphabetical listing of books, pamphlets, serials, and periodical contributions whose copyright registrations were renewed, including information about both the original and renewal registration. This type of catalog served as an official record of copyright renewals in the United States during the era when copyright renewal was required to maintain protection beyond the initial copyright term.
+"""
+
+Notes = """
+The year 1963 is chosen based on the renewal dates visible in the entries (e.g., "23Oct63; R324141"). This is a government document produced by the U.S. Copyright Office, part of the Library of Congress. Project Gutenberg ID 11828 corresponds to this administrative publication. These catalogs are important historical records for tracking intellectual property rights and understanding which works entered the public domain when copyright was not renewed.
+"""
+</result>

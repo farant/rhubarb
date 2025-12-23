@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 12, No. 340"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children", "literary-review"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly periodical published in the early 19th century. This particular issue is a supplementary number from Volume 12, No. 340, and features a review and excerpts from the literary annuals of 1829. Literary annuals were elaborately bound gift books popular during the Romantic era, containing poetry, prose, and illustrations. This issue discusses these ornate publications, their silk bindings, and promises to share "exquisite specimens" of their contents with readers. The publication aimed to provide accessible literature, entertainment, and educational content to a broad middle-class audience.
+"""
+
+Notes = """
+The year 1828 is chosen because this issue reviews the annuals "for 1829" - these gift books were typically published in the autumn of the preceding year for the Christmas season. The supplementary number would have appeared in late 1828, discussing the newly released 1829 annuals. The Mirror was published from 1822-1849 and was known for its accessible, entertaining content aimed at general readers.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is "Back to Back," a short story that's part of W.W. Jacobs' collection "Night Watches." W.W. Jacobs (William Wymark Jacobs, 1863-1943) was an English author known for his humorous short stories about dockside life and sailors, as well as his famous horror story "The Monkey's Paw."
+
+"Night Watches" was first published in 1914. The story appears to be a comedic piece about Mr. Scutts being brought home in a compromised state (likely intoxicated) in daylight, much to his wife's dismay.
+
+<result>
+Title = "Back to Back (from Night Watches)"
+Author = "W.W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Back to Back' is a humorous short story by W.W. Jacobs, included in his collection 'Night Watches' published in 1914. Jacobs was a popular English author known for his comic tales of sailors and dockside life, as well as the classic horror story 'The Monkey's Paw.' This particular story appears to involve the comedic misadventures of Mr. Scutts, who is brought home by cab in an apparently intoxicated state during daylight hours, to the dismay of his wife who observes the scene from behind a curtain. Jacobs' work is characterized by its wit, working-class characters, and gentle satire of English domestic life in the late Victorian and Edwardian periods.
+"""
+
+Notes = """
+'Night Watches' was published in 1914. While the humor involves adult situations (intoxication), Jacobs' writing style is clean and his comedy is situational rather than vulgar, making it generally appropriate for older children and families of the period.
+"""
+</result>

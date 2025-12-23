@@ -1,0 +1,15 @@
+<result>
+Title = "Thrilling Adventures by Land and Sea"
+Author = "James O. Brayman"
+Year = 1860
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a collection of historical adventure narratives compiled and edited by James O. Brayman in the mid-19th century. The book gathers "remarkable historical facts from authentic sources" featuring dramatic and exciting true stories of adventures occurring on both land and sea. The work was designed as a form of improving literature - the editor explicitly intended it to serve as a bridge between sensationalist popular fiction and more serious educational reading. The preface reveals the Victorian-era concern about the proliferation of morally dubious popular literature, and positions this collection as wholesome entertainment that could elevate readers' tastes while still providing excitement and drama. The stories focus on "the daring and heroic" with the stated purpose of exciting "noble impulses" in readers.
+"""
+
+Notes = """
+The exact publication year is difficult to determine from this excerpt alone, but based on the preface's language, concerns about popular literature, and publishing conventions, this work was likely published in the 1850s-1860s. I've chosen 1860 as a reasonable estimate for this type of compilation during the mid-Victorian era when such collections of "improving" adventure literature were popular. The Gutenberg edition is #10765. The work represents a common 19th-century publishing genre that attempted to provide morally acceptable entertainment as an alternative to dime novels and sensationalist fiction.
+"""
+</result>

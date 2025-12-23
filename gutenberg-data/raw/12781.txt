@@ -1,0 +1,21 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a periodical publication - "The Mirror of Literature, Amusement, and Instruction" from 1831. This was a Victorian-era magazine that published various articles, engravings, and pieces of general interest. The specific text shown is an article about Mocha (the Arabian port city famous for coffee exports) from Volume 17, Number 485, dated Saturday, April 16, 1831.
+
+Since this is a periodical rather than a single-author work, and the article appears to be editorial content drawing from Lord Valentia's travel writings, I'll structure the information accordingly:
+
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 17, No. 485"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular Victorian weekly periodical published in London that featured a variety of content including articles on geography, history, literature, engravings, and general knowledge. This particular issue from April 16, 1831 includes an article about Mocha, the Arabian port city on the Red Sea famous for coffee exports. The article describes the city's appearance, architecture, and quotes extensively from Lord Valentia's travels in the region. These periodicals were designed for family readership and self-education, typical of the Victorian era's emphasis on moral improvement and knowledge acquisition.
+"""
+
+Notes = """
+The year 1831 is the publication date of this specific issue. This was a weekly Saturday publication priced at 2 pence. The periodical ran from 1822 to 1849, making it one of the longer-running popular magazines of its era.
+"""
+</result>

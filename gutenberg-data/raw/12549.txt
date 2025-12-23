@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly an autobiography by Theodore Ledyard Cuyler, a prominent American Presbyterian minister and author. The work is titled "Recollections of a Long Life" and was published in 1902, as indicated in the text itself.
+
+Theodore Ledyard Cuyler (1822-1909) was a well-known Protestant minister, not a Catholic author, though he was a significant religious figure in 19th-century America. He served for many years as pastor of Lafayette Avenue Presbyterian Church in Brooklyn, New York, and was a prolific writer on religious topics.
+
+<result>
+Title = "Recollections of a Long Life: An Autobiography"
+Author = "Theodore Ledyard Cuyler"
+Year = 1902
+
+Tags = ["non-fiction", "autobiography", "religious", "historical-document"]
+
+Summary = """
+This is the autobiography of Theodore Ledyard Cuyler (1822-1909), a prominent American Presbyterian minister, author, and religious leader of the 19th century. Cuyler served as pastor of Lafayette Avenue Presbyterian Church in Brooklyn, New York, and was known for his evangelical work, temperance advocacy, and prolific religious writing. The autobiography covers his boyhood, college life, travels to Great Britain where he met notable figures like Wordsworth, Dickens, and Carlyle, his work in the pulpit, experiences with religious revivals, and his involvement in the temperance reform movement. The work provides valuable insight into American Protestant religious life and culture during the Victorian era.
+"""
+
+Notes = """
+The year 1902 is clearly stated in the publication information. Cuyler was a Protestant (Presbyterian) minister, not a Catholic author, so the 'catholic' tag does not apply. While the work deals with serious religious and historical topics, it is written in an accessible autobiographical style but would not typically be considered children's literature given its adult perspective and historical depth.
+"""
+</result>

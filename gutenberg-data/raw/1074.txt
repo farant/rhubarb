@@ -1,0 +1,15 @@
+<result>
+Title = "The Sea-Wolf"
+Author = "Jack London"
+Year = 1904
+
+Tags = ["fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+The Sea-Wolf is a psychological adventure novel by Jack London, first published in 1904. The story follows Humphrey van Weyden, a literary critic and survivor of a ferry accident in San Francisco Bay, who is rescued by a seal-hunting schooner called the Ghost. The ship is commanded by the brutal and philosophical Captain Wolf Larsen, a complex antagonist who espouses a form of Nietzschean philosophy while exercising tyrannical control over his crew. The novel explores themes of survival, the nature of strength and weakness, individualism versus civilization, and the conflict between intellectual and physical power. It is considered one of London's most important works and combines maritime adventure with philosophical discourse.
+"""
+
+Notes = """
+I chose 1904 as the year because this is when the work was first published (November 1904, as indicated in the publication information). This represents the original publication date of the novel, which is the most historically accurate date for this work. The title page shows a 1917 impression from the Popular Edition, but 1904 marks when the work first entered the literary canon.
+"""
+</result>

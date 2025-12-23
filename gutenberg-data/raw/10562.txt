@@ -1,0 +1,17 @@
+I recognize this as a collection of humorous short stories by W.W. Jacobs, a British author known for his maritime tales and comic fiction. "Ship's Company" was published in 1911 as one of his collections of short stories featuring working-class characters, often sailors and dockworkers, in comedic situations. The story shown here, "Friends in Need," is typical of Jacobs' style - dealing with everyday characters in pubs and their humorous conversations about work, money, and life's difficulties.
+
+<result>
+Title = "Ship's Company"
+Author = "W.W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Ship's Company is a collection of humorous short stories by W.W. Jacobs, published in 1911. Jacobs was an English author best known for his maritime tales and comic fiction featuring working-class characters, particularly sailors, dock workers, and pub-goers. His stories are characterized by witty dialogue, gentle satire, and observations of everyday life in early 20th-century England. While Jacobs is perhaps most famous for his horror story "The Monkey's Paw," the bulk of his work consists of lighthearted tales like those in Ship's Company, which depict the humorous adventures and misadventures of ordinary people in port towns and aboard ships.
+"""
+
+Notes = """
+The publication year 1911 is when this collection was first published. W.W. Jacobs (William Wymark Jacobs, 1863-1943) was at the height of his career during this period. His stories were immensely popular in their time and are generally appropriate for all ages, featuring humor rather than adult content.
+"""
+</result>

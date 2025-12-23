@@ -1,0 +1,15 @@
+<result>
+Title = "The Works of Francis Beaumont and John Fletcher, Volume I"
+Author = "Francis Beaumont, John Fletcher"
+Year = 1610
+
+Tags = ["fiction", "drama", "theatre"]
+
+Summary = """
+This is the first volume of a collected edition of plays by Francis Beaumont and John Fletcher, two of the most important English dramatists of the Jacobean era. The volume includes five notable plays: 'The Maid's Tragedy', 'Philaster', 'A King and No King', 'The Scornful Lady', and 'The Custom of the Country'. Beaumont and Fletcher frequently collaborated on their works, creating sophisticated tragicomedies and dramas that were immensely popular in their time and influenced English theatre for generations. Their plays are known for their complex plots, witty dialogue, and exploration of themes such as honor, love, and political intrigue. This particular edition was edited by Arnold Glover and represents a scholarly compilation of their theatrical works.
+"""
+
+Notes = """
+The year 1610 represents approximately the middle of Beaumont and Fletcher's most productive collaborative period (roughly 1606-1613). While the individual plays were written and performed at various dates in the early 17th century, 1610 serves as a representative date for their collaboration. The first collected folio edition referenced in this text was published in 1647, after both playwrights had died. For timeline purposes, using circa 1610 places these works in their proper historical context during the Jacobean era under King James I.
+"""
+</result>

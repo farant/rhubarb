@@ -1,0 +1,17 @@
+I recognize this work! This is a children's novel by George MacDonald, a Scottish author and minister who was known for his fantasy and children's literature. Let me analyze the text and provide the structured information you requested.
+
+<result>
+Title = "Gutta-Percha Willie: The Working Genius"
+Author = "George MacDonald"
+Year = 1873
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+A Victorian children's novel by George MacDonald about a boy named Willie who has an insatiable curiosity about how things work. The story follows Willie's journey of learning through hands-on experimentation and apprenticeship with various craftsmen, including a blacksmith. MacDonald uses the story to celebrate practical wisdom, the dignity of manual labor, and the integration of intellectual and physical learning. The title refers to gutta-percha, a natural rubber-like material popular in Victorian times, symbolizing Willie's malleable, adaptable nature as he learns. The novel embodies MacDonald's educational philosophy that children learn best through direct experience and creative problem-solving rather than rote memorization.
+"""
+
+Notes = """
+First published in 1873. George MacDonald was a Scottish Congregational minister and prolific author who influenced later fantasy writers like C.S. Lewis and J.R.R. Tolkien. While MacDonald was a Christian minister and his works contain Christian themes and values, he was not Catholic - he was Protestant (Congregational). Therefore, I have not included the 'catholic' tag, but included 'christian' instead to reflect the moral and spiritual elements present in his work. The illustrations mentioned are by Arthur Hughes, a Pre-Raphaelite artist who frequently collaborated with MacDonald.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics: Masterpieces of German Literature Translated into English, Volume II"
+Author = "Johann Wolfgang von Goethe"
+Year = 1809
+
+Tags = ["fiction", "non-fiction", "philosophy"]
+
+Summary = """
+This volume is part of a twenty-volume collection of German literary masterpieces translated into English, published in 1914. Volume II focuses on works by Johann Wolfgang von Goethe, Germany's preeminent writer and polymath of the late 18th and early 19th centuries. The volume includes his novel "The Elective Affinities" (Die Wahlverwandtschaften), which explores themes of marriage, passion, and moral choice through the metaphor of chemical attraction. Also included are Goethe's critical essays on Shakespeare and his oration on the writer Christoph Martin Wieland. Goethe (1749-1821) was a central figure of the Weimar Classicism movement and made profound contributions to literature, science, and philosophy.
+"""
+
+Notes = """
+I chose 1809 as the year because that is when "The Elective Affinities" (Die Wahlverwandtschaften), the major work in this volume, was originally published. While this is a 1914 compilation/translation, the primary content dates to 1809. The other essays were written at various points in Goethe's career, but the novel is the centerpiece of this volume. Goethe was not Catholic - he was raised Lutheran and later developed his own complex philosophical and spiritual views, so I did not include the 'catholic' tag.
+"""
+</result>

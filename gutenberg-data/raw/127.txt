@@ -1,0 +1,15 @@
+<result>
+Title = "The Number 'e' [Natural Log] To Approximately 1 Million Places"
+Author = "Robert Nemiroff, Jerry Bonnell"
+Year = 1996
+
+Tags = ["non-fiction", "reference", "mathematics"]
+
+Summary = """
+This is a computational reference work containing the mathematical constant e (Euler's number, the base of natural logarithms) calculated to approximately one million decimal places. The computation was performed by Robert Nemiroff (George Mason University and NASA Goddard Space Flight Center) and Jerry Bonnell (Universities Space Research Association and NASA Goddard Space Flight Center). This represents a significant computational achievement for its time and serves as a reference for mathematical and computational applications requiring high-precision values of this fundamental mathematical constant. The constant e ≈ 2.71828... appears throughout mathematics, particularly in calculus, complex analysis, and exponential growth models.
+"""
+
+Notes = """
+The exact year of computation/publication to Project Gutenberg is not explicitly stated in the text. Based on the email addresses format and NASA affiliations shown, this appears to be from the mid-1990s era of early internet scientific publishing. I've estimated 1996 as a reasonable approximation for when such a computational project would have been undertaken and published to Project Gutenberg, though the actual year could vary by 1-3 years in either direction. This is not a historical work with a traditional publication date, but rather a computational dataset. The work is marked as "appropriate-for-children" is notably absent because while the content is harmless, it's not pedagogically oriented toward children—it's a raw mathematical reference.
+"""
+</result>

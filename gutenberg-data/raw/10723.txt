@@ -1,0 +1,19 @@
+I recognize this work! Let me analyze the text and provide the structured information you requested.
+
+This is a collection of three stories/novellas by Harriet Beecher Stowe, published together in 1875. The text makes this clear with the title page showing all three works and the publication year. Stowe is best known for "Uncle Tom's Cabin" but wrote many other works throughout her career.
+
+<result>
+Title = "Betty's Bright Idea; also Deacon Pitkin's Farm, and The First Christmas of New England"
+Author = "Harriet Beecher Stowe"
+Year = 1875
+
+Tags = ["fiction", "appropriate-for-children", "christmas", "american-literature"]
+
+Summary = """
+A collection of three Christmas-themed stories by Harriet Beecher Stowe, the renowned American author best known for 'Uncle Tom's Cabin'. The title story 'Betty's Bright Idea' focuses on charitable works during the Christmas season in 1875 New York. 'Deacon Pitkin's Farm' tells a New England tale, and 'The First Christmas of New England' explores the Puritan settlers' first Christmas in America. These stories exemplify Stowe's interest in domestic life, Christian morality, and New England culture.
+"""
+
+Notes = """
+Year is straightforward as 1875 is clearly indicated on the title page as the original publication date. Stowe was from a prominent Protestant (Congregationalist/Presbyterian) family - her father Lyman Beecher was a famous preacher. While deeply Christian and moral in outlook, her works would not qualify for the 'catholic' tag as she was not Catholic and her theological perspective was distinctly Protestant/Calvinist New England.
+"""
+</result>

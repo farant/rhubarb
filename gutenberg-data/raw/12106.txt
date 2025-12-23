@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information in TOML format.
+
+This is "Old Gorgon Graham: More Letters from a Self-Made Merchant to His Son" by George Horace Lorimer, published in 1903. This is a sequel to his earlier work "Letters from a Self-Made Merchant to His Son" (1902). Lorimer was an American journalist and editor who became famous as the editor of The Saturday Evening Post.
+
+<result>
+Title = "Old Gorgon Graham: More Letters from a Self-Made Merchant to His Son"
+Author = "George Horace Lorimer"
+Year = 1903
+
+Tags = ["fiction", "epistolary", "business-advice", "appropriate-for-children"]
+
+Summary = """
+This is the sequel to George Horace Lorimer's popular "Letters from a Self-Made Merchant to His Son" (1902). The book continues the fictional correspondence from John Graham, a successful Chicago pork-packing magnate known as "Old Gorgon Graham," to his son Pierrepont. Through these humorous and wise letters, the father dispenses practical business advice, life lessons, and commentary on character and success. The epistolary format allows Lorimer to explore themes of American entrepreneurship, work ethic, and the transition of business knowledge from one generation to the next. The work was hugely popular in early 20th century America and reflects the values and business culture of the Gilded Age and Progressive Era.
+"""
+
+Notes = """
+The publication year of 1903 is clearly stated on the title page. This work was part of a popular genre of business advice literature in early 1900s America. While Lorimer himself was not Catholic (he was a Presbyterian), the work contains general moral and ethical advice rather than specifically religious content.
+"""
+</result>

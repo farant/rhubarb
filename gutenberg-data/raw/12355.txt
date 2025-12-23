@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Constitutional Development of Japan, 1853-1881"
+Author = "Toyokichi Iyenaga"
+Year = 1891
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a doctoral dissertation published in the Johns Hopkins University Studies in Historical and Political Science series. Written by Toyokichi Iyenaga, Professor of Political Science at Tokio Senmon-Gakko (a precursor to Waseda University), the work examines the constitutional movement in Japan during the crucial period from Commodore Perry's arrival in 1853 through the early Meiji era to 1881. This period covers Japan's forced opening to the West, the fall of the Tokugawa shogunate, the Meiji Restoration, and the early development of constitutional government in Japan. The work provides a contemporary scholarly analysis of these transformative events, written by a Japanese academic studying at an American institution during the Meiji period itself.
+"""
+
+Notes = """
+The publication date of September 1891 is clearly stated in the header. This is part of the Ninth Series of Johns Hopkins University Studies, edited by Herbert B. Adams. The work represents an important primary source for understanding how Japanese scholars of the period interpreted their own recent constitutional history while it was still unfolding (the Meiji Constitution would be promulgated in 1889, just two years before this publication).
+"""
+</result>

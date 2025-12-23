@@ -1,0 +1,17 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+<result>
+Title = "Children's Classics in Dramatic Form: A Reader for the Fourth Grade"
+Author = "Augusta Stevenson"
+Year = 1908
+
+Tags = ["non-fiction", "education", "appropriate-for-children"]
+
+Summary = """
+This is an educational reader designed for fourth-grade students, published in 1908. The book aims to accomplish three pedagogical goals: arousing interest in oral reading, developing expressive vocal abilities, and promoting natural grace in bodily movements during reading and speaking. Augusta Stevenson, a former teacher in the Indianapolis Public Schools, adapted favorite tales from folklore sources including Andersen, Grimm, Aesop, and the Arabian Nights into dramatic form. The work reflects Progressive Era educational philosophy, emphasizing the dramatic and expressive instincts of children as natural pedagogical tools rather than relying on formal theatrical presentation.
+"""
+
+Notes = """
+The year 1908 is clearly stated on the title page. This is an original work compiled and adapted by Stevenson, not a translation or reprint of an older text. It represents early 20th-century American educational methodology and the influence of progressive education movements that emphasized active, experiential learning.
+"""
+</result>

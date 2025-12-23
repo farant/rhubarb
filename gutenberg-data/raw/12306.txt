@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is a satirical piece from *Punch, or the London Charivari*, which was a famous British weekly magazine of humor and satire. The specific text is from Volume 99, October 4, 1890, and appears to be introducing a series called "Mr. Punch's Prize Novels."
+
+*Punch* magazine cannot be attributed to a single author - it was a collaborative publication with many contributors, though it was founded by Henry Mayhew and engraver Ebenezer Landells in 1841. This particular issue would have had multiple writers contributing anonymously or under pseudonyms, as was the magazine's style.
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 99, October 4, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["non-fiction", "humor", "periodical", "satire", "appropriate-for-children"]
+
+Summary = """
+Punch, or the London Charivari was Britain's most influential humor and satire magazine, published from 1841 to 1992 (with later revivals). This October 4, 1890 issue (Volume 99) features the introduction to 'Mr. Punch's Prize Novels,' a satirical series mocking the contemporary craze for prize competitions. The piece lampoons the Victorian obsession with contests offering prizes for everything from acrostics to novel-writing, and announces that Punch has obtained access to novels submitted to a £1000 prize competition and will publish them with commentary. The magazine was known for its political cartoons, social commentary, and coining the term 'cartoon' in its modern sense. It featured anonymous contributions from leading writers and artists of the Victorian era.
+"""
+
+Notes = """
+Year 1890 chosen as the publication date of this specific issue. Punch magazine itself was founded in 1841 and ran continuously until 1992. This is periodical literature, so the year represents when this particular volume was published, not when the overall work was 'written.'
+"""
+</result>

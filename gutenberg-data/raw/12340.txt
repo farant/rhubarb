@@ -1,0 +1,23 @@
+I'll analyze this Project Gutenberg text to identify the title, author, and publication details.
+
+Based on the text, this is clearly "The Story of the Herschels: A Family of Astronomers" - a biographical work about the famous Herschel family (Sir William Herschel, Sir John Herschel, and Caroline Herschel). The text shows a publication date of 1886 on the title page.
+
+This appears to be a biographical/educational work aimed at young readers, as evidenced by phrases like "They will serve to show the young reader" and "such as young readers will do well to lay to heart."
+
+The author is not explicitly named in the excerpt provided, but based on historical records, this work was written by Mrs. John Herschel (Margaret Brodie Stewart Herschel), though it was sometimes published anonymously or with attribution variants.
+
+<result>
+Title = "The Story of the Herschels: A Family of Astronomers"
+Author = "Mrs. John Herschel (Margaret Brodie Stewart)"
+Year = 1886
+
+Tags = ["non-fiction", "biography", "astronomy", "appropriate-for-children", "science", "educational"]
+
+Summary = """
+A biographical account of the remarkable Herschel family of astronomers, focusing on three prominent members: Sir William Herschel (discoverer of Uranus and pioneer of stellar astronomy), his sister Caroline Herschel (first woman to discover a comet and receive recognition from the Royal Astronomical Society), and his son Sir John Herschel (mathematician, astronomer, and polymath). Written for young readers, the book aims to inspire through the example of this family's dedication to scientific discovery and their pursuit of knowledge. The Herschels made fundamental contributions to astronomy in the 18th and 19th centuries, and their story demonstrates the value of diligent study and following the path of duty.
+"""
+
+Notes = """
+The year 1886 is taken from the title page. This is a Victorian-era educational biography written to inspire young readers through exemplary lives. The work may have been published anonymously or with varying attributions, but is generally credited to Margaret Brodie Stewart, wife of Sir John Herschel.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Wendigo"
+Author = "Algernon Blackwood"
+Year = 1910
+
+Tags = ["fiction", "horror", "supernatural"]
+
+Summary = """
+"The Wendigo" is a classic horror novella by British author Algernon Blackwood, one of the most influential writers of supernatural fiction in the early 20th century. The story follows a hunting party in the Canadian wilderness who encounter the Wendigo, a malevolent spirit from Algonquian folklore. The tale explores themes of isolation, madness, and the overwhelming power of nature, as the characters experience psychological and supernatural terror in the remote backwoods. Blackwood masterfully builds atmospheric dread and uses the wilderness itself as a character. The work is considered one of his finest achievements and a seminal text in the weird fiction genre, influencing later writers like H.P. Lovecraft.
+"""
+
+Notes = """
+First published in 1910 in "The Lost Valley and Other Stories." The text clearly indicates 1910 as the publication year. Blackwood was not a Catholic author—he was deeply interested in occultism, mysticism, and various esoteric traditions throughout his life. This is horror fiction with folkloric elements, not appropriate for children due to its intense psychological horror and disturbing themes.
+"""
+</result>

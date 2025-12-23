@@ -1,0 +1,17 @@
+I recognize this work! It's "The Poison Belt" by Arthur Conan Doyle, a science fiction adventure featuring Professor Challenger and his companions.
+
+<result>
+Title = "The Poison Belt"
+Author = "Arthur Conan Doyle"
+Year = 1913
+
+Tags = ["fiction", "science-fiction", "adventure", "appropriate-for-children"]
+
+Summary = """
+The Poison Belt is a science fiction novella by Sir Arthur Conan Doyle, featuring the return of the irascible Professor George Edward Challenger and his companions from "The Lost World" (Lord John Roxton, Professor Summerlee, and journalist Edward Malone). In this adventure, Challenger discovers that the Earth is about to pass through a belt of poisonous ether in space that threatens to asphyxiate all life on the planet. He summons his colleagues to his house where they seal themselves in a room with oxygen supplies to survive the catastrophe, watching through windows as the rest of humanity appears to succumb to the poison. The story explores themes of apocalypse, scientific observation, and human survival, told through Malone's firsthand account as he documents these "stupendous events" for posterity.
+"""
+
+Notes = """
+"The Poison Belt" was first published in 1913 as a serial in The Strand Magazine (March-July) and then as a book later that same year. It is the second story featuring Professor Challenger, following "The Lost World" (1912). The story reflects early 20th century anxieties about cosmic threats and the fragility of human civilization.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll help you identify this work. Let me analyze the text provided.
+
+This is clearly the prosecution's opening statement from the famous obscenity trial of Gustave Flaubert's novel "Madame Bovary" in 1857. The prosecutor, M. Ernest Pinard, is presenting his case against Flaubert for offenses against public morals and religion.
+
+<result>
+Title = "The Public vs. M. Gustave Flaubert"
+Author = "M. Ernest Pinard"
+Year = 1857
+
+Tags = ["non-fiction", "historical-document", "legal-document"]
+
+Summary = """
+This is the prosecution's opening statement from the famous obscenity trial of Gustave Flaubert's novel 'Madame Bovary' in 1857. The prosecutor, M. Ernest Pinard, argues that Flaubert's novel violated public morals and religion. The trial became a landmark case in literary history. Despite Pinard's prosecution, Flaubert was acquitted, and 'Madame Bovary' went on to become one of the most celebrated novels in world literature. This document provides insight into 19th-century French censorship, literary prosecution, and the moral standards of the era.
+"""
+
+Notes = """
+The trial took place in January-February 1857. This document is the prosecutor's speech, not Flaubert's novel itself. The year 1857 represents when the trial occurred and when these legal arguments were originally delivered. The novel was serialized in the Revue de Paris from October 1 to December 15, 1856, and the trial followed shortly after.
+"""
+</result>

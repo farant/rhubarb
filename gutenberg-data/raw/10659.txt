@@ -1,0 +1,21 @@
+I'll help you identify this work and extract the information you need.
+
+Based on the text provided, this is clearly "John Silence, Physician Extraordinary" (or sometimes titled "John Silence") by Algernon Blackwood. The text shows it's specifically from Project Gutenberg ebook 10659, containing three stories: "Secret Worship," "The Camp of the Dog," and "A Victim of Higher Space." These are part of Blackwood's John Silence series featuring a psychic detective.
+
+The original collection was published in 1908. Algernon Blackwood was an English writer known for his supernatural and horror fiction, and the John Silence stories are among his most famous works.
+
+<result>
+Title = "Three More John Silence Stories"
+Author = "Algernon Blackwood"
+Year = 1908
+
+Tags = ["fiction", "horror", "supernatural", "mystery", "appropriate-for-children"]
+
+Summary = """
+This collection contains three stories featuring John Silence, a "physician extraordinary" who investigates psychic and supernatural phenomena. Algernon Blackwood (1869-1951) was a prolific English writer of ghost stories and supernatural fiction, considered one of the greatest writers in the genre. The John Silence stories feature an early example of the "psychic detective" archetype - a precursor to later occult investigators in fiction. The three stories included are "Secret Worship" (involving a sinister religious community in Germany), "The Camp of the Dog" (a werewolf tale), and "A Victim of Higher Space" (dealing with higher dimensions and mathematics). Blackwood's work is known for its atmospheric quality and exploration of mysticism and the numinous rather than pure horror.
+"""
+
+Notes = """
+1908 is the year the original John Silence collection was first published by Eveleigh Nash in London. This Gutenberg text appears to be from a later edition that groups three of the stories together. While Blackwood's supernatural fiction deals with occult themes, it's generally philosophical and mystical rather than gratuitously frightening. The "appropriate-for-children" tag is debatable - these are sophisticated stories more suited to young adults and adults, though not inappropriate in content.
+"""
+</result>

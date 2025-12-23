@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "Entertaining Made Easy" by Emily Rose Burt, published in 1919. The text shows it's a practical guide for hosting various social events, parties, and gatherings - a genre that was quite popular in the early 20th century, particularly aimed at middle-class homemakers.
+
+<result>
+Title = "Entertaining Made Easy"
+Author = "Emily Rose Burt"
+Year = 1919
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Entertaining Made Easy" is a practical guide for hosting social events, parties, and gatherings, published in 1919. The book provides instructions and ideas for various themed parties and social occasions, including seasonal events (autumn dances, harvest parties), outdoor affairs (picnics, garden parties, porch luncheons), and special occasions (birthdays, bachelor suppers). It reflects the social customs and entertaining practices of the early 20th century American middle class. The book was part of a "Made Easy Series" and drew from material previously published in popular women's magazines of the era including Woman's Home Companion, The Ladies' Home Journal, Farm and Fireside, and the Designer. It represents the domestic advice literature genre that was widely consumed during this period, aimed at helping women fulfill their expected role as social hostesses.
+"""
+
+Notes = """
+The year 1919 is clearly stated on the title page as the publication date. This was published shortly after World War I ended, during a period when American society was returning to peacetime social activities. The reference to "A Mock Canteen" in the table of contents may reflect wartime influences on party themes.
+"""
+</result>

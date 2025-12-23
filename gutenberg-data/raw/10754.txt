@@ -1,0 +1,15 @@
+<result>
+Title = "Little Sarah"
+Author = "Unknown"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Little Sarah" is a children's story published as part of the "New Colored Toys" series, which were popular illustrated children's books in the mid-19th century. These small, affordable books featured hand-colored illustrations and simple moral tales designed for young readers. The "colored toys" referred to the chromolithographed or hand-colored plates that made these books attractive to children. Such publications were common in Britain and America during the Victorian era, often focusing on virtuous children and moral lessons appropriate for the period's educational philosophy.
+"""
+
+Notes = """
+The year 1850 is an estimate based on the style and format described ("New Colored Toys" series with colored illustrations). This type of publication was most popular in the mid-19th century, roughly 1840-1870. Without access to the full text or more bibliographic information, pinpointing an exact year is difficult, but 1850 represents a reasonable midpoint for this genre of children's literature. The author is listed as "Unknown," which was common for these mass-produced children's books of the era.
+"""
+</result>

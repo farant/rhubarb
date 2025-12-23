@@ -1,0 +1,15 @@
+<result>
+Title = "An Enquiry into the Obligations of Christians to Use Means for the Conversion of the Heathens"
+Author = "William Carey"
+Year = 1792
+
+Tags = ["non-fiction", "theology", "missions", "historical-document"]
+
+Summary = """
+This seminal work by William Carey, often called the "father of modern missions," is one of the most influential missionary texts in Protestant history. Published in 1792, the Enquiry challenges the prevailing Calvinist view that the Great Commission was only for the apostles. Carey presents a systematic argument for Christian missionary activity, including extensive statistical and geographical surveys of world religions, historical accounts of missionary efforts from the apostles through the Moravians, and practical proposals for establishing missions. This tract directly led to the founding of the Baptist Missionary Society in 1792 and Carey's own departure for India in 1793, where he would spend over 40 years translating the Bible into numerous Indian languages. The work represents a watershed moment in Protestant missionary thought and practice.
+"""
+
+Notes = """
+The work was published in 1792 in Leicester, England. This is the historically significant date as it marks when Carey's arguments first challenged the missionary complacency of his era. Though Carey was Baptist (not Catholic), this work has immense historical and theological significance for understanding 18th-19th century Christian missionary movements. Not tagged as 'catholic' as it represents Protestant missionary theology, though it addresses universal Christian concerns about evangelization.
+"""
+</result>

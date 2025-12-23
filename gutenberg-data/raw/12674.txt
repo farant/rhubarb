@@ -1,0 +1,15 @@
+<result>
+Title = "Cock Lane and Common-Sense"
+Author = "Andrew Lang"
+Year = 1894
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Cock Lane and Common-Sense" is a skeptical examination of supernatural phenomena, ghost stories, and spiritualism by Scottish scholar and folklorist Andrew Lang. The work investigates various paranormal claims and haunting cases, including the famous Cock Lane Ghost incident of 18th-century London, while applying rational analysis and folklore scholarship to these accounts. Lang explores the boundary between superstition and legitimate inquiry, examining how folklore, psychology, and credulity intersect in reports of supernatural events. Written during the height of Victorian interest in spiritualism, the book represents Lang's attempt to bring scholarly rigor and common sense to the study of allegedly paranormal phenomena.
+"""
+
+Notes = """
+First published in 1894. Andrew Lang (1844-1912) was a Scottish poet, novelist, literary critic, and anthropologist who made significant contributions to folklore studies and mythology. This work reflects the late Victorian fascination with spiritualism while maintaining a skeptical, scholarly perspective.
+"""
+</result>

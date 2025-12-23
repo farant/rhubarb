@@ -1,0 +1,15 @@
+<result>
+Title = "Dotty Dimple at Play"
+Author = "Sophie May"
+Year = 1868
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Dotty Dimple at Play" is part of the "Dotty Dimple Stories" series written by Sophie May (pen name of Rebecca Sophia Clarke, 1833-1906). This is a children's book that follows the adventures of the character Dotty Dimple, a young girl whose playful escapades form the heart of the story. The book is dedicated to blind children at the Asylum for the Blind in Indianapolis, and one chapter shows Dotty and Katie visiting blind girls. The series was popular in the late 19th century and was aimed at young readers, particularly girls, featuring moral lessons wrapped in entertaining stories about childhood play and mischief. Sophie May was a prolific American author of children's literature during the Victorian era.
+"""
+
+Notes = """
+The year 1868 is clearly stated on the title page of this edition. Sophie May's "Dotty Dimple" series followed her successful "Little Prudy Stories" series. While the author was writing in a Protestant American context of the mid-19th century, this is children's fiction rather than explicitly religious literature, so the 'catholic' tag does not apply.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Byways Around San Francisco Bay"
+Author = "W. E. Hutchinson"
+Year = 1915
+
+Tags = ["non-fiction", "appropriate-for-children", "travel", "nature"]
+
+Summary = """
+"Byways Around San Francisco Bay" is a collection of illustrated essays and poems by W. E. Hutchinson describing various scenic locations and natural attractions around the San Francisco Bay Area in the early 20th century. The work includes descriptive pieces about natural features like Wild-cat Cañon, Muir Woods, and Mount Tamalpais, as well as cultural sites like Chinatown and Meiggs' Wharf. The author also illustrated the book himself, combining literary and visual art to capture the beauty and character of the Bay Area landscape and coastal regions. This type of local color writing was popular during this era, serving both as travel literature and as a celebration of California's natural wonders during a period of rapid development and change in the region.
+"""
+
+Notes = """
+The year 1915 is clearly stated on the title page as the publication date. This was an interesting period in San Francisco history, coming just nine years after the 1906 earthquake and fire, when the city was rebuilding and the region was experiencing significant growth. The book represents a snapshot of the Bay Area's natural and cultural landscape during the early 20th century.
+"""
+</result>

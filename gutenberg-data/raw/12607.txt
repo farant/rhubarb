@@ -1,0 +1,15 @@
+<result>
+Title = "You Can Search Me"
+Author = "Hugh McHugh"
+Year = 1905
+
+Tags = ["fiction", "humor", "appropriate-for-children"]
+
+Summary = """
+"You Can Search Me" is part of the popular "John Henry" series of humorous books by Hugh McHugh (pseudonym of George Vere Hobart, 1867-1926). The series features the comic misadventures of the character John Henry, written in the colloquial, slangy American English style popular in early 20th century humor writing. These books were light entertainment, focusing on everyday situations and misunderstandings told with exaggerated vernacular and comedic timing. The John Henry books were widely popular in their time and represent a distinct style of American humor from the early 1900s.
+"""
+
+Notes = """
+The year 1905 is clearly stated on the title page of this Project Gutenberg text. This appears to be the original publication date. Hugh McHugh was a prolific humorist who wrote numerous "John Henry" books in quick succession during the early 1900s.
+"""
+</result>

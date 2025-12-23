@@ -1,0 +1,28 @@
+I need to identify this work from Project Gutenberg. Let me analyze the information provided.
+
+From the text, I can see:
+- Project Gutenberg eBook #11585
+- Title: "THE YOUNG EMIGRANTS; MADELAINE TUBE; THE BOY AND THE BOOK; AND THE CRYSTAL PALACE"
+- Publisher: Charles Scribner, New York, 1851
+- This appears to be a collection of children's stories
+- The chapter listings show "The Young Emigrants" is one of the stories, with chapters about emigration to America ("The New World," "A New Home")
+- Published in 1851
+- The Florida Board of Education notes indicate this is from their "Preservation and Access for American and British Children's Literature, 1850-1869" collection
+
+This is a 19th-century children's book, likely containing multiple short stories or novellas. The title suggests it's an anthology. Without more distinctive content, I cannot definitively identify a specific well-known author, but the publication date of 1851 and publisher Charles Scribner are clear from the document. This appears to be an original 1851 publication rather than a reprint of older material.
+
+<result>
+Title = "The Young Emigrants; Madelaine Tube; The Boy and the Book; and The Crystal Palace"
+Author = "Unknown"
+Year = 1851
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of children's stories published by Charles Scribner in 1851. The anthology includes 'The Young Emigrants,' which tells the story of a family's journey to America and their experiences settling in the New World, along with three other tales: 'Madelaine Tube,' 'The Boy and the Book,' and 'The Crystal Palace.' This work is representative of mid-19th century American children's literature, focusing on themes of emigration, adventure, and moral instruction typical of the era.
+"""
+
+Notes = """
+The year 1851 is taken directly from the original publication information. The author is not identified in the provided text. This appears to be part of the wave of emigration literature popular in the mid-19th century as many families were moving to America. The mention of the Crystal Palace suggests engagement with the Great Exhibition of 1851 in London.
+"""
+</result>

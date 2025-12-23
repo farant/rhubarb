@@ -1,0 +1,15 @@
+<result>
+Title = "The Booming of Acre Hill and Other Reminiscences of Urban and Suburban Life"
+Author = "John Kendrick Bangs"
+Year = 1902
+
+Tags = ["fiction", "humor", "appropriate-for-children"]
+
+Summary = """
+A collection of humorous stories by John Kendrick Bangs about urban and suburban life in early 20th century America. Bangs was a popular American humorist and author known for his satirical works about domestic life and society. The book features illustrations by the famous illustrator C. Dana Gibson, creator of the iconic "Gibson Girl." The stories had previously appeared in popular magazines of the era including The Ladies Home Journal and The Woman's Home Companion, suggesting light, family-oriented humor about the experiences of middle-class American life at the turn of the century.
+"""
+
+Notes = """
+The publication year of 1902 is clearly stated on the title page as the original publication date in New York and London. This appears to be the first book publication of these stories after their magazine serialization.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this as William Godwin's influential political novel "Caleb Williams" (also known by its subtitle "Things as They Are"). Let me provide the structured information:
+
+<result>
+Title = "Caleb Williams; or, Things as They Are"
+Author = "William Godwin"
+Year = 1794
+
+Tags = ["fiction", "philosophical-novel", "political-fiction", "gothic"]
+
+Summary = """
+"Caleb Williams" is a groundbreaking psychological thriller and political novel by William Godwin, one of the first mystery/suspense novels in English literature. The story follows Caleb Williams, a young secretary who discovers a dark secret about his employer, the gentleman Ferdinando Falkland, and subsequently becomes the victim of relentless persecution. The novel explores themes of justice, class oppression, surveillance, and the abuse of power in late 18th-century England. Godwin wrote it as a dramatic illustration of the political theories he outlined in his philosophical work "Political Justice," demonstrating how social and legal institutions can be used to crush individuals. The novel is considered a landmark in the development of both the psychological novel and crime fiction.
+"""
+
+Notes = """
+First published in 1794. This Project Gutenberg edition appears to be based on the 1903 London edition with an introduction by Ernest A. Baker. The novel was written quickly in 1793-1794 as Godwin intended it to be a popular vehicle for his radical political philosophy. The year 1794 is the most historically significant date as this represents the original publication and the work's impact on literature and political thought.
+"""
+</result>

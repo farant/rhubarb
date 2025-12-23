@@ -1,0 +1,15 @@
+<result>
+Title = "Blues My Naughty Sweetie Gives to Me"
+Author = "Raderman's Jazz Orchestra"
+Year = 1919
+
+Tags = ["historical-document", "music", "audio-recording"]
+
+Summary = """
+This is an audio recording of "Blues My Naughty Sweetie Gives to Me," performed by Raderman's Jazz Orchestra and preserved by Thomas A. Edison's laboratory. The song is a jazz standard from the early jazz age, representing the popular music of the era. This particular recording comes from the Edison National Historic Site archives and represents early 20th century recording technology and the nascent jazz movement in American music.
+"""
+
+Notes = """
+"Blues My Naughty Sweetie Gives to Me" was composed by Charles McCarron (lyrics) and Carey Morgan (music) and published in 1919. This recording by Raderman's Jazz Orchestra would have been made in approximately the same period, during the early years of jazz recordings. The date 1919 reflects the original composition and likely recording period, though exact recording dates from Edison's laboratory can sometimes vary. This is an audio artifact rather than a text, so traditional fields like "appropriate-for-children" or "fiction/non-fiction" don't apply in the usual sense - it's a historical audio document of early jazz music.
+"""
+</result>

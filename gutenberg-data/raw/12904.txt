@@ -1,0 +1,15 @@
+<result>
+Title = "Light"
+Author = "Henri Barbusse"
+Year = 1919
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+'Light' (original French title: 'Clarté') is a novel by Henri Barbusse, published in 1919, shortly after his acclaimed 'Under Fire' (Le Feu). The work explores themes of consciousness, social awakening, and the search for truth and meaning in the aftermath of World War I. Barbusse, who won the Prix Goncourt for 'Under Fire,' was deeply affected by his experiences in WWI and became increasingly concerned with pacifism and social justice. 'Light' represents his philosophical and spiritual exploration of humanity's condition and the possibility of enlightenment and social transformation. The novel is characterized by its introspective and symbolic narrative style, examining the inner life of its protagonist and broader questions about society, war, and human nature.
+"""
+
+Notes = """
+The year 1919 reflects both the French publication date ('Clarté' in 1919) and this English translation by Fitzwater Wray. While Barbusse was raised Catholic, by the time of writing this work he had moved toward socialism and pacifism, and his later works took on increasingly political and anti-religious tones, so this is not tagged as 'catholic'. The work straddles fiction and philosophical non-fiction, hence both tags are included.
+"""
+</result>

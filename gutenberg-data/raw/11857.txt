@@ -1,0 +1,15 @@
+<result>
+Title = "The Lay of Marie: A Poem"
+Author = "Matilda Betham"
+Year = 1816
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+Matilda Betham (1776-1852) was an English poet and biographer known for her narrative poems and literary works. "The Lay of Marie" is a narrative poem published in 1816, followed by "Vignettes in Verse" published in 1818. Betham was part of the Romantic literary circle and known for her friendships with figures like Samuel Taylor Coleridge and Charles Lamb. Her poetry often explored historical and romantic themes in the style of the period, with elaborate verse narratives. This particular work appears to be a romantic narrative poem dedicated to Lady Bedingfeld, written in the tradition of medieval lays—narrative poems that tell stories of romance, adventure, or historical events.
+"""
+
+Notes = """
+The year 1816 is clearly stated in the text as the publication date of "The Lay of Marie." The document indicates this is a reprint from the Garland edition of the original 1816 and 1818 publications. Matilda Betham was writing during the Romantic period in English literature, and her work reflects the era's interest in medievalism and narrative poetry.
+"""
+</result>

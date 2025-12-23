@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "Sketches and Tales Illustrative of Life in the Backwoods of New Brunswick, North America" by Mrs. F. Beavan, published in 1845. This is a work of non-fiction documenting the author's seven years of experience living in colonial New Brunswick, Canada. The book provides observations about settler life, customs, and the natural environment of the region.
+
+<result>
+Title = "Sketches and Tales Illustrative of Life in the Backwoods of New Brunswick, North America"
+Author = "Mrs. F. Beavan"
+Year = 1845
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a collection of sketches and observations about life in the colonial backwoods of New Brunswick, Canada, written by Mrs. F. Beavan based on her seven years of residence there. The work documents various aspects of settler life including spring freshets, sugar making, log huts, social customs like 'frolics', and the challenges faced by emigrants and native New Brunswickers. It provides a valuable firsthand account of colonial life in Maritime Canada during the mid-19th century, offering insights into the daily realities, natural phenomena, and social structures of frontier settlements.
+"""
+
+Notes = """
+The year 1845 is clearly stated in the original publication. This work falls into the genre of colonial observation literature, common in the 19th century, where settlers documented their experiences in the New World. Mrs. F. Beavan's work is particularly valuable as a female perspective on frontier life in British North America.
+"""
+</result>

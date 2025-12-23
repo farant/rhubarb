@@ -1,0 +1,21 @@
+It appears the file might be empty or have formatting issues. Based on the text you provided in your message, I can identify this work:
+
+**"Big and Little Sisters: A Story of an Indian Mission School"** by **Theodora R. Jenness**
+
+This is a children's book about life at a Sioux Indian mission school, published in the late 19th/early 20th century. Theodora R. Jenness wrote several books about Native American children in mission schools during this period. Based on the writing style and context, this work was first published around **1899-1900**.
+
+<result>
+Title = "Big and Little Sisters: A Story of an Indian Mission School"
+Author = "Theodora R. Jenness"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+A children's story set at a Sioux Indian mission school in Dakota, following the lives and moral development of young Native American girls like Hannah Straight Tree and Cordelia Running Bird as they navigate their duties, education, and Christian teachings at the boarding school. The book reflects the late 19th-century mission school movement aimed at assimilating Native American children into Euro-American Christian culture. Written with a didactic tone typical of the period, it emphasizes themes of duty, cleanliness, hard work, and Christian morality.
+"""
+
+Notes = """
+Published circa 1899. This work is part of the Indian mission school literature genre popular in the late 1800s. While well-intentioned for its time, modern readers should approach it with awareness of the historical context of forced assimilation policies and cultural suppression that characterized Indian boarding schools. The book provides historical insight into this period but reflects the paternalistic attitudes of the era.
+"""
+</result>

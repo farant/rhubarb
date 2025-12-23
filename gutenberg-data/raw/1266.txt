@@ -1,0 +1,15 @@
+I recognize this work! "Lavender and Old Lace" is a romance novel by Myrtle Reed, first published in 1902. Reed was an American author who wrote popular romantic fiction in the early 20th century. This is one of her best-known works, a gentle, nostalgic romance set in a small New England town involving old love letters, family secrets, and the relationship between a young woman visiting her aunt and a mysterious neighbor.
+
+<result>
+Title = "Lavender and Old Lace"
+Author = "Myrtle Reed"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A romantic novel by American author Myrtle Reed, published in 1902. The story follows a young woman who visits her aunt in a small New England village and becomes entangled in mysteries involving old love letters, lavender sachets, and family secrets from the past. The novel is characterized by its gentle, nostalgic tone and romantic elements, focusing on themes of lost love, second chances, and the enduring power of memory. Reed was known for her sentimental romantic fiction that appealed to early 20th-century readers seeking wholesome, idealistic stories."""
+
+Notes = """
+1902 is the original publication year. Myrtle Reed (1874-1911) was a popular American author of her era, though not a Catholic writer. The work is appropriate for general audiences and was characteristic of the genteel romantic fiction popular in the Edwardian era."""
+</result>

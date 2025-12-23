@@ -1,0 +1,15 @@
+<result>
+Title = "The Book of Mormon"
+Author = "Joseph Smith, Jr. (translator)"
+Year = 1830
+
+Tags = ["non-fiction", "religious-text", "scripture"]
+
+Summary = """
+The Book of Mormon is a sacred text of the Latter Day Saint movement, which presents itself as a record of ancient peoples in the Americas. According to the text, it was compiled and abridged by the prophet-historian Mormon and his son Moroni from plates containing the records of the Nephites and Lamanites, peoples said to have migrated from Jerusalem to the Americas around 600 BC. The book includes the record of the Jaredites who came to the Americas at the time of the Tower of Babel. Joseph Smith, Jr. published this work in 1830, claiming to have translated it from golden plates through divine inspiration. The text aims to testify of Jesus Christ and contains religious teachings, prophecies, and historical narratives spanning approximately 1000 BC to 421 AD according to its internal chronology.
+"""
+
+Notes = """
+1830 is the year of first publication and translation by Joseph Smith, Jr. in Palmyra, New York. This is the most historically significant date for this work as it marks its introduction to the world. The Book of Mormon is the foundational scripture of The Church of Jesus Christ of Latter-day Saints (LDS/Mormon Church) and other branches of the Latter Day Saint movement. Note: This work is not considered part of the Catholic canon and would not receive a nihil obstat or imprimatur. It is a distinctly Mormon religious text that arose from 19th-century American religious movements, separate from Catholic tradition.
+"""
+</result>

@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the structured information you requested.
+
+This is clearly the Book of Jonah from the Bible, specifically William Tyndale's 1531 translation from Hebrew to English (with modernized spelling in this edition). Jonah (or Jonas in the Latin/Tyndale rendering) is one of the twelve minor prophets, and this biblical book tells the famous story of the prophet who was called to preach to Nineveh but tried to flee to Tarshish, leading to the well-known incident with the great fish.
+
+<result>
+Title = "The Story of the Prophet Jonas"
+Author = "William Tyndale (translator)"
+Year = 1531
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children", "catholic"]
+
+Summary = """
+This is William Tyndale's 1531 English translation of the Book of Jonah (Jonas) from Hebrew, one of the twelve minor prophets in the Old Testament. The book tells the story of the prophet Jonah who is called by God to preach repentance to the great city of Nineveh, but instead attempts to flee to Tarshis (Tarshish). This edition presents Tyndale's translation with modernized spelling. Tyndale's translation work was foundational to the development of the English Bible and significantly influenced the King James Version. The Book of Jonah itself is believed to have been written sometime between the 8th and 5th centuries BC, though its dating is debated among scholars.
+"""
+
+Notes = """
+I chose 1531 as the year because this represents Tyndale's specific translation work, which is the historical artifact being presented. While the Book of Jonah as a biblical text dates back to ancient times (traditionally attributed to the prophet Jonah himself in the 8th century BC, though scholars debate the actual composition date), this particular edition's significance lies in Tyndale's pioneering English translation work. Tyndale was martyred in 1536 for his translation efforts, making his biblical translations historically and religiously significant documents in their own right.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "On the Origin of Species by Means of Natural Selection, or the Preservation of Favoured Races in the Struggle for Life"
+Author = "Charles Darwin"
+Year = 1859
+
+Tags = ["non-fiction"]
+
+Summary = """
+On the Origin of Species is Charles Darwin's groundbreaking work on evolutionary biology, first published in 1859. This is the First Edition of the text that fundamentally changed scientific understanding of life on Earth. Darwin presents his theory of evolution through natural selection, arguing that species evolve over time through a process where organisms better adapted to their environment tend to survive and produce more offspring. The work synthesizes Darwin's observations during his voyage on HMS Beagle with extensive research on artificial selection, biogeography, paleontology, and comparative anatomy. This book is considered one of the most influential scientific works ever published and laid the foundation for modern evolutionary biology.
+"""
+
+Notes = """
+This is explicitly the 1859 First Edition as noted at the beginning of the text. Darwin published multiple editions during his lifetime (six in total), with each containing revisions. While the 1872 Sixth Edition is often considered the definitive edition by scholars, the year 1859 is the historically accurate publication date for this particular text and represents the moment when Darwin's ideas first entered public discourse, fundamentally altering scientific thought.
+"""
+</result>

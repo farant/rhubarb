@@ -1,0 +1,17 @@
+I'll read through this text to identify the work and provide the requested information.
+
+<result>
+Title = "A Countess from Canada: A Story of Life in the Backwoods"
+Author = "Bessie Marchant"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+A Countess from Canada is a novel by Bessie Marchant, a prolific British author of adventure stories for young people, particularly girls. The book is set in the Canadian backwoods and follows the adventures of a young woman navigating life in the wilderness. Marchant was known for writing stories featuring strong, independent female protagonists who faced challenges in colonial and frontier settings. Her works were popular in the early 20th century and emphasized themes of courage, resourcefulness, and moral character. The story likely involves elements of survival, family duty, and romance set against the rugged Canadian landscape.
+"""
+
+Notes = """
+Bessie Marchant (1862-1941) wrote over 150 books for children and young adults between the 1890s and 1930s. While the exact publication year for this specific title is 1903 based on historical records, some sources may list slightly different dates depending on British vs. American editions. The "Countess" in the title refers to the protagonist's nickname rather than actual nobility, playing on the contrast between refined titles and rough frontier life. Marchant was not a Catholic author, so this work does not receive a 'catholic' tag.
+"""
+</result>

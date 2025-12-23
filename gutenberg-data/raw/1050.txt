@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly "The Dark Lady of the Sonnets" by George Bernard Shaw (also written as Bernard Shaw). The text shows it was written in 1910, as stated in the document itself. This is a short play that Shaw wrote as a fundraiser for the National Theatre project, which includes a substantial preface discussing Shakespeare's sonnets and the identity of the "Dark Lady."
+
+<result>
+Title = "The Dark Lady of the Sonnets"
+Author = "George Bernard Shaw"
+Year = 1910
+
+Tags = ["non-fiction", "drama", "literary-criticism"]
+
+Summary = """
+A short play by George Bernard Shaw written in 1910 as a fundraising piece for the establishment of a National Theatre as a memorial to Shakespeare. The work includes an extensive preface in which Shaw discusses the identity of the mysterious "Dark Lady" mentioned in Shakespeare's sonnets, specifically his identification of her with Mary Fitton. The preface explores various scholarly theories about Shakespeare's life, his social standing, his alleged pessimism, and his relationship with democracy and the British public. The play itself dramatizes a fictional encounter related to this literary mystery. Shaw uses this occasion piece to engage with Shakespearean scholarship and bardolatry while supporting the practical cause of creating a national theater.
+"""
+
+Notes = """
+The year 1910 is clearly stated in the text and represents when Shaw wrote this work. This is not a work that would receive Catholic approval - Shaw was not Catholic and was known for his socialist views and critique of traditional institutions. The 'appropriate-for-children' tag was not included as Shaw's literary and intellectual content is typically aimed at adult audiences.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Marie Antoinette, Queen of France"
+Author = "Charles Duke Yonge"
+Year = 1876
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+This is a biographical work about Marie Antoinette (1755-1793), the last Queen of France before the French Revolution. Written by English historian Charles Duke Yonge and published in 1876, the biography draws heavily on primary source materials including correspondence between Marie Antoinette, her mother Empress Maria Teresa of Austria, her brothers (Emperors Joseph and Leopold), and diplomatic correspondence from Count Mercy d'Argenteau. The work covers her life from her time as Dauphiness through her reign as Queen, including the tumultuous Revolutionary period leading to her execution in 1793. Yonge's biography is notable for its extensive use of archival materials, particularly the collections published by M. Arneth and M. Feuillet de Conches, which contained letters and diplomatic documents that provided insight into the French court and Marie Antoinette's political and personal life.
+"""
+
+Notes = """
+The year 1876 represents the publication date of this particular biography by Charles Duke Yonge, not the life of Marie Antoinette herself (1755-1793). This is clearly a historical biography written nearly a century after the subject's death, drawing on archival materials that had been published in the mid-19th century. The preface indicates the author's heavy reliance on documentary collections by M. Arneth and M. Feuillet de Conches.
+"""
+</result>

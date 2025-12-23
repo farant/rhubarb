@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is a short story by W.W. Jacobs called "Husbandry," which is Part 6 of his collection "Deep Waters." W.W. Jacobs (1863-1943) was an English author famous for his humorous short stories about sailors and dockside life, as well as his horror story "The Monkey's Paw."
+
+"Deep Waters" was published in 1919. "Husbandry" is one of the stories in this collection, featuring Jacobs' recurring character, the night-watchman, who tells humorous tales about relationships and life at the docks.
+
+<result>
+Title = "Husbandry"
+Author = "W.W. Jacobs"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Husbandry" is a humorous short story by W.W. Jacobs, part of his 1919 collection "Deep Waters." The story features Jacobs' beloved recurring character, the night-watchman, who spins a comic yarn about the differences between men and women, particularly in how they handle disagreements in marriage. Jacobs was a master of the humorous short story form, known for his tales of sailors, dockworkers, and English coastal life. His stories are characterized by witty dialogue, gentle satire of human nature, and vivid characterizations of working-class life in late Victorian and Edwardian England.
+"""
+
+Notes = """
+The year 1919 reflects the publication date of the "Deep Waters" collection. While individual stories may have appeared in magazines earlier, the collection as a whole was published in 1919. Jacobs is perhaps best known today for his horror classic "The Monkey's Paw" (1902), but during his lifetime he was equally famous for his humorous nautical tales.
+"""
+</result>

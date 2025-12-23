@@ -1,0 +1,15 @@
+<result>
+Title = "En ballon! Pendant le siège de Paris"
+Author = "Gaston Tissandier"
+Year = 1871
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a first-hand account by French scientist and aeronaut Gaston Tissandier of balloon flights during the Siege of Paris in the Franco-Prussian War (1870-1871). During the siege, balloons were the only means of communication between Paris and the outside world. Tissandier, an experienced balloonist, participated in these dangerous flights that carried messages, mail, and occasionally passengers out of the besieged city. The work is dedicated to General Chanzy, commander of the Army of the Loire, and references captive balloon ascensions at Le Mans and Laval. This is an important historical document about both the Franco-Prussian War and the early history of aviation in wartime.
+"""
+
+Notes = """
+The text is in French. The siege of Paris lasted from September 1870 to January 1871. While the exact publication date of this book is not stated in the excerpt, it was clearly written shortly after the siege ended in early 1871, as it references recent events and is dedicated to General Chanzy in his capacity as a deputy to the National Assembly (elected February 1871). The year 1871 represents when these events occurred and when the account would have been compiled, making it the most historically accurate date for educational purposes.
+"""
+</result>

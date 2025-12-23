@@ -1,0 +1,23 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+This is clearly a work in Danish (not Latin - I can see Danish characters and words like "Moder," "Mand," "Dreng," etc.). The text is titled "FRANZ PANDER" and is written by Herman Bang, a prominent Danish author.
+
+Herman Bang (1857-1912) was a Danish journalist, author, and one of the most important writers of the Modern Breakthrough period in Scandinavian literature. "Franz Pander" is one of his short stories, and based on the style and content, this appears to be from his collection of stories dealing with marginalized characters and social outcasts.
+
+Let me provide the structured information:
+
+<result>
+Title = "Franz Pander"
+Author = "Herman Bang"
+Year = 1891
+
+Tags = ["fiction", "short-story", "literary-fiction", "danish-literature"]
+
+Summary = """
+'Franz Pander' is a short story by Danish author Herman Bang (1857-1912), one of Scandinavia's most important Modern Breakthrough writers. The story appears to focus on a sensitive young boy named Franz whose mother is a washerwoman and whose father was a carpenter who drank himself to death. The opening suggests Franz may be illegitimate, with refined features unlike his supposed father. He is nicknamed "Jomfruen" (The Virgin/Maiden) by classmates due to his pale skin and gentle nature, and doesn't engage in typical boyish activities. Bang was known for his compassionate portrayals of social outsiders and marginalized individuals, often with subtle homoerotic undertones, and his impressionistic prose style that influenced modern Scandinavian literature.
+"""
+
+Notes = """
+The exact publication year is somewhat difficult to pin down for this particular story without seeing the full Gutenberg metadata. Herman Bang published various short story collections throughout the 1880s-1890s. I've chosen 1891 as a reasonable estimate based on his active publishing period and the style of the work, though the story may have appeared slightly earlier or later. Bang's major collections include 'Excentriske Noveller' (1885) and 'Under Aaget' (1890). The work was likely published in the early 1890s during his mature period.
+"""
+</result>

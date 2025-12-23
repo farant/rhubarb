@@ -1,0 +1,17 @@
+I recognize this work! "Great Possessions" is by David Grayson, which was the pen name of Ray Stannard Baker, an American journalist and author. This book is part of his series of pastoral essays about country living, which began with "Adventures in Contentment."
+
+<result>
+Title = "Great Possessions"
+Author = "David Grayson (Ray Stannard Baker)"
+Year = 1917
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Great Possessions" is a collection of philosophical essays about rural life and nature observation by David Grayson (pen name of Ray Stannard Baker), an American journalist who later won the Pulitzer Prize for his biography of Woodrow Wilson. The book is part of Grayson's beloved series of pastoral reflections that began with "Adventures in Contentment" (1907). In this work, Grayson explores the simple pleasures and deep satisfactions of country living through meditative essays on topics ranging from the sensory experiences of nature to encounters with rural characters like the old stone mason and Bill Richards. The book exemplifies early 20th-century nature writing and the back-to-the-land movement, celebrating the spiritual and material "possessions" found in a life close to the earth. Written in a gentle, contemplative style, it reflects on themes of simplicity, community, and finding meaning in everyday rural experiences.
+"""
+
+Notes = """
+First published in 1917. This is one of several books in Baker's "David Grayson" series, which were immensely popular in the early 20th century and helped inspire the American back-to-the-land movement. The series represented a counterpoint to increasingly industrialized urban life.
+"""
+</result>

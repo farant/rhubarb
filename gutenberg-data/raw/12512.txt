@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Deacon of Dobbinsville: A Story Based on Actual Happenings"
+Author = "John A. Morrison"
+Year = 1920
+
+Tags = ["fiction", "christian-literature", "holiness-movement"]
+
+Summary = """
+'The Deacon of Dobbinsville' is a religious novel by John A. Morrison (1893-1965) that portrays the contrast between nominal Christianity and authentic Christian conversion and holiness. Written from the perspective of the Holiness movement, the story depicts the difference between religious professors who merely attend church versus individuals who have experienced genuine conversion, been "made new creatures in Christ," and been filled with the Holy Spirit. The narrative appears to be based on actual events and reflects the theology and culture of early 20th-century American Holiness Christianity, emphasizing sanctification and living on the "highway of holiness." The book was originally published in the early 20th century and was reprinted in 1966 by Lawrence D. Pruitt after Morrison granted permission shortly before his death in December 1965.
+"""
+
+Notes = """
+The publisher's preface states the work was "written and first printed some 45 or 50 years ago" from the perspective of 1965-1966, which places the original publication around 1915-1920. Given that Morrison was born in 1893 and would have been in his mid-20s during this period, a date of approximately 1920 seems most reasonable for the original publication. Morrison was associated with the Holiness movement centered in Anderson, Indiana, where he died. This is Protestant Holiness literature rather than Catholic, so it does not receive the 'catholic' tag despite its Christian content.
+"""
+</result>

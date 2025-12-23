@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the structured information you requested.
+
+This is clearly "The Rover Boys at College" by Arthur M. Winfield, which is a pseudonym used by the Stratemeyer Syndicate (primarily Edward Stratemeyer). The book is part of the popular Rover Boys series, which was juvenile adventure fiction published in the early 20th century. The copyright mark shows "MCMX" which is 1910 in Roman numerals, indicating this is the original publication year.
+
+<result>
+Title = "The Rover Boys at College, or The Right Road and the Wrong"
+Author = "Arthur M. Winfield (Edward Stratemeyer)"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children", "adventure"]
+
+Summary = """
+The Rover Boys at College is part of the popular Rover Boys series of juvenile adventure novels published by the Stratemeyer Syndicate under the pseudonym Arthur M. Winfield. The series follows the adventures of three brothers - Dick, Tom, and Sam Rover - as they attend various schools and have adventures. This installment follows them to college where they face various challenges, competitions, and moral choices, as suggested by the subtitle 'The Right Road and the Wrong.' The series was enormously popular in the early 20th century and helped establish many conventions of young adult adventure fiction.
+"""
+
+Notes = """
+The copyright notation 'MCMX' clearly indicates 1910 as the publication year. Arthur M. Winfield was a house pseudonym used by the Stratemeyer Syndicate, with Edward Stratemeyer being the primary author of the Rover Boys series. The series was secular juvenile fiction aimed at young boys, emphasizing adventure, school life, and moral lessons, but was not Catholic literature.
+"""
+</result>

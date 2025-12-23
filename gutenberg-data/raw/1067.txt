@@ -1,0 +1,15 @@
+<result>
+Title = "Personal Memoirs of U. S. Grant, Volume I"
+Author = "Ulysses S. Grant"
+Year = 1885
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+The Personal Memoirs of U. S. Grant are the autobiography of Ulysses S. Grant, the 18th President of the United States and commanding general of the Union Army during the American Civil War. Written near the end of his life while suffering from terminal throat cancer, Grant composed these memoirs largely to provide financial security for his family after being defrauded by a business partner. The work is considered one of the finest military memoirs ever written, covering his early life, military career through the Mexican-American War, and his Civil War service. Volume I covers the period from his childhood through much of the Civil War. The memoirs were completed just days before his death and became both a critical and commercial success.
+"""
+
+Notes = """
+Grant began writing these memoirs in 1884 and completed them in July 1885, dying just days after finishing the manuscript on July 23, 1885. The work was published posthumously later that year by Mark Twain's publishing company, Charles L. Webster & Company. The year 1885 represents both when the work was completed and when it was published, making it the most historically accurate date for this memoir. Grant explicitly mentions in the preface that he wrote these memoirs out of financial necessity after being defrauded and while battling what would prove to be terminal throat cancer.
+"""
+</result>

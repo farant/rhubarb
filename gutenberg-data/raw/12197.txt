@@ -1,0 +1,19 @@
+I'll analyze this text from Project Gutenberg to identify the work and provide the requested information.
+
+Looking at this text, I can see it's "Mr. Scraggs" by Henry Wallace Phillips, a work of humorous fiction featuring the character Red Saunders. Let me provide the structured information:
+
+<result>
+Title = "Mr. Scraggs"
+Author = "Henry Wallace Phillips"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children", "humor", "western"]
+
+Summary = """
+'Mr. Scraggs' is a collection of humorous short stories by Henry Wallace Phillips, featuring the character Red Saunders as narrator/introducer. Phillips was an American author known for his Western humor and stories about frontier life. The book contains seven stories with titles like 'By Proxy,' 'In the Toils,' and 'The Fountain of Youth.' Phillips's writing style was characterized by gentle humor and colorful Western characters. This work is part of his Red Saunders series, which was popular in the early 20th century and originally appeared in magazines like The Saturday Evening Post before being collected into book form.
+"""
+
+Notes = """
+The year 1906 represents the first book publication date (January 1906, with a second edition in February 1906). The copyright page indicates the stories were previously published in magazines between 1903-1905 (The Curtis Publishing Co. and S.S. McClure Co.). I chose 1906 as it represents when this collection was formally published as a complete work. This is appropriate family-friendly Western humor from the early 1900s American literary tradition.
+"""
+</result>

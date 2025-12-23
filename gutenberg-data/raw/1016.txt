@@ -1,0 +1,17 @@
+I recognize this as Spinoza's famous early work on epistemology and philosophical method. Let me provide the structured information you requested:
+
+<result>
+Title = "On the Improvement of the Understanding (Tractatus de Intellectus Emendatione)"
+Author = "Baruch Spinoza (Benedict de Spinoza)"
+Year = 1677
+
+Tags = ["non-fiction", "philosophy", "epistemology"]
+
+Summary = """
+This is one of Spinoza's major philosophical works, originally written in Latin as 'Tractatus de Intellectus Emendatione.' It is an unfinished treatise on epistemology and philosophical method, exploring how human understanding can be improved and perfected. The work examines different modes of perception, distinguishes true ideas from fictitious and false ones, and provides a method for acquiring clear and distinct ideas through proper definitions. It reflects Spinoza's rationalist philosophy and his systematic approach to achieving genuine knowledge. The work is foundational to understanding Spinoza's broader philosophical system, which he developed more fully in his Ethics. This particular translation is by R.H.M. Elwes, one of the most widely-used English translations of Spinoza's works.
+"""
+
+Notes = """
+The work was published posthumously in 1677, shortly after Spinoza's death. While Spinoza worked on this treatise earlier in his career (likely begun in the 1650s-1660s), it remained unfinished at his death. The 1677 publication date represents when it became available to the wider world and is the most historically significant date. This is a philosophical work by a Jewish philosopher who was excommunicated from the Jewish community, not a Catholic author, so the 'catholic' tag does not apply. The work is highly technical philosophy, not appropriate for children.
+"""
+</result>

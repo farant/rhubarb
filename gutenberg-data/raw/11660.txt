@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a children's fiction book from the early 20th century. Based on the title "Ethel Morton's Enterprise" by Mabell S.C. Smith, this appears to be part of the Ethel Morton series of children's books. Mabell Shippie Clarke Smith was an American author who wrote several series of children's books in the early 1900s. The Ethel Morton series was published around 1915-1920.
+
+From the chapter titles and opening content, this is a wholesome children's story about gardening, community service, and adventure. The writing style, themes (gardening, flower festivals, community involvement), and the innocent nature of the narrative are characteristic of early 20th century children's literature.
+
+<result>
+Title = "Ethel Morton's Enterprise"
+Author = "Mabell S.C. Smith"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Part of the Ethel Morton series by Mabell S.C. Smith, this children's novel follows the adventures of Ethel Morton (nicknamed 'Ethel Blue') and her cousin Ethel Morton ('Ethel Brown') as they embark on various enterprises including gardening projects, community service, and flower festivals. The book promotes themes of industry, cooperation, and wholesome childhood activities typical of early 20th century American children's literature. The story involves the formation of what appears to be a club (the U.S.C.) and various adventures including gardening, wild flower collecting, and community involvement.
+"""
+
+Notes = """
+The exact publication year is estimated as 1915, which falls within the period when Mabell S.C. Smith was actively publishing the Ethel Morton series. The series was published by Dodd, Mead and Company and was popular among young readers in the 1910s-1920s. This work represents typical Progressive Era children's literature emphasizing practical skills, nature study, and civic engagement.
+"""
+</result>

@@ -1,0 +1,17 @@
+I can identify this work and provide the information you need.
+
+<result>
+Title = "The Young Engineers in Colorado; or, At Railwood Building in Earnest"
+Author = "H. Irving Hancock"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Young Engineers in Colorado" is part of H. Irving Hancock's "Young Engineers" series, which follows the adventures of Tom Reade and Harry Hazelton as they work on various engineering projects across America. In this installment, the young protagonists travel to Colorado to work on a railroad construction project at a place called Railwood. The book is typical of early 20th-century boys' adventure fiction, combining technical details about engineering with exciting Western adventure elements including conflicts with rough characters like "Bad Pete" and various challenges in the wilderness. Hancock was a prolific author of juvenile series fiction, writing multiple series aimed at young male readers featuring protagonists in various professions including engineering, aviation, and military service.
+"""
+
+Notes = """
+The year 1913 is based on the publication date of this specific volume in the Young Engineers series. H. Irving Hancock (1868-1922) was extremely prolific during the 1910s, writing numerous series for the Stratemeyer Syndicate and other publishers. The Young Engineers series was published by Henry Altemus Company starting around 1912-1913. This is wholesome adventure fiction typical of the era, with no concerning content, making it appropriate for children.
+"""
+</result>

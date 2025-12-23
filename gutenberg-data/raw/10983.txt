@@ -1,0 +1,15 @@
+<result>
+Title = "The Young Captives: A Narrative of the Shipwreck and Sufferings of John and William Doyley"
+Author = "Various"
+Year = 1836
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a true account of the wreck of the British ship Charles Eaton in the Torres Strait (between Australia and Papua New Guinea) in 1834. The ship was wrecked on a reef, and survivors reached an island only to be attacked and killed by indigenous inhabitants. Two young boys, John Ireland (about 2 years old) and William D'Oyley (an infant), were spared and lived in captivity for several years before being rescued. The story became famous in Britain and was published in various forms for children as a moral and adventure tale. This 1850 edition is a children's version of the dramatic rescue narrative that captivated Victorian audiences.
+"""
+
+Notes = """
+I've chosen 1836 as the year because that's when the boys were rescued and the story first became publicly known, which is the historically significant date for this narrative. The Charles Eaton wrecked in 1834, but the discovery of the survivors and the full story emerged in 1836. The 1850 date on this edition is just one of many republications. The actual names were John Ireland and William D'Oyley (note spelling variation from 'Doyley' in the text). This is a simplified children's version of a real maritime disaster and survival story.
+"""
+</result>

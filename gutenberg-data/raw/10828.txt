@@ -1,0 +1,15 @@
+<result>
+Title = "Roman History (Ab Urbe Condita)"
+Author = "Titus Livius (Livy)"
+Year = -27
+
+Tags = ["non-fiction", "history", "ancient-rome", "classical-literature"]
+
+Summary = """
+Livy's monumental history of Rome, known as Ab Urbe Condita (From the Foundation of the City), is one of the great works of Roman historiography. Originally comprising 142 books, it chronicles Rome's history from the legendary arrival of Aeneas through the early years of Augustus's empire until 9 BCE. The work combines historical narrative with moral instruction, emphasizing traditional Roman virtues and the lessons of history. Only 35 books survive in complete form (Books 1-10 and 21-45), covering Rome's early history through 294 BCE and the period of the Second Punic War through 167 BCE. The surviving books are among the most important sources for understanding early Roman history, the Punic Wars, and Rome's expansion in the Mediterranean.
+"""
+
+Notes = """
+I chose approximately 27 BCE as the publication date because this is when Livy began publishing his work during the Augustan Age. The complete work was published over more than 40 years (roughly 27 BCE to 17 CE), but the earlier books appeared first. Dating a multi-decade project is inherently approximate - some sources suggest he began writing around 29 BCE. The year 27 BCE is historically significant as when Augustus received his title and the Principate was established, and this aligns with when Livy was actively composing and publishing his early books. This Project Gutenberg edition (from 1904) appears to be Books I-X based on the introduction's reference to "Books I-X, containing the story of early Rome to the year 294 B.C."
+"""
+</result>

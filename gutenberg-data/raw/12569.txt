@@ -1,0 +1,19 @@
+I'll analyze this text to identify the work and provide the requested information.
+
+This is clearly a historical account/travel narrative by Charles Mair about the 1899 Athabasca and Peace River Treaty Expedition. Based on the content, this is a non-fiction work documenting the treaty-making process with Indigenous peoples in northern Canada. Charles Mair was a Canadian poet and journalist who was part of this expedition. The work was likely published in the early 1900s, shortly after the expedition took place in 1899.
+
+<result>
+Title = "Through the Mackenzie Basin: A Narrative of the Athabasca and Peace River Treaty Expedition of 1899"
+Author = "Charles Mair"
+Year = 1908
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a historical account by Canadian poet and journalist Charles Mair documenting the 1899 treaty expedition led by Hon. David Laird to negotiate Treaty 8 with Indigenous peoples in the Athabasca and Peace River regions of northern Canada (present-day Alberta and Northwest Territories). The work describes the journey from Edmonton through the Mackenzie Basin, the treaty-making process, and interactions with Indigenous communities. It provides valuable historical documentation of this important period in Canadian history when the government was extending its reach into the far northern territories, partly in response to the Klondike Gold Rush and increased interest in the region's resources. The narrative combines travel writing with ethnographic observations and historical context about the Hudson's Bay Company territories and the process of treaty negotiation.
+"""
+
+Notes = """
+The year 1908 is based on typical publication patterns for such expedition accounts, which were generally published several years after the events to allow for writing and compilation. The expedition itself occurred in 1899, and works of this nature typically appeared 5-10 years after the events described. This represents an important primary source document about Treaty 8 negotiations.
+"""
+</result>

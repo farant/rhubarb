@@ -1,0 +1,15 @@
+<result>
+Title = "The History of the Rise, Progress, and Accomplishment of the Abolition of the African Slave-Trade by the British Parliament"
+Author = "Thomas Clarkson"
+Year = 1808
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Thomas Clarkson's comprehensive historical account of the British abolitionist movement that led to the passage of the Slave Trade Act of 1807, which abolished the slave trade in the British Empire. Clarkson was not merely a historian but a central figure in the movement itself, having spent decades gathering evidence, traveling extensively to document conditions, and campaigning tirelessly alongside figures like William Wilberforce. The work chronicles the moral, political, and legislative struggle to end Britain's participation in the transatlantic slave trade, documenting the evidence gathered, the parliamentary debates, and the coalition of religious leaders, activists, and politicians who worked toward abolition. This two-volume work is both a primary historical document and a detailed firsthand account of one of the most significant humanitarian movements in British history.
+"""
+
+Notes = """
+The year 1808 is clearly marked on the title page as the publication date. This is the year immediately following the passage of the Slave Trade Act of 1807 (which took effect January 1, 1808), making this a contemporaneous account written by one of the movement's key participants. The dedication to the Cabinet ministers who accomplished the abolition, and the references to Pitt and Fox (both recently deceased), confirm this as an immediate historical record rather than a later retrospective.
+"""
+</result>

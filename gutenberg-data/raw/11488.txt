@@ -1,0 +1,21 @@
+I'll analyze this text to identify the work, author, and provide the requested information.
+
+This is clearly a collection of the poetical works of John Dryden, edited by Rev. George Gilfillan. The text shows the title page and the beginning of a biographical section about John Dryden (1631-1700), the famous English poet, literary critic, and playwright of the Restoration period.
+
+Based on the title page showing "M. DCCC. LV." (1855), this is an 1855 edition published in Edinburgh by Ballantyne and Company.
+
+<result>
+Title = "The Poetical Works of John Dryden"
+Author = "John Dryden (edited by Rev. George Gilfillan)"
+Year = 1855
+
+Tags = ["non-fiction", "poetry", "literary-collection", "biography"]
+
+Summary = """
+This is a comprehensive collection of John Dryden's poetical works, edited with a critical biography by Rev. George Gilfillan and published in 1855. John Dryden (1631-1700) was one of England's most influential poets, literary critics, and playwrights of the Restoration period. He served as Poet Laureate and was known for his mastery of satire, translation (notably of Virgil), and his development of the heroic couplet. This edition includes his life story, critical analysis, and explanatory notes to help readers understand his work in context. The volume begins with a detailed biography tracing Dryden's ancestry and early life in Northamptonshire.
+"""
+
+Notes = """
+The year chosen (1855) represents this specific edition's publication date rather than Dryden's original composition dates, as this is a collected works volume published over 150 years after many of the poems were written. The edition date is significant as this represents a 19th-century scholarly compilation and interpretation of Dryden's work. Dryden himself lived 1631-1700, and his major works were produced during the Restoration period (1660-1700).
+"""
+</result>

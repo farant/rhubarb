@@ -1,0 +1,15 @@
+<result>
+Title = "Marriage"
+Author = "Susan Ferrier"
+Year = 1818
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Marriage' is the first novel by Scottish author Susan Ferrier, originally published in 1818. It is a novel of manners that satirizes Scottish society, particularly focusing on marriage customs, social pretensions, and the contrast between Scottish and English society. The novel follows the story of Lady Juliana, a young English woman who elopes with a Scottish officer and must adjust to life in Scotland, along with the subsequent lives of her twin daughters who are raised in very different circumstances. The work is notable for its sharp social commentary, wit, and humor, and has been compared favorably to Jane Austen's novels. Sir Walter Scott praised Ferrier's work highly, and the novel established her reputation as one of Scotland's foremost novelists of the early 19th century.
+"""
+
+Notes = """
+The year 1818 represents the original publication date of 'Marriage', which was Ferrier's first novel. This edition appears to be from 1881, published by Richard Bentley & Son as part of an Edinburgh Edition, and claims to be the first complete reprint from the original editions. The prefatory note mentions that the novel received praise from Sir Walter Scott and Sir James Mackintosh, and was discussed in the Noctes Ambrosianae (a series of dialogues published in Blackwood's Magazine). The work's satirical treatment of social foibles rather than serious moral failings gives it a distinctive place in English fiction.
+"""
+</result>

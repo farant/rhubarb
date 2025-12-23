@@ -1,0 +1,15 @@
+<result>
+Title = "Queen Hortense: A Life Picture of the Napoleonic Era"
+Author = "L. Mühlbach"
+Year = 1867
+
+Tags = ["fiction", "historical-fiction", "biographical-fiction"]
+
+Summary = """
+This is a historical novel by L. Mühlbach (pen name of Clara Mundt, 1814-1873), a popular German historical novelist of the 19th century. The work is a fictionalized biography of Hortense de Beauharnais (1783-1837), the stepdaughter of Napoleon Bonaparte and Queen of Holland. Hortense was the daughter of Josephine de Beauharnais and became Queen of Holland through her marriage to Louis Bonaparte, Napoleon's brother. The novel traces her life from childhood through the Revolutionary period and into her role as Queen, depicting the dramatic events of the Napoleonic era through the lens of her experiences. Mühlbach was known for writing romanticized historical novels about European royalty and nobility, making complex historical periods accessible to popular audiences.
+"""
+
+Notes = """
+L. Mühlbach wrote a series of historical novels about European court life in the mid-to-late 1860s. While I cannot pinpoint the exact original German publication year with certainty, her works about the Napoleonic period were typically published in the 1860s, with English translations following shortly after. The 1910 date shown in this edition is likely a reprint. I've chosen 1867 as a reasonable estimate for the original publication based on the typical timeline of her works, though the original German edition may have appeared a few years earlier or later. This is historical fiction rather than a scholarly biography or primary historical document.
+"""
+</result>

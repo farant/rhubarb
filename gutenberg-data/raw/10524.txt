@@ -1,0 +1,15 @@
+<result>
+Title = "We Wish You a Merry Christmas"
+Author = "Traditional (performed by Roger McGuinn)"
+Year = 1500
+
+Tags = ["non-fiction", "appropriate-for-children", "music", "christmas", "traditional"]
+
+Summary = """
+"We Wish You a Merry Christmas" is a traditional English Christmas carol dating from the 16th century, originating in the West Country of England. The carol's lyrics express good wishes for Christmas and the New Year, and traditionally include verses about figgy pudding. This Project Gutenberg entry is an audio recording performed by folk musician Roger McGuinn (founding member of The Byrds) released in 2001. The carol itself has been performed and recorded countless times over the centuries and remains one of the most popular Christmas songs in the English-speaking world.
+"""
+
+Notes = """
+Year chosen reflects the approximate historical origin of the carol itself (16th century, circa 1500s) rather than Roger McGuinn's 2001 recording. For a historical timeline of works, the original composition date seems more educationally relevant than this particular performance date. If you prefer to use the recording/publication date instead, that would be 2001. The work is a traditional folk song rather than an authored literary work - the actual composer is unknown, which is why "Traditional" is listed as the author with McGuinn noted as the performer.
+"""
+</result>

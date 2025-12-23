@@ -1,0 +1,15 @@
+<result>
+Title = "Doctor Pascal"
+Author = "Émile Zola"
+Year = 1893
+
+Tags = ["fiction", "non-fiction"]
+
+Summary = """
+Doctor Pascal (Le Docteur Pascal) is the twentieth and final novel in Émile Zola's Les Rougon-Macquart cycle, his monumental series tracing the natural and social history of a family under the Second Empire. The novel follows Dr. Pascal Rougon, a scientist obsessed with heredity, who has spent decades documenting his family's genetic history. The work serves as both a conclusion to the entire cycle and a meditation on Zola's theories of heredity, naturalism, and scientific determinism. It explores themes of love, aging, scientific inquiry, and regeneration through the relationship between Pascal and his young niece Clotilde.
+"""
+
+Notes = """
+I chose 1893 as this is the original French publication year (Le Docteur Pascal). The English translation by Mary J. Serrano came later. This represents the historical completion of Zola's magnum opus. While fictional, the novel also serves as a quasi-non-fiction treatise on Zola's naturalist philosophy and theories of heredity, hence both tags. Not appropriate for children due to mature themes including an uncle-niece romantic relationship. Not tagged as Catholic - Zola was strongly anticlerical and the work reflects positivist/scientific rather than Catholic worldview.
+"""
+</result>

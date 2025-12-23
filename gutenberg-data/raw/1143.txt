@@ -1,0 +1,15 @@
+<result>
+Title = "Notes on Life and Letters"
+Author = "Joseph Conrad"
+Year = 1921
+
+Tags = ["non-fiction", "literary-criticism", "essays"]
+
+Summary = """
+"Notes on Life and Letters" is a collection of essays by Joseph Conrad, originally published in 1921. The work comprises Conrad's reflections on literature, other authors, and various aspects of life and writing. It includes literary appreciations of fellow writers like Henry James and Alphonse Daudet, as well as Conrad's thoughts on books, authors, and the craft of writing. The collection provides insight into Conrad's literary philosophy and his perspective on contemporary and earlier writers, offering a window into the mind of one of the most important modernist authors of the early 20th century.
+"""
+
+Notes = """
+The year 1921 reflects the first publication date of this collection by J. M. Dent. While individual essays were written and published earlier (as indicated by dates like 1905 and 1898 in the contents), the collection as a unified work appeared in 1921, making this the most appropriate date for historical timeline purposes.
+"""
+</result>

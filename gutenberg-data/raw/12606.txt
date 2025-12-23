@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Speeches and Orations of Daniel Webster"
+Author = "Daniel Webster, edited by Edwin P. Whipple"
+Year = 1923
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of selected speeches and orations by Daniel Webster (1782-1852), one of the most prominent American orators, statesmen, and lawyers of the 19th century. The volume was edited by Edwin P. Whipple and includes an essay on Webster's mastery of English style. Webster served as a U.S. Senator and Secretary of State, and was known for his powerful oratory on constitutional law, nationalism, and preservation of the Union. His speeches influenced American political thought and congressional legislation throughout his career. This collection represents highlights from the standard six-volume edition of Webster's works originally edited by Edward Everett in 1851.
+"""
+
+Notes = """
+The year 1923 reflects this particular edition's publication date. While Daniel Webster's speeches were delivered primarily between the 1810s-1850s, and the standard Everett edition appeared in 1851, this is clearly a 1923 reprint/selection intended to revive public interest in Webster's works. Since this is presented as a distinct editorial project by Whipple (with its own introduction and essay on Webster's style) rather than simply a reprint of Webster's original speeches, the 1923 publication date seems most appropriate for cataloging purposes.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Cowper"
+Author = "Goldwin Smith"
+Year = 1880
+
+Tags = ["non-fiction", "biography", "literary-criticism"]
+
+Summary = """
+This is a biographical and critical study of William Cowper (1731-1800), one of the most popular English poets of the eighteenth century. Written by Goldwin Smith, a prominent Victorian historian and journalist, the work examines Cowper's life and literary contributions, including his moral satires, his masterwork "The Task," his shorter poems, translations, and letters. Cowper is known for his nature poetry, his hymns (including "God Moves in a Mysterious Way"), and for bridging the gap between neoclassical and Romantic poetry. The biography traces his struggles with mental illness, his relationships with the Unwin family and the evangelical minister John Newton, and his significant influence on English literature.
+"""
+
+Notes = """
+The year 1880 represents the publication date of this specific biographical work by Goldwin Smith in London. This is a secondary work about Cowper rather than a primary text by him. William Cowper himself lived from 1731-1800, but this particular book is Smith's Victorian-era assessment of the poet's life and work.
+"""
+</result>

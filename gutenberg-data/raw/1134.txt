@@ -1,0 +1,24 @@
+Based on the information you provided in your message, this is clearly William Shakespeare's "Hamlet" - you included the opening lines with the characteristic early printing conventions (the u/v substitutions, etc.).
+
+From historical context, I know:
+- Hamlet was written around 1599-1601
+- The First Folio was published in 1623
+- Various quartos were published earlier (Q1 in 1603, Q2 in 1604-1605)
+
+Given that this appears to be from an early printing with the original typography preserved (based on your notes about the printing conventions), and that Project Gutenberg number 1134 is known to be the First Folio version, I'll use 1623 as the publication year, though the play was written and performed earlier.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1623
+
+Tags = ["fiction", "drama", "tragedy"]
+
+Summary = """
+Hamlet is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks revenge against his uncle Claudius for murdering his father, marrying his mother, and usurping the throne. The play explores themes of revenge, madness, mortality, and moral corruption. It contains some of Shakespeare's most famous lines including "To be or not to be" and features the iconic scenes with the ghost, Ophelia's madness, the play-within-a-play, and the final duel. This text appears to be from the First Folio edition, preserving the original printing conventions and typographical peculiarities of early 17th century English printing.
+"""
+
+Notes = """
+The year 1623 reflects the First Folio publication date, which is what this Project Gutenberg text appears to preserve (based on the printing conventions mentioned in the header). The play was written and first performed around 1599-1601, but this particular text represents the important 1623 collected works edition. Earlier quarto editions existed (1603, 1604-1605) but the First Folio is historically the most significant printed version.
+"""
+</result>

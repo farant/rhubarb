@@ -1,0 +1,17 @@
+I recognize this work clearly. Let me provide the structured information:
+
+<result>
+Title = "On Heroes, Hero-Worship, and the Heroic in History"
+Author = "Thomas Carlyle"
+Year = 1841
+
+Tags = ["non-fiction", "philosophy", "history", "literature"]
+
+Summary = """
+A collection of six lectures delivered by Thomas Carlyle in May 1840 and published in 1841. The work examines the role of great individuals throughout history, exploring different manifestations of heroism: as divinity (Odin), as prophet (Muhammad), as poet (Dante and Shakespeare), as priest (Luther and Knox), as man of letters (Johnson, Rousseau, Burns), and as king (Cromwell and Napoleon). Carlyle argues for the importance of great individuals in shaping history and culture, developing his influential "Great Man theory" of history. The work is a significant contribution to Victorian thought and remains one of Carlyle's most widely-read works.
+"""
+
+Notes = """
+The lectures were delivered in May 1840 (the first lecture is dated May 5, 1840) and published as a book in 1841. I've chosen 1841 as the publication year since that represents when the work became widely available in its complete form. This is one of Carlyle's major philosophical works and established many of his key ideas about history, leadership, and the role of exceptional individuals in civilization.
+"""
+</result>

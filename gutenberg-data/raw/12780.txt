@@ -1,0 +1,24 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+This is clearly a Finnish literary work. The text shows:
+- Title: "Laulu tulipunaisesta kukasta" (The Song of the Blood-Red Flower)
+- Author: Johannes Linnankoski
+- Year shown in text: 1905
+
+This is one of the most famous works of Finnish literature. Johannes Linnankoski (1869-1913) was a prominent Finnish author and journalist. "Laulu tulipunaisesta kukasta" (The Song of the Blood-Red Flower/The Song of the Scarlet Flower) was first published in 1905 and is considered his masterpiece. It's a romantic novel about a young log driver named Olavi and his romantic adventures.
+
+<result>
+Title = "Laulu tulipunaisesta kukasta"
+Author = "Johannes Linnankoski"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Laulu tulipunaisesta kukasta' (The Song of the Blood-Red Flower or The Song of the Scarlet Flower) is Johannes Linnankoski's most famous novel, first published in 1905. It tells the story of Olavi, a young, handsome log driver who travels through the Finnish countryside and forests, engaging in romantic adventures with various women he encounters. The novel is noted for its lyrical prose, vivid descriptions of the Finnish natural landscape, and its exploration of themes of youth, love, nature, and eventual moral awakening. It became one of the classics of Finnish literature and has been translated into multiple languages. The work captures the beauty of the Finnish forests and the vitality of youth against the backdrop of traditional rural life.
+"""
+
+Notes = """
+1905 is the original publication year of this work. While Linnankoski was a Lutheran Finn (not Catholic), the novel deals with moral and spiritual themes, though it would not qualify for the 'catholic' tag as specified in your criteria. The work has been adapted multiple times for film and theater in Scandinavia.
+"""
+</result>

@@ -1,0 +1,21 @@
+I'll help you identify this text and extract the relevant information. Let me analyze what you've provided.
+
+Based on the text, this is clearly "Ancient and Modern Physics" by Thomas E. Willson. This appears to be an early 20th-century work that attempts to reconcile Eastern metaphysical concepts (particularly Theosophical teachings) with Western physics. The work was originally published in serial form in *The Theosophical Forum* around 1900-1901, as evidenced by the preface noting Willson's death in March 1901 while the final chapter was being prepared for the April 1901 issue.
+
+The book represents an attempt to bridge ancient esoteric knowledge with modern scientific understanding, a common theme in Theosophical literature of that era. Thomas E. Willson was an American Theosophist who contributed regularly to Theosophical publications.
+
+<result>
+Title = "Ancient and Modern Physics"
+Author = "Thomas E. Willson"
+Year = 1901
+
+Tags = ["non-fiction", "philosophy", "theosophy", "metaphysics"]
+
+Summary = """
+'Ancient and Modern Physics' is a Theosophical work that attempts to reconcile Eastern metaphysical concepts with Western physical science. The book explores topics including the nature of matter and ether, planes of existence, dual nature of humanity, and what the author calls the 'septenary world.' Written from a Theosophical perspective, it represents early 20th-century attempts to create a unified framework encompassing both ancient esoteric wisdom and contemporary scientific understanding. The work was originally published as a series of articles in The Theosophical Forum magazine during 1900-1901.
+"""
+
+Notes = """
+The year 1901 represents when this work was completed and published in full. The author died in March 1901 while the final chapter was being prepared for publication in the April 1901 issue of The Theosophical Forum, where the work had been serialized. While some editions may have been published as a complete book later, 1901 marks the original publication date of the complete work.
+"""
+</result>

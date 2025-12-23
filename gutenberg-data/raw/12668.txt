@@ -1,0 +1,17 @@
+I recognize this work - it's David Collins' important historical account of early colonial Australia.
+
+<result>
+Title = "An Account of the English Colony in New South Wales"
+Author = "David Collins"
+Year = 1802
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the second volume of Lieutenant-Colonel David Collins' comprehensive eyewitness account of the early British settlement of New South Wales (modern-day Australia). Collins served as Judge Advocate and Secretary of the colony from its founding in 1788 through 1801. The work provides detailed observations on the penal colony's development, the customs and manners of Aboriginal inhabitants, and includes additional material on New Zealand compiled from Lieutenant-Governor King's manuscripts, as well as an account of the Bass and Flinders voyage that discovered Bass Strait, proving Tasmania (Van Diemen's Land) was an island separate from the Australian mainland. This is one of the most important primary historical sources for understanding early European colonization of Australia and interactions with indigenous peoples.
+"""
+
+Notes = """
+Published in 1802 in London. This is clearly the publication date based on the title page. Collins wrote this as a firsthand chronicle covering 1788-1801, making it a crucial contemporary historical document rather than a later historical analysis. The work was published in two volumes, and this is Volume II.
+"""
+</result>

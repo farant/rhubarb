@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+Based on the text, this is clearly "Driftwood Spars" by Percival Christopher Wren. The book includes a note stating "This book was written in the year 1912," which gives us the composition date. P.C. Wren is best known for his adventure novels, particularly "Beau Geste" (1924). "Driftwood Spars" was indeed published in 1916, though written in 1912 as noted. Since you're asking for the most historically accurate year for educational purposes, I'll use 1916 as the publication year, as that's when it became available to readers.
+
+This is a work of fiction set in colonial India (note the "I.A.R." after his name, which likely refers to Indian Army Reserve). Wren was not a Catholic author - he was an English adventure novelist who spent time in India and wrote primarily adventure and military fiction.
+
+<result>
+Title = "Driftwood Spars: The Stories of a Man, a Boy, a Woman, and Certain Other People Who Strangely Met Upon the Sea of Life"
+Author = "Percival Christopher Wren"
+Year = 1916
+
+Tags = ["fiction", "adventure", "colonial-literature"]
+
+Summary = """
+Driftwood Spars is an adventure novel by P.C. Wren, written in 1912 and published in 1916. Wren is best known for his later work 'Beau Geste' (1924). This novel explores the intertwined stories of several characters - a man (John Robin Ross-Ellison), a boy (Moussa Isa Somali), and a woman, along with various other characters who meet in colonial India. The title and epigraph from Matthew Arnold's poetry suggest themes of chance encounters and the transient nature of human connections. The work reflects the colonial adventure fiction popular in early 20th century British literature.
+"""
+
+Notes = """
+The book includes an internal note stating it was written in 1912, but was published in 1916. I've chosen 1916 as the publication year since that's when it became publicly available, though 1912 could also be justified as the composition date.
+"""
+</result>

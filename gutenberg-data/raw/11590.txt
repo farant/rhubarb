@@ -1,0 +1,15 @@
+<result>
+Title = "Les Français en Amérique pendant la guerre de l'indépendance des États-Unis 1777-1783"
+Author = "Thomas Balch"
+Year = 1872
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a historical work by American historian and francophile Thomas Balch about the French involvement in the American Revolutionary War during 1777-1783. The book is divided into two parts: the first discusses the causes and origins of the War of Independence, summarizes the events of the war up to 1781, and provides a complete account of the French expeditionary corps under the command of the Comte de Rochambeau. This work documents the crucial French military and naval support that helped secure American independence, including the role of figures like Rochambeau and Lafayette, and the decisive French naval victory that led to the British surrender at Yorktown in 1781.
+"""
+
+Notes = """
+The publication year of 1872 is clearly indicated on the title page. Thomas Balch (1821-1877) was an American lawyer and historian who wrote extensively about Franco-American relations. This work was written in French and published nearly a century after the events it describes, representing a 19th-century historical analysis of French-American cooperation during the Revolutionary War period.
+"""
+</result>

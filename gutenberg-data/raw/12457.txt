@@ -1,0 +1,15 @@
+<result>
+Title = "El Diablo Cojuelo"
+Author = "Luis Vélez de Guevara"
+Year = 1641
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+El Diablo Cojuelo (The Limping Devil or The Devil on Two Sticks) is a Spanish picaresque novel written by Luis Vélez de Guevara. The story follows a student named Don Cleofás who, while fleeing from the law, takes refuge in an attic where he releases the mischievous demon Cojuelo from captivity. In gratitude, the devil takes Don Cleofás on a fantastical journey through Madrid, lifting the roofs off buildings to reveal the hidden lives, vices, and follies of the city's inhabitants. The work is a satirical social commentary on 17th-century Spanish society, offering a panoramic view of various social classes and their moral failings. This edition appears to be from the Clásicos Castellanos series with prologue and notes by Francisco Rodríguez Marín, published in 1922.
+"""
+
+Notes = """
+The work was originally published in 1641. While this Gutenberg text is based on a 1922 scholarly edition with annotations by Francisco Rodríguez Marín, the year 1641 represents the original publication date of Vélez de Guevara's novel. The work was influential in Spanish Golden Age literature and later inspired Alain-René Lesage's French adaptation Le Diable Boiteux (1707).
+"""
+</result>

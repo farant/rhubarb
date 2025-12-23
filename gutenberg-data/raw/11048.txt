@@ -1,0 +1,25 @@
+I'll analyze this Project Gutenberg text to identify the work and extract the requested information.
+
+This is clearly a non-fiction work about the clandestine press in occupied Belgium during World War I. The title page and foreword provide clear information:
+
+- **Title**: "La Presse Clandestine dans la Belgique Occupée" (The Clandestine Press in Occupied Belgium)
+- **Author**: Jean Massart (identified as Vice-Director of the Science Class of the Royal Academy of Belgium)
+- **Publication Year**: 1917 (explicitly stated on the title page)
+
+The work discusses Belgian resistance to German occupation through underground publishing during WWI. The author mentions a previous book "Comment les Belges résistent à la domination allemande" and explains this volume focuses specifically on clandestine newspapers, pamphlets, books, and illustrated cards published and distributed during the German occupation.
+
+<result>
+Title = "La Presse Clandestine dans la Belgique Occupée"
+Author = "Jean Massart"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A historical account of the clandestine press operations in Belgium during the German occupation in World War I. Written by Jean Massart, Vice-Director of the Science Class of the Royal Academy of Belgium, this work documents how Belgians resisted German domination through underground publication and distribution of newspapers, pamphlets, books, and illustrated cards. The book includes twenty-six facsimiles and was sold for the benefit of Belgian relief organizations. It contrasts with the author's previous work by focusing specifically on uncensored writings rather than German-censored documents, highlighting the resilience and humor of Belgian resistance against German terror tactics.
+"""
+
+Notes = """
+The year 1917 is taken from the title page. This is a contemporary historical document written during WWI, not a retrospective history. The book represents primary source material documenting active resistance during the occupation. Not tagged as 'appropriate-for-children' due to war context and mature historical subject matter. Not tagged as 'catholic' despite Belgian Catholic context, as this is primarily a secular historical/political work about resistance journalism.
+"""
+</result>

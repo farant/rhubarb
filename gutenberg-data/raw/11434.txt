@@ -1,0 +1,17 @@
+I can recognize this work! This is a children's story by the Comtesse de Ségur. Let me provide the information you requested:
+
+<result>
+Title = "Pauvre Blaise"
+Author = "Comtesse de Ségur (Sophie Rostopchine)"
+Year = 1861
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+'Pauvre Blaise' is a children's novel by the Comtesse de Ségur, one of the most beloved French children's authors of the 19th century. The story follows Blaise, a virtuous and pious young boy, as he navigates life under new masters. Sophie Rostopchine, born into Russian nobility, converted to Catholicism and became the Comtesse de Ségur through marriage. She wrote extensively for children, creating morally instructive tales that emphasized Christian virtues. Her works were very popular in French Catholic households and often received ecclesiastical approval. This particular book is dedicated to her grandson Pierre de Segur and was written to provide both entertainment and moral education for young readers.
+"""
+
+Notes = """
+The year 1861 is explicitly stated in the dedication ('Paris, 1861'). The Comtesse de Ségur's works were written from a strong Catholic perspective and were designed to instruct children in virtue, making them likely candidates for nihil obstat and imprimatur, though I cannot confirm specific ecclesiastical approval for this particular work. Her books remain classics of French children's literature and exemplify 19th-century Catholic pedagogical literature.
+"""
+</result>

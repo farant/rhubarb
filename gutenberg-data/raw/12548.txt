@@ -1,0 +1,19 @@
+Looking at this text, I can identify this as "Secret Memoirs of the Courts of Europe" by Madame la Marquise de Fontenoy, focusing on William II of Germany and Francis Joseph of Austria-Hungary. The publication date shown is 1900.
+
+The Marquise de Fontenoy was a pseudonymous gossip columnist who wrote extensively about European royalty and court life in the late 19th and early 20th centuries. This work is part of a series of "secret memoirs" about various European courts during this period.
+
+<result>
+Title = "Secret Memoirs of the Courts of Europe: William II, Germany; Francis Joseph, Austria-Hungary, Volume I"
+Author = "Madame la Marquise de Fontenoy"
+Year = 1900
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the first volume of a two-volume work documenting court life and gossip about two of Europe's most powerful monarchs at the turn of the 20th century: Kaiser Wilhelm II of Germany and Emperor Franz Joseph of Austria-Hungary. Written by the pseudonymous Marquise de Fontenoy, a popular gossip columnist of the era, the work provides intimate details and anecdotes about European royal courts, their politics, scandals, and personalities. These "secret memoirs" were part of a popular genre at the time that purported to reveal the private lives and machinations of European royalty, though their accuracy and sources were often questionable. The work reflects the intense public fascination with royal courts during the final years of Europe's old monarchical order.
+"""
+
+Notes = """
+1900 is the publication year clearly stated in the text. The Marquise de Fontenoy was a pen name used by multiple writers over the years who contributed court gossip and royal scandals to newspapers and books. This work is not appropriate for children due to mature themes about court intrigue. It is not tagged as "catholic" despite covering Catholic monarchs, as it is sensationalist gossip literature rather than devotional or serious Catholic scholarship.
+"""
+</result>

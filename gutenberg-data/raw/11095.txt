@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This appears to be "Fun & Nonsense" by Willard Bonte, which is a children's illustrated book of humorous poems and verses. Based on the style and content, this appears to be from the early 20th century. Willard Bonte was an American illustrator and author who created whimsical children's books, and this work is characteristic of the light verse and illustrated children's literature popular in the 1900s-1920s era.
+
+Let me research the publication date. Based on the Project Gutenberg number (11095) and the style of the work, this appears to be from around 1904-1907, when Bonte was most active in producing these types of illustrated children's books.
+
+<result>
+Title = "Fun & Nonsense"
+Author = "Willard Bonte"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children", "poetry"]
+
+Summary = """
+A children's book of whimsical illustrated poems and light verse by American illustrator and author Willard Bonte. The work features humorous, nonsensical rhymes paired with charming illustrations, characteristic of early 20th-century children's literature. The poems include playful characters like "Chocolate Drop the Barber" and personified candy stick figures, designed to delight and amuse young readers with their gentle absurdity and visual charm.
+"""
+
+Notes = """
+Willard Bonte was an American illustrator active in the early 1900s who specialized in children's books with whimsical, often anthropomorphized characters. The exact publication year can be difficult to pin down precisely for some of his works, but the style and Project Gutenberg cataloging suggest a date around 1904-1907. I've chosen 1904 as a reasonable estimate for the original publication date based on the style and Bonte's period of greatest activity.
+"""
+</result>

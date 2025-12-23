@@ -1,0 +1,17 @@
+I recognize this work! "Adventures in Friendship" by David Grayson (the pen name of Ray Stannard Baker) is a collection of essays about rural life and human connections.
+
+<result>
+Title = "Adventures in Friendship"
+Author = "David Grayson (Ray Stannard Baker)"
+Year = 1910
+
+Tags = ["non-fiction", "essays", "appropriate-for-children"]
+
+Summary = """
+Adventures in Friendship is a collection of gentle, reflective essays by David Grayson (pen name of Ray Stannard Baker, a prominent American journalist and author). The book chronicles the observations and experiences of a narrator who has left city life to become a farmer, finding joy and wisdom in simple rural encounters and relationships. Through various 'adventures' - meetings with neighbors, observation of nature, and contemplation of everyday life - Grayson explores themes of contentment, human connection, and the spiritual richness found in ordinary moments. The work became quite popular in its time for its optimistic, philosophical approach to simple living and its celebration of friendship and community in rural America.
+"""
+
+Notes = """
+First published in 1910. Ray Stannard Baker (1870-1946) was a well-known muckraking journalist who also wrote under the pseudonym David Grayson. The Grayson books, including this one, represented a different side of his writing - more contemplative and focused on rural life and simple pleasures. Baker later won the Pulitzer Prize for his biography of Woodrow Wilson.
+"""
+</result>

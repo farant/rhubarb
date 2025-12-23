@@ -1,0 +1,17 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+<result>
+Title = "The Bracelets; or, Amiability and Industry Rewarded"
+Author = "Maria Edgeworth"
+Year = 1796
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Bracelets" is a moral tale by Maria Edgeworth, one of the stories from her collection of didactic children's literature. The story is set in a girls' boarding school run by the virtuous Mrs. Villars, where students compete for an annual prize that rewards merit and good conduct. The tale explores themes of emulation versus envy, justice, and moral education. Edgeworth was a pioneer in realistic children's fiction and educational literature, writing stories that taught moral lessons through relatable characters and situations rather than through fantasy or heavy-handed moralizing. Her works were highly influential in the development of children's literature and the novel form in the late 18th and early 19th centuries.
+"""
+
+Notes = """
+This work was first published in "The Parent's Assistant" (1796), Maria Edgeworth's first collection of children's stories. The 1850 date shown in this edition is for a later illustrated publication. I've chosen 1796 as the year because that represents when this story first appeared and became historically significant in the development of children's literature. Edgeworth was not Catholic (she was Anglo-Irish Protestant), so the 'catholic' tag is not applicable despite her moral focus.
+"""
+</result>

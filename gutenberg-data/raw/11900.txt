@@ -1,0 +1,15 @@
+<result>
+Title = "Elizabeth Visits America"
+Author = "Elinor Glyn"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Elizabeth Visits America" is a novel by Elinor Glyn, published in 1909. It is a sequel to her earlier work "The Visits of Elizabeth" and follows the titular character, the Marchioness of Valmond (Elizabeth), on her travels through the United States. The book is written in an epistolary format, chronicling Elizabeth's observations and adventures as she journeys from New York to San Francisco and various locations in between, including Philadelphia, Niagara, Chicago, and the American West. Known for her witty social commentary, Glyn uses Elizabeth's perspective to humorously contrast British aristocratic society with American culture of the early 20th century. The novel offers both entertainment and a period snapshot of Edwardian-era transatlantic cultural encounters.
+"""
+
+Notes = """
+The year 1909 is clearly stated on the title page of this Project Gutenberg edition and represents the original publication date of this work. Elinor Glyn was a popular and somewhat controversial British novelist of the early 20th century, known for coining the term "It" to describe sex appeal. While she was a prominent cultural figure, her works were primarily romantic fiction and social novels rather than explicitly Catholic literature, despite her personal background.
+"""
+</result>

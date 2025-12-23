@@ -1,0 +1,23 @@
+I need to analyze this text to identify the work. Let me examine what I can see here.
+
+This appears to be a play titled "The Custom of the Country" based on the header. The text shows a dramatis personae (list of characters) and mentions it's from Project Gutenberg ebook #12039. The setting alternates between Lisbon and Italy, and the list of principal actors at the end is very helpful.
+
+The actors listed (Joseph Taylor, John Lowin, Nicholas Toolie, John Underwood, Robert Benfeild, etc.) were members of the King's Men, the theatrical company that performed works by John Fletcher and Francis Beaumont, as well as Shakespeare. Given the character names (Spanish/Portuguese like Zenocia, Arnoldo, Duarte) and the Lisbon setting, along with the theatrical style, this is most likely "The Custom of the Country" by John Fletcher and Philip Massinger, a Jacobean era play.
+
+This play was written around 1619-1620 and first published in the First Folio of Beaumont and Fletcher's works in 1647, though it was performed earlier. The collaboration was between Fletcher and Massinger (not Beaumont, who had retired from playwriting by then).
+
+<result>
+Title = "The Custom of the Country"
+Author = "John Fletcher and Philip Massinger"
+Year = 1620
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+A Jacobean comedy by John Fletcher and Philip Massinger, first performed around 1619-1620. The play is set between Lisbon and Italy and deals with themes of honor, chastity, and the titular "custom of the country" - a controversial practice involving the droit du seigneur (a lord's supposed right to sleep with brides on their wedding night). The plot centers on Zenocia, a chaste wife pursued by the dishonorable Count Clodio, and involves various romantic entanglements, disguises, and dramatic complications typical of the period. The play showcases the theatrical collaboration between Fletcher and Massinger during the Jacobean era.
+"""
+
+Notes = """
+The year 1620 represents the approximate composition date. The play was first published in the 1647 First Folio of Beaumont and Fletcher's works, but was performed earlier by the King's Men. The actors listed (Joseph Taylor, John Lowin, etc.) were prominent members of that company. While sometimes attributed to Beaumont and Fletcher, modern scholarship confirms this was a Fletcher-Massinger collaboration, as Beaumont had largely retired from playwriting by this time.
+"""
+</result>

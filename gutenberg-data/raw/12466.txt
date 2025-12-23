@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, September 20, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["periodical", "humor", "satire", "non-fiction"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humor and satire established in 1841. It became one of the most influential and beloved satirical publications of the Victorian and Edwardian eras, known for its political cartoons, social commentary, and humorous essays. This particular issue from September 20, 1890 (Volume 99) contains various pieces including a humorous travel sketch titled "Out for Another Holiday" describing a cross-Channel journey from Dover to Ostend, Belgium. The magazine featured contributions from numerous writers and artists, making it a collaborative work rather than the product of a single author. Punch remained in publication until 1992, then briefly revived from 1996-2002.
+"""
+
+Notes = """
+The year 1890 is straightforward as this is a dated periodical issue. "Various" is used for the author field as Punch was a collaborative magazine with multiple contributors per issue, though individual pieces were sometimes signed or attributed to regular columnists. The piece shown here is written by "Our Impartial and Not-to-be-Biassed Critic" which was likely a recurring pseudonymous column. Not tagged as "appropriate-for-children" as Victorian satirical humor was generally aimed at an educated adult readership, though not inappropriate per se.
+"""
+</result>

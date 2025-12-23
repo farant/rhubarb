@@ -1,0 +1,21 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Based on the text, this is clearly "Simon Magus: An Essay on the Founder of Simonianism" by G.R.S. Mead. G.R.S. Mead (George Robert Stow Mead, 1863-1933) was a scholar of Gnosticism and an associate of the Theosophical Society. This work was originally published in 1892.
+
+The text is a scholarly examination of Simon Magus, the figure mentioned in Acts 8 who is traditionally considered the first Christian heretic and a founder of Gnostic movements. Mead approaches the subject from a historical and philosophical perspective, attempting to reevaluate Simon's teachings based on ancient sources rather than simply accepting the traditional Christian condemnation.
+
+<result>
+Title = "Simon Magus: An Essay on the Founder of Simonianism"
+Author = "G.R.S. Mead"
+Year = 1892
+
+Tags = ["non-fiction", "theology", "historical-study", "gnosticism"]
+
+Summary = """
+A scholarly examination of Simon Magus, the figure from Acts 8 traditionally regarded as the first Christian heretic and founder of Simonianism. G.R.S. Mead, a prominent scholar of Gnosticism and Theosophy, attempts to reevaluate Simon's philosophy and teachings based on ancient sources, challenging the patristic characterization of Simon as merely a wicked sorcerer. The work explores early Christian heresiology and the development of Gnostic systems, arguing that the traditional understanding of Simon and Simonianism requires reconsideration. Mead examines both the biblical narrative and later legendary accounts, including the famous story of Simon's attempted flight in Rome and his confrontation with Peter.
+"""
+
+Notes = """
+Publication year is 1892, when Mead first published this work. This is a scholarly theological/historical study rather than devotional literature, and while it discusses early Christian history, it is not a Catholic work and would not receive nihil obstat or imprimatur. Mead was associated with Theosophy and approached Gnosticism sympathetically, which would place this outside orthodox Catholic scholarship.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Harp: A Collection of Songs for Anti-Slavery Meetings"
+Author = "William W. Brown"
+Year = 1848
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Anti-Slavery Harp is a collection of anti-slavery songs compiled by William W. Brown, himself a fugitive slave who became a prominent abolitionist, lecturer, novelist, and historian. Published in 1848, this songbook was created to meet public demand for affordable anti-slavery songs suitable for abolitionist meetings and gatherings. The collection includes both previously published songs from earlier works like "Liberty Minstrel" and "Anti-Slavery Melodies," as well as newer compositions, some appearing in print for the first time. These songs were used as tools of activism and moral persuasion in the abolitionist movement, helping to spread anti-slavery sentiment through music. Brown dedicated the work "to all true friends of the Slave."
+"""
+
+Notes = """
+The year 1848 is clearly stated in the preface and on the title page. William W. Brown (c. 1814-1884) was an important African American abolitionist who escaped from slavery in 1834. This songbook represents an important primary source document from the American abolitionist movement. While Brown himself was not Catholic, this is a significant historical document that reflects the moral crusade against slavery in antebellum America.
+"""
+</result>

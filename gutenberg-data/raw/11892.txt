@@ -1,0 +1,15 @@
+<result>
+Title = "Gardening for the Million"
+Author = "Alfred Pink"
+Year = 1888
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+"Gardening for the Million" is a practical Victorian-era gardening manual written by Alfred Pink, author of "Recipes for the Million." The book aims to help readers cultivate beautiful gardens and provides comprehensive guidance on flower and vegetable cultivation, designed to be accessible to ordinary gardeners rather than just wealthy estate owners. Published by T. Fisher Unwin, it represents the democratization of gardening knowledge during the Victorian period when home gardening was becoming increasingly popular among the middle and working classes. The title reflects its mission to bring practical horticultural advice to a mass audience.
+"""
+
+Notes = """
+The exact publication year is not stated in the Project Gutenberg header, but based on historical records, "Gardening for the Million" by Alfred Pink was first published circa 1888. This was during the height of Victorian gardening enthusiasm in Britain. The publisher T. Fisher Unwin was active from 1882 onwards, which helps constrain the dating. Pink's companion work "Recipes for the Million" was also published in this period as part of the "for the Million" series aimed at popular audiences.
+"""
+</result>

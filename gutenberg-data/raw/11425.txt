@@ -1,0 +1,17 @@
+I recognize this as an issue of Punch magazine (also known as "The London Charivari"), which was a British weekly magazine of humor and satire. This particular excerpt is from Volume 153, dated December 5, 1917.
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 153, December 5, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "periodical", "humor", "satire", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humor and satire established in 1841. It became an institution of British culture, known for its political cartoons, witty commentary on current events, and social satire. Each issue featured various short humorous pieces, cartoons, and social commentary written by multiple contributors. This particular issue from December 5, 1917 contains typical Punch content from the World War I era, with humorous takes on wartime rationing, food shortages, and other contemporary issues of the period. The magazine continued publication until 1992, then briefly revived from 1996-2002.
+"""
+
+Notes = """
+Since this is a periodical issue rather than a single-authored book, the year 1917 represents the actual publication date of this specific issue. Punch was a collaborative effort with multiple writers and cartoonists contributing to each issue, hence "Various" as the author. The content reflects the social conditions and concerns of Britain during World War I, particularly food rationing and wartime restrictions.
+"""
+</result>

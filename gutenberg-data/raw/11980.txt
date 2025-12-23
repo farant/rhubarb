@@ -1,0 +1,15 @@
+<result>
+Title = "A Tramp's Sketches"
+Author = "Stephen Graham"
+Year = 1913
+
+Tags = ["non-fiction", "travel", "memoir"]
+
+Summary = """
+A Tramp's Sketches is a travel memoir by British writer Stephen Graham documenting his walking journey through the Caucasus, Crimea, and the Black Sea region, culminating in a pilgrimage to Jerusalem with Russian peasants. Graham embraced the life of a wanderer, rejecting modern commercialism to live as a "walking hermit" and experience spiritual and material revelations. The book was written largely outdoors during his travels and focuses on the universal experiences of the tramp and seeker rather than serving as a strict guidebook to Russia. Graham visited Crimean battlefields, traveled a thousand miles along the Black Sea coast, participated in religious pilgrimages with thousands of peasants, bathed in the Jordan River, and spent a night in the Holy Sepulchre. The work explores themes of wandering, spiritual seeking, and the rejection of modern conditions.
+"""
+
+Notes = """
+The year 1913 is clearly stated on the title page as the publication date. This appears to be the first edition of the work. Stephen Graham (1884-1975) was a British travel writer, journalist, and adventurer who wrote extensively about Russia and Eastern Europe in the early 20th century.
+"""
+</result>

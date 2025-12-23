@@ -1,0 +1,19 @@
+I'll analyze this Project Gutenberg text to identify the work and provide the requested information.
+
+This is clearly a biographical work - the letters and journals of Samuel F.B. Morse (the inventor of the telegraph), edited by his son Edward Lind Morse. This is Volume II of a two-volume set published in 1914.
+
+<result>
+Title = "Samuel F.B. Morse: His Letters and Journals, Volume II"
+Author = "Samuel F.B. Morse, edited by Edward Lind Morse"
+Year = 1914
+
+Tags = ["non-fiction", "biography", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is the second volume of a two-volume biographical work containing the letters and journals of Samuel Finley Breese Morse (1791-1872), the American inventor best known for developing the telegraph and Morse code. The work was edited and supplemented by his son, Edward Lind Morse, and published in 1914. The collection includes personal correspondence, journal entries, and documentation related to Morse's life and work, particularly his invention of the telegraph. The volume is illustrated with reproductions of Morse's paintings (he was also an accomplished artist) and includes technical notes and diagrams related to the telegraph invention.
+"""
+
+Notes = """
+The year 1914 is chosen as this represents the publication date of this edited collection. While the letters and journals themselves span Morse's lifetime (he died in 1872), this is fundamentally an early 20th-century biographical work that compiled and organized his writings. The editor, Edward Lind Morse, was Samuel Morse's son who undertook this project to preserve his father's legacy and document the history of the telegraph's invention.
+"""
+</result>

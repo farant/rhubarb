@@ -1,0 +1,15 @@
+<result>
+Title = "Crusaders of New France: A Chronicle of the Fleur-de-Lis in the Wilderness"
+Author = "William Bennett Munro"
+Year = 1918
+
+Tags = ["non-fiction", "history", "appropriate-for-children"]
+
+Summary = """
+This work is part of "The Chronicles of America Series" and provides a historical account of French colonial activity in North America. Written by historian William Bennett Munro, the book chronicles the efforts of French explorers, missionaries, settlers, and administrators in establishing and maintaining New France (primarily in what is now Canada and the Louisiana Territory). The work covers key figures and themes including French explorers and voyageurs, the role of the Catholic Church in colonization, the seigneurial system, the fur trade, and the broader context of French imperial ambitions in the New World during the age of the Bourbons and Louis XIV. The dedication to "Father Henri Beaudé (Henri d'Arles)" suggests a respectful treatment of French-Canadian Catholic heritage.
+"""
+
+Notes = """
+The publication year of 1918 is clear from the text itself. This appears to be a scholarly historical work written during World War I, looking back on the French colonial period in North America which spanned roughly from the early 1600s through 1763 (when New France was ceded to Britain after the Seven Years' War). While the work discusses Catholic missions and is dedicated to a Catholic priest, it appears to be a historical survey rather than a specifically Catholic religious work, so I have not included the 'catholic' tag.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Untamed"
+Author = "Max Brand"
+Year = 1919
+
+Tags = ["fiction", "western"]
+
+Summary = """
+"The Untamed" is a Western novel by Max Brand (pseudonym of Frederick Faust), first published in 1919. It tells the story of Dan Barry, nicknamed "Whistling Dan," a wild, untamed man raised in isolation who possesses an almost supernatural connection with nature and animals, particularly his horse Black Bart and his wolf-dog Satan. The novel explores themes of the conflict between civilization and wild nature, as Dan struggles with his primal instincts while forming human connections. This was one of Max Brand's early works that helped establish him as one of the most prolific and popular Western writers of the early 20th century. The novel was successful enough to spawn two sequels: "The Night Horseman" (1920) and "The Seventh Man" (1921).
+"""
+
+Notes = """
+The year 1919 is clearly stated in the Project Gutenberg text and represents the original publication date of this work. Max Brand was a pen name for Frederick Schiller Faust, who became one of the most commercially successful Western fiction authors of his era.
+"""
+</result>

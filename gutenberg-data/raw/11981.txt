@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Great Sermons, Volume I: Basil to Calvin"
+Author = "Various (Compiled by Grenville Kleiser)"
+Year = 1908
+
+Tags = ["non-fiction", "religious", "historical-document", "catholic"]
+
+Summary = """
+This is the first volume of a multi-volume compilation of historically significant sermons spanning from the early Church Fathers through the Reformation. Compiled by Grenville Kleiser, a faculty member at Yale Divinity School, this anthology presents sermons from major Christian theologians and preachers beginning with St. Basil the Great (4th century) and extending through John Calvin (16th century). The collection represents important moments in Christian theological and rhetorical history, including sermons from both Catholic and Protestant traditions during the formative centuries of Christianity. This work serves both as a historical record of Christian preaching and as a sourcebook for understanding the development of Christian thought and oratory across more than a millennium.
+"""
+
+Notes = """
+I've assigned the year 1908 as this appears to be when Grenville Kleiser's compilation was published by Funk & Wagnalls Company. This is a compilation work rather than an original text, so the compilation date is most appropriate for historical timeline purposes. The 'catholic' tag is included because the volume spans from Basil (an important Church Father and saint in both Catholic and Orthodox traditions) through Calvin, thus including the patristic and medieval Catholic preaching tradition. However, it also includes Protestant Reformation figures, making it ecumenical in scope.
+"""
+</result>

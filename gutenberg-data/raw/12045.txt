@@ -1,0 +1,15 @@
+<result>
+Title = "Women in the Fine Arts: From the Seventh Century B.C. to the Twentieth Century A.D."
+Author = "Clara Erskine Clement"
+Year = 1904
+
+Tags = ["non-fiction", "art-history", "womens-history", "appropriate-for-children"]
+
+Summary = """
+This is a historical survey of women artists spanning from ancient times through the early 20th century, written by Clara Erskine Clement, an American art historian and author. The book documents the contributions of female artists across nearly three millennia, providing biographical information, descriptions of their works, and the honors they received. Clement conducted original research by corresponding directly with living artists to ensure accuracy. The work represents an important early effort to recover and celebrate the often-overlooked achievements of women in the visual arts during a period when art history was dominated by male perspectives.
+"""
+
+Notes = """
+The year 1904 is clearly stated on the title page as the publication date. Clara Erskine Clement (1834-1916) was a prolific American art historian who wrote numerous books on art and artists, often focusing on educational topics suitable for general audiences.
+"""
+</result>

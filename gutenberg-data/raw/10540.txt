@@ -1,0 +1,17 @@
+Looking at this text, I can identify this as "Mother Carey's Chickens" by Kate Douglas Wiggin. This is a well-known children's novel about a family dealing with financial hardship after the death of their father. The work is fiction aimed at young readers, written in the early 20th century.
+
+<result>
+Title = "Mother Carey's Chickens"
+Author = "Kate Douglas Wiggin"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mother Carey's Chickens is a heartwarming children's novel by Kate Douglas Wiggin, the author of Rebecca of Sunnybrook Farm. The story follows the Carey family - mother and her four children (the "chickens") - as they face financial difficulties following the death of Captain Carey. They move from their comfortable home to a more modest dwelling called Beulah, where they learn valuable lessons about resourcefulness, family bonds, and finding happiness despite adversity. The novel emphasizes themes of feminine strength, family cooperation, and the importance of maintaining dignity and optimism during hardship. It was very popular in its time and reflects Progressive Era values about family, education, and self-reliance.
+"""
+
+Notes = """
+Published in 1911. Kate Douglas Wiggin was not Catholic - she was raised in a Protestant household and was influenced by the Congregational Church and later by more liberal Protestant traditions. Therefore, this work would not receive a nihil obstat or imprimatur and should not be tagged as 'catholic'. The novel is pure fiction written for children and young adults, reflecting early 20th century American domestic ideals.
+"""
+</result>

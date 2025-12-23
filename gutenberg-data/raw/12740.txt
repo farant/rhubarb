@@ -1,0 +1,17 @@
+I can identify this work for you.
+
+<result>
+Title = "An Autobiography of Buffalo Bill (Colonel W.F. Cody)"
+Author = "William F. Cody"
+Year = 1920
+
+Tags = ["non-fiction", "autobiography", "historical-document", "american-west"]
+
+Summary = """
+This is the autobiography of William Frederick "Buffalo Bill" Cody (1846-1917), one of the most famous figures of the American Old West. The book recounts his experiences as a Pony Express rider, buffalo hunter, Army scout, and showman. Cody earned his nickname "Buffalo Bill" by hunting buffalo to feed railroad workers. He later became world-famous for his Wild West show, which toured internationally and featured reenactments of frontier life, including Native American performers. The work provides a first-hand account of the American frontier during its most mythologized period, though like many frontier memoirs, it blends fact with legend and self-promotion.
+"""
+
+Notes = """
+While Cody lived from 1846-1917, this specific edition was published in 1920 by Cosmopolitan Book Corporation, three years after his death. The book went through various editions during and after his lifetime. I've chosen 1920 as the year since this appears to be the specific edition from Project Gutenberg based on the copyright page shown. The N.C. Wyeth illustrations are a notable feature of this edition - Wyeth was a prominent American illustrator of the early 20th century.
+"""
+</result>

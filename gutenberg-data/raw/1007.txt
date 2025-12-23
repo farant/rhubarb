@@ -1,0 +1,15 @@
+<result>
+Title = "Paradiso (from The Divine Comedy)"
+Author = "Dante Alighieri"
+Year = 1320
+
+Tags = ["non-fiction", "poetry", "catholic", "theological"]
+
+Summary = """
+Paradiso is the third and final part of Dante Alighieri's Divine Comedy, following Inferno and Purgatorio. It describes Dante's journey through the nine celestial spheres of Heaven, guided by Beatrice, his idealized beloved. The work is structured as 33 cantos of terza rima poetry. As Dante ascends through the spheres, he encounters various blessed souls and learns about divine love, justice, and theology. The journey culminates in the Empyrean, where Dante experiences a direct vision of God. This is one of the supreme achievements of medieval Catholic literature, combining theology, philosophy, astronomy, and poetry into a comprehensive vision of the cosmos and salvation. The translation by Rev. Henry Francis Cary (1772-1844) was published in the early 19th century and became one of the most influential English translations of Dante's work.
+"""
+
+Notes = """
+The Divine Comedy was completed around 1320, shortly before Dante's death in 1321. Paradiso specifically was likely finished between 1316-1320. I've chosen 1320 as a representative date for the original composition. This is definitively a Catholic work - Dante was Catholic, and the entire poem is structured around Catholic theology and cosmology. It would certainly have received the nihil obstat and imprimatur if those formal processes had existed in Dante's time (they were formalized later by the Church).
+"""
+</result>

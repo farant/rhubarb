@@ -1,0 +1,15 @@
+<result>
+Title = "Famous Americans of Recent Times"
+Author = "James Parton"
+Year = 1867
+
+Tags = ["non-fiction", "biography", "history", "american-history"]
+
+Summary = """
+A collection of biographical essays by James Parton about prominent American figures of the 19th century. The book profiles political leaders (Henry Clay, Daniel Webster, John C. Calhoun, John Randolph), business titans (Stephen Girard, Commodore Vanderbilt, John Jacob Astor), innovators (Charles Goodyear), media figures (James Gordon Bennett), religious leaders (Henry Ward Beecher), and notable women (Theodosia Burr). Parton was one of America's first professional biographers and is known for his detailed, accessible biographical works. This volume captures key personalities who shaped American political, economic, and cultural life in the decades leading up to and following the Civil War.
+"""
+
+Notes = """
+The year 1867 is clearly stated on the title page. This appears to be the original publication date. James Parton (1822-1891) was a prolific American biographer in the 19th century, and this work represents his characteristic style of biographical sketches of contemporary or near-contemporary figures.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Oeuvres Poétiques de Christine de Pisan, Tome Deuxième"
+Author = "Christine de Pisan"
+Year = 1399
+
+Tags = ["non-fiction", "poetry", "historical-document", "catholic"]
+
+Summary = """
+This is the second volume of the poetic works of Christine de Pisan (also spelled Christine de Pizan, c. 1364-1430), one of the most remarkable figures of medieval literature and the first professional woman writer in European history. Born in Venice but raised at the French court, Christine became a prolific author after being widowed at age 25. This volume contains several of her important early works including "L'Épitre au Dieu d'Amours" (Letter to the God of Love, 1399), "Le Dit de la Rose" (The Tale of the Rose), and "Le Débat de Deux Amants" (The Debate of Two Lovers). These works are notable for Christine's proto-feminist defense of women and her participation in the literary "Querelle de la Rose" (Quarrel of the Rose), where she critiqued the misogyny in the popular Roman de la Rose. As a devout Catholic and moralist, Christine's works often addressed women's virtue, education, and dignity. This edition was published by Maurice Roy for the Société des Anciens Textes Français.
+"""
+
+Notes = """
+I've chosen 1399 as the year because it corresponds to "L'Épitre au Dieu d'Amours," which is the first major work listed in this volume and marks Christine's entry into public literary debate. Her works span roughly 1393-1429, so dating could vary depending on which specific work is emphasized. This is a scholarly edition published much later (early 20th century based on the Project Gutenberg number), but the year reflects the original composition of the primary work.
+"""
+</result>

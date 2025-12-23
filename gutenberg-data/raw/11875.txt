@@ -1,0 +1,21 @@
+I'll read through this text to identify the work and gather the information you need.
+
+Based on the text provided, this is clearly the beginning of "The Blood Red Dawn" by Charles Caldwell Dobie, published in 1920. The text explicitly states this in the header.
+
+Let me provide the structured information in TOML format:
+
+<result>
+Title = "The Blood Red Dawn"
+Author = "Charles Caldwell Dobie"
+Year = 1920
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"The Blood Red Dawn" is a novel by American author Charles Caldwell Dobie, set during World War I in San Francisco. The story begins with the protagonist Claire Robson and her mother attending a church service where a foreign speaker (Serbian) is making an appeal for his war-torn country. The novel explores American home front experiences during WWI, examining themes of social change, women's evolving roles, and the impact of the war on ordinary American lives. Dobie was known for his realistic portrayals of San Francisco life and society in the early 20th century.
+"""
+
+Notes = """
+1920 is the original publication year as stated in the text. Charles Caldwell Dobie (1881-1943) was an American novelist and short story writer who focused on California life. The novel reflects the WWI period when America had entered the war and was "speeding up the draft" as mentioned in the text. This is not a children's book nor a Catholic work, though it mentions a Presbyterian church setting.
+"""
+</result>

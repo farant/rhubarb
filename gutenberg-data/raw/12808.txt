@@ -1,0 +1,15 @@
+<result>
+Title = "Frank on a Gun-Boat"
+Author = "Harry Castlemon"
+Year = 1864
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Frank on a Gun-Boat" is part of Harry Castlemon's "Gun-Boat Series," a collection of juvenile adventure novels set during the American Civil War. The series follows the adventures of young Frank Nelson as he serves in the Union Navy aboard a gunboat. These books were immensely popular with young readers in the post-Civil War era and combined patriotic themes with exciting naval action. Harry Castlemon was the pen name of Charles Austin Fosdick (1842-1915), a prolific American author of juvenile fiction who served in the Union Navy during the Civil War and drew on his own experiences for his naval stories. The books typically featured themes of courage, loyalty, and duty while providing young readers with adventure stories set against the backdrop of real historical events.
+"""
+
+Notes = """
+While this edition shows 1892 on the title page (likely a reprint), "Frank on a Gun-Boat" was originally published in 1864 during the Civil War itself. The 1864 date is more historically significant as it represents when the work first appeared and when it was written based on very recent or concurrent events. Castlemon's Gun-Boat Series was one of the earliest fictional treatments of Civil War naval operations written for young audiences.
+"""
+</result>

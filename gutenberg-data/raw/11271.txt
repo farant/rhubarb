@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Examiner, Part 1 of 4"
+Author = "American Anti-Slavery Society"
+Year = 1836
+
+Tags = ["non-fiction", "historical-document", "abolitionist-literature"]
+
+Summary = """
+The Anti-Slavery Examiner was a periodical publication by the American Anti-Slavery Society, one of the most prominent abolitionist organizations in the United States. This collection contains several influential anti-slavery tracts from 1836, including appeals to both the general American public and specifically to Christian women in the South, theological arguments against slavery drawing on Biblical sources, and constitutional arguments regarding Congressional power over slavery in the District of Columbia. The publication featured contributions from notable abolitionists including Gerrit Smith and others who used moral, religious, and legal arguments to advocate for the immediate abolition of slavery. These writings were part of the broader abolitionist movement that gained momentum in the 1830s and ultimately contributed to the debates leading to the Civil War.
+"""
+
+Notes = """
+The year 1836 is clearly stated in the document as the publication date of this collection. This was a pivotal period in the American abolitionist movement, when the American Anti-Slavery Society (founded in 1833) was actively publishing and distributing anti-slavery literature throughout the country, often facing violent opposition in both North and South. The society was founded by William Lloyd Garrison and others who advocated for immediate, rather than gradual, emancipation.
+"""
+</result>

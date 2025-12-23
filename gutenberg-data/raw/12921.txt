@@ -1,0 +1,29 @@
+I need to analyze this Project Gutenberg text to identify the work and provide the requested information in TOML format.
+
+Looking at the text, this is clearly a German collection of works by Björnstjerne Björnson. The title page shows:
+
+- **BJÖRNSTJERNE BJÖRNSON GESAMMELTE WERKE IN FÜNF BÄNDEN** (Collected Works in Five Volumes)
+- **ERSTER BAND** (First Volume)
+- **GEDICHTE UND ERZÄHLUNGEN** (Poems and Stories)
+- **HERAUSGEGEBEN VON JULIUS ELIAS** (Edited by Julius Elias)
+- Published in **1911**
+
+Björnstjerne Björnson (1832-1910) was a Norwegian writer, poet, and one of the "Four Greats" of Norwegian literature alongside Henrik Ibsen, Jonas Lie, and Alexander Kielland. He won the Nobel Prize in Literature in 1903.
+
+This is a German translation/compilation of his works. The volume contains poems and stories ("Gedichte und Erzählungen"), with the contents page showing various poems translated by different translators (Max Bamberger, Ludwig Fulda, Cläre Mjöen, Christian Morgenstern, and Roman Woerner).
+
+<result>
+Title = "Gesammelte Werke in Fünf Bänden: Erster Band - Gedichte und Erzählungen"
+Author = "Björnstjerne Björnson"
+Year = 1911
+
+Tags = ["fiction", "non-fiction", "poetry"]
+
+Summary = """
+This is the first volume of a five-volume German edition of the collected works of Björnstjerne Björnson (1832-1910), the Norwegian Nobel Prize-winning author. This volume contains poems and stories ("Gedichte und Erzählungen") edited by Julius Elias and published as the "only authorized German popular edition." Björnson was one of the "Four Greats" of 19th-century Norwegian literature and received the Nobel Prize in Literature in 1903 for his poetry and literary contributions. The poems in this collection were translated by several prominent German translators including Max Bamberger, Ludwig Fulda, Christian Morgenstern, and others. The contents include various poems with Norwegian themes and subjects.
+"""
+
+Notes = """
+I chose 1911 as the year because this is a specific German compilation/translation published in that year, not a translation of a single earlier work. While Björnson's individual poems and stories were written earlier (throughout the 19th century), this particular collected edition represents a distinct publication event. The editor Julius Elias curated this as an "authorized German popular edition," making 1911 the most historically accurate date for this specific work as it appears in Project Gutenberg.
+"""
+</result>

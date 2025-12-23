@@ -1,0 +1,15 @@
+<result>
+Title = "The Principles of Masonic Law: A Treatise on the Constitutional Laws, Usages And Landmarks of Freemasonry"
+Author = "Albert G. Mackey"
+Year = 1856
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is a foundational treatise on Masonic constitutional law and governance by Albert G. Mackey, one of the most influential Masonic scholars of the 19th century. The work systematically examines the constitutional laws, traditional usages, and landmarks that govern Freemasonry as an institution. Mackey served as Grand Lecturer and Grand Secretary of the Grand Lodge of South Carolina and held high positions in Scottish Rite Masonry. His writings became standard references in Masonic jurisprudence and remain influential in understanding Masonic organizational principles and legal framework.
+"""
+
+Notes = """
+The copyright page indicates 1855 as the copyright year, but the title page shows 1856 as the publication year. I've chosen 1856 as it represents the actual publication date. The work is not tagged as 'catholic' as Freemasonry has historically had complex and often contentious relationships with the Catholic Church, and Masonic writings would not receive ecclesiastical approval (nihil obstat/imprimatur). Not tagged as 'appropriate-for-children' given its specialized legal/constitutional subject matter for Masonic practitioners.
+"""
+</result>

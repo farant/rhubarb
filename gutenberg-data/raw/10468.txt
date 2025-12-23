@@ -1,0 +1,15 @@
+<result>
+Title = "Aunt Jane's Nieces in Society"
+Author = "Edith Van Dyne"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Aunt Jane's Nieces in Society" is part of the "Aunt Jane's Nieces" series written under the pseudonym Edith Van Dyne by L. Frank Baum (the creator of The Wonderful Wizard of Oz). This series, published between 1906-1918, follows the adventures of three young women—Louise Merrick, Beth De Graf, and Patsy Doyle—and their wealthy Uncle John Merrick. In this installment, the nieces navigate high society and social engagements. The series was popular early 20th-century young adult fiction aimed at girls, featuring themes of family, adventure, and moral development.
+"""
+
+Notes = """
+The year 1910 is clearly stated on the title page of this Project Gutenberg edition. L. Frank Baum wrote this series under the Edith Van Dyne pseudonym as a more realistic counterpart to his Oz books, focusing on contemporary young women's lives rather than fantasy adventures.
+"""
+</result>
