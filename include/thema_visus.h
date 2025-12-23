@@ -4,6 +4,8 @@
 #include "latina.h"
 #include "piscina.h"
 #include "fenestra.h"
+#include "widget.h"
+#include "entitas_repositorium.h"
 
 /* ==================================================
  * THEMA VISUS - Theme Palette Viewer Widget
@@ -91,6 +93,49 @@ b32
 thema_visus_tractare_eventum(
     ThemaVisus*       visus,
     constans Eventus* eventus);
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Vocatur per registrum_widget_initiare_omnes()
+ */
+vacuum
+thema_visus_init(
+    ContextusWidget* ctx);
+
+/* Salvare status visus ad entitas
+ *
+ * visus: theme viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "ThemaStatus::0")
+ *
+ * NOTA: ThemaVisus est read-only, ergo nihil salvare
+ */
+vacuum
+thema_visus_salvare_status(
+    ThemaVisus*          visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+/* Carcare status visus ex entitas
+ *
+ * visus: theme viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "ThemaStatus::0")
+ *
+ * NOTA: ThemaVisus est read-only, ergo nihil carcare
+ */
+vacuum
+thema_visus_carcare_status(
+    ThemaVisus*          visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
 
 
 #endif /* THEMA_VISUS_H */

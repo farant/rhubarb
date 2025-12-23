@@ -3,6 +3,7 @@
 #include "color.h"
 #include "delineare.h"
 #include "chorda.h"
+#include "registrum_commandi.h"
 #include <string.h>
 
 /* ==================================================
@@ -354,4 +355,67 @@ sputnik_syntaxis_tractare_eventum(
 
     /* Widget est read-only - non tractat eventus */
     redde FALSUM;
+}
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Command handler pro $sputnik-syntax */
+hic_manens b32
+_sputnik_command_handler(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+
+    /* SputnikSyntaxis non habet argumenta */
+    widget_ctx->commutare_widget(
+        widget_ctx->schirmata_datum,
+        "sputnik",
+        NIHIL);
+
+    redde VERUM;
+}
+
+vacuum
+sputnik_syntaxis_init(
+    ContextusWidget* ctx)
+{
+    si (!ctx || !ctx->reg_commandi)
+    {
+        redde;
+    }
+
+    registrum_commandi_registrare(
+        ctx->reg_commandi,
+        "sputnik-syntax",
+        _sputnik_command_handler,
+        ctx);
+}
+
+vacuum
+sputnik_syntaxis_salvare_status(
+    SputnikSyntaxis*     syntaxis,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    /* SputnikSyntaxis est read-only - nihil status ad salvare */
+    (vacuum)syntaxis;
+    (vacuum)repo;
+    (vacuum)entitas_id;
+}
+
+vacuum
+sputnik_syntaxis_carcare_status(
+    SputnikSyntaxis*     syntaxis,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    /* SputnikSyntaxis est read-only - nihil status ad carcare */
+    (vacuum)syntaxis;
+    (vacuum)repo;
+    (vacuum)entitas_id;
 }

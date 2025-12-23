@@ -4,6 +4,8 @@
 #include "latina.h"
 #include "piscina.h"
 #include "fenestra.h"
+#include "widget.h"
+#include "entitas_repositorium.h"
 
 /* ==================================================
  * SPUTNIK SYNTAXIS - Syntax Reference Widget
@@ -91,6 +93,49 @@ b32
 sputnik_syntaxis_tractare_eventum(
     SputnikSyntaxis*  syntaxis,
     constans Eventus* eventus);
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Vocatur per registrum_widget_initiare_omnes()
+ */
+vacuum
+sputnik_syntaxis_init(
+    ContextusWidget* ctx);
+
+/* Salvare status visus ad entitas
+ *
+ * syntaxis: syntax viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "SputnikStatus::0")
+ *
+ * NOTA: SputnikSyntaxis est read-only, ergo nihil salvare
+ */
+vacuum
+sputnik_syntaxis_salvare_status(
+    SputnikSyntaxis*     syntaxis,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+/* Carcare status visus ex entitas
+ *
+ * syntaxis: syntax viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "SputnikStatus::0")
+ *
+ * NOTA: SputnikSyntaxis est read-only, ergo nihil carcare
+ */
+vacuum
+sputnik_syntaxis_carcare_status(
+    SputnikSyntaxis*     syntaxis,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
 
 
 #endif /* SPUTNIK_SYNTAXIS_H */

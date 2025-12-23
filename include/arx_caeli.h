@@ -311,4 +311,47 @@ arx_caeli_marcare_immundum(
     ArcCaeli* arc);
 
 
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Vocatur per registrum_widget_initiare_omnes()
+ */
+vacuum
+arx_caeli_init(
+    ContextusWidget* ctx);
+
+/* Salvare status visus ad entitas
+ *
+ * arc: controller
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "ArcCaeliStatus::0")
+ *
+ * Salvat: schirma_currens_slug, historia, historia_index
+ */
+vacuum
+arx_caeli_salvare_status(
+    ArcCaeli*            arc,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+/* Carcare status visus ex entitas
+ *
+ * arc: controller
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "ArcCaeliStatus::0")
+ *
+ * Carcat: schirma_currens_slug et navigat ad eam
+ */
+vacuum
+arx_caeli_carcare_status(
+    ArcCaeli*            arc,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+
 #endif /* ARX_CAELI_H */

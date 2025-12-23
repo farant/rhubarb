@@ -2,7 +2,10 @@
 #include "thema.h"
 #include "xar.h"
 #include "delineare.h"
+#include "registrum_commandi.h"
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /* ==================================================
  * Functiones Interiores
@@ -2546,5 +2549,180 @@ navigator_entitatum_reddere(
         /* Divider inter columnam sinistram et mediam (double line cum gap) */
         delineare_lineam_verticalem(ctx, divider_x - II, divider_y0, divider_y1, color_border);
         delineare_lineam_verticalem(ctx, divider_x, divider_y0, divider_y1, color_border);
+    }
+}
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Command handler pro $navigator */
+hic_manens b32
+_navigator_command_handler(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+
+    /* NavigatorEntitatum non habet argumenta */
+    widget_ctx->commutare_widget(
+        widget_ctx->schirmata_datum,
+        "navigator",
+        NIHIL);
+
+    redde VERUM;
+}
+
+vacuum
+navigator_entitatum_init(
+    ContextusWidget* ctx)
+{
+    si (!ctx || !ctx->reg_commandi)
+    {
+        redde;
+    }
+
+    registrum_commandi_registrare(
+        ctx->reg_commandi,
+        "navigator",
+        _navigator_command_handler,
+        ctx);
+}
+
+vacuum
+navigator_entitatum_salvare_status(
+    NavigatorEntitatum*  nav,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    character buffer[CXXVIII];
+
+    si (!nav || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Scaffoldare entitas pro status */
+    entitas = repo->entitas_scaffoldare(
+        repo->datum,
+        "NavigatorStatus",
+        entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Salvare entitas_currens_id ut C string */
+    si (nav->entitas_currens && nav->entitas_currens->id &&
+        nav->entitas_currens->id->datum && nav->entitas_currens->id->mensura > ZEPHYRUM)
+    {
+        i32 len;
+        len = nav->entitas_currens->id->mensura;
+        si (len >= CXXVIII)
+        {
+            len = CXXVII;
+        }
+        memcpy(buffer, nav->entitas_currens->id->datum, (size_t)len);
+        buffer[len] = '\0';
+        repo->proprietas_ponere(repo->datum, entitas, "entitas_currens_id", buffer);
+    }
+
+    /* Salvare selectio */
+    sprintf(buffer, "%d", nav->selectio);
+    repo->proprietas_ponere(repo->datum, entitas, "selectio", buffer);
+
+    /* Salvare pagina_currens */
+    sprintf(buffer, "%d", nav->pagina_currens);
+    repo->proprietas_ponere(repo->datum, entitas, "pagina_currens", buffer);
+}
+
+vacuum
+navigator_entitatum_carcare_status(
+    NavigatorEntitatum*  nav,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    hic_manens i8 clavis_entitas_lit[] = "entitas_currens_id";
+    hic_manens i8 clavis_selectio_lit[] = "selectio";
+    hic_manens i8 clavis_pagina_lit[] = "pagina_currens";
+    chorda   clavis_entitas_id;
+    chorda   clavis_selectio;
+    chorda   clavis_pagina;
+    chorda*  valor_entitas_id;
+    chorda*  valor_selectio;
+    chorda*  valor_pagina;
+    character buffer[CXXVIII];
+    Entitas* entitas_target;
+
+    si (!nav || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Scaffoldare entitas pro status */
+    entitas = repo->entitas_scaffoldare(
+        repo->datum,
+        "NavigatorStatus",
+        entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Praeparare claves */
+    clavis_entitas_id.datum = clavis_entitas_lit;
+    clavis_entitas_id.mensura = XVIII;
+
+    clavis_selectio.datum = clavis_selectio_lit;
+    clavis_selectio.mensura = VIII;
+
+    clavis_pagina.datum = clavis_pagina_lit;
+    clavis_pagina.mensura = XIV;
+
+    /* Carcare et navigare ad entitatem */
+    valor_entitas_id = entitas_proprietas_capere(entitas, &clavis_entitas_id);
+    si (valor_entitas_id && valor_entitas_id->datum && valor_entitas_id->mensura > ZEPHYRUM)
+    {
+        /* Capere entitatem per ID */
+        entitas_target = repo->capere_entitatem(repo->datum, valor_entitas_id);
+        si (entitas_target)
+        {
+            nav->entitas_currens = entitas_target;
+            _construere_items(nav, XL);
+        }
+    }
+
+    /* Carcare selectio */
+    valor_selectio = entitas_proprietas_capere(entitas, &clavis_selectio);
+    si (valor_selectio && valor_selectio->datum && valor_selectio->mensura > ZEPHYRUM)
+    {
+        i32 len;
+        len = valor_selectio->mensura;
+        si (len >= LXIV)
+        {
+            len = LXIII;
+        }
+        memcpy(buffer, valor_selectio->datum, (size_t)len);
+        buffer[len] = '\0';
+        nav->selectio = (i32)atoi(buffer);
+    }
+
+    /* Carcare pagina_currens */
+    valor_pagina = entitas_proprietas_capere(entitas, &clavis_pagina);
+    si (valor_pagina && valor_pagina->datum && valor_pagina->mensura > ZEPHYRUM)
+    {
+        i32 len;
+        len = valor_pagina->mensura;
+        si (len >= LXIV)
+        {
+            len = LXIII;
+        }
+        memcpy(buffer, valor_pagina->datum, (size_t)len);
+        buffer[len] = '\0';
+        nav->pagina_currens = (i32)atoi(buffer);
     }
 }

@@ -142,4 +142,48 @@ navigator_entitatum_reddere(
     i32                  scala,
     b32                  focused);
 
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Vocatur per registrum_widget_initiare_omnes()
+ */
+vacuum
+navigator_entitatum_init(
+    ContextusWidget* ctx);
+
+/* Salvare status visus ad entitas
+ *
+ * nav: navigator entitatum
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "NavigatorStatus::0")
+ *
+ * Salvat: entitas_currens_id, selectio, pagina_currens
+ */
+vacuum
+navigator_entitatum_salvare_status(
+    NavigatorEntitatum*  nav,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+/* Carcare status visus ex entitas
+ *
+ * nav: navigator entitatum
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "NavigatorStatus::0")
+ *
+ * Carcat: navigat ad entitatem, restaurat selectio/pagina
+ */
+vacuum
+navigator_entitatum_carcare_status(
+    NavigatorEntitatum*  nav,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+
 #endif /* NAVIGATOR_ENTITATUM_H */

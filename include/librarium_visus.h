@@ -206,4 +206,47 @@ librarium_visus_quaerere(
     constans character* quaestio);
 
 
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Vocatur per registrum_widget_initiare_omnes()
+ */
+vacuum
+librarium_visus_init(
+    ContextusWidget* ctx);
+
+/* Salvare status visus ad entitas
+ *
+ * visus: library viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "LibrariumStatus::0")
+ *
+ * Salvat: modus, categoria, tag, indices
+ */
+vacuum
+librarium_visus_salvare_status(
+    LibrariumVisus*      visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+/* Carcare status visus ex entitas
+ *
+ * visus: library viewer
+ * repo: repositorium entitatum
+ * entitas_id: identificator entitas (e.g., "LibrariumStatus::0")
+ *
+ * Carcat: modus, categoria, tag, indices
+ */
+vacuum
+librarium_visus_carcare_status(
+    LibrariumVisus*      visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id);
+
+
 #endif /* LIBRARIUM_VISUS_H */

@@ -3,6 +3,7 @@
 #include "color.h"
 #include "delineare.h"
 #include "chorda.h"
+#include "registrum_commandi.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -359,4 +360,67 @@ thema_visus_tractare_eventum(
 
     /* Widget est read-only - non tractat eventus */
     redde FALSUM;
+}
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Command handler pro $thema */
+hic_manens b32
+_thema_command_handler(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+
+    /* ThemaVisus non habet argumenta */
+    widget_ctx->commutare_widget(
+        widget_ctx->schirmata_datum,
+        "thema",
+        NIHIL);
+
+    redde VERUM;
+}
+
+vacuum
+thema_visus_init(
+    ContextusWidget* ctx)
+{
+    si (!ctx || !ctx->reg_commandi)
+    {
+        redde;
+    }
+
+    registrum_commandi_registrare(
+        ctx->reg_commandi,
+        "thema",
+        _thema_command_handler,
+        ctx);
+}
+
+vacuum
+thema_visus_salvare_status(
+    ThemaVisus*          visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    /* ThemaVisus est read-only - nihil status ad salvare */
+    (vacuum)visus;
+    (vacuum)repo;
+    (vacuum)entitas_id;
+}
+
+vacuum
+thema_visus_carcare_status(
+    ThemaVisus*          visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    /* ThemaVisus est read-only - nihil status ad carcare */
+    (vacuum)visus;
+    (vacuum)repo;
+    (vacuum)entitas_id;
 }

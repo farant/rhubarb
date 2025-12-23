@@ -342,4 +342,19 @@ libro_salvare_si_immundum(
     LibroPaginarum* libro);
 
 
+/* ==================================================
+ * Lifecycle (Init)
+ * ================================================== */
+
+/* Initiare widget - registrare commandi
+ *
+ * ctx: contextus widget cum reg_commandi
+ *
+ * Registrat: $rename, $goto, $new
+ */
+vacuum
+libro_paginarum_init(
+    ContextusWidget* ctx);
+
+
 #endif /* LIBRO_PAGINARUM_H */

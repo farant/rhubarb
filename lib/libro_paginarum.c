@@ -4,6 +4,7 @@
 #include "thema.h"
 #include "tempus.h"
 #include "vim.h"
+#include "schirmata.h"
 #include <stdio.h>
 
 /* ==================================================
@@ -1166,4 +1167,188 @@ libro_salvare_si_immundum(
         libro_salvare_paginam(libro);
         libro->est_immundus = FALSUM;
     }
+}
+
+
+/* ==================================================
+ * Commandi - Utilitas
+ * ================================================== */
+
+/* Legere argumentum ex textu post command (usque ad finem lineae vel spatium)
+ * Redde: longitudo argumenti
+ */
+hic_manens i32
+_libro_legere_argumentum(
+    ContextusCommandi* ctx,
+    character*         buffer,
+    i32                max_long)
+{
+    i32 i;
+    character c;
+
+    /* Skip leading space */
+    si (ctx->columna < ctx->pagina->tabula.latitudo)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, ctx->columna);
+        si (c == ' ')
+        {
+            ctx->columna++;
+        }
+    }
+
+    /* Read until space or end of line */
+    per (i = ZEPHYRUM; i < max_long - I && (s32)(ctx->columna + i) < (s32)ctx->pagina->tabula.latitudo; i++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, ctx->columna + i);
+        si (c == '\0' || c == ' ' || c == '\n')
+        {
+            frange;
+        }
+        buffer[i] = c;
+    }
+    buffer[i] = '\0';
+
+    redde i;
+}
+
+
+/* Obtinere libro ex contextus commandi via schirmata
+ * Redde: LibroPaginarum* vel NIHIL
+ */
+hic_manens LibroPaginarum*
+_libro_ex_contextu(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+    Schirmata* schirmata;
+
+    si (ctx == NIHIL || ctx->datum_registratus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+    si (widget_ctx->schirmata_datum == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    schirmata = (Schirmata*)widget_ctx->schirmata_datum;
+    redde schirmata->libro;
+}
+
+
+/* ==================================================
+ * Commandi - Handlers
+ * ================================================== */
+
+/* $rename <name> - rename current page */
+hic_manens b32
+_libro_command_rename(
+    ContextusCommandi* ctx)
+{
+    LibroPaginarum* libro;
+    character titulus[LXIV];
+    i32 longitudo;
+    i32 index;
+
+    libro = _libro_ex_contextu(ctx);
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    longitudo = _libro_legere_argumentum(ctx, titulus, LXIV);
+    si (longitudo == ZEPHYRUM)
+    {
+        redde FALSUM;  /* No name provided */
+    }
+
+    index = libro_index_currens(libro);
+    libro_pagina_nominare(libro, index, titulus);
+
+    redde VERUM;
+}
+
+
+/* $goto <N> - go to page N */
+hic_manens b32
+_libro_command_goto(
+    ContextusCommandi* ctx)
+{
+    LibroPaginarum* libro;
+    character num_buffer[XVI];
+    i32 longitudo;
+    s32 page_num;
+    i32 i;
+
+    libro = _libro_ex_contextu(ctx);
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    longitudo = _libro_legere_argumentum(ctx, num_buffer, XVI);
+    si (longitudo == ZEPHYRUM)
+    {
+        redde FALSUM;  /* No number provided */
+    }
+
+    /* Parse integer */
+    page_num = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < longitudo; i++)
+    {
+        si (num_buffer[i] >= '0' && num_buffer[i] <= '9')
+        {
+            page_num = page_num * X + (s32)(num_buffer[i] - '0');
+        }
+    }
+
+    libro_navigare_ad(libro, page_num);
+
+    redde VERUM;
+}
+
+
+/* $new - create new page and navigate to it */
+hic_manens b32
+_libro_command_new(
+    ContextusCommandi* ctx)
+{
+    LibroPaginarum* libro;
+    s32 new_index;
+
+    libro = _libro_ex_contextu(ctx);
+    si (!libro)
+    {
+        redde FALSUM;
+    }
+
+    new_index = libro_pagina_nova(libro, NIHIL);
+    si (new_index >= ZEPHYRUM)
+    {
+        libro_navigare_ad(libro, new_index);
+    }
+
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Lifecycle (Init)
+ * ================================================== */
+
+vacuum
+libro_paginarum_init(
+    ContextusWidget* ctx)
+{
+    si (ctx == NIHIL || ctx->reg_commandi == NIHIL)
+    {
+        redde;
+    }
+
+    /* Registrare commandi */
+    registrum_commandi_registrare(ctx->reg_commandi, "rename", _libro_command_rename, ctx);
+    registrum_commandi_registrare(ctx->reg_commandi, "goto", _libro_command_goto, ctx);
+    registrum_commandi_registrare(ctx->reg_commandi, "new", _libro_command_new, ctx);
 }

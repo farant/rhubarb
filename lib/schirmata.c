@@ -27,6 +27,59 @@ nomen structura {
 
 
 /* ==================================================
+ * Widget Commutare Callback
+ *
+ * Haec functio vocatur per widgets (via ctx->commutare_widget)
+ * ad commutare inter modi widgetorum.
+ * ================================================== */
+
+hic_manens vacuum
+_schirmata_commutare_widget_callback(
+    vacuum*             schirmata_datum,
+    constans character* widget_titulus,
+    constans character* argumentum)
+{
+    Schirmata* schirmata;
+
+    schirmata = (Schirmata*)schirmata_datum;
+    si (!schirmata || !widget_titulus)
+    {
+        redde;
+    }
+
+    /* Mappare widget_titulus ad functionem commutandi */
+    si (strcmp(widget_titulus, "biblia") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_biblia_visus(schirmata);
+        si (argumentum)
+        {
+            biblia_visus_navigare_ad(schirmata->biblia_visus, argumentum);
+        }
+    }
+    alioquin si (strcmp(widget_titulus, "librarium") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_librarium(schirmata, argumentum);
+    }
+    alioquin si (strcmp(widget_titulus, "thema") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_thema_visus(schirmata);
+    }
+    alioquin si (strcmp(widget_titulus, "sputnik") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_sputnik_syntaxis(schirmata);
+    }
+    alioquin si (strcmp(widget_titulus, "arx_caeli") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_arx_caeli(schirmata, argumentum);
+    }
+    alioquin si (strcmp(widget_titulus, "navigator") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_navigator(schirmata);
+    }
+}
+
+
+/* ==================================================
  * Arx Caeli Link Callback
  * ================================================== */
 
@@ -521,6 +574,76 @@ _restituere_status(
     }
 }
 
+/* Salvare widget status pro schirma specifica ad entitas */
+hic_manens vacuum
+_salvare_widget_status(
+    Schirmata* schirmata,
+    i32        schirma_index)
+{
+    Schirma* schirma;
+    character entitas_id[XXXII];
+
+    si (!schirmata || !schirmata->ctx || !schirmata->ctx->repo)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirma_index];
+
+    /* Salvare status basatus in modo activo */
+    si (schirma->modus_arx_caeli)
+    {
+        sprintf(entitas_id, "ArcCaeliStatus::%d", schirma_index);
+        arx_caeli_salvare_status(schirmata->arx_caeli, schirmata->ctx->repo, entitas_id);
+    }
+    alioquin si (schirma->modus_biblia_visus)
+    {
+        sprintf(entitas_id, "BibliaStatus::%d", schirma_index);
+        biblia_visus_salvare_status(schirmata->biblia_visus, schirmata->ctx->repo, entitas_id);
+    }
+    alioquin si (schirma->modus_librarium)
+    {
+        sprintf(entitas_id, "LibrariumStatus::%d", schirma_index);
+        librarium_visus_salvare_status(schirmata->librarium_visus, schirmata->ctx->repo, entitas_id);
+    }
+    /* ThemaVisus et SputnikSyntaxis sunt read-only - nihil salvare */
+}
+
+/* Carcare widget status pro schirma specifica ex entitas */
+hic_manens vacuum
+_carcare_widget_status(
+    Schirmata* schirmata,
+    i32        schirma_index)
+{
+    Schirma* schirma;
+    character entitas_id[XXXII];
+
+    si (!schirmata || !schirmata->ctx || !schirmata->ctx->repo)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirma_index];
+
+    /* Carcare status basatus in modo activo */
+    si (schirma->modus_arx_caeli)
+    {
+        sprintf(entitas_id, "ArcCaeliStatus::%d", schirma_index);
+        arx_caeli_carcare_status(schirmata->arx_caeli, schirmata->ctx->repo, entitas_id);
+    }
+    alioquin si (schirma->modus_biblia_visus)
+    {
+        sprintf(entitas_id, "BibliaStatus::%d", schirma_index);
+        biblia_visus_carcare_status(schirmata->biblia_visus, schirmata->ctx->repo, entitas_id);
+    }
+    alioquin si (schirma->modus_librarium)
+    {
+        sprintf(entitas_id, "LibrariumStatus::%d", schirma_index);
+        librarium_visus_carcare_status(schirmata->librarium_visus, schirmata->ctx->repo, entitas_id);
+    }
+    /* ThemaVisus et SputnikSyntaxis sunt read-only - nihil carcare */
+}
+
 
 /* ==================================================
  * Creare Layout pro Schirma
@@ -601,30 +724,11 @@ _creare_schirma_layout(
     schirma->libro_status.cursor_columna = ZEPHYRUM;
     schirma->libro_status.modo = MODO_VIM_NORMALIS;
 
-    /* Creare Arx Caeli */
-    schirma->arx_caeli = arx_caeli_creare(schirmata->ctx);
-    si (schirma->arx_caeli)
-    {
-        arx_caeli_ponere_link_callback(schirma->arx_caeli,
-                                        _arx_caeli_link_callback,
-                                        schirmata);
-    }
-    schirma->modus_arx_caeli = FALSUM;  /* Initare in modus navigator */
-
-    /* Creare Thema Visus */
-    schirma->thema_visus = thema_visus_creare(schirmata->ctx->piscina);
+    /* Initiare modi flags - omnes ad modus navigator (default) */
+    schirma->modus_arx_caeli = FALSUM;
     schirma->modus_thema_visus = FALSUM;
-
-    /* Creare Sputnik Syntaxis */
-    schirma->sputnik_syntaxis = sputnik_syntaxis_creare(schirmata->ctx->piscina);
     schirma->modus_sputnik_syntaxis = FALSUM;
-
-    /* Creare Biblia Visus */
-    schirma->biblia_visus = biblia_visus_creare(schirmata->ctx->piscina);
     schirma->modus_biblia_visus = FALSUM;
-
-    /* Creare Librarium Visus */
-    schirma->librarium_visus = librarium_visus_creare(schirmata->ctx->piscina, schirmata->ctx);
     schirma->modus_librarium = FALSUM;
 
     schirma->initiatus = VERUM;
@@ -798,6 +902,24 @@ schirmata_creare(
         }
     }
 
+    /* Creare singleton widgets (una instancia pro omnes schirmae) */
+    schirmata->arx_caeli = arx_caeli_creare(ctx);
+    si (schirmata->arx_caeli)
+    {
+        arx_caeli_ponere_link_callback(schirmata->arx_caeli,
+                                        _arx_caeli_link_callback,
+                                        schirmata);
+    }
+
+    schirmata->thema_visus = thema_visus_creare(ctx->piscina);
+    schirmata->sputnik_syntaxis = sputnik_syntaxis_creare(ctx->piscina);
+    schirmata->biblia_visus = biblia_visus_creare(ctx->piscina);
+    schirmata->librarium_visus = librarium_visus_creare(ctx->piscina, ctx);
+
+    /* Configurare callback pro widget switching */
+    ctx->commutare_widget = _schirmata_commutare_widget_callback;
+    ctx->schirmata_datum = schirmata;
+
     redde schirmata;
 }
 
@@ -829,12 +951,14 @@ schirmata_commutare_ad(
 
     /* Salvare status schirmae currentis */
     _salvare_status(&schirmata->schirmae[schirmata->index_currens], schirmata->libro);
+    _salvare_widget_status(schirmata, schirmata->index_currens);
 
     /* Commutare */
     schirmata->index_currens = index;
 
     /* Restituere status novae schirmae */
     _restituere_status(&schirmata->schirmae[index], schirmata->libro);
+    _carcare_widget_status(schirmata, index);
 }
 
 vacuum
@@ -1084,15 +1208,12 @@ schirmata_commutare_ad_arx_caeli(
     si (schirma->modus_arx_caeli)
     {
         /* Iam in modus arx caeli - navigare ad slug */
-        arx_caeli_navigare_ad(schirma->arx_caeli, slug);
+        arx_caeli_navigare_ad(schirmata->arx_caeli, slug);
         redde;
     }
 
     /* Commutare ex navigator ad arx caeli */
     manager = schirma->manager;
-
-    /* Removere widget index 1 (navigator) et addere arx caeli */
-    /* Nota: ManagerWidget non habet functionem removere, ergo recreare */
 
     /* Creare arx caeli datum */
     arc_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataArcCaeliDatum));
@@ -1100,7 +1221,7 @@ schirmata_commutare_ad_arx_caeli(
     {
         redde;
     }
-    arc_datum->arx_caeli = schirma->arx_caeli;
+    arc_datum->arx_caeli = schirmata->arx_caeli;
     arc_datum->schirmata = schirmata;
 
     /* Substituere widget index 1 */
@@ -1118,7 +1239,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_librarium = FALSUM;
 
     /* Navigare ad slug */
-    arx_caeli_navigare_ad(schirma->arx_caeli, slug);
+    arx_caeli_navigare_ad(schirmata->arx_caeli, slug);
 }
 
 vacuum
@@ -1213,7 +1334,7 @@ schirmata_commutare_ad_thema_visus(
     {
         redde;
     }
-    thema_datum->thema_visus = schirma->thema_visus;
+    thema_datum->thema_visus = schirmata->thema_visus;
     thema_datum->schirmata = schirmata;
 
     /* Substituere widget index 1 */
@@ -1266,7 +1387,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
     {
         redde;
     }
-    syntaxis_datum->sputnik_syntaxis = schirma->sputnik_syntaxis;
+    syntaxis_datum->sputnik_syntaxis = schirmata->sputnik_syntaxis;
     syntaxis_datum->schirmata = schirmata;
 
     /* Substituere widget index 1 */
@@ -1319,7 +1440,7 @@ schirmata_commutare_ad_biblia_visus(
     {
         redde;
     }
-    biblia_datum->biblia_visus = schirma->biblia_visus;
+    biblia_datum->biblia_visus = schirmata->biblia_visus;
     biblia_datum->schirmata = schirmata;
 
     /* Substituere widget index 1 */
@@ -1364,7 +1485,7 @@ schirmata_commutare_ad_librarium(
         /* Iam in modus librarium - quaerere si quaestio */
         si (quaestio)
         {
-            librarium_visus_quaerere(schirma->librarium_visus, quaestio);
+            librarium_visus_quaerere(schirmata->librarium_visus, quaestio);
         }
         redde;
     }
@@ -1378,7 +1499,7 @@ schirmata_commutare_ad_librarium(
     {
         redde;
     }
-    librarium_datum->librarium_visus = schirma->librarium_visus;
+    librarium_datum->librarium_visus = schirmata->librarium_visus;
     librarium_datum->schirmata = schirmata;
 
     /* Substituere widget index 1 */
@@ -1399,7 +1520,7 @@ schirmata_commutare_ad_librarium(
     /* Quaerere si quaestio */
     si (quaestio)
     {
-        librarium_visus_quaerere(schirma->librarium_visus, quaestio);
+        librarium_visus_quaerere(schirmata->librarium_visus, quaestio);
     }
 }
 

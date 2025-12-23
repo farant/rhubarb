@@ -59,11 +59,7 @@ nomen structura {
     ManagerWidget* manager;           /* Widgets pro hac schirma */
     SchirmaLibroStatus libro_status;  /* Status salvatus libro */
     b32 initiatus;                    /* An haec schirma initiata */
-    ArcCaeli* arx_caeli;              /* Cloud castle widget */
-    ThemaVisus* thema_visus;          /* Theme viewer widget */
-    SputnikSyntaxis* sputnik_syntaxis; /* Syntax reference widget */
-    BibliaVisus* biblia_visus;        /* Bible viewer widget */
-    LibrariumVisus* librarium_visus;  /* Library viewer widget */
+    /* Modi flags - indicant quod widget activum in dextra parte */
     b32 modus_arx_caeli;              /* VERUM = cards mode */
     b32 modus_thema_visus;            /* VERUM = theme viewer mode */
     b32 modus_sputnik_syntaxis;       /* VERUM = syntax reference mode */
@@ -82,6 +78,13 @@ nomen structura {
 
     /* Res communicatae inter omnes schirmas */
     LibroPaginarum* libro;
+
+    /* Singleton widget instances (una per typum, non per schirmam) */
+    ArcCaeli*        arx_caeli;           /* Cloud castle widget */
+    ThemaVisus*      thema_visus;         /* Theme viewer widget */
+    SputnikSyntaxis* sputnik_syntaxis;    /* Syntax reference widget */
+    BibliaVisus*     biblia_visus;        /* Bible viewer widget */
+    LibrariumVisus*  librarium_visus;     /* Library viewer widget */
 } Schirmata;
 
 

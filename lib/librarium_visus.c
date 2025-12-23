@@ -6,9 +6,12 @@
 #include "stml.h"
 #include "filum.h"
 #include "internamentum.h"
+#include "registrum_commandi.h"
+#include "pagina.h"
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 /* ==================================================
  * Constantae
@@ -2420,5 +2423,251 @@ librarium_visus_quaerere(
         visus->filtrum_quaestio.mensura = 0;
         _librarium_visus_filtrare(visus);
         visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
+    }
+}
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Command handler pro $library */
+hic_manens b32
+_librarium_command_handler(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+    character argumentum[LXIV];
+    i32 col;
+    i32 idx;
+    character c;
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+    si (!widget_ctx || !widget_ctx->commutare_widget)
+    {
+        redde FALSUM;
+    }
+
+    /* Legere argumentum post commandum (skip leading space) */
+    idx = ZEPHYRUM;
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
+
+        /* Skip leading spaces */
+        si (idx == ZEPHYRUM && c == ' ')
+        {
+            perge;
+        }
+
+        /* Stop at end of line or null */
+        si (c == '\0' || c == '\n')
+        {
+            frange;
+        }
+
+        argumentum[idx++] = c;
+    }
+    argumentum[idx] = '\0';
+
+    /* Vocare callback ad commutare */
+    widget_ctx->commutare_widget(
+        widget_ctx->schirmata_datum,
+        "librarium",
+        idx > ZEPHYRUM ? argumentum : NIHIL);
+
+    redde VERUM;
+}
+
+vacuum
+librarium_visus_init(
+    ContextusWidget* ctx)
+{
+    si (!ctx || !ctx->reg_commandi)
+    {
+        redde;
+    }
+
+    registrum_commandi_registrare(
+        ctx->reg_commandi,
+        "library",
+        _librarium_command_handler,
+        ctx);
+}
+
+vacuum
+librarium_visus_salvare_status(
+    LibrariumVisus*      visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    character valor[XXXII];
+
+    si (!visus || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Scaffoldare entitas (creat si non existit) */
+    entitas = repo->entitas_scaffoldare(repo->datum, "LibrariumStatus", entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Salvare modus */
+    sprintf(valor, "%d", (int)visus->modus);
+    repo->proprietas_ponere(repo->datum, entitas, "modus", valor);
+
+    /* Salvare categoria */
+    sprintf(valor, "%d", (int)visus->categoria);
+    repo->proprietas_ponere(repo->datum, entitas, "categoria", valor);
+
+    /* Salvare index_paginae */
+    sprintf(valor, "%d", visus->index_paginae);
+    repo->proprietas_ponere(repo->datum, entitas, "index_paginae", valor);
+
+    /* Salvare index_selecta */
+    sprintf(valor, "%d", visus->index_selecta);
+    repo->proprietas_ponere(repo->datum, entitas, "index_selecta", valor);
+
+    /* Salvare liber_currens */
+    sprintf(valor, "%d", visus->liber_currens);
+    repo->proprietas_ponere(repo->datum, entitas, "liber_currens", valor);
+
+    /* Salvare pagina_lectio */
+    sprintf(valor, "%d", visus->pagina_lectio);
+    repo->proprietas_ponere(repo->datum, entitas, "pagina_lectio", valor);
+}
+
+vacuum
+librarium_visus_carcare_status(
+    LibrariumVisus*      visus,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    chorda* valor;
+    chorda* clavis;
+
+    si (!visus || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Scaffoldare entitas */
+    entitas = repo->entitas_scaffoldare(repo->datum, "LibrariumStatus", entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Carcare modus */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "modus");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->modus = (LibrariumModus)atoi(buf);
+    }
+
+    /* Carcare categoria */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "categoria");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->categoria = (LibrariumCategoria)atoi(buf);
+    }
+
+    /* Carcare index_paginae */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "index_paginae");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->index_paginae = (s32)atoi(buf);
+    }
+
+    /* Carcare index_selecta */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "index_selecta");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->index_selecta = (s32)atoi(buf);
+    }
+
+    /* Carcare liber_currens */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "liber_currens");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->liber_currens = (s32)atoi(buf);
+    }
+
+    /* Carcare pagina_lectio */
+    clavis = chorda_internare_ex_literis(visus->ctx->intern, "pagina_lectio");
+    valor = entitas_proprietas_capere(entitas, clavis);
+    si (valor && valor->mensura > ZEPHYRUM)
+    {
+        character buf[XVI];
+        i32 len;
+
+        len = (i32)valor->mensura;
+        si (len > XV)
+        {
+            len = XV;
+        }
+        memcpy(buf, valor->datum, (size_t)len);
+        buf[len] = '\0';
+        visus->pagina_lectio = (s32)atoi(buf);
     }
 }

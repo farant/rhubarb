@@ -4,6 +4,13 @@
 #include "thema.h"
 #include "tempus.h"
 #include "layout.h"
+#include "biblia_visus.h"
+#include "librarium_visus.h"
+#include "thema_visus.h"
+#include "sputnik_syntaxis.h"
+#include "arx_caeli.h"
+#include "navigator_entitatum.h"
+#include "libro_paginarum.h"
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -11,164 +18,6 @@
 /* ==================================================
  * Built-in Commands
  * ================================================== */
-
-/* $thema command - switch to theme viewer */
-interior b32
-_concha_command_thema(
-    ContextusCommandi* ctx)
-{
-    Schirmata* schirmata;
-
-    schirmata = (Schirmata*)ctx->datum_registratus;
-    si (!schirmata)
-    {
-        redde FALSUM;
-    }
-
-    schirmata_commutare_ad_thema_visus(schirmata);
-
-    redde VERUM;
-}
-
-
-/* $sputnik-syntax command - switch to syntax reference */
-interior b32
-_concha_command_sputnik_syntax(
-    ContextusCommandi* ctx)
-{
-    Schirmata* schirmata;
-
-    schirmata = (Schirmata*)ctx->datum_registratus;
-    si (!schirmata)
-    {
-        redde FALSUM;
-    }
-
-    schirmata_commutare_ad_sputnik_syntaxis(schirmata);
-
-    redde VERUM;
-}
-
-
-/* $bible command - switch to Bible viewer with optional reference
- *
- * Usage: $bible                 - open TOC
- *        $bible Genesis         - open Genesis 1
- *        $bible Genesis 3       - open Genesis 3
- *        $bible Genesis 3:16    - open Genesis 3, page with verse 16
- */
-interior b32
-_concha_command_biblia(
-    ContextusCommandi* ctx)
-{
-    Schirmata* schirmata;
-    Schirma* schirma;
-    character argumentum[LXIV];
-    i32 col;
-    i32 idx;
-    character c;
-
-    schirmata = (Schirmata*)ctx->datum_registratus;
-    si (!schirmata)
-    {
-        redde FALSUM;
-    }
-
-    /* Legere argumentum post commandum (skip leading space) */
-    idx = ZEPHYRUM;
-    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
-    {
-        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
-
-        /* Skip leading spaces */
-        si (idx == ZEPHYRUM && c == ' ')
-        {
-            perge;
-        }
-
-        /* Stop at end of line or null */
-        si (c == '\0' || c == '\n')
-        {
-            frange;
-        }
-
-        argumentum[idx++] = c;
-    }
-    argumentum[idx] = '\0';
-
-    /* Commutare ad biblia visus */
-    schirmata_commutare_ad_biblia_visus(schirmata);
-
-    /* Si argumentum, navigare ad referentiam */
-    si (idx > ZEPHYRUM)
-    {
-        schirma = &schirmata->schirmae[schirmata->index_currens];
-        si (schirma->biblia_visus)
-        {
-            biblia_visus_navigare_ad(schirma->biblia_visus, argumentum);
-        }
-    }
-
-    redde VERUM;
-}
-
-
-/* $library command - switch to library viewer with optional search query
- *
- * Usage: $library              - open categories menu
- *        $library The History  - search for "The History"
- */
-interior b32
-_concha_command_library(
-    ContextusCommandi* ctx)
-{
-    Schirmata* schirmata;
-    character argumentum[CXXVIII];
-    i32 col;
-    i32 idx;
-    character c;
-
-    schirmata = (Schirmata*)ctx->datum_registratus;
-    si (!schirmata)
-    {
-        redde FALSUM;
-    }
-
-    /* Legere argumentum post commandum (skip leading space) */
-    idx = ZEPHYRUM;
-    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < CXXVI; col++)
-    {
-        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
-
-        /* Skip leading spaces */
-        si (idx == ZEPHYRUM && c == ' ')
-        {
-            perge;
-        }
-
-        /* Stop at end of line or null */
-        si (c == '\0' || c == '\n')
-        {
-            frange;
-        }
-
-        argumentum[idx++] = c;
-    }
-    argumentum[idx] = '\0';
-
-    /* Commutare ad librarium visus */
-    si (idx > ZEPHYRUM)
-    {
-        schirmata_commutare_ad_librarium(schirmata, argumentum);
-    }
-    alioquin
-    {
-        schirmata_commutare_ad_librarium(schirmata, NIHIL);
-    }
-
-    redde VERUM;
-}
-
 
 /* $date command - insert/update current date in output region */
 interior b32
@@ -381,12 +230,17 @@ concha_creare(ConchaConfiguratio* config)
     }
     concha->schirmata = schirmata;
 
-    /* Registrare built-in commands */
+    /* Initiare widgets - registrant suos commandi */
+    biblia_visus_init(ctx);
+    librarium_visus_init(ctx);
+    thema_visus_init(ctx);
+    sputnik_syntaxis_init(ctx);
+    arx_caeli_init(ctx);
+    navigator_entitatum_init(ctx);
+    libro_paginarum_init(ctx);
+
+    /* Registrare built-in commands (non-widget) */
     registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);
-    registrum_commandi_registrare(reg_commandi, "thema", _concha_command_thema, schirmata);
-    registrum_commandi_registrare(reg_commandi, "sputnik-syntax", _concha_command_sputnik_syntax, schirmata);
-    registrum_commandi_registrare(reg_commandi, "bible", _concha_command_biblia, schirmata);
-    registrum_commandi_registrare(reg_commandi, "library", _concha_command_library, schirmata);
 
     /* Configurare fenestram */
     fenestra_config.titulus = config->titulus ? config->titulus : "Concha";

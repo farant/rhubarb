@@ -5,6 +5,8 @@
 #include "tempus.h"
 #include "xar.h"
 #include "entitas.h"
+#include "registrum_commandi.h"
+#include "pagina.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -2744,4 +2746,173 @@ arx_caeli_ponere_link_callback(
 
     arc->link_callback = callback;
     arc->link_callback_datum = datum;
+}
+
+
+/* ==================================================
+ * Lifecycle (Init / Status)
+ * ================================================== */
+
+/* Command handler pro $cards */
+hic_manens b32
+_arx_caeli_command_handler(
+    ContextusCommandi* ctx)
+{
+    ContextusWidget* widget_ctx;
+    character argumentum[LXIV];
+    i32 col;
+    i32 idx;
+    character c;
+
+    widget_ctx = (ContextusWidget*)ctx->datum_registratus;
+    si (!widget_ctx || !widget_ctx->commutare_widget)
+    {
+        redde FALSUM;
+    }
+
+    /* Legere argumentum post commandum (skip leading space) */
+    idx = ZEPHYRUM;
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    {
+        c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
+
+        /* Skip leading spaces */
+        si (idx == ZEPHYRUM && c == ' ')
+        {
+            perge;
+        }
+
+        /* Stop at end of line or null */
+        si (c == '\0' || c == '\n')
+        {
+            frange;
+        }
+
+        argumentum[idx++] = c;
+    }
+    argumentum[idx] = '\0';
+
+    /* Vocare callback ad commutare */
+    widget_ctx->commutare_widget(
+        widget_ctx->schirmata_datum,
+        "arx_caeli",
+        idx > ZEPHYRUM ? argumentum : NIHIL);
+
+    redde VERUM;
+}
+
+vacuum
+arx_caeli_init(
+    ContextusWidget* ctx)
+{
+    si (!ctx || !ctx->reg_commandi)
+    {
+        redde;
+    }
+
+    registrum_commandi_registrare(
+        ctx->reg_commandi,
+        "cards",
+        _arx_caeli_command_handler,
+        ctx);
+}
+
+vacuum
+arx_caeli_salvare_status(
+    ArcCaeli*            arc,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    character valor[CXXVIII];
+
+    si (!arc || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Salvare cartae si immundum */
+    si (arc->immundum)
+    {
+        arx_caeli_salvare(arc);
+    }
+
+    /* Scaffoldare entitas (creat si non existit) */
+    entitas = repo->entitas_scaffoldare(repo->datum, "ArcCaeliStatus", entitas_id);
+    si (!entitas)
+    {
+        redde;
+    }
+
+    /* Salvare slug currens */
+    si (arc->schirma_currens_slug.mensura > ZEPHYRUM)
+    {
+        i32 len;
+
+        len = (i32)arc->schirma_currens_slug.mensura;
+        si (len > CXXVII)
+        {
+            len = CXXVII;
+        }
+        memcpy(valor, arc->schirma_currens_slug.datum, (size_t)len);
+        valor[len] = '\0';
+    }
+    alioquin
+    {
+        strcpy(valor, "root");
+    }
+
+    repo->proprietas_ponere(repo->datum, entitas, "slug", valor);
+}
+
+vacuum
+arx_caeli_carcare_status(
+    ArcCaeli*            arc,
+    EntitasRepositorium* repo,
+    constans character*  entitas_id)
+{
+    Entitas* entitas;
+    chorda* clavis_slug;
+    chorda* valor_slug;
+
+    si (!arc || !repo || !entitas_id)
+    {
+        redde;
+    }
+
+    /* Scaffoldare entitas (obtinere existentem vel creare) */
+    entitas = repo->entitas_scaffoldare(repo->datum, "ArcCaeliStatus", entitas_id);
+    si (!entitas)
+    {
+        /* Nulla entitas - navigare ad root */
+        arx_caeli_navigare_ad(arc, NIHIL);
+        redde;
+    }
+
+    /* Legere slug */
+    clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
+    valor_slug = entitas_proprietas_capere(entitas, clavis_slug);
+
+    si (valor_slug && valor_slug->mensura > ZEPHYRUM)
+    {
+        /* Creare C string pro navigare */
+        character slug_buffer[CXXVIII];
+        i32 len;
+
+        len = (i32)valor_slug->mensura;
+        si (len > CXXVII)
+        {
+            len = CXXVII;
+        }
+        memcpy(slug_buffer, valor_slug->datum, (size_t)len);
+        slug_buffer[len] = '\0';
+
+        /* Navigare ad slug salvatum */
+        arx_caeli_navigare_ad(arc, slug_buffer);
+    }
+    alioquin
+    {
+        /* Nulla slug - navigare ad root */
+        arx_caeli_navigare_ad(arc, NIHIL);
+    }
 }
