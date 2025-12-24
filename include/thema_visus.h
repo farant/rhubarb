@@ -8,20 +8,22 @@
 #include "entitas_repositorium.h"
 
 /* ==================================================
- * THEMA VISUS - Theme Palette Viewer Widget
+ * THEMA VISUS - Theme & Pattern Viewer Widget
  *
- * Widget static pro visualizare palette colorum et
- * mappas semanticas themae currentis.
+ * Widget paginatus pro visualizare palette colorum,
+ * mappas semanticas, et exemplaria (patterns).
  *
  * PHILOSOPHIA:
- * - Read-only viewer, non interactivus
- * - Monstrat omnes XVI colores palette
- * - Monstrat mappas semanticas (Background, Text, etc.)
- * - Utile pro debugging et design themae
+ * - Pagina 0: Contrast grid, palette, semantic mappings
+ * - Pagina 1: Pattern viewer cum fg/bg color picker
+ * - h/l: navigare paginas
+ * - f/b: selectare modus fg/bg (in pagina exemplaria)
+ * - j/k: cyclare colores (in pagina exemplaria)
  *
  * EXEMPLUM:
  *   ThemaVisus* visus = thema_visus_creare(piscina);
  *   thema_visus_reddere(visus, tabula, x, y, lat, alt, scala, focused);
+ *   thema_visus_tractare_eventum(visus, &eventus);
  *
  * ================================================== */
 
@@ -33,6 +35,10 @@
 /* ThemaVisus - Widget state */
 nomen structura {
     Piscina* piscina;
+    i32 pagina;           /* 0 = colores, 1 = exemplaria */
+    i32 exemplar_fg;      /* foreground color index 0-15 */
+    i32 exemplar_bg;      /* background color index 0-15 */
+    b32 modus_fg;         /* VERUM = editing fg, FALSUM = editing bg */
 } ThemaVisus;
 
 
@@ -82,7 +88,9 @@ thema_visus_reddere(
 
 /* Tractare eventum
  *
- * Widget est read-only, ergo plerumque redde FALSUM.
+ * h/l: navigare paginas
+ * f/b: selectare modus fg/bg (pagina exemplaria)
+ * j/k: cyclare colores (pagina exemplaria)
  *
  * visus: theme viewer
  * eventus: eventus tractandus
@@ -111,11 +119,11 @@ thema_visus_init(
 
 /* Salvare status visus ad entitas
  *
+ * Salvat: pagina, exemplar_fg, exemplar_bg, modus_fg
+ *
  * visus: theme viewer
  * repo: repositorium entitatum
  * entitas_id: identificator entitas (e.g., "ThemaStatus::0")
- *
- * NOTA: ThemaVisus est read-only, ergo nihil salvare
  */
 vacuum
 thema_visus_salvare_status(
@@ -125,11 +133,11 @@ thema_visus_salvare_status(
 
 /* Carcare status visus ex entitas
  *
+ * Carcat: pagina, exemplar_fg, exemplar_bg, modus_fg
+ *
  * visus: theme viewer
  * repo: repositorium entitatum
  * entitas_id: identificator entitas (e.g., "ThemaStatus::0")
- *
- * NOTA: ThemaVisus est read-only, ergo nihil carcare
  */
 vacuum
 thema_visus_carcare_status(

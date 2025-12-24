@@ -664,7 +664,12 @@ _salvare_widget_status(
         sprintf(entitas_id, "LibrariumStatus::%d", schirma_index);
         librarium_visus_salvare_status(schirmata->librarium_visus, schirmata->ctx->repo, entitas_id);
     }
-    /* ThemaVisus et SputnikSyntaxis sunt read-only - nihil salvare */
+    alioquin si (schirma->modus_thema_visus)
+    {
+        sprintf(entitas_id, "ThemaStatus::%d", schirma_index);
+        thema_visus_salvare_status(schirmata->thema_visus, schirmata->ctx->repo, entitas_id);
+    }
+    /* SputnikSyntaxis est read-only - nihil salvare */
 }
 
 /* Carcare widget status pro schirma specifica ex entitas */
@@ -699,7 +704,12 @@ _carcare_widget_status(
         sprintf(entitas_id, "LibrariumStatus::%d", schirma_index);
         librarium_visus_carcare_status(schirmata->librarium_visus, schirmata->ctx->repo, entitas_id);
     }
-    /* ThemaVisus et SputnikSyntaxis sunt read-only - nihil carcare */
+    alioquin si (schirma->modus_thema_visus)
+    {
+        sprintf(entitas_id, "ThemaStatus::%d", schirma_index);
+        thema_visus_carcare_status(schirmata->thema_visus, schirmata->ctx->repo, entitas_id);
+    }
+    /* SputnikSyntaxis est read-only - nihil carcare */
 }
 
 
@@ -1290,6 +1300,7 @@ schirmata_commutare_ad_arx_caeli(
         manager->widgets[I].datum = arc_datum;
         manager->widgets[I].reddere = _schirmata_arx_caeli_reddere;
         manager->widgets[I].tractare_eventum = _schirmata_arx_caeli_tractare_eventum;
+        manager->focus_index = I;
     }
 
     schirma->modus_arx_caeli = VERUM;
@@ -1405,6 +1416,7 @@ schirmata_commutare_ad_thema_visus(
         manager->widgets[I].datum = thema_datum;
         manager->widgets[I].reddere = _schirmata_thema_visus_reddere;
         manager->widgets[I].tractare_eventum = _schirmata_thema_visus_tractare_eventum;
+        manager->focus_index = I;
     }
 
     schirma->modus_arx_caeli = FALSUM;
@@ -1459,6 +1471,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
         manager->widgets[I].datum = syntaxis_datum;
         manager->widgets[I].reddere = _schirmata_sputnik_syntaxis_reddere;
         manager->widgets[I].tractare_eventum = _schirmata_sputnik_syntaxis_tractare_eventum;
+        manager->focus_index = I;
     }
 
     schirma->modus_arx_caeli = FALSUM;
