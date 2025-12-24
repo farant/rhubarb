@@ -2,6 +2,7 @@
  */
 
 #include "paginarium.h"
+#include "utf8.h"
 #include <string.h>
 
 /* ========================================================================
@@ -46,6 +47,7 @@ _numerare_newlines(
 
 /* Detegere si paragraphus est versus (poesis, index, etc.)
  * Heuristica: si limina_pct% primarum lineae_probare linearum sunt < limina_lat% latitudinis
+ * UTF-8 aware: numerat runas, non bytes
  */
 interior b32
 _est_versus(
@@ -63,7 +65,8 @@ _est_versus(
     dum (lineae_probatae < lineae_probare && pos < textus.mensura)
     {
         i32 longitudo_lineae = 0;
-        i32 offset = 0;
+        constans i8* scan_ptr;
+        constans i8* scan_finis = textus.datum + textus.mensura;
 
         /* Praeterire \r\n ante lineam */
         dum (pos < textus.mensura)
@@ -79,16 +82,16 @@ _est_versus(
             }
         }
 
-        /* Mensurare lineam usque ad '\n' vel '\r' */
-        dum (pos + offset < textus.mensura)
+        /* Mensurare lineam usque ad '\n' vel '\r' (UTF-8 aware) */
+        scan_ptr = textus.datum + pos;
+        dum (scan_ptr < scan_finis)
         {
-            character c = (character)textus.datum[pos + offset];
-            si (c == '\n' || c == '\r')
+            s32 runa = utf8_decodere(&scan_ptr, scan_finis);
+            si (runa == '\n' || runa == '\r')
             {
                 frange;
             }
             longitudo_lineae++;
-            offset++;
         }
 
         /* Praeterire lineas vacuas */
@@ -103,7 +106,7 @@ _est_versus(
         }
 
         lineae_probatae++;
-        pos += offset;
+        pos = (i32)(scan_ptr - textus.datum);
     }
 
     /* Si limina_pct% linearum sunt breves, est versus */
@@ -211,33 +214,40 @@ paginarium_paginare(
 
             si (modus_versus)
             {
-                /* Versus: preservare structuram, word-wrap si necessarium */
+                /* Versus: preservare structuram, word-wrap si necessarium (UTF-8 aware) */
                 i32 line_len = 0;
                 i32 offset = 0;
-                s32 last_space = -1;
+                i32 last_space_offset = 0;
+                b32 habet_spatium = FALSUM;
                 b32 hit_newline = FALSUM;
+                constans i8* scan_ptr = textus.datum + pos;
+                constans i8* scan_finis = textus.datum + textus.mensura;
 
-                dum (pos + offset < textus.mensura && line_len < config.latitudo)
+                dum (scan_ptr < scan_finis && line_len < config.latitudo)
                 {
-                    character c = (character)textus.datum[pos + offset];
-                    si (c == '\n' || c == '\r')
+                    constans i8* runa_initium = scan_ptr;
+                    s32 runa = utf8_decodere(&scan_ptr, scan_finis);
+                    i32 runa_bytes = (i32)(scan_ptr - runa_initium);
+
+                    si (runa == '\n' || runa == '\r')
                     {
                         hit_newline = VERUM;
                         frange;
                     }
-                    si (c == ' ')
+                    si (runa == ' ')
                     {
-                        last_space = (s32)offset;
+                        last_space_offset = offset;
+                        habet_spatium = VERUM;
                     }
                     line_len++;
-                    offset++;
+                    offset += runa_bytes;
                 }
 
                 /* Si linea excedit latitudinem et habemus spatium, wrap ibi */
-                si (line_len >= config.latitudo && last_space > 0 && !hit_newline)
+                si (line_len >= config.latitudo && habet_spatium && !hit_newline)
                 {
-                    linea->finis = pos + (i32)last_space;
-                    pos += (i32)last_space + I;
+                    linea->finis = pos + last_space_offset;
+                    pos += last_space_offset + I;  /* +1 pro spatio */
                 }
                 alioquin
                 {
@@ -264,50 +274,60 @@ paginarium_paginare(
             }
             alioquin
             {
-                /* Prosa: tractare singulum newline ut spatium */
+                /* Prosa: tractare singulum newline ut spatium (UTF-8 aware) */
                 i32 visual_len = 0;
                 i32 source_len = 0;
-                s32 last_break_source = -1;
+                i32 last_break_source = 0;
+                b32 habet_break = FALSUM;
+                constans i8* scan_ptr = textus.datum + pos;
+                constans i8* scan_finis = textus.datum + textus.mensura;
 
-                dum (visual_len < config.latitudo && pos + source_len < textus.mensura)
+                dum (visual_len < config.latitudo && scan_ptr < scan_finis)
                 {
-                    character c = (character)textus.datum[pos + source_len];
+                    constans i8* runa_initium = scan_ptr;
+                    s32 runa = utf8_decodere(&scan_ptr, scan_finis);
+                    i32 runa_bytes = (i32)(scan_ptr - runa_initium);
 
                     /* Praeterire \r (non computare ut visual) */
-                    si (c == '\r')
+                    si (runa == '\r')
                     {
-                        source_len++;
+                        source_len += runa_bytes;
                         perge;
                     }
 
                     /* Verificare paragraph break */
-                    si (c == '\n')
+                    si (runa == '\n')
                     {
                         si (_numerare_newlines(textus, pos + source_len) >= II)
                         {
                             frange;  /* Terminare ante paragraph break */
                         }
                         /* Singulum newline = spatium */
-                        last_break_source = (s32)(source_len + I);
-                        source_len++;
+                        source_len += runa_bytes;
+                        last_break_source = source_len;
+                        habet_break = VERUM;
                         visual_len++;
                         perge;
                     }
 
-                    si (c == ' ')
+                    si (runa == ' ')
                     {
-                        last_break_source = (s32)(source_len + I);
+                        source_len += runa_bytes;
+                        last_break_source = source_len;
+                        habet_break = VERUM;
+                        visual_len++;
+                        perge;
                     }
 
-                    source_len++;
+                    source_len += runa_bytes;
                     visual_len++;
                 }
 
                 /* Applicare word wrap */
-                si (visual_len >= config.latitudo && last_break_source > 0)
+                si (visual_len >= config.latitudo && habet_break)
                 {
-                    linea->finis = pos + (i32)last_break_source;
-                    pos += (i32)last_break_source;
+                    linea->finis = pos + last_break_source;
+                    pos += last_break_source;
                 }
                 alioquin
                 {

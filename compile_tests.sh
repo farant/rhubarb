@@ -83,6 +83,8 @@ declare -a SOURCE_FILES=(
     "lib/exemplar.c"
     "lib/toml.c"
     "lib/paginarium.c"
+    "lib/utf8.c"
+    "lib/fons.c"
 )
 
 # Objective-C source (compiled separately)

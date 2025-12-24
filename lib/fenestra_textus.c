@@ -1,6 +1,8 @@
 /* Redditionis textus pro fenestra */
 #include "fenestra.h"
 #include "fons_6x8.h"
+#include "utf8.h"
+#include "fons.h"
 #include <string.h>
 
 /* Functio adiutorii pro pingendo characterem cum praecisione */
@@ -85,23 +87,40 @@ tabula_pixelorum_pingere_chordam (
              chorda  textus,
                 i32  color)
 {
-    i32 initium_x;
-    i32 idx;
+          i32  initium_x;
+    constans i8* ptr;
+    constans i8* finis;
 
     initium_x = x;
-    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
-    {
-        character c;
-        c = (character)textus.datum[idx];
+    ptr = textus.datum;
+    finis = textus.datum + textus.mensura;
 
-        si (c == '\n')
+    dum (ptr < finis)
+    {
+        s32 runa;
+        i8 glypha;
+
+        runa = utf8_decodere(&ptr, finis);
+
+        /* Nova linea */
+        si (runa == '\n')
         {
             y += FONS_ALTITUDO;
             x = initium_x;
         }
         alioquin
         {
-            tabula_pixelorum_pingere_characterem(tabula, x, y, c, color);
+            /* Mappare codepoint ad glypham */
+            si (runa < ZEPHYRUM)
+            {
+                glypha = FONS_TOFU;
+            }
+            alioquin
+            {
+                glypha = fons_codepoint_ad_glypham(runa);
+            }
+
+            tabula_pixelorum_pingere_characterem(tabula, x, y, (character)glypha, color);
             x += FONS_LATITUDO;
         }
     }
@@ -159,23 +178,38 @@ tabula_pixelorum_pingere_chordam_scalatam (
                 i32  color,
                 i32  scala)
 {
-    i32 initium_x;
-    i32 idx;
+          i32  initium_x;
+    constans i8* ptr;
+    constans i8* finis;
 
     initium_x = x;
-    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
-    {
-        character c;
-        c = (character)textus.datum[idx];
+    ptr = textus.datum;
+    finis = textus.datum + textus.mensura;
 
-        si (c == '\n')
+    dum (ptr < finis)
+    {
+        s32 runa;
+        i8 glypha;
+
+        runa = utf8_decodere(&ptr, finis);
+
+        si (runa == '\n')
         {
             y += FONS_ALTITUDO * scala;
             x = initium_x;
         }
         alioquin
         {
-            tabula_pixelorum_pingere_characterem_scalatum(tabula, x, y, c, color, scala);
+            si (runa < ZEPHYRUM)
+            {
+                glypha = FONS_TOFU;
+            }
+            alioquin
+            {
+                glypha = fons_codepoint_ad_glypham(runa);
+            }
+
+            tabula_pixelorum_pingere_characterem_scalatum(tabula, x, y, (character)glypha, color, scala);
             x += FONS_LATITUDO * scala;
         }
     }
@@ -194,16 +228,22 @@ tabula_pixelorum_pingere_chordam_praecisum (
                 i32  praecisio_latitudo,
                 i32  praecisio_altitudo)
 {
-    i32 initium_x;
-    i32 idx;
+          i32  initium_x;
+    constans i8* ptr;
+    constans i8* finis;
 
     initium_x = x;
-    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
-    {
-        character c;
-        c = (character)textus.datum[idx];
+    ptr = textus.datum;
+    finis = textus.datum + textus.mensura;
 
-        si (c == '\n')
+    dum (ptr < finis)
+    {
+        s32 runa;
+        i8 glypha;
+
+        runa = utf8_decodere(&ptr, finis);
+
+        si (runa == '\n')
         {
             y += FONS_ALTITUDO;
             x = initium_x;
@@ -214,10 +254,20 @@ tabula_pixelorum_pingere_chordam_praecisum (
             si (x >= praecisio_x + praecisio_latitudo) frange;
             si (y >= praecisio_y + praecisio_altitudo) frange;
 
+            /* Mappare codepoint ad glypham */
+            si (runa < ZEPHYRUM)
+            {
+                glypha = FONS_TOFU;
+            }
+            alioquin
+            {
+                glypha = fons_codepoint_ad_glypham(runa);
+            }
+
             /* Solum pingere si character saltem partim visibilis */
             si (x + FONS_LATITUDO >= praecisio_x && y + FONS_ALTITUDO >= praecisio_y)
             {
-                pingere_characterem_praecisum(tabula, x, y, c, color,
+                pingere_characterem_praecisum(tabula, x, y, (character)glypha, color,
                                                praecisio_x, praecisio_y,
                                                praecisio_latitudo, praecisio_altitudo);
             }
@@ -232,25 +282,30 @@ fons_latitudo_chordae (
              chorda  textus,
                 i32  scala)
 {
-    i32 latitudo;
-    i32 latitudo_maxima;
-    i32 idx;
+          i32  latitudo;
+          i32  latitudo_maxima;
+    constans i8* ptr;
+    constans i8* finis;
 
     latitudo = ZEPHYRUM;
     latitudo_maxima = ZEPHYRUM;
+    ptr = textus.datum;
+    finis = textus.datum + textus.mensura;
 
-    per (idx = ZEPHYRUM; idx < textus.mensura; idx++)
+    dum (ptr < finis)
     {
-        character c;
-        c = (character)textus.datum[idx];
+        s32 runa;
 
-        si (c == '\n')
+        runa = utf8_decodere(&ptr, finis);
+
+        si (runa == '\n')
         {
             si (latitudo > latitudo_maxima) latitudo_maxima = latitudo;
             latitudo = ZEPHYRUM;
         }
         alioquin
         {
+            /* Omnis runa (etiam TOFU) habet eandem latitudinem */
             latitudo += FONS_LATITUDO * scala;
         }
     }
