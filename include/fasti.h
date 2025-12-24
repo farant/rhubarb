@@ -73,6 +73,7 @@
 #define FASTI_FORMA_LATINA_LONGA    IV      /* XV Martii MMXXIV */
 #define FASTI_FORMA_LATINA_BREVIS   V       /* 15 Mar 2024 */
 #define FASTI_FORMA_LITURGICA       VI      /* Dominica, 15 Martii 2024 */
+#define FASTI_FORMA_ANGLICA_LONGA   VII     /* Thursday, December 25th 2025 */
 
 
 /* ==================================================
@@ -308,6 +309,16 @@ fasti_ex_unix(
 /* ==================================================
  * Formatatio (requiret Piscina)
  * ================================================== */
+
+/* Suffixum ordinale Anglicum (1->st, 2->nd, 3->rd, 4->th, etc.)
+ *
+ * numerus: numerus convertendus
+ *
+ * Redde: suffixum ("st", "nd", "rd", vel "th")
+ */
+constans character*
+fasti_suffixum_ordinale(
+    s32 numerus);
 
 /* Nomen mensis */
 chorda

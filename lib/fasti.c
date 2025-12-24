@@ -589,6 +589,28 @@ fasti_ex_unix(
  * Formatatio
  * ================================================== */
 
+constans character*
+fasti_suffixum_ordinale(s32 numerus)
+{
+    s32 absolutus;
+
+    /* Uti valore absoluto */
+    absolutus = numerus < ZEPHYRUM ? -numerus : numerus;
+
+    /* Casus speciales: 11, 12, 13 semper "th" */
+    si (absolutus >= XI && absolutus <= XIII) {
+        redde "th";
+    }
+
+    /* Secundum ultimam cifram */
+    commutatio (absolutus % X) {
+        casus I:   redde "st";
+        casus II:  redde "nd";
+        casus III: redde "rd";
+        ordinarius: redde "th";
+    }
+}
+
 chorda
 fasti_nomen_mensis(
     s32      mensis,
@@ -731,6 +753,23 @@ fasti_scribere_diem(
             chorda_aedificator_appendere_character(aedificator, ' ');
             chorda_aedificator_appendere_literis(aedificator,
                 NOMINA_MENSIUM_LATINA[dies.mensis - I]);
+            chorda_aedificator_appendere_character(aedificator, ' ');
+            chorda_aedificator_appendere_s32(aedificator, dies.annus);
+            frange;
+        }
+
+        casus FASTI_FORMA_ANGLICA_LONGA: {
+            /* Thursday, December 25th 2025 */
+            s32 dh = fasti_dies_hebdomadis(dies);
+            chorda_aedificator_appendere_literis(aedificator,
+                NOMINA_DIERUM_ANGLICA[dh]);
+            chorda_aedificator_appendere_literis(aedificator, ", ");
+            chorda_aedificator_appendere_literis(aedificator,
+                NOMINA_MENSIUM_ANGLICA[dies.mensis - I]);
+            chorda_aedificator_appendere_character(aedificator, ' ');
+            chorda_aedificator_appendere_s32(aedificator, dies.dies);
+            chorda_aedificator_appendere_literis(aedificator,
+                fasti_suffixum_ordinale(dies.dies));
             chorda_aedificator_appendere_character(aedificator, ' ');
             chorda_aedificator_appendere_s32(aedificator, dies.annus);
             frange;

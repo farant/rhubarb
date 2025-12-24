@@ -627,6 +627,102 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * Probare fasti_suffixum_ordinale
+     * ================================================== */
+
+    {
+        constans character* suff;
+
+        imprimere("\n--- Probans fasti_suffixum_ordinale ---\n");
+
+        /* 1st, 2nd, 3rd */
+        suff = fasti_suffixum_ordinale(I);
+        CREDO_AEQUALIS_S32(suff[0], 's');
+        CREDO_AEQUALIS_S32(suff[1], 't');
+
+        suff = fasti_suffixum_ordinale(II);
+        CREDO_AEQUALIS_S32(suff[0], 'n');
+        CREDO_AEQUALIS_S32(suff[1], 'd');
+
+        suff = fasti_suffixum_ordinale(III);
+        CREDO_AEQUALIS_S32(suff[0], 'r');
+        CREDO_AEQUALIS_S32(suff[1], 'd');
+
+        /* 4th - 10th are all "th" */
+        suff = fasti_suffixum_ordinale(IV);
+        CREDO_AEQUALIS_S32(suff[0], 't');
+        CREDO_AEQUALIS_S32(suff[1], 'h');
+
+        suff = fasti_suffixum_ordinale(X);
+        CREDO_AEQUALIS_S32(suff[0], 't');
+        CREDO_AEQUALIS_S32(suff[1], 'h');
+
+        /* 11th, 12th, 13th are exceptions (all "th") */
+        suff = fasti_suffixum_ordinale(XI);
+        CREDO_AEQUALIS_S32(suff[0], 't');
+        CREDO_AEQUALIS_S32(suff[1], 'h');
+
+        suff = fasti_suffixum_ordinale(XII);
+        CREDO_AEQUALIS_S32(suff[0], 't');
+        CREDO_AEQUALIS_S32(suff[1], 'h');
+
+        suff = fasti_suffixum_ordinale(XIII);
+        CREDO_AEQUALIS_S32(suff[0], 't');
+        CREDO_AEQUALIS_S32(suff[1], 'h');
+
+        /* 21st, 22nd, 23rd follow normal pattern */
+        suff = fasti_suffixum_ordinale(XXI);
+        CREDO_AEQUALIS_S32(suff[0], 's');
+        CREDO_AEQUALIS_S32(suff[1], 't');
+
+        suff = fasti_suffixum_ordinale(XXII);
+        CREDO_AEQUALIS_S32(suff[0], 'n');
+        CREDO_AEQUALIS_S32(suff[1], 'd');
+
+        suff = fasti_suffixum_ordinale(XXIII);
+        CREDO_AEQUALIS_S32(suff[0], 'r');
+        CREDO_AEQUALIS_S32(suff[1], 'd');
+
+        /* 31st */
+        suff = fasti_suffixum_ordinale(XXXI);
+        CREDO_AEQUALIS_S32(suff[0], 's');
+        CREDO_AEQUALIS_S32(suff[1], 't');
+    }
+
+
+    /* ==================================================
+     * Probare FASTI_FORMA_ANGLICA_LONGA
+     * ================================================== */
+
+    {
+        Dies d;
+        chorda s;
+
+        imprimere("\n--- Probans FASTI_FORMA_ANGLICA_LONGA ---\n");
+
+        /* Nativitas Domini - Thursday, December 25th 2025 */
+        d = fasti_dies(MMXXV, XII, XXV);
+        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Thursday, December 25th 2025", piscina));
+
+        /* 1 Ianuarii 2024 = Monday, January 1st 2024 */
+        d = fasti_dies(MMXXIV, I, I);
+        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Monday, January 1st 2024", piscina));
+
+        /* 22 Februarii = "22nd" */
+        d = fasti_dies(MMXXIV, II, XXII);
+        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Thursday, February 22nd 2024", piscina));
+
+        /* 13 Martii = "13th" (teen exception) */
+        d = fasti_dies(MMXXIV, III, XIII);
+        s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Wednesday, March 13th 2024", piscina));
+    }
+
+
+    /* ==================================================
      * Conclusio
      * ================================================== */
 
