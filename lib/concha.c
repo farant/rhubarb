@@ -12,6 +12,7 @@
 #include "navigator_entitatum.h"
 #include "libro_paginarum.h"
 #include "fons_visus.h"
+#include "calendario_visus.h"
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -37,7 +38,7 @@ _concha_command_date(
     sprintf(expectatum, " %02d/%02d/%04d",
             tempus_info->tm_mon + I,
             tempus_info->tm_mday,
-            tempus_info->tm_year + MCMX);  /* 1900 */
+            tempus_info->tm_year + MCM);  /* 1900 */
 
     longitudo = XI;  /* " MM/DD/YYYY" = 11 characters */
 
@@ -243,6 +244,7 @@ concha_creare(ConchaConfiguratio* config)
     arx_caeli_init(ctx);
     navigator_entitatum_init(ctx);
     libro_paginarum_init(ctx);
+    calendario_visus_init(ctx);
 
     /* Registrare built-in commands (non-widget) */
     registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);

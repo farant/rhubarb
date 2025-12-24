@@ -201,27 +201,27 @@ s32 principale(vacuum)
 
         /* Adventus = Violaceus */
         dies = fasti_dies(MMXXIV, FASTI_DECEMBER, I);
-        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLOR_VIOLACEUS);
+        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLLIT_VIOLACEUS);
 
         /* Nativitas = Albus */
         dies = fasti_dies(MMXXIV, FASTI_DECEMBER, XXV);
-        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLOR_ALBUS);
+        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLLIT_ALBUS);
 
         /* Tempus per Annum = Viridis */
         dies = fasti_dies(MMXXV, FASTI_IUNIUS, XV);
-        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLOR_VIRIDIS);
+        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLLIT_VIRIDIS);
 
         /* Quadragesima = Violaceus */
         dies = fasti_dies(MMXXV, FASTI_MARTIUS, X);
-        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLOR_VIOLACEUS);
+        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLLIT_VIOLACEUS);
 
         /* Pascha = Albus */
         dies = fasti_dies(MMXXV, FASTI_APRILIS, XX);
-        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLOR_ALBUS);
+        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLLIT_ALBUS);
 
         /* Pentecoste = Ruber */
         dies = fasti_dies(MMXXV, FASTI_IUNIUS, VIII);
-        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLOR_RUBER);
+        CREDO_AEQUALIS_S32((s32)calendarium_color_temporis(cal, dies), (s32)COLLIT_RUBER);
     }
 
 
@@ -278,7 +278,7 @@ s32 principale(vacuum)
         titulus = calendarium_nomen_temporis(TEMPUS_ADVENTUS, VERUM, piscina);
         CREDO_AEQUALIS_S32((s32)titulus.mensura, III);  /* "Adv" */
 
-        titulus = calendarium_nomen_coloris(COLOR_ALBUS, piscina);
+        titulus = calendarium_nomen_coloris(COLLIT_ALBUS, piscina);
         CREDO_AEQUALIS_S32((s32)titulus.mensura, V);  /* "Albus" */
 
         /* Formare titulum pro Dominica I Adventus */
@@ -304,7 +304,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32(info->dies.dies, I);
         CREDO_AEQUALIS_S32((s32)info->tempus_info.tempus, (s32)TEMPUS_ADVENTUS);
         CREDO_VERUM(info->tempus_info.est_dominica);
-        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_VIOLACEUS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLLIT_VIOLACEUS);
         CREDO_AEQUALIS_S32((s32)info->cyclus.cyclus_dominicalis, (s32)CYCLUS_B);
     }
 
@@ -326,7 +326,7 @@ s32 principale(vacuum)
         CREDO_VERUM(sanct != NIHIL);
         CREDO_AEQUALIS_S32(numerus, I);
         CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
-        CREDO_AEQUALIS_S32((s32)sanct->color, (s32)COLOR_ALBUS);
+        CREDO_AEQUALIS_S32((s32)sanct->color, (s32)COLLIT_ALBUS);
         CREDO_VERUM(sanct->dies_obligationis);
 
         /* 25 Dec - Nativitas (Sollemnitas, dies obligationis) */
@@ -357,7 +357,7 @@ s32 principale(vacuum)
         sanct = sanctorale_obtinere(FASTI_IUNIUS, XXIX, &numerus);
         CREDO_VERUM(sanct != NIHIL);
         CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
-        CREDO_AEQUALIS_S32((s32)sanct->color, (s32)COLOR_RUBER);
+        CREDO_AEQUALIS_S32((s32)sanct->color, (s32)COLLIT_RUBER);
         CREDO_FALSUM(sanct->dies_obligationis);
 
         /* 20 Jan - Duo sancti (Fabianus et Sebastianus) */
@@ -394,7 +394,7 @@ s32 principale(vacuum)
         CREDO_VERUM(info != NIHIL);
         CREDO_VERUM(info->celebratio_principalis != NIHIL);
         CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_SOLLEMNITAS);
-        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_ALBUS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLLIT_ALBUS);
 
         /* 19 Mar 2025 - St. Joseph (Sollemnitas) */
         /* In Lent, but Solemnity takes precedence */
@@ -403,7 +403,7 @@ s32 principale(vacuum)
         CREDO_VERUM(info != NIHIL);
         CREDO_VERUM(info->celebratio_principalis != NIHIL);
         CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_SOLLEMNITAS);
-        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_ALBUS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLLIT_ALBUS);
 
         /* 5 Mar 2025 - Ash Wednesday */
         /* Dies Peculiaris - no saint takes precedence */
@@ -412,7 +412,7 @@ s32 principale(vacuum)
         CREDO_VERUM(info != NIHIL);
         CREDO_VERUM(info->celebratio_principalis != NIHIL);
         CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_DIES_PECULIARIS);
-        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_VIOLACEUS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLLIT_VIOLACEUS);
 
         /* 1 Dec 2024 - Dominica I Adventus */
         /* Sunday takes precedence over any memoria */
@@ -437,7 +437,7 @@ s32 principale(vacuum)
         CREDO_VERUM(info != NIHIL);
         CREDO_VERUM(info->celebratio_principalis != NIHIL);
         CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_DIES_PECULIARIS);
-        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_ALBUS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLLIT_ALBUS);
 
         /* 25 Apr 2024 - St. Mark (Festum) */
         /* In 2024, Pascha = 31 Mar, ergo 25 Apr est post Octavam */
@@ -447,7 +447,7 @@ s32 principale(vacuum)
         CREDO_VERUM(info != NIHIL);
         CREDO_VERUM(info->celebratio_principalis != NIHIL);
         CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_FESTUM);
-        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_RUBER);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLLIT_RUBER);
 
         /* 17 Apr 2025 - Holy Thursday (Triduum) */
         /* Triduum takes precedence over everything */

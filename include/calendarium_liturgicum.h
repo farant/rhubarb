@@ -58,12 +58,12 @@ nomen enumeratio {
  * ================================================== */
 
 nomen enumeratio {
-    COLOR_ALBUS     = ZEPHYRUM,  /* Nativitas, Pascha, BVM, Confessores */
-    COLOR_RUBER     = I,         /* Passio, Martyres, Pentecoste */
-    COLOR_VIRIDIS   = II,        /* Tempus per Annum */
-    COLOR_VIOLACEUS = III,       /* Adventus, Quadragesima */
-    COLOR_ROSACEUS  = IV,        /* Gaudete, Laetare */
-    COLOR_NIGER     = V          /* Defunctorum (optionalis) */
+    COLLIT_ALBUS     = ZEPHYRUM,  /* Nativitas, Pascha, BVM, Confessores */
+    COLLIT_RUBER     = I,         /* Passio, Martyres, Pentecoste */
+    COLLIT_VIRIDIS   = II,        /* Tempus per Annum */
+    COLLIT_VIOLACEUS = III,       /* Adventus, Quadragesima */
+    COLLIT_ROSACEUS  = IV,        /* Gaudete, Laetare */
+    COLLIT_NIGER     = V          /* Defunctorum (optionalis) */
 } ColorLiturgicus;
 
 

@@ -442,16 +442,16 @@ calendarium_color_temporis(CalendariumLiturgicum* cal, Dies dies)
             si (fasti_differentia(dies, anch->dominica_i_adventus).dies_totales >= XIV &&
                 fasti_differentia(dies, anch->dominica_i_adventus).dies_totales < XXI &&
                 fasti_dies_hebdomadis(dies) == ZEPHYRUM) {
-                redde COLOR_ROSACEUS;
+                redde COLLIT_ROSACEUS;
             }
-            redde COLOR_VIOLACEUS;
+            redde COLLIT_VIOLACEUS;
 
         casus TEMPUS_NATIVITATIS:
-            redde COLOR_ALBUS;
+            redde COLLIT_ALBUS;
 
         casus TEMPUS_PER_ANNUM_I:
         casus TEMPUS_PER_ANNUM_II:
-            redde COLOR_VIRIDIS;
+            redde COLLIT_VIRIDIS;
 
         casus TEMPUS_QUADRAGESIMAE:
             /* Rosaceus Dominica IV (Laetare) */
@@ -459,23 +459,23 @@ calendarium_color_temporis(CalendariumLiturgicum* cal, Dies dies)
             si (fasti_differentia(dies, anch->dominica_i_quadragesimae).dies_totales >= XXI &&
                 fasti_differentia(dies, anch->dominica_i_quadragesimae).dies_totales < XXVIII &&
                 fasti_dies_hebdomadis(dies) == ZEPHYRUM) {
-                redde COLOR_ROSACEUS;
+                redde COLLIT_ROSACEUS;
             }
-            redde COLOR_VIOLACEUS;
+            redde COLLIT_VIOLACEUS;
 
         casus TEMPUS_TRIDUUM_SACRUM:
-            redde COLOR_RUBER;  /* Feria VI in Passione */
+            redde COLLIT_RUBER;  /* Feria VI in Passione */
 
         casus TEMPUS_PASCHALE:
             /* Ruber in Pentecoste */
             anch = calendarium_anchorae(cal, dies.annus);
             si (fasti_comparare(dies, anch->pentecoste) == ZEPHYRUM) {
-                redde COLOR_RUBER;
+                redde COLLIT_RUBER;
             }
-            redde COLOR_ALBUS;
+            redde COLLIT_ALBUS;
 
         ordinarius:
-            redde COLOR_VIRIDIS;
+            redde COLLIT_VIRIDIS;
     }
 }
 
@@ -703,7 +703,7 @@ calendarium_nomen_gradus(
 chorda
 calendarium_nomen_coloris(ColorLiturgicus color, Piscina* piscina)
 {
-    si (color < ZEPHYRUM || color > COLOR_NIGER) {
+    si (color < ZEPHYRUM || color > COLLIT_NIGER) {
         redde chorda_ex_literis("", piscina);
     }
 

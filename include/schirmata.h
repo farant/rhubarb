@@ -15,6 +15,7 @@
 #include "biblia_visus.h"
 #include "librarium_visus.h"
 #include "fons_visus.h"
+#include "calendario_visus.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -67,6 +68,7 @@ nomen structura {
     b32 modus_sputnik_syntaxis;       /* VERUM = syntax reference mode */
     b32 modus_biblia_visus;           /* VERUM = Bible viewer mode */
     b32 modus_librarium;              /* VERUM = library viewer mode */
+    b32 modus_calendario_visus;       /* VERUM = calendar viewer mode */
 } Schirma;
 
 /* Controller schirmarum */
@@ -88,6 +90,7 @@ nomen structura {
     BibliaVisus*     biblia_visus;        /* Bible viewer widget */
     LibrariumVisus*  librarium_visus;     /* Library viewer widget */
     FonsVisus*       fons_visus;          /* Font glyph viewer widget */
+    CalendarioVisus* calendario_visus;    /* Calendar viewer widget */
 } Schirmata;
 
 
@@ -200,6 +203,14 @@ schirmata_commutare_ad_librarium(
  */
 vacuum
 schirmata_commutare_ad_fons_visus(
+    Schirmata* schirmata);
+
+/* Commutare ad modus calendario visus (calendar viewer)
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_commutare_ad_calendario_visus(
     Schirmata* schirmata);
 
 

@@ -81,6 +81,10 @@ _schirmata_commutare_widget_callback(
     {
         schirmata_commutare_ad_fons_visus(schirmata);
     }
+    alioquin si (strcmp(widget_titulus, "calendario") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_calendario_visus(schirmata);
+    }
 }
 
 
@@ -506,6 +510,12 @@ nomen structura {
     Schirmata*  schirmata;
 } SchirmataFonsVisusDatum;
 
+/* Datum pro calendario visus widget wrapper */
+nomen structura {
+    CalendarioVisus*  calendario_visus;
+    Schirmata*        schirmata;
+} SchirmataCalendarioVisusDatum;
+
 hic_manens vacuum
 _schirmata_librarium_visus_reddere(
     Widget*          widget,
@@ -585,6 +595,49 @@ _schirmata_fons_visus_tractare_eventum(
     datum = (SchirmataFonsVisusDatum*)widget->datum;
 
     redde fons_visus_tractare_eventum(datum->fons_visus, eventus);
+}
+
+
+/* ==================================================
+ * Widget Wrapper Functiones - Calendario Visus
+ * ================================================== */
+
+hic_manens vacuum
+_schirmata_calendario_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataCalendarioVisusDatum* datum;
+
+    datum = (SchirmataCalendarioVisusDatum*)widget->datum;
+
+    calendario_visus_reddere(
+        datum->calendario_visus,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_calendario_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataCalendarioVisusDatum* datum;
+
+    datum = (SchirmataCalendarioVisusDatum*)widget->datum;
+
+    redde calendario_visus_tractare_eventum(datum->calendario_visus, eventus);
 }
 
 
@@ -985,6 +1038,7 @@ schirmata_creare(
     schirmata->biblia_visus = biblia_visus_creare(ctx->piscina);
     schirmata->librarium_visus = librarium_visus_creare(ctx->piscina, ctx);
     schirmata->fons_visus = fons_visus_creare(ctx->piscina);
+    schirmata->calendario_visus = calendario_visus_creare(ctx->piscina);
 
     /* Configurare callback pro widget switching */
     ctx->commutare_widget = _schirmata_commutare_widget_callback;
@@ -1309,6 +1363,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirmata->arx_caeli, slug);
@@ -1370,6 +1425,7 @@ schirmata_commutare_ad_navigator(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
 }
 
 
@@ -1425,6 +1481,7 @@ schirmata_commutare_ad_thema_visus(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
 }
 
 
@@ -1480,6 +1537,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
 }
 
 
@@ -1535,6 +1593,7 @@ schirmata_commutare_ad_biblia_visus(
     schirma->modus_biblia_visus = VERUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
 }
 
 
@@ -1601,6 +1660,7 @@ schirmata_commutare_ad_librarium(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = VERUM;
     schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
 
     /* Quaerere si quaestio */
     si (quaestio)
@@ -1661,6 +1721,63 @@ schirmata_commutare_ad_fons_visus(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = VERUM;
+    schirma->modus_calendario_visus = FALSUM;
+}
+
+
+/* ==================================================
+ * Mode Switching - Calendario Visus
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_calendario_visus(
+    Schirmata* schirmata)
+{
+    Schirma*                       schirma;
+    ManagerWidget*                 manager;
+    SchirmataCalendarioVisusDatum* calendario_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_calendario_visus)
+    {
+        /* Iam in modus calendario visus */
+        redde;
+    }
+
+    /* Commutare ad calendario visus */
+    manager = schirma->manager;
+
+    /* Creare calendario visus datum */
+    calendario_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataCalendarioVisusDatum));
+    si (!calendario_datum)
+    {
+        redde;
+    }
+    calendario_datum->calendario_visus = schirmata->calendario_visus;
+    calendario_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = calendario_datum;
+        manager->widgets[I].reddere = _schirmata_calendario_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_calendario_visus_tractare_eventum;
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = VERUM;
 }
 
 
@@ -1709,6 +1826,10 @@ _modus_ad_chorda(
     si (schirma->modus_fons_visus)
     {
         redde "fons";
+    }
+    si (schirma->modus_calendario_visus)
+    {
+        redde "calendario";
     }
     redde "navigator";
 }
@@ -1956,6 +2077,10 @@ schirmata_carcare_omnes(
             alioquin si (chorda_aequalis_literis(*modus_valor, "fons"))
             {
                 schirmata_commutare_ad_fons_visus(schirmata);
+            }
+            alioquin si (chorda_aequalis_literis(*modus_valor, "calendario"))
+            {
+                schirmata_commutare_ad_calendario_visus(schirmata);
             }
             /* "navigator" = default, nihil facere */
 

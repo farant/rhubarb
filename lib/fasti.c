@@ -112,7 +112,7 @@ fasti_dies_hodie(
     secunda = tv.tv_sec;
     tm_info = localtime(&secunda);
 
-    d.annus = (s32)(tm_info->tm_year + MCMX);
+    d.annus = (s32)(tm_info->tm_year + MCM);
     d.mensis = (s32)(tm_info->tm_mon + I);
     d.dies = (s32)(tm_info->tm_mday);
 
@@ -132,7 +132,7 @@ fasti_nunc(
     secunda = tv.tv_sec;
     tm_info = localtime(&secunda);
 
-    dh.dies.annus = (s32)(tm_info->tm_year + MCMX);
+    dh.dies.annus = (s32)(tm_info->tm_year + MCM);
     dh.dies.mensis = (s32)(tm_info->tm_mon + I);
     dh.dies.dies = (s32)(tm_info->tm_mday);
     dh.hora.hora = (s32)(tm_info->tm_hour);
