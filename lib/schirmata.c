@@ -1,4 +1,5 @@
 #include "schirmata.h"
+#include "fons_visus.h"
 #include "thema.h"
 #include "delineare.h"
 #include "tempus.h"
@@ -75,6 +76,10 @@ _schirmata_commutare_widget_callback(
     alioquin si (strcmp(widget_titulus, "navigator") == ZEPHYRUM)
     {
         schirmata_commutare_ad_navigator(schirmata);
+    }
+    alioquin si (strcmp(widget_titulus, "fons") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_fons_visus(schirmata);
     }
 }
 
@@ -495,6 +500,12 @@ nomen structura {
     Schirmata*      schirmata;
 } SchirmataLibrariumVisusDatum;
 
+/* Datum pro fons visus widget wrapper */
+nomen structura {
+    FonsVisus*  fons_visus;
+    Schirmata*  schirmata;
+} SchirmataFonsVisusDatum;
+
 hic_manens vacuum
 _schirmata_librarium_visus_reddere(
     Widget*          widget,
@@ -531,6 +542,49 @@ _schirmata_librarium_visus_tractare_eventum(
     datum = (SchirmataLibrariumVisusDatum*)widget->datum;
 
     redde librarium_visus_tractare_eventum(datum->librarium_visus, eventus);
+}
+
+
+/* ==================================================
+ * Widget Wrapper Functiones - Fons Visus
+ * ================================================== */
+
+hic_manens vacuum
+_schirmata_fons_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataFonsVisusDatum* datum;
+
+    datum = (SchirmataFonsVisusDatum*)widget->datum;
+
+    fons_visus_reddere(
+        datum->fons_visus,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_fons_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataFonsVisusDatum* datum;
+
+    datum = (SchirmataFonsVisusDatum*)widget->datum;
+
+    redde fons_visus_tractare_eventum(datum->fons_visus, eventus);
 }
 
 
@@ -734,6 +788,7 @@ _creare_schirma_layout(
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
 
     schirma->initiatus = VERUM;
 
@@ -919,6 +974,7 @@ schirmata_creare(
     schirmata->sputnik_syntaxis = sputnik_syntaxis_creare(ctx->piscina);
     schirmata->biblia_visus = biblia_visus_creare(ctx->piscina);
     schirmata->librarium_visus = librarium_visus_creare(ctx->piscina, ctx);
+    schirmata->fons_visus = fons_visus_creare(ctx->piscina);
 
     /* Configurare callback pro widget switching */
     ctx->commutare_widget = _schirmata_commutare_widget_callback;
@@ -1241,6 +1297,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirmata->arx_caeli, slug);
@@ -1264,7 +1321,7 @@ schirmata_commutare_ad_navigator(
 
     si (!schirma->modus_arx_caeli && !schirma->modus_thema_visus &&
         !schirma->modus_sputnik_syntaxis && !schirma->modus_biblia_visus &&
-        !schirma->modus_librarium)
+        !schirma->modus_librarium && !schirma->modus_fons_visus)
     {
         /* Iam in modus navigator */
         redde;
@@ -1301,6 +1358,7 @@ schirmata_commutare_ad_navigator(
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
 }
 
 
@@ -1354,6 +1412,7 @@ schirmata_commutare_ad_thema_visus(
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
 }
 
 
@@ -1407,6 +1466,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
     schirma->modus_sputnik_syntaxis = VERUM;
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
 }
 
 
@@ -1461,6 +1521,7 @@ schirmata_commutare_ad_biblia_visus(
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = VERUM;
     schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
 }
 
 
@@ -1526,12 +1587,67 @@ schirmata_commutare_ad_librarium(
     schirma->modus_sputnik_syntaxis = FALSUM;
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = VERUM;
+    schirma->modus_fons_visus = FALSUM;
 
     /* Quaerere si quaestio */
     si (quaestio)
     {
         librarium_visus_quaerere(schirmata->librarium_visus, quaestio);
     }
+}
+
+
+/* ==================================================
+ * Mode Switching - Fons Visus
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_fons_visus(
+    Schirmata* schirmata)
+{
+    Schirma*                 schirma;
+    ManagerWidget*           manager;
+    SchirmataFonsVisusDatum* fons_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->modus_fons_visus)
+    {
+        /* Iam in modus fons visus */
+        redde;
+    }
+
+    /* Commutare ad fons visus */
+    manager = schirma->manager;
+
+    /* Creare fons visus datum */
+    fons_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataFonsVisusDatum));
+    si (!fons_datum)
+    {
+        redde;
+    }
+    fons_datum->fons_visus = schirmata->fons_visus;
+    fons_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = fons_datum;
+        manager->widgets[I].reddere = _schirmata_fons_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_fons_visus_tractare_eventum;
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = VERUM;
 }
 
 
@@ -1576,6 +1692,10 @@ _modus_ad_chorda(
     si (schirma->modus_sputnik_syntaxis)
     {
         redde "sputnik";
+    }
+    si (schirma->modus_fons_visus)
+    {
+        redde "fons";
     }
     redde "navigator";
 }
@@ -1819,6 +1939,10 @@ schirmata_carcare_omnes(
             alioquin si (chorda_aequalis_literis(*modus_valor, "sputnik"))
             {
                 schirmata_commutare_ad_sputnik_syntaxis(schirmata);
+            }
+            alioquin si (chorda_aequalis_literis(*modus_valor, "fons"))
+            {
+                schirmata_commutare_ad_fons_visus(schirmata);
             }
             /* "navigator" = default, nihil facere */
 

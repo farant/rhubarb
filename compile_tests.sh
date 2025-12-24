@@ -85,6 +85,7 @@ declare -a SOURCE_FILES=(
     "lib/paginarium.c"
     "lib/utf8.c"
     "lib/fons.c"
+    "lib/fons_visus.c"
 )
 
 # Objective-C source (compiled separately)

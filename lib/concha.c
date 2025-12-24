@@ -11,6 +11,7 @@
 #include "arx_caeli.h"
 #include "navigator_entitatum.h"
 #include "libro_paginarum.h"
+#include "fons_visus.h"
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -237,6 +238,7 @@ concha_creare(ConchaConfiguratio* config)
     biblia_visus_init(ctx);
     librarium_visus_init(ctx);
     thema_visus_init(ctx);
+    fons_visus_init(ctx);
     sputnik_syntaxis_init(ctx);
     arx_caeli_init(ctx);
     navigator_entitatum_init(ctx);
