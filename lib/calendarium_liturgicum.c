@@ -770,7 +770,276 @@ calendarium_formare_titulum(
 
 
 /* ==================================================
- * Quaestio Principalis (Placeholder)
+ * Praecedentia Liturgica
+ *
+ * Secundum Tabulam Dierum Liturgicorum (GNLYC)
+ *
+ * Ordo praecedentiae:
+ * 1. Triduum Paschale
+ * 2. Nativitas, Epiphania, Ascensio, Pentecoste
+ *    Dominicae Adventus, Quadragesimae, Paschae
+ *    Feria IV Cinerum, Hebdomada Sancta, Octava Paschae
+ * 3. Sollemnitates Domini, BVM, Sanctorum
+ * 4. Commemoratio Omnium Fidelium Defunctorum
+ * 5. Dominicae Nativitatis et per Annum
+ * 6. Festa Domini et Sanctorum
+ * 7. Feriae Adventus (17-24 Dec), Quadragesimae
+ * 8. Memoriae obligatoriae
+ * 9. Memoriae ad libitum, Feriae per Annum
+ * ================================================== */
+
+/*
+ * Gradus praecedentiae superior = magis privilegiatus
+ */
+nomen enumeratio {
+    PRAECED_FERIA              = ZEPHYRUM,
+    PRAECED_MEMORIA_AD_LIBITUM = I,
+    PRAECED_MEMORIA            = II,
+    PRAECED_FERIA_PRIVILEGIATA = III,  /* Adventus 17-24, Quadragesima */
+    PRAECED_FESTUM             = IV,
+    PRAECED_DOMINICA           = V,
+    PRAECED_DEFUNCTORUM        = VI,   /* 2 Nov */
+    PRAECED_SOLLEMNITAS        = VII,
+    PRAECED_DOMINICA_MAIOR     = VIII, /* Adventus, Quadragesima, Pascha */
+    PRAECED_DIES_PECULIARIS    = IX,   /* Feria IV Cinerum, Hebd. Sancta, Oct. Pasch. */
+    PRAECED_TRIDUUM            = X
+} GradusPraecedentiae;
+
+
+/*
+ * obtinere_praeced_temporale
+ *
+ * Determinare gradum praecedentiae diei ex temporale.
+ */
+interior GradusPraecedentiae
+obtinere_praeced_temporale(CalendariumLiturgicum* cal, Dies dies)
+{
+    TempusLiturgicum tempus = calendarium_tempus(cal, dies);
+    s32 dies_hebd = fasti_dies_hebdomadis(dies);
+    b32 est_dominica = (dies_hebd == ZEPHYRUM);
+
+    /* Triduum Paschale - maxima praecedentia */
+    si (tempus == TEMPUS_TRIDUUM_SACRUM) {
+        redde PRAECED_TRIDUUM;
+    }
+
+    /* Octava Paschae */
+    si (calendarium_est_octava_paschae(cal, dies)) {
+        redde PRAECED_DIES_PECULIARIS;
+    }
+
+    /* Feria IV Cinerum */
+    si (calendarium_est_feria_cinerum(cal, dies)) {
+        redde PRAECED_DIES_PECULIARIS;
+    }
+
+    /* Hebdomada Sancta (Feria II - Feria IV) */
+    si (calendarium_est_hebdomada_sancta(cal, dies) && !est_dominica) {
+        redde PRAECED_DIES_PECULIARIS;
+    }
+
+    /* Dominicae maiores (Adventus, Quadragesimae, Paschae) */
+    si (est_dominica) {
+        si (tempus == TEMPUS_ADVENTUS ||
+            tempus == TEMPUS_QUADRAGESIMAE ||
+            tempus == TEMPUS_PASCHALE) {
+            redde PRAECED_DOMINICA_MAIOR;
+        }
+        redde PRAECED_DOMINICA;
+    }
+
+    /* Feriae privilegiatae Adventus (17-24 Dec) */
+    si (tempus == TEMPUS_ADVENTUS &&
+        dies.mensis == FASTI_DECEMBER &&
+        dies.dies >= XVII && dies.dies <= XXIV) {
+        redde PRAECED_FERIA_PRIVILEGIATA;
+    }
+
+    /* Feriae Quadragesimae */
+    si (tempus == TEMPUS_QUADRAGESIMAE) {
+        redde PRAECED_FERIA_PRIVILEGIATA;
+    }
+
+    /* 2 Novembris - Commemoratio Defunctorum */
+    si (dies.mensis == FASTI_NOVEMBER && dies.dies == II) {
+        redde PRAECED_DEFUNCTORUM;
+    }
+
+    /* Feriae Adventus (ante 17 Dec) */
+    si (tempus == TEMPUS_ADVENTUS) {
+        redde PRAECED_FERIA_PRIVILEGIATA;
+    }
+
+    /* Feriae ordinariae */
+    redde PRAECED_FERIA;
+}
+
+
+/*
+ * obtinere_praeced_sanctorale
+ *
+ * Convertere GradusCelebrationis ad GradusPraecedentiae.
+ */
+interior GradusPraecedentiae
+obtinere_praeced_sanctorale(GradusCelebrationis gradus)
+{
+    commutatio (gradus) {
+        casus GRADUS_SOLLEMNITAS:
+            redde PRAECED_SOLLEMNITAS;
+        casus GRADUS_FESTUM:
+            redde PRAECED_FESTUM;
+        casus GRADUS_MEMORIA:
+            redde PRAECED_MEMORIA;
+        casus GRADUS_MEMORIA_AD_LIBITUM:
+            redde PRAECED_MEMORIA_AD_LIBITUM;
+        casus GRADUS_DIES_PECULIARIS:
+            redde PRAECED_DEFUNCTORUM;  /* e.g. 2 Nov */
+        ordinarius:
+            redde PRAECED_FERIA;
+    }
+}
+
+
+/*
+ * comparare_praecedentiam
+ *
+ * Comparare praecedentiam temporalis et sanctoralis.
+ * Redit: >0 si sanctorale vincit, <0 si temporale vincit, 0 si aequales.
+ */
+interior s32
+comparare_praecedentiam(
+    GradusPraecedentiae praeced_temp,
+    GradusPraecedentiae praeced_sanct)
+{
+    /* Si temporale est Triduum vel Dies Peculiaris, temporale vincit */
+    si (praeced_temp >= PRAECED_DIES_PECULIARIS) {
+        redde -I;
+    }
+
+    /* Si sanctorale est sollemnitas */
+    si (praeced_sanct == PRAECED_SOLLEMNITAS) {
+        /* Sollemnitas vincit omnes praeter Dominicas maiores et supra */
+        si (praeced_temp >= PRAECED_DOMINICA_MAIOR) {
+            redde -I;  /* Dominica maior vincit */
+        }
+        redde I;  /* Sollemnitas vincit */
+    }
+
+    /* Dominicae (omnes) vincunt festa et memorias */
+    si (praeced_temp >= PRAECED_DOMINICA) {
+        redde -I;
+    }
+
+    /* Commemoratio Defunctorum (2 Nov) - specialis */
+    si (praeced_temp == PRAECED_DEFUNCTORUM ||
+        praeced_sanct == PRAECED_DEFUNCTORUM) {
+        redde ZEPHYRUM;  /* Celebratur */
+    }
+
+    /* Festa */
+    si (praeced_sanct == PRAECED_FESTUM) {
+        si (praeced_temp <= PRAECED_FERIA_PRIVILEGIATA) {
+            redde I;  /* Festum vincit feriam */
+        }
+        redde -I;
+    }
+
+    /* Memoriae in Quadragesima fiunt ad libitum */
+    si (praeced_temp == PRAECED_FERIA_PRIVILEGIATA) {
+        si (praeced_sanct == PRAECED_MEMORIA) {
+            /* Memoria obligatoria fit ad libitum in Quadragesima */
+            redde ZEPHYRUM;
+        }
+        si (praeced_sanct == PRAECED_MEMORIA_AD_LIBITUM) {
+            redde ZEPHYRUM;  /* Etiam permissa */
+        }
+        redde -I;
+    }
+
+    /* Memoriae in feriis ordinariae */
+    si (praeced_sanct >= PRAECED_MEMORIA_AD_LIBITUM) {
+        redde I;
+    }
+
+    redde ZEPHYRUM;
+}
+
+
+/*
+ * creare_celebrationem_temporale
+ *
+ * Creare Celebratio pro die temporali.
+ */
+interior Celebratio*
+creare_celebrationem_temporale(
+    CalendariumLiturgicum* cal,
+    Dies                   dies,
+    Piscina*               piscina)
+{
+    Celebratio* celeb;
+    InformatioTemporis info;
+    chorda titulus;
+
+    celeb = (Celebratio*)piscina_allocare(piscina, magnitudo(Celebratio));
+    si (celeb == NIHIL) {
+        redde NIHIL;
+    }
+
+    info = calendarium_tempus_info(cal, dies);
+    titulus = calendarium_formare_titulum(cal, dies, piscina);
+
+    celeb->titulus = titulus;
+    celeb->titulus_brevis = titulus;  /* Idem pro nunc */
+    celeb->color = calendarium_color_temporis(cal, dies);
+    celeb->genus = GENUS_TEMPORALE;
+    celeb->lectionarium = -I;
+
+    /* Determinare gradus */
+    si (info.est_dominica) {
+        celeb->gradus = GRADUS_DOMINICA;
+    } alioquin si (calendarium_tempus(cal, dies) == TEMPUS_TRIDUUM_SACRUM ||
+                  calendarium_est_feria_cinerum(cal, dies) ||
+                  calendarium_est_hebdomada_sancta(cal, dies) ||
+                  calendarium_est_octava_paschae(cal, dies)) {
+        celeb->gradus = GRADUS_DIES_PECULIARIS;
+    } alioquin {
+        celeb->gradus = GRADUS_FERIA;
+    }
+
+    redde celeb;
+}
+
+
+/*
+ * creare_celebrationem_sanctorale
+ *
+ * Creare Celebratio ex SanctoraleDatum.
+ */
+interior Celebratio*
+creare_celebrationem_sanctorale(
+    constans SanctoraleDatum* datum,
+    Piscina*                  piscina)
+{
+    Celebratio* celeb;
+
+    celeb = (Celebratio*)piscina_allocare(piscina, magnitudo(Celebratio));
+    si (celeb == NIHIL) {
+        redde NIHIL;
+    }
+
+    celeb->titulus = chorda_ex_literis(datum->titulus, piscina);
+    celeb->titulus_brevis = chorda_ex_literis(datum->titulus_brevis, piscina);
+    celeb->gradus = datum->gradus;
+    celeb->color = datum->color;
+    celeb->genus = GENUS_SANCTORALE;
+    celeb->lectionarium = -I;
+
+    redde celeb;
+}
+
+
+/* ==================================================
+ * Quaestio Principalis
  * ================================================== */
 
 InformatioDiei*
@@ -780,6 +1049,14 @@ calendarium_obtinere_diem(
     Piscina*               piscina)
 {
     InformatioDiei* info;
+    GradusPraecedentiae praeced_temp;
+    constans SanctoraleDatum* sancta;
+    s32 num_sanctorum;
+    s32 i;
+    Celebratio* celeb_temp;
+    Celebratio* celebrationes_array;
+    s32 num_celebrationum;
+    s32 idx;
 
     info = (InformatioDiei*)piscina_allocare(piscina, magnitudo(InformatioDiei));
 
@@ -789,7 +1066,6 @@ calendarium_obtinere_diem(
 
     info->dies = dies;
     info->tempus_info = calendarium_tempus_info(cal, dies);
-    info->color_diei = calendarium_color_temporis(cal, dies);
     info->titulus_diei = calendarium_formare_titulum(cal, dies, piscina);
 
     /* Cyclus lectionum */
@@ -797,10 +1073,80 @@ calendarium_obtinere_diem(
     info->cyclus.cyclus_quotidianus = calendarium_cyclus_quotidianus(dies.annus);
     info->cyclus.hebdomada_psalterii = calendarium_hebdomada_psalterii(cal, dies);
 
-    /* Celebrationes - TODO: addere sanctorale */
-    info->celebrationes = NIHIL;
-    info->numerus_celebrationum = ZEPHYRUM;
-    info->celebratio_principalis = NIHIL;
+    /* Obtinere praecedentiam temporalem */
+    praeced_temp = obtinere_praeced_temporale(cal, dies);
+
+    /* Creare celebrationem temporalem */
+    celeb_temp = creare_celebrationem_temporale(cal, dies, piscina);
+
+    /* Obtinere celebrationes sanctorales */
+    sancta = sanctorale_obtinere(dies.mensis, dies.dies, &num_sanctorum);
+
+    /* Allocare array pro celebrationibus */
+    num_celebrationum = I + num_sanctorum;  /* Temporale + sanctorale */
+    celebrationes_array = (Celebratio*)piscina_allocare(
+        piscina,
+        magnitudo(Celebratio) * (memoriae_index)num_celebrationum
+    );
+
+    si (celebrationes_array == NIHIL) {
+        redde NIHIL;
+    }
+
+    idx = ZEPHYRUM;
+
+    /* Addere celebrationem temporalem */
+    si (celeb_temp != NIHIL) {
+        celebrationes_array[idx] = *celeb_temp;
+        idx++;
+    }
+
+    /* Addere celebrationes sanctorales validas */
+    per (i = ZEPHYRUM; i < num_sanctorum; i++) {
+        GradusPraecedentiae praeced_sanct;
+        s32 comp;
+        Celebratio* celeb_sanct;
+
+        praeced_sanct = obtinere_praeced_sanctorale(sancta[i].gradus);
+        comp = comparare_praecedentiam(praeced_temp, praeced_sanct);
+
+        /* Si sanctorale vincit vel est permissum */
+        si (comp >= ZEPHYRUM) {
+            celeb_sanct = creare_celebrationem_sanctorale(&sancta[i], piscina);
+            si (celeb_sanct != NIHIL) {
+                celebrationes_array[idx] = *celeb_sanct;
+                idx++;
+            }
+        }
+    }
+
+    info->celebrationes = celebrationes_array;
+    info->numerus_celebrationum = idx;
+
+    /* Determinare celebrationem principalem et colorem */
+    si (idx > ZEPHYRUM) {
+        Celebratio* principalis = &celebrationes_array[ZEPHYRUM];
+        s32 j;
+
+        /* Invenire celebrationem cum maximo gradu */
+        per (j = I; j < idx; j++) {
+            si (celebrationes_array[j].gradus > principalis->gradus) {
+                principalis = &celebrationes_array[j];
+            }
+        }
+
+        info->celebratio_principalis = principalis;
+        info->color_diei = principalis->color;
+
+        /* Si principalis est sanctorale, titulus diei est titulus sancti */
+        si (principalis->genus == GENUS_SANCTORALE &&
+            principalis->gradus >= GRADUS_FESTUM) {
+            info->titulus_diei = principalis->titulus;
+        }
+    } alioquin {
+        info->celebratio_principalis = NIHIL;
+        info->color_diei = calendarium_color_temporis(cal, dies);
+    }
 
     redde info;
 }

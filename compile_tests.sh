@@ -88,6 +88,7 @@ declare -a SOURCE_FILES=(
     "lib/fons.c"
     "lib/fons_visus.c"
     "lib/calendarium_liturgicum.c"
+    "lib/sanctorale.c"
 )
 
 # Objective-C source (compiled separately)

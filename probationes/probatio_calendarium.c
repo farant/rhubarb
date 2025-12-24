@@ -309,6 +309,156 @@ s32 principale(vacuum)
     }
 
 
+    /* ==================================================
+     * Probare Sanctorale
+     * ================================================== */
+    {
+        constans SanctoraleDatum* sanct;
+        s32 numerus;
+
+        imprimere("\n--- Probans Sanctorale ---\n");
+
+        /* Numerus totalis */
+        CREDO_VERUM(sanctorale_numerus() > C);  /* Plus quam 100 */
+
+        /* 1 Ian - Maria Mater Dei (Sollemnitas, dies obligationis) */
+        sanct = sanctorale_obtinere(FASTI_IANUARIUS, I, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32(numerus, I);
+        CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_AEQUALIS_S32((s32)sanct->color, (s32)COLOR_ALBUS);
+        CREDO_VERUM(sanct->dies_obligationis);
+
+        /* 25 Dec - Nativitas (Sollemnitas, dies obligationis) */
+        sanct = sanctorale_obtinere(FASTI_DECEMBER, XXV, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_VERUM(sanct->dies_obligationis);
+
+        /* 15 Aug - Assumptio (Sollemnitas, dies obligationis) */
+        sanct = sanctorale_obtinere(FASTI_AUGUSTUS, XV, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_VERUM(sanct->dies_obligationis);
+
+        /* 1 Nov - Omnes Sancti (Sollemnitas, dies obligationis) */
+        sanct = sanctorale_obtinere(FASTI_NOVEMBER, I, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_VERUM(sanct->dies_obligationis);
+
+        /* 8 Dec - Immaculata Conceptio (Sollemnitas, dies obligationis) */
+        sanct = sanctorale_obtinere(FASTI_DECEMBER, VIII, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_VERUM(sanct->dies_obligationis);
+
+        /* 29 Jun - Petrus et Paulus (Sollemnitas, non dies obligationis in US) */
+        sanct = sanctorale_obtinere(FASTI_IUNIUS, XXIX, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32((s32)sanct->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_AEQUALIS_S32((s32)sanct->color, (s32)COLOR_RUBER);
+        CREDO_FALSUM(sanct->dies_obligationis);
+
+        /* 20 Jan - Duo sancti (Fabianus et Sebastianus) */
+        sanct = sanctorale_obtinere(FASTI_IANUARIUS, XX, &numerus);
+        CREDO_VERUM(sanct != NIHIL);
+        CREDO_AEQUALIS_S32(numerus, II);  /* Duo celebrationes */
+
+        /* 10 Ian - Nullus sanctus */
+        sanct = sanctorale_obtinere(FASTI_IANUARIUS, X, &numerus);
+        CREDO_VERUM(sanct == NIHIL);
+        CREDO_AEQUALIS_S32(numerus, ZEPHYRUM);
+    }
+
+
+    /* ==================================================
+     * Probare Praecedentiam
+     * ================================================== */
+    {
+        imprimere("\n--- Probans Praecedentiam ---\n");
+
+        /* 28 Jan 2025 - St. Thomas Aquinas (Memoria) in Ordinary Time */
+        /* Memoria celebratur */
+        dies = fasti_dies(MMXXV, FASTI_IANUARIUS, XXVIII);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->numerus_celebrationum >= II);  /* Temporale + Sanctorale */
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_MEMORIA);
+
+        /* 25 Dec 2024 - Nativitas Domini (Sollemnitas) */
+        /* Sollemnitas vincit */
+        dies = fasti_dies(MMXXIV, FASTI_DECEMBER, XXV);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_ALBUS);
+
+        /* 19 Mar 2025 - St. Joseph (Sollemnitas) */
+        /* In Lent, but Solemnity takes precedence */
+        dies = fasti_dies(MMXXV, FASTI_MARTIUS, XIX);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_SOLLEMNITAS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_ALBUS);
+
+        /* 5 Mar 2025 - Ash Wednesday */
+        /* Dies Peculiaris - no saint takes precedence */
+        dies = fasti_dies(MMXXV, FASTI_MARTIUS, V);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_DIES_PECULIARIS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_VIOLACEUS);
+
+        /* 1 Dec 2024 - Dominica I Adventus */
+        /* Sunday takes precedence over any memoria */
+        dies = fasti_dies(MMXXIV, FASTI_DECEMBER, I);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_DOMINICA);
+
+        /* 2 Nov 2025 - All Souls Day */
+        /* Dies peculiaris - special case */
+        dies = fasti_dies(MMXXV, FASTI_NOVEMBER, II);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->numerus_celebrationum >= I);
+
+        /* 25 Apr 2025 - St. Mark (Festum) */
+        /* NB: Pascha 2025 = 20 Apr, ergo 25 Apr est in Octava Paschae! */
+        /* Octava Paschae vincit festum - St. Mark transferred */
+        dies = fasti_dies(MMXXV, FASTI_APRILIS, XXV);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_DIES_PECULIARIS);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_ALBUS);
+
+        /* 25 Apr 2024 - St. Mark (Festum) */
+        /* In 2024, Pascha = 31 Mar, ergo 25 Apr est post Octavam */
+        /* Festum celebratur */
+        dies = fasti_dies(MMXXIV, FASTI_APRILIS, XXV);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_FESTUM);
+        CREDO_AEQUALIS_S32((s32)info->color_diei, (s32)COLOR_RUBER);
+
+        /* 17 Apr 2025 - Holy Thursday (Triduum) */
+        /* Triduum takes precedence over everything */
+        dies = fasti_dies(MMXXV, FASTI_APRILIS, XVII);
+        info = calendarium_obtinere_diem(cal, dies, piscina);
+        CREDO_VERUM(info != NIHIL);
+        CREDO_VERUM(info->celebratio_principalis != NIHIL);
+        CREDO_AEQUALIS_S32((s32)info->celebratio_principalis->gradus, (s32)GRADUS_DIES_PECULIARIS);
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();

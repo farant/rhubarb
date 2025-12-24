@@ -327,6 +327,38 @@ calendarium_formare_titulum(
 
 
 /* ==================================================
+ * Sanctorale - Data Structure
+ * ================================================== */
+
+/* SanctoraleDatum - Entry in the sanctorale table */
+nomen structura {
+    s32                  mensis;
+    s32                  dies;
+    constans character*  titulus;         /* English name */
+    constans character*  titulus_brevis;  /* Abbreviated name */
+    GradusCelebrationis  gradus;
+    ColorLiturgicus      color;
+    b32                  dies_obligationis;  /* US Holy Day of Obligation */
+} SanctoraleDatum;
+
+
+/* ==================================================
+ * Sanctorale - Lookup Functions
+ * ================================================== */
+
+/* Get sanctorale entries for a given date */
+constans SanctoraleDatum*
+sanctorale_obtinere(
+    s32  mensis,
+    s32  dies,
+    s32* numerus_celebrationum);
+
+/* Get number of entries in sanctorale */
+s32
+sanctorale_numerus(vacuum);
+
+
+/* ==================================================
  * Constantae Sanctorale - Dies Fixi Principales
  * ================================================== */
 
