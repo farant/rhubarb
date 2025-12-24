@@ -276,11 +276,24 @@
 #define CM					900
 #define CMLXXIX		  979
 #define M						1000
-#define MCMX 			  1900
+#define MDCCLXXVI		1776
+#define MCM					1900
+#define MCMX 			  1910
+#define MCMXCIX			1999
 #define MM					2000
+#define MMIV				2004
+#define MMXX				2020
+#define MMXXI				2021
+#define MMXXII			2022
+#define MMXXIII			2023
+#define MMXXIV			2024
+#define MMXXV				2025
+#define MMC					2100
 #define MMM					3000
 #define MMMM				4000
 #define MMMMXCVI		4096
+#define CCCLXV			365
+#define CCCLXVI			366
 
 #define imprimere 	printf
 #define liberare 		free

@@ -57,6 +57,7 @@ declare -a SOURCE_FILES=(
     "lib/delineare.c"
     "lib/fenestra_textus.c"
     "lib/tempus.c"
+    "lib/fasti.c"
     "lib/layout.c"
     "lib/registrum_commandi.c"
     "lib/registrum_widget.c"
@@ -86,6 +87,7 @@ declare -a SOURCE_FILES=(
     "lib/utf8.c"
     "lib/fons.c"
     "lib/fons_visus.c"
+    "lib/calendarium_liturgicum.c"
 )
 
 # Objective-C source (compiled separately)
