@@ -178,9 +178,6 @@ _reddere_details(
     i32 pixel_y;
     i32 char_width;
     i32 char_height;
-    i32 char_width_large;
-    i32 char_height_large;
-    i32 scala_large;
     i32 color_text;
     i32 color_feast;
     i32 color_lectionary;
@@ -188,12 +185,9 @@ _reddere_details(
     i32 offset_x;
     i32 offset_y;
 
-    /* Scala normalis et magna (2x) */
-    scala_large = scala * II;
+    /* Dimensiones characterum */
     char_width = VI * scala;
     char_height = VIII * scala;
-    char_width_large = VI * scala_large;
-    char_height_large = VIII * scala_large;
 
     /* Offset pro textu (25 pixels dextrorsum et deorsum) */
     offset_x = x * char_width + XXV;
@@ -217,62 +211,67 @@ _reddere_details(
 
     linea_pixel = offset_y;
 
-    /* Linea 1: Data completa Anglice (2x, white) */
-    /* e.g. "Wednesday, December 25th 2025" */
+    /* Linea 1: Data completa Anglice cum hebdomada (1x, white) */
+    /* e.g. "Wednesday - December 25th, 2025 AD (Week 52)" */
     {
         ChordaAedificator* aed;
         chorda chorda_date;
+        s32 hebdomada;
 
         aed = chorda_aedificator_creare(piscina_temp, CXXVIII);
         si (aed != NIHIL) {
             fasti_scribere_diem(aed, dies_sel, FASTI_FORMA_ANGLICA_LONGA);
+
+            /* Addere hebdomadam anni */
+            hebdomada = fasti_hebdomada_anni(dies_sel);
+            longitudo = snprintf(buffer, C, " (Week %d)", hebdomada);
+            chorda_aedificator_appendere_literis(aed, buffer);
+
             chorda_date = chorda_aedificator_spectare(aed);
 
             pixel_y = linea_pixel;
             per (col = ZEPHYRUM; col < (i32)chorda_date.mensura && col < latitudo; col++) {
-                pixel_x = offset_x + col * char_width_large;
+                pixel_x = offset_x + col * char_width;
                 tabula_pixelorum_pingere_characterem_scalatum(
                     tabula, pixel_x, pixel_y,
-                    (character)chorda_date.datum[col], color_text, scala_large
+                    (character)chorda_date.datum[col], color_text, scala
                 );
             }
         }
-    }
-    linea_pixel += char_height_large;
-
-    /* Linea 3: Hebdomada anni (Week N) - white */
-    {
-        s32 hebdomada = fasti_hebdomada_anni(dies_sel);
-        longitudo = snprintf(buffer, C, "(Week %d)", hebdomada);
-
-        pixel_y = linea_pixel;
-        per (col = ZEPHYRUM; col < (i32)longitudo && col < latitudo; col++) {
-            pixel_x = offset_x + col * char_width;
-            tabula_pixelorum_pingere_characterem_scalatum(
-                tabula, pixel_x, pixel_y,
-                buffer[col], color_text, scala
-            );
-        }
         linea_pixel += char_height;
-        linea_pixel += char_height / II;  /* Extra spatium post hebdomadam */
+        linea_pixel += char_height / II;  /* Extra spatium */
     }
 
     si (info != NIHIL) {
-        /* Obtinere colorem liturgicum pro tempus */
-        color_tempus = _color_liturgicus_ad_pixelum(info->color_diei);
+        /* Obtinere colorem liturgicum - eodem modo ac grilla */
+        ColorLiturgicus lit_color_temp;
+        lit_color_temp = calendarium_color_temporis(visus->cal, dies_sel);
+        color_tempus = _color_liturgicus_ad_pixelum(lit_color_temp);
 
-        /* Linea 4: Tempus liturgicum - liturgical color */
+        /* Linea 4: Tempus liturgicum (Anglice) - liturgical color */
         {
-            chorda nomen_temp = calendarium_nomen_temporis(
-                info->tempus_info.tempus, FALSUM, piscina_temp);
+            constans character* nomen_anglicum;
+            i32 nomen_len;
 
-            si (nomen_temp.mensura > ZEPHYRUM && nomen_temp.datum != NIHIL) {
+            commutatio (info->tempus_info.tempus) {
+                casus TEMPUS_ADVENTUS:      nomen_anglicum = "Advent"; frange;
+                casus TEMPUS_NATIVITATIS:   nomen_anglicum = "Christmas"; frange;
+                casus TEMPUS_PER_ANNUM_I:   nomen_anglicum = "Ordinary Time"; frange;
+                casus TEMPUS_QUADRAGESIMAE: nomen_anglicum = "Lent"; frange;
+                casus TEMPUS_TRIDUUM_SACRUM: nomen_anglicum = "Sacred Triduum"; frange;
+                casus TEMPUS_PASCHALE:      nomen_anglicum = "Easter"; frange;
+                casus TEMPUS_PER_ANNUM_II:  nomen_anglicum = "Ordinary Time"; frange;
+                ordinarius:                 nomen_anglicum = ""; frange;
+            }
+
+            nomen_len = (i32)strlen(nomen_anglicum);
+            si (nomen_len > ZEPHYRUM) {
                 pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < nomen_temp.mensura && col < latitudo; col++) {
+                per (col = ZEPHYRUM; col < nomen_len && col < latitudo; col++) {
                     pixel_x = offset_x + col * char_width;
                     tabula_pixelorum_pingere_characterem_scalatum(
                         tabula, pixel_x, pixel_y,
-                        (character)nomen_temp.datum[col], color_tempus, scala
+                        nomen_anglicum[col], color_tempus, scala
                     );
                 }
                 linea_pixel += char_height;
@@ -304,99 +303,18 @@ _reddere_details(
             linea_pixel += char_height;
         }
 
-        /* Linea speciale: Si est Pascha, monstrare "Easter" - yellow #11 */
+        /* Linea speciale: Festivitas mobilis (si adest) - yellow #11 */
         {
-            Dies pascha = fasti_computus(visus->annus_visus);
-            si (dies_sel.mensis == pascha.mensis && dies_sel.dies == pascha.dies) {
-                constans character* easter_text = "Easter";
-                i32 easter_len = VI;  /* "Easter" = 6 chars */
+            constans character* nomen_fest = fasti_nomen_festivitatis(dies_sel);
+            si (nomen_fest != NIHIL) {
+                i32 fest_len = (i32)strlen(nomen_fest);
 
                 pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < easter_len; col++) {
+                per (col = ZEPHYRUM; col < fest_len; col++) {
                     pixel_x = offset_x + col * char_width;
                     tabula_pixelorum_pingere_characterem_scalatum(
                         tabula, pixel_x, pixel_y,
-                        easter_text[col], color_feast, scala
-                    );
-                }
-                linea_pixel += char_height;
-            }
-        }
-
-        /* Linea speciale: Si est Feria VI, monstrare "Good Friday" - yellow #11 */
-        {
-            Dies pascha = fasti_computus(visus->annus_visus);
-            Dies feria_vi = fasti_addere_dies(pascha, -II);
-            si (dies_sel.mensis == feria_vi.mensis && dies_sel.dies == feria_vi.dies) {
-                constans character* friday_text = "Good Friday";
-                i32 friday_len = XI;  /* "Good Friday" = 11 chars */
-
-                pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < friday_len; col++) {
-                    pixel_x = offset_x + col * char_width;
-                    tabula_pixelorum_pingere_characterem_scalatum(
-                        tabula, pixel_x, pixel_y,
-                        friday_text[col], color_feast, scala
-                    );
-                }
-                linea_pixel += char_height;
-            }
-        }
-
-        /* Linea speciale: Si est Feria IV Cinerum, monstrare "Ash Wednesday" - yellow #11 */
-        {
-            Dies pascha = fasti_computus(visus->annus_visus);
-            Dies feria_iv_cinerum = fasti_addere_dies(pascha, -XLVI);
-            si (dies_sel.mensis == feria_iv_cinerum.mensis && dies_sel.dies == feria_iv_cinerum.dies) {
-                constans character* ash_text = "Ash Wednesday";
-                i32 ash_len = XIII;  /* "Ash Wednesday" = 13 chars */
-
-                pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < ash_len; col++) {
-                    pixel_x = offset_x + col * char_width;
-                    tabula_pixelorum_pingere_characterem_scalatum(
-                        tabula, pixel_x, pixel_y,
-                        ash_text[col], color_feast, scala
-                    );
-                }
-                linea_pixel += char_height;
-            }
-        }
-
-        /* Linea speciale: Si est Pentecoste, monstrare "Pentecost" - yellow #11 */
-        {
-            Dies pascha = fasti_computus(visus->annus_visus);
-            Dies pentecoste = fasti_addere_dies(pascha, XLIX);
-            si (dies_sel.mensis == pentecoste.mensis && dies_sel.dies == pentecoste.dies) {
-                constans character* pent_text = "Pentecost";
-                i32 pent_len = IX;  /* "Pentecost" = 9 chars */
-
-                pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < pent_len; col++) {
-                    pixel_x = offset_x + col * char_width;
-                    tabula_pixelorum_pingere_characterem_scalatum(
-                        tabula, pixel_x, pixel_y,
-                        pent_text[col], color_feast, scala
-                    );
-                }
-                linea_pixel += char_height;
-            }
-        }
-
-        /* Linea speciale: Si est Dominica Palmarum, monstrare "Palm Sunday" - yellow #11 */
-        {
-            Dies pascha = fasti_computus(visus->annus_visus);
-            Dies dominica_palmarum = fasti_addere_dies(pascha, -VII);
-            si (dies_sel.mensis == dominica_palmarum.mensis && dies_sel.dies == dominica_palmarum.dies) {
-                constans character* palm_text = "Palm Sunday";
-                i32 palm_len = XI;  /* "Palm Sunday" = 11 chars */
-
-                pixel_y = linea_pixel;
-                per (col = ZEPHYRUM; col < palm_len; col++) {
-                    pixel_x = offset_x + col * char_width;
-                    tabula_pixelorum_pingere_characterem_scalatum(
-                        tabula, pixel_x, pixel_y,
-                        palm_text[col], color_feast, scala
+                        nomen_fest[col], color_feast, scala
                     );
                 }
                 linea_pixel += char_height;
@@ -664,14 +582,14 @@ _reddere_grid(
         }
     }
 
-    /* Obtinere diem hodiernam et Pascha pro comparatione */
+    /* Obtinere diem hodiernam et festivitates pro comparatione */
     {
         Dies hodie = fasti_dies_hodie();
         Dies pascha = fasti_computus(visus->annus_visus);
-        Dies feria_vi = fasti_addere_dies(pascha, -II);  /* Good Friday = Pascha - 2 */
-        Dies feria_iv_cinerum = fasti_addere_dies(pascha, -XLVI);  /* Ash Wednesday = Pascha - 46 */
-        Dies pentecoste = fasti_addere_dies(pascha, XLIX);  /* Pentecost = Pascha + 49 */
-        Dies dominica_palmarum = fasti_addere_dies(pascha, -VII);  /* Palm Sunday = Pascha - 7 */
+        Dies feria_vi = fasti_feria_vi(visus->annus_visus);
+        Dies feria_iv_cinerum = fasti_feria_iv_cinerum(visus->annus_visus);
+        Dies pentecoste = fasti_pentecoste(visus->annus_visus);
+        Dies dominica_palmarum = fasti_dominica_palmarum(visus->annus_visus);
 
         /* Reddere dies mensis */
         per (dies = I; dies <= visus->numerus_dierum; dies++) {

@@ -759,19 +759,20 @@ fasti_scribere_diem(
         }
 
         casus FASTI_FORMA_ANGLICA_LONGA: {
-            /* Thursday, December 25th 2025 */
+            /* Wednesday - December 24th, 2025 AD */
             s32 dh = fasti_dies_hebdomadis(dies);
             chorda_aedificator_appendere_literis(aedificator,
                 NOMINA_DIERUM_ANGLICA[dh]);
-            chorda_aedificator_appendere_literis(aedificator, ", ");
+            chorda_aedificator_appendere_literis(aedificator, " - ");
             chorda_aedificator_appendere_literis(aedificator,
                 NOMINA_MENSIUM_ANGLICA[dies.mensis - I]);
             chorda_aedificator_appendere_character(aedificator, ' ');
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             chorda_aedificator_appendere_literis(aedificator,
                 fasti_suffixum_ordinale(dies.dies));
-            chorda_aedificator_appendere_character(aedificator, ' ');
+            chorda_aedificator_appendere_literis(aedificator, ", ");
             chorda_aedificator_appendere_s32(aedificator, dies.annus);
+            chorda_aedificator_appendere_literis(aedificator, " AD");
             frange;
         }
 
@@ -1008,4 +1009,74 @@ fasti_computus(
     dies = ((h + l - VII * m + CXIV) % XXXI) + I;
 
     redde fasti_dies(annus, mensis, dies);
+}
+
+
+/* ==================================================
+ * Festivitates Mobiles
+ * ================================================== */
+
+Dies
+fasti_feria_vi(
+    s32 annus)
+{
+    redde fasti_addere_dies(fasti_computus(annus), -II);
+}
+
+Dies
+fasti_feria_iv_cinerum(
+    s32 annus)
+{
+    redde fasti_addere_dies(fasti_computus(annus), -XLVI);
+}
+
+Dies
+fasti_dominica_palmarum(
+    s32 annus)
+{
+    redde fasti_addere_dies(fasti_computus(annus), -VII);
+}
+
+Dies
+fasti_pentecoste(
+    s32 annus)
+{
+    redde fasti_addere_dies(fasti_computus(annus), XLIX);
+}
+
+constans character*
+fasti_nomen_festivitatis(
+    Dies dies)
+{
+    Dies pascha;
+
+    pascha = fasti_computus(dies.annus);
+
+    /* Verificare festivitates in ordine praecedentiae */
+    si (fasti_aequalis(dies, pascha))
+    {
+        redde "Easter";
+    }
+
+    si (fasti_aequalis(dies, fasti_pentecoste(dies.annus)))
+    {
+        redde "Pentecost";
+    }
+
+    si (fasti_aequalis(dies, fasti_feria_vi(dies.annus)))
+    {
+        redde "Good Friday";
+    }
+
+    si (fasti_aequalis(dies, fasti_feria_iv_cinerum(dies.annus)))
+    {
+        redde "Ash Wednesday";
+    }
+
+    si (fasti_aequalis(dies, fasti_dominica_palmarum(dies.annus)))
+    {
+        redde "Palm Sunday";
+    }
+
+    redde NIHIL;
 }

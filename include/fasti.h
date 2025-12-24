@@ -397,4 +397,42 @@ fasti_computus(
     s32 annus);
 
 
+/* ==================================================
+ * Festivitates Mobiles (Moveable Feasts)
+ *
+ * Based on Computus Paschalis. All dates computed
+ * as offsets from Easter Sunday.
+ * ================================================== */
+
+/* Feria VI in Passione Domini (Good Friday) = Pascha - 2 */
+Dies
+fasti_feria_vi(
+    s32 annus);
+
+/* Feria IV Cinerum (Ash Wednesday) = Pascha - 46 */
+Dies
+fasti_feria_iv_cinerum(
+    s32 annus);
+
+/* Dominica in Palmis (Palm Sunday) = Pascha - 7 */
+Dies
+fasti_dominica_palmarum(
+    s32 annus);
+
+/* Pentecoste (Pentecost) = Pascha + 49 */
+Dies
+fasti_pentecoste(
+    s32 annus);
+
+/* Nomen festivitatis pro die (English, for display)
+ *
+ * dies: dies quaerendus
+ *
+ * Redde: nomen festivitatis vel NIHIL si non est festivitas
+ */
+constans character*
+fasti_nomen_festivitatis(
+    Dies dies);
+
+
 #endif /* FASTI_H */

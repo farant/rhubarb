@@ -3,6 +3,8 @@
 #include "thema.h"
 #include "delineare.h"
 #include "tempus.h"
+#include "fasti.h"
+#include "chorda_aedificator.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -973,6 +975,56 @@ _reddere_tabulam_schirmarum(
             color_ad_pixelum(color_text));
 
         tab_x += tab_width + margin_right;
+    }
+
+    /* Pingere festivitatem et datum hodiernum ad dextram */
+    {
+        Piscina* piscina_temp;
+        ChordaAedificator* aed;
+        Dies hodie;
+        chorda chorda_display;
+        constans character* nomen_fest;
+        i32 display_x;
+        i32 display_y;
+        i32 col;
+        i32 margin_dextra;
+
+        piscina_temp = piscina_generare_dynamicum("tab_date", M);
+        si (piscina_temp != NIHIL) {
+            hodie = fasti_dies_hodie();
+            aed = chorda_aedificator_creare(piscina_temp, CCLVI);
+
+            si (aed != NIHIL) {
+                /* Verificare si est festivitas hodie */
+                nomen_fest = fasti_nomen_festivitatis(hodie);
+
+                si (nomen_fest != NIHIL) {
+                    /* Festivitas - Date */
+                    chorda_aedificator_appendere_literis(aed, nomen_fest);
+                    chorda_aedificator_appendere_literis(aed, " - ");
+                }
+
+                /* Addere datum */
+                fasti_scribere_diem(aed, hodie, FASTI_FORMA_ANGLICA_LONGA);
+                chorda_display = chorda_aedificator_spectare(aed);
+
+                margin_dextra = VIII;
+                display_x = tabula->latitudo - (i32)chorda_display.mensura * character_latitudo - margin_dextra;
+                display_y = tab_y + I;
+
+                per (col = ZEPHYRUM; col < (i32)chorda_display.mensura; col++) {
+                    tabula_pixelorum_pingere_characterem(
+                        tabula,
+                        display_x + col * character_latitudo,
+                        display_y,
+                        (character)chorda_display.datum[col],
+                        color_ad_pixelum(color_text_normal)
+                    );
+                }
+            }
+
+            piscina_destruere(piscina_temp);
+        }
     }
 }
 
