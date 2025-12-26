@@ -1,0 +1,15 @@
+<result>
+Title = "An Essay on Mediæval Economic Teaching"
+Author = "George O'Brien"
+Year = 1920
+
+Tags = ["non-fiction", "catholic"]
+
+Summary = """
+This scholarly work by Irish economist and historian George O'Brien examines the economic teachings and principles developed during the medieval period, particularly as understood through Catholic scholastic thought. O'Brien was a prominent Irish academic who wrote extensively on Irish economic history. The essay explores medieval perspectives on property, trade, usury, and just price theory - concepts that were heavily influenced by theologians like Thomas Aquinas and the broader scholastic tradition. It represents an important contribution to understanding pre-modern economic thought from a Catholic intellectual perspective.
+"""
+
+Notes = """
+George O'Brien (1892-1973) was an Irish economist and professor at University College Dublin. This work was published in 1920 as an original scholarly essay, not a translation or reprint. The dedication to Rev. Michael Cronin, a Catholic priest and academic, and the subject matter focusing on scholastic economic thought indicate the Catholic intellectual context of the work.
+"""
+</result>

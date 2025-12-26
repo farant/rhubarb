@@ -1,0 +1,15 @@
+<result>
+Title = "L'Assassinat du Pont-Rouge"
+Author = "Charles Barbara"
+Year = 1855
+
+Tags = ["fiction"]
+
+Summary = """
+L'Assassinat du Pont-Rouge is a French novel by Charles Barbara, a writer associated with the Bohemian literary circles of mid-19th century Paris. Barbara was a friend of Charles Baudelaire and part of the same artistic milieu. The novel is a psychological thriller or roman noir set in Paris, involving murder and intrigue. The excerpt introduces two young friends, Maximilien (Max) and Rodolphe, contrasting personalities discussing literature and the difficulties of artistic life. Barbara's work was praised for its atmospheric quality and psychological depth, though he remained a relatively obscure figure compared to his more famous contemporaries.
+"""
+
+Notes = """
+The novel was first published in 1855. The 1859 date shown in the Gutenberg text refers to this particular Bibliothèque des Chemins de Fer edition published by Hachette. I have used 1855 as it represents the original publication date of the work.
+"""
+</result>

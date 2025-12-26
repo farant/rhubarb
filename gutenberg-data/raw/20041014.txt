@@ -1,0 +1,15 @@
+<result>
+Title = "The Monkey's Paw"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction", "horror", "supernatural"]
+
+Summary = """
+"The Monkey's Paw" is one of the most famous horror short stories in English literature. It tells the tale of the White family who come into possession of a mummified monkey's paw that has been enchanted by an Indian fakir to grant three wishes to its owner. The story explores the theme of "be careful what you wish for" as each wish brings unforeseen and tragic consequences. The tale is particularly noted for its masterful use of suspense and its chilling, ambiguous ending. W. W. Jacobs was primarily known as a humorist, making this dark tale something of a departure, though it became his most enduring work.
+"""
+
+Notes = """
+This story was first published in Harper's Monthly Magazine in September 1902, then collected in "The Lady of the Barge and Other Stories" (also 1902). The Gutenberg text appears to be from that collection. I've chosen 1902 as this is the year of first publication.
+"""
+</result>

@@ -1,0 +1,19 @@
+<result>
+Title = "Kevät ja Takatalvi"
+Author = "Juhani Aho"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Kevät ja Takatalvi (Spring and Late Winter) is considered Juhani Aho's masterwork. It is a large historical novel set in 19th century Finland, dealing with themes of revivalism and pietism during a period of national awakening. Aho had planned this work since the 1880s but only completed it in 1906, timing the publication to coincide with the 100th anniversary celebration of Johan Vilhelm Snellman, a key figure in Finnish nationalism. The novel is the second of Aho's major historical works, following Panu (1897). It depicts Finnish rural life and spiritual movements with Aho's characteristic lyrical prose style.
+"""
+
+Notes = """
+The Project Gutenberg text shows "WSOY, Porvoo, 1920" which refers to a later edition, not the original publication. The first edition was published in 1906. Juhani Aho (1861-1921) was a pioneer of Finnish-language literature and one of the most significant Finnish authors of his era.
+"""
+</result>
+
+Sources:
+- [Kansalliskirjasto Digital Archive - 1906 edition](https://digi.kansalliskirjasto.fi/teos/binding/1906853)
+- [Juhani Ahon Seura ry](http://www.juhaniahonseura.fi/aineistoja/lukupiirit/kevatjatakatalvi.php)

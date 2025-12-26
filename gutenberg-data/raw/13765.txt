@@ -1,0 +1,15 @@
+<result>
+Title = "Le Mystère de la Chambre Jaune"
+Author = "Gaston Leroux"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Le Mystère de la Chambre Jaune is a classic locked-room mystery novel, considered one of the finest examples of the genre. The story follows young journalist Joseph Rouletabille as he investigates an attempted murder that occurred in a hermetically sealed yellow room at the Château du Glandier. The victim, Mlle Stangerson, is found gravely wounded inside a room that was locked from the inside, with barred windows - yet no trace of an assailant can be found. Rouletabille must use pure logic to solve what appears to be an impossible crime, competing against the famous detective Frédéric Larsan. The novel established many conventions of the detective fiction genre and introduced the concept of "fair play" mystery writing where readers have access to all clues needed to solve the case.
+"""
+
+Notes = """
+The novel was first serialized in the French newspaper L'Illustration in 1907, then published as a book the same year. Gaston Leroux is better known today for Le Fantôme de l'Opéra (1910), but this locked-room mystery was highly influential on detective fiction writers including John Dickson Carr.
+"""
+</result>

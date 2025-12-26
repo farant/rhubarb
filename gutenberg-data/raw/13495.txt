@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XVII, No. 470"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap periodicals aimed at a working and middle-class readership, featuring miscellaneous content including articles on history, architecture, literature, and general knowledge. This particular issue (Vol. XVII, No. 470) from January 8, 1831 includes an illustrated article about Chichester Cross, a medieval market cross in the city of Chichester, England, built by Bishop Edward Story in the late 15th century.
+"""
+
+Notes = """
+The year 1831 is taken directly from the publication date shown in the issue header. This is a periodical rather than a standalone book, so the publication date of this specific issue is the most appropriate year to use.
+"""
+</result>

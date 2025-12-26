@@ -1,0 +1,15 @@
+<result>
+Title = "A Love Episode"
+Author = "Émile Zola"
+Year = 1878
+
+Tags = ["fiction"]
+
+Summary = """
+"A Love Episode" (original French title: "Une Page d'amour") is the eighth novel in Émile Zola's twenty-volume Rougon-Macquart series, which chronicles the lives of a family under the Second French Empire. The novel tells the story of Hélène Grandjean, a young widow living quietly in Paris with her sickly daughter Jeanne. When a doctor, Henri Deberle, saves Jeanne's life during a sudden illness, Hélène finds herself drawn into a passionate affair with him. The novel explores themes of forbidden love, maternal devotion, guilt, and the conflict between passion and duty. It is notably more intimate and psychological compared to Zola's other naturalist works, focusing on the interior emotional life of its protagonist against the backdrop of Paris, which Zola describes in five famous panoramic passages corresponding to different seasons and moods.
+"""
+
+Notes = """
+The original French novel "Une Page d'amour" was published in 1878. This English translation appears in a 1905 illustrated edition, but the year reflects the original publication date as this is a translation of Zola's work without substantial commentary that would warrant a different date.
+"""
+</result>

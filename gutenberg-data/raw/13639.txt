@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 1"
+Author = "Various"
+Year = 1841
+
+Tags = ["non-fiction", "historical-document", "periodical", "satire"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841. It became one of the most influential satirical publications in history, running until 1992 (with a brief revival 1996-2002). The magazine was named after the puppet character Mr. Punch from the traditional Punch and Judy show, using him as a metaphor for social and political commentary. This first volume from July 1841 establishes the publication's mission: to use humor and the spirit of the puppet show tradition to critique British society, politics, and pretension. The magazine became famous for coining the term "cartoon" in its modern sense and for its sharp wit directed at Victorian institutions.
+"""
+
+Notes = """
+Year 1841 is the founding year of the publication. This specific issue is from July 17, 1841, making it among the earliest issues. Punch was founded by Henry Mayhew and engraver Ebenezer Landells, with Mark Lemon as its first editor.
+"""
+</result>

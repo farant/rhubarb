@@ -1,0 +1,15 @@
+<result>
+Title = "The Underground City"
+Author = "Jules Verne"
+Year = 1877
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Underground City (Les Indes noires) is a Jules Verne novel set in Scotland, in an exhausted coal mine called Dochart Pit near Aberfoyle. The story follows engineer James Starr who receives a mysterious letter from an old mine foreman, Simon Ford, claiming to have discovered something important in the abandoned mine. What unfolds is the discovery of a vast underground world with remaining coal deposits and a subterranean lake. The novel incorporates elements of mystery, including a strange hermit named Silfax who haunts the caverns, and his granddaughter Nell who has lived her entire life underground. The work combines Verne's characteristic scientific curiosity with Scottish folklore and legend.
+"""
+
+Notes = """
+First published in French as "Les Indes noires" (literally "The Black Indies") in 1877. The English title varies between "The Underground City," "The Black Indies," and "The Child of the Cavern." The 1877 date represents the original French publication.
+"""
+</result>

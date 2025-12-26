@@ -1,0 +1,15 @@
+<result>
+Title = "Oberheim (Voices): A Chronicle of War"
+Author = "Christopher Leadem"
+Year = 2002
+
+Tags = ["fiction", "science-fiction"]
+
+Summary = """
+A science fiction novel set in the year 2410, described as "a chronicle of war." The story appears to follow a character named Eric in the Andersen Sector, opening with an atmospheric scene on an alien world with transplanted Earth birds and stark landscapes. The narrative structure is divided into "Acts" suggesting a dramatic or episodic format. At approximately 90,000 words, this is a full-length novel exploring themes of conflict in a future interstellar setting.
+"""
+
+Notes = """
+This is an original work published directly to Project Gutenberg in 2002 by Christopher Leadem. The copyright notice confirms 2002 as the publication year. This appears to be a self-published or independently released science fiction novel rather than a traditionally published work with wide distribution.
+"""
+</result>

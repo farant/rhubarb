@@ -1,0 +1,15 @@
+<result>
+Title = "Elizabeth's Campaign"
+Author = "Mrs. Humphry Ward"
+Year = 1918
+
+Tags = ["fiction"]
+
+Summary = """
+Elizabeth's Campaign is a World War I novel by Mary Augusta Ward (Mrs. Humphry Ward), a prominent British novelist of the late Victorian and Edwardian eras. The story is set during a critical period of the war and deals with themes of patriotism, duty, and the home front experience in England. Ward was known for her socially conscious fiction and was one of the most successful novelists of her time. The dedication to "T. S. A." who died at Passchendaele in October 1917 reflects the personal toll the war took on the author's circle.
+"""
+
+Notes = """
+The foreword explicitly states the book was finished in April 1918 and the publication date shown is 1918. Mrs. Humphry Ward was the pen name of Mary Augusta Ward (1851-1920).
+"""
+</result>

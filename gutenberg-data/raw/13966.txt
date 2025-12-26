@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 152, January 17, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "satire", "periodical"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, witty commentary on politics and society, and coined the term "cartoon" in its modern sense. This issue from January 1917 contains topical humor about World War I, including jokes about King Constantine I of Greece (nicknamed "Tino"), Kaiser Wilhelm II, the British naval blockade of Germany, and the coronation of Emperor Charles I of Austria-Hungary. The magazine was influential in British culture and known for its sharp political commentary.
+"""
+
+Notes = """
+This is a periodical issue, so the year reflects the actual publication date. Punch was not a Catholic publication but rather a mainstream British satirical magazine. The references to "Tino" concern King Constantine I of Greece, whose neutrality and perceived pro-German sympathies were controversial among the Allies during WWI.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Un Antiguo Rencor"
+Author = "Georges Ohnet"
+Year = 1895
+
+Tags = ["fiction"]
+
+Summary = """
+"Un Antiguo Rencor" (An Old Grudge) is a novel by French author Georges Ohnet (1848-1918), here presented in Spanish translation by F. Sarmiento. Ohnet was an extremely popular French novelist and playwright during the late 19th century, known for his dramatic stories of love, revenge, and social conflict among the bourgeoisie and aristocracy. His works were widely translated and enjoyed enormous commercial success, though literary critics often dismissed them as melodramatic. This novel follows themes typical of Ohnet's work - the chapter titles suggest a story of love turned to hatred, conflict, betrayal by allies, and moral struggle between goodness and malice.
+"""
+
+Notes = """
+The year 1895 is taken from this Spanish edition published by Librería de la Vda de Ch. Bouret in Paris and Mexico. The original French publication may have been slightly earlier, but this edition represents when this translation became available to Spanish-speaking readers.
+"""
+</result>

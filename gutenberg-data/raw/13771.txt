@@ -1,0 +1,15 @@
+<result>
+Title = "The Pickwick Papers"
+Author = "Charles Dickens"
+Year = 1837
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Posthumous Papers of the Pickwick Club (commonly known as The Pickwick Papers) is Charles Dickens's first novel, originally published in monthly serialized installments from March 1836 to November 1837. The novel follows Samuel Pickwick, founder of the Pickwick Club, and his companions as they travel through England, encountering various comic adventures and eccentric characters. The work launched Dickens to literary fame and established many of his characteristic themes: social satire, memorable character portraits, and a blend of humor with pathos. This particular edition is a French translation by P. Grolier under the direction of P. Lorain, published by Hachette in 1893.
+"""
+
+Notes = """
+Year 1837 chosen as the completion date of the original English serialization, which is the standard publication year cited for the work. The French translation date (1893) is noted but not used as the primary year since the work itself is Dickens's original 1837 novel.
+"""
+</result>

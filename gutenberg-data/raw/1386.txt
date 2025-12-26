@@ -1,0 +1,15 @@
+<result>
+Title = "Lady Baltimore"
+Author = "Owen Wister"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Lady Baltimore is a novel by Owen Wister set in Charleston, South Carolina. The story follows a Northern narrator who visits the fictional town of Kings Port (based on Charleston) and becomes entangled in the social intricacies of old Southern aristocratic society. The title comes from the Lady Baltimore cake, a confection Wister encountered at a Charleston tea room and became so enamored with that he named his novel after it. The book explores themes of North-South reconciliation in post-Civil War America, class distinctions, and the preservation of genteel Southern culture. It features a romantic subplot involving a young Southern gentleman named John Mayrant and questions of honor and social obligation. The novel was quite popular in its time and helped popularize the Lady Baltimore cake nationally.
+"""
+
+Notes = """
+First published by Macmillan in April 1906. Owen Wister (1860-1938) is better known for The Virginian (1902), considered one of the first Western novels. Wister was a Philadelphia-born, Harvard-educated writer who became friends with Theodore Roosevelt. The novel is dedicated to S. Weir Mitchell, the famous Philadelphia physician and author who was a longtime friend of the Wister family.
+"""
+</result>

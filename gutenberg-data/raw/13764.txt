@@ -1,0 +1,15 @@
+<result>
+Title = "The Art of Letters"
+Author = "Robert Lynd"
+Year = 1920
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A collection of literary essays by Irish essayist and journalist Robert Lynd. The book contains critical appreciations of various English writers including Samuel Pepys, John Bunyan, Thomas Campion, and John Donne. Lynd was known for his elegant, accessible prose style and his essays appeared in major British periodicals of the early 20th century. This work represents the tradition of the familiar essay applied to literary criticism.
+"""
+
+Notes = """
+The dedication is dated 30th August 1920, and the book was published in 1921. I chose 1920 as this appears to be when the work was completed based on the author's dating, though 1921 (first publication) would also be valid.
+"""
+</result>

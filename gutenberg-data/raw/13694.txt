@@ -1,0 +1,15 @@
+<result>
+Title = "Mince Pie"
+Author = "Christopher Morley"
+Year = 1919
+
+Tags = ["non-fiction", "essays", "humor", "appropriate-for-children"]
+
+Summary = """
+Mince Pie is a collection of humorous essays and sketches by Christopher Morley, one of America's most beloved essayists of the early 20th century. The book contains light, whimsical pieces originally published in various periodicals including the Philadelphia Evening Public Ledger, The Bookman, and Life magazine. Morley was known for his genial wit and love of books and literary life. The collection is meant as bedside reading - pleasant, undemanding entertainment. Morley went on to become a founding editor of the Saturday Review of Literature and author of numerous novels and essay collections.
+"""
+
+Notes = """
+First published in 1919 by George H. Doran Company. Christopher Morley (1890-1957) was a prolific American journalist, novelist, essayist, and poet. This was one of his early essay collections that helped establish his reputation as a humorist.
+"""
+</result>

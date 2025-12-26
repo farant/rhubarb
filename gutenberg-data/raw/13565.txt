@@ -1,0 +1,21 @@
+The text you've provided is in Finnish - it's a scholarly work about **Jaakko Juteini** (1781-1855), a Finnish writer and poet who was an important early figure in Finnish-language literature.
+
+The title is "Jaakko Juteini ja hänen kirjallinen toimintansa" (Jaakko Juteini and His Literary Activity), written by **Kuuno A. Talvioja** and published in 1915 in Heinola, Finland.
+
+This is a literary biography/study about Juteini, not Juteini's own work. The table of contents shows it covers Juteini's life, his writings in Finnish and Swedish, his views on education, his grammar work, children's books, and other writings.
+
+<result>
+Title = "Jaakko Juteini ja hänen kirjallinen toimintansa"
+Author = "Kuuno A. Talvioja"
+Year = 1915
+
+Tags = ["non-fiction", "literary-criticism", "biography", "finnish-literature"]
+
+Summary = """
+A scholarly monograph examining the life and literary works of Jaakko Juteini (1781-1855), one of the pioneering figures in Finnish-language literature. The study covers Juteini's biography, his decision to write in Finnish for the common people, his works in Swedish for the educated classes, his views on education, his Finnish grammar, his collection of proverbs, his children's literature, and his later philosophical writings. Originally written as a laudatur thesis under Professor E.N. Setälä in 1887-1888.
+"""
+
+Notes = """
+This is a secondary source about Juteini, not Juteini's own writing. The publication date of 1915 is clearly stated on the title page (A.G. Wäänäsen Kirjapaino, Heinola, 1915). Juteini himself was an important figure in the Finnish national awakening, writing during the period when Finland was a Grand Duchy under Russia and Finnish-language literature was in its infancy.
+"""
+</result>

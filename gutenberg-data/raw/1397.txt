@@ -1,0 +1,15 @@
+<result>
+Title = "The Ruins, or, Meditation on the Revolutions of Empires: and The Law of Nature"
+Author = "Constantin François de Chassebœuf, Comte de Volney"
+Year = 1791
+
+Tags = ["non-fiction", "philosophy", "deism", "enlightenment"]
+
+Summary = """
+"Les Ruines, ou méditation sur les révolutions des empires" is a philosophical treatise by the French Enlightenment philosopher Volney. The work was inspired by his travels through Egypt and Syria (1783-1785), where he contemplated the ruins of ancient civilizations. Standing among the remnants of Palmyra, Volney meditates on the rise and fall of empires, attributing their decline to tyranny, religious superstition, and ignorance. The work is a classic expression of Enlightenment deism and rationalist critique of organized religion. It was highly influential in revolutionary France and among American freethinkers - Thomas Jefferson even began translating portions of it. "The Law of Nature" appended to this edition is a catechism-style exposition of Volney's natural morality philosophy.
+"""
+
+Notes = """
+The original French edition "Les Ruines" was published in 1791. This particular Gutenberg text is from an 1890 American edition by Twentieth Century Publishing Co., which includes additional material (Volney's Answer to Dr. Priestley, biographical notice by Count Daru, and notes on zodiacal signs). The 1791 date represents the original publication, which is most historically significant for placing the work in context of the French Revolution and Enlightenment thought.
+"""
+</result>

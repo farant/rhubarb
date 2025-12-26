@@ -1,0 +1,15 @@
+<result>
+Title = "Wolfville Nights"
+Author = "Alfred Henry Lewis"
+Year = 1902
+
+Tags = ["fiction"]
+
+Summary = """
+Wolfville Nights is the third book in Alfred Henry Lewis's popular "Wolfville" series of Western fiction. The series presents tales of the American Old West through the voice of an elderly cowboy narrator called "The Old Cattleman" who regales listeners with stories about the colorful characters of the fictional Arizona town of Wolfville. The stories feature cowboys, gunfighters, saloon life, and frontier justice, told in a distinctive dialect style that was popular in late 19th and early 20th century Western literature. Lewis was a journalist and author who wrote extensively about the American West and political subjects.
+"""
+
+Notes = """
+The title page clearly indicates 1902 as the publication year. This is the original publication date for this particular work in the Wolfville series.
+"""
+</result>

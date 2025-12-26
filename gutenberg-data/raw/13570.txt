@@ -1,0 +1,15 @@
+<result>
+Title = "Sketches of the Covenanters"
+Author = "J. C. McFeeters"
+Year = 1913
+
+Tags = ["non-fiction", "historical", "protestant", "religious"]
+
+Summary = """
+This work is a historical account of the Scottish Covenanters, the Presbyterian movement that arose in 16th and 17th century Scotland. The Covenanters were those who signed the National Covenant of 1638 and the Solemn League and Covenant of 1643, pledging to maintain Presbyterian church governance against attempts by the Stuart monarchs to impose episcopacy. The book provides biographical sketches and narratives of the persecutions, martyrdoms, and struggles of these dissenters, particularly during the "Killing Times" of the 1680s under Charles II and James VII. McFeeters was a minister in the Reformed Presbyterian Church (Covenanter tradition) in Philadelphia.
+"""
+
+Notes = """
+J. C. McFeeters (1856-1930) was a Reformed Presbyterian minister. This book was published around 1913. The Queensferry Paper quoted in the preface was a Covenanter manifesto from 1680. Note that while the Covenanters were deeply religious Christians, they were Presbyterian/Calvinist rather than Catholic, so the 'catholic' tag does not apply.
+"""
+</result>

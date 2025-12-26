@@ -1,0 +1,15 @@
+<result>
+Title = "Der Todesgruß der Legionen"
+Author = "Gregor Samarow (Oskar Meding)"
+Year = 1874
+
+Tags = ["fiction", "historical-novel"]
+
+Summary = """
+"Der Todesgruß der Legionen" (The Death Salute of the Legions) is a multi-volume German "Zeitroman" (novel of the times) about the Franco-Prussian War of 1870-71. Gregor Samarow was the pseudonym of Oskar Meding (1829-1903), a German diplomat and popular novelist who wrote numerous political and historical novels. The novel opens in Saint-Dizier, a small French town on the Marne with a history of martial valor dating back to the time of Francis I. Published in Berlin by Otto Janke, the work reflects the political turmoil and military conflict between France under Napoleon III and the German states, a defining event in European history that led to German unification.
+"""
+
+Notes = """
+The year 1874 is the original publication date as printed in the book itself. Meding used the pseudonym Gregor Samarow for his popular fiction, distinguishing it from his diplomatic career. The Franco-Prussian War (1870-71) was still fresh in memory when this novel appeared, making it very much a contemporary commentary on recent events.
+"""
+</result>

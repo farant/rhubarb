@@ -1,0 +1,15 @@
+<result>
+Title = "The Cruise of the Cachalot: Round the World After Sperm Whales"
+Author = "Frank T. Bullen"
+Year = 1898
+
+Tags = ["non-fiction", "adventure", "maritime"]
+
+Summary = """
+A first-hand account of life aboard a South Sea whaling vessel, written from the perspective of a common seaman rather than a ship's officer or scientist. Bullen served as first mate on whaling voyages and provides a vivid description of the methods, dangers, and daily experiences of sperm whale hunting. The book was notable for being one of the first accessible accounts of whaling life aimed at general readers, as opposed to the scientific treatises that preceded it. It became quite popular and helped establish Bullen's literary career as a writer of sea stories.
+"""
+
+Notes = """
+Frank T. Bullen (1857-1915) published this work in 1898. It was his first and most successful book, drawing on his experiences at sea which began when he ran away to become a sailor at age twelve. The F.R.G.S. after his name indicates Fellow of the Royal Geographical Society, an honor he received later in life. The book was widely praised, including by Rudyard Kipling, and remained popular for decades.
+"""
+</result>

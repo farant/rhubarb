@@ -1,0 +1,15 @@
+<result>
+Title = "The Talisman"
+Author = "Sir Walter Scott"
+Year = 1825
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Talisman is a historical novel set during the Third Crusade (1189-1192), featuring Richard the Lionheart of England and the Kurdish Muslim leader Saladin. The story follows a Scottish knight, Sir Kenneth, who becomes entangled in the political intrigues among the Crusader leaders while a mysterious physician with connections to Saladin plays a pivotal role. The novel explores themes of chivalry, honor, religious conflict, and the contrast between Eastern and Western cultures. It was published as the second part of Scott's "Tales of the Crusaders" series, paired with "The Betrothed."
+"""
+
+Notes = """
+Published in June 1825 as part of "Tales of the Crusaders." Scott wrote this novel despite his admitted unfamiliarity with Eastern settings, as he acknowledges in this introduction by comparing himself unfavorably to contemporaries like Thomas Hope (Anastasius), James Morier (Hajji Baba), Robert Southey (Thalaba), Thomas Moore (Lalla Rookh), and Lord Byron.
+"""
+</result>

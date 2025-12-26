@@ -1,0 +1,15 @@
+<result>
+Title = "Lin McLean"
+Author = "Owen Wister"
+Year = 1897
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Lin McLean is a novel by Owen Wister, the author best known for "The Virginian" (1902), which is often credited as the first true Western novel. This earlier work follows the adventures of Lin McLean, a young cowpuncher in Wyoming Territory during the open-range cattle era. The book is composed of interconnected stories that trace Lin's life, loves, and misadventures across the frontier. Wister drew on his own extensive travels in Wyoming during the 1880s and 1890s, and his work helped establish many conventions of the Western genre. The novel offers a romanticized but affectionate portrait of cowboy life before the closing of the frontier.
+"""
+
+Notes = """
+The dedication is dated Philadelphia, 1897, which corresponds to the book's first publication. Wister had previously published some Lin McLean stories in Harper's Magazine before collecting and expanding them into this novel.
+"""
+</result>

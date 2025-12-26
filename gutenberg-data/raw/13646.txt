@@ -1,0 +1,15 @@
+<result>
+Title = "A Book of Nonsense"
+Author = "Edward Lear"
+Year = 1846
+
+Tags = ["fiction", "appropriate-for-children", "poetry"]
+
+Summary = """
+A collection of humorous limericks and accompanying illustrations by Edward Lear, considered one of the foundational works of English literary nonsense. The book features absurd characters and situations described in the limerick form, each accompanied by Lear's own whimsical drawings. Originally created to entertain the children of the Earl of Derby at Knowsley Hall, where Lear was employed as an artist, the collection became enormously popular and established the limerick as a recognized poetic form. Lear's nonsense verse influenced later writers including Lewis Carroll.
+"""
+
+Notes = """
+First published in 1846, though expanded editions appeared in 1855 and 1861. The dedication to the great-grandchildren of Edward, 13th Earl of Derby indicates this is from a later edition, but 1846 is the historically significant date for the work's first appearance.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Tales for Little Readers, About the Heathen"
+Author = "John Scudder"
+Year = 1849
+
+Tags = ["non-fiction", "appropriate-for-children", "missionary-literature", "educational"]
+
+Summary = """
+This is a children's educational book written by Dr. John Scudder, an American Protestant missionary who served in India and Ceylon (Sri Lanka). The work is designed to teach American children about Hindu customs, culture, and religious practices, with the explicit goal of inspiring them toward missionary work. The book covers topics such as Hindu appearance, dress, housing, eating customs, marriage practices, and religious beliefs. It draws heavily from the writings of Alexander Duff (Scottish Presbyterian missionary) and Abbé Jean-Antoine Dubois (French Catholic missionary whose ethnographic work on Hindu customs was widely read). The book is structured as an appeal to Christian parents to raise their children with missionary consciousness.
+"""
+
+Notes = """
+The year 1849 appears directly on the title page of this Gutenberg text. Dr. John Scudder (1793-1855) was the first American medical missionary to India, arriving in 1819. He was a Reformed Church in America minister. While he compiled information from Dubois (a Catholic source), the work itself is Protestant missionary literature and would not have received a nihil obstat. The work reflects 19th-century Protestant missionary attitudes toward Hinduism.
+"""
+</result>

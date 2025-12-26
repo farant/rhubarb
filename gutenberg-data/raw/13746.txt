@@ -1,0 +1,15 @@
+<result>
+Title = "Gold, Sport, and Coffee Planting in Mysore"
+Author = "Robert H. Elliot"
+Year = 1898
+
+Tags = ["non-fiction", "memoir", "colonial-history"]
+
+Summary = """
+A memoir by Robert H. Elliot recounting his 38 years of experience as a coffee planter in Mysore, India. The book covers topics including gold mining, sport (likely hunting), coffee cultivation in both Mysore and Coorg, the Mysore Representative Assembly, the Indian National Congress, the caste system, and the Indian silver question. It was dedicated to Sir K. Sheshadri Iyer, the Dewan (chief minister) of Mysore. Elliot had previously published "The Experiences of a Planter in the Jungles of Mysore" in 1871, and this 1898 work was essentially a substantial update rather than a new edition.
+"""
+
+Notes = """
+The year 1898 is clearly stated on the title page as the publication year in Westminster. This is a first-hand colonial account of British India during the late Victorian era.
+"""
+</result>

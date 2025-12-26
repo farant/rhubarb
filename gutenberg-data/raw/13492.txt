@@ -1,0 +1,15 @@
+<result>
+Title = "Viajes por Europa y América"
+Author = "Gorgonio Petano y Mazariegos"
+Year = 1858
+
+Tags = ["non-fiction", "travel-literature"]
+
+Summary = """
+This is a 19th century Spanish travel narrative recounting journeys through Europe and the Americas. The work includes a prologue by Patricio de la Escosura, a member of the Real Academia Española. Travel literature of this period typically combined personal observations, cultural commentary, and descriptions of places visited, serving both as entertainment and as a form of education for readers who might never have the opportunity to travel themselves. The dedication to the author's father and the praise from Escosura in the prologue suggest this was considered a well-crafted work of its genre.
+"""
+
+Notes = """
+The year 1858 is taken directly from the publication information on the title page (Paris, J.H. Truchy). This appears to be the original publication, not a later edition or reprint of an earlier work.
+"""
+</result>

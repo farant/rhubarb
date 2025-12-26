@@ -1,0 +1,15 @@
+<result>
+Title = "The Jimmyjohn Boss and Other Stories"
+Author = "Owen Wister"
+Year = 1900
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories set in the American West by Owen Wister, who is best known for his novel "The Virginian" (1902), considered the first true Western novel. This collection features tales of cowboys, ranchers, and frontier life in places like Idaho and Wyoming. Wister was a Philadelphia-born writer who traveled extensively in the West for his health and became captivated by the landscape and its people. His writing helped establish many of the conventions of the Western genre.
+"""
+
+Notes = """
+First published in 1900 by Harper & Brothers. The dedication to Harper & Brothers and Henry Mills Alden (who was editor of Harper's Magazine from 1869-1919) reflects that many of these stories first appeared in that magazine before being collected in book form.
+"""
+</result>

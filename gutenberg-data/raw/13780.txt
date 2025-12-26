@@ -1,0 +1,15 @@
+<result>
+Title = "Minkä mitäkin Italiasta"
+Author = "Juhani Aho"
+Year = 1921
+
+Tags = ["non-fiction", "travelogue"]
+
+Summary = """
+A collection of travel essays by Finnish author Juhani Aho describing his impressions and experiences in Italy. The work includes observations from various Italian locations including Venice, Rome, Florence (Fiesole), Pisa, Genoa, and Capri. Topics covered include the Semmering mountain railway journey, Roman catacombs, Roman carnival, a papal jubilee celebration, churches and religious ceremonies, Renaissance art (Michelangelo and Raphael), fresco paintings, and Italian cemeteries. Aho was one of Finland's most prominent writers of the late 19th and early 20th centuries, known for his realistic prose and keen observational style.
+"""
+
+Notes = """
+The publication year 1921 is taken from the title page (WSOY, Porvoo, 1921). Juhani Aho (1861-1921) was a major Finnish novelist and short story writer, considered one of the fathers of modern Finnish literature. This appears to be one of his later works, published in the final year of his life.
+"""
+</result>

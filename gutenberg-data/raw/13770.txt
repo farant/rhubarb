@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, Vol. XII, No. 33"
+Author = "Various"
+Year = 1873
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was a prominent American monthly literary magazine published in Philadelphia by J.B. Lippincott & Co. from 1868 to 1915. It featured a mix of serialized fiction, travel writing, poetry, essays, and cultural commentary. This December 1873 issue includes travel sketches from Bangkok, a serialized novel "A Princess of Thule" by William Black, poetry, historical essays, and the magazine's characteristic "Monthly Gossip" section covering literary and theatrical news. The magazine was known for publishing works by both established and emerging American and British authors.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with the date printed on the issue. Lippincott's Magazine later became famous for publishing Oscar Wilde's "The Picture of Dorian Gray" in 1890. The mix of fiction and non-fiction content makes both tags applicable.
+"""
+</result>

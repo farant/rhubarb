@@ -1,0 +1,17 @@
+Let me try to get more context from what you provided. Based on the text you shared, I can clearly identify this work:
+
+<result>
+Title = "The Life of James Renwick"
+Author = "Thomas Houston"
+Year = 1865
+
+Tags = ["non-fiction", "biography", "religious", "protestant", "scottish-history"]
+
+Summary = """
+A biographical account of James Renwick (1662-1688), a Scottish Covenanter minister who was the last person executed for religious beliefs during the "Killing Time" in Scotland. Renwick was a field preacher who maintained the Covenanting cause during the persecution under Charles II and James VII. He was captured and executed in Edinburgh at age 26. Thomas Houston, D.D., wrote this work as an introduction to a collection of Renwick's letters, providing historical context, a defense of Renwick's character and theological positions, and an account of his martyrdom.
+"""
+
+Notes = """
+The year 1865 is chosen as this is when Thomas Houston's biographical sketch was published by Alex. Gardner in Paisley, as stated in the text. While James Renwick himself lived 1662-1688, this is Houston's 19th century biographical and apologetic work about Renwick, not Renwick's own writings. The work is Protestant/Presbyterian rather than Catholic - it represents the Scottish Covenanting tradition which was in opposition to both the Stuart monarchy and the Catholic Church. Therefore no 'catholic' tag is applied.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Regrets sur ma vieille robe de chambre"
+Author = "Denis Diderot"
+Year = 1772
+
+Tags = ["non-fiction", "essay"]
+
+Summary = """
+This is a short philosophical essay by the French Enlightenment philosopher Denis Diderot. In it, he humorously laments the replacement of his old, comfortable dressing gown with a new, luxurious one. The new robe, rather than bringing him joy, has made him a slave to appearances and forced him to upgrade all his other belongings to match its elegance. The essay is a witty meditation on the tyranny of luxury, the corruption of simple pleasures by material acquisitiveness, and what would later be called "the Diderot Effect" - the phenomenon where acquiring a new possession leads to a spiral of consumption to match it.
+"""
+
+Notes = """
+The work was written in 1772 and circulated among friends before being published. The full title translates to "Regrets for My Old Dressing Gown, or A Warning to Those Who Have More Taste Than Fortune." This essay has become influential in consumer behavior studies and gave its name to the "Diderot Effect" studied by anthropologists and economists.
+"""
+</result>

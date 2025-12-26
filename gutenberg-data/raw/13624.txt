@@ -1,0 +1,15 @@
+<result>
+Title = "Chronicles of England, Scotland and Ireland (Holinshed's Chronicles)"
+Author = "Raphael Holinshed"
+Year = 1577
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is from Holinshed's Chronicles, one of the most important historical works of Elizabethan England. It compiled the history of Britain from legendary times through the reign of Elizabeth I. The Chronicles were famously used by Shakespeare as a source for many of his history plays. This particular excerpt is from the Second Book dealing with the legendary founding of Britain by Brutus (Brute), supposedly a descendant of Aeneas of Troy. The work represents the Tudor understanding of British origins, mixing genuine historical sources with Geoffrey of Monmouth's legendary history.
+"""
+
+Notes = """
+First edition published 1577, with a significantly expanded second edition in 1587. Choosing 1577 as it represents the original publication. The work was a collaborative effort involving several writers, but Holinshed is the principal named author. The text shown uses characteristic Early Modern English spelling and typography.
+"""
+</result>

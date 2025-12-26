@@ -1,0 +1,15 @@
+<result>
+Title = "Studies in the Psychology of Sex, Volume VI: Sex in Relation to Society"
+Author = "Havelock Ellis"
+Year = 1910
+
+Tags = ["non-fiction", "psychology", "sociology"]
+
+Summary = """
+This is the sixth and final volume of Havelock Ellis's groundbreaking series "Studies in the Psychology of Sex." Ellis (1859-1939) was a British physician, writer, and social reformer who became one of the pioneers of sexology. This volume examines sexuality not as an individual phenomenon but in its social context - how society, institutions, traditions, and Christianity have shaped sexual norms and behaviors. The work was highly influential in liberalizing attitudes toward human sexuality in the early 20th century, though it was also controversial and banned in various jurisdictions. Ellis approached sexuality from a scientific and naturalistic perspective, advocating for sexual education and reform.
+"""
+
+Notes = """
+The 1927 date in the Gutenberg text appears to be a later edition. Volume VI was originally published in 1910 as part of the complete series. The full "Studies in the Psychology of Sex" was published between 1897-1910, with this final volume completing the series. I chose 1910 as that represents the original publication of this volume as part of the scholarly work, rather than a later reprint edition.
+"""
+</result>

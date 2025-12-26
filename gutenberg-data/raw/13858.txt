@@ -1,0 +1,15 @@
+<result>
+Title = "The Laws of War, Affecting Commerce and Shipping"
+Author = "H. Byerley Thomson"
+Year = 1854
+
+Tags = ["non-fiction", "legal", "historical-document"]
+
+Summary = """
+A legal treatise examining the laws of war as they pertain to commerce and shipping. Written by a British barrister, the work addresses the legal framework governing maritime trade during wartime, including topics such as contraband, blockades, prizes, and the rights of neutral nations. The second edition was published during the Crimean War (1853-1856), making it particularly timely for British merchants and ship owners who needed to understand their legal position during active hostilities.
+"""
+
+Notes = """
+The 1854 date is the publication year of this second edition. The first edition was published shortly before (likely 1853 or early 1854) given the context of the Crimean War which began in October 1853. This is an original work, not a translation, so 1854 represents the authoritative publication date for this expanded edition.
+"""
+</result>

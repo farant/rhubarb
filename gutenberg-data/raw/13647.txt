@@ -1,0 +1,15 @@
+<result>
+Title = "Nonsense Songs, Stories, Botany, and Alphabets"
+Author = "Edward Lear"
+Year = 1871
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+A collection of whimsical nonsense verse and prose by Edward Lear, the Victorian master of literary nonsense. This volume contains some of his most beloved works, including "The Owl and the Pussy-Cat" and "The Jumblies." Lear, alongside Lewis Carroll, essentially invented the genre of nonsense literature. The book includes nonsense songs (narrative poems), absurdist short stories, fictional botany, and illustrated alphabets. Lear's work is characterized by invented words, impossible scenarios, and a gentle, playful absurdity that has delighted children and adults for over 150 years.
+"""
+
+Notes = """
+First published in 1871. This was Lear's second major nonsense collection, following "A Book of Nonsense" (1846). "The Owl and the Pussy-Cat" from this volume became one of the most famous poems in the English language for children.
+"""
+</result>

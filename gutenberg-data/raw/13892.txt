@@ -1,0 +1,15 @@
+<result>
+Title = "Le Meunier d'Angibault"
+Author = "George Sand"
+Year = 1845
+
+Tags = ["fiction", "french-literature", "social-novel"]
+
+Summary = """
+Le Meunier d'Angibault (The Miller of Angibault) is a novel by George Sand, the pen name of Amantine Lucile Aurore Dupin. The novel is set in the Berry region of France and explores themes of social inequality, love across class boundaries, and rural life. The story centers on a mill called Angibault and involves characters from different social strata, including the miller and aristocratic figures. Like many of Sand's works, it carries socialist undertones and critiques the rigid class structures of 19th century France. The novel also features a subplot involving a woman driven mad by love, which Sand mentions encountering during her explorations of the countryside.
+"""
+
+Notes = """
+The novel was first published in 1845. In the preface (Notice) included here, Sand describes how she discovered the actual mill called Angibault during a walk in 1844, which inspired the setting for the novel. She also mentions a former owner who had known Robespierre, situating the background in post-Revolutionary France.
+"""
+</result>

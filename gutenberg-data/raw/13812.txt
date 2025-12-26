@@ -1,0 +1,17 @@
+I recognize this work from the information you've provided. "Sir Mortimer" is a historical novel by Mary Johnston, published in 1904. Mary Johnston (1870-1936) was an American novelist known for her historical romances. This particular novel is set in Elizabethan England and follows Sir Dorian Doddington (called Sir Mortimer) during the era of English privateering and exploration.
+
+<result>
+Title = "Sir Mortimer"
+Author = "Mary Johnston"
+Year = 1904
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Sir Mortimer is a historical adventure novel set in Elizabethan England during the age of English privateering against Spain. The story follows the adventures of Sir Dorian Doddington (nicknamed Sir Doddington or referred to as Sir Mortimer) and touches on themes of seafaring, honor, romance, and the conflicts between England and Spain during the reign of Queen Elizabeth I. Mary Johnston was known for her vivid historical romances, and this work reflects her skill at bringing past eras to life. It was published during her most productive period, following the success of "To Have and To Hold" (1900).
+"""
+
+Notes = """
+Mary Johnston was not Catholic; she was raised Presbyterian and later became interested in mysticism. The novel is a romantic adventure story rather than a religious work. 1904 is the original publication date.
+"""
+</result>

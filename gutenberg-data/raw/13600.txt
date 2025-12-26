@@ -1,0 +1,15 @@
+<result>
+Title = "The Encyclopædia Britannica, Eleventh Edition"
+Author = "Various"
+Year = 1911
+
+Tags = ["non-fiction", "reference", "appropriate-for-children"]
+
+Summary = """
+The Encyclopædia Britannica, Eleventh Edition is widely considered the greatest single edition of any English-language encyclopedia. Published in 29 volumes between 1910-1911, it represents a monumental scholarly achievement with contributions from over 1,500 experts. This particular file contains Volume II, Part 01, covering entries from ANDROS to ANISE. The Eleventh Edition is renowned for its literary quality, comprehensive scholarship, and the distinguished roster of contributors, which included many leading academics and public figures of the era. It is now in the public domain and remains a valuable historical and scholarly resource.
+"""
+
+Notes = """
+The date 1911 is chosen as this marks the completion of the Eleventh Edition's publication (1910-1911). While the Britannica has a long history dating to 1768, the Eleventh Edition is a distinct scholarly work of the early 20th century and should be dated accordingly. This edition was jointly published by Cambridge University Press and the Encyclopædia Britannica Company.
+"""
+</result>
