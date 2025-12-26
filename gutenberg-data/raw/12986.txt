@@ -1,0 +1,15 @@
+<result>
+Title = "Works by Arnold Bennett (Bibliography/Catalog Page)"
+Author = "Arnold Bennett"
+Year = 1932
+
+Tags = ["non-fiction", "bibliography"]
+
+Summary = """
+This appears to be a bibliography or catalog page listing the works of Arnold Bennett (1867-1931), a prolific English novelist, playwright, and journalist. Bennett was one of the most prominent writers of the Edwardian era, best known for his realistic novels set in the Potteries district of Staffordshire (the "Five Towns"). His most celebrated works include "The Old Wives' Tale" (1908) and the Clayhanger trilogy. He was known for his detailed, naturalistic depictions of provincial English life and the struggles of ordinary people.
+"""
+
+Notes = """
+This is not a complete work but rather a publisher's listing of Bennett's works, likely from a frontmatter page of one of his books. The year 1932 is chosen because this list includes "Imperial Palace" (1930) and appears to be a posthumous compilation (Bennett died in 1931). The presence of "Accident" (1929) and "Imperial Palace" suggests this is from a late or posthumous edition. This fragment alone has limited value as a standalone text - it's essentially a bibliography page rather than substantive content.
+"""
+</result>

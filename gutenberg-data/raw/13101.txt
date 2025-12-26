@@ -1,0 +1,15 @@
+<result>
+Title = "Samlade Arbeten II"
+Author = "Johan Ludvig Runeberg"
+Year = 1903
+
+Tags = ["poetry", "religious", "psalms"]
+
+Summary = """
+This is Volume II of the Collected Works of Johan Ludvig Runeberg (1804-1877), Finland's national poet. The volume contains several of his major poetic works including "Kung Fjalar" (an epic poem from Norse mythology), "Nadeschda," "Kan ej," and "Kungarne på Salamis" (The Kings of Salamis, a dramatic poem). It also includes his contributions to the Swedish-Finnish hymnal, featuring translations and adaptations of Psalms of David, as well as hymns for various liturgical occasions including Christmas, New Year, Epiphany, Passion, Easter, and Pentecost.
+"""
+
+Notes = """
+The year 1903 refers to this collected edition. Runeberg himself lived 1804-1877 and wrote these works throughout his career. "Kung Fjalar" was originally published in 1844, and "Kungarne på Salamis" in 1863. Runeberg wrote in Swedish despite being Finnish, as Swedish was the literary language of educated Finns at that time. He is best known for "The Tales of Ensign Stål" and wrote the lyrics to Finland's national anthem.
+"""
+</result>

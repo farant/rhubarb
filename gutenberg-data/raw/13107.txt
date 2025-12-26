@@ -1,0 +1,15 @@
+<result>
+Title = "The New South: A Chronicle of Social and Industrial Evolution"
+Author = "Holland Thompson"
+Year = 1919
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+"The New South" is volume 42 of the Chronicles of America Series, a multi-volume historical series published by Yale University Press under editor Allen Johnson. Holland Thompson, a historian and professor at the College of the City of New York, examines the social and industrial transformation of the American South following the Civil War and Reconstruction. The work covers topics including the economic rebuilding of the region, the emergence of new industries (particularly textiles and manufacturing), agricultural changes, race relations, and the cultural evolution of Southern society in the late 19th and early 20th centuries. It represents the Progressive Era's scholarly attempt to understand and document the modernization of the former Confederate states.
+"""
+
+Notes = """
+1919 is the original publication year as part of the Chronicles of America Series. Holland Thompson (1873-1940) was a North Carolina-born historian who specialized in Southern history and wrote several works on the region's development.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Edda: I. The Divine Mythology of the North"
+Author = "Winifred Faraday"
+Year = 1902
+
+Tags = ["non-fiction", "mythology", "academic"]
+
+Summary = """
+This is part of the "Popular Studies in Mythology, Romance, and Folklore" series (No. 12), a scholarly introduction to the Norse Eddas and their mythological content. Winifred Faraday, a medieval scholar, provides an accessible overview of the Icelandic Eddas as the primary vernacular source for Germanic pre-Christian religion. The work explains how these texts preserved heathen traditions that were largely destroyed in England during the conversion period. It covers both the Elder Edda (poetic collection) and discusses the mythological system of the Norse peoples.
+"""
+
+Notes = """
+Winifred Faraday (1866-1939) was a British scholar who studied Old Norse literature. This pamphlet was published by David Nutt in London in 1902 as part of a popular educational series on folklore and mythology. The author's note is dated December 1901, with publication in 1902.
+"""
+</result>

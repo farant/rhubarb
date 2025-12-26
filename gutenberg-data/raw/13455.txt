@@ -1,0 +1,15 @@
+<result>
+Title = "The Rover Boys in the Mountains; or, A Hunt for Fun and Fortune"
+Author = "Edward Stratemeyer"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the eighth book in the Rover Boys series, a popular juvenile adventure series written under the pseudonym "Arthur M. Winfield" by Edward Stratemeyer. The series follows the adventures of three brothers—Dick, Tom, and Sam Rover—as they attend boarding school and have various adventures. The Rover Boys series was one of the earliest and most successful of Stratemeyer's many series aimed at young readers, predating his more famous Nancy Drew and Hardy Boys franchises. The books were formulaic adventure stories designed to appeal to boys, featuring mysteries, outdoor adventures, and wholesome values typical of early 20th century juvenile fiction.
+"""
+
+Notes = """
+Edward Stratemeyer (1862-1930) was a prolific author and literary syndicate founder. He wrote under numerous pseudonyms and eventually created the Stratemeyer Syndicate, which produced series like Nancy Drew, Hardy Boys, Tom Swift, and the Bobbsey Twins. "Arthur M. Winfield" was one of his pen names used specifically for the Rover Boys series. The 1902 date is the original publication year.
+"""
+</result>

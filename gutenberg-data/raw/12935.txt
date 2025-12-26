@@ -1,0 +1,15 @@
+<result>
+Title = "The Song of the Blood-Red Flower"
+Author = "Johannes Linnankoski"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+A Finnish novel by Johannes Linnankoski (pen name of Vihtori Peltonen), one of the most celebrated Finnish authors of the early 20th century. The story follows Olavi, a young logger and river driver, through his romantic adventures and coming-of-age journey in rural Finland. The novel explores themes of love, passion, nature, and moral growth as the protagonist matures from a carefree womanizer to a man seeking genuine love and meaning. It became extremely popular in Finland and was translated into numerous languages, also being adapted into several films.
+"""
+
+Notes = """
+The original Finnish version "Laulu tulipunaisesta kukasta" was published in 1905. The 1920 date in the Gutenberg text refers to this particular English translation. I chose 1905 as it represents when the work was actually created and first published.
+"""
+</result>

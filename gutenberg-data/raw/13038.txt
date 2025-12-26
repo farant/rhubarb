@@ -1,0 +1,15 @@
+<result>
+Title = "George Sand"
+Author = "E. Caro"
+Year = 1887
+
+Tags = ["non-fiction", "biography", "literary-criticism"]
+
+Summary = """
+This is a biographical and critical study of the French novelist George Sand (pseudonym of Amantine Lucile Aurore Dupin, 1804-1876), written by Elme-Marie Caro, a member of the Académie Française. The work is part of the "Les Grands Écrivains Français" (Great French Writers) series published by Hachette. Caro examines Sand's childhood, youth, origins, and the formation of her literary spirit. The opening reflects on Sand's literary reputation and legacy, defending the enduring value of her work against contemporary dismissiveness.
+"""
+
+Notes = """
+E. Caro (1826-1887) was a French philosopher and literary critic. This work was published in the year of his death. George Sand herself had died in 1876, making this an early posthumous critical assessment of her literary legacy.
+"""
+</result>

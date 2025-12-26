@@ -1,0 +1,15 @@
+<result>
+Title = "A Tour Through Some Parts of France, Switzerland, Savoy, Germany and Belgium, During the Summer and Autumn of 1814"
+Author = "Richard Boyle Bernard"
+Year = 1815
+
+Tags = ["non-fiction", "travelogue"]
+
+Summary = """
+A travel account by Richard Boyle Bernard, an Irish Member of Parliament, documenting his journey through continental Europe in 1814, immediately following the end of the Napoleonic Wars and Napoleon's first exile to Elba. The work is dedicated to the Prince Regent (later George IV) and offers observations on the post-war condition of France, Switzerland, Savoy, Germany, and Belgium during this historically significant transitional period.
+"""
+
+Notes = """
+The year 1815 is taken from the publication date shown in the title page. The journey itself took place in 1814, shortly after the Treaty of Paris (May 1814) which ended the War of the Sixth Coalition.
+"""
+</result>

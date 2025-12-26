@@ -1,0 +1,15 @@
+<result>
+Title = "Four Psalms: XXIII. XXXVI. LII. CXXI. Interpreted for Practical Use"
+Author = "George Adam Smith"
+Year = 1896
+
+Tags = ["non-fiction", "biblical-commentary", "protestantism"]
+
+Summary = """
+This is a devotional commentary on four Psalms (23, 36, 52, and 121) by George Adam Smith, a Scottish Old Testament scholar and minister of the Free Church of Scotland. Smith was a prominent biblical critic known for his work on Isaiah and the historical geography of the Holy Land. This small volume is part of the "Little Books on Religion" series edited by W. Robertson Nicoll, intended to make theological and biblical scholarship accessible to general readers for practical spiritual application.
+"""
+
+Notes = """
+George Adam Smith (1856-1942) was a Protestant minister and scholar. The "Little Books on Religion" series was published by Hodder & Stoughton beginning in the mid-1890s. This particular volume appears to date from around 1896 based on the series publication history. While dealing with scripture, this is a Protestant scholarly work and would not have a nihil obstat/imprimatur, hence tagged as 'protestantism' rather than 'catholic'.
+"""
+</result>

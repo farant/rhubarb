@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 100, April 18, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841, running until 1992 (with a brief revival 1996-2002). It was highly influential in British culture and coined the term "cartoon" in its modern sense. This issue from Volume 100 contains "Leaves from a Candidate's Diary," a satirical piece mocking the political process and newspaper coverage of parliamentary candidates during the Victorian era. The humor contrasts how partisan newspapers (the Conservative "Billsbury Standard" versus the Radical "Billsbury Meteor") would cover the same political event with wildly different spins.
+"""
+
+Notes = """
+The year 1891 is taken directly from the publication date in the header. Punch was a periodical with multiple contributors; individual pieces were often anonymous or pseudonymous, hence "Various" for author. Not marked appropriate-for-children as Victorian political satire contains period-specific references that require adult context to appreciate.
+"""
+</result>

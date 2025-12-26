@@ -1,0 +1,17 @@
+The text you provided is from **Notes and Queries**, a British scholarly journal/periodical that was founded in 1849 and still exists today. This particular issue is No. 42, dated August 17, 1850.
+
+<result>
+Title = "Notes and Queries, No. 42, August 17, 1850"
+Author = "Various"
+Year = 1849
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+Notes and Queries is a British scholarly journal founded in 1849, subtitled "A Medium of Inter-communication for Literary Men, Artists, Antiquaries, Genealogists, etc." It served as a forum where readers could pose questions about literature, history, language, folklore, and antiquarian matters, and receive answers from other learned readers. The motto "When found, make a note of" is from Captain Cuttle in Dickens's Dombey and Son. This particular issue from August 1850 contains discussions on Alfred's Orosius, folk lore about charming warts, Shakespeare's use of the word "delighted," and various antiquarian queries and replies.
+"""
+
+Notes = """
+Year is 1849 (founding of the journal) rather than 1850 (this specific issue) since for a periodical the founding date is more historically significant for a timeline. The journal was founded by William John Thoms and published by George Bell. It remains in publication today, making it one of the longest-running scholarly journals in the English-speaking world.
+"""
+</result>

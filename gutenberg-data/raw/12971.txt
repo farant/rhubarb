@@ -1,0 +1,15 @@
+<result>
+Title = "The Man in Lonely Land"
+Author = "Kate Langley Bosher"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A novel by Virginia author Kate Langley Bosher (1865-1932), who was known for her popular early 20th century fiction including "Mary Cary" and "Miss Gibbie Gault." The story centers on Winthrop Laine, a successful but emotionally isolated man navigating themes of loneliness, companionship, love, and societal expectations. The chapter titles suggest a Christmas-themed romance with Virginia settings (Elmwood, "A Visit to Virginia"). Bosher was known for her sentimental fiction with Southern settings and moral themes.
+"""
+
+Notes = """
+The MCMXII (1912) in the frontmatter confirms the publication year. First published by Harper & Brothers in 1912. This is light romantic fiction typical of the era - not Catholic literature, but inoffensive and suitable for general audiences.
+"""
+</result>

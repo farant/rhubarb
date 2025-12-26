@@ -1,0 +1,15 @@
+<result>
+Title = "The Pleasures of Ignorance"
+Author = "Robert Lynd"
+Year = 1921
+
+Tags = ["non-fiction", "essays"]
+
+Summary = """
+A collection of essays by the Irish-born essayist and literary critic Robert Lynd (1879-1949). Lynd was known for his witty, reflective essays on everyday subjects, often published in periodicals like The New Statesman under the pen name "Y.Y." This collection covers a characteristically eclectic range of topics including natural history (insects, cats, herring), gambling, virtue, and the title essay which playfully celebrates the joys of not knowing everything. Lynd was a popular essayist in the tradition of Charles Lamb, known for his gentle humor and accessible style.
+"""
+
+Notes = """
+The 1921 date is taken directly from the title page as the original publication year by Grant Richards Ltd. in London.
+"""
+</result>

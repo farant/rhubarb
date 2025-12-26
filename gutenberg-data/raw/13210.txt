@@ -1,0 +1,15 @@
+<result>
+Title = "El Comendador Mendoza"
+Author = "Juan Valera"
+Year = 1877
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+El Comendador Mendoza es una novela del escritor español Juan Valera (1824-1905), uno de los más importantes prosistas del realismo español del siglo XIX. La obra narra la historia de un caballero de la Orden de Santiago que regresa a su pueblo natal en Andalucía tras años de ausencia. La novela explora temas de honor, amor, costumbres rurales españolas y las tensiones entre la tradición y los sentimientos personales. Valera era conocido por su prosa elegante y su perspectiva irónica pero compasiva sobre la sociedad española de su época. Es más famoso por Pepita Jiménez (1874), a la cual hace referencia indirecta en esta dedicatoria cuando habla de su "primera novela" escrita sin saber que era novela.
+"""
+
+Notes = """
+La novela fue publicada originalmente en 1877. La dedicatoria a Ida de Bauer que aparece en este texto es característica de las ediciones de sus Obras Completas. Valera fue también diplomático y crítico literario además de novelista.
+"""
+</result>

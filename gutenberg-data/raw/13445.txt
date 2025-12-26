@@ -1,0 +1,15 @@
+<result>
+Title = "Suomalaisia kirjailijoita: Pikakuvia"
+Author = "Eino Leino"
+Year = 1909
+
+Tags = ["non-fiction", "literary-criticism", "finnish-literature"]
+
+Summary = """
+A collection of biographical and critical sketches ("quick portraits") of Finnish writers by Eino Leino, one of Finland's most celebrated poets and literary figures. The work surveys major figures in Finnish-language literature including Elias Lönnrot (compiler of the Kalevala), Aleksis Kivi (considered the father of Finnish literature), Minna Canth, Juhani Aho, and others. The book provides brief critical assessments of these authors' contributions to Finnish literary culture during its formative period in the 19th and early 20th centuries.
+"""
+
+Notes = """
+The year 1909 appears directly in the text as the publication date. Eino Leino (1878-1926) was a prolific Finnish poet, journalist, and critic who played a significant role in Finnish national romanticism and literary modernism.
+"""
+</result>

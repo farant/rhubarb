@@ -1,0 +1,15 @@
+<result>
+Title = "The Eighteenth Brumaire of Louis Bonaparte"
+Author = "Karl Marx"
+Year = 1852
+
+Tags = ["non-fiction", "historical-document", "political-philosophy"]
+
+Summary = """
+This is one of Marx's most important political essays, analyzing the French coup d'état of December 2, 1851, in which Louis-Napoléon Bonaparte (Napoleon III) seized power. The title refers to the date November 9, 1799 (18 Brumaire in the French Revolutionary calendar) when Napoleon I staged his coup, drawing a parallel between uncle and nephew. The work is famous for its opening line about history repeating itself "first as tragedy, then as farce." Marx uses the events to develop his theory of class struggle and historical materialism, examining how the French bourgeoisie, proletariat, and peasantry interacted during this turbulent period. It contains some of his most quoted observations on political consciousness and historical change.
+"""
+
+Notes = """
+Originally published in 1852 in the German-language magazine Die Revolution. The translator's preface references the "Debs Movement" (Eugene V. Debs, American socialist), indicating this English translation dates from the early 20th century, likely around 1898-1908. The work itself was written in late 1851 and early 1852, immediately following the events it describes.
+"""
+</result>

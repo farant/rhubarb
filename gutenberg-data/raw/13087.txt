@@ -1,0 +1,15 @@
+<result>
+Title = "Sammie and Susie Littletail"
+Author = "Howard R. Garis"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Sammie and Susie Littletail is a children's book about two young rabbit siblings and their adventures. It is one of Howard R. Garis's early animal fantasy works, written before his more famous Uncle Wiggily series (though Uncle Wiggily actually appears as a character in this book). The stories follow the Littletail rabbit family through various gentle adventures and mishaps, featuring talking animals in a cozy, domestic setting typical of early 20th century children's literature. Garis was an extremely prolific author who wrote thousands of stories for children, often serialized in newspapers before being collected into books.
+"""
+
+Notes = """
+The 1910 date comes directly from the title page of the book. The publisher's note indicates these stories first appeared serialized in the Newark Evening News before being collected into book form. Howard R. Garis (1873-1962) was an American author best known for the Uncle Wiggily series, which began shortly after this book.
+"""
+</result>

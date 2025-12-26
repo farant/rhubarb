@@ -1,0 +1,15 @@
+<result>
+Title = "Ester Ried"
+Author = "Pansy (Isabella Alden)"
+Year = 1870
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+Ester Ried is a Christian domestic novel by Isabella Macdonald Alden, who wrote under the pen name "Pansy." The story follows Ester Ried, a young woman dealing with the challenges of daily life, family relationships, and spiritual growth. The novel was extremely popular in the late 19th century and spawned several sequels including "Julia Ried," "Ester Ried Yet Speaking," and "Ester Ried's Namesake." Pansy was a prolific author of Christian fiction, particularly aimed at young readers, and her works emphasized moral lessons and Protestant evangelical themes. The Ester Ried series was among her most successful works.
+"""
+
+Notes = """
+The first Ester Ried book was published in 1870. Isabella Alden (1841-1930) was a Presbyterian author, so while the work is explicitly Christian in nature, it comes from a Protestant rather than Catholic tradition and would not have a nihil obstat or imprimatur.
+"""
+</result>

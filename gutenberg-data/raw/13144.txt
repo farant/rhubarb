@@ -1,0 +1,17 @@
+The file appears to be essentially empty. But you've provided the text in your prompt, so I can analyze that directly.
+
+<result>
+Title = "Medieval People"
+Author = "Eileen Power"
+Year = 1924
+
+Tags = ["non-fiction", "history", "appropriate-for-children"]
+
+Summary = """
+Medieval People is a pioneering work of social history by Eileen Power, one of the most distinguished medieval historians of the early 20th century. The book presents portraits of six ordinary people from the Middle Ages - including a peasant, a Venetian traveler, a prioress, a housewife, a wool merchant, and a clothier - reconstructing their daily lives from historical records. Power's innovative approach brought medieval social history to life for general readers, showing that ordinary people could be just as fascinating as kings and queens. The work remains influential for its accessible prose and its demonstration that rich historical material exists for reconstructing the lives of common folk, not just nobility.
+"""
+
+Notes = """
+First published in 1924, this is one of Eileen Power's most celebrated works. She was a Reader in History at the University of London and Fellow of Girton College, Cambridge. The book was reprinted many times (the excerpt mentions an eighth printing in 1969), testament to its enduring appeal. The dedication to her Girton colleagues (1913-20) and the epigraph from Langland's Piers Plowman reflect her deep engagement with medieval English culture and academic life.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Boy Scouts with the Motion Picture Players"
+Author = "Robert Shaler"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a volume in the Boy Scout fiction series by Robert Shaler (a pseudonym used by various authors for juvenile adventure series). The story follows Hugh Hardin and his fellow Boy Scouts from the Oakvale Troop as they encounter a "haunted" castle and become involved with motion picture production. The book combines the popular Boy Scout movement with the emerging film industry of the early 20th century, featuring themes of adventure, mystery, and the values promoted by scouting.
+"""
+
+Notes = """
+Robert Shaler was a house pseudonym used for several Boy Scout adventure series published in the 1910s-1920s. The Boy Scout movement was founded in America in 1910, and publishers quickly capitalized on its popularity with juvenile fiction series. This particular title likely dates to around 1913-1914 based on the series publication timeline and the reference to motion pictures as a novel entertainment form.
+"""
+</result>

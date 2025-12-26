@@ -1,0 +1,15 @@
+<result>
+Title = "Pioneers in Canada"
+Author = "Sir Harry Johnston"
+Year = 1912
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+A historical account of the exploration and colonization of Canada, part of Sir Harry Johnston's "Pioneer Library" series. Johnston (1858-1927) was a British explorer, botanist, and colonial administrator who wrote extensively about the British Empire and colonial history. This volume covers the various European explorers and settlers who opened up Canada, likely including French and English pioneers from the 16th century onward. The series was aimed at general readers interested in the history of British colonial expansion.
+"""
+
+Notes = """
+1912 is the original publication date as indicated in the text itself. Sir Harry Johnston was a prolific author of colonial histories during the Edwardian era.
+"""
+</result>

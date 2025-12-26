@@ -1,0 +1,15 @@
+<result>
+Title = "The Pony Rider Boys with the Texas Rangers; or, On the Trail of the Border Bandits"
+Author = "Frank Gee Patchin"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is one of the books in the "Pony Rider Boys" series, a popular early 20th century adventure series for young readers written by Frank Gee Patchin. The series follows a group of boys on horseback adventures across the American West. In this installment, the boys encounter the Texas Rangers and get involved in pursuing border bandits. The series was typical of the "boys' adventure" genre popular in the early 1900s, featuring outdoor adventures, mild peril, and wholesome themes of friendship and courage.
+"""
+
+Notes = """
+Frank Gee Patchin wrote numerous series books for juvenile audiences in the early 20th century. The Pony Rider Boys series ran from approximately 1909-1915. This particular volume appears to be from around 1914 based on the series publication timeline.
+"""
+</result>

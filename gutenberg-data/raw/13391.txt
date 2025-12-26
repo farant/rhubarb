@@ -1,0 +1,17 @@
+I can see from what you've shared that this is from **Punch, or the London Charivari**, Volume 100, dated June 6, 1891.
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 100, June 6, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["periodical", "satire", "humor", "fiction"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841. It was one of the most influential and celebrated satirical publications in history, running until 1992 (with a brief revival 1996-2002). The magazine featured cartoons, humorous articles, parodies, and social commentary. This issue from June 1891 includes "Voces Populi" (Voices of the People), a recurring feature presenting comedic sketches of everyday Victorian life. The excerpt shown depicts a hapless curate being pressed into service to narrate a magic lantern show of "Valentine and Orson" at a children's party - a classic Punch scenario of social awkwardness among the English middle class.
+"""
+
+Notes = """
+Punch was published weekly, so 1891 is the precise publication year. The magazine had no single author - it employed many writers and illustrators over its 150+ year run. Famous contributors included John Tenniel (Alice in Wonderland illustrator), Douglas Jerrold, and later A.A. Milne. "Charivari" refers to a French satirical magazine that inspired Punch's founding.
+"""
+</result>

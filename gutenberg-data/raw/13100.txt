@@ -1,0 +1,15 @@
+<result>
+Title = "Samlade Arbeten I"
+Author = "Johan Ludvig Runeberg"
+Year = 1832
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+This is the first volume of the collected works of Johan Ludvig Runeberg (1804-1877), Finland's national poet who wrote in Swedish. The volume contains several of his most celebrated works: "Älgskyttarne" (The Elk Hunters, 1832), an idyllic epic poem about Finnish rural life; "Hanna" (1836), a romantic pastoral poem; "Julkvällen" (Christmas Eve, 1841); and the beginning of "Fänrik Ståls sägner" (The Tales of Ensign Stål, 1848/1860), his masterpiece consisting of patriotic poems about the Finnish War of 1808-1809. The poem "Vårt land" (Our Land) from Fänrik Stål became the Finnish national anthem.
+"""
+
+Notes = """
+Year chosen is 1832, the publication date of "Älgskyttarne," the earliest major work in this collection. This 1903 edition is a posthumous collected works. Runeberg is considered the Finnish national poet despite writing in Swedish, which was the literary language of educated Finns at the time.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Four Months Among the Gold-Finders in Alta California"
+Author = "J. Tyrwhitt Brooks, M.D."
+Year = 1849
+
+Tags = ["non-fiction", "historical-document", "travel-narrative"]
+
+Summary = """
+This is a diary account of an expedition from San Francisco to the California gold districts during the famous Gold Rush of 1848-1849. The work documents the author's firsthand experiences traveling to and exploring the gold mining regions of Alta California (the historical name for the region before California became a U.S. state). It provides an eyewitness account of the early days of the Gold Rush, including descriptions of San Francisco, the journey to the gold fields, and observations about the miners and conditions there. The work is significant as a primary historical document of the California Gold Rush era.
+"""
+
+Notes = """
+The year 1849 is taken from the preface, which explicitly states "London, 1849" as the publication date. This is contemporaneous with the events described - the California Gold Rush began in January 1848 when gold was discovered at Sutter's Mill, and 1849 saw the massive influx of "Forty-Niners" to California. There is some historical debate about whether this work is entirely authentic or partially fabricated, as was common with Gold Rush literature of the period, but 1849 remains the correct publication year regardless.
+"""
+</result>

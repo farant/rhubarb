@@ -1,0 +1,15 @@
+<result>
+Title = "The Head Hunters of Northern Luzon: From Ifugao to Kalinga"
+Author = "Cornelis De Witt Willcox"
+Year = 1912
+
+Tags = ["non-fiction", "travel", "ethnography", "history"]
+
+Summary = """
+A firsthand travel account by U.S. Army Lieutenant-Colonel Cornelis De Witt Willcox documenting his expedition through the mountainous regions of northern Luzon in the Philippines. The book describes encounters with the Ifugao and Kalinga peoples, indigenous groups known for their headhunting practices, rice terraces, and distinct cultures. Written during the American colonial period in the Philippines, it includes observations on local customs, geography, and colonial administration. The appendix addresses the then-controversial question of Philippine independence from American rule.
+"""
+
+Notes = """
+The book was first published in 1912 by Franklin Hudson Publishing Company. Willcox was a military officer and professor at West Point who traveled through the Philippine highlands during the American occupation. The work reflects early 20th century American colonial perspectives on indigenous Filipino peoples.
+"""
+</result>

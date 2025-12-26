@@ -1,0 +1,15 @@
+<result>
+Title = "Peter Simple"
+Author = "Frederick Marryat"
+Year = 1834
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Peter Simple is a comedic naval adventure novel by Captain Frederick Marryat, a Royal Navy officer who drew extensively on his own maritime experiences. The story follows the naive but good-hearted Peter Simple, the grandson of a nobleman, as he enters the Royal Navy as a midshipman during the Napoleonic Wars. The novel is celebrated for its vivid depiction of life aboard British warships, its colorful cast of characters, and its blend of humor with genuine naval action. It remains one of the most popular 19th-century naval novels and helped establish the genre of nautical fiction.
+"""
+
+Notes = """
+Peter Simple was first published in 1834. This Gutenberg text is from an 1895 Dent edition which also includes "The Three Cutters" (1836), a shorter work often paired with Peter Simple in later editions.
+"""
+</result>

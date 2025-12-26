@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 100, May 30, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch was a British weekly magazine of humor and satire published from 1841 to 2002. This issue contains "Mr. Punch's Pocket Ibsen," a satirical condensation of Henrik Ibsen's play "The Wild Duck" (1884). The parody mocks Ibsen's dramatic conventions - his symbolic imagery, morally complex characters, and tendency toward psychological intensity - by reducing them to absurdist comedy. The piece reflects the British literary establishment's ambivalent reception of Ibsen's work during the late Victorian period, when his plays were considered both revolutionary and pretentious.
+"""
+
+Notes = """
+The year 1891 is the publication date of this specific issue. Punch was a periodical rather than a standalone book, so the issue date is the most historically meaningful year. The parody targets Ibsen's "The Wild Duck" (Vildanden), originally published in 1884.
+"""
+</result>

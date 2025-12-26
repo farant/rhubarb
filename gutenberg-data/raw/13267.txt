@@ -1,0 +1,15 @@
+<result>
+Title = "The Threshold Grace: Meditations in the Psalms"
+Author = "Percy C. Ainsworth"
+Year = 1912
+
+Tags = ["non-fiction", "devotional", "protestant"]
+
+Summary = """
+A collection of spiritual meditations on the Psalms by Percy C. Ainsworth, a Methodist minister known for his devotional writings. The work consists of eleven meditations originally published in the Methodist Times, later collected into book form. Ainsworth was recognized for his poetic and contemplative approach to Scripture, and this volume represents his reflections on themes such as faith, the soul's protection, prayer, and spiritual renewal. He died young (1879-1912), and this appears to be a posthumous collection based on the prefatory note's reference to his "brief ministry."
+"""
+
+Notes = """
+Percy C. Ainsworth was a British Methodist minister who died in 1912 at age 33. This work was published posthumously in 1912. The prefatory note mentions his previous works "The Pilgrim Church" and "The Blessed Life" and refers to "his brief ministry" in past tense, indicating posthumous publication. Not marked as catholic since this is a Methodist/Protestant devotional work.
+"""
+</result>

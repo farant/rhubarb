@@ -1,0 +1,15 @@
+<result>
+Title = "Shenandoah: A Military Comedy"
+Author = "Bronson Howard"
+Year = 1889
+
+Tags = ["fiction", "drama", "american-civil-war"]
+
+Summary = """
+Shenandoah is a four-act play set during the American Civil War, specifically around the Battle of Cedar Creek in the Shenandoah Valley (1864). The play interweaves romantic and familial relationships torn apart by the war, featuring characters from both Union and Confederate sides. It was one of Bronson Howard's most successful works, premiering in 1889 at the Star Theatre in New York under Charles Frohman's management. The play helped establish the American Civil War as viable dramatic material and was notable for its spectacular staging of battle scenes. Howard (1842-1908) was a pioneering American playwright who helped professionalize American drama and founded the American Dramatists Club in 1891.
+"""
+
+Notes = """
+The play premiered September 9, 1889 in New York. An earlier version was staged in Boston in 1888 but the 1889 New York production is considered the definitive version and launched its considerable commercial success. I chose 1889 as it represents the play's proper debut in its final form.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Teeth of the Tiger"
+Author = "Maurice Leblanc"
+Year = 1914
+
+Tags = ["fiction", "mystery", "adventure"]
+
+Summary = """
+The Teeth of the Tiger (Les Dents du tigre) is an Arsène Lupin novel by French author Maurice Leblanc. In this adventure, the gentleman-thief Lupin becomes involved in a complex mystery surrounding a massive inheritance of one hundred million francs. The story features intrigue, murder, and Lupin's characteristic cleverness as he navigates dangerous situations while staying one step ahead of the police. The novel is notable for Lupin operating under the identity of Don Luis Perenna, a war hero, and includes references to classic literary figures like D'Artagnan and Monte Cristo in its chapter titles.
+"""
+
+Notes = """
+1914 is the original French publication year. The novel was serialized in Le Journal and published as a book the same year. English translations followed shortly after.
+"""
+</result>

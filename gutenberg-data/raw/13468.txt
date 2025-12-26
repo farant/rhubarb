@@ -1,0 +1,17 @@
+I recognize this work immediately from the text you provided. This is G.K. Chesterton's "The New Jerusalem" - his travel book about his journey to Palestine in 1919-1920.
+
+<result>
+Title = "The New Jerusalem"
+Author = "G. K. Chesterton"
+Year = 1920
+
+Tags = ["non-fiction", "catholic", "travel-writing", "history"]
+
+Summary = """
+A travel book by G.K. Chesterton recounting his pilgrimage to the Holy Land in 1919-1920. Chesterton explores Jerusalem and Palestine shortly after the British took control following World War I, offering his characteristic wit and philosophical observations on the religious, cultural, and political landscape. The book examines the significance of the Holy Places to Christianity, Islam, and Judaism, and includes extended reflections on Zionism and the Jewish question which were controversial even at the time of publication. Chesterton approaches Jerusalem as both a pilgrim and a journalist, weaving together historical meditation, theological reflection, and contemporary political commentary.
+"""
+
+Notes = """
+First published in 1920 by Hodder & Stoughton. Chesterton visited Palestine in late 1919 and early 1920, during the early period of the British Mandate. The final chapter on Zionism mentioned in the preface was indeed contentious - Chesterton's views on Jewish nationalism were complex and have been debated by scholars. The book was serialized in a newspaper before book publication.
+"""
+</result>

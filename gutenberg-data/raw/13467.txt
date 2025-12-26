@@ -1,0 +1,15 @@
+<result>
+Title = "Study of Child Life"
+Author = "Marion Foster Washburne"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a volume from "The Library of Home Economics," a twelve-volume correspondence course published by the American School of Home Economics in Chicago. The series was designed as a comprehensive home-study course covering what was then called "the new profession of home-making." This particular volume focuses on child development and child-rearing practices. The series was targeted at mothers, teachers, nurses, and others involved in domestic life, reflecting the early 20th century "scientific motherhood" movement that sought to professionalize homemaking and apply scientific principles to child-rearing.
+"""
+
+Notes = """
+1907 is the publication year shown on the title page. Marion Foster Washburne was an American author and educator active in the early 1900s who wrote on domestic science and child development topics.
+"""
+</result>

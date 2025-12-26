@@ -1,0 +1,15 @@
+<result>
+Title = "Out of the Ashes"
+Author = "Ethel Watts Mumford"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+"Out of the Ashes" is a novel by American author Ethel Watts Mumford (1876-1940), a popular writer of the early 20th century known for her witty social commentary and fiction. The novel appears to be set among wealthy New York society, opening with Marcus Gard, a powerful man of refined tastes surrounded by Renaissance art and rare books in his Fifth Avenue mansion. The story involves art dealings (specifically a Vandyke painting) and the social intrigues of the Gilded Age elite. Mumford was known for her sharp observations of American high society and her collaborations on the popular "Cynic's Calendar" series of aphorisms.
+"""
+
+Notes = """
+The date 1913 appears directly in the text as the publication year. Ethel Watts Mumford was a prolific American author who wrote novels, plays, and humorous works during the early 1900s.
+"""
+</result>

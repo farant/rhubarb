@@ -1,0 +1,15 @@
+<result>
+Title = "A New Philosophy: Henri Bergson"
+Author = "Edouard le Roy"
+Year = 1912
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+This work is an introductory exposition of Henri Bergson's philosophy, written by Édouard Le Roy, a French philosopher and mathematician who was himself a prominent Bergsonian. The book originated as two articles published in the Revue des Deux Mondes in February 1912. Le Roy aimed to present Bergson's ideas to a general audience without excessive technical detail, serving as a preliminary guide for those seeking initiation into the "new philosophy." The work emphasizes Bergson's key concepts including intuition, duration, and the critique of mechanistic thinking, approaching philosophy as a "living act" rather than a system to be dissected.
+"""
+
+Notes = """
+Year chosen is 1912, when the original articles were published in Revue des Deux Mondes. This represents the first appearance of this work. Édouard Le Roy (1870-1954) was a close associate of Bergson and later succeeded him at the Collège de France. While Le Roy was Catholic and later wrote on Catholic themes, this particular work is a philosophical exposition of Bergson's thought rather than a specifically Catholic work.
+"""
+</result>

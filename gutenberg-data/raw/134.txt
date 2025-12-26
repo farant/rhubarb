@@ -1,0 +1,15 @@
+<result>
+Title = "Maria; or, The Wrongs of Woman"
+Author = "Mary Wollstonecraft"
+Year = 1798
+
+Tags = ["fiction", "feminist-literature"]
+
+Summary = """
+An unfinished novel by Mary Wollstonecraft, published posthumously by her husband William Godwin in 1798, shortly after her death in 1797. The work is a feminist novel that critiques the legal and social conditions of women in 18th-century England, particularly focusing on marriage laws, property rights, and the treatment of women in madhouses. The protagonist Maria is unjustly confined to an asylum by her husband, and the narrative explores themes of female oppression, sexuality, and the injustices women faced under English law. It is considered a companion piece to Wollstonecraft's famous philosophical work "A Vindication of the Rights of Woman" (1792), presenting similar arguments in fictional form.
+"""
+
+Notes = """
+Published posthumously in 1798 as part of "Posthumous Works of the Author of A Vindication of the Rights of Woman." Wollstonecraft died in 1797 from complications following childbirth (giving birth to Mary Shelley, future author of Frankenstein). The novel remained unfinished, which is why the edition includes fragments and multiple possible conclusions in the appendix.
+"""
+</result>

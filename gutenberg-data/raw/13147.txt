@@ -1,0 +1,15 @@
+<result>
+Title = "Savva / The Life of Man"
+Author = "Leonid Andreyev"
+Year = 1907
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+This volume contains two plays by Leonid Andreyev (1871-1919), a major Russian Expressionist playwright and short story writer. "Savva" (1906) tells the story of a revolutionary who plots to destroy a miraculous icon to liberate people from religious superstition, only to face tragic consequences. "The Life of Man" (1907) is an allegorical play depicting the stages of human existence from birth to death, with a mysterious gray figure ("Someone in Gray") observing throughout. Both plays exemplify Andreyev's pessimistic philosophical outlook and his experimental dramatic techniques that influenced Expressionist theater.
+"""
+
+Notes = """
+Year chosen is 1907, when "The Life of Man" premiered at the Moscow Art Theatre under Stanislavsky. "Savva" was written in 1906. The English translation by Thomas Seltzer was published in 1914 (copyright date) with this edition from 1920. Andreyev was one of the most popular Russian writers of his era, though he was not Catholic and his works often explored nihilistic and existentialist themes.
+"""
+</result>

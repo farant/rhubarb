@@ -1,0 +1,15 @@
+<result>
+Title = "The Hindu-Yogi Science of Breath"
+Author = "Yogi Ramacharaka"
+Year = 1903
+
+Tags = ["non-fiction", "spirituality", "health"]
+
+Summary = """
+This is one of the early works published under the pseudonym "Yogi Ramacharaka," which was actually William Walker Atkinson (1862-1932), a prolific American writer, lawyer, and pioneer of the New Thought movement. The book presents breathing exercises and philosophy drawn from (or inspired by) Hindu yoga traditions, blending Eastern concepts like prana (life force) with Western interests in physical culture and self-improvement. It covers both the physical/physiological aspects of breathing and more esoteric claims about psychic and spiritual development through breath control. The work was part of a wave of Western interest in Eastern spirituality in the early 20th century, though scholars note Atkinson's interpretations were heavily filtered through New Thought philosophy rather than being authentic representations of traditional yoga.
+"""
+
+Notes = """
+First published in 1903 by the Yogi Publication Society in Chicago. William Walker Atkinson wrote numerous books under this pseudonym and others, capitalizing on Western fascination with Eastern mysticism during this period.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Divine Songs Attempted in the Easy Language of Children"
+Author = "Isaac Watts"
+Year = 1715
+
+Tags = ["non-fiction", "poetry", "appropriate-for-children", "protestant", "hymns"]
+
+Summary = """
+Divine Songs is a collection of religious hymns and moral verses written specifically for children by Isaac Watts, the English Nonconformist minister often called the "Father of English Hymnody." The work was enormously influential in English-speaking religious education for over two centuries. It includes well-known pieces such as "How Doth the Little Busy Bee" and "Cradle Hymn." Watts aimed to make religious instruction accessible and memorable for young minds through simple verse and relatable imagery. The collection shaped children's religious literature and influenced later writers including Lewis Carroll, who parodied several of the poems in Alice's Adventures in Wonderland.
+"""
+
+Notes = """
+First published in 1715. Isaac Watts (1674-1748) was a Dissenting/Nonconformist Protestant minister, not Catholic, so the 'catholic' tag does not apply. The dedication references Sir Thomas Abney, with whom Watts lived for many years due to ill health. The mention of "our present King" coming to the throne refers to George I (1714), helping date the dedication to shortly after that event.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Hindu Literature: Comprising The Book of Good Counsels, Nala and Damayanti, The Rámáyana and Śakoontalá"
+Author = "Epiphanius Wilson (editor), Various translators"
+Year = 1900
+
+Tags = ["non-fiction", "anthology", "appropriate-for-children", "mythology", "world-literature"]
+
+Summary = """
+This is an anthology of classical Hindu literature compiled and edited by Epiphanius Wilson for a Western audience. It contains four major works: The Hitopadesha (Book of Good Counsels), which is a collection of Sanskrit fables similar to the Panchatantra featuring animal stories with moral lessons; the romantic tale of Nala and Damayanti from the Mahabharata; an abridged version of the Ramayana epic; and Kalidasa's famous Sanskrit drama Shakuntala. The collection was part of a broader series of world literature anthologies published by P.F. Collier & Son in the late 19th/early 20th century aimed at making classical texts accessible to American readers.
+"""
+
+Notes = """
+The year 1900 is the copyright date of this particular edition. The source texts themselves are ancient - the Hitopadesha dates to roughly 800-950 CE, the Nala and Damayanti episode is from the Mahabharata (composed between 400 BCE - 400 CE), the Ramayana is traditionally dated to around 500 BCE, and Shakuntala was written by Kalidasa around the 4th-5th century CE. However, since this is a compiled anthology with Wilson's editorial contributions and biographical sketches, 1900 represents when this particular work was created.
+"""
+</result>

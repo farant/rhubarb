@@ -1,0 +1,15 @@
+<result>
+Title = "Chocolate and Cocoa Recipes / Home Made Candy Recipes"
+Author = "Maria Parloa, Janet McKenzie Hill"
+Year = 1909
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a promotional recipe booklet published by Walter Baker & Co., a prominent American chocolate manufacturer established in 1780. It combines two recipe collections: chocolate and cocoa recipes by Maria Parloa, a famous cooking teacher and cookbook author of the late 19th century, and homemade candy recipes by Janet McKenzie Hill, founder of the Boston Cooking School Magazine. The book includes historical information about cocoa and chocolate, their origins in Mexico, and their introduction to Europe by the Spanish. It also contains consumption statistics showing the dramatic increase in American cocoa consumption from 1860 to 1908.
+"""
+
+Notes = """
+Maria Parloa (1843-1909) was a pioneering American cooking teacher and author. Janet McKenzie Hill (1852-1933) was an influential food writer and editor. This booklet was published as promotional material by Walter Baker & Co., one of the oldest chocolate companies in America. The year 1909 is printed in the text itself.
+"""
+</result>

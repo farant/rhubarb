@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, July 18, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 1992 (with a brief revival 1996-2002). It was highly influential in coining the term "cartoon" in its modern sense and was known for its satirical commentary on British society, politics, and culture. This issue from July 1891 contains "Letters to Abstractions," a humorous epistolary series addressing personified concepts - in this case, "Social Ambition" - satirizing Victorian social climbing and class consciousness. The magazine was a fixture of middle and upper-class British life and helped shape British comedic writing for over a century.
+"""
+
+Notes = """
+The year 1891 is the original publication date of this specific issue. Punch was a periodical rather than a single authored work, hence "Various" for author. The magazine featured contributions from many writers and illustrators over its long run. While containing witty social commentary, it would not qualify as appropriate for children due to sophisticated adult themes and Victorian social satire that requires cultural context to appreciate.
+"""
+</result>

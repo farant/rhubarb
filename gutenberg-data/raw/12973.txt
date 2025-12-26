@@ -1,0 +1,15 @@
+<result>
+Title = "Personal Recollections of Pardee Butler"
+Author = "Pardee Butler, Rosetta B. Hastings, John Boggs, J. B. McCleery"
+Year = 1889
+
+Tags = ["non-fiction", "autobiography", "american-history", "religious"]
+
+Summary = """
+This is an autobiography and memoir of Pardee Butler (1816-1888), a prominent minister in the Restoration Movement (Disciples of Christ/Christian Church) and an abolitionist activist in Kansas Territory during the "Bleeding Kansas" period of the 1850s. Butler was famously twice set adrift on the Missouri River by pro-slavery mobs for his anti-slavery views. The book contains his personal recollections of frontier ministry and anti-slavery work, supplemented by reminiscences from his daughter Rosetta B. Hastings and additional chapters by fellow ministers John Boggs and J. B. McCleery.
+"""
+
+Notes = """
+The book was published posthumously in 1889, the year after Butler's death. This is the appropriate year since it represents when this particular work of collected memoirs and reminiscences was compiled and published, rather than when the events occurred. Butler was a minister in the Disciples of Christ tradition (Stone-Campbell Movement), which is Protestant rather than Catholic.
+"""
+</result>

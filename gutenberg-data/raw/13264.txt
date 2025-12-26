@@ -1,0 +1,15 @@
+<result>
+Title = "Zalacaín el Aventurero"
+Author = "Pío Baroja"
+Year = 1909
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Zalacaín el Aventurero is a novel by Spanish author Pío Baroja, one of the most important writers of the Generation of '98. The novel follows the adventures of Martín Zalacaín, a bold and resourceful young man from the fictional Basque town of Urbia, set against the backdrop of the Carlist Wars in the late 19th century Spanish Basque Country. The work is considered one of Baroja's most successful adventure novels, combining his characteristic realist style with a fast-paced narrative. It portrays Basque rural life, the political tensions of the era, and the spirit of adventure and individualism that Baroja admired.
+"""
+
+Notes = """
+First published in 1909. The 1919 date in the text refers to a later Madrid edition. Pío Baroja (1872-1956) was a Basque Spanish writer known for his prolific output and membership in the Generation of '98 literary movement.
+"""
+</result>

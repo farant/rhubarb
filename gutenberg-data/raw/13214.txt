@@ -1,0 +1,15 @@
+<result>
+Title = "Anna Karenina"
+Author = "Leo Tolstoy"
+Year = 1877
+
+Tags = ["fiction"]
+
+Summary = """
+Anna Karenina is one of the greatest novels of world literature, following the tragic story of Anna Karenina, a married aristocrat who begins a passionate affair with Count Vronsky, leading to her social ostracism and eventual destruction. Parallel to Anna's story runs that of Levin, a landowner searching for meaning in life, love, and faith. The novel explores themes of love, jealousy, faith, family, society, and the contrast between urban and rural life in 19th century Russia. The opening line about happy and unhappy families is one of the most famous in literature.
+"""
+
+Notes = """
+The novel was originally serialized in the Russian Messenger from 1875-1877, with the first complete book edition published in 1878. I chose 1877 as this is when the serialization was completed and the work existed in its full form. This Dutch translation ("Naar het Russisch van Graaf Leo Tolstoï") is from a later period but the year reflects the original Russian publication.
+"""
+</result>

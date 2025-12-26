@@ -1,0 +1,15 @@
+<result>
+Title = "In the Footprints of the Padres"
+Author = "Charles Warren Stoddard"
+Year = 1902
+
+Tags = ["non-fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+A collection of essays and reminiscences about early California, particularly San Francisco and the old Spanish missions. Charles Warren Stoddard (1843-1909) was a California writer, poet, and convert to Catholicism who became a professor at the Catholic University of America. The book offers nostalgic glimpses of mission life, the city's development, and the legacy of the Franciscan padres who established the California missions. Stoddard was part of the San Francisco literary circle that included Mark Twain and Bret Harte.
+"""
+
+Notes = """
+The 1912 edition shown here (MCMXII) is described as "New and Enlarged Edition" with an introduction by Charles Phillips. The original first edition was published in 1902. I chose 1902 as it represents the original publication of the work. Stoddard was a notable Catholic convert and his work appeared in Ave Maria magazine, indicating its Catholic character.
+"""
+</result>

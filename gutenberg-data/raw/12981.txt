@@ -1,0 +1,15 @@
+<result>
+Title = "The Thirsty Sword: A Story of the Norse Invasion of Scotland (1262-1263)"
+Author = "Robert Leighton"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Thirsty Sword is a historical adventure novel set during the Norse invasion of Scotland in 1262-1263, culminating in the Battle of Largs. The story follows Kenric, son of Earl Hamish of Bute, and involves the conflict between Scottish forces and Norwegian invaders under King Haakon IV. Robert Leighton (1858-1934) was a Scottish author and journalist who wrote numerous adventure stories for young readers, often with historical Scottish settings. This work is typical of his style: action-oriented historical fiction aimed at boys, featuring young protagonists caught up in significant historical events.
+"""
+
+Notes = """
+The novel was first published in 1898. Robert Leighton wrote many similar adventure novels for young readers during the late Victorian and Edwardian periods. The historical backdrop—King Haakon IV's 1263 expedition to Scotland and the subsequent Battle of Largs—is accurate, though the narrative is fictional.
+"""
+</result>

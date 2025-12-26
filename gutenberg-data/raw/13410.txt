@@ -1,0 +1,15 @@
+<result>
+Title = "Some Private Views"
+Author = "James Payn"
+Year = 1881
+
+Tags = ["non-fiction"]
+
+Summary = """
+A collection of essays by James Payn, a prolific Victorian English novelist and editor. The essays were originally published in 'The Nineteenth Century' review and 'The Times'. The collection covers a variety of social and literary topics including literary criticism, poverty, the future of writing as a profession, fiction, hotels, servants, whist players, family relations, and travel. Payn was known for his witty, conversational prose style and his observations on Victorian middle-class life. He served as editor of Chambers's Journal and later The Cornhill Magazine.
+"""
+
+Notes = """
+1881 is the publication year printed on the title page. This appears to be a "new edition" which suggests earlier publication of some material, but the collected volume as presented is from 1881.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The California Birthday Book"
+Author = "George Wharton James (editor)"
+Year = 1909
+
+Tags = ["non-fiction", "anthology", "regional-americana"]
+
+Summary = """
+This is an anthology of prose and poetry selections from living California authors at the turn of the 20th century, compiled and edited by George Wharton James. The book is organized as a "birthday book" - a popular Victorian/Edwardian format where selections are arranged by calendar date, allowing readers to read a passage for each day of the year. It celebrates California's landscapes, climate, flora, fauna, and cultural achievements through the words of contemporary California writers, with brief biographical sketches of each contributor.
+"""
+
+Notes = """
+George Wharton James (1858-1923) was a prolific writer and lecturer on the American Southwest and California. He was originally from England and became a prominent figure in promoting California culture and tourism. The 1909 date is the original publication year by Arroyo Guild Press in Los Angeles.
+"""
+</result>

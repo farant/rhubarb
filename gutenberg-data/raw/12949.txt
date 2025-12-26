@@ -1,0 +1,17 @@
+The text you've provided is from an educational anthology, not a single original work. This is *Contes Français*, edited by Douglas Labaree Buffum - a collection of French short stories compiled for American students learning French.
+
+<result>
+Title = "Contes Français"
+Author = "Douglas Labaree Buffum (editor)"
+Year = 1907
+
+Tags = ["non-fiction", "anthology", "educational", "appropriate-for-children"]
+
+Summary = """
+This is an educational anthology of French short stories compiled by Douglas Labaree Buffum, a professor of Romance Languages at Princeton University. The collection contains stories from representative French authors of the nineteenth century, selected for literary merit, varied style and subject matter, and pedagogical value. It includes extensive vocabulary (6000-7000 words), notes explaining historical and literary references, and brief biographical information about each author. This is a companion volume to Buffum's earlier "French Short Stories" (1907).
+"""
+
+Notes = """
+The year 1907 is approximate based on the preface mentioning his earlier "French Short Stories" was published in 1907, suggesting this companion volume was published around the same time or shortly after. The exact publication date of this particular anthology would be in the early 1900s. As this is an educational compilation rather than an original literary work, the year reflects when this anthology was assembled rather than when the individual stories within were written.
+"""
+</result>

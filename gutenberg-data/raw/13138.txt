@@ -1,0 +1,15 @@
+<result>
+Title = "The Forgotten Threshold"
+Author = "Arthur Middleton"
+Year = 1919
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+The Forgotten Threshold is a mystical, poetic novel presented as a journal left behind by a young Catholic man named Arthur Middleton after his death. The work explores themes of beauty, spiritual longing, Catholic faith, and transcendence. Written in a lyrical, contemplative style characteristic of early 20th century Catholic literary revival, it reflects the author's deep devotion to the Roman Catholic Church and his mystical experiences of divine beauty. The narrative frame presents an editor who has transcribed Middleton's private writings posthumously, noting that Middleton died on Easter while watching the sunset - imagery connecting his death to the Paschal mystery.
+"""
+
+Notes = """
+This work was published in 1919. The author "Arthur Middleton" appears to be a literary persona or fictional narrator rather than the actual author. The book is part of the Catholic literary revival of the early 20th century. The dedication "To W.S.B." and the editorial framing suggest this may be a work by an author writing under or through a fictional journal conceit. The strong emphasis on Catholic faith, beauty, and mystical experience places it firmly in the tradition of Catholic devotional literature.
+"""
+</result>

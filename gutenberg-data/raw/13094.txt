@@ -1,0 +1,15 @@
+<result>
+Title = "Heart of the West"
+Author = "O. Henry"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Heart of the West is a collection of nineteen short stories by O. Henry (pen name of William Sydney Porter) set in the American Southwest, particularly Texas. The stories feature O. Henry's characteristic wit, surprise endings, and sympathetic portrayals of everyday people. The collection includes tales of cowboys, ranchers, outlaws, and frontier life, blending humor with romance and adventure. Notable stories include "The Caballero's Way" which introduced the character of the Cisco Kid, later adapted into films and television.
+"""
+
+Notes = """
+O. Henry was not Catholic, and while his stories are generally wholesome and suitable for children, they are secular fiction without religious content. The 1907 date represents the original book publication by McClure Company.
+"""
+</result>

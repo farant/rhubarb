@@ -1,0 +1,15 @@
+<result>
+Title = "The Rival Heirs: Being the Third and Last Chronicle of Aescendune"
+Author = "A. D. Crake"
+Year = 1882
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+The Rival Heirs is the third and final volume in Rev. Augustine David Crake's Chronicles of Aescendune trilogy, a series of historical novels set during the Norman Conquest of England. The story follows the conflict between Anglo-Saxon and Norman heirs to the fictional estate of Aescendune, exploring themes of dispossession, resistance, and eventual reconciliation in the turbulent years following 1066. Crake was an Anglican clergyman with High Church sympathies who wrote extensively for young readers, producing popular historical fiction that brought medieval English history to life while imparting moral and religious values.
+"""
+
+Notes = """
+Rev. A. D. Crake (1836-1890) published this novel in 1882 as part of his Aescendune series. While Crake was Anglican rather than Roman Catholic, his works reflect High Church sensibilities and Christian moral themes suitable for youth. The 'catholic' tag is not applied as he was not a Roman Catholic author.
+"""
+</result>

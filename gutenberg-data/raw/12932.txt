@@ -1,0 +1,15 @@
+<result>
+Title = "Four Max Carrados Detective Stories"
+Author = "Ernest Bramah"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of four detective stories featuring Max Carrados, a blind amateur detective created by Ernest Bramah. Max Carrados is notable in detective fiction as one of the first blind detectives, compensating for his lack of sight with extraordinarily heightened other senses and remarkable powers of deduction. The stories were originally published in various magazines before being collected. The four stories in this collection are "The Coin of Dionysius," "The Knight's Cross Signal Problem," "The Tragedy at Brookbend Cottage," and "The Last Exploit of Harry the Actor." Bramah's detective fiction is known for its clever plotting and the unique perspective of having a blind protagonist.
+"""
+
+Notes = """
+The year 1914 corresponds to the publication of "Max Carrados," the first collection of these detective stories. Ernest Bramah (full name Ernest Bramah Smith) was a British author also known for his Kai Lung stories set in a fantastical China.
+"""
+</result>

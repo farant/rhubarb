@@ -1,0 +1,15 @@
+<result>
+Title = "R.U.R. (Rossum's Universal Robots)"
+Author = "Karel Čapek"
+Year = 1920
+
+Tags = ["fiction", "science-fiction", "drama"]
+
+Summary = """
+R.U.R. (Rossum's Universal Robots) is a groundbreaking Czech science fiction play that introduced the word "robot" to the world (from Czech "robota" meaning forced labor or drudgery). The play depicts a future where artificial humanoids called robots are manufactured to serve humanity. Initially designed to free humans from labor, the robots eventually revolt against their creators, leading to the near-extinction of humanity. The work explores themes of technology, labor, dehumanization, and what it means to be human. It is considered one of the most influential works of early science fiction and a foundational text in the genre of robot fiction.
+"""
+
+Notes = """
+The play premiered on January 25, 1921 in Prague, but was written and published in 1920. I chose 1920 as it represents when the work was completed and first made available, though some sources cite 1921 for the premiere. This is the original Czech text of the play.
+"""
+</result>

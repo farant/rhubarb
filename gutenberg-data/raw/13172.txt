@@ -1,0 +1,15 @@
+<result>
+Title = "True Stories of Crime from the District Attorney's Office"
+Author = "Arthur Train"
+Year = 1908
+
+Tags = ["non-fiction"]
+
+Summary = """
+A collection of true crime narratives written by Arthur Train, who served as an Assistant District Attorney in New York County. The book presents actual criminal cases that Train personally prosecuted, offering firsthand accounts of schemes, criminals, and the legal proceedings that brought them to justice. Train was a prolific American lawyer and author who later became famous for his fictional character "Mr. Tutt," an elderly lawyer. This work represents his non-fiction documentation of real cases from his prosecutorial career, presented with literary flair while maintaining factual accuracy.
+"""
+
+Notes = """
+The year 1908 appears directly on the title page of this Gutenberg text. Arthur Train (1875-1945) was a Harvard-educated lawyer who worked in the New York District Attorney's office before becoming a successful author. The epigraph is from Charles Reade's "The Cloister and the Hearth" (1861).
+"""
+</result>

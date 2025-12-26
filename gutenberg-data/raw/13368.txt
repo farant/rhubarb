@@ -1,0 +1,15 @@
+<result>
+Title = "Korea's Fight for Freedom"
+Author = "F.A. McKenzie"
+Year = 1920
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Korea's Fight for Freedom is a journalistic account by Frederick Arthur McKenzie, a Canadian-born British journalist who witnessed firsthand the Japanese occupation of Korea. The book documents Japanese colonial abuses including violence against Korean civilians, suppression of independence movements, and the broader context of Korean resistance. McKenzie was notably sympathetic to the Korean independence cause and critical of Japanese colonial administration at a time when such criticism was controversial. The work is particularly significant as a Western eyewitness account of the March 1st Movement (1919) and its brutal suppression.
+"""
+
+Notes = """
+Published in 1920, shortly after the March 1st Movement of 1919 which was a major Korean independence uprising against Japanese rule. McKenzie had previously written "The Tragedy of Korea" (1908) and was one of the few Western journalists to document Japanese colonial practices in Korea critically.
+"""
+</result>

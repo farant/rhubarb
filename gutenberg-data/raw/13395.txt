@@ -1,0 +1,15 @@
+<result>
+Title = "Since Cézanne"
+Author = "Clive Bell"
+Year = 1922
+
+Tags = ["non-fiction", "art-criticism"]
+
+Summary = """
+A collection of essays on modern art by the influential English art critic Clive Bell, a key figure in the Bloomsbury Group. The book examines Post-Impressionist and early modernist painters including Cézanne, Renoir, Matisse, Picasso, Bonnard, and others. Bell was a champion of formalist aesthetics and helped introduce the British public to French modern art through his criticism. The essays originally appeared in various publications including The New Republic, The Athenaeum, and The Burlington Magazine.
+"""
+
+Notes = """
+First published in 1922. Bell was married to Vanessa Bell (Virginia Woolf's sister) and was instrumental in promoting the Post-Impressionist exhibitions organized by Roger Fry in London in 1910 and 1912.
+"""
+</result>

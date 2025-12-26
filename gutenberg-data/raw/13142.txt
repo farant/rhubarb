@@ -1,0 +1,21 @@
+Based on my knowledge, I can identify this work:
+
+**L. W. Rogers** (Louis William Rogers, 1859-1953) was an American Theosophist, lecturer, and writer associated with the Theosophical Society in America. He was known for making Theosophical concepts accessible to general audiences.
+
+"Self-Development and the Way to Power" is a Theosophical self-help work focused on spiritual evolution, mental development, and the idea that humans can transcend suffering through wisdom and understanding of natural/spiritual laws. The text you provided shows characteristic Theosophical themes: karma, spiritual evolution, the relationship between ignorance and suffering, and the attainment of wisdom as a path to happiness.
+
+<result>
+Title = "Self-Development and the Way to Power"
+Author = "L. W. Rogers"
+Year = 1922
+
+Tags = ["non-fiction", "theosophy", "self-help"]
+
+Summary = """
+A Theosophical self-help treatise by American Theosophist L. W. Rogers. The work presents the idea that suffering is caused by spiritual ignorance and that through wisdom and understanding of natural and spiritual laws, one can achieve happiness and mastery over life's circumstances. Rogers was a prominent lecturer for the Theosophical Society in America and known for making esoteric concepts accessible to general readers. The book covers topics such as spiritual evolution, mental development, and the practical application of Theosophical principles for personal growth.
+"""
+
+Notes = """
+1922 is the publication year as stated on the title page of the Gutenberg text itself. L. W. Rogers (1859-1953) was a prolific Theosophical writer and lecturer. Theosophy, while drawing on various religious traditions including some Christian mysticism, is a syncretic spiritual movement founded by Helena Blavatsky and is not aligned with Catholic teaching - hence no 'catholic' tag. The work is not marked 'appropriate-for-children' as it deals with abstract philosophical concepts aimed at adult readers.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Early Israel and the Surrounding Nations"
+Author = "A.H. Sayce"
+Year = 1899
+
+Tags = ["non-fiction", "history", "biblical-studies"]
+
+Summary = """
+This work by Archibald Henry Sayce, a distinguished Oxford Professor of Assyriology, examines ancient Israel in the context of its neighboring civilizations. Sayce was one of the pioneering scholars who helped integrate archaeological discoveries from Mesopotamia and Egypt with biblical history. The book situates the Israelites within the broader ancient Near Eastern world, drawing on then-recent Assyriological and Egyptological findings to illuminate the historical context of the Hebrew scriptures. It reflects the late Victorian scholarly approach to biblical history informed by comparative ancient studies.
+"""
+
+Notes = """
+1899 is the publication date shown on the title page. Sayce (1845-1933) was a prominent Anglican clergyman and orientalist whose work helped bridge archaeological discoveries with biblical scholarship. While written by a reverend, the work is primarily academic historical analysis rather than devotional literature, so I have not included the 'catholic' tag.
+"""
+</result>

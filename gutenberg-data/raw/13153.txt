@@ -1,0 +1,15 @@
+<result>
+Title = "String Quartet No. 13 in A minor, Op. 132"
+Author = "Ludwig van Beethoven"
+Year = 1825
+
+Tags = ["non-fiction", "musical-score", "classical-music"]
+
+Summary = """
+One of Beethoven's late string quartets, composed in 1825 during the final years of his life. The Op. 132 quartet is famous for its third movement, the "Heiliger Dankgesang" (Holy Song of Thanksgiving), which Beethoven wrote after recovering from a serious illness. The movement alternates between a hymn-like chorale marked "in the Lydian mode" and livelier sections marked "feeling new strength." This quartet is considered one of the pinnacles of the string quartet repertoire and represents Beethoven's most introspective and spiritually profound late period.
+"""
+
+Notes = """
+The quartet was completed in 1825 and first performed in November of that year. The Project Gutenberg text contains an error in the START/END markers, which reference "Opus 127" (the 12th quartet) rather than "Opus 132" (the 13th quartet). The title and main metadata correctly identify this as Op. 132.
+"""
+</result>

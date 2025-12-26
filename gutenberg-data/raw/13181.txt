@@ -1,0 +1,17 @@
+I read the context files. Now let me analyze this Project Gutenberg text. I recognize this work based on the content.
+
+<result>
+Title = "The Boy with the U.S. Census"
+Author = "Francis Rolt-Wheeler"
+Year = 1911
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children", "americana"]
+
+Summary = """
+This is a juvenile adventure novel from Francis Rolt-Wheeler's "U.S. Service Series," a popular early 20th century series of books designed to educate young American boys about various government agencies and services. The book follows a young protagonist through adventures related to the Census Bureau, showcasing the work of census enumerators across diverse American communities - from immigrant populations at Ellis Island to remote mountain communities. The series combined adventure storytelling with civic education, reflecting Progressive Era ideals about citizenship and government service.
+"""
+
+Notes = """
+1911 is the original publication date as indicated in the book itself ("November, 1911"). Rolt-Wheeler wrote numerous similar titles including "The Boy with the U.S. Survey," "The Boy with the U.S. Foresters," etc. The Census described would be the 1910 Census. The dedication to "Hamilton Day" and the preface's dramatic language about immigrant "hordes" and "child labor" reflects the reform concerns of the Progressive Era.
+"""
+</result>

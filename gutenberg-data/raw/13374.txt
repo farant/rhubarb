@@ -1,0 +1,15 @@
+<result>
+Title = "Consuelo"
+Author = "George Sand"
+Year = 1842
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Consuelo is a novel by French author George Sand (pseudonym of Amantine Lucile Aurore Dupin). The story follows a young Spanish singer named Consuelo who rises from poverty in Venice to become one of the great opera singers of 18th-century Europe. The novel is rich with musical themes, exploring the world of Baroque and early Classical music, and features historical figures like Joseph Haydn (who appears as the young Joseph in the novel). It is considered one of George Sand's major works and was originally published as a serial in the Revue Indépendante. The novel has a sequel, "La Comtesse de Rudolstadt."
+"""
+
+Notes = """
+The text shown is from an 1861 Michel Lévy Frères edition (Tome Troisième/Volume 3), but the novel was originally serialized in 1842-1843 and first published in book form in 1842. I chose 1842 as it represents the original publication date of the work itself.
+"""
+</result>

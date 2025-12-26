@@ -1,0 +1,15 @@
+<result>
+Title = "Les Misérables"
+Author = "Victor Hugo"
+Year = 1862
+
+Tags = ["fiction", "classic-literature"]
+
+Summary = """
+Les Misérables is Victor Hugo's monumental novel following the lives of several characters in early 19th-century France, most centrally the ex-convict Jean Valjean who seeks redemption after serving nineteen years in prison for stealing bread. The novel weaves together themes of justice, mercy, love, and revolution against the backdrop of French society from the Napoleonic era through the June Rebellion of 1832. It explores the struggles of the poor, the nature of moral transformation, and the tension between law and grace through characters including the relentless Inspector Javert, the tragic Fantine, and her daughter Cosette. The work is celebrated as one of the greatest novels of the 19th century.
+"""
+
+Notes = """
+The novel was first published in 1862 in French. This particular edition is Isabel F. Hapgood's English translation published by Thomas Y. Crowell & Co. in 1887. The year 1862 is used as it represents the original publication date of Hugo's work.
+"""
+</result>

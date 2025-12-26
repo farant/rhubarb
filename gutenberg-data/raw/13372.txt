@@ -1,0 +1,15 @@
+<result>
+Title = "The Gloved Hand"
+Author = "Burton E. Stevenson"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+The Gloved Hand is a detective mystery novel by Burton E. Stevenson, a prolific American author known for his mystery and adventure fiction. The novel was originally serialized in The Popular Magazine under the title "The Mind Master" before being published as a book. Stevenson was well-regarded for his detective stories, with this being one of several mysteries he wrote including The Holladay Case, The Marathon Mystery, and The Mystery of the Boule Cabinet. His works typically featured intricate plots and were popular in the early twentieth century detective fiction genre.
+"""
+
+Notes = """
+The year 1913 is taken directly from the title page of this edition. This appears to be the original publication year of the novel.
+"""
+</result>

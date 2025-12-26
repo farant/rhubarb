@@ -1,0 +1,15 @@
+<result>
+Title = "International Weekly Miscellany of Literature, Art, and Science"
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "literary-criticism"]
+
+Summary = """
+This is an issue of the International Weekly Miscellany, a mid-19th century American periodical that covered literature, art, and science. This particular issue (Vol. I, No. 2) from July 8, 1850 contains literary commentary including discussion of "The Lorgnette" (a satirical work in the style of Irving and Paulding's Salmagundi) and criticism of Tennyson's poetry, with the reviewer notably arguing that Bryant is a greater poet than Tennyson. The publication represents the literary journalism of antebellum America.
+"""
+
+Notes = """
+This is a periodical publication, not a book. The date July 8, 1850 is the exact publication date of this issue. The mention of Tennyson's "new poem" likely refers to "In Memoriam A.H.H." which was published in 1850.
+"""
+</result>

@@ -700,25 +700,25 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans FASTI_FORMA_ANGLICA_LONGA ---\n");
 
-        /* Nativitas Domini - Thursday, December 25th 2025 */
+        /* Nativitas Domini - Thursday - December 25th, 2025 AD */
         d = fasti_dies(MMXXV, XII, XXV);
         s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Thursday, December 25th 2025", piscina));
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Thursday - December 25th, 2025 AD", piscina));
 
-        /* 1 Ianuarii 2024 = Monday, January 1st 2024 */
+        /* 1 Ianuarii 2024 = Monday - January 1st, 2024 AD */
         d = fasti_dies(MMXXIV, I, I);
         s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Monday, January 1st 2024", piscina));
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Monday - January 1st, 2024 AD", piscina));
 
         /* 22 Februarii = "22nd" */
         d = fasti_dies(MMXXIV, II, XXII);
         s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Thursday, February 22nd 2024", piscina));
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Thursday - February 22nd, 2024 AD", piscina));
 
         /* 13 Martii = "13th" (teen exception) */
         d = fasti_dies(MMXXIV, III, XIII);
         s = fasti_formare_diem(d, FASTI_FORMA_ANGLICA_LONGA, piscina);
-        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Wednesday, March 13th 2024", piscina));
+        CREDO_CHORDA_AEQUALIS(s, chorda_ex_literis("Wednesday - March 13th, 2024 AD", piscina));
     }
 
 

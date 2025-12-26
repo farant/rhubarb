@@ -1,0 +1,15 @@
+<result>
+Title = "Wit Without Money"
+Author = "John Fletcher"
+Year = 1614
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+Wit Without Money is a comedic play by John Fletcher, a prolific Jacobean dramatist who frequently collaborated with Francis Beaumont and later with Shakespeare. The play centers on Valentine, a witty gentleman who has deliberately squandered his estate and refuses to maintain his wealth, much to the frustration of his uncle Lovegood. The plot involves romantic entanglements with a wealthy widow (Lady Hartwell) and her sister Isabel, with Valentine's companions also competing as suitors. The play explores themes of wit versus wealth, the nature of true gentility, and the comedy of courtship.
+"""
+
+Notes = """
+The play was likely written around 1614, though it was first published in 1639. Fletcher was one of the most successful playwrights of his era, succeeding Shakespeare as the chief dramatist for the King's Men company. The date of composition (1614) is chosen as it represents when the work was created, which is more historically significant than the later publication date.
+"""
+</result>

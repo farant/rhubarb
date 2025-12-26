@@ -1,0 +1,15 @@
+<result>
+Title = "The Rough Riders"
+Author = "Theodore Roosevelt"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+The Rough Riders is Theodore Roosevelt's first-hand account of the 1st United States Volunteer Cavalry Regiment during the Spanish-American War of 1898. Roosevelt, who served as Lieutenant Colonel and later Colonel of the regiment, describes the raising, training, and combat experiences of this famous volunteer cavalry unit. The book covers the regiment's formation from a diverse mix of cowboys, ranchers, Native Americans, and Ivy League athletes, their deployment to Cuba, and their participation in key battles including the famous charge at San Juan Hill. It stands as both a military memoir and an important primary source document for understanding American imperialism and the Spanish-American War.
+"""
+
+Notes = """
+The book was published in 1899, the year after the war ended. Roosevelt wrote it while serving as Governor of New York. The work helped cement his reputation as a war hero and contributed to his political rise, ultimately leading to the Vice Presidency in 1900 and the Presidency in 1901.
+"""
+</result>

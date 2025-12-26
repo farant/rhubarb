@@ -1,0 +1,15 @@
+<result>
+Title = "ABC's of Science"
+Author = "Charles Oliver"
+Year = 1919
+
+Tags = ["non-fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+ABC's of Science is a children's educational book that uses the alphabet format to introduce young readers to basic scientific concepts and terminology. Each letter of the alphabet is associated with a scientific term or concept, making it an accessible primer for elementary science education. The book was part of a genre of "ABC" educational books popular in the late 19th and early 20th centuries that aimed to make learning engaging for children.
+"""
+
+Notes = """
+The original publication year of 1919 is based on the known publication date of this work by Charles Oliver. The author wrote several educational children's books during this period. This is a straightforward educational text without significant later editorial additions.
+"""
+</result>

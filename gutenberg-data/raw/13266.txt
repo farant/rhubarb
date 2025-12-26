@@ -1,0 +1,15 @@
+<result>
+Title = "Final Report of the Louisiana Purchase Exposition Commission"
+Author = "Louisiana Purchase Exposition Commission"
+Year = 1906
+
+Tags = ["non-fiction", "historical-document", "government-report"]
+
+Summary = """
+This is the official final report of the Louisiana Purchase Exposition Commission to the U.S. Congress, documenting the 1904 World's Fair held in St. Louis, Missouri. The exposition celebrated the centennial of the Louisiana Purchase (1803), though it was held a year late in 1904. The fair was one of the largest world's fairs ever held, covering over 1,200 acres and featuring exhibits from numerous nations and U.S. states. This report includes financial accounts, reports from foreign countries and U.S. states/territories, and documentation of special events like Centennial Day, Diplomatic Day, and State Day. The report was transmitted to Congress by President Theodore Roosevelt.
+"""
+
+Notes = """
+The year 1906 is when this report was published and submitted to Congress. The exposition itself took place in 1904. For a historical timeline, 1906 is appropriate as this is a government document reporting on the completed event, not a contemporaneous account of the fair itself.
+"""
+</result>

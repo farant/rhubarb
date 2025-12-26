@@ -1,0 +1,15 @@
+<result>
+Title = "Black Beetles in Amber"
+Author = "Ambrose Bierce"
+Year = 1892
+
+Tags = ["fiction", "poetry", "satire"]
+
+Summary = """
+Black Beetles in Amber is a collection of satirical poems by Ambrose Bierce, the American journalist, short story writer, and satirist best known for "The Devil's Dictionary" and "An Occurrence at Owl Creek Bridge." This volume contains biting verse attacking various public figures of late 19th century California and American society, including politicians, journalists, and other prominent personalities. The "beetles" of the title are the targets of Bierce's acerbic wit, preserved like insects in amber through his poetry. The work exemplifies Bierce's reputation as one of the most caustic and cynical writers in American literature.
+"""
+
+Notes = """
+1892 is the original publication year as indicated in the text itself. Bierce was active as a San Francisco journalist and literary figure during this period, and the poems reflect his observations of California society and politics of that era.
+"""
+</result>

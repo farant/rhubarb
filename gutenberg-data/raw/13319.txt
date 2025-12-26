@@ -1,0 +1,17 @@
+The file appears empty or has issues. Based on the text you provided in your message, I can identify this work:
+
+<result>
+Title = "The Return of Peter Grimm"
+Author = "David Belasco"
+Year = 1911
+
+Tags = ["fiction", "drama", "play"]
+
+Summary = """
+The Return of Peter Grimm is a three-act play by American theatrical producer and playwright David Belasco. The play tells the story of Peter Grimm, an elderly Dutch-American horticulturist who, after dying, returns as a spirit to correct mistakes he made in life - particularly regarding his ward's engagement to his unworthy nephew. The play explores themes of death, the afterlife, and the possibility of communication between the living and the dead. It was one of Belasco's most successful works, premiering on Broadway in 1911 with David Warfield in the title role. The play became famous for its innovative staging and atmospheric effects, particularly in depicting the supernatural elements.
+"""
+
+Notes = """
+The play premiered on October 17, 1911 at the Belasco Theatre in New York. There was some controversy over authorship - Cecil B. DeMille claimed co-authorship, though Belasco is generally credited as sole author. A film adaptation was made in 1926 and again in 1935. The introductory material in the Gutenberg text appears to be from an edited collection of Belasco's plays, likely from the 1920s, but 1911 represents the original premiere and publication of the play itself.
+"""
+</result>

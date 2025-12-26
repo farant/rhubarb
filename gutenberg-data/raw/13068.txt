@@ -1,0 +1,18 @@
+<result>
+Title = "Twenty-One Days in India; Or, The Tour of Sir Ali Baba K.C.B."
+Author = "George Robert Aberigh-Mackay"
+Year = 1878
+
+Tags = ["fiction", "satire", "british-india"]
+
+Summary = """
+A satirical work originally serialized in Vanity Fair magazine in 1878-1879. The book presents a fictional narrator, "Sir Ali Baba K.C.B.," who offers witty and often biting observations on Anglo-Indian society during the British Raj. The work lampoons various archetypes of colonial India - civil servants, military officers, and Indian officials alike. When the anonymous author was revealed to be Aberigh-Mackay himself, an active civil servant and Principal of Rajkumar College in Indore, it caused considerable surprise. The satire was considered quite daring for its frank mockery of British imperial institutions. Aberigh-Mackay died young in 1881, and this remains his most celebrated work.
+"""
+
+Notes = """
+The original serialization began in Vanity Fair in 1878. The text provided is from the 1914 ninth edition which also includes "The Teapot Series" - additional contributions from The Bombay Gazette published in 1880 under the pseudonym "Our Political Orphan." I chose 1878 as the year since that marks the original publication of the core work.
+"""
+</result>
+
+Sources:
+- [Internet Archive - Twenty-one days in India](https://archive.org/details/indiatwentyone00aberrich)

@@ -1,0 +1,15 @@
+<result>
+Title = "Beethoven's Letters 1790-1826 Vol. 2"
+Author = "Ludwig van Beethoven (translated by Lady Wallace)"
+Year = 1866
+
+Tags = ["non-fiction", "historical-document", "music", "correspondence"]
+
+Summary = """
+This is the second volume of a collection of Ludwig van Beethoven's personal correspondence spanning from 1790 to 1826, the year of his death. The letters were compiled by Dr. Ludwig Nohl, a German musicologist who was one of the earliest serious Beethoven scholars. The collection also includes Beethoven's letters to Archduke Rudolph, Cardinal-Archbishop of Olmütz, who was one of his most important patrons and a piano student of Beethoven. Lady Wallace (Grace Wallace) translated the letters into English from the German. These letters provide invaluable insight into Beethoven's personality, his struggles with deafness, his compositional process, and his relationships with patrons, publishers, and fellow musicians during the height of his career.
+"""
+
+Notes = """
+The year 1866 corresponds to Lady Wallace's English translation publication. Dr. Ludwig Nohl's original German compilation "Briefe Beethovens" was published in 1865. The letters themselves span 1790-1826, but the scholarly compilation and translation that constitutes this work dates to the 1860s. Since this is a translated and edited scholarly work rather than simply a reproduction of the raw letters, the translation date seems most appropriate for historical cataloging purposes.
+"""
+</result>

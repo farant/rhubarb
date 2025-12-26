@@ -1,0 +1,15 @@
+<result>
+Title = "Out With Gun and Camera; or, The Boy Hunters in the Mountains"
+Author = "Edward Stratemeyer"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a boys' adventure novel from the early 20th century, part of the "Boy Hunters" series. The story follows young protagonists on an outdoor expedition combining hunting and the then-novel hobby of photography. The narrative includes encounters with various wild animals (deer, wildcats, bears, a lion, and a chimpanzee - likely escaped from a circus based on the chapter titles), river adventures through rapids, and conflicts with antagonists ("the Spink Crowd"). It's representative of the popular juvenile adventure fiction of the era that emphasized outdoor skills, self-reliance, and wholesome excitement.
+"""
+
+Notes = """
+"Captain Ralph Bonehill" was a house pseudonym used primarily by Edward Stratemeyer, the prolific author and founder of the Stratemeyer Syndicate (which produced Hardy Boys, Nancy Drew, and many other series). Stratemeyer wrote numerous boys' adventure series under various pen names. This particular work was published around 1910 as part of the juvenile adventure genre that was extremely popular in that period.
+"""
+</result>

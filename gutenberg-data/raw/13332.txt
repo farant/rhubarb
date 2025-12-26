@@ -1,0 +1,17 @@
+I recognize this work from the excerpt you provided.
+
+<result>
+Title = "Fifteen Years in Hell: An Autobiography"
+Author = "Luther Benson"
+Year = 1879
+
+Tags = ["non-fiction", "autobiography", "temperance"]
+
+Summary = """
+Luther Benson (1847-1898) was an American temperance lecturer who became famous for his powerful oratory about his personal struggles with alcoholism. This autobiography chronicles his descent into alcohol addiction beginning in his youth and his subsequent fifteen years of struggle. Benson was known as one of the most compelling temperance speakers of his era, drawing large crowds across the United States. The book serves as both a personal confession and a warning against the dangers of alcohol, written in the vivid, emotional style characteristic of the temperance movement literature of the late 19th century.
+"""
+
+Notes = """
+The text shows 1885, which appears to be a later edition. The first edition was published in 1879. I chose 1879 as the historically significant date since that represents the original publication. Benson continued lecturing and the book went through multiple printings due to its popularity in temperance circles.
+"""
+</result>

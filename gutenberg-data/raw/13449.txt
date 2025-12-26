@@ -1,0 +1,15 @@
+<result>
+Title = "The Plain Man and His Wife"
+Author = "Arnold Bennett"
+Year = 1913
+
+Tags = ["non-fiction"]
+
+Summary = """
+A collection of essays by Arnold Bennett offering practical philosophy and advice on everyday life, marriage, and the pursuit of happiness. Bennett, known for his realistic novels of English provincial life, here turns his observational skills to examining the habits, attitudes, and domestic arrangements of ordinary middle-class people. The work reflects Bennett's interest in self-improvement literature and his belief that thoughtful attention to daily life could yield greater satisfaction and meaning.
+"""
+
+Notes = """
+First published in 1913. Arnold Bennett (1867-1931) was an English writer best known for novels like "The Old Wives' Tale" (1908) and the Clayhanger series. While Bennett was not Catholic, his non-fiction works like this one are general lifestyle essays rather than religious or morally problematic content.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "English Travellers of the Renaissance"
+Author = "Clare Howard"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly study examining English travel during the Renaissance period. The book analyzes the phenomenon of educated Englishmen traveling to continental Europe, particularly Italy, for educational and cultural purposes. It draws on primary sources including travel diaries, letters, and instructional literature for travelers from the 16th and 17th centuries. The work was originally written as academic research at Oxford University between 1908-1910.
+"""
+
+Notes = """
+1914 is the original publication year as indicated in the text. This is an academic monograph, not a translation or edition of an older work.
+"""
+</result>

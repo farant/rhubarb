@@ -1,0 +1,15 @@
+<result>
+Title = "George Sand: Some Aspects of Her Life and Writings"
+Author = "René Doumic"
+Year = 1910
+
+Tags = ["non-fiction", "biography", "literary-criticism"]
+
+Summary = """
+This is a biographical and literary study of the French novelist George Sand (pen name of Amantine Lucile Aurore Dupin, 1804-1876), one of the most prolific and controversial writers of 19th century France. René Doumic, a French literary critic and member of the Académie française, examines various periods and aspects of Sand's life: her childhood as Aurore Dupin, her unhappy marriage as Baronne Dudevant, her feminist views, her romantic relationships (including the famous affair with Alfred de Musset), her humanitarian ideals, her involvement in the 1848 Revolution, and her later years as the beloved 'Bonne Dame de Nohant.' The work provides both biographical narrative and analysis of her literary genius and influence.
+"""
+
+Notes = """
+First published in 1910 as indicated in the text. This English translation by Alys Hallard was published the same year. René Doumic (1860-1937) was a prominent French literary critic who served as permanent secretary of the Académie française.
+"""
+</result>

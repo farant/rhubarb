@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 100, June 13, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841. It became a British institution, famous for its wit, social commentary, and iconic cartoons. This issue from Volume 100 contains the regular feature "Voces Populi" (Voices of the People), a satirical sketch depicting scenes from everyday British life - in this case, the conversations and behaviors of patrons at a London music hall. The piece gently mocks the middle-class audience members who attend such entertainment venues more for social purposes than for the show itself.
+"""
+
+Notes = """
+Punch magazine ran from 1841 to 2002. The year 1891 is the actual publication date of this specific issue. "Voces Populi" was a recurring feature in the magazine during this period.
+"""
+</result>

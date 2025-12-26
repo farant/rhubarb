@@ -1,0 +1,15 @@
+<result>
+Title = "The Lost Ambassador; Or, The Search for the Missing Delora"
+Author = "E. Phillips Oppenheim"
+Year = 1910
+
+Tags = ["fiction"]
+
+Summary = """
+A mystery/thriller novel by E. Phillips Oppenheim, a prolific British author known as the "Prince of Storytellers." The novel follows the search for a missing woman named Delora, set against the backdrop of European high society and diplomatic intrigue. Oppenheim was famous for his espionage and international mystery novels, often featuring aristocrats, diplomats, and wealthy protagonists caught up in dangerous situations. This work is typical of his style, blending romance, suspense, and continental glamour.
+"""
+
+Notes = """
+1910 is the original publication year as shown on the title page. Oppenheim wrote over 100 novels during his career, and this falls within his most productive period. The illustrations by Howard Chandler Christy, a famous American illustrator, indicate this was a well-produced first edition.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Common People of Ancient Rome: Studies of Roman Life and Literature"
+Author = "Frank Frost Abbott"
+Year = 1911
+
+Tags = ["non-fiction", "history", "classical-studies"]
+
+Summary = """
+This is a scholarly work by Frank Frost Abbott, a professor of Latin at Princeton University, examining the daily life, language, literature, occupations, and social conditions of ordinary citizens in ancient Rome. Abbott was a respected classicist of the early 20th century who wrote several works aimed at making Roman history accessible to general readers. This book is a companion to his earlier "Society and Politics in Ancient Rome" and focuses on how the common people, rather than emperors and senators, shaped the Roman Empire through their everyday activities and culture.
+"""
+
+Notes = """
+1911 is the original publication date by Charles Scribner's Sons as indicated in the copyright notice. This is a primary scholarly work, not a translation, so the publication year is straightforward.
+"""
+</result>

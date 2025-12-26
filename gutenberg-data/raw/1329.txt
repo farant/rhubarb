@@ -1,0 +1,15 @@
+<result>
+Title = "A Voyage to Arcturus"
+Author = "David Lindsay"
+Year = 1920
+
+Tags = ["fiction", "philosophical-fiction"]
+
+Summary = """
+A Voyage to Arcturus is a philosophical science fiction novel following Maskull, who travels to the planet Tormance orbiting the star Arcturus after attending a séance. The novel is a strange allegorical journey through bizarre landscapes inhabited by unusual beings, each representing different philosophical and spiritual viewpoints. Lindsay uses the alien setting to explore questions about the nature of reality, good and evil, pleasure and pain, and the search for ultimate truth. The book was commercially unsuccessful upon release but later gained a cult following and influenced writers like C.S. Lewis and J.R.R. Tolkien. It is considered a precursor to philosophical science fiction.
+"""
+
+Notes = """
+First published in 1920 by Methuen in London. Lindsay was Scottish and this was his first novel. Despite poor initial sales, it became recognized as an important work of imaginative fiction. The novel's Gnostic and Schopenhauerian themes make it more of a philosophical allegory than traditional science fiction.
+"""
+</result>

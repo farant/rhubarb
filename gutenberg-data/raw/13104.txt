@@ -1,0 +1,15 @@
+<result>
+Title = "The Abominations of Modern Society"
+Author = "T. De Witt Talmage"
+Year = 1872
+
+Tags = ["non-fiction", "religious"]
+
+Summary = """
+A collection of moral sermons and social commentary by Thomas De Witt Talmage, a prominent Presbyterian minister known for his dramatic preaching style. The work addresses various social ills of 19th century American society including nightlife temptations, fashion excess, dancing, and the exploitation of seamstresses and needle-workers. Talmage was one of the most famous American preachers of his era, known for sensationalist rhetoric aimed at moral reform.
+"""
+
+Notes = """
+Talmage was Presbyterian, not Catholic, so the 'catholic' tag does not apply. The work reflects Protestant evangelical moral reform movements of the Gilded Age.
+"""
+</result>

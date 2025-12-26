@@ -1,0 +1,15 @@
+<result>
+Title = "Ved Vejen"
+Author = "Herman Bang"
+Year = 1886
+
+Tags = ["fiction"]
+
+Summary = """
+Ved Vejen (By the Wayside/By the Road) is a Danish naturalist novel by Herman Bang, one of the most significant Scandinavian authors of the late 19th century. The novel tells the story of Katinka Bai, the young wife of a provincial railway stationmaster, who lives a monotonous existence in a small Danish town. The narrative explores her emotional awakening when she falls in love with a visitor, and the tragic consequences of unfulfilled longing. It is considered one of Bang's masterpieces and a landmark of Danish impressionist literature, known for its subtle psychological portrayal and innovative narrative technique that relies heavily on dialogue and external observation rather than direct exposition of characters' inner lives.
+"""
+
+Notes = """
+The year 1886 is clearly printed in the text itself as the publication year in Copenhagen (Kjøbenhavn). This is the original publication date of the novel.
+"""
+</result>

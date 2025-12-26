@@ -1,0 +1,15 @@
+<result>
+Title = "What I Saw in California"
+Author = "Edwin Bryant"
+Year = 1848
+
+Tags = ["non-fiction", "historical-document", "travel"]
+
+Summary = """
+A first-hand account by Edwin Bryant of his journey to California during the Gold Rush era. Bryant served as Alcalde (a Spanish-derived term for mayor/judge) of San Francisco in 1847. The book describes California's geography, climate, agricultural potential, and gold mines, serving as a practical guide for emigrants heading west. It includes official documents verifying gold discoveries and provides routes for travelers. The work is an important primary source for understanding the California Gold Rush period and early American California.
+"""
+
+Notes = """
+The title page shows 1849, which is the publication date of this expanded edition with the gold appendix. However, the original work "What I Saw in California" was first published in 1848, based on Bryant's overland journey in 1846 and his experiences as Alcalde in 1847. The 1848 date is used as it represents the original publication of the core narrative. This 1849 edition added appendices about the gold discoveries which had become sensational news.
+"""
+</result>

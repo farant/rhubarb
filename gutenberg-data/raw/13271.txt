@@ -1,0 +1,15 @@
+<result>
+Title = "Rides on Railways"
+Author = "Samuel Sidney"
+Year = 1851
+
+Tags = ["non-fiction", "travel", "appropriate-for-children"]
+
+Summary = """
+A Victorian travel guide describing railway journeys across Britain. Samuel Sidney (1813-1883) was an English journalist and author who wrote extensively on agriculture, emigration, and travel. This book provides observations on towns, districts, manufactures, and mines along railway routes to Wales, the Lake District, and the Scottish Highlands. It combines practical travel information with social and industrial commentary typical of mid-19th century British travel writing.
+"""
+
+Notes = """
+First published in 1851. Samuel Sidney was a prolific writer who contributed to various periodicals and wrote books on diverse topics including Australian emigration and horse management. This work reflects the early Victorian enthusiasm for railway travel and industrial tourism.
+"""
+</result>

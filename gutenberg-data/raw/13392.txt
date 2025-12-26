@@ -1,0 +1,15 @@
+<result>
+Title = "A Woman's Impressions of the Philippines"
+Author = "Mary H. Fee"
+Year = 1910
+
+Tags = ["non-fiction", "historical-document", "memoir", "travel"]
+
+Summary = """
+A firsthand account by Mary H. Fee, an American schoolteacher who traveled to the Philippines during the early American colonial period following the Spanish-American War (1898). The book documents her experiences teaching Filipino students, her observations on Filipino character and society, her adventures with typhoons and earthquakes, and her impressions of local customs, religion, and the political situation during American occupation. Fee was part of the group of American teachers sent to establish the American educational system in the Philippines, sometimes called "Thomasites" after the USS Thomas which transported many of them.
+"""
+
+Notes = """
+First published in 1910 by Sherman, French & Company. Mary H. Fee served as a teacher in the Philippines from 1901 onwards and wrote from direct experience during the early years of American administration of the islands.
+"""
+</result>

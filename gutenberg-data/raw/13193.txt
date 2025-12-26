@@ -1,0 +1,15 @@
+<result>
+Title = "Supreme Personality"
+Author = "Delmer Eugene Croft"
+Year = 1921
+
+Tags = ["non-fiction", "self-help", "new-thought"]
+
+Summary = """
+This is a New Thought/self-help work by Dr. Delmer Eugene Croft, a psychotherapist and lecturer who was part of the early 20th century American New Thought movement. The book focuses on developing personal power, overcoming doubt, fear and worry, and achieving happiness through mental and spiritual discipline. It includes material on "thought waves" and mental healing practices typical of the New Thought genre. The work was quite popular, as indicated by the "One Hundredth Thousand" printing note on the title page.
+"""
+
+Notes = """
+The exact publication date is difficult to pin down, but Croft was active in the 1910s-1920s and this work appears to be from around 1921 based on the style and New Thought movement peak. This is representative of the popular psychology/self-help genre that flourished in America during that era, blending quasi-spiritual concepts with practical life advice.
+"""
+</result>

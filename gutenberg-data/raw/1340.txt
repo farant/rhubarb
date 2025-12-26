@@ -1,0 +1,15 @@
+<result>
+Title = "Autobiography of Andrew Dickson White"
+Author = "Andrew Dickson White"
+Year = 1905
+
+Tags = ["non-fiction", "autobiography", "historical-document"]
+
+Summary = """
+This is the autobiography of Andrew Dickson White (1832-1918), an American historian, educator, and diplomat. He was the co-founder and first president of Cornell University, establishing it as one of the first non-sectarian universities in America. White also served as U.S. Ambassador to Germany and Russia. He is perhaps best known for his work "A History of the Warfare of Science with Theology in Christendom" (1896), which argued for the separation of scientific inquiry from religious authority. His autobiography covers his life in education, diplomacy, and his views on the relationship between science and religion.
+"""
+
+Notes = """
+The autobiography was first published in 1905 by The Century Company in two volumes. White wrote it late in his life, reflecting on his extensive career in academia and diplomacy.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Le Cap au Diable"
+Author = "Charles DeGuise"
+Year = 1863
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+Le Cap au Diable is a French-Canadian legend written by Dr. Charles DeGuise, a Quebec physician and author. The work belongs to the tradition of "légendes canadiennes" - folkloric tales that blend French-Canadian Catholic culture with supernatural elements tied to the landscape of Quebec. The excerpt describes the scenic beauty of the St. Lawrence River between Quebec and Montreal, particularly contrasting the rugged northern shore with its mountains and valleys against the gentler southern shore. The narrative builds toward the mysterious "Roche Avignon" (or "Roche Ah Veillons"), an outcropping that likely serves as the setting for the diabolical legend the title promises. These legends typically feature moral tales where the devil is outwitted or where faith triumphs over supernatural evil.
+"""
+
+Notes = """
+The year 1863 appears directly in the original publication. Charles DeGuise (1827-1884) was a medical doctor from Quebec who also wrote literary works. This is an original French-Canadian composition, not a translation, so the publication date is the appropriate year. The "M.D." after his name confirms his medical profession.
+"""
+</result>

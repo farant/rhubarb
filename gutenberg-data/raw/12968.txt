@@ -1,0 +1,23 @@
+Interesting - the file seems empty or has issues. But you've provided the content directly in your message! I can see it clearly:
+
+**Title:** Our Government: Local, State, and National  
+**Authors:** J.A. James, Ph.D. and A.H. Sanford, M.A.  
+**Year:** 1903 (first edition, with 1913 revision noted)
+
+This is a civics textbook written by two American history professors for use in high schools, academies, and normal schools (teacher training institutions). James was at Northwestern University and Sanford at the State Normal School in La Crosse, Wisconsin.
+
+<result>
+Title = "Our Government: Local, State, and National"
+Author = "J.A. James, A.H. Sanford"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A civics textbook designed for American high school and normal school students, covering local, state, and national government. Written by two history professors - J.A. James of Northwestern University and A.H. Sanford of Wisconsin State Normal School. The book emphasizes practical government operations while also providing historical context for the development of American governmental institutions. It was designed to be flexible, allowing teachers to start with any of the three parts (local, state, or national government).
+"""
+
+Notes = """
+The title page lists both 1903 and 1913, indicating the original publication in 1903 with a revised edition in 1913. Year 1903 chosen as the original publication date. The authors reference an earlier companion text "Government in State and Nation" which was intended for more advanced students (third or fourth year), while this text was prepared for earlier course levels.
+"""
+</result>

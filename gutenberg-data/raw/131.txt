@@ -1,0 +1,15 @@
+<result>
+Title = "The Pilgrim's Progress"
+Author = "John Bunyan"
+Year = 1678
+
+Tags = ["fiction", "allegory", "appropriate-for-children", "protestant"]
+
+Summary = """
+The Pilgrim's Progress is one of the most influential works of English literature and Christian allegory. It tells the story of Christian, a man burdened by sin, who journeys from the City of Destruction to the Celestial City. Along the way he encounters various characters and places representing spiritual states and theological concepts - the Slough of Despond, Vanity Fair, Giant Despair, and companions like Faithful and Hopeful. Written while Bunyan was imprisoned for unlicensed preaching, it became second only to the Bible in Protestant households for centuries.
+"""
+
+Notes = """
+Part One was first published in 1678. Part Two followed in 1684. Bunyan was a Puritan/Nonconformist preacher, not Catholic - the work reflects Protestant theology and was written during his imprisonment for refusing to conform to the Church of England. Despite theological differences, it remains a classic of Christian literature widely read across denominations.
+"""
+</result>

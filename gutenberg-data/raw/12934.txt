@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 99, November 1, 1890"
+Author = "Various"
+Year = 1890
+
+Tags = ["non-fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire published from 1841 to 2002. It was founded by Henry Mayhew and engraver Ebenezer Landells. The magazine became famous for its satirical cartoons, comic writing, and social commentary on Victorian and later British life. This particular issue from November 1890 contains a piece from the recurring "Modern Types" series, written by "Mr. Punch's Own Type Writer," which offers satirical character sketches of contemporary social figures—in this case, "The Average Undergraduate." The excerpt defends young men of the 1890s against complaints from older generations about declining manners and morals.
+"""
+
+Notes = """
+Punch was published weekly, so 1890 is the exact publication year for this specific issue. The magazine was influential in British culture and coined the phrase "cartoon" in its modern sense referring to a humorous illustration.
+"""
+</result>

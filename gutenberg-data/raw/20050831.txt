@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 19, No. 529"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap periodicals aimed at a broad readership, predating the penny press movement. The magazine featured a mix of articles on literature, history, science, travel, and general knowledge, often accompanied by woodcut illustrations. This particular issue from January 1832 includes an article about Fishmongers' Hall in London, discussing its architectural history, its connection to Christopher Wren's post-Great Fire rebuilding plans, and the historical importance of the Fishmongers' Company during the era when fish consumption was mandatory during Catholic fasting periods.
+"""
+
+Notes = """
+The year 1832 is the publication date of this specific issue. The Mirror was a serial publication, so each issue has its own date. This is Vol. XIX, No. 529, dated January 14, 1832.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "L'Auberge de l'Ange Gardien"
+Author = "Comtesse de Ségur"
+Year = 1863
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+L'Auberge de l'Ange Gardien (The Inn of the Guardian Angel) is a children's novel by the Comtesse de Ségur, born Sophie Rostopchine. The story follows two orphaned brothers, Jacques (age 6) and Paul (age 3), who are discovered sleeping by the roadside by a soldier and his Saint Bernard dog. The novel explores themes of Christian charity, family bonds, and divine providence as the children find refuge and care. The Comtesse de Ségur was one of the most beloved French children's authors of the 19th century, and her works were known for their moral and Catholic values while remaining engaging stories for young readers.
+"""
+
+Notes = """
+First published in 1863. The dedication to her grandsons Louis and Gaston de Malaret is typical of her personal, familial approach to her children's books. The Comtesse de Ségur was a devout Catholic convert (from Russian Orthodoxy) and her works consistently reflect Catholic moral teaching.
+"""
+</result>

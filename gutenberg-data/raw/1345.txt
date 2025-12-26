@@ -1,0 +1,15 @@
+<result>
+Title = "The Vicar of Tours"
+Author = "Honoré de Balzac"
+Year = 1832
+
+Tags = ["fiction"]
+
+Summary = """
+The Vicar of Tours (Le Curé de Tours) is a novella by Honoré de Balzac, part of his monumental Comédie Humaine series. The story follows Abbé Birotteau, a simple and naive priest in Tours who becomes entangled in petty ecclesiastical intrigues. After years of patient waiting, he finally obtains comfortable lodgings in the house of an old spinster, but his contentment is short-lived as he becomes the victim of machinations by his fellow priest, Abbé Troubert, an ambitious and cunning man. The work is a sharp social satire examining provincial life, clerical politics, and the destructive power of envy and ambition within seemingly pious circles.
+"""
+
+Notes = """
+First published in 1832 as part of the Scènes de la vie de province. This English translation by Katharine Prescott Wormeley was published later in the 19th century. The year 1832 represents the original French publication.
+"""
+</result>

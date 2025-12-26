@@ -1,0 +1,15 @@
+<result>
+Title = "War-Time Financial Problems"
+Author = "Hartley Withers"
+Year = 1919
+
+Tags = ["non-fiction", "economics", "history"]
+
+Summary = """
+A collection of essays on British financial policy during World War I, written by Hartley Withers, a prominent British financial journalist and editor of The Economist (1916-1921). The work addresses wartime economic challenges including war loans, taxation, currency issues, inflation, and post-war financial reconstruction. Withers was known for making complex financial topics accessible to general readers.
+"""
+
+Notes = """
+The book was published in 1919, collecting essays written during the war years (1914-1918). I chose 1919 as it represents the publication date of the collected work, which provides the historical context of immediate post-war financial reflection.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Mythes Chaldéens"
+Author = "Léon Heuzey"
+Year = 1895
+
+Tags = ["non-fiction", "archaeology", "mythology", "ancient-near-east"]
+
+Summary = """
+This is an academic article on Chaldean (Babylonian) mythology by Léon Heuzey, a distinguished French archaeologist and curator at the Louvre Museum. Heuzey was a specialist in ancient Near Eastern and Greek antiquities. The article was published in the Revue Archéologique, a prestigious French archaeological journal. The work likely examines mythological themes found in Mesopotamian art and artifacts, drawing on Heuzey's expertise in interpreting ancient sculptural and iconographic evidence.
+"""
+
+Notes = """
+1895 is the publication year shown on the title page. This appears to be an original scholarly article rather than a translation of an ancient text, so the publication date is the appropriate year to use.
+"""
+</result>

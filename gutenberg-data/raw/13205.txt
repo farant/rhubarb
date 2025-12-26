@@ -1,0 +1,15 @@
+<result>
+Title = "Civics: as Applied Sociology"
+Author = "Patrick Geddes"
+Year = 1904
+
+Tags = ["non-fiction", "sociology", "urban-planning"]
+
+Summary = """
+This is a lecture delivered by Patrick Geddes, the Scottish biologist, sociologist, and pioneering town planner, before the Sociological Society in London in 1904. Geddes was a foundational figure in urban planning and regional survey methods. In this work, he outlines his vision for "civics" as applied sociology - the systematic study of cities through Regional Survey leading to informed civic action through Regional Service. He advocates for combining scientific observation (a "Sociological Observatory") with practical experimentation (a "Sociological Laboratory") to understand and improve urban life. Geddes's ideas were highly influential in the development of modern urban planning and regional studies.
+"""
+
+Notes = """
+The year 1904 is when this lecture was delivered and published. Patrick Geddes (1854-1932) is considered one of the fathers of modern town planning. This text represents his early systematic thinking about cities as subjects for scientific study and coordinated improvement.
+"""
+</result>

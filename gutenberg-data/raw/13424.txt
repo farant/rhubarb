@@ -1,0 +1,15 @@
+<result>
+Title = "Honoring Parents"
+Author = "Massachusetts Sabbath School Society"
+Year = 1851
+
+Tags = ["non-fiction", "appropriate-for-children", "religious"]
+
+Summary = """
+A short moral tract published by the Massachusetts Sabbath School Society intended for children. The work teaches the importance of the Fifth Commandment ("Honor thy father and thy mother") through a story about a young boy who demonstrates respect for his mother. It was part of the Sunday School movement's educational literature designed to instill Christian values and moral behavior in young readers.
+"""
+
+Notes = """
+The Massachusetts Sabbath School Society was a Protestant organization, not Catholic. The year 1851 appears on the title page as the publication date. This is a tract/pamphlet rather than a substantial book.
+"""
+</result>

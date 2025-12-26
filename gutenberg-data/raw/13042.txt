@@ -1,0 +1,15 @@
+<result>
+Title = "Knickerbocker's History of New York"
+Author = "Washington Irving"
+Year = 1809
+
+Tags = ["fiction", "satire", "humor"]
+
+Summary = """
+A satirical history of New York from its founding by Dutch settlers through the end of Dutch rule. Written under the pseudonym "Diedrich Knickerbocker," the work parodies historical writing while poking fun at Dutch colonial society, contemporary politics, and the pomposity of historians. The book established Irving as a major American literary figure and was praised by Walter Scott for its Swift-like satirical style. It remains a classic of American humor and helped create lasting stereotypes about Dutch New Yorkers.
+"""
+
+Notes = """
+First published December 1809. Irving was 26 years old. The work was preceded by an elaborate hoax involving fake newspaper notices about the disappearance of the fictional Diedrich Knickerbocker. The term "Knickerbocker" became synonymous with old New York Dutch culture largely due to this book.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Eugene Field: A Study in Heredity and Contradictions"
+Author = "Slason Thompson"
+Year = 1901
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is a two-volume biography of Eugene Field (1850-1895), the beloved American poet and journalist known as the "Children's Poet." Field was famous for poems like "Little Boy Blue" and "Wynken, Blynken, and Nod." Slason Thompson was a close friend and colleague of Field's at the Chicago Daily News, making this an intimate portrait written by someone who knew the subject personally. The biography examines Field's personality, his literary career, his humor columns, and the apparent contradictions in his character - he was known for elaborate practical jokes yet wrote tender children's verse.
+"""
+
+Notes = """
+Published in December 1901, six years after Eugene Field's death in 1895. This is the original publication date of the biography itself, not a later edition.
+"""
+</result>

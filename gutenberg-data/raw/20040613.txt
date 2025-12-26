@@ -1,0 +1,15 @@
+<result>
+Title = "Fun & Nonsense"
+Author = "Willard Bonte"
+Year = 1910
+
+Tags = ["fiction", "poetry", "appropriate-for-children", "illustrated"]
+
+Summary = """
+A children's picture book of light verse and whimsical illustrations by Willard Bonte. The book features short, playful poems with accompanying illustrations, using simple rhymes and fanciful imagery appealing to young readers. The verses feature anthropomorphized candy and other charming nonsense typical of early 20th century children's literature.
+"""
+
+Notes = """
+Willard Bonte was an American illustrator and author active in the early 1900s. This work appears to be from around 1910 based on the style and Bonte's active period. The exact publication date is difficult to confirm, but the aesthetic and publishing conventions place it firmly in the Edwardian era of children's book illustration.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Child's Garden of Verses"
+Author = "Robert Louis Stevenson"
+Year = 1885
+
+Tags = ["poetry", "fiction", "appropriate-for-children"]
+
+Summary = """
+A beloved collection of poetry written for children, reflecting on the joys, imaginings, and experiences of childhood. The poems capture a child's perspective on play, bedtime, seasons, illness, and the wonder of everyday life. Dedicated to Alison Cunningham, Stevenson's childhood nurse ("Cummy") who cared for him during his sickly youth in Edinburgh. The collection includes such famous poems as "The Swing," "My Shadow," "The Land of Counterpane," and "The Lamplighter." It remains one of the most influential works of children's poetry in the English language.
+"""
+
+Notes = """
+First published in 1885 by Longmans, Green, and Co. Stevenson wrote many of these poems while recovering from illness in the south of France. The dedication to Alison Cunningham is touching given how much she influenced his early life and imagination during his frequently bedridden childhood.
+"""
+</result>

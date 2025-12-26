@@ -1,0 +1,15 @@
+<result>
+Title = "Robert F. Murray: His Poems with a Memoir"
+Author = "Robert F. Murray, Andrew Lang"
+Year = 1894
+
+Tags = ["poetry", "biography", "non-fiction"]
+
+Summary = """
+This is a posthumous collection of poems by Robert Fuller Murray (1863-1894), a Scottish poet who studied at St Andrews University and became known for his light verse and university-themed poetry, particularly "The Scarlet Gown" which celebrated student life at St Andrews. The collection includes a biographical memoir written by Andrew Lang, a prominent Scottish writer, poet, and literary critic. Murray died young of tuberculosis, and Lang, who was a friend and admirer of his work, compiled this memorial volume shortly after his death.
+"""
+
+Notes = """
+1894 is the year of first publication by Longmans, Green, and Co. Murray died in 1894 and this appears to be the first collected edition of his work with Lang's memoir.
+"""
+</result>

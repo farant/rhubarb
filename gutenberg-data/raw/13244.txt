@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari: Christmas Number 1890"
+Author = "Various (Punch Magazine Staff)"
+Year = 1890
+
+Tags = ["fiction", "humor", "periodical"]
+
+Summary = """
+This is the Christmas special issue of Punch magazine from 1890. Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841. The Christmas numbers were special editions featuring longer fictional pieces, often with fantastical or whimsical themes. This particular issue features "Punch Among the Planets," a framing narrative where the personified Mr. Punch character meets Father Time at his observatory. The magazine was famous for its wit, political cartoons, and coining the term "cartoon" in its modern sense. It ran continuously until 1992, with a brief revival from 1996-2002.
+"""
+
+Notes = """
+The year 1890 is definitive as this is explicitly identified as the "Christmas Number 1890" in the text itself. Punch magazine issues are dated to their publication year. The author is listed as "Various" because Punch was a collaborative publication with multiple contributors, though individual pieces within may have had specific authors.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Library of the World's Best Literature, Ancient and Modern, Vol. IV"
+Author = "Charles Dudley Warner (Editor)"
+Year = 1896
+
+Tags = ["non-fiction", "anthology", "literary-criticism"]
+
+Summary = """
+This is Volume IV of a massive 30-volume literary anthology compiled under the editorship of Charles Dudley Warner, an American essayist, novelist, and friend of Mark Twain. The "Library of the World's Best Literature" was one of the most ambitious literary anthology projects of the late 19th century, aiming to collect the finest examples of world literature from ancient times through the contemporary period. Each volume contains selections from various authors with critical introductions and biographical sketches. The advisory council included prominent academics from Harvard, Yale, Princeton, Columbia, and the University of Michigan, lending scholarly credibility to the project.
+"""
+
+Notes = """
+The work was originally published in 1896-1897 by R.S. Peale and J.A. Hill. The "Connoisseur Edition" was one of several editions produced. Charles Dudley Warner (1829-1900) is perhaps best known today for co-authoring "The Gilded Age" with Mark Twain, which gave that era its name.
+"""
+</result>

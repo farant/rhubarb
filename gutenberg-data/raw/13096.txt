@@ -1,0 +1,15 @@
+<result>
+Title = "Le Héros de Châteauguay"
+Author = "L. O. David"
+Year = 1883
+
+Tags = ["non-fiction", "historical-document", "biography"]
+
+Summary = """
+This is a biographical tribute to Charles-Michel de Salaberry (1778-1829), the French-Canadian military officer who commanded the Canadian Voltigeurs at the Battle of Châteauguay on October 26, 1813. In that battle, Salaberry led a force of approximately 300 Canadian militiamen and Indigenous warriors to repel an American invasion force of several thousand troops during the War of 1812. The work, written by Laurent-Olivier David, is a patriotic celebration of Salaberry as a symbol of French-Canadian military valor, comparing him favorably to legendary French knights and warriors like Bayard, Du Guesclin, and the crusaders. David was a prominent Quebec journalist, politician, and historian who wrote extensively on French-Canadian national figures.
+"""
+
+Notes = """
+The year 1883 appears directly in the text as the publication date. Laurent-Olivier David (1840-1926) was a significant figure in Quebec intellectual life, serving as a senator and writing numerous works celebrating French-Canadian heritage and heroes.
+"""
+</result>

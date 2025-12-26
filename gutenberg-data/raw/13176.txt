@@ -1,0 +1,15 @@
+<result>
+Title = "The Abolitionists: Together with Personal Memories of the Struggle for Human Rights, 1830-1864"
+Author = "John F. Hume"
+Year = 1905
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A personal memoir and historical account of the American abolitionist movement by John F. Hume, who was himself involved in the anti-slavery cause from an early age. The book was written partly in response to criticism of abolitionists by a prominent public figure (likely Theodore Roosevelt, given the timing and reference to the "recent presidential campaign" of 1904). Hume seeks to vindicate the character and legacy of abolitionists, providing firsthand recollections of the struggle against slavery from 1830 to 1864.
+"""
+
+Notes = """
+Published 1905 by G.P. Putnam's Sons. John F. Hume (1830-1910) was a Missouri lawyer, politician, and reformer who had been active in anti-slavery politics. The foreword references the 1904 presidential campaign, suggesting the work was prompted by Theodore Roosevelt's critical comments about abolitionists.
+"""
+</result>

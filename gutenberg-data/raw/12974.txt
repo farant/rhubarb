@@ -1,0 +1,15 @@
+<result>
+Title = "Christmas Entertainments"
+Author = "Alice Maude Kellogg"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of Christmas-themed performance materials designed for children aged five to fifteen years. The book contains fancy drills, acrostics, motion songs, tableaux, short plays, and recitations in costume suitable for holiday entertainments and school programs. It was part of the popular genre of entertainment manuals that provided teachers, Sunday school leaders, and parents with ready-made material for Christmas celebrations and performances.
+"""
+
+Notes = """
+Alice Maude Kellogg was an American author who wrote several books of entertainments and recitations for children in the early 1900s. This work was first published around 1903 based on copyright records and publication patterns of similar works by the author.
+"""
+</result>

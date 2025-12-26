@@ -1,0 +1,15 @@
+<result>
+Title = "The Spirit of Place and Other Essays"
+Author = "Alice Meynell"
+Year = 1899
+
+Tags = ["non-fiction", "essays"]
+
+Summary = """
+A collection of literary essays by Alice Meynell, the celebrated English essayist, poet, and critic. The essays explore various subjects including the relationship between place and spirit, solitude, literary figures, and seasonal reflections. Meynell was known for her elegant prose style and Catholic sensibility, though this particular collection is primarily literary criticism and personal reflection rather than explicitly religious writing.
+"""
+
+Notes = """
+The 1899 date comes from the John Lane edition mentioned in the transcription notes. Alice Meynell (1847-1922) was a convert to Catholicism and deeply Catholic in her personal life, but this essay collection is primarily literary rather than devotional in nature, so I have not included the 'catholic' tag which is reserved for works that would carry nihil obstat/imprimatur.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Dick in the Everglades"
+Author = "A.W. Dimock"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+An adventure novel for young readers set in the Florida Everglades and the Ten Thousand Islands region. The story follows two boys exploring the wilderness, encountering wildlife including alligators, manatees, crocodiles, tarpon, and porpoises. Based on real experiences and locations, the author (known for "Florida Enchantments") emphasizes the authenticity of the adventures, noting that the events could be replicated by determined young explorers. The book features photographs by J.A. Dimock and captures the natural history and adventure possibilities of early 20th century Florida wilderness.
+"""
+
+Notes = """
+Copyright date of 1909 is used as publication year. A.W. Dimock (Anthony Weston Dimock, 1842-1918) was a Wall Street financier who became a noted Florida naturalist and author. The preface's mention of specimens sent to the New York Aquarium and Zoological Park adds historical documentary value to the adventure narrative.
+"""
+</result>

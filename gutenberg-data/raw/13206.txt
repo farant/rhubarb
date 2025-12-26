@@ -1,0 +1,15 @@
+<result>
+Title = "A Short History of Monks and Monasteries"
+Author = "Alfred Wesley Wishart"
+Year = 1900
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+A comprehensive survey of Christian monasticism from its origins in the Egyptian desert through the Reformation. Wishart, a church historian trained at the University of Chicago, traces the development of the ascetic ideal across centuries, examining hermits, monastic orders, their accumulation of wealth and power, and their eventual decline in the sixteenth century. The work aims to present the "salient features" of monastic history for general readers rather than specialists.
+"""
+
+Notes = """
+1900 is the original publication year as indicated by both the Roman numerals (MDCCCC) and Arabic numerals in the frontmatter. This is the first and only edition of this work.
+"""
+</result>

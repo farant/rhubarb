@@ -1,0 +1,19 @@
+<result>
+Title = "Det graa Hus"
+Author = "Herman Bang"
+Year = 1901
+
+Tags = ["fiction"]
+
+Summary = """
+Det graa Hus (The Grey House) is a Danish novel by Herman Bang, one of the leading figures of the Modern Breakthrough in Scandinavian literature. It is the second part of a romanticized memoir following Det hvide Hus (The White House, 1898). The novel marked a shift in Bang's writing style from detached Impressionism toward a more psychologically introspective narrative technique with internal views of characters. The excerpt shows his characteristic impressionistic prose—"His Excellency" and "Her Grace" moving through a decaying grand house filled with shrouded bronzes and pedestals, listening to Her Grace's sleep-talking about long-dead Durchlauchters and balls at Weimar. Bang was known for his psychological depth and melancholic exploration of fading aristocratic worlds.
+"""
+
+Notes = """
+Herman Bang (1857-1912) was a Danish author and journalist. While Bang was gay and faced persecution for it in his lifetime, his work is secular literary fiction without particular Catholic significance.
+"""
+</result>
+
+Sources:
+- [Herman Bang - Wikipedia](https://en.wikipedia.org/wiki/Herman_Bang)
+- [Det graa Hus - Project Gutenberg](https://www.gutenberg.org/ebooks/12987)

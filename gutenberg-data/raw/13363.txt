@@ -1,0 +1,15 @@
+<result>
+Title = "The Parish Clerk"
+Author = "P.H. Ditchfield"
+Year = 1907
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+A scholarly study of the office of parish clerk in England, tracing its history from medieval times through the early 20th century. Peter Hampson Ditchfield (1854-1930) was an English clergyman, antiquary, and prolific author who wrote extensively on English rural life, church history, and local customs. This work examines the duties, privileges, and cultural significance of parish clerks, including their role in church music, their appearances in literature, their guild (the Worshipful Company of Parish Clerks), and their connection to parish registers. The book includes chapters on clerks in epitaphs, as poets, and their involvement in medieval mystery plays at Clerkenwell.
+"""
+
+Notes = """
+First published in 1907 as stated on the title page. Ditchfield was a Fellow of the Society of Antiquaries (F.S.A.) and held an M.A., indicating his scholarly credentials. He was an Anglican clergyman, not Catholic.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Les Pardaillan"
+Author = "Michel Zévaco"
+Year = 1907
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Les Pardaillan is the first novel in Michel Zévaco's epic historical adventure series of the same name. Set primarily during the French Wars of Religion in the 16th century, the series follows the adventures of the chevalier de Pardaillan and his son, swashbuckling heroes in the tradition of Alexandre Dumas. The novels are known for their romantic intrigue, sword fights, and vivid portrayal of Renaissance France, featuring historical figures like Catherine de Medici and the Montmorency family. Zévaco was a popular French novelist and journalist who wrote serialized adventure fiction, and the Pardaillan series became his most celebrated work.
+"""
+
+Notes = """
+The novel was originally published as a serial (feuilleton) in French newspapers starting in 1902, with book publication in 1907. I chose 1907 as it represents the first complete book edition. The series eventually comprised ten novels published between 1907 and 1926.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Lady with the Dog and Other Stories (The Tales of Chekhov, Volume 3)"
+Author = "Anton Chekhov"
+Year = 1899
+
+Tags = ["fiction"]
+
+Summary = """
+This is volume 3 of Constance Garnett's landmark English translation of Chekhov's short stories. The title story, "The Lady with the Dog" (Дама с собачкой), is considered one of the greatest short stories ever written. It tells of a cynical married man who begins an affair with a young woman at a seaside resort, only to find himself unexpectedly falling into genuine love. The collection also includes other notable late Chekhov stories such as "The Black Monk" (a psychological tale of a scholar haunted by a phantom monk), "Ionitch" (about a doctor's spiritual decline in provincial life), and "An Anonymous Story" (a longer novella about a revolutionary who infiltrates a household as a servant).
+"""
+
+Notes = """
+"The Lady with the Dog" was first published in 1899 in the journal Russkaya Mysl. This translation by Constance Garnett was published in 1917 as part of her comprehensive Tales of Chekhov series. The year 1899 is chosen as it represents when the title story—Chekhov's most celebrated work in this collection—was originally written and published.
+"""
+</result>

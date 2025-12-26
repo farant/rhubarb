@@ -1,0 +1,15 @@
+<result>
+Title = "The Prose Works of Jonathan Swift, Vol. IX: Contributions to The Tatler, The Examiner, The Spectator, and The Intelligencer"
+Author = "Jonathan Swift"
+Year = 1902
+
+Tags = ["non-fiction", "collected-works", "journalism", "political-writing", "satire"]
+
+Summary = """
+This is Volume IX of Temple Scott's edited collection of Jonathan Swift's prose works, published by George Bell and Sons. This particular volume gathers Swift's contributions to the major periodicals of his era: The Tatler (founded by Richard Steele in 1709), The Examiner (a Tory political paper Swift edited 1710-1711), The Spectator (the famous Addison and Steele publication), and The Intelligencer (which Swift co-founded with Thomas Sheridan in 1728). These periodical writings showcase Swift's formidable talents in political commentary, social satire, and essay writing during the height of the Augustan age of English literature. The introduction discusses Swift's reputation as a journalist, though the editor argues this characterization is inadequate for capturing Swift's true literary genius.
+"""
+
+Notes = """
+Year chosen is 1902, the publication date of this edited collection. While Swift's original contributions to these periodicals date from roughly 1709-1728, this is specifically Temple Scott's scholarly edition with introduction and editorial apparatus, making the edition date most appropriate. Swift himself lived 1667-1745 and was Dean of St. Patrick's Cathedral in Dublin. The original periodical pieces would have various dates: Tatler contributions circa 1709-1711, Examiner pieces 1710-1711, Spectator contributions 1711-1714, and Intelligencer pieces 1728-1729.
+"""
+</result>

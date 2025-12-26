@@ -1,0 +1,17 @@
+I can analyze this based on what you've provided. This is "The Bed-Book of Happiness" compiled by Harold Begbie, published in 1914.
+
+<result>
+Title = "The Bed-Book of Happiness"
+Author = "Harold Begbie"
+Year = 1914
+
+Tags = ["non-fiction", "anthology", "appropriate-for-children"]
+
+Summary = """
+An anthology compiled by Harold Begbie (1871-1929), a prolific English journalist, poet, and author. This collection brings together cheerful and uplifting writings from various sources, specifically curated for bedridden readers, insomniacs, and those seeking pleasant diversion. The book is dedicated to Sir Jesse Boot (founder of Boots the Chemist), suggesting a connection to those dealing with illness or convalescence. Begbie was known for his inspirational works and was a moderately popular author in Edwardian England.
+"""
+
+Notes = """
+The 1914 date is explicitly printed in the book ("PRINTED IN 1914 BY HAZELL, WATSON AND VINEY"). The epigraph from Charlotte Brontë and the dedication to Sir Jesse Boot (1850-1931, later 1st Baron Trent) help contextualize the work as an Edwardian-era comfort anthology. Begbie compiled this rather than authored original content, hence it is properly an anthology/colligation.
+"""
+</result>

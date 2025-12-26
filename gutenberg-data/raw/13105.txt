@@ -1,0 +1,15 @@
+<result>
+Title = "Memoirs of Margaret Fuller Ossoli, Vol. I"
+Author = "Various (R.W. Emerson, W.H. Channing, J.F. Clarke, editors)"
+Year = 1852
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is a biographical memoir of Margaret Fuller (1810-1850), one of the most important American intellectuals of the 19th century. Fuller was a journalist, critic, women's rights advocate, and leading figure in the Transcendentalist movement. She edited The Dial, wrote "Woman in the Nineteenth Century" (a foundational feminist text), and became the first female foreign correspondent for the New York Tribune. She married Giovanni Ossoli in Italy and died tragically in a shipwreck off Fire Island in 1850, just as she was returning to America. This memoir was compiled by her friends Ralph Waldo Emerson, William Henry Channing, and James Freeman Clarke, combining their reminiscences with her letters and journals.
+"""
+
+Notes = """
+The copyright notice shows 1851 but the title page indicates MDCCCLVII (1857). The first edition was actually published in 1852. I chose 1852 as that represents the original publication of this posthumous memoir, compiled shortly after Fuller's death in 1850.
+"""
+</result>

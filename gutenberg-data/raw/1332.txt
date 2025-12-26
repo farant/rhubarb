@@ -1,0 +1,15 @@
+<result>
+Title = "Peter Pan in Kensington Gardens"
+Author = "J. M. Barrie"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Peter Pan in Kensington Gardens is the origin story of Peter Pan, the boy who never grows up. Originally appearing as chapters in Barrie's 1902 novel "The Little White Bird," these chapters were extracted and published as a standalone book in 1906 with illustrations by Arthur Rackham. The story explains how Peter Pan, at just one week old, escaped from his nursery window and flew to Kensington Gardens in London, where he lives among the fairies. It is a gentler, more whimsical tale than the later "Peter and Wendy" (1911), focusing on the magical world within the gardens and Peter's interactions with fairies and the birds who taught him to fly.
+"""
+
+Notes = """
+1906 is when this text was first published as a standalone illustrated book, which is the form most readers know. The Peter Pan chapters originally appeared in "The Little White Bird" (1902), but the 1906 publication with Rackham's famous illustrations established this as a distinct work.
+"""
+</result>

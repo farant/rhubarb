@@ -1,0 +1,15 @@
+<result>
+Title = "Unmanned"
+Author = "Stephen Oliver"
+Year = 1999
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+"Unmanned" is a poetry collection by New Zealand poet Stephen Oliver, published in 1999 by HeadworX Publishers in Wellington. Stephen Oliver (born 1950) is a significant figure in New Zealand and Australian poetry, having published numerous collections since the late 1970s. His work often explores themes of landscape, identity, and the human condition. This collection follows his earlier works including "Guardians, Not Angels" (1993) and "Islands of Wilderness: A Romance" (1996).
+"""
+
+Notes = """
+The year 1999 is clearly indicated in the copyright notice and publication information. This is contemporary poetry, not a historical or translated work.
+"""
+</result>

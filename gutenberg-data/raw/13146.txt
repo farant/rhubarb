@@ -1,0 +1,15 @@
+<result>
+Title = "The Beauty and the Bolshevist"
+Author = "Alice Duer Miller"
+Year = 1920
+
+Tags = ["fiction"]
+
+Summary = """
+A light romantic novel by Alice Duer Miller, a popular American author known for witty social comedies. The title plays on the fairy tale "Beauty and the Beast" while invoking the topical concern of Bolshevism in the post-Russian Revolution era. Miller was known for her clever, entertaining fiction often set among upper-class Americans, as seen in her other works like "The Charm School" and "Come out of the Kitchen." This novel likely combines romance with social commentary on the political anxieties of the early 1920s.
+"""
+
+Notes = """
+Published October 1920 by Harper & Brothers, as stated on the title page. This was the original publication date.
+"""
+</result>

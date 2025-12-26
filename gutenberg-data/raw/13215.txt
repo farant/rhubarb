@@ -1,0 +1,15 @@
+<result>
+Title = "Edwy the Fair or the First Chronicle of Æscendune: A Tale of the Days of Saint Dunstan"
+Author = "A. D. Crake"
+Year = 1874
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+A historical novel set in 10th century Anglo-Saxon England during the reign of King Edwy (955-959 AD). The story follows characters connected to the fictional house of Æscendune against the backdrop of the conflict between the young King Edwy and Saint Dunstan, the influential Abbot of Glastonbury. The narrative covers Edwy's coronation, his controversial marriage to Elgiva, and Dunstan's exile and eventual return. Rev. Augustine David Crake was an Anglican clergyman who wrote numerous historical tales for young people, particularly focused on Church history and medieval England.
+"""
+
+Notes = """
+Augustine David Crake (1836-1890) wrote this as part of a series of historical tales for schoolboys. The "Chronicles of Æscendune" series includes multiple volumes covering different periods of English history. This first chronicle was originally published around 1874. While Crake was Anglican rather than Roman Catholic, his works treat the pre-Reformation English Church with great reverence and would generally be considered appropriate reading in Catholic contexts, focusing on saints like Dunstan.
+"""
+</result>

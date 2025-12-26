@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of Little Black Sambo and The Story of Little Black Mingo"
+Author = "Helen Bannerman"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A children's picture book written by Scottish author Helen Bannerman while living in India. The story follows a young boy named Sambo who encounters tigers while walking in the jungle wearing his new colorful clothes. The tigers threaten to eat him, but he cleverly gives them his clothing to appease them. The tigers become vain and chase each other around a tree until they melt into butter, which Sambo's family then uses to make pancakes. The book was enormously popular and influential in children's literature, though it later became controversial due to racial stereotypes. Little Black Mingo is a companion story also set in India.
+"""
+
+Notes = """
+The original "Little Black Sambo" was first published in 1899 by Grant Richards in London. "Little Black Mingo" was published in 1901. This Gutenberg edition combines both stories. The setting is explicitly India (not Africa as sometimes assumed), with references to bazaars, tigers, and Indian geography. Bannerman wrote the story during a train journey in India while separated from her children.
+"""
+</result>

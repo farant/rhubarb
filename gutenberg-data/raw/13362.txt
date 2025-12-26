@@ -1,0 +1,15 @@
+<result>
+Title = "Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc."
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "reference"]
+
+Summary = """
+Notes and Queries was a weekly British periodical founded in 1849 by William John Thoms. It served as a forum for scholars, antiquaries, literary researchers, and educated general readers to pose questions and share information on matters of history, literature, etymology, folklore, genealogy, and general knowledge. The format consisted of readers submitting queries which other readers would attempt to answer, along with original notes on various topics. This particular issue (No. 38) from July 20, 1850 includes discussions on Shakespeare's use of language, Milton, Easter etymology, folklore, and various historical and literary queries. The publication's motto "When found, make a note of" comes from Captain Cuttle in Dickens's Dombey and Son. Notes and Queries continues publication to this day, making it one of the longest-running scholarly periodicals.
+"""
+
+Notes = """
+Year 1850 is the actual publication date of this specific issue (July 20, 1850). The periodical itself began in November 1849.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "William of Germany"
+Author = "Stanley Shaw"
+Year = 1913
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+A biographical study of Kaiser Wilhelm II (1859-1941), the last German Emperor and King of Prussia. The book covers his youth, accession to the throne, his relationship with Bismarck (referenced in the chapter "Dropping the Pilot"), his court, his patronage of the arts, and German foreign policy including the Morocco Crisis of 1905. Written by Stanley Shaw, an Irish academic from Trinity College Dublin, the work provides a contemporary English-language perspective on the Kaiser published just one year before the outbreak of World War I.
+"""
+
+Notes = """
+Published in 1913, this is a primary historical document offering insight into how Wilhelm II was perceived by English-speaking observers immediately before the Great War fundamentally changed European views of the German monarchy.
+"""
+</result>

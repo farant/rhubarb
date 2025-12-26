@@ -1,0 +1,15 @@
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States From Interviews with Former Slaves, Volume XII, Ohio Narratives"
+Author = "Federal Writers' Project"
+Year = 1941
+
+Tags = ["non-fiction", "historical-document", "primary-source"]
+
+Summary = """
+This is part of the Federal Writers' Project's Slave Narratives collection, a massive oral history project conducted between 1936-1938 under the Works Progress Administration (WPA) during the New Deal era. Field workers interviewed formerly enslaved people, many of whom were elderly at the time, recording their firsthand accounts of life under slavery. The Ohio volume contains narratives from former slaves who were living in Ohio at the time of the interviews. This particular excerpt mentions Charles H. Anderson as an informant. The collection is invaluable as primary source material for understanding slavery from the perspective of those who experienced it directly, though scholars note the interviews were shaped by the racial dynamics of the era (most interviewers were white) and the advanced age of informants.
+"""
+
+Notes = """
+Year 1941 chosen as the publication date when the Library of Congress assembled and published the typewritten records. The interviews themselves were conducted 1936-1938. This is a government document/primary historical source rather than a creative work with a traditional author.
+"""
+</result>

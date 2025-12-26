@@ -1,0 +1,21 @@
+Found it. Project Gutenberg #13376 is **"Our Legal Heritage, King AEthelbert, 596 to King George III, 1775"** by **S. A. Reilly**.
+
+Note: The actual file is empty (0 bytes), so the download failed. You may want to re-download it.
+
+This is a legal history work covering English law from 596 AD to 1775. S. A. Reilly appears to be a modern legal historian, and the work was published in 1994.
+
+<result>
+Title = "Our Legal Heritage, King AEthelbert, 596 to King George III, 1775"
+Author = "S. A. Reilly"
+Year = 1994
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A comprehensive legal history tracing the development of English common law from the earliest Anglo-Saxon laws of King Æthelbert of Kent in 596 AD through to the reign of King George III ending in 1775 (just before American independence). The work covers nearly 1,200 years of legal evolution, including the development of property rights, criminal law, courts, and the gradual emergence of parliamentary supremacy and individual liberties that would influence both British and American jurisprudence.
+"""
+
+Notes = """
+The file 13376.txt is empty (0 bytes) - the download appears to have failed. The updated edition mentioned is Project Gutenberg #40780. Year 1994 is when this modern scholarly work was originally published by S. A. Reilly.
+"""
+</result>

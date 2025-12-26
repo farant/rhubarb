@@ -1,0 +1,15 @@
+<result>
+Title = "Runoelmia"
+Author = "Paavo Cajander"
+Year = 1914
+
+Tags = ["poetry", "fiction"]
+
+Summary = """
+This is a collection of poems by Paavo Cajander (1846-1913), a Finnish poet and translator. The collection was compiled and edited posthumously by A.V. Koskimies, who also wrote a biography of the author included in the volume. The poems span from 1866-1872 and cover themes of Finnish patriotism, nature, faith, love, and philosophical reflection. Cajander was known primarily as a translator who rendered works of Shakespeare, Goethe, and other major European authors into Finnish, contributing significantly to Finnish literary culture during the national awakening period.
+"""
+
+Notes = """
+The year 1914 is chosen as this appears to be the publication year of this specific posthumous collection, compiled after Cajander's death in 1913. While the individual poems were written between 1866-1872, this collected edition with biography represents the work as a historical artifact.
+"""
+</result>

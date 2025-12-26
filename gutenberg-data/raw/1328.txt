@@ -1,0 +1,17 @@
+Looking at the content you've provided, this is clearly **The Tinker's Wedding** by **J. M. Synge**.
+
+<result>
+Title = "The Tinker's Wedding"
+Author = "J. M. Synge"
+Year = 1909
+
+Tags = ["fiction", "drama", "Irish-literature"]
+
+Summary = """
+The Tinker's Wedding is a two-act comedy by Irish playwright John Millington Synge, one of the key figures of the Irish Literary Revival. The play concerns a group of Irish tinkers (traveling people) and their attempt to get married by a reluctant Catholic priest. The comedy arises from the clash between the free-spirited tinker lifestyle and the rigid expectations of settled society and the Church. Synge was known for his poetic rendering of Irish peasant speech and his unflinching yet sympathetic portrayals of rural Irish life. The play was considered too controversial to be performed at the Abbey Theatre during Synge's lifetime due to its satirical treatment of a priest.
+"""
+
+Notes = """
+The play was written around 1902-1903 but was not published until 1909. Synge died in March 1909, and the work was published posthumously that same year. The 1909 date represents the first publication, which is the most historically significant date for this work since it was never performed during Synge's lifetime. The preface included in this edition, where Synge discusses drama and its purpose, is itself a notable piece of dramatic criticism.
+"""
+</result>

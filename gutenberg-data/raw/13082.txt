@@ -1,0 +1,15 @@
+<result>
+Title = "NASA Spacecraft Reveals Surprising Anatomy Of A Comet"
+Author = "NASA/JPL-Caltech"
+Year = 2004
+
+Tags = ["non-fiction", "science", "space-exploration"]
+
+Summary = """
+This is a NASA press release from June 17, 2004 describing the findings from the Stardust spacecraft's flyby of Comet Wild 2 on January 2, 2004. The document reports on the unexpected discovery that the comet had a rigid surface with dramatic geological features including pinnacles, craters, cliffs, and active jets - contrary to the prevailing "dirty snowball" model of comets. The mission was significant as it gathered the most detailed high-resolution comet images ever obtained at that time, and Stardust was also collecting samples to return to Earth (which it did in 2006).
+"""
+
+Notes = """
+This is a primary historical document - a NASA press release issued the day before the scientific findings were published in Science magazine (June 18, 2004). The year 2004 represents when the flyby occurred and when these findings were announced.
+"""
+</result>

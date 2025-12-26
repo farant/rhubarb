@@ -1,0 +1,15 @@
+<result>
+Title = "The Malefactor"
+Author = "E. Phillips Oppenheim"
+Year = 1906
+
+Tags = ["fiction"]
+
+Summary = """
+The Malefactor is a novel by E. Phillips Oppenheim, a prolific British author known as the "Prince of Storytellers" who specialized in thriller and espionage fiction. This novel follows themes typical of Oppenheim's work - intrigue, society scandals, and moral complexity. The story involves a man returning to society after some disgrace or criminal past (suggested by the title "The Malefactor" and chapter titles like "Outside the Pale" and "Hast Thou Found Me, O Mine Enemy?"). The narrative appears to span from England to America, dealing with themes of redemption, revenge, and romantic entanglement among the upper classes.
+"""
+
+Notes = """
+First published in 1906. Oppenheim (1866-1946) wrote over 100 novels during his career, primarily in the thriller and mystery genres. He was enormously popular in the early 20th century.
+"""
+</result>

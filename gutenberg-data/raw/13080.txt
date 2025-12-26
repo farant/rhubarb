@@ -1,0 +1,15 @@
+<result>
+Title = "Night of Warehouses"
+Author = "Stephen Oliver"
+Year = 2001
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+A collection of poetry by New Zealand poet Stephen Oliver. Oliver is known for his experimental and modernist poetry style, having published numerous collections since the 1970s. His work often explores urban landscapes, consciousness, and the intersection of the personal with broader cultural themes.
+"""
+
+Notes = """
+Year is based on the copyright date (2001) shown in the Project Gutenberg file. This appears to be a contemporary poetry collection rather than a historical work.
+"""
+</result>

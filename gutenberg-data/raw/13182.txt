@@ -1,0 +1,15 @@
+<result>
+Title = "Prefaces and Prologues to Famous Books"
+Author = "Various (edited by Charles W. Eliot)"
+Year = 1909
+
+Tags = ["non-fiction", "anthology", "literary-history", "appropriate-for-children"]
+
+Summary = """
+This is Volume 39 of the Harvard Classics, also known as "Dr. Eliot's Five-Foot Shelf of Books," a 51-volume anthology compiled by Charles W. Eliot, president of Harvard University from 1869 to 1909. This particular volume collects prefaces, prologues, and dedications from historically significant books, including William Caxton's pioneering English printing works (1470s-1490s), John Calvin's Institutes of the Christian Religion (1536), and Copernicus's revolutionary astronomical treatise (1543). The collection serves as a window into how authors and editors throughout history introduced their works to readers.
+"""
+
+Notes = """
+The year 1909 is chosen as this is when the Harvard Classics anthology was first published by Little, Brown and Company (with P.F. Collier & Son edition following in 1910). While the individual prefaces span from the 15th to 19th centuries, this is properly understood as a 1909 editorial compilation by Eliot rather than a reprinting of any single historical work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Diario Historico de la Rebelion y Guerra de los Pueblos Guaranis"
+Author = "Tadeo Xavier Henis"
+Year = 1754
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is a historical diary written by Father Tadeo Xavier Henis, a Jesuit priest, documenting the Guarani War (1754-1756). The conflict arose from the Treaty of Madrid (1750) between Spain and Portugal, which required seven Jesuit missions on the eastern bank of the Uruguay River to be transferred to Portuguese control. The Guarani people, supported by some Jesuits, resisted this forced relocation. The work provides a firsthand Jesuit perspective on these events, originally written in Latin and translated to Spanish in 1836. It includes a preliminary discourse explaining the political context and the Jesuit opposition to the treaty.
+"""
+
+Notes = """
+The diary itself was written in 1754 during the events described. The Spanish translation was published in 1836. I chose 1754 as it represents when the original Latin work was composed and reflects the historical moment being documented. This is a primary source document for the Guarani War, an important episode in colonial South American history and in the history of the Jesuit Reductions.
+"""
+</result>

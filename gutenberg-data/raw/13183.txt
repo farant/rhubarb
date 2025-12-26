@@ -1,0 +1,15 @@
+<result>
+Title = "In the Days of Chivalry: A Tale of the Times of the Black Prince"
+Author = "Evelyn Everett-Green"
+Year = 1893
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A historical romance novel set during the Hundred Years' War, following twin brothers Raymond and Gaston in 14th-century Gascony during the era of Edward, the Black Prince. Evelyn Everett-Green was a prolific Victorian author who wrote over 350 books, many of them historical fiction aimed at younger readers. Her works typically combined adventure with moral instruction and were popular in both Britain and America. This novel romanticizes the age of chivalry and medieval warfare.
+"""
+
+Notes = """
+Evelyn Everett-Green (1856-1932) was an English novelist. While she was baptized Anglican, her works are generally wholesome Victorian adventure stories rather than specifically Catholic literature. The 1893 date represents the first publication of this work.
+"""
+</result>

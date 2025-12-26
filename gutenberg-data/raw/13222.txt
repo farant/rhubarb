@@ -1,0 +1,15 @@
+<result>
+Title = "Northern California, Oregon, and the Sandwich Islands"
+Author = "Charles Nordhoff"
+Year = 1874
+
+Tags = ["non-fiction", "travel", "geography"]
+
+Summary = """
+A travel guide and descriptive account of Northern California, Oregon, and Hawaii (then called the Sandwich Islands) written by Charles Nordhoff, a journalist and travel writer. The book was part of his efforts to promote western American destinations to eastern readers. Nordhoff was commissioned by railroad companies to write about California and the Pacific coast to encourage tourism and settlement. The work contains detailed observations about Hawaiian culture, geography, agriculture (including taro cultivation), and local customs, as well as descriptions of the Pacific Northwest including locations like Sausalito, the Klickitat region, and Mount Rainier.
+"""
+
+Notes = """
+Charles Nordhoff (1830-1901) was a German-American journalist and author. This book was first published in 1874 by Harper & Brothers. It followed his earlier successful work "California: For Health, Pleasure, and Residence" (1872). Nordhoff's grandson, also named Charles Nordhoff, would later co-author the famous "Mutiny on the Bounty" trilogy.
+"""
+</result>

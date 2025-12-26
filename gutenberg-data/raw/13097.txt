@@ -1,0 +1,15 @@
+<result>
+Title = "Lives of the Most Remarkable Criminals"
+Author = "Arthur L. Hayward (editor)"
+Year = 1735
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of criminal biographies originally published in 1735, drawing from the Newgate Calendar tradition. The work compiles accounts of condemned criminals executed for various offenses including murder, highway robbery, housebreaking, street robbery, and coining (counterfeiting). The original 1735 publication gathered these accounts from "Original Papers and Authentic Memoirs." Arthur L. Hayward edited this later edition for modern readers. The Newgate Calendar was a popular genre in 18th and 19th century England, serving as both entertainment and moral instruction through cautionary tales of crime and punishment.
+"""
+
+Notes = """
+The year 1735 refers to the original publication date of the collected criminal biographies, as stated in the subtitle. Hayward's edited edition came later (likely early 20th century based on Project Gutenberg's typical holdings), but the historical significance of the work lies in its 1735 origins as a primary source document of Georgian-era criminal justice and social history.
+"""
+</result>

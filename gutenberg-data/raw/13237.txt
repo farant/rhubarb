@@ -1,0 +1,15 @@
+<result>
+Title = "Strange Visitors: A Series of Original Papers"
+Author = "Henry J. Horn (Editor/Compiler)"
+Year = 1869
+
+Tags = ["non-fiction", "spiritualism", "occult"]
+
+Summary = """
+Strange Visitors is a spiritualist work from the late 1860s claiming to contain communications from deceased famous authors, politicians, and other notable figures channeled through a medium in trance states. The book purports to include posthumous writings from figures like Washington Irving, Edgar Allan Poe, Lord Byron, Nathaniel Hawthorne, Charlotte Brontë, and Napoleon Bonaparte, among others. It was compiled by Henry J. Horn, a New York businessman interested in spiritualism. The work is representative of the spiritualist movement that flourished in America during the mid-to-late 19th century, which claimed the living could communicate with the dead through mediums.
+"""
+
+Notes = """
+The text shows 1871 but the first edition was published in 1869 by Carleton & Co. in New York. The 1871 date may represent a later printing. I chose 1869 as the original publication year. Henry J. Horn is credited as the compiler/editor though the work claims authorship by various spirits through an unnamed clairvoyant medium.
+"""
+</result>

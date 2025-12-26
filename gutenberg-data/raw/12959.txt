@@ -1,0 +1,15 @@
+<result>
+Title = "Newton Forster; Or, The Merchant Service"
+Author = "Captain Frederick Marryat"
+Year = 1832
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Newton Forster is a nautical adventure novel by Captain Frederick Marryat, one of the most celebrated maritime novelists of the 19th century. The story follows the life of Newton Forster, a young man who enters the merchant service (as opposed to the Royal Navy, which was the setting of many of Marryat's other works). The novel depicts the adventures, hardships, and romantic entanglements of its protagonist as he navigates both the seas and Victorian society. Marryat drew heavily on his own extensive naval experience, having served in the Royal Navy for over two decades and risen to the rank of Captain. His sea novels were enormously popular and influential, helping to establish the maritime adventure genre.
+"""
+
+Notes = """
+The date 1832 reflects the original publication year. The edition shown here (MDCCCXCV = 1895) is a later reprint by J.M. Dent and Co. Marryat's naval novels were foundational to the genre and influenced later writers including Joseph Conrad and C.S. Forester.
+"""
+</result>

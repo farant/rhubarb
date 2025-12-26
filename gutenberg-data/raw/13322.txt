@@ -1,0 +1,15 @@
+<result>
+Title = "The Tongues of Toil and Other Poems"
+Author = "William Francis Barnard"
+Year = 1911
+
+Tags = ["poetry", "labor-movement", "social-commentary"]
+
+Summary = """
+A collection of poems by William Francis Barnard, an American labor poet active in the early 20th century. The title poem "The Tongues of Toil" is a powerful expression of working-class solidarity and the labor movement, calling for workers across the world to recognize their collective power against the ruling classes. The poetry reflects the Progressive Era's concern with labor rights, social justice, and the dignity of working people. Barnard was associated with the labor movement in Pittsburgh, Pennsylvania.
+"""
+
+Notes = """
+William Francis Barnard (1868-1935) was a Pittsburgh-based poet known for his labor poetry. This collection was published by Justice Publishing Company in Pittsburgh around 1911. The themes of international worker solidarity and challenge to established power structures place it firmly in the context of early 20th century American labor literature.
+"""
+</result>

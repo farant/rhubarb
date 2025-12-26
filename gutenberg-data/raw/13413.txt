@@ -1,0 +1,15 @@
+<result>
+Title = "The Party and Other Stories (The Tales of Chekhov, Volume 4)"
+Author = "Anton Chekhov"
+Year = 1888
+
+Tags = ["fiction", "short-stories", "russian-literature"]
+
+Summary = """
+This is Volume 4 of Constance Garnett's celebrated English translation of Anton Chekhov's short stories. The collection includes some of Chekhov's most psychologically penetrating works. "The Party" (1888) explores the inner world of a pregnant woman at a social gathering. "The Kiss" (1887) is a masterpiece about a shy officer's romantic fantasy. "A Woman's Kingdom" (1894) examines class and loneliness through a factory owner. "The Teacher of Literature" (1894) portrays disillusionment in marriage. These stories showcase Chekhov's characteristic style: subtle psychological realism, absence of moralizing, and profound empathy for ordinary people navigating life's disappointments.
+"""
+
+Notes = """
+The year 1888 corresponds to "The Party" (Именины), the title story and one of the earliest major works in this collection. The individual stories span from 1886-1894. Constance Garnett's translations, published 1916-1922, remain influential for introducing Chekhov to English readers. Chekhov himself was not religious and his works are secular literary fiction.
+"""
+</result>

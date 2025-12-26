@@ -1,0 +1,15 @@
+<result>
+Title = "The Idler in France"
+Author = "Marguerite Gardiner, Countess of Blessington"
+Year = 1841
+
+Tags = ["non-fiction", "travel-writing"]
+
+Summary = """
+A travel memoir by Lady Blessington recounting her journeys through France. The Countess of Blessington (1789-1849) was an Irish novelist and socialite who became one of the most prominent literary hostesses in London. This work describes her observations of French towns, architecture, hotels, and society, with particular attention to Roman antiquities at Nîmes including the famous Amphitheatre and Maison Carrée. The book reflects the genre of aristocratic travel writing popular in the early Victorian period.
+"""
+
+Notes = """
+1841 is the original publication year. Lady Blessington was a prolific writer known for her conversational style and social observations. While she was born into a Catholic family in Ireland, her works are secular travel and society writing rather than religious in nature.
+"""
+</result>

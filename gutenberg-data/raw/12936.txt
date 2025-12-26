@@ -1,0 +1,15 @@
+<result>
+Title = "Young Hunters of the Lake, or Out with Rod and Gun"
+Author = "Captain Ralph Bonehill"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a boys' adventure novel from the early 20th century, part of the outdoor adventure genre popular during that era. "Captain Ralph Bonehill" was a pseudonym used by Edward Stratemeyer, the prolific author and founder of the Stratemeyer Syndicate, which produced series like Nancy Drew and the Hardy Boys. The story follows four boys on an outdoor adventure involving camping, hunting, fishing, and mystery elements including a ghost and a hermit. It's typical of the wholesome adventure fiction written for young male readers of the period, emphasizing outdoor skills, friendship, and mild danger.
+"""
+
+Notes = """
+Edward Stratemeyer wrote under numerous pseudonyms. The "Young Hunters" series under the Bonehill name was published around 1908-1912. This appears to be the first book in that series. The year 1908 represents the original publication date of this particular work.
+"""
+</result>

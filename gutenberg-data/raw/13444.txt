@@ -1,0 +1,15 @@
+<result>
+Title = "Searchlights on Health: The Science of Eugenics"
+Author = "B.G. Jefferis, J.L. Nichols"
+Year = 1894
+
+Tags = ["non-fiction", "health", "eugenics", "marriage-manual"]
+
+Summary = """
+A popular late Victorian/early Edwardian health and marriage manual that went through numerous editions. It covers topics of sexuality, courtship, marriage, pregnancy, and child-rearing from the perspective of the era's eugenics movement. The book was widely distributed and aimed at providing "respectable" guidance on matters that were considered taboo to discuss openly. It reflects period attitudes about health, morality, and human reproduction that were common in American Protestant culture of the time.
+"""
+
+Notes = """
+The 1920 date shown is a later printing. The work was originally published in 1894 and went through many editions over the following decades. I chose 1894 as the historically significant date since that represents when the work first appeared and had its initial cultural impact. The eugenics framing was typical of health literature from this era.
+"""
+</result>

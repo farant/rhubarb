@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, July 11, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841. It became one of the most influential satirical publications in history, running until 1992 (with a brief revival 1996-2002). The magazine featured political cartoons, social commentary, parodies, and humorous sketches of Victorian and Edwardian life. This particular issue from July 1891 includes "Voces Populi" (Voices of the People), a recurring feature by F. Anstey (Thomas Anstey Guthrie) that presented satirical vignettes of public speakers and street orators in Hyde Park, capturing the various political and social debates of the day including socialism, spiritualism, and Irish politics (the Parnellite split was a major issue in 1891).
+"""
+
+Notes = """
+Punch was a periodical with many contributors. The "Voces Populi" series was written by F. Anstey. The year 1891 is the original publication date of this specific issue.
+"""
+</result>

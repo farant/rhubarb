@@ -1,0 +1,15 @@
+<result>
+Title = "Conscience"
+Author = "Hector Malot"
+Year = 1888
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+Conscience is a novel by French author Hector Malot, best known for his children's classic "Sans Famille" (Nobody's Boy). This work follows the story of Crozat, a former bohemian who has risen from poverty through a good marriage and now hosts Wednesday salons at the Hôtel des Médicis in Paris, where his old companions gather to discuss philosophical, political, social, and religious questions. The novel explores themes of conscience, morality, and social dynamics in late 19th century French bourgeois society.
+"""
+
+Notes = """
+The year 1888 appears directly in the text as the publication date. Hector Malot (1830-1907) was a prolific French novelist who wrote over 70 novels, many dealing with social issues and the lives of ordinary people.
+"""
+</result>

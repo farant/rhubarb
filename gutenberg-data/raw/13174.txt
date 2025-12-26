@@ -1,0 +1,15 @@
+<result>
+Title = "Sylvi; Kovan onnen lapsia"
+Author = "Minna Canth"
+Year = 1893
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+This volume contains two works by Minna Canth, Finland's most significant 19th-century female playwright and author. "Sylvi" is a four-act drama about a notary's wife caught in a tragic situation involving love, jealousy, and moral conflict. The play explores themes of women's position in society, marriage, and personal freedom. Canth was a pioneering realist writer and social critic who championed women's rights and workers' rights in Finnish society. Her works were controversial in their time for their frank treatment of social issues and their criticism of bourgeois morality.
+"""
+
+Notes = """
+The publication date shown (1920) refers to this collected edition. "Sylvi" was originally published in 1893. The volume title indicates it also contains "Kovan onnen lapsia" (Children of Hard Fortune), published 1888. I chose 1893 as it appears "Sylvi" is the primary work based on the text ordering, though 1888-1893 would represent the range of original publication dates for both works.
+"""
+</result>

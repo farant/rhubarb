@@ -1,0 +1,15 @@
+<result>
+Title = "Sermons on Subjects Suggested by the War: Third Series - The Religious Spirit of the Slavs"
+Author = "Nicolai Velimirovic"
+Year = 1916
+
+Tags = ["non-fiction", "religious", "orthodox-christianity", "lectures"]
+
+Summary = """
+This work consists of three Lenten lectures delivered at St. Margaret's, Westminster in 1916 by Father Nicolai Velimirovic, a Serbian Orthodox priest and theology professor at the University of Belgrade. The lectures explore the religious character of Slavic peoples during World War I, covering: (1) Slav Orthodoxy, examining the conflict between the Russian Holy Synod and Tolstoy; (2) Slav Revolutionary Catholicism; and (3) The Religious Spirit of the Slavs more broadly. Velimirovic was a significant Serbian theologian who later became a bishop and is now venerated as a saint in the Serbian Orthodox Church (canonized 2003). These wartime lectures represent an effort to explain Eastern Orthodox spirituality to Western audiences.
+"""
+
+Notes = """
+Nicolai Velimirovic (1881-1956) was a prominent Serbian Orthodox bishop, theologian, and writer. He was later glorified as Saint Nikolaj of Žiča. This work was published during WWI when Serbia was allied with Britain, explaining the wartime context at Westminster. Not marked 'catholic' as it represents an Orthodox perspective, though ecumenical in spirit.
+"""
+</result>

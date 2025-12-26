@@ -1,0 +1,15 @@
+<result>
+Title = "The Cross of Berny"
+Author = "Émile de Girardin, Théophile Gautier, Jules Sandeau, Joseph Méry"
+Year = 1845
+
+Tags = ["fiction", "epistolary-novel"]
+
+Summary = """
+The Cross of Berny (La Croix de Berny) is a unique collaborative epistolary novel written by four prominent French literary figures: Delphine de Girardin (writing under her husband's name Émile de Girardin), Théophile Gautier, Jules Sandeau, and Joseph Méry. The novel was composed as a literary game or competition among the four authors, with each taking on a character and writing that character's letters. The story follows the romantic entanglements of Irene (the Cross of Berny of the title) and her various suitors. The work is notable both for its wit and literary quality, and as a remarkably successful example of multi-author collaboration in fiction—a format that has historically proven very difficult to execute well.
+"""
+
+Notes = """
+The original French publication was in 1845. The work first appeared as a serial in the newspaper La Presse before book publication. Delphine de Girardin, who was actually the wife of Émile de Girardin (the newspaper's editor), was a celebrated writer in her own right. The American edition referenced in the preface came later. I chose 1845 as this represents the original French publication date.
+"""
+</result>

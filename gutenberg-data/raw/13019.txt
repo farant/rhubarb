@@ -1,0 +1,15 @@
+<result>
+Title = "Raphael, or Pages of the Book of Life at Twenty"
+Author = "Alphonse de Lamartine"
+Year = 1849
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+Raphael is a semi-autobiographical novel by the French Romantic poet and statesman Alphonse de Lamartine. The work is a thinly veiled account of his own youthful love affair with Julie Charles, a married woman six years his senior whom he met at Aix-les-Bains in 1816. She was suffering from tuberculosis and died the following year. This passionate, melancholic romance deeply marked Lamartine and inspired some of his most famous poetry, including "Le Lac." The novel is written in an intensely lyrical, sentimental style characteristic of French Romanticism, blending autobiographical confession with poetic prose meditation on love, nature, and mortality.
+"""
+
+Notes = """
+The work was first published in 1849. While the edition shown is from 1905, the original French publication date of 1849 is the historically significant year. Lamartine was a devout Catholic throughout his life, and his religious sensibility permeates much of his work, though this particular novel is more focused on romantic love than explicitly religious themes.
+"""
+</result>

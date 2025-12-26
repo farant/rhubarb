@@ -1,0 +1,15 @@
+<result>
+Title = "Poems"
+Author = "Jean Ingelow"
+Year = 1863
+
+Tags = ["poetry", "appropriate-for-children"]
+
+Summary = """
+Jean Ingelow (1820-1897) was a popular Victorian English poet and novelist. Her first major collection "Poems" was published in 1863 and became extraordinarily successful, going through thirty editions in England and selling over 200,000 copies in America. Her poetry is characterized by lyrical beauty, religious themes, and accessible verse. She was considered one of the most prominent female poets of her era, often mentioned alongside Christina Rossetti and Elizabeth Barrett Browning.
+"""
+
+Notes = """
+While this edition is dated 1896, Ingelow's "Poems" was first published in 1863, which established her reputation. The 1896 Roberts Brothers edition is the "Author's Complete Edition" which would have included later poems, but the core work dates to 1863. I chose 1863 as it represents the historically significant publication date.
+"""
+</result>

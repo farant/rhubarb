@@ -1,0 +1,15 @@
+<result>
+Title = "Oeuvres de Napoléon Bonaparte, Tome Quatrième"
+Author = "Napoléon Bonaparte"
+Year = 1821
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the fourth volume of the collected works of Napoleon Bonaparte, containing his official correspondence, speeches, and proclamations from 1806 during the height of the French Empire. This particular excerpt includes his address to the Conservative Senate regarding the Treaty of Pressburg with Austria and the announcement of the marriage of his adopted son Prince Eugène de Beauharnais to Princess Augusta of Bavaria. The collection documents Napoleon's imperial administration and diplomacy.
+"""
+
+Notes = """
+The year 1821 (MDCCCXXI) appears on the title page as the publication date of this collected edition. Napoleon died in 1821, so this was likely published shortly before or after his death. The contents themselves date from 1806 as indicated by "EMPIRE. 1806." This is a primary historical document compilation rather than a work composed in 1821.
+"""
+</result>

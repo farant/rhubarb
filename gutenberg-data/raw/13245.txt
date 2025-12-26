@@ -1,0 +1,15 @@
+<result>
+Title = "The Charm of Oxford"
+Author = "J. Wells"
+Year = 1920
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A descriptive guide to Oxford University and its colleges, written by Joseph Wells, who served as Warden of Wadham College. The book celebrates the architectural beauty, historical significance, and atmospheric qualities of Oxford's colleges, gardens, and spires. It includes illustrations by W. G. Blackall and draws on literary quotations, including Matthew Arnold's famous description of Oxford as the "home of lost causes" and Wordsworth's verses on the city's dreaming spires. This is the second revised edition from 1921, though the work was first published in 1920.
+"""
+
+Notes = """
+First edition published 1920, second revised edition 1921. I chose 1920 as the year since that represents the original publication. Joseph Wells (1855-1929) was a classical scholar and historian who served as Warden of Wadham College, Oxford from 1913 to 1927.
+"""
+</result>

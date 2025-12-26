@@ -1,0 +1,15 @@
+<result>
+Title = "The Travels and Adventures of Monsieur Violet in California, Sonora, and Western Texas"
+Author = "Captain Frederick Marryat"
+Year = 1843
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is an adventure novel by Captain Frederick Marryat, a prolific British naval officer and novelist. The book follows the fictional Monsieur Violet, a young Frenchman whose family was ruined by the July Revolution of 1830. He travels to the American West, living among Native American tribes (particularly the Shoshone) and experiencing various adventures in California, Sonora (Mexico), and Texas during the period of Mexican rule and early Texan independence. The novel blends adventure fiction with ethnographic observations about Native American cultures and the frontier landscape, though Marryat himself never visited these regions and relied on secondary sources, leading to some inaccuracies that were noted by contemporary critics.
+"""
+
+Notes = """
+First published in 1843. Marryat is better known for his naval fiction and children's books like "The Children of the New Forest." This work was somewhat controversial at the time as critics noted geographical and cultural inaccuracies, since Marryat wrote it based on accounts from others rather than personal experience.
+"""
+</result>

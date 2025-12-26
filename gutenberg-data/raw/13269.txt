@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 100"
+Author = "Various"
+Year = 1891
+
+Tags = ["periodical", "humor", "satire"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841. It became one of the most influential and long-running satirical publications in history, running until 1992 (with a brief revival 1996-2002). The magazine was known for its political cartoons, witty commentary on British society, and coining or popularizing terms like "cartoon" in its modern sense. Volume 100 represents the magazine's continued success at mid-life, featuring the typical mix of humorous verse, social commentary, and satirical observations on Victorian life.
+"""
+
+Notes = """
+The date March 21, 1891 is explicitly stated in the text. Punch was a periodical publication, so the year reflects actual publication date. The poem "My Lady" is a satirical piece on marriage in the Victorian era, characteristic of Punch's gentle mockery of domestic life.
+"""
+</result>

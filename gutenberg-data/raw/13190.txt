@@ -1,0 +1,15 @@
+<result>
+Title = "De l'importance des livres de raison au point de vue archéologique"
+Author = "Louis Guibert"
+Year = 1892
+
+Tags = ["non-fiction", "historical-document", "french-language"]
+
+Summary = """
+This is a scholarly essay by Louis Guibert on the archaeological and historical importance of "livres de raison" (household account books or family journals). These were domestic records kept by French families of various social classes - nobility, magistrates, bourgeoisie, artisans, and rural landowners. Guibert argues that these documents, long neglected and left to decay in attics, contain valuable information beyond mere genealogical data. He situates his argument within the emerging field of social science, suggesting these records offer insights into family life, traditions, and social history that were previously overlooked by scholars.
+"""
+
+Notes = """
+This text was originally presented at the 57th Archaeological Congress of France held in Brive in 1890, then published in Caen in 1892. The year 1892 represents the publication date of this extract. Louis Guibert was a French archivist and historian who championed the study of these domestic documents as primary sources for social history.
+"""
+</result>

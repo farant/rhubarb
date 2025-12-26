@@ -1,0 +1,15 @@
+<result>
+Title = "Juan Masili o Ang Pinuno ng Tulisan"
+Author = "Patricio Mariano"
+Year = 1906
+
+Tags = ["fiction", "philippine-literature", "tagalog"]
+
+Summary = """
+Juan Masili o Ang Pinuno ng Tulisan ("Juan Masili or The Leader of Bandits") is an early Filipino novel written in Tagalog by Patricio Mariano (1877-1935), one of the pioneering Tagalog novelists. The 24-page short novel tells the story of Juan Masili (literally "John Peppery"), a young man driven to banditry after his mother was raped by a wealthy Filipino businessman and his father was killed by policemen when he tried to avenge his wife. Despite becoming an outlaw, Masili retains a sense of justice and works to reunite two ill-fated lovers, Benita and Enrique, to repay the kindness of Enrique's family who took him in when he was orphaned. The novel is set in Morong (now part of Rizal province) and Novaliches during the American colonial era in the Philippines.
+"""
+
+Notes = """
+Published in Manila by Librería Luzónica in 1906 during the American colonial period in Philippine history. The author "Pat. Mariano" is Patricio Mariano. The year 1906 is the original publication date as printed on the title page.
+"""
+</result>

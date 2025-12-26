@@ -1,0 +1,15 @@
+<result>
+Title = "Oscar Wilde Miscellaneous"
+Author = "Oscar Wilde"
+Year = 1908
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+This is a posthumous collection of Oscar Wilde's works edited by Robert Ross, Wilde's literary executor and close friend. The collection includes "La Sainte Courtisane" (an unfinished dramatic fragment about a courtesan who encounters a hermit in the desert) and "A Florentine Tragedy" (a one-act verse play about jealousy and murder in Renaissance Florence, also left incomplete at Wilde's death). These works represent Wilde's continued interest in dramatic forms and themes of sin, redemption, and moral transformation.
+"""
+
+Notes = """
+Year chosen is 1908, when Robert Ross first published these collected works as part of the authorized edition of Wilde's complete works. While the individual pieces were written in the 1890s before Wilde's death in 1900, they were unpublished fragments during his lifetime. The 1917 Methuen edition mentioned in this Gutenberg text is a later reprint. Ross's editorial work in collecting and publishing Wilde's literary estate is historically significant.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Jean François Millet: A Collection of Fifteen Pictures and a Portrait of the Painter"
+Author = "Estelle M. Hurll"
+Year = 1900
+
+Tags = ["non-fiction", "art-criticism", "appropriate-for-children"]
+
+Summary = """
+This is an art appreciation book from The Riverside Art Series, featuring fifteen reproductions of paintings by Jean François Millet (1814-1875), the French Realist painter famous for depicting peasant life and rural scenes. The book includes interpretive commentary by Estelle M. Hurll, who wrote numerous art education books in the late 19th and early 20th centuries. Millet's works shown would likely include his famous paintings such as The Angelus, The Gleaners, and The Sower. These art appreciation series were popular educational tools of the era, designed to bring fine art to American audiences.
+"""
+
+Notes = """
+The year 1900 appears directly in the text as the publication date. Estelle M. Hurll (1863-1924) was a prolific American author of art education books, and The Riverside Art Series was published by Houghton Mifflin.
+"""
+</result>

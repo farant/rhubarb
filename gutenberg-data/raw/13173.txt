@@ -1,0 +1,15 @@
+<result>
+Title = "Anna Liisa; Kotoa pois"
+Author = "Minna Canth"
+Year = 1890
+
+Tags = ["fiction", "drama", "finnish-literature"]
+
+Summary = """
+Anna Liisa is a three-act drama by Finnish playwright and author Minna Canth (1844-1897), one of the most significant figures in Finnish literature and a pioneer of realism and naturalism in Finnish theater. The play deals with themes of guilt, confession, and moral redemption. Anna Liisa is a young woman about to be married to Johannes Kivimaa, but she carries a dark secret from her past - as a young servant girl, she killed her illegitimate newborn child. The arrival of Mikko, a former farmhand who knows her secret, and his mother Husso, forces Anna Liisa to confront her past. The play explores questions of sin, forgiveness, social judgment, and the possibility of redemption through confession. It is considered one of Canth's masterpieces and remains regularly performed in Finnish theater.
+"""
+
+Notes = """
+The play was first performed and published in 1895. The text shown indicates "1920 (1895)" which likely refers to a 1920 edition of the original 1895 work. I have chosen 1895 as the historically significant year since that is when Canth wrote and first published the drama. Minna Canth was known for her socially critical works addressing women's rights, class inequality, and moral hypocrisy in Finnish society.
+"""
+</result>

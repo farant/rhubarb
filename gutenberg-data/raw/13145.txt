@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, April 1873"
+Author = "Various"
+Year = 1873
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was a prominent American monthly literary magazine published in Philadelphia from 1868 to 1916. It featured a mix of fiction, poetry, travel writing, essays, and articles on science and current affairs. This April 1873 issue includes travel writing about Kabylia (Algeria), serial fiction by Rebecca Harding Davis and William Black, an article on Thackeray's school days at Charterhouse, medical writing, and notably an article on "The Mystery of Massabielle" which refers to the Marian apparitions at Lourdes (Massabielle being the grotto where Bernadette Soubirous reported seeing the Virgin Mary in 1858).
+"""
+
+Notes = """
+The magazine itself was published in April 1873, making that the appropriate date. Contributors include notable figures: Rebecca Harding Davis was an important American author and early realist; William Black was a popular Scottish novelist; Hjalmar Hjorth Boyesen was a Norwegian-American author and professor. The inclusion of the Lourdes article is interesting given its proximity to the 1858 apparitions and ongoing Catholic interest in the site.
+"""
+</result>

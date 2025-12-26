@@ -1,0 +1,15 @@
+<result>
+Title = "Journal of a Voyage Across the Atlantic: With Notes on Canada & the United States; and Return to Great Britain, in 1844"
+Author = "George Moore"
+Year = 1845
+
+Tags = ["non-fiction", "travel", "historical-document"]
+
+Summary = """
+A travel journal documenting George Moore's voyage across the Atlantic Ocean to North America in 1844, including his observations on Canada and the United States before returning to Great Britain. The work was privately printed in London in 1845 for circulation among the author's friends and acquaintances. It represents a first-hand account of transatlantic travel and North American society in the mid-19th century, written in the style of Victorian travel literature. The author emphasizes that the notes were published without revision, preserving his immediate impressions.
+"""
+
+Notes = """
+The year 1845 is chosen as this is when the work was printed and first circulated. The voyage itself took place in 1844. George Moore, Esq. appears to be a private gentleman rather than a notable public figure - the work was printed "for private circulation" suggesting it was intended for friends and family rather than commercial publication.
+"""
+</result>

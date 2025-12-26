@@ -1,0 +1,15 @@
+<result>
+Title = "A King's Comrade: A Story of Old Hereford"
+Author = "Charles W. Whistler"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A historical novel set in Anglo-Saxon England, telling the story of Ethelbert, King of East Anglia, and his ill-fated journey to the court of Offa, King of Mercia. The narrative follows Wilfrid, a companion to King Ethelbert, through events including the first Danish raids on England and the political intrigues at the Mercian court involving Queen Quendritha (Cynethryth). The story culminates in the martyrdom of St. Ethelbert in 794 AD, a historical event where the young king was murdered at Offa's court, allegedly through the scheming of Queen Cynethryth. Whistler was known for his well-researched historical fiction aimed at younger readers, bringing Anglo-Saxon and Viking-era Britain to life.
+"""
+
+Notes = """
+Charles W. Whistler (1856-1913) wrote numerous historical novels set in early medieval Britain. This particular work was published in 1904. The historical St. Ethelbert of East Anglia was martyred in 794 AD and became venerated as a saint, with Hereford Cathedral dedicated to him.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "In the Ranks of the C.I.V.: A Narrative and Diary of Personal Experiences with the C.I.V. Battery (Honourable Artillery Company) in South Africa"
+Author = "Erskine Childers"
+Year = 1900
+
+Tags = ["non-fiction", "historical-document", "military-memoir"]
+
+Summary = """
+This is a first-hand account by Erskine Childers of his service as a driver with the City Imperial Volunteers (C.I.V.) Battery during the Second Boer War (1899-1902) in South Africa. The C.I.V. was a volunteer unit raised from the Honourable Artillery Company in London. Childers, who at the time was a clerk in the House of Commons, volunteered for service and kept a diary of his experiences. The book covers his journey from England to South Africa and his participation in various engagements including actions around Bloemfontein, Lindley, Bethlehem, and other locations during the British campaign in the Orange Free State. Childers would later become famous as the author of "The Riddle of the Sands" (1903) and for his role in Irish republican politics.
+"""
+
+Notes = """
+Published in 1900, the same year as the events described, making this a contemporaneous account. Erskine Childers (1870-1922) is better known today for his spy novel "The Riddle of the Sands" and his later execution during the Irish Civil War. This early work is a straightforward military memoir without the political dimensions of his later life.
+"""
+</result>

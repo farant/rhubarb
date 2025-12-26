@@ -1,0 +1,15 @@
+<result>
+Title = "Croisilles"
+Author = "Alfred de Musset"
+Year = 1839
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Croisilles is a romantic short story (nouvelle) by Alfred de Musset, one of the major French Romantic writers. The tale follows a young man named Croisilles, son of a goldsmith, who falls in love with a woman above his social station. Set during the reign of Louis XV, it's a charming story about love, class differences, and fortune. The story exemplifies Musset's elegant prose style and his characteristic themes of romantic idealism meeting social reality.
+"""
+
+Notes = """
+The date 1839 appears directly in the text as the publication year. This is from Volume 7 of Musset's Complete Works (Œuvres Complètes), specifically the second volume of short stories and tales (Nouvelles et Contes II). The 1888 date in the header refers to this particular Charpentier edition, not the original publication.
+"""
+</result>

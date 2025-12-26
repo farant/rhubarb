@@ -1,0 +1,17 @@
+The text you've provided is enough for me to identify this work.
+
+<result>
+Title = "The Diwan of Abu'l-Ala"
+Author = "Henry Baerlein"
+Year = 1909
+
+Tags = ["non-fiction", "poetry", "translation", "islamic-philosophy"]
+
+Summary = """
+This is Henry Baerlein's English translation and interpretation of selected poems from Abu'l-Ala al-Ma'arri (973-1057 CE), the blind Syrian poet and philosopher. Al-Ma'arri was known for his pessimistic worldview, skepticism toward organized religion, and ascetic lifestyle. His poetry is noted for its philosophical depth and often dark, questioning tone about existence, death, and the nature of truth. Baerlein's work is part of the "Wisdom of the East" series, which aimed to bring Eastern philosophical and literary works to Western readers in accessible translations with commentary.
+"""
+
+Notes = """
+I chose 1909 as this is when Baerlein's translation was published (the text indicates "Second Edition, LONDON: John Murray, 1909"). While Abu'l-Ala al-Ma'arri wrote the original Arabic poetry in the early 11th century, this is primarily Baerlein's interpretive translation with substantial framing and commentary, making the 1909 publication date most appropriate. The dedication to Dr. E. J. Dillon (a notable journalist and scholar) and references to Bulgaria and Russia suggest the translator's own adventures informed his approach.
+"""
+</result>

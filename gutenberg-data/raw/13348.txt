@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 100, May 16, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire published from 1841 to 2002. This issue from May 16, 1891 includes "Mr. Punch's Prize Novels" series, which featured parodies of popular contemporary authors. This particular installment, "Gasps" by "Olph Schreion," is a satirical parody of Olive Schreiner's work "The Story of an African Farm" (1883). The parody mimics Schreiner's allegorical style and South African setting, referencing her characters like Tant' Sannie, Bonaparte Blenkins, and Waldo. The mock author's preface cleverly skewers the pretensions of allegorical writing.
+"""
+
+Notes = """
+The year 1891 is the publication date of this specific issue. Punch magazine was a significant cultural institution in Victorian Britain, known for its political cartoons and literary parodies. Olive Schreiner (1855-1920) was a South African author whose "The Story of an African Farm" was a groundbreaking feminist novel.
+"""
+</result>

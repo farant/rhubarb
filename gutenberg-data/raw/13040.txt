@@ -1,0 +1,17 @@
+It seems the file in your repo is very short. Based on the text you've provided in your message, I can identify this work:
+
+<result>
+Title = "The Prose Works of Jonathan Swift, Vol. X: Historical Writings"
+Author = "Jonathan Swift, Temple Scott (editor)"
+Year = 1713
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume X of a collected edition of Jonathan Swift's prose works, focusing on his historical writings. The main work contained is "The History of the Four Last Years of the Queen," which Swift composed during his retirement at Windsor in 1713. Swift (1667-1745) was an Anglo-Irish satirist, essayist, and clergyman, best known for Gulliver's Travels. This particular volume deals with the political history of Queen Anne's final years, a period during which Swift was deeply involved in Tory politics and served as a pamphleteer for the Harley ministry. The work was controversial even after Swift's death, with questions about the authenticity of the published version arising in later scholarship.
+"""
+
+Notes = """
+The year 1713 is chosen as this is when Swift composed the main historical work at Windsor. The physical edition you have is from 1902 (Temple Scott's edited collection published in Bohn's Standard Library), and the first publication of "The History of the Four Last Years of the Queen" was 1758 (posthumously). For a timeline of historical works, 1713 represents when the primary historical content was created, though the editorial apparatus is from 1902.
+"""
+</result>

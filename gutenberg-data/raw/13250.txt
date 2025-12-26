@@ -1,0 +1,15 @@
+<result>
+Title = "The Chums of Scranton High at Ice Hockey"
+Author = "Donald Ferguson"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a juvenile sports novel from the early 20th century, part of a series featuring the "Chums of Scranton High." The book follows a group of high school boys and their adventures in ice hockey. These series books were popular in the era, combining school life, friendship, and athletic competition in a wholesome format aimed at young male readers.
+"""
+
+Notes = """
+Year based on the copyright date MCMXIX (1919) shown in the text. Donald Ferguson was a house name/pseudonym used for this series of juvenile sports fiction.
+"""
+</result>

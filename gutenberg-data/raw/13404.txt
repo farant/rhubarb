@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Tufton's Travels"
+Author = "Evelyn Everett-Green"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A historical adventure novel for young readers set in early 18th century England during the reign of Queen Anne. The story follows Tom Tufton, son of a country squire, as he leaves his rural home to seek adventure in London and beyond. The narrative includes encounters with highwaymen, a visit to the famous St. Bernard monastery in the Alps, and meetings with notable historical figures including the Duke of Marlborough. It is a coming-of-age tale typical of Everett-Green's prolific output of wholesome adventure stories for children and young adults.
+"""
+
+Notes = """
+Evelyn Everett-Green (1856-1932) was an extraordinarily prolific English author who wrote over 350 books, primarily historical fiction for children and young adults. While she was Anglican rather than Catholic, her works are generally morally instructive and suitable for young readers. The 1903 date represents the first publication of this work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Mystic Christianity; Or, The Inner Teachings of the Master"
+Author = "William Walker Atkinson (as Yogi Ramacharaka)"
+Year = 1908
+
+Tags = ["non-fiction", "new-thought", "occultism"]
+
+Summary = """
+This work is part of a series of books written by William Walker Atkinson under the pseudonym "Yogi Ramacharaka." Atkinson was an American attorney, merchant, publisher, and prolific author who became a pioneer of the New Thought movement. Under this Eastern-sounding pen name, he blended Western esoteric traditions with what he presented as Eastern philosophy. "Mystic Christianity" attempts to present an esoteric interpretation of Christianity, claiming to reveal hidden or "inner" teachings of Jesus. The work is characteristic of early 20th century occultism and the theosophical movement's tendency to synthesize various religious traditions. It is not a work of orthodox Christian theology and would not be considered compatible with Catholic teaching.
+"""
+
+Notes = """
+The lessons were originally published serially from October 1907 to September 1908, with the compiled book appearing in September 1908. I chose 1908 as the publication year since that is when the complete work appeared. William Walker Atkinson (1862-1932) wrote over 100 books under various pseudonyms including "Yogi Ramacharaka," "Theron Q. Dumont," and others. This pseudonymous approach was common in New Thought and occult publishing of the era.
+"""
+</result>

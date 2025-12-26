@@ -1,0 +1,15 @@
+<result>
+Title = "Best Russian Short Stories"
+Author = "Thomas Seltzer (editor)"
+Year = 1917
+
+Tags = ["fiction", "anthology"]
+
+Summary = """
+This is an anthology of Russian short stories compiled and edited by Thomas Seltzer, featuring works from the greatest Russian authors of the 19th and early 20th centuries. The collection includes stories by Pushkin, Gogol, Turgenev, Dostoyevsky, Tolstoy, Chekhov, and Gorky, among others. It serves as an excellent introduction to Russian literature, showcasing the range and depth of the Russian short story tradition from Pushkin's romantic tale "The Queen of Spades" to Chekhov's masterful character studies and Gorky's social realism.
+"""
+
+Notes = """
+Thomas Seltzer (1875-1943) was a Russian-born American translator and publisher who did much to introduce Russian literature to English-speaking audiences. This anthology was first published in 1917 by Boni and Liveright. The individual stories span roughly 1834 (Pushkin's "Queen of Spades") to the early 1900s (Gorky's works), but the anthology itself as a compiled work dates to 1917.
+"""
+</result>

@@ -1,0 +1,19 @@
+The file appears to be empty. However, you've provided the text content directly in your message - I can see this is **"Paul Kauvar; or, Anarchy"** by **Steele Mackaye**.
+
+This is a melodrama that premiered in 1887 in New York. The play is set during the French Revolution and deals with themes of political violence, anarchy, and personal loyalty. Mackaye was known for theatrical innovations and this was one of his more successful plays.
+
+<result>
+Title = "Paul Kauvar; or, Anarchy"
+Author = "Steele Mackaye"
+Year = 1887
+
+Tags = ["fiction", "drama", "historical-fiction"]
+
+Summary = """
+A melodrama set during the French Revolution, exploring themes of political violence, loyalty, and the dangers of anarchy. The play was one of Steele Mackaye's notable successes, known for its large mob scenes and vigorous theatrical treatment. Mackaye (1844-1894) was an American playwright, actor, and theatrical innovator who introduced various stage technologies and advocated for Delsarte acting methods. The work reflects the social concerns of its era regarding political extremism.
+"""
+
+Notes = """
+1887 is the premiere year in New York. The text from Gutenberg includes a critical introduction discussing Mackaye's place in American theatrical history alongside contemporaries like Bronson Howard, David Belasco, and James A. Herne. The play represents the older romantic/melodramatic tradition that would later give way to realism.
+"""
+</result>

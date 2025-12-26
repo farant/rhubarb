@@ -1,0 +1,15 @@
+<result>
+Title = "Lapsia: Kokoelma novelleja lasten parista"
+Author = "Teuvo Pakkala"
+Year = 1895
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Lapsia" (Children) is a collection of short stories about children by Finnish author Teuvo Pakkala (1862-1925). Pakkala was one of Finland's most beloved writers of children's literature and realistic fiction depicting life in northern Finland. This collection contains ten stories including tales about Christmas joy, children's mischief, and everyday life. The first story "Häiritty jouluilo" (Disturbed Christmas Joy) begins with little Jaakko preparing a special Christmas gift for his mother. Pakkala was known for his warm, psychologically insightful portrayals of children and working-class life in Oulu and surrounding regions.
+"""
+
+Notes = """
+The year 1895 appears directly in the text as the publication date. Teuvo Pakkala published several collections of children's stories during the 1890s, and this work represents his characteristic style of realistic, affectionate depictions of Finnish childhood.
+"""
+</result>

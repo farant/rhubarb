@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement No. 520"
+Author = "Various"
+Year = 1885
+
+Tags = ["non-fiction", "periodical", "science", "engineering"]
+
+Summary = """
+This is an issue of the Scientific American Supplement, a weekly periodical that accompanied the main Scientific American magazine. This particular issue (No. 520) from December 19, 1885 contains articles on engineering topics including steel structures by James Christie, natural gas fuel applications by Andrew Carnegie, ancient Roman water supply systems by Prof. W.H. Corfield, steam engine economy, and metallurgy. The Scientific American was founded in 1845 and the Supplement series began in 1876 to provide more in-depth technical content.
+"""
+
+Notes = """
+Year is straightforward - this is a periodical with its publication date clearly stated as December 19, 1885. Notable that this issue contains a paper by Andrew Carnegie on natural gas, written during his industrial peak years.
+"""
+</result>

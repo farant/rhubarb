@@ -1,0 +1,15 @@
+<result>
+Title = "The Tales of Chekhov, Volume 11: The Schoolmaster and Other Stories"
+Author = "Anton Chekhov"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is Volume 11 of Constance Garnett's landmark English translation of Anton Chekhov's short stories. The collection contains 29 stories spanning Chekhov's career, including character studies, satirical pieces, and slice-of-life sketches that showcase his mastery of the short story form. Stories like "Enemies," "Betrothed," and "The Examining Magistrate" represent his more serious work, while pieces like "Joy," "Overdoing It," and "A Tripping Tongue" display his comedic talents. Chekhov (1860-1904) is considered one of the greatest short story writers in world literature.
+"""
+
+Notes = """
+The year 1921 represents when Constance Garnett's English translation was published by Macmillan. The original Russian stories were written between roughly 1883-1903. Since this is specifically a translated collection compiled and published as a volume by Garnett, and her translation work is itself historically significant in bringing Chekhov to English readers, I chose the translation publication date rather than any single original story date.
+"""
+</result>

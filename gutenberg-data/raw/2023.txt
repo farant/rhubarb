@@ -1,0 +1,15 @@
+<result>
+Title = "From the Lyrical Poems of Robert Herrick"
+Author = "Robert Herrick, Francis Turner Palgrave"
+Year = 1648
+
+Tags = ["poetry", "fiction", "appropriate-for-children"]
+
+Summary = """
+This is a selection of lyrical poems by Robert Herrick (1591-1674), one of the English Cavalier poets, arranged and introduced by Francis Turner Palgrave, the Victorian anthologist famous for "The Golden Treasury." Herrick was an Anglican clergyman whose poetry celebrates pastoral life, love, and the fleeting nature of beauty. His most famous works include "To the Virgins, to Make Much of Time" ("Gather ye rosebuds while ye may") and "Corinna's Going A-Maying." His poetry is characterized by classical influences, wit, and a carpe diem sensibility.
+"""
+
+Notes = """
+The year 1648 is when Herrick's major collection "Hesperides" was originally published, which contained most of his secular verse. Palgrave's arrangement was published much later (1877), but since this is primarily Herrick's poetry with Palgrave serving as editor/arranger rather than author of substantial new content, the original publication date of Herrick's work is most historically appropriate. Herrick was Anglican, not Catholic, so the 'catholic' tag does not apply.
+"""
+</result>

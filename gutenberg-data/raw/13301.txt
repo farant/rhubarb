@@ -1,0 +1,15 @@
+<result>
+Title = "The New Ideal in Education"
+Author = "Nicholai Velimirovic"
+Year = 1916
+
+Tags = ["non-fiction", "christian", "education", "orthodox"]
+
+Summary = """
+This is an address delivered by Father Nicholai Velimirovic (later Bishop Nikolaj Velimirović) before the League of the Empire on July 16th, 1916, during World War I. Velimirović was a Serbian Orthodox bishop, theologian, and philosopher who became one of the most influential Serbian religious figures of the 20th century. The address concerns education reform and the role of children in preventing future wars, reflecting on Christian ideals of education during the turmoil of the Great War. Velimirović argues that true peace must begin with the education of children, invoking Christ's call to "let the children come unto Me" as a guiding principle.
+"""
+
+Notes = """
+Nicholai Velimirovic (1881-1956) was a Serbian Orthodox bishop who was later canonized as Saint Nikolaj of Žiča and Ohrid. During WWI, he was sent to Britain and America as a representative of Serbia. This address was given during that period. He is not Catholic but Eastern Orthodox, hence I used 'christian' and 'orthodox' rather than 'catholic' as tags.
+"""
+</result>

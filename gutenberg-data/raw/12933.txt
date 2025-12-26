@@ -1,0 +1,15 @@
+<result>
+Title = "Little Journeys to the Homes of the Great"
+Author = "Elbert Hubbard"
+Year = 1894
+
+Tags = ["non-fiction", "biographical"]
+
+Summary = """
+A monumental biographical series by Elbert Hubbard, founder of the Roycroft artisan community in East Aurora, New York. Over fourteen years (1894-1908), Hubbard wrote 180 biographical essays visiting the homes and lives of influential historical figures across various fields including writers, artists, scientists, statesmen, and reformers. The series was published monthly and became Hubbard's most celebrated work. Hubbard was known for his Arts and Crafts movement publishing and his famous essay "A Message to Garcia." He died aboard the RMS Lusitania in 1915 when it was torpedoed by a German U-boat.
+"""
+
+Notes = """
+The 1916 date in the text is the Memorial Edition publication date, issued after Hubbard's death in 1915. The series itself began in 1894, which is the more historically significant date for this work. This edition was published by Wm. H. Wise & Co. in cooperation with The Roycrofters.
+"""
+</result>

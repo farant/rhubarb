@@ -1,0 +1,15 @@
+<result>
+Title = "The Decameron"
+Author = "Giovanni Boccaccio"
+Year = 1353
+
+Tags = ["fiction"]
+
+Summary = """
+The Decameron is a masterpiece of medieval Italian literature, a collection of 100 tales told by ten young people (seven women and three men) who have fled Florence to escape the Black Death of 1348. Over ten days, each person tells one story per day, resulting in stories ranging from the bawdy and comic to the tragic and romantic. The work is celebrated for its sophisticated frame narrative, its vivid portrayal of medieval Italian society across all social classes, and its influence on later European literature including Chaucer's Canterbury Tales. This is J.M. Rigg's English translation, Volume II, covering the Fifth Day onwards.
+"""
+
+Notes = """
+The Decameron was composed between approximately 1349-1353, with 1353 being the traditional date of completion. The work reflects Boccaccio's response to the devastating plague that struck Florence in 1348. This particular edition is J.M. Rigg's 1903 English translation with illustrations by Louis Chalon. The work is notable for its frank treatment of sexuality and its sometimes anticlerical humor, which has historically caused it to be considered unsuitable for children and placed on various censorship lists.
+"""
+</result>

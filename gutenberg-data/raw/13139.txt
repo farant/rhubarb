@@ -1,0 +1,15 @@
+<result>
+Title = "Lives of John Donne, Henry Wotton, Rich'd Hooker, George Herbert, &c, Volume Two"
+Author = "Izaak Walton"
+Year = 1670
+
+Tags = ["non-fiction", "biography", "appropriate-for-children", "anglican"]
+
+Summary = """
+This is the second volume of Izaak Walton's famous biographical work "Lives," containing his biographies of Richard Hooker, George Herbert, and Robert Sanderson. Walton (1593-1683), best known for "The Compleat Angler," was also a celebrated biographer who wrote intimate, affectionate portraits of notable Anglican clergymen and literary figures. The Lives were written and revised over several decades: Hooker's life was first published in 1665, Herbert's in 1670, and Sanderson's in 1678. This particular edition is based on John Major's 1825 edition, which used a 1675 copy corrected in Walton's own hand.
+"""
+
+Notes = """
+The year 1670 represents the publication of the collected "Lives" containing Donne, Wotton, Hooker, and Herbert together. The individual lives were published separately at different times (Donne 1640, Wotton 1651, Hooker 1665, Herbert 1670, Sanderson 1678). I chose 1670 as it marks when the collection took its recognizable form. Note: Walton was Anglican, not Catholic, so the 'catholic' tag is not applicable despite the devotional and ecclesiastical subject matter.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Rules of the Game"
+Author = "Stewart Edward White"
+Year = 1910
+
+Tags = ["fiction"]
+
+Summary = """
+"The Rules of the Game" is a novel by American author Stewart Edward White, known for his adventure stories and works depicting the American West and wilderness. This novel deals with themes of land development, power companies, and the conflicts that arise in developing frontier regions. White was a prolific writer of outdoor adventure fiction and was known for his detailed depictions of Western American landscapes and characters. The story appears to involve corporate interests (a Power Company) and various characters navigating the moral complexities of development in the Sierra region.
+"""
+
+Notes = """
+The copyright dates show 1909 and 1910, with publication in October 1910. The author's note indicates this is a roman à clef - while set in recognizable California Sierra geography, the characters are fictionalized versions of real people and events related to power company development in the region.
+"""
+</result>

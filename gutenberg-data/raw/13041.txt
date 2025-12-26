@@ -1,0 +1,15 @@
+<result>
+Title = "Vildanden"
+Author = "Henrik Ibsen"
+Year = 1884
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+Vildanden (The Wild Duck) is one of Henrik Ibsen's most celebrated plays and a masterpiece of Norwegian dramatic literature. The play explores themes of self-deception, the danger of idealism, and the lies families tell themselves to survive. The story centers on the Ekdal family - photographer Hjalmar, his wife Gina, and their daughter Hedvig - whose fragile domestic peace is shattered when Gregers Werle arrives determined to expose long-buried truths. The wild duck of the title is a wounded bird kept in the Ekdal attic, serving as a powerful symbol of damaged lives and the human capacity for adaptation. The play is considered a turning point in Ibsen's work, moving toward a more nuanced, tragicomic view of human nature.
+"""
+
+Notes = """
+1884 is the year of first publication. The play premiered in Bergen in January 1885. This appears to be the original Danish-Norwegian text.
+"""
+</result>

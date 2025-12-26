@@ -1,0 +1,15 @@
+<result>
+Title = "Twenty Years at Hull-House"
+Author = "Jane Addams"
+Year = 1910
+
+Tags = ["non-fiction", "autobiography", "memoir", "social-reform", "appropriate-for-children"]
+
+Summary = """
+Twenty Years at Hull-House is the autobiography of Jane Addams, co-founder of Hull House, one of the first settlement houses in the United States. Located in Chicago, Hull House was established in 1889 and became a center for social reform, education, and community services for immigrants and the urban poor. The book chronicles Addams's childhood, her education, her travels in Europe where she was inspired by Toynbee Hall in London, and the first two decades of her work at Hull House. It documents the settlement house movement, progressive era social reform, and addresses issues including immigration, labor conditions, women's suffrage, and urban poverty. Jane Addams would later become the first American woman to receive the Nobel Peace Prize (1931).
+"""
+
+Notes = """
+The book was first published in 1910 by Macmillan. Jane Addams (1860-1935) was a prominent social reformer and pacifist. While she came from a Quaker-influenced background and worked closely with many Catholic immigrant communities, she herself was not Catholic, so the 'catholic' tag is not applicable.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Sara Crewe; Or, What Happened at Miss Minchin's"
+Author = "Frances Hodgson Burnett"
+Year = 1888
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Sara Crewe is a children's novella by Frances Hodgson Burnett, first published in 1888. It tells the story of Sara Crewe, a wealthy young girl sent from India to a London boarding school run by the stern Miss Minchin. When her father dies and leaves her penniless, Sara goes from being a pampered pupil to a servant in the school's attic. The story follows her resilience, kindness, and imagination through hardship. This novella was later expanded into the full-length novel "A Little Princess" (1905), which is the more widely known version today.
+"""
+
+Notes = """
+The original novella was published in 1888 in St. Nicholas Magazine and then as a book. Burnett later expanded it significantly into "A Little Princess" in 1905. The year 1888 reflects the original publication of this specific shorter work.
+"""
+</result>

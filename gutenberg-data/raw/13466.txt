@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, August 1, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, wit, and social commentary on British politics and culture. This particular issue from August 1891 contains a satirical piece titled "The Prince," which parodies Machiavelli's famous political treatise "The Prince" (1532) in the form of a mock letter to the young Prince Vittorio Emanuele of Italy. The satire offers tongue-in-cheek advice on princely conduct while commenting on British customs and political attitudes of the Victorian era.
+"""
+
+Notes = """
+The year 1891 is the original publication date of this specific issue. Punch magazine was a significant cultural institution in Britain, known for coining the phrase "cartoon" in its modern sense and for its influence on British humour and political discourse.
+"""
+</result>

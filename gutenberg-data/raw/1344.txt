@@ -1,0 +1,15 @@
+<result>
+Title = "The Secrets of the Princesse de Cadignan"
+Author = "Honoré de Balzac"
+Year = 1839
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+This is a novella from Balzac's monumental "La Comédie humaine" cycle, specifically part of the "Scenes of Parisian Life" section. The story follows the Princesse de Cadignan (formerly the Duchesse de Maufrigneuse, a character who appears in several other Balzac works), a once-famous society coquette who has ruined herself financially through extravagance. After the July Revolution of 1830, she retreats into obscurity and reinvents herself. The central plot involves her calculated seduction of the idealistic writer Daniel d'Arthez, to whom she presents a carefully constructed narrative of herself as a misunderstood, virtuous woman. It is a psychologically penetrating study of feminine manipulation, social performance, and the relationship between truth and fiction.
+"""
+
+Notes = """
+First published in 1839 in the periodical "Le Siècle." Balzac was Catholic and his works reflect Catholic moral sensibilities, though this particular novella is more a study of worldly society than explicitly religious. The translation here is by Katharine Prescott Wormeley, a prolific American translator of French literature active in the late 19th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Les Deux Nigauds"
+Author = "Comtesse de Ségur"
+Year = 1863
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+Les Deux Nigauds (The Two Simpletons) is a children's novel by the Comtesse de Ségur, born Sophie Rostopchine. The story follows two naive country children, Simplicie and Innocent, whose parents decide to teach them a lesson about their romanticized desires to visit Paris. The children are sent to the city where they encounter various misadventures that cure them of their illusions about urban life. Like much of Ségur's work, it combines moral instruction with humor and memorable characters. The Comtesse de Ségur was a prolific French children's author of Russian origin who converted to Catholicism and whose works often carry moral and religious themes.
+"""
+
+Notes = """
+The Comtesse de Ségur (1799-1874) was a devout Catholic, and her children's books were widely approved by Catholic authorities. Les Deux Nigauds was first published in 1863 by Hachette in their Bibliothèque rose series.
+"""
+</result>
