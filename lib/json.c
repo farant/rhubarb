@@ -721,8 +721,10 @@ _parse_objectum(JsonParser* parser)
     fac
     {
         chorda clavis_raw;
-        chorda clavis;
+        chorda clavis_unesc;
+        chorda* clavis_intern;
         JsonValor* valor;
+        JsonPar* slot;
 
         /* Expectare chorda pro clave */
         si (parser->currens.genus != JSON_TOK_CHORDA)
@@ -731,8 +733,11 @@ _parse_objectum(JsonParser* parser)
             redde NIHIL;
         }
         clavis_raw = _parser_token_valor(parser);
-        clavis = _unescape_chorda(clavis_raw, parser->piscina);
+        clavis_unesc = _unescape_chorda(clavis_raw, parser->piscina);
         _parser_avanzare(parser);
+
+        /* Internare clavem */
+        clavis_intern = chorda_internare(internamentum_globale(), clavis_unesc);
 
         /* Expectare : */
         si (!_parser_expectare(parser, JSON_TOK_COLON))
@@ -747,8 +752,13 @@ _parse_objectum(JsonParser* parser)
             redde NIHIL;
         }
 
-        /* Addere ad objectum */
-        json_objectum_ponere_chorda(obj, clavis, valor);
+        /* Addere ad objectum (directe cum pointer internato) */
+        slot = (JsonPar*)xar_addere(obj->datum.objectum);
+        si (slot)
+        {
+            slot->clavis = clavis_intern;
+            slot->valor = valor;
+        }
 
         /* Comma? */
         si (parser->currens.genus != JSON_TOK_COMMA)
@@ -1148,32 +1158,42 @@ json_objectum_numerus(JsonValor* valor)
 JsonValor*
 json_objectum_capere(JsonValor* valor, constans character* clavis)
 {
-    chorda ch;
-    i8* buffer;
-    i32 len;
+    chorda* clavis_intern;
+    i32 i;
+    i32 num;
 
-    si (!clavis || !valor || !valor->piscina)
+    si (!clavis || !valor)
     {
         redde NIHIL;
     }
 
-    len = (i32)strlen(clavis);
-    buffer = (i8*)piscina_allocare(valor->piscina, (i64)len);
-    si (!buffer)
+    si (valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
     {
         redde NIHIL;
     }
-    memcpy(buffer, clavis, (size_t)len);
 
-    ch.datum = buffer;
-    ch.mensura = len;
+    /* Internare clavem - nulla allocatio in piscina valor! */
+    clavis_intern = chorda_internare_ex_literis(internamentum_globale(), clavis);
 
-    redde json_objectum_capere_chorda(valor, ch);
+    num = (i32)xar_numerus(valor->datum.objectum);
+
+    per (i = 0; i < num; i++)
+    {
+        JsonPar* par = (JsonPar*)xar_obtinere(valor->datum.objectum, i);
+        /* Comparatio pointer - O(1)! */
+        si (par && par->clavis == clavis_intern)
+        {
+            redde par->valor;
+        }
+    }
+
+    redde NIHIL;
 }
 
 JsonValor*
 json_objectum_capere_chorda(JsonValor* valor, chorda clavis)
 {
+    chorda* clavis_intern;
     i32 i;
     i32 num;
 
@@ -1182,17 +1202,18 @@ json_objectum_capere_chorda(JsonValor* valor, chorda clavis)
         redde NIHIL;
     }
 
+    /* Internare clavem */
+    clavis_intern = chorda_internare(internamentum_globale(), clavis);
+
     num = (i32)xar_numerus(valor->datum.objectum);
 
     per (i = 0; i < num; i++)
     {
         JsonPar* par = (JsonPar*)xar_obtinere(valor->datum.objectum, i);
-        si (par && par->clavis.mensura == clavis.mensura)
+        /* Comparatio pointer - O(1)! */
+        si (par && par->clavis == clavis_intern)
         {
-            si (memcmp(par->clavis.datum, clavis.datum, (size_t)clavis.mensura) == 0)
-            {
-                redde par->valor;
-            }
+            redde par->valor;
         }
     }
 
@@ -1256,7 +1277,8 @@ json_objectum_iterator_proxima(
 
     si (clavis_ex)
     {
-        *clavis_ex = par->clavis;
+        /* Dereference pointer ad chorda internata */
+        *clavis_ex = *par->clavis;
     }
     si (valor_ex)
     {
@@ -1484,27 +1506,44 @@ json_objectum_ponere(
     constans character* clavis,
     JsonValor*          valor)
 {
-    chorda ch;
-    i8* buffer;
-    i32 len;
+    chorda* clavis_intern;
+    i32 i;
+    i32 num;
+    JsonPar* slot;
 
     si (!objectum || !clavis)
     {
         redde;
     }
 
-    len = (i32)strlen(clavis);
-    buffer = (i8*)piscina_allocare(objectum->piscina, (i64)(len + I));
-    si (!buffer)
+    si (objectum->genus != JSON_OBJECTUM || !objectum->datum.objectum)
     {
         redde;
     }
-    memcpy(buffer, clavis, (size_t)len);
 
-    ch.datum = buffer;
-    ch.mensura = len;
+    /* Internare clavem */
+    clavis_intern = chorda_internare_ex_literis(internamentum_globale(), clavis);
 
-    json_objectum_ponere_chorda(objectum, ch, valor);
+    /* Probare si clavis iam existit */
+    num = (i32)xar_numerus(objectum->datum.objectum);
+    per (i = 0; i < num; i++)
+    {
+        JsonPar* par = (JsonPar*)xar_obtinere(objectum->datum.objectum, i);
+        si (par && par->clavis == clavis_intern)
+        {
+            /* Clavis existit - overwrite */
+            par->valor = valor;
+            redde;
+        }
+    }
+
+    /* Nova clavis */
+    slot = (JsonPar*)xar_addere(objectum->datum.objectum);
+    si (slot)
+    {
+        slot->clavis = clavis_intern;
+        slot->valor = valor;
+    }
 }
 
 vacuum
@@ -1513,6 +1552,7 @@ json_objectum_ponere_chorda(
     chorda     clavis,
     JsonValor* valor)
 {
+    chorda* clavis_intern;
     i32 i;
     i32 num;
     JsonPar* slot;
@@ -1527,19 +1567,19 @@ json_objectum_ponere_chorda(
         redde;
     }
 
+    /* Internare clavem */
+    clavis_intern = chorda_internare(internamentum_globale(), clavis);
+
     /* Probare si clavis iam existit */
     num = (i32)xar_numerus(objectum->datum.objectum);
     per (i = 0; i < num; i++)
     {
         JsonPar* par = (JsonPar*)xar_obtinere(objectum->datum.objectum, i);
-        si (par && par->clavis.mensura == clavis.mensura)
+        si (par && par->clavis == clavis_intern)
         {
-            si (memcmp(par->clavis.datum, clavis.datum, (size_t)clavis.mensura) == 0)
-            {
-                /* Clavis existit - overwrite */
-                par->valor = valor;
-                redde;
-            }
+            /* Clavis existit - overwrite */
+            par->valor = valor;
+            redde;
         }
     }
 
@@ -1547,7 +1587,7 @@ json_objectum_ponere_chorda(
     slot = (JsonPar*)xar_addere(objectum->datum.objectum);
     si (slot)
     {
-        slot->clavis = clavis;
+        slot->clavis = clavis_intern;
         slot->valor = valor;
     }
 }
@@ -1598,9 +1638,9 @@ _scribere_objectum(JsonValor* obj, ChordaAedificator* aed, b32 pulchrum, i32 ind
             _scribere_indentatio(aed, indent + I);
         }
 
-        /* Clavis */
+        /* Clavis (dereference pointer) */
         chorda_aedificator_appendere_character(aed, '"');
-        chorda_aedificator_appendere_evasus_json(aed, par->clavis);
+        chorda_aedificator_appendere_evasus_json(aed, *par->clavis);
         chorda_aedificator_appendere_character(aed, '"');
 
         chorda_aedificator_appendere_character(aed, ':');

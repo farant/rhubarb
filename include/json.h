@@ -67,9 +67,11 @@ nomen structura JsonValor {
     Piscina* piscina;              /* Pro mutationes */
 } JsonValor;
 
-/* JsonPar - Par clavis-valor pro objectis */
+/* JsonPar - Par clavis-valor pro objectis
+ * clavis est pointer ad chorda internata (via internamentum_globale)
+ */
 nomen structura {
-    chorda     clavis;
+    chorda*    clavis;    /* Pointer ad chorda internata */
     JsonValor* valor;
 } JsonPar;
 
