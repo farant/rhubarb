@@ -1,0 +1,17 @@
+Interesting - the file appears to be empty or have issues. Based on the text you've provided in your message, I can identify this work:
+
+<result>
+Title = "An History of Birmingham"
+Author = "William Hutton"
+Year = 1782
+
+Tags = ["non-fiction", "history", "local-history"]
+
+Summary = """
+William Hutton's 'An History of Birmingham' is a pioneering work of local history, being one of the first comprehensive histories of an English industrial town. Hutton (1723-1815) was a Birmingham bookseller and self-made man who became deeply attached to the city. The work covers Birmingham's development from ancient times through the 18th century, documenting its transformation into a major manufacturing center. Hutton's personal, sometimes digressive style makes it both a historical document and a window into Georgian attitudes. The work was quite popular and went through multiple editions.
+"""
+
+Notes = """
+First edition was 1781, second edition (which this appears to be based on "THE SECOND EDITION, WITH CONSIDERABLE ADDITIONS") was 1782. I've chosen 1782 since this is explicitly the second edition. Hutton continued to revise the work through later editions. He is considered a pioneer of English local history writing.
+"""
+</result>

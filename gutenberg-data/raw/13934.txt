@@ -1,0 +1,17 @@
+The file seems empty or truncated. Based on the excerpt you provided in your message, I can identify this work:
+
+<result>
+Title = "Inferences from Haunted Houses and Haunted Men"
+Author = "John Harris"
+Year = 1901
+
+Tags = ["non-fiction", "paranormal", "spiritualism"]
+
+Summary = """
+A short essay or pamphlet by the Honourable John Harris examining psychical phenomena, particularly haunted houses and telepathy. The work engages with contemporary scientific discourse on the topic, referencing Sir William Crookes (physicist and paranormal researcher) and the "Alleged Haunting of B---- House" (referring to Ballechin House, a famous Scottish haunting investigated in 1896-1897). Harris discusses thought transference, apparitions as hallucinations, and the relationship between sensory perception and psychical experiences. The work reflects the late Victorian interest in scientific investigation of spiritualist claims.
+"""
+
+Notes = """
+The year 1901 is explicitly stated in the Project Gutenberg header. John Harris was a member of the Society for Psychical Research. The reference to "B---- House" is almost certainly Ballechin House in Perthshire, Scotland, which was the subject of a famous investigation by the SPR and documented in the book "The Alleged Haunting of B---- House" (1899) by Ada Goodrich-Freer (Miss Freer) and John, Marquess of Bute.
+"""
+</result>

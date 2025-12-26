@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XIII, No. 360"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap periodicals aimed at a general readership, predating Penny Magazine. Each issue contained miscellaneous articles on topics including architecture, history, literature, natural history, and current events, often accompanied by woodcut illustrations. This particular issue from March 1829 features an article on the newly erected grand entrance to Hyde Park designed by architect Decimus Burton, describing its Ionic columns, gates manufactured by Bramah, and frieze designed by Henning junior depicting a triumphal procession.
+"""
+
+Notes = """
+The year 1829 is taken directly from the publication date shown in the header (March 14, 1829). This is a periodical rather than a single-authored work, hence "Various" for author. The magazine was founded by John Limbird.
+"""
+</result>

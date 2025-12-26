@@ -1,0 +1,15 @@
+<result>
+Title = "The Siege of Kimberley: Its Humorous and Social Side"
+Author = "T. Phelan"
+Year = 1913
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A first-hand account of the Siege of Kimberley during the Second Boer War (1899-1902). The siege lasted from October 1899 to February 1900, when British-held Kimberley in South Africa was surrounded by Boer forces. The author structures the narrative as "Eighteen Weeks in Eighteen Chapters," focusing on the humorous and social aspects of life under siege rather than purely military matters. This provides a unique perspective on civilian experience during one of the notable sieges of the Anglo-Boer War.
+"""
+
+Notes = """
+The book was published in 1913 by M.H. Gill & Son in Dublin, reflecting on events from 1899-1900. Using 1913 as the year since this is the author's original work of memoir/commentary, not a translation or edition of an earlier text.
+"""
+</result>

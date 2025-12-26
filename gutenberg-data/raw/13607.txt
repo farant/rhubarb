@@ -1,0 +1,17 @@
+This is Adolphe Thiers' *Histoire de la Révolution Française* (History of the French Revolution), specifically Volume 10, 9th edition from 1839. This is a major multi-volume historical work covering the French Revolution.
+
+<result>
+Title = "Histoire de la Révolution Française, Tome Dixième"
+Author = "Adolphe Thiers"
+Year = 1823
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+This is Volume 10 of Adolphe Thiers' comprehensive history of the French Revolution, one of the most influential 19th-century works on the subject. This particular volume covers the Directory period and Napoleon's Egyptian Expedition (1798), including the departure from Toulon, the conquest of Malta, the landing at Alexandria, the Battle of the Pyramids, and the naval Battle of Aboukir where the French fleet was destroyed by Nelson. Thiers was a French statesman and historian who later became President of France. This work established his reputation as a historian and remains a primary source for understanding 19th-century French liberal historiography of the Revolution.
+"""
+
+Notes = """
+The first edition was published 1823-1827 in 10 volumes. This text indicates "Neuvième Édition" (9th edition) and "M DCCC XXXIX" (1839) as the publication date of this particular edition. I chose 1823 as the Year since that is when the work was originally published and began appearing, which is most historically relevant for a timeline of works. Thiers was not Catholic in the religious sense and this is a secular liberal historical work, so no 'catholic' tag is appropriate.
+"""
+</result>

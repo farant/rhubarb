@@ -1,0 +1,17 @@
+The file seems empty or minimal. Let me check what's available - you've already provided the text content in your message. Based on the text you shared, I can identify this work:
+
+<result>
+Title = "Conception Control and Its Effects on the Individual and the Nation"
+Author = "Florence E. Barrett"
+Year = 1922
+
+Tags = ["non-fiction", "medical", "social-commentary"]
+
+Summary = """
+A medical treatise on birth control written by Dr. Florence E. Barrett, a prominent British physician who served as Consulting Obstetric and Gynaecological Surgeon to the Royal Free Hospital and President of the Federation of Medical Women. The book addresses both the individual health implications and broader national/demographic consequences of contraception practices. It includes a foreword by the Archbishop of Canterbury, suggesting engagement with moral and religious dimensions of the topic. Barrett approaches the subject from a medical professional's perspective while acknowledging the ethical nature of reproductive decisions.
+"""
+
+Notes = """
+Florence Barrett (1867-1945) was a pioneering female physician in Britain. She was made a C.B.E. (Commander of the Order of the British Empire). The involvement of the Archbishop of Canterbury in the foreword reflects the significant religious and social controversy surrounding birth control in early 20th century Britain. This was published just two years after Marie Stopes opened her first birth control clinic in London (1921), during a period of intense debate on the topic.
+"""
+</result>

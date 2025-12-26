@@ -1,0 +1,15 @@
+<result>
+Title = "John-of-the-Woods"
+Author = "Abbie Farwell Brown"
+Year = 1909
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+John-of-the-Woods is a children's novel by Abbie Farwell Brown, an American author known for her children's literature and poetry in the early 20th century. The story follows a boy who lives in harmony with nature and the animal kingdom. Brown was a prolific writer of fairy tales and children's stories, often incorporating themes of nature, fantasy, and moral lessons. The book was illustrated by E. Boyd Smith, a well-known illustrator of the period.
+"""
+
+Notes = """
+First published October 1909 by Houghton Mifflin Company.
+"""
+</result>

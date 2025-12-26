@@ -1,0 +1,15 @@
+<result>
+Title = "The Common Law"
+Author = "Robert W. Chambers"
+Year = 1911
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+The Common Law is a romantic novel by Robert W. Chambers set in the New York art world of the early 20th century. The story follows Louis Neville, a successful artist, and Valerie West, a beautiful young woman who becomes his model. The novel explores themes of love, social conventions, artistic life, and the tension between passion and propriety in Gilded Age America. Chambers was known for his popular romantic fiction and his earlier weird fiction work "The King in Yellow." This novel was one of his bestselling works and was later adapted into film multiple times.
+"""
+
+Notes = """
+The Common Law was first published in 1911 by D. Appleton and Company. It was serialized in Cosmopolitan magazine before book publication. The novel was a major commercial success and reflects the popular romantic fiction of the era.
+"""
+</result>

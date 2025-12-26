@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents, Volume IX"
+Author = "James D. Richardson"
+Year = 1902
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is Volume IX of a comprehensive compilation of official presidential documents, covering the administrations of Benjamin Harrison (1889-1893) and Grover Cleveland's second term (1893-1897). The work was authorized by the United States Congress and compiled by James D. Richardson, a Representative from Tennessee. It contains presidential proclamations, addresses, messages to Congress, and executive orders. The prefatory note reveals that Richardson began the compilation in April 1895 and spent nearly four years on the project, far longer than initially anticipated. This volume represents the final substantive volume of the series, with only an Appendix and Index volume to follow.
+"""
+
+Notes = """
+The year 1902 is chosen as it is explicitly stated as the publication year ("Published by Authority of Congress 1902"). This is a primary source collection of historical documents rather than an interpretive work, making the compilation date the most relevant year for cataloging purposes.
+"""
+</result>

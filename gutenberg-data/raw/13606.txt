@@ -1,0 +1,15 @@
+<result>
+Title = "A General History and Collection of Voyages and Travels, Vol. XVIII"
+Author = "Robert Kerr, William Stevenson"
+Year = 1824
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume XVIII of Robert Kerr's monumental compilation of voyage and travel accounts, a comprehensive encyclopedic work documenting the history of navigation, exploration, and commerce from ancient times through the early 19th century. This particular volume contains William Stevenson's "Historical Sketch of the Progress of Discovery, Navigation, and Commerce" which provides a scholarly overview of maritime exploration history. The series was an important reference work of its era, systematically organizing accounts of global exploration and trade.
+"""
+
+Notes = """
+The date MDCCCXXIV (1824) appears on the title page as the publication year. Robert Kerr was a Scottish writer and translator, Fellow of the Royal Society of Edinburgh. William Stevenson contributed the historical sketch portion of this volume. This is an original 19th century compilation rather than a translation of an older work.
+"""
+</result>

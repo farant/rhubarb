@@ -1,0 +1,15 @@
+<result>
+Title = "Muistelmia ja matkakuvia"
+Author = "Juhani Aho"
+Year = 1921
+
+Tags = ["non-fiction", "memoir", "travel-writing"]
+
+Summary = """
+A collection of memoirs and travel writings by Finnish author Juhani Aho (1861-1921), one of the most significant figures in Finnish literature. The book contains reminiscences about notable Finnish cultural figures including Sakari Topelius, Elias Lönnrot, Minna Canth, and Karl Bergbom, as well as travel accounts from Paris during the 1889 World Exhibition, impressions from Russia, and observations about international figures like Henrik Ibsen, Bjørnstjerne Bjørnson, and Pope Leo XIII. The work provides valuable insight into Finnish cultural life and European travel experiences in the late 19th century.
+"""
+
+Notes = """
+Published posthumously in 1921 by WSOY (Werner Söderström Osakeyhtiö) in Porvoo, Finland. Juhani Aho was a pioneering Finnish novelist and journalist who helped establish Finnish-language prose literature. The travel pieces date from his journeys in the 1880s-1890s, but this collection was compiled near the end of his life.
+"""
+</result>

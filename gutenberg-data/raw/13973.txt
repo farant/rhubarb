@@ -1,0 +1,15 @@
+<result>
+Title = "Whistler Stories"
+Author = "Don C. Seitz"
+Year = 1913
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+A collection of anecdotes and stories about James Abbott McNeill Whistler (1834-1903), the famous American-born painter known for his sharp wit and controversial personality as much as for his art. Don C. Seitz, a journalist and author, compiled these stories about the artist who was renowned for works like "Arrangement in Grey and Black No. 1" (popularly known as "Whistler's Mother") and his libel suit against art critic John Ruskin. The book captures Whistler's legendary bon mots and the colorful episodes of his life in the art world of the late 19th century.
+"""
+
+Notes = """
+Publication date clearly stated as MCMXIII (1913) and "Published October 1913" on the title page. Seitz was also the author of a bibliography of Whistler's writings, indicating his expertise on the subject.
+"""
+</result>

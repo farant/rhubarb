@@ -1,0 +1,15 @@
+<result>
+Title = "Nedra"
+Author = "George Barr McCutcheon"
+Year = 1905
+
+Tags = ["fiction", "romance", "adventure"]
+
+Summary = """
+Nedra is a romantic adventure novel by George Barr McCutcheon, a popular American author of the early 20th century best known for his Graustark series of romantic novels set in fictional European kingdoms. This novel involves a shipwreck (as indicated by the final chapter "The Wreck of the Tempest Queen") and appears to be a tale of love, mistaken identity, and adventure set against exotic locales including Manila. McCutcheon was known for his entertaining, fast-paced romantic fiction that appealed to popular audiences of the era.
+"""
+
+Notes = """
+The title page indicates 1906, but the novel was actually first published in 1905 by Dodd, Mead and Company. The 1906 date likely refers to a subsequent printing. The illustrations by Harrison Fisher, a famous American illustrator known for his "Fisher Girl" images, added to the book's appeal as a popular romantic novel of the period.
+"""
+</result>

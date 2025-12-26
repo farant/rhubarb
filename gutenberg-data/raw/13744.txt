@@ -1,0 +1,17 @@
+I can identify this work from the excerpt you provided:
+
+<result>
+Title = "Isidora"
+Author = "George Sand"
+Year = 1845
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+Isidora is a novel by George Sand (pseudonym of Amantine Lucile Aurore Dupin), published in 1845. The novel explores themes of love, society, and the position of women in 19th century France. The work is presented through a framing device involving two manuscripts - a philosophical work and a personal journal - discovered among papers left by a character named Jacques Laurent. Sand was one of the most prolific and celebrated French authors of the Romantic era, known for her unconventional lifestyle and her exploration of women's independence.
+"""
+
+Notes = """
+The prefatory notice is dated Nohant, 17 janvier 1853, but the novel itself was first published in 1845, as Sand herself indicates in the notice ("A Paris, 1845"). George Sand mentions that the character Isidora was inspired by, but not directly modeled on, a real person she encountered. I chose 1845 as it represents the original publication date of the novel.
+"""
+</result>

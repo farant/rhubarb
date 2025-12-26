@@ -1,0 +1,15 @@
+<result>
+Title = "The Mysterious Rider"
+Author = "Zane Grey"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Mysterious Rider is a Western novel by Zane Grey, one of the most prolific and influential authors of the Western genre. The story is set in the Colorado Rockies and centers on a mysterious stranger named Bent Wade who arrives at a ranch and becomes entangled in a complex drama involving a young woman named Columbine, her adoptive father Old Bill Belllounds, and his dissolute son Jack. The novel explores themes of honor, redemption, justice, and the rugged morality of the American frontier. Wade serves as a quasi-supernatural figure of justice, righting wrongs and protecting the innocent. The book was quite popular in its time and exemplifies Grey's romantic vision of the Old West.
+"""
+
+Notes = """
+1921 is the original publication year. Zane Grey (1872-1939) was an American author best known for his popular adventure novels and stories associated with the Western genre. He was one of the first millionaire authors and helped shape the mythic image of the American West in popular culture.
+"""
+</result>

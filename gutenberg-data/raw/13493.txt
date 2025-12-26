@@ -1,0 +1,15 @@
+<result>
+Title = "The American Frugal Housewife"
+Author = "Lydia Maria Child"
+Year = 1829
+
+Tags = ["non-fiction", "appropriate-for-children", "domestic-economy"]
+
+Summary = """
+The American Frugal Housewife is a practical domestic economy guide written by Lydia Maria Child, a prominent American abolitionist, women's rights activist, and author. The book provides advice on household management, cooking, cleaning, home remedies, and frugal living for middle-class and working-class American families. It was enormously popular in its time, going through over thirty editions. Child wrote it partly from her own experience of financial hardship and partly as a counterpoint to imported British housekeeping manuals that assumed greater wealth and different ingredients. The book is notable for its no-nonsense, practical approach and its famous dedication "to those who are not ashamed of economy."
+"""
+
+Notes = """
+The book was first published in 1829 under the title "The Frugal Housewife." The word "American" was added in 1832 to distinguish it from a British book with a similar title. The Gutenberg text appears to be from the 1832 edition based on the title page, but I chose 1829 as the year since that represents the original publication of the work itself.
+"""
+</result>

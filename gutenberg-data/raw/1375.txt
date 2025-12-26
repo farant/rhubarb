@@ -1,0 +1,15 @@
+<result>
+Title = "New Chronicles of Rebecca"
+Author = "Kate Douglas Wiggin"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+New Chronicles of Rebecca is a sequel to Kate Douglas Wiggin's beloved 1903 novel "Rebecca of Sunnybrook Farm." The book follows the continuing adventures of Rebecca Rowena Randall, an imaginative and spirited young girl from a poor family who goes to live with her stern aunts in the small Maine village of Riverboro. The chronicles present episodic stories of Rebecca's childhood experiences, friendships, and small-town New England life in the late 19th century. Wiggin was a prominent American educator and author who helped establish the kindergarten movement in the western United States.
+"""
+
+Notes = """
+The original Rebecca of Sunnybrook Farm was published in 1903 and became enormously popular. This sequel, New Chronicles of Rebecca, was published in 1907. The stories are set in rural Maine and reflect Wiggin's own New England upbringing.
+"""
+</result>

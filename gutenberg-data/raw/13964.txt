@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, Vol. XII, No. 31"
+Author = "Various"
+Year = 1873
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was a prominent American monthly literary magazine published in Philadelphia by J.B. Lippincott & Co. from 1868 to 1915. This October 1873 issue contains a typical mix of travel writing (including pieces on Strasburg and the Tyrol), serialized fiction (including William Black's "A Princess of Thule" and Sarah C. Hallowell's "On the Church Steps"), poetry, and cultural commentary. The magazine was known for publishing both American and British authors and covering topics ranging from literature and travel to science and current events. It competed with other major literary magazines of the era such as Harper's and The Atlantic Monthly.
+"""
+
+Notes = """
+The year 1873 is taken directly from the issue itself (October 1873, Vol. XII, No. 31). This is a periodical compilation rather than a single-author work, containing contributions from multiple writers including Edward Strahan, William Black, Emma Lazarus (spelled "Lazaros" in the table of contents), and others. The mix of fiction and non-fiction makes categorical tagging complex - it contains both.
+"""
+</result>

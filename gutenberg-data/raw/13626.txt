@@ -1,0 +1,15 @@
+<result>
+Title = "The Forty-Five Guardsmen"
+Author = "Alexandre Dumas"
+Year = 1848
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+The Forty-Five Guardsmen (Les Quarante-cinq) is the third and final novel in Alexandre Dumas's Valois Romances trilogy, following La Reine Margot and Chicot the Jester (La Dame de Monsoreau). Set during the French Wars of Religion in the late 16th century, the novel follows the personal guard of King Henri III of France. The story interweaves political intrigue, the Catholic League's machinations against the king, and romantic adventures. The "Forty-Five" were an actual historical bodyguard unit employed by Henri III for protection against assassination attempts during this turbulent period of French history.
+"""
+
+Notes = """
+The novel was originally published in serial form in 1847-1848, with the complete book edition appearing in 1848. This is the year typically cited for the work. The 1893 date in the Gutenberg text refers to this particular Collier edition, not the original publication.
+"""
+</result>

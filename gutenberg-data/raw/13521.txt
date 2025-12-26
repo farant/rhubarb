@@ -1,0 +1,15 @@
+<result>
+Title = "Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc."
+Author = "Various"
+Year = 1849
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+Notes and Queries was a weekly periodical founded in 1849 by William John Thoms. It served as a correspondence forum for scholars, antiquaries, literary researchers, and curious readers to pose questions and share answers on matters of history, literature, folklore, etymology, genealogy, and general curiosities. The motto "When found, make a note of" comes from Captain Cuttle in Dickens' Dombey and Son. This particular issue (No. 9, December 29, 1849) contains articles on subjects ranging from Sir Edward Dering's household accounts to Gothic architecture, musical works, and various historical queries. The publication continues to this day and remains an important resource for researchers.
+"""
+
+Notes = """
+This is issue No. 9 from the first volume of Notes and Queries, dated December 29, 1849. The periodical was founded that same year (November 1849), making this one of the earliest issues. The year 1849 represents both the original publication date and the founding of this long-running scholarly journal.
+"""
+</result>

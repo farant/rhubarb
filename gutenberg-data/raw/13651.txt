@@ -1,0 +1,15 @@
+<result>
+Title = "Alphabetical Catalogue of Books in Fiction and General Literature"
+Author = "Chatto & Windus"
+Year = 1905
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a publisher's trade catalogue from Chatto & Windus, a prominent Victorian and Edwardian London publishing house. The catalogue lists books available for purchase in their fiction and general literature categories, arranged alphabetically by author or title. Such catalogues were common marketing tools for publishers in this era, distributed to booksellers and sometimes directly to customers. Chatto & Windus was known for publishing works by authors such as Mark Twain, Wilkie Collins, and Ouida, among many others.
+"""
+
+Notes = """
+The date September 1905 is explicitly given in the catalogue header. This is a trade catalogue rather than a literary work per se - it documents publishing history and book prices of the Edwardian era.
+"""
+</result>

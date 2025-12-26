@@ -1,0 +1,15 @@
+<result>
+Title = "Shandygaff"
+Author = "Christopher Morley"
+Year = 1918
+
+Tags = ["non-fiction", "essays", "literary-criticism"]
+
+Summary = """
+Shandygaff is a collection of essays, short pieces, and literary sketches by American journalist and author Christopher Morley (1890-1957). The title refers to a British drink made of beer mixed with ginger ale or ginger beer. The book reflects Morley's characteristic wit, bookish charm, and love of literature. Morley was a prolific essayist, novelist, and poet who helped found the Saturday Review of Literature and was known for his genial, conversational style. This was one of his earlier essay collections, establishing his reputation as a man of letters with a light touch.
+"""
+
+Notes = """
+1918 is the original publication year as stated in the text itself. Christopher Morley was a Rhodes Scholar and worked as an editor and columnist. He is perhaps best remembered today for his novel "Kitty Foyle" (1939) and "The Haunted Bookshop" (1919).
+"""
+</result>

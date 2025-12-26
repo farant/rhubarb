@@ -1,0 +1,15 @@
+<result>
+Title = "Le Neveu de Rameau"
+Author = "Denis Diderot"
+Year = 1761
+
+Tags = ["fiction", "philosophy", "satire"]
+
+Summary = """
+Le Neveu de Rameau is a philosophical dialogue between the narrator (Diderot himself, referred to as "Moi") and Jean-François Rameau, the eccentric nephew of the famous composer Jean-Philippe Rameau. The work is a brilliant satire examining morality, genius, social conventions, and the nature of authenticity. Through the character of Rameau's nephew - a failed musician, parasite, and social climber - Diderot explores questions about virtue versus self-interest, the corruptions of society, and whether it is better to be an honest failure or a successful hypocrite. The dialogue format allows Diderot to present opposing viewpoints with remarkable psychological depth, making it one of the most original works of the French Enlightenment.
+"""
+
+Notes = """
+The work was begun around 1761 and revised multiple times until approximately 1774-1779. It was never published during Diderot's lifetime. The 1761 date represents when composition began. The complex publication history includes Goethe's German translation (1805) before any French edition, with the authoritative text only published in 1891 from a manuscript copy. The subtitle "Satire seconde" indicates it follows Diderot's "Satire première" and was partly written as a response to Palissot's satirical play "Les Philosophes" (1760) which had attacked Diderot and the Encyclopedists.
+"""
+</result>

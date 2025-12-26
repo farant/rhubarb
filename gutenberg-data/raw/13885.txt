@@ -1,0 +1,17 @@
+I have enough context from what you've provided. This is clearly "Echoes from the Sabine Farm" - a collection of paraphrases/translations of Horace's Odes by the Field brothers.
+
+<result>
+Title = "Echoes from the Sabine Farm"
+Author = "Roswell Martin Field, Eugene Field"
+Year = 1893
+
+Tags = ["poetry", "translation", "classical-literature"]
+
+Summary = """
+A collection of free verse translations and paraphrases of Horace's Odes by brothers Eugene Field (the famous American journalist, poet, and children's author known for "Little Boy Blue" and "Wynken, Blynken, and Nod") and Roswell Martin Field (a lawyer and writer). The work takes Horace's Latin poems and renders them in a playful, accessible English style characteristic of Eugene Field's wit. The "Sabine Farm" of the title refers to Horace's famous country estate, a gift from his patron Maecenas, where the Roman poet spent much of his later life writing.
+"""
+
+Notes = """
+The 1899 date shown in the Gutenberg text refers to this particular edition as part of "The Writings in Prose and Verse of Eugene Field" collected works. The original "Echoes from the Sabine Farm" was first published in 1893 (two years before Eugene Field's death in 1895). I have used 1893 as it represents when this work first appeared as an independent publication.
+"""
+</result>

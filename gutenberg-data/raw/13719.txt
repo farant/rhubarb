@@ -1,0 +1,15 @@
+<result>
+Title = "Blackwood's Edinburgh Magazine, Vol. LVI, July-December 1844"
+Author = "Various"
+Year = 1844
+
+Tags = ["non-fiction", "periodical", "literary-magazine"]
+
+Summary = """
+Blackwood's Edinburgh Magazine was one of the most influential British literary and political magazines of the 19th century, founded in 1817 by William Blackwood. It was known for its Tory political stance, sharp literary criticism, and publication of fiction and poetry. This volume covers the second half of 1844 and includes a typical mix of essays on social issues (crime), travel writing (Sicily tour), poetry (Goethe translations, an ode to Martin Luther), fiction, and serialized tales. The magazine was particularly famous for its role in the Romantic period and for publishing works by authors such as George Eliot, Joseph Conrad, and many others throughout its long run until 1980.
+"""
+
+Notes = """
+The year 1844 is definitive as this is a periodical publication with dated issues. Blackwood's was published monthly from Edinburgh and was a significant cultural institution in Victorian Britain.
+"""
+</result>

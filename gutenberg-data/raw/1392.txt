@@ -1,0 +1,15 @@
+<result>
+Title = "The Seven Poor Travellers"
+Author = "Charles Dickens"
+Year = 1854
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Seven Poor Travellers is a Christmas story by Charles Dickens, first published in the Christmas 1854 issue of his weekly magazine Household Words. The frame narrative is set at Richard Watts' charity house in Rochester, Kent, which historically provided lodging for six poor travelers. The narrator joins these travelers on Christmas Eve and tells them the tale of Richard Doubledick, a soldier who transforms from a dissolute man seeking death in battle to a hero of the Napoleonic Wars. The story weaves themes of redemption, forgiveness, and the Christmas spirit throughout.
+"""
+
+Notes = """
+First published December 1854 in Household Words as that year's Christmas issue. The Richard Watts charity mentioned in the story was a real institution in Rochester, established by bequest in 1579, which Dickens would have known from his childhood in the area.
+"""
+</result>

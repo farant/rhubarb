@@ -1,0 +1,17 @@
+You've provided the text directly in your message. Based on my knowledge:
+
+<result>
+Title = "Penelope's Irish Experiences"
+Author = "Kate Douglas Wiggin"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the third book in Kate Douglas Wiggin's "Penelope" travel series, following Penelope's English Experiences and Penelope's Experiences in Scotland. The novel follows American Penelope Hamilton and her companions as they tour Ireland, visiting the provinces of Leinster, Munster, and Ulster. Written in a warm, humorous style typical of Wiggin, the book blends travel narrative with light romance and social observation. Wiggin was beloved for her children's literature (most famously Rebecca of Sunnybrook Farm) but also wrote these popular adult travel novels drawing on her own journeys through the British Isles.
+"""
+
+Notes = """
+The dedication to Jane Barlow, an Irish poet and novelist, and the explicit "Published 1901" in the text confirms the publication year. Wiggin was an American author, not Catholic, and while the book is set in Ireland and treats Irish culture sympathetically, it is a light travel novel rather than a Catholic religious or theological work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Adolphe"
+Author = "Benjamin Constant"
+Year = 1816
+
+Tags = ["fiction", "french-literature", "romantic-novel"]
+
+Summary = """
+Adolphe is a psychological novel by Swiss-French author Benjamin Constant, widely considered one of the masterpieces of French Romantic literature. The novel is a first-person narrative following Adolphe, a young man who begins an affair with Ellénore, an older woman in a long-term relationship. What starts as a conquest of vanity becomes a genuine but ultimately destructive attachment. The novel explores with remarkable psychological depth the themes of love, obligation, freedom, weakness of will, and the inability to either fully commit to or fully abandon a relationship. It is celebrated for its concise prose and its unflinching analysis of emotional ambivalence and the suffering caused by indecision.
+"""
+
+Notes = """
+1816 is the year of first publication. The novel is partly autobiographical, drawing on Constant's own tumultuous relationships, particularly with Madame de Staël. It was written several years before publication (around 1806-1810) but the standard date given is the publication year.
+"""
+</result>

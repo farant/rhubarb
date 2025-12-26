@@ -1,0 +1,15 @@
+<result>
+Title = "Portraits Littéraires, Tome II"
+Author = "Charles-Augustin Sainte-Beuve"
+Year = 1862
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+Portraits Littéraires is a collection of literary essays and critical studies by Sainte-Beuve, one of the most influential French literary critics of the 19th century. This second volume contains biographical and critical portraits of major French literary figures including Molière, Delille, Bernardin de Saint-Pierre, General La Fayette, Fontanes, Joubert, Léonard, Aloïsius Bertrand, Comte de Ségur, Joseph de Maistre, and Gabriel Naudé. Sainte-Beuve pioneered biographical criticism, examining authors' lives and characters to illuminate their works. The excerpt shown begins his essay on Molière, placing him among the rare universal geniuses of world literature alongside Homer.
+"""
+
+Notes = """
+The 1862 date appears on the title page and represents the definitive edition. Sainte-Beuve published various versions of Portraits Littéraires beginning in the 1830s-1840s, but the 1862 edition represents his mature, revised work as a member of the Académie française.
+"""
+</result>

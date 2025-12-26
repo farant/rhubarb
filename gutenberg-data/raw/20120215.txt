@@ -1,0 +1,15 @@
+<result>
+Title = "Tamburlaine the Great, Part I"
+Author = "Christopher Marlowe"
+Year = 1587
+
+Tags = ["fiction", "drama", "tragedy", "historical-fiction"]
+
+Summary = """
+Tamburlaine the Great is a two-part Elizabethan tragedy by Christopher Marlowe, one of the most important English playwrights before Shakespeare. The play dramatizes the rise of Timur (Tamerlane), the 14th-century Turco-Mongol conqueror, from a Scythian shepherd to a world-conquering emperor. Part I follows Tamburlaine's meteoric ascent through military conquest, his capture of the Persian king Mycetes, his wooing of the Egyptian princess Zenocrate, and his defeat of the Turkish emperor Bajazeth. The play is famous for its "mighty line" - Marlowe's innovative use of blank verse that influenced all subsequent English drama. Tamburlaine represents Renaissance ambition and the will to power, embodying both the era's fascination with individual greatness and its anxieties about unchecked tyranny.
+"""
+
+Notes = """
+The play was first performed circa 1587 and published in 1590. I chose 1587 as this represents when the work was created and first staged, which is more historically significant than the print date. This edition is edited by Rev. Alexander Dyce, a 19th-century scholar known for his editions of Elizabethan dramatists. Marlowe was not Catholic - he was famously accused of atheism and heterodox views - so the 'catholic' tag is not appropriate despite the historical period.
+"""
+</result>

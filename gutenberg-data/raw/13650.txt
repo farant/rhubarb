@@ -1,0 +1,15 @@
+<result>
+Title = "Nonsense Books"
+Author = "Edward Lear"
+Year = 1846
+
+Tags = ["fiction", "appropriate-for-children", "poetry", "humor"]
+
+Summary = """
+A collected edition of Edward Lear's famous nonsense verse and illustrations. Lear essentially invented the modern limerick form and popularized nonsense literature as a genre. The collection includes his beloved limericks, nonsense songs (including "The Owl and the Pussycat"), and whimsical illustrations. Lear originally created these works to amuse the grandchildren of his patron, the Earl of Derby. The works are characterized by absurd situations, invented words, and playful illustrations that have delighted children and adults for generations.
+"""
+
+Notes = """
+The 1894 date on this edition is a collected compilation. The original Book of Nonsense was first published in 1846, which I've chosen as the year since that represents the historical origin of Lear's nonsense works. The subsequent volumes (1871, 1872, 1877) expanded the collection but the 1846 date best represents when this literary phenomenon began.
+"""
+</result>

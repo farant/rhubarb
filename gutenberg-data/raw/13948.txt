@@ -1,0 +1,15 @@
+<result>
+Title = "Le Vicomte de Bragelonne"
+Author = "Alexandre Dumas"
+Year = 1848
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Le Vicomte de Bragelonne is the third and final novel in Alexandre Dumas's D'Artagnan Romances trilogy, following The Three Musketeers and Twenty Years After. This sprawling epic continues the adventures of D'Artagnan, Athos, Porthos, and Aramis during the early reign of Louis XIV. The novel covers major historical events including the restoration of Charles II to the English throne, the intrigues of Fouquet and Colbert, and culminates in the famous story of the Man in the Iron Mask. Raoul, the Vicomte de Bragelonne and son of Athos, serves as a new generation protagonist caught in tragic love with Louise de La Vallière, who becomes the king's mistress.
+"""
+
+Notes = """
+The novel was originally published as a serial in Le Siècle from 1847-1850. The dates 1848-1850 shown in this Gutenberg text refer to the serialization period. I chose 1848 as it marks when the bulk of publication occurred. This is Tome II (Volume 2) of what is often published in multiple volumes due to its considerable length.
+"""
+</result>

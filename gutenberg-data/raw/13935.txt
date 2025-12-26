@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 17, No. 491"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a British weekly magazine published from 1822 to 1849. It was one of the first cheap popular periodicals in England, aimed at providing educational and entertaining content to a broad readership. This particular issue from May 28, 1831 contains an article about Ampthill House, the seat of Lord Holland, with an accompanying illustration. The magazine typically featured articles on literature, history, travel, natural history, and current events, often with engravings.
+"""
+
+Notes = """
+Year is the publication date of this specific issue (May 28, 1831) as shown in the header. The magazine was a periodical with multiple contributors, hence "Various" for author.
+"""
+</result>

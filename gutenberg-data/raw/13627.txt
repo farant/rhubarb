@@ -1,0 +1,19 @@
+It seems the file was truncated. However, based on the text you've provided in the prompt, I have enough information to identify this work.
+
+This is **Memorie del Presbiterio** (Memories of the Presbytery) by **Emilio Praga**, published in 1881. The preface reveals an interesting story: Praga, a poet of the Milanese *Scapigliatura* movement, began this novel but died before completing it. The work was finished by Roberto Sacchetti (who is writing the dedication to Antonio Galateo) and published posthumously.
+
+<result>
+Title = "Memorie del Presbiterio"
+Author = "Emilio Praga, Roberto Sacchetti"
+Year = 1881
+
+Tags = ["fiction"]
+
+Summary = """
+Memorie del Presbiterio (Memories of the Presbytery) is an Italian novel set in provincial Italy, subtitled "Scene di Provincia" (Scenes of the Province). It was begun by Emilio Praga, one of the most significant poets of the Scapigliatura movement - a bohemian literary movement in late 19th century Milan that rebelled against Romanticism and bourgeois values. Praga was known for his melancholic poetry and troubled life. He worked on this novel intermittently for years, publishing portions in the Milanese newspaper Il Pungolo, but died in 1875 before completing it. Roberto Sacchetti, a fellow writer and friend, finished the work, which was finally published complete in 1881. The novel reflects Praga's characteristic style - described in the preface as having "splendid flashes" of imagination, "profound and sick, bizarre and most delicate" sentiment.
+"""
+
+Notes = """
+Year 1881 chosen as this is when the completed work was first published in book form by F. Casanova in Turin. While Praga began writing it earlier (portions appeared in Il Pungolo newspaper), and Praga himself died in 1875, the novel as a unified work with Sacchetti's completion dates to 1881.
+"""
+</result>

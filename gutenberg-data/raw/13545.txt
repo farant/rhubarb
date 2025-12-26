@@ -1,0 +1,15 @@
+<result>
+Title = "Mary at the Farm and Book of Recipes Compiled During Her Visit Among the Pennsylvania Germans"
+Author = "Edith M. Thomas"
+Year = 1915
+
+Tags = ["non-fiction", "appropriate-for-children", "cookbook", "regional-americana"]
+
+Summary = """
+This is a combination cookbook and travelogue documenting the culinary traditions and customs of the Pennsylvania Dutch (Pennsylvania German) community in the early 20th century. The book follows a narrative structure where "Mary" visits relatives in rural Pennsylvania and learns traditional recipes and customs from the local German-American farming community. It captures both the recipes and the cultural context of Pennsylvania Dutch cooking, including descriptions of farm life, local customs, and historical anecdotes. The work is notable for preserving authentic regional American recipes and documenting a distinctive American subculture.
+"""
+
+Notes = """
+1915 is the original publication year as stated in the text. This is a primary source document, not a reprint or translation.
+"""
+</result>

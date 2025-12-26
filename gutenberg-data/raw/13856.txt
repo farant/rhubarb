@@ -1,0 +1,15 @@
+<result>
+Title = "La reine Margot"
+Author = "Alexandre Dumas, père"
+Year = 1845
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+La Reine Margot is a historical novel by Alexandre Dumas set during the French Wars of Religion. The story centers on Marguerite de Valois (Queen Margot), daughter of Catherine de Medici and wife of Henry of Navarre (the future Henry IV of France). The novel opens with their politically arranged marriage in August 1572 and dramatizes the St. Bartholomew's Day Massacre, one of the bloodiest episodes in French history when thousands of Huguenots were killed in Paris. The work combines romantic intrigue, political conspiracy, and vivid historical recreation in Dumas's characteristic adventure style.
+"""
+
+Notes = """
+The novel was first published in 1845 as a serialized work in La Presse newspaper, then as a complete book the same year. This is Tome I (Volume 1) of the work. The chapter titles reference the massacre of August 24, 1572 (St. Bartholomew's Day).
+"""
+</result>

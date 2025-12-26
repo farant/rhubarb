@@ -83,6 +83,7 @@ declare -a SOURCE_FILES=(
     "lib/iter_directoria.c"
     "lib/exemplar.c"
     "lib/toml.c"
+    "lib/json.c"
     "lib/paginarium.c"
     "lib/utf8.c"
     "lib/fons.c"

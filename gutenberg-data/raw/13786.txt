@@ -1,0 +1,15 @@
+<result>
+Title = "The Influence of Old Norse Literature Upon English Literature"
+Author = "Conrad Hjalmar Nordby"
+Year = 1901
+
+Tags = ["non-fiction", "literary-criticism", "academic"]
+
+Summary = """
+This is Conrad Hjalmar Nordby's scholarly study examining how Old Norse literature (the sagas, Eddas, and other medieval Scandinavian texts) influenced English literature over the centuries. The work traces the transmission of Norse themes, stories, and stylistic elements into English literary tradition. The epigraph from the Hávamál (a poem from the Poetic Edda) about the endurance of fame sets the thematic tone. Nordby was a Norwegian-born scholar, and this was published posthumously as his only literary work, edited by friends after his death.
+"""
+
+Notes = """
+The year 1901 appears on the title page as the publication date. The prefatory note indicates this was published posthumously and represents an unfinished manuscript that never received final revision. Nordby was born in 1867 in Christiania (now Oslo), Norway.
+"""
+</result>

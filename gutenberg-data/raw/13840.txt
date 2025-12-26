@@ -1,0 +1,23 @@
+The file appears empty or has issues. Based on the text you provided directly in your message, I can identify this work:
+
+**The Sign of the Red Cross: A Tale of Old London** by **Evelyn Everett-Green**
+
+This is a historical novel set during the Great Plague of London (1665). Evelyn Everett-Green (1856-1932) was a prolific English novelist who wrote over 350 books, many of them historical fiction for young readers. She was an Anglican (Church of England) author.
+
+This particular novel was first published in **1895**. It tells the story of life in London during the devastating plague year, with the "red cross" of the title referring to the mark painted on doors of infected houses to warn others away.
+
+<result>
+Title = "The Sign of the Red Cross: A Tale of Old London"
+Author = "Evelyn Everett-Green"
+Year = 1895
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction"]
+
+Summary = """
+A historical novel set during the Great Plague of London in 1665. The story follows characters living through the devastating epidemic that killed an estimated 100,000 Londoners. The 'red cross' of the title refers to the mark painted on doors of houses where plague victims resided, warning others to stay away. Everett-Green was known for her morally instructive historical fiction aimed at younger readers, and this work combines adventure with a vivid portrayal of 17th century London under the shadow of pestilence.
+"""
+
+Notes = """
+Evelyn Everett-Green was an Anglican author, not Catholic, so the 'catholic' tag is not applied. She was extraordinarily prolific (350+ novels) and specialized in historical fiction for young people. The year 1895 is the original publication date; the setting is 1665.
+"""
+</result>

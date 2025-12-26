@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents"
+Author = "James D. Richardson"
+Year = 1897
+
+Tags = ["non-fiction", "historical-document", "government-document"]
+
+Summary = """
+This is a comprehensive compilation of official presidential messages, proclamations, and papers authorized by the United States Congress. James D. Richardson, a Democratic Representative from Tennessee, compiled this monumental work which originally covered presidents from Washington through Cleveland (1789-1897), later expanded to include McKinley. The work became an essential primary source for American political history, collecting executive communications, proclamations, and official papers in one authoritative reference. This particular section contains William McKinley's messages and papers relating to the Spanish-American War of 1898.
+"""
+
+Notes = """
+The original compilation was copyrighted in 1897, though the expanded 1902 edition (as noted in the text "Published by Authority of Congress 1902") included additional material through McKinley's presidency and the Spanish-American War. I chose 1897 as this represents the original publication/copyright date of Richardson's compilation project. The work became notable for the "Richardson Affair" - a controversy over copyrighting public government documents.
+"""
+</result>

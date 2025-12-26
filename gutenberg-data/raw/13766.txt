@@ -1,0 +1,17 @@
+This is helpful context. The chapter on "Maeterlinck on Hamlet" likely discusses Maeterlinck's "Wisdom and Destiny" (1898 French original), so this book was written after 1898. Given that the book discusses Maeterlinck (late 19th century) and George Sand (died 1876), and uses the pseudonym "Arachne" in an Edwardian style, this appears to be an early 1900s philosophical essay collection.
+
+<result>
+Title = "Cobwebs of Thought"
+Author = "Arachne (pseudonym, identity unknown)"
+Year = 1906
+
+Tags = ["non-fiction", "philosophy", "essays", "literary-criticism"]
+
+Summary = """
+A collection of five philosophical essays written under the pseudonym "Arachne" (Greek for spider, hence the title's cobweb metaphor). The essays explore themes of self-knowledge, consciousness, and literary criticism. The chapters include meditations on human ignorance of the self, philosophical contrasts, a discussion of Maeterlinck's interpretation of Hamlet (from his 1898 work "Wisdom and Destiny"), a critique of certain philosophical positions, and impressions of the French novelist George Sand. The epigraph from Voltaire sets the tone, questioning the nature of thought and consciousness. It is a slight but thoughtful work of popular philosophy from the Edwardian era.
+"""
+
+Notes = """
+The year 1906 is an estimate. The exact publication date is not recorded in standard bibliographic databases. The work references Maeterlinck's "Wisdom and Destiny" (1898), so it must be after that date. The style and concerns are consistent with Edwardian-era popular philosophy (roughly 1901-1910). The true identity of "Arachne" appears to be lost to history. Project Gutenberg lists it simply as by "Arachne" with no further attribution.
+"""
+</result>

@@ -1,0 +1,17 @@
+The file appears mostly empty in the raw folder. No matter - from the text you provided, I recognize this work clearly.
+
+<result>
+Title = "Vendetta"
+Author = "Honoré de Balzac"
+Year = 1830
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Vendetta is a novella by Honoré de Balzac, part of his monumental Comédie humaine cycle, specifically belonging to the "Scènes de la vie privée" (Scenes from Private Life). The story follows a Corsican family, the Piombos, who flee their island after a bloody vendetta and settle in Paris under the protection of Napoleon. The daughter, Ginevra, becomes an accomplished painter but falls tragically in love with Luigi Porta - the sole survivor of the rival family her father massacred. The tale explores the collision between old Corsican codes of honor and revenge with romantic love, culminating in tragedy. It is a study of how ancestral hatreds can poison even the purest affections.
+"""
+
+Notes = """
+First published in 1830 in the collection "Scènes de la vie privée." This is considered one of Balzac's earlier works that would later be incorporated into La Comédie humaine. The translation here is by Katharine Prescott Wormeley, an American translator who produced many English versions of Balzac's works in the 1880s-1890s.
+"""
+</result>

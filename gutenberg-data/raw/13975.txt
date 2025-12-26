@@ -1,0 +1,15 @@
+<result>
+Title = "Quentin Durward"
+Author = "Walter Scott"
+Year = 1823
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction"]
+
+Summary = """
+Quentin Durward is a historical novel by Sir Walter Scott, first published in 1823. The story follows a young Scottish archer named Quentin Durward who enters the service of King Louis XI of France in the late 15th century. The novel depicts the conflict between Louis XI and Charles the Bold, Duke of Burgundy, weaving a tale of adventure, romance, and political intrigue. It was Scott's first novel set entirely outside Britain and was enormously popular, especially in France. The text you have is a Finnish translation by "Suonio" (pen name of Julius Krohn, a notable Finnish folklorist and linguist) published in 1917.
+"""
+
+Notes = """
+Year 1823 chosen as original publication date. The Finnish translation by Suonio (Julius Krohn) was published by Werner Söderström Osakeyhtiö in 1917, but for historical/educational purposes the original English publication year is more relevant.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Boy Scouts in Southern Waters; or, Spaniard's Treasure Chest"
+Author = "G. Harvey Ralphson"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the Boy Scouts series by G. Harvey Ralphson, a prolific author of early 20th century juvenile adventure fiction. The series followed young Boy Scouts on various adventures across different settings - airships, motor boats, submarines, and international locations. This particular volume involves adventure in southern waters (likely the Gulf of Mexico or Caribbean based on the "Spaniard's Treasure Chest" subtitle) with themes of treasure hunting, maritime adventure, and the values of scouting. Ralphson's Boy Scout books were popular during the 1910s when the Boy Scout movement was rapidly growing in America.
+"""
+
+Notes = """
+The date 1915 appears directly in the source text. G. Harvey Ralphson was a pseudonym, and the true authorship of these books has been debated - they may have been written by multiple authors under a house name for the publisher.
+"""
+</result>

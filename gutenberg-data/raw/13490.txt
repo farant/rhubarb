@@ -1,0 +1,15 @@
+<result>
+Title = "Corysandre"
+Author = "Hector Malot"
+Year = 1870
+
+Tags = ["fiction"]
+
+Summary = """
+Corysandre is a French novel by Hector Malot, a prolific 19th-century French author best known for "Sans Famille" (Nobody's Boy). This work is part of a series, following "La Duchesse d'Arvernes" as noted in the text. The excerpt describes the gambling world of Baden-Baden (Bade), focusing on a rivalry between two Russian princes - Prince Savine and Prince Otchakoff - who compete for notoriety through their extravagant gambling. The narrative captures the decadent atmosphere of European spa towns and the idle rich of the period.
+"""
+
+Notes = """
+Hector Malot (1830-1907) published prolifically throughout the 1860s-1890s. Corysandre appears to be from his earlier period of serialized novels dealing with society and intrigue. The exact publication year is difficult to pinpoint precisely, but the style and setting are consistent with his works from around 1870.
+"""
+</result>

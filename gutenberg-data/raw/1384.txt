@@ -1,0 +1,15 @@
+<result>
+Title = "The Ayrshire Legatees"
+Author = "John Galt"
+Year = 1821
+
+Tags = ["fiction"]
+
+Summary = """
+The Ayrshire Legatees is an epistolary novel by Scottish author John Galt. It follows the Pringle family, a Scottish minister and his household from Ayrshire, who travel to London to claim an inheritance from a deceased relative in India. The novel is structured as a series of letters written by family members back to friends in Scotland, providing humorous observations on London society, manners, and notable events of the era including the funeral of King George III and the trial of Queen Caroline. It offers a satirical provincial perspective on metropolitan life and was originally serialized in Blackwood's Magazine before publication as a book.
+"""
+
+Notes = """
+First serialized in Blackwood's Edinburgh Magazine from June 1820 to December 1820, then published as a complete novel in 1821. The 1821 book publication date is chosen as it represents the work in its complete, intended form.
+"""
+</result>

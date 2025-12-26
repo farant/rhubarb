@@ -1,0 +1,15 @@
+<result>
+Title = "Beautiful Britain: Canterbury"
+Author = "Gordon Home"
+Year = 1911
+
+Tags = ["non-fiction", "travel", "history", "appropriate-for-children"]
+
+Summary = """
+This is a travel and historical guide to Canterbury, England, part of the "Beautiful Britain" series of illustrated books. Gordon Home (1878-1969) was a British author and illustrator who wrote extensively about English towns, landscapes, and architecture. The book covers Canterbury's famous cathedral, its medieval history as a pilgrimage destination (as evoked by the Chaucer quotation from The Canterbury Tales), and its architectural heritage. These "Beautiful Britain" volumes were popular Edwardian-era guides combining descriptive text with illustrations.
+"""
+
+Notes = """
+The year MCMXI (1911) appears on the title page as the publication date. Gordon Home wrote numerous similar guides in this period including books on Yorkshire, London, and other English regions.
+"""
+</result>

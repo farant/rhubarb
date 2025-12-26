@@ -1,0 +1,17 @@
+I found the information I needed. One source explicitly states "The Son of Clemenceau (1867)" though this is notable since it's described as a sequel to "L'Affaire Clemenceau" which was also published in 1866-1867. They may have been published close together or the "sequel" designation came later.
+
+<result>
+Title = "The Son of Clemenceau"
+Author = "Alexandre Dumas fils"
+Year = 1867
+
+Tags = ["fiction"]
+
+Summary = """
+A romantic novel set in Munich, Germany, described as "A Novel of Modern Love and Life." It is a sequel to Dumas fils' earlier work "L'Affaire Clemenceau" (The Clemenceau Case, 1866). The story follows the son of the protagonist from the original novel, weaving themes of love, social class struggles, personal identity, and revenge. The title character is described as an empathetic hero who unknowingly bears the curse of his father. The novel was popular enough to inspire a 1915 film adaptation. Dumas fils was the illegitimate son of Alexandre Dumas père (author of The Three Musketeers), and much of his work explored themes of family, legitimacy, and lost mothers - drawing from his own experience of being taken from his seamstress mother by his father under French law.
+"""
+
+Notes = """
+The 1867 date comes from online-literature.com's bibliography of Dumas fils. This is the same year or very close to when the original "L'Affaire Clemenceau" was published (1866), so they were likely conceived and written close together. Some sources are less specific about the date, simply saying "late 19th century," but 1867 appears to be the established date in literary reference sources.
+"""
+</result>

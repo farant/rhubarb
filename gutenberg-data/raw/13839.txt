@@ -1,0 +1,15 @@
+<result>
+Title = "Correspondance de George Sand, Volume V (1812-1876)"
+Author = "George Sand"
+Year = 1883
+
+Tags = ["non-fiction", "correspondence", "literary"]
+
+Summary = """
+This is Volume V of the collected correspondence of George Sand (pen name of Amantine Lucile Aurore Dupin, 1804-1876), the prolific French novelist and memoirist. The letter shown is dated January 2, 1864, addressed to Madame Augustine de Bertholdi in Decize. In it, Sand discusses her exhaustion from writing, recurring illness, and the financial necessity of continuing to work despite her poor health. George Sand was one of the most popular writers in Europe during her lifetime, known for her novels and her unconventional lifestyle.
+"""
+
+Notes = """
+The year 1883 is chosen as this is when this edition of the collected correspondence was published by Calmann Lévy in Paris (noted as "Quatrième Édition" - Fourth Edition). While the letters themselves span 1812-1876, and this particular letter is from 1864, the work as a compiled volume was published posthumously. For a historical timeline, 1883 represents when this collection became available to readers.
+"""
+</result>

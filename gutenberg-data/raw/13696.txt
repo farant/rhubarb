@@ -1,0 +1,15 @@
+<result>
+Title = "Reis door Tunis en Algiers"
+Author = "M. G. Brondgeest"
+Year = 1905
+
+Tags = ["non-fiction", "travel"]
+
+Summary = """
+A Dutch travelogue describing a journey through Tunisia and Algeria in North Africa. The text opens with reflections on the allure of the Mediterranean and the South for inhabitants of the cold northern Netherlands, then provides historical context about the Mediterranean region - from the Greeks and Romans through the spread of Christianity, the invasions by northern peoples, the rise of Islam, the Italian Renaissance, and finally European colonial influence in North Africa. The author discusses how France established control over Tunisia and Algeria, and England over Egypt via the Suez Canal.
+"""
+
+Notes = """
+M. G. Brondgeest was a Dutch author who wrote travel accounts in the early 20th century. The text references events "in de laatste helft der vorige eeuw" (in the last half of the previous century) and mentions recent French interest in Morocco, which began seriously around 1904-1905. The Gutenberg ID 13696 and writing style suggest this was published around 1905-1910. I've estimated 1905 as a reasonable publication date based on the historical references.
+"""
+</result>
