@@ -978,6 +978,107 @@ sententia_numerare(
 }
 
 
+SententiaIndicesFructus
+sententia_fissio_indices(
+    chorda   textus,
+    Piscina* piscina)
+{
+    SententiaIndicesFructus fructus;
+    i32 capacitas;
+    i32 i;
+    i32 finis;
+
+    fructus.indices = NIHIL;
+    fructus.numerus = ZEPHYRUM;
+
+    si (textus.mensura <= ZEPHYRUM || piscina == NIHIL)
+    {
+        redde fructus;
+    }
+
+    /* Allocare array initiale */
+    capacitas = XVI;
+    fructus.indices = piscina_allocare(piscina, (i64)(capacitas * (i32)magnitudo(SententiaIndices)));
+    si (fructus.indices == NIHIL)
+    {
+        redde fructus;
+    }
+
+    /* Iterare per textum */
+    i = ZEPHYRUM;
+
+    /* Saltare spatia initialia */
+    dum (i < textus.mensura && _est_spatium((character)textus.datum[i]))
+    {
+        i++;
+    }
+
+    dum (i < textus.mensura)
+    {
+        i32 initium;
+        i32 sent_init;
+        i32 sent_fin;
+
+        initium = i;
+        finis = _invenire_finem_sententiae(textus, initium);
+
+        si (finis < ZEPHYRUM)
+        {
+            finis = textus.mensura;
+        }
+
+        /* Trim spatia */
+        sent_init = initium;
+        sent_fin = finis;
+
+        dum (sent_init < sent_fin && _est_spatium((character)textus.datum[sent_init]))
+        {
+            sent_init++;
+        }
+
+        dum (sent_fin > sent_init && _est_spatium((character)textus.datum[sent_fin - I]))
+        {
+            sent_fin--;
+        }
+
+        si (sent_fin > sent_init)
+        {
+            /* Expandere array si necesse */
+            si (fructus.numerus >= capacitas)
+            {
+                i32 nova_capacitas;
+                SententiaIndices* novum_array;
+
+                nova_capacitas = capacitas * II;
+                novum_array = piscina_allocare(piscina, (i64)(nova_capacitas * (i32)magnitudo(SententiaIndices)));
+                si (novum_array != NIHIL)
+                {
+                    memcpy(novum_array, fructus.indices, (size_t)(fructus.numerus * (i32)magnitudo(SententiaIndices)));
+                    fructus.indices = novum_array;
+                    capacitas = nova_capacitas;
+                }
+            }
+
+            /* Addere indices */
+            fructus.indices[fructus.numerus].initium = sent_init;
+            fructus.indices[fructus.numerus].finis = sent_fin;
+            fructus.numerus++;
+        }
+
+        /* Movere ad proximam sententiam */
+        i = finis;
+
+        /* Saltare spatia */
+        dum (i < textus.mensura && _est_spatium((character)textus.datum[i]))
+        {
+            i++;
+        }
+    }
+
+    redde fructus;
+}
+
+
 /* ==================================================
  * API Iterator
  * ================================================== */

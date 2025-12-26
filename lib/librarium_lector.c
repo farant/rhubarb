@@ -42,6 +42,9 @@ librarium_lector_creare(
     lector->paginarium.numerus_paginarum = 0;
     lector->pagina_currens = 0;
     lector->paginae_totales = 0;
+    lector->modus_sententiae = FALSUM;
+    lector->sententia_resultus = NIHIL;
+    lector->sententia_currens = 0;
     lector->cache_latitudo = 0;
     lector->cache_altitudo = 0;
     lector->est_carcatus = FALSUM;
@@ -104,6 +107,11 @@ librarium_lector_carcare(
 
     lector->est_carcatus = VERUM;
     lector->pagina_currens = 0;
+
+    /* Reset modus sententiae */
+    lector->modus_sententiae = FALSUM;
+    lector->sententia_resultus = NIHIL;
+    lector->sententia_currens = 0;
 
     /* Invalidare cache */
     lector->cache_latitudo = 0;
@@ -236,6 +244,156 @@ librarium_lector_pagina_saltare(
 
 
 /* ==================================================
+ * Modus Sententiae
+ * ================================================== */
+
+vacuum
+librarium_lector_toggle_modus_sententiae(
+    LibrariumLector* lector)
+{
+    si (!lector)
+    {
+        redde;
+    }
+
+    lector->modus_sententiae = !lector->modus_sententiae;
+
+    /* Si entrando in modus sententiae, reset ad initium */
+    si (lector->modus_sententiae && lector->sententia_currens < 0)
+    {
+        lector->sententia_currens = 0;
+    }
+}
+
+vacuum
+librarium_lector_sententia_proxima(
+    LibrariumLector* lector)
+{
+    s32 totales;
+
+    si (!lector || !lector->sententia_resultus)
+    {
+        redde;
+    }
+
+    totales = (s32)sententia_paginarium_numerus(lector->sententia_resultus);
+
+    si (lector->sententia_currens < totales - 1)
+    {
+        lector->sententia_currens++;
+    }
+}
+
+vacuum
+librarium_lector_sententia_prior(
+    LibrariumLector* lector)
+{
+    si (!lector)
+    {
+        redde;
+    }
+
+    si (lector->sententia_currens > 0)
+    {
+        lector->sententia_currens--;
+    }
+}
+
+vacuum
+librarium_lector_sententia_paginare(
+    LibrariumLector* lector,
+    s32              latitudo,
+    s32              altitudo)
+{
+    s32 chars_disponibiles;
+    s32 lineae_disponibiles;
+
+    si (!lector || !lector->est_carcatus)
+    {
+        redde;
+    }
+
+    /* Verificare cache - si iam paginatum cum isdem dimensionibus */
+    si (lector->sententia_resultus != NIHIL &&
+        lector->cache_latitudo == latitudo &&
+        lector->cache_altitudo == altitudo)
+    {
+        redde;
+    }
+
+    chars_disponibiles = latitudo - (PADDING * II);
+    lineae_disponibiles = altitudo - V;  /* Header et footer */
+
+    si (chars_disponibiles < X)
+    {
+        chars_disponibiles = X;
+    }
+    si (lineae_disponibiles < V)
+    {
+        lineae_disponibiles = V;
+    }
+
+    /* Creare sententia paginarium */
+    lector->sententia_resultus = sententia_paginarium_creare(
+        lector->textus,
+        (i32)chars_disponibiles,
+        (i32)lineae_disponibiles,
+        lector->piscina);
+
+    /* Actualizare cache */
+    lector->cache_latitudo = latitudo;
+    lector->cache_altitudo = altitudo;
+}
+
+b32
+librarium_lector_in_modo_sententiae(
+    LibrariumLector* lector)
+{
+    si (!lector)
+    {
+        redde FALSUM;
+    }
+    redde lector->modus_sententiae;
+}
+
+s32
+librarium_lector_sententia_currens(
+    LibrariumLector* lector)
+{
+    si (!lector)
+    {
+        redde 0;
+    }
+    redde lector->sententia_currens;
+}
+
+s32
+librarium_lector_sententiae_totales(
+    LibrariumLector* lector)
+{
+    si (!lector || !lector->sententia_resultus)
+    {
+        redde 0;
+    }
+    redde (s32)sententia_paginarium_numerus(lector->sententia_resultus);
+}
+
+SententiaPagina*
+librarium_lector_sententia_pagina_obtinere(
+    LibrariumLector* lector)
+{
+    si (!lector || !lector->sententia_resultus)
+    {
+        redde NIHIL;
+    }
+
+    redde sententia_paginarium_pagina_obtinere(
+        lector->sententia_resultus,
+        (i32)lector->sententia_currens);
+}
+
+
+/* ==================================================
  * Accessores
  * ================================================== */
 
@@ -352,6 +510,22 @@ librarium_lector_salvare_progressum(
         entitas,
         "pagina_currens",
         pagina_buffer);
+
+    /* Ponere modus_sententiae */
+    sprintf(pagina_buffer, "%d", (int)lector->modus_sententiae);
+    repo->proprietas_ponere(
+        repo->datum,
+        entitas,
+        "modus_sententiae",
+        pagina_buffer);
+
+    /* Ponere sententia_currens */
+    sprintf(pagina_buffer, "%d", (int)lector->sententia_currens);
+    repo->proprietas_ponere(
+        repo->datum,
+        entitas,
+        "sententia_currens",
+        pagina_buffer);
 }
 
 vacuum
@@ -390,5 +564,25 @@ librarium_lector_carcare_progressum(
     si (clavis && entitas_proprietas_capere_s32(entitas, clavis, &pagina_salvata))
     {
         lector->pagina_currens = pagina_salvata;
+    }
+
+    /* Capere modus_sententiae */
+    {
+        s32 modus_salvatus = 0;
+        clavis = chorda_internare_ex_literis(intern, "modus_sententiae");
+        si (clavis && entitas_proprietas_capere_s32(entitas, clavis, &modus_salvatus))
+        {
+            lector->modus_sententiae = (b32)modus_salvatus;
+        }
+    }
+
+    /* Capere sententia_currens */
+    {
+        s32 sententia_salvata = 0;
+        clavis = chorda_internare_ex_literis(intern, "sententia_currens");
+        si (clavis && entitas_proprietas_capere_s32(entitas, clavis, &sententia_salvata))
+        {
+            lector->sententia_currens = sententia_salvata;
+        }
     }
 }

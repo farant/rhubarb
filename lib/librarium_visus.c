@@ -1585,6 +1585,12 @@ _reddere_lectio(
     /* Calculare paginationem via lector */
     librarium_lector_paginare(visus->lector, (s32)latitudo, (s32)altitudo);
 
+    /* Si in modo sententiae, paginare sententias quoque */
+    si (librarium_lector_in_modo_sententiae(visus->lector))
+    {
+        librarium_lector_sententia_paginare(visus->lector, (s32)latitudo, (s32)altitudo);
+    }
+
     /* Header: titulus libri */
     si (visus->liber_currens >= 0)
     {
@@ -1620,8 +1626,61 @@ _reddere_lectio(
             (x + PADDING) * char_lat, linea * char_alt,
             titulus, pixelum_text_dim, scala);
     }
+    alioquin si (librarium_lector_in_modo_sententiae(visus->lector))
+    {
+        /* Modus sententiae - reddere sententiam currentem */
+        SententiaPagina* sent_pagina;
+        chorda textus_libri = librarium_lector_textus(visus->lector);
+
+        sent_pagina = librarium_lector_sententia_pagina_obtinere(visus->lector);
+
+        si (sent_pagina && sent_pagina->lineae)
+        {
+            i32 numerus_linearum = (i32)xar_numerus(sent_pagina->lineae);
+            i32 i;
+
+            per (i = 0; i < numerus_linearum; i++)
+            {
+                PaginariumLinea* pag_linea;
+                chorda linea_reddita;
+
+                pag_linea = (PaginariumLinea*)xar_obtinere(
+                    sent_pagina->lineae, i);
+                si (!pag_linea)
+                {
+                    perge;
+                }
+
+                si (pag_linea->est_vacua)
+                {
+                    linea++;
+                    perge;
+                }
+
+                linea_reddita = paginarium_linea_reddere(
+                    textus_libri, pag_linea, visus->piscina);
+
+                si (linea_reddita.mensura > 0)
+                {
+                    tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                        (x + PADDING) * char_lat, linea * char_alt,
+                        linea_reddita, pixelum_text, scala);
+                }
+
+                linea++;
+            }
+        }
+        alioquin
+        {
+            titulus = _chorda_ex_cstr("Nulla sententia");
+            tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                (x + PADDING) * char_lat, linea * char_alt,
+                titulus, pixelum_text_dim, scala);
+        }
+    }
     alioquin
     {
+        /* Modus paginae - reddere paginam currentem */
         PaginariumPagina* pagina;
         i32 numerus_linearum;
         i32 i;
@@ -1671,12 +1730,25 @@ _reddere_lectio(
     /* Footer */
     linea = y + altitudo - II;
     {
-        character buffer[LXIV];
-        s32 pag_curr = librarium_lector_pagina_currens(visus->lector);
-        s32 pag_tot = librarium_lector_paginae_totales(visus->lector);
-        sprintf(buffer, "Pagina %d/%d   j/k: paginae   Esc: retro",
-            pag_curr + 1,
-            pag_tot > 0 ? pag_tot : 1);
+        character buffer[CXXVIII];
+
+        si (librarium_lector_in_modo_sententiae(visus->lector))
+        {
+            s32 sent_curr = librarium_lector_sententia_currens(visus->lector);
+            s32 sent_tot = librarium_lector_sententiae_totales(visus->lector);
+            sprintf(buffer, "Sententia %d/%d   Tab: paginae   j/k: sententiae   Esc: retro",
+                sent_curr + 1,
+                sent_tot > 0 ? sent_tot : 1);
+        }
+        alioquin
+        {
+            s32 pag_curr = librarium_lector_pagina_currens(visus->lector);
+            s32 pag_tot = librarium_lector_paginae_totales(visus->lector);
+            sprintf(buffer, "Pagina %d/%d   Tab: sententiae   j/k: paginae   Esc: retro",
+                pag_curr + 1,
+                pag_tot > 0 ? pag_tot : 1);
+        }
+
         titulus = _chorda_ex_cstr(buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
             (x + PADDING) * char_lat, linea * char_alt,
@@ -2149,15 +2221,37 @@ librarium_visus_tractare_eventum(
 
         casus LIBRARIUM_MODUS_LECTIO:
         {
+            /* Tab: toggle modus sententiae */
+            si (eventus->datum.clavis.clavis == CLAVIS_TABULA)
+            {
+                librarium_lector_toggle_modus_sententiae(visus->lector);
+                librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
+                redde VERUM;
+            }
+
             commutatio (eventus->datum.clavis.typus)
             {
                 casus 'j':
-                    librarium_lector_pagina_proxima(visus->lector);
+                    si (librarium_lector_in_modo_sententiae(visus->lector))
+                    {
+                        librarium_lector_sententia_proxima(visus->lector);
+                    }
+                    alioquin
+                    {
+                        librarium_lector_pagina_proxima(visus->lector);
+                    }
                     librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
                     redde VERUM;
 
                 casus 'k':
-                    librarium_lector_pagina_prior(visus->lector);
+                    si (librarium_lector_in_modo_sententiae(visus->lector))
+                    {
+                        librarium_lector_sententia_prior(visus->lector);
+                    }
+                    alioquin
+                    {
+                        librarium_lector_pagina_prior(visus->lector);
+                    }
                     librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
                     redde VERUM;
 

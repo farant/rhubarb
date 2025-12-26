@@ -91,6 +91,7 @@ declare -a SOURCE_FILES=(
     "lib/sanctorale.c"
     "lib/calendario_visus.c"
     "lib/sententia_fissio.c"
+    "lib/sententia_paginarium.c"
 )
 
 # Objective-C source (compiled separately)

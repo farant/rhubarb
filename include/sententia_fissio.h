@@ -30,6 +30,21 @@ nomen structura {
 
 
 /* ==================================================
+ * Structura Indices - Byte offsets sententiarum
+ * ================================================== */
+
+nomen structura {
+    i32 initium;          /* Byte offset initii sententiae */
+    i32 finis;            /* Byte offset finis sententiae (exclusivus) */
+} SententiaIndices;
+
+nomen structura {
+    SententiaIndices* indices;   /* Array indicum */
+    i32               numerus;   /* Numerus sententiarum */
+} SententiaIndicesFructus;
+
+
+/* ==================================================
  * Iterator pro fissione pigra
  * ================================================== */
 
@@ -62,6 +77,19 @@ sententia_fissio(
 i32
 sententia_numerare(
     chorda textus);
+
+
+/* Findere textum in indices sententiarum (non copiae)
+ *
+ * textus:  textus findendus
+ * piscina: piscina pro allocare
+ *
+ * Redde: structura cum array indicum et numero
+ */
+SententiaIndicesFructus
+sententia_fissio_indices(
+    chorda   textus,
+    Piscina* piscina);
 
 
 /* ==================================================

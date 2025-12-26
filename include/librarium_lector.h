@@ -22,6 +22,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "paginarium.h"
+#include "sententia_paginarium.h"
 #include "entitas_repositorium.h"
 #include "internamentum.h"
 
@@ -48,10 +49,15 @@ nomen structura LibrariumLector {
     character numerus_buffer[LIBRARIUM_LECTOR_NUMERUS_MAX];
     character via_buffer[LIBRARIUM_LECTOR_VIA_MAX];
 
-    /* Paginatio */
+    /* Paginatio (modus paginae) */
     PaginariumResultus paginarium;
     s32 pagina_currens;
     s32 paginae_totales;
+
+    /* Modus sententiae */
+    b32 modus_sententiae;
+    SententiaPaginariumResultus* sententia_resultus;
+    s32 sententia_currens;
 
     /* Cache */
     s32 cache_latitudo;
@@ -136,6 +142,61 @@ vacuum
 librarium_lector_pagina_saltare(
     LibrariumLector* lector,
     s32              pagina);
+
+
+/* ========================================================================
+ * FUNCTIONES - MODUS SENTENTIAE
+ * ======================================================================== */
+
+/* Toggle modus sententiae (inter paginae et sententiae) */
+vacuum
+librarium_lector_toggle_modus_sententiae(
+    LibrariumLector* lector);
+
+/* Saltare ad sententiam proximam */
+vacuum
+librarium_lector_sententia_proxima(
+    LibrariumLector* lector);
+
+/* Saltare ad sententiam priorem */
+vacuum
+librarium_lector_sententia_prior(
+    LibrariumLector* lector);
+
+/* Paginare sententias (cum caching)
+ *
+ * lector:   Lector cum textu carcato
+ * latitudo: Latitudo in characteribus
+ * altitudo: Altitudo in lineis
+ */
+vacuum
+librarium_lector_sententia_paginare(
+    LibrariumLector* lector,
+    s32              latitudo,
+    s32              altitudo);
+
+/* Verificare si in modo sententiae */
+b32
+librarium_lector_in_modo_sententiae(
+    LibrariumLector* lector);
+
+/* Obtinere sententia currens (0-indexed) */
+s32
+librarium_lector_sententia_currens(
+    LibrariumLector* lector);
+
+/* Obtinere numerus sententiarum totalis */
+s32
+librarium_lector_sententiae_totales(
+    LibrariumLector* lector);
+
+/* Obtinere paginam word-wrapped pro sententia currens
+ *
+ * Redde: Pointer ad SententiaPagina, vel NIHIL si error
+ */
+SententiaPagina*
+librarium_lector_sententia_pagina_obtinere(
+    LibrariumLector* lector);
 
 
 /* ========================================================================
