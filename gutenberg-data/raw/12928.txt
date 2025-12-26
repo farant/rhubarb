@@ -1,0 +1,15 @@
+<result>
+Title = "Three Expeditions into the Interior of Eastern Australia"
+Author = "Thomas Livingstone Mitchell"
+Year = 1838
+
+Tags = ["non-fiction", "historical-document", "exploration", "geography"]
+
+Summary = """
+This is Major Thomas Livingstone Mitchell's account of his three expeditions exploring the interior of eastern Australia between 1831 and 1836. Mitchell served as Surveyor-General of New South Wales and his explorations were instrumental in mapping the Australian interior. The work describes his discovery of the fertile region he named "Australia Felix" (present-day Victoria). The expeditions documented geography, natural resources, encounters with Aboriginal peoples, and the potential for European settlement. Mitchell's journals are considered foundational texts in Australian exploration literature and colonial history.
+"""
+
+Notes = """
+The first edition was published in 1838. The text indicates this is from the "Second Edition, carefully revised" but the original publication year of 1838 is the most historically significant date for this work. Mitchell (1792-1855) was a Scottish-born surveyor and explorer who became one of the most important figures in mapping colonial Australia.
+"""
+</result>

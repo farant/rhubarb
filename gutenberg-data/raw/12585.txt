@@ -1,0 +1,15 @@
+<result>
+Title = "Seaward Sussex: The South Downs from End to End"
+Author = "Edric Holmes"
+Year = 1920
+
+Tags = ["non-fiction", "travel", "geography"]
+
+Summary = """
+A travel and topographical guide to the South Downs of Sussex, England, describing the chalk hills that run from the Hampshire border to Beachy Head. The book combines walking tour descriptions with historical, geological, and cultural observations about the Sussex countryside. Illustrated with 100 drawings by Mary M. Vigers and including maps by the author, it represents the early 20th century tradition of English landscape writing that celebrated rural England.
+"""
+
+Notes = """
+Edric Holmes was an English writer active in the early 20th century who wrote several books about English countryside and travel. "Seaward Sussex" was published around 1920. The exact first publication date is somewhat uncertain, but this period aligns with the style and the Project Gutenberg metadata suggesting early 20th century origin.
+"""
+</result>

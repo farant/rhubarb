@@ -4,6 +4,7 @@
 #include "delineare.h"
 #include "tempus.h"
 #include "fasti.h"
+#include "calendarium_liturgicum.h"
 #include "chorda_aedificator.h"
 #include <string.h>
 #include <stdio.h>
@@ -983,7 +984,7 @@ _reddere_tabulam_schirmarum(
         ChordaAedificator* aed;
         Dies hodie;
         chorda chorda_display;
-        constans character* nomen_fest;
+        chorda nomina_celebrationum;
         i32 display_x;
         i32 display_y;
         i32 col;
@@ -995,12 +996,12 @@ _reddere_tabulam_schirmarum(
             aed = chorda_aedificator_creare(piscina_temp, CCLVI);
 
             si (aed != NIHIL) {
-                /* Verificare si est festivitas hodie */
-                nomen_fest = fasti_nomen_festivitatis(hodie);
+                /* Obtinere nomina omnium celebrationum (mobiles et fixae) */
+                nomina_celebrationum = calendarium_nomen_celebrationum(hodie, piscina_temp);
 
-                si (nomen_fest != NIHIL) {
-                    /* Festivitas - Date */
-                    chorda_aedificator_appendere_literis(aed, nomen_fest);
+                si (nomina_celebrationum.mensura > ZEPHYRUM) {
+                    /* Celebrationes - Date */
+                    chorda_aedificator_appendere_chorda(aed, nomina_celebrationum);
                     chorda_aedificator_appendere_literis(aed, " - ");
                 }
 

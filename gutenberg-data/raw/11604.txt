@@ -1,0 +1,15 @@
+<result>
+Title = "The Atlantic Monthly, Vol. VI, No. XXXIII"
+Author = "Various"
+Year = 1860
+
+Tags = ["non-fiction", "periodical", "science"]
+
+Summary = """
+This is an issue of The Atlantic Monthly, a prestigious American literary and cultural magazine founded in 1857 in Boston. This particular issue from July 1860 contains an article on meteorology that provides a general overview of the science as it was understood in the mid-19th century, discussing the atmosphere, its composition, and the relationship of meteorology to other sciences like physics, geography, and climate studies. The Atlantic Monthly was known for publishing work by prominent American writers and intellectuals and remains in publication today as The Atlantic.
+"""
+
+Notes = """
+The date July 1860 is explicitly stated in the document header. The Atlantic Monthly was founded in 1857 by Moses Dresser Phillips and Francis H. Underwood, with notable contributors including Ralph Waldo Emerson, Henry Wadsworth Longfellow, and Oliver Wendell Holmes Sr. As a periodical with multiple articles by different authors, 'Various' is used for the author field.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Brotherly Love; Shewing That as merely human it may not always be depended upon"
+Author = "Mrs. Sherwood, Mrs. Streeten"
+Year = 1851
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+A moralistic children's tale by Mary Martha Sherwood and her daughter Mrs. Streeten. The story follows two brothers, Marten and Reuben, who are left home when their parents must travel urgently to Portsmouth. Sherwood was a prolific Victorian author of evangelical children's literature, known for works emphasizing Christian moral instruction. This particular tale, subtitled "The Brothers; or, Be Not Wise in Your Own Conceit," likely explores themes of sibling responsibility, humility, and the limits of merely human affection without divine grace.
+"""
+
+Notes = """
+Published in 1851 as indicated on the title page. Mrs. Sherwood (Mary Martha Sherwood, 1775-1851) was one of the most popular children's authors of the early 19th century, best known for "The History of the Fairchild Family." She collaborated with her daughter Mrs. Streeten on several later works. While deeply Christian in character, Sherwood was Church of England rather than Catholic, so the 'catholic' tag is not applied despite the religious content.
+"""
+</result>

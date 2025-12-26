@@ -1,0 +1,15 @@
+<result>
+Title = "The Hacker Crackdown: Law and Disorder on the Electronic Frontier"
+Author = "Bruce Sterling"
+Year = 1992
+
+Tags = ["non-fiction", "technology", "history", "journalism"]
+
+Summary = """
+The Hacker Crackdown is a seminal work of technology journalism documenting the 1990 nationwide crackdown on computer hackers in the United States, particularly focusing on Operation Sundevil and the prosecution of various "phone phreaks" and hackers. Sterling, a science fiction author and cyberpunk pioneer, provides an in-depth exploration of the emerging digital underground culture, the telecommunications industry's history, law enforcement's attempts to understand and combat computer crime, and the birth of digital civil liberties organizations like the Electronic Frontier Foundation. The book examines the cultural clash between hackers, telephone companies, law enforcement, and civil libertarians during the early days of networked computing. Sterling notably released this book into the public domain, making it freely distributable.
+"""
+
+Notes = """
+Published in 1992 by Bantam Books. Sterling released the electronic version for free distribution in 1994, which is why it appears on Project Gutenberg. The work documents events primarily from 1990, known colloquially as "the hacker crackdown" year, including the Martin Luther King Day AT&T crash, Operation Sundevil raids, and the Steve Jackson Games case.
+"""
+</result>

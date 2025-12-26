@@ -1,0 +1,15 @@
+<result>
+Title = "Ride of the Valkyries"
+Author = "Richard Wagner"
+Year = 1870
+
+Tags = ["music", "classical", "opera", "audio-recording"]
+
+Summary = """
+"Ritt der Walküren" (Ride of the Valkyries) is an orchestral excerpt from the beginning of Act III of Wagner's opera "Die Walküre" (The Valkyrie), the second of the four operas in the Ring Cycle (Der Ring des Nibelungen). This iconic piece depicts the Valkyries, warrior maidens of Norse mythology, riding through the sky on their horses to gather fallen heroes for Valhalla. The recording here is a historic Edison cylinder recording performed by the American Symphony Orchestra, representing early audio recording technology from the Edison era.
+"""
+
+Notes = """
+Year 1870 chosen as the premiere of Die Walküre in Munich. The Ring Cycle was composed between 1848-1874, with Die Walküre specifically completed in 1856 but not premiered until 1870. The Edison recording itself dates from the early 20th century (Edison National Historic Site collection), but the historically significant date is the composition/premiere of Wagner's work.
+"""
+</result>

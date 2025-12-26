@@ -1,0 +1,15 @@
+<result>
+Title = "Discourses: Biological & Geological Essays"
+Author = "Thomas H. Huxley"
+Year = 1894
+
+Tags = ["non-fiction", "science", "essays"]
+
+Summary = """
+This is a collection of essays and lectures by Thomas Henry Huxley (1825-1895), the renowned English biologist and comparative anatomist who was known as "Darwin's Bulldog" for his advocacy of Charles Darwin's theory of evolution. The volume contains popular lectures and addresses delivered to scientific bodies, covering topics in biology and geology. Huxley was a gifted science communicator who took seriously the task of making complex scientific ideas accessible to general audiences, as reflected in the preface where he discusses the challenges of translating technical knowledge into plain language.
+"""
+
+Notes = """
+1894 is the publication year stated in the text itself. Huxley published many essay collections throughout his career, and this appears to be one of his later compilations. He died in 1895, so this was among his final published works.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Beacon Lights of History, Volume VII: Great Women"
+Author = "John Lord"
+Year = 1884
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+Beacon Lights of History is a 15-volume series of historical lectures by American historian John Lord (1810-1894). Volume VII focuses on "Great Women" and contains biographical essays on influential women throughout history. Lord was a popular lecturer who delivered these talks across America before compiling them into book form. The series covers major figures and movements in world history from ancient times through the 19th century, presenting history through the lens of individual biography. Lord's style was accessible and moralistic, aimed at general audiences rather than academic specialists.
+"""
+
+Notes = """
+The Beacon Lights of History series was published between 1883-1896. Volume VII on Great Women was published around 1884. John Lord was a Protestant author, not Catholic, so the work would not qualify for the 'catholic' tag. The content covers historical women of various backgrounds and would be generally appropriate for older readers but contains 19th century perspectives that may feel dated.
+"""
+</result>

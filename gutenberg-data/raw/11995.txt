@@ -1,0 +1,15 @@
+<result>
+Title = "A Residence in France, During the Years 1792, 1793, 1794, and 1795"
+Author = "Anonymous English Lady, edited by John Gifford"
+Year = 1797
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a collection of letters written by an anonymous English woman who lived in France during the tumultuous years of the French Revolution, specifically during the Reign of Terror and its aftermath. The letters provide a firsthand account of life under the revolutionary government, observations on French society and character, and reflections on the political upheavals of the period including the fall of Robespierre. John Gifford, a prolific conservative writer and editor known for his anti-Jacobin views, prepared the letters for publication and likely added editorial commentary. The work serves as valuable primary source material for understanding the Revolutionary period from a foreign observer's perspective.
+"""
+
+Notes = """
+The year 1797 is chosen as this is when the work was first published in London. While the letters themselves were written during 1792-1795, the published work as a whole dates to 1797. The excerpt shown is from a letter dated January 1795 from Amiens, discussing the political situation after Robespierre's execution in July 1794. John Gifford was the pen name of John Richards Green, a Tory journalist and historian.
+"""
+</result>

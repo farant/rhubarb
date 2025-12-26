@@ -1,0 +1,15 @@
+<result>
+Title = "Select Speeches of Kossuth"
+Author = "Lajos Kossuth, Francis W. Newman"
+Year = 1853
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of speeches by Lajos Kossuth (1802-1894), the Hungarian revolutionary leader and statesman who led Hungary's struggle for independence from the Habsburg Empire during the 1848-1849 revolution. After the revolution's defeat, Kossuth went into exile and toured England and America in 1851-1852, delivering passionate speeches that generated enormous enthusiasm for the Hungarian cause. This volume was compiled and abridged by Francis W. Newman (brother of Cardinal John Henry Newman), an English classical scholar and political activist who sympathized with Kossuth's cause. The speeches address themes of national independence, liberty, and the threat posed by reactionary monarchies to European freedom.
+"""
+
+Notes = """
+Kossuth's famous speaking tours occurred in 1851-1852 (England and America). This collection by Newman was published in 1853. The year reflects the publication of this compiled edition rather than the dates of the individual speeches, as the editorial work and compilation represent a distinct contribution.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Apartment Next Door"
+Author = "William Johnston"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A World War I-era spy thriller/mystery novel set in America during the war. The story follows Jane Strong, a young woman who becomes suspicious of her German-American neighbors and gets drawn into espionage investigations. The novel reflects the wartime paranoia and anti-German sentiment common in American fiction of the period. William Johnston was a prolific American author of mystery and adventure novels in the early 20th century.
+"""
+
+Notes = """
+1919 is the original publication year as indicated in the text itself. This is original American popular fiction, not a translation or annotated classic.
+"""
+</result>

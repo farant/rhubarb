@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 12, No. 348"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap periodicals aimed at a broad readership, offering a mix of literary excerpts, historical anecdotes, engravings of notable places, and miscellaneous educational content. This particular issue (Vol. 12, No. 348) from December 27, 1828, features an article about Barber's Barn in Hackney, London, discussing its history including its connection to Colonel John Okey, one of the regicides who signed the death warrant of King Charles I.
+"""
+
+Notes = """
+The year 1828 is the publication date of this specific issue. The magazine was a periodical, so each issue is dated individually. The content discusses historical events from the 1660s but the publication itself is from 1828.
+"""
+</result>

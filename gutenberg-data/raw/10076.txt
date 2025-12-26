@@ -1,0 +1,15 @@
+<result>
+Title = "Lister's Great Adventure"
+Author = "Harold Bindloss"
+Year = 1920
+
+Tags = ["fiction"]
+
+Summary = """
+Lister's Great Adventure is a novel by Harold Bindloss, a prolific British author known for his adventure stories set in Canada and the American Northwest. Bindloss wrote over 60 novels, many featuring rugged outdoor settings and romantic plots. This work appears to be a two-part adventure novel involving characters named Barbara and Lister, with elements of mystery (Barbara's disappearance), intrigue (Vernon's plot), and likely romance. The story seems to move between locations including Winnipeg, suggesting the Canadian setting typical of Bindloss's work.
+"""
+
+Notes = """
+The year 1920 appears directly on the title page of this Project Gutenberg edition, which would be the original publication year.
+"""
+</result>

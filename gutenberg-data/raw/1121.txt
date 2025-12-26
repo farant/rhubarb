@@ -1,0 +1,15 @@
+<result>
+Title = "The Complete Works of William Shakespeare (First Folio)"
+Author = "William Shakespeare"
+Year = 1623
+
+Tags = ["fiction", "drama", "poetry"]
+
+Summary = """
+This is the First Folio of Shakespeare's works, the first collected edition of his plays published posthumously in 1623 by his fellow actors John Heminges and Henry Condell. The First Folio contains 36 plays and is considered one of the most important books in English literature. This particular text preserves many of the original spelling conventions and printing peculiarities of the era, including the characteristic u/v substitutions and other typographical variations that resulted from the printing practices of the time.
+"""
+
+Notes = """
+The year 1623 is chosen as this appears to be a transcription of the First Folio edition, as evidenced by the Executive Director's notes discussing the preservation of original spelling conventions and "canon errors" that scholars associate with the First Folio. While Shakespeare wrote his plays between approximately 1589-1613, this collected edition published seven years after his death (1616) represents the authoritative compilation that preserved many plays that might otherwise have been lost.
+"""
+</result>

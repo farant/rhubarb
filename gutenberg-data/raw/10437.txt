@@ -1,0 +1,15 @@
+<result>
+Title = "Pulpit and Press"
+Author = "Mary Baker Eddy"
+Year = 1895
+
+Tags = ["non-fiction", "religious"]
+
+Summary = """
+Pulpit and Press is a compilation by Mary Baker Eddy, the founder of Christian Science, containing her dedicatory sermon for the Mother Church (The First Church of Christ, Scientist) in Boston, along with newspaper clippings and press coverage of the church's dedication in January 1895. The work includes hymns written by Eddy, excerpts from her Christian Science teachings, and reprinted articles from various newspapers documenting public reception of the new religious movement. It serves as both a primary religious text for Christian Scientists and a historical document showing how the movement was perceived by mainstream media in the late 19th century.
+"""
+
+Notes = """
+The first edition was published in 1895 to commemorate the dedication of the Mother Church. This appears to be the sixth edition from 1897. I chose 1895 as that was the original publication year and the year of the dedicatory events the book documents.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Life and Opinions of Tristram Shandy, Gentleman"
+Author = "Laurence Sterne"
+Year = 1759
+
+Tags = ["fiction", "satire", "experimental-literature"]
+
+Summary = """
+One of the most innovative and unconventional novels in English literature. Sterne's work is a comic, digressive, and self-referential narrative that ostensibly tells the story of Tristram Shandy's life, but famously spends most of its pages on digressions, philosophical musings, and the stories of other characters (particularly his father Walter and Uncle Toby). The novel parodies literary conventions, plays with typography and page layout, and anticipates many modernist and postmodernist techniques by nearly two centuries. It was published in nine volumes between 1759 and 1767.
+"""
+
+Notes = """
+The first two volumes were published in December 1759 (dated 1760). I chose 1759 as this is when the work first appeared and made its literary impact. Sterne was an Anglican clergyman, not Catholic.
+"""
+</result>

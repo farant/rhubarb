@@ -1,0 +1,15 @@
+<result>
+Title = "La Campagna del 1796 nel Veneto, Parte Prima: La Decadenza Militare della Serenissima"
+Author = "Eugenio Barbarich"
+Year = 1910
+
+Tags = ["non-fiction", "historical-document", "military-history"]
+
+Summary = """
+This is a military history work by Eugenio Barbarich, an Italian army captain on the general staff, examining the military decline of the Venetian Republic (La Serenissima) leading up to Napoleon's 1796 Italian campaign. The first part focuses on the internal causes of Venice's military weakness: the sources of Venetian military manpower, central war administration, officers of various ranks, hired troops, local militias, artillery, military engineers, cavalry, troop training, and military budgets. It sets the stage for understanding why Venice fell so quickly to Napoleon's forces. The work was published by Enrico Voghera in Rome.
+"""
+
+Notes = """
+The publication date of 1910 appears on the title page, with printing noted as 1909. This is an original scholarly work of military history, not a translation or reprint of an earlier text, so 1910 (the publication year) is the appropriate date.
+"""
+</result>

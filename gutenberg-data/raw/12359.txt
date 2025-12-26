@@ -1,0 +1,15 @@
+<result>
+Title = "The Meaning of Infancy"
+Author = "John Fiske"
+Year = 1883
+
+Tags = ["non-fiction", "philosophy", "education", "evolutionary-theory"]
+
+Summary = """
+This work by American philosopher and historian John Fiske explores the evolutionary significance of the prolonged period of human infancy compared to other animals. Fiske argues that the extended dependency of human children is not a weakness but a crucial adaptation that allowed for the development of human intelligence, family bonds, and civilization itself. The work draws on Darwinian evolutionary theory to explain how the helplessness of human infants necessitated parental care, which in turn fostered social bonds and the transmission of learned behavior across generations. It was influential in connecting evolutionary biology to educational philosophy.
+"""
+
+Notes = """
+The 1883 date is when Fiske originally published these ideas in "Excursions of an Evolutionist." This Riverside Educational Monographs edition is a later compilation of his writings on the topic, drawing from both that work and "A Century of Science." John Fiske (1842-1901) was a prominent American philosopher who popularized evolutionary ideas in the United States.
+"""
+</result>

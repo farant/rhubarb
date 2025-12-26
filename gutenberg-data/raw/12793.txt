@@ -1,0 +1,15 @@
+<result>
+Title = "Cobwebs from an Empty Skull"
+Author = "Ambrose Bierce"
+Year = 1874
+
+Tags = ["fiction", "satire", "humor"]
+
+Summary = """
+This is a collection of satirical fables, short stories, and humorous sketches by Ambrose Bierce, published under his early pseudonym "Dod Grile." The book contains "Fables of Zambri, the Parsee" (satirical fables in the tradition of Aesop but with darker, more cynical morals), along with various tales mixing dark humor, social commentary, and the macabre sensibility that would later define Bierce's more famous works. This was one of Bierce's earliest book publications, written during his time in London working as a journalist.
+"""
+
+Notes = """
+Ambrose Bierce (1842-c.1914) was an American journalist and author best known for "The Devil's Dictionary" and the short story "An Occurrence at Owl Creek Bridge." He used the pseudonym "Dod Grile" for his early satirical works. This 1874 London publication represents his first major book. While Bierce was raised in a religious household, his mature work is characterized by bitter cynicism and dark satire rather than religious devotion, so the 'catholic' tag would not be appropriate.
+"""
+</result>

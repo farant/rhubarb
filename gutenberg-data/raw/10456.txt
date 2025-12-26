@@ -1,0 +1,17 @@
+I recognize this text. This is Ralph Waldo Emerson's essay "Eloquence" published in The Atlantic Monthly in September 1858. The style, philosophical observations about oratory, and the references to Plato are characteristic of Emerson's transcendentalist essays.
+
+<result>
+Title = "Eloquence"
+Author = "Ralph Waldo Emerson"
+Year = 1858
+
+Tags = ["non-fiction", "essay", "philosophy"]
+
+Summary = """
+An essay by Ralph Waldo Emerson exploring the nature and power of public speaking. Emerson examines how different temperaments require different levels of stimulation to reach eloquence - some need only parlor conversation, others require public debate, antagonism, revolution, or the grandeur of absolute ideas. He reflects on the dynamics of audiences, the pitfalls of speaking prematurely, and references Plato on the consequences of wise men refusing to participate in governance. The essay was later collected in his book 'Society and Solitude' (1870).
+"""
+
+Notes = """
+This essay appeared in The Atlantic Monthly Vol. II, No. XI, September 1858. Emerson was a founding contributor to The Atlantic Monthly (established 1857) and this represents the original publication. The 1858 date is appropriate as this is the work's first appearance, not a reprint or translation of an older work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Man From Brodney's"
+Author = "George Barr McCutcheon"
+Year = 1908
+
+Tags = ["fiction", "romance", "adventure"]
+
+Summary = """
+The Man From Brodney's is a romantic adventure novel by George Barr McCutcheon, a popular American author best known for his Graustark series of romantic novels set in fictional European principalities. This novel involves a complicated inheritance situation on a tropical island, where two groups of heirs must fulfill unusual conditions of a will. The story combines romance, legal intrigue, and exotic adventure in McCutcheon's characteristic style of entertaining escapist fiction.
+"""
+
+Notes = """
+First published in 1908 by Dodd, Mead and Company. McCutcheon (1866-1928) was one of the most popular American novelists of the early 20th century, known for his romantic adventure stories.
+"""
+</result>

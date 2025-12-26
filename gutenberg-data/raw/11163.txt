@@ -1,0 +1,15 @@
+<result>
+Title = "Potterism: A Tragi-Farcical Tract"
+Author = "Rose Macaulay"
+Year = 1920
+
+Tags = ["fiction"]
+
+Summary = """
+Potterism is a satirical novel by Rose Macaulay, a prominent English novelist and essayist. The book is a social satire that coined the term "Potterism" to describe a particular kind of intellectual laziness, sentimentality, and muddled thinking that Macaulay saw as prevalent in post-World War I British society. The story follows the Potter family, whose patriarch runs a sensationalist newspaper empire, and explores themes of journalism ethics, truth versus comfortable illusion, and the tension between clear thinking and popular sentiment. It was well-received as a sharp critique of British middle-class values and media culture of the era.
+"""
+
+Notes = """
+1920 is the original publication year. Rose Macaulay (1881-1958) was an English writer known for her satirical novels. This work came shortly after WWI and reflects the disillusionment and social criticism common to that period.
+"""
+</result>

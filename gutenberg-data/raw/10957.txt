@@ -1,0 +1,15 @@
+<result>
+Title = "The Love Affairs of Great Musicians, Volume I"
+Author = "Rupert Hughes"
+Year = 1903
+
+Tags = ["non-fiction", "biography", "music-history"]
+
+Summary = """
+A biographical study examining the romantic lives of famous classical composers. The work covers figures including Beethoven, Liszt, Chopin, Wagner, Tchaikovsky, and Clara Schumann. Hughes draws on letters, diaries, and newly available materials from the early 1900s to illuminate the personal relationships of these musicians. The book was considered novel at its time for compiling this subject matter and incorporating recently published primary sources such as Liszt's letters to his princess and Chopin's correspondence previously thought destroyed.
+"""
+
+Notes = """
+Published in 1903 by Rupert Hughes (1872-1956), an American novelist, film director, and music critic. The medieval English verse quoted in the note is from Chaucer's translation of the Roman de la Rose. This is Volume I of a two-volume work.
+"""
+</result>

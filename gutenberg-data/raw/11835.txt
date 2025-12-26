@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1967
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a volume from the Catalog of Copyright Entries published by the United States Copyright Office, specifically covering renewal registrations. These catalogs were official government publications that recorded copyright registrations and renewals in the United States. This particular volume lists books, pamphlets, serials, and contributions to periodicals for which copyright renewals were filed during the covered period. The entries are arranged alphabetically by author or issuing body and include both original and renewal registration information. These catalogs are invaluable for researchers determining the copyright status of works from this era.
+"""
+
+Notes = """
+The page reference '1967_h1/A/1129' and the renewal dates visible in the entries (e.g., '18Apr67', '5Jun67') indicate this is from 1967. The original works being renewed date from around 1939-1940, which aligns with the 28-year copyright renewal period that existed under U.S. copyright law at that time.
+"""
+</result>

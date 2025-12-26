@@ -1,0 +1,15 @@
+<result>
+Title = "Tulitikkuja lainaamassa"
+Author = "Maiju Lassila"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Tulitikkuja lainaamassa" (Borrowing Matches) is a classic Finnish comic novel by Maiju Lassila, the pen name of Algot Untola. The story is a humorous tale about rural Finnish village life, following the simple errand of borrowing matches that spirals into an absurd series of events. The novel is known for its depiction of Finnish peasant dialogue and the comical misunderstandings that arise from everyday conversations. It became one of the most beloved works of Finnish humor literature and has been adapted for film and theater multiple times. The excerpt shows the characteristic style of meandering village gossip about a neighbor's cow calving.
+"""
+
+Notes = """
+The text itself states "Ensimmäinen painos ilmestynyt vuonna 1910" (First edition published in 1910), confirming the original publication year. Maiju Lassila was a pseudonym of Algot Untola (1868-1918), a Finnish author known for his humorous portrayals of rural Finnish life.
+"""
+</result>

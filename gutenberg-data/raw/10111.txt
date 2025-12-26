@@ -1,0 +1,15 @@
+<result>
+Title = "Boys and Girls from Thackeray"
+Author = "Kate Dickinson Sweetser"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a children's anthology that extracts and adapts the childhood and youth portions of William Makepeace Thackeray's major novels, presenting them as standalone stories suitable for young readers. The book focuses on the juvenile characters and their early lives from works like "Henry Esmond" and "The Virginians," removing the adult intrigue and complex plots of the original novels. It was part of a series by Sweetser that included similar volumes adapting Dickens and George Eliot for younger audiences. The book includes illustrations by George Alfred Williams.
+"""
+
+Notes = """
+Kate Dickinson Sweetser (1865-1935) was an American author who specialized in adapting classic literature for children and writing biographical works for young readers. This work is educational adaptation rather than original fiction, designed to introduce children to Thackeray's characters without the mature themes of his novels.
+"""
+</result>

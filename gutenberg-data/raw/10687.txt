@@ -1,0 +1,15 @@
+<result>
+Title = "Tartarin de Tarascon"
+Author = "Alphonse Daudet"
+Year = 1872
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Tartarin de Tarascon is a comedic novel by French author Alphonse Daudet, the first in a trilogy featuring the lovable braggart Tartarin. The story satirizes the boastful character of Provençal southerners through its protagonist, a rotund bourgeois from the small town of Tarascon who fancies himself a great hunter and adventurer. Despite never having left his garden, Tartarin sets off on a lion-hunting expedition to Algeria, leading to a series of absurd misadventures. The novel gently mocks both French provincial life and the romanticized notion of exotic adventure that was popular in 19th century literature.
+"""
+
+Notes = """
+First published in 1872. This particular edition is an American educational text with scholarly apparatus by Barry Cerf, likely published in the early 20th century for French language instruction. The original French text is preserved from the Collection Guillaume (Flammarion).
+"""
+</result>

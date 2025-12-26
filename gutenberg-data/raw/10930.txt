@@ -1,0 +1,15 @@
+<result>
+Title = "The Buccaneer Farmer"
+Author = "Harold Bindloss"
+Year = 1918
+
+Tags = ["fiction"]
+
+Summary = """
+The Buccaneer Farmer is a novel by Harold Bindloss, a prolific British author known for adventure and romance novels often set in the English Lake District or the Canadian Northwest. This novel appears to be divided into two parts - the first set at Ashness (a location in the Lake District of England) dealing with rural farming life and local conflicts, and the second part shifting to the Caribbean with themes of adventure and buccaneering. Bindloss was known for combining romantic plots with adventure elements and vivid descriptions of landscape.
+"""
+
+Notes = """
+Published in 1918. The text notes it was published in England under the alternate title "Askew's Victory". Harold Bindloss (1866-1945) wrote over 60 novels during his career.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Alaskan"
+Author = "James Oliver Curwood"
+Year = 1923
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Alaskan" is an adventure novel set in the Alaskan wilderness during the early 20th century. James Oliver Curwood was a prolific American author known for his wilderness adventure stories, many set in the northern frontier regions of Canada and Alaska. His works often featured themes of nature, wildlife, and rugged individualism. Curwood was deeply influenced by his extensive travels in the northern wilderness and became an early conservationist. This novel reflects his romanticized vision of Alaska as a "new empire rising in the North" and the strong pioneer spirit of its settlers.
+"""
+
+Notes = """
+The dedication is dated August 1, 1923, from Owosso, Michigan (Curwood's hometown), confirming this as the original publication year.
+"""
+</result>

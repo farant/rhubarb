@@ -1,0 +1,17 @@
+Let me read more of the file to get a better sense of it, but I already recognize this work from the excerpt you provided.
+
+<result>
+Title = "The Human Chord"
+Author = "Algernon Blackwood"
+Year = 1910
+
+Tags = ["fiction", "supernatural", "occult"]
+
+Summary = """
+The Human Chord is a supernatural novel by Algernon Blackwood, one of the most celebrated writers of ghost stories and weird fiction in the early 20th century. The novel explores mystical themes around the power of sound, names, and vibration. The protagonist becomes involved with a clergyman who believes that discovering and pronouncing the true names of things can unlock supernatural powers - ultimately attempting to pronounce the "true name of God" which would grant immense power. The story blends Blackwood's characteristic atmosphere of cosmic wonder with his interest in occultism, Kabbalah, and the idea that reality is fundamentally composed of vibration and sound. It is considered one of Blackwood's major works alongside "The Centaur" and his famous short stories.
+"""
+
+Notes = """
+1910 is the original publication year - this was first published as a novel in that year. Blackwood (1869-1951) was an English author who wrote prolifically in the supernatural/weird fiction genre. While raised in a strictly religious household, his adult interests were in Theosophy, Buddhism, and occultism rather than Christianity, so this would not be considered a Catholic work.
+"""
+</result>

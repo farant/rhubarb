@@ -1,0 +1,15 @@
+<result>
+Title = "Night Watches"
+Author = "W.W. Jacobs"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Night Watches is a collection of short stories by William Wymark Jacobs (1863-1943), a popular English author known for his humorous tales of maritime and working-class life, as well as macabre horror stories. This collection features stories narrated by a night-watchman character, a recurring figure in Jacobs' work who shares amusing anecdotes about dock workers, sailors, and the colorful characters of London's waterfront. The story "His Other Self" included here deals with themes of mistaken identity and twins. Jacobs is perhaps best remembered today for his horror classic "The Monkey's Paw," though the majority of his work consists of light comic fiction.
+"""
+
+Notes = """
+Night Watches was first published in 1914. W.W. Jacobs was a prolific short story writer during the late Victorian and Edwardian eras.
+"""
+</result>

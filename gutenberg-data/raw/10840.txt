@@ -1,0 +1,15 @@
+<result>
+Title = "The Explorers of Australia and their Life-work"
+Author = "Ernest Favenc"
+Year = 1908
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+This work is a comprehensive historical account of the explorers who mapped and opened up the Australian continent. Ernest Favenc (1845-1908) was himself an explorer, journalist, and historian who participated in expeditions in Queensland and the Northern Territory. The book covers the major figures of Australian exploration including Charles Sturt, whose portrait appears in the frontispiece. Favenc was well-qualified to write on this subject, having both practical experience as an explorer and extensive research into the history of Australian exploration. The work forms part of "The Makers of Australasia" series, which aimed to document the key figures who shaped the development of Australia and New Zealand.
+"""
+
+Notes = """
+The book was published in 1908 by Whitcombe and Tombs Limited as part of their "Makers of Australasia" series. Favenc died in the same year the book was published. The reference to Captain Charles Sturt "aged about 54 years" in the frontispiece illustration connects to Sturt's later expeditions in the 1840s.
+"""
+</result>

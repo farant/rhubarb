@@ -1,0 +1,15 @@
+<result>
+Title = "George Washington"
+Author = "William Roscoe Thayer"
+Year = 1922
+
+Tags = ["non-fiction", "biography", "appropriate-for-children"]
+
+Summary = """
+This is a biographical sketch of George Washington written by William Roscoe Thayer, an American biographer and historian known for his works on Italian history and American figures. The book aims to present Washington as a real human being rather than the mythologized figure created by Parson Weems and his famous (but fabricated) cherry tree story. Thayer acknowledges the vast amount of material available about Washington—military records, congressional reports, correspondence—yet notes that many find the man himself "elusive" behind all the documentation. The work was published as part of the Riverside Library series.
+"""
+
+Notes = """
+1922 is the original publication year as stated in the text itself. William Roscoe Thayer (1859-1923) was a Harvard-educated historian who wrote several well-regarded biographies. This was one of his later works, published just a year before his death.
+"""
+</result>

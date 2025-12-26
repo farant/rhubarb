@@ -1,0 +1,15 @@
+<result>
+Title = "The First Part of Henry the Sixth"
+Author = "William Shakespeare"
+Year = 1591
+
+Tags = ["fiction", "drama", "historical-fiction"]
+
+Summary = """
+Henry VI, Part 1 is a history play by William Shakespeare, believed to be the first of a tetralogy covering the reign of Henry VI and the Wars of the Roses. The play dramatizes the English losses in France following the death of Henry V, the rise of Joan of Arc, and the beginning of the factional strife between the houses of York and Lancaster (symbolized by the famous Temple Garden scene where nobles pluck red and white roses). It covers the period from Henry V's funeral in 1422 through the English defeat in France and the arrangement of Henry VI's marriage to Margaret of Anjou.
+"""
+
+Notes = """
+The exact date of composition is uncertain. Scholars generally place it between 1589-1592. The play was likely performed by 1592 based on references by Thomas Nashe. Some scholars believe it may have been written after Parts 2 and 3, or that it involved collaboration with other playwrights (possibly Thomas Nashe or Christopher Marlowe). I chose 1591 as a representative middle date within the scholarly consensus range. This First Folio text (1623) contains the spelling variations typical of early modern printing practices described in the notes.
+"""
+</result>

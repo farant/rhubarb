@@ -1,0 +1,15 @@
+<result>
+Title = "History of France, Volume II"
+Author = "François Guizot"
+Year = 1872
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+This is the second volume of François Guizot's comprehensive History of France, covering the medieval period including the Crusades, the development of French kingship, the rise of the communes and Third Estate, and the Hundred Years' War through the reign of Charles V. Guizot (1787-1874) was a French historian and statesman who served as Prime Minister of France. His historical works are noted for their scholarly approach and emphasis on the development of political institutions and civilization.
+"""
+
+Notes = """
+Guizot's History of France was published in multiple volumes between 1872-1876. Volume II focuses on the medieval period roughly from the Crusades through the 14th century. While Guizot was nominally Protestant (Huguenot background), this is a scholarly historical work rather than a religious text.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Perilous Secret"
+Author = "Charles Reade"
+Year = 1884
+
+Tags = ["fiction"]
+
+Summary = """
+A Perilous Secret is one of Charles Reade's later novels, published in the final year of his life. Reade was a Victorian novelist and dramatist known for his "sensation novels" that combined melodrama with social commentary. His most famous works include "The Cloister and the Hearth" and "It Is Never Too Late to Mend." This novel, like many of his others, likely involves themes of secrets, class differences (as suggested by the chapter titles contrasting "The Poor Man's Child" and "The Rich Man's Child"), and romantic entanglements. Reade was known for his meticulous research and advocacy for social reform through fiction.
+"""
+
+Notes = """
+1884 is clearly printed on the title page as the publication year. Charles Reade died in April 1884, making this one of his final works.
+"""
+</result>

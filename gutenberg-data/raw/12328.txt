@@ -1,0 +1,15 @@
+<result>
+Title = "Tent Life in Siberia"
+Author = "George Kennan"
+Year = 1870
+
+Tags = ["non-fiction", "travel", "adventure", "exploration"]
+
+Summary = """
+A travel narrative recounting George Kennan's adventures in Siberia during the 1860s as part of an expedition to survey a route for a telegraph line connecting America and Europe via Alaska and Siberia. The book describes his experiences living among the Koryak people and other indigenous tribes of Kamchatka and Northern Asia, documenting their customs, the harsh climate, and the challenges of Arctic exploration. Kennan would later become famous for his exposés of the Russian exile system.
+"""
+
+Notes = """
+The text shown is from the 1910 revised edition, but the preface explicitly states "This narrative of Siberian life and adventure was first given to the public in 1870--just forty years ago." The original 1870 publication date is the historically significant year for this work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Precaution"
+Author = "James Fenimore Cooper"
+Year = 1820
+
+Tags = ["fiction"]
+
+Summary = """
+Precaution was James Fenimore Cooper's first novel, published in 1820. It is a novel of manners set in English society, dealing with themes of courtship, social propriety, and the importance of careful judgment in choosing a spouse. The story follows an English family and their concerns about suitable marriages for their daughters. Cooper wrote it somewhat as an experiment after reportedly claiming he could write a better novel than one his wife was reading. The book was influenced by Jane Austen's style of social commentary. It was not particularly successful, but it launched Cooper's literary career, which would soon flourish with his more famous works like The Last of the Mohicans and the Leatherstocking Tales.
+"""
+
+Notes = """
+1820 is the year of first publication. The excerpt shown includes a memorial discourse by William Cullen Bryant from 1852 (after Cooper's death in 1851), which serves as a preface in this Gutenberg edition. The epigraph attribution to "W. C. Bryant" actually refers to this commemorative discourse, not the novel's original epigraph.
+"""
+</result>

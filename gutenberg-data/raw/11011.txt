@@ -1,0 +1,15 @@
+<result>
+Title = "A Hilltop on the Marne"
+Author = "Mildred Aldrich"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document", "memoir", "world-war-i"]
+
+Summary = """
+A collection of letters written by American journalist and author Mildred Aldrich during the opening months of World War I. Aldrich had retired to a farmhouse on a hilltop overlooking the Marne valley in France, and found herself an eyewitness to the First Battle of the Marne in September 1914. The letters, dated June 3 to September 8, 1914, document her observations of the German advance, the French retreat, and the subsequent Allied counteroffensive that saved Paris. The book became a bestseller and brought Aldrich considerable fame as a chronicler of the war from a civilian perspective.
+"""
+
+Notes = """
+The letters were written in 1914 but first published as a book in 1915. The note referencing the "Tenth Impression" dated February 1916 indicates the book's popularity. I chose 1915 as it represents the first publication as a collected work, which is the historically significant date for this book as a literary artifact.
+"""
+</result>

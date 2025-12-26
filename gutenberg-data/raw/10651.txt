@@ -1,0 +1,15 @@
+<result>
+Title = "Shenandoah"
+Author = "Traditional (performed by Roger McGuinn)"
+Year = 1840
+
+Tags = ["music", "folk-song", "american-traditional"]
+
+Summary = """
+"Shenandoah" is a traditional American folk song of uncertain origin, likely dating to the early 19th century. The song has multiple versions with different lyrics, but commonly tells of a trader or voyageur who falls in love with the daughter of an Native American chief named Shenandoah. The Shenandoah River and Valley in Virginia may also be referenced. It became popular as a sea shanty among sailors and has been recorded by countless artists. This Project Gutenberg entry is an audio recording by Roger McGuinn (founder of The Byrds) as part of his "Folk Den" project, where he recorded traditional folk songs.
+"""
+
+Notes = """
+The year 1840 is approximate. The song's origins are obscure, with theories ranging from the 1820s-1850s. Some associate it with Missouri River fur traders, others with sailors. The earliest documented versions appear around the 1840s. This particular recording is from 2001 by Roger McGuinn, but the underlying work is the traditional song itself.
+"""
+</result>

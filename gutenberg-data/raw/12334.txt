@@ -1,0 +1,15 @@
+<result>
+Title = "A Bicycle of Cathay"
+Author = "Frank R. Stockton"
+Year = 1900
+
+Tags = ["fiction"]
+
+Summary = """
+A Bicycle of Cathay is a romantic novel by Frank R. Stockton, a popular American humorist and writer known for his short stories and novels in the late 19th century. Stockton is perhaps best remembered for his famous short story "The Lady, or the Tiger?" The novel follows a lighthearted adventure involving a bicycle journey, characteristic of Stockton's witty and gently satirical style. The title alludes to "Cathay," the historical European name for China, suggesting an exotic or fantastical journey.
+"""
+
+Notes = """
+The year 1900 appears directly on the title page of the Gutenberg text, indicating the original publication date.
+"""
+</result>

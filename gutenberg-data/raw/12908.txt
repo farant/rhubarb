@@ -1,0 +1,15 @@
+<result>
+Title = "Missing"
+Author = "Mrs. Humphry Ward"
+Year = 1917
+
+Tags = ["fiction"]
+
+Summary = """
+"Missing" is a World War I novel by Mary Augusta Ward (Mrs. Humphry Ward), a popular and prolific English novelist of the late Victorian and Edwardian era. The novel deals with the emotional trauma of war, particularly focusing on wives and families left behind when soldiers are reported as "wounded and missing" - a devastating category that left loved ones in agonizing uncertainty. Ward was known for her socially conscious fiction and was one of the bestselling authors of her time, though her reputation has faded considerably since. The frontispiece depicting the telegram notification of a husband being "wounded and missing" immediately establishes the central dramatic tension of the work.
+"""
+
+Notes = """
+Published in 1917 during World War I. Mrs. Humphry Ward (Mary Augusta Ward, 1851-1920) was the niece of Matthew Arnold and was enormously popular in her day, with "Robert Elsmere" (1888) being her most famous work. She was notably anti-suffrage despite her literary prominence. "Missing" was part of her later output responding to the Great War.
+"""
+</result>

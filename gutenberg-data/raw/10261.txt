@@ -1,0 +1,15 @@
+<result>
+Title = "La Bella Cubana"
+Author = "José White Lafitte"
+Year = 1860
+
+Tags = ["music", "audio-recording", "instrumental"]
+
+Summary = """
+"La Bella Cubana" is a famous habanera composed by José White Lafitte, a Cuban-born violinist and composer of African descent who became one of the most celebrated musicians of the 19th century. The piece is a quintessential example of the habanera rhythm that originated in Cuba and later influenced many other musical forms including tango and various European compositions. This Project Gutenberg entry is an audio recording performed by El Trio Cubano, taken from the Edison National Historic Site, representing an early phonograph recording from the Edison era.
+"""
+
+Notes = """
+The composition date of approximately 1860 reflects when José White wrote this piece during his active composing years. The recording itself would date from the Edison phonograph era (late 1800s to early 1900s). "El Trio Cubano" was a performing group, not the composer. The title is sometimes rendered with or without the final 'a' in "Cubana/Cubano."
+"""
+</result>

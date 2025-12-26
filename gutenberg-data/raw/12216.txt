@@ -1,0 +1,15 @@
+<result>
+Title = "The Pirates Own Book: Authentic Narratives of the Most Celebrated Sea Robbers"
+Author = "Charles Ellms"
+Year = 1837
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A popular 19th-century anthology of pirate histories and adventures, compiling accounts of famous pirates including Blackbeard, Captain Kidd, and others. The book was intended for general audiences fascinated by maritime crime and adventure. It includes narratives of pirate exploits, their methods, hideouts, and eventual fates. The work reflects the Victorian-era fascination with piracy as both a moral cautionary tale and thrilling entertainment.
+"""
+
+Notes = """
+1837 is the original publication year as stated in the text itself. Charles Ellms was an American publisher and compiler known for this work and similar popular compilations. The book went through multiple editions throughout the 19th century due to its popularity.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Voice Trial - Kinetophone Actor Audition"
+Author = "Siegfried Von Schultz"
+Year = 1913
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is a historic audio recording from Thomas Edison's Kinetophone project - an early attempt at synchronized sound film technology. The Kinetophone was Edison's system for adding synchronized sound to motion pictures, developed around 1913. This particular recording is an actor audition/voice trial, where Siegfried Von Schultz (likely a stage actor of the period) recorded his voice to test his suitability for the new talking picture medium. These recordings are valuable historical artifacts documenting the early days of sound cinema technology and Edison's pioneering work in audiovisual media.
+"""
+
+Notes = """
+The Kinetophone was publicly demonstrated in February 1913, so I've chosen 1913 as the year. This is an audio-only Project Gutenberg entry (MP3 format) rather than a traditional text, representing Edison's experimental sound film technology. The recording comes from the Edison National Historic Site archives.
+"""
+</result>

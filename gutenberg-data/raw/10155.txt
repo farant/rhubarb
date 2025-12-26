@@ -1,0 +1,15 @@
+<result>
+Title = "The Right of the People to Rule"
+Author = "Theodore Roosevelt"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document", "speech"]
+
+Summary = """
+This is an audio recording of Theodore Roosevelt's famous speech "The Right of the People to Rule," delivered on March 20, 1912, in Carnegie Hall, New York City. The speech was a major address during Roosevelt's campaign for the Republican presidential nomination against incumbent William Howard Taft. In it, Roosevelt advocated for progressive reforms including the recall of judicial decisions, direct primaries, and greater popular control over government. The speech articulated his belief that the people should have the ultimate authority in a democracy, challenging what he saw as judicial and political obstruction of the popular will. This recording was made by Thomas Edison and is preserved at the Edison National Historic Site.
+"""
+
+Notes = """
+The year 1912 reflects when the speech was actually delivered. This is an audio recording, one of the earliest preserved recordings of a major American political address. The Edison connection makes this a historically significant artifact both politically and technologically.
+"""
+</result>

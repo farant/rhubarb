@@ -1,0 +1,15 @@
+<result>
+Title = "Tutt and Mr. Tutt"
+Author = "Arthur Train"
+Year = 1919
+
+Tags = ["fiction"]
+
+Summary = """
+A collection of short stories featuring the fictional law firm of Tutt & Tutt, with the eccentric criminal defense attorney Ephraim Tutt as the central character. Arthur Train was a lawyer himself and drew on his legal experience to create these popular legal fiction stories. The Tutt stories were originally published in The Saturday Evening Post and became extremely popular, leading to multiple collections. The stories blend humor with courtroom drama and often feature clever legal maneuvering to achieve justice for sympathetic defendants.
+"""
+
+Notes = """
+1919 is the publication year of this collection. Arthur Train wrote many Tutt stories over several decades, making this character one of the most beloved in American legal fiction.
+"""
+</result>

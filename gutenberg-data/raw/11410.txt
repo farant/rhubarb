@@ -1,0 +1,15 @@
+<result>
+Title = "Wanderings in Wessex: An Exploration of the Southern Realm from Itchen to Otter"
+Author = "Edric Holmes"
+Year = 1906
+
+Tags = ["non-fiction", "travel", "history", "appropriate-for-children"]
+
+Summary = """
+A travel and topographical book exploring the historic region of Wessex in southern England, covering the area from the River Itchen (near Winchester) to the River Otter (in Devon). The work belongs to the early 20th century tradition of English regional travel writing, combining descriptions of landscape, architecture, local history, and antiquarian observations. Edric Holmes was known for similar works including "Seaward Sussex." The book features illustrations by M.M. Vigers and opens with Winchester Cathedral, reflecting the importance of ecclesiastical and medieval heritage in the narrative.
+"""
+
+Notes = """
+The exact publication year is 1906, when this work was first published. Edric Holmes wrote several regional travel books about southern England during the Edwardian era. The "Wessex" referenced is the historical Anglo-Saxon kingdom, a term popularized in literature by Thomas Hardy, though Holmes takes a more antiquarian and descriptive approach rather than a fictional one.
+"""
+</result>

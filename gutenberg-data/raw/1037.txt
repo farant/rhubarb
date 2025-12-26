@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of John Bunyan"
+Author = "Edmund Venables"
+Year = 1888
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+A biographical work about John Bunyan (1628-1688), the English Puritan preacher and author of "The Pilgrim's Progress." Edmund Venables was a Canon of Lincoln Cathedral and wrote this biography as part of the "Great Writers" series published by Walter Scott. The work covers Bunyan's life from his humble origins as a tinker's son in Bedfordshire, through his spiritual struggles, imprisonment for nonconformist preaching, and his literary output including his famous allegorical works.
+"""
+
+Notes = """
+The year 1888 is taken from the transcription note indicating this was "Transcribed from the 1888 Walter Scott edition." This appears to be the original publication year of this particular biography by Venables.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Mr. Thomas Cat"
+Author = "Edison Grand Concert Band"
+Year = 1902
+
+Tags = ["audio", "music", "instrumental"]
+
+Summary = """
+This is an audio recording of "Mr. Thomas Cat," a novelty musical piece performed by the Edison Grand Concert Band. The Edison Grand Concert Band was a house ensemble that recorded for Thomas Edison's phonograph company in the early 1900s. The piece is likely a characteristic march or novelty number typical of the era's band repertoire, possibly featuring musical imitations of a cat. These early Edison recordings were made for the cylinder phonograph format and represent some of the earliest commercial audio recordings in American history.
+"""
+
+Notes = """
+The year 1902 is an estimate based on the typical recording period of the Edison Grand Concert Band, which was most active in the early 1900s. The Edison National Historic Site attribution suggests this is an archival recording from Edison's phonograph business. Exact dating of early Edison recordings can be difficult without catalog number references.
+"""
+</result>

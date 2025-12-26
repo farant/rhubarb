@@ -1,0 +1,15 @@
+<result>
+Title = "Galipettes"
+Author = "Félix Galipaux"
+Year = 1887
+
+Tags = ["fiction", "humor"]
+
+Summary = """
+Galipettes is a collection of humorous sketches and stories by Félix Galipaux (1860-1931), a celebrated French actor and comedian of the Belle Époque era. The book, illustrated by various artists of the period, showcases Galipaux's wit and comedic sensibility that made him famous on the Parisian stage. The preface praises his unique style of comedy - refined and witty rather than grotesque or relying on physical peculiarities. The work is dedicated to his mother, whom he calls his best friend.
+"""
+
+Notes = """
+Félix Galipaux was primarily known as a stage comedian at theaters like the Palais-Royal and Variétés. This appears to be his literary debut, capitalizing on his theatrical fame. The publisher Jules Lévy was known for humorous and illustrated works in this period.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "L'argent des autres: I. Les hommes de paille"
+Author = "Émile Gaboriau"
+Year = 1874
+
+Tags = ["fiction"]
+
+Summary = """
+L'argent des autres (Other People's Money) is a novel by Émile Gaboriau, the French writer considered one of the fathers of detective fiction. This is the first part, "Les hommes de paille" (The Men of Straw). The novel deals with financial crime, fraud, and the machinations of unscrupulous businessmen in 19th century Paris. Gaboriau was known for his intricate plots involving crime, investigation, and social commentary on the bourgeoisie and financial world of Second Empire and early Third Republic France.
+"""
+
+Notes = """
+The novel was first published in 1874. Gaboriau died in 1873, and this work was published posthumously. He is best known for creating the detective Monsieur Lecoq and for establishing many conventions of the detective fiction genre.
+"""
+</result>

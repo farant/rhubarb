@@ -1,0 +1,17 @@
+I can see from what you've shared - this is E. Phillips Oppenheim's "The Profiteers" from 1921.
+
+<result>
+Title = "The Profiteers"
+Author = "E. Phillips Oppenheim"
+Year = 1921
+
+Tags = ["fiction"]
+
+Summary = """
+The Profiteers is a novel by the prolific English thriller writer E. Phillips Oppenheim, published in 1921. The story centers on the world of London stockbrokers and financiers in the aftermath of World War I, exploring themes of profiteering, financial manipulation, and the moral ambiguities of wealth accumulated during wartime. Oppenheim was known as the "Prince of Storytellers" and wrote over 100 novels, many featuring international intrigue, espionage, and the world of high finance. This work reflects the post-war concerns about war profiteers and the changing social landscape of early 1920s Britain.
+"""
+
+Notes = """
+The year 1921 appears on the title page of the Project Gutenberg text, which matches the original publication date. Oppenheim (1866-1946) was one of the most popular and prolific authors of his era, particularly known for his thrillers and tales of international intrigue.
+"""
+</result>

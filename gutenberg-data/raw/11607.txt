@@ -1,0 +1,15 @@
+<result>
+Title = "Dio's Rome: An Historical Narrative (Volume 2, Books 36-44)"
+Author = "Cassius Dio, translated by Herbert Baldwin Foster"
+Year = 230
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the second volume of an English translation of Cassius Dio's Roman History (Historia Romana), covering Books 36-44 which detail Roman history from 69 BC to 44 BC. This period encompasses crucial events including Pompey's campaigns in the East, the First Triumvirate, Caesar's Gallic Wars, the civil war between Caesar and Pompey, and Caesar's assassination. Cassius Dio (c. 155-235 AD) was a Roman senator and historian of Greek origin who wrote an 80-book history of Rome spanning from the legendary arrival of Aeneas to his own time. The work is invaluable for understanding late Republican Rome, particularly for periods where other sources are fragmentary.
+"""
+
+Notes = """
+The year 230 AD is chosen as an approximate date for when Cassius Dio completed his Roman History, as he wrote during the reigns of Septimius Severus through Alexander Severus (193-235 AD). The translation by Herbert Baldwin Foster was published in 1905, but the historically significant date is when the original Greek text was composed. Dio spent approximately 22 years writing his history, completing it around 229-230 AD.
+"""
+</result>

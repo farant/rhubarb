@@ -1,0 +1,15 @@
+<result>
+Title = "Cluck Old Hen"
+Author = "Fiddlin' Powers and Family"
+Year = 1924
+
+Tags = ["audio", "music", "folk", "appropriate-for-children"]
+
+Summary = """
+"Cluck Old Hen" is a traditional American old-time fiddle tune recorded by Fiddlin' Powers (Cowan Powers) and his family. Fiddlin' Powers was a Virginia fiddler who made some of the earliest commercial recordings of old-time Appalachian music. This recording is from the Edison National Historic Site collection, representing the early era of commercial folk music recordings. The tune itself is a traditional breakdown that predates the recording, with lyrics typically involving barnyard imagery and rural life.
+"""
+
+Notes = """
+Year 1924 chosen as this is when Fiddlin' Powers made his first recordings for Edison Records. The tune "Cluck Old Hen" is a traditional piece of unknown origin that predates this recording, but 1924 represents the historically significant moment when this performance was captured. The Edison association places this firmly in the early commercial recording era of American folk music.
+"""
+</result>

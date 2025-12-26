@@ -1,0 +1,15 @@
+<result>
+Title = "The First Hundred Thousand: Being the Unofficial Chronicle of a Unit of 'K(1)'"
+Author = "Ian Hay (John Hay Beith)"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a semi-autobiographical account of the early training and experiences of Kitchener's New Army during World War I. Ian Hay (the pen name of Captain John Hay Beith) served in the British Army and wrote this chronicle documenting the transformation of civilian volunteers into soldiers. The book follows a unit from recruitment through training in Britain and eventually to the Western Front. It was enormously popular during the war, offering a mix of humor, patriotism, and realistic detail about military life. The work helped shape public perception of the volunteer soldiers and became one of the most widely-read books about the British Army in WWI.
+"""
+
+Notes = """
+First published in 1915 during WWI. The 'K(1)' in the subtitle refers to the first of Kitchener's New Army divisions (K1 through K5 were the waves of volunteers). The book was originally serialized in Blackwood's Magazine before being published as a complete volume. Ian Hay was the pseudonym of John Hay Beith (1876-1952), a Scottish schoolmaster turned soldier and author.
+"""
+</result>

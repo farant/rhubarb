@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Handel Festival"
+Author = "August Manns (conductor), Thomas A. Edison (editor)"
+Year = 1888
+
+Tags = ["non-fiction", "audio-recording", "classical-music"]
+
+Summary = """
+This is a historical audio recording from the Handel Festival, conducted by August Manns. The recording originates from the Edison National Historic Site, indicating it was made using Thomas Edison's phonograph technology. August Manns (1825-1907) was a German-born conductor who became famous for his work in England, particularly conducting the Crystal Palace concerts for over 40 years. The Handel Festivals were large-scale musical celebrations of George Frideric Handel's works held at the Crystal Palace in London.
+"""
+
+Notes = """
+The year 1888 is an estimate based on the Edison phonograph technology timeline. Edison's improved phonograph became commercially viable around 1887-1888, and recordings from this era at the Edison National Historic Site typically date from the late 1880s to early 1890s. The Handel Festivals at Crystal Palace, which Manns conducted, were held triennially from 1857-1926. This recording likely captures one of those festival performances during the early phonograph era.
+"""
+</result>

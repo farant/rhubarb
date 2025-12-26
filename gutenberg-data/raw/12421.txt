@@ -1,0 +1,15 @@
+<result>
+Title = "Practical Exercises in English"
+Author = "Huber Gray Buehler"
+Year = 1895
+
+Tags = ["non-fiction", "education", "appropriate-for-children"]
+
+Summary = """
+A pedagogical workbook designed to accompany Adams Sherman Hill's "Foundations of Rhetoric." The book focuses on teaching correct English usage through practical exercises rather than mere error correction. Buehler, a master of English at the Hotchkiss School, argues that language proficiency comes primarily through imitation and habit formation rather than abstract knowledge. The work critiques the common approach of "sentences to be corrected" exercises, proposing instead methods that more effectively build lasting correct habits of expression.
+"""
+
+Notes = """
+The copyright year of 1895 is used as the publication date. This is an educational text from the era when formal grammar and rhetoric instruction was a major component of American schooling. The Hotchkiss School is a prestigious preparatory school in Connecticut, and Adams Sherman Hill was a prominent Harvard rhetoric professor whose textbooks were widely used in the late 19th century.
+"""
+</result>

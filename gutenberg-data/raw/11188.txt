@@ -1,0 +1,17 @@
+Hmm, the file seems to be in a different location or format. Based on the text you provided in your prompt, I can identify this work:
+
+<result>
+Title = "Captains All"
+Author = "W.W. Jacobs"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Captains All" is a collection of short stories by William Wymark Jacobs (1863-1943), an English author known for his humorous tales of working-class life, particularly stories set around the Thames waterfront, docks, and seafaring communities. Jacobs was extremely popular in his time for his comedic sketches of bargemen, sailors, and ordinary folk. The story excerpted here, "The Temptation of Samuel Burge," appears to be a humorous piece involving religious hypocrisy or the contrast between pious appearances and earthly desires - a common theme in Jacobs' work. The setup involves a jeweller awaiting a supposedly holy guest while struggling with his own hunger, suggesting the satirical tone Jacobs was known for.
+"""
+
+Notes = """
+W.W. Jacobs published "Captains All" in 1905. He is perhaps best remembered today for the macabre horror story "The Monkey's Paw" (1902), but the bulk of his work consisted of light humorous fiction. The title "Captains All" is somewhat ironic given that his stories often featured common sailors and dock workers rather than actual captains.
+"""
+</result>

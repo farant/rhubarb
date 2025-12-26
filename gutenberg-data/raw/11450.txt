@@ -1,0 +1,15 @@
+<result>
+Title = "Fort comme la mort"
+Author = "Guy de Maupassant"
+Year = 1889
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+Fort comme la mort (Strong as Death) is one of Guy de Maupassant's later novels, considered among his most psychologically complex works. The story centers on Olivier Bertin, a successful Parisian portrait painter who has maintained a long affair with the Countess Anne de Guilleroy. When Anne's daughter Annette comes of age, Bertin becomes increasingly obsessed with the young woman, who bears a striking resemblance to her mother in her youth. The novel explores themes of aging, the passage of time, impossible love, and the terror of watching beauty fade. It is a melancholy meditation on mortality and desire, reflecting Maupassant's own growing pessimism in the years before his mental decline.
+"""
+
+Notes = """
+First published in 1889 as a serial in the Revue illustrée, then as a book the same year. This was Maupassant's fifth novel and one of his most autobiographical, drawing on his own experiences in Parisian artistic society.
+"""
+</result>

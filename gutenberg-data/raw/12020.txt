@@ -1,0 +1,15 @@
+<result>
+Title = "A Woman of the World: Her Counsel to Other People's Sons and Daughters"
+Author = "Ella Wheeler Wilcox"
+Year = 1904
+
+Tags = ["non-fiction", "advice"]
+
+Summary = """
+This is a collection of advisory letters written by Ella Wheeler Wilcox (1850-1919), the popular American author and poet best known for her poem "Solitude" with its famous opening line "Laugh, and the world laughs with you." In this work, she adopts the persona of a worldly-wise woman offering practical counsel to young people facing various life situations: a law student, college women, newlyweds, those entering the workforce, and others navigating the challenges of early 20th century American society. Wilcox was enormously popular in her time, known for her optimistic, accessible style and her interest in New Thought philosophy and theosophy.
+"""
+
+Notes = """
+First published in 1904. This Gutenberg text appears to be from the fourth impression of April 1910. Wilcox was not Catholic; she was interested in various spiritual movements including New Thought and theosophy, so the 'catholic' tag is not appropriate here.
+"""
+</result>

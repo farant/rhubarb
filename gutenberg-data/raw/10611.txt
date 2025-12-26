@@ -1,0 +1,15 @@
+<result>
+Title = "An Essay on the Slavery and Commerce of the Human Species, Particularly the African"
+Author = "Thomas Clarkson"
+Year = 1786
+
+Tags = ["non-fiction", "historical-document", "abolitionist"]
+
+Summary = """
+This is Thomas Clarkson's landmark anti-slavery essay, originally written in Latin as a prize-winning dissertation at Cambridge University in 1785. Clarkson expanded and translated it into English for publication in 1786. The work was instrumental in launching the British abolitionist movement. Clarkson systematically argued against the moral and legal justifications for the slave trade, drawing on classical sources, natural law philosophy, and contemporary accounts of the African slave trade. This essay helped establish Clarkson as one of the most important figures in the movement to abolish the transatlantic slave trade, which Britain ultimately banned in 1807.
+"""
+
+Notes = """
+The year 1786 (M.DCC.LXXXVI in Roman numerals as shown in the text) is when this English translation with additions was published. The original Latin dissertation won the Cambridge prize in 1785. I chose 1786 as it represents the publication of this expanded English version which had the greater historical impact on the abolitionist movement.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Siegel-Myers School of Music - Vocal Record F"
+Author = "Siegel-Myers Correspondence School of Music"
+Year = 1912
+
+Tags = ["non-fiction", "audio", "educational", "music-instruction"]
+
+Summary = """
+This is an audio recording from the Siegel-Myers Correspondence School of Music, a Chicago-based institution that operated in the early 20th century offering home-study courses in music. The school was known for providing vocal and instrumental instruction through mail correspondence, supplemented by phonograph records that students could use to hear proper technique and musical examples. This particular record (labeled "Vocal Record F") would have been part of their vocal instruction curriculum. Thomas Edison is listed as editor, indicating this was produced using Edison's phonograph recording technology.
+"""
+
+Notes = """
+The Siegel-Myers Correspondence School of Music was active roughly from 1906-1920s. The year 1912 is an approximation based on the school's peak activity period and Edison's involvement with educational recordings during this era. The Edison National Historic Site preservation suggests this is from Edison's collection of educational phonograph materials.
+"""
+</result>

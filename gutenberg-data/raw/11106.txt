@@ -1,0 +1,15 @@
+<result>
+Title = "The Girl at Cobhurst"
+Author = "Frank R. Stockton"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A novel by Frank R. Stockton, a popular American writer known for his humorous and whimsical fiction. The story centers on life in a rural community called Cobhurst, featuring a cast of colorful characters including the meddlesome Miss Panney, Dr. Tolbridge, and various romantic entanglements. Stockton was celebrated for his light, entertaining prose and gentle social comedy. This novel follows his characteristic style of depicting small-town American life with warmth and wit.
+"""
+
+Notes = """
+The year 1898 appears directly in the text as the publication date. Frank R. Stockton (1834-1902) was a prolific American author best known for his short story "The Lady, or the Tiger?" This novel was published near the end of his career.
+"""
+</result>

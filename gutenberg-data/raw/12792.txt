@@ -1,0 +1,15 @@
+<result>
+Title = "The Young Captives: A Story of Judah and Babylon"
+Author = "Erasmus W. Jones"
+Year = 1907
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+A historical fiction novel set during the Babylonian captivity of Judah, likely following young Jewish captives taken to Babylon after Nebuchadnezzar's conquest of Jerusalem (circa 586 BC). The book appears to be written for younger readers as a way to bring biblical history to life through narrative storytelling. Given its 1907 publication date and subject matter, it fits the genre of Christian historical fiction popular in the early 20th century that aimed to make Old Testament events accessible and engaging for youth.
+"""
+
+Notes = """
+I could not find specific information about Erasmus W. Jones in my knowledge base, so this appears to be a relatively obscure work. The year 1907 is taken directly from the text as the publication date. Tagged as 'christian' rather than 'catholic' since the author and publisher background are unknown, and the subject matter (Old Testament history) would be broadly Christian rather than specifically Catholic in orientation.
+"""
+</result>

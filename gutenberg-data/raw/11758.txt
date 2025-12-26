@@ -1,0 +1,15 @@
+<result>
+Title = "Baldy of Nome"
+Author = "Esther Birdsall Darling"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Baldy of Nome is a children's novel about sled dogs in Alaska, centered on a dog named Baldy who becomes a racing champion. The story is set in Nome, Alaska during the gold rush era and celebrates the bond between humans and working dogs in the harsh Arctic environment. Esther Birdsall Darling was herself a dog musher and the first woman to enter the All-Alaska Sweepstakes sled dog race, giving the book authentic detail about dog sledding culture.
+"""
+
+Notes = """
+First published in 1913 by Penn Publishing Company. The book was inspired by real sled dogs from the Nome region and the author's personal experience with dog mushing in Alaska.
+"""
+</result>

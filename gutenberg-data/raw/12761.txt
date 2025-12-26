@@ -1,0 +1,15 @@
+<result>
+Title = "Blackwood's Edinburgh Magazine, Volume 53, No. 329"
+Author = "Various"
+Year = 1843
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Blackwood's Edinburgh Magazine was one of the most influential British literary and political magazines of the 19th century, published in Edinburgh from 1817 to 1980. This issue from March 1843 contains a typical mix of the magazine's content: translated fiction (a tale from Russian by Marlinski about the Caucasus), poetry translations (Schiller's poems and ballads), serialized fiction (Caleb Stukely), literary dialogues (by Walter Savage Landor), essays, and cultural commentary. The magazine was known for its Tory political stance, its promotion of Romantic literature, and its sometimes controversial satirical pieces.
+"""
+
+Notes = """
+The year 1843 is the publication date of this specific issue. Blackwood's Magazine (often called "Maga" by its readers) was founded in 1817 by William Blackwood. The magazine published many notable writers including George Eliot, Joseph Conrad, and was particularly important for introducing German Romantic literature to British readers through translations like the Schiller poems mentioned here.
+"""
+</result>

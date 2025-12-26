@@ -1,0 +1,15 @@
+<result>
+Title = "Sermons on Evil-Speaking"
+Author = "Isaac Barrow"
+Year = 1678
+
+Tags = ["non-fiction", "religious", "sermons"]
+
+Summary = """
+Isaac Barrow (1630-1677) was an English theologian, mathematician, and classical scholar who served as the first Lucasian Professor of Mathematics at Cambridge (a position later held by Isaac Newton, his student). This collection contains four sermons addressing various forms of sinful speech: foolish talking and jesting, rash swearing, evil-speaking in general, and slander. Barrow was known for his lengthy, learned sermons and his precise theological reasoning. Though an Anglican divine, his moral theology on these topics draws on classical and patristic sources.
+"""
+
+Notes = """
+Barrow died in 1677. His sermons were published posthumously, with the first collected edition appearing in 1678. This edition was edited by Henry Morley (1822-1894), a Victorian literary scholar who produced many accessible editions of classic works. The year 1678 represents the first publication of his collected sermons rather than this particular edited version.
+"""
+</result>

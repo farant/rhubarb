@@ -1,0 +1,17 @@
+The file seems to have an issue, but I have enough from the excerpt you provided in your message. This is clearly Tenney Frank's biography of Vergil from 1922.
+
+<result>
+Title = "Vergil: A Biography"
+Author = "Tenney Frank"
+Year = 1922
+
+Tags = ["non-fiction", "biography", "classical-studies"]
+
+Summary = """
+A scholarly biography of the Roman poet Publius Vergilius Maro (Vergil/Virgil), written by Tenney Frank, a prominent American classicist and professor of Latin at Johns Hopkins University. Frank was known for his rigorous historical approach to Roman literature and history. This work attempts to reconstruct Vergil's life and personality through careful analysis of his poetry and the historical context of the late Roman Republic and early Empire, while critically evaluating the unreliable ancient biographical tradition preserved by the grammarian Donatus. The book is dedicated to W. Warde Fowler, a distinguished British classicist known for his studies of Roman religion and society.
+"""
+
+Notes = """
+1922 is the original publication year. Tenney Frank (1876-1939) was one of the leading American Roman historians of his era. This is a work of modern scholarship about an ancient author, not a translation of an ancient text, so the publication year is straightforward.
+"""
+</result>

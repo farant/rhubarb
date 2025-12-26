@@ -1,0 +1,15 @@
+<result>
+Title = "Folklore of the Santal Parganas"
+Author = "Cecil Henry Bompas"
+Year = 1909
+
+Tags = ["non-fiction", "folklore", "anthropology"]
+
+Summary = """
+A collection of folklore, myths, and tales from the Santal people, a Munda tribe of the Chutia Nagpore plateau in eastern India. The Santals are an aboriginal group with animistic religious practices, elaborate social organization, and a rich oral tradition. Bompas, a British civil servant in India, compiled and translated these stories which preserve Santal beliefs about spirits (bongas), their origin myths, and traditional tales. The work provides ethnographic insight into Santal culture, social customs, and worldview at the turn of the 20th century.
+"""
+
+Notes = """
+1909 is the publication date of Bompas's collection. This is the appropriate year as the work represents his compilation and translation of oral traditions rather than ancient texts. The Santal Parganas district mentioned was formed after the Santal Rebellion of 1855-56.
+"""
+</result>

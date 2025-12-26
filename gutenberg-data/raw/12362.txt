@@ -1,0 +1,15 @@
+<result>
+Title = "The Mother's Recompense: A Sequel to Home Influence"
+Author = "Grace Aguilar"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Mother's Recompense is the sequel to Grace Aguilar's popular novel "Home Influence: A Tale for Mothers and Daughters" (1847). The story continues following the Hamilton family and explores themes of domestic virtue, moral education, and the influence of a mother's guidance on her children's development. Like its predecessor, it was written to illustrate the importance of proper home education and Christian values in raising children. Grace Aguilar was a Sephardic Jewish English writer known for her domestic fiction and works on Jewish history and religion. This novel, along with Home Influence, became very popular in Victorian England and America as guides for moral education within the family.
+"""
+
+Notes = """
+Grace Aguilar died in 1847, and The Mother's Recompense was published posthumously in 1850 by her mother. The 1859 date shown in this Gutenberg text is the Tauchnitz edition (a German publisher who produced English-language editions for continental European readers), not the original publication date.
+"""
+</result>

@@ -1,0 +1,17 @@
+The file appears to be empty. However, you've provided the text in your message - this is "Joe Wilson and His Mates" by Henry Lawson. I recognize this work well.
+
+<result>
+Title = "Joe Wilson and His Mates"
+Author = "Henry Lawson"
+Year = 1901
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of short stories by Henry Lawson, one of Australia's most celebrated writers. The book centers on Joe Wilson, a bush worker and family man, and includes some of Lawson's finest work exploring the hardships and humanity of rural Australian life in the late 19th century. The stories deal with themes of marriage, poverty, drought, mateship, and the struggles of outback existence. Notable stories include "Joe Wilson's Courtship," "Brighten's Sister-in-Law," and "Water Them Geraniums." Lawson's prose is marked by understated emotion and deep sympathy for ordinary Australians.
+"""
+
+Notes = """
+First published in 1901 by William Blackwood and Sons in Edinburgh and London. Lawson (1867-1922) was a key figure in Australian literary nationalism. The collection represents his most mature work in the short story form.
+"""
+</result>

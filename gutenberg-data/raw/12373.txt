@@ -1,0 +1,15 @@
+<result>
+Title = "The Atlantic Monthly, Vol. I, No. V - The Catacombs of Rome"
+Author = "Various (Charles Eliot Norton)"
+Year = 1858
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+This is an article from the March 1858 issue of The Atlantic Monthly, one of America's most prestigious literary magazines founded in 1857. The article "The Catacombs of Rome" discusses the underground burial sites of early Christians in Rome. The piece takes a scholarly Protestant perspective, critiquing how the Roman Catholic Church has historically used the catacombs to support its claims while also acknowledging the genuine historical and spiritual significance of these sites. The author references recent archaeological investigations that were bringing new scholarly rigor to the study of early Christian history in Rome. The opening epigraph is from Dante's Paradiso, Canto IX.
+"""
+
+Notes = """
+The Atlantic Monthly was founded in Boston in 1857. This particular article on the Catacombs of Rome was written by Charles Eliot Norton, a prominent American scholar and man of letters. The year 1858 represents the original publication date of this specific issue. The magazine itself is still published today as "The Atlantic."
+"""
+</result>

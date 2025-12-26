@@ -1,0 +1,15 @@
+<result>
+Title = "The Atheist's Mass"
+Author = "Honoré de Balzac"
+Year = 1836
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+"The Atheist's Mass" (La Messe de l'athée) is a short story by Balzac, part of his grand Comédie Humaine cycle, specifically within the Philosophical Studies section. The story follows Dr. Desplein, a famous Parisian surgeon renowned for his atheism, and his student Bianchon, who discovers that his master secretly attends Mass four times a year. The mystery of why an avowed atheist would do this is gradually revealed through the story of Desplein's impoverished youth and the humble water-carrier who saved him from destitution. It is a moving meditation on gratitude, faith, and the complexity of human relationships that transcend belief.
+"""
+
+Notes = """
+First published in 1836 in the Parisian periodical La Chronique de Paris. Clara Bell's English translation came later in the 19th century. Despite Balzac's own complicated relationship with religion, this story is sympathetic to Catholic faith and explores themes of grace and charitable love, making it suitable for the 'catholic' tag.
+"""
+</result>

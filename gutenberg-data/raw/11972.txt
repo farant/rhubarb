@@ -1,0 +1,15 @@
+<result>
+Title = "Dialstone Lane"
+Author = "W.W. Jacobs"
+Year = 1904
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Dialstone Lane is a comic novel by W.W. Jacobs, the English author famous for his humorous tales of maritime life and the macabre short story "The Monkey's Paw." This novel follows the adventures of residents of a small English town, particularly involving a scheme related to a supposed treasure map and expedition to the South Seas. Jacobs was known for his wit and gentle satire of English provincial life, and this work exemplifies his light comedic touch with its cast of eccentric characters including sea captains, would-be adventurers, and scheming locals.
+"""
+
+Notes = """
+W.W. Jacobs (William Wymark Jacobs, 1863-1943) published Dialstone Lane in 1904. The novel was originally serialized before book publication. Jacobs was prolific in the late Victorian and Edwardian era, primarily writing humorous stories set around the London docks and English coastal towns.
+"""
+</result>

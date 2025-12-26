@@ -1,0 +1,15 @@
+<result>
+Title = "At Love's Cost"
+Author = "Charles Garvice"
+Year = 1906
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+At Love's Cost is a romantic novel by Charles Garvice, one of the most popular and prolific British romance novelists of the late Victorian and Edwardian era. The story follows the conventions of the romance genre of its time, featuring aristocratic characters, dramatic plot twists, and themes of love overcoming social obstacles. Garvice was known for producing accessible, entertaining fiction aimed at a wide readership, particularly women. His works were enormously popular in their day, though largely forgotten today.
+"""
+
+Notes = """
+Charles Garvice (1850-1920) was a British novelist who wrote over 150 romance novels. At Love's Cost was published around 1906. Garvice was one of the best-selling authors of his era, though his works are now considered period pieces of Edwardian popular fiction.
+"""
+</result>

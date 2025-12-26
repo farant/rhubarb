@@ -1,0 +1,15 @@
+<result>
+Title = "The Apricot Tree"
+Author = "Unknown"
+Year = 1840
+
+Tags = ["fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+This is a moral tale published by the Society for Promoting Christian Knowledge (SPCK), a venerable Anglican organization founded in 1698. The SPCK published numerous inexpensive tracts and books intended for religious education and moral instruction, particularly for children and the working classes. "The Apricot Tree" would be a short didactic story using the apricot tree as a vehicle for teaching Christian virtues or moral lessons, typical of the genre of children's religious literature popular in Victorian England.
+"""
+
+Notes = """
+The exact year is uncertain as the author is unknown and the text only indicates SPCK publication. The SPCK's Committee of General Literature and Education was active primarily in the 1830s-1850s. I've estimated 1840 as a reasonable midpoint for this style of tract. The work is marked 'christian' rather than 'catholic' as SPCK is an Anglican organization.
+"""
+</result>

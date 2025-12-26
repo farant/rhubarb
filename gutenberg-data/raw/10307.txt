@@ -1,0 +1,15 @@
+<result>
+Title = "At the Moving Picture Ball"
+Author = "Maurice Burkhart"
+Year = 1912
+
+Tags = ["fiction", "audio", "music", "novelty-song"]
+
+Summary = """
+"At the Moving Picture Ball" is a novelty song from the early silent film era. The song is a comedic piece that imagines various silent film stars of the day attending a ball together, with humorous descriptions of their dancing and antics. It was recorded on Edison Records and represents the popular culture crossover between the nascent film industry and the music industry of the early 1910s. The song references various early movie stars and was part of a genre of novelty songs that capitalized on the public's fascination with the new medium of moving pictures.
+"""
+
+Notes = """
+The song was written around 1912 during the height of the Edison recording era and early silent film popularity. The Gutenberg entry indicates this is an audio file from the Edison National Historic Site, making it a historical recording rather than sheet music or lyrics. Maurice Burkhart was a songwriter of the era who wrote several novelty and popular songs.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Madness of Mr. Lister"
+Author = "W.W. Jacobs"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+This is a short story from the collection "Captains All" by William Wymark Jacobs, a popular English author known for his humorous tales of maritime life and the London waterfront. The story concerns Jem Lister, an old sailor aboard the ship Susannah, who is plagued by two conflicting vices: a love of strong drink and extreme miserliness. The comic tension arises from his attempts to satisfy his thirst without spending any money, leading him to cadge drinks from his shipmates in ways they find embarrassing to the entire crew.
+"""
+
+Notes = """
+"Captains All" was published in 1905 as a collection of short stories. W.W. Jacobs (1863-1943) was a prolific English author best remembered today for his horror story "The Monkey's Paw," but in his lifetime he was primarily celebrated for his comedic tales of dock workers, sailors, and rural village life.
+"""
+</result>

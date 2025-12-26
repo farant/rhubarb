@@ -1,0 +1,15 @@
+<result>
+Title = "A Residence in France, During the Years 1792, 1793, 1794, and 1795"
+Author = "Anonymous (edited by John Gifford)"
+Year = 1797
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is a collection of letters written by an anonymous English lady who resided in France during the tumultuous years of the French Revolution (1792-1795). The letters provide a firsthand account of life in revolutionary France, offering observations on French character, manners, and the dramatic political and social upheavals of the period. John Gifford, a conservative English author and editor known for his anti-Jacobin stance, prepared the letters for publication. The work offers a valuable eyewitness perspective on the Reign of Terror and its aftermath from a foreign observer's viewpoint.
+"""
+
+Notes = """
+The year 1797 is chosen as this is when the work was first published in London. The letters themselves were written during 1792-1795, but as a compiled and edited work, the publication date represents when it entered the historical record as a book. This is the second edition, suggesting the first edition also appeared in 1797 or possibly late 1796.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Old Bachelor"
+Author = "William Congreve"
+Year = 1693
+
+Tags = ["fiction", "drama", "restoration-comedy"]
+
+Summary = """
+The Old Bachelor is a Restoration comedy and William Congreve's first play. It was written when Congreve was only about 21 years old and premiered at the Theatre Royal, Drury Lane in March 1693. The play was an immediate success and established Congreve's reputation as a dramatist. It is a comedy of manners dealing with themes of love, marriage, and social pretension in late 17th century English society. The plot centers on Heartwell, an aging bachelor who has long railed against marriage but finds himself falling for a young woman. The play features the witty dialogue and intricate plotting characteristic of Restoration comedy.
+"""
+
+Notes = """
+The play was first performed and published in 1693. The text you have is from an 1895 scholarly edition edited by G. S. Street, but the original composition date of 1693 is the historically significant year for this work.
+"""
+</result>

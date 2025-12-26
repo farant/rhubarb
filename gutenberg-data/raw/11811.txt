@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations (1955)"
+Author = "United States Copyright Office"
+Year = 1955
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a volume from the Catalog of Copyright Entries published by the United States Copyright Office. Specifically, this appears to be from the renewal registrations section for 1955, which lists works whose copyright registrations were renewed during that period. The catalog served as an official record of copyright claims and renewals in the United States. These volumes are valuable historical documents for researchers tracking the copyright status of works from the early-to-mid 20th century.
+"""
+
+Notes = """
+The year 1955 is derived from the page notation '1955_h1' visible in the document header, indicating this is from the first half of 1955. The entries shown include renewal registrations referencing original copyrights from the late 1920s (e.g., the Abbott entry shows original copyright from 1927 with renewal in 1955, consistent with the 28-year renewal term that existed under U.S. copyright law at that time).
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Yolanda: Maid of Burgundy"
+Author = "Charles Major"
+Year = 1905
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Yolanda: Maid of Burgundy is a historical romance novel set in 15th century Burgundy during the reign of Charles the Bold. The story follows the adventures of a young woman named Yolanda, daughter of Charles the Bold, Duke of Burgundy. Charles Major was known for his popular historical romances, and this work follows in the tradition of his earlier success "When Knighthood Was in Flower" (1898). The novel blends romantic adventure with the political intrigues of the Burgundian court during a tumultuous period of European history.
+"""
+
+Notes = """
+The publication year 1905 is clearly indicated in the text as MCMV (Roman numerals). Charles Major (1856-1913) was an American author and lawyer from Indiana who became popular for his historical romance novels set in medieval and Renaissance Europe.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Erick and Sally"
+Author = "Johanna Spyri"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A children's story by Johanna Spyri, the beloved Swiss author best known for Heidi. This work follows Spyri's characteristic style of depicting Swiss village life through the eyes of children. The story was translated into English by Helene H. Boll. Spyri's works typically feature themes of moral growth, the beauty of the Swiss Alps, and the contrast between rural mountain life and urban settings.
+"""
+
+Notes = """
+1921 is the year of this English translation by Helene H. Boll. The original German publication date is uncertain from the provided text, but Spyri wrote most of her children's stories between 1879 and her death in 1901. However, since this appears to be specifically about the translated edition and no original German title is given, I've used the translation year as the primary date.
+"""
+</result>

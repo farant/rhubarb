@@ -1,0 +1,17 @@
+The text you provided is enough for me to identify this work. This is a memorial volume for Jane Cunningham Croly, the pioneering American journalist who wrote under the pen name "Jenny June." She founded Sorosis (the first professional women's club in the US) and the General Federation of Women's Clubs.
+
+<result>
+Title = "Memories of Jane Cunningham Croly 'Jenny June'"
+Author = "Caroline M. Morse (editor)"
+Year = 1904
+
+Tags = ["non-fiction", "biography", "historical-document", "women's-history"]
+
+Summary = """
+A memorial volume dedicated to Jane Cunningham Croly (1829-1901), a pioneering American journalist who wrote under the pen name "Jenny June." Croly was one of the first female newspaper columnists in the United States and is credited with founding Sorosis in 1868, the first professional women's club in America. She also founded the Woman's Press Club of New York City and was instrumental in establishing the General Federation of Women's Clubs in 1890. This book, prepared by the Woman's Press Club after her death, contains biographical material compiled by her brother Rev. John Cunningham along with tributes and memories from colleagues and contemporaries.
+"""
+
+Notes = """
+The year 1904 is printed directly on the title page. This is the original publication date of the memorial volume, published shortly after Croly's death on December 23, 1901.
+"""
+</result>

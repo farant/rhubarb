@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewals (Class A)"
+Author = "United States Copyright Office"
+Year = 1951
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a volume from the Catalog of Copyright Entries published by the United States Copyright Office. Specifically, this appears to be the renewals section for Class A (books) covering 1951. The Catalog of Copyright Entries was an official publication that recorded copyright registrations and renewals in the United States. This particular volume lists alphabetically the works for which copyright renewal was registered during the period covered, including information about the original registration date and the renewal registration details.
+"""
+
+Notes = """
+The year 1951 is taken from the page header visible in the text ('1951_h2/A/0633') and the renewal dates shown (e.g., '26Sep51', '2Nov51', '21Dec51'). This is a government document/reference work rather than a creative work, so it represents a historical record of American publishing and copyright law administration.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Autobiography"
+Author = "John Stuart Mill"
+Year = 1873
+
+Tags = ["non-fiction", "autobiography", "philosophy"]
+
+Summary = """
+John Stuart Mill's Autobiography is one of the most celebrated autobiographies in the English language. It chronicles Mill's extraordinary education under his father James Mill, a rigorous program that had him learning Greek at age three and Latin at eight. The work documents his intellectual development, his famous "mental crisis" at age twenty when he fell into a deep depression questioning the utilitarian philosophy he had been raised in, and his recovery through poetry and emotion. It also covers his career as a philosopher, economist, and reformer, his work at the East India Company, and his relationship with Harriet Taylor, whom he later married and credited as a profound intellectual influence on his work.
+"""
+
+Notes = """
+Mill wrote the autobiography between 1853-1870 but it was published posthumously in 1873, the year of his death. The work went through several revisions during his lifetime. I chose 1873 as it represents the first publication and the complete form in which the work entered the historical record.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "North American Species of Cactus, Anhalonium, and Lophophora"
+Author = "John M. Coulter"
+Year = 1894
+
+Tags = ["non-fiction", "scientific"]
+
+Summary = """
+A botanical monograph by John Merle Coulter (1851-1928), an American botanist who was a prominent figure in American botany during the late 19th and early 20th centuries. This work is a taxonomic study of cacti native to North America, with particular focus on the genera Anhalonium and Lophophora (the latter being the genus containing peyote). Coulter was known for his systematic work on plant taxonomy and served as president of several universities. This monograph would have been part of the scientific effort to catalog and classify the flora of North America during a period of intense botanical exploration.
+"""
+
+Notes = """
+This work was originally published in 1894 as part of the Contributions from the U.S. National Herbarium (Volume 3, No. 2). Coulter was working at the time on systematic botany and contributed significantly to understanding North American plant species. The Gutenberg text was prepared in 1998.
+"""
+</result>

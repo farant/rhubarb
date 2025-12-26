@@ -1,0 +1,15 @@
+<result>
+Title = "Graf von Loeben and the Legend of Lorelei"
+Author = "Allen Wilson Porterfield"
+Year = 1915
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+This is a scholarly article published in the academic journal Modern Philology examining Graf Otto Heinrich von Loeben (1786-1825), a minor German Romantic poet, and his connection to the Lorelei legend. The article explores how Loeben, despite being a prolific but ultimately unsuccessful poet who never achieved lasting fame, played a role in the development of the famous Lorelei legend - the story of the siren on the Rhine who lured sailors to their doom. Porterfield situates Loeben among the German Romantic poets, discussing his literary connections and his place in the history of this particular German folklore motif that was later immortalized by Heinrich Heine.
+"""
+
+Notes = """
+The year 1915 is clearly stated in the journal citation: "VOLUME XIII     October 1915     NUMBER 6". Allen Wilson Porterfield was an American scholar of German literature active in the early 20th century. This is academic literary criticism rather than a primary literary work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Trial and Triumph"
+Author = "Frances Ellen Watkins Harper"
+Year = 1888
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Trial and Triumph is a serialized novel by Frances Ellen Watkins Harper, one of the most prominent African-American writers and activists of the 19th century. The novel follows Annette, an orphaned African-American girl being raised by her Aunt Susan, as she navigates challenges of growing up, education, and finding her place in society during the post-Civil War era. Like Harper's other novels, it carries strong themes of moral uplift, the importance of education, racial pride, and Christian virtue. The work was originally published serially in The Christian Recorder, a newspaper of the African Methodist Episcopal Church, before being rediscovered and republished in book form much later.
+"""
+
+Notes = """
+The novel was serialized in The Christian Recorder from October 1888 to February 1889. It remained relatively obscure until Frances Smith Foster's scholarly recovery and republication in the 1990s. Harper is better known for her novel Iola Leroy (1892), but Trial and Triumph represents an important earlier work in her fiction output.
+"""
+</result>

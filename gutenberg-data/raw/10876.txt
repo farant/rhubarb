@@ -1,0 +1,15 @@
+<result>
+Title = "At Sunwich Port"
+Author = "W. W. Jacobs"
+Year = 1902
+
+Tags = ["fiction"]
+
+Summary = """
+At Sunwich Port is a comedic novel by W. W. Jacobs, a British author famous for his humorous short stories about maritime life and the macabre tale "The Monkey's Paw." This novel is set in a fictional English coastal town and follows the romantic and social entanglements of its characters, particularly focusing on the rivalries between two sea captains and their families. Jacobs was known for his wit and his affectionate portrayal of working-class characters in seaside communities. The novel combines romance, family drama, and the author's characteristic dry humor.
+"""
+
+Notes = """
+W. W. Jacobs (William Wymark Jacobs, 1863-1943) published At Sunwich Port in 1902. The illustrations by Will Owen were part of the original publication.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Young Girl's Wooing"
+Author = "E. P. Roe"
+Year = 1884
+
+Tags = ["fiction"]
+
+Summary = """
+A Young Girl's Wooing is a romantic novel by Edward Payson Roe, a popular American novelist of the late 19th century. Roe was a Presbyterian minister before becoming a bestselling author. His novels typically feature moral themes, romance, and American domestic life. This work, published in 1884, follows the romantic pursuits suggested by its title. Roe was one of the most commercially successful American authors of his era, though his works are less read today.
+"""
+
+Notes = """
+The date 1884 appears directly in the text as the publication year. E. P. Roe (1838-1888) was known for sentimental fiction with moral undertones. While he was a Protestant minister, his works are general fiction rather than specifically religious literature.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States From Interviews with Former Slaves, Volume II, Arkansas Narratives, Part 6"
+Author = "Federal Writers' Project (Works Progress Administration)"
+Year = 1937
+
+Tags = ["non-fiction", "historical-document", "primary-source"]
+
+Summary = """
+This is part of the Federal Writers' Project's Slave Narrative Collection, a massive oral history project conducted between 1936-1938 as part of the New Deal's Works Progress Administration. Interviewers, mostly white but some Black, traveled throughout the South to record the memories of formerly enslaved people, most of whom were elderly at the time. This particular volume contains Arkansas narratives, specifically an interview with Doc Quinn. The collection is invaluable as primary source material for understanding the lived experience of slavery, though scholars note the interviews must be read with awareness of the racial dynamics between interviewers and subjects, and the advanced age of informants recalling childhood experiences.
+"""
+
+Notes = """
+Chose 1937 as a middle date of the interview period (1936-1938) rather than 1941 (the publication/assembly date). The interviews themselves are the historically significant content, not the later compilation. The collection contains approximately 2,300 first-person accounts from 17 states.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Danger Trail"
+Author = "James Oliver Curwood"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Danger Trail is an adventure novel set in the Canadian wilderness, featuring themes of romance, mystery, and survival in the harsh northern frontier. James Oliver Curwood was known for his outdoor adventure stories set in the wilds of Canada and Alaska, often featuring rugged protagonists, dangerous situations, and romantic elements. This novel follows the character Howland as he encounters mystery and danger in the snowy northern regions. Curwood's works were extremely popular in the early 20th century and several were adapted into films.
+"""
+
+Notes = """
+1910 is the original publication year. Curwood was a prolific American author of adventure fiction, particularly stories set in the Canadian North. He was influenced by Jack London and his own experiences exploring the Canadian wilderness.
+"""
+</result>

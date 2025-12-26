@@ -1,0 +1,15 @@
+<result>
+Title = "The First Folio (Mr. William Shakespeares Comedies, Histories, & Tragedies)"
+Author = "William Shakespeare"
+Year = 1623
+
+Tags = ["fiction", "drama", "historical-document"]
+
+Summary = """
+The First Folio is the first collected edition of William Shakespeare's plays, published in 1623, seven years after his death. It was compiled by John Heminges and Henry Condell, two actors from Shakespeare's company, the King's Men. This monumental work preserved 36 of Shakespeare's plays, 18 of which had never been published before and might have been lost without this collection. The First Folio is considered one of the most important books in English literature and the primary source for many of Shakespeare's works. This Project Gutenberg edition appears to preserve the original spelling and typographical conventions of early modern English printing.
+"""
+
+Notes = """
+The year 1623 refers to the publication of the First Folio itself, not the composition dates of individual plays (which span roughly 1590-1613). This is appropriate because this text represents the First Folio as a historical document and publishing event, not any individual play. The Executive Director's notes discuss the printing conventions and "errors" characteristic of this 1623 edition.
+"""
+</result>

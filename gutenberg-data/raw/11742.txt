@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 13, No. 367"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap literary periodicals, aimed at making literature and general knowledge accessible to a broader middle-class audience. Each issue contained a mix of articles on architecture, history, poetry, anecdotes, and miscellaneous topics. This particular issue from April 25, 1829 features an illustrated article on Sussex Place in Regent's Park, London, designed by architect John Nash, along with what appears to be a translation of an Irish deed of gift found in Dublin Castle.
+"""
+
+Notes = """
+Year is taken directly from the issue date (April 25, 1829) as printed in the header. This is a periodical rather than a single-authored work, hence "Various" for author.
+"""
+</result>

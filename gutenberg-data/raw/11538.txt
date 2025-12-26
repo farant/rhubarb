@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap periodicals aimed at the working and middle classes, predating Penny Magazine. Each issue contained a mix of historical articles, literary excerpts, poetry, and illustrations. This particular issue (Vol. XIX, No. 531) from January 28, 1832, features an article about Pontefract Castle in Yorkshire, discussing its etymology, history from Norman times, and its construction by Ilbert de Lacy after the Conquest.
+"""
+
+Notes = """
+The year 1832 is the publication date of this specific issue. The Mirror was a periodical with multiple contributors, hence 'Various' as author. The magazine was notable for bringing educational content to a broader audience at an affordable price (2d per issue as shown).
+"""
+</result>

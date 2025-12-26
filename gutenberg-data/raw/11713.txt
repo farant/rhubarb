@@ -1,0 +1,15 @@
+<result>
+Title = "The World's Great Sermons, Volume III: Massillon to Mason"
+Author = "Grenville Kleiser (compiler)"
+Year = 1908
+
+Tags = ["non-fiction", "religious", "anthology"]
+
+Summary = """
+This is Volume III of a ten-volume anthology of famous sermons compiled by Grenville Kleiser, a former Yale Divinity School faculty member. The collection features sermons from significant preachers spanning several centuries, with this volume covering preachers from Massillon (1663-1742) through Mason. It includes sermons by Jean-Baptiste Massillon, Jacques Saurin, Jonathan Edwards, John Wesley, and George Whitefield. The anthology was designed as an educational resource for studying homiletics and the history of preaching, with an introduction by Lewis O. Brastow, Professor Emeritus of Practical Theology at Yale.
+"""
+
+Notes = """
+1908 is the publication year of this compiled anthology. The individual sermons within date from the 17th and 18th centuries. This is an ecumenical Protestant collection rather than a specifically Catholic work - it includes both Catholic preachers (Massillon) and Protestant figures (Edwards, Wesley, Whitefield).
+"""
+</result>

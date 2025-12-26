@@ -1,0 +1,15 @@
+<result>
+Title = "Excellent Women"
+Author = "Various Writers"
+Year = 1892
+
+Tags = ["non-fiction", "biography", "appropriate-for-children", "protestant"]
+
+Summary = """
+A collection of biographical sketches of notable Christian women, primarily from the Protestant tradition. The book features profiles of twelve women including Elizabeth Fry (prison reformer), Selina Countess of Huntingdon (Methodist patroness), Frances Ridley Havergal (hymn writer), Hannah More (writer and philanthropist), Susanna Wesley (mother of John and Charles Wesley), and others. Each biography was written by a different author, mostly clergymen and scholars. The work is representative of Victorian-era inspirational literature aimed at providing moral exemplars for readers.
+"""
+
+Notes = """
+This appears to be a late Victorian compilation. The subjects span from the 17th century (Rachel, Lady Russell) to the late 19th century (Frances Ridley Havergal, d. 1879; Mary Louisa Whately, d. 1889). The inclusion of Whately, who died in 1889, and the style of the work suggest publication in the early 1890s. Project Gutenberg records indicate 1892. Note: Tagged as 'protestant' rather than 'catholic' as the subjects and authors are predominantly from Anglican, Methodist, and Quaker traditions. Madame Guyon, while Catholic, was controversial and associated with Quietism.
+"""
+</result>

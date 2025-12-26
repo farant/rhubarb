@@ -1,0 +1,15 @@
+<result>
+Title = "No and Other Stories Compiled by Uncle Humphrey"
+Author = "Various (compiled by Uncle Humphrey)"
+Year = 1858
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of moral tales and stories for children compiled under the pseudonym "Uncle Humphrey." This was a common format in mid-19th century children's literature, where anonymous or pseudonymous editors would gather short instructive stories designed to teach moral lessons to young readers. The "Uncle" persona was a popular literary device of the era, creating a sense of familial warmth and authority.
+"""
+
+Notes = """
+The year 1858 is based on the PALMM Project metadata indicating this is from the "Preservation and Access for American and British Children's Literature, 1850-1869" collection. The specific date comes from catalog records for this work. "Uncle Humphrey" was a pseudonym used for several children's compilations in this period.
+"""
+</result>

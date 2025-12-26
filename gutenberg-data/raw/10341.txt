@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Events by Famous Historians, Volume XXI"
+Author = "Charles F. Horne (editor)"
+Year = 1914
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Volume XXI of "The Great Events by Famous Historians," a multi-volume encyclopedic work edited by Charles F. Horne. The series compiled narratives from eminent historians covering world history from ancient times to the early 20th century. This particular volume covers events from around 1910, including the establishment of the United States House of Governors, the Union of South Africa, Portugal becoming a republic, and the suppression of Finnish autonomy by Russia. The work features contributions from various historians and scholars, with Horne providing connecting introductions.
+"""
+
+Notes = """
+The complete series was published between 1904-1914, with this volume covering 1910 events being among the later volumes. The 1914 date represents the completion of the expanded edition that included these contemporary (at the time) events.
+"""
+</result>

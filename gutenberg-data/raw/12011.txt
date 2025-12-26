@@ -1,0 +1,15 @@
+<result>
+Title = "Monsieur Parent"
+Author = "Guy de Maupassant"
+Year = 1886
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+"Monsieur Parent" is a short story by Guy de Maupassant, one of the greatest French short story writers of the 19th century. The story follows the tragic figure of Monsieur Parent, a devoted father who discovers his wife's infidelity and faces devastating revelations about his family. The tale explores themes of marital betrayal, paternal love, and the destruction of domestic happiness. It is characteristic of Maupassant's naturalistic style and his keen psychological insight into human relationships and suffering. The story was published as part of a collection bearing the same name.
+"""
+
+Notes = """
+The collection "Monsieur Parent" was first published in 1886. Maupassant (1850-1893) was a protégé of Gustave Flaubert and is considered a master of the short story form. This work reflects his typical themes of bourgeois life, marital discord, and the cruelty underlying social respectability.
+"""
+</result>

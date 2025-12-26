@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 10, No. 285"
+Author = "Various"
+Year = 1827
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a mass audience, offering a miscellany of articles on history, travel, literature, and current events. This particular issue from December 1, 1827 features an article about the Castle of the Seven Towers (Yedikule Fortress) in Constantinople, which was notorious as a prison where the Ottoman Empire confined foreign diplomats during times of war. The timing of this article coincides with the Greek War of Independence and tensions between the Ottoman Empire and European powers.
+"""
+
+Notes = """
+The year 1827 is the publication date of this periodical issue. As a contemporary magazine, this is the appropriate date rather than any historical date of the subjects discussed within.
+"""
+</result>

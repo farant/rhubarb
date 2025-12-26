@@ -1,0 +1,15 @@
+<result>
+Title = "King Grisly-Beard"
+Author = "The Brothers Grimm"
+Year = 1812
+
+Tags = ["fiction", "appropriate-for-children", "fairy-tale"]
+
+Summary = """
+King Grisly-Beard (König Drosselbart in German) is a fairy tale by the Brothers Grimm about a proud princess who mocks all her suitors, particularly one king whose chin she ridicules as looking like a thrush's beak. Her father, angered by her arrogance, marries her off to a poor beggar. Through hardship and humiliation she learns humility, only to discover her beggar husband was actually King Grisly-Beard in disguise, teaching her a lesson. It is tale number 52 in the Grimm collection.
+"""
+
+Notes = """
+1812 is the year the Brothers Grimm published the first volume of Kinder- und Hausmärchen (Children's and Household Tales), which included this story. This Gutenberg entry is an audio recording of the tale.
+"""
+</result>

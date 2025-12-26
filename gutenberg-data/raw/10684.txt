@@ -1,0 +1,15 @@
+<result>
+Title = "A History of Freedom of Thought"
+Author = "J. B. Bury"
+Year = 1913
+
+Tags = ["non-fiction", "history", "philosophy"]
+
+Summary = """
+A historical survey tracing the development of intellectual freedom from ancient Greece and Rome through the Middle Ages, Renaissance, Reformation, and into the modern era. Bury examines how rationalism and free inquiry have alternately flourished and been suppressed throughout Western civilization. The work is a classic of liberal intellectual history, arguing for the importance of freedom of thought as essential to human progress.
+"""
+
+Notes = """
+J. B. Bury (1861-1927) was an Irish historian and classical scholar. This work was published as part of the Home University Library of Modern Knowledge series. Bury was a rationalist and this work reflects his secular liberal perspective on intellectual history.
+"""
+</result>

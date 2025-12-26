@@ -1,0 +1,15 @@
+<result>
+Title = "The Nest of the Sparrowhawk: A Romance of the XVIIth Century"
+Author = "Baroness Orczy"
+Year = 1909
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A historical romance novel set in 17th century England during the Cromwellian era. The story takes place in Kent and involves intrigue surrounding a young heiress, Lady Sue, her guardian (a Kentish squire), and a mysterious French prince. The plot involves deception, secret service, and romantic entanglements against the backdrop of the English Interregnum period. Baroness Orczy is best known for creating The Scarlet Pimpernel, and this novel showcases her characteristic blend of adventure, romance, and historical drama.
+"""
+
+Notes = """
+Baroness Emma Orczy (1865-1947) was a Hungarian-British novelist. While she was raised Catholic (her family was Hungarian nobility), this particular work is a secular historical romance without religious content that would warrant a nihil obstat. The November 1909 date appears on the title page as the publication date.
+"""
+</result>

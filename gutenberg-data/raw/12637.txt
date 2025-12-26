@@ -1,0 +1,15 @@
+<result>
+Title = "Joris Komijn op de Tentoonstelling"
+Author = "Justus van Maurik"
+Year = 1883
+
+Tags = ["fiction", "humor", "dutch-literature"]
+
+Summary = """
+This is a humorous sketch (humoristische schets) by Justus van Maurik (1846-1904), a popular Dutch author known for his humorous stories about Amsterdam life and its inhabitants. Van Maurik was a prolific writer of short stories, sketches, and novels depicting everyday Dutch life in the late 19th century. "Joris Komijn op de Tentoonstelling" (Joris Komijn at the Exhibition) likely follows a comedic character visiting an exhibition, a common theme in van Maurik's work which often featured ordinary people in amusing situations.
+"""
+
+Notes = """
+The exact original publication date is uncertain. Van Maurik was most active in the 1880s-1890s. The Gutenberg text shows this edition is from Warendorf's Novellen-Bibliotheek series and includes an advertisement referencing a law taking effect February 1, 1909, indicating this particular edition is from 1908-1909. However, the work itself was likely first published around 1883, during the period of major exhibitions in the Netherlands and when van Maurik was establishing his reputation as a humorist. I have chosen 1883 as a reasonable estimate for the original composition, though the exact date may vary.
+"""
+</result>

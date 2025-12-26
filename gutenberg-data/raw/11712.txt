@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 156, June 25, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document", "humor", "periodical"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841 and published until 1992 (with a brief revival 1996-2002). It was highly influential in British culture and coined the term "cartoon" in its modern sense. This issue from June 1919 contains typical Punch content: witty observations on current events, political satire, and social commentary. The references to the trans-Atlantic flight (Alcock and Brown's historic crossing completed June 15, 1919), post-WWI Joy Loans, American prohibition, and Irish Sinn Fein situate it firmly in the immediate post-war period.
+"""
+
+Notes = """
+The year 1919 is explicit in the masthead. Punch was a weekly periodical so this represents the original publication date. The "Charivari" in the title references Le Charivari, the French satirical magazine that inspired Punch's founding.
+"""
+</result>

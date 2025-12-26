@@ -1,0 +1,15 @@
+<result>
+Title = "Words of Welcome"
+Author = "Garrett A. Hobart"
+Year = 1898
+
+Tags = ["non-fiction", "historical-document", "audio-recording"]
+
+Summary = """
+This is a historic audio recording of Garrett A. Hobart, the 24th Vice President of the United States under William McKinley (1897-1899). The recording was made on an Edison phonograph cylinder and is preserved at the Edison National Historic Site. Hobart was a prominent New Jersey politician and businessman who died in office in 1899. This recording represents one of the earliest audio recordings of a sitting Vice President of the United States.
+"""
+
+Notes = """
+The year 1898 is estimated based on Hobart's term as Vice President (1897-1899) and the period when Edison cylinder recordings of prominent figures were commonly made. The exact recording date is uncertain, but it falls within this narrow window. Thomas Edison is credited as editor, reflecting his role in the recording technology rather than content authorship.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Nine-Tenths"
+Author = "James Oppenheim"
+Year = 1911
+
+Tags = ["fiction", "labor-movement", "social-reform"]
+
+Summary = """
+The Nine-Tenths is a novel by American poet and writer James Oppenheim, inspired by the tragic Triangle Shirtwaist Factory fire of March 25, 1911, which killed 146 garment workers in New York City. The novel follows a magazine editor who becomes radicalized after witnessing a similar factory fire. The title refers to the working class majority of society. The book is a passionate exploration of labor rights, class consciousness, and social justice in early 20th century America. Oppenheim was known for his socialist sympathies and his poetry celebrating the dignity of workers.
+"""
+
+Notes = """
+The year 1911 is clearly printed on the title page. This novel was published the same year as the Triangle fire that inspired it, making it a remarkably immediate literary response to that industrial tragedy.
+"""
+</result>

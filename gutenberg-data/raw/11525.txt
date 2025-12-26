@@ -1,0 +1,21 @@
+The file appears to be empty. Based on the text you provided in your message, this is from **The Atlantic Monthly**, Volume III, April 1859, Number XVIII. The specific article is "Agrarianism."
+
+The Atlantic Monthly was (and still is as "The Atlantic") a major American literary and cultural magazine. This particular issue is from April 1859 - right before the Civil War. The article "Agrarianism" discusses class conflict, property rights, and reform movements, which was a hot topic in antebellum America with debates over slavery and economic systems.
+
+The Atlantic Monthly articles from this era were often published anonymously or pseudonymously, and the author of this particular "Agrarianism" essay is not immediately identifiable from the text itself. This was common practice for the magazine at that time.
+
+<result>
+Title = "Agrarianism (from The Atlantic Monthly, Vol. III, No. XVIII)"
+Author = "Anonymous"
+Year = 1859
+
+Tags = ["non-fiction", "historical-document", "political-essay"]
+
+Summary = """
+An essay from The Atlantic Monthly (April 1859) examining the historical conflict between property owners and the propertyless - what the author calls the House of HAVE and the House of WANT. The piece surveys this tension across civilizations from ancient Greece and Rome through to antebellum America, discussing how property-holders have historically used accusations of 'Agrarianism' (hostility to property institutions) to discredit reformers. Written on the eve of the American Civil War, it reflects the period's intense debates about property, slavery, and social reform.
+"""
+
+Notes = """
+The Atlantic Monthly frequently published articles anonymously in this era. The magazine was founded in 1857 in Boston and became a major voice of Northern intellectual culture. This 1859 date is significant - the article's discussion of property rights and reform takes on additional weight given the approaching conflict over slavery. The term 'Agrarianism' here refers not to agricultural policy but to radical redistribution of property, derived from Roman agrarian laws that redistributed land.
+"""
+</result>

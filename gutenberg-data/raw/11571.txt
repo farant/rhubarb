@@ -1,0 +1,15 @@
+<result>
+Title = "Mr. Punch's History of the Great War"
+Author = "Various (Punch Magazine Staff)"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document", "humor", "satire"]
+
+Summary = """
+This is a compilation volume from Punch magazine covering World War I (1914-1918) through the lens of British satirical commentary. Punch, the famous British weekly magazine of humor and satire founded in 1841, documented the war years through cartoons, verses, and commentary. The book collects this material into a retrospective "history" that captures the British home front perspective, morale, and the characteristic dark humor that helped civilians and soldiers alike cope with the conflict. The "C. L. G." in the preface refers to Charles L. Graves, who served as an assistant editor at Punch during this period.
+"""
+
+Notes = """
+The year 1919 is when this compilation was first published, with multiple impressions printed that same year indicating its popularity. The "Great War" was the contemporary name for World War I before the Second World War necessitated the numerical distinction. This is not a straightforward historical account but rather a curated selection of wartime humor and commentary from Britain's most famous satirical publication.
+"""
+</result>

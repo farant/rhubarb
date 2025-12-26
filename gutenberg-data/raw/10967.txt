@@ -1,0 +1,15 @@
+<result>
+Title = "Four Weeks in the Trenches: The War Story of a Violinist"
+Author = "Fritz Kreisler"
+Year = 1915
+
+Tags = ["non-fiction", "memoir", "historical-document"]
+
+Summary = """
+A first-hand account of World War I combat on the Eastern Front by the famous Austrian-American violinist Fritz Kreisler. Kreisler served as an officer in the Austro-Hungarian army at the outbreak of WWI in 1914 and was wounded in action. After recovering, he wrote this memoir describing his experiences in the trenches. The book provides a unique perspective from a world-renowned musician thrust into the horrors of modern warfare, offering vivid descriptions of trench life, combat, and the psychological toll of war.
+"""
+
+Notes = """
+Published in 1915 shortly after Kreisler's recovery and arrival in America. This was one of the earliest first-person accounts of WWI trench warfare to reach American audiences, published before the US entered the war in 1917.
+"""
+</result>

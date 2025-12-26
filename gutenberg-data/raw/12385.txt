@@ -1,0 +1,15 @@
+<result>
+Title = "The Italians: A Novel"
+Author = "Frances Elliot"
+Year = 1875
+
+Tags = ["fiction"]
+
+Summary = """
+"The Italians" is a Victorian novel set in Lucca, Italy, written by Frances Elliot (also known as Frances Minto Elliot), a British travel writer and novelist who was well known for her books about Italian life and society. Elliot spent considerable time in Italy and wrote extensively about its culture, history, and people. This novel appears to be a romantic or social drama involving Italian aristocracy, featuring characters such as the Marchesa Guinigi and Count Marescotti. The Guinigi family was a real historical family of Lucca, and the famous Guinigi Tower still stands in the city. Elliot was known for her vivid portrayals of Italian society and her other works include "Diary of an Idle Woman in Italy" and books on French court life.
+"""
+
+Notes = """
+The year 1875 appears on the title page of the Gutenberg text, which indicates the original publication date of this novel.
+"""
+</result>

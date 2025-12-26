@@ -1,0 +1,15 @@
+<result>
+Title = "Autumnal Tints"
+Author = "Henry David Thoreau"
+Year = 1862
+
+Tags = ["non-fiction", "nature-writing"]
+
+Summary = """
+"Autumnal Tints" is an essay by Henry David Thoreau that celebrates the brilliant fall foliage of New England. Thoreau observes that European visitors are struck by the vivid autumn colors in America, which have no equivalent in English nature or poetry. The essay is a meditation on the beauty of changing leaves, which Thoreau views not as decay but as a sign of perfect maturity—comparable to ripe fruit rather than rotten. This piece exemplifies Thoreau's characteristic attention to natural phenomena and his transcendentalist philosophy of finding profound meaning in close observation of nature.
+"""
+
+Notes = """
+This essay was first published in The Atlantic Monthly in October 1862, shortly after Thoreau's death in May of that year. It was later collected in the posthumous volume "Excursions" (1863). The year 1862 represents the original publication date.
+"""
+</result>

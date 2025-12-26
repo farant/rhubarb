@@ -1,0 +1,15 @@
+<result>
+Title = "A Trip Abroad: An Account of a Journey to the Earthly Canaan and the Land of the Ancient Pharaohs"
+Author = "Don Carlos Janes"
+Year = 1905
+
+Tags = ["non-fiction", "travel", "religious"]
+
+Summary = """
+A travel account by Don Carlos Janes describing his journey to Palestine and Egypt in the early 20th century. The book combines personal travelogue with educational content about the geography and history of Palestine, and includes a chapter on Churches of Christ in Great Britain. Janes was associated with the Churches of Christ (Restoration Movement) and this work reflects the interest of American Protestant Christians in visiting the Holy Land during this period.
+"""
+
+Notes = """
+The year 1905 appears directly on the title page. Don Carlos Janes (1877-1944) was a prominent figure in the Churches of Christ movement and missionary advocate. This is not a Catholic work - Janes was Protestant, specifically associated with the Stone-Campbell Restoration Movement.
+"""
+</result>

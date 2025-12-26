@@ -1,0 +1,15 @@
+<result>
+Title = "Evangelio según San Mateo (Biblia de Dominio Público)"
+Author = "Various (Translators based on World English Bible)"
+Year = 2004
+
+Tags = ["non-fiction", "catholic", "appropriate-for-children", "scripture", "translation"]
+
+Summary = """
+This is a Spanish public domain translation of the Gospel of Matthew, based on the World English Bible (WEB). The Gospel of Matthew is one of the four canonical Gospels of the New Testament, traditionally attributed to the Apostle Matthew. It recounts the life, teachings, death, and resurrection of Jesus Christ, with particular emphasis on Jesus as the fulfillment of Old Testament prophecy and the promised Messiah. The genealogy opening (shown in the excerpt) traces Jesus's lineage through David to Abraham, establishing his Jewish royal heritage.
+"""
+
+Notes = """
+The year 2004 reflects the approximate creation date of this Spanish translation project (Biblia de Dominio Público), not the original composition of Matthew's Gospel (c. 80-90 AD). The translation is explicitly based on the World English Bible and was created as a collaborative public domain project. The text itself notes it was released to public domain by the translators working through the evangelios-dp Yahoo group. Given this is a modern translation project rather than an ancient manuscript or historic scholarly edition, the translation's publication date seems most appropriate for cataloging purposes.
+"""
+</result>

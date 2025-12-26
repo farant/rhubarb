@@ -1,0 +1,15 @@
+<result>
+Title = "The Mahabharata, Book 3: Vana Parva"
+Author = "Krishna-Dwaipayana Vyasa (translated by Kisari Mohan Ganguli)"
+Year = -400
+
+Tags = ["fiction", "historical-document", "epic-poetry"]
+
+Summary = """
+The Mahabharata is one of the two major Sanskrit epics of ancient India, the other being the Ramayana. It is attributed to the sage Vyasa (Krishna-Dwaipayana Vyasa). The epic narrates the struggle between two groups of cousins, the Kauravas and the Pandavas, in the Kurukshetra War and the fates of the Kaurava and Pandava princes and their successors. Vana Parva (Book of the Forest) is the third of eighteen books and describes the twelve years of exile the Pandavas spent in the forest after losing a game of dice. This section describes Bhimasena's journey through the Gandhamadana mountains, encountering various animals and natural wonders.
+"""
+
+Notes = """
+The Mahabharata was composed over several centuries, with estimates ranging from 400 BCE to 400 CE for the full compilation. The core narrative is generally dated to around 400 BCE. This translation by Kisari Mohan Ganguli was published between 1883-1896 and remains one of the most complete English translations. I chose -400 (400 BCE) as this represents the approximate date of the original composition rather than the translation date, as the work itself is the ancient epic rather than a substantially annotated modern commentary.
+"""
+</result>

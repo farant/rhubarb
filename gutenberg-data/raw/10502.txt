@@ -1,0 +1,15 @@
+<result>
+Title = "Vecchie Storie"
+Author = "Emilio De Marchi"
+Year = 1899
+
+Tags = ["fiction"]
+
+Summary = """
+"Vecchie Storie" (Old Stories) is a collection of short stories by Emilio De Marchi (1851-1901), a prominent Italian novelist and poet from Milan. De Marchi was known for his realistic portrayals of Lombard middle-class and working-class life, often with a compassionate and morally observant tone. This particular excerpt is from the story "Due Sposi in Viaggio" (Two Spouses on a Journey), which depicts a newlywed couple traveling through the Lake Como region toward Tremezzina. The prose captures the picturesque Alpine landscape with careful, painterly detail characteristic of De Marchi's style.
+"""
+
+Notes = """
+The collection "Vecchie Storie" was published in 1899. De Marchi is best known for his novel "Demetrio Pianelli" (1890). While De Marchi was Catholic and wrote with moral sensibility, this work is general literary fiction rather than explicitly religious content.
+"""
+</result>

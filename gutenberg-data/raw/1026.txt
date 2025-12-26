@@ -1,0 +1,15 @@
+<result>
+Title = "The Diary of a Nobody"
+Author = "George Grossmith, Weedon Grossmith"
+Year = 1892
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A comedic novel originally serialized in Punch magazine (1888-1889) and published as a book in 1892. It follows Charles Pooter, a middle-class clerk living in suburban London, who chronicles his daily life with earnest self-importance while being completely unaware of his own absurdity. The humor arises from Pooter's pomposity, social mishaps, and the mundane concerns he treats with great seriousness. It is considered a classic of English comic literature and a satire of Victorian suburban life and middle-class pretensions.
+"""
+
+Notes = """
+First serialized in Punch 1888-1889, first published as a complete book in 1892. The 1892 date is most appropriate as it represents the complete work with Weedon Grossmith's illustrations.
+"""
+</result>

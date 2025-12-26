@@ -1,0 +1,15 @@
+<result>
+Title = "Le Nabab"
+Author = "Alphonse Daudet"
+Year = 1877
+
+Tags = ["fiction"]
+
+Summary = """
+Le Nabab is a novel by French author Alphonse Daudet, published in 1877. The story follows Bernard Jansoulet, a self-made man who has amassed enormous wealth in Tunisia (hence "le nabab" - the nabob) and returns to Paris seeking social acceptance and political power. The novel is a sharp satire of Second Empire society, depicting the corruption, materialism, and moral decay of Parisian high society. The character of Jansoulet was partly inspired by the real-life figure François Bravay, a wealthy adventurer of the period. The work is considered one of Daudet's major novels and offers a critical portrait of the era's nouveaux riches and the aristocratic circles that both courted and despised them.
+"""
+
+Notes = """
+The text indicates "M DCCC LXXXVII" (1887) which refers to this particular edition, but the novel was originally published in 1877. This excerpt is from Chapter XIII "Un jour de spleen" (A Day of Spleen) and is marked as Tome II (Volume 2).
+"""
+</result>

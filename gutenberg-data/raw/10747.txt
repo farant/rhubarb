@@ -1,0 +1,15 @@
+<result>
+Title = "Chantecler"
+Author = "Edmond Rostand"
+Year = 1910
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Chantecler is a verse drama in four acts by French playwright Edmond Rostand, best known for Cyrano de Bergerac. The play is an allegorical fable featuring barnyard animals as characters, with the protagonist being a rooster (Chantecler) who believes his crowing causes the sun to rise. The play satirizes French society, artistic pretension, and explores themes of self-delusion, idealism, and the nature of purpose. It was highly anticipated after Rostand's earlier successes but received mixed reviews upon its premiere in Paris in 1910.
+"""
+
+Notes = """
+The play premiered on February 7, 1910 at the Théâtre de la Porte Saint-Martin in Paris. This English translation by Gertrude Hall was published the same year. The 1910 date represents both the original French premiere and this translation.
+"""
+</result>

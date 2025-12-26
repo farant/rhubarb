@@ -1,0 +1,15 @@
+<result>
+Title = "Poems"
+Author = "Walter R. Cassels"
+Year = 1856
+
+Tags = ["poetry", "fiction"]
+
+Summary = """
+A collection of poetry by Walter Richard Cassels (1826-1907), an English merchant and writer. This volume includes various poems on themes of nature, love, loss, and religious contemplation. Cassels is perhaps better known for his later anonymous work "Supernatural Religion" (1874), a critical examination of Christian origins that sparked considerable controversy. This earlier poetry collection represents his literary work before he turned to religious criticism.
+"""
+
+Notes = """
+The 1856 date is printed directly in the book as the London publication year, making this straightforward. Cassels was a Victorian poet and later a controversial religious writer.
+"""
+</result>

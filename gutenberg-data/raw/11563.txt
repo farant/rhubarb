@@ -1,0 +1,15 @@
+<result>
+Title = "Morning Bells; Or, Waking Thoughts for the Little Ones"
+Author = "Frances Ridley Havergal"
+Year = 1875
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of 23 short Christian devotional reflections designed as morning readings for children. Each chapter takes a Bible verse as its title and theme, offering gentle spiritual instruction to help young readers begin their day with thoughts of faith. Frances Ridley Havergal (1836-1879) was a prolific English hymn writer and devotional author, known for works like "Take My Life and Let It Be." This work was dedicated to twin brothers Willie and Ethelbert, signed affectionately from "Aunt Fanny."
+"""
+
+Notes = """
+First published in 1875. Havergal was an Anglican author, not Catholic, so no 'catholic' tag applied. The work is explicitly written for children as the subtitle indicates.
+"""
+</result>

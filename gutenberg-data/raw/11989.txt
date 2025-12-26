@@ -1,0 +1,15 @@
+<result>
+Title = "The Crime of the French Café and Other Stories"
+Author = "Nick Carter (house name)"
+Year = 1891
+
+Tags = ["fiction", "detective-fiction", "dime-novel"]
+
+Summary = """
+This is a collection of three Nick Carter detective stories. Nick Carter was not a real author but a house name used by Street & Smith Publications for a long-running series of dime novel detective stories. The character Nick Carter first appeared in 1886 and became one of the most popular fictional detectives of the late 19th and early 20th centuries. Multiple authors wrote under this pseudonym, including John Russell Coryell (creator), Frederick Van Rensselaer Dey, and many others. The stories follow Nicholas Carter, billed as "America's Greatest Detective," solving crimes in New York City. The series was notable for its sensationalist plots and was published in various formats including dime novels, pulp magazines, and later collected editions.
+"""
+
+Notes = """
+The Nick Carter character debuted in 1886. "The Crime of the French Café" was among the early stories in the series, likely from around 1891. Dating these stories precisely is difficult as they were published in various formats over decades. The year chosen represents the approximate era of the original publication of this particular story. The "house name" designation indicates this was written by one of many anonymous authors working for the publisher rather than a single identifiable person.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Lincoln's Second Inaugural Address"
+Author = "Abraham Lincoln"
+Year = 1865
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+Abraham Lincoln's Second Inaugural Address, delivered on March 4, 1865, just weeks before the end of the American Civil War and his assassination. Considered one of the greatest speeches in American history, it is remarkably brief and deeply theological in character. Lincoln reflects on the war's causes, particularly slavery, and interprets the conflict through a providential lens, suggesting that the war may be divine punishment visited upon both North and South for the sin of slavery. The address concludes with the famous call for reconciliation: "With malice toward none, with charity for all."
+"""
+
+Notes = """
+The year 1865 is the date of delivery. This is a primary historical document - the actual speech text as delivered by Lincoln at his second inauguration, approximately six weeks before his assassination on April 14, 1865.
+"""
+</result>

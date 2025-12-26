@@ -1,0 +1,17 @@
+The file appears to be empty or have issues. But based on the text you've included in your message, I have enough information to identify this work:
+
+<result>
+Title = "The Mother's Recompense: A Sequel to Home Influence"
+Author = "Grace Aguilar"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Mother's Recompense is the sequel to Grace Aguilar's popular domestic novel Home Influence (1847). Both works were written when Aguilar was only nineteen years old in 1836, though they were not published until later. The novel follows the Hamilton family and explores themes of maternal love, moral education, domestic virtue, and the influence mothers have in shaping their children's characters. Aguilar was a Victorian-era Anglo-Jewish writer known for her works on Jewish faith and domestic fiction. She died young at age 31 in 1847, and this sequel was published posthumously by her mother Sarah Aguilar.
+"""
+
+Notes = """
+Though written in 1836, the novel was published posthumously in 1850, three years after Grace Aguilar's death. The 1859 Tauchnitz edition you have is a later reprint. I chose 1850 as the year since that is when the work was first made available to the public. Grace Aguilar was Jewish, not Catholic, so the 'catholic' tag is not applicable despite the work's strong moral and religious themes.
+"""
+</result>

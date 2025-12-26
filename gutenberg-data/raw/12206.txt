@@ -1,0 +1,15 @@
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Odd Craft is a collection of short stories by William Wymark Jacobs, a popular English author known for his humorous tales of working-class life, particularly stories set among Thames-side dock workers and rural village folk. The story "Breaking a Spell" included here is a comic tale about Joe Barlcomb, a superstitious man who believes in witchcraft and fears the old women of Claybury village might curse him. Jacobs was renowned for his wit and skillful use of dialect, and his work spans both comedy and the macabre (he also wrote "The Monkey's Paw"). His village stories, often narrated by an old man reminiscing, capture English rural life with gentle humor.
+"""
+
+Notes = """
+Odd Craft was first published in 1903. W.W. Jacobs (1863-1943) was a prolific English short story writer whose work was extremely popular in the early 20th century.
+"""
+</result>

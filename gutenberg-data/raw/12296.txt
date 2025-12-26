@@ -1,0 +1,15 @@
+<result>
+Title = "Camps and Trails in China"
+Author = "Roy Chapman Andrews, Yvette Borup Andrews"
+Year = 1918
+
+Tags = ["non-fiction", "travel", "natural-history", "exploration"]
+
+Summary = """
+A first-hand account of the American Museum of Natural History's Asiatic Zoological Expedition of 1916-1917, led by Roy Chapman Andrews (who would later become famous for his Gobi Desert expeditions and dinosaur fossil discoveries). The book documents exploration, wildlife observation, and adventure in remote regions of China. Roy Chapman Andrews was a naturalist and explorer, while his wife Yvette Borup Andrews served as the expedition's photographer. The work combines scientific observation with travel narrative, describing the landscapes, wildlife, and peoples encountered during their journey through little-known areas of China.
+"""
+
+Notes = """
+1918 is the original publication date by D. Appleton and Company. Roy Chapman Andrews later became one of the most famous explorers of the early 20th century and is sometimes cited as an inspiration for the Indiana Jones character.
+"""
+</result>

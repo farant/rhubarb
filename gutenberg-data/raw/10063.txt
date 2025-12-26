@@ -1,0 +1,15 @@
+<result>
+Title = "Happiness and Marriage"
+Author = "Elizabeth Towne"
+Year = 1904
+
+Tags = ["non-fiction", "self-help"]
+
+Summary = """
+A self-help book from the early New Thought movement offering advice on achieving happiness in marriage. Elizabeth Towne (1865-1960) was a prominent American author, editor, and publisher in the New Thought movement. She founded and edited The Nautilus magazine, one of the most influential New Thought publications. This book reflects the movement's emphasis on positive thinking, mental science, and the "Law of Attraction" as tools for personal transformation and relationship harmony. The work includes practical advice framed through the lens of early 20th century metaphysical spirituality.
+"""
+
+Notes = """
+The year 1904 appears explicitly in the text. Elizabeth Towne was not Catholic; she was part of the New Thought movement which drew from Transcendentalism, idealism, and various metaphysical traditions. The book would not be considered appropriate for the 'catholic' tag.
+"""
+</result>

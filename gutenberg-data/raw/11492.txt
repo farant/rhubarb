@@ -1,0 +1,15 @@
+<result>
+Title = "Il Tenente dei Lancieri"
+Author = "Gerolamo Rovetta"
+Year = 1896
+
+Tags = ["fiction"]
+
+Summary = """
+"Il Tenente dei Lancieri" (The Lieutenant of the Lancers) is a novel by Gerolamo Rovetta, a prominent Italian writer of the late 19th century known for his realistic portrayals of Milanese bourgeois society. The novel opens with the introduction of the Monghisoni-Trebeschi family, centered on the domineering Signora Maddalena, a shrewd businesswoman who runs her father's wholesale provisions shop in Milan's Via Lentasio. Rovetta was known for his satirical and sometimes critical depictions of the Italian middle class during the post-unification period, exploring themes of commerce, social ambition, and family dynamics.
+"""
+
+Notes = """
+Gerolamo Rovetta (1851-1910) was a Milanese novelist and playwright. "Il Tenente dei Lancieri" was first published in 1896. The 1916 date in the Gutenberg text refers to a later edition published in Sesto San Giovanni. Rovetta's works often examined the tensions between traditional values and modern commercial society in northern Italy.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Battle-Pieces and Aspects of the War"
+Author = "Herman Melville"
+Year = 1866
+
+Tags = ["poetry", "non-fiction", "historical-document"]
+
+Summary = """
+A collection of poetry by Herman Melville reflecting on the American Civil War. The poems were largely composed after the fall of Richmond in April 1865 and published the following year. Melville dedicated the volume to the 300,000 Union soldiers who died in the conflict. The collection includes reflections on battles, figures like John Brown (referenced in "The Portent"), and the varied emotional responses to the war. It represents Melville's major poetic work and his attempt to process the national trauma of the Civil War through verse.
+"""
+
+Notes = """
+The year 1866 is the original publication date, clearly stated in the text itself. This is Melville's first published book of poetry and came after a period of relative obscurity following the commercial failure of his novels. The work is considered an important literary response to the Civil War, though it received mixed reviews upon publication.
+"""
+</result>

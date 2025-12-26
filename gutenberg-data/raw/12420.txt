@@ -1,0 +1,15 @@
+<result>
+Title = "The Three Additions to Daniel: A Study"
+Author = "William Heaford Daubney"
+Year = 1906
+
+Tags = ["non-fiction", "theology", "biblical-studies", "catholic"]
+
+Summary = """
+This is a scholarly theological study examining three apocryphal additions to the Book of Daniel: the Prayer of Azariah and the Song of the Three Holy Children, the History of Susanna, and Bel and the Dragon. These texts appear in the Septuagint and Vulgate versions of Daniel but not in the Hebrew/Protestant canon. Daubney, an Anglican clergyman and prizeman in biblical studies, argues these additions deserve more serious scholarly attention than they had received, countering the prejudice against apocryphal works common in English Protestant circles. The book examines textual questions, origins, and theological significance of these deuterocanonical passages.
+"""
+
+Notes = """
+The publication year 1906 is appropriate as this is the year of this specific scholarly study. While the biblical additions themselves date to approximately 100 BCE, this work is Daubney's original academic analysis. The 'catholic' tag applies because these texts are part of the Catholic biblical canon and the author treats them with theological seriousness befitting their liturgical use in the Church (the Song of the Three Children, for instance, is used in the Divine Office).
+"""
+</result>

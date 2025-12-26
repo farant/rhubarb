@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Tolstoy's Plower Story"
+Author = "John Wanamaker"
+Year = 1908
+
+Tags = ["non-fiction", "audio-recording", "historical-document"]
+
+Summary = """
+This is a historical audio recording from the Edison National Historic Site, featuring John Wanamaker (1838-1922), the famous American merchant and religious leader, reciting or discussing a story by Leo Tolstoy. Wanamaker was a pioneer of modern advertising and founder of one of the first department stores in the United States. He was also known for his religious devotion and Sunday school work. Edison cylinder and disc recordings from this era captured notable figures of the time speaking or performing.
+"""
+
+Notes = """
+The year 1908 is an estimate based on the period when Edison was actively recording notable American figures for his phonograph recordings. Wanamaker made several recordings for Edison around 1908-1912. The "Plower Story" likely refers to one of Tolstoy's moral tales, possibly "A Grain as Big as a Hen's Egg" or another agricultural parable, which Wanamaker would have chosen given his interest in moral and religious instruction.
+"""
+</result>

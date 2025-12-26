@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Events by Famous Historians, Vol. XVII"
+Author = "Rossiter Johnson (Editor-in-Chief), Charles F. Horne, John Rudd"
+Year = 1905
+
+Tags = ["non-fiction", "historical-document", "anthology"]
+
+Summary = """
+This is Volume XVII of a 22-volume historical anthology series titled "The Great Events by Famous Historians," published in the early 20th century. The series compiled narratives from eminent historians covering major world events from ancient times through the modern era. This particular volume covers events from 1844-1848, including the invention of the telegraph, the repeal of the English Corn Laws, the discovery of Neptune, the Mexican-American War, the Irish Famine, Mormon migrations, and the early reforms of Pope Pius IX. The work was designed to be accessible and comprehensive, drawing on primary accounts from notable historians of each period.
+"""
+
+Notes = """
+The Great Events by Famous Historians was originally published in 1904-1905 by the National Alumni. The series was a popular educational resource in early 20th century America. I chose 1905 as the publication year based on the typical dating of this anthology series. The editors compiled and arranged existing historical narratives rather than writing original content, so the year reflects when this compilation was assembled rather than when the individual historical accounts were written.
+"""
+</result>

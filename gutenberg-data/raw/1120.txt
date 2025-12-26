@@ -1,0 +1,17 @@
+The file appears to be empty, but you've provided the text content in your message. Based on the content you shared - specifically the "Executive Director's Notes" mentioning Hamlet with the lines "Barnardo. Who's there?" and "Fran. Nay answer me: Stand & vnfold your selfe", along with the discussion of Shakespeare and early printing practices - this is clearly **The Tragedy of Hamlet, Prince of Denmark** by William Shakespeare.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "tragedy"]
+
+Summary = """
+Hamlet is one of Shakespeare's most famous tragedies, telling the story of Prince Hamlet of Denmark who seeks to avenge his father's murder by his uncle Claudius. The play explores themes of revenge, mortality, madness, and moral corruption. It contains some of the most quoted lines in English literature, including "To be, or not to be" and features the famous play-within-a-play device. This particular Gutenberg edition preserves early printing conventions and spellings from the original quartos/folios, including letter substitutions (u for v, etc.) that were common printing practices of the era.
+"""
+
+Notes = """
+The year 1603 represents the First Quarto publication date. Hamlet was likely written between 1599-1601 and first performed around 1600-1601. The First Folio was published in 1623. I chose 1603 as this Gutenberg text appears to preserve early quarto spellings and conventions as discussed in the Executive Director's notes.
+"""
+</result>

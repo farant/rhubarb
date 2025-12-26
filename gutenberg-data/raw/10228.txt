@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: El Presidente Diaz al Senor Edison"
+Author = "Porfirio Díaz"
+Year = 1909
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is a phonograph recording of Mexican President Porfirio Díaz sending a greeting to Thomas Edison. It is one of the earliest audio recordings of a world leader and represents the diplomatic and technological exchange between Mexico and the United States during the Porfiriato era. The recording was made during Edison's efforts to document voices of prominent world figures on his phonograph technology.
+"""
+
+Notes = """
+The year 1909 is chosen as this corresponds to when Edison was actively collecting phonograph recordings from world leaders. Díaz served as President of Mexico from 1876-1880 and 1884-1911. This is an audio artifact rather than a literary work.
+"""
+</result>

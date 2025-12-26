@@ -1,0 +1,15 @@
+<result>
+Title = "Evangelio de Marcos (Biblia de Dominio Público)"
+Author = "Various (World English Bible translation team, Spanish translators)"
+Year = 70
+
+Tags = ["non-fiction", "historical-document", "catholic", "appropriate-for-children"]
+
+Summary = """
+This is a Spanish translation of the Gospel of Mark, based on the World English Bible (WEB). The Gospel of Mark is the second book of the New Testament and is traditionally attributed to John Mark, a companion of the Apostle Peter. It is considered the earliest of the four canonical Gospels, likely composed around 66-70 AD. Mark presents a fast-paced narrative of Jesus's ministry, emphasizing his actions and miracles, beginning with John the Baptist's preparation and moving through Jesus's Galilean ministry, journey to Jerusalem, passion, and resurrection. This particular translation was created as a public domain Spanish version for free distribution and evangelization.
+"""
+
+Notes = """
+The year 70 AD represents the scholarly consensus for when the Gospel of Mark was originally composed, making it the earliest of the synoptic Gospels. While this specific Spanish translation is modern (early 2000s based on the geocities reference), for a historical timeline the original composition date is most appropriate since this is a direct translation without substantial commentary. The Gospel of Mark served as a source for both Matthew and Luke according to the two-source hypothesis.
+"""
+</result>

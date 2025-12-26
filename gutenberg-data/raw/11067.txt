@@ -1,0 +1,15 @@
+<result>
+Title = "The 'Domus Medici' Wallet of Recipes"
+Author = "Various"
+Year = 1910
+
+Tags = ["non-fiction", "cookbook", "vegetarian", "health-food"]
+
+Summary = """
+This is a vegetarian and health food recipe book published in early 20th century Britain. The excerpt shown is a directory of health food stores and vegetarian suppliers across Scotland and England, including Edinburgh, Glasgow, Aberdeen, and various English cities. The book was associated with the vegetarian and food reform movement that was active in Britain during the late Victorian and Edwardian periods. "Domus Medici" (House of the Physician) was a brand associated with health foods and vegetarian products. The Wallace brand and Mapleton's Nut Food Company mentioned were prominent vegetarian food manufacturers of the era.
+"""
+
+Notes = """
+The exact year is difficult to determine from this excerpt alone, but based on the businesses mentioned (particularly Mapleton's Nut Food Co. and the general style of the directory), this appears to be from approximately 1905-1915. I've estimated 1910 as a reasonable midpoint. The Gutenberg ID 11067 corresponds to this vegetarian recipe collection. The format and businesses listed suggest Edwardian-era Britain when the vegetarian and food reform movement was gaining significant traction.
+"""
+</result>

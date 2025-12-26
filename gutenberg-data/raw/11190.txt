@@ -1,0 +1,15 @@
+<result>
+Title = "Captains All"
+Author = "W.W. Jacobs"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+"Captains All" is a collection of short stories by William Wymark Jacobs (1863-1943), a popular English author known for his humorous tales of working-class life, particularly those set in the docklands of London and rural English villages. This particular story, "The White Cat," is a comic tale told by an old man in a pub about a peculiar white cat with one yellow eye and one blue eye that belonged to old man Clark, and the tensions it caused with his nephew Joe Clark who stood to inherit from his uncle. Jacobs was famous for his ability to capture vernacular speech and create atmospheric, often darkly humorous narratives. His most famous work is the horror story "The Monkey's Paw" (1902).
+"""
+
+Notes = """
+"Captains All" was first published in 1905 as a short story collection. Jacobs was a prolific writer during the Edwardian era, and this collection represents his characteristic blend of humor and working-class English settings.
+"""
+</result>

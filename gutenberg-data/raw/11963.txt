@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 156, June 4, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "humor", "periodical", "historical-document"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, witty social commentary, and political humor. The magazine gave its name to the "Punch cartoon" style and was highly influential in British culture. This particular issue from June 1919 contains topical humor about post-WWI events including the Treaty of Versailles negotiations with Germany, the Landru serial killer case in Paris, and various social observations typical of the publication's style.
+"""
+
+Notes = """
+The year 1919 is the original publication date of this specific issue. Punch was a periodical, so each issue has its own publication date. The references to Germany signing (the Treaty of Versailles was signed June 28, 1919) and Henri Landru (the French serial killer who was arrested in 1919) confirm this dating.
+"""
+</result>

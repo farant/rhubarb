@@ -1,0 +1,15 @@
+<result>
+Title = "The American Indian as Participant in the Civil War"
+Author = "Annie Heloise Abel"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly historical work by Annie Heloise Abel, a prominent American historian who specialized in Native American history and their relations with the United States government. The book examines the involvement of Native American tribes in the American Civil War (1861-1865), focusing particularly on events in Indian Territory (present-day Oklahoma) and the surrounding regions. It covers military engagements like the Battle of Pea Ridge, the organization of Indian expeditions, the refugee crisis among tribes, and the complex political negotiations between Union forces and various Native American nations. Abel was known for her rigorous archival research and this work is part of her larger trilogy on the slaveholding tribes during the Civil War era.
+"""
+
+Notes = """
+1919 is the original publication year. Annie Heloise Abel (1873-1947) was a pioneering historian; this book was the second volume in her trilogy on Native Americans and the Civil War. The dedication to Goucher College and Johns Hopkins indicates her academic positions at the time of writing.
+"""
+</result>

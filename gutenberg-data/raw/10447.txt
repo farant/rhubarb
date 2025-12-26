@@ -1,0 +1,15 @@
+<result>
+Title = "October Vagabonds"
+Author = "Richard Le Gallienne"
+Year = 1910
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+October Vagabonds is a collection of nature essays and travel sketches by Richard Le Gallienne, a British-American poet and essayist associated with the Aesthetic movement of the 1890s. The book chronicles an autumn journey through the American countryside, particularly the northeastern United States, with chapters devoted to observations on nature, rural life, encounters with local characters, and lyrical meditations on the changing seasons. Le Gallienne was known for his romantic prose style and appreciation of natural beauty, and this work exemplifies his talent for evocative landscape writing.
+"""
+
+Notes = """
+The title page shows 1911, but the book was actually first published in 1910 by Mitchell Kennerley in New York. The 1911 date likely refers to a subsequent printing or the Gutenberg source edition. I have used 1910 as the original publication year.
+"""
+</result>

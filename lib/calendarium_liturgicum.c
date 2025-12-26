@@ -6,6 +6,7 @@
  * ================================================== */
 
 #include "calendarium_liturgicum.h"
+#include "chorda_aedificator.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -766,6 +767,56 @@ calendarium_formare_titulum(
     result.mensura = (i32)longitudo;
 
     redde result;
+}
+
+
+chorda
+calendarium_nomen_celebrationum(
+    Dies     dies,
+    Piscina* piscina)
+{
+    ChordaAedificator* aed;
+    constans character* nomen_mobile;
+    constans SanctoraleDatum* sancta;
+    s32 num_sanctorum;
+    s32 i;
+    b32 primum;
+    chorda result;
+
+    aed = chorda_aedificator_creare(piscina, CCLVI);
+    si (aed == NIHIL)
+    {
+        result.datum = NIHIL;
+        result.mensura = ZEPHYRUM;
+        redde result;
+    }
+
+    primum = VERUM;
+
+    /* Primo: festivitates mobiles (Pascha, Pentecoste, etc.) */
+    nomen_mobile = fasti_nomen_festivitatis(dies);
+    si (nomen_mobile != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(aed, nomen_mobile);
+        primum = FALSUM;
+    }
+
+    /* Secundo: sanctorale (fixa) */
+    sancta = sanctorale_obtinere(dies.mensis, dies.dies, &num_sanctorum);
+    si (sancta != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < num_sanctorum; i++)
+        {
+            si (!primum)
+            {
+                chorda_aedificator_appendere_literis(aed, ", ");
+            }
+            chorda_aedificator_appendere_literis(aed, sancta[i].titulus);
+            primum = FALSUM;
+        }
+    }
+
+    redde chorda_aedificator_finire(aed);
 }
 
 

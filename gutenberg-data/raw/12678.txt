@@ -1,0 +1,15 @@
+<result>
+Title = "The House of Mystery: An Episode in the Career of Rosalie Le Grange, Clairvoyant"
+Author = "Will Irwin"
+Year = 1910
+
+Tags = ["fiction"]
+
+Summary = """
+A mystery novel featuring Rosalie Le Grange, a clairvoyant detective character. Will Irwin (1873-1948) was an American journalist and author known for his muckraking journalism and fiction. This work belongs to the popular early 20th century genre of detective and mystery fiction, incorporating the then-fashionable spiritualist and clairvoyant elements that were prominent in American popular culture during the Progressive Era.
+"""
+
+Notes = """
+The 1910 date appears directly in the text, which likely represents the first publication year.
+"""
+</result>

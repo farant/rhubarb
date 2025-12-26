@@ -1,0 +1,15 @@
+<result>
+Title = "Captains All"
+Author = "W. W. Jacobs"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Captains All is a collection of short stories by William Wymark Jacobs (1863-1943), an English author best known for his humorous tales of maritime life and the macabre short story "The Monkey's Paw." This collection features stories centered on sailors, dockworkers, and the colorful characters of English coastal towns. Jacobs was celebrated for his comic timing and ear for dialogue, particularly capturing the speech patterns of working-class Londoners and seafaring folk. The stories typically involve schemes, misunderstandings, and domestic complications, delivered with a light touch and dry wit.
+"""
+
+Notes = """
+The 1911 date shown in the Gutenberg text appears to be a reprint edition. Captains All was originally published in 1905. Jacobs was a prolific writer of short story collections during the Edwardian era, and his maritime comedies were extremely popular in their time.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Miscellaneous Essays"
+Author = "Thomas De Quincey"
+Year = 1854
+
+Tags = ["non-fiction", "essays", "literary-criticism"]
+
+Summary = """
+This is a collection of essays by Thomas De Quincey, the English essayist and literary critic best known for his "Confessions of an English Opium-Eater." This particular volume contains some of his most famous shorter works, including "On the Knocking at the Gate, in Macbeth" (a brilliant piece of literary criticism examining Shakespeare's dramatic technique), "Murder, Considered as One of the Fine Arts" (a darkly satirical essay), "Joan of Arc," and "The English Mail-Coach" with its companion piece "The Vision of Sudden Death." De Quincey was a master of ornate, elaborate prose and is considered one of the great English essayists of the 19th century.
+"""
+
+Notes = """
+De Quincey published these essays across various periodicals throughout the 1820s-1840s. This collected edition from Ticknor and Fields appears to be from their 1850s series of De Quincey's writings. The individual essays have earlier dates: "On the Knocking at the Gate" (1823), "Murder as a Fine Art" (1827), etc. I chose 1854 as this appears to be when Ticknor and Fields began their systematic collection of his works, making this collected volume historically significant as how American readers encountered De Quincey.
+"""
+</result>

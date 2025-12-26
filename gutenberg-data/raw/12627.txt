@@ -1,0 +1,17 @@
+Let me read this properly - it seems the text you provided is from the file. Based on what you've shared, I can identify this work:
+
+<result>
+Title = "Escenas Montañesas"
+Author = "José María de Pereda"
+Year = 1864
+
+Tags = ["fiction", "costumbrismo", "regional-literature"]
+
+Summary = """
+Escenas Montañesas (Mountain Scenes) is a collection of costumbrist sketches by José María de Pereda depicting rural life in the Cantabrian region of northern Spain (La Montaña, the old name for Santander province). Pereda was a leading figure in Spanish literary realism, particularly known for his detailed portrayals of regional customs, landscapes, and character types. This work established his reputation as a master of the costumbrismo genre. The book presents vivid tableaux of peasant life, local festivals, sailors, and the traditional ways of the montañés people. Pereda was a traditionalist and Catholic conservative, and his work often reflects nostalgia for disappearing rural traditions.
+"""
+
+Notes = """
+First published in 1864. The text you provided is from a 1919 Madrid edition of his complete works (Obras Completas, Tomo V). The "Advertencia" (foreword) discusses Pereda's reorganization of material between this book and his "Esbozos y Rasguños" for this collected edition. Antonio de Trueba wrote the original prologue. Pereda was indeed a Catholic author, but this work is primarily regional fiction/costumbrismo rather than explicitly religious literature, so I did not include the 'catholic' tag in the religious-work sense you described.
+"""
+</result>

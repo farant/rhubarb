@@ -1,0 +1,15 @@
+<result>
+Title = "A Voyage to Terra Australis"
+Author = "Matthew Flinders"
+Year = 1814
+
+Tags = ["non-fiction", "historical-document", "exploration", "geography"]
+
+Summary = """
+This is Matthew Flinders' monumental account of his circumnavigation of Australia (1801-1803) aboard HMS Investigator. Flinders was a British navigator and cartographer who made significant contributions to the mapping of Australia's coastline. The work documents his scientific exploration, coastal surveys, and the various misfortunes that befell the expedition, including the shipwreck of the Porpoise and Flinders' subsequent six-and-a-half year imprisonment on Mauritius by the French during the Napoleonic Wars. Flinders is credited with popularizing the name "Australia" for the continent, advocating for it in this very work.
+"""
+
+Notes = """
+Published in 1814, shortly before Flinders' death. He received his advance copy on July 18, 1814, and died the following day. The work was published in two volumes with an accompanying atlas of charts. Flinders had been working on the manuscript during his long imprisonment on Mauritius and after his return to England in 1810.
+"""
+</result>

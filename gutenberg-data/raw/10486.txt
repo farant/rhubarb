@@ -1,0 +1,15 @@
+<result>
+Title = "Twelve Gates to the City"
+Author = "Traditional"
+Year = 1850
+
+Tags = ["folk-song", "spiritual", "appropriate-for-children", "christian"]
+
+Summary = """
+An African American spiritual that references the New Jerusalem described in Revelation 21:12-13, which depicts the holy city with twelve gates - three on each of the four cardinal directions. The song celebrates the beauty of the heavenly city while incorporating references to Moses leading the Israelites and Christ's miracles. Like many spirituals, it served both as religious expression and, during slavery, as a coded message of hope for freedom.
+"""
+
+Notes = """
+Dating traditional spirituals is inherently imprecise. This song emerged from the African American spiritual tradition, with most scholars placing its origins in the antebellum period (pre-1865). The 1850 date is a reasonable midpoint estimate for when such spirituals were being actively composed and transmitted orally. The song was later popularized in various recorded versions in the 20th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Our Farm of Four Acres and the Money We Made by It"
+Author = "Miss Coulton"
+Year = 1859
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A popular Victorian-era practical guide to small-scale farming and household economy. The book recounts the author's personal experience establishing and running a profitable four-acre farm, covering topics such as dairy management, butter-making, and the financial aspects of small agricultural ventures. It became a bestseller in England, reaching at least twelve editions, and was later published in America with an introduction by Peter B. Mead, editor of The Horticulturist. The work exemplifies the mid-19th century interest in rural self-sufficiency and practical domestic economy.
+"""
+
+Notes = """
+The American edition shown is dated 1860 and references the "Twelfth London Edition." The first London edition was published in 1859. I've chosen 1859 as it represents the original publication date of the work.
+"""
+</result>

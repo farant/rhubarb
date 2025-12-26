@@ -1,0 +1,21 @@
+Interesting - the file appears empty or has issues. Based on the text you pasted in your message, I can identify this work:
+
+The text you shared is from **"Castilian Days"** by **John Hay**. The Project Gutenberg header says "POEMS By John Hay" but the actual content - discussing Spain, Madrid, August 1870, the Franco-Prussian War, and the preface to a revised edition about Spanish observations - is unmistakably from "Castilian Days," Hay's collection of essays about his time as a diplomat in Spain.
+
+John Hay (1838-1905) was Lincoln's private secretary and later U.S. Secretary of State. He wrote "Castilian Days" based on his experiences as a diplomat in Madrid during 1869-1870, a turbulent period in Spanish history.
+
+<result>
+Title = "Castilian Days"
+Author = "John Hay"
+Year = 1871
+
+Tags = ["non-fiction", "travel-literature", "historical-document"]
+
+Summary = """
+A collection of essays by American diplomat John Hay describing his observations of Spain during his time as a secretary of legation in Madrid from 1869-1870. The work captures a tumultuous period in Spanish history, including the aftermath of the 1868 revolution that deposed Queen Isabella II. Hay writes about Spanish culture, politics, religion, art, and daily life with the perspective of a young American intellectual. The essays blend travel writing, cultural commentary, and political observation.
+"""
+
+Notes = """
+The Gutenberg header appears mislabeled as "POEMS" but the content is clearly from "Castilian Days." First published in 1871. The preface excerpt mentions events of August 1870 (Franco-Prussian War, passing through Paris before Sedan) and refers to "twenty years" having passed, suggesting the revised edition preface was written circa 1890. The original 1871 publication date is used as it represents the work's first appearance.
+"""
+</result>

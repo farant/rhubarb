@@ -1,0 +1,15 @@
+<result>
+Title = "The Fourth-Dimensional Reaches of the Exposition"
+Author = "Cora Lenore Williams"
+Year = 1915
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is a philosophical essay examining the 1915 Panama-Pacific International Exposition in San Francisco through the lens of fourth-dimensional theory. The author, Cora Lenore Williams (who held an M.S. degree), applies concepts from early 20th century speculation about higher spatial dimensions to interpret the architecture and design of the world's fair. The exposition celebrated the completion of the Panama Canal and San Francisco's recovery from the 1906 earthquake. The work includes etchings by Gertrude Partington and reflects the era's fascination with dimensionality, influenced by thinkers like Charles Howard Hinton and the popularization of non-Euclidean geometry.
+"""
+
+Notes = """
+The year 1915 is definitive as it appears both in the title referencing the exposition and in the copyright notice. The Panama-Pacific International Exposition ran from February to December 1915.
+"""
+</result>

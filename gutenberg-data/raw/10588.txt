@@ -1,0 +1,15 @@
+<result>
+Title = "Seeing Europe with Famous Authors, Vol. I: Great Britain and Ireland, Part One"
+Author = "Francis W. Halsey (editor)"
+Year = 1914
+
+Tags = ["non-fiction", "travel", "anthology", "appropriate-for-children"]
+
+Summary = """
+This is the first volume (Part One) of a ten-volume anthology edited by Francis W. Halsey, a literary editor known for compiling collections of historical and literary works. The series gathers travel writings and descriptions of European locations from various famous authors, organized by country and region. This particular volume focuses on Great Britain and Ireland. The work was designed both as a reference for those who had traveled to Europe and as an armchair travel companion for those who had not, emphasizing the importance of historical knowledge in appreciating European sites. Halsey was associated with several major literary compilation projects in the early 20th century.
+"""
+
+Notes = """
+The ten-volume set "Seeing Europe with Famous Authors" was published in 1914 by Funk & Wagnalls. Francis W. Halsey (1851-1919) was a prolific American editor and literary historian. The work is an anthology rather than original writing, so the year reflects the compilation date rather than the dates of the excerpted pieces within.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Maid-at-Arms"
+Author = "Robert W. Chambers"
+Year = 1902
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+The Maid-at-Arms is a historical romance novel set during the American Revolutionary War. Robert W. Chambers was known for his historical fiction set in colonial and revolutionary America. The novel deals with the conflicts and struggles of the war period, with the preface reflecting on how Americans view their revolutionary past without the softening haze of distance that other nations might have regarding their histories. Chambers was a prolific author who also wrote the famous weird fiction collection "The King in Yellow" (1895), but much of his later career focused on historical romances.
+"""
+
+Notes = """
+1902 is the original publication year as indicated in the text itself. The novel was illustrated by Howard Chandler Christy, a well-known American artist of that era.
+"""
+</result>

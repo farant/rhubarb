@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedy of the Korosko"
+Author = "Arthur Conan Doyle"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Tragedy of the Korosko is an adventure novel by Arthur Conan Doyle, best known as the creator of Sherlock Holmes. The story follows a group of Western tourists traveling up the Nile in Egypt aboard the steamboat Korosko who are captured by Dervish raiders. The novel explores themes of religious conflict, courage under duress, and the clash between Victorian civilization and the forces of Islamic militancy in Sudan during the Mahdist period. It is considered one of Doyle's better non-Holmes works, offering a tense survival narrative with philosophical undertones about faith and mortality.
+"""
+
+Notes = """
+First published in 1898. The novel was serialized in The Strand Magazine in 1897 before book publication. The setting reflects the real historical context of the Mahdist War in Sudan and British involvement in Egypt during the 1890s.
+"""
+</result>

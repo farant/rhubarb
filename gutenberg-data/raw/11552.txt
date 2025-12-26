@@ -1,0 +1,15 @@
+<result>
+Title = "Slave Narratives: A Folk History of Slavery in the United States From Interviews with Former Slaves, Volume VIII: Maryland Narratives"
+Author = "Federal Writers' Project"
+Year = 1937
+
+Tags = ["non-fiction", "historical-document", "primary-source"]
+
+Summary = """
+This volume is part of the larger Slave Narratives collection compiled by the Federal Writers' Project (FWP) under the Works Progress Administration during the Great Depression. Between 1936-1938, FWP workers interviewed over 2,300 formerly enslaved African Americans across 17 states, recording their firsthand accounts of life under slavery. Volume VIII contains narratives from Maryland, including testimonies from Lucy Brooks, Lafayette Brooks, and Charles Coles. These narratives constitute one of the most significant primary source collections documenting American slavery from the perspective of those who experienced it, providing invaluable oral histories that would otherwise have been lost as this generation passed away.
+"""
+
+Notes = """
+Year 1937 chosen as approximate midpoint of the 1936-1938 interview collection period, representing when most interviews were conducted. The 1941 date refers to when the Library of Congress assembled and published the typewritten records, but the historical significance lies in the interview period itself. This is a government document/oral history compilation rather than a single-authored work.
+"""
+</result>

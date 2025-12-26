@@ -1,0 +1,15 @@
+<result>
+Title = "Wilson's Tales of the Borders and of Scotland, Vol. XXII"
+Author = "John Mackay Wilson, Alexander Leighton, Alexander Campbell"
+Year = 1835
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+Wilson's Tales of the Borders and of Scotland is a celebrated collection of stories depicting Scottish life, history, traditions, and folklore, particularly from the Border regions between Scotland and England. The series was originally published in weekly installments beginning in 1835 by John Mackay Wilson, a Scottish author and editor. After Wilson's death in 1835, the series was continued by other contributors, most notably Alexander Leighton who became the primary editor and contributor. The tales blend historical events with imaginative storytelling, featuring a mix of romantic, tragic, and humorous narratives drawn from Scottish tradition. This volume (XXII) contains stories from multiple contributors including Wilson's original work and pieces by Leighton and Alexander Campbell.
+"""
+
+Notes = """
+The original series began publication in 1835. This 1884 date shown in the text refers to a revised edition edited by Alexander Leighton. I chose 1835 as it represents the historical origin of the work as a literary project, which seems most appropriate for a historical timeline. The series was enormously popular in 19th century Scotland and ran to many volumes over several decades.
+"""
+</result>

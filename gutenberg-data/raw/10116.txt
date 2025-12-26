@@ -1,0 +1,15 @@
+<result>
+Title = "All Saints' Day and Other Sermons"
+Author = "Charles Kingsley"
+Year = 1878
+
+Tags = ["non-fiction", "religious", "sermons"]
+
+Summary = """
+This is a posthumous collection of sermons by Charles Kingsley (1819-1875), the English Anglican clergyman, university professor, social reformer, historian, and novelist. Kingsley served as Rector of Eversley in Hampshire for most of his career. The collection includes sermons on Church seasons, doctrine, and practical Christian living. Many were never formally prepared for publication during his lifetime, having been written hastily for pulpit delivery. The prefatory note indicates the sermons were published after his death by editors who preserved his original manuscripts as closely as possible.
+"""
+
+Notes = """
+Charles Kingsley died in 1875, and this collection was published posthumously. The year 1878 represents the first publication of this sermon collection. Kingsley was associated with the Christian Socialist movement and was also known for novels such as "Westward Ho!" and "The Water-Babies." While an Anglican clergyman, he would not be considered Catholic in the Roman Catholic sense, so the 'catholic' tag is not applied.
+"""
+</result>

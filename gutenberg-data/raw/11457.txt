@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 402"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a working-class and middle-class readership, featuring a mix of literary excerpts, historical articles, travel writing, illustrations, and miscellaneous entertainment. This particular issue (Vol. 14, No. 402) is a supplementary number featuring content about the Leaning Towers of Bologna and a review of "The Landscape Annual" for 1830, which contained engravings of Italian and Swiss scenery by Samuel Prout.
+"""
+
+Notes = """
+The year 1829 is chosen because this supplementary issue reviews "The Landscape Annual, London and Paris, 1830" - annuals were typically published in the autumn of the preceding year for gift-giving. Vol. 14 of The Mirror corresponds to the 1829 publication year. The magazine was founded by John Limbird and was notable for making literature and knowledge accessible to ordinary readers at a very low price (2d per issue).
+"""
+</result>

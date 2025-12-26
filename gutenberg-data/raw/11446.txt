@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 400"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a British weekly magazine published from 1822 to 1849. It was one of the first cheap popular magazines in England, priced at just 2d (two pence), making literature and general knowledge accessible to the working and middle classes. The publication contained a mix of articles on travel, history, literature, science, and general interest topics, often accompanied by illustrations. This particular issue from November 1829 features an article about the Limoeiro prison in Lisbon, Portugal, drawing on the account of W. Young, an Englishman who was imprisoned there during the turbulent period of Don Miguel's authoritarian rule.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with the publication date clearly stated (November 21, 1829). The magazine was founded by John Limbird and was notable for its affordability and accessibility to common readers during the early Victorian era.
+"""
+</result>

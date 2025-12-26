@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XII, No. 327"
+Author = "Various"
+Year = 1828
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a British weekly magazine published from 1822 to 1849. It was one of the first cheap popular periodicals in England, aimed at making literature and information accessible to the working and middle classes. Each issue contained miscellaneous content including essays, poetry, historical sketches, and engravings. This particular issue from August 1828 features an article about Rosamond's Well and Labyrinth at Woodstock, connected to the medieval legend of Fair Rosamond (Rosamond Clifford), mistress of King Henry II.
+"""
+
+Notes = """
+This is a periodical, so 1828 is the actual publication date of this issue. The magazine was published by John Limbird in London.
+"""
+</result>

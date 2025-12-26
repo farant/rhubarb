@@ -1,0 +1,15 @@
+<result>
+Title = "Le Docteur Ox"
+Author = "Jules Verne"
+Year = 1874
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Le Docteur Ox is a collection of short stories by Jules Verne, the famous French science fiction pioneer. The main novella, "Une Fantaisie du Docteur Ox" (A Fantasy of Doctor Ox), tells the satirical tale of a mysterious scientist who conducts an experiment on the sleepy Flemish town of Quiquendone by secretly pumping pure oxygen into the town, causing its lethargic inhabitants to become increasingly agitated and aggressive. The collection also includes "Maître Zacharius" (Master Zacharias), a Gothic tale about a clockmaker who believes he has given souls to his clocks; "Un Hivernage dans les Glaces" (A Winter Amid the Ice), an Arctic adventure; and "Un Drame dans les Airs" (A Drama in the Air), about a balloon journey gone wrong.
+"""
+
+Notes = """
+The stories were originally published separately between 1851-1872, but were collected together in this volume in 1874. The 1920 date shown in the text refers to this particular edition, not the original publication. I chose 1874 as it represents the first collected edition of these works as "Le Docteur Ox."
+"""
+</result>

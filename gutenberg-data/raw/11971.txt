@@ -1,0 +1,15 @@
+<result>
+Title = "Dialstone Lane"
+Author = "W.W. Jacobs"
+Year = 1904
+
+Tags = ["fiction"]
+
+Summary = """
+Dialstone Lane is a comic novel by William Wymark Jacobs, a popular English author known for his humorous short stories about life in maritime and rural England. The novel follows the adventures and misadventures of various characters in the fictional town of Binchester, centering around Captain Dowd Dowell Dodd (Captain Dowd), a retired sea captain, and the romantic and comedic entanglements of the younger characters. Jacobs was celebrated for his light, witty prose and his ability to capture the rhythms of everyday English life with gentle satire. The story involves a treasure hunt scheme that goes amusingly awry.
+"""
+
+Notes = """
+First published in 1904. W.W. Jacobs (1863-1943) is perhaps best known today for his macabre short story "The Monkey's Paw" (1902), but during his lifetime he was primarily celebrated as a humorist. Dialstone Lane represents his characteristic blend of comedy and mild adventure.
+"""
+</result>

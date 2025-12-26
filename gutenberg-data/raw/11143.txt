@@ -1,0 +1,15 @@
+<result>
+Title = "Mary Marie"
+Author = "Eleanor H. Porter"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mary Marie is a novel by Eleanor H. Porter, the author best known for creating Pollyanna. The story follows a young girl caught between her divorced parents - her father, an astronomer, calls her Mary, while her artistic mother calls her Marie. The novel explores themes of divorce, identity, and a child's perspective on family dissolution, told through the girl's diary entries as she alternates between her parents' very different households. Porter was known for her optimistic fiction and stories featuring young female protagonists navigating difficult circumstances.
+"""
+
+Notes = """
+1920 is the original publication year. Eleanor H. Porter (1868-1920) actually died the same year this novel was published. The book addresses divorce at a time when it was still quite socially controversial, though presented through an accessible, child-friendly narrative voice characteristic of Porter's style.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewals (Class A)"
+Author = "United States Copyright Office"
+Year = 1952
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a volume from the Catalog of Copyright Entries published by the United States Copyright Office. Specifically, this appears to be from the 1952 renewals section for Class A (which covers books, pamphlets, serials, and contributions to periodicals). The catalog served as the official record of copyright registrations and renewals in the United States, providing an alphabetical listing of works whose copyright renewals were registered during the covered period. Each entry includes details about both the original and renewal registrations.
+"""
+
+Notes = """
+The page reference '1952_h1/A/0265' and the renewal dates from 1952 (e.g., "9Jun52", "28Apr52") indicate this is from the 1952 edition. The Catalog of Copyright Entries was published by the Library of Congress Copyright Office from 1891 to 1978 in various formats. This particular volume covers copyright renewals, which were required under the Copyright Act of 1909 to extend protection beyond the initial 28-year term.
+"""
+</result>

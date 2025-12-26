@@ -1,0 +1,15 @@
+<result>
+Title = "A Horse's Tale"
+Author = "Mark Twain"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Horse's Tale is a novella by Mark Twain told primarily from the perspective of Soldier Boy, a military horse at a U.S. Army fort in the American West. The story also follows Cathy, a young orphaned girl who comes to live with her uncle, General Alison, at the fort. The narrative explores themes of animal welfare, the bond between humans and animals, and critiques bullfighting. Twain wrote this work partly at the request of actress Minnie Maddern Fiske, who was campaigning against bullfighting in Spain. The story's ending, involving a bullfight, serves as a powerful condemnation of cruelty to animals.
+"""
+
+Notes = """
+First serialized in Harper's Magazine in August-September 1906, then published as a book in 1907. Using 1906 as the year since that represents the original publication date of the work itself.
+"""
+</result>

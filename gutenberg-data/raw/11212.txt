@@ -1,0 +1,15 @@
+<result>
+Title = "Modern India"
+Author = "William Eleroy Curtis"
+Year = 1905
+
+Tags = ["non-fiction", "travel", "history"]
+
+Summary = """
+A collection of travel letters originally written for The Chicago Record-Herald newspaper during the winter of 1903-04. William Eleroy Curtis, an American journalist and author known for his travel writing, provides observations on India during the British Raj period. The book covers a wide range of topics including Indian cities (Bombay, Delhi, Jeypore, Ahmedabad), Hindu customs and weddings, religions of India, British colonial governance, railways, Mughal architecture including the Taj Mahal, and various cultural phenomena such as fakirs and nautch dancers. The work is dedicated to Lady Curzon, wife of Lord Curzon who was Viceroy of India at the time.
+"""
+
+Notes = """
+The letters were written in 1903-04 and published in book form shortly after. The first edition appears to be 1905. Curtis was a prolific American travel writer who worked for various newspapers and wrote numerous books about different regions of the world.
+"""
+</result>

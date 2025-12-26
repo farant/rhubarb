@@ -1,0 +1,15 @@
+<result>
+Title = "Impressions of Theophrastus Such"
+Author = "George Eliot"
+Year = 1879
+
+Tags = ["fiction", "essays"]
+
+Summary = """
+Impressions of Theophrastus Such is George Eliot's final published work, a collection of eighteen essays written in the voice of a fictional narrator named Theophrastus. The work is modeled on the character sketches of the ancient Greek philosopher Theophrastus, who was Aristotle's successor and known for his "Characters" - short, witty descriptions of moral types. Eliot's narrator observes and satirizes various types of Victorian society: the self-deceived, the pompous intellectual, the political opportunist, and others. The work blends social criticism with philosophical reflection, touching on themes of moral hypocrisy, intellectual pretension, and Jewish identity (particularly in the final essay "The Modern Hep! Hep! Hep!"). It is more essayistic than her novels, representing a departure in form while maintaining her characteristic moral seriousness.
+"""
+
+Notes = """
+The date 1879 comes from the publication information given (MDCCCLXXIX = 1879). This was the first and only edition published during Eliot's lifetime; she died in December 1880. The "Second Edition" noted refers to a second printing in 1879, not a later revised edition.
+"""
+</result>

@@ -1,0 +1,21 @@
+The file appears to be empty - 0 lines and file utility reports it as empty. However, from the context you provided in your message (the Executive Director's Notes), I can clearly identify this work:
+
+This is **The Tragedy of Hamlet, Prince of Denmark** by **William Shakespeare**. The notes reference the First Folio printing conventions, the famous opening lines with Barnardo and Francisco, and the characteristic spelling variations of early modern English printing ("liue" for "live", "vnfold" for "unfold", etc.).
+
+Project Gutenberg #1122 is indeed one of their Shakespeare editions, specifically Hamlet based on early quartos/folio texts.
+
+<result>
+Title = "The Tragedy of Hamlet, Prince of Denmark"
+Author = "William Shakespeare"
+Year = 1603
+
+Tags = ["fiction", "drama", "tragedy"]
+
+Summary = """
+Hamlet is Shakespeare's longest play and one of the most influential works in Western literature. The tragedy follows Prince Hamlet of Denmark who seeks revenge against his uncle Claudius, who murdered Hamlet's father, took the throne, and married Hamlet's mother Gertrude. The play explores themes of revenge, moral corruption, mortality, madness (both real and feigned), and the nature of action versus inaction. Famous for its soliloquies ("To be or not to be"), the play has been continuously performed and adapted for over four centuries.
+"""
+
+Notes = """
+Year chosen is 1603 when the first quarto (Q1, the "bad quarto") was published. Q2 appeared in 1604-1605, and the First Folio text in 1623. The play was likely written between 1599-1601. Project Gutenberg #1122 appears to be based on early printed texts preserving original spelling conventions, as evidenced by the Executive Director's notes discussing printing practices of the era (u/v substitutions, clichés, etc.). Shakespeare was not Catholic in the formal sense required for ecclesiastical approval, though his father John Shakespeare has been associated with Catholic recusancy, and Catholic themes appear throughout his works.
+"""
+</result>

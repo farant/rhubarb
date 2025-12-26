@@ -1,0 +1,15 @@
+<result>
+Title = "The Provost"
+Author = "John Galt"
+Year = 1822
+
+Tags = ["fiction", "scottish-literature"]
+
+Summary = """
+The Provost is a novel by Scottish author John Galt, first published in 1822. It is written in the form of a fictional autobiography of James Pawkie, who serves three times as provost (chief magistrate) of the fictional Scottish town of Gudetown. The novel is a satirical portrait of small-town Scottish politics and society in the late 18th and early 19th centuries, following Pawkie's rise through municipal government. Galt was known for his "Tales of the West" depicting Scottish provincial life, and The Provost is considered one of his finest works in this genre, offering sharp social commentary through the voice of a self-satisfied narrator who unwittingly reveals his own opportunism and moral compromises.
+"""
+
+Notes = """
+1822 is the original publication date. The excerpt references a 1913 T. N. Foulis edition, which was a later reprint. John Galt (1779-1839) was a Scottish novelist particularly noted for his realistic portrayals of Scottish life and character.
+"""
+</result>

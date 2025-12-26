@@ -1,0 +1,17 @@
+The text you provided in your message is sufficient for me to identify this work.
+
+<result>
+Title = "Experiments in Government and the Essentials of the Constitution"
+Author = "Elihu Root"
+Year = 1913
+
+Tags = ["non-fiction", "political-philosophy", "american-history"]
+
+Summary = """
+This is a collection of lectures delivered by Elihu Root, a distinguished American lawyer and statesman who served as U.S. Secretary of War under McKinley and Roosevelt, Secretary of State under Roosevelt, and U.S. Senator from New York. He won the Nobel Peace Prize in 1912. In this work, Root defends the principles of the U.S. Constitution against Progressive Era criticisms, arguing for the wisdom of the Founders' approach to separated powers and limited government. The lectures were delivered at a time when constitutional reforms like direct election of senators and ballot initiatives were being hotly debated.
+"""
+
+Notes = """
+1913 is the original publication year. Root delivered these as lectures and they were published that same year. The timing is significant as it coincides with major Progressive Era constitutional changes including the ratification of the 16th Amendment (income tax) and 17th Amendment (direct election of senators) in 1913.
+"""
+</result>

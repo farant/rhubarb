@@ -1,0 +1,15 @@
+<result>
+Title = "Reuben Haskin's Ride on the Cyclone Auto"
+Author = "Len Spencer"
+Year = 1902
+
+Tags = ["fiction", "audio-recording", "comedy", "appropriate-for-children"]
+
+Summary = """
+This is an early phonograph cylinder recording by Len Spencer, a popular American recording artist of the early 20th century. Spencer was one of the most prolific recording artists of the acoustic era, known for his comedic monologues and dialect pieces. "Reuben Haskin's Ride on the Cyclone Auto" is a humorous rural character sketch featuring the stock "Reuben" or country bumpkin character encountering modern automobile technology. These comedic recordings were popular entertainment in the early days of recorded sound.
+"""
+
+Notes = """
+Year is approximate based on Len Spencer's active recording period for Edison Records (roughly 1899-1910). The "Cyclone Auto" references and the Edison National Historic Site provenance suggest this is from the early automobile era, likely 1902-1905. Spencer recorded numerous similar rural comedy sketches during this period.
+"""
+</result>

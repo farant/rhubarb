@@ -1,0 +1,15 @@
+<result>
+Title = "Indian Speeches (1907-1909)"
+Author = "John Morley, 1st Viscount Morley of Blackburn"
+Year = 1909
+
+Tags = ["non-fiction", "historical-document", "political-speeches"]
+
+Summary = """
+This is a collection of speeches delivered by John Morley during his tenure as Secretary of State for India (1905-1910). The speeches document a pivotal moment in British-Indian relations: the Morley-Minto Reforms of 1909, which expanded Indian participation in legislative councils and represented an early step toward Indian self-governance. Morley, a Liberal politician and distinguished man of letters, was navigating the tension between maintaining British imperial control and responding to growing Indian nationalist sentiment. The speeches cover budget presentations, civil service matters, and the proposed constitutional reforms that bear his name. The "OM" after his name indicates he held the Order of Merit, Britain's highest honor for distinguished service.
+"""
+
+Notes = """
+The year 1909 is chosen as it is the publication date stated in the text and represents the culmination of the reform process these speeches document. The Morley-Minto Reforms were formally enacted in 1909. The quote from Sir Henry Maine (a famous legal historian who served in India) sets the intellectual context for Morley's gradualist approach to political reform.
+"""
+</result>

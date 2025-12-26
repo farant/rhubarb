@@ -1,0 +1,15 @@
+<result>
+Title = "Schultz at the Paris Exposition"
+Author = "Frank Kennedy"
+Year = 1900
+
+Tags = ["fiction", "humor", "audio-recording"]
+
+Summary = """
+This is a comedic monologue recorded on an Edison cylinder, featuring a German-American character named Schultz describing his experiences at the 1900 Paris Exposition (World's Fair). It belongs to the genre of ethnic dialect comedy that was popular in American vaudeville and early phonograph recordings of the late 19th and early 20th centuries. These recordings often featured exaggerated accents and humorous misunderstandings. The piece was produced for Thomas Edison's phonograph company as entertainment for home audiences.
+"""
+
+Notes = """
+Year chosen as 1900 based on the Paris Exposition reference, which refers to the Exposition Universelle of 1900 - one of the largest world's fairs ever held. This was a major cultural event that generated considerable popular entertainment and commentary. The recording would have been made around this time while the exposition was topical. Note this is an audio recording, not a text work.
+"""
+</result>

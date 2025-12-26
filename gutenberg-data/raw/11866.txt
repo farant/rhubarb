@@ -1,0 +1,15 @@
+<result>
+Title = "The Life and Most Surprising Adventures of Robinson Crusoe, of York, Mariner"
+Author = "Daniel Defoe"
+Year = 1719
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Robinson Crusoe is considered one of the first English novels and a foundational work of Western literature. It tells the story of a shipwrecked mariner who survives alone on a deserted island for 28 years. The narrative explores themes of self-reliance, providence, redemption, and the human capacity for survival. Defoe drew partial inspiration from the real-life story of Alexander Selkirk, a Scottish castaway. The novel was enormously influential and essentially created the "castaway" and "desert island" genres that persist to this day.
+"""
+
+Notes = """
+While this particular edition is from 1801, the original work was first published on April 25, 1719. I chose 1719 as the year since this is clearly Defoe's original novel rather than a substantially annotated or transformed work - the 1801 edition is simply a later printing of the classic text.
+"""
+</result>

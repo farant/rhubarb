@@ -1,0 +1,15 @@
+<result>
+Title = "Rapunzel"
+Author = "Jacob Grimm, Wilhelm Grimm"
+Year = 1812
+
+Tags = ["fiction", "appropriate-for-children", "fairy-tale", "folklore"]
+
+Summary = """
+Rapunzel is one of the most beloved fairy tales collected by the Brothers Grimm, telling the story of a young girl with impossibly long golden hair who is locked in a tower by an enchantress. The tale involves themes of captivity, love, and eventual liberation when a prince discovers her by following her singing voice. The story has roots in older European folk traditions and has become one of the most recognizable fairy tales in Western culture.
+"""
+
+Notes = """
+1812 is the year of first publication in the Grimms' 'Kinder- und Hausmärchen' (Children's and Household Tales), first edition. The tale underwent revisions in later editions (notably 1857), but 1812 represents the original scholarly collection of this folk narrative.
+"""
+</result>

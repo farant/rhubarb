@@ -1,0 +1,15 @@
+<result>
+Title = "Abraham Lincoln: A History, Volume Two"
+Author = "John G. Nicolay, John Hay"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "biography"]
+
+Summary = """
+This is the second volume of the monumental ten-volume biography of Abraham Lincoln written by his two private secretaries, John G. Nicolay and John Hay. Both men served Lincoln throughout his presidency and had unprecedented access to his papers and personal life. The work is considered one of the most authoritative primary sources on Lincoln's life and the Civil War era. Nicolay and Hay began work on the biography shortly after Lincoln's assassination and spent over fifteen years completing it. The biography draws heavily on Lincoln's personal papers, which Robert Todd Lincoln (Abraham's son) entrusted to the authors.
+"""
+
+Notes = """
+1890 is the correct publication year. The work was serialized in The Century Magazine from 1886-1890 before being published in book form. This is an original historical work, not a translation or reprint of an earlier text.
+"""
+</result>

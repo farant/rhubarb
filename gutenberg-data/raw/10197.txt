@@ -1,0 +1,15 @@
+<result>
+Title = "He Was Nailed to the Cross for Me"
+Author = "Ernest V. Stoneman"
+Year = 1927
+
+Tags = ["audio-recording", "gospel-music", "christian"]
+
+Summary = """
+This is an audio recording of the traditional gospel hymn "He Was Nailed to the Cross for Me" performed by Ernest V. Stoneman, a pioneering country and gospel musician from Virginia. Stoneman was one of the earliest country music recording artists, and this recording was made for Edison Records. The song is a devotional piece reflecting on Christ's crucifixion.
+"""
+
+Notes = """
+Ernest Stoneman recorded prolifically for Edison Records in the late 1920s. The spelling "Earnest" in the Gutenberg metadata appears to be an error; the artist's name was Ernest V. Stoneman (1893-1968). The year 1927 is chosen as this aligns with Stoneman's peak recording period for Edison. This is an audio file rather than a text, preserved from the Edison National Historic Site collection.
+"""
+</result>

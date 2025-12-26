@@ -1,0 +1,17 @@
+The file appears nearly empty. Based on the text you've provided in your message, this is from:
+
+<result>
+Title = "Vitaulium Hofwijk en Spaansche Wijsheit"
+Author = "Constantijn Huygens"
+Year = 1653
+
+Tags = ["non-fiction", "poetry"]
+
+Summary = """
+This volume contains two works by Constantijn Huygens (1596-1687), the prominent Dutch Golden Age poet, composer, and secretary to two Princes of Orange. "Hofwijk" (1653) is a lengthy descriptive poem about his country estate near Voorburg, which he designed and built between 1639-1642. The poem celebrates the villa, its gardens, and rural life as a retreat from his busy diplomatic and administrative duties. "Spaansche Wijsheit" is a collection of translated Spanish proverbs. This edition includes annotations by Dr. J. van Vloten, a 19th-century Dutch literary scholar.
+"""
+
+Notes = """
+The year 1653 is when "Hofwijk" was first published, though the estate itself was built 1639-1642 as described in the prefatory material. Huygens was a polymath figure of the Dutch Golden Age - father of the famous scientist Christiaan Huygens. The text mentions architects Jacob van Campen and Pieter Post who helped design the estate.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Social Pictorial Satire"
+Author = "George du Maurier"
+Year = 1898
+
+Tags = ["non-fiction", "art-criticism", "appropriate-for-children"]
+
+Summary = """
+This is a lecture/essay by George du Maurier on the art of pictorial satire in British periodicals, particularly focusing on the work of John Leech and Charles Keene, two of the great Punch magazine illustrators. Du Maurier himself was a renowned Punch cartoonist for decades before achieving literary fame with his novel "Trilby" (1894). This work provides insight into the craft of social caricature and the golden age of British magazine illustration in the Victorian era.
+"""
+
+Notes = """
+The MDCCCXCVIII at the end of the title page indicates 1898 as the publication year. Du Maurier (1834-1896) was a French-British cartoonist and author. This appears to be a posthumous publication of a lecture he gave, as he died in 1896. The work discusses his colleagues and predecessors at Punch magazine.
+"""
+</result>

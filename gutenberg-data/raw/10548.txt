@@ -1,0 +1,17 @@
+I can identify this work from the excerpt you provided. This is "The Westcotes" by Arthur Quiller-Couch (who often wrote as "Q"), dedicated to Henry James.
+
+<result>
+Title = "The Westcotes"
+Author = "Arthur Quiller-Couch"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Westcotes is a novel by Arthur Quiller-Couch set during the Napoleonic Wars in a small English town. The story centers on Dorothea Dobie, a spinster who becomes entangled in a romance with a French prisoner of war who has been paroled to the town. The novel explores themes of social propriety, forbidden love, and the complexities of wartime relationships in provincial England. Quiller-Couch, known as "Q," was a prominent English writer and literary critic, and this work demonstrates his characteristic interest in character study and the tensions between duty and desire.
+"""
+
+Notes = """
+First published in 1903. The dedication to Henry James is notable as both authors were prominent literary figures of the Edwardian era. Quiller-Couch later became a professor at Cambridge and edited the Oxford Book of English Verse.
+"""
+</result>

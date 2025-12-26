@@ -1,0 +1,15 @@
+<result>
+Title = "Love, Life & Work"
+Author = "Elbert Hubbard"
+Year = 1906
+
+Tags = ["non-fiction", "self-help"]
+
+Summary = """
+A collection of essays and opinions by Elbert Hubbard, the American writer, publisher, and philosopher who founded the Roycroft artisan community in East Aurora, New York. Hubbard was known for his aphoristic writing style and inspirational essays, most famously "A Message to Garcia." This work contains his thoughts on happiness, mental attitude, religion, art, and personal development. Hubbard was a prominent figure in the Arts and Crafts movement and published two magazines, The Philistine and The Fra.
+"""
+
+Notes = """
+Elbert Hubbard died in 1915 aboard the RMS Lusitania when it was torpedoed by a German U-boat. He was not Catholic; he held eclectic philosophical and religious views influenced by various traditions including transcendentalism.
+"""
+</result>

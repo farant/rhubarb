@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Charge of the Light Brigade"
+Author = "Trumpeter Martin Leonard Landfrey"
+Year = 1890
+
+Tags = ["historical-document", "audio-recording"]
+
+Summary = """
+This is a historical audio recording of Trumpeter Martin Leonard Landfrey recounting the Charge of the Light Brigade, in which he participated as a member of the 17th Lancers during the Battle of Balaclava on October 25, 1854, during the Crimean War. The recording was made by Thomas Edison and preserved at the Edison National Historic Site. Landfrey was one of the survivors of the infamous cavalry charge against Russian artillery, immortalized in Tennyson's poem. This is a primary source eyewitness account of one of the most famous military disasters in British history.
+"""
+
+Notes = """
+The year 1890 is approximate - Edison cylinder recordings of this nature were typically made in the late 1880s to early 1890s. The actual Charge of the Light Brigade occurred in 1854, but since this is a recording (not a written account from that period), the relevant date is when the recording was made. Landfrey would have been an elderly veteran at the time of recording. This is an audio file (MP3), not a traditional text document.
+"""
+</result>

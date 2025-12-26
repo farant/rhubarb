@@ -1,0 +1,15 @@
+<result>
+Title = "Romance of the Rabbit"
+Author = "Francis Jammes"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+Romance of the Rabbit (Le Roman du Lièvre) is a pastoral novella by French poet Francis Jammes, telling the story of a hare and its life in the countryside of the Pyrenees. Written in Jammes' characteristic simple, lyrical style, the work reflects his deep love of nature and rural life. The story follows the rabbit through its encounters with other animals and the natural world, imbued with a gentle spirituality and appreciation for humble creatures. It exemplifies Jammes' unique position in French literature as a poet of rustic simplicity and sincere Catholic faith, far removed from Parisian literary movements.
+"""
+
+Notes = """
+The original French work "Le Roman du Lièvre" was published in 1903. The 1920 date in the Gutenberg text refers to this English translation by Gladys Edgerton. Francis Jammes (1868-1938) was a deeply Catholic poet who converted in 1905, though his work always had spiritual undertones. His rural, anti-modernist aesthetic and sincere faith earned him admirers across the Catholic literary world.
+"""
+</result>

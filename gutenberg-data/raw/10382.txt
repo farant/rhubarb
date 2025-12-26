@@ -1,0 +1,15 @@
+<result>
+Title = "Memoir of William Watts McNair"
+Author = "J.E. Howard"
+Year = 1890
+
+Tags = ["non-fiction", "biography", "historical-document", "exploration"]
+
+Summary = """
+This is a biographical memoir of William Watts McNair (1849-1889), a British surveyor who served in the Indian Survey Department. McNair is historically significant as the first European explorer to enter Kafiristan (now Nuristan, in northeastern Afghanistan), a remote and mysterious region that remained closed to outsiders. He accomplished this feat in 1883 by disguising himself as a native physician. McNair served during the Second Anglo-Afghan War (1879-1880) and was present at significant military engagements near Kabul. The memoir was written by J.E. Howard and dedicated to the Royal Geographical Society of London, which had recognized McNair's achievements during his lifetime.
+"""
+
+Notes = """
+The year 1890 is chosen as it appears to have been published shortly after McNair's death on August 13, 1889. The memoir references his death and the official proceedings noting it, suggesting publication in the year following his passing. McNair's exploration of Kafiristan predates Rudyard Kipling's famous story "The Man Who Would Be King" (1888), which was set in the same region.
+"""
+</result>

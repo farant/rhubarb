@@ -1,0 +1,15 @@
+<result>
+Title = "From a Bench in Our Square"
+Author = "Samuel Hopkins Adams"
+Year = 1922
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by American journalist and author Samuel Hopkins Adams, set in a New York City neighborhood referred to as "Our Square." The stories are character sketches and vignettes depicting the lives of ordinary people in an urban community, told from the perspective of an observer on a park bench. Adams was known for his muckraking journalism and popular fiction, and this work represents his more gentle, humanistic storytelling about everyday American life in the early 20th century.
+"""
+
+Notes = """
+Samuel Hopkins Adams (1871-1958) was a prolific American author best known for exposing patent medicine fraud in his "Great American Fraud" series. He also wrote popular fiction and had several works adapted for film. This collection was published in 1922 as indicated in the text itself.
+"""
+</result>

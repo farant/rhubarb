@@ -1,0 +1,15 @@
+<result>
+Title = "Open Source Democracy: How Online Communication is Changing Offline Politics"
+Author = "Douglas Rushkoff"
+Year = 2003
+
+Tags = ["non-fiction", "political-theory", "media-studies"]
+
+Summary = """
+Open Source Democracy is a political pamphlet published by Demos, a British think tank. Douglas Rushkoff, a media theorist and author known for coining the term "viral media," argues that the collaborative, decentralized ethos of open source software development and internet culture could serve as a model for reinvigorating democratic participation. The work examines how interactive digital media changes the relationship between ideas and the channels through which they spread, and suggests this offers lessons for addressing challenges of globalization, fundamentalism, and competing value systems. It's part of Rushkoff's broader body of work exploring how media shapes culture and consciousness.
+"""
+
+Notes = """
+The copyright notice explicitly states 2003. This was published by Demos UK as part of their series of short political essays/pamphlets. Rushkoff is a secular media theorist, not a Catholic author.
+"""
+</result>

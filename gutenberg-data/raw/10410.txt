@@ -1,0 +1,15 @@
+<result>
+Title = "The Powers and Maxine"
+Author = "C.N. and A.M. Williamson"
+Year = 1907
+
+Tags = ["fiction"]
+
+Summary = """
+A romantic thriller novel by the prolific husband-and-wife writing team of Charles Norris Williamson and Alice Muriel Williamson. The story involves intrigue, mystery, and romance centered around a character named Maxine, likely an actress given chapter titles referencing "the stage." The Williamsons were known for their popular early 20th century novels, particularly automobile-themed romances and adventure stories. This work appears to be set in Paris and involves diplomatic intrigue (suggested by "The Powers" in the title, likely referring to the Great Powers of Europe).
+"""
+
+Notes = """
+The copyright date of 1907 is used as the publication year. C.N. and A.M. Williamson were a British-American couple who wrote over 40 novels together between 1900-1920, many featuring automobiles, travel, and romantic adventure.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Tokyo To Tijuana: Gabriele Departing America"
+Author = "Steven Sills"
+Year = 2004
+
+Tags = ["fiction"]
+
+Summary = """
+This is a contemporary literary novel by Steven Sills, an American author known for writing fiction set in Asia. The book appears to follow characters moving between locations in Korea (Seoul, Chongju) and deals with themes of identity, longing, and cultural displacement. The excerpt introduces Sang Huin (called Shawn by American friends) and Yang Lin at Toksugum Palace in Seoul, exploring themes of empathy, desire, and alienation. Sills has written several novels with Asian settings and themes of expatriate life.
+"""
+
+Notes = """
+Steven Sills is a contemporary American author. This novel was published around 2004 based on its Project Gutenberg catalog number and the author's publication history. The work is literary fiction dealing with themes of identity and cultural displacement across Asian and American settings.
+"""
+</result>

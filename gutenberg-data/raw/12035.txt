@@ -1,0 +1,15 @@
+<result>
+Title = "Progressive Morality: An Essay in Ethics"
+Author = "Thomas Fowler"
+Year = 1884
+
+Tags = ["non-fiction", "philosophy", "ethics"]
+
+Summary = """
+This is a work on moral philosophy by Thomas Fowler, an Oxford academic who served as President of Corpus Christi College and Wykeham Professor of Logic. The book attempts to present a scientific conception of morality in accessible, popular form, focusing on practical applications rather than theoretical debates. Fowler notes in the preface that the views represent what he sees as the emerging consensus among educated thinkers of his era. The work was written independently of a larger collaborative project on the 'Principles of Morals' that Fowler had been working on with Professor Wilson, which remained incomplete due to Wilson's declining health and death.
+"""
+
+Notes = """
+1884 is the publication date clearly stated on the title page. This is an original work, not a translation or edition of an earlier text, so this date is straightforward.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The History of a Crime: The Testimony of an Eye-Witness"
+Author = "Victor Hugo"
+Year = 1877
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Victor Hugo's eyewitness account of Louis-Napoléon Bonaparte's coup d'état of December 2, 1851, which dissolved the French National Assembly and established the dictatorship that would become the Second Empire. Hugo, then a member of the Assembly, participated in the resistance and was forced into exile. The work documents the events day by day, including the arrests of representatives, the street fighting, and the suppression of republican opposition. Hugo wrote it shortly after the events but delayed publication until after the fall of the Second Empire.
+"""
+
+Notes = """
+Hugo wrote this account in 1852 during his exile but withheld publication until 1877, after the fall of Napoleon III and the establishment of the Third Republic. The 1877 date is chosen as it represents when the work entered public discourse and had its historical impact.
+"""
+</result>

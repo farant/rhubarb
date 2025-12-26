@@ -1,0 +1,15 @@
+<result>
+Title = "What Germany Thinks: Or The War as Germans See It"
+Author = "Thomas F.A. Smith"
+Year = 1915
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A contemporary analysis of German public opinion and propaganda during World War I, written by an English academic who had spent twelve years living and working in Germany before the war. Smith, who was an English lecturer at the University of Erlangen from 1902-1914, offers an insider's perspective on how Germans perceived and justified the war. The book covers topics including German views on the causes of the war, the invasion of Belgium, reported atrocities, the stance of German intellectuals and Social Democrats, and the culture of anti-British sentiment that developed during the conflict.
+"""
+
+Notes = """
+Published during the war itself (1915), this is a primary source document reflecting wartime perspectives. The author's extended residence in Germany gives him unusual credibility as an observer of German society and opinion.
+"""
+</result>

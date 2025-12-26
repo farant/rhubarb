@@ -325,6 +325,21 @@ calendarium_formare_titulum(
     Dies                   dies,
     Piscina*               piscina);
 
+/* Obtinere nomina omnium celebrationum pro die (mobiles et fixae)
+ *
+ * Redde chorda cum nominibus celebrationum iunctis per ", ".
+ * Si nulla celebratio, redde chorda vacua.
+ *
+ * dies: dies quaerenda
+ * piscina: piscina pro allocare chorda
+ *
+ * Redde: chorda cum nominibus (e.g. "Easter", "St. Stephen", "Ss. Peter, Paul")
+ */
+chorda
+calendarium_nomen_celebrationum(
+    Dies     dies,
+    Piscina* piscina);
+
 
 /* ==================================================
  * Sanctorale - Data Structure

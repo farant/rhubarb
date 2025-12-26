@@ -1,0 +1,15 @@
+<result>
+Title = "The Coxon Fund"
+Author = "Henry James"
+Year = 1894
+
+Tags = ["fiction"]
+
+Summary = """
+"The Coxon Fund" is a novella by Henry James, first published in 1894. The story is a satirical tale about Frank Saltram, a brilliant but dissolute philosopher loosely based on Samuel Taylor Coleridge. The narrative centers on the question of whether Saltram should receive a bequest from the Coxon Fund, which is meant to support distinguished philosophers. The work explores themes of genius versus moral character, the nature of intellectual gifts, and the relationship between talent and responsibility. It is told through the eyes of a narrator who becomes entangled in the question of whether Saltram's undeniable brilliance justifies supporting him despite his personal failings.
+"""
+
+Notes = """
+First published in The Yellow Book in July 1894, then collected in "Terminations" (1895). The 1915 Martin Secker edition mentioned in the Gutenberg header is a later reprint. The year 1894 represents the original publication.
+"""
+</result>

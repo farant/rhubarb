@@ -1,0 +1,15 @@
+<result>
+Title = "The Brook Kerith: A Syrian Story"
+Author = "George Moore"
+Year = 1916
+
+Tags = ["fiction", "biblical-fiction", "literary"]
+
+Summary = """
+The Brook Kerith is a novel by Irish author George Moore that offers an imaginative retelling of the life of Jesus. The novel presents a controversial narrative in which Jesus survives the crucifixion and is nursed back to health by Joseph of Arimathea, after which he lives as an Essene shepherd by the brook Kerith (Cherith) in the Judean wilderness. The novel later depicts an encounter between the aged Jesus and Paul of Tarsus. Moore drew on biblical scholarship of his time, including the Dead Sea Scrolls' precursors and Essene studies, to craft this literary work. The novel is notable for its prose style and its serious, sympathetic treatment of its subject matter despite its heterodox premise.
+"""
+
+Notes = """
+First published in 1916. George Moore was an Irish novelist and critic associated with the Irish Literary Revival. While Moore was raised Catholic, this work would certainly NOT receive a nihil obstat or imprimatur given its premise that Jesus survived the crucifixion. The novel was considered controversial at the time of publication.
+"""
+</result>

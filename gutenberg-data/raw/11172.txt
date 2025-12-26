@@ -1,0 +1,15 @@
+<result>
+Title = "Abraham Lincoln: A Play"
+Author = "John Drinkwater"
+Year = 1918
+
+Tags = ["fiction", "drama", "historical-fiction"]
+
+Summary = """
+A theatrical drama depicting the life and presidency of Abraham Lincoln, written by English poet and playwright John Drinkwater. The play focuses on Lincoln's character and his handling of the American Civil War, dramatizing key moments of his leadership. Drinkwater drew heavily from Lord Charnwood's biography of Lincoln for historical material, while taking dramatic liberties with timeline and adding fictional characters like Burnet Hook to represent opposition forces. The play was enormously successful and helped establish Drinkwater's international reputation.
+"""
+
+Notes = """
+The play premiered in 1918 at the Birmingham Repertory Theatre in England, though this Gutenberg edition is dated 1919 (the year of its first publication with Arnold Bennett's introduction and its Broadway premiere). I chose 1918 as it represents the original theatrical debut. The play was a landmark work that brought Drinkwater fame on both sides of the Atlantic.
+"""
+</result>

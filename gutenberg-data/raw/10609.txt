@@ -1,0 +1,15 @@
+<result>
+Title = "English Literature: Its History and Its Significance for the Life of the English-Speaking World"
+Author = "William J. Long"
+Year = 1909
+
+Tags = ["non-fiction", "appropriate-for-children", "educational", "literary-criticism"]
+
+Summary = """
+This is a comprehensive textbook on English literature designed for schools, covering the entire span of English literary history from the Anglo-Saxon period through the Victorian Era. William J. Long (1866-1952) was an American minister, naturalist, and educator who wrote several popular educational works. The book aims to encourage students to read primary literary works rather than just secondary criticism, while also situating literature within its historical and social context. It was widely used in American schools in the early 20th century as a standard introduction to English literary history.
+"""
+
+Notes = """
+The first edition was published in 1909 by Ginn and Company. Long held a Ph.D. from Heidelberg University as noted on the title page. This work represents the scholarly approach to literary history popular in the Progressive Era of American education, emphasizing both aesthetic appreciation and historical understanding.
+"""
+</result>

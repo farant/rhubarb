@@ -1,0 +1,15 @@
+<result>
+Title = "The Scouts of the Valley"
+Author = "Joseph A. Altsheler"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Scouts of the Valley is a historical adventure novel set during the American Revolutionary War, focusing on the frontier conflicts in the Ohio Valley region. It follows young frontiersman Henry Ware and his companions as they navigate the dangers of warfare between American settlers and British-allied Native American forces. The novel is part of Altsheler's "Young Trailers" series, which chronicles frontier life in Kentucky and the Ohio Valley during the late 18th century. Altsheler was known for his accessible, action-packed historical fiction aimed at young readers, combining adventure with educational depictions of American history.
+"""
+
+Notes = """
+Joseph A. Altsheler (1862-1919) was a prolific American author of historical fiction for young adults. The Scouts of the Valley was published in 1911 as part of his Young Trailers series. While Altsheler was personally a Protestant (Presbyterian background from Kentucky), his works are secular adventure fiction without religious content, so the 'catholic' tag does not apply.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Lone Star Ranger"
+Author = "Zane Grey"
+Year = 1915
+
+Tags = ["fiction", "western"]
+
+Summary = """
+The Lone Star Ranger is a Western novel following Buck Duane, a young Texan who becomes an outlaw after killing a man in self-defense. Fleeing into the wild Texas frontier, he eventually finds redemption by joining the Texas Rangers. The novel is dedicated to Captain John Hughes and his Rangers, and Grey notes it was inspired by stories he heard along the Rio Grande, particularly from Ranger Coffee. The book romanticizes the Texas Rangers and the lawless border country of the early twentieth century.
+"""
+
+Notes = """
+First published in 1915 by Harper & Brothers. Zane Grey was one of the most popular Western novelists of the early 20th century. This novel was later adapted into several films.
+"""
+</result>

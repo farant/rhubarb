@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 10, No. 287"
+Author = "Various"
+Year = 1827
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap literary periodicals aimed at a broad readership, offering miscellaneous content including essays, poetry, illustrations, and articles on science, history, and current events. This particular issue from December 1827 features coverage of a new steam carriage design, reflecting the era's fascination with emerging steam-powered transportation technology during the early Industrial Revolution.
+"""
+
+Notes = """
+Year is taken directly from the publication date shown in the issue header (December 15, 1827). This is a periodical rather than a standalone book, so the date represents when this specific issue was published.
+"""
+</result>

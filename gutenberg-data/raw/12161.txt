@@ -1,0 +1,15 @@
+<result>
+Title = "Night Watches"
+Author = "W. W. Jacobs"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Night Watches is a collection of short stories by William Wymark Jacobs (1863-1943), an English author renowned for his humorous tales of working-class life, particularly those set around the London docks and featuring sailors, night watchmen, and bargemen. Jacobs had a gift for comic dialogue and situational humor. This collection contains ten stories including "Back to Back," "The Three Sisters," and "Easy Money." While Jacobs is perhaps best known for his macabre horror story "The Monkey's Paw" (1902), the majority of his work consists of these lighter comedic pieces depicting the everyday misadventures of ordinary English folk.
+"""
+
+Notes = """
+1911 is the original publication year of this collection. Jacobs published numerous short story collections between the 1890s and 1920s, and this represents his work in the Edwardian period.
+"""
+</result>

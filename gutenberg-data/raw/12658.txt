@@ -1,0 +1,15 @@
+<result>
+Title = "Shapes of Clay"
+Author = "Ambrose Bierce"
+Year = 1903
+
+Tags = ["poetry", "satire", "fiction"]
+
+Summary = """
+Shapes of Clay is a collection of satirical poetry by Ambrose Bierce, the celebrated American journalist, short story writer, and cynic known for works like "The Devil's Dictionary" and "An Occurrence at Owl Creek Bridge." This volume contains verse that is often personally censorious and names real persons, continuing in the tradition of his earlier poetry collection "Black Beetles in Amber." Bierce dedicated the work to his protégés George Sterling and Herman Scheffauer, both poets of the San Francisco literary scene. The collection showcases Bierce's characteristic sharp wit and biting social commentary in verse form.
+"""
+
+Notes = """
+1903 is the original publication year as indicated in the text itself. Bierce (1842-c.1914) was a prominent figure in American letters who famously disappeared in Mexico in 1913-1914.
+"""
+</result>

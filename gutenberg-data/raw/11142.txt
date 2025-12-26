@@ -1,0 +1,15 @@
+<result>
+Title = "Unitarianism"
+Author = "W.G. Tarrant"
+Year = 1912
+
+Tags = ["non-fiction", "religious-history"]
+
+Summary = """
+This is a historical and theological survey of Unitarianism written by William George Tarrant (1853-1928), a prominent British Unitarian minister and hymn writer. The work traces the development of Unitarian thought and communities from early martyrs through the movement's establishment in England and New England, covering legal recognition, property disputes, and modern developments. Tarrant was a well-known figure in British Unitarianism and served as editor of The Inquirer, a Unitarian newspaper.
+"""
+
+Notes = """
+1912 is the original publication date as shown in the text. This is a primary work by Tarrant, not a translation or compilation.
+"""
+</result>

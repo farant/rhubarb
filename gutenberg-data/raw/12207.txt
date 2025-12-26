@@ -1,0 +1,15 @@
+<result>
+Title = "Odd Craft"
+Author = "W.W. Jacobs"
+Year = 1903
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Odd Craft is a collection of short stories by William Wymark Jacobs (1863-1943), an English author famous for his humorous tales of maritime life and the London docklands. Jacobs was known for his witty, light-hearted stories featuring sailors, dock workers, and the colorful characters of working-class England. This particular collection includes stories like "Establishing Relations" which follows the romantic misadventures of merchant sailors. Jacobs is perhaps best remembered today for his horror story "The Monkey's Paw," though the bulk of his work consists of these gentle comedic tales.
+"""
+
+Notes = """
+W.W. Jacobs published Odd Craft in 1903. He was a prolific author of short story collections during the Edwardian era, with most of his maritime humor stories appearing between 1896 and 1926.
+"""
+</result>

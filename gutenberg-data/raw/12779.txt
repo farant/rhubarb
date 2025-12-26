@@ -1,0 +1,15 @@
+<result>
+Title = "The Human Machine"
+Author = "Arnold Bennett"
+Year = 1908
+
+Tags = ["non-fiction", "self-help"]
+
+Summary = """
+The Human Machine is a self-help book by Arnold Bennett, the prolific English novelist and journalist best known for his "Five Towns" novels set in the Staffordshire Potteries. In this work, Bennett offers practical advice on self-improvement, mental discipline, and the management of one's thoughts and emotions. It is a companion piece to his popular "How to Live on 24 Hours a Day" (1908), continuing his exploration of how ordinary people can live more effectively and purposefully. Bennett writes in an accessible, conversational style aimed at the general reader seeking to improve their daily life and mental habits.
+"""
+
+Notes = """
+The Human Machine was first published in 1908. The text shown is actually just the front matter listing Bennett's other works, with The Human Machine appearing at the bottom of the "Belles-Lettres" section. Arnold Bennett (1867-1931) was one of the most successful English authors of his era.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Romance of the Republic"
+Author = "Lydia Maria Child"
+Year = 1867
+
+Tags = ["fiction", "historical-fiction", "abolitionist"]
+
+Summary = """
+A Romance of the Republic is an abolitionist novel by Lydia Maria Child, a prominent American abolitionist, women's rights activist, and author. The novel deals with themes of slavery, racial identity, and miscegenation in antebellum America. Set in New Orleans and spanning the years before and during the Civil War, it tells the story of two mixed-race sisters who are sold into slavery after their father's death. The dedication to the parents of Colonel Robert Gould Shaw (who led the famous 54th Massachusetts Infantry Regiment, one of the first African American units in the Civil War) reflects Child's deep commitment to the abolitionist cause.
+"""
+
+Notes = """
+L. Maria Child is Lydia Maria Child (1802-1880). She was already famous for her anti-slavery work "An Appeal in Favor of That Class of Americans Called Africans" (1833). This novel was published in 1867, just after the Civil War ended, and represents one of her later literary works addressing racial justice.
+"""
+</result>

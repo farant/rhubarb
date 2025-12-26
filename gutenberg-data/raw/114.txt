@@ -1,0 +1,15 @@
+<result>
+Title = "Alice's Adventures in Wonderland"
+Author = "Lewis Carroll"
+Year = 1865
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Alice's Adventures in Wonderland is a classic work of children's literature written by Charles Lutwidge Dodgson under the pen name Lewis Carroll. The story follows a young girl named Alice who falls down a rabbit hole into a fantastical underground world populated by peculiar creatures including the Cheshire Cat, the Mad Hatter, the Queen of Hearts, and many others. The narrative is celebrated for its wordplay, logical puzzles, and satirical elements. This particular Gutenberg entry appears to be a collection of the famous illustrations by Sir John Tenniel, which have become inseparable from the work itself and defined the visual imagination of the story for generations.
+"""
+
+Notes = """
+The work was first published on July 4, 1865. John Tenniel's 42 wood-engraved illustrations appeared in this first edition and have remained the definitive visual interpretation of the story. While Carroll wrote the tale, Tenniel's illustrations are so iconic that this appears to be a standalone collection of those images with their descriptions.
+"""
+</result>

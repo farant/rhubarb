@@ -1,0 +1,15 @@
+<result>
+Title = "Betty Gordon at Boarding School; Or, The Treasure of Indian Chasm"
+Author = "Alice B. Emerson"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the fourth book in the Betty Gordon series, a girls' adventure series published by the Stratemeyer Syndicate. "Alice B. Emerson" was a house pseudonym used by multiple ghostwriters working for the syndicate. The series follows Betty Gordon, an orphaned girl, through various adventures. In this installment, Betty attends boarding school at Shadyside and becomes involved in a mystery surrounding a lost treasure at Indian Chasm. The Betty Gordon series was part of the Stratemeyer Syndicate's extensive catalog of juvenile fiction series, which also included Nancy Drew, the Hardy Boys, and the Bobbsey Twins.
+"""
+
+Notes = """
+The Stratemeyer Syndicate produced these books using ghostwriters under house pseudonyms. The actual authors varied by volume and their identities were kept confidential. The year 1921 represents the original publication date of this specific volume in the series.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Life of St. Mochuda of Lismore"
+Author = "Rev. P. Power"
+Year = 1914
+
+Tags = ["non-fiction", "catholic", "hagiography", "historical-document"]
+
+Summary = """
+This is a scholarly edition and English translation of an Irish-language hagiographical text about St. Mochuda (also known as St. Carthach), the founder and patron saint of Lismore in County Waterford, Ireland. St. Mochuda lived in the 6th-7th century and was one of the important early Irish saints. The text was edited from a manuscript in the Royal Irish Academy library by Rev. Patrick Power, a priest and scholar associated with University College Cork. The work is part of the Irish Texts Society's series of publications making medieval Irish texts accessible to modern readers. The preface indicates this was published alongside the Life of St. Declan, another Waterford saint.
+"""
+
+Notes = """
+The year 1914 is when this translation/edition was published by the Irish Texts Society. The underlying Irish hagiographical text is medieval, but since this edition includes substantial scholarly apparatus (introduction, translation, notes) by Rev. P. Power, the publication date of this scholarly work is most appropriate. Rev. Patrick Power (1862-1951) was a notable Irish priest, historian, and scholar of local Waterford history.
+"""
+</result>

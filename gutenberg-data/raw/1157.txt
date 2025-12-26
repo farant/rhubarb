@@ -1,0 +1,17 @@
+The text you've provided is already sufficient. I recognize this work.
+
+<result>
+Title = "Damaged Goods (Les Avariés)"
+Author = "Eugene Brieux, Upton Sinclair"
+Year = 1901
+
+Tags = ["fiction", "drama", "social-commentary"]
+
+Summary = """
+Les Avariés (Damaged Goods) is a French play by Eugene Brieux that deals frankly with syphilis and its devastating effects on individuals and families. The play follows a young man who, despite warnings from his doctor, marries before being cured of the disease, leading to tragic consequences for his wife and child. It was considered revolutionary for bringing venereal disease into public discourse. Upton Sinclair's novelization brought the work to English-speaking audiences. The play was initially banned in France and caused significant controversy when performed, but became influential in public health education movements.
+"""
+
+Notes = """
+The play was written by Brieux in 1901 and first performed in France in 1902. It was banned initially but later championed by George Bernard Shaw. The 1913 American production mentioned in the text was a landmark event. I chose 1901 as the year since this is primarily Brieux's work; Sinclair's novelization came later (around 1913). I list both authors since this is explicitly Sinclair's novelization "with approval of the author" rather than a simple translation.
+"""
+</result>

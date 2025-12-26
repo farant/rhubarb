@@ -1,0 +1,15 @@
+<result>
+Title = "The Aeroplane Boys Flight; Or, A Hydroplane Roundup"
+Author = "John Luther Langworthy"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of "The Aeroplane Boys" series, a juvenile adventure series popular in the early 20th century during the golden age of aviation enthusiasm following the Wright Brothers' success. The series follows young protagonists involved in early aviation adventures. "John Luther Langworthy" was a house pseudonym used by the Stratemeyer Syndicate, the prolific publisher of series books for young readers (also responsible for Nancy Drew, Hardy Boys, Tom Swift, etc.). The stories capitalized on public fascination with the new technology of flight and featured boys having exciting adventures with aeroplanes and, in this case, hydroplanes (seaplanes).
+"""
+
+Notes = """
+The copyright page shows 1914, but the Aeroplane Boys series began publication in 1912. This particular title appears to be from around 1912-1913 based on series publication order. I've chosen 1912 as the series launch year, though this specific volume may have appeared slightly later. The Stratemeyer Syndicate commonly used house names, and the actual ghostwriter is unknown.
+"""
+</result>

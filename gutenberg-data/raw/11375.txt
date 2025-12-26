@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 10, No. 273"
+Author = "Various"
+Year = 1827
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a British weekly magazine published from 1822 to 1849. It was one of the first cheap popular periodicals in England, offering a mix of literary excerpts, articles on art, science, history, and current events, along with illustrations. This particular issue (Vol. 10, No. 273) is a supplementary number focusing on the New Palace in St. James's Park (later known as Buckingham Palace after its major reconstruction under George IV and William IV) and improvements to the adjoining parks, including a triumphal arch at Hyde Park.
+"""
+
+Notes = """
+Volume 10 of The Mirror corresponds to 1827. The magazine was founded by John Limbird and was notable for bringing illustrated content to a mass audience at an affordable price (2d per issue). The New Palace discussed refers to the transformation of Buckingham House into Buckingham Palace, undertaken by architect John Nash for King George IV beginning in 1825.
+"""
+</result>

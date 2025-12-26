@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1960
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a catalog of copyright renewal registrations published by the United States Copyright Office. It lists books, pamphlets, serials, and contributions to periodicals for which copyright renewals were filed during a specific period (in this case, 1960). The entries are arranged alphabetically by author or title and include information about both the original copyright registration and the renewal. These catalogs are valuable historical documents for researchers tracking the copyright status of works from the early-to-mid 20th century.
+"""
+
+Notes = """
+The year 1960 is taken from the page header '1960_h1/A/0771' and the renewal dates shown (e.g., '5Jul60', '4Apr60', '6Jan60'). This is a government publication, not a creative work per se. The original works being renewed date from 1932-1933, but this catalog documenting the renewals is from 1960.
+"""
+</result>

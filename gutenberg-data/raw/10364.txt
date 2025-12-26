@@ -1,0 +1,15 @@
+<result>
+Title = "Yeast: A Problem"
+Author = "Charles Kingsley"
+Year = 1848
+
+Tags = ["fiction", "social-commentary"]
+
+Summary = """
+Yeast: A Problem is a social novel by Charles Kingsley, one of the founders of Christian Socialism in England. The novel follows Lancelot Smith, a young gentleman who becomes increasingly aware of the dire conditions of rural agricultural laborers in southern England. Through his encounters with a gamekeeper named Tregarva and his romantic interest in Argemone Dobroyd, Lancelot undergoes a spiritual and social awakening. The novel critiques the poverty, lack of education, and poor living conditions of the working class, while also exploring questions of religious doubt and the search for authentic faith. It was originally serialized in Fraser's Magazine in 1848 before being published as a book in 1851.
+"""
+
+Notes = """
+The novel was first serialized in 1848, which I've chosen as the year since that represents its original publication. The preface mentions it was written "nearly twelve years ago" from the fourth edition, and the fourth edition dates to around 1859. Kingsley was an Anglican clergyman, not Catholic, and the novel reflects his Protestant Christian Socialist views rather than Catholic teaching.
+"""
+</result>

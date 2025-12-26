@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewal Registrations"
+Author = "United States Copyright Office"
+Year = 1973
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a volume from the Catalog of Copyright Entries published by the United States Copyright Office. It contains renewal registration records for copyrighted works. Copyright renewals were required under U.S. law (before 1978) to extend copyright protection beyond the initial 28-year term. This particular volume documents renewals processed in early 1973, including entries for works like Superman comics originally published in 1945. These catalogs serve as important legal records for determining copyright status of works.
+"""
+
+Notes = """
+The year 1973 is chosen because this is when the renewal registrations were filed (as indicated by dates like "10Jan73" in the entries). The original works being renewed date from 1945, but the document itself is a 1973 publication of the Copyright Office. These catalogs were published periodically throughout the year, with this appearing to be from early 1973 based on the registration dates shown.
+"""
+</result>

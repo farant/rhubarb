@@ -1,0 +1,15 @@
+<result>
+Title = "Wee Ones' Bible Stories"
+Author = "Anonymous"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+A children's religious book containing simplified Bible stories adapted for young readers. The work presents short sketches of Biblical narratives with illustrations designed specifically for small children. This type of devotional literature for children was common in the early 20th century as part of religious education in Protestant households.
+"""
+
+Notes = """
+The year 1903 appears directly in the text. Since the author is anonymous and this is a children's adaptation rather than a scholarly work, the publication year is the most appropriate date. I used 'christian' rather than 'catholic' as the tag since this appears to be a Protestant publication (the style and anonymous Protestant publisher approach was typical of that era's evangelical children's literature rather than Catholic publishing which typically included imprimaturs and named authors/editors).
+"""
+</result>

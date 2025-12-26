@@ -1,0 +1,15 @@
+<result>
+Title = "Gaslight Sonatas"
+Author = "Fannie Hurst"
+Year = 1918
+
+Tags = ["fiction"]
+
+Summary = """
+Gaslight Sonatas is a collection of seven short stories by Fannie Hurst, a popular American novelist and short story writer known for her sentimental fiction depicting working-class and immigrant life in early 20th century America. Hurst was one of the highest-paid writers of her era. Her stories often focused on women's struggles, urban life, and emotional human drama. The "gaslight" in the title evokes the atmospheric urban settings of her tales, set in an era when gas lighting was still common.
+"""
+
+Notes = """
+1918 is the original publication year of this collection.
+"""
+</result>

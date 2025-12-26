@@ -1,0 +1,15 @@
+<result>
+Title = "The Complete Works of William Shakespeare"
+Author = "William Shakespeare"
+Year = 1623
+
+Tags = ["fiction", "drama", "poetry"]
+
+Summary = """
+This is a collected edition of all of Shakespeare's plays and sonnets. William Shakespeare (1564-1616) was an English playwright and poet widely regarded as the greatest writer in the English language. His works include tragedies (Hamlet, Macbeth, King Lear, Othello), comedies (A Midsummer Night's Dream, The Merchant of Venice, Twelfth Night), histories (the Henry plays, Richard III), and romances (The Tempest, The Winter's Tale). The 154 sonnets explore themes of love, beauty, mortality, and time. His works have profoundly influenced Western literature, theater, and the English language itself.
+"""
+
+Notes = """
+The year 1623 is chosen as this represents the publication of the First Folio, the first collected edition of Shakespeare's plays compiled by his fellow actors John Heminges and Henry Condell. While individual plays were written and performed between roughly 1590-1613, the First Folio is the historically significant moment when Shakespeare's complete dramatic works were gathered and preserved, and is the basis for all subsequent complete works editions.
+"""
+</result>

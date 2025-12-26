@@ -1,0 +1,15 @@
+<result>
+Title = "Travels in Morocco"
+Author = "James Richardson"
+Year = 1860
+
+Tags = ["non-fiction", "travel", "historical-document"]
+
+Summary = """
+A two-volume travel account of Morocco written by James Richardson, a British explorer and abolitionist known for his expeditions in North Africa. Richardson traveled extensively in Morocco and the Sahara, documenting the geography, peoples, customs, and political conditions of the region. This work was published posthumously, edited by his widow, after Richardson died during his famous mission to Central Africa in 1851. The introduction references events in the Straits of Gibraltar involving France and Spain, providing contemporary political context for the region.
+"""
+
+Notes = """
+James Richardson (1806-1851) was a British explorer who made multiple journeys to North Africa. He died in Unguratua (in present-day Nigeria) during a British government-sponsored expedition to Central Africa. This work on Morocco was published posthumously in 1860, edited by his widow. The introduction's reference to Sir William Codrington as Governor of Gibraltar and ongoing Franco-Spanish tensions with Morocco helps date the publication to around 1859-1860, during the Spanish-Moroccan War (1859-1860).
+"""
+</result>

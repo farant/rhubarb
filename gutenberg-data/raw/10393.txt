@@ -1,0 +1,15 @@
+<result>
+Title = "Making the House a Home"
+Author = "Edgar A. Guest"
+Year = 1922
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a memoir/essay by Edgar A. Guest, known as the "People's Poet," about building a home and family life. Guest was an extremely popular American newspaper poet in the early 20th century, famous for his optimistic, sentimental verse about everyday domestic life. This work reflects on his marriage beginning in 1906 and the process of turning a house into a home over fifteen years. Guest worked for the Detroit Free Press for decades and became one of the most widely read poets in America during his lifetime.
+"""
+
+Notes = """
+The year 1922 appears explicitly in the text at the beginning of the work. Edgar A. Guest (1881-1959) was a British-born American poet who became enormously popular for his homespun, accessible poetry about family values, hard work, and domestic happiness.
+"""
+</result>

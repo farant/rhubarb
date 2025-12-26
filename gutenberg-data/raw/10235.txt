@@ -1,0 +1,15 @@
+<result>
+Title = "Audio: Discussion on Edison's Monoid Theory"
+Author = "Theodore M. Edison"
+Year = 1920
+
+Tags = ["non-fiction", "audio"]
+
+Summary = """
+This is an audio recording from the Edison National Historic Site featuring Theodore M. Edison (1898-1992), son of Thomas Edison, discussing his father's "Monoid Theory." Theodore was a physicist and inventor in his own right who worked at the Edison Laboratory. The recording appears to be a discussion of Thomas Edison's philosophical and scientific theories about the nature of matter and consciousness, which Edison senior developed later in his life.
+"""
+
+Notes = """
+The exact date of this recording is uncertain. Theodore Edison was active in preserving and discussing his father's work throughout his life. Thomas Edison developed his monoid theory in the 1920s, proposing that life was composed of tiny entities he called "life units" or monoids. I've estimated 1920 as a representative year for when these ideas were being developed and discussed, though this particular recording could be from a later period. This is an audio file (MP3) rather than a text document.
+"""
+</result>

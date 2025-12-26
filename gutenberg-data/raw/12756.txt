@@ -1,0 +1,15 @@
+<result>
+Title = "Vier Voordrachten over Theosofie"
+Author = "Annie Besant"
+Year = 1898
+
+Tags = ["non-fiction", "religious-philosophy"]
+
+Summary = """
+This is a Dutch publication of four lectures on Theosophy given by Annie Besant in various cities in the Netherlands in January 1898. The lectures cover: (1) The teachings of Theosophy from a historical perspective, (2) The teachings of Theosophy from a scientific perspective, (3) Esoteric Christianity, and (4) The story of Christ. Annie Besant (1847-1933) was a prominent British socialist, theosophist, women's rights activist, and later president of the Theosophical Society. She was a major figure in the theosophical movement founded by Helena Blavatsky.
+"""
+
+Notes = """
+The year 1898 is when these lectures were delivered and published in the Netherlands. This is the original publication date of this specific work, not a translation of an earlier text. A fifth lecture on "Life Conditions After Death" was published separately. The text notes these were transcribed from shorthand and represent Besant's spoken words faithfully, with only minor omissions where English Bible references didn't match Dutch translations.
+"""
+</result>

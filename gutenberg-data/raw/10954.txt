@@ -1,0 +1,15 @@
+<result>
+Title = "The Girl Aviators' Sky Cruise"
+Author = "Margaret Burnham"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of "The Girl Aviators" series, a popular early 20th century adventure series for young readers featuring Peggy Prescott and her friends engaging in aviation adventures. The series capitalized on the excitement surrounding early aviation following the Wright Brothers' achievements. The books feature plucky young heroines navigating aerial adventures, mysteries, and the novelty of flight during the pioneering era of aviation.
+"""
+
+Notes = """
+Margaret Burnham was a pseudonym used for this juvenile fiction series. The 1911 date is taken directly from the publication information provided by Hurst & Company. This is the original publication year.
+"""
+</result>

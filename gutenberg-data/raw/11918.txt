@@ -1,0 +1,15 @@
+<result>
+Title = "The Castle Inn"
+Author = "Stanley John Weyman"
+Year = 1898
+
+Tags = ["fiction"]
+
+Summary = """
+The Castle Inn is a historical adventure novel by Stanley J. Weyman, a popular English author known for his romantic historical fiction set primarily in France during the 16th and 17th centuries. This particular novel is set in 18th century England and revolves around intrigue at an English coaching inn. Weyman was one of the most successful novelists of his era, often compared to Alexandre Dumas for his swashbuckling tales. The Castle Inn features the typical Weyman formula of adventure, romance, and historical atmosphere.
+"""
+
+Notes = """
+1898 is the original publication year as indicated in the book itself.
+"""
+</result>

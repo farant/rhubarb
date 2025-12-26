@@ -1,0 +1,15 @@
+<result>
+Title = "When the Saints Go Marching In"
+Author = "Traditional (performed by Roger McGuinn)"
+Year = 1896
+
+Tags = ["music", "folk", "spiritual", "appropriate-for-children", "catholic"]
+
+Summary = """
+"When the Saints Go Marching In" is a traditional American gospel hymn that became one of the most famous spirituals in history. The song originated in the African-American Christian tradition and describes the desire to be among the saints entering heaven. While its exact origins are uncertain, it became widely popular in the late 19th century. Roger McGuinn (founder of The Byrds) recorded this version as part of his Folk Den project, a long-running effort to preserve and share traditional folk songs. The song has been adopted by jazz musicians, particularly in New Orleans where it became an iconic funeral march and celebration piece.
+"""
+
+Notes = """
+The year 1896 represents the earliest known publication of this spiritual, though it likely existed in oral tradition earlier. This Gutenberg entry is actually an audio recording by Roger McGuinn from 2001, not a text. The song itself is traditional/anonymous - McGuinn is the performer, not the composer. The Catholic tag is appropriate as the song's themes of saints, salvation, and heavenly procession align with Catholic theology, even though it emerged from Protestant African-American traditions.
+"""
+</result>

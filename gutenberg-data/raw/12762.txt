@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of a Piece of Coal: What It Is, Whence It Comes, and Whither It Goes"
+Author = "Edward A. Martin"
+Year = 1896
+
+Tags = ["non-fiction", "appropriate-for-children", "science", "geology"]
+
+Summary = """
+A popular science book explaining the origins, nature, and uses of coal. Martin, a Fellow of the Geological Society, covers the botanical origins of coal from ancient plant matter, its geological formation, the history of its discovery and early use, its role in producing illuminating gas and oils, environmental concerns (the "fog-problem" from coal smoke in Victorian Britain), and debates about the eventual exhaustion of British coal supplies. The book was written during the height of the coal-powered Industrial Revolution when coal was central to British economic and daily life.
+"""
+
+Notes = """
+The date is explicitly given in the preface as February 1896, and the title page confirms this publication year. This is the original publication, not a reprint or translation.
+"""
+</result>

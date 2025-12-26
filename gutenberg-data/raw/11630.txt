@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 156, June 18, 1919"
+Author = "Various"
+Year = 1919
+
+Tags = ["non-fiction", "humor", "periodical", "satire"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841. It became a British institution, known for its satirical humor, cartoons, and commentary on politics and society. This issue from June 1919 comes from the immediate post-World War I period, making references to President Wilson, the peace negotiations, and cultural trends like the Jazz boom. The magazine ran until 2002, making it one of the longest-running humor publications in history.
+"""
+
+Notes = """
+The year 1919 is clearly indicated in the text itself (June 18, 1919). Punch was not a single-author work but rather a collaborative periodical with many contributors over its 161-year run.
+"""
+</result>

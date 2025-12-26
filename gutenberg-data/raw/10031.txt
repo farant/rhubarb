@@ -1,0 +1,15 @@
+<result>
+Title = "The Complete Poetical Works of Edgar Allan Poe"
+Author = "Edgar Allan Poe, edited by John H. Ingram"
+Year = 1874
+
+Tags = ["poetry", "fiction", "collected-works"]
+
+Summary = """
+This is John H. Ingram's edited collection of Edgar Allan Poe's complete poetry. Ingram was a pioneering Poe scholar who worked to rehabilitate Poe's reputation after the damaging memoir written by Rufus Griswold. This edition is notable for being the first to gather previously unknown and unreprinted Poe poems into a single volume, along with scholarly notes providing biographical and bibliographical context. Poe (1809-1849) was one of America's most influential poets and short story writers, known for works like "The Raven," "Annabel Lee," and "The Bells."
+"""
+
+Notes = """
+The year 1874 is chosen because Ingram states in the preface that he began his work of drawing attention to unknown Poe poetry in that year. While Poe himself lived 1809-1849 and wrote these poems during his lifetime, this particular collected edition with Ingram's scholarly apparatus represents a distinct editorial work. The first posthumous collection was published in 1850, but this Ingram edition with its additional material and notes is a later scholarly contribution.
+"""
+</result>

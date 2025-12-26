@@ -1,0 +1,15 @@
+<result>
+Title = "Life of John Sterling"
+Author = "Thomas Carlyle"
+Year = 1851
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is Thomas Carlyle's biography of his friend John Sterling (1806-1844), an English author, poet, and essayist who was part of the intellectual circle that included Carlyle, Samuel Taylor Coleridge, and F.D. Maurice. Sterling briefly served as a Church of England curate before health problems (tuberculosis) forced him to resign. The biography was written partly as a response to an earlier biography by Archdeacon Julius Hare, which Carlyle felt overemphasized Sterling's brief clerical career. Carlyle's work instead focuses on Sterling as a literary man and thinker, and provides vivid portraits of the Victorian intellectual world. The book is notable for its portrait of Coleridge and for Carlyle's distinctive prose style.
+"""
+
+Notes = """
+Published in 1851. John Sterling died in 1844, and the text mentions this was written "near seven years" after his death, confirming the 1851 publication date. Archdeacon Hare's earlier biography appeared in 1848, prompting Carlyle to write his own account.
+"""
+</result>

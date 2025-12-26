@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary, Vol. XLII, No. 1"
+Author = "American Missionary Association"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+The American Missionary was a monthly periodical published by the American Missionary Association (AMA), a Protestant abolitionist and missionary organization founded in 1846. This issue from January 1888 covers the AMA's work among three main groups: freedmen in the South, Native Americans, and Chinese immigrants. The magazine documents missionary and educational efforts during the Reconstruction era and its aftermath, including reports on schools, churches, and social conditions. The AMA was instrumental in founding numerous historically black colleges and universities.
+"""
+
+Notes = """
+The American Missionary was published from 1846 to 1934. This is Volume XLII, Number 1, explicitly dated January 1888. The periodical nature means this specific issue was published in 1888, which is the appropriate year for cataloging purposes.
+"""
+</result>

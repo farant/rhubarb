@@ -1,0 +1,15 @@
+<result>
+Title = "The Shadow of the Rope"
+Author = "E.W. Hornung"
+Year = 1902
+
+Tags = ["fiction"]
+
+Summary = """
+A mystery novel by Ernest William Hornung, best known as the creator of A.J. Raffles, the gentleman thief. The Shadow of the Rope tells the story of a woman acquitted of murdering her husband who struggles to escape the suspicion that follows her. She eventually remarries but cannot escape her past. The novel explores themes of guilt, reputation, and whether one can ever truly start over after being touched by scandal.
+"""
+
+Notes = """
+The book was first published in 1902, though this edition notes 1906 which likely refers to an illustrated reprint. I've used 1902 as the original publication year. Hornung was Arthur Conan Doyle's brother-in-law and created the Raffles stories as a sort of inversion of Sherlock Holmes.
+"""
+</result>

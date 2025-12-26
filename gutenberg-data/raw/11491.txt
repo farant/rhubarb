@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 153, October 31, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "satire", "periodical"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841, running until 1992 (with a brief revival 1996-2002). It was highly influential in coining the term "cartoon" in its modern sense and was known for its satirical commentary on British politics and society. This issue from October 1917 reflects wartime Britain during World War I, with jokes about food rationing, government bureaucracy, German prisoners of war, and Winston Churchill (then being considered for Minister of Munitions, not Air as the joke suggests). The "Charivari" subtitle references the French satirical magazine Le Charivari, which inspired Punch's founding.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with the date in the header. The content provides valuable primary source material for understanding British civilian life and attitudes during WWI, particularly regarding rationing and the home front.
+"""
+</result>

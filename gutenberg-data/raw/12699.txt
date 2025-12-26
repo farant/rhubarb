@@ -1,0 +1,15 @@
+<result>
+Title = "The Works of Aristotle the Famous Philosopher"
+Author = "Anonymous (pseudo-Aristotelian)"
+Year = 1684
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is NOT actually a work by the ancient Greek philosopher Aristotle. It is a pseudo-Aristotelian text, a popular compilation of folk medicine, midwifery advice, and sexual/reproductive information that circulated widely in England from the late 17th century onward. The work became one of the most reprinted books in the English language for over two centuries. It contains sections on pregnancy, childbirth, physiognomy (reading character from physical features), and various medical "problems." Despite bearing Aristotle's name for authority, the content is medieval and early modern folk knowledge with no connection to the actual philosopher.
+"""
+
+Notes = """
+The earliest known edition dates to 1684 in England. The work was reprinted continuously through the 19th century. I chose 1684 as it represents the first appearance of this particular compilation, even though it draws on older pseudo-Aristotelian traditions. The work was considered scandalous in its time due to its frank discussion of reproduction and was sometimes sold "under the counter." It is not appropriate for children due to its explicit reproductive content.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Summer on the Lakes, in 1843"
+Author = "Margaret Fuller"
+Year = 1844
+
+Tags = ["non-fiction", "travel-literature"]
+
+Summary = """
+Summer on the Lakes is a travel narrative by Margaret Fuller, one of America's most important 19th-century intellectuals and a leading figure in the Transcendentalist movement. The book recounts her journey through the Great Lakes region in 1843, including visits to Niagara Falls, Chicago, Wisconsin, and Mackinac Island. Fuller combines vivid descriptions of the American frontier landscape with philosophical reflections, commentary on the treatment of Native Americans, observations about women settlers, and literary digressions. The work is notable for its proto-feminist perspectives and its critique of westward expansion's impact on indigenous peoples. This book helped establish Fuller's literary reputation and led directly to Horace Greeley hiring her as literary critic for the New York Tribune.
+"""
+
+Notes = """
+The publication date of 1844 (MDCCCXLIV in Roman numerals on the title page) represents the first edition. S. M. Fuller was Margaret Fuller's published name (Sarah Margaret Fuller). She is now more commonly known simply as Margaret Fuller.
+"""
+</result>

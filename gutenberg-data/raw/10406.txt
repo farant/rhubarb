@@ -1,0 +1,15 @@
+<result>
+Title = "The Heart Bowed Down (from The Bohemian Girl)"
+Author = "Michael William Balfe"
+Year = 1843
+
+Tags = ["audio-recording", "opera", "music"]
+
+Summary = """
+This is a recording of the famous aria "The Heart Bowed Down" from the opera "The Bohemian Girl" by Irish composer Michael William Balfe. The opera premiered in London in 1843 and became one of the most popular English-language operas of the 19th century. "The Heart Bowed Down" is sung by the character Count Arnheim and is one of the most beloved arias from the work. This particular recording was made by William Tuson in April 1903 in New York City.
+"""
+
+Notes = """
+Year reflects the premiere of the opera (1843), not the recording date (1903). The composer's name is slightly misspelled in the Gutenberg metadata as "Michal" but should be "Michael William Balfe." This is an audio file rather than a text document.
+"""
+</result>

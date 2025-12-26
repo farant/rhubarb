@@ -1,0 +1,15 @@
+<result>
+Title = "Dio's Rome, Volume V., Books 61-76 (A.D. 54-211)"
+Author = "Cassius Dio"
+Year = 230
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is the fifth volume of Cassius Dio's monumental "Roman History" (Historia Romana), covering Books 61-76 which document the period from 54 AD to 211 AD. This spans the reigns of emperors from Nero through to the death of Septimius Severus. Cassius Dio Cocceianus was a Roman senator and historian of Greek origin who wrote in Greek. His work is one of the most important primary sources for the history of the Roman Empire during this period, providing detailed accounts of imperial politics, wars, and the characters of various emperors including Nero, Vespasian, Trajan, Hadrian, Marcus Aurelius, and Septimius Severus. This English translation is by Herbert Baldwin Foster.
+"""
+
+Notes = """
+The year 230 AD is approximate. Cassius Dio wrote his history over approximately 22 years, completing it around 229 AD during the reign of Alexander Severus. The work covers events up to 211 AD (the death of Septimius Severus) in this volume, but was composed retrospectively during the early 3rd century. The original Greek text survives only partially; much of what we have comes through Byzantine epitomes and excerpts.
+"""
+</result>

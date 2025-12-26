@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Col. James Gardiner"
+Author = "Philip Doddridge"
+Year = 1747
+
+Tags = ["non-fiction", "biography", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a biographical account of Colonel James Gardiner (1688-1745), a British army officer who served under the Duke of Marlborough and was killed at the Battle of Prestonpans during the Jacobite rising of 1745. The work is notable for documenting Gardiner's dramatic religious conversion from a life of dissolution to devout Christianity. Philip Doddridge, a prominent Nonconformist minister and hymn writer, knew Gardiner personally and wrote this biography shortly after his death. The book became quite popular in evangelical circles as an exemplary conversion narrative and was frequently reprinted throughout the 18th and 19th centuries.
+"""
+
+Notes = """
+First published in 1747, two years after Gardiner's death. Doddridge (1702-1751) was a leading Dissenting minister and the author of "The Rise and Progress of Religion in the Soul." While Doddridge was a Nonconformist rather than Catholic, this work is a straightforward Protestant biography of genuine historical interest.
+"""
+</result>

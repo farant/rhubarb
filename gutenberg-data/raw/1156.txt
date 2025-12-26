@@ -1,0 +1,15 @@
+<result>
+Title = "Babbitt"
+Author = "Sinclair Lewis"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+Babbitt is a satirical novel by Sinclair Lewis that follows George F. Babbitt, a middle-aged real estate agent in the fictional Midwestern city of Zenith. The novel is a sharp critique of American middle-class conformity, materialism, and the emptiness of boosterism culture in 1920s America. Babbitt is the quintessential "successful" businessman who gradually becomes aware of the spiritual hollowness of his life, attempts a brief rebellion, but ultimately returns to conformity. The novel helped establish Lewis as one of America's foremost social critics and contributed to his receiving the Nobel Prize in Literature in 1930.
+"""
+
+Notes = """
+The dedication to Edith Wharton reflects the mutual admiration between these two major American novelists. The novel was a major commercial and critical success upon publication in 1922, and "Babbitt" entered the English language as a term for a materialistic, conformist businessman.
+"""
+</result>

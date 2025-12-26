@@ -1,0 +1,17 @@
+The file appears to be empty, but you've provided the content in your message. Based on what you've shared:
+
+<result>
+Title = "The Best American Humorous Short Stories"
+Author = "Alexander Jessup (Editor)"
+Year = 1920
+
+Tags = ["anthology", "fiction", "humor"]
+
+Summary = """
+An anthology of American humorous short stories edited by Alexander Jessup, who also edited "Representative American Short Stories" and "The Book of the Short Story." The collection aims to present the best examples of the humorous short story form in American literature, with the editor noting that selections had to work first as good short stories, with humor as a close secondary criterion. The introduction discusses the boundaries of humor and notes the exclusion of Joel Chandler Harris (Uncle Remus) despite his significance as a humorist, arguing Harris was primarily a humorist rather than a short story writer.
+"""
+
+Notes = """
+First published in 1920. Alexander Jessup was a notable anthologist of the early 20th century. The work represents a curated selection rather than comprehensive coverage, with the editor explicitly acknowledging many equally good stories exist elsewhere in American literature.
+"""
+</result>

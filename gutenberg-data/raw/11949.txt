@@ -1,0 +1,15 @@
+<result>
+Title = "Master Tales of Mystery, Volume III"
+Author = "Various (Francis J. Reynolds, editor)"
+Year = 1915
+
+Tags = ["fiction", "anthology", "mystery"]
+
+Summary = """
+This is Volume III of a mystery anthology series compiled by Francis J. Reynolds. The collection features short mystery and detective stories from several popular authors of the early 20th century, including Arthur B. Reeve (known for his scientific detective Craig Kennedy), Paul Leicester Ford, Max Pemberton, George Barr McCutcheon, Burton E. Stevenson, and others. Arthur B. Reeve's contributions featuring Craig Kennedy were particularly notable for introducing forensic science methods into detective fiction. The anthology represents the golden age of American mystery short fiction.
+"""
+
+Notes = """
+The Master Tales of Mystery series was published around 1915. Arthur B. Reeve's Craig Kennedy stories (like "The Poisoned Pen" and "The Silent Bullet") were originally published in magazines starting around 1910-1911 before being collected. This anthology compiles works from multiple authors who were popular in the 1910s era of mystery fiction.
+"""
+</result>

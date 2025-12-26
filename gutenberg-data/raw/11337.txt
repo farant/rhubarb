@@ -1,0 +1,15 @@
+<result>
+Title = "Cowmen and Rustlers: A Story of the Wyoming Cattle Ranges"
+Author = "Edward S. Ellis"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Western adventure novel set in the Wyoming cattle ranges during the late 19th century era of conflict between established cattlemen and cattle rustlers. Edward S. Ellis (1840-1916) was an extremely prolific American author who wrote hundreds of dime novels and adventure stories, primarily aimed at young readers. He was one of the most popular authors of juvenile fiction in the late 1800s, known for his Western, frontier, and adventure tales. This work follows the typical Ellis formula of action-packed storytelling with moral lessons suitable for young audiences.
+"""
+
+Notes = """
+The MCMIV (1904) date in the Gutenberg text appears to be a reprint edition. Based on publishing records, this novel was first published around 1898. Ellis was incredibly productive, publishing under his own name and numerous pseudonyms, with estimates of his total output ranging from 400 to over 1,000 titles.
+"""
+</result>

@@ -1,0 +1,17 @@
+The file appears to have an issue. However, you've provided the content directly in your message - this is **Clarissa, or, the History of a Young Lady** by **Samuel Richardson**.
+
+<result>
+Title = "Clarissa, or, the History of a Young Lady"
+Author = "Samuel Richardson"
+Year = 1748
+
+Tags = ["fiction", "epistolary-novel", "tragedy"]
+
+Summary = """
+Clarissa is one of the longest novels in the English language and a foundational work of the epistolary novel form. It tells the tragic story of Clarissa Harlowe, a virtuous young woman from a wealthy family who is pressured into marriage for financial gain. She is pursued by the libertine rake Robert Lovelace, who eventually abducts and violates her. The novel follows her moral struggle, decline, and ultimately her death, presented through an exchange of letters between the characters. It was enormously influential in the development of the novel as a literary form and was widely read across Europe.
+"""
+
+Notes = """
+Published in three installments in 1747-1748; the complete work appeared in 1748. This excerpt is from Volume IX, the final volume, which contains Clarissa's death scene and its aftermath. Richardson later published a revised edition in 1751, but 1748 represents the first complete publication.
+"""
+</result>

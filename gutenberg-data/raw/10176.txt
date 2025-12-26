@@ -1,0 +1,15 @@
+<result>
+Title = "The Debutante"
+Author = "Edna White"
+Year = 1916
+
+Tags = ["audio-recording", "music", "instrumental"]
+
+Summary = """
+This is an audio recording of a trumpet performance by Edna White, a prominent American female trumpet virtuoso of the early 20th century. "The Debutante" was likely a popular musical piece of the era. Edna White was known for her exceptional trumpet playing and made numerous recordings for Edison Records during the acoustic recording era. This recording comes from the Edison National Historic Site collection.
+"""
+
+Notes = """
+Year is estimated based on Edna White's active recording period with Edison Records, which was primarily during the 1910s-1920s. This is an audio file (MP3), not a text work - it represents an early phonograph recording rather than literature. The exact composition date of "The Debutante" piece is uncertain, but White's Edison recordings were predominantly made between 1914-1920.
+"""
+</result>

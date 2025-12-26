@@ -1,0 +1,15 @@
+<result>
+Title = "The Vertical City"
+Author = "Fannie Hurst"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+The Vertical City is a collection of six short stories by Fannie Hurst, one of the most popular and highest-paid American writers of the early 20th century. The stories explore urban life, particularly focusing on women's experiences in New York City. Hurst was known for her sympathetic portrayals of working-class women and immigrants, and her emotionally intense, sometimes melodramatic style. The title story and others in the collection examine themes of ambition, love, sacrifice, and the complexities of modern urban existence in the "vertical city" of skyscrapers.
+"""
+
+Notes = """
+1922 is the original publication year as indicated in the text itself. Fannie Hurst (1885-1968) was Jewish, not Catholic, so the 'catholic' tag does not apply. The stories deal with adult themes typical of early 20th century literary fiction and would not generally be classified as appropriate for children.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Tales of Bengal"
+Author = "S. B. Banerjea"
+Year = 1895
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of seventeen short stories depicting life in Bengal during the British Raj period. The tales explore rural Bengali society, village politics, social customs, and the interactions between different castes and classes. Written by S. B. Banerjea and edited by Francis Henry Skrine (a British civil servant in India), the stories offer insight into everyday Bengali life, covering themes like rivalry, deception, justice, and moral lessons. The collection serves as both entertainment and a window into late 19th century Indian society for English readers.
+"""
+
+Notes = """
+The work was first published in 1895. S. B. Banerjea was a Bengali writer, and Francis Henry Skrine was a British Indian civil servant who wrote several works about India and Central Asia. The introduction's reference to Kipling's famous line "East is East, and West is West" (from "The Ballad of East and West," 1889) and discussion of Britain's responsibility for "300,000,000 Asiatics" places this firmly in the late Victorian colonial period.
+"""
+</result>

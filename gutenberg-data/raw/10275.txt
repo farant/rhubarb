@@ -1,0 +1,17 @@
+Based on this Project Gutenberg entry, this is an audio recording of the opera "La Gioconda" by Amilcare Ponchielli (libretto by Arrigo Boito). The recording appears to be from the Edison National Historic Site, making it a historical phonograph recording.
+
+<result>
+Title = "La Gioconda (Audio Recording)"
+Author = "Amilcare Ponchielli (composer), Arrigo Boito (librettist)"
+Year = 1876
+
+Tags = ["fiction", "opera", "historical-recording", "italian"]
+
+Summary = """
+La Gioconda is an Italian opera in four acts composed by Amilcare Ponchielli with a libretto by Arrigo Boito (writing under the pseudonym Tobia Gorrio). The opera is based on Victor Hugo's play Angelo, Tyran de Padoue. Set in 17th-century Venice, it tells the tragic story of a street singer named La Gioconda, involving themes of love, jealousy, and sacrifice. The opera is famous for containing the "Dance of the Hours" ballet sequence, which has become one of the most recognizable pieces of classical music. This particular Gutenberg entry is an early phonograph audio recording from the Edison collection, representing important early audio preservation technology.
+"""
+
+Notes = """
+The year 1876 represents the opera's premiere at La Scala in Milan. The Gutenberg entry is actually an audio recording (MP3 format) taken from Edison National Historic Site archives, likely dating from the early 1900s when Edison was making opera recordings. The performer credited as "Paola Koraleck" appears to be a singer on this particular recording. I chose 1876 as the year since this represents the original work's creation rather than the recording date.
+"""
+</result>

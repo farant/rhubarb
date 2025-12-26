@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap literary periodicals in England, aimed at making literature and general knowledge accessible to the working and middle classes. Each issue contained a mix of articles on history, science, literature, and current events, often accompanied by illustrations. This particular issue (Vol. 13, No. 368) from May 2, 1829 features an article about Clarendon House in Piccadilly, the mansion of Edward Hyde, 1st Earl of Clarendon, the famous Lord Chancellor under Charles II.
+"""
+
+Notes = """
+Year chosen is 1829, the actual publication date of this specific issue. As a periodical, each issue is a distinct publication. The magazine itself began in 1822, but this issue is from 1829 as clearly indicated in the header.
+"""
+</result>

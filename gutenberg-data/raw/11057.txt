@@ -1,0 +1,15 @@
+<result>
+Title = "The Wife of His Youth and Other Stories of the Color Line, and Selected Essays"
+Author = "Charles W. Chesnutt"
+Year = 1899
+
+Tags = ["fiction", "non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of short stories by Charles Waddell Chesnutt (1858-1932), a pioneering African-American author, educator, lawyer, and activist. The stories explore race relations in post-Civil War America, particularly focusing on the "color line" - the social and legal barriers between races. The collection addresses the effects of Jim Crow laws and colorism within the African-American community itself. The stories are notable for their psychological depth and their examination of mixed-race identity in a segregated society. This edition also includes three of Chesnutt's essays on racial issues. Chesnutt was the most prominent black prose author of his era and received the Spingarn Medal from the NAACP in 1928.
+"""
+
+Notes = """
+1899 is the original publication year of this short story collection. Chesnutt published several works between 1898 and 1905, and this was his second collection of short stories. The Project Gutenberg edition includes supplementary essays added by the editor.
+"""
+</result>

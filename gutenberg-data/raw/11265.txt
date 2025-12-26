@@ -1,0 +1,21 @@
+The file appears to be empty or not yet downloaded. Based on the text you've pasted in your message, I can identify this work:
+
+This is **Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, etc.** - specifically Issue No. 2, published November 10, 1849.
+
+Notes and Queries was a British weekly periodical founded by William John Thoms in 1849. It was designed as a forum for scholars and amateur enthusiasts to pose questions and share knowledge about literature, history, genealogy, heraldry, and antiquarian topics. The famous motto "When found, make a note of" attributed to Captain Cuttle comes from Dickens' *Dombey and Son*.
+
+<result>
+Title = "Notes and Queries, No. 2"
+Author = "William John Thoms (editor)"
+Year = 1849
+
+Tags = ["non-fiction", "periodical", "reference"]
+
+Summary = """
+Notes and Queries was a pioneering British scholarly periodical founded by William John Thoms in 1849. It served as an early form of crowdsourced knowledge exchange, where readers could pose questions about literature, history, language, genealogy, folklore, and antiquarian matters, and receive answers from fellow subscribers. The publication was influential in establishing a culture of collaborative scholarly inquiry and remained in print for over 150 years. This is the second issue, dated November 10, 1849.
+"""
+
+Notes = """
+Year is definitively 1849 as this is a periodical with a precise publication date (November 10, 1849). William John Thoms founded and edited the publication; individual articles have various contributors. The motto 'When found, make a note of' is from Captain Cuttle in Dickens' Dombey and Son (1846-1848).
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Unspeakable Gentleman"
+Author = "John P. Marquand"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+"The Unspeakable Gentleman" is the debut novel of John P. Marquand, who would later become a Pulitzer Prize-winning author. The novel is a historical romance/adventure set in 1805, involving a French royalist plot and a complex father-son relationship. The narrator, Henry, is summoned to meet his estranged father, a morally ambiguous figure involved in intrigue. Marquand would go on to become famous for his satirical novels of upper-class New England society, particularly the Mr. Moto spy series and "The Late George Apley" (1937), which won the Pulitzer Prize. This early work shows his interest in New England settings and family dynamics that would characterize his later career.
+"""
+
+Notes = """
+1922 is both the year of original publication and appears in the Gutenberg text header. This was Marquand's first novel, published when he was 28 years old.
+"""
+</result>

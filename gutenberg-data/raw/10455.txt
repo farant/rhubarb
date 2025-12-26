@@ -1,0 +1,15 @@
+<result>
+Title = "The Golden Book of Venice"
+Author = "Mrs. Lawrence Turnbull"
+Year = 1900
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A historical romance set in 16th century Venice during the period of the Venetian Republic. The novel centers around Fra Paolo Sarpi, the famous Venetian theologian and statesman who served as a counselor to the Republic during its conflicts with the Papacy. The author draws heavily on primary sources including Sarpi's collected works preserved in Venice. The book explores Venetian patrician life, the complex relationship between Church and State, and the political intrigues of the Republic during this tumultuous period.
+"""
+
+Notes = """
+Mrs. Lawrence Turnbull (née Francese Hubbard Litchfield) was an American author. The 1900 date appears on the title page as the original publication year. While the setting is 16th century Venice, this is a work of historical fiction written in the late Victorian era, not a primary historical document.
+"""
+</result>

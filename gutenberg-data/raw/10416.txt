@@ -1,0 +1,15 @@
+<result>
+Title = "There's a Little Bit of Bad in Every Good Little Girl"
+Author = "Fred Fischer, Grant Clarke"
+Year = 1916
+
+Tags = ["fiction", "music", "audio-recording"]
+
+Summary = """
+A popular Tin Pan Alley song from 1916 with music composed by Fred Fischer and lyrics by Grant Clarke. The song was recorded by Gladys Rice in September 1916 in New York City. It is a lighthearted novelty song typical of the era, playing on the idea that even well-behaved young women have a mischievous side. Fred Fischer and Grant Clarke were prolific songwriters of the period, contributing many popular tunes to the American songbook.
+"""
+
+Notes = """
+Year is from the recording date (September 1916) which likely coincides with or closely follows the song's original publication. This is an audio recording rather than a text work. The Project Gutenberg entry credits Gladys Rice as the performer and Thomas Edison as editor (referring to the Edison recording technology/label).
+"""
+</result>

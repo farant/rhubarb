@@ -1,0 +1,15 @@
+<result>
+Title = "An Essay Concerning Human Understanding"
+Author = "John Locke"
+Year = 1689
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+One of the most influential works in the history of Western philosophy. Locke systematically investigates the nature, origins, and limits of human knowledge. He argues that the mind at birth is a "tabula rasa" (blank slate) and that all knowledge derives from experience—either from sensation or reflection. The work is divided into four books covering innate notions (which he rejects), the nature of ideas, language and its relation to ideas, and the extent and certainty of human knowledge. This text represents Books III and IV, dealing with language and epistemology respectively.
+"""
+
+Notes = """
+The first edition was published in 1689, though dated 1690 on the title page. This text notes it is based on the 2nd edition (1694). The 1689 date is used as it represents the work's original publication and historical significance in the Enlightenment.
+"""
+</result>

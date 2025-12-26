@@ -1,0 +1,15 @@
+<result>
+Title = "The White Road to Verdun"
+Author = "Kathleen Burke"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand account of World War I, specifically focusing on the Battle of Verdun and the French war effort. Kathleen Burke was a Scottish fundraiser and humanitarian who traveled extensively to raise money for the Scottish Women's Hospitals during WWI. This book describes her experiences traveling through wartime France, including visits to the front lines near Verdun during one of the most brutal and prolonged battles of the war. The dedication to French diplomatic figures and American/Canadian supporters reflects her transatlantic fundraising efforts.
+"""
+
+Notes = """
+The Battle of Verdun was fought from February to December 1916. Given that Burke was actively fundraising during the war and the book is dedicated to figures involved in Franco-American relations during wartime, this was almost certainly published in 1916 or early 1917 while the events were still current. The most historically relevant year is 1916, when Verdun became a defining symbol of French resistance.
+"""
+</result>

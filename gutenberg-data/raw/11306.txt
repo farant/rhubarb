@@ -1,0 +1,21 @@
+The file seems to have issues. Based on what you've provided in the prompt, I can identify this text.
+
+This is a medieval Catalan debate poem ("Streitgedicht") between a man named "En Buc" and his horse, published by Wendelin Foerster in the *Zeitschrift für Romanische Philologie* in 1877. The text comes from a Catalan manuscript (MS 377) in the Carpentras library. The manuscript itself is medieval - likely 14th-15th century based on the language and style.
+
+The work belongs to a genre of satirical debate poetry where a person argues with their animal, related to Provençal precedents by Bertran Carbonel and Old French works like the "Plait Renart de Dammartin contre Vairon son roncin."
+
+<result>
+Title = "Catalanisches Streitgedicht zwischen En Buc und seinem Pferd"
+Author = "Anonymous (edited by Wendelin Foerster)"
+Year = 1877
+
+Tags = ["fiction", "poetry", "medieval", "scholarly-edition"]
+
+Summary = """
+A satirical medieval Catalan debate poem in which a man named En Buc argues with his horse. The horse is accused of various misdeeds, and the poem follows the comic genre of "beast debates" popular in medieval Romance literature. The text survives in a single manuscript (MS 377) at the Carpentras library in France. This edition by the German philologist Wendelin Foerster includes scholarly apparatus and linguistic analysis, with comparisons to similar Provençal poems by Bertran Carbonel and the Old French "Plait Renart."
+"""
+
+Notes = """
+The original poem is anonymous and dates to the medieval period (likely 14th-15th century based on manuscript and language), but since this is a scholarly edition with substantial philological commentary and apparatus, the 1877 publication date is more appropriate for cataloguing purposes. The medieval text itself would be impossible to date precisely.
+"""
+</result>

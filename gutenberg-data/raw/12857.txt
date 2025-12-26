@@ -1,0 +1,15 @@
+<result>
+Title = "Beautiful Britain--Cambridge"
+Author = "Gordon Home"
+Year = 1905
+
+Tags = ["non-fiction", "travel", "architecture", "history"]
+
+Summary = """
+This is a guidebook to Cambridge, England, part of the "Beautiful Britain" series of illustrated travel books. Gordon Home (1878-1969) was a prolific English author and artist who wrote numerous topographical and travel books about Britain. The book covers the history of Cambridge from its early origins through the development of its famous colleges, describing the architecture and notable features of both the greater and lesser colleges, university buildings, and churches in the town. It is richly illustrated with photographs and drawings typical of Edwardian-era travel literature.
+"""
+
+Notes = """
+The "Beautiful Britain" series was published by A&C Black starting around 1904-1905. Gordon Home contributed several volumes to this series. The exact publication year of the Cambridge volume appears to be 1905 based on the series timeline, though some sources cite 1906.
+"""
+</result>

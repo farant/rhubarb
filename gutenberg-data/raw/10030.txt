@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Hon. William F. Cody, Known as Buffalo Bill"
+Author = "William F. Cody"
+Year = 1879
+
+Tags = ["non-fiction", "autobiography", "american-frontier", "historical-document"]
+
+Summary = """
+This is the autobiography of William Frederick Cody (1846-1917), better known as "Buffalo Bill," one of the most famous figures of the American Old West. The book recounts his experiences as a Pony Express rider, buffalo hunter, Army scout, and guide during the Indian Wars. Cody served under notable military figures including Generals Sheridan, Carr, Merritt, Crook, and Terry. The autobiography covers his childhood in Kansas during its turbulent territorial period, his work with wagon trains crossing the plains, and his numerous encounters with Native Americans. This work was published during Cody's lifetime while he was already becoming a celebrity, predating his famous Wild West show which would begin in 1883.
+"""
+
+Notes = """
+The year 1879 is explicitly stated in the text itself and represents the original publication date of this autobiography. This was Cody's first major autobiographical work, published when he was 33 years old and already well-known as a scout and showman.
+"""
+</result>

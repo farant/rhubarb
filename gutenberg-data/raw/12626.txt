@@ -1,0 +1,15 @@
+<result>
+Title = "The Earlier Work of Titian"
+Author = "Claude Phillips"
+Year = 1897
+
+Tags = ["non-fiction", "art-criticism"]
+
+Summary = """
+This is an art historical monograph examining the early artistic career of Titian (Tiziano Vecellio, c. 1488-1576), the great Venetian Renaissance painter. Written by Claude Phillips, who served as Keeper of the Wallace Collection in London, the work analyzes Titian's formative period and early masterpieces. The monograph includes reproductions of several famous works including "Flora," "Sacred and Profane Love," and "Le Jeune Homme au Gant" (Young Man with a Glove). This type of scholarly art criticism was typical of the late Victorian period's serious engagement with Renaissance masters.
+"""
+
+Notes = """
+Claude Phillips (1846-1924) was a distinguished British art critic and the first Keeper of the Wallace Collection. The year 1897 represents the original publication date of this monograph as part of "The Portfolio Artistic Monographs" series.
+"""
+</result>

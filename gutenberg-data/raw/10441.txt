@@ -1,0 +1,15 @@
+<result>
+Title = "The Green Mouse"
+Author = "Robert W. Chambers"
+Year = 1910
+
+Tags = ["fiction"]
+
+Summary = """
+The Green Mouse is a romantic comedy novel by Robert W. Chambers, a prolific American author known for his weird fiction (particularly "The King in Yellow") as well as lighter romantic novels. This work falls into his more commercial, romantic fiction category rather than his supernatural horror works. The novel deals with themes of love, courtship, and the social mores of early 20th century American upper-class society, told with Chambers' characteristic wit and humor.
+"""
+
+Notes = """
+Robert W. Chambers (1865-1933) was a fascinating figure - trained as an artist at the École des Beaux-Arts in Paris, he became one of the most popular American authors of his era. While literary scholars today primarily remember him for "The King in Yellow" (1895), his weird fiction collection that influenced Lovecraft and others, during his lifetime he was far more commercially successful for his romantic novels. The dedication to John Corbin (a drama critic and author) with its deliberately absurd verse is characteristic of Chambers' playful style in his lighter works.
+"""
+</result>

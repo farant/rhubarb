@@ -1,0 +1,17 @@
+I've read the files. This is "Experiments in Government and the Essentials of the Constitution" by Elihu Root, a series of lectures delivered in 1913.
+
+<result>
+Title = "Experiments in Government and the Essentials of the Constitution"
+Author = "Elihu Root"
+Year = 1913
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Elihu Root was a distinguished American statesman, lawyer, and Nobel Peace Prize laureate (1912) who served as U.S. Secretary of War and Secretary of State. This work consists of lectures he delivered in 1913 addressing the Progressive Era debates about constitutional reform. Root defends the wisdom of the Founding Fathers and the essential principles of the U.S. Constitution against critics who sought radical changes to American governance. The lectures engage with contemporary movements questioning federalism, separation of powers, and other foundational constitutional principles.
+"""
+
+Notes = """
+Year 1913 is when the lectures were delivered and published. Root was responding to Progressive Era critiques of the Constitution during a period of significant political reform in America (the same year saw ratification of the 16th and 17th Amendments). The work represents a conservative defense of constitutional principles.
+"""
+</result>

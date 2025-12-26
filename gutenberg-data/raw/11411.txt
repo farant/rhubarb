@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 14, No. 390"
+Author = "Various"
+Year = 1829
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a broad readership, offering a mix of literary extracts, essays, engravings, and informative articles on topics ranging from geography and history to natural philosophy and the arts. This particular issue from September 1829 features an article on Clifton, the fashionable spa town near Bristol, describing its scenic beauty along the River Avon, its salubrious climate, and the elegant buildings rising on its cliffs and downs.
+"""
+
+Notes = """
+The year 1829 is the publication date of this specific issue. The periodical was founded by John Limbird and was notable for making literature and knowledge accessible to the working and middle classes at a low price (2d per issue).
+"""
+</result>

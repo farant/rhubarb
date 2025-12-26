@@ -1,0 +1,15 @@
+<result>
+Title = "The Double Traitor"
+Author = "E. Phillips Oppenheim"
+Year = 1915
+
+Tags = ["fiction"]
+
+Summary = """
+The Double Traitor is a spy thriller set in the lead-up to and during World War I. The novel follows Francis Donaghue Donaghue, a young English diplomat who becomes entangled in international espionage between England and Germany. Oppenheim was known as the "Prince of Storytellers" and was one of the most prolific and popular authors of spy fiction and intrigue novels in the early 20th century. This work reflects the heightened tensions and paranoia of the WWI era, dealing with themes of loyalty, betrayal, and the machinations of European powers on the brink of war.
+"""
+
+Notes = """
+Published in 1915 during World War I. E. Phillips Oppenheim (1866-1946) was an English novelist who wrote over 100 novels, mostly thrillers and spy stories. He was enormously popular in his day and helped establish many conventions of the spy fiction genre that would later be developed by authors like John Buchan and Ian Fleming.
+"""
+</result>

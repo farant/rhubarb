@@ -1,0 +1,15 @@
+<result>
+Title = "The Rime of the Ancient Mariner"
+Author = "Samuel Taylor Coleridge"
+Year = 1798
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+One of the foundational works of English Romantic poetry. The poem tells the supernatural tale of a mariner who shoots an albatross and brings a curse upon his ship and crew. It explores themes of sin, penance, redemption, and respect for nature. The famous lines "Water, water, every where, / Nor any drop to drink" come from this work. It was first published in the collection "Lyrical Ballads" alongside works by William Wordsworth, which is considered a landmark publication that launched the Romantic movement in English literature.
+"""
+
+Notes = """
+First published in 1798 in "Lyrical Ballads." Coleridge revised it several times, with a notable expanded version in 1817 that added marginal glosses. The 1798 date is chosen as the historically significant publication year. Note: The Gutenberg title has "Rhyme" but the traditional title is "Rime" (archaic spelling deliberately chosen by Coleridge).
+"""
+</result>

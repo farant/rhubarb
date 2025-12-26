@@ -1,0 +1,15 @@
+<result>
+Title = "International Correspondence School - Spanish Lesson #9"
+Author = "International Correspondence Schools, Thomas A. Edison (editor)"
+Year = 1906
+
+Tags = ["non-fiction", "educational", "audio-recording", "language-learning"]
+
+Summary = """
+This is an audio recording of a Spanish language lesson from the International Correspondence Schools (ICS), a pioneering distance education institution founded in 1891 in Scranton, Pennsylvania. The recording was made using Edison phonograph technology and preserved at the Edison National Historic Site. These lessons represent early attempts at audio-based language instruction, combining the correspondence school model with Edison's recording technology to create what would be an early precursor to modern language learning audio courses.
+"""
+
+Notes = """
+The year 1906 is an estimate based on the period when Edison's National Phonograph Company was actively producing educational cylinder recordings and when ICS was at its peak of innovation in correspondence education. Edison had been experimenting with educational applications of his phonograph since the 1890s, but language instruction recordings became more common in the early 1900s. The exact production date is uncertain as this is an archival audio recording rather than a printed work.
+"""
+</result>

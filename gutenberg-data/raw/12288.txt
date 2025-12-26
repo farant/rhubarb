@@ -1,0 +1,15 @@
+<result>
+Title = "The Witchcraft Delusion in Colonial Connecticut 1647-1697"
+Author = "John M. Taylor"
+Year = 1908
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A historical study examining the witchcraft trials and prosecutions that occurred in colonial Connecticut between 1647 and 1697. The author, John M. Taylor, who also wrote works on Roger Ludlow and Maximilian and Carlotta, draws from original court records and private manuscript collections to document this often overlooked aspect of New England witch persecution. While Salem's trials are more famous, Connecticut had its own significant history of witchcraft accusations and prosecutions during this period.
+"""
+
+Notes = """
+The 1908 date is when this scholarly work was published. The frontispiece reproduces an original 1692 grand jury presentment from Fairfield County accusing three women of witchcraft, demonstrating the author's use of primary sources.
+"""
+</result>

@@ -1,0 +1,17 @@
+I recognize this work. Let me provide the structured output:
+
+<result>
+Title = "Knights of Malta, 1523-1798"
+Author = "R. Cohen"
+Year = 1920
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an academic historical study of the Knights of Malta (the Order of St. John of Jerusalem) covering the period from their departure from Rhodes in 1523 to the fall of Malta to Napoleon in 1798. The work was the winning entry for the Lothian Prize Essay at Oxford University in 1920. It covers the Order's settlement in Malta, the famous Great Siege of 1565 against the Ottoman Turks under Suleiman the Magnificent, the constitutional structure of the Order, and presumably its later history and decline. The author, R. Cohen, was a scholar at Wadham College, Oxford.
+"""
+
+Notes = """
+The year 1920 is taken directly from the title page as the publication year. This is an original scholarly work, not a translation or edition of an earlier text, so the publication year is the appropriate date. The Lothian Prize is an essay competition at Oxford University for historical subjects.
+"""
+</result>

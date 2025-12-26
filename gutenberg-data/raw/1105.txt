@@ -1,0 +1,15 @@
+<result>
+Title = "The Sonnets"
+Author = "William Shakespeare"
+Year = 1609
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+Shakespeare's 154 sonnets, first published in 1609 by Thomas Thorpe. The collection is divided into two main sequences: sonnets 1-126 addressed to a young man (the "Fair Youth"), and sonnets 127-154 addressed to a woman (the "Dark Lady"). The early sonnets urge the young man to marry and have children to preserve his beauty. The poems explore themes of love, beauty, mortality, time, jealousy, and the immortalizing power of poetry itself. They are considered among the greatest achievements in English lyric poetry.
+"""
+
+Notes = """
+1609 is the year of first publication in quarto form. While Shakespeare likely composed these sonnets over a period of years (possibly 1592-1609), the 1609 publication date is the standard reference point for this work as a collected whole.
+"""
+</result>

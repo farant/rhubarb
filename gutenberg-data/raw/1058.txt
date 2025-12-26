@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of the Sea: Memories and Impressions"
+Author = "Joseph Conrad"
+Year = 1906
+
+Tags = ["non-fiction", "memoir"]
+
+Summary = """
+The Mirror of the Sea is a collection of autobiographical essays and reflections by Joseph Conrad based on his twenty years as a merchant seaman before becoming a novelist. The work is divided into sections covering various aspects of seafaring life: ships, storms, anchors, landfalls, the character of different winds, and the nature of the sea itself. Conrad meditates on the relationship between sailors and their vessels, the psychology of seamanship, and the moral dimensions of life at sea. It stands as one of the finest works of maritime literature in English, blending memoir with philosophical reflection on the human encounter with the ocean.
+"""
+
+Notes = """
+First published in October 1906 by Methuen & Co. in London. The Project Gutenberg text notes it was transcribed from a 1907 edition, which was likely a reprint. The 1906 date represents the original publication.
+"""
+</result>

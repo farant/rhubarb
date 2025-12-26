@@ -1,0 +1,15 @@
+<result>
+Title = "Waltzing Matilda"
+Author = "Andrew Barton 'Banjo' Paterson, Christina Macpherson"
+Year = 1895
+
+Tags = ["fiction", "poetry", "folk-song", "appropriate-for-children"]
+
+Summary = """
+"Waltzing Matilda" is Australia's most iconic folk song, often considered an unofficial national anthem. The lyrics tell the story of a swagman (itinerant worker) who camps by a billabong (waterhole), catches a jumbuck (sheep) for food, and when confronted by the squatter (landowner) and troopers, drowns himself in the billabong rather than be captured. The song uses extensive Australian slang and captures themes of freedom, defiance against authority, and the harsh life of the Australian bush. "Waltzing Matilda" refers not to a woman but to carrying one's swag (bedroll) while traveling on foot looking for work.
+"""
+
+Notes = """
+The song was composed in 1895. Christina Macpherson adapted the melody from a Scottish tune she had heard, and Banjo Paterson wrote the lyrics while visiting Dagworth Station in Queensland. The song may have been inspired by the 1894 shearer's strike and the death of Samuel Hoffmeister at a billabong near Dagworth. The song was first performed publicly in 1895. There are multiple versions of the lyrics; this appears to be close to the original Paterson version.
+"""
+</result>

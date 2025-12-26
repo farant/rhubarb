@@ -1,0 +1,15 @@
+<result>
+Title = "Turkish Prisoners in Egypt: A Report by the Delegates of the International Committee of the Red Cross"
+Author = "International Committee of the Red Cross"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an official Red Cross report documenting a humanitarian inspection visit to camps holding Turkish prisoners of war in Egypt during World War I. The delegates visited these camps in December 1916 and January 1917, examining the conditions under which Ottoman soldiers captured by British forces were being held. The report details their methodology, the cooperation they received from British military authorities including General Murray, and their observations about prisoner treatment. Such Red Cross inspection reports were part of the organization's mandate under the Geneva Conventions to monitor POW conditions and ensure humane treatment during wartime.
+"""
+
+Notes = """
+The year 1917 is when this report was published, which is the appropriate date since this is an original primary source document rather than a translation or commentary on an older work. The document itself states it was 'Published in 1917' and documents events from late 1916 to early 1917.
+"""
+</result>

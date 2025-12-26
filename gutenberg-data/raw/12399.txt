@@ -1,0 +1,15 @@
+<result>
+Title = "Contes et Nouvelles"
+Author = "Édouard Laboulaye"
+Year = 1861
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of tales and short stories by Édouard Laboulaye, a French jurist, poet, and anti-slavery activist who was also a member of the Institut de France. Laboulaye is perhaps best known internationally as the intellectual father of the Statue of Liberty. His literary works often contain moral lessons and fantastical elements in the tradition of fairy tales. This particular story, "Ma Cousine Marie," appears to be set during the social upheavals of 1818 Paris and follows a widow named Madeleine whose husband was killed in street fighting, leaving her to care for a sick child while working as a lace laundress.
+"""
+
+Notes = """
+The first edition of "Contes et Nouvelles" was published in 1861, though Laboulaye continued to write and publish tales throughout his life. The reference to 1818 and civil unrest in the text itself is a narrative setting, not the publication date. The illustrated edition mentioned (with 60 vignettes by E. Boilvin) is likely a later edition, but the original collection dates to 1861.
+"""
+</result>

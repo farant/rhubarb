@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 153, November 21, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, witty commentary on politics, society, and culture, and coined the term "cartoon" in its modern sense. This issue from November 1917 reflects wartime Britain during World War I, with topical jokes about food rationing, the Russian Revolution (mentioning Lenin), and American involvement in the war (Colonel House's visit). The magazine was highly influential in British culture and served as a model for similar publications worldwide.
+"""
+
+Notes = """
+The year 1917 is the publication date of this specific issue. Punch ran from 1841-1992 (with a brief revival 1996-2002). This wartime issue provides a snapshot of British humor and concerns during WWI.
+"""
+</result>

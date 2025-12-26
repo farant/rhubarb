@@ -1,0 +1,15 @@
+<result>
+Title = "The Bicyclers and Three Other Farces"
+Author = "John Kendrick Bangs"
+Year = 1896
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of four humorous one-act farces by American humorist John Kendrick Bangs. The plays include "The Bicyclers" (capitalizing on the 1890s bicycle craze), "A Dramatic Evening," "The Fatal Message," and "A Proposal Under Difficulties." Bangs was a prolific American author and editor known for his light comedic works, particularly his "Houseboat on the Styx" series. These short theatrical pieces exemplify the genteel humor popular in late Victorian America, featuring domestic situations and social comedy suitable for amateur theatrical performance.
+"""
+
+Notes = """
+First published in 1896 by Harper & Brothers. The bicycle craze of the 1890s provides the cultural context for the title piece.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "An Essay on War, in Blank Verse; Honington Green, a Ballad; The Culprit, an Elegy; and Other Poems, on Various Subjects"
+Author = "Nathaniel Bloomfield"
+Year = 1803
+
+Tags = ["poetry", "non-fiction"]
+
+Summary = """
+A collection of poetry by Nathaniel Bloomfield, elder brother of the more famous Robert Bloomfield (author of "The Farmer's Boy"). Nathaniel was a self-taught laboring-class poet from Suffolk, England. The collection includes anti-war poetry in blank verse, ballads about rural English life, elegies, and various other poems. The Bloomfield brothers were notable examples of the "peasant poet" tradition in English literature, writing from their experiences as rural working-class men.
+"""
+
+Notes = """
+The year 1803 appears directly on the title page of the work. Nathaniel Bloomfield was less commercially successful than his brother Robert but was part of the same literary movement of laboring-class poets that flourished in late 18th and early 19th century England.
+"""
+</result>

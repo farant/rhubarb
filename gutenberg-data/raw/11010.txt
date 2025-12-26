@@ -1,0 +1,15 @@
+<result>
+Title = "The Spectator, Vol. II"
+Author = "Joseph Addison, Richard Steele"
+Year = 1711
+
+Tags = ["non-fiction", "periodical", "essays", "appropriate-for-children"]
+
+Summary = """
+The Spectator was a daily periodical published in London from March 1711 to December 1712 (with a brief revival in 1714). It was founded by Joseph Addison and Richard Steele, who wrote the majority of its essays. The publication was enormously influential in shaping English prose style and middle-class culture during the 18th century. Each issue typically contained a single essay on topics ranging from morality, literature, and philosophy to social customs and manners. The fictional "Spectator Club" and its members, including the famous Sir Roger de Coverley, provided a framework for social commentary. This edition by Henry Morley (1891) is a scholarly reproduction with annotations.
+"""
+
+Notes = """
+Year 1711 chosen as this represents when the original periodical began publication and when issue No. 203 (shown in the excerpt) was published. The 1891 date is merely this particular scholarly edition by Morley.
+"""
+</result>

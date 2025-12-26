@@ -1,0 +1,15 @@
+<result>
+Title = "Roy Blakeley's Adventures in Camp"
+Author = "Percy Keese Fitzhugh"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the popular Roy Blakeley series by Percy Keese Fitzhugh, an American author who wrote extensively for the Boy Scouts of America. The series follows Roy Blakeley and his scout troop through various adventures. Fitzhugh was one of the most prolific authors of boys' adventure fiction in the early 20th century, writing over 90 books including the Tom Slade and Pee-Wee Harris series. The books were designed to promote scouting values while entertaining young readers with humorous adventures. Roy Blakeley is known for his rambling, digressive narrative style which was part of the character's charm.
+"""
+
+Notes = """
+The 1920 date comes directly from the title page of the book. This was part of a series published by Grosset & Dunlap in association with the Boy Scouts of America.
+"""
+</result>

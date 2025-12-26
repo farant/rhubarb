@@ -1,0 +1,15 @@
+<result>
+Title = "The High School Boys' Canoe Club"
+Author = "H. Irving Hancock"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of H. Irving Hancock's "High School Boys" series, which follows Dick Prescott and his friends (collectively known as "Dick & Co.") through various adventures. This particular volume focuses on canoeing competition on Lake Pleasant, featuring rivalry between groups of high school boys. Hancock was a prolific author of juvenile adventure fiction in the early 20th century, writing numerous series about high school and military academy life. The books were popular wholesome entertainment for young readers of the era.
+"""
+
+Notes = """
+The High School Boys series was published between 1910-1912. This specific volume about the Canoe Club was published in 1912. Hancock wrote many similar series including the High School Boys, Grammar School Boys, and various military academy series.
+"""
+</result>

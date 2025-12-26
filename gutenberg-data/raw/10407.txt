@@ -1,0 +1,15 @@
+<result>
+Title = "A Perfect Day"
+Author = "Carrie Jacobs Bond"
+Year = 1910
+
+Tags = ["music", "audio-recording", "fiction"]
+
+Summary = """
+"A Perfect Day" is a popular parlor song composed by Carrie Jacobs Bond, an American singer, pianist, and composer who became one of the most successful female songwriters of the early 20th century. The song became enormously popular and was one of the best-selling songs of its era. This Project Gutenberg entry is an audio recording of the piece performed by Jaudas' Society Orchestra, conducted by Eugene A. Jaudas, recorded on January 23, 1917 in New York City.
+"""
+
+Notes = """
+The song "A Perfect Day" was originally published in 1910 by Carrie Jacobs Bond. While this particular recording was made in 1917, the composition itself dates to 1910. I chose the composition date rather than the recording date as this represents when the creative work was originally produced. Carrie Jacobs Bond was a remarkable figure - largely self-taught, she became one of the first women to establish her own music publishing company and her songs sold millions of copies.
+"""
+</result>

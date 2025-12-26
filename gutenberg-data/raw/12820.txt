@@ -1,0 +1,17 @@
+I can work with the text you've provided in your message. This is Annie Besant's presidential address to the 32nd Indian National Congress in 1917.
+
+<result>
+Title = "The Case for India"
+Author = "Annie Besant"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "political-speech"]
+
+Summary = """
+This is the presidential address delivered by Annie Besant at the Thirty-Second Indian National Congress held in Calcutta on December 26, 1917. Annie Besant (1847-1933) was a British socialist, theosophist, women's rights activist, and supporter of Indian self-rule. She became deeply involved in Indian nationalism and the Home Rule movement. Earlier in 1917, she had been interned by the British colonial government for her activism, which only increased her popularity. Her election as Congress President while still under internment was a significant act of defiance by the Indian nationalist movement. The speech advocates for Indian self-governance and draws parallels between the development of English liberty and India's aspirations for freedom.
+"""
+
+Notes = """
+Year chosen is 1917 as this is when the speech was delivered at the Congress session. Annie Besant was a theosophist but not Catholic; the work represents an important historical document in the Indian independence movement rather than a religious text.
+"""
+</result>

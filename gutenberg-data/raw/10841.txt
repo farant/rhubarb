@@ -1,0 +1,15 @@
+<result>
+Title = "L'Archéologie Égyptienne"
+Author = "Gaston Maspero"
+Year = 1887
+
+Tags = ["non-fiction", "archaeology", "egyptology"]
+
+Summary = """
+This is a foundational work on Egyptian archaeology by Gaston Maspero, one of the most important Egyptologists of the 19th century. The book provides a systematic survey of ancient Egyptian material culture, covering civil and military architecture, temples, tombs, sculpture, and decorative arts. Maspero served as director of the Egyptian Antiquities Service and the Egyptian Museum in Cairo. This work was widely used as an introduction to Egyptian archaeology and was translated into multiple languages.
+"""
+
+Notes = """
+First published in 1887 as part of the Bibliothèque de l'enseignement des beaux-arts series. Maspero (1846-1916) was a French Egyptologist who succeeded Auguste Mariette as head of Egyptian antiquities. The work went through multiple editions and remains a classic reference for understanding 19th-century Egyptological knowledge.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Somerset"
+Author = "G.W. Wade, J.H. Wade"
+Year = 1905
+
+Tags = ["non-fiction", "travel-guide", "geography", "appropriate-for-children"]
+
+Summary = """
+A travel guidebook to Somerset county in England, part of Methuen's popular "Little Guides" series. The book provides descriptive accounts of places of interest throughout Somerset, with the authors prioritizing helping readers "see for themselves what is best worth seeing" over extensive family histories. It includes discussions of natural features like the Quantock Hills and Cheddar Gorge, as well as historical sites and towns. The series was designed for tourists and travelers exploring the English counties.
+"""
+
+Notes = """
+The exact first publication date is uncertain. The book was in its second edition by 1913, and the same authors (G.W. Wade and J.H. Wade) published their Monmouthshire guide in 1909. Based on Methuen catalogues from 1907-1911 listing the work, circa 1905-1907 is a reasonable estimate for first publication. I have chosen 1905 as a best-effort date.
+"""
+</result>

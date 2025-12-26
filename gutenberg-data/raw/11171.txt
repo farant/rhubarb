@@ -1,0 +1,17 @@
+The file appears to be empty, but you've provided the text in your message. Based on what you've shown me, I can identify this work:
+
+<result>
+Title = "Uncle Tom's Cabin: Young Folks' Edition"
+Author = "Harriet Beecher Stowe"
+Year = 1852
+
+Tags = ["fiction", "appropriate-for-children", "abridged"]
+
+Summary = """
+This is a children's adaptation of Harriet Beecher Stowe's landmark antislavery novel "Uncle Tom's Cabin." The original novel, published in 1852, was enormously influential in shaping public opinion against slavery in the United States prior to the Civil War. The story follows the lives of several enslaved people, particularly Uncle Tom, a deeply devout man who is sold away from his family. The novel depicts both cruel and kind slaveholders, showing the inherent evil of the institution regardless of individual behavior. This "Young Folks' Edition" is an abridged version intended to make the story accessible to children while preserving its moral message about the injustice of slavery.
+"""
+
+Notes = """
+The original Uncle Tom's Cabin was first published as a serial in The National Era newspaper from 1851-1852, then as a complete novel on March 20, 1852. I chose 1852 as this is when the full novel was published and represents its historical significance. This particular "Young Folks' Edition" was likely published later (various children's editions appeared throughout the late 19th and early 20th centuries), but the core work and authorship date to 1852. Lincoln allegedly said to Stowe upon meeting her: "So you're the little woman who wrote the book that started this great war."
+"""
+</result>

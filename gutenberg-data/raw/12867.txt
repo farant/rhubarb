@@ -1,0 +1,17 @@
+The file appears to be empty. However, you've provided the text content in your message itself. Based on what you've shared, I can identify this work:
+
+<result>
+Title = "Il Convito (The Banquet)"
+Author = "Dante Alighieri"
+Year = 1307
+
+Tags = ["non-fiction", "philosophy", "catholic", "appropriate-for-children"]
+
+Summary = """
+The Convito (or Convivio in modern Italian) is an unfinished philosophical treatise by Dante Alighieri, written during his exile from Florence. It was intended to be fifteen books but only four were completed. The work serves as a bridge between Dante's earlier Vita Nuova and his masterpiece, the Divine Comedy. In it, Dante presents a "banquet" of knowledge, offering commentary on his own canzoni (lyric poems) while exploring philosophy, ethics, and the nature of human knowledge. The work demonstrates Dante's mature philosophical thinking, heavily influenced by Aristotle and Thomas Aquinas, and discusses topics including the nature of nobility, the pursuit of wisdom, and the relationship between human and divine love.
+"""
+
+Notes = """
+The date 1307 represents approximately when Dante composed this work during his exile (circa 1304-1307). This is a translation by Elizabeth Price Sayer published in 1887, with an introduction by Henry Morley. Since the translation appears to be a straightforward rendering without substantial independent commentary that would merit dating to the translation year, I've used the original composition date. The Convito is significant as a vernacular philosophical work - Dante deliberately wrote in Italian rather than Latin to reach a broader audience.
+"""
+</result>

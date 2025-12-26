@@ -1,0 +1,15 @@
+<result>
+Title = "Saxe Holm's Stories"
+Author = "Helen Hunt Jackson"
+Year = 1873
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Saxe Holm's Stories is a collection of six short stories originally published anonymously under the pseudonym "Saxe Holm." The collection includes: "Draxy Miller's Dowry," "The Elder's Wife," "Whose Wife Was She?," "The One-Legged Dancers," "How One Woman Kept Her Husband," and "Esther Wynn's Love-Letters." The stories are domestic fiction focusing on the lives of women in 19th century America, exploring themes of marriage, love, and social constraints. Helen Hunt Jackson (1830-1885) was a prominent American poet and writer, best known later for her advocacy work on behalf of Native Americans in "A Century of Dishonor" and her novel "Ramona."
+"""
+
+Notes = """
+The pseudonym "Saxe Holm" was not confirmed as Helen Hunt Jackson until after her death. The stories were quite popular in their time and sparked much speculation about the true author's identity. The 1873 date appears in the text itself and corresponds to the first collection's publication.
+"""
+</result>

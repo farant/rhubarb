@@ -1,0 +1,15 @@
+<result>
+Title = "Beneath the Banner: Being Narratives of Noble Lives and Brave Deeds"
+Author = "F.J. Cross"
+Year = 1895
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A Victorian-era collection of inspirational biographical sketches featuring heroic figures from British history and society. The book presents narratives of noble deeds performed by various individuals including Alice Ayres (a nurse who died saving children from a fire), Sir Samuel Baker (explorer and anti-slavery campaigner), working-class heroes Case and Chew, Sir Colin Campbell (commander at Balaclava), and Lord Cochrane (naval commander). The work is clearly intended for young readers as moral instruction, presenting examples of courage, duty, and self-sacrifice to inspire Victorian youth. The epigraph from General Gordon ("I have done my best for the honour of our country") sets the patriotic and moralistic tone.
+"""
+
+Notes = """
+This is the second edition published in 1895. F.J. Cross was a Victorian author who wrote moral and instructional literature for children. The mention of "Ready about May, 1895" for another work by the same author suggests this edition was published around that time. Alice Ayres (1859-1885) was a famous Victorian heroine who died saving children from a house fire, and her inclusion helps date the narratives to the late Victorian period.
+"""
+</result>

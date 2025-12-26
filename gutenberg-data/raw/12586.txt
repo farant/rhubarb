@@ -1,0 +1,15 @@
+<result>
+Title = "Satan"
+Author = "Lewis Sperry Chafer"
+Year = 1909
+
+Tags = ["non-fiction", "theology", "protestant"]
+
+Summary = """
+This is a theological work by Lewis Sperry Chafer (1871-1952), an American theologian and the founder and first president of Dallas Theological Seminary. The book examines Satan from a dispensationalist Protestant perspective, covering topics such as Satan's career, methods, the "Satanic system," spiritual warfare, and the believer's victory over evil. C.I. Scofield (of the Scofield Reference Bible) wrote the foreword, which indicates the book's alignment with dispensationalist theology. Chafer was a prominent figure in American evangelical Christianity and this work represents early 20th century Protestant demonology.
+"""
+
+Notes = """
+The year 1909 is printed directly in the text. Chafer was a Presbyterian minister and later ordained in the Congregational church. While Christian, this is explicitly Protestant/dispensationalist theology rather than Catholic - Chafer's views on ecclesiology and eschatology would not align with Catholic teaching, so the 'catholic' tag is not appropriate here.
+"""
+</result>

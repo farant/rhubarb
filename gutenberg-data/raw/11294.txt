@@ -1,0 +1,15 @@
+<result>
+Title = "Juhana Herttuan ja Catharina Jagellonican lauluja"
+Author = "Eino Leino"
+Year = 1919
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by Eino Leino (1878-1926), one of Finland's most celebrated poets and a central figure in Finnish national romanticism and neo-romanticism. The title translates to "Songs of Duke John and Catharina Jagellonica" - referring to John III of Sweden (Juhana Herttua, Duke John) and his wife Catherine Jagiellon, a Polish princess. The poems explore themes through Latin-titled sections (Invocatio, Confessio cordis, De profundis, etc.) and Italian musical forms (Serenata, Ballata, Notturno, Sonetto, etc.), creating a formal, courtly atmosphere befitting the historical subject matter. The work reflects Leino's characteristic blend of Finnish nationalism with European cultural traditions.
+"""
+
+Notes = """
+1919 is the original publication year as indicated in the text itself. Eino Leino was writing during a turbulent period in Finnish history - Finland had declared independence in 1917 and experienced a civil war in 1918. This historical poetry collection may have been a way of exploring Finnish-Swedish royal history during a time of national identity formation.
+"""
+</result>

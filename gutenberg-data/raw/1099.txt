@@ -1,0 +1,15 @@
+<result>
+Title = "The Riverman"
+Author = "Stewart Edward White"
+Year = 1908
+
+Tags = ["fiction"]
+
+Summary = """
+The Riverman is a novel by American author Stewart Edward White that depicts the life of lumberjacks and log drivers in the Michigan timber industry during the late 19th century. The story follows the dangerous and skilled work of rivermen who guide logs down rivers to sawmills. White, known for his adventure fiction and outdoor writing, drew on his own experiences in the lumber camps of Michigan to create an authentic portrait of this vanishing way of life. The novel is part of White's "blazed trail" series of lumber industry stories and captures the camaraderie, danger, and hard work of the rivermen during the golden age of American logging.
+"""
+
+Notes = """
+The novel was first published in 1908. The setting described as 1872 is the in-story timeframe, not the publication date. Stewart Edward White (1873-1946) was a prolific American author known for his adventure novels and stories of the American frontier and outdoors.
+"""
+</result>

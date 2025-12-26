@@ -1,0 +1,15 @@
+<result>
+Title = "'Lena Rivers"
+Author = "Mary Jane Holmes"
+Year = 1856
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+'Lena Rivers is a popular sentimental domestic novel from the mid-19th century. It tells the story of Helena (nicknamed 'Lena), an orphaned girl from New England who is sent to live with her wealthy but cold relatives at Maple Grove in Kentucky after her grandmother's death. The novel follows 'Lena's struggles against the snobbery and cruelty of her aunt and cousins, her friendship with the kind characters she meets, and eventually her discovery of secrets about her parentage. It is a classic example of the "woman's fiction" genre that was immensely popular in antebellum America, featuring themes of virtue triumphing over adversity, class consciousness, and the importance of moral character over social position.
+"""
+
+Notes = """
+The MDCCCXCVII (1897) date on the title page refers to a later printing edition. The novel was originally published in 1856 and became one of the best-selling American novels of the 19th century, reportedly selling over one million copies. Mary Jane Holmes was one of the most popular and prolific American novelists of her era.
+"""
+</result>

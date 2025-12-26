@@ -1,0 +1,21 @@
+Interesting - the file seems to have only 1 line. But you've provided the text content in your message directly, so I can work with that.
+
+Based on the text you provided, I recognize this work:
+
+**Phases of Faith** by Francis William Newman (1805-1897), the younger brother of Cardinal John Henry Newman. This is a significant work in Victorian religious controversy - Francis Newman's spiritual autobiography tracing his journey from evangelical Christianity toward a more rationalist/theistic position. It was first published in 1850, though your excerpt mentions "1874" which would be a later edition.
+
+<result>
+Title = "Phases of Faith; or, Passages from the History of My Creed"
+Author = "Francis William Newman"
+Year = 1850
+
+Tags = ["non-fiction", "autobiography", "spiritual-memoir"]
+
+Summary = """
+A spiritual autobiography by Francis William Newman (1805-1897), younger brother of the famous Cardinal John Henry Newman. The work traces the author's intellectual and religious journey from fervent evangelical Christianity through various stages of doubt toward a rationalist theism. Newman recounts his experiences as a missionary, his struggles with biblical criticism, and his eventual rejection of orthodox Christianity. The book was controversial in Victorian England and represents an important document in the history of religious doubt and the conflict between faith and reason in the 19th century.
+"""
+
+Notes = """
+First published in 1850. The date 1874 in the Gutenberg header likely refers to a later edition. The work famously prompted John Henry Newman (the author's brother, who had converted to Roman Catholicism) to write his own spiritual autobiography 'Apologia Pro Vita Sua' (1864) in part as a response to the religious controversies Francis had stirred. Not marked 'catholic' as Francis Newman explicitly rejected orthodox Christianity and Catholic teaching.
+"""
+</result>

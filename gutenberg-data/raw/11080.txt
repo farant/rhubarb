@@ -1,0 +1,15 @@
+<result>
+Title = "The Orations of Marcus Tullius Cicero, Vol. IV"
+Author = "Marcus Tullius Cicero, translated by C.D. Yonge"
+Year = -44
+
+Tags = ["non-fiction", "historical-document", "philosophy", "rhetoric"]
+
+Summary = """
+This volume contains Cicero's famous Philippics - fourteen orations delivered against Mark Antony in 44-43 BC, following the assassination of Julius Caesar. These speeches are among the most celebrated examples of Roman oratory and political rhetoric. Cicero attacked Antony's character, policies, and ambitions, ultimately contributing to the tensions that led to Cicero's own execution in 43 BC. The volume also includes several of Cicero's important rhetorical treatises: De Inventione (On Rhetorical Invention), Orator, Topica, and De Partitione Oratoria, which together form a comprehensive guide to classical rhetoric and oratory.
+"""
+
+Notes = """
+Year chosen is 44 BC (represented as -44), when the Philippics began to be delivered. While this is C.D. Yonge's 1903 translation, the historical significance lies in the original Latin orations. The Philippics take their name from Demosthenes' speeches against Philip II of Macedon, a comparison Cicero himself invited.
+"""
+</result>

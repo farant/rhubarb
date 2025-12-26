@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 100, January 17, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841. It was highly influential in British culture and coined the term "cartoon" in its modern sense. The magazine featured satirical commentary on politics, society, and current events, along with illustrations and humorous sketches. This particular issue is from Volume 100, published January 17, 1891, and includes typical Punch fare such as "Voces Populi" (Voices of the People) - a recurring feature presenting humorous dialogues overheard in public places, here set at Madame Tussaud's wax museum on Regent Street. The references to Dr. Koch relate to Robert Koch's then-recent and highly publicized work on tuberculosis.
+"""
+
+Notes = """
+Punch was a periodical rather than a single-authored work. The year 1891 is the actual publication date of this specific issue. Robert Koch had announced his tuberculosis research in 1890, making it a topical subject for satire. The magazine ran until 2002.
+"""
+</result>

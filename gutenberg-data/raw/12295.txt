@@ -1,0 +1,15 @@
+<result>
+Title = "Histoire de la Révolution Française"
+Author = "Adolphe Thiers"
+Year = 1823
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A comprehensive history of the French Revolution by Adolphe Thiers, a French statesman and historian who later became President of France. This multi-volume work covers the period from the beginning of the Revolution through the Directory period. This particular volume (Tome Huitième/Volume 8) covers the Directory government, including the nomination of the five Directors, financial difficulties, military operations on the Rhine and in Italy, and the pacification of the Vendée. The work was highly influential in shaping 19th-century understanding of the Revolution.
+"""
+
+Notes = """
+The first edition was published in 1823-1827. This excerpt indicates it is the ninth edition (Neuvième Edition) from 1839 (MDCCCXXXIX). I chose 1823 as the year since that is when the work was originally published, and this is a reprint/new edition of that original historical work rather than a substantially revised or annotated version.
+"""
+</result>

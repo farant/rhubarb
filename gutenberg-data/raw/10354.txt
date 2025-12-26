@@ -1,0 +1,15 @@
+<result>
+Title = "Die Laune des Verliebten"
+Author = "Johann Wolfgang von Goethe"
+Year = 1768
+
+Tags = ["fiction", "drama", "pastoral"]
+
+Summary = """
+"Die Laune des Verliebten" (The Lover's Caprice or The Wayward Lover) is a one-act pastoral play in verse by Goethe, written during his student years in Leipzig. It is a Schäferspiel (shepherd's play) featuring four characters - Egle, Amine, Eridon, and Lamon - in a rococo pastoral setting. The play deals with themes of jealousy, flirtation, and the caprices of young love. It was one of Goethe's earliest dramatic works, composed when he was around 18-19 years old, and reflects the influence of French and German anacreontic poetry popular at the time.
+"""
+
+Notes = """
+Written 1767-1768 during Goethe's Leipzig period, though not published until 1806. The year 1768 represents the completion of the work. This is early, pre-Sturm und Drang Goethe, showing rococo influences rather than the later romantic sensibilities he became famous for.
+"""
+</result>

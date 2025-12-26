@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedies of the Medici"
+Author = "Edgcumbe Staley"
+Year = 1908
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+A historical work examining tragic episodes in the famous Medici family of Florence. Edgcumbe Staley, known for his works on Florentine history including "The Guilds of Florence," explores the darker side of this powerful Renaissance dynasty. The book includes decorative narrative elements alongside historical facts, departing from conventional academic history writing. It features an introduction on the rise of the Medici house and a chart cataloging the various tragedies discussed.
+"""
+
+Notes = """
+First published in 1908. Staley notes in the preface that Alexandre Dumas had intended to write a similar work as a companion to his "Crimes of the Borgias" but never completed it, making this an attempt to fill that gap in Florentine historical literature.
+"""
+</result>

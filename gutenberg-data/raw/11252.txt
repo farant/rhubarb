@@ -1,0 +1,15 @@
+<result>
+Title = "Martin Hewitt, Investigator"
+Author = "Arthur Morrison"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Martin Hewitt, Investigator is a collection of detective short stories featuring the private investigator Martin Hewitt. Arthur Morrison created Hewitt as a deliberate contrast to Sherlock Holmes - where Holmes was eccentric and bohemian, Hewitt is described as ordinary-looking and methodical. The stories follow the classic Victorian detective fiction format, with Hewitt solving various mysteries including robberies, disappearances, and cases involving valuable objects. The collection was originally published in The Strand Magazine, the same publication that serialized the Sherlock Holmes stories, and represents one of the most successful attempts to create a rival detective character during the golden age of detective fiction.
+"""
+
+Notes = """
+1894 is the year of first book publication. The stories were originally serialized in The Strand Magazine in 1894 before being collected into this volume. Arthur Morrison (1863-1945) was an English author better known for his realistic depictions of London's East End slums, but his Martin Hewitt detective stories achieved considerable popularity.
+"""
+</result>

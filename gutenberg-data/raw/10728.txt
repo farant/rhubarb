@@ -1,0 +1,15 @@
+<result>
+Title = "Christie, the King's Servant"
+Author = "Mrs. O. F. Walton"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children", "protestant-religious"]
+
+Summary = """
+This is a sequel to the popular Victorian children's book "Christie's Old Organ" (1874) by Amy Catherine Walton (née Deck), who wrote under the name Mrs. O. F. Walton. The original story followed a young orphan boy named Christie who befriends an elderly organ grinder. This sequel continues Christie's story as he grows in his Christian faith and service. Mrs. Walton was a prolific writer of evangelical children's literature in the late Victorian era, with her works emphasizing moral and religious themes. Her books were widely read in Protestant Sunday schools and remained popular well into the 20th century.
+"""
+
+Notes = """
+Mrs. O. F. Walton (1849-1939) was a Protestant evangelical author. While she wrote Christian-themed works, they represent a Protestant/evangelical perspective rather than Catholic, hence the 'protestant-religious' tag rather than 'catholic'. The year 1889 is the approximate publication date of this sequel, about 15 years after the original "Christie's Old Organ" was published.
+"""
+</result>

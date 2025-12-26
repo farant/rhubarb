@@ -1,0 +1,15 @@
+<result>
+Title = "Nova analysis aquarum Medeviensium"
+Author = "Jöns Jacob Berzelius"
+Year = 1800
+
+Tags = ["non-fiction", "scientific", "latin-language"]
+
+Summary = """
+A scientific paper in Latin analyzing the mineral waters of the Medevi health spa in Sweden. Berzelius, who would later become one of the founders of modern chemistry, examines the chemical composition of the various springs at Medevi (the old/lowest spring, middle spring, and highest spring). This was an early work by Berzelius, published when he was only 21 years old, before his major contributions to chemistry including the development of chemical notation and the discovery of several elements.
+"""
+
+Notes = """
+Published as a dissertation at Uppsala University in December 1800. Berzelius is listed as both author and respondent, with A.G. Ekeberg as the presiding professor. Medevi was Sweden's oldest health spa, established in 1678.
+"""
+</result>

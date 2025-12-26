@@ -1,0 +1,15 @@
+<result>
+Title = "Poems"
+Author = "Marietta Holley"
+Year = 1887
+
+Tags = ["poetry", "appropriate-for-children"]
+
+Summary = """
+A collection of poems by Marietta Holley, an American humorist and poet best known for her "Samantha" series written under the pen name "Josiah Allen's Wife." While Holley was famous for her satirical prose advocating for women's suffrage and temperance, this collection represents her more sentimental poetic work. The poems cover themes of nature, love, loss, memory, and romantic narratives, dedicated touchingly to the memory of her mother.
+"""
+
+Notes = """
+Marietta Holley (1836-1926) published several poetry collections. This particular collection "Poems" was published in 1887. She was a prominent 19th-century American writer whose humorous works were compared to Mark Twain in popularity during her lifetime.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Adopting An Abandoned Farm"
+Author = "Kate Sanborn"
+Year = 1891
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A humorous and practical memoir by Kate Sanborn (1839-1917), an American author, lecturer, and wit, recounting her experiences leaving New York City to purchase and restore an abandoned farm in New England. The book covers the challenges and delights of rural life, including buying horses, keeping poultry, dealing with local customs, and the realities of farm work. Sanborn was known for her sharp wit and this work reflects her characteristic blend of humor and observation. It was part of a broader cultural movement in late 19th century America romanticizing the return to rural life.
+"""
+
+Notes = """
+The year 1891 is printed directly in the text as the publication date. Kate Sanborn was a popular lecturer and author of her era, known for works on wit and humor.
+"""
+</result>
