@@ -93,10 +93,18 @@ declare -a SOURCE_FILES=(
     "lib/calendario_visus.c"
     "lib/sententia_fissio.c"
     "lib/sententia_paginarium.c"
+    "lib/tcp_posix.c"
+    "lib/http.c"
+    "lib/base64.c"
+    "lib/url.c"
+    "lib/multipart.c"
 )
 
-# Objective-C source (compiled separately)
-OBJC_SOURCE="lib/fenestra_macos.m"
+# Objective-C sources (compiled separately)
+declare -a OBJC_SOURCES=(
+    "lib/fenestra_macos.m"
+    "lib/tls_macos.m"
+)
 
 # Build directory for object files
 BUILD_DIR="build"
@@ -146,11 +154,15 @@ compile_libraries() {
         fi
     done
 
-    # Also check Objective-C file
-    obj_file="$BUILD_DIR/fenestra_macos.o"
-    if [ ! -f "$obj_file" ] || [ "$OBJC_SOURCE" -nt "$obj_file" ]; then
-        needs_compile=1
-    fi
+    # Also check Objective-C files
+    for objc_file in "${OBJC_SOURCES[@]}"; do
+        obj_name=$(basename "$objc_file" .m).o
+        obj_file="$BUILD_DIR/$obj_name"
+        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
+            needs_compile=1
+            break
+        fi
+    done
 
     # Check if any header changed
     for header in include/*.h; do
@@ -188,15 +200,19 @@ compile_libraries() {
         fi
     done
 
-    # Compile Objective-C file
-    obj_file="$BUILD_DIR/fenestra_macos.o"
-    if [ ! -f "$obj_file" ] || [ "$OBJC_SOURCE" -nt "$obj_file" ]; then
-        echo -e "  Compiling: $OBJC_SOURCE"
-        if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$OBJC_SOURCE" -o "$obj_file" 2>&1; then
-            echo -e "${RED}✗ FAILED: $OBJC_SOURCE${RESET}"
-            return 1
+    # Compile Objective-C files
+    for objc_file in "${OBJC_SOURCES[@]}"; do
+        obj_name=$(basename "$objc_file" .m).o
+        obj_file="$BUILD_DIR/$obj_name"
+
+        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
+            echo -e "  Compiling: $objc_file"
+            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$objc_file" -o "$obj_file" 2>&1; then
+                echo -e "${RED}✗ FAILED: $objc_file${RESET}"
+                return 1
+            fi
         fi
-    fi
+    done
 
     echo -e "${GREEN}Libraries compiled${RESET}"
     echo ""
@@ -215,8 +231,11 @@ get_object_files() {
         obj_files="$obj_files $BUILD_DIR/$obj_name"
     done
 
-    # Add Objective-C object
-    obj_files="$obj_files $BUILD_DIR/fenestra_macos.o"
+    # Add Objective-C objects
+    for objc_file in "${OBJC_SOURCES[@]}"; do
+        obj_name=$(basename "$objc_file" .m).o
+        obj_files="$obj_files $BUILD_DIR/$obj_name"
+    done
 
     echo "$obj_files"
 }
@@ -238,7 +257,7 @@ compile_gui_app() {
 
     # Compile test file and link with object files
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
-    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
@@ -267,7 +286,7 @@ compile_and_run_test() {
     obj_files=$(get_object_files)
 
     # Compile test file and link with object files
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
