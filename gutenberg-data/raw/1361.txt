@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Swift and His Giant Cannon, or The Longest Shots on Record"
+Author = "Victor Appleton"
+Year = 1913
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the Tom Swift series, a popular early 20th century juvenile adventure series featuring the young inventor Tom Swift. In this installment, Tom designs and builds a massive cannon capable of firing projectiles unprecedented distances. The story involves testing at Sandy Hook (a real military proving ground), dealings with the U.S. government, and adventures in Panama near the Gatun Locks of the Panama Canal. The series was published under the house pseudonym "Victor Appleton" by the Stratemeyer Syndicate, with multiple ghostwriters contributing to different volumes. The Tom Swift books were influential in popularizing science fiction and invention-focused adventure stories for young readers.
+"""
+
+Notes = """
+"Victor Appleton" is a house pseudonym used by the Stratemeyer Syndicate. The actual author of this particular volume was likely Howard Garis. Tom Swift and His Giant Cannon was first published in 1913, the same year construction was completing on the Panama Canal (which features in the plot). This was the 16th book in the original Tom Swift series.
+"""
+</result>

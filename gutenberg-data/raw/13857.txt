@@ -1,0 +1,15 @@
+<result>
+Title = "La reine Margot - Tome II"
+Author = "Alexandre Dumas"
+Year = 1845
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+La Reine Margot is a historical novel by Alexandre Dumas set during the French Wars of Religion, specifically around the time of the St. Bartholomew's Day Massacre in 1572. The story centers on Marguerite de Valois (Queen Margot), daughter of Catherine de' Medici and wife of the future Henri IV of Navarre. The novel weaves together political intrigue, romance, and the bloody religious conflicts between Catholics and Huguenots at the French court. This is Tome II (Volume 2) of the work, covering the aftermath of the massacre and continuing court intrigues. The chapter titles reference themes of fraternity, vengeance, and classical tragedy (Les Atrides refers to the House of Atreus from Greek mythology, suggesting familial bloodshed).
+"""
+
+Notes = """
+1845 is the year of original publication. The novel was first serialized in the newspaper La Presse from December 1844 to April 1845, then published as a complete work in 1845. Despite being written by a Catholic author, the work is primarily entertainment fiction rather than religious literature, so the 'catholic' tag is not applied.
+"""
+</result>

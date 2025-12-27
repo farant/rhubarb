@@ -1,0 +1,15 @@
+<result>
+Title = "Edward MacDowell: His Work and Ideals"
+Author = "Elizabeth Fry Page"
+Year = 1910
+
+Tags = ["non-fiction", "biography", "music"]
+
+Summary = """
+A biographical and critical study of Edward MacDowell (1860-1908), the American composer and pianist considered one of the first great American classical composers. The book examines his musical works and artistic philosophy, supplemented by poetical interpretations by the author inspired by MacDowell's compositions. The poems reference several of MacDowell's famous piano pieces including "To a Wild Rose" and "A Deserted Farm" from his Woodland Sketches. Elizabeth Fry Page was a music critic and writer who contributed to the early appreciation of American classical music.
+"""
+
+Notes = """
+Edward MacDowell died in 1908, and this appears to be an early memorial/appreciation volume. The dedication to the founder of a MacDowell Club and the "In Memoriam" poem suggest it was published shortly after his death. Based on the style and context, this was likely published around 1910.
+"""
+</result>

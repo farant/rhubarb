@@ -1,0 +1,15 @@
+<result>
+Title = "Men of the Bible; Some Lesser-Known Characters"
+Author = "George Milligan, J. G. Greenhough, Alfred Rowland, Walter F. Adeney, J. Morgan Gibbon, H. Elvet Lewis, D. Rowlands, W. J. Townsend"
+Year = 1904
+
+Tags = ["non-fiction", "protestant"]
+
+Summary = """
+A collection of biographical studies focusing on lesser-known figures from the Bible, written by eight Protestant ministers and scholars. Each chapter examines a different biblical character such as Enoch, Barzillai, Adonijah, Hiram, Jeroboam, Asa, Ahaziah, and Gehazi, drawing moral and spiritual lessons from their lives. This was part of a series of devotional and educational works popular in the early 20th century aimed at helping readers gain deeper insight into scriptural figures who often receive less attention than major prophets and kings.
+"""
+
+Notes = """
+The 1904 date appears on the title page and represents the original publication year. The authors are all Protestant clergymen (various denominations including Methodist and Congregationalist), so this would not qualify for the 'catholic' tag despite being religious in nature.
+"""
+</result>

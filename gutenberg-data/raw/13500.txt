@@ -1,0 +1,15 @@
+<result>
+Title = "A Heroine of France: The Story of Joan of Arc"
+Author = "Evelyn Everett-Green"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children", "historical-fiction"]
+
+Summary = """
+A historical novel telling the story of Joan of Arc (Jeanne d'Arc) from her first appearance at Vaucouleurs through her campaign to relieve Orléans and crown the Dauphin at Reims. The narrative follows Joan's divine mission to save France during the Hundred Years' War, presented through the perspective of a fictional narrator who witnesses her journey. Evelyn Everett-Green was a prolific English novelist who wrote over 350 books, many of them historical fiction for young readers. This work is characteristic of her style: accessible, morally instructive historical tales.
+"""
+
+Notes = """
+First published in 1898. Evelyn Everett-Green (1856-1932) was an Anglican author rather than Catholic, so despite the subject matter being a Catholic saint, the work itself would not carry ecclesiastical approval. The novel romanticizes Joan's story for a popular audience.
+"""
+</result>

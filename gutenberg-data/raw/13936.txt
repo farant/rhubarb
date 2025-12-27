@@ -1,0 +1,15 @@
+<result>
+Title = "Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc."
+Author = "Various (edited by William John Thoms)"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "reference", "literary-history", "folklore"]
+
+Summary = """
+Notes and Queries was a weekly scholarly periodical founded in London by William John Thoms in November 1849. It served as a forum for literary scholars, antiquarians, genealogists, and interested amateurs to exchange knowledge on folklore, literature, and history. The format consisted of "Notes" (miscellaneous findings considered of interest) and "Queries" (questions from readers with responses from other correspondents). Its famous motto, "When found, make a note of," comes from Captain Cuttle in Dickens's Dombey and Son. The journal has been described as a Victorian-era precursor to moderated Internet newsgroups. This particular issue (No. 47) is from September 21, 1850, and covers topics ranging from old songs and folk lore to questions about Gray's Elegy, Harvey and the circulation of blood, and various etymological and genealogical inquiries. The journal continues to this day, now published quarterly by Oxford University Press.
+"""
+
+Notes = """
+This is a periodical rather than a single-authored work. The year 1850 reflects when this specific issue was published. William John Thoms was the founding editor, but the content was contributed by various correspondents. Being a scholarly reference periodical with multiple contributors, it does not fit the 'appropriate-for-children' tag (not inappropriate, just not targeted at children), nor the 'catholic' tag as it was a secular scholarly publication.
+"""
+</result>

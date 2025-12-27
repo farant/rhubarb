@@ -1,0 +1,15 @@
+<result>
+Title = "La Bohème (Libretto)"
+Author = "Giuseppe Giacosa, Luigi Illica"
+Year = 1896
+
+Tags = ["fiction", "libretto", "opera"]
+
+Summary = """
+La Bohème is the libretto for Giacomo Puccini's beloved opera, written by Giuseppe Giacosa and Luigi Illica. Based on Henri Murger's novel "Scènes de la vie de bohème" (1851), the opera tells the tragic love story of Rodolfo, a poor poet, and Mimì, a seamstress, set among bohemian artists living in Paris's Latin Quarter around 1830. The work follows the lives, loves, and struggles of a group of impoverished young artists and culminates in Mimì's death from tuberculosis. It premiered at Teatro Regio in Turin on February 1, 1896, conducted by Arturo Toscanini, and has become one of the most frequently performed operas in the world.
+"""
+
+Notes = """
+The year 1896 is chosen as it marks the opera's premiere. While Murger's source novel was published in 1851, the libretto itself was a new creative work by Giacosa and Illica specifically for Puccini's composition. This is an English translation by W. Grist and P. Pinkerton of the original Italian libretto.
+"""
+</result>

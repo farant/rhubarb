@@ -1,0 +1,15 @@
+<result>
+Title = "Captain Rogers"
+Author = "W.W. Jacobs"
+Year = 1902
+
+Tags = ["fiction"]
+
+Summary = """
+"Captain Rogers" is a short story by William Wymark Jacobs, an English author known for his humorous tales of maritime and working-class life. This story is part of his collection "The Lady of the Barge and Others." Jacobs was celebrated for his droll humor and skilled characterization, particularly in depicting life around the Thames waterfront, barges, and small English towns. The story opens with a weary traveler arriving at a small town, suggesting one of Jacobs' typical narratives involving colorful characters in modest circumstances.
+"""
+
+Notes = """
+"The Lady of the Barge and Others" was first published in 1902. W.W. Jacobs (1863-1943) was a prolific English author best known for the horror classic "The Monkey's Paw" (also from this collection) but primarily wrote comic short stories about working-class life on the Thames.
+"""
+</result>

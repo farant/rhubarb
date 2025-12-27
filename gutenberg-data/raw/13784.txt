@@ -1,0 +1,15 @@
+<result>
+Title = "Mr. Dooley in the Hearts of His Countrymen"
+Author = "Finley Peter Dunne"
+Year = 1899
+
+Tags = ["fiction", "humor", "satire"]
+
+Summary = """
+This is a collection of humorous dialect sketches featuring Mr. Dooley, an Irish-American bartender in Chicago who offers witty commentary on politics, society, and current events of the late 1890s. Finley Peter Dunne created Mr. Dooley as a vehicle for political satire, and the character became enormously popular during the Spanish-American War era. The sketches originally appeared in Chicago newspapers and were written in an exaggerated Irish brogue. Mr. Dooley's observations on imperialism, politicians, and American life made Dunne one of the most influential humorists of his time.
+"""
+
+Notes = """
+The copyright and publication information clearly indicates 1899 as the publication year, with multiple editions printed in October 1899. The sardonic dedication to British publishers "who, uninvited, presented Mr. Dooley" refers to unauthorized British editions, reflecting the copyright disputes of the era.
+"""
+</result>

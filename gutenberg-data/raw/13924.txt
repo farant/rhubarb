@@ -1,0 +1,15 @@
+<result>
+Title = "The Atlantic Monthly, Volume IX"
+Author = "Various"
+Year = 1862
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Atlantic Monthly was a highly influential American literary and cultural magazine founded in Boston in 1857. Volume IX covers issues 51-56 (January through June 1862), published during the American Civil War. The magazine featured prominent American writers and intellectuals of the era, including contributions on literature, politics, abolition, and culture. Notable contents in this volume include serialized fiction like Harriet Beecher Stowe's "Agnes of Sorrento," the famous "Letter to a Young Contributor" by Thomas Wentworth Higginson, and most significantly, the first publication of Julia Ward Howe's "Battle Hymn of the Republic" in issue 52 (February 1862). Founders and contributors included Ralph Waldo Emerson, Oliver Wendell Holmes Sr., Henry Wadsworth Longfellow, and Harriet Beecher Stowe.
+"""
+
+Notes = """
+This is the table of contents compilation for the entire volume year. The Roman numeral M DCCC LXII in the original text confirms the 1862 date. As a periodical anthology with multiple contributors, "Various" is the appropriate author designation.
+"""
+</result>

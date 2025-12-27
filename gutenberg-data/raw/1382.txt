@@ -1,0 +1,15 @@
+<result>
+Title = "Poems, Volume 2 [of 3]"
+Author = "George Meredith"
+Year = 1862
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is volume 2 of a three-volume collection of poetry by George Meredith (1828-1909), an English Victorian poet and novelist. Meredith was known for his psychological insight and complex, allusive style. His poetry often explored themes of nature, love, and human psychology. He is perhaps best known for his sonnet sequence "Modern Love" (1862), which dealt frankly with marital unhappiness. While more celebrated as a novelist during his lifetime (works like "The Egoist" and "Diana of the Crossways"), his poetry has gained appreciation for its intellectual depth and innovative techniques.
+"""
+
+Notes = """
+The 1912 date refers to this particular "Surrey" edition published by the Times Book Club. Meredith's poetry was published throughout his career from the 1850s onward. I chose 1862 as it represents the publication of "Modern Love and Poems of the English Roadside," his most significant poetry collection, which likely forms a substantial part of this volume. His collected poems were compiled in various editions during and after his lifetime.
+"""
+</result>

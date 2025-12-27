@@ -1,0 +1,15 @@
+<result>
+Title = "The Last Shot"
+Author = "Frederick Palmer"
+Year = 1914
+
+Tags = ["fiction", "war-fiction"]
+
+Summary = """
+"The Last Shot" is a war novel by Frederick Palmer, an American journalist and war correspondent who covered numerous conflicts including the Greco-Turkish War, the Philippine-American War, the Russo-Japanese War, and World War I. Drawing on his extensive firsthand experience observing warfare across the globe, Palmer crafted this fictional narrative exploring the human dimensions of armed conflict. The novel examines themes of nationalism, the psychology of soldiers, the tragedy of war, and the shared humanity of combatants on opposing sides. Palmer was known for his vivid, realistic depictions of military life and combat.
+"""
+
+Notes = """
+Published in 1914, the same year World War I began. Palmer would go on to serve as the accredited American correspondent with the British Expeditionary Force during WWI. The preface ("To the Reader") reflects his philosophy developed from years of war correspondence - seeing beyond national allegiances to the common human experience of conflict.
+"""
+</result>

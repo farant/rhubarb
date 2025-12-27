@@ -1,0 +1,19 @@
+The file seems to have an issue. However, you've provided the content directly in your message, so I can work with that.
+
+Based on the excerpt you provided, this is *The Dark House* by I. A. R. Wylie (Ida Alexa Ross Wylie), published in 1922.
+
+<result>
+Title = "The Dark House"
+Author = "I. A. R. Wylie"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+The Dark House is a novel by I. A. R. Wylie (Ida Alexa Ross Wylie, 1885-1959), an Australian-born British-American writer who was quite popular in the early 20th century. The novel follows Robert Stonehouse from childhood, exploring themes of family dysfunction, loss, and psychological development. The opening establishes the young protagonist on his eighth birthday, already shaped by the death of his mother and his antagonistic relationship with Christine, who attempts to fill the maternal role. Wylie was known for her psychological insight and her novels often dealt with complex emotional terrain and social issues of the era.
+"""
+
+Notes = """
+1922 is the original publication year. Wylie was a prolific author whose works were frequently serialized in magazines and adapted for film. She was not Catholic; her works are general literary fiction of the period.
+"""
+</result>

@@ -98,6 +98,7 @@ declare -a SOURCE_FILES=(
     "lib/base64.c"
     "lib/url.c"
     "lib/multipart.c"
+    "lib/uri.c"
 )
 
 # Objective-C sources (compiled separately)

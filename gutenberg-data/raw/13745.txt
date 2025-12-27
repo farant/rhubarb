@@ -1,0 +1,15 @@
+<result>
+Title = "Lastuja IV-VII"
+Author = "Juhani Aho"
+Year = 1891
+
+Tags = ["fiction", "literary-sketches"]
+
+Summary = """
+Lastuja (meaning "Chips" or "Shavings") is a series of short literary sketches and prose poems by Juhani Aho (1861-1921), one of the most significant Finnish authors of the late 19th and early 20th century. Aho was a pioneer of Finnish-language realist literature and is considered the creator of the Finnish short story form. The Lastuja collections contain brief, impressionistic pieces that capture moments of Finnish rural life, nature observations, and psychological vignettes. This volume combines collections IV through VII of the series. The pieces range from lyrical nature descriptions like "Metsäpolku" (Forest Path) to character sketches of Finnish country folk.
+"""
+
+Notes = """
+The first Lastuja collection was published in 1891, with subsequent volumes appearing over the following decades. This particular edition from WSOY (Werner Söderström) is dated 1921, but I have chosen 1891 as it represents when Aho began publishing this influential series. Juhani Aho (born Johan Brofeldt) was instrumental in developing modern Finnish prose and was the first professional Finnish-language author.
+"""
+</result>

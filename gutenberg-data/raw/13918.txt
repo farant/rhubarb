@@ -1,0 +1,15 @@
+<result>
+Title = "Secret Chambers and Hiding-Places"
+Author = "Allan Fea"
+Year = 1901
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+A historical study of priest holes, secret chambers, and hiding places in English country houses, primarily from the Tudor and Stuart periods. The book documents the architectural ingenuity used to conceal Catholic priests during the Elizabethan persecution, including the famous work of Nicholas Owen, a Jesuit lay brother who constructed many of these hiding places. It covers notable locations like Hindlip Hall and Harvington Hall, and events such as the Gunpowder Plot. The work combines architectural history with the dramatic stories of those who built and used these secret spaces.
+"""
+
+Notes = """
+First published in 1901, with this being the third revised edition. Allan Fea (1860-1937) was a British historian who specialized in Stuart period history, particularly relating to Catholic recusancy and the English Civil War. While the subject matter is sympathetic to the Catholic experience during persecution, Fea himself was an Anglican historian writing academic history rather than devotional literature.
+"""
+</result>

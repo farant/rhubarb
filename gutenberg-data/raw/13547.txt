@@ -1,0 +1,15 @@
+<result>
+Title = "The Rocks of Valpré"
+Author = "Ethel M. Dell"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+The Rocks of Valpré is a romantic novel by Ethel M. Dell, a popular British author known for her passionate and dramatic romance fiction in the early 20th century. The story centers on a young woman named Chris who, while on holiday at the French coastal town of Valpré, meets a mysterious French officer. The novel explores themes of love, honor, sacrifice, and redemption through a complex plot involving misunderstandings, secrets, and the testing of relationships. Dell was known for her emotionally intense storytelling and this work exemplifies her style, featuring the dramatic romantic conflicts that made her one of the best-selling authors of her era.
+"""
+
+Notes = """
+1913 is the original publication year. Ethel M. Dell (1881-1939) was an English novelist who achieved enormous popular success with her romantic fiction, though her work was often dismissed by literary critics. The epigraph from Robert Southey's "The Curse of Kehama" reflects the novel's central themes about the enduring and purifying nature of love through trials.
+"""
+</result>

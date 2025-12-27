@@ -1,0 +1,15 @@
+<result>
+Title = "Poems, Volume 3"
+Author = "George Meredith"
+Year = 1912
+
+Tags = ["poetry", "fiction"]
+
+Summary = """
+This is the third volume of collected poems by George Meredith (1828-1909), the English Victorian novelist and poet. Meredith was known for both his novels (such as "The Egoist" and "Diana of the Crossways") and his poetry. His verse is characterized by intellectual complexity, nature imagery, and philosophical themes. This collection represents his mature poetic work, compiled as part of his complete works.
+"""
+
+Notes = """
+George Meredith published poetry throughout his career, but this 1912 "Surrey" edition from the Times Book Club represents a posthumous collected edition (Meredith died in 1909). I've used 1912 as the year since this is specifically from that collected edition rather than being a single original work with a distinct publication date.
+"""
+</result>

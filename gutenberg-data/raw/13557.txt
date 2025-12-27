@@ -1,0 +1,15 @@
+<result>
+Title = "Cent-vingt jours de service actif: Récit historique très complet de la campagne du 65ème au Nord-Ouest"
+Author = "Charles R. Daoust"
+Year = 1886
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a French-Canadian historical account of the 65th Battalion (Carabiniers Mont-Royal) during the North-West Rebellion of 1885, also known as the Northwest Resistance. The rebellion was led by Louis Riel and the Métis people against the Canadian government in what is now Saskatchewan and Alberta. The 65th Battalion was a Montreal-based militia unit that was deployed to the Northwest Territories during this conflict. The book documents 120 days of active service, including the march from Montreal to Calgary, operations around Edmonton, Fort Pitt, and the pursuit of the Cree chief Big Bear (Gros-Ours). The mention of Lemay and Marcotte likely refers to casualties or notable soldiers from the campaign.
+"""
+
+Notes = """
+The publication date of 1886 is clearly stated on the title page. The flag presentation ceremony mentioned (Easter 1886 at the Gésu Church in Montreal) and the events described (the 1885 North-West Rebellion) confirm this dating. This is a primary historical source written immediately after the events it describes.
+"""
+</result>

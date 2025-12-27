@@ -1,0 +1,15 @@
+<result>
+Title = "Peter Stuyvesant, the Last Dutch Governor of New Amsterdam"
+Author = "John S. C. Abbott"
+Year = 1873
+
+Tags = ["non-fiction", "biography", "history", "appropriate-for-children"]
+
+Summary = """
+This is a biographical history of Peter Stuyvesant (1612-1672), the final Dutch Director-General of the colony of New Netherland, who governed from 1647 until the English takeover in 1664. John S. C. Abbott was a prolific 19th-century American historian known for writing accessible historical narratives and biographies. The book is part of his series "The Pioneers and Patriots of America," which included works on De Soto, Daniel Boone, and Miles Standish. Abbott's works were intended for general readers and often had an educational purpose, making colonial American history accessible to a broad audience including younger readers.
+"""
+
+Notes = """
+John Stevens Cabot Abbott (1805-1877) was a Congregationalist minister and historian. This work was published in 1873 as part of his American history series. Abbott was known for his readable, popular histories rather than scholarly works. While he was a Protestant minister rather than Catholic, his historical works are generally factual narratives without anti-Catholic bias.
+"""
+</result>

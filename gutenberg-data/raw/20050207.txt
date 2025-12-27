@@ -1,0 +1,15 @@
+<result>
+Title = "Twenty"
+Author = "Stella Benson"
+Year = 1918
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+A collection of poetry by English novelist and poet Stella Benson (1892-1933). The volume compiles verses previously published in her novels "I Pose" (1915) and "This Is the End" (1917), along with poems from periodicals including the Athenaeum, Everyman, and Pall Mall Gazette. Benson was known for her whimsical, imaginative style. The title "Twenty" does not refer to the author's age, as she notes in the preface. The poems include reflections on World War I ("Christmas, 1917"), nature ("The Orchard"), and various songs and meditations.
+"""
+
+Notes = """
+Publication year 1918 is clearly indicated on the title page. Stella Benson was a British author who spent much of her later life in China. She won the Femina Vie Heureuse Prize in 1931 for her novel "Tobit Transplanted."
+"""
+</result>

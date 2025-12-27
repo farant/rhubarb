@@ -1,0 +1,15 @@
+<result>
+Title = "Amours de Voyage"
+Author = "Arthur Hugh Clough"
+Year = 1858
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+Amours de Voyage is a verse novel written in hexameters by the Victorian poet Arthur Hugh Clough. Set during the Roman Republic of 1849 (the short-lived republican government established during the Italian Risorgimento), the poem follows Claude, a skeptical young English intellectual traveling in Italy, who encounters an English family including a young woman named Mary Trevellyn. The work explores themes of doubt, indecision, romantic hesitation, and the difficulty of authentic action in modern life. Claude's excessive self-analysis and inability to commit—to love, to political causes, to any firm position—makes him an early example of the paralyzed modern intellectual. The poem is epistolary in form, composed of letters from various characters interspersed with lyrical passages.
+"""
+
+Notes = """
+Clough wrote Amours de Voyage in 1849 while witnessing the siege of Rome, but it was not published until 1858 when it appeared in The Atlantic Monthly. The 1903 Macmillan edition mentioned in this Gutenberg text is a later reprint. I chose 1858 as the historically significant publication date, as this is when the work entered public literary consciousness.
+"""
+</result>

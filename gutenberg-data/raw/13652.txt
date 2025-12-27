@@ -1,0 +1,15 @@
+<result>
+Title = "Exposition of the Apostles' Creed"
+Author = "James Dodds"
+Year = 1887
+
+Tags = ["non-fiction", "theology", "catholic"]
+
+Summary = """
+A theological exposition and commentary on the Apostles' Creed by Rev. James Dodds, D.D., a Scottish Presbyterian minister. The work systematically examines each article of the Creed, breaking down the fundamental Christian beliefs expressed in this ancient profession of faith. The book includes sections on the nature of belief, the doctrine of God, the Trinity, and other core Christian doctrines as expressed in the Creed's twelve articles.
+"""
+
+Notes = """
+James Dodds (1812-1885) was a Scottish Presbyterian minister and author. This exposition was published posthumously around 1887. While Dodds was Presbyterian rather than Roman Catholic, the Apostles' Creed itself is an ecumenical Christian document accepted by Catholics, and this type of creedal exposition would generally be considered orthodox Christian teaching compatible with Catholic doctrine, though it comes from a Protestant perspective. I've included the 'catholic' tag in the sense of 'universal Christian teaching' but note the author was Presbyterian.
+"""
+</result>

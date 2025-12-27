@@ -1,0 +1,17 @@
+I can see from the excerpt you shared. This is a Filipino nationalist text from the revolutionary period. Let me provide the analysis:
+
+<result>
+Title = "Justicia ng Dios: Mga Ilang Bagay na Inasal Dito sa Filipinas nang Manga Fraile"
+Author = "Mariano Sequera"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A polemical work written during the Philippine Revolution against Spain. The title translates roughly to "God's Justice: Some Things Done Here in the Philippines by the Friars." Mariano Sequera was a journalist who wrote for revolutionary newspapers including "Ang Kapatid ng Bayan" (The Brother of the Nation) and "El Grito del Pueblo" (The Cry of the People). This work is an anti-friar tract documenting alleged abuses by Spanish religious orders in the Philippines, part of the broader Philippine revolutionary literature that criticized the Spanish colonial church. The dedication "Sa Inang Filipinas" (To Mother Philippines) and the poetic verse indicate the nationalist character of the work.
+"""
+
+Notes = """
+Published in Manila in 1899 by Chofré y Comp., Escolta no. 33. This was during the brief period of the First Philippine Republic, after the Spanish were defeated but before full American control. The subtitle indicates this is "Unang Bahagui" (First Part) of a work called "¡Nasaan ang Dios!" (Where is God!). The orthography uses the old Tagalog tilde-g (~g) representing the ng sound, a Spanish-influenced spelling convention that was later simplified.
+"""
+</result>

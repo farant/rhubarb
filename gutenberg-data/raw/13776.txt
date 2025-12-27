@@ -1,0 +1,15 @@
+<result>
+Title = "One Day: A Sequel to Three Weeks"
+Author = "Anonymous (Elinor Glyn)"
+Year = 1909
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+This is a sequel to Elinor Glyn's scandalous 1907 novel "Three Weeks," which told the story of a passionate affair between a young Englishman named Paul and a mysterious older woman who turns out to be a Balkan queen. "One Day" continues the story by focusing on the child born from that illicit union - a boy who becomes king but is marked by the circumstances of his conception. The novel explores themes of heredity, fate, and whether the sins of the parents inevitably affect the children. The "Boy" (the young prince) struggles against forces shaped by his parents' transgression, with the author framing it as a moral tale about the consequences of passion outside the law.
+"""
+
+Notes = """
+Though published anonymously, this work is attributed to Elinor Glyn (1864-1943), the British author famous for her romantic and sensationalist fiction. "Three Weeks" was enormously controversial for its time due to its frank treatment of adultery and passion. The 1909 date reflects the original publication by The Macaulay Company as stated in the text itself. The 1912 date in the header is a later edition.
+"""
+</result>

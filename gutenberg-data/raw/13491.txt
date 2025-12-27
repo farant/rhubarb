@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "humor", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humor and satire established in 1841. It became one of the most influential satirical publications in history, running until 1992 (with a brief revival 1996-2002). The magazine was known for its cartoons, witty commentary on politics and society, and coined the term "cartoon" in its modern sense. This particular issue from August 15, 1891 includes "A Terrible Tale," a humorous poem that sets up dramatic expectations only to reveal the narrator is a carpet being beaten clean.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with its publication date clearly stated (August 15, 1891). Punch was generally family-friendly Victorian humor, hence appropriate-for-children tag.
+"""
+</result>

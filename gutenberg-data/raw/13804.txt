@@ -1,0 +1,15 @@
+<result>
+Title = "Voyage du Prince Fan-Férédin dans la Romancie"
+Author = "Guillaume-Hyacinthe Bougeant"
+Year = 1735
+
+Tags = ["fiction", "satire"]
+
+Summary = """
+This is a satirical novel by Guillaume-Hyacinthe Bougeant, a French Jesuit priest and writer. The work is a parody of the romance novel genre that was extremely popular in 17th and 18th century France. The fictional "Prince Fan-Férédin" travels through "Romancie" (a play on "romance"), a fantastical land that represents the world of romance novels. Through this journey, Bougeant mocks the conventions, clichés, and absurdities of the genre - the predictable plots, the overwrought emotions, the formal courtship rituals (note the chapter on "thirty-six preliminary formalities before marriage proposals"), and the tedious nature of many such works (the "illness of yawning" chapter). It's a clever meta-fictional critique written during the height of the romance novel's popularity.
+"""
+
+Notes = """
+Bougeant (1690-1743) was a Jesuit known for his wit and satirical works. While he was a Catholic priest, this particular work is literary satire rather than religious writing, so I have not included the 'catholic' tag. The year 1735 appears directly in the Gutenberg text and matches the known publication date of this work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Women and the Alphabet: A Series of Essays"
+Author = "Thomas Wentworth Higginson"
+Year = 1881
+
+Tags = ["non-fiction", "essays", "feminism", "education"]
+
+Summary = """
+A collection of essays by Thomas Wentworth Higginson advocating for women's education and equal rights. The lead essay, "Ought Women to Learn the Alphabet?", originally published in the Atlantic Monthly in 1859, became influential in the women's education movement and reportedly inspired Sophia Smith to found Smith College. The volume combines this landmark essay with later writings from "Common Sense About Women" (1881), addressing women's training, duties, and social position. Higginson was a Unitarian minister, abolitionist, and women's rights advocate who also famously corresponded with Emily Dickinson.
+"""
+
+Notes = """
+1881 is the publication year of this collected volume. The lead essay dates to 1859, but the book as a whole was compiled and published in 1881. The work had significant transatlantic circulation with London reprints and a German translation in 1895.
+"""
+</result>

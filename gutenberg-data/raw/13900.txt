@@ -1,0 +1,15 @@
+<result>
+Title = "Collected Poems 1897-1907"
+Author = "Henry Newbolt"
+Year = 1907
+
+Tags = ["poetry", "appropriate-for-children"]
+
+Summary = """
+A collection of patriotic and naval poetry by Sir Henry Newbolt (1862-1938), an English poet and author best known for his stirring verses celebrating British naval history and the spirit of empire. This collection includes his most famous poem "Drake's Drum," which imagines Sir Francis Drake promising to return from the afterlife to defend England if his drum is struck in time of need. Newbolt's poetry is characterized by its rhythmic, ballad-like quality and themes of duty, honor, and national pride. His work was immensely popular in Edwardian England and helped shape the patriotic sentiment of the era.
+"""
+
+Notes = """
+The year 1907 represents the publication date of this collected edition. "Drake's Drum" was first published in 1895 and became one of the most popular English poems of its era. Newbolt was knighted in 1915 for his contributions to literature.
+"""
+</result>

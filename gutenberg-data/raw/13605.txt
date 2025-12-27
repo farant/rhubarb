@@ -1,0 +1,15 @@
+<result>
+Title = "The Principal Navigations, Voyages, Traffiques and Discoveries of the English Nation"
+Author = "Richard Hakluyt"
+Year = 1589
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Richard Hakluyt's magnum opus is a monumental collection of accounts of English voyages, explorations, and trading expeditions from the earliest times through the Elizabethan era. Hakluyt (c. 1552-1616) was an English clergyman and geographer who devoted his life to promoting English exploration and colonization. This work compiled firsthand accounts, ships' logs, diplomatic correspondence, and geographical treatises documenting English maritime activity. The collection was instrumental in fostering English national pride in seafaring and encouraging further exploration and colonial ventures. It remains one of the most important primary source collections for understanding the Age of Discovery from an English perspective.
+"""
+
+Notes = """
+The first edition was published in 1589 as a single volume. A greatly expanded second edition appeared in three volumes from 1598-1600. This appears to be from a 19th-century edition edited by Edmund Goldsmid (the F.R.H.S. designation and editorial conventions indicate Victorian-era scholarship). I chose 1589 as the year since that represents the original publication of Hakluyt's work, which is the historically significant date for a timeline of works.
+"""
+</result>

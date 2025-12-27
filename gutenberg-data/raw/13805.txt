@@ -1,0 +1,15 @@
+<result>
+Title = "Todsünden"
+Author = "Hermann Heiberg"
+Year = 1891
+
+Tags = ["fiction", "german-literature"]
+
+Summary = """
+"Todsünden" (Deadly Sins) is a novel by the German-Danish author Hermann Heiberg (1840-1910). Heiberg was a significant figure in German literary realism, known for bridging traditional and modern literary styles. The preface positions him alongside Theodor Fontane as a pioneer of German realism who, unlike more programmatic naturalists, achieved realistic fiction through craft rather than manifestos. His earlier works "Plaudereien mit der Herzogin von Seeland" (1881) and "Apotheker Heinrich" helped establish realistic fiction for broader German audiences.
+"""
+
+Notes = """
+The year 1891 is taken directly from the title page of this Berlin edition published by "Verlag des Vereins der Bücherfreunde." The prefatory essay contextualizes Heiberg within the German realist movement of the 1870s-1890s.
+"""
+</result>

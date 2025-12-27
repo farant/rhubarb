@@ -1,0 +1,15 @@
+<result>
+Title = "Le Vicomte de Bragelonne, Tome III"
+Author = "Alexandre Dumas"
+Year = 1850
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Le Vicomte de Bragelonne is the third and final novel in Alexandre Dumas's D'Artagnan Romances trilogy, following The Three Musketeers and Twenty Years After. This massive work follows the aging musketeers—D'Artagnan, Athos, Porthos, and Aramis—during the early reign of Louis XIV. The novel encompasses several famous storylines including the Man in the Iron Mask. This Tome III continues the intricate court intrigues, featuring Porthos, Planchet, and various nobles navigating the politics and romances of the French court. The chapter titles reference royal psychology, Jesuits, Madame (Henrietta of England), and the schemes of characters like de Guiche, Malicorne, and de Wardes.
+"""
+
+Notes = """
+Le Vicomte de Bragelonne was originally published as a serial in the newspaper Le Siècle from 1847 to 1850. The complete work appeared in book form in 1850. Given that this is Tome III and the serialization concluded in 1850, that year represents the completion and definitive publication of this portion of the novel.
+"""
+</result>

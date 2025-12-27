@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary, Volume XLII, No. 7"
+Author = "American Missionary Association"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+The American Missionary was a monthly magazine published by the American Missionary Association (AMA), a Protestant abolitionist and missionary organization founded in 1846. The AMA was particularly active in establishing schools and churches for freed slaves in the South after the Civil War, as well as missionary work among Native Americans and Chinese immigrants. This July 1888 issue covers topics including the "Indian Problem," education at institutions like Gregory Institute and Tougaloo College, Chinese school life, women's temperance work in the South, and various missionary activities. The publication provides valuable primary source material for understanding post-Reconstruction era Protestant missionary efforts and attitudes toward race relations in America.
+"""
+
+Notes = """
+The year 1888 is taken directly from the publication date shown in the document. This is a periodical rather than a standalone book, so the publication date is straightforward. The AMA was a Congregationalist organization, not Catholic, so the 'catholic' tag is not applicable.
+"""
+</result>

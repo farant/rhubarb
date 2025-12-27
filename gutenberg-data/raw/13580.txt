@@ -1,0 +1,15 @@
+<result>
+Title = "Helsinkiin"
+Author = "Juhani Aho"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A short psychological novel about a young man named Antti Ljungberg who travels from Kuopio to Helsinki by boat and train to begin his university studies. The story captures his emotional journey of leaving home and family for the first time, exploring themes of independence, coming-of-age, and the transition to adulthood. Written during the Finnish national awakening, it also touches on the language politics of the era as Finnish was emerging as a language of academia in the bilingual country. Juhani Aho (1861-1921) was one of the first major Finnish authors to write in Finnish, and this work is considered a classic of Finnish literature.
+"""
+
+Notes = """
+The Gutenberg edition shows 1920 as the publication year (WSOY, Porvoo), but this is a later reprint. The novel was originally published in 1889. Aho was a pioneering figure in Finnish-language literature at a time when Swedish was still dominant in educated circles.
+"""
+</result>

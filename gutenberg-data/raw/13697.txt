@@ -1,0 +1,23 @@
+Based on my research, I found this text:
+
+**"Pondichéry, hoofdstad van Fransch-Indië"** by **Gerrit Verschuur** (1840-1906)
+
+This was published in the Dutch periodical "De Aarde en haar Volken" (The Earth and Its Peoples) in **1906**. The text notes it was translated "Naar het Fransch" (from the French), suggesting Verschuur originally wrote it in French.
+
+It's a travel/geographical account about Pondicherry, the capital of French colonial India, covering the city's accessibility by sea, urban layout (White city vs Indian city), government buildings, trade, politics, and the colonial situation.
+
+<result>
+Title = "Pondichéry, hoofdstad van Fransch-Indië"
+Author = "Gerrit Verschuur"
+Year = 1906
+
+Tags = ["non-fiction", "travel", "geography", "colonialism"]
+
+Summary = """
+A Dutch travel account of Pondicherry (Pondichéry), the capital of French India, originally written in French by the Dutch travel writer Gerrit Verschuur. The text describes the city's difficult sea approach, its division into a "White city" and "Indian city," the Government Palace, trade, population, architecture, religion, and the political situation of France's small remaining colonial holdings in India. Verschuur reflects on how France's once-ambitious Indian empire under Dupleix had shrunk to a modest 29,145 hectares, with Pondicherry and four small dependencies (Chandernagor, Karikal, Mahé, and Yanaon) being all that remained.
+"""
+
+Notes = """
+Published in "De Aarde en haar Volken" (The Earth and Its Peoples), a Dutch illustrated geographical periodical that ran from 1865-1940. The subtitle indicates this is from the 1906 volume. Gerrit Verschuur (1840-1906) was a Dutch travel writer; this may have been among his final works given he died in 1906.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Cathedral Church of Peterborough: A Description Of Its Fabric And A Brief History Of The Episcopal See"
+Author = "W.D. Sweeting"
+Year = 1898
+
+Tags = ["non-fiction", "architecture", "history", "anglican"]
+
+Summary = """
+This is an architectural and historical guide to Peterborough Cathedral, one of England's great Norman cathedrals. The work describes the physical fabric of the cathedral building—its architecture, monuments, and artistic features—while also providing a history of the episcopal see (the bishop's seat and diocese). Peterborough Cathedral is notable for its magnificent West Front with its three massive Gothic arches, and for being the original burial place of both Catherine of Aragon and Mary, Queen of Scots. The Rev. W.D. Sweeting was a local historian and clergyman who wrote several works on Peterborough and its surroundings.
+"""
+
+Notes = """
+First published February 1898, with a revised second edition in 1899. The 1926 date in the text refers to a later reprint by Bell and Sons. I chose 1898 as the original publication year. Note this is an Anglican work about an Anglican cathedral (Peterborough became Anglican at the Reformation), so it would not carry a nihil obstat or imprimatur, hence 'anglican' rather than 'catholic' in tags.
+"""
+</result>

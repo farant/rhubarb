@@ -1,0 +1,15 @@
+<result>
+Title = "Tristan"
+Author = "Thomas Mann"
+Year = 1903
+
+Tags = ["fiction"]
+
+Summary = """
+"Tristan" is a novella by German author Thomas Mann, one of his early masterworks. The story is set in a sanatorium called "Einfried" and explores themes of art, beauty, illness, and the conflict between bourgeois life and aesthetic sensibility. The title references Wagner's opera "Tristan und Isolde," which plays a central role in the narrative. A writer named Detlev Spinell becomes infatuated with Gabriele Klöterjahn, a frail, beautiful woman staying at the sanatorium. The story culminates in a powerful scene where she plays the Tristan prelude on piano, an act that proves fatal to her delicate health. It's considered one of Mann's finest shorter works, showcasing his ironic prose style and his recurring theme of the artist as outsider.
+"""
+
+Notes = """
+First published in 1903 as part of a collection of novellas titled "Tristan: Sechs Novellen." Thomas Mann was 28 years old at the time. This is the original German text.
+"""
+</result>

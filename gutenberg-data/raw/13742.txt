@@ -1,0 +1,15 @@
+<result>
+Title = "The Philippine Islands, 1493-1898, Volume VIII (of 55), 1591-1593"
+Author = "Emma Helen Blair, James Alexander Robertson"
+Year = 1903
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is volume eight of a monumental 55-volume documentary history of the Philippine Islands, compiled and edited by Emma Helen Blair and James Alexander Robertson between 1903-1909. The series collects and translates primary source documents from Spanish, Portuguese, and other European archives covering Philippine history from the pre-colonial period through the end of Spanish rule in 1898. This particular volume covers the years 1591-1593 and includes contemporaneous accounts of early navigators, descriptions of the islands and peoples, records of Catholic missions, and documentation of political, economic, commercial, and religious conditions. Edward Gaylord Bourne provided the historical introduction. The work remains an essential primary source collection for scholars of Philippine and Southeast Asian colonial history.
+"""
+
+Notes = """
+The year 1903 is chosen as this represents when Blair and Robertson began publishing this scholarly compilation. While the documents contained within date from the 1590s, the work itself is a 20th century editorial project of translation, annotation, and historical scholarship. The 'catholic' tag is applied because the work extensively documents Catholic missionary activity and includes many ecclesiastical documents, though the editors themselves were American academics working in a scholarly rather than devotional capacity.
+"""
+</result>

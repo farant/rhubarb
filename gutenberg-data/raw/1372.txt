@@ -1,0 +1,15 @@
+<result>
+Title = "The Adventures of Captain Bonneville"
+Author = "Washington Irving"
+Year = 1837
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is Washington Irving's account of Captain Benjamin Bonneville's fur-trading and exploration expeditions in the American West during the 1830s. Irving compiled the book from Bonneville's journals and personal conversations, documenting his travels through the Rocky Mountains, encounters with various Native American tribes, and observations of the fur trade. The book provides valuable historical documentation of the American frontier during the era of westward expansion, combining adventure narrative with ethnographic and geographic observations.
+"""
+
+Notes = """
+The 1837 date is when Irving originally published this work, based on materials he purchased from Captain Bonneville. The expeditions themselves took place between 1832-1835. Irving was already famous for works like "The Legend of Sleepy Hollow" and had recently completed his history of the Astoria fur trading venture when he undertook this project.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Last West and Paolo's Virginia"
+Author = "G. B. Warren"
+Year = 1919
+
+Tags = ["poetry", "non-fiction"]
+
+Summary = """
+A collection of poetry by Canadian author G. B. Warren, focusing on the natural landscapes of western Canada, particularly British Columbia. The poems describe scenes from the Pacific coast, the Cascade Range, Vancouver, Victoria, and various wilderness locations. The collection includes nature poetry celebrating mountain vistas, coastal scenery, and frontier life, along with a separate piece called "Paolo's Virginia" described as "A Spring Phantasy."
+"""
+
+Notes = """
+The copyright date of 1919 in Canada is used as the publication year. G. B. Warren appears to be a minor Canadian poet; this collection represents regional poetry celebrating the landscapes of British Columbia and the Canadian west coast during the early 20th century.
+"""
+</result>

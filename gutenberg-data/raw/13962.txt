@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement No. 455"
+Author = "Various"
+Year = 1884
+
+Tags = ["non-fiction", "periodical", "science", "technology"]
+
+Summary = """
+This is an issue of the Scientific American Supplement, a weekly publication that accompanied the main Scientific American magazine. The Supplement focused on longer, more technical articles covering chemistry, engineering, mechanics, and other scientific topics. This particular issue from September 20, 1884 includes articles on starch sugar chemistry, petroleum as locomotive fuel, gas light buoys, and harbor engineering at Havre. Scientific American was established in 1845 and became one of the most important popular science publications in America.
+"""
+
+Notes = """
+Year is straightforward - this is a periodical with a specific publication date of September 20, 1884. The Scientific American Supplement ran from 1876 to 1919 as a companion to the main magazine, offering more in-depth technical content.
+"""
+</result>

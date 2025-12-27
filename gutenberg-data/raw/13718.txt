@@ -1,0 +1,15 @@
+<result>
+Title = "Manual of Ship Subsidies: An Historical Summary of the Systems of All Nations"
+Author = "Edwin M. Bacon"
+Year = 1911
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an economic and political history reference work examining the ship subsidy systems of maritime nations worldwide. The book provides a comparative analysis of how different countries (Great Britain, France, Germany, Italy, Russia, Japan, the United States, and others) have used government subsidies to support their merchant marine fleets. Written during a period when maritime trade policy was a significant political issue, it serves as a factual compilation of laws, regulations, and historical development of these systems rather than an advocacy piece.
+"""
+
+Notes = """
+1911 is the publication year as stated on the title page. This appears to be the original publication, not a reprint or translation.
+"""
+</result>

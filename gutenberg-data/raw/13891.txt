@@ -1,0 +1,15 @@
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents"
+Author = "James D. Richardson"
+Year = 1902
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a volume from James D. Richardson's monumental compilation of presidential documents, specifically covering Theodore Roosevelt's administration. Richardson, a Democratic congressman from Tennessee, began this project in 1896 and it was published by authority of Congress. The compilation gathered together presidential messages to Congress, proclamations, executive orders, and other official papers from George Washington through the contemporary presidents. This particular volume covers Roosevelt's presidency beginning September 14, 1901 (when he assumed office after McKinley's assassination) through the end of the Fifty-seventh Congress's First Session. The work became a standard reference for American political history and presidential communications.
+"""
+
+Notes = """
+The year 1902 is chosen as this volume specifically covers materials through the end of the Fifty-seventh Congress's First Session, which concluded in July 1902. Richardson's compilation was an ongoing project that was updated with new volumes as presidencies progressed. The original compilation began publication in 1896 covering earlier presidents.
+"""
+</result>

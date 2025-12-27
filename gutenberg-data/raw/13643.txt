@@ -1,0 +1,15 @@
+<result>
+Title = "International Weekly Miscellany of Literature, Art, and Science"
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "literary-criticism"]
+
+Summary = """
+This is an issue of the International Weekly Miscellany, an American periodical published in New York in 1850. This particular issue (Vol. I, No. 6, dated August 5, 1850) contains literary criticism translated from the German Cologne Gazette, discussing prominent English female novelists of the era including Geraldine Jewsbury, Charlotte Brontë, and Elizabeth Gaskell. The piece provides contemporary observations about these writers' works, personalities, and social positions, offering a valuable glimpse into mid-19th century literary culture and attitudes toward women writers.
+"""
+
+Notes = """
+This is a periodical rather than a standalone work. The year 1850 is the actual publication date of this issue. The content represents contemporary literary criticism from the period, making it a primary historical source for understanding Victorian-era reception of female authors.
+"""
+</result>

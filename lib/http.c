@@ -7,6 +7,7 @@
 #include "tls.h"
 #include "tcp.h"
 #include "chorda_aedificator.h"
+#include "via.h"
 
 #include <string.h>
 
@@ -1046,35 +1047,59 @@ _resolvere_url_relativum(
     /* Casus 3: Via absolutum (incipit cum "/") */
     si (location.mensura > 0 && location.datum[0] == '/')
     {
-        per (i = 0; i < location.mensura; i++)
-        {
-            chorda_aedificator_appendere_character(aed, (character)location.datum[i]);
-        }
+        chorda via_normalizata;
+        chorda location_chorda;
+
+        /* Creare chorda ex location */
+        location_chorda.datum = location.datum;
+        location_chorda.mensura = location.mensura;
+
+        /* Normalizare viam (resolvere . et ..) */
+        via_normalizata = via_normalizare(location_chorda, piscina);
+
+        chorda_aedificator_appendere_chorda(aed, via_normalizata);
         resultatus = chorda_aedificator_finire(aed);
         redde (constans character*)resultatus.datum;
     }
 
     /* Casus 4: Via relativum - resolvere contra directory current */
-    /* Invenire ultimam "/" in via base */
-    ultima_slash = 0;
-    per (i = 0; i < base->via.mensura; i++)
     {
-        si (base->via.datum[i] == '/')
+        ChordaAedificator* via_aed;
+        chorda via_combinata;
+        chorda via_normalizata;
+
+        via_aed = chorda_aedificator_creare(piscina, CXXVIII);
+
+        /* Invenire ultimam "/" in via base */
+        ultima_slash = 0;
+        per (i = 0; i < base->via.mensura; i++)
         {
-            ultima_slash = i;
+            si (base->via.datum[i] == '/')
+            {
+                ultima_slash = i;
+            }
         }
-    }
 
-    /* Copiare via usque ad ultimam "/" (inclusive) */
-    per (i = 0; i <= ultima_slash; i++)
-    {
-        chorda_aedificator_appendere_character(aed, (character)base->via.datum[i]);
-    }
+        /* Copiare via usque ad ultimam "/" (inclusive) */
+        per (i = 0; i <= ultima_slash; i++)
+        {
+            chorda_aedificator_appendere_character(via_aed,
+                                                    (character)base->via.datum[i]);
+        }
 
-    /* Appendere location relativum */
-    per (i = 0; i < location.mensura; i++)
-    {
-        chorda_aedificator_appendere_character(aed, (character)location.datum[i]);
+        /* Appendere location relativum */
+        per (i = 0; i < location.mensura; i++)
+        {
+            chorda_aedificator_appendere_character(via_aed,
+                                                    (character)location.datum[i]);
+        }
+
+        via_combinata = chorda_aedificator_finire(via_aed);
+
+        /* Normalizare viam (resolvere . et ..) */
+        via_normalizata = via_normalizare(via_combinata, piscina);
+
+        chorda_aedificator_appendere_chorda(aed, via_normalizata);
     }
 
     resultatus = chorda_aedificator_finire(aed);

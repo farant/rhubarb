@@ -1,0 +1,15 @@
+<result>
+Title = "The Unknown Eros"
+Author = "Coventry Patmore"
+Year = 1877
+
+Tags = ["poetry", "catholic", "mystical"]
+
+Summary = """
+The Unknown Eros is a collection of odes by Coventry Patmore, an English poet who converted to Catholicism in 1864. The poems explore themes of divine and human love, mystical spirituality, and the relationship between earthly and heavenly eros. Patmore was deeply influenced by Catholic mysticism, particularly the writings of St. John of the Cross. The collection represents some of the finest English Catholic devotional poetry of the Victorian era, treating marriage and conjugal love as sacramental and pointing toward divine love. The work is written in what Patmore calls "catalectic verse" - a free form using pause and rhyme with flexibility governed by poetic passion rather than fixed metrical rules.
+"""
+
+Notes = """
+First published in 1877, with expanded editions following. Patmore (1823-1896) is best known for "The Angel in the House" but considered The Unknown Eros his finest work. His Catholic mystical poetry influenced later writers including Gerard Manley Hopkins and Francis Thompson.
+"""
+</result>

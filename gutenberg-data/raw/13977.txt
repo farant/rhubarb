@@ -1,0 +1,15 @@
+<result>
+Title = "The Argonautica"
+Author = "Apollonius Rhodius"
+Year = -250
+
+Tags = ["fiction", "classical-literature", "mythology", "epic-poetry"]
+
+Summary = """
+The Argonautica is a Hellenistic Greek epic poem written by Apollonius of Rhodes in the 3rd century BC. It tells the story of Jason and the Argonauts on their quest to retrieve the Golden Fleece from Colchis. The poem is notable for its psychological depth, particularly in its portrayal of Medea's love for Jason in Book III, which influenced later Roman poets including Virgil and Ovid. It is the only complete surviving Hellenistic epic and represents a significant literary achievement of the Alexandrian period.
+"""
+
+Notes = """
+The year -250 (250 BC) is approximate. Apollonius likely composed this work in the mid-3rd century BC, with scholars placing his birth between 296-260 BC. The introduction mentions this is R.C. Seaton's 1912 English translation for the Loeb Classical Library. The original Greek composition predates this translation by over two millennia. I chose the approximate composition date rather than the translation date since the text is primarily the ancient work itself.
+"""
+</result>

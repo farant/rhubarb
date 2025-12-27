@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of Manhattan"
+Author = "Charles Hemstreet"
+Year = 1901
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A concise history of New York City written for general readers, particularly young people. Charles Hemstreet (1866-1938) was an American author who specialized in accessible histories of New York. This book traces Manhattan's development from its earliest days through the turn of the 20th century, using a narrative storytelling approach rather than dry academic prose. The book was illustrated with historical prints and engravings, and included a table of events for easy reference. Hemstreet deliberately minimized dates in the main text to keep the narrative flowing smoothly.
+"""
+
+Notes = """
+1901 is the original publication year as stated in the text itself. Hemstreet wrote several popular histories of New York during this era.
+"""
+</result>

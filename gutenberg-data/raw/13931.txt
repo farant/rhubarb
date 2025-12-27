@@ -1,0 +1,15 @@
+<result>
+Title = "Master Of His Fate"
+Author = "J. Maclaren Cobban"
+Year = 1890
+
+Tags = ["fiction"]
+
+Summary = """
+A Victorian novel by Scottish author James Maclaren Cobban (1849-1903). The work appears to be a psychological or supernatural thriller involving mysterious cases and a physician character. The dedication to Z. Mennell, described as representing "the most humane and most exacting of all professions," suggests the medical profession plays a central role. The chapter titles hint at elements of mystery, the supernatural ("An Apparition And a Confession"), and romance ("Contains a Love Interlude"). Cobban was known for his psychological fiction and this novel explores themes of human will and destiny, as suggested by the title.
+"""
+
+Notes = """
+The year 1890 appears directly on the title page of this Gutenberg text, which represents the original publication date.
+"""
+</result>

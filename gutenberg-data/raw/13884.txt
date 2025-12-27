@@ -1,0 +1,15 @@
+<result>
+Title = "The History of Sir Charles Grandison, Volume IV"
+Author = "Samuel Richardson"
+Year = 1753
+
+Tags = ["fiction"]
+
+Summary = """
+The History of Sir Charles Grandison is an epistolary novel by Samuel Richardson, published in seven volumes. It was Richardson's final novel, following his earlier successes Pamela (1740) and Clarissa (1748). The novel presents Sir Charles Grandison as an idealized model of the perfect English gentleman - virtuous, honorable, and morally exemplary. The plot involves a complex love triangle between Sir Charles, the English Harriet Byron, and the Italian Catholic Clementina della Porretta. Volume IV continues the narrative through letters, particularly focusing on Sir Charles's relationship with the Porretta family in Italy and Clementina's struggles. The novel was highly influential in establishing the "novel of manners" genre and was admired by Jane Austen among others.
+"""
+
+Notes = """
+The novel was first published in 1753, with volumes appearing between November 1753 and March 1754. Richardson wrote it partly in response to readers who wanted to see a portrayal of a virtuous male character after his female protagonists in earlier works.
+"""
+</result>

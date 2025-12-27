@@ -1,0 +1,15 @@
+<result>
+Title = "Taormina"
+Author = "Johanna G. Lugt"
+Year = 1904
+
+Tags = ["non-fiction", "travel-writing"]
+
+Summary = """
+This is a Dutch-language travel account about Taormina, the famous town on the east coast of Sicily known for its ancient Greek theatre and stunning views of Mount Etna. The author Johanna G. Lugt was a Dutch travel writer active in the early 20th century. The excerpt speaks to experiencing Italy authentically, moving beyond superficial tourist judgments to appreciate Italian culture, people, and customs. The epigraph quotes Annie Vivanti ("I want the sun, I want the burning sun"), setting the tone for Mediterranean wanderlust.
+"""
+
+Notes = """
+Johanna G. Lugt published several travel books about Italy and Sicily in the early 1900s. The exact publication year is uncertain, but based on the style and the reference to Annie Vivanti (whose fame peaked around 1900-1910), I estimate circa 1904. This is a travel memoir rather than fiction or historical document.
+"""
+</result>

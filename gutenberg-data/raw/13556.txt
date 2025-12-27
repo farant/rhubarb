@@ -1,0 +1,15 @@
+<result>
+Title = "Behind the Line: A Story of College Life and Football"
+Author = "Ralph Henry Barbour"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Behind the Line is a novel by Ralph Henry Barbour, a prolific American author known for his boys' sports fiction in the early 20th century. The book follows college life centered around football, typical of Barbour's genre which combined athletic competition with themes of character development, sportsmanship, and coming-of-age. Barbour wrote dozens of similar novels that were popular with young male readers of the era. The book includes illustrations by C.M. Relyea and features a football play devised by Lorin F. Deland, a noted football strategist credited with innovations like the "flying wedge" formation.
+"""
+
+Notes = """
+1902 is the publication year shown on the title page. Ralph Henry Barbour (1870-1944) was not Catholic; he was a mainstream American author of juvenile fiction. The work would have been considered wholesome reading for boys of the period.
+"""
+</result>

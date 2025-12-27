@@ -1,0 +1,15 @@
+<result>
+Title = "Every Step in Canning: The Cold-Pack Method"
+Author = "Grace Viall Gray"
+Year = 1920
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a practical home economics guide to food preservation using the cold-pack (also known as one-period) canning method. Grace Viall Gray, a former associate professor of Home Economics at Iowa State College, wrote this book to popularize a more efficient canning technique she had learned at a demonstration in DeKalb, Illinois. The cold-pack method allowed home canners to preserve not only fruits but also harder vegetables like peas, corn, and beans more easily than traditional methods. The book appears to be aimed at housewives and home cooks, providing step-by-step instruction in this preservation technique during an era when home food preservation was essential for most American families.
+"""
+
+Notes = """
+The year 1920 appears on the title page itself, indicating the original publication date. This was published during a period of strong interest in home food preservation, which had been heavily promoted during World War I as part of the war effort, and the techniques remained popular in the immediate postwar years.
+"""
+</result>
