@@ -1,0 +1,15 @@
+<result>
+Title = "The Practice & Science of Drawing"
+Author = "Harold Speed"
+Year = 1913
+
+Tags = ["non-fiction", "art-instruction"]
+
+Summary = """
+A comprehensive treatise on drawing by Harold Speed, a respected British artist and member of the Royal Society of Portrait Painters. The book covers both the practical techniques and theoretical principles of drawing, addressing topics such as line, mass, rhythm, unity, and the relationship between drawing and painting. Speed wrote this as an instructional text for serious art students, rejecting superficial "tricks" in favor of deep understanding of artistic principles. It became an influential text in art education and remains studied today.
+"""
+
+Notes = """
+1913 is the original publication date as shown on the title page. This is Speed's first major instructional book; he later wrote "Oil Painting Techniques and Materials" (1924). The work represents early 20th century academic art instruction philosophy.
+"""
+</result>

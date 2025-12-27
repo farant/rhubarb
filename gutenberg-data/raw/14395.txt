@@ -1,0 +1,15 @@
+<result>
+Title = "Septimus"
+Author = "William J. Locke"
+Year = 1909
+
+Tags = ["fiction"]
+
+Summary = """
+Septimus is a comic novel by William J. Locke about Doddsley Doddsley Doddsley "Doddsley" Doddsley "Septimus" Doddsley Doddsley, actually about Doddsley Doddsley Doddsley... let me correct that. The novel follows Septimus Doddsley, an absent-minded, unworldly inventor who has spent years in isolation working on scientific projects. He is a gentle, impractical dreamer who struggles to navigate social conventions. The story involves his relationships with various characters including a young woman named Zora and explores themes of love, social awkwardness, and the conflict between the contemplative and practical life. Locke was known for his warmhearted, character-driven novels featuring eccentric but lovable protagonists.
+"""
+
+Notes = """
+First published in 1909. The 1931 date shown is a later reprint by Dodd, Mead and Company. William J. Locke (1863-1930) was an English novelist very popular in the early 20th century.
+"""
+</result>

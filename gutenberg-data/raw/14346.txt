@@ -1,0 +1,15 @@
+<result>
+Title = "An Historical Relation of the Island Ceylon, in the East-Indies"
+Author = "Robert Knox"
+Year = 1681
+
+Tags = ["non-fiction", "historical-document", "travel-literature"]
+
+Summary = """
+This is Robert Knox's famous account of his nearly twenty years of captivity on the island of Ceylon (modern-day Sri Lanka). Knox, an English sea captain, was captured along with his father and other crew members in 1660 when their ship, the Anne, was forced to seek repairs on the island. They were detained by the Kandyan king Rajasinghe II. Knox's father died in captivity, but Robert eventually escaped in 1679 and made his way to the Dutch-controlled coast. His detailed account provides one of the most comprehensive European descriptions of 17th-century Sinhalese society, including its geography, customs, religion, agriculture, and political structure. The work was highly influential and was later used by Daniel Defoe as a source for Robinson Crusoe.
+"""
+
+Notes = """
+The year 1681 is the original publication date in London. This is the first and primary edition of the work, printed by Richard Chiswell for the Royal Society. The endorsement from the East India Company dated August 1681 appears in the prefatory matter.
+"""
+</result>

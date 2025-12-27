@@ -1,0 +1,15 @@
+<result>
+Title = "The Philippine Islands, 1493-1898, Volume VIII (of 55), 1591-1593"
+Author = "Emma Helen Blair, James Alexander Robertson"
+Year = 1904
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is volume VIII of a monumental 55-volume scholarly compilation of primary source documents relating to the Philippine Islands from 1493 to 1898. The series, edited by Emma Helen Blair and James Alexander Robertson, translates and annotates contemporaneous Spanish colonial documents, missionary records, exploration accounts, and administrative correspondence. This particular volume covers the years 1591-1593. The work is invaluable for understanding Spanish colonial history, Catholic missionary efforts (particularly by Augustinians, Franciscans, Jesuits, and Dominicans), and the indigenous peoples of the Philippines during the Spanish period.
+"""
+
+Notes = """
+The Blair-Robertson series was published between 1903-1909 by the Arthur H. Clark Company in Cleveland, Ohio. Volume VIII was published in 1904. While the documents contained within date to 1591-1593, the year chosen reflects when this scholarly compilation was published, as this is primarily a work of historical editing, translation, and annotation rather than a simple reproduction of original texts.
+"""
+</result>

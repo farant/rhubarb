@@ -1,0 +1,15 @@
+<result>
+Title = "Inaugural Address (Second Inauguration)"
+Author = "Grover Cleveland"
+Year = 1893
+
+Tags = ["non-fiction", "historical-document", "political-speech"]
+
+Summary = """
+This is the second inaugural address of Grover Cleveland, delivered on March 4, 1893, when he began his second (non-consecutive) term as the 22nd and 24th President of the United States. Cleveland remains the only U.S. president to serve two non-consecutive terms. The address focuses on themes of national integrity, the dangers of paternalism in government, sound currency, tariff reform, and the importance of maintaining constitutional limits on federal power. Cleveland was a conservative Democrat known for his fiscal conservatism, opposition to political corruption, and support for the gold standard.
+"""
+
+Notes = """
+The year 1893 is the date of delivery. Cleveland's second term was marked by the Panic of 1893, one of the worst economic depressions in American history. This speech preceded those difficulties and reflects his governing philosophy of limited government and individual responsibility.
+"""
+</result>

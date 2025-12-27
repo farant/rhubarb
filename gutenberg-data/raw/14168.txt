@@ -1,0 +1,15 @@
+<result>
+Title = "Widdershins"
+Author = "Oliver Onions"
+Year = 1911
+
+Tags = ["fiction"]
+
+Summary = """
+Widdershins is a collection of supernatural horror and ghost stories by British author Oliver Onions. The collection is best known for containing "The Beckoning Fair One," widely considered one of the finest ghost stories in the English language. The stories explore psychological horror, the uncanny, and supernatural phenomena. The title "Widdershins" means "contrary to the course of the Sun" (counter-clockwise), a direction traditionally associated with bad luck and dark magic in folklore.
+"""
+
+Notes = """
+Oliver Onions (1873-1961) was a British novelist and short story writer. While he wrote in various genres, he is primarily remembered today for his supernatural fiction. "The Beckoning Fair One" from this collection has been anthologized extensively and influenced later horror writers. The work is not appropriate for young children due to its mature psychological horror themes.
+"""
+</result>

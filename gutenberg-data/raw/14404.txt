@@ -1,0 +1,15 @@
+<result>
+Title = "Les Rois"
+Author = "Jules Lemaître"
+Year = 1893
+
+Tags = ["fiction"]
+
+Summary = """
+"Les Rois" (The Kings) is a play by Jules Lemaître, a prominent French critic, dramatist, and member of the Académie française. The work is set in 1900 and opens in a royal court with the elderly King Christian on his throne. Lemaître was known for his theatrical works that often explored political and social themes with wit and psychological insight. This play appears to examine monarchy and royal institutions, fitting with the late 19th century French interest in questioning traditional power structures while also harboring nostalgia for them.
+"""
+
+Notes = """
+The 1893 date comes directly from the text itself (fifth edition published by Calmann Lévy). Jules Lemaître (1853-1914) was a significant figure in French literary criticism and theater of the Belle Époque period.
+"""
+</result>

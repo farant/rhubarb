@@ -1,0 +1,15 @@
+<result>
+Title = "Music Talks with Children"
+Author = "Thomas Tapper"
+Year = 1898
+
+Tags = ["non-fiction", "appropriate-for-children", "music-education"]
+
+Summary = """
+This is an educational work by Thomas Tapper, an American music educator and author who was prolific in producing music education materials for children in the late 19th and early 20th centuries. The book is designed to introduce children to various aspects of music appreciation and understanding through simple, accessible "talks" or discussions. Tapper was associated with the progressive music education movement and wrote numerous books aimed at making music accessible to young learners. The work is intended to be read or discussed with children by an adult, serving as a guide for music appreciation conversations.
+"""
+
+Notes = """
+The 1898 date is taken directly from the publication information in the text (Philadelphia, Theodore Presser, 1898). Theodore Presser was a prominent American music publisher. This represents the original publication date.
+"""
+</result>

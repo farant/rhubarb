@@ -1,0 +1,15 @@
+<result>
+Title = "Quatre Contes de Prosper Mérimée"
+Author = "Prosper Mérimée"
+Year = 1902
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is an educational edition of four short stories by the French Romantic writer Prosper Mérimée (1803-1870), edited by F.C.L. Van Steenderen for American students learning French. Mérimée was a master of the short story form, known for his precise, economical prose and dramatic narratives. His most famous work is "Carmen" (1845), which inspired Bizet's opera. This collection includes "Le Coup de pistolet," Mérimée's adaptation of Pushkin's "The Shot," which the editor notes is so thoroughly reimagined that it functions as an original work. The stories showcase Mérimée's characteristic blend of realism, psychological insight, and occasional supernatural elements.
+"""
+
+Notes = """
+The year 1902 reflects the publication date of this specific annotated educational edition. While the original stories by Mérimée date from the mid-19th century, this edition represents a distinct scholarly work with introduction, notes, and vocabulary apparatus by Van Steenderen. For a historical timeline focused on educational publishing and the reception of French literature in American academia, 1902 is the appropriate date.
+"""
+</result>

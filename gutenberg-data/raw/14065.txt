@@ -1,0 +1,15 @@
+<result>
+Title = "The History of the Remarkable Life of John Sheppard"
+Author = "Daniel Defoe"
+Year = 1724
+
+Tags = ["non-fiction", "historical-document", "biography", "crime"]
+
+Summary = """
+This is a biographical account of John "Jack" Sheppard (1702-1724), one of the most notorious criminals of 18th century London. Sheppard became a folk hero not for the severity of his crimes (mostly burglaries and highway robberies), but for his extraordinary escapes from prison. He escaped from custody four times in 1724, including twice from Newgate Prison—the second escape being particularly legendary as he broke free from the heavily fortified "Castle" while chained and handcuffed. His exploits captivated London and he became a celebrity, with crowds visiting him in prison. He was finally executed at Tyburn on November 16, 1724, at age 22. Daniel Defoe, author of Robinson Crusoe, wrote this account capitalizing on the enormous public interest in Sheppard's story.
+"""
+
+Notes = """
+This pamphlet was published in 1724, the same year as Sheppard's escapes and execution. Daniel Defoe wrote several accounts of Sheppard's life that year, capitalizing on the public fascination. The reference to the escape "in the Night of the 15th of October" confirms this is the 1724 publication, as that was when Sheppard made his final, most famous escape from Newgate. He was recaptured and executed the following month.
+"""
+</result>

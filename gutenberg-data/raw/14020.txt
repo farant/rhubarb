@@ -1,0 +1,15 @@
+<result>
+Title = "The Works of Horace"
+Author = "Horace (Quintus Horatius Flaccus), translated by Christopher Smart, revised by Theodore Alois Buckley"
+Year = -23
+
+Tags = ["poetry", "classical", "non-fiction", "appropriate-for-children"]
+
+Summary = """
+This is a prose translation of the complete works of Horace (65-8 BC), the great Roman lyric poet of the Augustan age. The Odes (Carmina) are his most celebrated work, consisting of four books of lyric poetry covering themes of love, friendship, wine, nature, philosophy, and the Roman state. This particular edition presents Christopher Smart's literal English prose translation, later revised by Theodore Buckley. Smart (1722-1771) was an English poet known for his translations of classical works. The excerpt shown is Ode I.1, the famous dedication to Maecenas, Horace's patron, which serves as a programmatic introduction to the entire collection, cataloguing various human pursuits before Horace declares his own calling as a lyric poet.
+"""
+
+Notes = """
+Year chosen is -23 (23 BC), when Horace published the first three books of the Odes. While this translation dates from the 18th-19th century (Smart's original ~1756, Buckley's revision ~1850s), the work itself is the ancient Roman text, so the original publication date is most historically meaningful for a timeline of works. Book IV of the Odes was published separately in 13 BC.
+"""
+</result>

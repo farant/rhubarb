@@ -1,0 +1,15 @@
+<result>
+Title = "Séraphîta"
+Author = "Honoré de Balzac"
+Year = 1835
+
+Tags = ["fiction", "mysticism", "philosophy"]
+
+Summary = """
+Séraphîta is a philosophical novel by Honoré de Balzac, part of his Études philosophiques within La Comédie humaine. Set in a Norwegian fjord, the novel follows a mysterious androgynous being named Séraphîta/Séraphîtüs who appears as a woman to a young man (Wilfrid) and as a man to a young woman (Minna). The work is heavily influenced by the mystical theology of Emanuel Swedenborg and explores themes of spiritual transcendence, the nature of angels, divine love, and the possibility of human beings ascending to angelic states. It culminates in Séraphîta's transformation and ascension to heaven. The novel is considered one of Balzac's most esoteric and spiritually ambitious works.
+"""
+
+Notes = """
+First published in 1835 in the Revue de Paris, then as a complete volume in 1835. This English translation is by Katharine Prescott Wormeley. The dedication to Eveline Hanska is significant—she was Balzac's great love whom he eventually married. While Balzac was nominally Catholic, this work draws heavily on Swedenborgian mysticism rather than orthodox Catholic theology, so I have not included the 'catholic' tag.
+"""
+</result>

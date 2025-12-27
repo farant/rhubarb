@@ -1,0 +1,15 @@
+<result>
+Title = "The Memoirs of Major Alexander Ramkins, A Highland Officer"
+Author = "Daniel Defoe"
+Year = 1719
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+This is a work of fiction by Daniel Defoe, presented as the memoirs of a Scottish Jacobite officer who served King James II (the deposed Stuart monarch) across various European campaigns over 28 years. The narrative purports to be written from prison in Avignon, France. Defoe was known for writing fictional memoirs and pseudo-autobiographies (including Robinson Crusoe, published the same year). This work is part of his output of Jacobite-themed fiction, presenting cautionary tales about those who supported the Stuart cause against the Hanoverian succession. The work satirizes French politics and warns British readers against entangling themselves in "foreign interests" - a political message relevant to the post-1715 Jacobite rebellion period.
+"""
+
+Notes = """
+The attribution to Daniel Defoe is based on scholarly consensus identifying this as one of his works. Published in 1719, the same year as Robinson Crusoe. "Major Alexander Ramkins" is a fictional character, not a historical person. The work is propaganda/satire disguised as memoir, a genre Defoe excelled at.
+"""
+</result>

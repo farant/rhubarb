@@ -1,0 +1,15 @@
+<result>
+Title = "Holidays at Roselands"
+Author = "Martha Finley"
+Year = 1868
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the second book in the popular "Elsie Dinsmore" series by Martha Finley. The series follows Elsie Dinsmore, a young Southern girl in antebellum America, known for her piety and moral struggles. The books were extremely popular in the late 19th century, particularly among young girls. The series eventually grew to 28 volumes. While the books have strong Protestant Christian themes emphasizing piety and obedience, they are not Catholic works.
+"""
+
+Notes = """
+The copyright notice in the text explicitly states 1868 as the original publication year. The 1898 date is a later copyright renewal by Dodd, Mead & Company. The full title is sometimes given as "Elsie's Holidays at Roselands" as shown in the chapter heading.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Picture of Dorian Gray"
+Author = "Oscar Wilde"
+Year = 1890
+
+Tags = ["fiction"]
+
+Summary = """
+The Picture of Dorian Gray is Oscar Wilde's only novel, a philosophical work exploring aestheticism, moral corruption, and the relationship between beauty and morality. The story follows Dorian Gray, a young man whose portrait ages while he remains youthful, allowing him to pursue a life of hedonism and vice without visible consequence. The novel is famous for its witty epigrams and its exploration of the dangerous pursuit of pleasure at the expense of conscience. It was considered scandalous upon publication and was used as evidence against Wilde during his trials.
+"""
+
+Notes = """
+The novel was first published in 1890 in Lippincott's Monthly Magazine, then revised and expanded for book publication in 1891. This is a French translation published in 1893 by Albert Savine. I chose 1890 as the original publication year. The preface shown here contains Wilde's famous aphorisms about art and criticism.
+"""
+</result>

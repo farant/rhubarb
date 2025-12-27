@@ -1,0 +1,23 @@
+<result>
+Title = "Lalli; Tuomas piispa; Maunu Tavast"
+Author = "Eino Leino"
+Year = 1907
+
+Tags = ["fiction", "drama", "historical-fiction"]
+
+Summary = """
+This is a collection of three historical plays by Finnish author Eino Leino, one of Finland's most celebrated poets and playwrights. The three plays dramatize key figures from Finnish medieval history:
+
+1. "Lalli" - About the legendary Finnish peasant who, according to tradition, killed Bishop Henry (Henrik Pyhä), the apostle of Finland, in 1158. This is one of Finland's foundational national legends.
+
+2. "Tuomas piispa" (Bishop Thomas) - About Thomas, Bishop of Finland in the 13th century.
+
+3. "Maunu Tavast" - About Magnus Tavast, Bishop of Turku in the 15th century, an important figure in Finnish ecclesiastical history.
+
+These plays are part of Leino's "Naamioita" (Masks) series, which explored Finnish historical and mythological themes through drama.
+"""
+
+Notes = """
+The plays were published across 1907-1909 as indicated in the text. I chose 1907 as the year since that's when the first play (Lalli) was published as part of "Naamioita II". Eino Leino (1878-1926) was a central figure in Finnish literature during the National Romantic period. Bishop Henry's martyrdom by Lalli is a semi-legendary event traditionally dated to 1158, and forms part of Finland's Christian origin story, though the historical accuracy is debated.
+"""
+</result>

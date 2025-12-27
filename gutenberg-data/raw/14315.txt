@@ -1,0 +1,15 @@
+<result>
+Title = "Old English Sports: Pastimes and Customs"
+Author = "P. H. Ditchfield"
+Year = 1891
+
+Tags = ["non-fiction", "history", "appropriate-for-children"]
+
+Summary = """
+A historical survey of traditional English sports, pastimes, and customs by Peter Hampson Ditchfield (1854-1930), a prolific English antiquarian, clergyman, and author. Ditchfield was the rector of Barkham in Berkshire and a Fellow of the Royal Historical Society. He wrote extensively on English rural life, local history, and traditions. This work examines the recreational activities and social customs of earlier periods in English history, drawing on his antiquarian research and interest in preserving knowledge of vanishing traditions. The book was originally published as a series of articles in The Parish Magazine before being collected into book form.
+"""
+
+Notes = """
+The title page explicitly states "First published by Methuen & Co., 1891" which provides the definitive publication year.
+"""
+</result>

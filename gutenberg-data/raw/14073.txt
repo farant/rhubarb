@@ -1,0 +1,15 @@
+<result>
+Title = "Berättelser från Finland"
+Author = "Daniel Sten (Ina Lange)"
+Year = 1890
+
+Tags = ["fiction"]
+
+Summary = """
+A collection of short stories from Finland by Ina Lange, writing under the pseudonym Daniel Sten. Ina Lange (1846-1930) was a Swedish-speaking Finnish author. This collection contains seven stories with evocative titles like "Every Fifty Years a Flower Blooms" (Hvart femtionde år slår en blomma ut), "Towards Evening" (Mot afton), "Night" (Natt), and others. The opening story begins with an elderly woman, Fru Lamström, struggling to light a fire in her stove - setting an atmospheric, intimate tone typical of late 19th century Nordic regional literature.
+"""
+
+Notes = """
+First published by Z. Hæggströms Förlagsexpedition in 1890 as stated in the text itself. The work is dedicated to Gabriele von Plessen.
+"""
+</result>

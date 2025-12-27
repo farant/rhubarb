@@ -1,0 +1,15 @@
+<result>
+Title = "The Voice of the City: Further Stories of the Four Million"
+Author = "O. Henry"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories by O. Henry (pen name of William Sydney Porter), set primarily in New York City. This is a follow-up to his popular collection "The Four Million" and features his characteristic wit, surprise endings, and sympathetic portrayals of ordinary urban dwellers. The stories explore the lives of New Yorkers from various social classes, capturing the humor, irony, and humanity of city life in the early 20th century. O. Henry was renowned for his clever plot twists and accessible prose style.
+"""
+
+Notes = """
+The 1919 date shown in the Gutenberg text is a reprint edition. The original publication was 1908 by McClure Company. O. Henry died in 1910, so this collection was published during his lifetime.
+"""
+</result>

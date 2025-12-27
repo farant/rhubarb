@@ -1,0 +1,17 @@
+The text you've shared in your message is sufficient for me to identify this work.
+
+<result>
+Title = "The Autobiography of Benjamin Franklin"
+Author = "Benjamin Franklin"
+Year = 1791
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+The Autobiography of Benjamin Franklin is one of the most influential and widely-read autobiographies in American literature. Franklin began writing it in 1771 as a private account for his son William, but it grew into a much larger project spanning his life from childhood in Boston through his rise as a printer, scientist, inventor, and statesman. The work covers his early years, his self-education, his establishment of the printing business in Philadelphia, his civic projects, scientific experiments, and diplomatic career. It is particularly famous for his systematic approach to moral improvement through his list of thirteen virtues. The autobiography remained unfinished at his death in 1790, ending around 1757.
+"""
+
+Notes = """
+Year chosen is 1791, when the first edition was published posthumously in Paris (in French translation). Franklin wrote the work in four parts between 1771-1790 but never published it during his lifetime. The Harvard Classics edition you have (1909, edited by Charles W. Eliot) is a later annotated scholarly edition. While Franklin died in 1790, the work properly entered the world in 1791.
+"""
+</result>

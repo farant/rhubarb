@@ -1,0 +1,15 @@
+<result>
+Title = "Mrs. Lirriper's Legacy"
+Author = "Charles Dickens"
+Year = 1864
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mrs. Lirriper's Legacy is the second of two Christmas stories featuring Mrs. Emma Lirriper, a warm-hearted London lodging-house keeper. This sequel to "Mrs. Lirriper's Lodgings" (1863) continues her narrative voice - rambling, digressive, and full of affection - as she recounts adventures involving her adopted grandson Jemmy and her loyal friend Major Jackman. The story was originally published as the extra Christmas number of Dickens's periodical "All the Year Round" in December 1864. Like its predecessor, it showcases Dickens's gift for creating memorable, garrulous narrators from the working class.
+"""
+
+Notes = """
+Year 1864 chosen as this is when the story was first published in "All the Year Round" Christmas number. The 1894 Chapman and Hall edition mentioned in the Gutenberg text is a later collected edition.
+"""
+</result>

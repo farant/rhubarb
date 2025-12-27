@@ -1,0 +1,15 @@
+<result>
+Title = "English Grammar, in Familiar Lectures"
+Author = "Samuel Kirkham"
+Year = 1829
+
+Tags = ["non-fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+This is Samuel Kirkham's influential grammar textbook, first published in 1829. It was one of the most widely used English grammar books in American schools during the 19th century, going through numerous editions. The work presents English grammar through a series of "familiar lectures" designed to make the subject accessible to students. It includes systematic parsing exercises, punctuation rules, exercises in correcting false syntax, and philosophical notes on grammar theory. The book was designed for both classroom use and private learners, reflecting the educational practices of the early American republic.
+"""
+
+Notes = """
+The copyright notice in the text explicitly states August 22, 1829, as the deposit date for the 54th year of American Independence, confirming this as the first edition date. Kirkham's grammar was enormously popular and remained in print for decades, with the "stereotype edition" indicating this is a later printing from fixed plates.
+"""
+</result>

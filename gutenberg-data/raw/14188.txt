@@ -1,0 +1,15 @@
+<result>
+Title = "Fifty-Two Story Talks to Boys and Girls"
+Author = "Howard J. Chidley"
+Year = 1914
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of 52 short moral and religious stories designed to be told to children, likely intended for Sunday school or church settings. The author was a Congregational pastor, and the book represents the early 20th century tradition of using simple narrative stories to teach Christian values and ethics to young people. Each "story talk" would have been suitable for one week of the year, providing a full year's worth of children's sermons or lessons.
+"""
+
+Notes = """
+Year 1914 taken directly from the copyright notice in the text. The author was a Protestant (Congregational) minister, not Catholic, so the 'catholic' tag is not applied despite the work being Christian in nature.
+"""
+</result>

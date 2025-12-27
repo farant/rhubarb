@@ -1,0 +1,15 @@
+<result>
+Title = "The Angels of Mons: The Bowmen and Other Legends of the War"
+Author = "Arthur Machen"
+Year = 1915
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+This is Arthur Machen's famous collection of supernatural war stories, most notably "The Bowmen," published during World War I. The title story, originally published in The Evening News in September 1914, depicts spectral English longbowmen from the Battle of Agincourt appearing to aid British soldiers at the Battle of Mons. The story became legendary because many readers believed it to be a true account, spawning widespread rumors of angelic or supernatural intervention at Mons. Machen spent considerable effort explaining that it was pure fiction, but the "Angels of Mons" legend persisted and became one of the most enduring myths of World War I. The collection includes the original story along with other war-themed supernatural tales and Machen's introduction discussing the strange phenomenon of his fiction being taken as fact.
+"""
+
+Notes = """
+1915 is the publication year of this book collection. "The Bowmen" story itself first appeared in The Evening News on September 29, 1914, shortly after the actual Battle of Mons (August 23, 1914). Machen was a Welsh author associated with the supernatural and decadent literary movements, known for works like "The Great God Pan." This work is historically significant as a study in how fiction can transform into folklore and urban legend in real-time.
+"""
+</result>

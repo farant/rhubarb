@@ -1,0 +1,15 @@
+<result>
+Title = "Panayam ng Tatlong Binata / Tinig Kasalukuyan"
+Author = "Cleto R. Ignacio"
+Year = 1921
+
+Tags = ["fiction", "tagalog-literature"]
+
+Summary = """
+This is a Tagalog literary work from the early 20th century Philippines, written in verse (tinula) format. The title translates roughly to "Conversation of Three Bachelors" or "Voice of the Present" - a story about three young men named Brillo, Electo, and Brindo. It represents the vernacular literary tradition that flourished in the Philippines during the American colonial period, when Tagalog writers produced popular works in poetic narrative forms like the "awit" and "korido" traditions. Published in Manila by P. Sayo (widow of Soriano) publishing house in Binondo, this was its first printing (Unang Pagkapalimbag).
+"""
+
+Notes = """
+Year 1921 is explicitly stated on the title page as "UNANG PAGKAPALIMBAG 1921" (First Printing 1921). The text preserves archaic Tagalog orthography including the tilde-g (~g) convention that is no longer used in modern Filipino.
+"""
+</result>

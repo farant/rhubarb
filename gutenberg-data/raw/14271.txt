@@ -1,0 +1,15 @@
+<result>
+Title = "Panayam ng Tatlong Binata / Tinig Kasalukuyan"
+Author = "Cleto R. Ignacio"
+Year = 1921
+
+Tags = ["fiction", "tagalog-literature"]
+
+Summary = """
+This is a Tagalog verse narrative (tinula) telling the story of three young men named Brillo, Electo, and Brindo. Published in Manila in 1921, it represents early 20th century Filipino vernacular literature. The work is written in an older Tagalog orthography that used tildes over certain letters (like ~g for ng). The publisher was P. Sayo, widow of Soriano, based in Binondo, Manila. The author Cleto R. Ignacio was from Concepcion, Malabon, Rizal. This appears to be a romantic or dramatic tale in verse form, a popular literary format in the Philippines during this period.
+"""
+
+Notes = """
+The year 1921 is explicitly stated on the title page as "UNANG PAGKAPALIMBAG 1921" (First Printing 1921). This is a first edition. The work is in Tagalog using pre-reform orthography.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Electricity and Progress"
+Author = "Thomas A. Edison"
+Year = 1908
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an audio recording of Thomas Edison speaking about electricity and its role in human progress. Edison, the prolific American inventor known for the phonograph, practical incandescent light bulb, and motion picture camera, made various recordings throughout his life. This particular recording comes from the Edison National Historic Site collection and represents Edison's thoughts on how electrical technology was transforming society and industry in the early 20th century.
+"""
+
+Notes = """
+The exact year of this recording is uncertain. Edison made numerous recordings between 1877 (when he invented the phonograph) and his death in 1931. Based on the subject matter and the period when Edison was most actively promoting electrical progress, I estimate this recording dates to approximately 1908-1910, during the height of the electrification movement. The Gutenberg release date of 2003 refers only to when it was digitized for the archive.
+"""
+</result>

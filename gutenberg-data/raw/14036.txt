@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, Vol. XII, No. 30, September 1873"
+Author = "Various"
+Year = 1873
+
+Tags = ["periodical", "fiction", "non-fiction"]
+
+Summary = """
+Lippincott's Magazine was a monthly American literary magazine published in Philadelphia by J.B. Lippincott & Co. from 1868 to 1916. It featured a mix of serialized novels, short stories, travel writing, poetry, and essays on topics of general interest. This September 1873 issue includes travel sketches from China and the Tyrol, serialized fiction including William Black's "A Princess of Thule," pieces on Colorado, tropical botany, English court life, and the Patrons of Husbandry (the Grange movement). The magazine was known for publishing quality popular literature and was a significant venue for Victorian-era writers.
+"""
+
+Notes = """
+The year 1873 is taken directly from the magazine issue date. As a periodical with multiple contributors, 'Various' is used for author. This is a general interest magazine rather than a specifically Catholic publication.
+"""
+</result>

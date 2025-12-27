@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Napoleon I"
+Author = "John Holland Rose"
+Year = 1901
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+A comprehensive biography of Napoleon Bonaparte by British historian John Holland Rose (1855-1942), a Cambridge scholar who became one of the leading Napoleon experts of his era. The work draws on British official records and represents serious academic scholarship on Napoleon's life, military campaigns, and political career. Rose was known for his balanced approach, attempting to assess Napoleon fairly while utilizing primary source materials from British archives that had not been previously incorporated into Napoleon biographies.
+"""
+
+Notes = """
+The first edition was published in December 1901. This appears to be from a 1910 reprint. Rose continued revising the work through multiple editions (1902, 1903, 1907), indicating ongoing scholarly refinement. The 1901 date represents the original publication of this influential biography.
+"""
+</result>

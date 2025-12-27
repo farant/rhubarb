@@ -1,0 +1,15 @@
+<result>
+Title = "Our Government: Local, State, and National"
+Author = "J.A. James, A.H. Sanford"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+A civics textbook designed for high school, academy, and normal school students in the early 20th century United States. The work covers three levels of American government—local, state, and national—with emphasis on practical aspects of how government actually functions rather than purely theoretical treatments. The authors, both professors of history, structured the book to be flexible in teaching order and encouraged students to compare governmental practices across different states with their own. This represents the Progressive Era approach to civic education, emphasizing practical citizenship.
+"""
+
+Notes = """
+The text indicates "1903, 1913" suggesting an original 1903 publication with a 1913 revised edition. I chose 1903 as the original publication year. This was published by Charles Scribner's Sons, a major American publisher of educational materials at the time.
+"""
+</result>

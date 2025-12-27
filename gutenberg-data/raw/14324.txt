@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, April 1875"
+Author = "Various"
+Year = 1875
+
+Tags = ["periodical", "fiction", "non-fiction"]
+
+Summary = """
+Lippincott's Magazine was a prominent American monthly literary magazine published in Philadelphia from 1868 to 1916. This April 1875 issue (Vol. XV, No. 88) contains a typical mix of the era's magazine content: travel writing (Australian scenes, Nice), natural history (golden eagles), serialized fiction (William Black's "Three Feathers"), poetry (including work by Emma Lazarus, later famous for "The New Colossus" on the Statue of Liberty), religious and political commentary (on Russian religious dissent and papal conclaves), and social history. The magazine was known for publishing complete novels in single issues and for its mix of British and American authors.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with a clear publication date. Notable contributors include Emma Lazarus (1849-1887), the Jewish-American poet, and T. Adolphus Trollope (1810-1892), elder brother of novelist Anthony Trollope.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Kristoffer Kolumbus: Amerikan löytöretken päiväkirja"
+Author = "Christopher Columbus, Bartolomé de las Casas (transcriber), Erkki Valkeila (translator)"
+Year = 1493
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is a Finnish translation of Christopher Columbus's diary/journal from his voyage of discovery to America. The original diary was transcribed by Bartolomé de las Casas, the Spanish Dominican friar and historian who preserved many important documents from the early colonial period. Columbus's original journal is lost, but Las Casas made an abstract of it that survives. The work documents Columbus's first voyage (1492-1493) which led to European awareness of the Americas. The Finnish translation includes an introduction and explanatory notes by Erkki Valkeila. The excerpt shows discussion of Columbus's disputed birthdate (1446 or 1451), his Genoese origins, and mentions Salvador de Madariaga's theory about Columbus's possible Jewish converso background.
+"""
+
+Notes = """
+The year 1493 is chosen as this represents when Columbus completed the voyage and the diary's historical significance dates from that period. Columbus was Catholic and sailed under Spanish Catholic monarchs; Las Casas was a Dominican friar. The original Spanish transcription by Las Casas dates from the early 16th century, but the content documents the 1492-1493 voyage.
+"""
+</result>

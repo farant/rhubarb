@@ -1,0 +1,15 @@
+<result>
+Title = "The Pilots of Pomona: A Story of the Orkney Islands"
+Author = "Robert Leighton"
+Year = 1892
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A Victorian-era adventure novel for young readers set in the Orkney Islands off the northern coast of Scotland. The story follows a young protagonist through various adventures involving pilots (those who guide ships through dangerous waters), shipwrecks, Viking artifacts, and Arctic voyages. The narrative captures the maritime culture, Norse heritage, and rugged island life of Orkney, featuring themes of friendship, coming-of-age, and seafaring adventure typical of boys' adventure fiction of the period.
+"""
+
+Notes = """
+Robert Leighton (1858-1934) was a Scottish author and journalist who wrote numerous adventure stories for young readers. The Pilots of Pomona was first published in 1892. Pomona is the old name for the Orkney Mainland, the largest of the Orkney Islands.
+"""
+</result>

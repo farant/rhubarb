@@ -1,0 +1,15 @@
+<result>
+Title = "Through Stained Glass"
+Author = "George Agnew Chamberlain"
+Year = 1915
+
+Tags = ["fiction"]
+
+Summary = """
+Through Stained Glass is a novel by American author George Agnew Chamberlain, set against the backdrop of the post-Civil War Confederate emigration to Brazil. The story begins in 1866 with the historical context of Southern families fleeing Reconstruction-era America to seek new lives in South America. Chamberlain was known for his romantic novels set in exotic locales, and this work explores themes of exile, loss of homeland, and the struggles of Americans attempting to build new lives in a foreign land. The novel follows the "irreconcilables" - those Southerners who could not accept defeat and chose emigration over living under what they perceived as occupation.
+"""
+
+Notes = """
+The novel was first published in March 1915 by Grosset & Dunlap. George Agnew Chamberlain (1879-1966) was an American novelist and short story writer who spent much of his youth in Brazil, which informed several of his works including this one. His most famous work was "Home" (1914), which is referenced on this title page.
+"""
+</result>

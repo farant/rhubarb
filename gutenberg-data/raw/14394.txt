@@ -1,0 +1,15 @@
+<result>
+Title = "The Street Called Straight"
+Author = "Basil King"
+Year = 1912
+
+Tags = ["fiction"]
+
+Summary = """
+The Street Called Straight is a novel by Basil King, a Canadian-born American author who was also an Episcopal clergyman. King was known for his popular romantic novels in the early 20th century, including The Inner Shrine and The Wild Olive (both mentioned on the title page). His works typically dealt with moral and social themes of the era, often exploring questions of conscience, redemption, and personal honor among upper-class American and European characters. The title references a New England saying connecting the "Street Called Straight" to the "House Called Beautiful," suggesting themes of moral rectitude leading to spiritual or personal fulfillment.
+"""
+
+Notes = """
+The book was serialized in 1911 and published in book form in May 1912. I chose 1912 as the publication year since that is when the complete novel was published.
+"""
+</result>

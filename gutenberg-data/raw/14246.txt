@@ -1,0 +1,19 @@
+<result>
+Title = "Mercadet"
+Author = "Honoré de Balzac"
+Year = 1840
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+A satirical comedy about financial speculation in 19th century Paris. Mercadet is a speculator drowning in debt, constantly scheming to outwit his creditors while trying to arrange an advantageous marriage for his daughter Julie. The play is a sharp critique of the bourgeois obsession with money and the moral compromises of capitalism. Balzac originally wrote it as a five-act play titled "Le Faiseur" (The Schemer/The Dealmaker). It forms part of his larger Comédie Humaine project.
+"""
+
+Notes = """
+Balzac wrote the play in 1840, though it was not performed until August 24, 1851—over a year after his death in 1850. The version presented was adapted and reduced from five acts to three by Adolphe d'Ennery. I chose 1840 as the year since that represents when Balzac composed the original work, which is more historically significant than the posthumous adapted premiere.
+"""
+</result>
+
+Sources:
+- [Mercadet - Wikipedia](https://en.wikipedia.org/wiki/Mercadet)
+- [Mercadet – Study of the works | Honoré de Balzac](https://www.balzac-analyse.com/the-maker/?lang=en)

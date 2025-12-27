@@ -1,0 +1,15 @@
+<result>
+Title = "The Marriage of William Ashe"
+Author = "Mrs. Humphry Ward"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+"The Marriage of William Ashe" is a novel by Mary Augusta Ward (known professionally as Mrs. Humphry Ward), one of the most popular English novelists of the late Victorian and Edwardian eras. The story is loosely based on the real-life marriage of Lady Caroline Lamb and William Lamb (later Lord Melbourne, Queen Victoria's first Prime Minister). The novel follows the marriage of ambitious politician William Ashe to the brilliant but volatile Lady Kitty Bristol, exploring themes of political ambition, marital discord, and the constraints placed on women in English society. Mrs. Humphry Ward was known for her social novels that examined moral and religious questions of the day.
+"""
+
+Notes = """
+The book was published in 1905, as indicated on the title page and the dedication dated "MARCH, 1905". Mrs. Humphry Ward (1851-1920) was the niece of Matthew Arnold and a prominent figure in English literary society, though her works have largely fallen out of popular readership today.
+"""
+</result>

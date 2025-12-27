@@ -1,0 +1,17 @@
+The file seems empty or has issues. However, based on the text you provided in your message, I can identify this work clearly:
+
+<result>
+Title = "Grashalmen (Leaves of Grass)"
+Author = "Walt Whitman"
+Year = 1855
+
+Tags = ["poetry", "non-fiction", "translation"]
+
+Summary = """
+This is a Dutch translation by Maurits Wagenvoort of Walt Whitman's seminal poetry collection "Leaves of Grass." The original work is considered one of the most important and influential poetry collections in American literature. Whitman self-published the first edition in 1855 and continued revising and expanding it throughout his life. The poems celebrate democracy, nature, the human body, the American experience, and the unity of all things. Whitman's free verse style was revolutionary for its time and broke from traditional poetic forms.
+"""
+
+Notes = """
+The year 1855 is chosen as the original publication date of Whitman's "Leaves of Grass" first edition. This Dutch translation by Maurits Wagenvoort was published in 1917 (as noted in the header "1917 GEDRUKT TER DRUKKERIJ 'DE DEGEL', AMSTERDAM"). For a historical timeline, the original work's publication date is more significant as it marks when Whitman's revolutionary poetry entered the literary world. Whitman revised and expanded Leaves of Grass many times until the "deathbed edition" of 1891-92.
+"""
+</result>

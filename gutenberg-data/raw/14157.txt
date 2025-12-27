@@ -1,0 +1,15 @@
+<result>
+Title = "Bouvard et Pécuchet"
+Author = "Gustave Flaubert"
+Year = 1881
+
+Tags = ["fiction", "satire"]
+
+Summary = """
+Bouvard et Pécuchet is Gustave Flaubert's final, unfinished novel. It tells the story of two Parisian copy-clerks who meet by chance on a bench, become close friends, and after one inherits a fortune, retire to the countryside in Normandy. There they embark on a series of autodidactic pursuits—agriculture, chemistry, medicine, geology, archaeology, literature, politics, philosophy, religion, and education—failing comically at each endeavor. The novel is a satirical encyclopedia of human stupidity and the futility of seeking absolute knowledge. Flaubert spent over a decade researching the book, reading some 1,500 volumes to document the errors and contradictions his protagonists would encounter.
+"""
+
+Notes = """
+Flaubert worked on this novel from approximately 1872 until his death in 1880. It was published posthumously in 1881 in its incomplete state. The second volume, which was to consist of a "Dictionary of Received Ideas" (Dictionnaire des idées reçues) compiled by the two clerks, was never finished, though fragments and notes survive.
+"""
+</result>

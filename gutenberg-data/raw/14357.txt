@@ -1,0 +1,15 @@
+<result>
+Title = "Rudolf Eucken: A Philosophy of Life"
+Author = "Abel J. Jones"
+Year = 1912
+
+Tags = ["non-fiction", "philosophy"]
+
+Summary = """
+This is an expository work by Welsh philosopher Abel J. Jones introducing English-speaking readers to the philosophy of Rudolf Eucken, the German idealist philosopher who won the Nobel Prize in Literature in 1908. The book aims to provide a clear and accessible summary of Eucken's philosophical and ethical teachings, which emphasized spiritual activism and the importance of an inner life transcending mere naturalism. Eucken was known for his optimistic, religiously-tinged idealism that sought to reconcile scientific modernity with spiritual values.
+"""
+
+Notes = """
+The date is estimated as 1912 based on the preface mentioning Eucken had been at Jena for "thirty-eight years" since 1874. The book was published by T. C. & E. C. Jack in London, a publisher active in the early 20th century known for educational and philosophical works.
+"""
+</result>

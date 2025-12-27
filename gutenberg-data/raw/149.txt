@@ -1,0 +1,15 @@
+<result>
+Title = "The Lost Continent"
+Author = "Edgar Rice Burroughs"
+Year = 1916
+
+Tags = ["fiction", "science-fiction", "adventure"]
+
+Summary = """
+The Lost Continent (originally titled "Beyond Thirty") is a science fiction novella by Edgar Rice Burroughs. Set in the year 2137, it imagines a future where the Americas have isolated themselves from the rest of the world for over two centuries following a great war. The protagonist, a Pan-American naval officer, ventures beyond the forbidden 30th meridian and discovers that Europe has reverted to barbarism, with wild animals roaming and civilization collapsed. It combines Burroughs' characteristic adventure storytelling with speculative fiction about the decline of Western civilization.
+"""
+
+Notes = """
+Originally serialized as "Beyond Thirty" in All-Around Magazine in February 1916, then published in book form as "The Lost Continent" in 1963. The 1916 date represents the original publication of the work.
+"""
+</result>

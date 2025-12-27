@@ -1,0 +1,15 @@
+<result>
+Title = "Aeroplanes"
+Author = "J. S. Zerbe"
+Year = 1911
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an early aviation reference work by Jerome S. Zerbe, covering the principles and mechanics of heavier-than-air flight during the pioneering era of aviation. Written just a few years after the Wright Brothers' historic flight at Kitty Hawk (1903), the book explains aerodynamic principles, aircraft construction, and the state of aviation technology in the early 20th century. It serves as a snapshot of aviation knowledge during a period of rapid development in the field.
+"""
+
+Notes = """
+J. S. Zerbe (Jerome S. Zerbe) wrote several technical and educational books in the early 1900s. 'Aeroplanes' was published in 1911, during the exciting early years of powered flight when aviation was transitioning from experimental curiosity to practical technology. The Project Gutenberg release date of 1998 reflects when it was digitized, not original publication.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Dew Drops, Vol. 37, No. 8"
+Author = "David C. Cook Publishing Co. (Julia H. Johnston, contributor)"
+Year = 1914
+
+Tags = ["non-fiction", "appropriate-for-children", "christian"]
+
+Summary = """
+Dew Drops was a weekly Christian Sunday school publication for children, produced by the David C. Cook Publishing Company. This particular issue from February 22, 1914 contains moral lessons and stories designed to teach Christian virtues to young readers. The featured piece "Doing and Being" by Julia H. Johnston addresses a common concern children have about being too young to help others, with a Sunday school teacher guiding her students to understand that character and being good matters as much as active deeds.
+"""
+
+Notes = """
+David C. Cook Publishing was founded in 1875 and became a major publisher of Sunday school materials. This is a periodical rather than a standalone book, so the year reflects the actual publication date of this issue. Julia H. Johnston (1849-1919) was a prolific hymn writer and author of religious educational materials.
+"""
+</result>
