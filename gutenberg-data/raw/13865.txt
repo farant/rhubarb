@@ -1,0 +1,15 @@
+<result>
+Title = "Chambers's Edinburgh Journal, No. 418"
+Author = "William Chambers, Robert Chambers"
+Year = 1852
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+Chambers's Edinburgh Journal was a popular Scottish weekly magazine founded in 1832 by William and Robert Chambers. It published essays, fiction, poetry, and articles on science, history, and social issues, aimed at educating and entertaining the middle and working classes. This particular issue (No. 418) from January 3, 1852 opens with an essay titled "A Child's Toy" - a meditative reflection on observing a paper kite floating in the sky, using this simple object as a springboard for philosophical contemplation about childhood wonder and imagination.
+"""
+
+Notes = """
+The date January 3, 1852 is explicitly printed in the header. The Chambers brothers were Scottish publishers who made significant contributions to popular education and accessible literature in Victorian Britain.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "El Gaucho Martín Fierro"
+Author = "José Hernández"
+Year = 1872
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+Martín Fierro is Argentina's national epic poem and one of the most important works of gauchesque literature. Written in the voice of a gaucho (Argentine cowboy), it tells the story of Martín Fierro, a payador (folk singer) who is forcibly conscripted into frontier military service, loses his family and land, and becomes an outlaw. The poem is a powerful social critique of the treatment of gauchos by Argentine authorities during the late 19th century, while also celebrating gaucho culture, values, and way of life. The work is written in the distinctive speech patterns and vocabulary of the gauchos, making it both a literary and linguistic monument.
+"""
+
+Notes = """
+The year 1872 is printed directly on the title page of this edition (Buenos Aires, Imprenta de La Pampa). This is the first publication of the poem. A sequel, "La Vuelta de Martín Fierro," was published in 1879. Together they form the complete work, but this text is specifically the original 1872 first part.
+"""
+</result>

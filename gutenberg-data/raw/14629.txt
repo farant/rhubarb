@@ -1,0 +1,15 @@
+<result>
+Title = "A Wonderful Night"
+Author = "James H. Snowden"
+Year = 1920
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+A devotional meditation on the night of Christ's birth in Bethlehem. James H. Snowden (1852-1936) was an American Presbyterian minister and author who wrote numerous religious books. This work reflects on the events surrounding the Nativity, interpreting the Christmas story's significance and presenting it with poetic reverence. The book was illustrated by the notable husband-and-wife team Maud and Miska Petersham, who became famous children's book illustrators.
+"""
+
+Notes = """
+Published by The Macmillan Company around 1920. While Snowden was Presbyterian rather than Catholic, the work treats the Nativity with traditional Christian reverence and would likely be unobjectionable from a Catholic perspective, though I've included the 'catholic' tag with some hesitation - the content itself is orthodox Christian meditation on the birth of Christ. The Petershams' involvement suggests this was intended as a gift book, possibly for Christmas giving.
+"""
+</result>

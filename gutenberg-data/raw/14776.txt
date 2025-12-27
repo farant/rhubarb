@@ -1,0 +1,15 @@
+<result>
+Title = "The Arabian Art of Taming and Training Wild & Vicious Horses"
+Author = "P.R. Kincaid"
+Year = 1856
+
+Tags = ["non-fiction", "practical-manual"]
+
+Summary = """
+This is a 19th-century American manual on horse training methods, claiming to derive from Arabian techniques. The work covers methods for breaking and training horses, particularly those considered wild or difficult. It was part of a popular genre of horse-training manuals that circulated in America during the mid-1800s, often making claims to secret or exotic knowledge. The text discusses the history of horse domestication and presents practical techniques for handlers. The attribution to "T. Gilbert, Bro. Ramsey & Co." appears to be the publisher rather than the author - this work is generally attributed to P.R. Kincaid, who wrote several similar horse-training manuals in this period.
+"""
+
+Notes = """
+The 1856 date is taken from the publication information in the text itself. This was published in Cincinnati, Ohio. Horse-training manuals claiming Arabian or exotic origins were quite popular in this era, as Arabian horses were highly prized. The actual authorship of these works was often obscured or attributed to publishers, but P.R. Kincaid is the most commonly cited author for this particular text.
+"""
+</result>

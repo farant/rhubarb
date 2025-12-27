@@ -1,0 +1,15 @@
+<result>
+Title = "Unleavened Bread"
+Author = "Robert Grant"
+Year = 1900
+
+Tags = ["fiction"]
+
+Summary = """
+Unleavened Bread is a satirical novel by Robert Grant that follows the life of Selma White, an ambitious American woman who rises through society via a series of marriages. The novel is a critique of American social climbing, cultural pretension, and the "New Woman" movement of the late 19th century. Selma believes herself to be an intellectual and cultural reformer, but Grant portrays her aspirations as shallow and her self-improvement as superficial. The book was quite popular and influential in its time, sparking discussion about American middle-class values and women's roles in society.
+"""
+
+Notes = """
+Published in 1900 by Charles Scribner's Sons. This was one of Grant's most successful novels and was later adapted into a stage play.
+"""
+</result>

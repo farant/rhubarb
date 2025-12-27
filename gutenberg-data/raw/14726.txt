@@ -1,0 +1,15 @@
+<result>
+Title = "The Elder Eddas of Saemund Sigfusson and The Younger Eddas of Snorre Sturleson"
+Author = "Saemund Sigfusson, Snorre Sturleson, Benjamin Thorpe (translator), I.A. Blackwell (translator)"
+Year = 1906
+
+Tags = ["non-fiction", "mythology", "appropriate-for-children"]
+
+Summary = """
+This volume contains English translations of the two major collections of Old Norse literature known as the Eddas. The Elder Edda (Poetic Edda), traditionally attributed to Saemund Sigfusson, is a collection of Old Norse poems from the Icelandic medieval manuscript Codex Regius, containing mythological and heroic lays about Norse gods (Odin, Thor, Loki) and legendary heroes (Sigurd the dragon-slayer). The Younger Edda (Prose Edda), written by Snorri Sturluson in the 13th century, is a manual of poetics that preserves Norse mythology and serves as a guide to skaldic poetry. Together they form the primary sources for our knowledge of Norse mythology and pre-Christian Scandinavian religion.
+"""
+
+Notes = """
+The year 1906 is chosen as this is the publication date of this specific Norroena Society edition edited by Rasmus B. Anderson. The original Elder Edda poems date from the Viking Age (9th-13th centuries), while Snorri Sturluson wrote the Prose Edda around 1220. Benjamin Thorpe's translation of the Poetic Edda was first published in 1866, and I.A. Blackwell's translation of the Prose Edda in 1847. For a historical timeline, 1906 represents when this combined scholarly edition was produced.
+"""
+</result>

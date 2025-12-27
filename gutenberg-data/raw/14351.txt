@@ -1,0 +1,15 @@
+<result>
+Title = "Maaliskuun lauluja; Tarina suuresta tammesta; Yökehrääjä"
+Author = "Eino Leino"
+Year = 1896
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collection of poems by Eino Leino, one of Finland's most celebrated poets and a central figure in Finnish literature. "Maaliskuun lauluja" (March Songs) represents his early work, published when Leino was only 18 years old. The collection showcases themes of Finnish rural life, nature, love, and longing - subjects that would become hallmarks of his poetic voice. Leino was a neo-romantic poet who drew heavily on Finnish folklore and the Kalevala tradition. He became known for his lyrical mastery and his ability to capture the Finnish landscape and soul in verse.
+"""
+
+Notes = """
+1896 is the original publication year as indicated in the document itself. Eino Leino (1878-1926) was a prolific Finnish poet who published this collection very early in his career. While Leino is considered one of the greatest Finnish-language poets, this work predates his most famous collections like "Helkavirsiä" (Whitsongs).
+"""
+</result>

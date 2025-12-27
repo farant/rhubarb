@@ -1,0 +1,15 @@
+<result>
+Title = "Some Roundabout Papers"
+Author = "William Makepeace Thackeray"
+Year = 1863
+
+Tags = ["non-fiction", "essays"]
+
+Summary = """
+A collection of essays originally published in The Cornhill Magazine between 1860 and 1863, during Thackeray's tenure as the magazine's first editor. These "roundabout" papers are personal, discursive essays in which Thackeray reflects on a wide variety of subjects—literature, society, childhood memories, contemporary events, and observations on human nature. The essays are notable for their conversational tone, gentle wit, and the author's characteristic blend of sentiment and irony. They represent some of Thackeray's finest non-fiction work and provide insight into his personality and views during the final years of his life.
+"""
+
+Notes = """
+The essays were written between 1860-1863 for The Cornhill Magazine. Thackeray died in December 1863, and this collection was published posthumously. I have chosen 1863 as the year since that represents when the series concluded and the collection was first gathered, though various editions appeared in subsequent years.
+"""
+</result>

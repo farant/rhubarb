@@ -1,0 +1,15 @@
+<result>
+Title = "The Empty House and Other Ghost Stories"
+Author = "Algernon Blackwood"
+Year = 1906
+
+Tags = ["fiction", "supernatural", "horror"]
+
+Summary = """
+A collection of ghost stories by Algernon Blackwood, one of the most influential supernatural fiction writers of the early 20th century. Blackwood was a master of atmospheric horror and psychological terror, known for his ability to evoke a sense of cosmic dread and the uncanny. This collection includes tales of haunted houses, mysterious islands, and encounters with the supernatural. Blackwood's work heavily influenced later horror writers including H.P. Lovecraft, who praised him as the greatest living author of weird fiction.
+"""
+
+Notes = """
+First printed in 1906 according to the publication information in the text. The 1915 and 1916 dates refer to later reprints. Blackwood (1869-1951) was an English author and broadcasting narrator, and this was one of his early collections that helped establish his reputation in the supernatural fiction genre.
+"""
+</result>

@@ -1,0 +1,17 @@
+The text you've provided is from **Punch, or the London Charivari** - the famous British satirical magazine. This particular issue is from June 4, 1892 (Vol. 102).
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 102, June 4, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch was a British weekly magazine of humor and satire, published from 1841 to 2002. It was enormously influential in British culture, coining the term "cartoon" in its modern sense and featuring contributions from many notable Victorian and Edwardian writers and illustrators. This issue from June 1892 includes the humorous piece "Lost Luggage" about the misadventures of a traveler whose baggage goes missing between Dover and Ostend. The magazine was known for its witty social commentary, political satire, and illustrations lampooning Victorian society.
+"""
+
+Notes = """
+Year is straightforward as periodicals are dated by publication. Punch featured many anonymous or pseudonymous contributors, hence "Various" for author. The piece shown features some Latin - "Vacuus Viator" (empty traveler) - fitting for your project's aesthetic. Not marked appropriate-for-children as Victorian humor can be subtle/adult in nature, though not inappropriate per se.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Vanished Arcadia: Being Some Account of the Jesuits in Paraguay 1607 to 1767"
+Author = "R. B. Cunninghame Graham"
+Year = 1901
+
+Tags = ["non-fiction", "history", "catholic"]
+
+Summary = """
+This is a historical account of the Jesuit missions in Paraguay, covering the period from 1607 to 1767. R. B. Cunninghame Graham, a Scottish writer, politician, and adventurer who had traveled extensively in South America, wrote this sympathetic examination of the Jesuit Reductions—the mission settlements where Jesuits worked with the Guaraní people. The book explores how the Jesuits created a unique social experiment, protecting indigenous peoples from Spanish and Portuguese slave traders while establishing prosperous communities. The work ends with the expulsion of the Jesuits from Spanish territories in 1767, which Graham portrays as a tragedy that destroyed this "vanished Arcadia." Graham draws on his personal travels in the region as well as historical sources, writing in his characteristic literary style that blends history with personal reflection.
+"""
+
+Notes = """
+First published in 1901 by William Heinemann in London. Cunninghame Graham was not Catholic himself but wrote sympathetically about the Jesuit missions. The dedication references 'Santa Teresa, Her Life and Times' by Gabriela Cunninghame Graham, his wife. The work is considered an important early English-language defense of the Jesuit Reductions against Protestant and Enlightenment criticism.
+"""
+</result>

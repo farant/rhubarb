@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 102, March 5th, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["non-fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841 and published until 1992 (with a brief revival 1996-2002). It was highly influential in British culture and coined the term "cartoon" in its modern sense. This issue from March 1892 contains satirical verse commenting on contemporary social phenomena, including the music hall craze around Lottie Collins's popular song "Ta-ra-ra-boom-de-ay!" The magazine was known for its wit, political commentary, and illustrations by notable artists.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with its publication date in the title. Punch was aimed at educated middle and upper-class readers and would not typically be classified as appropriate for children, though not inappropriate either - simply adult-oriented satire. The reference to Lottie Collins and her famous song/dance number places this firmly in early 1892 when that song was sweeping London.
+"""
+</result>

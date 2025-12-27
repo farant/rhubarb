@@ -1,0 +1,15 @@
+<result>
+Title = "The Lutherans of New York: Their Story and Their Problems"
+Author = "George U. Wenner"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A historical account of Lutheran congregations and communities in New York City, written by George U. Wenner, a pastor of Christ Church in New York. The book traces the story of Lutherans in New York from the seventeenth century (beginning around 1648) through the early twentieth century, examining both their history and the challenges they faced. Wenner held doctoral degrees (D.D. and L.H.D.) and wrote this work as both a historical chronicle and a practical examination of the problems facing Lutheran communities in the modern urban environment of New York.
+"""
+
+Notes = """
+The publication year 1918 is clearly stated on the title page with copyright. This is the original publication, not a reprint or translation of an earlier work.
+"""
+</result>

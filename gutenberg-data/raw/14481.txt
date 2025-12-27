@@ -1,0 +1,15 @@
+<result>
+Title = "The Function of the Poet and Other Essays"
+Author = "James Russell Lowell"
+Year = 1855
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+This is a collection of literary essays and criticism by James Russell Lowell (1819-1891), one of the most prominent American men of letters of the 19th century. Lowell was a poet, critic, editor, and diplomat who served as the first editor of The Atlantic Monthly and later as U.S. Ambassador to Spain and England. The title essay, "The Function of the Poet," explores the role of poetry and poets in society. The collection was assembled posthumously by Albert Mordell, gathering essays that Lowell himself had not collected during his lifetime. Lowell was associated with the Fireside Poets and was a professor at Harvard. His critical work helped shape American literary taste during the Gilded Age.
+"""
+
+Notes = """
+The 1920 date shown is when Mordell's collected edition was published by Houghton Mifflin. The title essay "The Function of the Poet" was originally delivered as a lecture in 1855. Since this is a posthumous collection of essays written across Lowell's career, I've chosen 1855 as the year since that represents the earliest major work in the collection (the title essay). One could also argue for using the 1920 collection date. Lowell lived 1819-1891.
+"""
+</result>

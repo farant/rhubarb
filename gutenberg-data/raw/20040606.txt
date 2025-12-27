@@ -1,0 +1,15 @@
+<result>
+Title = "Big Timber: A Story of the Northwest"
+Author = "Bertrand W. Sinclair"
+Year = 1916
+
+Tags = ["fiction"]
+
+Summary = """
+Big Timber is a romance novel set in the Pacific Northwest logging country. The story follows characters navigating life in the timber industry, featuring themes of frontier life, labor, and relationships amid the rugged landscape of early 20th century logging camps. Bertrand W. Sinclair was a Canadian-American author known for his Western and frontier fiction, often drawing on his own experiences in the Canadian wilderness and Pacific Northwest.
+"""
+
+Notes = """
+The year 1916 appears directly in the book's front matter, indicating this is the original publication date. Sinclair was a prolific writer of frontier fiction during this era.
+"""
+</result>

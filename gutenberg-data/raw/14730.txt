@@ -1,0 +1,15 @@
+<result>
+Title = "The Redemption of David Corson"
+Author = "Charles Frederic Goss"
+Year = 1900
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by American clergyman and author Charles Frederic Goss (1852-1930). The story follows David Corson, likely a Quaker based on the chapter titles and themes, through a journey of moral temptation, fall, and eventual redemption. The chapter titles suggest a narrative arc involving encounters with temptation ("And Satan Came Also," "The Trail of the Serpent"), moral struggle ("The Flesh and the Devil," "Found Wanting"), exile and suffering ("A Fugitive and a Vagabond," "The Shadow of Death"), and ultimate spiritual recovery ("Safe Haven"). Goss was a Disciples of Christ minister known for inspirational and morally instructive fiction.
+"""
+
+Notes = """
+The 1900 date is confirmed by the Bowen-Merrill Company imprint shown in the text itself. This was the first edition publication year.
+"""
+</result>

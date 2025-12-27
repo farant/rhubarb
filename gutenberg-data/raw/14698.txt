@@ -1,0 +1,15 @@
+<result>
+Title = "Ranching for Sylvia"
+Author = "Harold Bindloss"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+Ranching for Sylvia is a Western romance novel by Harold Bindloss, a prolific British author known for his adventure stories set in the Canadian and American West. The novel follows George, who becomes a trustee managing a ranch on the Canadian prairie, presumably for the benefit of a woman named Sylvia. The story involves typical elements of Bindloss's work: frontier life, cattle ranching, conflicts with liquor-runners, blizzards, and romantic entanglements. Bindloss wrote over 40 novels, many featuring protagonists who leave England to seek their fortunes in the rugged landscapes of Western Canada.
+"""
+
+Notes = """
+Published in 1913 by A. L. Burt Company in New York. The book was published in England under the alternate title "The Trustee." Harold Bindloss (1866-1945) was a British author who spent time in Western Canada, which informed his many novels set in that region.
+"""
+</result>

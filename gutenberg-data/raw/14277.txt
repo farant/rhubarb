@@ -1,0 +1,17 @@
+The file appears empty. However, you've provided the content in your message - it's from **Punch, or The London Charivari**, Vol. 100, April 25th, 1891. This is a famous British satirical magazine, and this particular piece is a parody of Ibsen's "Hedda Gabler" (which premiered in 1891).
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 100, April 25th, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire published from 1841 to 2002. This issue from April 1891 contains "Mr. Punch's Pocket Ibsen," a satirical condensation of Henrik Ibsen's "Hedda Gabler" by an anonymous writer styling themselves as "Mr P.'s Own Harmless Ibsenite." The parody mocks Ibsen's dark Nordic symbolism with exaggerated descriptions of black bombazine upholstery, immortelles, cemeteries, and the earnest explanatory dialogue typical of Ibsen's social dramas. Punch was known for its witty commentary on Victorian society, politics, and the arts.
+"""
+
+Notes = """
+Hedda Gabler premiered in Munich in January 1891, making this April 1891 parody very timely - appearing just months after the play's debut. The magazine was a collective effort with many anonymous contributors, hence "Various" as author.
+"""
+</result>

@@ -1,0 +1,18 @@
+<result>
+Title = "The Illustrious Gaudissart"
+Author = "Honoré de Balzac"
+Year = 1833
+
+Tags = ["fiction"]
+
+Summary = """
+L'Illustre Gaudissart is a short story by Honoré de Balzac, part of his monumental La Comédie humaine. The story satirizes the figure of the commercial traveller (commis voyageur), a new type of modern salesman who traverses France selling everything from hats to insurance to newspaper subscriptions. Gaudissart is a Parisian "travelling salesman" who ventures into the provinces of Touraine, where his urban sophistication and patter meet the cunning of rural folk. The story is a comic piece about the clash between Parisian modernity and provincial shrewdness, and serves as social commentary on the emerging commercial culture of 19th century France.
+"""
+
+Notes = """
+Written in Paris in November 1832 and first published in 1833. Later integrated into La Comédie humaine in 1843 as part of the 'Scènes de la vie de province' under 'Parisiens en province'. The translation here is by Katharine Prescott Wormeley, who translated many of Balzac's works into English in the late 19th century.
+"""
+</result>
+
+Sources:
+- [L'illustre Gaudissart - Wikipedia](https://en.wikipedia.org/wiki/L'illustre_Gaudissart)

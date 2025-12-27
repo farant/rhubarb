@@ -1,0 +1,15 @@
+<result>
+Title = "The Bay State Monthly, Volume II, Number 6"
+Author = "Various"
+Year = 1885
+
+Tags = ["non-fiction", "periodical", "biography"]
+
+Summary = """
+The Bay State Monthly was a Massachusetts-focused literary magazine published in the 1880s. This issue (March 1885) contains biographical articles about notable Massachusetts figures, including a piece by George L. Austin, M.D. about the publishers William Lee and Charles Shepard of the Boston publishing house Lee and Shepard. The excerpt focuses on William Lee's early life, describing how he was born in Boston in 1826, lost his father at age eleven, and rose from humble beginnings to become a prominent publisher.
+"""
+
+Notes = """
+This is a periodical rather than a standalone book. The year 1885 reflects the publication date of this specific issue. Lee and Shepard was a significant Boston publishing house known for children's literature and educational works in the latter half of the 19th century.
+"""
+</result>

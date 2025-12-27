@@ -1,0 +1,15 @@
+<result>
+Title = "For the Admiral"
+Author = "W.J. Marx"
+Year = 1906
+
+Tags = ["fiction"]
+
+Summary = """
+"For the Admiral" is a historical adventure novel by W.J. Marx, who also wrote other adventure stories such as "Scouting for Buller" and "The British Legion." Based on the chapter titles referencing cavaliers, fords, and loyalty to the king, this appears to be a swashbuckling tale set during the English Civil War period or a similar era of royalist conflict. Marx was known for writing adventure fiction aimed at young readers in the early 20th century.
+"""
+
+Notes = """
+The 1906 date is taken directly from the publication information in the text. This appears to be the original publication year. I do not have specific knowledge of this particular work beyond what is shown in the text, so the summary is based on contextual clues from the chapter titles and the author's other known works.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Grey Book: A Collection of Protests Against Anti-Semitism and Persecution of Jews Issued by Non-Roman Catholic Churches and Church Leaders During Hitler's Rule"
+Author = "Johan M. Snoek"
+Year = 1969
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly compilation documenting the official protests and statements made by Protestant and Orthodox churches and their leaders against Nazi antisemitism and the persecution of Jews during the Third Reich (1933-1945). The work collects primary source documents showing how non-Roman Catholic Christian bodies responded to the Holocaust. It includes an introduction by Uriel Tal, a noted Israeli historian who specialized in the relationship between Christianity and antisemitism in modern Germany. The book examines factors that led to public protests, their results, and also addresses the complex issues of aid to Jewish converts to Christianity and so-called "mercy baptisms."
+"""
+
+Notes = """
+The copyright date of 1969 is the original publication year. This is a primary historical research work, not a translation or reprint of an older text. The distinction "Non-Roman Catholic" in the title indicates this complements similar documentation of Catholic Church responses to the Holocaust.
+"""
+</result>

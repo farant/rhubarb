@@ -1,0 +1,15 @@
+<result>
+Title = "Lyyli"
+Author = "Elviira Willman"
+Year = 1903
+
+Tags = ["fiction", "drama", "finnish-literature"]
+
+Summary = """
+Lyyli is a five-act play by Finnish author and playwright Elviira Willman (1875-1925). The play depicts working-class life in Helsinki, featuring a cast of laborers, their wives, and their families. Willman was a notable Finnish playwright and socialist who wrote social realist drama focusing on the lives of ordinary people and the working class. This play premiered at the Finnish National Theatre on February 25, 1903. Willman was part of the early 20th century Finnish literary movement that brought attention to social issues and the struggles of the working class.
+"""
+
+Notes = """
+The year 1903 is when the play was both first performed and first published by Yrjö Weilin. The text is in Finnish and represents early 20th century Finnish social drama.
+"""
+</result>

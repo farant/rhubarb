@@ -1,0 +1,15 @@
+<result>
+Title = "Russia in 1919"
+Author = "Arthur Ransome"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A firsthand account of revolutionary Russia written by British journalist and author Arthur Ransome, who was present in Russia during the tumultuous period following the Bolshevik Revolution. Ransome had unusual access to Soviet leaders including Lenin and Trotsky, and this work provides a sympathetic but observational account of conditions in Russia during the civil war period. Ransome later became famous for his children's books, particularly the "Swallows and Amazons" series, but his early career was marked by his controversial reporting from revolutionary Russia.
+"""
+
+Notes = """
+The book was published in 1919, the same year it describes. Ransome's reporting from Russia was controversial at the time, as he was seen by some as too sympathetic to the Bolsheviks. He was married to Trotsky's secretary, Evgenia Shelepina, which gave him exceptional access but also raised questions about his objectivity.
+"""
+</result>

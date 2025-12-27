@@ -1,0 +1,15 @@
+<result>
+Title = "The Philippine Islands, 1493-1898, Volume X (1597-1599)"
+Author = "Emma Helen Blair, James Alexander Robertson, Edward Gaylord Bourne"
+Year = 1904
+
+Tags = ["non-fiction", "historical-document", "catholic"]
+
+Summary = """
+This is Volume X of a massive 55-volume scholarly compilation of primary source documents relating to the history of the Philippines from their earliest contact with European nations through the end of Spanish colonial rule. The series was edited by Emma Helen Blair and James Alexander Robertson, with historical introductions by Edward Gaylord Bourne. This particular volume covers the years 1597-1599 and contains letters, reports, and official documents from Spanish colonial officials including Governor Francisco Tello, Antonio de Morga (a prominent colonial judge and historian), Archbishop Ygnacio de Santibañez, and Bishop Miguel de Benavides. The documents provide firsthand accounts of colonial administration, Catholic missionary activities, and political/economic conditions in the islands during the late 16th century.
+"""
+
+Notes = """
+The year 1904 is when Blair and Robertson published this compilation (volumes were issued 1903-1909). While the source documents themselves date from 1597-1599, the appropriate year for this work is the publication of the scholarly edition, as the editorial apparatus, annotations, and historical introductions constitute substantial original scholarship. The work is marked 'catholic' because the source documents extensively cover Catholic missionary activities and are written by Catholic colonial officials, and the compilation itself treats the history of the Catholic Church in the Philippines as a central theme.
+"""
+</result>

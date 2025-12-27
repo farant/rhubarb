@@ -1,0 +1,15 @@
+<result>
+Title = "Addresses"
+Author = "Phillips Brooks"
+Year = 1895
+
+Tags = ["non-fiction", "religious", "protestant"]
+
+Summary = """
+A collection of six addresses by Phillips Brooks, the renowned Episcopal bishop of Massachusetts and author of the Christmas carol "O Little Town of Bethlehem." The addresses cover topics including Christian service, the relationship between thought and action, business ethics for Christians, liberty, Christology, and a tribute to Abraham Lincoln. Brooks was one of the most influential American preachers of the 19th century, known for his eloquent oratory and broad theological outlook.
+"""
+
+Notes = """
+Phillips Brooks (1835-1893) was an Episcopal (Anglican) bishop, not Catholic. While a significant Christian figure and respected theologian, his works would not carry a nihil obstat or imprimatur as he was Protestant. The 1895 publication date appears to be posthumous, as Brooks died in 1893. These addresses were likely compiled from sermons and speeches delivered during his lifetime.
+"""
+</result>

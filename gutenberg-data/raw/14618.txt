@@ -1,0 +1,15 @@
+<result>
+Title = "Robert Browning"
+Author = "C.H. Herford"
+Year = 1905
+
+Tags = ["non-fiction", "literary-criticism", "biography"]
+
+Summary = """
+This is a critical biography of the Victorian poet Robert Browning (1812-1889), written by Charles Harold Herford, who was Professor of English Literature at the University of Manchester. The book was part of Blackwood's "Modern English Writers" series, which produced accessible scholarly studies of major Victorian and late-Victorian literary figures. The series included volumes on Matthew Arnold, Tennyson, Ruskin, Thackeray, and others. Herford was a distinguished literary scholar known for his work on English and German literature.
+"""
+
+Notes = """
+The year 1905 is derived from the Roman numerals "MCMV" on the title page. This is the original publication date of this critical study, not a date related to Browning himself.
+"""
+</result>

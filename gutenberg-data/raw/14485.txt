@@ -1,0 +1,15 @@
+<result>
+Title = "Notes on the Apocalypse"
+Author = "David Steele, Sr."
+Year = 1870
+
+Tags = ["non-fiction", "theology", "biblical-commentary"]
+
+Summary = """
+A theological commentary on the Book of Revelation (the Apocalypse) by Rev. David Steele, Sr., a pastor of the Reformed Presbyterian Congregation in Philadelphia. The work takes a historicist and postmillennial approach to interpreting the prophetic and symbolic language of Revelation. It includes an appendix with dissertations on apocalyptic symbols and critiques of interpretations by other British and American expositors of his time. The book is dedicated to Rev. John Cunningham, a Reformed Presbyterian missionary to the Jews in London.
+"""
+
+Notes = """
+Published 1870 in Philadelphia by Young & Ferguson. The author was a Reformed Presbyterian pastor, which is a Covenanter tradition distinct from mainstream Presbyterianism. The work is Protestant in perspective and would not carry a Catholic nihil obstat or imprimatur.
+"""
+</result>

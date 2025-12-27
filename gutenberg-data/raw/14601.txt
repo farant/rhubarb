@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 102, May 7, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was a highly influential publication that coined the term "cartoon" in its modern sense and was known for its wit, political commentary, and illustrations. This particular issue (Vol. 102, May 7, 1892) contains "'Arry on Wheels," a comedic poem written in Cockney dialect featuring the recurring character 'Arry, a working-class Londoner commenting on spring weather and Bank Holiday frustrations. The 'Arry series was a popular feature depicting the speech patterns and concerns of Victorian London's lower-middle class.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with the publication date clearly stated in the header. Punch magazine issues are dated precisely, so 1892 is unambiguous. Not marked appropriate-for-children as 'Arry pieces often contain mild adult themes and would require cultural context to appreciate. Not marked catholic as Punch was a secular satirical publication.
+"""
+</result>

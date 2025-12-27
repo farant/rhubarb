@@ -1,0 +1,15 @@
+<result>
+Title = "Catalog of Copyright Entries: Renewals"
+Author = "United States Copyright Office"
+Year = 1964
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a volume from the Catalog of Copyright Entries published by the United States Copyright Office. Specifically, this appears to be the renewal registrations section from 1964, which lists books, pamphlets, serials, and contributions to periodicals for which copyright renewal registrations were filed during that period. These catalogs served as the official record of copyright registrations and renewals in the United States and are valuable historical documents for tracking the copyright status of works from earlier eras.
+"""
+
+Notes = """
+The year 1964 is chosen based on the page header showing '1964_h1/A/0959' and the renewal dates visible in the entries (e.g., '2Mar64', '18May64'). The original works being renewed date primarily from 1936-1937, as copyright renewals were filed 28 years after initial registration under the 1909 Copyright Act.
+"""
+</result>

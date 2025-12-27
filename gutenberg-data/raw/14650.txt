@@ -1,0 +1,15 @@
+<result>
+Title = "Meripoikia"
+Author = "Teuvo Pakkala"
+Year = 1895
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+Meripoikia (Sea Boys/Sailor Lads) is a three-act comedy by Finnish author Teuvo Pakkala. The play centers on the daughters of a sailor and depicts life in Finnish coastal communities during the era of sailing ships. The dedication reveals a nostalgic lament for the decline of Finland's sailing fleet - the frigates, barques, and schooners that once filled Finnish harbors - and pays tribute to the generation of sailors who represented the last glory of Finnish maritime tradition. The play features three sisters (Eeva, Elviira, and Anna) as its main characters.
+"""
+
+Notes = """
+The play was first performed in 1895, though this Gutenberg text is from the 1922 Otava edition. I chose 1895 as it represents the original composition/premiere date. Teuvo Pakkala (1862-1925) was a notable Finnish author known for his depictions of Ostrobothnian coastal life and children's literature. The dedication is dated Kokkola, March 9, 1915, suggesting this edition may have been revised, but the play itself dates to the 1890s.
+"""
+</result>

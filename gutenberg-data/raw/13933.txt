@@ -1,0 +1,15 @@
+<result>
+Title = "In Old Kentucky"
+Author = "Edward Marshall, Charles T. Dazey"
+Year = 1893
+
+Tags = ["fiction", "drama-adaptation"]
+
+Summary = """
+"In Old Kentucky" is a novel adaptation of Charles T. Dazey's immensely popular stage melodrama of the same name. The story is set in the Bluegrass region and mountains of Kentucky, featuring themes of feuds, romance, horse racing, and the contrast between mountain folk and more refined society. The play was one of the most successful American melodramas of the late 19th century, running for decades and featuring the famous Kentucky Derby racing scene. The novel version by Edward Marshall expands on the theatrical material.
+"""
+
+Notes = """
+The play "In Old Kentucky" by Charles T. Dazey premiered in 1893 and became one of the longest-running plays in American theatrical history. While this novelization was published in 1910 (as indicated in the text), the original work dates to 1893. I chose 1893 as it represents when the story first entered the public consciousness as a theatrical work, and the novel is explicitly noted as being "founded on" Dazey's play.
+"""
+</result>

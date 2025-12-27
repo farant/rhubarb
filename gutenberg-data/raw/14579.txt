@@ -1,0 +1,15 @@
+<result>
+Title = "Simon Called Peter"
+Author = "Robert Keable"
+Year = 1921
+
+Tags = ["fiction", "war-novel", "controversial"]
+
+Summary = """
+A bestselling and controversial World War I novel about Peter Graham, an Anglican priest serving as an army chaplain in wartime France who has an affair with a nurse named Julie. The novel is largely autobiographical—Keable himself was a priest who left the Church of England after falling in love with a nurse during his chaplaincy. The book explores themes of faith, doubt, sexuality, and the psychological impact of war. It was enormously popular, selling over 600,000 copies in the 1920s and reaching its 66th edition by 1922. The novel was referenced in F. Scott Fitzgerald's The Great Gatsby and was adapted into a Broadway play in 1924.
+"""
+
+Notes = """
+Published April 1921. The novel caused considerable scandal in Britain due to its frank treatment of sexuality and religious doubt. Despite (or because of) its controversial nature, it became one of the bestselling novels of the early 1920s.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Development of the European Nations 1870-1914"
+Author = "J. Holland Rose"
+Year = 1905
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+A comprehensive historical survey of European political and diplomatic history from 1870 to 1914, covering the period from the Franco-Prussian War through the outbreak of World War I. J. Holland Rose (1855-1942) was a distinguished British historian at Cambridge, known for his biographies of Napoleon and William Pitt. This work examines the development of European nation-states, their rivalries, alliances, and the complex diplomatic relationships that ultimately led to the Great War. The fifth edition (1915) added supplementary chapters covering events leading up to and including the early stages of WWI.
+"""
+
+Notes = """
+First published October 1905. The text shown is the fifth edition from 1915, but I have used the original publication year as this represents when the core historical analysis was first presented. The work went through multiple editions as European events continued to unfold, with the author adding supplementary chapters to address the outbreak of World War I.
+"""
+</result>

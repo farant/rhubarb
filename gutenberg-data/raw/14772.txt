@@ -1,0 +1,15 @@
+<result>
+Title = "Acton's Feud: A Public School Story"
+Author = "Frederick Swainson"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A British public school novel set in the late Victorian/Edwardian era. The story follows conflicts and rivalries among schoolboys, centering on a character named Acton and what appears to be a feud stemming from some incident (likely the "foul" referenced in the first chapter, suggesting a sports context). The narrative involves house rivalries (Biffen's House features prominently), school concerts, and the typical themes of honor, fair play, and character development found in the public school fiction genre popularized by Thomas Hughes' "Tom Brown's School Days." The dedication "Ad Matrem" (To Mother) suggests a personal work.
+"""
+
+Notes = """
+The year 1901 is clearly printed on the title page as the publication date. This appears to be the original publication - Frederick Swainson was a minor author of boys' school stories in this period, and this work is not a translation or adaptation of an earlier text.
+"""
+</result>

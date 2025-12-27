@@ -1,0 +1,15 @@
+<result>
+Title = "The Correspondence of Thomas Carlyle and Ralph Waldo Emerson, 1834-1872, Volume I"
+Author = "Thomas Carlyle, Ralph Waldo Emerson"
+Year = 1883
+
+Tags = ["non-fiction", "letters", "philosophy", "literature"]
+
+Summary = """
+This is the first volume of the collected correspondence between two of the most influential literary and philosophical figures of the 19th century: Scottish essayist and historian Thomas Carlyle (1795-1881) and American transcendentalist Ralph Waldo Emerson (1803-1882). Their friendship, conducted largely through letters over nearly four decades, represents a remarkable transatlantic intellectual exchange. The correspondence covers their mutual admiration, philosophical discussions, practical matters of publishing each other's works, and the development of their respective careers. Edited by Charles Eliot Norton, a Harvard professor and close friend of both men, the collection was published shortly after both correspondents had died.
+"""
+
+Notes = """
+The year 1883 is chosen as this is a compiled and edited collection of letters, not the letters themselves. The editorial note is dated January 29, 1883, indicating the publication date. While the letters span 1834-1872, the work as a literary object is the Norton edition. The correspondence itself became an important document in American and British literary history, showing how ideas crossed the Atlantic during the Romantic and Victorian periods.
+"""
+</result>

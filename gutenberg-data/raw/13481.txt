@@ -1,0 +1,15 @@
+<result>
+Title = "Roman Life in the Days of Cicero"
+Author = "Alfred J. Church"
+Year = 1883
+
+Tags = ["non-fiction", "historical", "appropriate-for-children"]
+
+Summary = """
+A popular history book that reconstructs daily life in ancient Rome during the time of Marcus Tullius Cicero (106-43 BC). Church uses Cicero's extensive writings and correspondence as a window into Roman society, covering topics such as education, politics, law, country estates, and the major political figures of the late Roman Republic including Caesar, Pompey, Cato, and Brutus. The book is written in an accessible narrative style intended for general readers and students.
+"""
+
+Notes = """
+Alfred J. Church (1829-1912) was an English classical scholar and prolific author known for adapting classical literature and history for younger readers. This work was first published in 1883. Church held the position of Professor of Latin at University College London.
+"""
+</result>

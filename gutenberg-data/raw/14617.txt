@@ -1,0 +1,15 @@
+<result>
+Title = "Poems"
+Author = "Joanna Baillie"
+Year = 1790
+
+Tags = ["poetry", "fiction", "appropriate-for-children"]
+
+Summary = """
+This is Joanna Baillie's first published work, a collection of poems focusing on rural life, nature, and the Scottish countryside. The volume appeared anonymously and established her interest in observing how circumstances affect different characters - a theme she would later develop extensively in her dramatic works. The poems include descriptive pieces like "A Winter Day" which follow the rhythms of country life through careful observation of both nature and the working poor.
+"""
+
+Notes = """
+The MDCCXC on the title page gives us 1790 as the publication year. Joanna Baillie (1762-1851) was a Scottish poet and dramatist who would later become famous for her "Plays on the Passions" series. This early anonymous volume is notable for its naturalistic observation and sympathy for rural laborers.
+"""
+</result>

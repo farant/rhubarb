@@ -1,0 +1,15 @@
+<result>
+Title = "The Authoritative Life of General William Booth, Founder of The Salvation Army"
+Author = "G. S. Railton"
+Year = 1912
+
+Tags = ["non-fiction", "biography", "religious"]
+
+Summary = """
+This is the official biography of William Booth (1829-1912), the English Methodist preacher who founded The Salvation Army in 1865. Written by George Scott Railton, who was one of Booth's closest associates and the first Commissioner appointed by General Booth, this work was published shortly after Booth's death in August 1912. The Salvation Army began as the East London Christian Mission and grew into a worldwide evangelical and charitable organization. Booth was known for his radical approach to Christian ministry, focusing on serving the urban poor through both spiritual outreach and practical social services. The biography includes a preface by Bramwell Booth, William's son and successor as General of The Salvation Army.
+"""
+
+Notes = """
+Year 1912 chosen as it is when the book was published, which coincides with William Booth's death. This is a contemporary biographical work, not a historical document requiring backdating to its subject's earlier life. Railton was uniquely positioned to write this biography, having worked closely with Booth for four decades. Not marked "catholic" as The Salvation Army is a Protestant denomination.
+"""
+</result>

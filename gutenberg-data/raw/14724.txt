@@ -1,0 +1,17 @@
+The file appears very short - it seems you pasted the content directly in your message rather than it being in the file. Based on the content you provided, I recognize this work:
+
+<result>
+Title = "Kangastuksia; Talvi-yö; Halla; Tähtitarha"
+Author = "Eino Leino"
+Year = 1902
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+This is a collected volume of poetry by Eino Leino (1878-1926), Finland's most celebrated poet of the National Romantic era. The title translates roughly to "Mirages; Winter Night; Frost; Star Garden" - four separate poetry collections bound together. Leino was a prolific Finnish author who wrote in a style blending Finnish folklore, mythology (particularly the Kalevala tradition), and European symbolism. The "Perman taru" (Tale of Perm) section draws on the mythology of the ancient Finno-Ugric Permian peoples. Leino is considered one of the founders of modern Finnish literature.
+"""
+
+Notes = """
+The years 1902, 1905, 1908, 1912 represent the original publication dates of the four individual collections: Kangastuksia (1902), Talvi-yö (1905), Halla (1908), and Tähtitarha (1912). I chose 1902 as the primary year since that was the first publication date of the earliest collection in this omnibus. Leino was Lutheran, not Catholic - this is Finnish national romantic poetry deeply rooted in pre-Christian Finnish/Karelian mythology.
+"""
+</result>

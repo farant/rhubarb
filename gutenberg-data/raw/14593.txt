@@ -1,0 +1,15 @@
+<result>
+Title = "Norse Tales and Sketches"
+Author = "Alexander L. Kielland"
+Year = 1879
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of short stories by Alexander Lange Kielland (1849-1906), one of the "Four Greats" of Norwegian realist literature alongside Ibsen, Bjørnson, and Lie. This English translation by R. L. Cassie presents novelettes that showcase Kielland's characteristic satirical style and realistic portrayal of Norwegian provincial life. Kielland was known for his social criticism, particularly of the bourgeoisie and religious hypocrisy in his native Stavanger. His prose is noted for its polish, precision, and understated power.
+"""
+
+Notes = """
+The 1896 date is for this English translation. Kielland's short stories were originally published in Norwegian collections starting with "Novelletter" (1879). I chose 1879 as this represents when Kielland began publishing his short fiction, which is what this collection draws from. The translator's introduction suggests these are selected novelettes from his body of work rather than a single original Norwegian volume.
+"""
+</result>

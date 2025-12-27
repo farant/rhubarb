@@ -1,0 +1,15 @@
+<result>
+Title = "Twenty-Six and One and Other Stories"
+Author = "Maxim Gorky"
+Year = 1899
+
+Tags = ["fiction", "social-realism"]
+
+Summary = """
+This is a collection of short stories by the Russian writer Maxim Gorky (1868-1936), one of the founders of socialist realism. The title story "Twenty-Six and One" (Двадцать шесть и одна) is considered one of his masterpieces - a haunting tale about twenty-six bakers working in terrible conditions in a basement bakery who idealize a young woman named Tanya who visits them daily. The story explores themes of labor, exploitation, idealization, and disillusionment. Gorky drew heavily on his own experiences as a vagrant and laborer across Russia, giving his work an authenticity that shocked and moved readers. His sympathetic portrayal of society's outcasts and working poor made him enormously popular and influential.
+"""
+
+Notes = """
+The title story "Twenty-Six and One" was originally published in Russian in 1899. This English translation by J. F. Taylor & Company was published in 1902 as part of their Vagabond Series. I chose 1899 as the year since that represents when the original work was created. Gorky's name is sometimes transliterated as "Maxime" (as in this edition) or more commonly today as "Maxim."
+"""
+</result>

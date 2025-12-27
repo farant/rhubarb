@@ -1,0 +1,15 @@
+<result>
+Title = "Sister Teresa"
+Author = "George Moore"
+Year = 1901
+
+Tags = ["fiction"]
+
+Summary = """
+Sister Teresa is a novel by Irish author George Moore, serving as a sequel to his earlier novel Evelyn Innes (1898). The story follows Evelyn Innes, a famous opera singer who renounces her career and worldly life to become a nun. The novel explores themes of religious vocation, artistic sacrifice, and the tension between spiritual aspirations and earthly passions. Moore was known for his naturalistic style and was an important figure in the Irish Literary Revival, though this particular work deals more with English Catholic religious life than Irish themes.
+"""
+
+Notes = """
+The first edition was published in 1901, with a substantially rewritten second edition in 1909. I chose 1901 as it represents the original publication. George Moore was raised Catholic but had a complicated relationship with the faith; the novel treats Catholic religious life seriously but is not itself a devotional work, hence no 'catholic' tag.
+"""
+</result>

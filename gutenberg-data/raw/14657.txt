@@ -1,0 +1,15 @@
+<result>
+Title = "Philo-Judæus of Alexandria"
+Author = "Norman Bentwich"
+Year = 1910
+
+Tags = ["non-fiction", "biography", "philosophy", "jewish-history"]
+
+Summary = """
+A scholarly biography and intellectual study of Philo of Alexandria (c. 20 BCE - 50 CE), the Hellenistic Jewish philosopher who attempted to synthesize Jewish scripture with Greek philosophy. Bentwich examines Philo's life, his allegorical method of biblical interpretation, his philosophical system blending Platonic and Stoic thought with Jewish theology, and his historical significance as a bridge between Jewish and Christian thought. The work is part of the Jewish Publication Society's effort to make Jewish intellectual history accessible to English readers.
+"""
+
+Notes = """
+Norman Bentwich (1883-1971) was a British Jewish scholar and later Attorney-General of Mandatory Palestine. This 1910 publication represents early 20th century Jewish academic engagement with a figure who had been largely preserved and studied by Christian rather than Jewish scholars for nearly two millennia.
+"""
+</result>

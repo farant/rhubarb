@@ -1,0 +1,15 @@
+<result>
+Title = "Three Wonder Plays"
+Author = "Lady Gregory"
+Year = 1922
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+Three Wonder Plays is a collection of three one-act plays by Lady Gregory (Isabella Augusta Gregory), a central figure in the Irish Literary Revival and co-founder of the Abbey Theatre in Dublin alongside W.B. Yeats and Edward Martyn. The collection includes "The Dragon," "Aristotle's Bellows," and "The Jester." These plays blend Irish folklore, fantasy, and comedy in Lady Gregory's characteristic Kiltartan dialect—a stylized version of the English spoken by Irish peasants in the Galway region. The "wonder" element refers to their fantastical and fairy-tale qualities, departing from her more realistic folk-history plays.
+"""
+
+Notes = """
+First published in 1922 by G.P. Putnam's Sons in London and New York. Lady Gregory (1852-1932) was an Irish dramatist, folklorist, and theatre manager. While Catholic themes occasionally appear in her folklore collections, she herself was Anglo-Irish Protestant, so the 'catholic' tag is not applied.
+"""
+</result>

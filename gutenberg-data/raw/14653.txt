@@ -1,0 +1,15 @@
+<result>
+Title = "The Feast of St. Friend: A Christmas Book"
+Author = "Arnold Bennett"
+Year = 1911
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A reflective essay collection by Arnold Bennett on the meaning and celebration of Christmas. Bennett, a prominent Edwardian novelist known for his realistic fiction set in the English Midlands, here turns to philosophical meditation on the Christmas festival. The book examines what has changed about Christmas in modern times, defends the practice of feasting and celebration, and proposes ways to revitalize the spiritual and social significance of the holiday season. It concludes with reflections on the new year.
+"""
+
+Notes = """
+Arnold Bennett (1867-1931) was an English writer, not Catholic. The work is reflective/philosophical rather than strictly religious, examining Christmas as a cultural and human phenomenon. Published in 1911 as indicated on the title page.
+"""
+</result>

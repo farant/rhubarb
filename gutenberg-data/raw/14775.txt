@@ -1,0 +1,19 @@
+<result>
+Title = "Elämän Hawainnoita III: Suku-ylpeys; Tahdon woima"
+Author = "Pietari Päivärinta"
+Year = 1891
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is Volume III of "Elämän hawainnoita" (Observations from Life), a ten-volume series of short stories by Finnish author Pietari Päivärinta (1827-1913). Päivärinta was one of the most significant Finnish realist authors of his era, known for depicting the struggles and everyday life of common rural Finnish people. This volume contains two stories: "Suku-ylpeys" (Family Pride) and "Tahdon woima" (The Power of Will). The excerpt shown takes place in autumn 1807, during the Oulu market, as rumors spread about Russia's plans to invade Finland (which would come to pass in the Finnish War of 1808-1809). The stories explore themes of rural Finnish life, family honor, and personal determination.
+"""
+
+Notes = """
+The year 1891 is taken directly from the publication information in the text (WSOY, Porvoo, 1891). This is the original Finnish publication date for this volume. The "Elämän hawainnoita" series was published between approximately 1889-1899 across ten volumes.
+"""
+</result>
+
+Sources:
+- [Books by Pietari Päivärinta - Project Gutenberg](https://www.gutenberg.org/ebooks/author/5555)
+- [Elämän hawainnoita 09 - Project Gutenberg](https://www.gutenberg.org/cache/epub/15009/pg15009-images.html)

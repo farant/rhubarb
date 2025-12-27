@@ -1,0 +1,17 @@
+I recognize this text. This is William Ralph Inge's "Christian Mysticism," based on his Bampton Lectures delivered at Oxford in 1899.
+
+<result>
+Title = "Christian Mysticism"
+Author = "William Ralph Inge"
+Year = 1899
+
+Tags = ["non-fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+A scholarly examination of the Christian mystical tradition delivered as the Bampton Lectures at Oxford University. W.R. Inge (later Dean of St Paul's Cathedral, London) traces the history and philosophy of Christian mysticism from its origins through the medieval period, exploring figures like Plotinus, Pseudo-Dionysius, Meister Eckhart, and the English mystics. The work examines how mystical experience relates to theology, philosophy, and practical religion, becoming a foundational text in the academic study of Christian spirituality. Inge distinguishes authentic mysticism from its counterfeits and argues for its central place in Christian life.
+"""
+
+Notes = """
+The year 1899 reflects when the lectures were delivered at Oxford, which is the significant date for the work's origin. While Inge was Anglican rather than Roman Catholic, his treatment of mysticism draws heavily from the Catholic mystical tradition (Augustine, Bernard, the medieval mystics, etc.) and the work itself represents serious theological scholarship that would be compatible with Catholic teaching on contemplative spirituality. The Bampton Lectures were a prestigious theological lecture series endowed in 1751.
+"""
+</result>

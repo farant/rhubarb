@@ -1,0 +1,15 @@
+<result>
+Title = "Op Samoa"
+Author = "Eginhard von Barfus"
+Year = 1899
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Op Samoa" is a Dutch adventure novel by German author Eginhard von Barfus, translated by Mrs. J. van der Hoeven. Von Barfus was a popular German writer of adventure and travel stories for young readers in the late 19th and early 20th centuries. This work is set in Samoa during the period of heightened colonial interest in the Pacific islands. The book likely depicts adventures in the exotic Samoan setting, following the conventions of the adventure genre popular at the time. Von Barfus also wrote "De Goudzoekers aan de Klondyke-Rivier" (The Gold Seekers at the Klondike River), indicating his focus on adventure stories set in frontier and colonial locations.
+"""
+
+Notes = """
+The exact publication year is uncertain. Von Barfus was most active in the 1890s-1900s period. Given his Klondike book reference (the Klondike Gold Rush was 1896-1899) and the colonial interest in Samoa during the 1889-1899 period (culminating in the Tripartite Convention of 1899 that divided Samoa between Germany and the US), 1899 is a reasonable estimate for when this work would have been published to capitalize on contemporary interest in Samoa.
+"""
+</result>

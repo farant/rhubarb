@@ -1,0 +1,15 @@
+<result>
+Title = "The Story of the Foss River Ranch: A Tale of the Northwest"
+Author = "Ridgwell Cullum"
+Year = 1903
+
+Tags = ["fiction"]
+
+Summary = """
+A Western adventure novel set in the Canadian Northwest. Ridgwell Cullum (1867-1943) was an English-born author who emigrated to Canada and later the United States, becoming known for his frontier and Western fiction. This novel features typical elements of the genre: ranch life, frontier challenges, and dramatic conflict in the untamed Northwest territories. The chapter titles suggest poker games, blizzards, and mysterious dealings characteristic of adventure fiction of the era.
+"""
+
+Notes = """
+First published August 1903 as indicated on the title page. Ridgwell Cullum was a prolific author of Western adventure novels popular in the early 20th century.
+"""
+</result>

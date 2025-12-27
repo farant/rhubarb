@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Swift and His Undersea Search, or The Treasure on the Floor of the Atlantic"
+Author = "Victor Appleton"
+Year = 1920
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the Tom Swift series, a long-running juvenile science fiction/adventure series featuring the young inventor Tom Swift. In this installment, Tom searches for sunken treasure on the Atlantic ocean floor using his inventive submarine technology. The series was published under the house pseudonym "Victor Appleton" by the Stratemeyer Syndicate, with multiple ghostwriters contributing to the books. The Tom Swift books were enormously popular in the early 20th century and helped establish the "boy inventor" genre in American fiction.
+"""
+
+Notes = """
+"Tom Swift and His Undersea Search" was first published in 1920 as part of the original Tom Swift series (1910-1941). Victor Appleton is a house pseudonym used by the Stratemeyer Syndicate; the actual author of this volume was likely Howard Garis, who wrote many of the early Tom Swift books.
+"""
+</result>

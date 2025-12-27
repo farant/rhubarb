@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 152, February 28th, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "satire", "periodical"]
+
+Summary = """
+Punch, or the London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. This issue from February 1917 contains typical wartime content: satirical jabs at German leadership including Kaiser Wilhelm II, Hindenburg, the Crown Prince of Bavaria, and Admiral von Capelle. The humor reflects British wartime propaganda and morale-boosting through mockery of the enemy. The magazine was known for its cartoons, witty commentary on current events, and wordplay (such as the dark pun on Von Bissing's "execution"). Captain Boy-Ed mentioned was a German naval attaché expelled from the US in 1915 for espionage activities.
+"""
+
+Notes = """
+Year is straightforward as 1917 - this is a periodical issue dated February 28th, 1917. Punch was published weekly so each issue is its own discrete publication. The context is World War I, with Britain and Germany as belligerents.
+"""
+</result>

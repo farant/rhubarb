@@ -1,0 +1,15 @@
+<result>
+Title = "Mistress Wilding"
+Author = "Rafael Sabatini"
+Year = 1910
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Mistress Wilding is a historical adventure novel set during the Monmouth Rebellion of 1685, when the Duke of Monmouth attempted to overthrow King James II of England. The story follows the romantic and political intrigues surrounding the protagonist Ruth Westmacott and the mysterious Mr. Wilding, a supporter of Monmouth's cause. Sabatini, known for his swashbuckling tales like Captain Blood and Scaramouche, weaves together themes of forced marriage, loyalty, betrayal, and adventure against the backdrop of this failed Protestant uprising in England's West Country.
+"""
+
+Notes = """
+First published in 1910. Rafael Sabatini (1875-1950) was an Italian-British author famous for his historical adventure novels. Though Sabatini was born to an Italian father and English mother, he wrote in English and became one of the most popular adventure novelists of the early 20th century.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Catechism of Christian Doctrine (Baltimore Catechism No. 3)"
+Author = "Third Plenary Council of Baltimore, supplemented by Rev. Thomas L. Kinkead"
+Year = 1885
+
+Tags = ["non-fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+The Baltimore Catechism is the standard Catholic catechism used in the United States for over a century. It was commissioned by the Third Plenary Council of Baltimore in 1884 and first published in 1885. This is No. 3 in the series, designed for post-confirmation classes (a two-year course), making it more advanced than the basic editions. The catechism uses a question-and-answer format to teach Catholic doctrine on topics including the Creed, sacraments, commandments, prayer, and Christian life. Rev. Thomas L. Kinkead's supplementary material adds explanations and context. The work bears the imprimatur of Cardinal John McCloskey and the approval of Archbishop (later Cardinal) James Gibbons, who served as Apostolic Delegate.
+"""
+
+Notes = """
+The 1885 date reflects the original publication following the Third Plenary Council of Baltimore (1884). The note about "New Canon Law" in the title page refers to a later revision, as the 1917 Code of Canon Law prompted updates to catechetical materials. However, the core text and its authority derive from the 1885 original, which is the historically significant date for this foundational American Catholic text.
+"""
+</result>

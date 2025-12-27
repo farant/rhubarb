@@ -1,0 +1,15 @@
+<result>
+Title = "De Carmine Pastorali (On Pastoral Poetry)"
+Author = "René Rapin"
+Year = 1659
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+This is René Rapin's influential Latin treatise on pastoral poetry, "De Carmine Pastorali" (On Pastoral Poetry), originally published as part of his larger work on poetics. This edition is the English translation by Thomas Creech, published in 1684 as a preface to his translation of Theocritus's Idylls. Rapin was a French Jesuit scholar and literary critic whose work on pastoral poetry became highly influential in establishing neoclassical standards for the genre in both France and England. The treatise examines the origins, nature, and proper rules of pastoral poetry, drawing heavily on classical models particularly Theocritus and Virgil.
+"""
+
+Notes = """
+The year 1659 represents the original Latin publication of Rapin's treatise. While this particular edition is Creech's 1684 English translation published by the Augustan Reprint Society in 1947, the work itself and its historical significance dates to Rapin's original composition. Rapin (1621-1687) was indeed a Jesuit, but this work is literary criticism rather than devotional writing, so I have not included the 'catholic' tag as it would not typically require an imprimatur.
+"""
+</result>

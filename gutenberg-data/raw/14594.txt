@@ -1,0 +1,15 @@
+<result>
+Title = "Cassell's Vegetarian Cookery: A Manual of Cheap and Wholesome Diet"
+Author = "A. G. Payne"
+Year = 1891
+
+Tags = ["non-fiction", "cookbook", "appropriate-for-children"]
+
+Summary = """
+A Victorian-era vegetarian cookbook published by Cassell & Company, a major British publisher. The book provides practical recipes and guidance for those following a vegetarian diet, with an emphasis on economical and nutritious meals. It reflects the growing interest in vegetarianism in late 19th century Britain, which was driven by both ethical concerns and health reform movements. The author, A. G. Payne, B.A., wrote several cookery books for Cassell's during this period.
+"""
+
+Notes = """
+The first edition was published around 1891. Cassell's published numerous practical household manuals during the Victorian era, and this was part of their series of affordable guides for the middle and working classes. The inclusion of gas stove advertisements in the Gutenberg text reflects the period when gas cooking was becoming widespread in British homes.
+"""
+</result>

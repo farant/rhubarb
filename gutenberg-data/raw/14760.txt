@@ -1,0 +1,15 @@
+<result>
+Title = "Report of the Special Committee on Moral Delinquency in Children and Adolescents"
+Author = "O.C. Mazengarb (Chairman), Special Committee"
+Year = 1954
+
+Tags = ["non-fiction", "historical-document", "government-report"]
+
+Summary = """
+This is the Mazengarb Report, a New Zealand government inquiry into juvenile delinquency conducted in 1954. The committee, chaired by Dr. Oswald Chettle Mazengarb QC, was established in response to public concern about youth behaviour, particularly following media coverage of incidents involving teenagers in the Hutt Valley. The report examined perceived moral decline among young people and made recommendations regarding education, parenting, and social policy. It became historically significant as a reflection of 1950s moral panic and conservative social attitudes in New Zealand. The government distributed copies to every household with children, making it one of the most widely circulated official documents in New Zealand history.
+"""
+
+Notes = """
+The report was presented to Parliament on 20 September 1954. It reflects post-war anxieties about changing youth culture and is now studied as a historical document illustrating mid-20th century attitudes toward adolescence, sexuality, and social control rather than as a source of valid social science.
+"""
+</result>

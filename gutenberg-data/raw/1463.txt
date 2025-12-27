@@ -1,0 +1,15 @@
+<result>
+Title = "The Private Papers of Henry Ryecroft"
+Author = "George Gissing"
+Year = 1903
+
+Tags = ["fiction", "autobiographical-fiction"]
+
+Summary = """
+A semi-autobiographical novel by George Gissing, one of the notable English novelists of the late Victorian era. The work is presented as the private journals of a fictional writer named Henry Ryecroft who, after years of struggling in poverty as a London author, inherits a small legacy and retires to the Devon countryside. The book is divided into four seasonal sections (Spring, Summer, Autumn, Winter) and consists of reflective essays on literature, nature, society, and the writing life. It is widely considered Gissing's most personal work, drawing heavily on his own experiences as a struggling writer and his love of classical literature. The meditative, essayistic style marks a departure from his earlier naturalistic novels about poverty and class.
+"""
+
+Notes = """
+First published in 1903 by Archibald Constable & Co., the same year Gissing died. The work was written in 1902-1903 during the final period of his life while he was ill in France.
+"""
+</result>

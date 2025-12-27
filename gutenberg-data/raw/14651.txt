@@ -1,0 +1,15 @@
+<result>
+Title = "Kauppaneuvoksen härkä"
+Author = "Teuvo Pakkala"
+Year = 1901
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+"Kauppaneuvoksen härkä" (The Commercial Counselor's Ox/Bull) is a four-act comedy by Finnish author Teuvo Pakkala (1862-1925). Pakkala was a significant figure in Finnish literature, known for his realistic portrayals of everyday Finnish life, particularly in the Oulu region. He wrote novels, short stories, and plays. This comedy features a cast of small-town characters including a mayor, his wife and daughters, a commercial counselor, a newspaper editor, a cantor, and various townspeople. The play satirizes provincial bourgeois society and its pretensions.
+"""
+
+Notes = """
+The Gutenberg text shows publication by Otava in 1922, but the play was originally written and first performed in 1901. I chose 1901 as it represents the original creation of the work rather than this particular edition. Pakkala was a Lutheran Finnish author, not Catholic, so the 'catholic' tag does not apply.
+"""
+</result>

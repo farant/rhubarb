@@ -1,0 +1,15 @@
+<result>
+Title = "A Christmas Garland"
+Author = "Max Beerbohm"
+Year = 1912
+
+Tags = ["fiction", "satire", "parody"]
+
+Summary = """
+A Christmas Garland is a celebrated collection of literary parodies by the English essayist, caricaturist, and critic Max Beerbohm. The book contains seventeen short stories, each written in the style of a famous contemporary author of the Edwardian era, including Henry James, Rudyard Kipling, Thomas Hardy, H.G. Wells, George Bernard Shaw, Joseph Conrad, and others. Each parody imagines how these different writers would approach the theme of Christmas. Beerbohm's wit and keen observational skills made this work a classic of the parody genre, demonstrating his remarkable ability to capture the distinctive voice and stylistic mannerisms of each author he imitated.
+"""
+
+Notes = """
+First published October 1912 by William Heinemann in London. The MCMXXI (1921) date on the title page likely refers to a later impression or edition. The work went through multiple printings in 1912 alone, indicating its immediate popularity. Beerbohm (1872-1956) was known as an incomparable parodist and this is generally considered his masterpiece in that form.
+"""
+</result>

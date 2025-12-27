@@ -1,0 +1,15 @@
+<result>
+Title = "Winston of the Prairie"
+Author = "Harold Bindloss"
+Year = 1907
+
+Tags = ["fiction"]
+
+Summary = """
+Winston of the Prairie is a novel by Harold Bindloss, a prolific British-Canadian author known for his adventure romances set in the Canadian and American West. The story follows the protagonist Winston, a prairie settler or rancher, through the challenges and adventures of frontier life. Bindloss was particularly skilled at depicting the hardships and rewards of homesteading in the Canadian prairies, and this novel is representative of his body of work that romanticized the pioneering spirit of the early 20th century West.
+"""
+
+Notes = """
+Harold Bindloss (1866-1945) was a British author who spent time in Canada and wrote extensively about prairie life. Winston of the Prairie was first published in 1907. The Gutenberg release date of 2005 reflects when it was digitized, not original publication.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Brain, A Decoded Enigma"
+Author = "Dorin T. Moisa"
+Year = 2004
+
+Tags = ["non-fiction"]
+
+Summary = """
+A contemporary work presenting a symbolic/logical model of brain function. The author explicitly states it is based on logic rather than imagination, and is aimed at those with aptitude in positive sciences. This is a self-published or small-press work from the early 2000s exploring neuroscience concepts through a symbolic modeling approach.
+"""
+
+Notes = """
+The copyright date of 2004 is used as the publication year since this appears to be the original work, published to Gutenberg in January 2005. This is a modern copyrighted work, not a public domain historical text. The author Dorin T. Moisa does not appear to be a widely recognized figure in neuroscience literature.
+"""
+</result>

@@ -1,0 +1,19 @@
+The file seems very short. Let me check what you've pasted in the message - that appears to be the content itself rather than from the file.
+
+Based on the text you provided:
+
+<result>
+Title = "A Compilation of the Messages and Papers of the Presidents, Volume X"
+Author = "James D. Richardson"
+Year = 1902
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is Volume X of a comprehensive compilation of official presidential papers, messages, proclamations, and documents from the Presidents of the United States. James D. Richardson, a Representative from Tennessee, undertook this monumental project beginning in April 1895, completing it after more than four years of work. This volume notably includes the extensive Index to the entire compilation, prepared primarily by Richardson's son James D. Richardson Jr. The Index contains not only references to the presidential papers but also encyclopedic articles covering political and historical definitions, accounts of battles involving US forces, and descriptions of states and foreign countries. Richardson explicitly notes his intention to make the work non-partisan and educational, hoping to instill patriotism and civic knowledge in young readers.
+"""
+
+Notes = """
+The year 1902 is taken directly from the title page of this volume. The compilation as a whole was authorized by Congressional resolution and represents an official government publication. Richardson served in the U.S. House of Representatives from 1885-1905 and was selected by Congress to compile this authoritative collection. The full compilation spans multiple volumes covering presidential documents from Washington through McKinley.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Elämän Hawainnoita II: Waimoni; Puutteen Matti"
+Author = "Pietari Päivärinta"
+Year = 1890
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is Volume II of Pietari Päivärinta's series "Elämän hawainnoita" (Observations of Life), containing two stories: "Waimoni" (My Wife) and "Puutteen Matti" (Matt of Poverty/Want). Päivärinta (1827-1913) was a Finnish peasant writer who became one of the most important voices of rural Finnish life in the 19th century. His works are characterized by realistic portrayals of Finnish peasant life, often exploring themes of hardship, family struggles, and moral questions. The excerpt shows a traveler arriving at a prosperous farmhouse where he observes a strange, mournful atmosphere and a master of the house seemingly lost in deep grief.
+"""
+
+Notes = """
+The publication year 1890 is taken directly from the text header (WSOY, Porvoo, 1890). Päivärinta's "Elämän hawainnoita" series was published across multiple volumes from 1889 onwards. This is realistic Finnish fiction of the period, appropriate for general audiences.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Soul of the Far East"
+Author = "Percival Lowell"
+Year = 1888
+
+Tags = ["non-fiction", "travel", "cultural-criticism"]
+
+Summary = """
+A cultural and philosophical analysis of Japanese and East Asian society by American astronomer and author Percival Lowell. Based on his extensive travels in Japan and Korea during the 1880s, Lowell examines what he perceives as fundamental differences between Eastern and Western modes of thought, particularly regarding individuality, family structure, language, art, and religion. The work was influential in shaping Western perceptions of Japan during the Meiji era, though its orientalist framing reflects the attitudes of its time.
+"""
+
+Notes = """
+Percival Lowell (1855-1916) is better known today for his astronomical work and his theories about Mars. Before turning to astronomy, he spent nearly a decade traveling in East Asia and wrote several books on Japanese and Korean culture. This was his first major work on the subject.
+"""
+</result>

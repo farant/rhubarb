@@ -1,0 +1,15 @@
+<result>
+Title = "The Elene of Cynewulf"
+Author = "Cynewulf (translated by Lucius Hudson Holt)"
+Year = 800
+
+Tags = ["poetry", "religious", "catholic", "historical-document"]
+
+Summary = """
+The Elene is an Old English poem by Cynewulf, one of the few Anglo-Saxon poets known by name. The poem tells the story of Saint Helena (mother of Emperor Constantine) and her quest to find the True Cross in Jerusalem. It is based on the legend of the Invention of the Cross and follows Helena as she travels to the Holy Land, interrogates Jewish elders, and ultimately discovers the cross on which Christ was crucified. The poem is significant as one of the major works of Anglo-Saxon religious literature and contains Cynewulf's runic signature in the epilogue.
+"""
+
+Notes = """
+Cynewulf composed the Elene in Old English sometime in the late 8th to early 9th century (estimates range from roughly 750-850 AD). I chose 800 as a representative date. This 1904 publication is a prose translation by Lucius Hudson Holt for the Yale Studies in English series, but the historically significant date is when Cynewulf originally composed the poem, not when it was translated into modern English.
+"""
+</result>

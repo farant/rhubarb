@@ -1,0 +1,15 @@
+<result>
+Title = "The Romance of Tristan and Iseult"
+Author = "Joseph Bédier, Hilaire Belloc (translator)"
+Year = 1900
+
+Tags = ["fiction", "appropriate-for-children", "medieval-romance", "legend"]
+
+Summary = """
+This is Joseph Bédier's scholarly reconstruction of the medieval Tristan and Iseult legend, originally published in French as "Le Roman de Tristan et Iseut" in 1900. Bédier, a distinguished French medievalist, synthesized the fragmentary Old French sources (by Béroul, Thomas of Britain, and others) into a coherent prose narrative. This English translation by Hilaire Belloc was published in 1913. The story tells of the tragic love between the Cornish knight Tristan and the Irish princess Iseult, who accidentally drink a love potion meant for Iseult's marriage to King Mark. It is one of the foundational texts of Western romantic literature.
+"""
+
+Notes = """
+Year 1900 chosen as that is when Bédier's French reconstruction was first published. The 1913 date visible in the text (Mcmxiii) is the Belloc English translation. The underlying legend dates to the 12th century, but Bédier's work is a modern scholarly reconstruction rather than a direct translation, so 1900 is most appropriate for this particular text.
+"""
+</result>

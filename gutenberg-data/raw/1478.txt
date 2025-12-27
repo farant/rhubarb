@@ -1,0 +1,15 @@
+<result>
+Title = "A Parody Outline of History"
+Author = "Donald Ogden Stewart"
+Year = 1921
+
+Tags = ["fiction", "humor", "parody"]
+
+Summary = """
+A comedic work in which Donald Ogden Stewart parodies famous American authors of his era by imagining how they would have written about key events in American history. The book includes satirical chapters mimicking the styles of writers like H.G. Wells, William Lyon Phelps, James Branch Cabell, Sinclair Lewis, and others. Each chapter takes a historical event (Columbus's discovery, the Plymouth colony, etc.) and rewrites it in the distinctive voice of a contemporary literary figure. It was a popular humor book of the 1920s and helped establish Stewart's reputation as a satirist before his later career as a Hollywood screenwriter.
+"""
+
+Notes = """
+First published in 1921. Donald Ogden Stewart (1894-1980) was an American humorist and screenwriter who later won an Academy Award for The Philadelphia Story (1940). This was one of his early successful humor books.
+"""
+</result>

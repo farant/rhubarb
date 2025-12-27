@@ -1,0 +1,15 @@
+<result>
+Title = "Mary Anderson"
+Author = "J.M. Farrar"
+Year = 1885
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is a biographical work about Mary Anderson (1859-1940), a celebrated American actress who was one of the most famous stage performers of the late 19th century. She was known for her beauty and her Shakespearean roles, particularly Juliet and Hermione/Perdita in The Winter's Tale. J.M. Farrar wrote this biography during the height of her fame. Anderson retired from the stage in 1889 at just 29 years old and lived the rest of her life in England.
+"""
+
+Notes = """
+The year 1885 is printed directly in the text as the publication date. This was written while Anderson was still actively performing and at the peak of her theatrical career.
+"""
+</result>

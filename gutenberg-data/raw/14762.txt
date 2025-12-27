@@ -1,0 +1,15 @@
+<result>
+Title = "Now or Never; Or, The Adventures of Bobby Bright"
+Author = "Oliver Optic"
+Year = 1857
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Now or Never" is the first book in Oliver Optic's "Riverdale Story Books" series (also known as the "Riverdale Stories"). It follows Bobby Bright, a young boy who struggles with both external challenges in the world and internal moral temptations. The story emphasizes character development and devotion to principles over mere worldly success. Oliver Optic (pseudonym of William Taylor Adams) was one of the most prolific and popular American authors of juvenile fiction in the 19th century, writing over 100 books for young readers.
+"""
+
+Notes = """
+The 1872 date shown is a later edition. The book was first published in 1857. Oliver Optic was the pen name of William Taylor Adams (1822-1897), a Boston schoolteacher who became enormously popular writing adventure stories for boys. The dedication to Charles Henry Pope and the moralizing preface are typical of his style.
+"""
+</result>

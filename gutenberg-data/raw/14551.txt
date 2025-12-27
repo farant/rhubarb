@@ -1,0 +1,15 @@
+<result>
+Title = "A Catechism of Christian Doctrine (Baltimore Catechism No. 1)"
+Author = "Third Plenary Council of Baltimore"
+Year = 1885
+
+Tags = ["non-fiction", "appropriate-for-children", "catholic", "catechesis"]
+
+Summary = """
+The Baltimore Catechism is one of the most influential Catholic catechetical texts in American history. It was commissioned by the Third Plenary Council of Baltimore in 1884 and published in 1885 to provide a standardized religious education text for Catholic children in the United States. The work uses a question-and-answer format to teach Catholic doctrine, covering topics such as the nature of God, the sacraments, the commandments, and prayer. This particular volume (No. 1) is designed for First Communion classes and represents an abridgement of the fuller No. 2 version. The Baltimore Catechism remained the standard Catholic catechetical text in America for nearly a century until the Second Vatican Council.
+"""
+
+Notes = """
+The imprimatur dates of April 6, 1885 from both Cardinal McCloskey of New York and Archbishop Gibbons of Baltimore establish 1885 as the publication year. The Third Plenary Council itself met in 1884, but the catechism was published the following year after review and approval.
+"""
+</result>

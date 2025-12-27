@@ -1,0 +1,15 @@
+<result>
+Title = "Overland Through Asia: Pictures of Siberian, Chinese, and Tartar Life"
+Author = "Thomas Wallace Knox"
+Year = 1870
+
+Tags = ["non-fiction", "travel", "historical-document"]
+
+Summary = """
+A travel narrative by American journalist and author Thomas W. Knox documenting his extensive journeys through Siberia, Kamchatka, China, Mongolia, and Russian territories in the late 1860s. Knox was a correspondent who accompanied the Western Union Telegraph Expedition (1865-1867), which sought to establish a telegraph line connecting America to Europe via Alaska, the Bering Strait, and Siberia. The book provides detailed accounts of Siberian exile systems, encounters with indigenous peoples like the Tungus, descriptions of the Amur River region, and observations of daily life across vast stretches of Asia. It was one of the first comprehensive English-language accounts of these remote regions for American readers.
+"""
+
+Notes = """
+First published in 1870 by the American Publishing Company. Knox traveled as part of the Collins Overland Telegraph project in the mid-1860s, but the book documenting his experiences appeared in 1870. The subscription-only publishing model mentioned was common for illustrated travel books of this era.
+"""
+</result>

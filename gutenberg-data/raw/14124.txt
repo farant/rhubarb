@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 20"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a mass audience, costing only twopence. The magazine featured a diverse mix of content including essays, biographical sketches, historical narratives, poetry, extracts from new books, scientific discoveries, and domestic advice. Volume 20 would have been published in 1832-1833. The periodical was founded by John Limbird and was notable for making literature and knowledge accessible to working-class readers during the early Victorian era.
+"""
+
+Notes = """
+The Mirror of Literature ran from 1822-1849. Volume 20 corresponds to the year 1832 based on the publication schedule of roughly one volume per year. This is a periodical compilation rather than a single-author work, hence "Various" for the author field.
+"""
+</result>

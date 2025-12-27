@@ -1,0 +1,15 @@
+<result>
+Title = "Dream Life and Real Life: A Little African Story"
+Author = "Olive Schreiner"
+Year = 1893
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of three short stories by Olive Schreiner, the celebrated South African author best known for "The Story of an African Farm" (1883). The title story is set in the South African karoo landscape, and the collection includes "The Woman's Rose" and "The Policy in Favour of Protection--". Schreiner was a pioneering feminist writer and social thinker whose works often explored themes of freedom, identity, and the African landscape. The dedication indicates these were among her earliest literary efforts, originally written for her brother Fred's school magazine.
+"""
+
+Notes = """
+The 1893 date comes from the dedication dated "New College, Eastbourne, Sept. 29, 1893" which appears to be when this collection was published. While the individual stories were written earlier (the dedication mentions "many long years ago"), 1893 represents the publication of this collected edition.
+"""
+</result>

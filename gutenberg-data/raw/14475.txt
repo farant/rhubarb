@@ -1,0 +1,15 @@
+<result>
+Title = "Mary Erskine"
+Author = "Jacob Abbott"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mary Erskine is part of Jacob Abbott's Franconia Stories series, a collection of children's literature set in a fictional New England village. The series follows various characters and emphasizes moral education through narrative rather than didactic instruction. Abbott was a prolific 19th-century American writer known for his educational works and the famous Rollo Books series. This particular story focuses on the title character Mary Erskine and her life on a farm, using storytelling to convey lessons about character formation, kindness, and virtue to young readers.
+"""
+
+Notes = """
+The 1850 date comes directly from the copyright notice in the text. Jacob Abbott (1803-1879) was a Congregationalist minister and educator, not Catholic. The preface explicitly discusses Abbott's philosophy of moral education through sympathetic example rather than direct instruction, which characterized his approach to children's literature.
+"""
+</result>

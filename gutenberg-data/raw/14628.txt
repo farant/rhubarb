@@ -1,0 +1,15 @@
+<result>
+Title = "Fleur & Blanchefleur"
+Author = "Mrs. Leighton (translator)"
+Year = 1160
+
+Tags = ["fiction", "appropriate-for-children", "medieval-romance"]
+
+Summary = """
+Fleur and Blanchefleur (also known as Floris and Blancheflour) is a medieval French romance dating from the 12th century. The tale recounts the love story between Fleur, the son of a Saracen king of Spain, and Blanchefleur, a Christian captive's daughter. Born on the same day and raised together, the two fall deeply in love. When they are separated by the king who disapproves of the match and sells Blanchefleur into slavery, Fleur undertakes a long journey to find and rescue her. The story was immensely popular throughout medieval Europe, being translated into many languages including Middle English, German, Dutch, and Norse. It represents an early example of the "sentimental romance" genre and influenced later works including Boccaccio's Filocolo.
+"""
+
+Notes = """
+The original Old French poem "Floire et Blancheflor" dates to approximately 1160. This particular edition is a 1922 English translation by Mrs. Leighton with illustrations by Eleanor Fortescue Brickdale. I chose 1160 as the year since this is a translation of the medieval tale without substantial new commentary, and the historical/literary significance lies in the original 12th century work.
+"""
+</result>

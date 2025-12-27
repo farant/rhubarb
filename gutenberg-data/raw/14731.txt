@@ -1,0 +1,15 @@
+<result>
+Title = "Hatchie the Guardian Slave; or, The Heiress of Bellevue"
+Author = "Warren T. Ashton"
+Year = 1853
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+This is an abolitionist novel set in the Mississippi River region and the American Southwest. The story centers on Hatchie, a slave who serves as a guardian figure, and involves themes of slavery, identity, and inheritance (as suggested by the subtitle "The Heiress of Bellevue"). The epigraphs from Shakespeare and Knowles hint at questions of virtue and lineage crossing racial boundaries. Published in Boston by anti-slavery publishers, this work is part of the antebellum abolitionist literary tradition that used fiction to critique the institution of slavery.
+"""
+
+Notes = """
+"Warren T. Ashton" was a pseudonym used by William Taylor Adams (1822-1897), a prolific American author better known by his other pen name "Oliver Optic." Adams was a New England writer who produced hundreds of books, primarily adventure stories for young readers. This particular work represents his engagement with the slavery question in the years leading up to the Civil War.
+"""
+</result>

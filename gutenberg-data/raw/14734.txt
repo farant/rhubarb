@@ -1,0 +1,15 @@
+<result>
+Title = "Second Plays"
+Author = "A.A. Milne"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of two plays by A.A. Milne, best known as the creator of Winnie-the-Pooh. This volume contains "Make-Believe" (a children's fantasy play) and "Mr. Pim Passes By" (a comedic play about a case of mistaken identity that causes domestic upheaval). Milne was a successful playwright before his fame as a children's author, and these works represent his theatrical career during the post-WWI period. The dedication "To D.M." refers to his wife Dorothy (Daphne) de Sélincourt Milne.
+"""
+
+Notes = """
+"Second Plays" was first published in 1921. "Mr. Pim Passes By" had premiered in 1919 and was one of Milne's most successful stage comedies. The Knopf American edition followed the British publication.
+"""
+</result>

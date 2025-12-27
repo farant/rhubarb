@@ -1,0 +1,17 @@
+Looking at the text you provided in your prompt, I can identify this work clearly.
+
+<result>
+Title = "Experiments and Considerations Touching Colours"
+Author = "Robert Boyle"
+Year = 1664
+
+Tags = ["non-fiction", "science", "natural-philosophy"]
+
+Summary = """
+This is Robert Boyle's pioneering treatise on the nature of colors, published when he was a Fellow of the Royal Society. Boyle, often called the "father of modern chemistry," approaches the study of color empirically rather than dogmatically, presenting experimental observations rather than a fixed theoretical system. The work is part of his broader project of "experimental philosophy" - the systematic investigation of nature through careful observation and experiment. The Latin epigraph from Francis Bacon ("One must not invent or imagine, but discover what Nature does or permits") signals Boyle's commitment to the Baconian scientific method. This treatise influenced later work on optics, including Newton's studies on light and color.
+"""
+
+Notes = """
+The year 1664 is clearly indicated in the original publication as "MDCLXIV" (printed in London by Henry Herringman). This is the first edition date. Boyle was one of the founding members of the Royal Society and a major figure in the Scientific Revolution.
+"""
+</result>

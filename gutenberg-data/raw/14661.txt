@@ -1,0 +1,15 @@
+<result>
+Title = "Conditions in Utah: Speech of Hon. Thomas Kearns"
+Author = "Thomas Kearns"
+Year = 1905
+
+Tags = ["non-fiction", "historical-document", "political-speech"]
+
+Summary = """
+This is a speech delivered by Senator Thomas Kearns of Utah before the United States Senate on February 28, 1905. The speech addresses the ongoing controversy over polygamy and plural marriage in Utah, particularly in relation to the Mormon Church (LDS). This was delivered during the Reed Smoot hearings era, when the Senate was investigating whether the Mormon apostle Reed Smoot should be allowed to keep his Senate seat. Kearns, himself a Catholic and a political rival of the LDS Church establishment in Utah, used this speech to criticize ongoing polygamous practices despite the 1890 Manifesto that officially ended the practice. The speech references a resolution by Senator Dubois of Idaho proposing constitutional amendments to prohibit polygamy.
+"""
+
+Notes = """
+Thomas Kearns (1862-1918) was a mining magnate and U.S. Senator from Utah (1901-1905). He was notable for being a non-Mormon Catholic in Utah politics. This speech is historically significant as part of the broader political conflict between the LDS Church and federal government in the early 20th century. The year 1905 is both the year of delivery and publication.
+"""
+</result>

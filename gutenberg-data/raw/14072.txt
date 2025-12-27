@@ -1,0 +1,15 @@
+<result>
+Title = "Primitive Christian Worship"
+Author = "J. Endell Tyler"
+Year = 1840
+
+Tags = ["non-fiction", "theology", "protestant"]
+
+Summary = """
+This is a theological treatise by James Endell Tyler (1789-1851), an Anglican clergyman who served as Rector of St. Giles-in-the-Fields and Canon of St. Paul's Cathedral in London. The work is a Protestant apologetic arguing against Catholic practices of invoking saints, angels, and the Virgin Mary, attempting to demonstrate from Scripture and early Church evidence that such practices were not part of primitive Christianity. It was published by the Society for Promoting Christian Knowledge (SPCK), the oldest Anglican mission organization.
+"""
+
+Notes = """
+The title page indicates this is the "Second Edition" from 1847. The first edition was published in 1840. I chose 1840 as the year since that represents when the work was originally composed and published. This is explicitly a Protestant polemical work against Catholic devotional practices, so it would not receive a nihil obstat or imprimatur.
+"""
+</result>

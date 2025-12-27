@@ -1,0 +1,15 @@
+<result>
+Title = "Some Christmas Stories"
+Author = "Charles Dickens"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of Christmas stories by Charles Dickens, including "A Christmas Tree" (1850), "What Christmas is as we Grow Older" (1851), "The Poor Relation's Story" (1852), and "The Child's Story" (1852). These pieces were originally published in Dickens's weekly periodical "Household Words" as part of his annual Christmas numbers. They showcase Dickens's characteristic warmth, sentimentality, and moral reflection on themes of memory, family, childhood, and the Christmas spirit. "A Christmas Tree" is a nostalgic meditation on Christmas memories and traditions, while the other stories explore themes of imagination, redemption, and the passage of time.
+"""
+
+Notes = """
+The year 1850 is chosen as it marks the publication of "A Christmas Tree," the earliest story in this collection. These stories were published individually between 1850-1852 in Household Words before being collected together. This particular edition is transcribed from the 1911 Chapman and Hall collection.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Showell's Dictionary of Birmingham: A History and Guide"
+Author = "Thomas T. Harman"
+Year = 1885
+
+Tags = ["non-fiction", "historical-document", "reference"]
+
+Summary = """
+This is a comprehensive alphabetical reference guide to Birmingham, England, compiled by Thomas T. Harman for the brewing company Walter Showell & Sons. The work serves as both a history and practical guide to the city, covering its public buildings, churches, societies, institutions, schools, parks, theatres, notable citizens, manufactures, trades, and population statistics. It represents the genre of Victorian municipal reference works that documented the rapid growth and civic pride of industrial English cities during the 19th century.
+"""
+
+Notes = """
+The first edition of Showell's Dictionary of Birmingham was published in 1885. There were subsequent editions, but this appears to be from the original 1885 publication based on the format and publishers listed (Cornish Brothers, New Street, and J.G. Hammond & Co.). The work was commissioned by Walter Showell & Sons, a brewery company, as a promotional and civic-minded publication.
+"""
+</result>

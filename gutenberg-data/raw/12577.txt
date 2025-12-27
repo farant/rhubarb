@@ -1,0 +1,15 @@
+<result>
+Title = "Strange True Stories of Louisiana"
+Author = "George W. Cable"
+Year = 1889
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Strange True Stories of Louisiana is a collection of historical narratives by George Washington Cable, a prominent Southern author known for his realistic portrayals of Creole life in New Orleans. The book presents a series of true accounts from Louisiana's colorful past, including stories of French and Spanish colonial periods, Creole families, and the unique cultural blend of the region. Cable gathered these stories from original documents, family papers, and personal interviews, presenting them as authentic historical narratives rather than fiction. The work includes tales such as "The Young Aunt with White Hair" and "The Adventures of Françoise and Suzanne," depicting the lives of French colonists and their descendants in Louisiana.
+"""
+
+Notes = """
+The title page shows 1890, but the book was first published in 1889 by Charles Scribner's Sons. The 1890 date likely represents a subsequent printing or edition. George W. Cable (1844-1925) was a Louisiana native and one of the first Southern authors to write critically about slavery and racism while celebrating Creole culture.
+"""
+</result>

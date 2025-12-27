@@ -1,0 +1,15 @@
+<result>
+Title = "The Princess Passes: A Romance of a Motor-Car"
+Author = "C. N. and A. M. Williamson"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Princess Passes" is a romantic novel by the husband-and-wife writing team of Charles Norris Williamson and Alice Muriel Williamson. The Williamsons were popular Edwardian-era authors who specialized in automobile-themed romances, capitalizing on the novelty and excitement of early motoring. This book is a sequel to their successful "The Lightning Conductor" (1903). The story follows romantic adventures set against the backdrop of motor-car travel through scenic European locations, particularly the Riviera. The Williamsons wrote numerous similar "motor romances" that combined travelogue elements with light romantic plots, appealing to readers fascinated by the new automobile age.
+"""
+
+Notes = """
+1905 is the original publication year as shown on the title page (Henry Holt and Company, New York).
+"""
+</result>

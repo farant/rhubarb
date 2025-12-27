@@ -1,0 +1,15 @@
+<result>
+Title = "A Legend of Montrose"
+Author = "Sir Walter Scott"
+Year = 1819
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A Legend of Montrose is one of Walter Scott's Tales of My Landlord series, set during the Scottish Civil War of the 1640s. The novel follows the campaign of James Graham, 1st Marquess of Montrose, who led a Royalist uprising in Scotland on behalf of King Charles I against the Covenanter government. The narrative centers on the tragic fate of Lord Kilpont and the complex history of James Stewart of Ardvoirlich, weaving together Highland clan feuds, military adventure, and the divided loyalties of the period. The novel also features the memorable character of Captain Dugald Dalgetty, a Scottish mercenary soldier whose pragmatic philosophy provides both comic relief and commentary on the nature of warfare and honor.
+"""
+
+Notes = """
+First published in 1819 as part of the third series of Tales of My Landlord, alongside The Bride of Lammermoor. Scott drew on historical accounts of Montrose's 1644-1645 Highland campaign and the real murder of Lord Kilpont by James Stewart.
+"""
+</result>

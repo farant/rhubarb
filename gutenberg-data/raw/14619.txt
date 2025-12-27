@@ -1,0 +1,15 @@
+<result>
+Title = "An Account of the Battle of Châteauguay"
+Author = "W.D. Lighthall, W. Patterson"
+Year = 1889
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a lecture delivered by William Douw Lighthall on March 8th, 1889, recounting the Battle of Châteauguay (October 26, 1813), a significant engagement during the War of 1812. In this battle, Lieutenant-Colonel Charles de Salaberry led a small force of Canadian Voltigeurs and Indigenous allies to repel a much larger American invasion force attempting to advance on Montreal. The work includes additional local and personal notes by W. Patterson. Lighthall was a notable Canadian author, poet, and historian from Montreal, and this lecture was published under the auspices of the Châteauguay Literary and Historical Society.
+"""
+
+Notes = """
+The year 1889 is when this lecture was delivered and published. The battle itself occurred in 1813, but this is a 19th century historical account/lecture rather than a primary source document from the war.
+"""
+</result>

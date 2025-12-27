@@ -1,0 +1,15 @@
+<result>
+Title = "Contes de Noël"
+Author = "Madame de La Ville de Mirmont"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of Christmas stories by Madame de La Ville de Mirmont, a French author. The excerpt shown is from "Nuit de Noël" (Christmas Night), dedicated to Jean, which depicts a warm Christmas Eve scene in a rustic home with an old oak-paneled room, a Christmas tree from the local mountain forest, and a large Yule log burning in the fireplace. The narrative has a pastoral, sentimental quality typical of turn-of-century French Christmas literature, referencing a pastor's family and the generous Father Jousse who raised the tree for the children.
+"""
+
+Notes = """
+The date 1906 appears explicitly in the text as the publication year. The epigraph is from Alfred de Vigny's poem "La Neige" (The Snow). Madame de La Ville de Mirmont (née Alexandrine Vieillard, 1848-1914) was a French writer; she was the mother of the poet Jean de La Ville de Mirmont, to whom this story is dedicated.
+"""
+</result>

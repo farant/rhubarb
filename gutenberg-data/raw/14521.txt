@@ -1,0 +1,15 @@
+<result>
+Title = "Memories: A Story of German Love"
+Author = "Max Müller"
+Year = 1857
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"Deutsche Liebe" (German Love) is a novella by Friedrich Max Müller, the renowned German-born British philologist and Orientalist best known for his scholarly work on comparative religion and mythology. This romantic tale, originally published in German, tells the story of a young scholar's memories of love. It is one of Müller's rare forays into fiction, written in a sentimental style characteristic of German Romantic literature. The work was quite popular in its time and was translated into multiple languages, including this English translation by George P. Upton.
+"""
+
+Notes = """
+The original German work "Deutsche Liebe" was first published in 1857. This 1902 edition is George P. Upton's English translation. The year 1857 is chosen as it represents the original publication date of the work itself, which is more historically significant than the translation date.
+"""
+</result>

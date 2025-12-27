@@ -1,0 +1,15 @@
+<result>
+Title = "L'Odyssée"
+Author = "Homère (traduction Charles-René-Marie Leconte de Lisle)"
+Year = -800
+
+Tags = ["fiction", "appropriate-for-children", "classical-literature", "epic-poetry"]
+
+Summary = """
+L'Odyssée est l'un des deux grands poèmes épiques attribués à Homère, l'autre étant l'Iliade. L'œuvre raconte le voyage de retour d'Ulysse (Odysseus) vers Ithaque après la guerre de Troie. Pendant dix ans, il erre à travers la Méditerranée, affrontant des monstres, des dieux hostiles et des tentations. Le poème explore les thèmes de l'hospitalité, de la fidélité, de la ruse et du retour au foyer. Cette traduction française est l'œuvre de Leconte de Lisle (1818-1894), poète parnassien français célèbre pour ses traductions fidèles et poétiques des œuvres grecques antiques.
+"""
+
+Notes = """
+L'année -800 est approximative. La composition de l'Odyssée est traditionnellement datée entre le VIIIe et le VIIe siècle avant J.-C. La traduction de Leconte de Lisle a été publiée en 1868, mais pour une chronologie historique des œuvres littéraires, la date de composition originale est plus pertinente.
+"""
+</result>

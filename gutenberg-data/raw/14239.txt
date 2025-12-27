@@ -1,0 +1,15 @@
+<result>
+Title = "Golden Steps to Respectability, Usefulness, and Happiness"
+Author = "John Mather Austin"
+Year = 1851
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A moral instruction book aimed at young people of both sexes, offering lectures on building good character, choosing proper associates, appropriate amusements, religious principles, and guidance on marriage. Part of the 19th century genre of conduct literature designed to help youth navigate their path to becoming respectable adults. Austin was an American Universalist minister who wrote several advice books for young people and married couples.
+"""
+
+Notes = """
+Year taken directly from the title page publication date (Auburn: Derby, Miller, and Company, 1851). This appears to be the first edition.
+"""
+</result>

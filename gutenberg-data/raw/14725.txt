@@ -1,0 +1,15 @@
+<result>
+Title = "Treatise on Light"
+Author = "Christiaan Huygens"
+Year = 1690
+
+Tags = ["non-fiction", "science", "physics"]
+
+Summary = """
+This is Christiaan Huygens' foundational work on the wave theory of light, originally written in French as "Traité de la Lumière." In this treatise, Huygens develops his wave theory of light and uses it to explain reflection, refraction, and the peculiar double refraction observed in Iceland spar (calcite crystals). The work introduces what is now known as "Huygens' principle" - that every point on a wavefront can be considered a source of secondary wavelets. This theory stood in contrast to Newton's corpuscular theory and would later be vindicated by 19th century physics. The treatise was communicated to the French Royal Academy of Sciences in 1678 but not published until 1690.
+"""
+
+Notes = """
+Huygens wrote the treatise in 1678 and presented it to the French Academy that year, but it was not formally published until 1690 in Leiden. The 1690 date is the standard publication year used in academic references. This English translation by Silvanus P. Thompson was published by University of Chicago Press (early 20th century). I chose 1690 as it represents when the work entered the public scientific discourse.
+"""
+</result>

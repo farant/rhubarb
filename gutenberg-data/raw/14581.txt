@@ -1,0 +1,15 @@
+<result>
+Title = "The Just and the Unjust"
+Author = "Vaughan Kester"
+Year = 1912
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by American author Vaughan Kester, who was known for his popular fiction in the early 20th century. Kester is best remembered for "The Prodigal Judge" (1911), which was a bestseller. "The Just and the Unjust" was published the year before his death in 1911 (the 1912 date is the publication year). The novel appears to be a work of romantic or dramatic fiction based on the illustrated frontispiece caption "Oh, I want you, Elizabeth!" The title suggests themes of justice and morality.
+"""
+
+Notes = """
+Vaughan Kester (1869-1911) died before this book was published. The 1912 date represents the first edition publication by Bobbs-Merrill Company.
+"""
+</result>

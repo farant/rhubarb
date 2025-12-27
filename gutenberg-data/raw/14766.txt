@@ -1,0 +1,15 @@
+<result>
+Title = "McGuffey's Third Eclectic Reader"
+Author = "William Holmes McGuffey"
+Year = 1837
+
+Tags = ["non-fiction", "educational", "appropriate-for-children"]
+
+Summary = """
+The McGuffey Readers were a series of graded primers widely used in American public schools from the mid-19th century through the early 20th century. William Holmes McGuffey, a professor and minister, compiled the first four readers in 1836-1837. The Third Eclectic Reader was designed for students who had progressed beyond basic literacy, featuring more advanced vocabulary, moral lessons, and literary excerpts. The series is estimated to have sold over 120 million copies, making it one of the most influential textbooks in American history. The readers emphasized moral character, elocution, and proper pronunciation alongside reading comprehension.
+"""
+
+Notes = """
+The first McGuffey Readers were published in 1836-1837. The series underwent many revisions over the decades. This particular Project Gutenberg edition references "the schoolroom of 1900," suggesting it may be from a later revised edition, but I have chosen 1837 as the year representing when McGuffey originally created the Third Reader as part of his initial series. McGuffey was a Presbyterian minister and professor, so while Protestant rather than Catholic, the readers have a strong moral and religious character typical of 19th century American education.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Literary Taste: How to Form It"
+Author = "Arnold Bennett"
+Year = 1909
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A practical guide by the English novelist and literary critic Arnold Bennett on developing appreciation for literature. The book offers advice on how to approach reading classics, understand style, and systematically build one's literary knowledge. Bennett was a prolific author of the Edwardian era, known for his realist novels set in the Potteries region of Staffordshire. This work reflects his democratic approach to culture, aiming to make literary appreciation accessible to general readers rather than just the educated elite.
+"""
+
+Notes = """
+The 1913 date in the Gutenberg header appears to be a later edition. The work was originally published in 1909. Bennett wrote it as part of his efforts to democratize culture and help ordinary readers engage with serious literature.
+"""
+</result>

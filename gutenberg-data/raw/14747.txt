@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 102, June 25, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["non-fiction", "periodical", "satire", "humor", "appropriate-for-children"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, witty commentary on politics and society, and humorous reviews of arts and culture. This particular issue from June 1892 includes a satirical review of a ballet called "Versailles" at the Empire Theatre in Leicester Square, written in Punch's characteristic irreverent style, poking fun at the theatrical conventions and pretensions of the production.
+"""
+
+Notes = """
+Punch was published weekly, so the year 1892 corresponds to this specific issue date (June 25, 1892). The magazine was an institution of Victorian and later British cultural life, known for coining the phrase "cartoon" in its modern sense.
+"""
+</result>

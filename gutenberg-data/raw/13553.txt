@@ -1,0 +1,15 @@
+<result>
+Title = "The Tidal Wave and Other Stories"
+Author = "Ethel M. Dell"
+Year = 1919
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+A collection of short stories by Ethel M. Dell, a popular British romance novelist of the early 20th century. Dell was known for her passionate, dramatic romantic fiction that was extremely popular in her era, particularly during and after World War I. This volume includes stories such as "The Magic Circle," "The Woman of his Dream," and "The Return Game," which were originally published in The Red Magazine. Her works typically feature intense emotional situations, exotic settings, and themes of love conquering adversity.
+"""
+
+Notes = """
+The year 1919 appears directly on the title page. Dell was a prolific author whose works were bestsellers in Britain and America during the 1910s-1930s. While popular entertainment of her era, her romance novels are not considered appropriate for children due to mature romantic themes, nor do they have particular Catholic significance despite Dell being from a middle-class English background.
+"""
+</result>

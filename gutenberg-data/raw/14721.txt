@@ -1,0 +1,15 @@
+<result>
+Title = "Speeches & Letters of Abraham Lincoln 1832-1865"
+Author = "Abraham Lincoln, edited by Merwin Roe"
+Year = 1907
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a collection of Abraham Lincoln's speeches and letters spanning from 1832 to 1865, covering his entire political career from his early days in Illinois through his presidency during the American Civil War. The edition was published by J.M. Dent & Sons in London as part of their Everyman's Library series, with an introduction by James Bryce (a distinguished British historian and diplomat). The collection provides primary source material for understanding Lincoln's political philosophy, his views on slavery and union, and his evolution as a statesman and orator.
+"""
+
+Notes = """
+The year 1907 is chosen as this is specifically an edited anthology/collection first published that year, not Lincoln's original works. While Lincoln's speeches and letters were written between 1832-1865, this particular edition with Merwin Roe's editorial work and Bryce's introduction represents a distinct scholarly publication. The introduction references material from 'The Complete Works of Abraham Lincoln' published by Century Company in 1894.
+"""
+</result>

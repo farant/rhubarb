@@ -1,0 +1,15 @@
+<result>
+Title = "Birds of Guernsey and the Neighbouring Islands"
+Author = "Cecil Smith"
+Year = 1879
+
+Tags = ["non-fiction", "natural-history"]
+
+Summary = """
+A comprehensive ornithological survey of the bird species found in Guernsey and its neighboring Channel Islands (Alderney, Sark, Jethou, and Herm). The author, Cecil Smith, a member of the British Ornithologist's Union, compiled observations from approximately thirty years of visits to the Channel Islands. The work catalogs resident birds, migrants, and occasional visitors to the islands, drawing on specimens in his personal collection as well as observations from other naturalists including Miss C.B. Carey and Mr. Harvie Browne. The book represents one of the first systematic treatments of Channel Island ornithology.
+"""
+
+Notes = """
+1879 is the publication date shown on the title page. This is an original scientific work, not a translation or edition of an earlier text.
+"""
+</result>

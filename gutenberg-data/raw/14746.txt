@@ -1,0 +1,19 @@
+The file appears to be empty (0 bytes). However, you've provided the text directly in your message, so I can work from that. Based on the text you've shared, this is clearly:
+
+**Erasmus's "A Pilgrimage of Pure Devotion"** (original Latin title: *Peregrinatio religionis ergo*), which is one of the Colloquies. This is an English translation of that Latin dialogue.
+
+<result>
+Title = "A Pilgrimage of Pure Devotion (Peregrinatio religionis ergo)"
+Author = "Desiderius Erasmus"
+Year = 1526
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is one of Erasmus's famous Colloquies (Colloquia), a collection of Latin dialogues he wrote for educational purposes that became vehicles for his wit and social criticism. "A Pilgrimage of Pure Devotion" is a satirical dialogue critiquing the practice of pilgrimages to shrines, particularly targeting the shrine of Thomas Becket at Canterbury and the shrine of Our Lady of Walsingham. Through two characters discussing their pilgrimage experiences, Erasmus exposes what he saw as superstitious practices, the commercialization of relics, and the gap between outward religious observance and genuine piety. The work was controversial and later condemned by Catholic authorities, contributing to its suppression in England after the Reformation took a different turn. This English translation dates from the early Tudor period.
+"""
+
+Notes = """
+The Colloquies were first published in 1518 but expanded significantly over subsequent editions. "Peregrinatio religionis ergo" first appeared in the 1526 edition of the Colloquies. I chose 1526 as that is when this particular dialogue was published, though Erasmus continued revising the Colloquies until 1533. Note: Despite Erasmus being a Catholic priest who never left the Church, this particular work would NOT receive a nihil obstat today as it was actually placed on the Index of Forbidden Books and is critical of practices the Church has defended. Hence I did not include the 'catholic' tag despite Erasmus's personal faith.
+"""
+</result>

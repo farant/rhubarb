@@ -1,0 +1,17 @@
+Based on the text you've provided in your message, I can identify this work:
+
+<result>
+Title = "Ulster's Stand for Union"
+Author = "Ronald McNeill"
+Year = 1922
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a historical account of Ulster Unionist resistance to Irish Home Rule, written by Ronald McNeill (later Baron Cushendun), who was himself a prominent Ulster Unionist politician and MP. The book documents the organized political and paramilitary opposition of Protestant Ulster to the prospect of an all-Ireland parliament in Dublin, covering the crisis period leading up to the partition of Ireland. McNeill was directly involved in these events, including the famous signing of the Ulster Covenant in 1912 and the formation of the Ulster Volunteer Force. The work provides an insider's perspective on the Unionist movement's organization and motivations.
+"""
+
+Notes = """
+Published in 1922, the same year as the establishment of the Irish Free State and the formal partition of Ireland. Ronald McNeill (1861-1934) was a Conservative MP who became Baron Cushendun in 1927. The sardonic dedication "to the memory of the Unionist Party" reflects the political upheaval of the period, as the traditional Unionist alliance was fracturing over Irish policy. This is a primary historical source for understanding the Ulster Unionist perspective during the Home Rule crisis.
+"""
+</result>

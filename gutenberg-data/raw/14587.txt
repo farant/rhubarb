@@ -1,0 +1,15 @@
+<result>
+Title = "The Crest-Wave of Evolution"
+Author = "Kenneth Morris"
+Year = 1919
+
+Tags = ["non-fiction", "theosophical", "history", "philosophy"]
+
+Summary = """
+A series of 27 lectures on world history delivered at the Raja-Yoga College in Point Loma, California. Kenneth Morris (1879-1937) was a Welsh-American Theosophist, poet, and fantasy writer associated with the Point Loma Theosophical community led by Katherine Tingley. The work presents a Theosophical interpretation of history, tracing what Morris saw as cycles of cultural and spiritual development across civilizations including Greece, Rome, India, China, and Ireland. The lectures cover figures from Homer to Bodhidharma and attempt to demonstrate patterns of rise and fall in human consciousness across cultures.
+"""
+
+Notes = """
+The lectures were delivered in 1918-1919 and serialized in The Theosophical Path magazine from March 1919 through July 1921. I chose 1919 as the year since that is when the serialization began and represents the first publication of the work. Point Loma was a significant Theosophical community in San Diego where Morris lived and taught for many years.
+"""
+</result>

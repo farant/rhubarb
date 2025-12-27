@@ -1,0 +1,15 @@
+<result>
+Title = "The Seven Plays in English Verse"
+Author = "Sophocles, translated by Lewis Campbell"
+Year = -440
+
+Tags = ["fiction", "drama", "classical-antiquity"]
+
+Summary = """
+This is a verse translation of the seven surviving plays of Sophocles, the great Athenian tragedian of the 5th century BC. The plays include Oedipus Rex, Oedipus at Colonus, Antigone, Ajax, Electra, Philoctetes, and The Trachiniae (Women of Trachis). Sophocles was one of the three great Greek tragedians alongside Aeschylus and Euripides. His works explore themes of fate, duty, hubris, and the relationship between mortals and the gods. Lewis Campbell was a distinguished Scottish classicist and this translation, first published in 1883, was widely regarded for its literary quality and fidelity to the original Greek meter and spirit.
+"""
+
+Notes = """
+The year -440 (440 BC) is approximate, representing the middle of Sophocles' productive career. His plays were written between roughly 468 BC and 406 BC. Since this is a translation without substantial commentary that would constitute a new scholarly work, I chose to date it to the original composition period rather than Campbell's 1883 translation date, as the educational/historical value lies in placing Sophocles in his 5th century BC Athenian context.
+"""
+</result>

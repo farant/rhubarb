@@ -1,0 +1,19 @@
+Based on my research, I found this is "Vechter" (The Fighter), a Dutch kluchtspel (farce) by **Thomas Asselijn** (ca. 1620-1701). He was a prominent Dutch playwright known for his comedies performed at the Amsterdam Schouwburg.
+
+The 1697 date on your text matches Asselijn's active period - he wrote numerous kluchten through the 1680s and 1690s. The characters (Vechter the cobbler/bridge-keeper, his wife Maiken, daughter Klaartje, etc.) and vernacular Amsterdam dialect are typical of his popular farces.
+
+<result>
+Title = "Vechter"
+Author = "Thomas Asselijn"
+Year = 1697
+
+Tags = ["fiction", "drama", "comedy"]
+
+Summary = """
+Vechter (The Fighter) is a Dutch kluchtspel (farce) by Thomas Asselijn, performed at the Amsterdam Schouwburg theater. The play follows Vechter, a cobbler and bridge-keeper, and his domestic troubles with his wife Maiken and daughter Klaartje. The opening scene shows Maiken complaining about her husband constantly running off to the tavern while neglecting his work - customers waiting for shoe repairs, a neighbor who needs her chest moved, and the sexton who wants him to ring the church bells. Written in Amsterdam vernacular dialect, it represents the popular comic theater of the Dutch Golden Age's twilight, depicting the everyday lives and foibles of common Amsterdam folk.
+"""
+
+Notes = """
+Thomas Asselijn (ca. 1620-1701) was a prolific Dutch playwright whose farces remained popular in theatrical repertoire for decades. The 1697 publication date from Jacob Lescailje's press in Amsterdam represents when this edition was printed; the play may have been written and first performed somewhat earlier. Asselijn's other notable kluchten include De kwakzalver (1692), De stief moer (1684), and De spilpenning (1693).
+"""
+</result>

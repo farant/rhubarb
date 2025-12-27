@@ -1,0 +1,15 @@
+<result>
+Title = "Les Fantômes: Étude Cruelle"
+Author = "Charles-Marie Flor O'Squarr"
+Year = 1885
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+Les Fantômes: Étude Cruelle is a French novella or short novel by Charles-Marie Flor O'Squarr, published in Paris in 1885. The work opens with a narrator confessing to a three-year affair with the wife of his best friend—a man who had been extraordinarily devoted and generous to him. The narrator acknowledges this friend's loyalty while simultaneously betraying him, setting up what the subtitle promises: a "cruel study" of human psychology, guilt, and moral contradiction. Flor O'Squarr was a French author of the late 19th century who wrote in the naturalist and psychological realist traditions popular in that era.
+"""
+
+Notes = """
+The year 1885 is printed directly on the title page as the publication date by Jules Lévy in Paris. This appears to be the original publication.
+"""
+</result>

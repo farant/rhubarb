@@ -1,0 +1,15 @@
+<result>
+Title = "The Woman Thou Gavest Me: Being the Story of Mary O'Neill"
+Author = "Hall Caine"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by Sir Thomas Henry Hall Caine (1853-1931), a highly popular English novelist of the late Victorian and Edwardian era. "The Woman Thou Gavest Me" tells the story of Mary O'Neill through a frame narrative, presented as memoranda written by Martin Conrad and edited by the author. The novel deals with themes of love, marriage, and the struggles of a woman in society. Hall Caine was known for his melodramatic and morally earnest novels, which were bestsellers in their time and often adapted for stage and film. This work was published in August 1913 and was one of his later novels.
+"""
+
+Notes = """
+Publication date of August 1913 is explicitly stated on the title page. Hall Caine was a prolific and commercially successful author, though his reputation has faded since his death. He was knighted in 1918. The novel's frame narrative structure, with the author receiving "memoranda" from a character, was a common literary device of the period.
+"""
+</result>

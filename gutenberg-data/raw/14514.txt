@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 102"
+Author = "Various"
+Year = 1892
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was a highly influential publication that coined the term "cartoon" in its modern sense and was known for its satirical commentary on British politics, society, and culture. The magazine featured illustrations, poetry, prose, and social commentary. This particular issue is from April 23, 1892 (Vol. 102), during the Victorian era. The excerpt shown is a parody poem playing on Robert Browning's famous "Home-Thoughts, from Abroad" ("Oh, to be in England now that April's there"), reimagined as observations of London society during the Season.
+"""
+
+Notes = """
+The year 1892 is the publication date of this specific issue. Punch was a periodical with many contributors over its long history, hence "Various" as the author. The magazine was generally considered respectable middle-class entertainment but contained satire that was sometimes pointed at religious and political figures, so it would not typically carry a nihil obstat. The content is generally appropriate for older children but contains social commentary that may be above younger readers' comprehension.
+"""
+</result>

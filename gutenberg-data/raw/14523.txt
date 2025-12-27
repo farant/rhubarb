@@ -1,0 +1,15 @@
+<result>
+Title = "Sister Carmen"
+Author = "M. Corvus"
+Year = 1891
+
+Tags = ["fiction"]
+
+Summary = """
+Sister Carmen is a German novel translated into English by Kate Dykers. The story opens on Easter Sunday morning in a small Moravian village, suggesting a narrative set in Central European religious community life. The Moravian Church setting and the atmospheric opening with villagers gathering at a graveyard around a stone cross on Easter morning indicates this is likely a work of religious or sentimental fiction typical of late 19th century German literature. The pseudonymous author "M. Corvus" (corvus being Latin for crow/raven) adds an element of mystery to the work's provenance.
+"""
+
+Notes = """
+The 1891 date comes from the Minerva Publishing Company edition in New York, which appears to be the first English translation. The original German publication date is unknown, but given this is a translation, the German original likely predates 1891 by a few years. I have used 1891 as this represents the earliest confirmed publication date available from the text itself.
+"""
+</result>

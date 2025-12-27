@@ -1,0 +1,15 @@
+<result>
+Title = "The Nursery: A Monthly Magazine for Youngest Readers, Vol. XXVIII, No. 165"
+Author = "Various"
+Year = 1880
+
+Tags = ["fiction", "non-fiction", "appropriate-for-children", "periodical"]
+
+Summary = """
+The Nursery was an American children's magazine published in Boston from 1867 to 1881. It was one of the earliest and most beloved periodicals specifically designed for very young children learning to read. The magazine featured short stories, poems, songs with music, and illustrations. This September 1880 issue (No. 165) includes works by multiple contributors covering topics like animals, moral lessons, and simple adventures typical of Victorian-era children's literature. The magazine was notable for its gentle, educational approach and high-quality content aimed at the youngest readers.
+"""
+
+Notes = """
+Year is 1880 as explicitly stated on the cover. This is a periodical/magazine rather than a standalone book. The Nursery was published by The Nursery Publishing Company in Boston and was distributed through various news companies across the United States.
+"""
+</result>

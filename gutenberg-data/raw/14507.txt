@@ -1,0 +1,15 @@
+<result>
+Title = "Het Vatikaan"
+Author = "Anonymous"
+Year = 1890
+
+Tags = ["non-fiction", "travel-guide", "catholic"]
+
+Summary = """
+This is a Dutch-language guide or descriptive work about the Vatican. The text appears to be a travel narrative inviting the reader to accompany the author on walks through Rome, visiting its streets, squares, ruins, monuments, churches, monasteries, and palaces. The author reflects on Rome's 2,500 years of history, describing it as an incomparable city where ancient civilization's glory and decline can still be read in visible form. This type of descriptive Vatican/Rome guide was popular among educated Dutch readers in the late 19th century.
+"""
+
+Notes = """
+The exact publication year is uncertain as the author is anonymous. Based on the literary style, the reference to "vijf-en-twintig eeuwen" (25 centuries) of history, and the genre of Dutch travel literature about Rome, this appears to be a late 19th century work, likely from around 1880-1900. I've estimated 1890 as a reasonable midpoint. The work celebrates Rome and the Vatican from a respectful perspective consistent with Catholic sensibilities.
+"""
+</result>

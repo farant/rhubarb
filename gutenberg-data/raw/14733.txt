@@ -1,0 +1,19 @@
+<result>
+Title = "Elämän Hawainnoita I: Uudistalo; Halla-aamuna; Mökin Maiju; Noidan rangaistus"
+Author = "Pietari Päivärinta"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Pietari Päivärinta (1827-1913) was a Finnish author and member of the Finnish Diet, known for his realistic portrayals of rural Finnish life in the 19th century. "Elämän Hawainnoita" (Observations of Life) is a multi-volume collection of short stories depicting the hardships and daily realities of Finnish peasant life. This first volume contains four stories: "Uudistalo" (The New Homestead), "Halla-aamuna" (On a Frosty Morning), "Mökin Maiju" (Maiju of the Cottage), and "Noidan rangaistus" (The Witch's Punishment). The excerpt shown is from "Uudistalo," describing a traveler's harrowing winter journey through a desolate, burned-over crown land to reach an isolated homestead.
+"""
+
+Notes = """
+The publication year 1889 is confirmed by the WSOY Porvoo imprint in the text itself. Päivärinta wrote extensively about Finnish rural life based on his own experiences as a crofter's son. His works are considered important documents of 19th century Finnish peasant culture.
+"""
+</result>
+
+Sources:
+- [Books by Päivärinta, Pietari - Project Gutenberg](https://www.gutenberg.org/ebooks/author/5555)
+- [Amazon - Elämän Hawainnoita 01](https://www.amazon.com/Elämän-hawainnoita-Uudistalo-rangaistus-Finnish/dp/1318808731)

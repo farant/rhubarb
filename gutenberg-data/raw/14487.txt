@@ -1,0 +1,15 @@
+<result>
+Title = "The Lion's Share"
+Author = "Arnold Bennett"
+Year = 1916
+
+Tags = ["fiction"]
+
+Summary = """
+The Lion's Share is a novel by Arnold Bennett, a prominent English writer known for his realistic portrayals of life in the English Midlands (the "Five Towns" of the Potteries district). This novel tells the story of Audrey Dorain, a young woman who inherits a fortune and uses her newfound independence to explore life, art, and the suffragette movement in Edwardian England. The book explores themes of female emancipation, wealth, social class, and the search for meaning and purpose. Bennett was one of the most successful and prolific authors of his era, celebrated for works like The Old Wives' Tale and the Clayhanger trilogy.
+"""
+
+Notes = """
+First published in 1916 as indicated in the text itself. Arnold Bennett (1867-1931) was not Catholic; he was raised Methodist and later became agnostic, so the work does not qualify for the 'catholic' tag.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Gaudissart II"
+Author = "Honoré de Balzac"
+Year = 1844
+
+Tags = ["fiction", "realism"]
+
+Summary = """
+Gaudissart II is a short story by Honoré de Balzac, part of his vast literary project "La Comédie Humaine" (The Human Comedy). The story is a satirical examination of Parisian commerce and the art of salesmanship. It explores the theatrical nature of retail in 19th century Paris, describing how shopkeepers and salesmen create elaborate illusions to seduce customers. The title references Balzac's earlier character Gaudissart, a traveling salesman who appeared in "L'Illustre Gaudissart" (1833). This sequel-of-sorts uses the Gaudissart name as a type for the quintessential salesman. The dedication to Princess Cristina Trivulzio di Belgiojoso, an Italian noblewoman and patriot who lived in Paris, was typical of Balzac's practice of dedicating works to notable figures of his social circle.
+"""
+
+Notes = """
+First published in 1844 as part of the "Scènes de la vie parisienne" (Scenes of Parisian Life) section of La Comédie Humaine. The translation by Clara Bell was part of a major English translation project of Balzac's complete works in the late 19th century.
+"""
+</result>

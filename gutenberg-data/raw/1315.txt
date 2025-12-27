@@ -1,0 +1,15 @@
+<result>
+Title = "Autobiography and Selected Essays"
+Author = "Thomas Henry Huxley"
+Year = 1909
+
+Tags = ["non-fiction", "essays", "science", "education"]
+
+Summary = """
+This is a collection of essays by Thomas Henry Huxley (1825-1895), the eminent Victorian biologist and public intellectual known as "Darwin's Bulldog" for his fierce advocacy of evolutionary theory. The collection includes his autobiography and several of his most famous essays on science, education, and scientific method. Huxley was a gifted science communicator who worked to make scientific ideas accessible to general audiences. This particular edition was compiled and edited by Ada L. F. Snell for use in college education.
+"""
+
+Notes = """
+The year 1909 reflects this specific edited collection published by Riverside College Classics. The individual essays within were originally published at various dates during Huxley's lifetime (he died in 1895). As an edited anthology with introduction and notes by Snell, the 1909 publication date is most appropriate for this particular work.
+"""
+</result>

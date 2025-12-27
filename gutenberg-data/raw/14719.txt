@@ -1,0 +1,15 @@
+<result>
+Title = "Viimeinen ponnistus"
+Author = "Matti Kurikka"
+Year = 1884
+
+Tags = ["fiction", "drama", "historical-document"]
+
+Summary = """
+"Viimeinen ponnistus" (The Last Effort/The Final Struggle) is a four-act play by Finnish writer and social reformer Matti Kurikka (1863-1915). The play is set in Ingria in 1861, the year of the Russian Emancipation Reform that freed the serfs. It depicts tensions between Finnish peasants and Russian authority (represented by nobleman Kosmin and Cossack soldiers), exploring themes of social justice, serfdom, and the struggle for freedom. Kurikka dedicated the work to Kaarlo Bergbom, the founder and director of the Finnish National Theatre. Kurikka later became known as a utopian socialist and led the short-lived Sointula colony in British Columbia, Canada.
+"""
+
+Notes = """
+1884 is the year of first publication by Gummerus, as stated in the text itself. Kurikka was only about 21 years old when this early work was published.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, February 1875"
+Author = "Various"
+Year = 1875
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was a prominent American monthly literary magazine published in Philadelphia from 1868 to 1916. It featured a mix of fiction, travel writing, scientific articles, and poetry. This February 1875 issue includes travel writing about the Tiber River, an account of time spent among cannibals, fiction pieces including a serialized novel "Three Feathers" by William Black, a medical article on fever, and poetry. The magazine was known for publishing both established and emerging American and British authors.
+"""
+
+Notes = """
+The year 1875 is taken directly from the publication date of this periodical issue. As a magazine rather than a book, the publication date is the only relevant year.
+"""
+</result>

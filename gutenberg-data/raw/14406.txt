@@ -1,0 +1,15 @@
+<result>
+Title = "The Intriguers"
+Author = "Harold Bindloss"
+Year = 1914
+
+Tags = ["fiction"]
+
+Summary = """
+"The Intriguers" is a novel by Harold Bindloss, a prolific British author known for his adventure and romance novels, many set in the Canadian wilderness or featuring rugged outdoor settings. Bindloss wrote over 40 novels between the 1890s and 1930s, typically featuring themes of honest men overcoming adversity, frontier life, and romantic entanglements. This particular work appears to be one of his adventure romances, likely involving mystery or intrigue as suggested by the title.
+"""
+
+Notes = """
+The copyright date of February 1914 clearly establishes the publication year. Bindloss was not a Catholic author and his works are general popular fiction of the early 20th century.
+"""
+</result>

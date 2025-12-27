@@ -1,0 +1,15 @@
+<result>
+Title = "Scottish Sketches"
+Author = "Amelia E. Barr"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of short stories set in Scotland by Amelia Edith Huddleston Barr (1831-1919), a British-American novelist. The collection includes six tales: "Crawford's Sair Strait," "James Blackie's Revenge," "Facing His Enemy," "Andrew Cargill's Confession," "One Wrong Step," and "Lile Davie." Barr was a prolific author known for her regional fiction, particularly stories set in Scotland and Texas. Her works often featured strong moral themes and character studies of ordinary people facing difficult circumstances.
+"""
+
+Notes = """
+The copyright page shows 1883 by American Tract Society, while the Dodd, Mead edition is from 1898. I chose 1883 as that appears to be the original publication date.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Viija: Kuvaus Savon kansan elämästä"
+Author = "Kauppis-Heikki"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Viija is a novel by Finnish author Kauppis-Heikki (pen name of Heikki Kauppinen, 1862-1920), depicting life among the rural people of the Savo region in Finland. The story follows Viija, a young girl who becomes an orphan after losing both parents, and is taken in by her aunt Reeta. The narrative traces Viija's coming of age in late 19th century rural Finland, exploring themes of loss, family, community, and resilience. Kauppis-Heikki was known for his sympathetic portrayals of Northern Savo's rural population, especially women, rendered with a blend of seriousness and gentle humor. The subtitle "Kuvaus Savon kansan elämästä" means "A Description of the Life of the Savo People."
+"""
+
+Notes = """
+The novel was originally published in 1889 by Werner Söderström in Porvoo. The 1920 date in the Gutenberg text header appears to be a later edition. Kauppis-Heikki died in September 1920, so that edition may have been a memorial or commemorative printing.
+"""
+</result>

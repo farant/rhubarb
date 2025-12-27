@@ -1,0 +1,19 @@
+The file seems empty or near-empty in the path. But you've provided the text directly in your message. Let me analyze what you've shared:
+
+Based on the text you've provided, I can identify this work:
+
+<result>
+Title = "Thoughts, Moods and Ideals: Crimes of Leisure"
+Author = "William Douw Lighthall"
+Year = 1887
+
+Tags = ["poetry", "non-fiction", "canadian-literature"]
+
+Summary = """
+A collection of poetry by William Douw Lighthall, a Canadian lawyer, author, and poet from Montreal. Lighthall was a significant figure in early Canadian literature and was involved in promoting Canadian national identity through literature. This volume includes reflective and patriotic verse exploring themes of Canadian identity, nature, and the emerging sense of nationhood. The poem "The Confused Dawn" shown here exemplifies his interest in articulating a distinct Canadian consciousness and the spiritual awakening of the young nation.
+"""
+
+Notes = """
+The publication year 1887 is clearly stated on the title page ("Witness" Printing House, Montreal). Lighthall (1857-1954) was a notable Montreal advocate and literary figure who later edited the influential anthology "Songs of the Great Dominion" (1889). The "W.D." stands for William Douw. This is an original Canadian work, not a translation.
+"""
+</result>

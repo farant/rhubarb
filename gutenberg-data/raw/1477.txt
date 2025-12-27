@@ -1,0 +1,15 @@
+<result>
+Title = "The Toys of Peace and Other Papers"
+Author = "Saki (H.H. Munro)"
+Year = 1919
+
+Tags = ["fiction", "short-stories", "satire", "british-literature"]
+
+Summary = """
+A posthumous collection of short stories by H.H. Munro, better known by his pen name Saki. The collection was published after his death in World War I (he was killed in 1916). Saki was renowned for his witty, mischievous, and sometimes macabre short stories that satirized Edwardian society and culture. The title story "The Toys of Peace" is a satirical piece about an attempt to give children educational, peaceful toys instead of military ones, which predictably backfires. The collection showcases his characteristic dark humor, clever plotting, and sharp social commentary.
+"""
+
+Notes = """
+1919 is the publication year of this collection. While individual stories may have been written earlier (Saki died in 1916), this is a posthumous collection and 1919 represents when it became available as a unified work. The dedication to the 22nd Royal Fusiliers reflects Saki's military service - he enlisted as a common soldier despite being over-age and was killed by a German sniper in France.
+"""
+</result>

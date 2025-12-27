@@ -1,0 +1,15 @@
+<result>
+Title = "Left Tackle Thayer"
+Author = "Ralph Henry Barbour"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Left Tackle Thayer is a young adult sports novel, part of Ralph Henry Barbour's extensive series of school and athletic stories. The book follows the adventures of a football player at a preparatory school, combining themes of sportsmanship, school life, friendship, and character development typical of Barbour's work. The chapter titles suggest a plot involving football practice, team dynamics, some mystery elements (a runaway wheel, a mysterious auto, buried treasure), and personal conflicts. Barbour was one of the most prolific and popular authors of boys' sports fiction in early 20th century America.
+"""
+
+Notes = """
+The 1915 date appears on the title page and represents the original publication year. This is part of Barbour's "Left" series which included Left End Edwards, Left Guard Gilbert, and other football-themed novels for young readers.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Different Girls"
+Author = "Various (edited by William Dean Howells and Henry Mills Alden)"
+Year = 1906
+
+Tags = ["fiction", "anthology", "short-stories"]
+
+Summary = """
+An anthology of short stories from Harper's Novelettes series, featuring ten stories by different authors including William Dean Howells, Richard Le Gallienne, Elizabeth Jordan, Alice Brown, and others. The collection focuses on female protagonists and was part of Harper & Brothers' popular novelette series. The stories represent late Victorian and early Edwardian American magazine fiction, showcasing the literary tastes of the period.
+"""
+
+Notes = """
+The copyright dates listed (1895-1906) indicate the individual stories were published across these years, with 1906 being the final compilation date. William Dean Howells was a major figure in American literary realism and served as editor of The Atlantic Monthly. His own contribution "Editha" is one of his most famous short stories, a critique of war romanticism.
+"""
+</result>

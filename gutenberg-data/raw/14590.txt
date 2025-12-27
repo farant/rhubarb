@@ -1,0 +1,17 @@
+The text you've provided appears to be complete enough for me to identify this work. Let me provide the analysis:
+
+<result>
+Title = "A New Hochelagan Burying-Ground Discovered at Westmount on the Western Spur of Mount Royal, Montreal, July-September 1898"
+Author = "W. D. Lighthall"
+Year = 1898
+
+Tags = ["non-fiction", "historical-document", "archaeology"]
+
+Summary = """
+This is an archaeological report by William Douw Lighthall (1857-1954), a Canadian lawyer, author, and antiquarian from Montreal. The document describes the discovery of a prehistoric Indigenous burial ground in Westmount, a municipality on the western slope of Mount Royal. Lighthall was a prominent member of the Numismatic and Antiquarian Society of Montreal and took great interest in documenting the history of the Hochelaga people—the St. Lawrence Iroquoians who inhabited the Montreal area when Jacques Cartier visited in 1535. The report details the finding of several graves with skeletal remains, pottery fragments, and other artifacts, attempting to connect them to the Indigenous peoples who once lived in the region. Lighthall's work represents early Canadian archaeological documentation, though the methods and interpretations reflect the standards of his era.
+"""
+
+Notes = """
+The year 1898 is explicitly stated on the title page as both the date of discovery (July-September 1898) and the publication date. This is a primary source document—a contemporary archaeological report published privately by the author through Alphonse Pelletier, printer to the Numismatic and Antiquarian Society of Montreal. Lighthall himself notes the title is "provisional as respects the term 'Hochelagan'" reflecting uncertainty about the exact cultural affiliation of the remains.
+"""
+</result>

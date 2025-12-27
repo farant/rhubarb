@@ -1,0 +1,15 @@
+<result>
+Title = "The Masque of the Red Death"
+Author = "Edgar Allan Poe"
+Year = 1842
+
+Tags = ["fiction", "gothic-horror", "allegory"]
+
+Summary = """
+A Gothic short story in which Prince Prospero attempts to escape a deadly plague called the Red Death by sealing himself and a thousand nobles inside a fortified abbey. During an elaborate masquerade ball held in seven colored rooms, a mysterious figure dressed as a victim of the Red Death appears and proves that no wealth or walls can protect against death. The story is a powerful allegory about the inevitability of mortality and the futility of trying to escape it through isolation and revelry.
+"""
+
+Notes = """
+First published in Graham's Magazine in May 1842. The story was written during a period when cholera and tuberculosis epidemics were common concerns, which likely influenced Poe's imagery of the plague.
+"""
+</result>

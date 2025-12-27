@@ -1,0 +1,15 @@
+<result>
+Title = "The Laurel Bush: An Old-Fashioned Love Story"
+Author = "Dinah Maria Mulock Craik"
+Year = 1876
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Laurel Bush is a romantic novel by Dinah Maria Mulock Craik, the celebrated Victorian author best known for John Halifax, Gentleman. The story follows a gentle love story set in Scotland, centered around Fortune Williams, a young governess, and Robert Roy, a tutor from St. Andrews. The narrative unfolds around a household with mischievous boys and their elderly grandmother, with the eponymous laurel bush serving as a symbolic meeting point. Craik was known for her morally uplifting fiction that appealed to Victorian sensibilities while treating themes of love, duty, and quiet virtue.
+"""
+
+Notes = """
+First published in 1876. Craik (1826-1887) was one of the most popular Victorian novelists. While she was not Catholic (she was of Protestant background), her works were generally considered wholesome and morally sound for the era.
+"""
+</result>

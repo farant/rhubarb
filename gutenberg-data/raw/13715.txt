@@ -1,0 +1,15 @@
+<result>
+Title = "The History of the Fabian Society"
+Author = "Edward R. Pease"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a historical account of the Fabian Society, a British socialist organization founded in 1884. Written by Edward R. Pease, who served as the Society's secretary for twenty-five years, the book traces the development of socialist theory in England and the Society's influence on political thought. The Fabian Society was notable for its gradualist approach to socialism, advocating for reform through democratic means rather than revolution. Key figures mentioned include Sidney Webb, Bernard Shaw, and Sydney Olivier, all prominent Fabians who contributed to the book's revision.
+"""
+
+Notes = """
+The first edition was published in 1916 by E.P. Dutton & Company. The preface references "the last thirty years" of socialist influence, placing it around three decades after the Society's 1884 founding. This is a primary historical document about the early socialist movement in Britain, written by an insider with direct knowledge of the events described.
+"""
+</result>

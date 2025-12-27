@@ -1,0 +1,15 @@
+<result>
+Title = "Creatures That Once Were Men"
+Author = "Maxim Gorky"
+Year = 1897
+
+Tags = ["fiction", "social-realism"]
+
+Summary = """
+"Creatures That Once Were Men" (Russian: "Бывшие люди") is a novella by Maxim Gorky depicting the lives of outcasts and destitute people living in a flophouse in a Russian town. The work is a powerful study of poverty, alcoholism, and social degradation, examining how various individuals from different backgrounds—former nobles, intellectuals, workers—have fallen to the lowest rungs of society. Gorky draws on his own experiences of poverty and homelessness to create vivid, sympathetic portraits of these marginalized figures. The work was influential in establishing Gorky's reputation as a voice for the dispossessed and is characteristic of his early naturalistic style.
+"""
+
+Notes = """
+The work was originally published in Russian in 1897. This English translation by J.M. Shirazi includes an introduction by G.K. Chesterton, which was likely added for the English edition published around 1905-1906. I have chosen 1897 as it represents the original publication date of Gorky's work.
+"""
+</result>

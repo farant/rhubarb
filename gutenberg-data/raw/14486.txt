@@ -1,0 +1,15 @@
+<result>
+Title = "The Thunder Bird"
+Author = "B. M. Bower"
+Year = 1919
+
+Tags = ["fiction"]
+
+Summary = """
+The Thunder Bird is a Western adventure novel by B. M. Bower (pen name of Bertha Muzzy Sinclair), a prolific author of Western fiction in the early 20th century. This novel follows Johnny Doble, a character from her earlier novel "Skyrider" (1918), and continues his adventures involving early aviation in the American West. The story combines the traditional Western genre with the emerging excitement around airplanes in the post-World War I era. Bower was known for her authentic depictions of ranch life and the American frontier, having lived in Montana. The "Thunder Bird" of the title refers to an airplane, connecting Native American mythology with modern technology.
+"""
+
+Notes = """
+1919 is the original publication year by Little, Brown, and Company. The Grosset & Dunlap edition shown here is a reprint. This is a sequel to "Skyrider" (1918) and part of Bower's loosely connected Flying-U series of Western novels.
+"""
+</result>

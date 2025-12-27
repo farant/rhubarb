@@ -1,0 +1,15 @@
+<result>
+Title = "The Forest of Vazon: A Guernsey Legend of the Eighth Century"
+Author = "Unknown"
+Year = 1889
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+This is a Victorian-era historical novel set in 8th century Guernsey, one of the Channel Islands. The narrative is built around the actual geological event of March 709 AD, when great tidal inundations in the Bay of Avranches caused significant changes to the coastline, destroying forest lands and separating land masses from the mainland. The preface discusses the lack of authentic historical records for Guernsey prior to its annexation to Normandy in the 10th century, noting that knowledge of earlier periods comes only from monkish chronicles and archaeological remains (cromlechs, menhirs, Celtic artifacts, and Roman relics). The story appears to be set against this backdrop of natural catastrophe, weaving legend around historical geological events.
+"""
+
+Notes = """
+Published anonymously in London by Harrison & Sons in 1889. The author is not identified in the text. I was unable to identify the author from my knowledge. The year 1889 is the publication date of this work itself, as it is an original Victorian historical novel rather than a translation or edition of an earlier work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Essays"
+Author = "Alice Meynell"
+Year = 1914
+
+Tags = ["non-fiction", "catholic", "appropriate-for-children"]
+
+Summary = """
+A collection of literary essays by Alice Meynell, the distinguished English Catholic poet, essayist, and critic. The essays display her characteristic meditative prose style, treating subjects from nature (winds, waters, rushes, reeds) to literary and aesthetic topics. Meynell was known for her precise, elegant prose and her ability to find spiritual depth in everyday observations. She was a prominent figure in Catholic literary circles and a suffragist, and her essays were highly regarded by contemporaries including George Meredith and Coventry Patmore.
+"""
+
+Notes = """
+The 1914 Burns & Oates edition is specified in the transcription notes. Burns & Oates was a prominent Catholic publishing house, which aligns with Meynell's Catholic identity. While some of these essays may have appeared earlier in periodicals, 1914 represents this collected edition.
+"""
+</result>

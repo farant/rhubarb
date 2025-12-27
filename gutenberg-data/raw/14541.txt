@@ -1,0 +1,15 @@
+<result>
+Title = "Discours de réception de M. Berthelot ; Réponse de M. Jules Lemaître"
+Author = "Marcellin Berthelot, Jules Lemaître"
+Year = 1901
+
+Tags = ["non-fiction", "historical-document", "french-language"]
+
+Summary = """
+This is the reception speech of Marcellin Berthelot (1827-1907) at the Académie française, delivered on May 2, 1901, along with the response by Jules Lemaître. Berthelot was one of the most renowned French chemists of the 19th century, a pioneer in organic synthesis and thermochemistry. He was elected to the Académie française in 1900, representing the tradition of admitting distinguished scientists to this literary institution. The reception speech follows the customary format where the new member honors his predecessor and the respondent welcomes him to the company. Berthelot succeeded Ernest Renan's seat at the Academy.
+"""
+
+Notes = """
+The year 1901 is the year of both the speech delivery and publication. This is a primary historical document of the actual event. Jules Lemaître (1853-1914) was a French critic and dramatist who was already a member of the Académie.
+"""
+</result>

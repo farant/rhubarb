@@ -1,0 +1,15 @@
+<result>
+Title = "The Sorcery Club"
+Author = "Elliott O'Donnell"
+Year = 1912
+
+Tags = ["fiction"]
+
+Summary = """
+The Sorcery Club is a supernatural fiction novel by Elliott O'Donnell, a prolific Irish author known primarily for his works on ghosts, the paranormal, and the occult. The novel follows characters who discover and attempt to practice black magic derived from the lost civilization of Atlantis. O'Donnell was a popular writer of ghost stories and purported non-fiction accounts of hauntings in the early 20th century. This work represents his foray into occult fiction, combining his interests in the supernatural with an adventure narrative structure.
+"""
+
+Notes = """
+First published in 1912 by William Rider & Son in London, as indicated on the title page. O'Donnell (1872-1965) wrote extensively on supernatural topics throughout his long career.
+"""
+</result>

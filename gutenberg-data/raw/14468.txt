@@ -1,0 +1,15 @@
+<result>
+Title = "The Felon's Track: History of the Attempted Outbreak in Ireland"
+Author = "Michael Doheny"
+Year = 1849
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A first-hand account of the Young Ireland movement and the failed Irish Rebellion of 1848, written by one of its principal participants. Michael Doheny was a barrister and revolutionary who was deeply involved in the movement alongside figures like Thomas Francis Meagher, William Smith O'Brien, and Thomas D'Arcy McGee. The work chronicles the political agitation beginning with Daniel O'Connell's Repeal movement in 1843 through the abortive uprising of 1848. After the rebellion's failure, Doheny escaped to America, where he wrote this memoir while a fugitive. The book is valuable as both a historical document and a dramatic personal narrative of revolutionary nationalism.
+"""
+
+Notes = """
+The original edition was published in New York in 1849, shortly after Doheny's escape to America. This particular edition from 1920 includes supplementary material by D'Arcy McGee. I've chosen 1849 as the year since that represents the original publication of Doheny's work, which is the core historical document here.
+"""
+</result>

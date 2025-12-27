@@ -1,0 +1,15 @@
+<result>
+Title = "At a Winter's Fire"
+Author = "Bernard Capes"
+Year = 1899
+
+Tags = ["fiction", "horror", "ghost-stories"]
+
+Summary = """
+A collection of short supernatural and horror stories by Bernard Capes, a British author known for his ghost stories and weird fiction. The collection includes tales such as "The Black Reaper," "The Vanishing House," and "Dark Dignum." Capes was a prolific writer of the late Victorian and Edwardian era, and this collection represents some of his finest work in the ghost story genre. The stories were originally published in various magazines including Cornhill, Macmillan's, Lippincott's, and Pearson's before being collected in this volume.
+"""
+
+Notes = """
+The year 1899 is taken directly from the title page of this Project Gutenberg text. Bernard Capes (1854-1918) was a well-regarded writer of supernatural fiction whose work has been compared to M.R. James and other masters of the ghost story.
+"""
+</result>

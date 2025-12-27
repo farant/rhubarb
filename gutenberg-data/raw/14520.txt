@@ -1,0 +1,15 @@
+<result>
+Title = "Mavericks"
+Author = "William MacLeod Raine"
+Year = 1912
+
+Tags = ["fiction", "western"]
+
+Summary = """
+Mavericks is a Western novel by William MacLeod Raine, a prolific author of Western fiction in the early 20th century. The term "maverick" refers to unbranded cattle on the open range, which became a source of conflict between ranchers and "nesters" (homesteaders) in the American West. The novel deals with themes of cattle rustling, frontier justice, and the tensions between established ranchers and newcomers. Raine was one of the most popular Western writers of his era, known for romanticized but action-packed tales of the American frontier.
+"""
+
+Notes = """
+The copyright page shows both 1911 (Street & Smith) and 1912 (G.W. Dillingham Company). The 1912 date appears to be the primary book publication by Dillingham, with the 1911 date likely representing earlier serialization or a different format. I chose 1912 as the book publication date.
+"""
+</result>

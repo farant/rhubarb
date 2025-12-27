@@ -1,0 +1,15 @@
+<result>
+Title = "La tierra de todos"
+Author = "Vicente Blasco Ibáñez"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+La tierra de todos is a novel by the prominent Spanish author Vicente Blasco Ibáñez, one of the most widely translated Spanish writers of the early 20th century. The novel deals with themes of aristocratic decline, debt, and social pretense, following the Marqués de Torrebianca and his wife "la bella Elena" as they navigate financial troubles while maintaining appearances. Blasco Ibáñez was known for his naturalistic novels depicting Spanish regional life and social criticism, including famous works like Los cuatro jinetes del Apocalipsis (The Four Horsemen of the Apocalypse).
+"""
+
+Notes = """
+The publication year 1922 is taken directly from the Prometeo edition shown in the text. This appears to be the first publication date of this novel.
+"""
+</result>

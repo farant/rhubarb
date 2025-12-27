@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 152, February 21st, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "humor", "periodical"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was highly influential in shaping British political and social commentary through cartoons, satirical articles, and witty observations. This issue from February 1917 contains the "Charivaria" section - short humorous paragraphs commenting on current events during World War I, including jokes about Count Bernstorff (the German ambassador expelled from the US), Count Tisza of Hungary, German food shortages, and war dispatches.
+"""
+
+Notes = """
+The year 1917 is the original publication date of this specific issue. Punch magazine itself was founded in 1841, but each issue is its own distinct publication. This wartime issue reflects the sardonic British humor applied to WWI events.
+"""
+</result>

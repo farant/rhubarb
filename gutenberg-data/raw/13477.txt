@@ -1,0 +1,15 @@
+<result>
+Title = "Watts (1817-1904)"
+Author = "W. Loftus Hare"
+Year = 1905
+
+Tags = ["non-fiction", "art-criticism", "biography"]
+
+Summary = """
+This is a monograph on the English Victorian painter and sculptor George Frederic Watts (1817-1904), part of the "Masterpieces in Colour" series edited by T. Leman Hare. The book discusses Watts's life and artistic works, featuring color reproductions of his paintings. Watts was known for his allegorical and symbolic paintings, portraits of notable Victorians, and his deeply moral approach to art. The work "Death Crowning Innocence" mentioned in the frontispiece is characteristic of his symbolic style.
+"""
+
+Notes = """
+Year chosen as 1905 based on the subject's death date (1904) appearing in the title, indicating publication shortly after Watts's death. The "Masterpieces in Colour" series was published by T.C. & E.C. Jack in the early 1900s. The exact publication date is likely 1905-1906.
+"""
+</result>

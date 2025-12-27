@@ -1,0 +1,15 @@
+<result>
+Title = "Elämäni"
+Author = "Pietari Päivärinta"
+Year = 1877
+
+Tags = ["non-fiction", "autobiography", "appropriate-for-children"]
+
+Summary = """
+"Elämäni" (My Life) is an autobiographical work by Finnish author Pietari Päivärinta (1827-1913), a self-educated peasant writer who became one of the most popular Finnish authors of his era. The work describes his life growing up in poverty in rural Finland, with devoutly religious parents who worked hard to support their large family. The narrative captures the hardships of peasant life, including crop failures, illness, and economic struggle. Päivärinta was known for his realistic portrayals of Finnish rural life and his deeply religious worldview. His works were widely read and appreciated for their authentic depiction of common people's experiences.
+"""
+
+Notes = """
+The year 1877 appears on the title page of this Gutenberg text, indicating the original publication date. Päivärinta was a Lutheran author, not Catholic, so the 'catholic' tag is not applicable despite the religious themes in his writing.
+"""
+</result>

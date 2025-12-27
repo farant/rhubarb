@@ -1,0 +1,15 @@
+<result>
+Title = "Notable Women of Modern China"
+Author = "Margaret E. Burton"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A collection of biographical sketches of pioneering Chinese women during the late Qing Dynasty and early Republican era. Margaret E. Burton, an American author interested in women's education and missionary work in China, profiles remarkable women including Dr. Hü King Eng (mentioned as a medical college graduate in the frontispiece). The book documents the emergence of educated, professional Chinese women during a transformative period in Chinese history, including doctors, educators, and social reformers. Burton had previously written "The Education of Women in China" and was well-positioned to chronicle these biographical accounts.
+"""
+
+Notes = """
+The year 1912 is based on publication records for this Fleming H. Revell Company edition. This was a significant year as it coincided with the fall of the Qing Dynasty and establishment of the Republic of China, making it an appropriate moment for such a work documenting modern Chinese women's achievements.
+"""
+</result>

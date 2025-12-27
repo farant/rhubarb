@@ -1,0 +1,17 @@
+The file seems nearly empty, but based on the text you've provided in your message, this is clearly Molière's "Le Mariage Forcé" (The Forced Marriage) in Finnish translation.
+
+<result>
+Title = "Le Mariage Forcé (Väkinäinen naiminen)"
+Author = "Molière (Jean-Baptiste Poquelin)"
+Year = 1664
+
+Tags = ["fiction", "drama", "comedy", "appropriate-for-children"]
+
+Summary = """
+Le Mariage Forcé (The Forced Marriage) is a one-act comedy-ballet by Molière, first performed at the Louvre on January 29, 1664 for Louis XIV. The play follows Sganarelle, a middle-aged man who decides to marry the young Dorimène (here Dorimena), but becomes increasingly anxious about whether marriage is wise. He consults two philosophers - an Aristotelian (Pankrasius) and a Pyrrhonist skeptic (Marphurius) - and fortune-tellers, seeking advice. The comedy satirizes both pedantic philosophy and the foolishness of an older man pursuing a young bride. The play was originally accompanied by music by Lully and featured ballet interludes.
+"""
+
+Notes = """
+The year 1664 is when the original French work premiered. This Finnish translation was published by G. V. Edlund in 1902, as noted in the text. The character names have been slightly Finnicized (Dorimène → Dorimena, etc.). The play is one of Molière's shorter works but remains a clever satire on marriage and pretentious intellectualism.
+"""
+</result>

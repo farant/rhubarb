@@ -1,0 +1,15 @@
+<result>
+Title = "The Nervous Child"
+Author = "Hector Charles Cameron"
+Year = 1919
+
+Tags = ["non-fiction", "parenting", "psychology", "medicine"]
+
+Summary = """
+A medical treatise on childhood nervousness and behavioral issues by Dr. Hector Charles Cameron, a physician at Guy's Hospital in London. The book addresses the psychological and physical aspects of nervous conditions in children, offering guidance to parents and caregivers. Cameron was a respected pediatrician of his era, and this work reflects early 20th century understanding of child psychology and development. The Emerson epigraph about respecting the child's solitude suggests a relatively progressive approach for its time.
+"""
+
+Notes = """
+First edition published 1919, with a second impression in 1920. The 1919 date is used as the original publication year.
+"""
+</result>

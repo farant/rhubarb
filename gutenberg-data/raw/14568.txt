@@ -1,0 +1,15 @@
+<result>
+Title = "Sir Gawayne and the Green Knight"
+Author = "Anonymous (edited by Richard Morris)"
+Year = 1360
+
+Tags = ["fiction", "appropriate-for-children", "medieval-romance"]
+
+Summary = """
+Sir Gawain and the Green Knight is one of the finest examples of Middle English alliterative poetry, composed around 1360 AD by an anonymous poet often referred to as the "Pearl Poet" or "Gawain Poet" (who also wrote Pearl, Patience, and Cleanness). The poem tells the story of Sir Gawain, a knight of King Arthur's Round Table, who accepts a challenge from a mysterious Green Knight: Gawain may strike him with an axe, but must receive a return blow in one year. The narrative explores themes of chivalry, honor, temptation, and human frailty. It survives in a single manuscript (Cotton Nero A.x) in the British Museum. This edition by Richard Morris, first published in 1864, made the text more accessible to Victorian readers.
+"""
+
+Notes = """
+The year 1360 reflects the approximate date of the original poem's composition, not the 1864/1869 publication of this scholarly edition. The original work is the historically significant artifact here. While the author was almost certainly Catholic (writing in 14th century England before the Reformation), I have not tagged it 'catholic' as it is primarily Arthurian romance rather than devotional literature.
+"""
+</result>

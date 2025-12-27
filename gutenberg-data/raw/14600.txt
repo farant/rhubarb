@@ -1,0 +1,15 @@
+<result>
+Title = "Theory of Silk Weaving"
+Author = "Arnold Wolfensberger"
+Year = 1921
+
+Tags = ["non-fiction", "technical", "textiles"]
+
+Summary = """
+A technical treatise on silk weaving covering the construction and application of weaves, decomposition and calculation of various silk fabrics including broad, narrow, plain, novelty and jacquard types. The author was a graduate of the Textile Institute of Zurich, Switzerland. This is the second revised and enlarged edition containing 95 plates of illustrations. It was published by the American Silk Journal, indicating it was aimed at the American textile industry during a period when silk manufacturing was significant in the United States.
+"""
+
+Notes = """
+The 1921 date is from this second edition. The first edition would have been earlier but 1921 is the most appropriate date for this specific text as it represents the revised and enlarged version that was published.
+"""
+</result>

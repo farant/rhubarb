@@ -1,0 +1,15 @@
+<result>
+Title = "The Cave in the Mountain: A Sequel to In the Pecos Country"
+Author = "Edward S. Ellis"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a Western adventure novel for young readers, part of Edward S. Ellis's series featuring frontier adventures in the American Southwest. It continues the story from "In the Pecos Country," following characters through dangerous encounters in Apache territory and the rugged mountain landscapes of Texas/New Mexico. Ellis was one of the most prolific American authors of dime novels and juvenile fiction in the late 19th century, writing under numerous pseudonyms including "Lieut. R. H. Jayne." His works typically featured young protagonists navigating wilderness survival, encounters with Native Americans, and frontier dangers.
+"""
+
+Notes = """
+"Lieut. R. H. Jayne" was a pseudonym of Edward Sylvester Ellis (1840-1916). Ellis wrote over 500 novels and was enormously popular in his time. The 1894 date from the Mershon Company edition appears to be the original publication year for this particular title.
+"""
+</result>

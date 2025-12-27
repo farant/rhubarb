@@ -1,0 +1,15 @@
+<result>
+Title = "Mr. Fortescue: An Andean Romance"
+Author = "William Westall"
+Year = 1891
+
+Tags = ["fiction"]
+
+Summary = """
+"Mr. Fortescue: An Andean Romance" is a Victorian adventure novel by English author William Westall (1834-1903). The story begins in Essex, England at a fox hunt before transitioning to adventures in South America, specifically the Andes mountains. Westall was known for his adventure novels often set in exotic locations, drawing on themes of exploration, romance, and Victorian sensibilities. The novel follows the conventions of the period's adventure fiction, combining English country life with dramatic escapades abroad.
+"""
+
+Notes = """
+William Westall was a prolific English novelist who wrote numerous adventure stories. "Mr. Fortescue" was first published in 1891. The opening scene at Matching Green in Essex establishes the English setting before the narrative moves to its Andean adventures, as indicated by the subtitle.
+"""
+</result>

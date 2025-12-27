@@ -1,0 +1,15 @@
+<result>
+Title = "McClure's Magazine, Vol. VI, No. 5"
+Author = "Various"
+Year = 1896
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+McClure's Magazine was one of the most influential American magazines of the late 19th and early 20th centuries, known for pioneering investigative journalism and muckraking. This April 1896 issue features a remarkable collection including H.J.W. Dam's article on Röntgen's newly discovered X-rays (discovered just months earlier in November 1895), Ida M. Tarbell's biographical work on Abraham Lincoln, an installment of Anthony Hope's novel "Phroso," poetry by Rudyard Kipling, and articles on art history. McClure's was founded by S.S. McClure in 1893 and became famous for publishing works by major authors and journalists of the era.
+"""
+
+Notes = """
+The year 1896 is the publication date printed on the magazine. This issue is historically notable for its coverage of the newly discovered X-rays (Röntgen rays), making it an early popular science document on this revolutionary technology. Ida M. Tarbell, who contributes the Lincoln biography section, would later become famous for her exposé of Standard Oil.
+"""
+</result>

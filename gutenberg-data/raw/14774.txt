@@ -1,0 +1,15 @@
+<result>
+Title = "Painuva päivä; Elämän koreus; Leirivalkeat; Ajatar; Syreenien kukkiessa"
+Author = "Eino Leino"
+Year = 1914
+
+Tags = ["poetry", "fiction", "finnish-literature"]
+
+Summary = """
+This is a collected edition of five poetry collections by Eino Leino (1878-1926), Finland's most celebrated national romantic poet. The collections span 1914-1920, a tumultuous period in Finnish history covering World War I and Finnish independence (1917). Leino was a prolific writer known for his lyrical verse, folklore-inspired works, and deeply emotional poetry. His work draws heavily on the Kalevala tradition and Finnish national romanticism. These collections represent his later period, marked by both personal struggles and the dramatic political changes in Finland.
+"""
+
+Notes = """
+The years 1914, 1915, 1917, 1920 listed in the text refer to the original publication dates of the individual collections. I chose 1914 as the primary year since that is when the first collection (Painuva päivä) was published. Eino Leino is considered one of the greatest Finnish poets, often compared to national poets of other countries. He wrote in Finnish during a period of Finnish national awakening.
+"""
+</result>

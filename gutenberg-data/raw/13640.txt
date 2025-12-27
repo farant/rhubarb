@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement, No. 821"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "science"]
+
+Summary = """
+Scientific American Supplement was a weekly publication that accompanied the main Scientific American magazine, providing extended coverage of scientific and technological developments. Issue No. 821 from September 26, 1891 would have contained articles on contemporary scientific discoveries, engineering innovations, and industrial advances of the late Victorian era. The Scientific American was established in 1845 and became one of the most important popular science publications in America.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical issue dated September 26, 1891. The Supplement series ran alongside the main Scientific American publication to provide additional in-depth content.
+"""
+</result>

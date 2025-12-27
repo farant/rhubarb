@@ -1,0 +1,17 @@
+The text you've provided is from *Punch, or The London Charivari*, a famous British satirical magazine that ran from 1841 to 2002. This specific issue is Vol. 101, dated August 22, 1891.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 101, August 22, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "periodical", "humor", "satire"]
+
+Summary = """
+Punch was Britain's most famous satirical magazine, founded in 1841 and running until 2002. It featured political cartoons, humorous articles, satirical sketches, and commentary on Victorian society. This particular issue from August 1891 includes "The Travelling Companions," a comedic serialized sketch depicting British and American tourists visiting the Waterloo battlefield in Belgium. The magazine was enormously influential in British culture and helped establish the tradition of sophisticated political cartooning.
+"""
+
+Notes = """
+Year reflects the original publication date of this specific issue. Punch was a weekly periodical, so each issue is dated individually. The sketch shown parodies Anglo-American cultural differences and tourist behavior of the era.
+"""
+</result>

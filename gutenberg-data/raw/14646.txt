@@ -1,0 +1,15 @@
+<result>
+Title = "Christopher and Columbus"
+Author = "Elizabeth von Arnim"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Christopher and Columbus is a novel by Elizabeth von Arnim (born Mary Annette Beauchamp, also known as "Elizabeth" from her famous earlier work "Elizabeth and Her German Garden"). The story follows twin sisters Anna-Rose and Anna-Felicitas, young women of mixed German-English parentage who are sent to America during World War I as refugees. The title refers to their self-adopted nicknames as they set out to "discover a New World." The novel is a wartime comedy dealing with themes of identity, displacement, and the difficulties faced by those caught between warring nations. Von Arnim herself had complicated national ties - born in Australia, raised in England, married to a German count - which informed this sympathetic portrayal of the sisters' predicament.
+"""
+
+Notes = """
+Published in 1919 by Doubleday, Page & Company as indicated in the text. Elizabeth von Arnim published many works anonymously as "By the Author of Elizabeth and Her German Garden" which is how this work is attributed in the original publication.
+"""
+</result>

@@ -1,0 +1,17 @@
+The file appears very short. Based on the text you've provided in your message, I can identify this work:
+
+<result>
+Title = "Un Hiver à Majorque"
+Author = "George Sand"
+Year = 1842
+
+Tags = ["non-fiction", "travel-writing"]
+
+Summary = """
+Un Hiver à Majorque (A Winter in Majorca) is a travel memoir by the French novelist George Sand (Amantine Lucile Aurore Dupin, 1804-1876). The book recounts her stay on the Spanish island of Majorca during the winter of 1838-1839 with her two children and her lover, the Polish composer Frédéric Chopin, who was suffering from tuberculosis. The work is both a travelogue describing Majorcan landscape, customs, and people, and an intimate account of their difficult sojourn—marked by Chopin's illness, the hostility of local inhabitants, and their eventual retreat to the abandoned Carthusian monastery of Valldemossa. Sand's observations are characteristically sharp, sometimes critical of Majorcan society, and the book remains a classic of 19th-century travel literature.
+"""
+
+Notes = """
+First published in 1842 in the Revue des Deux Mondes, then as a book in 1842. The 1855 notice included in this edition reflects a later republication with a new preface dated August 25, 1855 at Nohant. The year 1842 is chosen as it represents the original publication, not the later reprint edition.
+"""
+</result>

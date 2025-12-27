@@ -1,0 +1,15 @@
+<result>
+Title = "The Canterville Ghost"
+Author = "Oscar Wilde"
+Year = 1887
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A satirical short story by Oscar Wilde that humorously contrasts British aristocratic tradition with American pragmatism. The story follows the Otis family, an American minister and his family, who purchase Canterville Chase, a haunted English manor. The resident ghost, Sir Simon de Canterville, who has successfully haunted the house for three centuries, finds himself completely ineffective against the practical, unflappable Americans who refuse to be frightened. The twins torment him, Mrs. Otis offers him lubricant for his clanking chains, and the family treats his bloodstains as a cleaning problem. Only the young daughter Virginia shows him compassion, ultimately helping him find peace. The story is a gentle comedy that mocks both British obsession with tradition and American materialism.
+"""
+
+Notes = """
+First published in 1887 in The Court and Society Review. The 1906 date on this Gutenberg text refers to the illustrated edition by John W. Luce and Company with Wallace Goldsmith's illustrations, not the original publication.
+"""
+</result>

@@ -1,0 +1,17 @@
+The file appears empty or very short in the raw data folder. Based on the text you've provided in your message, I can identify this work:
+
+<result>
+Title = "Stray Thoughts for Girls"
+Author = "Lucy Helen Muriel Soulsby"
+Year = 1893
+
+Tags = ["non-fiction", "appropriate-for-children", "conduct-literature", "education"]
+
+Summary = """
+A conduct and advice book written by Lucy H. M. Soulsby, an English educator and headmistress of Oxford High School for Girls. The work addresses young women during their formative years (what Soulsby calls the "awkward age"), offering guidance on character formation, manners, education, and moral development. Soulsby was known for her practical and sensible approach to girls' education, and this book became quite popular in late Victorian and Edwardian England, going through multiple editions. The epigraph quoting Shakespeare's Portia from The Merchant of Venice signals its target audience of young women who are still learning and growing.
+"""
+
+Notes = """
+The 1903 date shown is for the "New and Enlarged Edition" - the original publication was 1893. I have used 1893 as that represents when the work first appeared. Soulsby was Anglican, not Catholic, so the 'catholic' tag is not included. The motto "I sing the Obsolete" reflects Soulsby's somewhat conservative educational philosophy valuing traditional virtues.
+"""
+</result>

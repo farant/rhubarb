@@ -1,0 +1,15 @@
+<result>
+Title = "Chambers' Edinburgh Journal, No. 420"
+Author = "William Chambers, Robert Chambers"
+Year = 1852
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children"]
+
+Summary = """
+Chambers' Edinburgh Journal was a popular British weekly magazine founded in 1832 by William and Robert Chambers of Edinburgh. It was aimed at the working and middle classes, providing accessible educational content, essays, fiction, and commentary on social issues. This particular issue (No. 420) from January 17, 1852 opens with an essay on self-examination and personal responsibility, questioning whether we deserve the treatment we receive from the world based on our own contributions to it. The Chambers brothers were influential publishers who believed in making knowledge available to ordinary people at affordable prices.
+"""
+
+Notes = """
+The date is explicitly stated in the document header as January 17, 1852. The journal ran from 1832 to 1956 under various names. While the Chambers brothers were Scottish Presbyterians rather than Catholic, the content here is morally instructive and appropriate general reading.
+"""
+</result>

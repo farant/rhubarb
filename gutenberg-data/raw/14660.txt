@@ -1,0 +1,17 @@
+The file appears empty. But you've provided the text directly in your message, so I can work with that.
+
+<result>
+Title = "Mabini's Decalogue for Filipinos"
+Author = "Apolinario Mabini"
+Year = 1898
+
+Tags = ["non-fiction", "historical-document", "political-philosophy"]
+
+Summary = """
+Apolinario Mabini (1864-1903) was a Filipino revolutionary leader, political philosopher, and the chief adviser to Emilio Aguinaldo during the Philippine Revolution against Spain and the subsequent Philippine-American War. Known as "the Sublime Paralytic" due to being paralyzed from polio, he was called "the brains of the revolution" by American officers. His Decalogue for Filipinos is a set of ten principles outlining duties of Filipinos to their country, God, and fellow citizens. Mabini served as President of the Council of Secretaries (essentially Prime Minister) and Secretary of Foreign Affairs of the First Philippine Republic. He was eventually captured, exiled to Guam, and died shortly after returning to the Philippines in 1903.
+"""
+
+Notes = """
+The Decalogue itself was written in 1898 during the revolution against Spain. This particular pamphlet was published by the Philippine Press Bureau in Washington D.C. in 1922, likely as part of advocacy for Philippine independence. I chose 1898 as the year since that is when Mabini composed the Decalogue and it represents the historical significance of the work, rather than this later reprinting.
+"""
+</result>

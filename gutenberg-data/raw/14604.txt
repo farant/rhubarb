@@ -1,0 +1,15 @@
+<result>
+Title = "Scandinavian Influence on Southern Lowland Scotch: A Contribution to the Study of the Linguistic Relations of English and Scandinavian"
+Author = "George Tobias Flom"
+Year = 1900
+
+Tags = ["non-fiction", "linguistics", "academic"]
+
+Summary = """
+This is a scholarly linguistic study examining the influence of Scandinavian languages (Old Norse and related tongues) on the Scots dialect spoken in the Southern Lowlands of Scotland. The work analyzes vocabulary, phonology, and grammatical features that entered Lowland Scots through contact with Norse settlers during the Viking Age and subsequent centuries. Flom was an academic specializing in Germanic philology, and this appears to be based on his graduate work at Columbia University.
+"""
+
+Notes = """
+The original copyright is 1900 from Columbia University Press. The 1966 date in the text is simply an AMS Press reprint. The work represents early 20th century comparative philology examining the linguistic legacy of Scandinavian settlement in Scotland.
+"""
+</result>

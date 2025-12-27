@@ -1,0 +1,15 @@
+<result>
+Title = "When William Came"
+Author = "Saki (H.H. Munro)"
+Year = 1913
+
+Tags = ["fiction", "speculative-fiction", "political-satire"]
+
+Summary = """
+When William Came is a speculative fiction novel by H.H. Munro, better known by his pen name Saki. The novel imagines a future in which Germany has successfully invaded and conquered Britain. "William" in the title refers to Kaiser Wilhelm II. The story follows members of the English upper class as they adapt to life under German occupation, exploring themes of national identity, collaboration, and resistance. It is considered one of the earliest examples of "invasion literature" and alternate history fiction. The novel is notable for its satirical portrayal of British society and its prescient publication just before World War I actually began.
+"""
+
+Notes = """
+The novel was first published in 1913, though this particular edition is from 1914 (John Lane). I chose 1913 as the original publication year. Saki was killed in action during World War I in 1916, making this novel eerily prophetic in its concerns about German militarism, though of course the actual war unfolded very differently from his imagined scenario.
+"""
+</result>

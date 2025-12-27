@@ -1,0 +1,15 @@
+<result>
+Title = "Mäkijärveläiset"
+Author = "Kauppis-Heikki"
+Year = 1887
+
+Tags = ["fiction"]
+
+Summary = """
+Mäkijärveläiset (The People of Mäkijärvi) is a Finnish novel depicting life in the Savo region of Finland. Written by Kauppis-Heikki (pen name of Heikki Kauppinen, 1862-1920), it portrays the everyday existence of rural Finnish villagers living around a small lake. The work is part of the Finnish realist tradition, offering an intimate look at peasant life, folk songs, and community dynamics in late 19th century Finland. Kauppis-Heikki was known for his authentic depictions of Savo peasant culture and dialect.
+"""
+
+Notes = """
+First published in 1887. The 1920 date shown in the Gutenberg text refers to a later WSOY (Werner Söderström) edition published in Porvoo. The original publication year of 1887 is more historically significant as it places the work in its proper context within Finnish literary realism.
+"""
+</result>

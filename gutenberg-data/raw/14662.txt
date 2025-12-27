@@ -1,0 +1,15 @@
+<result>
+Title = "Around the Tea-Table"
+Author = "T. De Witt Talmage"
+Year = 1874
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of informal essays and conversations by Thomas De Witt Talmage, a prominent American Presbyterian minister and preacher of the late 19th century. The book presents itself as a series of discussions and readings shared around the family tea-table, covering various topics in Talmage's characteristic warm, conversational, and morally instructive style. Talmage was known as one of the most popular preachers of his era, with his sermons reaching millions through newspaper syndication.
+"""
+
+Notes = """
+First published in 1874. Talmage (1832-1902) was a Dutch Reformed and later Presbyterian minister famous for his oratory. While he was a Protestant minister rather than Catholic, the work represents popular American religious literature of the Victorian era. The Christian Herald later republished this edition.
+"""
+</result>

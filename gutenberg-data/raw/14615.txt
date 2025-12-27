@@ -1,0 +1,15 @@
+<result>
+Title = "The Sable Cloud: A Southern Tale, With Northern Comments"
+Author = "Nehemiah Adams"
+Year = 1861
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a pro-slavery apologist work by Nehemiah Adams, a Congregationalist minister from Boston. Adams had previously written "A South-Side View of Slavery" (1854) after visiting the South, in which he defended the institution of slavery and criticized Northern abolitionists. "The Sable Cloud" continues this perspective, presenting scenes of Southern life with slavery and offering commentary that attempts to justify or soften the institution. The title references Milton's Comus and the idea of finding a "silver lining" in the "sable cloud" of slavery. The work was published on the eve of the Civil War and represents a Northern voice sympathetic to Southern slaveholders.
+"""
+
+Notes = """
+Published in 1861, the year the Civil War began. Nehemiah Adams (1806-1878) was controversial in his time for his pro-slavery stance despite being a Northern minister. The work is historically significant as documentation of Northern pro-slavery sentiment but is obviously morally repugnant in its defense of slavery.
+"""
+</result>

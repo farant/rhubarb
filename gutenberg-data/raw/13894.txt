@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Adventure"
+Author = "Arnold Bennett"
+Year = 1913
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+A comedic play in four acts by Arnold Bennett, one of the prominent Edwardian novelists and playwrights. The play centers on Ilam Carve, a famous painter, and his valet Albert Shawn. It explores themes of identity, fame, and escape from public life. The play was successfully produced in London and represents Bennett's lighter theatrical work, distinct from his more serious novels like the Clayhanger series and The Old Wives' Tale.
+"""
+
+Notes = """
+1913 is the year of first publication and stage production. Arnold Bennett (1867-1931) was an English writer known primarily for his realistic novels set in the Potteries district of Staffordshire.
+"""
+</result>

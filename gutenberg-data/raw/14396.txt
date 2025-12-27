@@ -1,0 +1,15 @@
+<result>
+Title = "His Family"
+Author = "Ernest Poole"
+Year = 1917
+
+Tags = ["fiction"]
+
+Summary = """
+His Family is a novel by Ernest Poole that won the first Pulitzer Prize for the Novel in 1918. The story centers on Roger Gale, a widower in New York City, and his relationships with his three adult daughters, each representing different paths for women in early 20th century America: one traditional and domestic, one a progressive social worker, and one pursuing personal freedom and pleasure. The novel explores themes of generational change, family bonds, and the shifting roles of women in American society during the Progressive Era.
+"""
+
+Notes = """
+The novel was serialized in 1916-1917 before book publication in May 1917. I chose 1917 as that is the year of first book publication. Ernest Poole was an American journalist and novelist known for his social realism; his previous novel "The Harbor" (1915) was also a bestseller dealing with labor and social themes.
+"""
+</result>

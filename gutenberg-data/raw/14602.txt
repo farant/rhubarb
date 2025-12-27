@@ -1,0 +1,15 @@
+<result>
+Title = "War Brides"
+Author = "Marion Craig Wentworth"
+Year = 1915
+
+Tags = ["fiction", "drama", "anti-war"]
+
+Summary = """
+War Brides is a one-act anti-war play that became famous during World War I. The play depicts women who refuse to bear children destined to become soldiers, presenting a powerful pacifist and feminist message. It was notably performed by the acclaimed actress Alla Nazimova, and was later adapted into a 1916 silent film also starring Nazimova. The play was controversial for its time, addressing themes of women's bodily autonomy and resistance to war through the refusal of motherhood as a form of protest.
+"""
+
+Notes = """
+1915 is the year of first publication by The Century Co., as indicated on the title page. This was during World War I when anti-war sentiment was growing in America before U.S. entry into the war in 1917.
+"""
+</result>

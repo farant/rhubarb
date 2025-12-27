@@ -1,0 +1,15 @@
+<result>
+Title = "The Sword Maker"
+Author = "Robert Barr"
+Year = 1910
+
+Tags = ["fiction"]
+
+Summary = """
+The Sword Maker is a historical romance novel set in medieval Germany along the Rhine River. The story follows Roland, a young sword maker from Frankfurt, who organizes a band of guild craftsmen to challenge the robber barons who have been terrorizing merchants and blocking trade on the Rhine. The narrative involves political intrigue with the Archbishop of Cologne, a romantic subplot with the Countess von Sayn, and adventure as the protagonists attempt to open the river to free commerce. The novel combines swashbuckling action with romantic elements typical of the historical adventure genre popular in the early 20th century.
+"""
+
+Notes = """
+Robert Barr (1849-1912) was a Scottish-Canadian author known for historical romances and detective fiction. This novel was first published in 1910 by Frederick A. Stokes Company, as indicated in the frontmatter. Barr was not Catholic; he was of Scottish Presbyterian background, so the work does not qualify for the 'catholic' tag.
+"""
+</result>

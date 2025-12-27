@@ -1,0 +1,15 @@
+<result>
+Title = "The War of the Wenuses"
+Author = "C. L. Graves, E. V. Lucas"
+Year = 1898
+
+Tags = ["fiction", "humor", "parody"]
+
+Summary = """
+A satirical parody of H. G. Wells' "The War of the Worlds" (published 1898). The title is a playful corruption of "Venuses" and the book purports to be a translation from "the Artesian of H. G. Pozzuoli" - a humorous reference to Wells. The fictional author credits ("The Treadmill", "The Isthmus of Dr. Day", "The Vanishing Lady") parody Wells' actual works like "The Time Machine", "The Island of Doctor Moreau", and "The Invisible Man". The dedication is cheekily addressed directly to H. G. Wells himself. Charles Larcom Graves was a journalist and humorist, and E. V. Lucas was a prolific English writer, essayist, and humorist - together they produced this lighthearted response to Wells' invasion narrative.
+"""
+
+Notes = """
+Published the same year as Wells' "The War of the Worlds" - the parody appeared remarkably quickly, demonstrating how immediately influential and culturally prominent Wells' novel was upon release.
+"""
+</result>

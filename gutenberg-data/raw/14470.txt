@@ -1,0 +1,15 @@
+<result>
+Title = "The German Classics of the Nineteenth and Twentieth Centuries, Volume XII"
+Author = "Kuno Francke, William Guild Howard (editors)"
+Year = 1914
+
+Tags = ["non-fiction", "anthology", "literary-criticism"]
+
+Summary = """
+This is Volume XII of a twenty-volume anthology series collecting masterpieces of German literature translated into English. This particular volume features works by Gustav Freytag (1816-1895), a German novelist and playwright known for realistic depictions of German middle-class life, and Theodor Fontane (1819-1898), one of the most important German realist novelists. The series was edited by Kuno Francke, a Harvard professor specializing in German cultural history, and aimed to make German literary heritage accessible to English-speaking audiences. The frontispiece features Adolph von Menzel's famous painting of Frederick the Great playing the flute.
+"""
+
+Notes = """
+The copyright date of 1914 is used as this represents when this specific anthology was compiled and published. While it contains translations of 19th century German works, the anthology itself is the primary "work" represented by this volume.
+"""
+</result>

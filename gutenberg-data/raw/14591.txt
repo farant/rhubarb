@@ -1,0 +1,15 @@
+<result>
+Title = "Faust"
+Author = "Johann Wolfgang von Goethe"
+Year = 1808
+
+Tags = ["fiction", "poetry", "drama"]
+
+Summary = """
+Faust is Goethe's masterwork, a dramatic poem in two parts telling the story of Heinrich Faust, a scholar who makes a pact with the devil Mephistopheles. In exchange for unlimited knowledge and worldly pleasures, Faust wagers his soul. Part One follows Faust's seduction and tragic destruction of the innocent Gretchen (Margarete). Part Two is a more expansive allegorical work dealing with politics, classical mythology, and Faust's ultimate redemption. The work is considered one of the greatest achievements of German literature and Western literature as a whole.
+"""
+
+Notes = """
+Faust Part One was published in 1808, Part Two posthumously in 1832. The year 1808 is chosen as it marks the first complete publication of Part One, which is typically what is meant by "Faust" in common reference. This edition features Bayard Taylor's celebrated 1870-71 English translation, notable for preserving the original German metres. Harry Clarke's illustrations were added in the 1925 edition published by George G. Harrap & Co.
+"""
+</result>

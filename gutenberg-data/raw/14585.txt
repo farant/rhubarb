@@ -1,0 +1,15 @@
+<result>
+Title = "ERPANET Case Study: Project Gutenberg"
+Author = "ERPANET"
+Year = 2004
+
+Tags = ["non-fiction", "technical-report"]
+
+Summary = """
+This is a case study document produced by ERPANET (Electronic Resource Preservation and Access Network), a European Union-funded project that ran from 2001-2004. The document analyzes Project Gutenberg as a case study in digital preservation practices. It covers topics such as awareness of digital preservation issues, preservation activities, compliance monitoring, costs, and future outlook for digital text archives. This is essentially a meta-document: a study about digital preservation that happens to be preserved on the very platform it studies.
+"""
+
+Notes = """
+The copyright notice states 2004, which is when ERPANET produced this case study. ERPANET was an EU-funded initiative focused on digital preservation research and best practices. This is a technical/academic report rather than a general interest work.
+"""
+</result>

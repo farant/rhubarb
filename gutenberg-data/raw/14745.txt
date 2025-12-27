@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 102, June 18, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["fiction", "humor", "periodical"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and running until 2002. It was famous for its satirical cartoons, witty commentary on British society, politics, and culture, and coined the term "cartoon" in its modern sense. This issue from June 1892 includes typical Punch fare: humorous travel sketches (like the "Courier of the Hague" piece shown here, satirizing English tourists abroad), political commentary, jokes, and illustrations. The magazine was influential in Victorian and Edwardian Britain and was known for its relatively gentle, establishment-friendly humor compared to more radical satirical publications.
+"""
+
+Notes = """
+The year 1892 is the original publication date as clearly indicated in the masthead. Punch was a weekly periodical, so each issue has a specific date. The piece shown is a humorous travel sketch written in the style common to Victorian humor magazines, gently mocking both the English tourist and the Dutch guide.
+"""
+</result>

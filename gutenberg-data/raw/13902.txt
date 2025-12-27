@@ -1,0 +1,17 @@
+Based on my research, this is an article titled "Pisa" that was published in the Dutch magazine *De Aarde en haar Volken* (The Earth and its Peoples) in 1887. The author is listed as Anonymous - this was a geography/travel periodical where many articles were published without author attribution.
+
+<result>
+Title = "Pisa"
+Author = "Anonymous"
+Year = 1887
+
+Tags = ["non-fiction", "travel", "geography"]
+
+Summary = """
+A Dutch travel essay originally published in "De Aarde en haar Volken" (The Earth and its Peoples), an illustrated geography and ethnography magazine that ran from 1865-1940. The article describes the city of Pisa from a traveler's perspective, comparing it favorably to Genoa and discussing Italian art and architecture. The author takes the route from Lucca to Pisa by train, describing the fertile countryside. The essay reflects the 19th-century tradition of travel writing that combined personal observation with historical and cultural commentary.
+"""
+
+Notes = """
+The original publication was in the 1887 volume of "De Aarde en haar Volken," a Dutch periodical published by Kruseman & Tjeenk Willink in Haarlem. As was common for such magazines, individual articles were often published without author attribution. Project Gutenberg lists this as ebook #13902 with "Anonymous" as the author.
+"""
+</result>

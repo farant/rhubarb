@@ -1,0 +1,15 @@
+<result>
+Title = "Césarine Dietrich"
+Author = "George Sand"
+Year = 1871
+
+Tags = ["fiction"]
+
+Summary = """
+Césarine Dietrich is a novel by George Sand (pseudonym of Amantine Lucile Aurore Dupin, Baronne Dudevant), one of the most prolific and influential French writers of the 19th century. The novel is narrated by a 35-year-old noblewoman who becomes the governess and tutor to the 15-year-old Césarine Dietrich after the girl's mother dies. The narrator, a countess fallen on hard times, must overcome her aristocratic pride to work for a wealthy bourgeois family. The novel explores themes of class, education, female independence, and social mobility in 19th-century France. Sand was known for her unconventional lifestyle and her novels often featured strong female protagonists navigating society's constraints.
+"""
+
+Notes = """
+Césarine Dietrich was first published in 1871. The edition shown here is from 1897, published by Calmann Lévy in Paris. George Sand (1804-1876) was not Catholic in the traditional sense - she was critical of institutional religion and held unconventional spiritual views, so the work would not qualify for the 'catholic' tag.
+"""
+</result>

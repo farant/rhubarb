@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, September 19, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "humor", "satire"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was one of the most influential and celebrated satirical magazines in history, famous for its cartoons, political commentary, and witty observations on Victorian and Edwardian society. The magazine gave us the term "cartoon" in its modern sense and was a cultural institution in Britain. This particular issue from September 1891 contains typical Punch fare: satirical illustrations, humorous verse (such as the poem "Silence and Sleep" shown here), and commentary on contemporary life.
+"""
+
+Notes = """
+The year 1891 is the publication date of this specific issue. Punch ran continuously from 1841-1992 and briefly 1996-2002. Each issue is its own work, so the issue date is the appropriate year to use.
+"""
+</result>

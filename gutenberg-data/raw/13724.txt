@@ -1,0 +1,15 @@
+<result>
+Title = "The Frontiersmen"
+Author = "Charles Egbert Craddock"
+Year = 1904
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+"The Frontiersmen" is a collection of short stories set in the American frontier, particularly focusing on the Cherokee and other Native American peoples of the Tennessee region. Charles Egbert Craddock was the pen name of Mary Noailles Murfree (1850-1922), a Tennessee author known for her local color fiction depicting life in the Appalachian Mountains. The stories in this collection explore encounters between settlers and Native Americans, featuring themes of captivity, cultural exchange, and frontier life. Murfree was one of the first American women to achieve literary fame for her regional fiction.
+"""
+
+Notes = """
+1904 is the original publication year as indicated on the title page. Mary Noailles Murfree used the male pseudonym Charles Egbert Craddock throughout her career.
+"""
+</result>

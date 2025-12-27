@@ -1,0 +1,15 @@
+<result>
+Title = "Duhovnye ody (Spiritual Odes)"
+Author = "Gavrila Romanovich Derzhavin"
+Year = 1784
+
+Tags = ["poetry", "non-fiction", "religious"]
+
+Summary = """
+Gavrila Derzhavin (1743-1816) was the greatest Russian poet of the 18th century, serving as a transitional figure between Russian classicism and the Romanticism that would follow with Pushkin. His "Spiritual Odes" are philosophical and religious poems meditating on God, mortality, human insignificance before the divine, and the nature of existence. The most famous of these odes is "Bog" (God), written in 1784, which is considered one of the masterpieces of Russian literature. These poems reflect Enlightenment-era deism combined with Orthodox Christian sensibility.
+"""
+
+Notes = """
+The year 1784 corresponds to the composition of "Bog" (God), Derzhavin's most celebrated spiritual ode and the centerpiece of this collection. Derzhavin was Russian Orthodox rather than Catholic, so the 'catholic' tag is not applied despite the religious nature of the work.
+"""
+</result>

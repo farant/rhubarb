@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 102, April 9th, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, witty social commentary, and parodies of Victorian and later British life. This particular issue from April 1892 captures the atmosphere of the Oxford-Cambridge Boat Race day, depicting various street characters, vendors, and con artists working the crowds along the Thames from Hammersmith to Mortlake. The magazine was enormously influential in British culture and coined the term "cartoon" in its modern sense.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with the publication date clearly indicated. Punch was not a Catholic publication - it was a secular humor magazine that occasionally satirized religious figures and institutions of all denominations.
+"""
+</result>

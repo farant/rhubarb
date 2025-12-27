@@ -1,0 +1,15 @@
+<result>
+Title = "Dorothy Dainty's Gay Times"
+Author = "Amy Brooks"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the Dorothy Dainty series, a popular children's book series from the early 20th century written and illustrated by Amy Brooks. The series follows the adventures of Dorothy Dainty, a young girl, through various wholesome situations typical of children's literature of that era. Amy Brooks (1858-1917) was an American author and illustrator who wrote numerous children's books, including the Randy Books series. The Dorothy Dainty books were known for their gentle, moral tales appropriate for young readers.
+"""
+
+Notes = """
+The year 1908 is taken directly from the publication information in the text itself.
+"""
+</result>

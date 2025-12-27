@@ -1,0 +1,15 @@
+<result>
+Title = "Astoria; Or, Anecdotes of an Enterprise Beyond the Rocky Mountains"
+Author = "Washington Irving"
+Year = 1836
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+Astoria is Washington Irving's historical account of John Jacob Astor's ambitious attempt to establish a fur trading empire on the Pacific coast of North America. The book chronicles the 1810-1813 expeditions—one by sea around Cape Horn and one overland across the Rocky Mountains—to establish Fort Astoria at the mouth of the Columbia River in what is now Oregon. Irving drew upon interviews with Astor himself, company records, and journals of expedition members to create this narrative of exploration, commerce, adventure, and ultimately failure, as the enterprise collapsed during the War of 1812. The work provides valuable documentation of the American West before widespread settlement, including encounters with Native American tribes and descriptions of the landscape.
+"""
+
+Notes = """
+First published in 1836. Irving was commissioned by John Jacob Astor to write this account, which was based on Astor's papers and interviews. While Irving is best known for fiction (Rip Van Winkle, The Legend of Sleepy Hollow), this is a work of narrative history. The "about two years ago" reference in the introduction places Irving's conversation with Astor around 1834, and the "between twenty and thirty years since" places the enterprise itself in the 1810s, consistent with the historical record.
+"""
+</result>

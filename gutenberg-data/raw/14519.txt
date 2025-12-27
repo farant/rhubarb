@@ -1,0 +1,15 @@
+<result>
+Title = "Five Little Plays"
+Author = "Alfred Sutro"
+Year = 1922
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+A collection of five one-act plays by Alfred Sutro, a prolific English dramatist of the Edwardian era. The plays included are "The Man in the Stalls," "A Marriage Has Been Arranged," "The Man on the Kerb," "The Open Door," and "The Bracelet." Sutro was known for his well-crafted social comedies and dramas that often explored themes of marriage, social conventions, and human relationships. He was one of the most successful playwrights of his time in London's West End.
+"""
+
+Notes = """
+1922 is the publication year of this Brentano edition. Some of these individual plays may have been written and performed earlier, but this appears to be the collected volume publication date.
+"""
+</result>

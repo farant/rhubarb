@@ -1,0 +1,15 @@
+<result>
+Title = "Prufrock and Other Observations"
+Author = "T. S. Eliot"
+Year = 1917
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+T. S. Eliot's first published poetry collection, containing twelve poems including the famous "The Love Song of J. Alfred Prufrock." The collection established Eliot as a major voice in modernist poetry. The title poem explores themes of alienation, indecision, and the anxiety of modern urban life through the interior monologue of a middle-aged man. The epigraph is from Dante's Inferno (Canto XXVII), spoken by Guido da Montefeltro. The collection is dedicated to Jean Verdenal, a French medical student and friend of Eliot's who died at Gallipoli in 1915.
+"""
+
+Notes = """
+Published June 1917 by The Egoist Ltd in London. "The Love Song of J. Alfred Prufrock" was written around 1910-1911 but the collection as a whole was first published in 1917.
+"""
+</result>

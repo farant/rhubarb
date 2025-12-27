@@ -1,0 +1,15 @@
+<result>
+Title = "Trois Héros de la Colonie de Montréal"
+Author = "P. Dupuy"
+Year = 1887
+
+Tags = ["non-fiction", "historical-document", "catholic", "appropriate-for-children"]
+
+Summary = """
+This is a French-language historical account of three heroes of the Montreal colony in New France: Jacques Le Maître and Guillaume Vignal, both priests of Saint-Sulpice, covering the period 1659-1661. The work describes their arrival in Canada aboard a ship afflicted with plague, their ministry alongside the Hospitaller sisters and Marguerite Bourgeoys (founder of the Congregation of Notre-Dame), and their service to the sick during the perilous Atlantic crossing. The text is a hagiographic tribute to these early Catholic missionaries who helped establish the religious and social foundations of Montreal.
+"""
+
+Notes = """
+The year 1887 appears on the title page as the publication date. This is a work of Catholic historiography about 17th-century New France, written from a devotional perspective celebrating the Sulpician missionaries and religious sisters who founded Montreal's institutions.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Devil's Garden"
+Author = "W. B. Maxwell"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by William Babington Maxwell, a popular English novelist of the Edwardian era. The story follows a village postmaster and explores themes of moral struggle and temptation, as suggested by the epigraph about the Devil playing in a man's mind. Maxwell was known for his psychological novels examining middle-class English life and moral dilemmas. This was one of his well-received works during his peak popularity in the 1910s.
+"""
+
+Notes = """
+The book shows 1914 as the Bobbs-Merrill (American) publication date, but the novel was first published in 1913 by Hutchinson in London. Using the original publication year.
+"""
+</result>

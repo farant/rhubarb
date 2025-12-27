@@ -1,0 +1,15 @@
+<result>
+Title = "The Black Dwarf"
+Author = "Sir Walter Scott"
+Year = 1816
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+The Black Dwarf is a novel by Sir Walter Scott, first published in 1816 as part of the first series of "Tales of My Landlord." The story is set in the Scottish Borders during the early 18th century and centers on a mysterious, misanthropic dwarf named Elshender the Recluse (or "the Black Dwarf") who lives as a hermit. The narrative explores themes of isolation, bitterness, political intrigue surrounding the Jacobite period, and ultimately redemption. The framing device features the fictional editor Jedediah Cleishbotham, schoolmaster of Gandercleugh, who supposedly collected these tales. It was published alongside "Old Mortality" in the same volume.
+"""
+
+Notes = """
+1816 is the year of first publication. This was one of Scott's "Waverley novels" published anonymously, as was his custom at the time. Scott himself considered this one of his weaker works and it is among his shorter novels.
+"""
+</result>

@@ -1,0 +1,21 @@
+I've read the context files. Now let me analyze this Project Gutenberg text.
+
+This is **"Hochelagans and Mohawks: A Link in Iroquois History"** by **William Douw Lighthall** (W. D. Lighthall, M.A., F.R.S.L.), published in 1899 in the Transactions of the Royal Society of Canada.
+
+The paper is a scholarly historical study examining the origins and early history of the Iroquois, particularly investigating the relationship between the Hochelagans (the indigenous people Jacques Cartier encountered at Hochelaga, near present-day Montreal, in 1535) and the Mohawks. This was presented to the Royal Society of Canada on May 26, 1899.
+
+<result>
+Title = "Hochelagans and Mohawks: A Link in Iroquois History"
+Author = "William Douw Lighthall"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly paper presented to the Royal Society of Canada examining the origins and early history of the Iroquois Five Nations. Lighthall investigates the mysterious disappearance of the Hochelagans - the indigenous people Jacques Cartier encountered at Hochelaga (near present-day Montreal) in 1535 - and their possible connection to the Mohawks. The paper addresses longstanding questions about where the Iroquois came from before they established themselves in their familiar territory from the Mohawk River westward, and seeks to establish historical links in Iroquois prehistory.
+"""
+
+Notes = """
+The year 1899 represents the original publication/presentation date, as indicated in the document itself. William Douw Lighthall (1857-1954) was a Canadian lawyer, author, and historian from Montreal who wrote extensively on Canadian history and literature. This work represents original historical scholarship rather than a reprint of earlier material.
+"""
+</result>

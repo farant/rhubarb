@@ -1,0 +1,15 @@
+<result>
+Title = "Life in a Thousand Worlds"
+Author = "W. S. Harris"
+Year = 1905
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A speculative fiction work by Reverend William Shuler Harris, a Methodist minister. The book is an imaginative journey through various inhabited worlds in the solar system and beyond, describing the customs, societies, and spiritual conditions of their inhabitants. It belongs to the genre of religious science fiction popular in the late 19th and early 20th centuries, blending Christian theology with astronomical speculation. Harris uses the conceit of visiting other planets to explore moral and spiritual themes, imagining how different worlds might have developed with or without sin, and how their inhabitants relate to God.
+"""
+
+Notes = """
+Harris was a prolific author of religious and moral literature. This work reflects the era's fascination with astronomy and the possibility of life on other planets, combined with Protestant theological imagination.
+"""
+</result>

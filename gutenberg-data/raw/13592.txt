@@ -1,0 +1,15 @@
+<result>
+Title = "L'Uscoque"
+Author = "George Sand"
+Year = 1838
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+L'Uscoque is a novel by George Sand set in 16th-century Venice and the Adriatic. The story follows Orio Soranzo, a Venetian nobleman who becomes entangled with Uskok pirates (the "Uscoques" - Slavic pirates and raiders who operated along the Dalmatian coast). The novel explores themes of passion, betrayal, and moral corruption. The frame narrative, as shown in this excerpt, presents the story as being told by a Greek sage named Zuzuf, who claims to have shared the tale with Lord Byron (who then adapted it into his poems "The Corsair" and "Lara"). This framing device is a literary conceit by Sand.
+"""
+
+Notes = """
+First published in 1838 in the Revue des Deux Mondes, then as a standalone volume the same year. George Sand (Amantine Lucile Aurore Dupin) was a French novelist known for her romantic works and unconventional lifestyle. The reference to Byron's poems is fictional - Byron wrote "The Corsair" (1814) and "Lara" (1814) before this novel was written, and they have different source inspirations.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Camping for Boys"
+Author = "H. W. Gibson"
+Year = 1911
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A practical guide to organizing and running boys' camps, written by H.W. Gibson who had extensive experience with over a thousand boys at Camps Shand, Durrell and Becket. Published by the Association Press (YMCA), the book emphasizes character development and citizenship alongside outdoor skills. It covers camp leadership selection, safety practices, and the moral formation of young men through camping experiences. The work reflects early 20th century American ideals about youth development and outdoor education.
+"""
+
+Notes = """
+Copyright date of 1911 chosen over publication date of 1913. The transcriber notes that medical advice is outdated and prices reflect 1913 values (approximately 20:1 ratio to 2004 dollars). Association Press was the publishing arm of the YMCA.
+"""
+</result>

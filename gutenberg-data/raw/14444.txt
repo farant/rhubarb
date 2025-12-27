@@ -1,0 +1,15 @@
+<result>
+Title = "The Complete English Tradesman"
+Author = "Daniel Defoe"
+Year = 1726
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A practical guide to business and commerce written by Daniel Defoe, best known as the author of Robinson Crusoe. This work offers advice to merchants and tradesmen on conducting business successfully in early 18th century England. Topics include apprenticeship, business correspondence, diligence, avoiding over-trading, handling bankruptcy, and the dangers of extravagant living. It provides valuable insight into commercial practices and middle-class values of the Georgian era.
+"""
+
+Notes = """
+First published in London in 1726. A second volume followed in 1727. The work reflects Defoe's own extensive (and sometimes troubled) experience in trade and commerce before he became a professional writer.
+"""
+</result>

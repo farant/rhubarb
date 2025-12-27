@@ -1,0 +1,15 @@
+<result>
+Title = "The Case of Mrs. Clive"
+Author = "Catherine Clive"
+Year = 1744
+
+Tags = ["non-fiction", "historical-document", "theatre-history"]
+
+Summary = """
+This is a pamphlet written by Catherine "Kitty" Clive (1711-1785), one of the most celebrated English comic actresses of the 18th century. In this work, she presents her case regarding a dispute with the theatre management at Drury Lane, specifically concerning her treatment by the theatre managers and her contractual and professional grievances. Clive was known for her wit, her comic roles, and her willingness to advocate for herself in an era when actresses had limited professional standing. The pamphlet is a valuable primary source for understanding theatre labor relations, the economics of the 18th-century London stage, and the position of women performers in Georgian England.
+"""
+
+Notes = """
+The date 1744 appears directly on the title page. This is the original publication date of the pamphlet. The version shown here is an Augustan Reprint Society facsimile edition with a modern scholarly introduction by Richard C. Frushell, but the original work itself dates to 1744.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Charles the Bold: Last Duke of Burgundy, 1433-1477"
+Author = "Ruth Putnam"
+Year = 1908
+
+Tags = ["non-fiction", "biography", "history"]
+
+Summary = """
+A scholarly biography of Charles the Bold (1433-1477), the last Duke of Burgundy from the Valois dynasty. Charles was one of the most powerful and ambitious rulers of 15th century Europe, controlling a vast territory between France and the Holy Roman Empire. His reign was marked by constant warfare, administrative reforms, and grand ambitions to create an independent Burgundian kingdom. He died at the Battle of Nancy in 1477, and with his death the Burgundian state was divided between France and the Habsburgs through his daughter Mary's marriage to Maximilian I. Ruth Putnam (1856-1931) was an American historian who specialized in European history, particularly of the Low Countries and Burgundy.
+"""
+
+Notes = """
+Ruth Putnam's biography of Charles the Bold was first published in 1908 by G.P. Putnam's Sons as part of the "Heroes of the Nations" series. This was a major scholarly work drawing on primary sources and chronicles from the period.
+"""
+</result>

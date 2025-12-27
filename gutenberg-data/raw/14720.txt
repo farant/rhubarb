@@ -1,0 +1,15 @@
+<result>
+Title = "Opuscules"
+Author = "Jean-Baptiste-Antoine Ferland"
+Year = 1876
+
+Tags = ["non-fiction", "historical-document", "catholic", "appropriate-for-children"]
+
+Summary = """
+Opuscules is a collection of miscellaneous shorter writings by Abbé Jean-Baptiste-Antoine Ferland (1805-1865), a prominent French-Canadian Catholic priest, historian, and professor at Université Laval. This particular excerpt describes his 1852 voyage aboard the ship Doris to visit the island of Anticosti in the Gulf of St. Lawrence. Ferland was one of the founding figures of French-Canadian historiography, best known for his major work "Cours d'histoire du Canada." The Opuscules were published posthumously in 1876, collecting various essays, travel narratives, and shorter historical pieces. The text provides valuable descriptions of maritime life, the dangers of the St. Lawrence shipping routes, and the lighthouse system established to aid shipwrecked sailors.
+"""
+
+Notes = """
+The year 1876 is the publication date of this posthumous collection. Abbé Ferland died in 1865. The voyage described in this excerpt took place in September 1852. As a posthumous collection of the author's shorter works, 1876 is the appropriate date for the compiled volume itself.
+"""
+</result>

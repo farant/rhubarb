@@ -1,0 +1,15 @@
+<result>
+Title = "Hocken and Hunken: A Tale of Troy"
+Author = "Arthur Quiller-Couch"
+Year = 1912
+
+Tags = ["fiction"]
+
+Summary = """
+A comic novel set in the fictional Cornish town of Troy (based on Fowey, Cornwall), featuring two retired sea captains, Doble Hocken and 'Doble Hunken, who have been lifelong friends. The story follows their adventures and misadventures as they settle into shore life, complicated by romantic entanglements with the widow Mrs. Doris Bosenna. Quiller-Couch, known for his pen name 'Q', was a prominent Cornish author and literary critic who served as the King Edward VII Professor of English Literature at Cambridge. His "Tales of Troy" series affectionately portrays life in a small Cornish maritime community.
+"""
+
+Notes = """
+First published in 1912. Quiller-Couch (1863-1944) was knighted in 1910 and is remembered both for his own fiction and for editing the influential Oxford Book of English Verse.
+"""
+</result>

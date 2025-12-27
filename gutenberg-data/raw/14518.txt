@@ -1,0 +1,15 @@
+<result>
+Title = "Handbook of Home Rule: Being Articles on the Irish Question"
+Author = "James Bryce (editor), W.E. Gladstone, John Morley, Lord Thring, Canon MacColl, E.L. Godkin, R. Barry O'Brien"
+Year = 1887
+
+Tags = ["non-fiction", "historical-document", "politics"]
+
+Summary = """
+A collection of essays by prominent British Liberal politicians and commentators arguing in favor of Irish Home Rule. Published during the heated debates following Gladstone's first Home Rule Bill of 1886, which had been defeated in Parliament. The volume includes contributions from Prime Minister Gladstone himself, future Chief Secretary for Ireland John Morley, jurist and diplomat James Bryce, and others. The essays attempt to make the case for Irish self-government through reasoned argument, addressing legal, constitutional, and practical objections to Home Rule. Earl Spencer, who served as Lord Lieutenant of Ireland, provides the preface.
+"""
+
+Notes = """
+1887 is the publication year of this second edition. The Irish Home Rule debate was one of the defining political controversies of late Victorian Britain, ultimately splitting the Liberal Party. The first Home Rule Bill failed in 1886; subsequent bills would be introduced in 1893 and 1912-1914.
+"""
+</result>
