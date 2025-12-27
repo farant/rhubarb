@@ -1,0 +1,15 @@
+<result>
+Title = "La Daniella"
+Author = "George Sand"
+Year = 1857
+
+Tags = ["fiction"]
+
+Summary = """
+La Daniella is a romantic novel by George Sand (pseudonym of Amantine Lucile Aurore Dupin), one of the most prolific and celebrated French writers of the 19th century. The novel tells the story of a passionate love affair set in Italy, particularly around Rome and the Roman Campagna. The narrative follows the romantic relationship between the narrator (a French artist) and Daniella, an Italian woman. The work exemplifies Sand's characteristic themes of passionate love, artistic sensibility, and the exploration of unconventional relationships. The Italian setting allows Sand to incorporate her observations of Italian culture, landscape, and society, which she knew well from her travels.
+"""
+
+Notes = """
+La Daniella was first published in 1857 as a serial in the Revue des Deux Mondes, then as a complete novel. George Sand (1804-1876) was known for her progressive views on love and relationships, and this novel reflects her romantic idealism. The excerpt shown is from Tome II (Volume 2) of the work.
+"""
+</result>

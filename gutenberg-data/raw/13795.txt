@@ -1,0 +1,15 @@
+<result>
+Title = "Nouveaux mystères et aventures"
+Author = "Arthur Conan Doyle"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a French translation of a collection of mystery and adventure stories by Arthur Conan Doyle, the famous British author best known for creating Sherlock Holmes. The collection includes the story "Notre Dame de la Mort" (Our Lady of Death) among others. Conan Doyle was a prolific writer of detective fiction, science fiction, historical novels, and short stories beyond the Holmes canon.
+"""
+
+Notes = """
+The year 1910 is listed in the document itself as the publication date of this French edition. The original English stories may have been published earlier, but since this is specifically a French translation/collection with its own publication history, I've used the date of this compiled French edition.
+"""
+</result>

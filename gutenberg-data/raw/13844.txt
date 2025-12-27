@@ -1,0 +1,15 @@
+<result>
+Title = "No. 13 Washington Square"
+Author = "Leroy Scott"
+Year = 1914
+
+Tags = ["fiction"]
+
+Summary = """
+A light romantic comedy novel set in New York City's Washington Square neighborhood. The story centers on the wealthy and socially prominent Mrs. De Peyster and the complications that arise when an amiable young gentleman enters her carefully ordered world. The chapter titles suggest a plot involving social propriety, family honor, and ultimately romance (ending with "The Honeymooners"). Leroy Scott was an American novelist and journalist known for popular fiction in the early 20th century.
+"""
+
+Notes = """
+1914 appears on the title page as the publication year. Leroy Scott (1875-1929) was a prolific American author of the Progressive Era.
+"""
+</result>

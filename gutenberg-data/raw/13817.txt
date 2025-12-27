@@ -1,0 +1,15 @@
+<result>
+Title = "With Marlborough to Malplaquet: A Story of the Reign of Queen Anne"
+Author = "Herbert Strang, Richard Stead"
+Year = 1908
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A historical adventure novel set during the War of the Spanish Succession, following characters through the military campaigns of John Churchill, Duke of Marlborough. The story culminates at the Battle of Malplaquet (1709), one of the bloodiest battles of the 18th century. Part of Herbert Strang's Historical Series, these books were designed to teach British history to young readers through engaging adventure narratives. Herbert Strang was actually a pseudonym for two authors, George Herbert Ely and Charles James L'Estrange, who collaborated with Richard Stead (a Fellow of the Royal Historical Society) to ensure historical accuracy.
+"""
+
+Notes = """
+1908 is the publication year shown on the title page. Herbert Strang was a house pseudonym used by Oxford University Press for adventure stories aimed at boys.
+"""
+</result>

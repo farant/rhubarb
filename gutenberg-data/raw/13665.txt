@@ -1,0 +1,15 @@
+<result>
+Title = "War in the Garden of Eden"
+Author = "Kermit Roosevelt"
+Year = 1919
+
+Tags = ["non-fiction", "historical-document", "memoir"]
+
+Summary = """
+A firsthand account of military operations in Mesopotamia (modern-day Iraq) during World War I, written by Kermit Roosevelt, son of President Theodore Roosevelt. The book describes his experiences serving with the British Expeditionary Forces in the Mesopotamian campaign against the Ottoman Empire. The "Garden of Eden" in the title refers to the traditional biblical location believed to be in the region between the Tigris and Euphrates rivers. Kermit Roosevelt served with distinction in both British and American forces during WWI, and this memoir captures the unique landscape, challenges, and military engagements of this often-overlooked theater of the Great War.
+"""
+
+Notes = """
+The book was published in 1919, the same year WWI concluded with the Treaty of Versailles. Kermit Roosevelt dedicated the work to his father Theodore Roosevelt, who had died in January 1919. The dedication "To The Memory of My Father" indicates this was published after Theodore's death.
+"""
+</result>

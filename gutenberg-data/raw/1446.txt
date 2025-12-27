@@ -1,0 +1,15 @@
+<result>
+Title = "Perfect Behavior: A Guide for Ladies and Gentlemen in all Social Crises"
+Author = "Donald Ogden Stewart"
+Year = 1922
+
+Tags = ["fiction", "humor", "satire"]
+
+Summary = """
+Perfect Behavior is a satirical parody of etiquette manuals that were popular in early 20th century America. Donald Ogden Stewart, a prominent American humorist and later Academy Award-winning screenwriter, wrote this work as a comedic send-up of the rigid social conventions and elaborate behavioral codes of his era. The book offers mock-serious advice for navigating social situations, deliberately exaggerating the absurdities of formal etiquette guides. Stewart was part of the Algonquin Round Table literary circle and known for his witty, irreverent style. This work followed his successful "A Parody Outline of History" and established him as a major American satirist of the 1920s.
+"""
+
+Notes = """
+The book was first published in 1922 by George H. Doran Company. Stewart (1894-1980) later became a successful Hollywood screenwriter, winning an Oscar for The Philadelphia Story (1940). He was blacklisted during the McCarthy era and spent his later years in London.
+"""
+</result>

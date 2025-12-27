@@ -1,0 +1,15 @@
+<result>
+Title = "Mesikämmen; Musti; Ahven ja kultakalat"
+Author = "Eino Leino"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a collection of three animal tales/fairy tales by Eino Leino, one of Finland's most celebrated poets and writers. The collection includes: "Mesikämmen" (The Bear), "Musti" (Blackie - an animal story about a dog), and "Ahven ja kultakalat" (The Perch and the Goldfish - a tale from the depths). These are children's stories in the Finnish literary fairy tale tradition, featuring anthropomorphized animals. Leino was a prolific writer during the Finnish national romantic period.
+"""
+
+Notes = """
+The title page lists years 1914, 1916, and 1918, suggesting these three stories were originally published separately in those years and later collected. I chose 1914 as it represents the earliest of these publication dates (likely for "Mesikämmen"). Eino Leino (1878-1926) was a Finnish poet, journalist and writer, considered one of the pioneers of Finnish-language poetry.
+"""
+</result>

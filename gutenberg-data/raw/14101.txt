@@ -1,0 +1,15 @@
+<result>
+Title = "Dew Drops, Vol. 37, No. 10"
+Author = "George E. Cook (Editor), Marion Mallette Thornton (Story Author)"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children", "periodical", "christian"]
+
+Summary = """
+Dew Drops was a weekly children's Sunday school paper published by David C. Cook Publishing Company. This issue contains a story called "Francie Fisher's Fish" by Marion Mallette Thornton, about a young boy named Francie who wants to bring a new child to his Sunday school class. The Sunday school has a visual reward system where fish are pinned to a picture of a river for each new scholar recruited. Francie eventually finds a potential recruit in the ash-man's son, a little Italian-American boy named (presumably) from the Lugi family.
+"""
+
+Notes = """
+David C. Cook Publishing Company was (and still is) a Protestant Christian publisher, not Catholic. While the content is wholesome children's Christian literature, it would not have a nihil obstat or imprimatur. The 'christian' tag is used rather than 'catholic' to reflect its Protestant Sunday school origins.
+"""
+</result>
