@@ -41,7 +41,8 @@ nomen enumeratio {
     HTTP_ERROR_CONNEXIO,     /* Connexio fallita */
     HTTP_ERROR_TIMEOUT,      /* Timeout */
     HTTP_ERROR_PARSE,        /* Parse error */
-    HTTP_ERROR_IO            /* I/O error */
+    HTTP_ERROR_IO,           /* I/O error */
+    HTTP_ERROR_REDIRECTIO    /* Nimis redirectiones */
 } HttpError;
 
 /* Caput (header) */
@@ -126,6 +127,20 @@ HttpResultus
 http_exsequi(
     HttpPetitio* petitio,
     Piscina*     piscina);
+
+/* Exsequi petitio cum sequendo redirectiones (301, 302, 307, 308)
+ *
+ * petitio:           Petitio praeparata
+ * piscina:           Arena pro responsum
+ * max_redirectiones: Maximum redirectiones sequendae (typice V vel X)
+ *
+ * Redde: Resultus cum responsum finale vel error
+ */
+HttpResultus
+http_exsequi_cum_redirectionibus(
+    HttpPetitio* petitio,
+    Piscina*     piscina,
+    i32          max_redirectiones);
 
 
 /* ========================================================================

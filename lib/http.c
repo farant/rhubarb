@@ -114,6 +114,126 @@ _chorda_aequalis_literis_ignora_casus(chorda s, constans character* cstr)
 
 
 /* ========================================================================
+ * FUNCTIONES INTERNAE - NUMERI
+ * ======================================================================== */
+
+/* Convertere chorda ad i32 */
+interior i32
+_chorda_ad_i32(chorda s)
+{
+    i32 resultatus = 0;
+    i32 i;
+
+    per (i = 0; i < s.mensura; i++)
+    {
+        si (s.datum[i] >= '0' && s.datum[i] <= '9')
+        {
+            resultatus = resultatus * X + (i32)(s.datum[i] - '0');
+        }
+        alioquin
+        {
+            frange;
+        }
+    }
+
+    redde resultatus;
+}
+
+/* Convertere hex character ad valor
+ * Redde: valor (0-15) vel -1 si invalidum
+ * Nota: Utitur integer (signed) pro -1 redditio
+ */
+interior integer
+_hex_ad_valor(i8 c)
+{
+    si (c >= '0' && c <= '9') redde c - '0';
+    si (c >= 'A' && c <= 'F') redde c - 'A' + X;
+    si (c >= 'a' && c <= 'f') redde c - 'a' + X;
+    redde -1;
+}
+
+/* Decodificare chunked transfer encoding
+ *
+ * Format:
+ *   <hex-size>\r\n
+ *   <data>\r\n
+ *   <hex-size>\r\n
+ *   <data>\r\n
+ *   0\r\n
+ *   \r\n
+ */
+interior chorda
+_decodificare_chunked(constans i8* data, i32 len, Piscina* piscina)
+{
+    chorda resultatus;
+    i8*    output;
+    i32    output_pos;
+    i32    i;
+    i32    chunk_size;
+    integer hex_val;
+
+    /* Allocare output buffer (maxime = input longitudo) */
+    output = piscina_allocare(piscina, len);
+    output_pos = 0;
+    i = 0;
+
+    dum (i < len)
+    {
+        /* Legere chunk size (hexadecimal) */
+        chunk_size = 0;
+        dum (i < len)
+        {
+            hex_val = _hex_ad_valor(data[i]);
+            si (hex_val >= 0)
+            {
+                chunk_size = chunk_size * XVI + (i32)hex_val;
+                i++;
+            }
+            alioquin
+            {
+                frange;
+            }
+        }
+
+        /* Saltare \r\n post chunk size */
+        si (i < len && data[i] == '\r') i++;
+        si (i < len && data[i] == '\n') i++;
+
+        /* Si chunk_size == 0, finis */
+        si (chunk_size == 0)
+        {
+            frange;
+        }
+
+        /* Copiare chunk data */
+        si (i + chunk_size <= len)
+        {
+            memcpy(output + output_pos, data + i, (size_t)chunk_size);
+            output_pos += chunk_size;
+            i += chunk_size;
+        }
+        alioquin
+        {
+            /* Truncatus - copiare quod possumus */
+            i32 available = len - i;
+            memcpy(output + output_pos, data + i, (size_t)available);
+            output_pos += available;
+            frange;
+        }
+
+        /* Saltare \r\n post chunk data */
+        si (i < len && data[i] == '\r') i++;
+        si (i < len && data[i] == '\n') i++;
+    }
+
+    resultatus.datum = output;
+    resultatus.mensura = output_pos;
+
+    redde resultatus;
+}
+
+
+/* ========================================================================
  * FUNCTIONES INTERNAE - URL PARSING
  * ======================================================================== */
 
@@ -720,14 +840,50 @@ http_exsequi(
         line_start = line_end + II;
     }
 
-    /* Corpus */
+    /* Corpus - cum Transfer-Encoding et Content-Length supporto */
     {
         constans character* body_start = headers_end + IV;  /* Post \r\n\r\n */
         i32 body_len = total_size - (i32)(body_start - (constans character*)total_data);
+        chorda transfer_encoding;
+        chorda content_length_hdr;
 
         si (body_len > 0)
         {
-            resp->corpus = _chorda_ex_partibus(body_start, body_len, piscina);
+            /* Verificare Transfer-Encoding: chunked */
+            transfer_encoding = http_responsum_caput(resp, "Transfer-Encoding");
+            si (transfer_encoding.mensura > 0 &&
+                _chorda_aequalis_literis_ignora_casus(transfer_encoding, "chunked"))
+            {
+                /* Decodificare chunked encoding */
+                resp->corpus = _decodificare_chunked((constans i8*)body_start,
+                                                      body_len, piscina);
+            }
+            alioquin
+            {
+                /* Verificare Content-Length */
+                content_length_hdr = http_responsum_caput(resp, "Content-Length");
+                si (content_length_hdr.mensura > 0)
+                {
+                    i32 expected_len = _chorda_ad_i32(content_length_hdr);
+                    si (expected_len > 0 && expected_len <= body_len)
+                    {
+                        /* Usare exacte Content-Length bytes */
+                        resp->corpus = _chorda_ex_partibus(body_start,
+                                                           expected_len, piscina);
+                    }
+                    alioquin
+                    {
+                        /* Content-Length maior quam data disponibilia */
+                        resp->corpus = _chorda_ex_partibus(body_start,
+                                                           body_len, piscina);
+                    }
+                }
+                alioquin
+                {
+                    /* Nullum Content-Length - usare omnia */
+                    resp->corpus = _chorda_ex_partibus(body_start, body_len, piscina);
+                }
+            }
         }
         alioquin
         {
@@ -809,6 +965,220 @@ http_error_descriptio(HttpError error)
         casus HTTP_ERROR_TIMEOUT:   redde "Timeout";
         casus HTTP_ERROR_PARSE:     redde "Parse error";
         casus HTTP_ERROR_IO:        redde "I/O error";
+        casus HTTP_ERROR_REDIRECTIO: redde "Nimis redirectiones";
         ordinarius:                 redde "Error ignotus";
     }
+}
+
+
+/* ========================================================================
+ * FUNCTIONES INTERNAE - URL RELATIVUM
+ * ======================================================================== */
+
+/* Resolvere URL relativum contra petitio base
+ *
+ * Casus:
+ *   "https://other.com/path"  -> usare ut est (absolutum)
+ *   "//other.com/path"        -> schema originale + "//other.com/path"
+ *   "/new-path"               -> schema://hospes:portus + "/new-path"
+ *   "new-path"                -> schema://hospes:portus + via_directory + "new-path"
+ */
+interior constans character*
+_resolvere_url_relativum(
+    HttpPetitio* base,
+    chorda       location,
+    Piscina*     piscina)
+{
+    ChordaAedificator* aed;
+    chorda resultatus;
+    i32 i;
+    i32 ultima_slash;
+
+    /* Casus 1: URL absolutum (continet "://") */
+    per (i = 0; i < location.mensura - II; i++)
+    {
+        si (location.datum[i] == ':' &&
+            location.datum[i + I] == '/' &&
+            location.datum[i + II] == '/')
+        {
+            /* Est URL absolutum - copiare ut est */
+            character* buffer = (character*)piscina_allocare(piscina,
+                                                              (i64)(location.mensura + I));
+            per (i = 0; i < location.mensura; i++)
+            {
+                buffer[i] = (character)location.datum[i];
+            }
+            buffer[location.mensura] = '\0';
+            redde buffer;
+        }
+    }
+
+    aed = chorda_aedificator_creare(piscina, CCLVI);
+
+    /* Casus 2: Protocol-relative (incipit cum "//") */
+    si (location.mensura >= II &&
+        location.datum[0] == '/' &&
+        location.datum[I] == '/')
+    {
+        chorda_aedificator_appendere_chorda(aed, base->schema);
+        chorda_aedificator_appendere_character(aed, ':');
+        per (i = 0; i < location.mensura; i++)
+        {
+            chorda_aedificator_appendere_character(aed, (character)location.datum[i]);
+        }
+        resultatus = chorda_aedificator_finire(aed);
+        redde (constans character*)resultatus.datum;
+    }
+
+    /* Casus 3 et 4: Via absolutum vel relativum - necessitamus base */
+    chorda_aedificator_appendere_chorda(aed, base->schema);
+    chorda_aedificator_appendere_literis(aed, "://");
+    chorda_aedificator_appendere_chorda(aed, base->hospes);
+
+    /* Addere portus si non standard */
+    si ((chorda_aequalis_literis(base->schema, "https") && base->portus != 443) ||
+        (chorda_aequalis_literis(base->schema, "http") && base->portus != 80))
+    {
+        chorda_aedificator_appendere_character(aed, ':');
+        chorda_aedificator_appendere_i32(aed, base->portus);
+    }
+
+    /* Casus 3: Via absolutum (incipit cum "/") */
+    si (location.mensura > 0 && location.datum[0] == '/')
+    {
+        per (i = 0; i < location.mensura; i++)
+        {
+            chorda_aedificator_appendere_character(aed, (character)location.datum[i]);
+        }
+        resultatus = chorda_aedificator_finire(aed);
+        redde (constans character*)resultatus.datum;
+    }
+
+    /* Casus 4: Via relativum - resolvere contra directory current */
+    /* Invenire ultimam "/" in via base */
+    ultima_slash = 0;
+    per (i = 0; i < base->via.mensura; i++)
+    {
+        si (base->via.datum[i] == '/')
+        {
+            ultima_slash = i;
+        }
+    }
+
+    /* Copiare via usque ad ultimam "/" (inclusive) */
+    per (i = 0; i <= ultima_slash; i++)
+    {
+        chorda_aedificator_appendere_character(aed, (character)base->via.datum[i]);
+    }
+
+    /* Appendere location relativum */
+    per (i = 0; i < location.mensura; i++)
+    {
+        chorda_aedificator_appendere_character(aed, (character)location.datum[i]);
+    }
+
+    resultatus = chorda_aedificator_finire(aed);
+    redde (constans character*)resultatus.datum;
+}
+
+
+/* ========================================================================
+ * FUNCTIONES PUBLICAE - REDIRECTIONES
+ * ======================================================================== */
+
+HttpResultus
+http_exsequi_cum_redirectionibus(
+    HttpPetitio* petitio,
+    Piscina*     piscina,
+    i32          max_redirectiones)
+{
+    HttpResultus res;
+    chorda location;
+    i32 redirectiones = 0;
+    constans character* nova_url;
+    HttpPetitio* nova_petitio;
+    HttpPetitio* current_petitio;
+    i32 i;
+
+    si (!petitio || !piscina || max_redirectiones < 0)
+    {
+        redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida", piscina);
+    }
+
+    /* Prima petitio */
+    current_petitio = petitio;
+    res = http_exsequi(current_petitio, piscina);
+
+    /* Sequere redirectiones */
+    dum (res.successus && redirectiones < max_redirectiones)
+    {
+        /* Verificare si est redirectio */
+        si (res.responsum->status != 301 &&    /* Moved Permanently */
+            res.responsum->status != 302 &&    /* Found */
+            res.responsum->status != 307 &&    /* Temporary Redirect */
+            res.responsum->status != 308)      /* Permanent Redirect */
+        {
+            /* Non est redirectio, redde resultatum */
+            frange;
+        }
+
+        /* Obtinere Location header */
+        location = http_responsum_caput(res.responsum, "Location");
+        si (location.mensura == 0)
+        {
+            /* Nullum Location header, redde quod habemus */
+            frange;
+        }
+
+        /* Resolvere URL (absolutum vel relativum) */
+        nova_url = _resolvere_url_relativum(current_petitio, location, piscina);
+        si (!nova_url)
+        {
+            redde _creare_error(HTTP_ERROR_URL, "Redirectio URL invalida", piscina);
+        }
+
+        /* Creare nova petitio */
+        nova_petitio = http_petitio_creare(piscina, petitio->methodus, nova_url);
+        si (!nova_petitio)
+        {
+            redde _creare_error(HTTP_ERROR_URL, "Redirectio URL invalida", piscina);
+        }
+
+        /* Copiare capita originales (excepto Host) */
+        per (i = 0; i < petitio->capita_numerus; i++)
+        {
+            si (!_chorda_aequalis_literis_ignora_casus(petitio->capita[i].titulus, "Host"))
+            {
+                nova_petitio->capita[nova_petitio->capita_numerus] = petitio->capita[i];
+                nova_petitio->capita_numerus++;
+            }
+        }
+
+        /* Pro 307/308, preservare corpus */
+        si (res.responsum->status == 307 || res.responsum->status == 308)
+        {
+            nova_petitio->corpus = petitio->corpus;
+        }
+
+        /* Actualizare current_petitio pro proxima redirectio */
+        current_petitio = nova_petitio;
+
+        /* Exsequi nova petitio */
+        res = http_exsequi(nova_petitio, piscina);
+        redirectiones++;
+    }
+
+    /* Verificare si nimis redirectiones */
+    si (res.successus && redirectiones >= max_redirectiones)
+    {
+        si (res.responsum->status == 301 ||
+            res.responsum->status == 302 ||
+            res.responsum->status == 307 ||
+            res.responsum->status == 308)
+        {
+            redde _creare_error(HTTP_ERROR_REDIRECTIO, "Nimis redirectiones", piscina);
+        }
+    }
+
+    redde res;
 }
