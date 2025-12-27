@@ -223,10 +223,21 @@ interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
     s32 n;
-
-    (vacuum)piscina;
+    TlsResultus res;
 
     printf("--- Probans nullum argumenta ---\n");
+
+    /* tls_connectere cum NIHIL hospes */
+    res = tls_connectere(NIHIL, CDXL + III, piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_NIHIL(res.connexio);
+    printf("  NIHIL hospes: recte recusatum\n");
+
+    /* tls_connectere cum NIHIL piscina */
+    res = tls_connectere("httpbin.org", CDXL + III, NIHIL);
+    CREDO_FALSUM(res.successus);
+    CREDO_NIHIL(res.connexio);
+    printf("  NIHIL piscina: recte recusatum\n");
 
     /* tls_mittere cum NIHIL */
     n = (s32)tls_mittere(NIHIL, (constans i8*)"test", IV);
@@ -244,6 +255,76 @@ probatio_nullum_argumenta(Piscina* piscina)
 
     /* tls_est_valida cum NIHIL */
     CREDO_FALSUM(tls_est_valida(NIHIL));
+
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_connectere_cum_optionibus(Piscina* piscina)
+{
+    TlsOptiones opt;
+    TlsResultus res;
+    constans character* petitio;
+    i8 buffer[MMMMXCVI];
+    i32 n;
+
+    printf("--- Probans connectere cum optionibus ---\n");
+
+    /* Optiones cum verificare_certificatum = VERUM (default) */
+    opt = tls_optiones_default();
+    CREDO_VERUM(opt.verificare_certificatum);
+
+    res = tls_connectere_cum_optionibus("httpbin.org", CDXL + III, &opt, piscina);
+    si (!res.successus)
+    {
+        printf("  NOTA: Connexio fallita (rete non disponibilis?)\n");
+        printf("\n");
+        redde;
+    }
+
+    CREDO_VERUM(res.successus);
+    CREDO_NON_NIHIL(res.connexio);
+    printf("  Connexio cum optionibus successus\n");
+
+    /* Verificare functionalitas */
+    petitio = "GET /get HTTP/1.1\r\n"
+              "Host: httpbin.org\r\n"
+              "Connection: close\r\n"
+              "\r\n";
+
+    n = tls_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
+    CREDO_MAIOR_I32(n, 0);
+
+    n = tls_recipere(res.connexio, buffer, MMMMXCVI - I);
+    CREDO_MAIOR_I32(n, 0);
+    buffer[n] = '\0';
+
+    CREDO_VERUM(strncmp((character*)buffer, "HTTP/1.1 200", XII) == 0);
+    printf("  Responsum: 200 OK\n");
+
+    tls_claudere(res.connexio);
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_optiones_timeout(Piscina* piscina)
+{
+    TlsOptiones opt;
+    TlsResultus res;
+
+    printf("--- Probans optiones timeout ---\n");
+
+    opt = tls_optiones_default();
+    opt.timeout_ms = M;  /* 1 second timeout */
+
+    /* Connectere ad hospes non-existens - debet timeout */
+    res = tls_connectere_cum_optionibus("192.0.2.1", CDXL + III, &opt, piscina);
+
+    /* 192.0.2.1 est TEST-NET - non respondet, debet timeout vel fallere */
+    CREDO_FALSUM(res.successus);
+    printf("  Timeout/failure correcte: error=%d\n", res.error);
 
     printf("\n");
 }
@@ -277,6 +358,8 @@ principale(vacuum)
     probatio_connexio_invalida(piscina);
     probatio_connexio_https(piscina);
     probatio_mittere_recipere(piscina);
+    probatio_connectere_cum_optionibus(piscina);
+    probatio_optiones_timeout(piscina);
 
     credo_imprimere_compendium();
 

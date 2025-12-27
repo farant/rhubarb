@@ -472,6 +472,137 @@ probatio_trailing_slash(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - CAPACITAS
+ * ======================================================================== */
+
+interior vacuum
+probatio_routa_capacitas(Piscina* piscina)
+{
+    Router* router;
+    b32 res;
+    i32 i;
+    i32 successus_count = 0;
+    character via_buffer[XXXII];
+
+    printf("--- Probans routa capacitas (CXXVIII max) ---\n");
+
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+
+    /* Adicere CXXVIII routes */
+    per (i = 0; i < CXXVIII; i++)
+    {
+        sprintf(via_buffer, "/route%d", i);
+        res = router_get(router, via_buffer, handler_simplex);
+        si (res)
+        {
+            successus_count++;
+        }
+    }
+
+    CREDO_VERUM(successus_count == CXXVIII);
+    CREDO_VERUM(router_numerus_routarum(router) == CXXVIII);
+    printf("  Routae additae: %u\n", successus_count);
+
+    /* Proxima debet fallere */
+    res = router_get(router, "/overflow", handler_simplex);
+    CREDO_FALSUM(res);
+    CREDO_VERUM(router_numerus_routarum(router) == CXXVIII);
+    printf("  Routa CXXIX recte recusata\n");
+
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_duplicata_routa(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+
+    printf("--- Probans duplicata routa ---\n");
+
+    reset_globals();
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+
+    /* Adicere eadem via bis */
+    CREDO_VERUM(router_get(router, "/test", handler_users));
+    CREDO_VERUM(router_get(router, "/test", handler_user_by_id));
+
+    /* Secunda debet vincere (vel prima, dependent on impl) */
+    res = router_matching(router, HTTP_GET, chorda_test("/test"), piscina);
+    CREDO_VERUM(res.invenit);
+    res.handler(NIHIL, NIHIL, &res.params);
+    /* Verificare quod handler est users (C) vel user_by_id (CC) */
+    CREDO_VERUM(g_handler_vocatus == C || g_handler_vocatus == CC);
+
+    printf("  Duplicata handled (handler: %u)\n", g_handler_vocatus);
+    printf("\n");
+}
+
+
+/* ========================================================================
+ * PROBATIONES - PATH EDGE CASES
+ * ======================================================================== */
+
+interior vacuum
+probatio_via_longa(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+    character via_longa[CCLVI];
+    i32 i;
+
+    printf("--- Probans via longa ---\n");
+
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+
+    /* Creare via longa */
+    via_longa[0] = '/';
+    per (i = I; i < CCL; i++)
+    {
+        via_longa[i] = 'a';
+    }
+    via_longa[CCL] = '\0';
+
+    CREDO_VERUM(router_get(router, via_longa, handler_simplex));
+
+    res = router_matching(router, HTTP_GET,
+                          chorda_ex_buffer((i8*)via_longa, CCL), piscina);
+    CREDO_VERUM(res.invenit);
+
+    printf("  Via longa (%u chars) matched\n", CCL);
+    printf("\n");
+}
+
+
+interior vacuum
+probatio_via_radix(Piscina* piscina)
+{
+    Router* router;
+    RoutaResultus res;
+
+    printf("--- Probans via radix (/) ---\n");
+
+    reset_globals();
+    router = router_creare(piscina);
+    CREDO_NON_NIHIL(router);
+
+    CREDO_VERUM(router_get(router, "/", handler_simplex));
+
+    res = router_matching(router, HTTP_GET, chorda_test("/"), piscina);
+    CREDO_VERUM(res.invenit);
+    res.handler(NIHIL, NIHIL, &res.params);
+    CREDO_VERUM(g_handler_vocatus == I);
+
+    printf("  Radix matched\n");
+    printf("\n");
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -502,6 +633,10 @@ principale(vacuum)
     probatio_param_non_numericus(piscina);
     probatio_nullum_argumenta(piscina);
     probatio_trailing_slash(piscina);
+    probatio_routa_capacitas(piscina);
+    probatio_duplicata_routa(piscina);
+    probatio_via_longa(piscina);
+    probatio_via_radix(piscina);
 
     credo_imprimere_compendium();
 

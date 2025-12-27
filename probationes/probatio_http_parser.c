@@ -530,6 +530,148 @@ probatio_responsum_serialize_nihil(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - MALFORMED REQUESTS
+ * ======================================================================== */
+
+interior vacuum
+probatio_parse_sine_uri(Piscina* piscina)
+{
+    constans character* petitio = "GET HTTP/1.1\r\n\r\n";
+    HttpParseResultus res;
+
+    printf("--- Probans parse sine URI ---\n");
+
+    res = http_petitio_parse(petitio, (i32)strlen(petitio), piscina);
+
+    /* Debet fallere vel parse incorrecte */
+    si (!res.successus)
+    {
+        printf("  Recte recusatum (error)\n");
+    }
+    alioquin
+    {
+        /* Si parse "succedit", URI debet esse malformata */
+        printf("  Parsed (URI: '%.*s')\n",
+               res.petitio->uri.mensura, res.petitio->uri.datum);
+    }
+    printf("\n");
+}
+
+interior vacuum
+probatio_parse_sine_versio(Piscina* piscina)
+{
+    constans character* petitio = "GET /path\r\n\r\n";
+    HttpParseResultus res;
+
+    printf("--- Probans parse sine versio ---\n");
+
+    res = http_petitio_parse(petitio, (i32)strlen(petitio), piscina);
+
+    /* Acceptabile ut fallat vel parse cum versio default */
+    si (!res.successus)
+    {
+        printf("  Recte recusatum\n");
+    }
+    alioquin
+    {
+        printf("  Parsed (versio: %d)\n", res.petitio->versio);
+    }
+    printf("\n");
+}
+
+interior vacuum
+probatio_parse_header_sine_colon(Piscina* piscina)
+{
+    constans character* petitio =
+        "GET /path HTTP/1.1\r\n"
+        "InvalidHeader\r\n"
+        "\r\n";
+    HttpParseResultus res;
+
+    printf("--- Probans parse header sine colon ---\n");
+
+    res = http_petitio_parse(petitio, (i32)strlen(petitio), piscina);
+
+    /* Expectamus ut header ignoretur vel error */
+    printf("  successus=%d, capita=%d\n",
+           res.successus, res.petitio ? res.petitio->capita_numerus : 0);
+    printf("\n");
+}
+
+interior vacuum
+probatio_parse_vacua(Piscina* piscina)
+{
+    HttpParseResultus res;
+
+    printf("--- Probans parse vacua ---\n");
+
+    res = http_petitio_parse("", 0, piscina);
+
+    CREDO_FALSUM(res.successus);
+    printf("  Empty input recte recusatum\n");
+
+    res = http_petitio_parse(NIHIL, 0, piscina);
+    CREDO_FALSUM(res.successus);
+    printf("  NIHIL input recte recusatum\n");
+    printf("\n");
+}
+
+interior vacuum
+probatio_parse_content_length_mismatch(Piscina* piscina)
+{
+    constans character* petitio =
+        "POST /api HTTP/1.1\r\n"
+        "Content-Length: 100\r\n"
+        "\r\n"
+        "short";  /* Solo 5 bytes, non 100 */
+    HttpParseResultus res;
+
+    printf("--- Probans Content-Length mismatch ---\n");
+
+    res = http_petitio_parse(petitio, (i32)strlen(petitio), piscina);
+
+    /* Debet indicare incompleta (non tota corpus) */
+    si (res.successus && !res.completa)
+    {
+        printf("  Recte: petitio incompleta\n");
+    }
+    alioquin
+    {
+        printf("  successus=%d, completa=%d\n", res.successus, res.completa);
+    }
+    printf("\n");
+}
+
+interior vacuum
+probatio_parse_uri_longa(Piscina* piscina)
+{
+    character petitio[MMMMXCVI];
+    i32 uri_len;
+    HttpParseResultus res;
+
+    printf("--- Probans URI longa ---\n");
+
+    /* Creare petitio cum URI de 2000 characters */
+    memcpy(petitio, "GET /", V);
+    memset(petitio + V, 'x', MM);
+    memcpy(petitio + V + MM, " HTTP/1.1\r\n\r\n", XIII);
+    uri_len = V + MM + XIII;
+
+    res = http_petitio_parse(petitio, uri_len, piscina);
+
+    si (res.successus)
+    {
+        printf("  URI longa accepted (len=%d)\n", res.petitio->uri.mensura);
+    }
+    alioquin
+    {
+        printf("  URI longa recusata\n");
+    }
+    printf("\n");
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -566,6 +708,14 @@ principale(vacuum)
     probatio_responsum_serialize_cum_headers(piscina);
     probatio_responsum_serialize_sine_corpus(piscina);
     probatio_responsum_serialize_nihil(piscina);
+
+    /* Malformed requests */
+    probatio_parse_sine_uri(piscina);
+    probatio_parse_sine_versio(piscina);
+    probatio_parse_header_sine_colon(piscina);
+    probatio_parse_vacua(piscina);
+    probatio_parse_content_length_mismatch(piscina);
+    probatio_parse_uri_longa(piscina);
 
     credo_imprimere_compendium();
 
