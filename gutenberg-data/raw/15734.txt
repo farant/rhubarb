@@ -1,0 +1,15 @@
+<result>
+Title = "Aus Kroatien: Skizzen und Erzählungen"
+Author = "Arthur Achleitner"
+Year = 1920
+
+Tags = ["fiction", "german-language"]
+
+Summary = """
+A collection of sketches and stories set in Croatia by Bavarian author Arthur Achleitner (1858-1927). Achleitner was a prolific German writer known for his regional literature, particularly works set in Alpine regions and the Balkans. This collection contains narrative pieces including "Drei Regimentsbefehle" (Three Regimental Orders), "Des Popen Meisterstück" (The Pope's Masterpiece), and "Waldkultur" (Forest Culture), offering literary glimpses into Croatian life and culture.
+"""
+
+Notes = """
+The publication year 1920 is taken directly from the Leipzig imprint in the text. Achleitner wrote extensively about the Habsburg territories and surrounding regions during the late 19th and early 20th centuries.
+"""
+</result>

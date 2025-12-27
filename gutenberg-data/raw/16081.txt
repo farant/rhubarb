@@ -1,0 +1,15 @@
+<result>
+Title = "The Anti-Slavery Alphabet"
+Author = "Anonymous"
+Year = 1847
+
+Tags = ["non-fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+An abolitionist alphabet book published in Philadelphia for the Anti-Slavery Fair in 1847. This work was designed to teach children the alphabet while simultaneously instilling anti-slavery sentiments. Each letter of the alphabet was paired with words and verses related to the abolitionist cause. Such didactic materials were common in the American abolitionist movement, using children's education as a vehicle for moral instruction against the institution of slavery. The work reflects the strong Quaker abolitionist tradition in Philadelphia.
+"""
+
+Notes = """
+The year 1847 is printed directly on the title page as the publication date for the Anti-Slavery Fair in Philadelphia. This was during the height of American abolitionist activity, approximately 14 years before the Civil War began.
+"""
+</result>

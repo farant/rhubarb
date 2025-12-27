@@ -1,0 +1,15 @@
+<result>
+Title = "England in America, 1580-1652"
+Author = "Lyon Gardiner Tyler"
+Year = 1904
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+This is a scholarly historical work by Lyon Gardiner Tyler (1853-1935), an American historian who served as president of the College of William and Mary. The book covers the early period of English colonization in America, from the Raleigh expeditions through the early colonial settlements in Virginia and New England. Tyler was the son of President John Tyler and was particularly known for his expertise in Virginia colonial history. This work was part of "The American Nation: A History" series edited by Albert Bushnell Hart.
+"""
+
+Notes = """
+The year 1904 is when this work was originally published by Harper & Brothers, as indicated in the text. Lyon Gardiner Tyler was a respected historian of his era, though some of his views on colonial history and the Lost Cause reflect the perspectives common among Southern historians of that period.
+"""
+</result>

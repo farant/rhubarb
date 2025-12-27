@@ -1,0 +1,15 @@
+<result>
+Title = "Sketches From My Life"
+Author = "Hobart Pasha"
+Year = 1886
+
+Tags = ["non-fiction", "memoir", "military-history", "naval-history"]
+
+Summary = """
+This is the autobiography of Augustus Charles Hobart-Hampden (1822-1886), a British naval officer who led a remarkable and adventurous life. He served in the Royal Navy, notably ran the Union blockade during the American Civil War as a blockade runner for the Confederacy, and later became an admiral in the Ottoman Turkish Navy (hence "Hobart Pasha" - Pasha being an Ottoman honorific). His memoir recounts his various naval adventures, including his service in the Crimean War, his blockade-running exploits, and his later career reorganizing the Turkish fleet. He was known for his daring and unconventional career path.
+"""
+
+Notes = """
+The book was published posthumously in 1886, the year of Hobart-Hampden's death. The title page indicates "The Late Admiral Hobart Pasha," confirming it was published after his death. He died in June 1886, and this memoir was prepared for publication around that time.
+"""
+</result>

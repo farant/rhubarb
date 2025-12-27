@@ -1,0 +1,15 @@
+<result>
+Title = "The Indiscreet Letter"
+Author = "Eleanor Hallowell Abbott"
+Year = 1915
+
+Tags = ["fiction"]
+
+Summary = """
+The Indiscreet Letter is a romantic novella by Eleanor Hallowell Abbott, an American author known for her sentimental and gently humorous fiction. Abbott was popular in the early 20th century for works like "Molly Make-Believe" (1910) and "The Sick-a-Bed Lady" (1911). This work follows her characteristic style of light, engaging storytelling often involving romantic entanglements and misunderstandings. The "indiscreet letter" of the title likely serves as a plot device driving the narrative's complications.
+"""
+
+Notes = """
+1915 is the publication year indicated on the title page of the original Century Co. edition.
+"""
+</result>

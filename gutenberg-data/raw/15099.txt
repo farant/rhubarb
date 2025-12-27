@@ -1,0 +1,15 @@
+<result>
+Title = "The Hoosier Schoolmaster"
+Author = "Edward Eggleston"
+Year = 1871
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Hoosier Schoolmaster is a novel set in rural Indiana that follows Ralph Hartsook, a young schoolteacher who takes a position in a backwoods community called Flat Creek. The story depicts the challenges he faces with rough frontier life, including dealing with unruly students, navigating local politics, and confronting a gang of thieves. It's considered an early example of American regional realism, capturing the dialect, customs, and character of 19th-century rural Indiana. The novel was originally serialized in Hearth and Home magazine before being published as a book.
+"""
+
+Notes = """
+First serialized in 1871 in Hearth and Home magazine, then published as a book the same year. This appears to be a later revised edition with illustrations, but the original publication year of 1871 is the historically significant date for this work.
+"""
+</result>

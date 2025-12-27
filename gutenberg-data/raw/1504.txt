@@ -1,0 +1,15 @@
+<result>
+Title = "The Comedy of Errors"
+Author = "William Shakespeare"
+Year = 1594
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Comedy of Errors is one of Shakespeare's earliest and shortest comedies, based on Plautus's ancient Roman play Menaechmi. The plot centers on two sets of identical twins separated at birth: Antipholus of Syracuse and Antipholus of Ephesus, along with their twin servants both named Dromio. When the Syracuse pair arrives in Ephesus, a series of mistaken identities ensues, leading to farcical confusion involving wives, merchants, a courtesan, and accusations of madness and theft. The play culminates in a recognition scene at an abbey where the long-lost family is reunited. It is a light farce exploring themes of identity, family, and the absurdity of circumstance.
+"""
+
+Notes = """
+The exact composition date is uncertain, but scholars generally place it between 1592-1594. The first recorded performance was at Gray's Inn on December 28, 1594. I chose 1594 as the most commonly cited approximate date for the play's completion and first known staging.
+"""
+</result>

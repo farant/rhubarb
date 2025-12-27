@@ -1,0 +1,15 @@
+<result>
+Title = "The Child of the Dawn"
+Author = "Arthur Christopher Benson"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A spiritual fantasy novel by A.C. Benson, a prolific English essayist and academic who was Master of Magdalene College, Cambridge. The book is a visionary work exploring themes of the afterlife, spiritual growth, and the soul's journey. Benson was known for his contemplative, introspective writing style. He was the son of Edward White Benson, Archbishop of Canterbury, and brother to E.F. Benson and R.H. Benson (the latter a Catholic priest and novelist). Despite his Anglican background, Benson's spiritual writings tend toward a broad, mystical Christianity rather than strict denominational boundaries.
+"""
+
+Notes = """
+The Greek epigraph on the title page is from Pindar and roughly translates to "I have learned to stretch out my long life with bold hopes." The 1912 date is the original publication year as indicated on the title page.
+"""
+</result>

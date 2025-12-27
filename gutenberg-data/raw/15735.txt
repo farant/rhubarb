@@ -1,0 +1,15 @@
+<result>
+Title = "History of the Negro Race in America From 1619 to 1880, Vol. 1"
+Author = "George W. Williams"
+Year = 1883
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A pioneering work of African American historiography by George Washington Williams, a Baptist minister, lawyer, and the first African American elected to the Ohio State Legislature. This comprehensive two-volume work was the first serious scholarly history of African Americans written by a Black author. Volume 1 covers the period from 1619 to 1800, examining the origins of slavery in America, African history and civilization, and the condition of Black people during the colonial and revolutionary periods. Williams conducted extensive primary source research and aimed to present a dignified, factual account of Black history at a time when such scholarship was rare and often dismissed.
+"""
+
+Notes = """
+First published in 1883 by G.P. Putnam's Sons. Williams (1849-1891) was a remarkable figure - a Civil War veteran, minister, politician, and historian. This work predates W.E.B. Du Bois and is considered foundational to the field of African American history.
+"""
+</result>

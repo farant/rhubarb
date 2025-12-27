@@ -1,0 +1,15 @@
+<result>
+Title = "A Good Samaritan"
+Author = "Mary Raymond Shipman Andrews"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mary Raymond Shipman Andrews (1860-1936) was a popular American author known for sentimental short stories and novellas. "A Good Samaritan" is a short work of fiction that draws on the biblical parable of the Good Samaritan as a thematic framework. Andrews was well-known for her patriotic and moral fiction, with her most famous work being "The Perfect Tribute" (1906), a story about Abraham Lincoln. Her works were widely read in the early 20th century and often featured themes of kindness, duty, and moral courage.
+"""
+
+Notes = """
+The exact publication year is estimated as 1906 based on Andrews' active publishing period. She published extensively between 1900-1920, with several illustrated short works appearing around 1906. The illustrator Charlotte Harding was also particularly active in this period illustrating books and magazine fiction.
+"""
+</result>

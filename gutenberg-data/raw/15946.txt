@@ -1,0 +1,15 @@
+<result>
+Title = "The Original Fables of La Fontaine"
+Author = "Jean de La Fontaine"
+Year = 1668
+
+Tags = ["fiction", "appropriate-for-children", "fables", "poetry"]
+
+Summary = """
+Jean de La Fontaine's Fables are a collection of 243 poetic fables written in French verse, drawing heavily on Aesop, Phaedrus, and other classical fabulists, as well as Indian sources like the Panchatantra. The fables use anthropomorphized animals to convey moral lessons and satirize human nature, social hierarchies, and political power. They are considered masterpieces of French literature and have been translated into virtually every language. This particular edition is Frederick Colin Tilney's English prose translation, published as part of a children's series.
+"""
+
+Notes = """
+The first collection of La Fontaine's Fables was published in 1668, with subsequent volumes appearing in 1678-1679 and 1694. I chose 1668 as it marks the original publication of the work, though this English translation by Tilney dates to the early 20th century. The fables themselves are the historically significant contribution.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Evangeline: A Tale of Acadie"
+Author = "Henry Wadsworth Longfellow"
+Year = 1847
+
+Tags = ["fiction", "poetry", "appropriate-for-children"]
+
+Summary = """
+Evangeline is an epic poem by Henry Wadsworth Longfellow, considered one of the most significant works of American literature. It tells the tragic story of Evangeline Bellefontaine, an Acadian girl separated from her beloved Gabriel Lajeunesse during the Great Expulsion (Le Grand Dérangement) of 1755, when the British forcibly removed French-speaking Acadians from Nova Scotia. The poem follows Evangeline's lifelong search for Gabriel across the American landscape, from Louisiana bayous to the western prairies, until they are finally reunited in old age just before Gabriel's death. Written in dactylic hexameter (unusual for English poetry), the work brought widespread attention to the Acadian deportation and established Longfellow as one of America's foremost poets.
+"""
+
+Notes = """
+The poem was first published in 1847, which is the historically significant date for this work. This Gutenberg edition includes notes and a plan of study by W.F. Conover, making it an annotated educational edition, but the core work remains Longfellow's 1847 original. Longfellow was a Unitarian, not Catholic, though the poem treats the Catholic Acadian community sympathetically.
+"""
+</result>

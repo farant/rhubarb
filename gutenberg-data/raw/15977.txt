@@ -1,0 +1,15 @@
+<result>
+Title = "Frank and Fanny: A Rural Story"
+Author = "Mrs. Clara Moreton"
+Year = 1850
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A mid-19th century American children's story set in a rural environment. The book was published by Phillips, Sampson & Co. of Boston and features numerous engravings typical of illustrated children's literature of the period. The "rural story" designation suggests a moralistic tale centered on country life, nature, and simple virtues—a common genre in Victorian-era children's literature meant to instruct young readers in proper conduct while entertaining them.
+"""
+
+Notes = """
+The copyright registration date of 1850 is used rather than the 1851 publication date shown on the title page, as the copyright entry represents when the work was formally completed and registered. Mrs. Clara Moreton was a pseudonymous or minor author of children's literature; limited biographical information is available about her.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Chronology of Ancient Kingdoms Amended"
+Author = "Isaac Newton"
+Year = 1728
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is Isaac Newton's attempt to establish a revised chronology of ancient history, particularly focusing on the kingdoms of Egypt, Assyria, Babylon, Media, Persia, and Greece. Newton, famous for his scientific work, spent considerable effort on biblical and historical studies. In this work, he argues that conventional ancient chronologies were too long and attempts to compress the timeline of ancient civilizations using astronomical calculations and critical analysis of ancient sources. He believed that Greek historians had greatly exaggerated the antiquity of their civilization and other ancient kingdoms.
+"""
+
+Notes = """
+Published posthumously in 1728, one year after Newton's death. Newton had worked on this chronological study for decades during his lifetime but was reluctant to publish it. The work represents Newton's serious engagement with historical and theological questions alongside his more famous scientific pursuits.
+"""
+</result>

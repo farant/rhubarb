@@ -1,0 +1,15 @@
+<result>
+Title = "Humorous Masterpieces from American Literature"
+Author = "Various (edited by Edward T. Mason)"
+Year = 1886
+
+Tags = ["fiction", "anthology", "humor"]
+
+Summary = """
+This is an anthology of humorous writings collected from various American authors, compiled and edited by Edward T. Mason. The collection showcases comedic literary works from 19th century American literature, featuring selections from notable humorists of the era. Such anthologies were popular in the late Victorian period as a way to introduce readers to the breadth of American literary humor.
+"""
+
+Notes = """
+Edward T. Mason published several literary anthologies in the 1880s. This particular collection was first published around 1886. The "Various" authorship indicates this is a compilation rather than a single-author work.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Angelina"
+Author = "Rafael Delgado"
+Year = 1893
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+Angelina is a Mexican novel by Rafael Delgado, one of the most important Mexican realist writers of the late 19th century. The novel is set in provincial Mexico and tells a romantic story with strong moral and sentimental themes characteristic of the period. Delgado was known for his detailed portrayals of Mexican provincial life and customs, and his work reflects Catholic moral sensibilities typical of Mexican literature of that era.
+"""
+
+Notes = """
+The novel was first published in 1893. Rafael Delgado (1853-1914) was a prominent Mexican novelist associated with the realist movement. He was deeply Catholic and his works generally reflect traditional moral values.
+"""
+</result>

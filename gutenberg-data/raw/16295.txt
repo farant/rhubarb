@@ -1,0 +1,15 @@
+<result>
+Title = "The Vedanta-Sutras with the Commentary by Sankaracarya"
+Author = "Badarayana, Sankaracarya (commentary), George Thibaut (translator)"
+Year = 1890
+
+Tags = ["non-fiction", "philosophy", "religion", "hinduism"]
+
+Summary = """
+The Vedanta-Sutras (also known as Brahma-Sutras) are attributed to Badarayana and form one of the foundational texts of Vedanta philosophy, likely composed between 500-200 BCE. This edition includes the famous commentary (bhashya) by Sankaracarya (Adi Shankara), the 8th-century Indian philosopher who systematized Advaita Vedanta. The sutras are terse aphorisms summarizing and systematizing the teachings of the Upanishads concerning Brahman (ultimate reality) and the nature of the self. Sankaracarya's commentary is the most influential interpretation, arguing for non-dualism (advaita) - that the individual soul and Brahman are ultimately identical. George Thibaut's English translation was part of the Sacred Books of the East series edited by Max Müller.
+"""
+
+Notes = """
+Year chosen is 1890, the publication date of this translation in the Sacred Books of the East series (Volume 34). The original Vedanta-Sutras date to perhaps 400 BCE, and Sankaracarya's commentary to around 800 CE, but since this is specifically Thibaut's scholarly translation with the commentary, the translation date seems most appropriate for a historical timeline of published works accessible to English readers.
+"""
+</result>

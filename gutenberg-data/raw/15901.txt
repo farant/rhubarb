@@ -1,0 +1,15 @@
+<result>
+Title = "A Minniature ov Inglish Orthoggraphy"
+Author = "James Elphinston"
+Year = 1795
+
+Tags = ["non-fiction", "linguistics", "spelling-reform"]
+
+Summary = """
+James Elphinston (1721-1809) was a Scottish educator and linguist who became somewhat notorious for his attempts to reform English spelling to make it more phonetically consistent. This work is part of his broader project on English orthography, written entirely in his proposed reformed spelling system. Elphinston believed English spelling should more closely match pronunciation, leading to spellings like 'ov' for 'of', 'dhe' for 'the', and 'orthoggraphy' for 'orthography'. His spelling reform proposals were largely ridiculed in his time (Samuel Johnson famously dismissed his work), though they represent an interesting historical attempt at linguistic standardization.
+"""
+
+Notes = """
+The dedication to the Prince and Princess of Wales and the Duke and Duchess of York places this firmly in the 1790s. The Prince of Wales (future George IV) married Caroline of Brunswick in 1795, and Frederick, Duke of York, married Frederica Charlotte in 1791. Elphinston's major orthographic works appeared in this period, with his 'Propriety Ascertained' published 1786-1787 and subsequent miniature/summary works following. 1795 is the most likely publication date for this particular work.
+"""
+</result>

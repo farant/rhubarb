@@ -1,0 +1,15 @@
+<result>
+Title = "Los Hombres de Pro"
+Author = "José María de Pereda"
+Year = 1872
+
+Tags = ["fiction", "spanish-literature", "costumbrismo", "catholic"]
+
+Summary = """
+Los Hombres de Pro is a collection of satirical sketches and short stories by José María de Pereda, a prominent Spanish novelist of the 19th century associated with the Realist and Costumbrista literary movements. Pereda was a deeply Catholic, traditionalist writer from the Cantabria region (the "Montaña" of northern Spain). This work, one of his earlier collections, satirizes bourgeois social climbers and the pretensions of provincial society. Pereda is best known for his detailed depictions of rural Cantabrian life and his conservative Catholic worldview, which permeates his literary output.
+"""
+
+Notes = """
+The first edition was published in 1872. The Project Gutenberg text references the sixth edition (sexta edición). Pereda was a devout Catholic and his works generally reflect Catholic moral sensibilities, though this particular collection is satirical fiction rather than devotional literature.
+"""
+</result>

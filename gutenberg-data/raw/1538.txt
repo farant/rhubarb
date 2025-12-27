@@ -1,0 +1,15 @@
+<result>
+Title = "Cymbeline"
+Author = "William Shakespeare"
+Year = 1611
+
+Tags = ["fiction", "drama", "romance", "tragicomedy"]
+
+Summary = """
+Cymbeline is one of Shakespeare's late romances, blending elements of tragedy, comedy, and fairy tale. Set in ancient Britain during the reign of the legendary King Cymbeline, the play follows the story of his daughter Imogen, who secretly marries the lowborn but virtuous Posthumus against her father's wishes. The plot involves a wager on Imogen's fidelity, the scheming villain Iachimo, long-lost princes raised in the Welsh wilderness, and conflict with Rome over tribute. The play weaves together themes of jealousy, forgiveness, national identity, and reconciliation, culminating in a famously complex final scene with multiple revelations and reunions.
+"""
+
+Notes = """
+The play was likely written around 1610-1611 and first performed circa 1611. It was first published in the First Folio of 1623. I've chosen 1611 as representing the approximate date of composition and first performance, which is the most historically significant date for understanding when this work entered the cultural landscape.
+"""
+</result>

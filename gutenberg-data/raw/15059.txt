@@ -1,0 +1,15 @@
+<result>
+Title = "Les petites filles modèles"
+Author = "Comtesse de Ségur"
+Year = 1857
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+Les petites filles modèles is a classic French children's novel by Sophie, Comtesse de Ségur (née Rostopchine), a Russian-born French author who converted to Catholicism and became one of the most beloved children's authors in French literature. The story follows the virtuous young girls Camille and Madeleine de Fleurville and contrasts their good behavior with the misadventures of the mischievous Sophie (from her earlier novel Les Malheurs de Sophie). The book is part of a trilogy that includes Les Malheurs de Sophie and Les Vacances. The Comtesse de Ségur's works are known for their moral instruction wrapped in engaging narratives, and she wrote from a devoutly Catholic perspective.
+"""
+
+Notes = """
+The date 1857 is explicitly given in the Project Gutenberg text itself. The Comtesse de Ségur was a devout Catholic convert, and her children's books were widely approved by Catholic educators and contain clear moral and religious themes consistent with Catholic teaching.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Golf Course Mystery"
+Author = "Chester K. Steele"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Golf Course Mystery is a detective novel published under the house pseudonym "Chester K. Steele," which was used by the Stratemeyer Syndicate (the same literary syndicate behind Nancy Drew and the Hardy Boys). The actual ghostwriter was likely W. Bert Foster. The story is a murder mystery set at a golf club, following the investigation of a death that occurs on the course. It features typical early 20th century mystery conventions with amateur sleuthing and period social settings among the upper-middle class golfing community.
+"""
+
+Notes = """
+Chester K. Steele was a Stratemeyer Syndicate house name used for various mystery novels in the early 20th century. The Golf Course Mystery was first published in 1919. These were formulaic but popular mystery stories aimed at general audiences including younger readers.
+"""
+</result>

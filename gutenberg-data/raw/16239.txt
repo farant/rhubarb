@@ -1,0 +1,15 @@
+<result>
+Title = "Colomba"
+Author = "Prosper Mérimée"
+Year = 1840
+
+Tags = ["fiction"]
+
+Summary = """
+Colomba is a novella by French author Prosper Mérimée, set in Corsica. The story follows Orso della Rebbia, a young Corsican officer returning home after serving in Napoleon's army, and his fierce sister Colomba who is determined to avenge their father's murder according to the island's vendetta traditions. The work is celebrated for its vivid portrayal of Corsican customs, the conflict between traditional honor codes and modern civilization, and the powerful character of Colomba herself. It remains one of Mérimée's most famous works alongside Carmen.
+"""
+
+Notes = """
+1840 is the year of first publication. Mérimée visited Corsica in 1839 and drew on his observations for this work.
+"""
+</result>

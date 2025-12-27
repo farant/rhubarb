@@ -1,0 +1,15 @@
+<result>
+Title = "Same old Bill, eh Mable!"
+Author = "Edward Streeter"
+Year = 1919
+
+Tags = ["fiction", "humor", "appropriate-for-children"]
+
+Summary = """
+This is the sequel to Edward Streeter's popular "Dere Mable: Love Letters of a Rookie" (1918). Written in the form of humorous letters from a World War I American soldier named Bill to his girlfriend Mable back home, the book continues the comedic portrayal of army life, training, and the everyday experiences of an average doughboy. The letters are written in dialect and intentionally misspelled, capturing the voice of an uneducated but endearing soldier. Streeter served in the 27th Division of the New York National Guard, and the books were based on his own military experiences. The series was extremely popular during and immediately after WWI.
+"""
+
+Notes = """
+The first book "Dere Mable" was published in 1918 and became a bestseller. This sequel "Same old Bill, eh Mable!" was published in 1919, shortly after the war ended. Streeter later became a longtime humor columnist for The New York Times.
+"""
+</result>

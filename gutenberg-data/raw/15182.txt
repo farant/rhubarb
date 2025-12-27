@@ -1,0 +1,15 @@
+<result>
+Title = "Marion Arleigh's Penance"
+Author = "Charlotte M. Braeme"
+Year = 1883
+
+Tags = ["fiction"]
+
+Summary = """
+Marion Arleigh's Penance is a Victorian romance novel by Charlotte M. Braeme (who also wrote under the pen name Bertha M. Clay). Braeme was a prolific English author of sensational romance novels that were extremely popular in the late 19th century. Her works typically feature melodramatic plots involving love, class differences, secrets, and moral dilemmas. This novel, like many of her others, was widely distributed in inexpensive editions and serialized formats, making her one of the best-selling authors of her era.
+"""
+
+Notes = """
+Charlotte M. Braeme published prolifically in the 1880s and 1890s. The exact year of first publication for this particular work is difficult to pinpoint precisely, but 1883 represents a reasonable estimate based on her active publishing period. She died in 1884, so the work would have been published before then.
+"""
+</result>

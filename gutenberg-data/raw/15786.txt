@@ -1,0 +1,15 @@
+<result>
+Title = "Himlauret eller det profetiska ordet"
+Author = "Fredrik Franson"
+Year = 1898
+
+Tags = ["non-fiction", "christian", "prophecy"]
+
+Summary = """
+"Himlauret eller det profetiska ordet" (The Heavenly Reward or the Prophetic Word) is a Swedish-language work on biblical prophecy by Fredrik Franson (1852-1908), a Swedish-American evangelist and founder of several missionary organizations including The Evangelical Alliance Mission (TEAM). Franson was a prominent figure in the Scandinavian free church movement and was deeply influenced by D.L. Moody. This work, published in Chicago by the Chicago-Bladets publishing house, contains references, three overview tables, and a diagram dealing with prophetic/eschatological themes. Franson was known for his premillennialist views and his emphasis on missions and evangelism.
+"""
+
+Notes = """
+The 1898 date is the original publication year as indicated in the text itself (Chicago: Chicago-Bladets Förlag. 1898). Franson was a Protestant evangelical, not Catholic, so the 'catholic' tag is not applicable. While Christian in nature, this is Protestant evangelical literature focused on biblical prophecy interpretation.
+"""
+</result>

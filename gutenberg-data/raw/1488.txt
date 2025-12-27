@@ -1,0 +1,15 @@
+<result>
+Title = "The True Story of Christopher Columbus"
+Author = "Elbridge S. Brooks"
+Year = 1892
+
+Tags = ["non-fiction", "appropriate-for-children", "biography"]
+
+Summary = """
+A biographical account of Christopher Columbus written for young readers by Elbridge Streeter Brooks, a prolific American author of children's historical books. The work was published to coincide with the 400th anniversary of Columbus's 1492 voyage to the Americas, the same year as the World's Columbian Exposition in Chicago. Brooks was known for making history accessible and engaging for children through his "True Story" series of biographies covering historical figures.
+"""
+
+Notes = """
+Year chosen is 1892, the publication year, as this is an original biographical work by Brooks timed to the quadricentennial celebration of Columbus's voyage, not a translation or reprint of an earlier work.
+"""
+</result>

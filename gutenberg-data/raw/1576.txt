@@ -1,0 +1,17 @@
+The file seems very short. Let me check if there's a different location or if this is just a stub file. From what you've provided in your prompt, I can identify this work:
+
+<result>
+Title = "A Unique Story of a Marvellous Career: Life of Hon. Phineas T. Barnum"
+Author = "Joel Benton"
+Year = 1891
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is a biography of P.T. Barnum (1810-1891), the legendary American showman, businessman, and entertainer famous for founding the Barnum & Bailey Circus. Joel Benton was a poet and author who knew Barnum personally and wrote this sympathetic account of his life. The biography covers Barnum's career from his early days as a newspaper publisher and shopkeeper in Connecticut, through his famous hoaxes and attractions (like Joice Heth and the "Feejee Mermaid"), his promotion of performers like General Tom Thumb and Jenny Lind, to his establishment of "The Greatest Show on Earth." Barnum was a complex figure - part huckster, part genuine entertainer, and later in life a temperance advocate and politician.
+"""
+
+Notes = """
+Joel Benton published this biography in 1891, the same year Barnum died. Benton was a Connecticut neighbor and friend of Barnum's, giving him personal access and perspective. This was one of several biographies written about Barnum, who was himself a prolific autobiographer - he wrote multiple editions of his own autobiography throughout his life starting in 1854.
+"""
+</result>

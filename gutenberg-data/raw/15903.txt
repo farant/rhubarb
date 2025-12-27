@@ -1,0 +1,15 @@
+<result>
+Title = "Bart Stirling's Road to Success; Or, The Young Express Agent"
+Author = "Allen Chapman"
+Year = 1906
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a juvenile adventure novel from the early 20th century, part of the boys' series fiction that was extremely popular during that era. "Allen Chapman" was a house pseudonym used by the Stratemeyer Syndicate, the prolific publishing operation that also produced the Hardy Boys, Nancy Drew, and Tom Swift series. The actual author was likely Edward Stratemeyer himself or one of his ghostwriters. The story follows young Bart Stirling as he works as an express agent, facing various adventures and challenges on his path to success. These books were meant to provide wholesome, exciting entertainment for young boys while promoting values like hard work, honesty, and perseverance.
+"""
+
+Notes = """
+The Bart Stirling series was published starting around 1906-1909. I've chosen 1906 as this appears to be when the series began. As a Stratemeyer Syndicate production, it represents the factory-style juvenile fiction publishing that dominated American children's literature in the early 1900s.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 152, May 23, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["periodical", "satire", "humor", "fiction"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841. It became a British institution, known for its witty commentary on politics, society, and culture, as well as its cartoons and illustrations. The magazine was influential in coining new words and phrases that entered the English language. This particular issue is from May 1917, during World War I, and would contain topical satire, cartoons, and commentary relevant to that period. The magazine continued publication until 2002.
+"""
+
+Notes = """
+The year 1917 is the publication date of this specific issue. Punch as a periodical began in 1841, but each issue is dated to its release. Owen Seaman was the editor of Punch from 1906 to 1932.
+"""
+</result>

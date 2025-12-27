@@ -1,0 +1,15 @@
+<result>
+Title = "A Book For The Young"
+Author = "Sarah French"
+Year = 1856
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A Victorian-era book of moral instruction and edification written for children. The work was published in Saint John, New Brunswick, Canada and dedicated to the Hon. Mrs. Manners Sutton (wife of Charles Manners-Sutton, who served as Lieutenant Governor of New Brunswick 1854-1861). The author published under the pseudonym "A Lady," which was common practice for women writers of that period. The book likely contains moral tales, religious instruction, and guidance appropriate for young readers of the mid-19th century British colonial context.
+"""
+
+Notes = """
+The year 1856 is printed directly in the book's title page. The dedication to Mrs. Manners Sutton and the Saint John, New Brunswick publication details place this firmly in colonial Canadian literary history.
+"""
+</result>

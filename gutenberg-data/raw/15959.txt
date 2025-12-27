@@ -1,0 +1,15 @@
+<result>
+Title = "Dagdrömmar: En man utan humor I"
+Author = "Gustaf Hellström"
+Year = 1921
+
+Tags = ["fiction"]
+
+Summary = """
+"Dagdrömmar" (Daydreams) is the first volume in Gustaf Hellström's series "En man utan humor" (A Man Without Humor). Hellström (1882-1953) was a prominent Swedish author and journalist who worked as a foreign correspondent in Paris and London before becoming a full-time novelist. This work is part of his psychological fiction exploring modern Swedish life and character in the early 20th century. Hellström was known for his realistic portrayals of bourgeois society and his sharp psychological observations.
+"""
+
+Notes = """
+The year 1921 is taken directly from the publication information in the text: "Albert Bonniers Förlag, Stockholm, 1921." This appears to be the first edition.
+"""
+</result>

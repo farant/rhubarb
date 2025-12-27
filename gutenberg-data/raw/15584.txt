@@ -1,0 +1,15 @@
+<result>
+Title = "Jean Ziska: Épisode de la guerre des Hussites"
+Author = "George Sand"
+Year = 1843
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Jean Ziska est un récit historique romancé de George Sand (pseudonyme d'Amantine Lucile Aurore Dupin) qui raconte l'histoire de Jan Žižka, le célèbre chef militaire hussite bohémien du XVe siècle. L'œuvre s'inscrit dans le cycle de Consuelo, ayant été écrite entre Consuelo et La Comtesse de Rudolstadt. Sand y explore la guerre des Hussites, mouvement religieux réformateur précurseur de la Réforme protestante, qui s'est développé en Bohême après l'exécution de Jan Hus en 1415. L'œuvre mêle fiction romantique et reconstitution historique de cette période tumultueuse de l'histoire européenne.
+"""
+
+Notes = """
+L'année 1843 correspond à la publication originale dans le contexte du cycle Consuelo. George Sand était d'origine catholique mais ses œuvres reflètent souvent des sympathies pour les mouvements réformateurs et socialistes, donc l'œuvre n'est pas marquée comme 'catholic'. Le texte est en français.
+"""
+</result>

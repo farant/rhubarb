@@ -1,0 +1,15 @@
+<result>
+Title = "Les pilotes de l'Iroise"
+Author = "Édouard Corbière"
+Year = 1832
+
+Tags = ["fiction", "french-language"]
+
+Summary = """
+Les pilotes de l'Iroise (The Pilots of the Iroise) is a maritime novel by Édouard Corbière, a French author known for his seafaring fiction. Corbière was himself a former naval officer and privateer, which gave his maritime novels an authentic quality. The Iroise Sea is a treacherous body of water off the coast of Brittany, France, known for its strong currents and rocky shores. The novel likely deals with the lives of the pilots who guided ships through these dangerous waters. Corbière is perhaps best known for his novel "Le Négrier" (The Slave Ship), which is referenced in the title page of this work.
+"""
+
+Notes = """
+The year 1832 appears directly on the title page as the publication date. Édouard Corbière (1793-1875) was the father of the poet Tristan Corbière.
+"""
+</result>

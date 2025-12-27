@@ -1,0 +1,15 @@
+<result>
+Title = "The Emigrants Of Ahadarra"
+Author = "William Carleton"
+Year = 1848
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+The Emigrants of Ahadarra is a novel by Irish author William Carleton, one of the most significant Irish novelists of the 19th century. The work depicts rural Irish life during the period leading up to and during the Great Famine, focusing on themes of emigration, land tenure, and the social conditions of the Irish peasantry. Carleton was known for his vivid and realistic portrayals of Irish rural life, drawing heavily from his own experiences growing up in County Tyrone. This novel is part of his larger body of work documenting the struggles, customs, and character of the Irish people during a turbulent period in Irish history.
+"""
+
+Notes = """
+The novel was first published in 1848, during the height of the Great Famine (1845-1852). This timing is significant as Carleton was writing about emigration while mass emigration from Ireland was occurring in real time. William Carleton (1794-1869) was raised Catholic but converted to Protestantism, which gives his work an interesting perspective on Irish Catholic rural life.
+"""
+</result>

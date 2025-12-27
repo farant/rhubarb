@@ -1,0 +1,15 @@
+<result>
+Title = "The Legends of the Jews, Volume II: Bible Times and Characters from Joseph to the Exodus"
+Author = "Louis Ginzberg"
+Year = 1910
+
+Tags = ["non-fiction", "jewish", "religious-scholarship", "folklore", "biblical-studies"]
+
+Summary = """
+This is the second volume of Louis Ginzberg's monumental seven-volume work compiling and synthesizing Jewish legendary material (aggadah) from the Talmud, Midrash, and other rabbinic sources. This volume covers the narratives surrounding Joseph through the Exodus from Egypt. Ginzberg (1873-1953) was a Lithuanian-born rabbi and Talmudic scholar who became a professor at the Jewish Theological Seminary of America. The work is considered one of the most comprehensive collections of Jewish folklore and legend ever assembled, presenting scattered rabbinic traditions in a unified narrative form. Henrietta Szold, who translated the work from German, was a prominent Jewish American activist and founder of Hadassah.
+"""
+
+Notes = """
+The first volume was published in 1909, with subsequent volumes appearing through 1938. Volume II specifically was published in 1910. While this is a Jewish rather than Catholic work, it represents serious religious scholarship that has been valuable for Catholic biblical scholars studying the intertestamental period and Jewish interpretive traditions that informed early Christianity.
+"""
+</result>

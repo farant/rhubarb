@@ -1,0 +1,15 @@
+<result>
+Title = "Crowds: A Moving-Picture of Democracy"
+Author = "Gerald Stanley Lee"
+Year = 1913
+
+Tags = ["non-fiction"]
+
+Summary = """
+"Crowds" is a work of social philosophy and cultural criticism by Gerald Stanley Lee, an American Congregationalist minister and essayist. The book examines democracy, mass society, and the relationship between individuals and crowds in the modern industrial age. Lee was known for his optimistic, idealistic views on technology and democracy. The work is divided into five books addressing themes of crowds and machines, morality, beauty, heroism, and social progress. Lee was editor of the magazine "Mount Tom" and wrote several other works of social commentary including "The Voice of the Machines" and "Inspired Millionaires."
+"""
+
+Notes = """
+First published in 1913 by Doubleday, Page & Company. Gerald Stanley Lee (1862-1944) was a progressive-era American writer and minister who wrote extensively about democracy, technology, and social reform. While Lee was a Protestant minister rather than Catholic, the work represents early 20th century American progressive thought on mass democracy.
+"""
+</result>

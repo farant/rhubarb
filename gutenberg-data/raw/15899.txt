@@ -1,0 +1,15 @@
+<result>
+Title = "Susan Clegg and Her Friend Mrs. Lathrop"
+Author = "Anne Warner"
+Year = 1904
+
+Tags = ["fiction"]
+
+Summary = """
+A humorous novel featuring Susan Clegg, a sharp-tongued, opinionated spinster in a small American town, and her long-suffering neighbor Mrs. Lathrop. The book consists of a series of comic monologues in which Susan holds forth on various topics including marriage, funerals, neighbors, and small-town life, while the passive Mrs. Lathrop listens. Anne Warner (full name Anne Warner French, 1869-1913) was an American author known for her regional humor and character sketches. This was her most popular work, spawning several sequels featuring the same characters.
+"""
+
+Notes = """
+The first edition was published in 1904 by Little, Brown, and Company in Boston. Anne Warner was known for her dialect humor in the tradition of American local color writing.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Collected Works of Ambrose Bierce, Volume 8: Epigrams, On With the Dance, Negligible Tales"
+Author = "Ambrose Bierce"
+Year = 1911
+
+Tags = ["fiction", "satire", "short-stories"]
+
+Summary = """
+This is Volume 8 of Ambrose Bierce's Collected Works, published by Neale Publishing Company between 1909-1912. Bierce (1842-1914?) was an American journalist, satirist, and short story writer known for his sardonic wit and cynical worldview. This volume contains "Negligible Tales" (humorous short fiction), "On With the Dance" (satirical pieces), and "Epigrams" (his characteristically biting aphorisms). Bierce is best known for "The Devil's Dictionary" and his Civil War stories. His work is marked by dark humor, mordant social criticism, and a generally pessimistic view of human nature.
+"""
+
+Notes = """
+The Collected Works were published 1909-1912. Volume 8 specifically appeared in 1911. The individual pieces collected here were written over Bierce's career, but using the collection date as this represents the definitive compilation he prepared before his mysterious disappearance into Mexico in 1913.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "In Friendship's Guise"
+Author = "William Murray Graydon"
+Year = 1899
+
+Tags = ["fiction"]
+
+Summary = """
+A mystery/adventure novel by William Murray Graydon, a prolific Anglo-American author known for his sensational fiction and adventure stories in the late 19th and early 20th centuries. The opening chapter title "The Duplicate Rembrandt" suggests a plot involving art forgery or theft. Graydon was known for writing popular fiction including detective stories, adventure tales, and serialized novels for magazines and penny dreadfuls.
+"""
+
+Notes = """
+The year 1899 is indicated directly in the source text as the original publication year.
+"""
+</result>

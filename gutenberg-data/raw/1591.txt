@@ -1,0 +1,15 @@
+<result>
+Title = "Protagoras"
+Author = "Plato"
+Year = -380
+
+Tags = ["non-fiction", "philosophy", "classical"]
+
+Summary = """
+The Protagoras is one of Plato's early dialogues, featuring a conversation between Socrates and the famous Sophist Protagoras at the house of Callias in Athens. The dialogue explores whether virtue can be taught, with Protagoras arguing that it can while Socrates initially expresses skepticism. The discussion touches on the unity of virtues, the nature of courage, and the relationship between knowledge and moral action. Other notable figures present include the Sophists Hippias and Prodicus, as well as Alcibiades and Critias. This is Benjamin Jowett's English translation.
+"""
+
+Notes = """
+The date of composition is uncertain but generally placed around 380 BCE. The dramatic date of the dialogue itself is earlier, around 432 BCE. I chose -380 as a representative date for when Plato likely wrote the work. Negative year indicates BCE.
+"""
+</result>

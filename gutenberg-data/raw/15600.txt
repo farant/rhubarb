@@ -1,0 +1,15 @@
+<result>
+Title = "Matisse Picasso and Gertrude Stein"
+Author = "Gertrude Stein"
+Year = 1933
+
+Tags = ["fiction", "modernist-literature", "experimental"]
+
+Summary = """
+This is an experimental literary work by Gertrude Stein, also known by its abbreviated title "G.M.P." (for the initials of the three figures: Gertrude, Matisse, Picasso). The work is part of Stein's avant-garde writing style characterized by repetition, rhythm, and a departure from conventional narrative structure. Despite the title referencing the famous painters Henri Matisse and Pablo Picasso (both of whom were close friends of Stein in her Paris salon), the work is not a traditional biography or portrait but rather an abstract, experimental prose piece that exemplifies Stein's unique literary techniques. It was written during her time in Paris when she was at the center of the modernist art movement.
+"""
+
+Notes = """
+The work was written around 1911-1912 but first published in 1933 by Plain Edition in Paris. I chose 1933 as this represents when the work became publicly available, which seems most relevant for a historical timeline of published works. The "Two Shorter Stories" mentioned in the subtitle are typically "A Long Gay Book" and "Many Many Women" which were included in the same volume.
+"""
+</result>

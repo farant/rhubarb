@@ -1,0 +1,15 @@
+<result>
+Title = "The Mansion of Mystery"
+Author = "Chester K. Steele"
+Year = 1907
+
+Tags = ["fiction"]
+
+Summary = """
+The Mansion of Mystery is a detective novel featuring Adam Adams, an investigator and detective. Chester K. Steele was a house pseudonym used by the Stratemeyer Syndicate, with this particular work likely written by Edward Stratemeyer himself or one of his ghostwriters. The novel follows the classic early 20th century mystery format, presenting a case from the detective's notebook. The Stratemeyer Syndicate was famous for producing popular series fiction including the Hardy Boys and Nancy Drew, and their detective novels for adults followed similar formulaic but entertaining patterns.
+"""
+
+Notes = """
+Chester K. Steele was a house pseudonym used primarily between 1906-1927. The Mansion of Mystery was published around 1907 by the International Fiction Library. The subtitle indicates it is part of a series featuring Adam Adams as the detective protagonist.
+"""
+</result>

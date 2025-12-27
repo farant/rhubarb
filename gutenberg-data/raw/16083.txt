@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary, Volume 43, No. 1"
+Author = "Various"
+Year = 1889
+
+Tags = ["non-fiction", "historical-document", "protestant"]
+
+Summary = """
+The American Missionary was a monthly periodical published by the American Missionary Association (AMA), a Protestant organization founded in 1846. The AMA was particularly active in education and evangelization efforts among African Americans, especially in the South during and after the Civil War and Reconstruction era. This January 1889 issue would have contained articles on missionary work, reports from schools and churches supported by the Association, and fundraising appeals. The reference to Daniel Hand likely relates to his significant donation to the AMA in 1888 for the education of freedmen.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical dated January 1889. Not marked 'catholic' as the American Missionary Association was a Protestant (primarily Congregationalist) organization. Not marked 'appropriate-for-children' as it is an adult periodical focused on organizational matters.
+"""
+</result>

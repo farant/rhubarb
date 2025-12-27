@@ -1,0 +1,15 @@
+<result>
+Title = "Stufen: Eine Entwickelung in Aphorismen und Tagebuch-Notizen"
+Author = "Christian Morgenstern"
+Year = 1918
+
+Tags = ["non-fiction", "philosophy", "aphorisms"]
+
+Summary = """
+"Stufen" (Steps/Stages) is a collection of aphorisms and diary notes by Christian Morgenstern, the German poet best known for his humorous and nonsense poetry (Galgenlieder). This work represents his more serious, philosophical side, documenting his spiritual and intellectual development. Morgenstern was deeply influenced by Rudolf Steiner and anthroposophy in his later years, and this collection reflects his contemplative, mystical thinking. The title "Stufen" refers to stages of inner development and spiritual growth.
+"""
+
+Notes = """
+Christian Morgenstern died in 1914. This work was published posthumously - the 1922 date in the Gutenberg text is the publication year of this particular edition by R. Piper & Co. The work was first published in 1918, compiled from his notebooks and papers after his death. I chose 1918 as it represents the first publication of this collected work.
+"""
+</result>

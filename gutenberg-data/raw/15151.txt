@@ -1,0 +1,15 @@
+<result>
+Title = "A Book of the Play: Studies and Illustrations of Histrionic Story, Life, and Character"
+Author = "Dutton Cook"
+Year = 1876
+
+Tags = ["non-fiction", "theatre-history"]
+
+Summary = """
+A collection of essays and studies on the history of English theatre, actors, and dramatic performance. Dutton Cook (1829-1883) was an English novelist and theatre critic who served as drama critic for The Pall Mall Gazette and later The World. This work examines various aspects of theatrical life, including famous actors, historical performances, and the culture surrounding the stage in England.
+"""
+
+Notes = """
+First edition published in 1876. This text identifies itself as the "Third and Revised Edition." Cook was a well-known Victorian theatre critic and his works on drama history were considered authoritative in his time.
+"""
+</result>

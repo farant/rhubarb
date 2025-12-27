@@ -1,0 +1,15 @@
+<result>
+Title = "Advis de la deffaicte des Anglois et autres heretiques venuz en Bretaigne, pour le Roy de Navarre, pres Chasteau-bourg"
+Author = "Philippe-Emmanuel de Lorraine, duc de Mercœur"
+Year = 1591
+
+Tags = ["historical-document", "non-fiction", "catholic"]
+
+Summary = """
+This is a French Catholic League pamphlet from the Wars of Religion (1562-1598). It reports on the defeat of English Protestant forces and other "heretics" who came to Brittany in support of Henri de Navarre (the future Henri IV). The Duke of Mercœur was the Catholic League's governor of Brittany and a staunch opponent of the Protestant cause. The document mentions the deaths of François de la Noue and the Count of Montgomery, both prominent Huguenot military leaders. This is a piece of contemporary propaganda/military correspondence celebrating a Catholic victory near Châteaubourg in Brittany.
+"""
+
+Notes = """
+The year 1591 is printed directly on the document itself. The Duke of Mercœur (Philippe-Emmanuel de Lorraine) was one of the last Catholic League holdouts against Henri IV, not submitting until 1598.
+"""
+</result>

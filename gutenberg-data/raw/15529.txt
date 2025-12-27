@@ -1,0 +1,15 @@
+<result>
+Title = "Songs from Books"
+Author = "Rudyard Kipling"
+Year = 1912
+
+Tags = ["poetry", "fiction"]
+
+Summary = """
+Songs from Books is a collection of poems by Rudyard Kipling, gathering verses that originally appeared as chapter headings, epigraphs, and interludes throughout his prose works including The Jungle Book, Kim, Puck of Pook's Hill, and others. Kipling was known for prefacing chapters of his stories with original poetry, and this volume compiles those scattered verses into a single collection. The poems range from martial and imperial themes to children's verses and mystical pieces.
+"""
+
+Notes = """
+The collection was first published in 1912, though the Project Gutenberg text shows a 1914 edition from Macmillan. The 1912 date represents the original publication. Kipling won the Nobel Prize in Literature in 1907, making him the first English-language writer to receive the honor.
+"""
+</result>

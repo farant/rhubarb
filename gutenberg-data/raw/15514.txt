@@ -1,0 +1,15 @@
+<result>
+Title = "Maaemon lapsia"
+Author = "Arvid Järnefelt"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+"Maaemon lapsia" (Children of Mother Earth) is a Finnish novel by Arvid Järnefelt, a prominent Finnish author known for his Tolstoyan idealism and works exploring social justice, rural life, and moral philosophy. Järnefelt was part of the cultural elite of Finland and became deeply influenced by Leo Tolstoy's ideas about simple living, pacifism, and agrarian ideals. This work reflects his interest in the connection between people and the land, exploring themes of Finnish peasant life and humanity's relationship with nature.
+"""
+
+Notes = """
+The Gutenberg text indicates publication by Otava in Helsinki in 1907, but the novel was originally published in 1905. I have used the original publication year rather than this particular edition's date.
+"""
+</result>

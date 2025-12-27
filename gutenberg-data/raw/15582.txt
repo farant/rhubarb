@@ -1,0 +1,15 @@
+<result>
+Title = "Chartularium Ecclesiae Sancti Petri de Burgo Valentiae Ordinis Sancti Augustini"
+Author = "Ulysse Chevalier"
+Year = 1875
+
+Tags = ["non-fiction", "historical-document", "catholic", "primary-source"]
+
+Summary = """
+This is a cartulary (chartularium) - a collection of medieval charters and documents - compiled by Ulysse Chevalier (1841-1923), a French Catholic priest and prolific medievalist scholar. The work contains the historical documents of the Church of Saint Peter of Bourg-lès-Valence, an Augustinian priory in the Drôme region of France. Chevalier was renowned for his meticulous compilation of medieval ecclesiastical sources and published numerous cartularies and reference works essential for the study of French medieval church history. This was published under the auspices of the Société d'Archéologie de la Drôme.
+"""
+
+Notes = """
+Ulysse Chevalier published this cartulary around 1875 as part of his extensive work documenting medieval French ecclesiastical records. While the original documents span centuries of medieval history, the appropriate year here is when Chevalier compiled and published this scholarly edition, as the work's value lies in his editorial contribution to making these primary sources accessible.
+"""
+</result>

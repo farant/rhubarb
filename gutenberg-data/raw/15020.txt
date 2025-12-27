@@ -1,0 +1,15 @@
+<result>
+Title = "The Brochure Series of Architectural Illustration, Vol 1, No. 11, November, 1895: The Country Houses of Normandy"
+Author = "Various"
+Year = 1895
+
+Tags = ["non-fiction", "architecture", "periodical"]
+
+Summary = """
+This is an issue of The Brochure Series of Architectural Illustration, a late 19th century American periodical that presented photographic documentation and discussion of architectural subjects. This particular issue focuses on the vernacular country houses and farmhouses (fermes) of Normandy, France, showcasing the distinctive regional architecture characterized by half-timbered construction, steep roofs, and rural agricultural buildings. The series was aimed at architects, students, and those interested in architectural history and design.
+"""
+
+Notes = """
+The year 1895 is the publication date of this specific periodical issue. The Brochure Series ran from 1895-1906 and was published in Boston. As a periodical rather than a standalone book, the publication date is the most historically relevant year for this work.
+"""
+</result>

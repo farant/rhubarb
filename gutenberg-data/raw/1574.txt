@@ -1,0 +1,15 @@
+<result>
+Title = "Historic Girls: Stories Of Girls Who Have Influenced The History Of Their Times"
+Author = "E. S. Brooks"
+Year = 1887
+
+Tags = ["non-fiction", "appropriate-for-children", "historical"]
+
+Summary = """
+Historic Girls is a collection of biographical sketches written by Elbridge Streeter Brooks (1846-1902), a prolific American author known for his historical works for young readers. The book presents stories of notable girls and young women from history who demonstrated courage, leadership, and ability equal to the men of their times. Brooks wrote numerous similar works including "Historic Boys" as companion volumes. The book was part of a popular genre of the late 19th century that aimed to provide inspiring historical examples for youth, particularly emphasizing moral character and achievement.
+"""
+
+Notes = """
+First published in 1887 by G.P. Putnam's Sons. E. S. Brooks (Elbridge Streeter Brooks) was a well-known author of juvenile historical literature in the late Victorian era.
+"""
+</result>

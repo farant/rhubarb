@@ -1,0 +1,15 @@
+<result>
+Title = "Elsa Finne I-II"
+Author = "Axel Lundegård"
+Year = 1902
+
+Tags = ["fiction"]
+
+Summary = """
+Elsa Finne is a Swedish novel by Axel Lundegård (1861-1930), a Swedish author and playwright who was part of the naturalist literary movement in Scandinavia. Lundegård was known for his psychological realism and often explored themes of social constraints, relationships, and the inner lives of his characters. This two-part novel was published by Albert Bonniers Förlag, one of Sweden's most prestigious publishing houses.
+"""
+
+Notes = """
+The year 1902 is taken directly from the publication information in the text (Albert Bonniers Förlag, Stockholm, 1902). This appears to be the original Swedish publication.
+"""
+</result>

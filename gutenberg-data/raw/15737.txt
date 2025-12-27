@@ -1,0 +1,15 @@
+<result>
+Title = "The Torch and Other Tales"
+Author = "Eden Phillpotts"
+Year = 1924
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+A collection of short stories by Eden Phillpotts, a prolific English author known primarily for his novels and stories set in Dartmoor, Devon. This collection includes tales such as "Santa Claus," "The Returned Native," "The Hound's Pool," and the titular "The Torch." Phillpotts was an extremely productive writer who produced over 250 books during his lifetime, spanning novels, plays, poetry, and short story collections. His Dartmoor cycle of novels, depicting rural life in Devon, remains his most celebrated work.
+"""
+
+Notes = """
+The Torch and Other Tales was first published in 1924 by Macmillan. Eden Phillpotts (1862-1960) was a contemporary and friend of Agatha Christie, who dedicated her novel The Mysterious Affair at Styles to him.
+"""
+</result>

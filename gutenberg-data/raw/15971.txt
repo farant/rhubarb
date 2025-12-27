@@ -1,0 +1,15 @@
+<result>
+Title = "Polly of the Hospital Staff"
+Author = "Emma C. Dowd"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Polly of the Hospital Staff is a children's novel by Emma C. Dowd, author of the popular "Polly" series. The story follows a young girl named Polly who becomes connected to a hospital setting, likely as a patient or through family circumstances. Dowd was known for her wholesome, heartwarming stories featuring child protagonists facing life's challenges with courage and kindness. The book is part of a series that includes other Polly titles and was popular among young readers in the early twentieth century.
+"""
+
+Notes = """
+Emma C. Dowd published this novel in 1912. She was an American author who wrote several children's books in the early 1900s, with the Polly series being among her most well-known works.
+"""
+</result>

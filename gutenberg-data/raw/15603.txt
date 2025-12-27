@@ -1,0 +1,15 @@
+<result>
+Title = "One Man in His Time"
+Author = "Ellen Glasgow"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by Ellen Glasgow, a prominent American novelist known for her realistic portrayals of the American South. The title is taken from Shakespeare's "As You Like It" ("All the world's a stage, And all the men and women merely players; They have their exits and their entrances, And one man in his time plays many parts"). The novel is set in Virginia during the post-World War I era and explores political and social themes through the story of Gideon Vetch, a populist governor of humble origins, and his interactions with the old Virginia aristocracy. It examines class tensions, political idealism, and the changing social landscape of the South.
+"""
+
+Notes = """
+Ellen Glasgow (1873-1945) was a Virginia-born novelist who won the Pulitzer Prize for Fiction in 1942. While she was raised in a Presbyterian household and her works often engage with moral and social questions, she would not be considered a Catholic author and her works would not carry a nihil obstat.
+"""
+</result>

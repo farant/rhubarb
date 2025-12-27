@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Round World and What Is Going On In It, Vol. 1, No. 29"
+Author = "Various"
+Year = 1897
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children", "historical-document"]
+
+Summary = """
+The Great Round World and What Is Going On In It was a weekly magazine published in New York City specifically designed for boys and girls. It covered current events and news from around the world in a format accessible to young readers. The magazine was published by William Beverley Harison and cost five cents per issue or $2.50 for a yearly subscription. This particular issue is from May 27, 1897, during a period of significant global events including tensions leading up to the Spanish-American War.
+"""
+
+Notes = """
+Year is the actual publication date of this periodical issue, not a later reprint or translation. As a weekly news magazine, the 1897 date represents its original and only meaningful publication year.
+"""
+</result>

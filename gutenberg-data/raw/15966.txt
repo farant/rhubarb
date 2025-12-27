@@ -1,0 +1,15 @@
+<result>
+Title = "A Voyage of Consolation"
+Author = "Sara Jeannette Duncan"
+Year = 1898
+
+Tags = ["fiction"]
+
+Summary = """
+A Voyage of Consolation is a comedic travel novel and sequel to Duncan's popular 1891 work "An American Girl in London." The story follows the American protagonist and her family on a European tour, offering witty observations on transatlantic cultural differences, tourism, and social customs of the late Victorian era. Duncan, a Canadian journalist and novelist who wrote under her married name Mrs. Everard Cotes, was known for her sharp social commentary and humorous portrayals of Anglo-American relations.
+"""
+
+Notes = """
+First published in 1898. Duncan (1861-1922) was a pioneering Canadian female journalist and novelist who spent much of her adult life in India after marrying Everard Cotes.
+"""
+</result>

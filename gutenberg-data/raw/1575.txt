@@ -1,0 +1,15 @@
+<result>
+Title = "The Foundations of Personality"
+Author = "Abraham Myerson"
+Year = 1921
+
+Tags = ["non-fiction", "psychology"]
+
+Summary = """
+A work of early 20th century psychology by Abraham Myerson (1881-1948), an American neurologist and psychiatrist. The book examines the biological, psychological, and social factors that shape human personality. Myerson was known for his work on mental health and was a professor at Tufts Medical School. This text represents the emerging field of personality psychology during a period when the discipline was being established as a scientific endeavor distinct from philosophy.
+"""
+
+Notes = """
+The book was originally published in 1921 by Little, Brown and Company. Myerson was a prominent figure in American psychiatry and neurology, also known for his later work on depression and his controversial views on eugenics which were common among medical professionals of that era.
+"""
+</result>

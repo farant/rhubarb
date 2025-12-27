@@ -1,0 +1,20 @@
+<result>
+Title = "The New McGuffey First Reader"
+Author = "William Holmes McGuffey"
+Year = 1901
+
+Tags = ["non-fiction", "appropriate-for-children", "educational"]
+
+Summary = """
+The McGuffey Readers were a series of graded primers and readers used in American schools from 1836 through the early 20th century. Originally written by William Holmes McGuffey, a professor and minister, the series became the standard textbooks for primary education, selling over 120 million copies between 1836 and 1960. The readers combined literacy instruction with moral and religious lessons, featuring stories, poems, and exercises designed to build reading skills progressively. The series was particularly influential in the American Midwest and shaped generations of American students.
+"""
+
+Notes = """
+The original McGuffey First Eclectic Reader was published in 1836. However, this is "The New McGuffey First Reader," which is a later revised edition. The McGuffey Readers went through multiple revisions: 1838, 1857, 1879, and later editions into the early 1900s. "The New McGuffey" editions were published by the American Book Company starting around 1901, representing a significant modernization of the original series. I've chosen 1901 as the year since this appears to be from "The New McGuffey" series rather than the original or 1879 revised editions. McGuffey himself died in 1873, so later editions were prepared by others but retained his name.
+"""
+</result>
+
+Sources:
+- [McGuffey Readers - Wikipedia](https://en.wikipedia.org/wiki/McGuffey_Readers)
+- [McGuffey Readers | Britannica](https://www.britannica.com/topic/McGuffey-Readers)
+- [McGuffey Collection - Miami University](https://spec.lib.miamioh.edu/home/mcguffey/)

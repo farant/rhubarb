@@ -1,0 +1,15 @@
+<result>
+Title = "As Farpas: Chronica Mensal da Politica, das Letras e dos Costumes"
+Author = "Ramalho Ortigão, Eça de Queiroz"
+Year = 1877
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+As Farpas (The Barbs/Stings) was a satirical monthly chronicle published in Portugal from 1871 to 1883. It was originally co-authored by Ramalho Ortigão and Eça de Queiroz, two of the most important figures in 19th-century Portuguese literature. The publication offered sharp social, political, and cultural criticism of Portuguese society during the late monarchy period. Eça de Queiroz left the collaboration in 1872 to pursue his diplomatic career, after which Ortigão continued alone. This particular volume covers May to June 1877. The work is considered a masterpiece of Portuguese satirical journalism and provides valuable insight into the social mores and political climate of Portugal during this era.
+"""
+
+Notes = """
+Year reflects this specific issue (May-June 1877). The full series ran 1871-1883. Eça de Queiroz is best known for his realist novels like Os Maias and O Crime do Padre Amaro. Both authors were part of the 'Generation of 70' intellectual movement in Portugal.
+"""
+</result>

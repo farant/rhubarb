@@ -1,0 +1,15 @@
+<result>
+Title = "The Forest of Swords: A Story of Paris and the Marne"
+Author = "Joseph A. Altsheler"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Forest of Swords is a World War I novel by American author Joseph A. Altsheler, part of his World War Series. The story follows young American John Scott who finds himself caught up in the early battles of WWI in France, particularly around the First Battle of the Marne in 1914. Altsheler was known for writing adventure novels for young readers, particularly historical fiction covering American frontier history and various wars. This novel captures the dramatic opening months of the Great War from an American perspective, written while the conflict was still ongoing.
+"""
+
+Notes = """
+Published in 1915 during WWI itself. Altsheler wrote several WWI novels in his World War Series alongside his more famous frontier and Civil War series. The subtitle "A Story of Paris and the Marne" refers to the pivotal First Battle of the Marne (September 1914) which halted the German advance on Paris.
+"""
+</result>

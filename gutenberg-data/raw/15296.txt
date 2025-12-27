@@ -1,0 +1,15 @@
+<result>
+Title = "Le Juif errant - Tome II"
+Author = "Eugène Sue"
+Year = 1844
+
+Tags = ["fiction", "anti-clerical"]
+
+Summary = """
+Le Juif errant (The Wandering Jew) is a serialized novel by French author Eugène Sue, originally published in the newspaper Le Constitutionnel between 1844-1845. The novel is a sprawling social critique that follows the descendants of a Huguenot family targeted by a Jesuit conspiracy to seize their inheritance. The legendary figure of the Wandering Jew and his sister Herodias appear as supernatural observers cursed to wander until the family's fate is resolved. The novel was enormously popular and influential, contributing to anti-Jesuit sentiment in 19th century France. It was placed on the Index of Forbidden Books by the Catholic Church.
+"""
+
+Notes = """
+The work was serialized from June 1844 to August 1845. I chose 1844 as it marks the beginning of publication. This is Tome II (Volume 2) of the complete work. The novel is explicitly anti-Catholic, particularly anti-Jesuit in its portrayal, and would definitely not have received a nihil obstat or imprimatur - indeed it was condemned by the Church.
+"""
+</result>

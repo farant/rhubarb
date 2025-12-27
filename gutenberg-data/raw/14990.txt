@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement No. 819"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "science", "technology"]
+
+Summary = """
+Scientific American Supplement was a weekly companion publication to the main Scientific American magazine, which had been established in 1845. The Supplement series ran from 1876 to 1919 and typically contained longer, more technical articles on science, engineering, and technology than the main magazine. Issue 819, Volume XXXII, was published on September 12, 1891. These supplements covered topics ranging from industrial machinery and electrical innovations to natural history and medicine, reflecting the technological optimism of the late 19th century.
+"""
+
+Notes = """
+Year chosen is the original publication date of this specific periodical issue (September 12, 1891), as periodicals are best dated by their issue date rather than any other metric.
+"""
+</result>

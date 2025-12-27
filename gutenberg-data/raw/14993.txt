@@ -1,0 +1,15 @@
+<result>
+Title = "Rig Veda Americanus: Sacred Songs of the Ancient Mexicans, With a Gloss in Nahuatl"
+Author = "Daniel Garrison Brinton (editor)"
+Year = 1890
+
+Tags = ["non-fiction", "historical-document", "anthropology", "religious-texts", "translation"]
+
+Summary = """
+This is a collection of ancient Aztec/Nahuatl sacred hymns and songs, compiled and edited by Daniel Garrison Brinton, a prominent 19th-century American anthropologist and linguist. The work presents ritual songs from pre-Columbian Mexican religion, including hymns to various Aztec deities such as Xippe Totec (god of silversmiths, spring, and renewal). The texts are presented in the original Nahuatl language with English translations and scholarly commentary. This is volume VIII of Brinton's "Library of Aboriginal American Literature" series, which aimed to preserve and make accessible the literary heritage of indigenous American peoples.
+"""
+
+Notes = """
+The year 1890 is when Brinton published this volume as part of his Library of Aboriginal American Literature series (1882-1890). The original hymns themselves date to pre-Columbian times, but this scholarly edition with Brinton's translations and annotations is the work being catalogued here. The title "Rig Veda Americanus" is Brinton's own designation, drawing a parallel to the ancient Hindu Rig Veda to emphasize the sacred/religious nature of these texts.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Poems of Henry Van Dyke"
+Author = "Henry Van Dyke"
+Year = 1911
+
+Tags = ["poetry", "appropriate-for-children"]
+
+Summary = """
+A collected volume of poetry by Henry Van Dyke (1852-1933), an American author, educator, and clergyman who served as a Presbyterian minister and later as a professor of English literature at Princeton University. Van Dyke was also appointed U.S. Ambassador to the Netherlands by Woodrow Wilson. His poetry often reflects themes of nature, faith, and the contemplative life. He is perhaps best known for writing the lyrics to "Joyful, Joyful, We Adore Thee" set to Beethoven's "Ode to Joy." This collection gathers his poetic works into a single volume.
+"""
+
+Notes = """
+The first collected edition of Van Dyke's poems was published in 1911 by Charles Scribner's Sons. While Van Dyke was a Presbyterian minister rather than Catholic, his works reflect a broadly Christian sensibility and were widely admired across denominational lines.
+"""
+</result>

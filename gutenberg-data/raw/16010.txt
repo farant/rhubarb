@@ -1,0 +1,15 @@
+<result>
+Title = "The Tithe-Proctor"
+Author = "William Carleton"
+Year = 1849
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+The Tithe-Proctor is a novel by Irish writer William Carleton, one of the most important Irish novelists of the 19th century. The work deals with the controversial tithe system in Ireland, where Catholic peasants were required to pay tithes to support the Protestant Church of Ireland. The novel is set against the backdrop of the Tithe War (1830s), a period of violent resistance to tithe collection. Carleton, who converted from Catholicism to Protestantism, wrote extensively about Irish peasant life and was known for his realistic portrayals of rural Irish society. The story follows a tithe-proctor (a collector of tithes) and explores the social tensions and violence surrounding this deeply resented system.
+"""
+
+Notes = """
+First published in 1849. Carleton (1794-1869) was raised Catholic but converted to Protestantism, which complicates categorizing the work as 'catholic'. While he wrote sympathetically about Irish Catholic peasants, his religious position and the complex political nature of this particular work (dealing with anti-tithe agitation) means it would not be considered a work likely to receive a nihil obstat. The tithe system was abolished in Ireland in 1838, so the novel was written as a historical reflection on the Tithe War period.
+"""
+</result>

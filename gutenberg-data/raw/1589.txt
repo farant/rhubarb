@@ -1,0 +1,15 @@
+<result>
+Title = "Tamburlaine the Great, Part II"
+Author = "Christopher Marlowe"
+Year = 1590
+
+Tags = ["fiction", "drama", "renaissance"]
+
+Summary = """
+Tamburlaine the Great, Part II is the sequel to Christopher Marlowe's groundbreaking play about the Turco-Mongol conqueror Timur (Tamerlane). This second part continues the story of Tamburlaine's military campaigns and conquests, depicting his increasingly brutal rise to power and eventual death. The play is notable for its blank verse, its portrayal of ambition and power, and its influence on Elizabethan drama. Marlowe's Tamburlaine plays were enormously popular and helped establish the conventions of English Renaissance tragedy.
+"""
+
+Notes = """
+The first part was performed around 1587, with Part II following shortly after due to popular demand. The plays were first published together in 1590. This edition was edited by Rev. Alexander Dyce, a 19th century scholar known for his editions of Elizabethan dramatists.
+"""
+</result>

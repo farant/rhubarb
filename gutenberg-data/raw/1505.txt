@@ -1,0 +1,15 @@
+<result>
+Title = "The Rape of Lucrece"
+Author = "William Shakespeare"
+Year = 1594
+
+Tags = ["fiction", "poetry", "classical-themes"]
+
+Summary = """
+The Rape of Lucrece is a narrative poem by William Shakespeare, published in 1594 as a companion piece to Venus and Adonis (1593). It tells the story of Lucretia, a Roman noblewoman whose rape by Sextus Tarquinius (son of the Roman king) and subsequent suicide led to the overthrow of the Roman monarchy and the establishment of the Roman Republic. Shakespeare dedicated the poem to Henry Wriothesley, Earl of Southampton, his patron. The work draws on classical sources including Ovid's Fasti and Livy's Ab Urbe Condita. It was highly popular in Shakespeare's lifetime and went through multiple editions.
+"""
+
+Notes = """
+First published in 1594 by Richard Field. This is one of Shakespeare's two major narrative poems and was registered with the Stationers' Company on May 9, 1594.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Winter's Tale"
+Author = "William Shakespeare"
+Year = 1611
+
+Tags = ["fiction", "drama", "appropriate-for-children"]
+
+Summary = """
+The Winter's Tale is one of Shakespeare's late romances, blending tragedy and comedy. The play tells the story of King Leontes of Sicilia, who becomes consumed by irrational jealousy, convinced his wife Hermione is having an affair with his childhood friend Polixenes, King of Bohemia. His paranoid accusations lead to the apparent death of Hermione, the actual death of their young son Mamillius, and the abandonment of their infant daughter Perdita. The second half of the play jumps forward sixteen years to a pastoral setting in Bohemia, where Perdita has been raised by shepherds and falls in love with Polixenes' son Florizel. The play concludes with reconciliation, forgiveness, and one of Shakespeare's most famous theatrical moments: the apparent resurrection of Hermione from a statue.
+"""
+
+Notes = """
+The Winter's Tale was first performed around 1611, with the earliest recorded performance on May 15, 1611 at the Globe Theatre. It was first published in the First Folio of 1623. The 1611 date represents the original composition and performance.
+"""
+</result>

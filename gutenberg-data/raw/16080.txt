@@ -1,0 +1,15 @@
+<result>
+Title = "Uncle Max"
+Author = "Rosa Nouchette Carey"
+Year = 1887
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Uncle Max is a Victorian novel by Rosa Nouchette Carey, a popular English author known for her domestic fiction and stories with strong moral themes. The novel follows the story of a young woman and her relationship with her uncle, a clergyman. Carey was known for writing wholesome, family-oriented stories that were particularly popular with female readers in the late 19th century. Her works often featured themes of duty, self-sacrifice, and Christian virtue, and were considered suitable reading for young women of the era.
+"""
+
+Notes = """
+The 1894 date shown in the Gutenberg text appears to be a later edition. Uncle Max was first published in 1887. Rosa Nouchette Carey (1840-1909) was a prolific Victorian novelist who wrote over 40 books, mostly domestic fiction aimed at women and families.
+"""
+</result>

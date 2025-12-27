@@ -1,0 +1,15 @@
+<result>
+Title = "Svet"
+Author = "Branislav Nušić"
+Year = 1906
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+"Svet" (The World) is a comedy by Branislav Nušić (1864-1938), one of the most celebrated Serbian playwrights and humorists. Nušić was known for his satirical comedies that mocked Serbian bourgeois society, bureaucracy, and social pretensions. His works remain popular in Serbian theater to this day. "Svet" is a social satire examining how people behave differently based on public perception and social expectations.
+"""
+
+Notes = """
+Branislav Nušić wrote prolifically in the early 20th century. "Svet" was first performed around 1906. The text appears to be in Serbian Cyrillic script (though partially garbled in the excerpt due to encoding issues). Nušić was Serbian Orthodox, not Catholic.
+"""
+</result>

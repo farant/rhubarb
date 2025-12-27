@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Froude"
+Author = "Herbert Paul"
+Year = 1905
+
+Tags = ["non-fiction", "biography"]
+
+Summary = """
+This is a biography of James Anthony Froude (1818-1894), the prominent Victorian historian and man of letters. Froude was known for his monumental twelve-volume History of England from the Fall of Wolsey to the Defeat of the Spanish Armada, as well as controversial works including his biography of Thomas Carlyle. Herbert Paul, himself a journalist, politician, and author, wrote this biography eleven years after Froude's death, with assistance from Froude's daughter Margaret who provided letters and documents. The work examines Froude's literary career, his historical methodology, and his often contentious place in Victorian intellectual life.
+"""
+
+Notes = """
+The publication year of 1905 is clearly stated in the text ("London: Sir Isaac Pitman & Sons, 1905"). Herbert Paul notes in the preface that eleven years had elapsed since Froude's death (1894), confirming this date. This is the original publication, not a reprint or translation.
+"""
+</result>

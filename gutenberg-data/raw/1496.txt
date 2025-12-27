@@ -1,0 +1,15 @@
+<result>
+Title = "Massacre at Paris"
+Author = "Christopher Marlowe"
+Year = 1593
+
+Tags = ["fiction", "historical-drama", "play"]
+
+Summary = """
+The Massacre at Paris is a historical tragedy by Christopher Marlowe dramatizing the St. Bartholomew's Day Massacre of 1572, in which thousands of French Huguenots (Protestants) were killed by Catholic mobs. The play follows the machinations of the Duke of Guise and Catherine de Medici, the Queen Mother, depicting the religious violence and political intrigue of the French Wars of Religion. It continues through subsequent events including the assassinations of the Duke of Guise and King Henry III. The play is notable for its anti-Catholic sentiment typical of Elizabethan Protestant England and its portrayal of the Machiavellian Duke of Guise as the chief villain.
+"""
+
+Notes = """
+The play was likely written circa 1593, shortly before Marlowe's death in May of that year. The exact date of composition is uncertain, but it was first performed by the Admiral's Men in January 1593. The surviving text is corrupt and incomplete, possibly reconstructed from memory by actors. This is Marlowe's most topical play, dealing with events from recent European history that would have been well-known to Elizabethan audiences.
+"""
+</result>

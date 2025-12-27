@@ -1,0 +1,15 @@
+<result>
+Title = "His Masterpiece"
+Author = "Émile Zola"
+Year = 1886
+
+Tags = ["fiction"]
+
+Summary = """
+His Masterpiece (L'Œuvre) is the fourteenth novel in Émile Zola's Rougon-Macquart series. The novel follows Claude Lantier, a painter struggling to create his artistic masterpiece in Paris during the latter years of the Second Empire. It is a deeply autobiographical work that draws on Zola's own experiences in the Parisian art world and his friendship with Paul Cézanne. The novel explores themes of artistic obsession, the conflict between artistic ideals and reality, and the psychological toll of creative ambition. It is considered one of the most significant literary works about the Impressionist movement and the struggles of artists in 19th century France.
+"""
+
+Notes = """
+The novel was first published in 1886 in French as L'Œuvre. This English translation by Ernest Alfred Vizetelly was published later. The work caused a rift between Zola and his childhood friend Paul Cézanne, who saw himself in the tragic protagonist Claude Lantier.
+"""
+</result>

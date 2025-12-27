@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 158, March 17, 1920"
+Author = "Various (Edited by Owen Seaman)"
+Year = 1920
+
+Tags = ["periodical", "satire", "humor", "fiction"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841. It became one of the most influential and iconic British publications, known for its satirical commentary on politics, society, and culture, as well as its cartoons and illustrations. The magazine coined the term "cartoon" in its modern sense. Owen Seaman served as editor from 1906 to 1932. This particular issue is from March 1920, shortly after World War I, a period when the magazine frequently commented on post-war reconstruction, the Treaty of Versailles aftermath, and social changes in Britain.
+"""
+
+Notes = """
+Year reflects the actual publication date of this specific issue rather than the magazine's founding date (1841), as each issue represents contemporary commentary on events of its time. Punch ceased publication in 2002 after 161 years.
+"""
+</result>

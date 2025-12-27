@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Round World and What Is Going On In It, Vol. 1, No. 35"
+Author = "Various"
+Year = 1897
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children", "historical-document"]
+
+Summary = """
+The Great Round World and What Is Going On In It was a weekly magazine published in New York City specifically designed for young readers (boys and girls). It covered current events and news from around the world, presented in a way accessible to children. The magazine was edited by Julia Truitt Bishop and sold for five cents per issue. This particular issue is from Vol. 1, No. 35, dated July 8, 1897, indicating it was in its first year of publication.
+"""
+
+Notes = """
+The metadata shows some inconsistency - the title indicates July 8, 1897 (No. 35) but the body text shows June 3, 1897 (No. 30). This appears to be a Gutenberg transcription error. I used 1897 as the year since this was a contemporary periodical documenting current events of that time.
+"""
+</result>

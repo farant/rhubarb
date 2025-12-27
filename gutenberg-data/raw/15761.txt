@@ -1,0 +1,15 @@
+<result>
+Title = "Om utvandringen, dess betydelse och orsaker"
+Author = "Knut Wicksell"
+Year = 1882
+
+Tags = ["non-fiction", "economics", "sociology"]
+
+Summary = """
+This is a Swedish-language work by Knut Wicksell (1851-1926), one of the most influential economists of the late 19th and early 20th centuries. The title translates to "On Emigration, Its Significance and Causes." It consists of lectures delivered in Stockholm and Uppsala in November-December 1881, published the following year. Wicksell was a Swedish economist known for his contributions to monetary theory, capital theory, and public finance. This early work examines the causes and effects of emigration from Sweden, which was experiencing significant population outflows to America during this period. Wicksell was known for his neo-Malthusian views on population, which likely inform this analysis.
+"""
+
+Notes = """
+The lectures were delivered in late 1881, but the work was published in 1882 by Albert Bonniers Förlag in Stockholm. I chose 1882 as it represents the publication date of the complete work with appendix ("Med ett bihang").
+"""
+</result>

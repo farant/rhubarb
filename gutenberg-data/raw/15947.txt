@@ -1,0 +1,15 @@
+<result>
+Title = "The Pleasures of England"
+Author = "John Ruskin"
+Year = 1884
+
+Tags = ["non-fiction", "lectures", "art-history", "cultural-criticism"]
+
+Summary = """
+A series of lectures delivered by John Ruskin at Oxford University during his second tenure as Slade Professor of Fine Art. The lectures explore English cultural history, art, and national character. Ruskin examines the sources of English pleasure and satisfaction through history, architecture, literature, and religion. The work reflects Ruskin's characteristic blend of art criticism, social commentary, and moral philosophy that made him one of the most influential Victorian thinkers.
+"""
+
+Notes = """
+The lectures were delivered in 1884 during Ruskin's second period as Slade Professor (1883-1884). While this edition shows 1888 (the Wiley publication date), the original lectures and first publication were in 1884. Ruskin resigned the professorship in 1884 partly due to controversy over vivisection at Oxford.
+"""
+</result>

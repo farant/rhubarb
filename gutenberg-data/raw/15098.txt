@@ -1,0 +1,15 @@
+<result>
+Title = "Diderot and the Encyclopaedists (Vol 1 of 2)"
+Author = "John Morley"
+Year = 1878
+
+Tags = ["non-fiction", "biography", "philosophy", "history"]
+
+Summary = """
+This is a biographical and intellectual history work by John Morley examining Denis Diderot and the circle of French philosophes who created the famous Encyclopédie in 18th century France. Morley explores Diderot's life, thought, and his central role in the Enlightenment project of the Encyclopédie, which aimed to systematize all human knowledge. The work situates Diderot within the broader intellectual currents of the French Enlightenment and examines his relationships with other major figures like d'Alembert, Voltaire, and Rousseau.
+"""
+
+Notes = """
+John Morley (1838-1923) was a British Liberal statesman and writer. This work was first published in 1878. Morley wrote from a sympathetic Enlightenment-rationalist perspective, so while scholarly, the work reflects Victorian liberal values and a generally favorable view of the philosophes' critique of traditional religion and authority.
+"""
+</result>

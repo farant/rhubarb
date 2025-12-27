@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 158, January 21st, 1920"
+Author = "Various"
+Year = 1920
+
+Tags = ["fiction", "periodical", "humor", "satire"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire published from 1841 to 2002. It was famous for its satirical cartoons, witty commentary on British politics and society, and its influence on the development of the modern political cartoon. The magazine featured contributions from numerous writers and illustrators, hence the "Various" authorship. This particular issue from January 1920 reflects the post-World War I period in Britain, with its characteristic blend of jokes, social commentary, and illustrations.
+"""
+
+Notes = """
+Year chosen is 1920 as this is a periodical and the date of this specific issue is the relevant historical date. Punch magazine itself was founded in 1841, but each issue is its own publication. Not marked appropriate-for-children as content includes adult humor and social satire typical of the era. Not marked catholic as it was a secular British publication.
+"""
+</result>

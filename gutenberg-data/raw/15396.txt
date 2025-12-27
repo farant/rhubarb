@@ -1,0 +1,15 @@
+<result>
+Title = "Tender Buttons: Objects–Food–Rooms"
+Author = "Gertrude Stein"
+Year = 1914
+
+Tags = ["non-fiction", "experimental-literature"]
+
+Summary = """
+Tender Buttons is one of Gertrude Stein's most famous experimental prose poetry works. Published in 1914, it consists of three sections: Objects, Food, and Rooms. The work is a landmark of literary modernism and cubist writing, abandoning conventional syntax and narrative in favor of abstract, fragmented descriptions of domestic items. Stein uses repetition, wordplay, and unusual juxtapositions to defamiliarize everyday objects. The work has been highly influential on avant-garde literature, language poetry, and feminist literary criticism.
+"""
+
+Notes = """
+1914 is the original publication year by Claire Marie press in New York. Gertrude Stein (1874-1935) was an American expatriate writer who lived most of her adult life in Paris. She was Jewish, not Catholic.
+"""
+</result>

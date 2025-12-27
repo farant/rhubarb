@@ -1,0 +1,15 @@
+<result>
+Title = "Green Fields and Running Brooks, and Other Poems"
+Author = "James Whitcomb Riley"
+Year = 1892
+
+Tags = ["poetry", "appropriate-for-children"]
+
+Summary = """
+A collection of pastoral poetry by James Whitcomb Riley, the beloved "Hoosier Poet" known for his dialect verse and sentimental portrayals of rural Indiana life. Riley was one of the most popular American poets of his era, celebrated for accessible, heartfelt poems that captured childhood nostalgia and country scenes. This volume continues his characteristic themes of nature, simple pleasures, and Midwestern Americana.
+"""
+
+Notes = """
+First published in 1892 by Bowen-Merrill Company (later Bobbs-Merrill) in Indianapolis. Riley (1849-1916) was immensely popular during his lifetime, often compared to Longfellow and Tennyson in fame.
+"""
+</result>

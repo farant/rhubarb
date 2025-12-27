@@ -1,0 +1,15 @@
+<result>
+Title = "The Grey Room"
+Author = "Eden Phillpotts"
+Year = 1921
+
+Tags = ["fiction"]
+
+Summary = """
+The Grey Room is a mystery novel by Eden Phillpotts, a prolific English author known for his Dartmoor novels and detective fiction. The story centers on a mysterious room in an English country house where unexplained deaths occur. When guests at a house party die under strange circumstances after spending time in the grey room, an investigation ensues involving various characters attempting to uncover whether the cause is supernatural or has a rational explanation. The novel blends elements of the locked-room mystery with gothic atmosphere, reflecting the post-WWI interest in spiritualism and the unexplained.
+"""
+
+Notes = """
+Eden Phillpotts (1862-1960) was an extremely prolific writer who produced over 250 works. The Grey Room was first published in 1921. While Phillpotts was not Catholic, he explored themes of faith and rationality in his work. This novel is notable for its atmospheric tension and its examination of belief versus skepticism in the face of seemingly inexplicable events.
+"""
+</result>

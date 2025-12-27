@@ -1,0 +1,15 @@
+<result>
+Title = "The Tragedy of King Richard III"
+Author = "William Shakespeare"
+Year = 1593
+
+Tags = ["fiction", "drama", "historical-fiction"]
+
+Summary = """
+One of Shakespeare's earliest and most popular history plays, Richard III dramatizes the rise and fall of Richard, Duke of Gloucester, who schemes and murders his way to the English throne. The play covers the final chapter of the Wars of the Roses, depicting Richard as a brilliant but monstrous villain who eliminates his brothers, nephews (the Princes in the Tower), and anyone else standing between him and power. The play culminates in the Battle of Bosworth Field where Richard is defeated by Henry Tudor (the future Henry VII), ending the Plantagenet dynasty and beginning the Tudor era. Famous for Richard's opening soliloquy ("Now is the winter of our discontent") and his battlefield cry ("A horse! A horse! My kingdom for a horse!").
+"""
+
+Notes = """
+The play was likely written around 1592-1593 and first performed circa 1593. The exact date is uncertain, but it was entered in the Stationers' Register in 1597. I chose 1593 as a reasonable middle estimate for composition/first performance. Shakespeare drew heavily from Raphael Holinshed's Chronicles and Thomas More's History of King Richard III for his portrayal, which reflects the Tudor propaganda view of Richard as a villain.
+"""
+</result>

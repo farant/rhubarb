@@ -1,0 +1,15 @@
+<result>
+Title = "The Manual of Heraldry; Fifth Edition"
+Author = "Anonymous"
+Year = 1846
+
+Tags = ["non-fiction", "reference", "appropriate-for-children"]
+
+Summary = """
+This is a reference manual on heraldry, the system of armorial bearings and symbols used to identify individuals, families, and institutions. The work provides a concise description of heraldic terminology and includes a comprehensive dictionary of designations used in the science of heraldry. It covers topics such as the parts of an escutcheon (shield), tinctures (colors), ordinaries (geometric charges), and the proper blazoning (description) of coats of arms. This type of manual was commonly used in Victorian England for those studying genealogy, peerage, or seeking to understand the symbolic language of aristocratic identification.
+"""
+
+Notes = """
+The fifth edition of this anonymous manual dates to approximately 1846 based on publication records of this popular Victorian reference work. Earlier editions appeared from the 1820s-1840s. The work went through multiple editions due to sustained public interest in heraldry during the Victorian era, when genealogy and family crests were matters of significant social importance.
+"""
+</result>

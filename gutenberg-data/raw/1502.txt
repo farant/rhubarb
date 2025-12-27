@@ -1,0 +1,15 @@
+<result>
+Title = "The Third Part of King Henry VI"
+Author = "William Shakespeare"
+Year = 1591
+
+Tags = ["fiction", "drama", "historical-fiction"]
+
+Summary = """
+Henry VI, Part 3 is the final play in Shakespeare's first historical tetralogy, dramatizing the Wars of the Roses between the Houses of York and Lancaster. The play covers the period from the Duke of York's claim to the throne through the murder of Henry VI. It features some of Shakespeare's most violent scenes, including the death of young Rutland and the paper-crown humiliation of York by Queen Margaret. The play culminates with Edward IV securing the throne and the future Richard III beginning his machinations. It is notable for its portrayal of civil war's brutality and the famous "molehill" scene.
+"""
+
+Notes = """
+The exact date of composition is uncertain, but scholars generally place it between 1590-1592. The play was likely written around 1591, making it one of Shakespeare's earliest works. It was published in a "bad quarto" in 1595 under the title "The True Tragedy of Richard Duke of York" before appearing in the First Folio of 1623. I chose 1591 as a reasonable scholarly consensus for the original composition date.
+"""
+</result>

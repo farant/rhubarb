@@ -1,0 +1,15 @@
+<result>
+Title = "The Ragged Edge"
+Author = "Harold MacGrath"
+Year = 1922
+
+Tags = ["fiction"]
+
+Summary = """
+The Ragged Edge is a romantic adventure novel by Harold MacGrath, a popular American novelist of the early 20th century known for his adventure stories and romances. The novel deals with themes of redemption and escape, following characters in exotic settings. MacGrath was a prolific writer whose works were frequently adapted into silent films, as evidenced by the photoplay adaptation mentioned in this edition featuring actors Mimi Palmeri and Alfred Lunt.
+"""
+
+Notes = """
+The novel was first published in 1922. The edition referenced here includes stills from the 1923 film adaptation, but the original publication date of the novel itself is 1922.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Round World and What Is Going On In It, Vol. 1, No. 44"
+Author = "Various"
+Year = 1897
+
+Tags = ["non-fiction", "periodical", "appropriate-for-children", "historical-document"]
+
+Summary = """
+The Great Round World and What Is Going On In It was a weekly magazine published for boys and girls in the late 1890s. Edited by Julia Truitt Bishop, the publication aimed to present current events and news from around the world in a format accessible and interesting to young readers. This particular issue is from September 9, 1897. The magazine was part of the late Victorian era's effort to educate children about geography, world affairs, and current events, priced at five cents per issue.
+"""
+
+Notes = """
+Year chosen is 1897, the publication date of this specific issue as indicated in the header. As a periodical, each issue has its own publication date rather than a single original publication year for the entire series.
+"""
+</result>

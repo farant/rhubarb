@@ -1,0 +1,15 @@
+<result>
+Title = "Voyages abracadabrants du gros Philéas"
+Author = "Olga de Pitray"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+A whimsical children's book by Olga de Pitray (née de Ségur), daughter of the famous French children's author Comtesse de Ségur. The title translates roughly to "The Fantastic Voyages of Fat Philéas" - an illustrated adventure story in the tradition of imaginative French children's literature of the late 19th century. The de Ségur family was known for producing wholesome Catholic children's literature, and Olga continued this tradition. The book was published by Gaume et Cie, a Catholic publishing house in Paris.
+"""
+
+Notes = """
+Olga de Pitray (1835-1908) was born Olga de Ségur, daughter of Sophie de Ségur (Comtesse de Ségur), one of the most celebrated French children's authors. The work was published circa 1883 by Gaume et Cie, a well-known Catholic publisher. The illustrations were by Mme de La Fargue with engravings by Perez. The de Ségur/Pitray family had strong Catholic ties, and Sophie de Ségur's works often received ecclesiastical approval.
+"""
+</result>

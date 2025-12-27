@@ -1,0 +1,15 @@
+<result>
+Title = "Syvistä riveistä: Kansankirjailijaimme novellikokoelma"
+Author = "Various"
+Year = 1890
+
+Tags = ["fiction", "anthology"]
+
+Summary = """
+"Syvistä riveistä" (From the Deep Ranks) is a Finnish anthology of short stories by folk writers ("kansankirjailijat"). The collection features works by several Finnish authors including Liisa Tervo, Eero Sissala, P. Päivärinta, N. Niemelä, Alkio (Santeri Alkio), and Kauppis-Heikki. These writers were part of a movement in late 19th century Finland that focused on depicting rural and working-class life. The anthology was published by WSOY in Porvoo and represents an important contribution to Finnish realist literature of the period.
+"""
+
+Notes = """
+The year 1890 is taken directly from the publication information in the text (WSOY, Porvoo, 1890). This appears to be the original publication date of this anthology collection.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Rogue's Life"
+Author = "Wilkie Collins"
+Year = 1856
+
+Tags = ["fiction"]
+
+Summary = """
+A Rogue's Life is a picaresque novella by Wilkie Collins, one of the pioneers of the detective and sensation novel genres. The story follows the misadventures of a charming but morally flexible protagonist through Victorian England and eventually to Australia. Written in a light, satirical tone, it chronicles the narrator's various failed attempts at respectable careers—as a painter, a caricaturist, and other pursuits—before his descent into more dubious activities. The work is notable for its witty social commentary and its affectionate portrayal of a likeable scoundrel navigating the rigid class structures of mid-Victorian society.
+"""
+
+Notes = """
+Originally serialized in Charles Dickens's periodical Household Words in March 1856. Collins later republished it in book form in 1879 with revisions. The year 1856 is chosen as the original publication date since that represents when the work first appeared to readers.
+"""
+</result>

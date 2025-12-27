@@ -1,0 +1,15 @@
+<result>
+Title = "Memoiren einer Sozialistin: Kampfjahre"
+Author = "Lily Braun"
+Year = 1911
+
+Tags = ["non-fiction", "autobiography", "political"]
+
+Summary = """
+This is the second volume of Lily Braun's autobiographical memoirs, subtitled "Kampfjahre" (Years of Struggle). Lily Braun (1865-1916) was a German feminist and socialist activist. Born into an aristocratic Prussian family, she became a prominent figure in the German women's movement and Social Democratic Party. This volume covers her years of political activism and struggle for women's rights and socialist causes. The first volume, "Lehrjahre" (Years of Learning), was published in 1909. Despite being labeled "Roman" (novel), the work is essentially autobiographical memoir with some literary framing.
+"""
+
+Notes = """
+The 1911 date is taken directly from the publication information in the text. This represents the original German publication by Albert Langen in Munich. Lily Braun was not Catholic - she came from a Protestant Prussian military family and later became a socialist, so the 'catholic' tag is not applicable.
+"""
+</result>

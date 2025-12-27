@@ -1,0 +1,15 @@
+<result>
+Title = "Young Folks' Library, Volume III"
+Author = "Thomas Bailey Aldrich, William Jewett Tucker, Hamilton Wright Mabie, Henry Van Dyke, Nathan Haskell Dole (editors)"
+Year = 1902
+
+Tags = ["non-fiction", "anthology", "appropriate-for-children"]
+
+Summary = """
+Young Folks' Library is a twenty-volume anthology series designed to introduce young readers to classic literature from around the world. The collection includes folk tales, fairy tales, fables, legends, natural history, adventure stories, biographies, history, poetry, and patriotic works. This third edition was compiled by a distinguished editorial board led by Thomas Bailey Aldrich (poet and former editor of The Atlantic Monthly), with contributions from prominent figures including Hamilton Wright Mabie and Henry Van Dyke. The series was published by Hall and Locke Company in Boston and represents a late Victorian/Edwardian approach to children's literary education.
+"""
+
+Notes = """
+1902 is the publication year explicitly stated on the title page for this third edition. As an anthology/compilation rather than an original work, this publication date is the appropriate year to use.
+"""
+</result>

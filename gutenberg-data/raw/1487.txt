@@ -1,0 +1,15 @@
+<result>
+Title = "The Perfect Wagnerite: A Commentary on the Niblung's Ring"
+Author = "George Bernard Shaw"
+Year = 1898
+
+Tags = ["non-fiction", "literary-criticism", "music-criticism"]
+
+Summary = """
+A critical and philosophical analysis of Richard Wagner's operatic cycle "Der Ring des Nibelungen" (The Ring of the Nibelung). Shaw interprets Wagner's epic four-opera work as an allegory of contemporary social and political themes, particularly capitalism, socialism, and the critique of power. Shaw argues that Wagner embedded revolutionary socialist ideas within the mythological framework of the Norse/Germanic legends. The book examines each opera in the cycle (Das Rheingold, Die Walküre, Siegfried, and Götterdämmerung) and their characters as symbols of various social forces and philosophical concepts. It remains one of the most influential interpretations of Wagner's Ring cycle.
+"""
+
+Notes = """
+First published in 1898. Shaw was a prominent music critic before becoming famous as a playwright, and this work reflects his dual expertise in music and social criticism. Shaw was a Fabian socialist and this analysis reflects his political philosophy. The work went through several editions with additional prefaces (including a German edition translated by Siegfried Trebitsch, referenced in this text). Shaw was not Catholic and his interpretation is secular/socialist in nature.
+"""
+</result>

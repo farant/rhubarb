@@ -1,0 +1,15 @@
+<result>
+Title = "The Tale of Cuffy Bear"
+Author = "Arthur Scott Bailey"
+Year = 1915
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Tale of Cuffy Bear is a children's story about a young bear cub and his adventures. It is part of Arthur Scott Bailey's "Sleepy-Time Tales" series, which featured animal protagonists in stories designed for young children. Bailey was a prolific American author of children's books in the early 20th century, known for his series featuring various animal characters including Cuffy Bear, Fatty Coon, and many others. The stories are gentle, wholesome tales meant to entertain and instruct young readers.
+"""
+
+Notes = """
+Arthur Scott Bailey's Sleepy-Time Tales series began publication around 1915. The Tale of Cuffy Bear was one of the early entries in this popular series published by Grosset & Dunlap.
+"""
+</result>

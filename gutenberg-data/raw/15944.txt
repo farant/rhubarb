@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Volume 10, No. 277"
+Author = "Various"
+Year = 1827
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a mass audience, priced at just 2d (two pence). The magazine featured a mix of articles on literature, science, history, travel, and general knowledge, often accompanied by illustrations. This particular issue from October 13, 1827 includes a feature on the Palace at Stockholm. The publication was influential in democratizing access to literature and information for the working and middle classes in early Victorian Britain.
+"""
+
+Notes = """
+Year chosen is 1827, the publication date of this specific issue as indicated in the header. The magazine itself began publication in 1822, but each issue is dated individually.
+"""
+</result>
