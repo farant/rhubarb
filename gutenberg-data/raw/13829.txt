@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. XVII, No. 475"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the earliest cheap periodicals aimed at a mass readership, costing only two pence. The magazine contained a miscellany of articles on literature, history, science, biography, and current events, often accompanied by woodcut illustrations. This particular issue from February 5, 1831 features an article about Princess Elizabeth's Cottage at Windsor, describing the rural retreat built under the supervision of Princess Elizabeth (1770-1840), daughter of King George III and sister of King George IV and William IV.
+"""
+
+Notes = """
+Year chosen is 1831, the publication date printed on this specific issue. The Mirror was a periodical, so each issue has its own date. Princess Elizabeth mentioned in the article was a real historical figure who married the Landgrave of Hesse Homburg in 1818.
+"""
+</result>

@@ -1,0 +1,17 @@
+The file seems empty. But based on the text you provided directly in your message, I can identify this work:
+
+<result>
+Title = "Manasse Jäppinen"
+Author = "Maiju Lassila"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A humorous Finnish novel by Maiju Lassila (pseudonym of Algot Untola, 1868-1918), one of Finland's most beloved early 20th century humorists. The story follows Manasse Jäppinen from his childhood in a remote village in Sääminki, sarcastically framing him as a future famous educator and school official. Lassila was known for his folksy humor and satirical portrayals of rural Finnish life. The work is characteristic of his comedic style, poking fun at educational pretensions and rural customs.
+"""
+
+Notes = """
+First published by Kustannusosakeyhtiö Kirja in 1912, as stated in the text itself. Maiju Lassila was a prolific Finnish author who wrote numerous humorous novels depicting Finnish rural life. He died in 1918 during the Finnish Civil War.
+"""
+</result>

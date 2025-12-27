@@ -1,0 +1,15 @@
+<result>
+Title = "Oeuvres de Napoléon Bonaparte, Tome Cinquième: Campagne de Russie"
+Author = "Napoléon Bonaparte"
+Year = 1812
+
+Tags = ["historical-document", "non-fiction", "military"]
+
+Summary = """
+This is the fifth volume of Napoleon Bonaparte's collected works, containing the bulletins from the Russian Campaign of 1812. The bulletins were official military dispatches issued by Napoleon to inform the French public and government about the progress of military operations. This particular excerpt begins with the First Bulletin of the Grande Armée, dated June 20, 1812, from Gumbinnen, which outlines the political justifications for the war against Russia, citing Russia's change in policy, the influence of England, and the breakdown of diplomatic relations. The bulletins served as propaganda as well as military communiqués.
+"""
+
+Notes = """
+The year 1812 is chosen as this represents when the bulletins were written during the actual campaign, rather than 1821 when this Panckoucke edition was published in Paris. The bulletins are primary historical documents from Napoleon himself during the invasion of Russia.
+"""
+</result>

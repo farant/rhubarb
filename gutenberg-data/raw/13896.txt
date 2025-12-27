@@ -1,0 +1,15 @@
+<result>
+Title = "Jacques Bonneval; Or, The Days of the Dragonnades"
+Author = "Anne Manning"
+Year = 1868
+
+Tags = ["fiction", "historical-fiction", "protestant"]
+
+Summary = """
+A historical novel by Anne Manning (1807-1879), a prolific Victorian-era British novelist. The story is set during the Dragonnades, a period of brutal persecution of French Protestants (Huguenots) by Louis XIV in the 1680s. The dragonnades involved quartering dragoons (mounted soldiers) in Protestant households to force conversions to Catholicism through violence and intimidation, culminating in the Revocation of the Edict of Nantes in 1685. Manning was known for her historical fiction written in an archaic diary style, most famously "Mary Powell" (1849) and "The Household of Sir Thomas More." She published many works under the anonymous attribution "by the author of Mary Powell."
+"""
+
+Notes = """
+Anne Manning was Anglican/Protestant in sympathy, and this work reflects that perspective - it portrays the Huguenot experience of persecution sympathetically. The chapter titles ("Persecuted, Yet Not Forsaken", "Cast Down, But Not Destroyed", "My Native Land, Good-Night") suggest a Protestant martyrology narrative. The Dragonnades were indeed historically brutal, though this is obviously written from one confessional viewpoint. Not marked 'catholic' as it is Protestant historical fiction.
+"""
+</result>

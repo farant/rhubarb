@@ -1,0 +1,15 @@
+<result>
+Title = "Isänmaa"
+Author = "Arvid Järnefelt"
+Year = 1893
+
+Tags = ["fiction"]
+
+Summary = """
+Isänmaa (Fatherland) is a Finnish novel by Arvid Järnefelt (1861-1932), a prominent figure in Finnish literature and part of a distinguished artistic family. The text opens with a description of two old farmsteads—Vuorela and Niemelä—separated by the Taivalkoski rapids, tracing their settlement history and the hardships of the 1860s famine years. The novel deals with themes of Finnish rural life, social class dynamics between landowners and tenant farmers, and national identity during a period when Finland was a Grand Duchy under Russian rule. Järnefelt was significantly influenced by Tolstoyan ideas of Christian ethics and social justice, which permeate much of his literary work.
+"""
+
+Notes = """
+The title page indicates "1893-94" suggesting serialized or multi-volume publication. I have chosen 1893 as the primary year as this appears to be when publication began. Arvid Järnefelt, while personally influenced by Tolstoy's Christian philosophy, was not a Catholic author—he was part of the Finnish Lutheran/Tolstoyan tradition—so the 'catholic' tag is not applicable.
+"""
+</result>

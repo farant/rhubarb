@@ -1,0 +1,15 @@
+<result>
+Title = "Le Côté de Guermantes"
+Author = "Marcel Proust"
+Year = 1920
+
+Tags = ["fiction"]
+
+Summary = """
+Le Côté de Guermantes is the third novel in Marcel Proust's monumental seven-part work "À la recherche du temps perdu" (In Search of Lost Time). This volume follows the narrator's entry into the aristocratic world of the Guermantes family, one of the most distinguished noble families in France. The novel explores themes of social ambition, the nature of aristocracy, love, jealousy, and the passage of time. It includes the famous episode of the grandmother's death and the narrator's complex relationship with the Duchess of Guermantes. The work is considered one of the greatest achievements of 20th century literature.
+"""
+
+Notes = """
+Le Côté de Guermantes was published in two parts: the first part in 1920 and the second part (which includes the third section shown here) in 1921. I chose 1920 as this represents the initial publication year of the volume. The complete "À la recherche du temps perdu" was published between 1913 and 1927, with the final volumes appearing posthumously after Proust's death in 1922.
+"""
+</result>

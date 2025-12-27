@@ -1,0 +1,15 @@
+<result>
+Title = "Köyhää kansaa"
+Author = "Minna Canth"
+Year = 1886
+
+Tags = ["fiction", "social-realism"]
+
+Summary = """
+"Köyhää kansaa" (Poor People) is a collection of short stories by Minna Canth, Finland's first significant female author and a pioneering figure in Finnish realism and naturalism. The work depicts the harsh lives of the Finnish working class and poor, focusing particularly on the struggles of women and families living in poverty. This opening story shows a mother caring for a sick child through the night while her husband sleeps obliviously - a scene that exemplifies Canth's social criticism and her focus on gender inequality within marriage and society. Canth was known for her advocacy of women's rights and social reform, and her works often challenged the conservative values of her time.
+"""
+
+Notes = """
+The original "Köyhää kansaa" was first published in 1886. This Gutenberg text is from a 1917 Otava edition that pairs it with another work "Salakari". Minna Canth (1844-1897) is considered one of Finland's most important 19th-century writers and a key figure in Finnish literary realism.
+"""
+</result>

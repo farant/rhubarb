@@ -1,0 +1,21 @@
+This text is a Dutch review/excerpt of Marie Robinson Wright's book about Chile. Let me provide the structured output:
+
+<result>
+Title = "Kijkjes in een mooi werk over Chili"
+Author = "Marie Robinson Wright"
+Year = 1904
+
+Tags = ["non-fiction", "geography", "travel-literature"]
+
+Summary = """
+This is a Dutch language review or excerpt describing Marie Robinson Wright's major work "The Republic of Chile: The Growth, Resources, and Industrial Conditions of a Great Nation." The text summarizes the contents of Wright's comprehensive study of Chile, covering its history, government, finances, foreign trade, Santiago, the navy and army, social life, churches, universities, education, and arts. It also discusses Chile's three natural zones, Valparaíso, Viña del Mar, haciendas, wine production, nitrate wealth, the Lota mines, minerals (gold, silver, iron, copper, coal), railways, steamships, agriculture, industry, and the southern regions including Patagonia, Punta Arenas, Tierra del Fuego, and Juan Fernández island. Wright spent five years traveling in South America and two years specifically in Chile.
+"""
+
+Notes = """
+The year 1904 is the publication date of Wright's original English work "The Republic of Chile" published by George Barrie & Sons in Philadelphia. This Dutch text appears to be a contemporary review or excerpt, likely also from around 1904-1905. The text mentions a Dutch minister of Water Management visiting Chile, which provides period context. Marie Robinson Wright (1866-1914) was an American author who wrote several books on Latin American countries.
+"""
+</result>
+
+Sources:
+- [Internet Archive - The Republic of Chile](https://archive.org/details/republicofchileg00wrig)
+- [Memoria Chilena - Marie Robinson Wright](https://www.memoriachilena.gob.cl/602/w3-propertyvalue-129799.html)

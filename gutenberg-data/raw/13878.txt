@@ -1,0 +1,15 @@
+<result>
+Title = "The English Orphans; Or, A Home in the New World"
+Author = "Mary Jane Holmes"
+Year = 1855
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A sentimental domestic novel following English immigrant orphans who find themselves in America after family tragedy. The story centers on their experiences in a New England town called Chicopee, including time spent in a poor-house and their eventual finding of a proper home. Mary Jane Holmes was one of the most popular American novelists of the 19th century, known for her accessible, moralistic fiction that appealed to a wide readership. Her works typically featured themes of virtue rewarded, class mobility, and domestic life.
+"""
+
+Notes = """
+The 1877 date shown appears to be a reprint edition. The novel was first published in 1855. Mary Jane Holmes (1825-1907) was a prolific American author whose novels sold millions of copies during her lifetime.
+"""
+</result>

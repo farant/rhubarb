@@ -1,0 +1,15 @@
+<result>
+Title = "The Jericho Road"
+Author = "W. Bion Adkins"
+Year = 1901
+
+Tags = ["non-fiction", "fraternal-organization"]
+
+Summary = """
+A work dedicated to members of the Independent Order of Odd Fellows (IOOF), a fraternal organization founded in the early 19th century. The book appears to be inspirational and instructional literature aimed at helping Odd Fellows in their personal development and commitment to the order's principles of friendship, love, and truth. Adkins was apparently a prolific author within this fraternal tradition.
+"""
+
+Notes = """
+The 1901 date is explicitly stated on the title page. The Odd Fellows were one of the largest fraternal organizations in America during this period. This is clearly Protestant fraternal literature rather than Catholic material.
+"""
+</result>

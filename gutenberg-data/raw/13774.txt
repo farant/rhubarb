@@ -1,0 +1,20 @@
+<result>
+Title = "Rosa Mundi and Other Stories"
+Author = "Ethel M. Dell"
+Year = 1921
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+A collection of romantic short stories by Ethel May Dell (1881-1939), one of the most popular British romance novelists of the early 20th century. Dell was known for her melodramatic, emotionally intense tales often featuring passionate love affairs, exotic settings (particularly British India), and strong-willed heroines. The collection includes the title story "Rosa Mundi," "A Debt of Honour," and "The Deliverer." Her works were immensely popular in her time, though critics often dismissed them as formulaic. Dell's writing appeals to readers seeking dramatic romantic narratives with clear moral frameworks.
+"""
+
+Notes = """
+First edition published in 1921 by Cassell (UK) and G.P. Putnam's Sons (US). Ethel M. Dell was a prolific author whose romance novels sold millions of copies during the interwar period.
+"""
+</result>
+
+Sources:
+- [Project Gutenberg - Rosa Mundi](https://www.gutenberg.org/ebooks/13774)
+- [AbeBooks - Rosa Mundi listings](https://www.abebooks.co.uk/book-search/title/rosa-mundi-and-other-stories/author/ethel-m-dell/)
+- [Rooke Books - Dell Collection](https://www.rookebooks.com/1921-1939-19vol-a-collection-of-novels-by-ethel-m-dell)

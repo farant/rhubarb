@@ -1,0 +1,15 @@
+<result>
+Title = "Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc."
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "reference"]
+
+Summary = """
+Notes and Queries was a weekly periodical founded in London in 1849, still published today. It served as a forum for scholars, antiquaries, literary men, and curious readers to pose questions and share answers on matters of history, literature, language, folklore, heraldry, and genealogy. The format was simple: readers submitted "queries" on obscure topics, and other readers responded with "notes" providing information. This particular issue (No. 53, November 2, 1850) includes discussions on Shakespeare and Marlowe, proposals for a Church-History Society, notes on the historian Burnet, and various minor queries ranging from the etymology of "Cheshire Cat" to questions about Steele's burial place. The motto "When found, make a note of" comes from Captain Cuttle in Dickens's Dombey and Son (1848).
+"""
+
+Notes = """
+The year 1850 is the publication date of this specific issue. Notes and Queries began publication on November 3, 1849. This is issue No. 53 from the first volume/series.
+"""
+</result>

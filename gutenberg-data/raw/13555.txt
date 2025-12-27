@@ -1,0 +1,15 @@
+<result>
+Title = "Youth and the Bright Medusa"
+Author = "Willa Cather"
+Year = 1920
+
+Tags = ["fiction", "short-stories"]
+
+Summary = """
+Youth and the Bright Medusa is a collection of eight short stories by Willa Cather, focusing on artists and their struggles with American society. The stories explore themes of artistic ambition, the conflict between art and commercialism, and the price of pursuing creative dreams. Several stories feature musicians, singers, and sculptors navigating the tension between their calling and societal expectations. The collection includes some of Cather's most celebrated short works, including "Paul's Case" (about a troubled young man's escape into fantasy) and "The Sculptor's Funeral" (examining how a small town fails to understand one of its own who achieved artistic greatness). The epigraph from Christina Rossetti's "Goblin Market" signals the collection's concern with dangerous enchantments and the costs of pursuing beauty.
+"""
+
+Notes = """
+1920 is the original publication year by Alfred A. Knopf. Four of the eight stories were revised versions of earlier published work, while four were new. Cather was already an established novelist by this point, having published O Pioneers! (1913) and My Ántonia (1918).
+"""
+</result>

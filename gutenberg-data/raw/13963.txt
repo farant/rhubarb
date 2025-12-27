@@ -1,0 +1,17 @@
+It seems the file only has the content you pasted. Based on the text provided, I can identify this work:
+
+<result>
+Title = "Ireland Since Parnell"
+Author = "D.D. Sheehan"
+Year = 1921
+
+Tags = ["non-fiction", "historical-document", "political-history"]
+
+Summary = """
+This is a political history and memoir by Captain Daniel Desmond Sheehan, an Irish nationalist politician who served as Member of Parliament for Mid-Cork from 1901 to 1918. The work covers the tumultuous period of Irish politics from the fall of Charles Stewart Parnell in 1890 through the rise of Sinn Féin and the revolutionary period leading up to 1921. Sheehan was a member of the Irish Parliamentary Party and a prominent figure in the land reform and labour movements in Ireland. The book provides an insider's perspective on the factional splits, the Home Rule movement, the land question, and the dramatic political changes that transformed Ireland in this period.
+"""
+
+Notes = """
+1921 is the year of first publication, as shown on the title page. This is an original work by Sheehan, not a translation or edition of an earlier text. Sheehan was a moderate nationalist who fell out with the Irish Parliamentary Party leadership and provides a critical perspective on figures like John Redmond and John Dillon.
+"""
+</result>

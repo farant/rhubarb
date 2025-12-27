@@ -1,0 +1,15 @@
+<result>
+Title = "The Journal of Negro History, Vol. I, No. 1"
+Author = "Carter G. Woodson (Editor)"
+Year = 1916
+
+Tags = ["non-fiction", "historical-document", "academic-journal"]
+
+Summary = """
+This is the inaugural issue of The Journal of Negro History, a groundbreaking academic quarterly founded by Carter G. Woodson, often called the "Father of Black History." Woodson, a Harvard-trained historian, established the Association for the Study of Negro Life and History in 1915 and launched this journal in January 1916 to provide a scholarly venue for research on African American history and the African diaspora. This first issue includes articles on Black communities in Cincinnati before the Civil War, early African American educators, African civilizations and proverbs, as well as primary documents from the 18th century and early Black churches. The journal was revolutionary in legitimizing the academic study of Black history at a time when it was largely ignored by mainstream academia.
+"""
+
+Notes = """
+The year 1916 is the original publication date of this first issue. Carter G. Woodson is listed as editor rather than sole author since this is a compiled journal with multiple contributors. Woodson also founded Negro History Week in 1926, which later became Black History Month. The Journal of Negro History continued publication and was renamed The Journal of African American History in 2002.
+"""
+</result>

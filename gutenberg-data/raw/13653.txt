@@ -1,0 +1,15 @@
+<result>
+Title = "Elle et Lui"
+Author = "George Sand"
+Year = 1859
+
+Tags = ["fiction", "autobiographical-fiction"]
+
+Summary = """
+Elle et Lui is an autobiographical novel by French writer George Sand (pen name of Amantine Lucile Aurore Dupin). The novel is a fictionalized account of her famous love affair with the Romantic poet Alfred de Musset, which took place in 1833-1835 and included their dramatic trip to Venice. Sand transposes the story into the world of painting rather than poetry, with the protagonists Thérèse Jacques (a painter) and Laurent (a young artist) standing in for Sand and Musset respectively. The novel caused considerable scandal upon publication, coming just two years after Musset's death in 1857, and prompted Musset's brother Paul to publish a counter-narrative, "Lui et Elle," defending Alfred's memory.
+"""
+
+Notes = """
+Published in 1859, two years after Alfred de Musset's death. The work sparked a literary controversy, with Paul de Musset responding with his own account "Lui et Elle" (1860) to defend his brother's reputation against what he saw as an unflattering portrayal. George Sand was one of the most prolific and celebrated French authors of the 19th century, known for her independent lifestyle and numerous romantic liaisons with notable figures.
+"""
+</result>

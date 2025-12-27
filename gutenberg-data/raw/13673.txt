@@ -1,0 +1,15 @@
+<result>
+Title = "The Pacha of Many Tales"
+Author = "Captain Frederick Marryat"
+Year = 1835
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of interconnected tales framed in the style of the Arabian Nights. The narrative follows a Pacha who, inspired by the stories of Scheherazade, seeks to collect his own treasury of entertaining stories with the help of his barber-vizier. The tales range from adventures of a camel-driver to voyages of a character named Huckaback, including an English sailor's story. Marryat was a Royal Navy officer whose seafaring experience informed much of his fiction, and this work shows his talent for adventure storytelling in an exotic Eastern setting.
+"""
+
+Notes = """
+Frederick Marryat (1792-1848) was a Royal Navy captain who became one of the most popular novelists of his era. The Pacha of Many Tales was first published in 1835. Marryat is perhaps better known for his naval adventure novels like Mr Midshipman Easy and for children's works like The Children of the New Forest.
+"""
+</result>

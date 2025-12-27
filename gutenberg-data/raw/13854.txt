@@ -1,0 +1,17 @@
+The file appears to be essentially empty, but you've provided the content in your message. Based on what you've shared, I can identify this work:
+
+<result>
+Title = "The Old Franciscan Missions of California"
+Author = "George Wharton James"
+Year = 1913
+
+Tags = ["non-fiction", "history", "catholic", "appropriate-for-children"]
+
+Summary = """
+A historical and descriptive account of the Spanish Franciscan missions established along the California coast from 1769 to 1823. George Wharton James (1858-1923) was a prolific American writer and lecturer who documented the American Southwest extensively. This work covers the founding, development, architecture, and decline of the 21 California missions, along with biographical sketches of the Franciscan friars who established them, particularly Junípero Serra. The book reflects early 20th century romantic interest in preserving California's Spanish colonial heritage during a period when many missions were being restored.
+"""
+
+Notes = """
+The year 1913 appears directly in the source text as the publication date. James wrote several editions and related works on California missions, but 1913 represents the primary publication of this specific title. While the subject matter is Catholic (the Franciscan missions), the author himself was not Catholic - he was actually a former Methodist minister who became interested in Southwestern culture and history. However, the work is respectful and sympathetic toward the missionary endeavor, hence the 'catholic' tag for subject matter relevance.
+"""
+</result>

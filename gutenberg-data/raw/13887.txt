@@ -1,0 +1,15 @@
+<result>
+Title = "Dr. Allinson's Cookery Book"
+Author = "Thomas Richard Allinson"
+Year = 1915
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A practical vegetarian cookbook written by Dr. Thomas Richard Allinson, a physician (L.R.C.P. Edinburgh) who was a prominent advocate for vegetarianism and natural health in late Victorian and Edwardian England. The book contains hundreds of vegetarian recipes including soups, puddings, custards, and main dishes. It emphasizes wholemeal flour over white flour and provides practical guidance for vegetarians, including a month's worth of menus with quantities for one person. Allinson was known for his advocacy of wholemeal bread and his opposition to the medical establishment's conventional practices.
+"""
+
+Notes = """
+1915 is the publication date that appears in the text itself. Dr. Allinson (1858-1918) was a controversial figure who was struck off the medical register in 1892 for advertising his views on birth control and vegetarianism, though he continued to practice and write. He founded the Natural Food Company and the Allinson bread brand which still exists today.
+"""
+</result>

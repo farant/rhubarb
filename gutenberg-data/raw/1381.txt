@@ -1,0 +1,15 @@
+<result>
+Title = "Poems, Vol. 1 [of 3]"
+Author = "George Meredith"
+Year = 1851
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+George Meredith (1828-1909) was a Victorian English novelist and poet. This is the first volume of a three-volume collection of his poetry from the 1912 "Surrey Edition." Meredith began publishing poetry in 1851 with his first collection "Poems," which included early works. He is perhaps better known for his novels like "The Ordeal of Richard Feverel" and "The Egoist," but his poetry was significant in Victorian literature. His verse tends toward philosophical reflection on nature, love, and human consciousness.
+"""
+
+Notes = """
+Year 1851 chosen as that was when Meredith published his first poetry collection. The 1912 Surrey Edition referenced in the Gutenberg text is a later collected edition, but the poems themselves date from various periods starting in 1851. For a historical timeline, the earliest publication date of his poetry seems most appropriate.
+"""
+</result>

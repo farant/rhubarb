@@ -1,0 +1,17 @@
+Looking at the text you provided, I can identify this work:
+
+<result>
+Title = "Study of a Woman"
+Author = "Honoré de Balzac"
+Year = 1830
+
+Tags = ["fiction", "french-literature"]
+
+Summary = """
+"Study of a Woman" (Étude de femme) is a short story by Honoré de Balzac, part of his vast interconnected series "La Comédie humaine" (The Human Comedy). The story examines the Marquise de Listomere, a young aristocratic woman navigating the tensions between religious devotion and worldly society during the Restoration period in France. Balzac uses her as a lens to critique the social mores and hypocrisies of his era. The work is dedicated to the Italian Marquis Jean-Charles di Negro, a Genoese patron of the arts. This is Katharine Prescott Wormeley's English translation from the late 19th century.
+"""
+
+Notes = """
+The story was first published in 1830 in "La Mode" magazine. I chose this date as it represents the original French publication. Wormeley's translation came much later (1890s), but for historical timeline purposes the original composition date is more appropriate. Balzac later revised and incorporated this piece into "La Comédie humaine" in the 1840s.
+"""
+</result>

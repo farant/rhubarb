@@ -1,0 +1,15 @@
+<result>
+Title = "Little Journeys to the Homes of the Great, Volume 5: Little Journeys to the Homes of English Authors"
+Author = "Elbert Hubbard"
+Year = 1895
+
+Tags = ["non-fiction", "biography", "literary-criticism"]
+
+Summary = """
+This is volume 5 of Elbert Hubbard's "Little Journeys to the Homes of the Great" series, focusing on English authors. Hubbard (1856-1915) was an American writer, publisher, artist, and philosopher who founded the Roycroft artisan community in East Aurora, New York. The "Little Journeys" series was one of his most popular works, consisting of biographical essays about famous figures from various fields. This volume covers twelve English literary figures including William Morris, Robert Browning, Alfred Tennyson, Robert Burns, John Milton, Samuel Johnson, Thomas Macaulay, Lord Byron, Joseph Addison, Robert Southey, Samuel Taylor Coleridge, and Benjamin Disraeli. Hubbard's approach was to visit the homes of these authors and write personal, accessible biographical sketches rather than formal academic biographies.
+"""
+
+Notes = """
+The "Little Journeys" series was originally published as monthly pamphlets starting in 1895. This 1916 edition represents a later collected volume. I chose 1895 as the year since that's when the series began publication and most of these individual essays would have been written and published in the mid-to-late 1890s. The series ran from 1895 to 1909.
+"""
+</result>

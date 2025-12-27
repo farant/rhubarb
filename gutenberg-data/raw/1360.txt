@@ -1,0 +1,15 @@
+<result>
+Title = "Historical Lectures and Essays"
+Author = "Charles Kingsley"
+Year = 1880
+
+Tags = ["non-fiction", "historical"]
+
+Summary = """
+A collection of historical lectures and essays by Charles Kingsley, the Victorian-era Anglican clergyman, novelist, and historian. The collection includes five pieces: "The First Discovery of America" (examining pre-Columbian contact theories), "Cyrus, Servant of the Lord" (on the Persian emperor Cyrus the Great and his biblical significance), "Ancient Civilisation," "Rondelet" (on the French naturalist Guillaume Rondelet), and "Vesalius" (on the Renaissance anatomist Andreas Vesalius). Kingsley was known for his broad intellectual interests spanning history, natural science, and theology, and these essays reflect his characteristic Victorian approach of finding moral and spiritual lessons in historical subjects.
+"""
+
+Notes = """
+Charles Kingsley (1819-1875) delivered many of these as lectures during his lifetime. The collection was published posthumously, with various editions appearing after his death. The 1880 date represents an early collected edition of these works. Kingsley was an Anglican, not Catholic, so the 'catholic' tag is not applicable despite his religious themes.
+"""
+</result>

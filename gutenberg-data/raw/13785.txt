@@ -1,0 +1,17 @@
+Hmm, the file seems mostly empty. Let me work with what you've provided in the prompt - the Project Gutenberg text about "The Glory of English Prose" by Stephen Coleridge.
+
+<result>
+Title = "The Glory of English Prose: Letters to My Grandson"
+Author = "Stephen Coleridge"
+Year = 1922
+
+Tags = ["non-fiction", "literary-criticism", "appropriate-for-children"]
+
+Summary = """
+A collection of letters written by the Honourable Stephen Coleridge (1854-1936), a British barrister and animal rights advocate who was also a descendant of the poet Samuel Taylor Coleridge. The work is addressed to his grandson Antony, intended as a guide to English literature and its finest prose. Coleridge writes to introduce the young man to the great English authors, hoping to cultivate in him a taste for noble writing and an aversion to the vulgar. This is a sequel to an earlier work, "Letters to My Grandson on the World About Him," and assumes the reader has matured - Antony is now in the sixth form of his public school.
+"""
+
+Notes = """
+The year 1922 is taken directly from the title page as the publication date. Stephen Coleridge was known for his literary interests and his passionate advocacy against vivisection. The epigraph quoting Dr. Johnson ("The chief glory of every people arises from its authors") sets the tone for what is essentially a work of literary appreciation meant to form the character of a young gentleman.
+"""
+</result>

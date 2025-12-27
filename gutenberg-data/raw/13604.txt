@@ -1,0 +1,15 @@
+<result>
+Title = "Thrilling Stories of the Ocean"
+Author = "Marmaduke Park"
+Year = 1852
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A collection of adventure stories and accounts drawn from the experiences of sailors, voyagers, and travelers at sea. The book was designed specifically for young readers, combining entertainment with education about maritime life, sea creatures like sharks, and the dangers and wonders of ocean travel. It includes numerous illustrations and compiles "authentic accounts" of various sea adventures from contemporary (mid-19th century) sources.
+"""
+
+Notes = """
+The year 1852 is taken directly from the title page publication date. "Marmaduke Park" appears to be a pseudonym commonly used for children's adventure literature of this period. The work is representative of the popular genre of maritime adventure tales for youth that flourished in the mid-1800s.
+"""
+</result>

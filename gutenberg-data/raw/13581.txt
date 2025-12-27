@@ -1,0 +1,25 @@
+The file is empty on disk. However, you've pasted the text content directly in your message. Based on that text:
+
+This is **Finnish** literature by **Juhani Aho** (1861-1921), one of the most important Finnish writers. The text is from a collection published in 1920 by WSOY (Werner Söderström) in Porvoo containing three short stories/novellas:
+
+1. "Hellmannin herra" (The Master of Hellmanni)
+2. "Esimerkin vuoksi" (For the Sake of Example)  
+3. "Maailman murjoma" (Crushed by the World)
+
+Juhani Aho was a pioneer of Finnish realism and naturalism. These are realistic short stories depicting Finnish rural/provincial life.
+
+<result>
+Title = "Hellmannin herra; Esimerkin vuoksi; Maailman murjoma"
+Author = "Juhani Aho"
+Year = 1920
+
+Tags = ["fiction", "realism"]
+
+Summary = """
+A collection of three Finnish short stories/novellas by Juhani Aho, a pioneering figure in Finnish literature and one of the founders of Finnish literary realism. The title story "Hellmannin herra" (The Master of Hellmanni) opens with a vivid scene of a tyrannical household master terrorizing his wife, servants, and farmhands as he prepares to visit the village. Aho's work characteristically depicts Finnish rural and provincial life with psychological depth and social observation, often examining power dynamics, class relations, and the tensions of Finnish society during the transition from Swedish rule to independence.
+"""
+
+Notes = """
+Juhani Aho (born Johannes Brofeldt, 1861-1921) was a Lutheran Finnish author. This 1920 WSOY edition appears to be a late collection. While Aho is an important cultural figure, his works are secular fiction without Catholic orientation.
+"""
+</result>
