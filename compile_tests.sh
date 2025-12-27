@@ -101,6 +101,7 @@ declare -a SOURCE_FILES=(
     "lib/uri.c"
     "lib/reactor.c"
     "lib/router.c"
+    "lib/flatura.c"
 )
 
 # Objective-C sources (compiled separately)
