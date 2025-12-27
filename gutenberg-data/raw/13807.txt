@@ -1,0 +1,15 @@
+<result>
+Title = "Abélard"
+Author = "Charles de Rémusat"
+Year = 1845
+
+Tags = ["non-fiction", "philosophy", "biography", "medieval-studies"]
+
+Summary = """
+This is the second volume of Charles de Rémusat's comprehensive study of Peter Abelard (1079-1142), the famous medieval French philosopher, theologian, and logician. Rémusat, a 19th-century French politician, philosopher, and member of the Académie française, undertook this scholarly work to rehabilitate Abelard's reputation and establish his importance in the history of philosophy. This particular volume focuses on Abelard's philosophy, including his metaphysics and his famous position in the debate over universals (the question of whether abstract concepts like "species" and "genera" have real existence or are merely names). The work draws extensively on primary sources including Jean de Salisbury, one of Abelard's students.
+"""
+
+Notes = """
+Originally published in Paris by Ladrange in 1845 in two volumes. A revised edition appeared in 1855. The work is written in French. Rémusat (1797-1875) was himself a significant philosopher and political figure who served as Minister of the Interior and Minister of Foreign Affairs under different French governments.
+"""
+</result>

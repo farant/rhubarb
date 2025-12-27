@@ -1,0 +1,17 @@
+The file seems to have minimal content. Based on what you've provided in your message, I have enough information to identify this work:
+
+<result>
+Title = "Charles Rex"
+Author = "Ethel M. Dell"
+Year = 1922
+
+Tags = ["fiction", "romance"]
+
+Summary = """
+Charles Rex is a romantic novel by Ethel M. Dell, a popular British author known for her melodramatic romance fiction in the early 20th century. The story follows themes of redemption, love, and moral transformation. Dell was one of the best-selling novelists of her era, particularly popular from the 1910s through the 1930s. Her works typically featured strong emotional drama, exotic settings, and morally complex characters finding redemption through love. The epigraph from Emerson about half-gods and gods, along with the dedicatory poem, signals the novel's themes of replacing worldly concerns (sin, success, pleasure, gold) with higher virtues (courage, honour, faithfulness, and love).
+"""
+
+Notes = """
+The year 1922 appears explicitly in the text as the publication date. Ethel M. Dell (1881-1939) was an English novelist who achieved enormous commercial success with her romantic fiction. While she was likely nominally Anglican given her English background and era, her works are not considered Catholic literature and would not carry a nihil obstat or imprimatur.
+"""
+</result>

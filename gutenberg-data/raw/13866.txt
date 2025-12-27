@@ -1,0 +1,17 @@
+The text you provided is from Émile Zola's "Le Naturalisme au théâtre" (Naturalism in the Theatre). This is a collection of Zola's dramatic criticism essays, originally published in 1881.
+
+<result>
+Title = "Le Naturalisme au théâtre"
+Author = "Émile Zola"
+Year = 1881
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A collection of Émile Zola's theatrical criticism essays, originally published in newspapers Le Bien public and Le Voltaire over four years. Zola applies his naturalist literary theories to dramatic criticism, arguing for a new form of theatre that would break from the conventions of the time. This volume represents the theoretical portion of his theatrical criticism, with a companion volume "Nos auteurs dramatiques" covering specific playwrights. The work is significant as a manifesto for naturalist drama.
+"""
+
+Notes = """
+First published in 1881 by Charpentier in Paris. The essays were originally written between approximately 1876-1880 during Zola's tenure as a theatre critic. Zola was nominally Catholic (baptized) but became an anti-clerical agnostic, so the work does not qualify for the 'catholic' tag.
+"""
+</result>

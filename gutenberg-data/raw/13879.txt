@@ -1,0 +1,15 @@
+<result>
+Title = "The Death of Balder"
+Author = "Johannes Ewald, translated by George Borrow"
+Year = 1773
+
+Tags = ["fiction", "drama", "mythology"]
+
+Summary = """
+"The Death of Balder" (Danish: "Balders Død") is a tragic drama by Danish poet Johannes Ewald, considered one of the masterpieces of Danish Golden Age literature. The play draws on Norse mythology, dramatizing the death of the god Balder, son of Odin, who is killed through the machinations of Loki. Ewald's work helped establish Danish as a literary language and is notable for its lyrical verse. This English translation by George Borrow, the eccentric Victorian author known for his travel writings and linguistic abilities, was published posthumously in 1889.
+"""
+
+Notes = """
+Year chosen is 1773, the original Danish publication date, as this is the historically significant date for the work itself. The 1889 date represents only this particular English translation by Borrow. Ewald (1743-1781) is considered Denmark's first great lyric poet.
+"""
+</result>

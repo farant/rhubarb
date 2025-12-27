@@ -1,0 +1,15 @@
+<result>
+Title = "Autobiography of Andrew Dickson White, Volume II"
+Author = "Andrew Dickson White"
+Year = 1905
+
+Tags = ["non-fiction", "autobiography", "historical-document"]
+
+Summary = """
+Andrew Dickson White (1832-1918) was an American historian, diplomat, and educator who co-founded Cornell University with Ezra Cornell and served as its first president. His autobiography details his remarkable career in education, diplomacy (including service as U.S. Ambassador to Germany and Russia), and his famous work on the relationship between science and religion. White was a major figure in American higher education reform, advocating for non-sectarian universities with practical curricula alongside classical studies.
+"""
+
+Notes = """
+The autobiography was first published in 1905 in two volumes. White is perhaps best known for his other major work "A History of the Warfare of Science with Theology in Christendom" (1896), which is referenced in the Gutenberg header. This is Volume II of the autobiography.
+"""
+</result>

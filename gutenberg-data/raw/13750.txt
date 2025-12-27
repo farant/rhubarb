@@ -1,0 +1,15 @@
+<result>
+Title = "The Heavenly Footman"
+Author = "John Bunyan"
+Year = 1698
+
+Tags = ["non-fiction", "christian", "appropriate-for-children"]
+
+Summary = """
+The Heavenly Footman is a Puritan devotional treatise by John Bunyan, the famous author of The Pilgrim's Progress. The work uses the metaphor of running a race (drawn from 1 Corinthians 9:24) to describe the Christian's journey toward salvation. Bunyan exhorts readers to flee spiritual slothfulness and pursue heaven with earnest effort and determination. The treatise contains practical directions for the spiritual life, warnings against complacency, and encouragement for perseverance. It is characteristic of Bunyan's accessible, vigorous prose style aimed at common readers.
+"""
+
+Notes = """
+This work was published posthumously in 1698, ten years after Bunyan's death in 1688. It was likely written much earlier, possibly in the 1660s during one of his imprisonments, but 1698 represents its first publication and entry into the literary record.
+"""
+</result>

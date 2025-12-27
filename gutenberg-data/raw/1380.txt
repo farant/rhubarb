@@ -1,0 +1,17 @@
+The file appears to be empty, but you've provided the text in your message. Based on the text you've shared, this is "The Two Brothers" (also known as "La Rabouilleuse" or "A Bachelor's Establishment") by Honoré de Balzac. This is part of his monumental "La Comédie humaine" cycle.
+
+<result>
+Title = "The Two Brothers"
+Author = "Honoré de Balzac"
+Year = 1842
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+"The Two Brothers" (originally "La Rabouilleuse" in French, also published as "A Bachelor's Establishment") is a novel by Honoré de Balzac forming part of his Comédie humaine cycle, specifically within the "Scenes from Provincial Life" section. The novel follows the Bridau family across two generations, particularly focusing on two brothers: the virtuous painter Joseph and the dissolute Philippe. The story examines themes of maternal favoritism, inheritance disputes, moral corruption, and the contrast between artistic integrity and selfish ambition. Set during and after the Napoleonic era, it traces the family's decline and the devastating effects of a mother's blind love for her unworthy elder son. The work is notable for its dark portrayal of domestic villainy and the consequences of weak parental authority.
+"""
+
+Notes = """
+The novel was first serialized in 1841-1842 and published in book form in 1842. It was originally titled "La Rabouilleuse" (referring to a character who disturbs water to catch crayfish), then published in English under various titles including "The Two Brothers" and "A Bachelor's Establishment." The 1842 date represents the completed novel's publication. The dedication to Charles Nodier and Balzac's preface reflect his Catholic conservative views on family, paternal authority, and the dangers of weakened social institutions - themes central to his broader literary project.
+"""
+</result>

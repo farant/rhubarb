@@ -1,0 +1,15 @@
+<result>
+Title = "Rhymes of the Rookies: Sunny Side of Soldier Service"
+Author = "W. E. Christian"
+Year = 1917
+
+Tags = ["poetry", "non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A collection of light-hearted verse about American military life during World War I. The poems capture the everyday experiences of enlisted soldiers ("rookies") - their camaraderie, their officers, pay day, and the typical complaints of army life. Written in an accessible, humorous style meant to show the "sunny side" of soldier service. The dedication to Theodore Roosevelt and his Rough Riders connects the work to the broader tradition of American military spirit.
+"""
+
+Notes = """
+1917 is printed directly in the text and corresponds to American entry into World War I (April 1917), making this a contemporary wartime publication meant to boost morale and give civilians a glimpse into soldier life.
+"""
+</result>

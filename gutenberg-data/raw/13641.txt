@@ -1,0 +1,15 @@
+<result>
+Title = "The American Missionary, Volume XLII, No. 10"
+Author = "American Missionary Association"
+Year = 1888
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+The American Missionary was a monthly periodical published by the American Missionary Association (AMA), a Protestant abolitionist and missionary organization founded in 1846. This October 1888 issue covers the Association's work with freedmen (formerly enslaved African Americans), Native Americans, Chinese immigrants, and frontier communities. Topics include qualifications for mission work, the expulsion of Black residents from Marion, Arkansas, educational efforts, and the comparison of Confucius and Christ. The AMA was particularly active in establishing schools and churches for African Americans in the post-Civil War South.
+"""
+
+Notes = """
+Year 1888 is taken directly from the periodical's publication date. The American Missionary Association, while Protestant (primarily Congregationalist), played a significant role in American religious and educational history, founding institutions such as Fisk University, Hampton University, and others.
+"""
+</result>

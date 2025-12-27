@@ -1,0 +1,15 @@
+<result>
+Title = "The Adventure Club Afloat"
+Author = "Ralph Henry Barbour"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A boys' adventure novel by Ralph Henry Barbour, a prolific American author known for his juvenile fiction, particularly stories about school sports and outdoor adventures. This book follows the exploits of young protagonists on a boating adventure, likely involving mystery and excitement on the water. Barbour was extremely popular in the early 20th century for his clean, wholesome adventure stories aimed at young male readers, often featuring themes of sportsmanship, courage, and camaraderie.
+"""
+
+Notes = """
+The 1917 date appears directly in the front matter of the text, which would be the original publication year.
+"""
+</result>

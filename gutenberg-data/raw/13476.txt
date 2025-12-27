@@ -1,0 +1,15 @@
+<result>
+Title = "Experiments with Alternate Currents of High Potential and High Frequency"
+Author = "Nikola Tesla"
+Year = 1892
+
+Tags = ["non-fiction", "science", "electrical-engineering"]
+
+Summary = """
+This is a published version of a lecture Nikola Tesla delivered before the Institution of Electrical Engineers in London in February 1892. In this lecture, Tesla demonstrated his groundbreaking experiments with high-frequency alternating currents, including early work on what would later become wireless transmission, fluorescent lighting, and resonance phenomena. The lecture was a pivotal moment in Tesla's career, helping establish his international reputation as a pioneering electrical engineer and inventor. The published version includes a biographical sketch of Tesla and a portrait.
+"""
+
+Notes = """
+The lecture was delivered in February 1892 and published the same year. This represents Tesla's own original work and research, so 1892 is the appropriate date. Tesla was of Serbian Orthodox background, not Catholic.
+"""
+</result>

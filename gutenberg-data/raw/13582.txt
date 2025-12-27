@@ -1,0 +1,15 @@
+<result>
+Title = "On the Excavations of the Roman Baths at Bath"
+Author = "Charles E. Davis"
+Year = 1884
+
+Tags = ["non-fiction", "historical-document", "archaeology"]
+
+Summary = """
+This is an archaeological report originally published in the Transactions of the Bristol and Gloucestershire Archaeological Society, Volume VIII, Part I. The paper documents the excavations of the Roman Baths at Bath, England, conducted by Charles E. Davis, the City Architect of Bath. Davis supervised the major excavations in the 1880s that uncovered the Great Roman Bath and other significant Roman remains. The work references Leland's 1530 visit to Bath and explains historical puzzles about the water systems. This excavation was one of the most significant archaeological discoveries in Victorian Britain, revealing the remarkably preserved Roman bathing complex built around the natural hot springs.
+"""
+
+Notes = """
+The Transactions of the Bristol and Gloucestershire Archaeological Society Vol. VIII, Part I was published in 1883-1884. Charles E. Davis conducted these excavations between 1878-1895, with the Great Bath being discovered in 1880. I selected 1884 as this appears to be when this particular paper was published in the Transactions.
+"""
+</result>

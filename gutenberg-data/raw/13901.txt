@@ -1,0 +1,15 @@
+<result>
+Title = "Perzië, Chaldea en Susiane"
+Author = "Jane Dieulafoy"
+Year = 1887
+
+Tags = ["non-fiction", "travel", "archaeology"]
+
+Summary = """
+This is a Dutch translation of Jane Dieulafoy's travel account of her expedition through Persia, Chaldea, and Susiana (ancient Elam, in modern-day Iran). Jane Dieulafoy accompanied her husband Marcel Dieulafoy, an engineer and archaeologist, on a mission commissioned by the French Ministry of Public Education to study Sassanid monuments (3rd-7th century CE). The expedition lasted fourteen months and covered regions not previously explored by French missions. Jane Dieulafoy is notable for her archaeological work at Susa and for wearing men's clothing during her travels, which she received special permission for in France.
+"""
+
+Notes = """
+The original French work "La Perse, la Chaldée et la Susiane" was published in 1887. The Dieulafoys' expeditions to Persia took place 1881-1882 and 1884-1886, with Jane's travel narrative based primarily on the first expedition. This Dutch translation was published around the same time as the French original.
+"""
+</result>

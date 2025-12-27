@@ -1,0 +1,15 @@
+<result>
+Title = "The Collected Works of Ambrose Bierce, Volume 1"
+Author = "Ambrose Bierce"
+Year = 1909
+
+Tags = ["non-fiction", "fiction", "satire", "autobiography", "civil-war"]
+
+Summary = """
+This is Volume 1 of the collected works of Ambrose Bierce, the American journalist, short story writer, and satirist known as "Bitter Bierce." This volume contains a mix of satirical fiction and autobiographical essays. "Ashes of the Beacon" is a satirical piece imagining a future historian looking back at the fall of American civilization. "The Land Beyond the Blow" is a Swiftian satirical travelogue with fantastical lands critiquing human society. The "Bits of Autobiography" section contains valuable firsthand accounts of Bierce's experiences as a Union soldier in the American Civil War, including the battles of Shiloh, Chickamauga, and Pickett's Mill, making these historically significant primary sources.
+"""
+
+Notes = """
+1909 is the original publication year of this collected edition, published by Neale Publishing Company. While some individual pieces were written earlier (the Civil War memoirs describe events from 1861-1865), this collected volume first appeared in 1909. Bierce famously disappeared in Mexico in 1913-1914 and was never seen again.
+"""
+</result>

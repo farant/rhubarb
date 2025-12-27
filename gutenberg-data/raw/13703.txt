@@ -1,0 +1,15 @@
+<result>
+Title = "La maison de Claudine"
+Author = "Colette"
+Year = 1922
+
+Tags = ["fiction", "memoir", "french-literature"]
+
+Summary = """
+La maison de Claudine is a semi-autobiographical collection of vignettes by the French author Sidonie-Gabrielle Colette (1873-1954), known simply as Colette. The work presents fictionalized memories of her childhood in Burgundy, centered around her family home and particularly her beloved mother, "Sido." Through a series of short sketches, Colette evokes the rural world of her youth, her relationships with her parents and siblings, animals, nature, and the particular sensibility of a young girl growing into awareness. It is considered one of her most tender and personal works, blending memoir with novelistic technique.
+"""
+
+Notes = """
+1922 is the original publication year in French. Colette was not a Catholic author in any meaningful religious sense - she was known for her bohemian lifestyle and her works often explored themes of sensuality and female independence that would not align with Catholic moral teaching.
+"""
+</result>

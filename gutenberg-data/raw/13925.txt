@@ -1,0 +1,20 @@
+<result>
+Title = "Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc."
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "periodical", "reference", "scholarly"]
+
+Summary = """
+Notes and Queries was a pioneering scholarly periodical founded in 1849 by William John Thoms. It served as an "academic correspondence magazine" where scholars and interested amateurs could exchange knowledge on folklore, literature, history, and antiquarian subjects. The format consisted of "Notes" (miscellaneous findings of interest) and "Queries" (questions posed by readers with responses from others). This particular issue (No. 24, April 13, 1850) is from the first volume and includes contributions on topics ranging from Skinner's Life of Monk to minor queries about etymology, genealogy, and historical figures. The journal's motto "When found, make a note of" comes from Captain Cuttle in Dickens's Dombey and Son. Notes and Queries has been described as an early print analogy to internet newsgroups or social media, and continues publication today through Oxford University Press.
+"""
+
+Notes = """
+Year 1850 chosen as this is the publication date of this specific issue. The journal itself was founded November 3, 1849. This is issue No. 24 from the first volume. Given that this is a periodical with various contributors rather than a single authored work, "Various" is appropriate for the author field.
+"""
+</result>
+
+Sources:
+- [Notes and Queries - Wikipedia](https://en.wikipedia.org/wiki/Notes_and_Queries)
+- [History of Information - Notes and Queries](https://historyofinformation.com/detail.php?id=2892)
+- [A Victorian Virtual Community](https://victorianweb.org/victorian/periodicals/notesandqueries/leary.html)

@@ -1,0 +1,15 @@
+<result>
+Title = "Lady Connie"
+Author = "Mrs. Humphry Ward"
+Year = 1916
+
+Tags = ["fiction"]
+
+Summary = """
+Lady Connie is a novel by Mary Augusta Ward (Mrs. Humphry Ward), a prolific English novelist of the late Victorian and Edwardian eras. The story follows Constance (Connie), a young aristocratic woman who comes to Oxford after living abroad. The novel explores Oxford society, romantic entanglements, and the social dynamics of early 20th century England. Ward was known for her detailed portrayals of English society and her engagement with intellectual and social issues of her time. This is one of her later works, published during World War I.
+"""
+
+Notes = """
+1916 is the publication year shown on the title page. Mrs. Humphry Ward (born Mary Augusta Arnold, 1851-1920) was the niece of Matthew Arnold and a major literary figure of her era, though her reputation has faded considerably since.
+"""
+</result>

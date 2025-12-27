@@ -1,0 +1,17 @@
+I can see this is a French political pamphlet by Étienne Grosclaude titled "Une Politique Européenne" (A European Policy) concerning the Boer War in the Transvaal. Let me provide the structured information:
+
+<result>
+Title = "Une Politique Européenne: La France, la Russie, l'Allemagne et la Guerre au Transvaal"
+Author = "Étienne Grosclaude"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document", "political-commentary"]
+
+Summary = """
+A French political pamphlet written during the Second Boer War (1899-1902), examining European policy toward the conflict between Britain and the Boer republics in South Africa. Grosclaude, a French journalist and satirist, argues for European intervention against British imperialism, opening with Bismarck's prophetic quote that "South Africa will be the tomb of England." The work reflects the widespread anti-British sentiment in continental Europe during the Boer War, when France, Germany, and Russia all harbored grievances against British colonial expansion.
+"""
+
+Notes = """
+The reference to events "at this moment around the Transvaal" and the mention of the "bouillant Kaiser" (Kaiser Wilhelm II) and his "sensational telegram" (the Kruger Telegram of 1896) places this firmly in the context of the Second Boer War which began in October 1899. Grosclaude (1858-1932) was a well-known French humorist and journalist. The work was likely published in late 1899 or early 1900, at the height of European sympathy for the Boers.
+"""
+</result>

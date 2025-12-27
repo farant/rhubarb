@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, Vol. XI, No. 23"
+Author = "Various"
+Year = 1873
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was an American monthly literary magazine published in Philadelphia from 1868 to 1916. It featured a mix of fiction, poetry, travel writing, essays, and scientific articles aimed at a general educated audience. This February 1873 issue includes travel/botanical writing about Peru, antiquarian studies of Athens, fiction by notable authors like Constance Fenimore Woolson and Thomas Dunn English, and accounts of submarine diving. The magazine was known for publishing complete novels in single issues and for featuring both American and British authors.
+"""
+
+Notes = """
+Year is straightforward as this is a periodical with its publication date (February 1873) clearly indicated. Lippincott's was a significant literary magazine of its era, publishing early work by Oscar Wilde and Arthur Conan Doyle among others.
+"""
+</result>
