@@ -1,0 +1,15 @@
+<result>
+Title = "Miscellaneous Papers"
+Author = "Charles Dickens"
+Year = 1850
+
+Tags = ["non-fiction", "essays"]
+
+Summary = """
+A collection of essays, articles, and miscellaneous writings by Charles Dickens, originally published in various periodicals including Household Words and All the Year Round during his editorial career. The collection covers a wide range of topics including social reform, criminal justice, education, and contemporary Victorian issues. Dickens was known for his passionate advocacy for the poor and his criticism of institutional failures.
+"""
+
+Notes = """
+The year 1850 is chosen as it marks the founding of Household Words, Dickens's weekly magazine where many of these miscellaneous papers first appeared. The pieces span roughly 1850-1870, but 1850 represents the beginning of this significant phase of his non-fiction writing. The 1912 Gresham edition mentioned in the text is a posthumous collection.
+"""
+</result>

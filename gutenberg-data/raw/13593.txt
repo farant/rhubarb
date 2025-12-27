@@ -1,0 +1,17 @@
+The text you've provided is "Yksin" (meaning "Alone") by Juhani Aho, a prominent Finnish author. This is one of his well-known works.
+
+<result>
+Title = "Yksin"
+Author = "Juhani Aho"
+Year = 1890
+
+Tags = ["fiction", "finnish-literature"]
+
+Summary = """
+Yksin (Alone) is a lyrical novella by Finnish author Juhani Aho, one of the pioneering figures of Finnish-language literature. The work is a melancholic, introspective narrative dealing with themes of loneliness, unrequited love, and the inner emotional life of the protagonist. Written in Aho's characteristic impressionistic style, it follows the narrator's feelings of isolation and longing, particularly in relation to a woman named Anna. The book is considered a classic of Finnish literature and exemplifies the psychological realism and lyrical prose that Aho brought to Finnish fiction. The epigraph "Soitto on suruista tehty, murehista muovaeltu" (The music is made of sorrows, shaped from griefs) sets the melancholic tone for the entire work.
+"""
+
+Notes = """
+First published in 1890. The 1920 WSOY edition mentioned in the Gutenberg text is a later printing. Juhani Aho (born Johannes Brofeldt, 1861-1921) was a key figure in establishing Finnish as a literary language and is considered one of Finland's national authors.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, Vol. XII, No. 29"
+Author = "Various"
+Year = 1873
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was an American monthly literary magazine published in Philadelphia by J.B. Lippincott & Co. from 1868 to 1915. It featured a mix of serialized fiction, travel writing, essays, poetry, and literary criticism. This August 1873 issue includes travel pieces about the Tyrol and Japan, serialized novels including William Black's "A Princess of Thule," poetry by Emma Lazarus (who would later write "The New Colossus" for the Statue of Liberty), and various essays on topics ranging from deer parks to tropical fruits. The magazine was known for publishing complete novels in single issues and for featuring both American and British authors.
+"""
+
+Notes = """
+The year 1873 is the publication date of this specific issue. Lippincott's was a significant American literary periodical of its era, competing with Harper's and The Atlantic Monthly.
+"""
+</result>

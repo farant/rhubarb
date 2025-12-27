@@ -1,0 +1,15 @@
+<result>
+Title = "The Poetry of Robert Browning"
+Author = "Stopford A. Brooke"
+Year = 1902
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A critical study of the poetry of Robert Browning by Stopford Augustus Brooke, an Irish clergyman and literary critic. Brooke was known for his works on English literature, particularly his studies of major Victorian poets. This volume examines Browning's treatment of nature, his theory of human life as expressed in works like Pauline and Paracelsus, his role as a poet of art, and his complex narrative poem Sordello. Brooke also compares Browning with his contemporary Tennyson.
+"""
+
+Notes = """
+First edition published September 1902, with reprints following in October 1902 and January 1903. Using 1902 as the year since that is when the work was first published.
+"""
+</result>

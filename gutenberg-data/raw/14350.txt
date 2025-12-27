@@ -1,0 +1,15 @@
+<result>
+Title = "Three Voyages for the Discovery of a Northwest Passage from the Atlantic to the Pacific, and Narrative of an Attempt to Reach the North Pole, Volume II"
+Author = "Sir William Edward Parry"
+Year = 1821
+
+Tags = ["non-fiction", "historical-document", "exploration"]
+
+Summary = """
+This is the second volume of Sir William Edward Parry's accounts of his Arctic expeditions. Parry was a renowned British Royal Navy officer and Arctic explorer who led multiple expeditions seeking the Northwest Passage - the long-sought sea route connecting the Atlantic and Pacific Oceans through the Arctic. His voyages (1819-1820, 1821-1823, 1824-1825) were among the most significant Arctic expeditions of the 19th century, pushing further west through the Canadian Arctic than any previous explorer. The work also includes his 1827 attempt to reach the North Pole by sledge from Spitsbergen, which set a record for "Farthest North" that stood for nearly 50 years.
+"""
+
+Notes = """
+The 1844 date shown is the Harper & Brothers edition. Parry's original voyage accounts were published separately: First Voyage (1821), Second Voyage (1824), Third Voyage (1826), and the North Pole attempt narrative (1828). I chose 1821 as the year since this represents when Parry's expedition narratives first began to be published, establishing these works historically. The compilation format shown here is from a later American edition.
+"""
+</result>

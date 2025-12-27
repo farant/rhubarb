@@ -1,0 +1,15 @@
+<result>
+Title = "Love Romances of the Aristocracy"
+Author = "Thornton Hall"
+Year = 1911
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A collection of romantic tales and scandals from the British aristocracy, compiled by Thornton Hall, a barrister and Fellow of the Society of Antiquaries. The book presents various love stories, intrigues, tragedies, and comedies from the history of the British Peerage. It appears to be a companion or sequel to his earlier work "Love Intrigues of Royal Courts." The book is dedicated to Mrs Tom Hesketh with a French epigraph meaning "Friendship is love without wings."
+"""
+
+Notes = """
+The publication year of 1911 is based on the original T. Werner Laurie edition. Thornton Hall was a popular Edwardian-era writer who specialized in historical romances and scandals of the nobility. The F.S.A. designation indicates he was a Fellow of the Society of Antiquaries of London.
+"""
+</result>

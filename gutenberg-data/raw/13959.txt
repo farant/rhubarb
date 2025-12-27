@@ -1,0 +1,19 @@
+The text you've provided is in Dutch - it's a travelogue about eastern Persia by Major Percy Molesworth Sykes, British Consul-General in Khorassan. This is a Dutch translation of his travel account.
+
+Percy Molesworth Sykes was a British military officer, explorer, and diplomat who traveled extensively in Persia in the 1890s. His most notable work on Persia was published in English as "Ten Thousand Miles in Persia" (1902), but the travel described here is from his 1893-1894 journey. The Dutch translation "Door Oost-Perzië" appears to be from around 1894-1905.
+
+<result>
+Title = "Door Oost-Perzië"
+Author = "Percy Molesworth Sykes"
+Year = 1902
+
+Tags = ["non-fiction", "travel", "geography"]
+
+Summary = """
+A Dutch translation of British Major Percy Molesworth Sykes' account of his travels through eastern Persia (Iran). Sykes served as British Consul-General in Khorassan and made extensive journeys through the region in the 1890s. The work describes his route from England via the Caspian Sea to Astrabad, through Meshed, the Lut Desert, and on to Kirman. It provides valuable geographical, cultural, and political observations of Persia during a period of significant British and Russian imperial interest in the region.
+"""
+
+Notes = """
+The journey described took place in 1893-1894. The original English work "Ten Thousand Miles in Persia" was published in 1902, which I've used as the year since this Dutch translation "Door Oost-Perzië" is derived from that work. Sykes was a significant figure in British exploration of Central Asia and Persia.
+"""
+</result>

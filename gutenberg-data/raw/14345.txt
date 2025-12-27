@@ -1,0 +1,15 @@
+<result>
+Title = "The Fight for the Republic in China"
+Author = "B. L. Putnam Weale"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a political and historical account of the early Chinese Republic, focusing on the tumultuous period following the fall of the Qing Dynasty in 1912. B. L. Putnam Weale (pen name of Bertram Lenox Simpson, a British journalist and diplomat who lived in China) examines the political struggles, warlordism, and attempts to establish republican government in China. The book was written during World War I and provides a contemporary Western perspective on Chinese politics during this transformative era, including the presidency of Li Yuan-Hung and the various forces competing for control of the new republic.
+"""
+
+Notes = """
+1918 is the original publication date as shown on the title page. The author B. L. Putnam Weale was a pseudonym for Bertram Lenox Simpson (1877-1930), who wrote extensively about China and East Asian politics. His earlier work "Indiscreet Letters from Peking" (1907) covered the Boxer Rebellion.
+"""
+</result>

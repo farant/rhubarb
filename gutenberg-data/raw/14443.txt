@@ -1,0 +1,15 @@
+<result>
+Title = "Sketches In The House (1893)"
+Author = "T. P. O'Connor"
+Year = 1893
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A collection of parliamentary sketches and observations from the British House of Commons during the memorable 1893 session. T. P. O'Connor (Thomas Power O'Connor, 1848-1929) was an Irish nationalist politician, journalist, and MP who sat in the House of Commons for nearly fifty years. Known as "Tay Pay," he was a skilled political journalist who founded several newspapers. This work captures the debates, personalities, and drama of Parliament during a significant year that included discussions on Irish Home Rule under Gladstone's fourth ministry. O'Connor's journalistic background made him an astute observer of parliamentary life and political character.
+"""
+
+Notes = """
+The year 1893 is clearly indicated in both the title and publication information. This was published contemporaneously with the events described, making it both a journalistic work and a primary historical document of Victorian parliamentary politics.
+"""
+</result>

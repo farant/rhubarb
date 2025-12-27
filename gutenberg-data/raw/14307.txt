@@ -1,0 +1,15 @@
+<result>
+Title = "Reseña Verídica de la Revolución Filipina"
+Author = "Emilio Aguinaldo y Famy"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a firsthand account of the Philippine Revolution written by Emilio Aguinaldo, the first President of the Philippine Republic. The work provides Aguinaldo's personal narrative of the 1896 revolution against Spanish colonial rule and the subsequent events leading to Philippine independence. It covers the uprising that began in August 1896, the role of the Katipunan revolutionary society, and the political developments that followed. As a primary historical document written by the central figure of Philippine independence, it offers invaluable insight into the revolutionary period from the Filipino nationalist perspective.
+"""
+
+Notes = """
+Published in Tarlak (Tarlac) in 1899 during the brief period of the First Philippine Republic, before American colonial control was fully established. This was written during the Philippine-American War as Aguinaldo sought to document and legitimize the revolutionary cause.
+"""
+</result>

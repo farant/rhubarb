@@ -1,0 +1,17 @@
+I recognize this work from your prompt excerpt. This is Gilbert White's classic work of English natural history.
+
+<result>
+Title = "The Natural History of Selborne"
+Author = "Gilbert White"
+Year = 1789
+
+Tags = ["non-fiction", "natural-history", "appropriate-for-children"]
+
+Summary = """
+The Natural History of Selborne is a collection of letters written by English naturalist and clergyman Gilbert White to fellow naturalists Thomas Pennant and Daines Barrington. The work documents White's detailed observations of the flora, fauna, and seasonal changes in his parish of Selborne in Hampshire, England. It is considered one of the most influential works of natural history ever written and one of the most published books in the English language. White's careful, methodical observations of birds, insects, plants, and weather patterns helped establish the practice of detailed field observation that became foundational to modern ecology and natural history.
+"""
+
+Notes = """
+First published in 1789 as 'The Natural History and Antiquities of Selborne'. Gilbert White (1720-1793) was an Anglican curate. While White was a clergyman, this is primarily a scientific/naturalist work rather than a theological one, so I have not tagged it 'catholic' (and he was Anglican rather than Roman Catholic). The invitatory poem at the beginning was written by White himself.
+"""
+</result>

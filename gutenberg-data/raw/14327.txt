@@ -1,0 +1,15 @@
+<result>
+Title = "Lippincott's Magazine of Popular Literature and Science, Volume XI, No. 22"
+Author = "Various"
+Year = 1873
+
+Tags = ["non-fiction", "periodical", "fiction"]
+
+Summary = """
+Lippincott's Magazine was a prominent American monthly literary magazine published in Philadelphia from 1868 to 1916. This January 1873 issue contains a typical mix of the era's periodical content: technical articles (on iron bridge construction, quinine plant expeditions), travel writing (pieces on Dublin and Florence), fiction and serialized stories, poetry, and cultural commentary. The magazine was known for publishing both established and emerging American writers, and this issue features contributions from authors like Caroline Chesebro', Edgar Fawcett, and Margaret J. Preston. The magazine later became famous for publishing Oscar Wilde's "The Picture of Dorian Gray" in 1890.
+"""
+
+Notes = """
+The year 1873 is the publication date of this specific issue. Lippincott's Magazine as a periodical ran from 1868-1916, but each issue is its own discrete publication. The magazine merged with Scribner's Magazine in 1916.
+"""
+</result>

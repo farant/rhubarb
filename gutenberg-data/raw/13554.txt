@@ -1,0 +1,15 @@
+<result>
+Title = "Aftermath: Part Second of A Kentucky Cardinal"
+Author = "James Lane Allen"
+Year = 1895
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Aftermath is the sequel to James Lane Allen's popular novella "A Kentucky Cardinal" (1894). The story continues the romantic tale of Adam Moss, a nature-loving bachelor in Kentucky, and his relationship with Georgiana Cobb. Set against the backdrop of the Kentucky bluegrass region, the work blends gentle romantic comedy with Allen's characteristic lyrical descriptions of nature and bird life. Allen was a prominent figure in American regionalist literature, known for his evocative portrayals of Kentucky life and landscapes.
+"""
+
+Notes = """
+The title page shows 1899, but Aftermath was originally published in 1895, the year after A Kentucky Cardinal (1894). The 1899 date likely refers to a later edition. I chose 1895 as the historically accurate original publication year. Also note: the author's name appears as "James Lake Allen" on the title page but this is an OCR error - the correct name is James Lane Allen.
+"""
+</result>

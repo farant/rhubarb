@@ -1,0 +1,15 @@
+<result>
+Title = "Mischievous Maid Faynie"
+Author = "Laura Jean Libbey"
+Year = 1899
+
+Tags = ["fiction"]
+
+Summary = """
+A romantic melodrama by Laura Jean Libbey, one of the most popular and prolific authors of dime novels and story-paper serials in late 19th century America. This work follows the typical Libbey formula of sensational romance featuring young women facing dramatic trials, misunderstandings, and obstacles before finding love. Libbey's novels were enormously popular with working-class women readers and were known for their emotional intensity, cliffhangers, and virtuous heroines. The opening scene depicts two handsome young men in New York City during a fierce blizzard, setting up the romantic entanglements to follow.
+"""
+
+Notes = """
+The year 1899 appears on the title page as the publication date for this "Author's Special Edition." Laura Jean Libbey (1862-1924) was extraordinarily prolific, publishing over 80 novels. Her works were originally serialized in story papers before being collected into books.
+"""
+</result>

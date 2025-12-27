@@ -1,0 +1,15 @@
+<result>
+Title = "The Happy Family"
+Author = "B.M. Bower"
+Year = 1910
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"The Happy Family" is a Western novel by B.M. Bower (pen name of Bertha Muzzy Sinclair), one of the most prolific and popular authors of Western fiction in the early 20th century. The book is part of her "Flying U" series, which follows the adventures of cowboys on a Montana ranch. Bower was notable for being a woman writing Westerns at a time when the genre was dominated by men, and her work is known for its authentic portrayal of ranch life, humor, and memorable characters. The "Happy Family" refers to the colorful group of cowboys who work together and get into various scrapes and adventures.
+"""
+
+Notes = """
+The copyright dates shown (1907, 1909, 1910) indicate serial publication before the 1910 book edition by G.W. Dillingham Company. I chose 1910 as this represents the first complete book publication.
+"""
+</result>

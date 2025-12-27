@@ -1,0 +1,15 @@
+<result>
+Title = "Nouveaux Contes de Fées pour les Petits Enfants"
+Author = "Comtesse de Ségur (née Rostopchine)"
+Year = 1857
+
+Tags = ["fiction", "appropriate-for-children", "catholic"]
+
+Summary = """
+This is a collection of fairy tales written by Sophie Rostopchine, Countess of Ségur, a Russian-born French author who became one of the most beloved children's writers in French literature. The book contains several original fairy tales including "Histoire de Blondine, de Bonne-Biche et de Beau-Minon" (The Story of Blondine, Good-Doe and Handsome-Kitten). The Countess wrote these stories originally for her grandchildren Camille and Madeleine de Malaret, as noted in the dedication. Her works are characterized by moral lessons presented through engaging narratives, reflecting her devout Catholic faith. The tales feature classic fairy tale elements: kings, enchanted animals, and moral transformations.
+"""
+
+Notes = """
+The Gutenberg text shows 1896, which is a later illustrated edition with engravings by Gustave Doré and Jules Didier. The original publication was in 1857. The Comtesse de Ségur was a devout Catholic convert whose works were widely approved by Catholic educators and families, making the 'catholic' tag appropriate despite this being fiction.
+"""
+</result>

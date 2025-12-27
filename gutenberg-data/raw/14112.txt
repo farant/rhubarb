@@ -1,0 +1,15 @@
+<result>
+Title = "Venetië"
+Author = "Anonymous"
+Year = 1900
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a Dutch-language historical essay about Venice (Venetië), the famous Italian republic. The text opens with a quote from P.C. Hooft comparing two lions - the Lion of St. Mark (Venice's symbol, holding a book) and the Lion of the Dutch Republic (holding a sword). The essay discusses the historical connection between the ancient aristocratic Republic of Venice, with its thousand-year history, and the young bourgeois Dutch Republic (Verenigde Nederlanden). It appears to be an educational or literary reflection on the shared interests and brief alliance between these two maritime trading republics.
+"""
+
+Notes = """
+The exact year of composition is uncertain. The text references P.C. Hooft (1581-1647), the Dutch historian and poet, but is clearly written much later as retrospective historical commentary. The language style and orthography suggest late 19th or early 20th century Dutch. Project Gutenberg lists it as anonymous with a 2004 release date but no original publication date. I've estimated 1900 as a reasonable approximation for when this type of popular historical essay about Venice would have been written in Dutch, though it could range from roughly 1880-1920.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "The Tale of Terror: A Study of the Gothic Romance"
+Author = "Edith Birkhead"
+Year = 1921
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+This is a scholarly study of the Gothic Romance and supernatural fiction in English literature. Birkhead traces the development of the Gothic novel from Horace Walpole's 'The Castle of Otranto' (1764) through Charles Maturin's 'Melmoth the Wanderer' (1820), and continues the survey into the early twentieth century. The work includes a chapter on American contributions to the genre, particularly examining Hawthorne and Poe. Edith Birkhead was an English academic and literary critic who specialized in Gothic literature. This book became a foundational text in the academic study of Gothic fiction.
+"""
+
+Notes = """
+1921 is the original publication date by Constable & Company in London. This was Birkhead's first major scholarly work, written during and after her tenure as the William Noble Fellow at the University of Liverpool (1916-18).
+"""
+</result>

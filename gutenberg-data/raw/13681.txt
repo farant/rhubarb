@@ -1,0 +1,17 @@
+The file on disk appears to be empty, but you've included the text in your prompt. Based on the text you provided, I can identify this work:
+
+<result>
+Title = "Ihmiskohtaloja"
+Author = "Arvid Järnefelt"
+Year = 1895
+
+Tags = ["fiction", "Finnish-literature"]
+
+Summary = """
+"Ihmiskohtaloja" (Human Fates/Human Destinies) is a novel by Finnish author Arvid Järnefelt (1861-1932), published in 1895 by Otava in Helsinki. Järnefelt was a prominent Finnish writer known for his Tolstoyan idealism and social consciousness. He was part of a distinguished Finnish cultural family - his brother was the composer Jean Sibelius's brother-in-law. The novel deals with themes of human destiny and social conditions in late 19th century Finland. The opening scene depicts passengers boarding a ship bound abroad, contrasting a group of boisterous young university students who see themselves as bearers of "new ideas" with other travelers including a young couple departing on their honeymoon.
+"""
+
+Notes = """
+The year 1895 is explicitly stated in the text as the publication year by Otava, Helsinki. Arvid Järnefelt converted to Tolstoyan Christianity and his works often reflect themes of social justice and moral philosophy, though this particular novel is secular literary fiction rather than explicitly religious writing.
+"""
+</result>

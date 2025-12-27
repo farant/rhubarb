@@ -1,0 +1,15 @@
+<result>
+Title = "Lord of the World"
+Author = "Robert Hugh Benson"
+Year = 1907
+
+Tags = ["fiction", "catholic", "dystopian", "apocalyptic"]
+
+Summary = """
+Lord of the World is a dystopian novel by Monsignor Robert Hugh Benson, a Catholic priest and son of the Archbishop of Canterbury who converted to Catholicism. The novel depicts a future world where secular humanism has triumphed globally, Catholicism has been reduced to a remnant, and a charismatic world leader emerges who may be the Antichrist. It is considered one of the first modern dystopian novels and has been praised by multiple popes, including Pope Francis who has recommended it publicly. The novel explores themes of faith versus secularism, the nature of the Antichrist, and the end times from a Catholic eschatological perspective.
+"""
+
+Notes = """
+Published in 1907 as indicated in the preface signed "Cambridge 1907." Benson wrote this as a Catholic priest after his 1903 conversion from Anglicanism. The dedication "Clavi Domus David" (Keys of the House of David) is a reference to papal authority from Isaiah 22:22.
+"""
+</result>

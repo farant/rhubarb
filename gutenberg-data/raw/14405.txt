@@ -1,0 +1,15 @@
+<result>
+Title = "Patriarchal Palestine"
+Author = "A.H. Sayce"
+Year = 1895
+
+Tags = ["non-fiction", "historical-document", "biblical-archaeology"]
+
+Summary = """
+This work by Archibald Henry Sayce, a prominent British Assyriologist and Oxford professor, examines the history and geography of Canaan (ancient Palestine) during the patriarchal period described in Genesis and Exodus. Sayce draws on then-recent archaeological discoveries from Babylonia, Assyria, and Egypt to illuminate the biblical narratives. The book was part of a series published by the Society for Promoting Christian Knowledge (SPCK) and represents the late Victorian era's effort to harmonize archaeological findings with biblical history. Sayce was known for his accessible writing style and his generally conservative approach to biblical historicity.
+"""
+
+Notes = """
+First published in 1895 by SPCK. Sayce (1845-1933) was a leading figure in bringing Near Eastern archaeology to popular audiences. The work reflects the optimism of early biblical archaeology before more critical methodologies developed in the 20th century.
+"""
+</result>

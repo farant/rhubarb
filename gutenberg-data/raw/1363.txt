@@ -1,0 +1,15 @@
+<result>
+Title = "Tom Swift Among the Fire Fighters, or Battling with Flames from the Air"
+Author = "Victor Appleton"
+Year = 1921
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the 24th book in the Tom Swift series, a popular juvenile science fiction series that ran from 1910 to 1941. "Victor Appleton" is a house pseudonym used by the Stratemeyer Syndicate, with this volume likely written by Howard R. Garis. The series follows young inventor Tom Swift and his various technological adventures. In this installment, Tom develops aerial firefighting technology, using aircraft to battle blazes from above - a remarkably prescient concept given that aerial firefighting was still in its infancy at the time. The Tom Swift books were influential in popularizing science and invention among young American readers in the early 20th century.
+"""
+
+Notes = """
+First published in 1921 by Grosset & Dunlap. The Tom Swift series was created by Edward Stratemeyer and written by various ghostwriters under the Victor Appleton pseudonym. Howard R. Garis is generally credited with writing most of the early Tom Swift books.
+"""
+</result>
