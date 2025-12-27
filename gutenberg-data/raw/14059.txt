@@ -1,0 +1,19 @@
+<result>
+Title = "Le Roi des Étudiants"
+Author = "Wenceslas-Eugène Dick"
+Year = 1880
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A French-Canadian adventure novel set in Quebec City among medical students at Université Laval. The story follows the escapades of a group of boisterous students, led by the "king of students" Després, known for his drinking and mischief-making. Dick drew from his own experiences as a medical student at Laval from 1867 to 1870. The novel is considered an important work of 19th century Quebec literature and offers a vivid portrait of student life in that era.
+"""
+
+Notes = """
+Originally serialized in L'Album des familles (Montreal) from February 1, 1880 to June 1, 1881. First published as a book in 1903. I chose 1880 as the year since that's when it was first published to the public, even though in serial form. The author's name appears as "V.E. Dick" in the text but his full name was Wenceslas-Eugène Dick (1848-1919).
+"""
+</result>
+
+Sources:
+- [Project Gutenberg - Le Roi des Étudiants](https://www.gutenberg.org/ebooks/14059)
+- [BeQ - Wenceslas-Eugène Dick](https://beq.ebooksgratuits.com/pdf/Dick-roi.pdf)

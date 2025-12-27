@@ -1,0 +1,15 @@
+<result>
+Title = "Doctor Marigold"
+Author = "Charles Dickens"
+Year = 1865
+
+Tags = ["fiction"]
+
+Summary = """
+Doctor Marigold is a Christmas story by Charles Dickens, originally published as the Christmas number of his magazine "All the Year Round" in 1865. The story is narrated by a "Cheap Jack" (a travelling salesman who sells goods from a cart at fairs and markets) named Doctor Marigold. The tale follows his life, including the tragic loss of his daughter and his later adoption of a deaf-mute girl named Sophy. It's a sentimental story exploring themes of loss, love, and redemption, typical of Dickens' Christmas stories. The narrative voice captures the distinctive patter and showmanship of the travelling salesmen of Victorian England.
+"""
+
+Notes = """
+First published in December 1865 as the Christmas number of "All the Year Round." The 1894 Chapman and Hall edition mentioned in the Project Gutenberg metadata is a later collected edition, not the original publication date.
+"""
+</result>

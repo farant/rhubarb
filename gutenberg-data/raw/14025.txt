@@ -1,0 +1,15 @@
+<result>
+Title = "Mount Music"
+Author = "E. Œ. Somerville and Martin Ross"
+Year = 1919
+
+Tags = ["fiction", "irish-literature"]
+
+Summary = """
+Mount Music is a novel by the Irish writing duo Edith Œnone Somerville and Violet Martin (pen name Martin Ross), best known for their "Irish R.M." stories. The novel deals with themes of Anglo-Irish society, religious tensions between Catholics and Protestants in Ireland, and the complexities of Irish identity during a turbulent period. Set against the backdrop of the Irish independence movement, it explores love across religious divides and the declining Anglo-Irish ascendancy class. Somerville and Ross were cousins who collaborated on numerous works depicting Irish life with humor and keen social observation.
+"""
+
+Notes = """
+The title page states 1920, but Mount Music was actually first published in 1919 by Longmans, Green and Co. The 1920 date likely refers to a subsequent edition. Martin Ross (Violet Martin) had died in 1915, but Somerville continued to publish under their joint names, as noted in the preface where she explains the book was planned together before Ross's death.
+"""
+</result>

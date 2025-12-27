@@ -1,0 +1,15 @@
+<result>
+Title = "Akbar, Emperor of India: A Picture of Life and Customs from the Sixteenth Century"
+Author = "Richard von Garbe"
+Year = 1909
+
+Tags = ["non-fiction", "history", "biography"]
+
+Summary = """
+This is a historical and biographical work about Akbar the Great (1542-1605), the third Mughal Emperor of India. Written by German Indologist Richard von Garbe, who was a professor at the University of Tübingen, the book examines Akbar's life, reign, and the cultural customs of 16th century India. Akbar is notable for his religious tolerance, administrative reforms, and patronage of arts and culture. The work was originally published in the German academic journal and then translated to English and published in "The Monist" philosophical journal before being released as this separate volume.
+"""
+
+Notes = """
+Year 1909 chosen as this is the original publication date of the English translation. The German original would have been published shortly before. Richard von Garbe (1857-1927) was a respected German Indologist and Sanskrit scholar.
+"""
+</result>

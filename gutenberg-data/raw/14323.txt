@@ -1,0 +1,15 @@
+<result>
+Title = "Là-Bas (Down There)"
+Author = "Joris-Karl Huysmans"
+Year = 1891
+
+Tags = ["fiction", "catholic"]
+
+Summary = """
+Là-Bas is a decadent novel by French author J.K. Huysmans that explores Satanism, black masses, and the occult in 19th century France. The protagonist, Durtal, is a writer researching the life of the medieval child-murderer Gilles de Rais while simultaneously becoming entangled in contemporary Parisian occultism. The novel is significant in Huysmans' spiritual journey - he was moving away from naturalism toward Catholicism, and this work sits at a pivotal point, examining evil as a pathway to understanding spiritual reality. Huysmans would later convert to Catholicism and write devotional works. The novel contains explicit descriptions of Satanic rituals and sexual content.
+"""
+
+Notes = """
+While Huysmans later became a devout Catholic and oblate of the Benedictines, this particular work was written during his transitional period and contains sympathetic portrayals of occultism and explicit content that would not receive an imprimatur. Marked 'catholic' because it is part of his spiritual trajectory and engages seriously with Catholic theology, but readers should be aware of its challenging content. Not appropriate for children.
+"""
+</result>

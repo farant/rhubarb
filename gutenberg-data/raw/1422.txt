@@ -1,0 +1,15 @@
+<result>
+Title = "Going into Society"
+Author = "Charles Dickens"
+Year = 1858
+
+Tags = ["fiction"]
+
+Summary = """
+"Going into Society" is a short story by Charles Dickens, originally published as part of the collaborative Christmas number "A House to Let" in the magazine Household Words. The story concerns a showman and his experiences with a dwarf performer named Chops who wins a lottery and attempts to enter fashionable society, only to find himself exploited and eventually ruined. It's a characteristic Dickens tale examining class, aspiration, and the cruelty of social pretension.
+"""
+
+Notes = """
+This story was first published in December 1858 as part of the Christmas number of Household Words. It was later collected in "Christmas Stories." The 1894 Chapman and Hall edition mentioned in the Gutenberg header is a later reprinting.
+"""
+</result>

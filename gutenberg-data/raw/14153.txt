@@ -1,0 +1,15 @@
+<result>
+Title = "Westways: A Village Chronicle"
+Author = "S. Weir Mitchell"
+Year = 1913
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Westways is a Civil War novel set in western Pennsylvania, the final work by physician and author S. Weir Mitchell, written when he was 84 years old. The story follows the Penhallow family: James, a proud and serious man; his Southern wife who sympathizes with the Confederacy; and John, his nephew who comes to live with them. The first half depicts village life and John's coming of age, while the second half depicts the battlefields of the Civil War. Mitchell was a renowned neurologist who pioneered the "rest cure" for nervous disorders, and his medical expertise often informed his fiction. He was known for psychological insight in his novels, including the popular Hugh Wynne (1896).
+"""
+
+Notes = """
+1913 is the year of original publication - this was Mitchell's last novel before his death in January 1914. The book was dedicated to his three brothers who served in the Union Army.
+"""
+</result>

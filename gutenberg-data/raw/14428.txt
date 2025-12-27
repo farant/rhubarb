@@ -1,0 +1,15 @@
+<result>
+Title = "The Life and Correspondence of Major-General Sir Isaac Brock, K.B."
+Author = "Ferdinand Brock Tupper"
+Year = 1845
+
+Tags = ["non-fiction", "historical-document", "biography"]
+
+Summary = """
+A biographical work documenting the life, military career, and correspondence of Major-General Sir Isaac Brock (1769-1812), a British Army officer who became a Canadian hero during the War of 1812. Brock is celebrated for his defense of Upper Canada against American invasion and his alliance with the Shawnee leader Tecumseh. He died at the Battle of Queenston Heights. The book was compiled by his nephew Ferdinand Brock Tupper from manuscripts and personal effects that had remained unopened for nearly thirty years after Brock's death. The work includes notices of Tecumseh and brief memoirs of other family members.
+"""
+
+Notes = """
+1845 is the year of first publication as indicated on the title page. This is a primary historical source compiled from original manuscripts and correspondence.
+"""
+</result>

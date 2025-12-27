@@ -1,0 +1,15 @@
+<result>
+Title = "A History of Trade Unionism in the United States"
+Author = "Selig Perlman"
+Year = 1922
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is an academic history of the American labor movement and trade unions from colonial times through the early 20th century. Selig Perlman was a prominent labor economist at the University of Wisconsin who worked under John R. Commons, a foundational figure in institutional economics and labor history. The book synthesizes earlier collaborative research published as "History of Labour in the United States" (1918) while extending the narrative through the early 1920s. Perlman later became famous for his "Theory of the Labor Movement" (1928), which proposed that American workers were primarily focused on job-conscious unionism rather than revolutionary class struggle.
+"""
+
+Notes = """
+The publication year 1922 is explicitly stated multiple times in the front matter. This is the original publication, not a reprint or translation of an earlier work.
+"""
+</result>

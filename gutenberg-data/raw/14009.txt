@@ -1,0 +1,15 @@
+<result>
+Title = "Scientific American Supplement No. 787"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "science", "appropriate-for-children"]
+
+Summary = """
+This is an issue of the Scientific American Supplement, a weekly publication that accompanied the main Scientific American magazine. This particular issue (No. 787) was published January 31, 1891 and contains articles on diverse scientific and technical topics including a biography of Charles Goodyear (inventor of vulcanized rubber), biological classification debates, and several pieces on electrical technology including ballistic targets, geological instruments, and electromagnet construction by the notable physicist Silvanus P. Thompson.
+"""
+
+Notes = """
+Scientific American was established in 1845 and remains one of the oldest continuously published magazines in the United States. The Supplement series ran from 1876 to 1919 and provided more in-depth technical and scientific content than the main publication. The year 1891 is the publication date of this specific issue.
+"""
+</result>

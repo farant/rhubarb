@@ -1,0 +1,15 @@
+<result>
+Title = "Alton of Somasco: A Romance of the Great Northwest"
+Author = "Harold Bindloss"
+Year = 1905
+
+Tags = ["fiction"]
+
+Summary = """
+A romance novel set in the Canadian/American Pacific Northwest, featuring themes common to Bindloss's work: frontier life, ranching, and the rugged wilderness of British Columbia. Harold Bindloss (1866-1945) was a prolific English author who wrote numerous adventure and romance novels set in the Canadian West and other frontier settings. His works typically feature strong protagonists navigating both the physical challenges of wilderness life and romantic entanglements. "Alton of Somasco" follows the pattern of his other popular works like "Winston of the Prairie" in depicting life in the "Great Northwest" during the early settlement period.
+"""
+
+Notes = """
+The copyright date of 1905 is used as the publication year. The 1906 date mentioned refers to a subsequent edition by A. L. Burt Company.
+"""
+</result>

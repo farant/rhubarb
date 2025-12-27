@@ -1,0 +1,15 @@
+<result>
+Title = "Mimmi Paavaliina"
+Author = "Maiju Lassila"
+Year = 1916
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mimmi Paavaliina is a four-act comedy play by Finnish author Maiju Lassila, the pen name of Algot Untola. The play centers on the character Mimmi Paavaliina, an unmarried woman (neitsyt/maiden) who nonetheless has six children of various ages. This comedic premise drives the rural Finnish humor typical of Lassila's work. The play features a cast of colorful village characters including farmers, a dean (rovasti), a parish clerk (lukkari), and young people, set in a Finnish peasant household. Lassila was known for his humorous depictions of Finnish rural life and common people.
+"""
+
+Notes = """
+Maiju Lassila (1868-1918) was one of the most popular Finnish humorists of the early 20th century. He wrote under multiple pseudonyms and is best known for 'Tulitikkuja lainaamassa' (Borrowing Matches). He was tragically executed during the Finnish Civil War in 1918. The play was first published by Arvi A. Karisto in 1916.
+"""
+</result>

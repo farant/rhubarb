@@ -1,0 +1,15 @@
+<result>
+Title = "A Frog He Would A-Wooing Go"
+Author = "Randolph Caldecott"
+Year = 1883
+
+Tags = ["fiction", "appropriate-for-children", "illustrated", "nursery-rhyme"]
+
+Summary = """
+This is one of Randolph Caldecott's famous Picture Books, an illustrated version of the traditional English nursery rhyme about a frog who goes courting Miss Mouse. The rhyme itself dates back to at least the 16th century (referenced as early as 1549), but Caldecott's illustrated edition became the definitive popular version. The story follows Mr. Frog as he sets out with his opera hat, meets Mr. Rat, and together they visit Miss Mouse at her hall. Caldecott's illustrations brought new life and humor to the old song, and his picture books were enormously influential on the development of children's book illustration.
+"""
+
+Notes = """
+The year 1883 is when Caldecott published this illustrated picture book edition. The underlying nursery rhyme is much older - one of the oldest English nursery rhymes with references dating to 1549. However, since this is specifically Caldecott's illustrated picture book (as indicated by "R. Caldecott Picture Books" on the cover), the 1883 publication date is most appropriate as this represents his artistic contribution rather than just a reprinting of the traditional rhyme.
+"""
+</result>

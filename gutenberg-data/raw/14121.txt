@@ -1,0 +1,15 @@
+<result>
+Title = "Langs den Congo tot Brazzaville"
+Author = "A. Kloos"
+Year = 1900
+
+Tags = ["non-fiction", "travel-writing"]
+
+Summary = """
+This is a Dutch-language travel account describing a journey along the Congo River to Brazzaville. The author traveled aboard the Albertville, a steamship of the Messageries Maritimes du Congo. The text describes the impressive entrance to the Congo River, the landscape, the colonial settlement at Banana Point, and observations about the European trading presence and colonial administration in the Congo Free State/Belgian Congo region.
+"""
+
+Notes = """
+The exact publication year is uncertain. The text references the "Congostaat" (Congo Free State), which existed from 1885-1908, and describes established European trading houses and colonial infrastructure, suggesting this was written in the late colonial period of the Congo Free State, likely around 1900. The Messageries Maritimes du Congo operated steamship services during this era. I have estimated 1900 as a reasonable midpoint for when this travel account was likely written and published.
+"""
+</result>

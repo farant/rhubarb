@@ -1,0 +1,17 @@
+The file only contains the result block - it appears this text has already been processed. However, you've pasted the actual Gutenberg text content in your message, so let me provide the analysis based on that:
+
+<result>
+Title = "Notes and Queries: A Medium of Inter-Communication for Literary Men, Artists, Antiquaries, Genealogists, Etc., No. 25"
+Author = "Various"
+Year = 1850
+
+Tags = ["non-fiction", "historical-document", "periodical"]
+
+Summary = """
+Notes and Queries was a weekly British periodical founded in 1849 by William John Thoms. It served as a correspondence forum for scholars, antiquaries, literary researchers, and historians to pose questions, share discoveries, and exchange information on matters of literary, historical, and genealogical interest. The publication featured a distinctive format of notes (brief scholarly observations), queries (questions seeking answers from readers), and replies (answers to previously published queries). This issue (No. 25) from April 20, 1850 includes discussions on Roger Bacon, Pope's revision of Spence, folk lore including Easter eggs and toothache charms, and the Duke of Monmouth's pocket-book. The journal's motto "When found, make a note of" comes from Captain Cuttle in Dickens's Dombey and Son.
+"""
+
+Notes = """
+Year 1850 is exact as printed on the issue itself (April 20, 1850). Notes and Queries continues publication to this day, making it one of the longest-running scholarly periodicals in English.
+"""
+</result>

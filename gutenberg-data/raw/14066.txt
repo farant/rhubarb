@@ -1,0 +1,17 @@
+The file is empty (0 bytes). However, you've provided the text content directly in your message. Based on the excerpt you provided, I can identify this work:
+
+<result>
+Title = "Everyday Foods in War Time"
+Author = "Mary Swartz Rose"
+Year = 1918
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A practical wartime nutrition guide published during World War I by Mary Swartz Rose, a pioneer in the field of nutrition science and professor at Columbia University's Teachers College. The book was written to help American housewives adapt their cooking and meal planning to support the war effort through food conservation. It explains the nutritional roles of common foods and provides guidance on how to economize while still maintaining proper nutrition, particularly focusing on conserving wheat, meat, sugar, and fats that were needed for soldiers and allies overseas.
+"""
+
+Notes = """
+Mary Swartz Rose (1874-1941) was one of the most influential nutritionists of the early 20th century and helped establish nutrition as an academic discipline in the United States. This book was published in direct response to the U.S. Food Administration's conservation campaigns during WWI. The year 1918 is printed directly in the book's front matter.
+"""
+</result>

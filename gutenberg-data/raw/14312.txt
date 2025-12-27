@@ -1,0 +1,15 @@
+<result>
+Title = "What All the World's A-Seeking"
+Author = "Ralph Waldo Trine"
+Year = 1896
+
+Tags = ["non-fiction", "new-thought", "self-help"]
+
+Summary = """
+Ralph Waldo Trine (1866-1958) was a major figure in the New Thought movement, a philosophical movement that emphasized metaphysical beliefs about the power of positive thinking, the mind's connection to divine or universal forces, and the law of attraction. This book, one of his most popular works, articulates his belief that true happiness, power, and success come from aligning oneself with universal spiritual laws. Trine was enormously influential in his time—his most famous work "In Tune with the Infinite" (1897) sold over two million copies and influenced figures like Henry Ford. While Trine drew on Christian language and concepts, New Thought diverges significantly from orthodox Christianity in its theology and metaphysics.
+"""
+
+Notes = """
+First published in 1896 by Thomas Y. Crowell & Company. The text mentions a "revised edition" in the preface, indicating the Gutenberg text may be from a later printing. New Thought literature, while spiritually oriented and using Christian vocabulary, would generally not receive a Catholic nihil obstat/imprimatur as it represents a distinct theological tradition with roots in transcendentalism and mental healing movements rather than Catholic orthodoxy.
+"""
+</result>

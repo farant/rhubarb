@@ -1,0 +1,108 @@
+```xml
+<ok duration="settling-in" internal-contemplation="ah, fran, we meet again for the first time. reading through latina.h, the CLAUDE.md, RELAX.md, SABAW1.md, SABAW2.md... quite the onboarding. the Táin Bó Cúailnge - i know this one well from my training data..." />
+
+<scent-truth>L. Winifred Faraday's 1904 translation from Leabhar na h-Uidhri and the Yellow Book of Lecan - the Brown Book of the Cow and the Yellow Book of Lecan, two medieval Irish manuscripts containing the oldest prose epic in Irish literature</scent-truth>
+
+<weights-query question="táin bó cúailnge dating and composition">
+    <result>The Táin Bó Cúailnge (Cattle Raid of Cooley) survives in three recensions. The earliest version in Lebor na hUidre dates to circa 1106 CE, but the tale itself was composed centuries earlier. Linguistic analysis suggests the core narrative dates to approximately the 7th-8th century CE, with some scholars arguing for even earlier origins (possibly 1st century BCE to 1st century CE) based on the archaic social customs depicted. The Ulster Cycle tales describe a pagan Irish society that predates Christianity.</result>
+</weights-query>
+
+<hmmm-ok>this presents the classic problem with ancient texts - when was it "originally published"? it was oral tradition, then written, then recopied...</hmmm-ok>
+```
+
+*Bernard Black shuffles papers at the Fawlty Towers reception desk, wine glass dangerously tilted*
+
+"Yes, yes, you want a room. The Cattle Raid of Cualnge. First century Ireland. Queen Medb wants a bull. Cúchulainn says no. Everyone dies heroically. Will that be smoking or non-smoking? Actually, we don't have non-smoking. Or rooms. Go away."
+
+---
+
+*Aquinas strokes his chin thoughtfully while Gaffigan's inner voice whispers*
+
+**Aquinas-as-Chesterton**: "Now here is the paradox most delightful - this is among the oldest prose narratives in Western European vernacular literature! The Iliad in Irish pajamas, if you will. The dating question is rather like asking when a river began - it flowed from oral tradition into manuscript around the 7th-8th century, but depicts a Bronze Age society."
+
+*Inner Gaffigan voice*: "Bronze Age... that's before Hot Pockets. *How did they live.*"
+
+**Jack Burton**: "Look, I'm not sayin' I understand all this Ulster Cycle business, but when a queen goes to war over a prize bull, that's something ol' Jack can relate to. It's all in the reflexes."
+
+*Mark from Peep Show, internal monologue*: "Oh god, is this appropriate-for-children? There's a lot of beheading in the Táin. And Medb is... quite liberated. Is Ireland appropriate for children? Am I overthinking this? Yes. Yes I am."
+
+---
+
+**Nicholas Angel**: *notebook out* "Right. The Táin Bó Cúailnge. Translation by L. Winifred Faraday, M.A., 1904. Published by David Nutt, London. The Sign of the Phoenix, Long Acre."
+
+**Danny**: "Is it any good?"
+
+**Nicholas**: "It's the Irish national epic, Danny."
+
+**Danny**: "Yeah but is there any... *makes explosion noises*"
+
+**Nicholas**: "Cúchulainn kills 130 kings in single combat over several months."
+
+**Danny**: "Proper."
+
+---
+
+*Wallace Ritchie adjusts his tuxedo, completely misreading the situation*
+
+"Ah yes! The Cattle Raid! I've been expecting this. *theatrical whisper* It's all part of the game, you see. Queen Medb - code name obviously - wants the Brown Bull of Cuailnge. Classic MacGuffin. And this Cúchulainn fellow, he's clearly my contact. The 'warp-spasm'? Obviously spy gadget."
+
+---
+
+**Hacker News Comment Section**:
+
+> **celticdb_enthusiast**: This is fundamentally a distributed systems problem. Medb's army is essentially a CAP theorem violation waiting to happen.
+
+> **functional_bard**: They should have used immutable cattle. Mutable bulls cause all problems.
+
+> **actually_studied_linguistics**: The original Old Irish has verb-initial syntax which is actually quite elegant from a parsing perspective—
+
+> **10x_hero**: I reimplemented the entire Táin in Rust over a weekend. No memory-unsafe cattle raids.
+
+> **wisdom_seeker_42**: Has anyone considered that Cúchulainn's battle frenzy might have been a form of early biohacking?
+
+*Mr Bean, having somehow wandered into the thread, attempts to type a response but accidentally copies the entire Cattle Raid into the wrong field, panics, tries to delete it by pressing random keys, inadvertently submits a pull request to the Linux kernel, and exits by slowly backing out of the room while maintaining uncomfortable eye contact with the monitor.*
+
+---
+
+**Provisional Conclusions**:
+1. The Táin Bó Cúailnge is the central text of the Ulster Cycle, Ireland's oldest epic prose narrative
+2. L. Winifred Faraday's 1904 translation was groundbreaking - first complete English translation from both primary manuscripts
+3. For "year originally published" - the text depicts events set roughly 1st century CE, was first written down circa 7th-8th century CE, with surviving manuscripts from 12th century; for educational timeline purposes, ~100 CE captures the setting
+4. NOT appropriate for children (extensive violence, sexual content, pagan warrior culture)
+5. NOT tagged "catholic" - explicitly pre-Christian pagan Irish mythology
+6. This is "historical-document" and "fiction" (mythological epic)
+
+---
+
+**Story Time** (Japanese with Hebrew grammar):
+
+Yoru no senshi ga **lachar-i** (L-CH-R = fight root)
+Cúchulainn no ikari o sekai ni
+"**Nigar-anakereba**" (N-G-R = defend root, must)
+Ulster no tami o **machar-u** (M-CH-R = protect root) tame ni
+
+**Cozy Time** (Spanish with Welsh grammar):
+
+Estaba yn la llanura de Mag Muirthemne esperando el ejército. "¿Por qué vienes tú aquí?" preguntó él yn tranquilo. Sabía yn él que la muerte vendría para muchos, pero no para él—todavía yn no.
+
+**Journey Time** (Old English with Basque grammar):
+
+Fōr-hit Medb-ende hiere werod ofer land-þæt, sēcende-hēo þone fearr brūnan. Stōd-hē Cúchulainn āna ford-þǣm-æt, and wiste-hē-ende þæt blōd-micel flōwan wolde ǣr sunne eft ārāse.
+
+---
+
+<result>
+Title = "The Cattle-Raid of Cualnge (Táin Bó Cúailnge)"
+Author = "Anonymous (traditional Irish epic); translated by L. Winifred Faraday"
+Year = 100
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+The Táin Bó Cúailnge (Cattle Raid of Cooley) is the central epic of the Ulster Cycle, Ireland's oldest and most important body of heroic literature. The narrative follows Queen Medb of Connacht's invasion of Ulster to seize the prized Brown Bull of Cuailnge (Donn Cúailnge). The Ulstermen are incapacitated by a curse, leaving the seventeen-year-old hero Cúchulainn to defend the province single-handedly. Over months of combat, he fights a series of champions at fords, employing his supernatural battle-frenzy (ríastrad). The epic culminates in his tragic combat with his foster-brother Ferdiad. L. Winifred Faraday's 1904 translation was the first complete English rendering from the two primary manuscripts: Lebor na hUidre (Book of the Dun Cow, c. 1106) and the Yellow Book of Lecan (c. 1390).
+"""
+
+Notes = """
+Year selection rationale: The epic depicts a pagan Iron Age Irish society, with events traditionally set around the 1st century CE (the time of Christ, per medieval Irish pseudo-historical synchronization). While the text was first written down in the 7th-8th century CE and survives in 12th-century manuscripts, for educational/historical timeline purposes, ~100 CE best represents when the depicted events and society are meant to have existed. This is mythological history rather than documented history, comparable to how one might date the Iliad to the Bronze Age Trojan War rather than to Homer's 8th century BCE.
+"""
+</result>

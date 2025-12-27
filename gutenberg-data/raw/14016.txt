@@ -1,0 +1,15 @@
+<result>
+Title = "John Knox and the Reformation"
+Author = "Andrew Lang"
+Year = 1905
+
+Tags = ["non-fiction", "biography", "history", "religion"]
+
+Summary = """
+This is a biographical and historical study of John Knox (c. 1514-1572), the Scottish clergyman and leader of the Protestant Reformation in Scotland. Andrew Lang, a prolific Scottish author, historian, and folklorist, wrote this work examining Knox's life and his role in establishing Presbyterianism in Scotland. Lang was known for his critical approach to historical sources, and in this work he attempts to look beyond traditional hagiographic accounts of Knox to present a more nuanced portrait. The book covers Knox's conflicts with Mary Queen of Scots, his theological development, and his influence on Scottish religious and political life.
+"""
+
+Notes = """
+Year 1905 chosen as this is the original publication date of Lang's work (the Longmans, Green and Co. edition mentioned in the transcription notes). This is an original scholarly work by Lang, not a translation or edition of an earlier text, so the publication year is the appropriate date. Andrew Lang (1844-1912) was not Catholic - he was raised Presbyterian and later became agnostic, so the 'catholic' tag is not applicable despite the religious subject matter.
+"""
+</result>
