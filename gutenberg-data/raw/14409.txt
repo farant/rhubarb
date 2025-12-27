@@ -1,0 +1,19 @@
+I recognize this work from the excerpt you provided. This is **Esther: A Novel** by **Henry Adams**, published anonymously in 1884. Adams was a prominent American historian and member of the famous Adams political family. He published this novel anonymously (and it was one of two novels he wrote, the other being *Democracy*).
+
+The novel deals with themes of religion, art, science, and the tension between faith and skepticism in Gilded Age America. The protagonist Esther Dudley falls in love with a clergyman but struggles with religious doubt.
+
+<result>
+Title = "Esther: A Novel"
+Author = "Henry Adams"
+Year = 1884
+
+Tags = ["fiction"]
+
+Summary = """
+Esther is a philosophical novel by American historian Henry Adams, published anonymously in 1884. The story follows Esther Dudley, an intelligent and artistic young woman in New York's Gilded Age society, who becomes romantically involved with Stephen Hazard, the charismatic rector of the fashionable St. John's Episcopal Church on Fifth Avenue. The central conflict arises from Esther's inability to accept religious faith despite her love for Hazard. The novel explores tensions between religion and science, tradition and modernity, and the question of whether intellectual honesty can coexist with religious belief. It is considered semi-autobiographical, reflecting Adams's own religious skepticism and his wife Marian's struggles with faith. The book was a commercial failure but has since been recognized as an important work examining American intellectual life in the late 19th century.
+"""
+
+Notes = """
+Henry Adams published this novel anonymously and made no effort to promote it, apparently using it as an experiment to see if a book could succeed purely on its merits without advertising or the author's reputation. It did not. Adams was not Catholic; he came from a prominent Unitarian/Protestant family. The novel actually critiques aspects of organized religion, making it unsuitable for the 'catholic' tag.
+"""
+</result>

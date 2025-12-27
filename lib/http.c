@@ -945,13 +945,14 @@ http_methodus_nomen(HttpMethodus methodus)
 {
     commutatio (methodus)
     {
-        casus HTTP_GET:    redde "GET";
-        casus HTTP_POST:   redde "POST";
-        casus HTTP_PUT:    redde "PUT";
-        casus HTTP_DELETE: redde "DELETE";
-        casus HTTP_PATCH:  redde "PATCH";
-        casus HTTP_HEAD:   redde "HEAD";
-        ordinarius:        redde "GET";
+        casus HTTP_GET:     redde "GET";
+        casus HTTP_POST:    redde "POST";
+        casus HTTP_PUT:     redde "PUT";
+        casus HTTP_DELETE:  redde "DELETE";
+        casus HTTP_PATCH:   redde "PATCH";
+        casus HTTP_HEAD:    redde "HEAD";
+        casus HTTP_OPTIONS: redde "OPTIONS";
+        ordinarius:         redde "GET";
     }
 }
 
@@ -1206,4 +1207,654 @@ http_exsequi_cum_redirectionibus(
     }
 
     redde res;
+}
+
+
+/* ========================================================================
+ * STRUCTURA INTERNA - SERVER PARSER
+ * ======================================================================== */
+
+#define HTTP_PARSER_BUFFER_INITIALE  MMMMXCVI    /* 4096 bytes */
+
+structura HttpParser {
+    Piscina*            piscina;
+    HttpParseStatus     status;
+    HttpPetitioServeri* petitio;
+
+    /* Buffer pro data accumulata */
+    i8*    buffer;
+    i32    buffer_mensura;
+    i32    buffer_capacitas;
+
+    /* Parsing state */
+    i32 cursor;           /* Current position in buffer */
+    i32 linea_initium;    /* Start of current line */
+};
+
+
+/* ========================================================================
+ * FUNCTIONES INTERNAE - SERVER PARSER
+ * ======================================================================== */
+
+/* Expandere buffer si necesse */
+interior b32
+_parser_expandere_buffer(HttpParser* parser, i32 additio)
+{
+    i32 nova_capacitas;
+    i8* nova_buffer;
+
+    si (parser->buffer_mensura + additio <= parser->buffer_capacitas)
+    {
+        redde VERUM;
+    }
+
+    nova_capacitas = parser->buffer_capacitas * II;
+    dum (nova_capacitas < parser->buffer_mensura + additio)
+    {
+        nova_capacitas *= II;
+    }
+
+    nova_buffer = (i8*)piscina_allocare(parser->piscina, (i64)nova_capacitas);
+    si (!nova_buffer)
+    {
+        redde FALSUM;
+    }
+
+    si (parser->buffer_mensura > 0)
+    {
+        memcpy(nova_buffer, parser->buffer, (size_t)parser->buffer_mensura);
+    }
+
+    parser->buffer = nova_buffer;
+    parser->buffer_capacitas = nova_capacitas;
+
+    redde VERUM;
+}
+
+/* Invenire CRLF in buffer ex positione
+ * Redde: Positio CRLF vel I32_MAX si non invenit
+ */
+#define PARSER_NON_INVENIT  0xFFFFFFFFu
+
+interior i32
+_parser_invenire_crlf(HttpParser* parser, i32 initium)
+{
+    i32 i;
+
+    si (parser->buffer_mensura < II)
+    {
+        redde PARSER_NON_INVENIT;
+    }
+
+    per (i = initium; i < parser->buffer_mensura - I; i++)
+    {
+        si (parser->buffer[i] == '\r' && parser->buffer[i + I] == '\n')
+        {
+            redde i;
+        }
+    }
+
+    redde PARSER_NON_INVENIT;
+}
+
+/* Parse request line: METHOD URI HTTP/1.x */
+interior b32
+_parser_parse_linea_petitionis(HttpParser* parser, i32 linea_finis)
+{
+    i32 i = parser->linea_initium;
+    i32 methodus_initium;
+    i32 methodus_finis;
+    i32 uri_initium;
+    i32 uri_finis;
+    i32 versio_initium;
+    character methodus_str[XVI];
+    i32 methodus_len;
+    i32 j;
+
+    /* Saltare leading whitespace */
+    dum (i < linea_finis && (parser->buffer[i] == ' ' || parser->buffer[i] == '\t'))
+    {
+        i++;
+    }
+
+    /* Parse methodus */
+    methodus_initium = i;
+    dum (i < linea_finis && parser->buffer[i] != ' ')
+    {
+        i++;
+    }
+    methodus_finis = i;
+
+    /* Copiare methodus ad string temporarium */
+    methodus_len = methodus_finis - methodus_initium;
+    si (methodus_len <= 0 || methodus_len >= XVI)
+    {
+        redde FALSUM;
+    }
+
+    per (j = 0; j < methodus_len; j++)
+    {
+        methodus_str[j] = (character)parser->buffer[methodus_initium + j];
+    }
+    methodus_str[methodus_len] = '\0';
+
+    parser->petitio->methodus = http_methodus_ex_literis(methodus_str);
+
+    /* Saltare spatia */
+    dum (i < linea_finis && parser->buffer[i] == ' ')
+    {
+        i++;
+    }
+
+    /* Parse URI */
+    uri_initium = i;
+    dum (i < linea_finis && parser->buffer[i] != ' ')
+    {
+        i++;
+    }
+    uri_finis = i;
+
+    si (uri_finis <= uri_initium)
+    {
+        redde FALSUM;
+    }
+
+    /* Creare URI chorda */
+    parser->petitio->uri = _chorda_ex_partibus(
+        (constans character*)&parser->buffer[uri_initium],
+        uri_finis - uri_initium,
+        parser->piscina);
+
+    /* Separare via et quaestio */
+    {
+        i32 q;
+        i32 uri_len = uri_finis - uri_initium;
+
+        /* Invenire ? */
+        per (q = 0; q < uri_len; q++)
+        {
+            si (parser->buffer[uri_initium + q] == '?')
+            {
+                frange;
+            }
+        }
+
+        si (q < uri_len)
+        {
+            /* Habet quaestio */
+            parser->petitio->via = _chorda_ex_partibus(
+                (constans character*)&parser->buffer[uri_initium],
+                q, parser->piscina);
+            parser->petitio->quaestio = _chorda_ex_partibus(
+                (constans character*)&parser->buffer[uri_initium + q + I],
+                uri_len - q - I, parser->piscina);
+        }
+        alioquin
+        {
+            /* Nullum quaestio */
+            parser->petitio->via = parser->petitio->uri;
+            parser->petitio->quaestio.datum = NIHIL;
+            parser->petitio->quaestio.mensura = 0;
+        }
+    }
+
+    /* Saltare spatia */
+    dum (i < linea_finis && parser->buffer[i] == ' ')
+    {
+        i++;
+    }
+
+    /* Parse HTTP version */
+    versio_initium = i;
+
+    /* Verificare "HTTP/1." */
+    si (linea_finis - versio_initium >= VII &&
+        parser->buffer[versio_initium] == 'H' &&
+        parser->buffer[versio_initium + I] == 'T' &&
+        parser->buffer[versio_initium + II] == 'T' &&
+        parser->buffer[versio_initium + III] == 'P' &&
+        parser->buffer[versio_initium + IV] == '/' &&
+        parser->buffer[versio_initium + V] == '1' &&
+        parser->buffer[versio_initium + VI] == '.')
+    {
+        si (linea_finis - versio_initium >= VIII &&
+            parser->buffer[versio_initium + VII] == '1')
+        {
+            parser->petitio->versio = XI;  /* HTTP/1.1 */
+        }
+        alioquin
+        {
+            parser->petitio->versio = X;   /* HTTP/1.0 */
+        }
+    }
+    alioquin
+    {
+        parser->petitio->versio = XI;  /* Default HTTP/1.1 */
+    }
+
+    /* Default keep-alive pro HTTP/1.1 */
+    parser->petitio->keep_alive = (parser->petitio->versio == XI);
+
+    redde VERUM;
+}
+
+/* Parse single header line */
+interior b32
+_parser_parse_caput(HttpParser* parser, i32 linea_finis)
+{
+    i32 i = parser->linea_initium;
+    i32 colon_pos = PARSER_NON_INVENIT;
+    i32 valor_initium;
+    HttpCaput* caput;
+
+    /* Invenire colon */
+    dum (i < linea_finis)
+    {
+        si (parser->buffer[i] == ':')
+        {
+            colon_pos = i;
+            frange;
+        }
+        i++;
+    }
+
+    si (colon_pos == PARSER_NON_INVENIT)
+    {
+        redde FALSUM;
+    }
+
+    /* Verificare capacitas */
+    si (parser->petitio->capita_numerus >= HTTP_CAPITA_MAXIMA)
+    {
+        redde VERUM;  /* Ignorare extra headers */
+    }
+
+    caput = &parser->petitio->capita[parser->petitio->capita_numerus];
+
+    /* Titulus */
+    caput->titulus = _chorda_ex_partibus(
+        (constans character*)&parser->buffer[parser->linea_initium],
+        colon_pos - parser->linea_initium,
+        parser->piscina);
+
+    /* Valor (saltare spatia) */
+    valor_initium = colon_pos + I;
+    dum (valor_initium < linea_finis &&
+         (parser->buffer[valor_initium] == ' ' ||
+          parser->buffer[valor_initium] == '\t'))
+    {
+        valor_initium++;
+    }
+
+    caput->valor = _chorda_ex_partibus(
+        (constans character*)&parser->buffer[valor_initium],
+        linea_finis - valor_initium,
+        parser->piscina);
+
+    parser->petitio->capita_numerus++;
+
+    /* Verificare special headers */
+    si (_chorda_aequalis_literis_ignora_casus(caput->titulus, "Content-Length"))
+    {
+        parser->petitio->content_length = _chorda_ad_i32(caput->valor);
+        parser->petitio->corpus_longitudo = parser->petitio->content_length;
+    }
+    alioquin si (_chorda_aequalis_literis_ignora_casus(caput->titulus, "Transfer-Encoding"))
+    {
+        si (_chorda_aequalis_literis_ignora_casus(caput->valor, "chunked"))
+        {
+            parser->petitio->chunked = VERUM;
+        }
+    }
+    alioquin si (_chorda_aequalis_literis_ignora_casus(caput->titulus, "Connection"))
+    {
+        si (_chorda_aequalis_literis_ignora_casus(caput->valor, "close"))
+        {
+            parser->petitio->keep_alive = FALSUM;
+        }
+        alioquin si (_chorda_aequalis_literis_ignora_casus(caput->valor, "keep-alive"))
+        {
+            parser->petitio->keep_alive = VERUM;
+        }
+    }
+
+    redde VERUM;
+}
+
+
+/* ========================================================================
+ * FUNCTIONES PUBLICAE - SERVER PARSER
+ * ======================================================================== */
+
+HttpMethodus
+http_methodus_ex_literis(constans character* methodus)
+{
+    si (!methodus)
+    {
+        redde HTTP_METHODUS_IGNOTUS;
+    }
+
+    si (strcmp(methodus, "GET") == 0)     redde HTTP_GET;
+    si (strcmp(methodus, "POST") == 0)    redde HTTP_POST;
+    si (strcmp(methodus, "PUT") == 0)     redde HTTP_PUT;
+    si (strcmp(methodus, "DELETE") == 0)  redde HTTP_DELETE;
+    si (strcmp(methodus, "PATCH") == 0)   redde HTTP_PATCH;
+    si (strcmp(methodus, "HEAD") == 0)    redde HTTP_HEAD;
+    si (strcmp(methodus, "OPTIONS") == 0) redde HTTP_OPTIONS;
+
+    redde HTTP_METHODUS_IGNOTUS;
+}
+
+HttpParser*
+http_parser_creare(Piscina* piscina)
+{
+    HttpParser* parser;
+    HttpPetitioServeri* petitio;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+
+    parser = (HttpParser*)piscina_allocare(piscina, (i64)magnitudo(HttpParser));
+    si (!parser)
+    {
+        redde NIHIL;
+    }
+
+    petitio = (HttpPetitioServeri*)piscina_allocare(piscina,
+                                                     (i64)magnitudo(HttpPetitioServeri));
+    si (!petitio)
+    {
+        redde NIHIL;
+    }
+
+    /* Allocare capita array */
+    petitio->capita = (HttpCaput*)piscina_allocare(piscina,
+                                                    (i64)(HTTP_CAPITA_MAXIMA * (i32)magnitudo(HttpCaput)));
+    si (!petitio->capita)
+    {
+        redde NIHIL;
+    }
+
+    /* Initiare parser */
+    parser->piscina = piscina;
+    parser->status = HTTP_PARSE_LINEA_PETITIONIS;
+    parser->petitio = petitio;
+
+    /* Allocare buffer initiale */
+    parser->buffer = (i8*)piscina_allocare(piscina, (i64)HTTP_PARSER_BUFFER_INITIALE);
+    si (!parser->buffer)
+    {
+        redde NIHIL;
+    }
+    parser->buffer_mensura = 0;
+    parser->buffer_capacitas = HTTP_PARSER_BUFFER_INITIALE;
+    parser->cursor = 0;
+    parser->linea_initium = 0;
+
+    /* Initiare petitio */
+    petitio->methodus = HTTP_GET;
+    petitio->uri.datum = NIHIL;
+    petitio->uri.mensura = 0;
+    petitio->via.datum = NIHIL;
+    petitio->via.mensura = 0;
+    petitio->quaestio.datum = NIHIL;
+    petitio->quaestio.mensura = 0;
+    petitio->versio = XI;
+    petitio->capita_numerus = 0;
+    petitio->corpus.datum = NIHIL;
+    petitio->corpus.mensura = 0;
+    petitio->corpus_longitudo = 0;
+    petitio->keep_alive = VERUM;
+    petitio->chunked = FALSUM;
+    petitio->content_length = 0;
+
+    redde parser;
+}
+
+HttpParseResultus
+http_parser_adicere(
+    HttpParser*         parser,
+    constans character* datum,
+    i32                 longitudo)
+{
+    HttpParseResultus res;
+    i32 crlf_pos;
+
+    /* Default resultatus */
+    res.successus = VERUM;
+    res.completa = FALSUM;
+    res.petitio = NIHIL;
+    res.error = HTTP_OK;
+    res.error_descriptio.datum = NIHIL;
+    res.error_descriptio.mensura = 0;
+
+    si (!parser || !datum || longitudo <= 0)
+    {
+        res.successus = FALSUM;
+        res.error = HTTP_ERROR_PARSE;
+        redde res;
+    }
+
+    si (parser->status == HTTP_PARSE_ERROR ||
+        parser->status == HTTP_PARSE_COMPLETA)
+    {
+        res.petitio = parser->petitio;
+        res.completa = (parser->status == HTTP_PARSE_COMPLETA);
+        redde res;
+    }
+
+    /* Expandere buffer et adicere data */
+    si (!_parser_expandere_buffer(parser, longitudo))
+    {
+        parser->status = HTTP_PARSE_ERROR;
+        res.successus = FALSUM;
+        res.error = HTTP_ERROR_PARSE;
+        res.error_descriptio = chorda_ex_literis("Buffer overflow", parser->piscina);
+        redde res;
+    }
+
+    memcpy(parser->buffer + parser->buffer_mensura, datum, (size_t)longitudo);
+    parser->buffer_mensura += longitudo;
+
+    /* State machine parsing */
+    dum (parser->status != HTTP_PARSE_COMPLETA &&
+         parser->status != HTTP_PARSE_ERROR)
+    {
+        commutatio (parser->status)
+        {
+            casus HTTP_PARSE_LINEA_PETITIONIS:
+                crlf_pos = _parser_invenire_crlf(parser, parser->cursor);
+                si (crlf_pos == PARSER_NON_INVENIT)
+                {
+                    /* Necesse plus data */
+                    res.petitio = parser->petitio;
+                    redde res;
+                }
+
+                si (!_parser_parse_linea_petitionis(parser, crlf_pos))
+                {
+                    parser->status = HTTP_PARSE_ERROR;
+                    res.successus = FALSUM;
+                    res.error = HTTP_ERROR_PARSE;
+                    res.error_descriptio = chorda_ex_literis("Request line invalida",
+                                                              parser->piscina);
+                    redde res;
+                }
+
+                parser->cursor = crlf_pos + II;  /* Post \r\n */
+                parser->linea_initium = parser->cursor;
+                parser->status = HTTP_PARSE_CAPITA;
+                frange;
+
+            casus HTTP_PARSE_CAPITA:
+                crlf_pos = _parser_invenire_crlf(parser, parser->cursor);
+                si (crlf_pos == PARSER_NON_INVENIT)
+                {
+                    /* Necesse plus data */
+                    res.petitio = parser->petitio;
+                    redde res;
+                }
+
+                /* Linea vacua = finis capitum */
+                si (crlf_pos == parser->linea_initium)
+                {
+                    parser->cursor = crlf_pos + II;
+
+                    /* Verificare si expectamus corpus */
+                    si (parser->petitio->content_length > 0)
+                    {
+                        parser->status = HTTP_PARSE_CORPUS;
+                    }
+                    alioquin si (parser->petitio->chunked)
+                    {
+                        /* TODO: Chunked not yet supported pro server */
+                        parser->status = HTTP_PARSE_COMPLETA;
+                    }
+                    alioquin
+                    {
+                        parser->status = HTTP_PARSE_COMPLETA;
+                    }
+                    frange;
+                }
+
+                /* Parse header */
+                si (!_parser_parse_caput(parser, crlf_pos))
+                {
+                    parser->status = HTTP_PARSE_ERROR;
+                    res.successus = FALSUM;
+                    res.error = HTTP_ERROR_PARSE;
+                    res.error_descriptio = chorda_ex_literis("Header invalida",
+                                                              parser->piscina);
+                    redde res;
+                }
+
+                parser->cursor = crlf_pos + II;
+                parser->linea_initium = parser->cursor;
+                frange;
+
+            casus HTTP_PARSE_CORPUS:
+            {
+                i32 corpus_disponibile;
+
+                corpus_disponibile = parser->buffer_mensura - parser->cursor;
+
+                si (corpus_disponibile >= parser->petitio->content_length)
+                {
+                    /* Habemus totum corpus */
+                    parser->petitio->corpus = _chorda_ex_partibus(
+                        (constans character*)&parser->buffer[parser->cursor],
+                        parser->petitio->content_length,
+                        parser->piscina);
+                    parser->petitio->corpus_longitudo = parser->petitio->content_length;
+                    parser->status = HTTP_PARSE_COMPLETA;
+                }
+                alioquin
+                {
+                    /* Necesse plus data */
+                    res.petitio = parser->petitio;
+                    redde res;
+                }
+                frange;
+            }
+
+            ordinarius:
+                parser->status = HTTP_PARSE_COMPLETA;
+                frange;
+        }
+    }
+
+    /* Parsing completa */
+    res.petitio = parser->petitio;
+    res.completa = (parser->status == HTTP_PARSE_COMPLETA);
+
+    redde res;
+}
+
+b32
+http_parser_est_completa(HttpParser* parser)
+{
+    si (!parser)
+    {
+        redde FALSUM;
+    }
+
+    redde (parser->status == HTTP_PARSE_COMPLETA);
+}
+
+HttpPetitioServeri*
+http_parser_obtinere_petitio(HttpParser* parser)
+{
+    si (!parser)
+    {
+        redde NIHIL;
+    }
+
+    redde parser->petitio;
+}
+
+vacuum
+http_parser_reset(HttpParser* parser)
+{
+    si (!parser)
+    {
+        redde;
+    }
+
+    parser->status = HTTP_PARSE_LINEA_PETITIONIS;
+    parser->buffer_mensura = 0;
+    parser->cursor = 0;
+    parser->linea_initium = 0;
+
+    /* Reset petitio */
+    parser->petitio->methodus = HTTP_GET;
+    parser->petitio->uri.datum = NIHIL;
+    parser->petitio->uri.mensura = 0;
+    parser->petitio->via.datum = NIHIL;
+    parser->petitio->via.mensura = 0;
+    parser->petitio->quaestio.datum = NIHIL;
+    parser->petitio->quaestio.mensura = 0;
+    parser->petitio->versio = XI;
+    parser->petitio->capita_numerus = 0;
+    parser->petitio->corpus.datum = NIHIL;
+    parser->petitio->corpus.mensura = 0;
+    parser->petitio->corpus_longitudo = 0;
+    parser->petitio->keep_alive = VERUM;
+    parser->petitio->chunked = FALSUM;
+    parser->petitio->content_length = 0;
+}
+
+HttpParseResultus
+http_petitio_parse(
+    constans character* datum,
+    i32                 longitudo,
+    Piscina*            piscina)
+{
+    HttpParser* parser;
+    HttpParseResultus res;
+
+    si (!datum || longitudo <= 0 || !piscina)
+    {
+        res.successus = FALSUM;
+        res.completa = FALSUM;
+        res.petitio = NIHIL;
+        res.error = HTTP_ERROR_PARSE;
+        res.error_descriptio.datum = NIHIL;
+        res.error_descriptio.mensura = 0;
+        redde res;
+    }
+
+    parser = http_parser_creare(piscina);
+    si (!parser)
+    {
+        res.successus = FALSUM;
+        res.completa = FALSUM;
+        res.petitio = NIHIL;
+        res.error = HTTP_ERROR_PARSE;
+        res.error_descriptio = chorda_ex_literis("Parser creatio fallita", piscina);
+        redde res;
+    }
+
+    redde http_parser_adicere(parser, datum, longitudo);
 }

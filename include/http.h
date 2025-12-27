@@ -31,7 +31,9 @@ nomen enumeratio {
     HTTP_PUT,
     HTTP_DELETE,
     HTTP_PATCH,
-    HTTP_HEAD
+    HTTP_HEAD,
+    HTTP_OPTIONS,
+    HTTP_METHODUS_IGNOTUS
 } HttpMethodus;
 
 /* HTTP error codes */
@@ -72,6 +74,51 @@ nomen structura {
     HttpError     error;
     chorda        error_descriptio;
 } HttpResultus;
+
+
+/* ========================================================================
+ * TYPI - SERVER (REQUEST PARSING)
+ * ======================================================================== */
+
+/* Status parsing */
+nomen enumeratio {
+    HTTP_PARSE_LINEA_PETITIONIS = 0,  /* Parsing request line */
+    HTTP_PARSE_CAPITA,                 /* Parsing headers */
+    HTTP_PARSE_CORPUS,                 /* Parsing body */
+    HTTP_PARSE_COMPLETA,               /* Parsing complete */
+    HTTP_PARSE_ERROR                   /* Parse error */
+} HttpParseStatus;
+
+/* Petitio serveri (parsed incoming request) */
+nomen structura {
+    HttpMethodus methodus;
+    chorda       uri;              /* Full URI "/path?query" */
+    chorda       via;              /* Path only "/path" */
+    chorda       quaestio;         /* Query string (after ?) */
+    i32          versio;           /* 10 = HTTP/1.0, 11 = HTTP/1.1 */
+
+    HttpCaput*   capita;           /* Array of headers */
+    i32          capita_numerus;
+
+    chorda       corpus;           /* Request body */
+    i32          corpus_longitudo; /* Body length */
+
+    b32          keep_alive;       /* Connection: keep-alive */
+    b32          chunked;          /* Transfer-Encoding: chunked */
+    i32          content_length;   /* Content-Length header value */
+} HttpPetitioServeri;
+
+/* Parser incrementalis (opaque) */
+nomen structura HttpParser HttpParser;
+
+/* Resultus parse */
+nomen structura {
+    b32                 successus;
+    b32                 completa;      /* FALSUM si necesse plus data */
+    HttpPetitioServeri* petitio;
+    HttpError           error;
+    chorda              error_descriptio;
+} HttpParseResultus;
 
 
 /* ========================================================================
@@ -168,6 +215,64 @@ http_methodus_nomen(HttpMethodus methodus);
 /* Obtinere error descriptio */
 constans character*
 http_error_descriptio(HttpError error);
+
+
+/* ========================================================================
+ * FUNCTIONES - SERVER (REQUEST PARSING)
+ * ======================================================================== */
+
+/* Parse petitio uno ictu (si habes totam petitionem)
+ *
+ * datum:     Data petitionis
+ * longitudo: Longitudo datorum
+ * piscina:   Arena pro allocationibus
+ *
+ * Redde: Resultus cum petitio vel error
+ */
+HttpParseResultus
+http_petitio_parse(
+    constans character* datum,
+    i32                 longitudo,
+    Piscina*            piscina);
+
+/* Creare parser incrementalis
+ *
+ * piscina: Arena pro allocationibus
+ *
+ * Redde: Parser vel NIHIL si error
+ */
+HttpParser*
+http_parser_creare(Piscina* piscina);
+
+/* Adicere data ad parser
+ *
+ * parser:    Parser
+ * datum:     Nova data
+ * longitudo: Longitudo datorum
+ *
+ * Redde: Resultus (successus = parse valida, completa = petitio completa)
+ */
+HttpParseResultus
+http_parser_adicere(
+    HttpParser*         parser,
+    constans character* datum,
+    i32                 longitudo);
+
+/* Verificare si parsing completa */
+b32
+http_parser_est_completa(HttpParser* parser);
+
+/* Obtinere petitio parsata (post completa) */
+HttpPetitioServeri*
+http_parser_obtinere_petitio(HttpParser* parser);
+
+/* Reset parser pro nova petitio */
+vacuum
+http_parser_reset(HttpParser* parser);
+
+/* Convertere methodus string ad enum */
+HttpMethodus
+http_methodus_ex_literis(constans character* methodus);
 
 
 #endif /* HTTP_H */

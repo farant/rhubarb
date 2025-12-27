@@ -135,4 +135,125 @@ b32 tcp_est_valida(TcpConnexio* connexio);
 constans character* tcp_error_descriptio(TcpError error);
 
 
+/* ========================================================================
+ * TYPI - SERVUS (SERVER)
+ * ======================================================================== */
+
+/* Opaque handle pro server socket */
+nomen structura TcpServus TcpServus;
+
+/* Address info */
+nomen structura {
+    character hospes[CCLVI];
+    i32       portus;
+} TcpAddress;
+
+/* Server optiones */
+nomen structura {
+    i32 tergum;              /* listen() backlog (default CXXVIII) */
+    b32 reuti_inscriptio;    /* SO_REUSEADDR (default VERUM) */
+    b32 non_blocans;         /* O_NONBLOCK (default VERUM) */
+} TcpServusOptiones;
+
+/* Server resultus */
+nomen structura {
+    b32         successus;
+    TcpServus*  servus;
+    TcpError    error;
+    chorda      error_descriptio;
+} TcpServusResultus;
+
+
+/* ========================================================================
+ * FUNCTIONES - SERVUS
+ * ======================================================================== */
+
+/* Creare server et ligare ad portum
+ *
+ * portus:  Numerus portus (0 = auto-select)
+ * piscina: Arena pro allocationibus
+ *
+ * Redde: Resultus cum servus vel error
+ */
+TcpServusResultus
+tcp_servus_creare(
+    i32      portus,
+    Piscina* piscina);
+
+/* Creare server cum optionibus
+ *
+ * hospes:   Interface ad ligandum (NIHIL = INADDR_ANY = omnes interfaces)
+ * portus:   Numerus portus
+ * optiones: Optiones server
+ * piscina:  Arena pro allocationibus
+ */
+TcpServusResultus
+tcp_servus_creare_cum_optionibus(
+    constans character*         hospes,
+    i32                         portus,
+    constans TcpServusOptiones* optiones,
+    Piscina*                    piscina);
+
+/* Optiones default pro server */
+TcpServusOptiones tcp_servus_optiones_default(vacuum);
+
+/* Incipere auscultare pro connexionibus
+ *
+ * tergum: Maximum pending connexiones (0 = use default)
+ *
+ * Redde: TCP_OK vel error
+ */
+TcpError
+tcp_servus_auscultare(
+    TcpServus* servus,
+    i32        tergum);
+
+/* Accipere connexionem (blocking vel non-blocking secundum optiones)
+ *
+ * servus:  Server socket
+ * piscina: Arena pro nova connexione
+ *
+ * Redde: Resultus cum nova TcpConnexio vel error
+ *        Si non_blocans et nullae connexiones, error = TCP_ERROR_IO
+ */
+TcpResultus
+tcp_servus_accipere(
+    TcpServus* servus,
+    Piscina*   piscina);
+
+/* Obtinere file descriptor (pro reactor/poll) */
+integer
+tcp_servus_obtinere_fd(TcpServus* servus);
+
+/* Obtinere portum ligatum (utilis si portus 0 usus) */
+i32
+tcp_servus_obtinere_portum(TcpServus* servus);
+
+/* Obtinere address ligatam */
+TcpAddress
+tcp_servus_obtinere_address(TcpServus* servus);
+
+/* Claudere server */
+vacuum
+tcp_servus_claudere(TcpServus* servus);
+
+
+/* ========================================================================
+ * FUNCTIONES - NON-BLOCKING
+ * ======================================================================== */
+
+/* Ponere non-blocking mode pro connexione
+ *
+ * Redde: TCP_OK vel error
+ */
+TcpError
+tcp_ponere_non_blocans(
+    TcpConnexio* connexio,
+    b32          non_blocans);
+
+/* Obtinere peer address ex connexione */
+TcpAddress
+tcp_obtinere_peer_address(TcpConnexio* connexio);
+
+
 #endif /* TCP_H */

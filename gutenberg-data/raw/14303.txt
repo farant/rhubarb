@@ -1,0 +1,17 @@
+Based on the excerpt you've provided, I can identify this work:
+
+<result>
+Title = "Queed"
+Author = "Henry Sydnor Harrison"
+Year = 1911
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Queed is a novel about a socially awkward, intensely intellectual young man (the titular Mr. Queed) who boards at a boarding house in Richmond, Virginia. He is entirely absorbed in writing a treatise on evolutionary sociology and has no interest in human connection or social obligations. The novel traces his gradual transformation as he is drawn into the lives of those around him, particularly through his relationship with Sharlee Weyland, the landlady's agent. It's a character study about the awakening of social consciousness and the discovery that one's "cosmos" cannot be "all ego." The book was quite popular in its time and is considered an early example of American social comedy.
+"""
+
+Notes = """
+1911 is the original publication date by Houghton Mifflin Company, as shown in the copyright page of the Gutenberg text. Henry Sydnor Harrison (1880-1930) was an American novelist and journalist from Virginia.
+"""
+</result>
