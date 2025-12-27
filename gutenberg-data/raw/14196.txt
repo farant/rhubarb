@@ -1,0 +1,15 @@
+<result>
+Title = "The Nervous Housewife"
+Author = "Abraham Myerson"
+Year = 1920
+
+Tags = ["non-fiction"]
+
+Summary = """
+A psychiatric study examining the psychological conditions affecting housewives in early 20th century America. Dr. Abraham Myerson, a prominent Boston neurologist and psychiatrist, analyzes the causes of nervous disorders among married women who work in the home. The book examines factors such as monotonous housework, financial strain, marital conflicts, and the social isolation of domestic life. It was considered a progressive work for its time in acknowledging the genuine psychological toll of household labor and the limited options available to women.
+"""
+
+Notes = """
+Abraham Myerson (1881-1948) was a well-known American neurologist and psychiatrist. This work reflects early 20th century psychiatric thinking about women's mental health and domestic life. The 1920 publication date is confirmed in the Project Gutenberg metadata.
+"""
+</result>

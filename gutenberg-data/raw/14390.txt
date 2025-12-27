@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 102"
+Author = "Various"
+Year = 1892
+
+Tags = ["non-fiction", "periodical", "humor", "satire"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841 and published until 1992 (with a brief revival 1996-2002). Known for its witty commentary on British society, politics, and culture, as well as its distinctive illustrations and cartoons. This volume (102) from April 1892 contains the typical mix of satirical articles, theatrical reviews, social commentary, and wordplay that made Punch a beloved institution of Victorian and Edwardian Britain. This particular excerpt reviews performances at the London Pavilion music hall, including the famous Lottie Collins and Albert Chevalier, a renowned costermonger comedian.
+"""
+
+Notes = """
+The year 1892 is explicitly stated in the text (April 2, 1892). Punch was a periodical with multiple contributors, hence "Various" for author. The magazine coined the term "cartoon" in its modern sense and was highly influential in British culture.
+"""
+</result>

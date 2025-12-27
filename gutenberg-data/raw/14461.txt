@@ -1,0 +1,15 @@
+<result>
+Title = "Letters on Demonology and Witchcraft"
+Author = "Sir Walter Scott"
+Year = 1830
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A scholarly examination of witchcraft, demonology, and the supernatural written by the famous Scottish novelist Sir Walter Scott. The work is structured as ten letters addressed to his son-in-law, J.G. Lockhart, allowing for an informal yet comprehensive exploration of the subject. Scott examines social, cultural, medical, and psychological factors underlying people's paranormal experiences throughout history. Topics include fairies, elves, fortune-telling, witch trials, and the inquisition. The work takes a rational, skeptical approach while remaining sympathetic to historical beliefs. It is now recognized as a pioneering work of scientific anthropology that significantly influenced Victorian Gothic and ghostly fiction.
+"""
+
+Notes = """
+First published September 14, 1830 as part of Murray's Family Library series. Scott wrote this after suffering a stroke in February 1830 - his son-in-law suggested this less demanding project instead of a three-volume novel. The 1884 edition shown in this text includes an introduction by Henry Morley.
+"""
+</result>

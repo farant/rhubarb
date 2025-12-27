@@ -1,0 +1,15 @@
+<result>
+Title = "Gawayne and the Green Knight: A Fairy Tale"
+Author = "Charlton Miner Lewis"
+Year = 1903
+
+Tags = ["fiction", "poetry", "appropriate-for-children", "arthurian"]
+
+Summary = """
+This is a verse retelling of the medieval Arthurian romance "Sir Gawain and the Green Knight" by American poet and professor Charlton Miner Lewis. The original anonymous Middle English poem dates to the late 14th century and is one of the great works of medieval English literature. Lewis's adaptation transforms the story into a "fairy tale" in verse form, divided into four cantos, making the classic tale more accessible to early 20th century readers. The story follows Sir Gawain's encounter with the mysterious Green Knight and his subsequent test of honor and courage.
+"""
+
+Notes = """
+The copyright date of 1903 and "Published October, 1903" establish the original publication year, though this particular edition shows MDCCCCXVI (1916) from Yale University Press, which was likely a reprint. Charlton Miner Lewis (1866-1923) was an American educator and poet who taught at Yale.
+"""
+</result>

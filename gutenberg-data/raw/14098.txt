@@ -1,0 +1,15 @@
+<result>
+Title = "Hieroglyphic Tales"
+Author = "Horace Walpole"
+Year = 1785
+
+Tags = ["fiction", "fantasy", "surrealism"]
+
+Summary = """
+Hieroglyphic Tales is a collection of short, fantastical stories by Horace Walpole, the author famous for The Castle of Otranto (1764), which is considered the first Gothic novel in English. These tales are often described as proto-surrealist works - bizarre, absurd, and deliberately nonsensical narratives that predate the surrealist movement by over a century. Walpole wrote them in 1771-1772 but did not publish them until 1785, when he printed only six copies at his private Strawberry Hill Press, keeping all copies for himself. He described them as "even wilder than the Castle of Otranto." The epigraph from Crébillon's Le Sopha ("Schah Baham only understood things that were absurd and beyond all probability") signals the intentionally ridiculous nature of the tales.
+"""
+
+Notes = """
+The 1785 date is when Walpole printed this extremely limited edition (6 copies). The tales themselves were composed in 1771-1772. Since publication and distribution to readers is the relevant historical event for a timeline, 1785 is the appropriate year.
+"""
+</result>

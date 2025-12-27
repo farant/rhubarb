@@ -1,0 +1,15 @@
+<result>
+Title = "The Great Events by Famous Historians, Volume VI"
+Author = "Rossiter Johnson (Editor-in-Chief), Charles F. Horne (Associate Editor)"
+Year = 1905
+
+Tags = ["non-fiction", "historical-anthology", "appropriate-for-children"]
+
+Summary = """
+This is volume six of a twenty-two volume encyclopedic anthology of world history, published by The National Alumni as a limited edition set. The work compiles narratives from eminent historians covering major events in world history, arranged chronologically. Each volume presents complete historical narratives with introductions by specialists to contextualize the accounts. This particular volume appears to cover medieval history, including events like the murder of Thomas Becket at Canterbury Cathedral (1170). The series was edited by Rossiter Johnson, LL.D., with Charles F. Horne, Ph.D. as associate editor.
+"""
+
+Notes = """
+The 1905 date represents the original publication of this limited edition set by The National Alumni. There was a later 1926 edition as well. The work itself is a compilation of writings by various historians, so it contains historical narratives written at different times, but as an anthology the appropriate date is its original publication year.
+"""
+</result>

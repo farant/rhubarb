@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 102, February 20, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["non-fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire established in 1841 and published until 1992 (with a brief revival 1996-2002). It was a highly influential publication that coined the term "cartoon" in its modern sense and was known for its sharp wit and social commentary. This particular issue from February 1892 contains "Jim's Jottings," a satirical piece written in Cockney dialect addressing the slum housing conditions in London, specifically referencing a real work by a vestry health committee member named Lazarus about landlords exploiting the poor in St Pancras. The piece criticizes "rats'-rents" (exploitative rents for decrepit housing), corrupt landlords, and the social conditions of Victorian slums.
+"""
+
+Notes = """
+Punch was published weekly, so the year 1892 reflects this specific issue date. The magazine featured contributions from many writers and artists, hence "Various" for author. The content reflects Victorian-era concerns about urban poverty and housing reform that were prominent social issues of the time.
+"""
+</result>

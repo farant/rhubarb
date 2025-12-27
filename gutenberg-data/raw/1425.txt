@@ -1,0 +1,15 @@
+<result>
+Title = "El Verdugo"
+Author = "Honoré de Balzac"
+Year = 1830
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+El Verdugo (The Executioner) is a short story by Honoré de Balzac, set during the Napoleonic Wars in Spain. The tale concerns a French officer and a Spanish noble family during the Peninsular War. It is one of Balzac's earlier works and was later included in his vast literary project "La Comédie humaine" under the section "Études philosophiques." The story explores themes of honor, duty, family loyalty, and the brutal moral dilemmas created by war. The title refers to the grim role one character must assume. It is a dark and tragic tale characteristic of Balzac's philosophical studies.
+"""
+
+Notes = """
+First published in 1830 in the periodical "La Mode." The translator Katharine Prescott Wormeley was a prominent 19th-century American translator of French literature. The dedication to Martinez de la Rosa (a Spanish statesman and writer) connects to the Spanish setting of the story.
+"""
+</result>

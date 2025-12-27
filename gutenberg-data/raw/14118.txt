@@ -1,0 +1,17 @@
+Let me try that again - you've included part of the text in your message. Based on what you've provided:
+
+<result>
+Title = "Legend of Moulin Huet"
+Author = "Lizzie A. Freeth"
+Year = 1872
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A short fictional work set in or around Moulin Huet, a scenic bay on the southern coast of Guernsey in the Channel Islands. The author, Lizzie A. Freeth, was a minor Victorian writer who also wrote children's literature including 'The Adventures of Carl Skinflint among the Fairies'. This appears to be a local legend or folklore tale from Guernsey, published locally by Le Lievre printer. The dedication to "The Conway Boys" refers to cadets on H.M.S. Conway, a training ship for the merchant navy stationed at Birkenhead.
+"""
+
+Notes = """
+The year 1872 is printed directly on the title page as the publication date. This appears to be the original and only publication of this work.
+"""
+</result>

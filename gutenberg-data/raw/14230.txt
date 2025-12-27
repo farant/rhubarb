@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 17, No. 493"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a general readership, predating the penny press movement. The magazine featured a mix of articles on literature, history, science, travel, and general interest topics, often accompanied by engravings. This particular issue from June 1831 includes a piece about Virginia Water, an artificial lake in Surrey created for the royal estate, discussing its opening to the public and describing its landscape features including a boat-house and cascade.
+"""
+
+Notes = """
+Year is the publication date of this specific issue (June 11, 1831) as indicated in the masthead. The magazine was founded by John Limbird in 1822 and was notable for being sold at the low price of twopence, making it accessible to working-class readers.
+"""
+</result>

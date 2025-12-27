@@ -1,0 +1,15 @@
+<result>
+Title = "Bailén"
+Author = "Benito Pérez Galdós"
+Year = 1873
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+Bailén es el cuarto volumen de la Primera Serie de los Episodios Nacionales de Benito Pérez Galdós. La obra narra los acontecimientos que condujeron a la histórica Batalla de Bailén (19 de julio de 1808), la primera derrota significativa del ejército napoleónico en campo abierto durante las Guerras Napoleónicas. Esta victoria española, liderada por el General Castaños contra las tropas del General Dupont, tuvo enorme importancia simbólica para la resistencia europea contra Napoleón. Como es característico de los Episodios Nacionales, Galdós entrelaza personajes ficticios con eventos históricos reales para crear una narrativa vívida de la Guerra de la Independencia Española (1808-1814).
+"""
+
+Notes = """
+Los Episodios Nacionales fueron publicados en series entre 1872-1912. La Primera Serie, que incluye Bailén, fue publicada entre 1873-1875. Bailén específicamente apareció en 1873.
+"""
+</result>

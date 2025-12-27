@@ -1,0 +1,15 @@
+<result>
+Title = "Proportional Representation Applied to Party Government: A New Electoral System"
+Author = "T.R. Ashworth, H.P.C. Ashworth"
+Year = 1901
+
+Tags = ["non-fiction", "political-science"]
+
+Summary = """
+A treatise on electoral reform written by two Australian authors - T.R. Ashworth, who was President of the Victorian Division of the Australian Free Trade and Liberal Association, and H.P.C. Ashworth, a civil engineer. The work examines principles of political representation, critiques existing electoral systems, and proposes reforms including proportional representation methods such as the Hare system and preferential voting. Published during a period of significant electoral reform debate in the British Empire and particularly relevant to Australia, which was federated the same year.
+"""
+
+Notes = """
+1901 is the publication date by Swan Sonnenschein & Co. in London. This appears to be an original work rather than a translation or reprint.
+"""
+</result>

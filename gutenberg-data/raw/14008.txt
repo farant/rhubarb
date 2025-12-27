@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first inexpensive literary periodicals in England, sold at just twopence, making literature and general knowledge accessible to the working and middle classes. The magazine featured a mix of content including essays, poetry, biographical sketches, descriptions of notable places and buildings, scientific articles, and entertaining miscellany. This particular issue (Volume XX, No. 578) from December 1, 1832 features an article about Tanfield Arch in County Durham, a notable 18th-century stone bridge built for coal wagon railways.
+"""
+
+Notes = """
+Year is the publication date of this specific issue. The magazine ran 1822-1849 under various editors. As a periodical with multiple contributors, 'Various' is used for author. The Tanfield Arch described in this issue still stands today and is considered one of the oldest surviving railway bridges in the world.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Landscape and Song"
+Author = "E. Nesbit"
+Year = 1886
+
+Tags = ["poetry", "anthology", "appropriate-for-children"]
+
+Summary = """
+This is a poetry anthology selected and arranged by E. Nesbit (Edith Nesbit, 1858-1924), the beloved English author and poet best known for her children's novels such as "The Railway Children" and "Five Children and It." Before gaining fame as a novelist, Nesbit was an accomplished poet and anthologist. "Landscape and Song" is a collection of poems celebrating nature, seasons, and pastoral English scenes, typical of Victorian gift books that combined verse with decorative illustrations. These anthologies were popular as Christmas and holiday gifts, as evidenced by the handwritten inscription "Xmas 1887" in this copy.
+"""
+
+Notes = """
+The exact publication year is difficult to determine, but the handwritten inscription dated "Xmas 1887" provides a terminus ante quem. Victorian gift books like this were typically purchased soon after publication for gift-giving occasions. The publishers listed (Henry J. Drane & Co. in London and E.P. Dutton & Co. in New York) suggest a commercial edition likely from 1886 or early 1887. I've chosen 1886 as the probable first publication year.
+"""
+</result>

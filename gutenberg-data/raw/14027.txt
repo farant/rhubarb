@@ -1,0 +1,17 @@
+Based on the text you provided directly in your message, I can identify this work:
+
+<result>
+Title = "Abydos"
+Author = "Émile Amélineau"
+Year = 1899
+
+Tags = ["non-fiction", "historical-document", "egyptology"]
+
+Summary = """
+This is a Dutch translation of a French work by Émile Amélineau, a French Egyptologist who excavated at Abydos, Egypt from 1895-1898. The text discusses the ancient Egyptian city of Abydos, the legend of Osiris, and the history of the site from pharaonic times through the Christian period. Amélineau describes his four years of excavation work there and the significant discoveries he made, including the tombs of early dynastic kings. The excerpt discusses the Osiris legend and the ancient pilgrimage traditions associated with Abydos.
+"""
+
+Notes = """
+The original French text was likely published around 1899, following Amélineau's excavations at Abydos (1895-1898). The Dutch translation ("Naar het Fransch van E. Amelineau") was probably published shortly after. I've chosen 1899 as this represents when Amélineau's major work on Abydos was being published, based on his excavation findings. Amélineau was a controversial figure in Egyptology - his excavation methods were criticized, and Flinders Petrie later re-excavated the same sites with more rigorous methodology.
+"""
+</result>

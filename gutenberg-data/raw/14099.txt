@@ -1,0 +1,15 @@
+<result>
+Title = "True Irish Ghost Stories"
+Author = "St John D. Seymour, Harry L. Neligan"
+Year = 1914
+
+Tags = ["non-fiction", "folklore"]
+
+Summary = """
+A collection of Irish ghost stories compiled by St John D. Seymour (a Church of Ireland clergyman and author known for his work on Irish witchcraft) and Harry L. Neligan. The book was created after Seymour noticed that while there were many books on Irish fairy and folklore, there was no dedicated collection of Irish ghost stories. He solicited stories through letters to Irish newspapers in October 1913. The collection includes accounts of hauntings, poltergeists, and supernatural encounters from various parts of Ireland.
+"""
+
+Notes = """
+The year 1914 appears directly in the text as the publication date. Seymour mentions his previous work "Irish Witchcraft and Demonology" was published in October 1913, and he began collecting these stories shortly after.
+"""
+</result>

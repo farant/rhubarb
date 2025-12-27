@@ -1,0 +1,15 @@
+<result>
+Title = "Salaperäinen ovi (Dr. Jekyll and Mr. Hyde)"
+Author = "Robert Louis Stevenson"
+Year = 1886
+
+Tags = ["fiction", "gothic-horror", "psychological-thriller"]
+
+Summary = """
+This is a Finnish translation of Robert Louis Stevenson's classic novella "Strange Case of Dr Jekyll and Mr Hyde." The story follows lawyer Gabriel Utterson as he investigates the mysterious connection between his friend Dr. Henry Jekyll and the sinister Edward Hyde. It is a pioneering work of psychological horror that explores the duality of human nature - the capacity for both good and evil within a single person. The novella became enormously influential, giving rise to the phrase "Jekyll and Hyde" to describe someone with drastically different moral personas.
+"""
+
+Notes = """
+The original English novella was published in 1886. This Finnish translation was first published by Kustannusosakeyhtiö Otava in 1911, as noted in the text. The year 1886 is chosen as it represents the original work's publication date, which is the historically significant date for this literary milestone.
+"""
+</result>

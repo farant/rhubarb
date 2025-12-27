@@ -1,0 +1,15 @@
+<result>
+Title = "David Balfour"
+Author = "Robert Louis Stevenson"
+Year = 1893
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+David Balfour (also known as "Catriona" in the UK) is the sequel to Stevenson's beloved adventure novel "Kidnapped" (1886). The story continues following young David Balfour after his kidnapping ordeal, now dealing with the aftermath of the Appin Murder (the real historical assassination of Colin Roy Campbell in 1752). The novel follows David's attempts to testify on behalf of the wrongly accused James Stewart, his imprisonment on the Bass Rock, travels to Holland and France, and his romantic entanglement with Catriona Drummond, daughter of the notorious outlaw's son James More MacGregor. It combines historical fiction with adventure and romance, set against the backdrop of post-Jacobite Scotland.
+"""
+
+Notes = """
+The novel was first serialized in 1892-1893 and published in book form in 1893. In Britain it was published under the title "Catriona" while American editions used "David Balfour." The dedication to Charles Baxter and the 1893 copyright date visible in the text confirm the publication year. The 1905 date shown is simply a later Scribner's edition.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Dream of the North Sea"
+Author = "James Runciman"
+Year = 1889
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A work by James Runciman dedicated to Queen Victoria, concerning the Mission to Deep Sea Fishermen. Runciman was a Victorian author and journalist who wrote extensively about maritime life, particularly the harsh conditions faced by North Sea trawlermen. This book appears to document the humanitarian work being done among the fishing fleets, which operated in dangerous conditions far from shore. The Mission to Deep Sea Fishermen was a charitable organization founded in 1881 that sent hospital ships and provided medical care, religious services, and supplies to the fishing fleets.
+"""
+
+Notes = """
+The year 1889 is taken directly from the publication information in the text. Runciman (1852-1891) was a prolific writer on social issues and maritime subjects during the late Victorian era.
+"""
+</result>

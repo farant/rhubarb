@@ -1,0 +1,15 @@
+<result>
+Title = "The Fugitive Slave Law and Its Victims"
+Author = "American Anti-Slavery Society"
+Year = 1856
+
+Tags = ["non-fiction", "historical-document", "abolitionist"]
+
+Summary = """
+This is an anti-slavery tract (No. 18 in a series) published by the American Anti-Slavery Society documenting the Fugitive Slave Law of 1850 and its effects. The law, authored primarily by Senator James Mason of Virginia and signed by President Millard Fillmore, required citizens to assist in the capture of escaped slaves and denied fugitives the right to a jury trial. The tract provides a synopsis of the law's provisions and likely catalogs cases of individuals affected by its enforcement. It was part of the abolitionist movement's effort to expose the law's injustices and galvanize opposition to slavery in the years leading up to the Civil War.
+"""
+
+Notes = """
+The year 1856 is taken directly from the title page of this edition. This is the original publication year of this specific tract, which documents events following the passage of the Fugitive Slave Law in 1850.
+"""
+</result>

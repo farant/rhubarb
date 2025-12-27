@@ -1,0 +1,15 @@
+<result>
+Title = "The White Riband, or A Young Female's Folly"
+Author = "F. Tennyson Jesse"
+Year = 1921
+
+Tags = ["fiction"]
+
+Summary = """
+A novel by Fryniwyd Tennyson Jesse (1888-1958), a British author, journalist, and playwright who was a great-niece of Alfred, Lord Tennyson. She was known for her crime writing and novels exploring psychological themes. "The White Riband" is a work of fiction from her early career period when she was establishing herself as a novelist after her journalism work during World War I.
+"""
+
+Notes = """
+1921 is the publication year as shown on the title page. F. Tennyson Jesse (full name Fryniwyd Tennyson Jesse) was a notable early 20th century British writer.
+"""
+</result>

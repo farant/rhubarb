@@ -1,0 +1,15 @@
+<result>
+Title = "Lady Byron Vindicated"
+Author = "Harriet Beecher Stowe"
+Year = 1870
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This work is Harriet Beecher Stowe's defense of Lady Byron (Anne Isabella Milbanke), the wife of the famous poet Lord Byron. Stowe had previously published an article in 1869 in The Atlantic Monthly revealing that Lady Byron had confided to her about Lord Byron's incestuous relationship with his half-sister Augusta Leigh. The article caused enormous controversy on both sides of the Atlantic. This book-length work was Stowe's expanded defense of Lady Byron's character and reputation against the storm of criticism that followed. Stowe, already famous as the author of Uncle Tom's Cabin, used her literary reputation to champion what she saw as a wronged woman's cause against the posthumous cult of Byron worship.
+"""
+
+Notes = """
+The year 1870 is when the full book was published. Stowe's original controversial article "The True Story of Lady Byron's Life" appeared in The Atlantic Monthly in September 1869. This book expands on that article and responds to the backlash it generated.
+"""
+</result>

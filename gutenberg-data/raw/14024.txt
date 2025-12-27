@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 20, No. 566"
+Author = "Various"
+Year = 1832
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a popular British weekly magazine published from 1822 to 1849. It was one of the first cheap periodicals aimed at a mass readership, predating the penny press movement. Each issue contained a mix of articles on history, travel, architecture, literature, and general knowledge, often accompanied by illustrations. This particular issue (Vol. 20, No. 566) from September 15, 1832 features an article on Bolsover Castle in Derbyshire, tracing its history from the Norman Conquest through the reign of King John.
+"""
+
+Notes = """
+The year 1832 is the publication date of this specific issue. The magazine ran for 27 years and was influential in democratizing access to literature and knowledge for working-class readers in Victorian Britain.
+"""
+</result>

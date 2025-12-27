@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, December 5, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch was a British weekly magazine of humour and satire published from 1841 to 2002. This issue from December 1891 contains "Quite Fabulous!", a satirical piece dedicated to Professor Munro that uses the fairy tale figure of Old King Cole as an allegory for contemporary labour disputes and the debates over working hours in British coal mines. The piece cleverly satirizes the tensions between workers demanding shorter hours and the expectation that productivity remain unchanged - a hot political topic in Victorian Britain as the labour movement gained strength.
+"""
+
+Notes = """
+Punch was a periodical with multiple contributors per issue, hence "Various" for author. The year 1891 is the publication date of this specific issue. Professor Munro referenced in the dedication is likely a contemporary figure in labour economics or politics. The "black diamonds" are coal, and the piece satirizes the ongoing debates about the eight-hour workday movement that was prominent in Britain during this period.
+"""
+</result>

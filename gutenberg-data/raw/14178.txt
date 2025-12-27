@@ -1,0 +1,15 @@
+<result>
+Title = "Omhoog in het luchtruim! Praatje over het luchtvaartvraagstuk"
+Author = "Frederike J. van Uildriks"
+Year = 1906
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A Dutch popular science pamphlet about the aviation question ("luchtvaartvraagstuk"). The text discusses the excitement sweeping Europe and America about airships and flying machines, the various aviation congresses and competitions being held, and the technical developments that were making controlled flight increasingly feasible. The author particularly emphasizes the role of the benzine (gasoline) motor developed for automobiles between 1895-1905 as a key enabling technology for aviation, due to its favorable power-to-weight ratio.
+"""
+
+Notes = """
+The year 1906 is estimated based on internal evidence: the text refers to automobile development "between 1895 and 1905" as recent history, and describes the current state of aviation experimentation in a way consistent with the period just before the Wright Brothers' achievements became widely known in Europe (around 1908). Frederike van Uildriks was a Dutch author who wrote popular educational works. The diminutive "Praatje" (little talk/chat) in the title suggests this was likely a lecture or popular pamphlet rather than a formal scientific treatise.
+"""
+</result>

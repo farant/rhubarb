@@ -1,0 +1,15 @@
+<result>
+Title = "Manners and Conduct in School and Out"
+Author = "The Deans of Girls in Chicago High Schools"
+Year = 1921
+
+Tags = ["non-fiction", "appropriate-for-children", "education"]
+
+Summary = """
+This is an etiquette and conduct manual written collectively by the Deans of Girls from Chicago high schools. It was designed to teach young people proper social behavior and manners both in educational settings and in everyday life. The book follows the early 20th century American tradition of formal conduct guides for youth, emphasizing the development of good character, civic responsibility, and social graces. It reflects the Progressive Era's focus on moral education and social improvement through schools.
+"""
+
+Notes = """
+The copyright date of 1921 is used as the publication year. The copyright holder listed is Fanny R. Smith, who was likely the editor or lead author among the collective of deans. The quote from Dr. Frank Crane in the foreword and the Spenser epigraph reflect the moral educational philosophy of the era.
+"""
+</result>

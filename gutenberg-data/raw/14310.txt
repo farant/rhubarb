@@ -1,0 +1,15 @@
+<result>
+Title = "Le Livre des Mères et des Enfants: Contes en Vers et en Prose, Tome II"
+Author = "Marceline Desbordes-Valmore"
+Year = 1840
+
+Tags = ["fiction", "appropriate-for-children", "french-language"]
+
+Summary = """
+This is the second volume of a collection of stories in verse and prose written by Marceline Desbordes-Valmore (1786-1859), one of the most celebrated French Romantic poets. The work is intended for mothers and children, containing moral tales and stories. The excerpt shown is from "La Physiologie des Poupées" (The Physiology of Dolls), a touching story about a widowed father, M. Sarrasin, who returns from travels to care for his four children after the death of their mother, bringing them four dolls as gifts. Desbordes-Valmore was known for her deeply emotional poetry and prose, often drawing from personal tragedy including the loss of several of her own children.
+"""
+
+Notes = """
+The work was first published in 1840 by Charpentier in Paris. Marceline Desbordes-Valmore was a Catholic author from Douai, France, though this particular work is secular children's literature rather than explicitly religious writing, so I have not included the 'catholic' tag.
+"""
+</result>

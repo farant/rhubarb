@@ -1,0 +1,15 @@
+<result>
+Title = "Clara A. Swain, M.D.: First Medical Missionary to the Women of the Orient"
+Author = "Mrs. Robert Hoskins"
+Year = 1912
+
+Tags = ["non-fiction", "biography", "appropriate-for-children", "protestant"]
+
+Summary = """
+This is a biography of Clara A. Swain (1834-1910), who was the first female medical missionary sent to Asia. She was sent by the Woman's Foreign Missionary Society of the Methodist Episcopal Church to India in 1870, where she established the first hospital for women in all of Asia at Bareilly. The book chronicles her early life in New York, her medical training, and her pioneering work bringing Western medicine to Indian women at a time when cultural restrictions prevented them from being treated by male physicians.
+"""
+
+Notes = """
+The year 1912 is the publication date of this biography. Clara Swain herself died in 1910. This is a Protestant missionary biography rather than a Catholic work, so the 'catholic' tag is not applied. The work appears suitable for children as it is an inspirational biographical account written in an accessible style.
+"""
+</result>

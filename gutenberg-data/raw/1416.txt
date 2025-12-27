@@ -1,0 +1,15 @@
+<result>
+Title = "Mrs. Lirriper's Lodgings"
+Author = "Charles Dickens"
+Year = 1863
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Mrs. Lirriper's Lodgings is a Christmas story by Charles Dickens, originally published as the extra Christmas number of his literary magazine "All the Year Round" in December 1863. The story is narrated by Mrs. Emma Lirriper, a warm-hearted elderly widow who runs a lodging house in London. Written in her distinctive rambling, conversational voice, the tale chronicles her experiences with various lodgers and her relationship with her devoted servant Major Jemmy Jackman. The story was popular enough that Dickens wrote a sequel, "Mrs. Lirriper's Legacy," the following Christmas.
+"""
+
+Notes = """
+The 1863 date reflects the original publication as a Christmas number. The text mentions being transcribed from an 1894 Chapman and Hall edition, but that is simply a later collected edition of Dickens's Christmas stories.
+"""
+</result>

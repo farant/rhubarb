@@ -1,0 +1,15 @@
+<result>
+Title = "An Enquiry into the Truth of the Tradition, Concerning the Discovery of America, by Prince Madog ab Owen Gwynedd, about the Year, 1170"
+Author = "John Williams"
+Year = 1791
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a scholarly historical treatise by John Williams (also known as "Ab Ithel"), a Welsh antiquarian and clergyman. The work examines the legend that Prince Madog ab Owen Gwynedd, a Welsh prince, discovered America around 1170 - over three centuries before Columbus. Williams investigates various historical sources, Welsh poetry, and traditions to evaluate the credibility of this claim. The Madog legend was popular in the 18th century, partly used to support British claims to the New World. The work reflects the antiquarian movement of the period and Welsh national pride in their maritime heritage.
+"""
+
+Notes = """
+The first edition was published in London in 1791. John Williams was a Welsh clergyman and antiquary who wrote several works on Welsh history and traditions. This work is representative of 18th-century antiquarianism and the interest in establishing alternative discovery narratives for America.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Message from the Sea"
+Author = "Charles Dickens"
+Year = 1860
+
+Tags = ["fiction"]
+
+Summary = """
+A Message from the Sea is a Christmas novella by Charles Dickens, originally published as the Christmas number of his literary magazine "All the Year Round" in December 1860. The story follows Captain Jorgan, an American sea captain, who arrives at a small English fishing village built on steep cliffs to deliver a mysterious message. The tale involves a family secret, a lost inheritance, and themes of redemption typical of Dickens's Christmas works. Dickens collaborated with Wilkie Collins on this story, though Dickens wrote the framing chapters himself.
+"""
+
+Notes = """
+Published December 1860 as a special Christmas edition. The 1894 Chapman and Hall edition mentioned in the Gutenberg text is a later collected reprint. Wilkie Collins co-authored portions of the middle chapters, but Dickens is listed as primary author since he wrote the main narrative frame.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Theory of the Earth, With Proofs and Illustrations"
+Author = "James Hutton"
+Year = 1795
+
+Tags = ["non-fiction", "historical-document", "science"]
+
+Summary = """
+This is James Hutton's seminal geological work, often considered the foundation of modern geology. Hutton, a Scottish physician and naturalist, proposed the theory of uniformitarianism - that the Earth's features were shaped by slow, gradual processes over immense periods of time, the same processes observable today. This was revolutionary for its time, challenging the prevailing view of a young Earth shaped by catastrophic events. The work introduced the concept of "deep time" and famously concluded that Earth shows "no vestige of a beginning, no prospect of an end." This is Volume II of the expanded four-part edition published in 1795, which elaborated on his original 1788 paper presented to the Royal Society of Edinburgh.
+"""
+
+Notes = """
+1795 is the publication year of this expanded book-length version. Hutton first presented his theory in 1785 and published an abstract in 1788, but this four-volume work with "Proofs and Illustrations" is the definitive 1795 edition. Hutton is considered the "Father of Modern Geology."
+"""
+</result>
