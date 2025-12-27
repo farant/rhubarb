@@ -99,6 +99,8 @@ declare -a SOURCE_FILES=(
     "lib/url.c"
     "lib/multipart.c"
     "lib/uri.c"
+    "lib/reactor.c"
+    "lib/router.c"
 )
 
 # Objective-C sources (compiled separately)

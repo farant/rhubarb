@@ -935,6 +935,113 @@ http_responsum_caput(
     redde vacua;
 }
 
+constans character*
+http_status_descriptio(i32 status)
+{
+    commutatio (status)
+    {
+        /* 1xx Informationales */
+        casus C:   redde "Continue";
+        casus CI:  redde "Switching Protocols";
+
+        /* 2xx Successus */
+        casus CC:    redde "OK";
+        casus CCI:   redde "Created";
+        casus CCII:  redde "Accepted";
+        casus CCIV:  redde "No Content";
+
+        /* 3xx Redirectiones */
+        casus CCC:   redde "Multiple Choices";
+        casus CCCI:  redde "Moved Permanently";
+        casus CCCII: redde "Found";
+        casus CCCIV: redde "Not Modified";
+        casus CCCVII: redde "Temporary Redirect";
+        casus CCCVIII: redde "Permanent Redirect";
+
+        /* 4xx Errores Clientis */
+        casus CD:     redde "Bad Request";
+        casus CDI:    redde "Unauthorized";
+        casus CDIII:  redde "Forbidden";
+        casus CDIV:   redde "Not Found";
+        casus CDV:    redde "Method Not Allowed";
+        casus CDIX:   redde "Conflict";
+        casus CDX:    redde "Gone";
+        casus CDXXII: redde "Unprocessable Entity";
+        casus CDXXIX: redde "Too Many Requests";
+
+        /* 5xx Errores Serveri */
+        casus D:     redde "Internal Server Error";
+        casus DI:    redde "Not Implemented";
+        casus DII:   redde "Bad Gateway";
+        casus DIII:  redde "Service Unavailable";
+        casus DIV:   redde "Gateway Timeout";
+
+        ordinarius: redde "Unknown";
+    }
+}
+
+chorda
+http_responsum_serialize(
+    HttpResponsum* responsum,
+    Piscina*       piscina)
+{
+    ChordaAedificator* aed;
+    constans character* status_text;
+    chorda vacua;
+    i32 i;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = 0;
+
+    si (!responsum || !piscina)
+    {
+        redde vacua;
+    }
+
+    aed = chorda_aedificator_creare(piscina, CXXVIII);
+    si (!aed)
+    {
+        redde vacua;
+    }
+
+    status_text = http_status_descriptio(responsum->status);
+
+    /* Status line: HTTP/1.1 200 OK\r\n */
+    chorda_aedificator_appendere_literis(aed, "HTTP/1.1 ");
+    chorda_aedificator_appendere_i32(aed, responsum->status);
+    chorda_aedificator_appendere_character(aed, ' ');
+    chorda_aedificator_appendere_literis(aed, status_text);
+    chorda_aedificator_appendere_literis(aed, "\r\n");
+
+    /* User headers */
+    per (i = 0; i < responsum->capita_numerus; i++)
+    {
+        chorda_aedificator_appendere_chorda(aed, responsum->capita[i].titulus);
+        chorda_aedificator_appendere_literis(aed, ": ");
+        chorda_aedificator_appendere_chorda(aed, responsum->capita[i].valor);
+        chorda_aedificator_appendere_literis(aed, "\r\n");
+    }
+
+    /* Content-Length si corpus praesens */
+    si (responsum->corpus.mensura > 0)
+    {
+        chorda_aedificator_appendere_literis(aed, "Content-Length: ");
+        chorda_aedificator_appendere_i32(aed, responsum->corpus.mensura);
+        chorda_aedificator_appendere_literis(aed, "\r\n");
+    }
+
+    /* Finis capitum */
+    chorda_aedificator_appendere_literis(aed, "\r\n");
+
+    /* Corpus si praesens */
+    si (responsum->corpus.mensura > 0)
+    {
+        chorda_aedificator_appendere_chorda(aed, responsum->corpus);
+    }
+
+    redde chorda_aedificator_finire(aed);
+}
+
 
 /* ========================================================================
  * FUNCTIONES PUBLICAE - UTILITAS

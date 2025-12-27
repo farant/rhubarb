@@ -203,6 +203,27 @@ http_responsum_caput(
     HttpResponsum*      responsum,
     constans character* titulus);
 
+/* Obtinere descriptio status (e.g., 200 -> "OK")
+ *
+ * status: HTTP status code (CC, CDIV, etc.)
+ *
+ * Redde: String descriptio status
+ */
+constans character*
+http_status_descriptio(i32 status);
+
+/* Serialize responsum ad HTTP response string
+ *
+ * responsum: Responsum cum status, capita, corpus
+ * piscina:   Arena pro allocationibus
+ *
+ * Redde: Chorda cum "HTTP/1.1 200 OK\r\n..."
+ */
+chorda
+http_responsum_serialize(
+    HttpResponsum* responsum,
+    Piscina*       piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - UTILITAS

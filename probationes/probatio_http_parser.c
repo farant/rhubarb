@@ -361,6 +361,175 @@ probatio_nullum_argumenta(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - STATUS DESCRIPTIO
+ * ======================================================================== */
+
+interior vacuum
+probatio_status_descriptio(vacuum)
+{
+    printf("--- Probans status_descriptio ---\n");
+
+    /* 2xx */
+    CREDO_VERUM(strcmp(http_status_descriptio(CC), "OK") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCI), "Created") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCIV), "No Content") == 0);
+
+    /* 3xx */
+    CREDO_VERUM(strcmp(http_status_descriptio(CCCI), "Moved Permanently") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCCII), "Found") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCCIV), "Not Modified") == 0);
+
+    /* 4xx */
+    CREDO_VERUM(strcmp(http_status_descriptio(CD), "Bad Request") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDI), "Unauthorized") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDIII), "Forbidden") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDIV), "Not Found") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDV), "Method Not Allowed") == 0);
+
+    /* 5xx */
+    CREDO_VERUM(strcmp(http_status_descriptio(D), "Internal Server Error") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(DI), "Not Implemented") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(DIII), "Service Unavailable") == 0);
+
+    /* Unknown */
+    CREDO_VERUM(strcmp(http_status_descriptio(999), "Unknown") == 0);
+
+    printf("  Omnes status descriptiones correctae\n");
+    printf("\n");
+}
+
+
+/* ========================================================================
+ * PROBATIONES - RESPONSUM SERIALIZE
+ * ======================================================================== */
+
+interior vacuum
+probatio_responsum_serialize_simplex(Piscina* piscina)
+{
+    HttpResponsum resp;
+    chorda serialized;
+
+    printf("--- Probans responsum_serialize simplex ---\n");
+
+    memset(&resp, 0, magnitudo(resp));
+    resp.status = CC;
+    resp.corpus = chorda_ex_literis("Hello World!", piscina);
+
+    serialized = http_responsum_serialize(&resp, piscina);
+
+    CREDO_VERUM(serialized.mensura > 0);
+    CREDO_NON_NIHIL(serialized.datum);
+
+    /* Verificare status line */
+    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 200 OK\r\n", XVII) == 0);
+
+    /* Verificare Content-Length praesens */
+    CREDO_VERUM(strstr((character*)serialized.datum, "Content-Length: 12") != NIHIL);
+
+    /* Verificare corpus in fine */
+    CREDO_VERUM(strstr((character*)serialized.datum, "\r\n\r\nHello World!") != NIHIL);
+
+    printf("  Serialized (%d bytes):\n", serialized.mensura);
+    printf("    %.*s\n", serialized.mensura, serialized.datum);
+    printf("\n");
+}
+
+interior vacuum
+probatio_responsum_serialize_404(Piscina* piscina)
+{
+    HttpResponsum resp;
+    chorda serialized;
+
+    printf("--- Probans responsum_serialize 404 ---\n");
+
+    memset(&resp, 0, magnitudo(resp));
+    resp.status = CDIV;
+    resp.corpus = chorda_ex_literis("Not Found", piscina);
+
+    serialized = http_responsum_serialize(&resp, piscina);
+
+    CREDO_VERUM(serialized.mensura > 0);
+    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 404 Not Found\r\n", XXIV) == 0);
+
+    printf("  Status line correcta\n");
+    printf("\n");
+}
+
+interior vacuum
+probatio_responsum_serialize_cum_headers(Piscina* piscina)
+{
+    HttpResponsum resp;
+    HttpCaput capita[II];
+    chorda serialized;
+
+    printf("--- Probans responsum_serialize cum headers ---\n");
+
+    memset(&resp, 0, magnitudo(resp));
+    resp.status = CC;
+
+    /* Addere custom headers */
+    capita[0].titulus = chorda_ex_literis("Content-Type", piscina);
+    capita[0].valor = chorda_ex_literis("application/json", piscina);
+    capita[I].titulus = chorda_ex_literis("X-Custom", piscina);
+    capita[I].valor = chorda_ex_literis("test-value", piscina);
+
+    resp.capita = capita;
+    resp.capita_numerus = II;
+    resp.corpus = chorda_ex_literis("{}", piscina);
+
+    serialized = http_responsum_serialize(&resp, piscina);
+
+    CREDO_VERUM(serialized.mensura > 0);
+    CREDO_VERUM(strstr((character*)serialized.datum, "Content-Type: application/json\r\n") != NIHIL);
+    CREDO_VERUM(strstr((character*)serialized.datum, "X-Custom: test-value\r\n") != NIHIL);
+
+    printf("  Custom headers inclusi\n");
+    printf("\n");
+}
+
+interior vacuum
+probatio_responsum_serialize_sine_corpus(Piscina* piscina)
+{
+    HttpResponsum resp;
+    chorda serialized;
+
+    printf("--- Probans responsum_serialize sine corpus ---\n");
+
+    memset(&resp, 0, magnitudo(resp));
+    resp.status = CCIV;  /* No Content */
+
+    serialized = http_responsum_serialize(&resp, piscina);
+
+    CREDO_VERUM(serialized.mensura > 0);
+    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 204 No Content\r\n", XXV) == 0);
+
+    /* Non debet habere Content-Length */
+    CREDO_VERUM(strstr((character*)serialized.datum, "Content-Length") == NIHIL);
+
+    /* Debet finire cum \r\n\r\n */
+    CREDO_VERUM(memcmp(serialized.datum + serialized.mensura - IV, "\r\n\r\n", IV) == 0);
+
+    printf("  204 No Content correcte serialized\n");
+    printf("\n");
+}
+
+interior vacuum
+probatio_responsum_serialize_nihil(Piscina* piscina)
+{
+    chorda serialized;
+
+    printf("--- Probans responsum_serialize NIHIL ---\n");
+
+    serialized = http_responsum_serialize(NIHIL, piscina);
+    CREDO_VERUM(serialized.mensura == 0);
+    CREDO_NIHIL(serialized.datum);
+
+    printf("  NIHIL handling correcte\n");
+    printf("\n");
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -389,6 +558,14 @@ principale(vacuum)
     probatio_parser_incrementalis(piscina);
     probatio_omnes_methodi(piscina);
     probatio_nullum_argumenta(piscina);
+
+    /* Response serialization */
+    probatio_status_descriptio();
+    probatio_responsum_serialize_simplex(piscina);
+    probatio_responsum_serialize_404(piscina);
+    probatio_responsum_serialize_cum_headers(piscina);
+    probatio_responsum_serialize_sine_corpus(piscina);
+    probatio_responsum_serialize_nihil(piscina);
 
     credo_imprimere_compendium();
 
