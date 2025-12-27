@@ -434,20 +434,20 @@ nomen structura {
 } _QuaererePar;
 
 
-/* Sort pairs by score descending (simple insertion sort) */
+/* Insertion sort pro parvis partitionibus (descendens per puncta) */
 interior vacuum
-_quaerere_ordinare(_QuaererePar* paria, i32 numerus)
+_quaerere_insertion_sort(_QuaererePar* paria, s32 sinister, s32 dexter)
 {
-    i32 i;
-    s32 j;  /* Debet esse signatus pro comparatio j >= 0 */
+    s32 i;
+    s32 j;
     _QuaererePar temp;
 
-    per (i = 1; i < numerus; i++)
+    per (i = sinister + 1; i <= dexter; i++)
     {
         temp = paria[i];
-        j = (s32)i - 1;
+        j = i - 1;
 
-        dum (j >= 0 && paria[j].puncta < temp.puncta)
+        dum (j >= sinister && paria[j].puncta < temp.puncta)
         {
             paria[j + 1] = paria[j];
             j--;
@@ -455,6 +455,77 @@ _quaerere_ordinare(_QuaererePar* paria, i32 numerus)
 
         paria[j + 1] = temp;
     }
+}
+
+
+/* Quicksort cum insertion sort fallback (descendens per puncta) */
+interior vacuum
+_quaerere_quicksort(_QuaererePar* paria, s32 sinister, s32 dexter)
+{
+    s32 i;
+    s32 j;
+    s32 pivot;
+    _QuaererePar temp;
+
+    /* Pro parvis partitionibus, insertion sort est celerior */
+    si (dexter - sinister < XVI)
+    {
+        _quaerere_insertion_sort(paria, sinister, dexter);
+        redde;
+    }
+
+    /* Pivot ex elemento medio */
+    pivot = paria[(sinister + dexter) / II].puncta;
+    i = sinister;
+    j = dexter;
+
+    dum (i <= j)
+    {
+        /* Quaerere elementum sinistrum quod debet esse dextrum */
+        dum (paria[i].puncta > pivot)
+        {
+            i++;
+        }
+
+        /* Quaerere elementum dextrum quod debet esse sinistrum */
+        dum (paria[j].puncta < pivot)
+        {
+            j--;
+        }
+
+        si (i <= j)
+        {
+            temp = paria[i];
+            paria[i] = paria[j];
+            paria[j] = temp;
+            i++;
+            j--;
+        }
+    }
+
+    /* Recursio */
+    si (sinister < j)
+    {
+        _quaerere_quicksort(paria, sinister, j);
+    }
+
+    si (i < dexter)
+    {
+        _quaerere_quicksort(paria, i, dexter);
+    }
+}
+
+
+/* Wrapper pro sorting API */
+interior vacuum
+_quaerere_ordinare(_QuaererePar* paria, i32 numerus)
+{
+    si (numerus <= 1)
+    {
+        redde;
+    }
+
+    _quaerere_quicksort(paria, 0, (s32)numerus - 1);
 }
 
 
