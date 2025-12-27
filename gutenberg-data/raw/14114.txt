@@ -1,0 +1,15 @@
+<result>
+Title = "Plutarch's Lives, Volume II"
+Author = "Plutarch (translated by Aubrey Stewart and George Long)"
+Year = 100
+
+Tags = ["non-fiction", "biography", "classical", "appropriate-for-children"]
+
+Summary = """
+Plutarch's Lives (Parallel Lives) is a series of biographies of famous Greek and Roman figures, written by the Greek historian Plutarch of Chaeronea around 100 AD. The work pairs Greek and Roman leaders who shared similar qualities or careers, followed by a comparison. This volume includes lives of Pelopidas, Marcellus, Aristeides, Cato, Philopoemen, Flamininus, Pyrrhus, Marius, Lysander, Sulla, Kimon, and Lucullus. The work is one of the most influential biographical texts in Western literature, shaping how figures like Alexander, Caesar, and others were understood for centuries.
+"""
+
+Notes = """
+Year chosen is approximate date of original composition by Plutarch (c. 100 AD). This 1899 Bell & Sons edition is a translation by Stewart and Long, but the historical significance lies in Plutarch's original work. Plutarch was a pagan Greek, so not tagged as catholic, though his moral philosophy was later appreciated by Christian writers.
+"""
+</result>

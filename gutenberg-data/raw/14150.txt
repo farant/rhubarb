@@ -1,0 +1,15 @@
+<result>
+Title = "The Light in the Clearing"
+Author = "Irving Bacheller"
+Year = 1917
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+A historical novel set in upstate New York during the 1830s-1840s, centered around the life and times of Silas Wright, a real historical figure who served as U.S. Senator and Governor of New York. The story follows a young orphan boy named Barton Baynes growing up in the North Country of New York, exploring themes of rural American life, political integrity, and moral development. Bacheller, known for his nostalgic portrayals of 19th-century rural New York life, uses the novel to examine American democratic ideals through the lens of Wright, who was known for his honesty and refusal of political corruption. The title refers to moments of moral clarity and truth.
+"""
+
+Notes = """
+Irving Bacheller (1859-1950) was a popular American novelist known for regional fiction depicting upstate New York. He is best remembered for 'Eben Holden' (1900). While Bacheller was raised in a Protestant tradition, not Catholic, the work itself promotes wholesome moral values and would be suitable for general audiences including children.
+"""
+</result>

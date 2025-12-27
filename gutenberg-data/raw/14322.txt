@@ -1,0 +1,15 @@
+<result>
+Title = "Electra"
+Author = "Euripides, translated by Gilbert Murray"
+Year = -413
+
+Tags = ["fiction", "drama", "classical", "tragedy"]
+
+Summary = """
+Electra is a Greek tragedy by Euripides, one of the three great Athenian tragedians. The play dramatizes the revenge of Electra and her brother Orestes against their mother Clytemnestra and stepfather Aegisthus for the murder of their father Agamemnon. Euripides' version is notable for its more realistic and psychologically complex portrayal compared to the versions by Aeschylus and Sophocles. The play presents Electra as living in poverty, married off to a peasant farmer to prevent her from bearing noble children who might avenge Agamemnon. This translation by Gilbert Murray, the renowned classical scholar and Regius Professor of Greek at Oxford, renders the work into English rhyming verse and was notably performed at the Court Theatre in London in 1907.
+"""
+
+Notes = """
+The year -413 (413 BC) is the commonly accepted date for the original production of Euripides' Electra, though some scholars place it slightly earlier around 420-417 BC. I chose to use the original composition date rather than Murray's 1905 translation date since the primary historical and literary significance lies with Euripides' original work. Murray's translation, while excellent and influential in reviving interest in Greek drama in the early 20th century, is primarily a vehicle for the ancient text.
+"""
+</result>

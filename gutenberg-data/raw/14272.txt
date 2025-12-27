@@ -1,0 +1,19 @@
+I can see this is from **Punch, or the London Charivari**, Volume 102, January 30, 1892.
+
+Punch was a famous British satirical and humor magazine that ran from 1841 to 2002. This is a periodical/magazine issue rather than a standalone book. The "Confessions of a Duffer" series appears to be a humorous column about someone who fails at various pursuits - in this case, literary pursuits.
+
+<result>
+Title = "Punch, or the London Charivari, Vol. 102, January 30, 1892"
+Author = "Various"
+Year = 1892
+
+Tags = ["fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch was a British weekly magazine of humor and satire published from 1841 to 2002. It was highly influential in British culture and coined the term "cartoon" in its modern sense. This issue (Vol. 102, January 30, 1892) contains "Confessions of a Duffer" - a humorous series about a man who fails at everything he attempts. This particular installment covers "The Literary Duffer," satirizing would-be authors who persistently submit manuscripts despite constant rejection, poke fun at the pretensions of aspiring writers, and the byzantine world of Victorian publishing.
+"""
+
+Notes = """
+Year is straightforward as Punch issues are dated. As a periodical with multiple anonymous and pseudonymous contributors, "Various" is appropriate for Author. Not marked appropriate-for-children as Victorian humor magazines often contained adult themes and social commentary. Not marked "catholic" as Punch was a secular satirical publication.
+"""
+</result>

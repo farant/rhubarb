@@ -1,0 +1,17 @@
+The file seems to be mostly in your message. Based on the text you've provided, I can identify this work:
+
+<result>
+Title = "Hebraic Literature: Translations from the Talmud, Midrashim and Kabbala"
+Author = "Various (edited by Maurice Henry Harris)"
+Year = 1901
+
+Tags = ["non-fiction", "historical-document", "religious"]
+
+Summary = """
+This is an anthology of translated excerpts from major works of Jewish religious literature: the Talmud (the central text of Rabbinic Judaism containing Jewish law, ethics, philosophy, and history from roughly 1st century BCE to 4th century CE), the Midrashim (rabbinic commentaries and interpretations of Hebrew scriptures), and the Kabbala (Jewish mystical tradition). The work provides English-speaking readers access to these foundational texts of Judaism, with introductions explaining their historical and religious context. It was originally published as part of "The World's Great Classics" series.
+"""
+
+Notes = """
+The 1943 Tudor Publishing date in the Gutenberg text is a reprint. The original compilation was published in 1901 as part of "The World's Great Classics" library series. Rabbi Maurice Henry Harris (1859-1930) served as the editor and wrote introductory material. I chose 1901 as the year since this represents the original compilation and editorial work, though the underlying Talmudic, Midrashic, and Kabbalistic texts themselves date from antiquity through the medieval period.
+"""
+</result>

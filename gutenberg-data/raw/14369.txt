@@ -1,0 +1,15 @@
+<result>
+Title = "The Young Engineers on the Gulf; or, The Dread Mystery of the Million Dollar Breakwater"
+Author = "H. Irving Hancock"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is the fourth book in H. Irving Hancock's "Young Engineers" series, which follows the adventures of Tom Reade and Harry Hazelton, two young civil engineers who tackle various construction projects across America. In this installment, the protagonists are working on a massive breakwater construction project along the Gulf Coast. The story involves mystery, adventure, and engineering challenges as the young men encounter suspicious activities and must solve "the dread mystery" while completing their demanding infrastructure project. Hancock was a prolific author of boys' adventure series in the early 20th century, and the Young Engineers books combined technical engineering details with exciting narratives aimed at young male readers.
+"""
+
+Notes = """
+The Young Engineers series was published between 1912-1916. This particular volume, being the fourth in the series, was published in 1914 by Henry Altemus Company. H. Irving Hancock (1868-1922) wrote numerous series for boys including the West Point series, the Annapolis series, and the High School Boys series.
+"""
+</result>

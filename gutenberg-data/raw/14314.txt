@@ -1,0 +1,15 @@
+<result>
+Title = "Etiquette in Society, in Business, in Politics and at Home"
+Author = "Emily Post"
+Year = 1922
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+Emily Post's landmark etiquette guide, often simply called "Etiquette," became the definitive American manual on social conduct and manners. Post (1872-1960) was a novelist who turned to writing about etiquette after her divorce. This book covers everything from formal dinners and weddings to business correspondence and political protocol. It established Post as the foremost authority on American etiquette and spawned a lasting institution - the Emily Post Institute continues to this day. The book went through numerous editions and revisions during her lifetime and remains influential in updated forms.
+"""
+
+Notes = """
+First edition published July 1922 as clearly stated in the text. This is the original publication, not a reprint or later edition.
+"""
+</result>

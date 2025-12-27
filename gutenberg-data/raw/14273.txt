@@ -1,0 +1,15 @@
+<result>
+Title = "Invisible Links"
+Author = "Selma Lagerlöf"
+Year = 1894
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Invisible Links (Osynliga länkar) is a collection of short stories by Swedish author Selma Lagerlöf, who would later become the first woman to win the Nobel Prize in Literature (1909). The collection contains tales rooted in Swedish folklore, legend, and rural life, blending realism with romantic and supernatural elements. Stories like "The Outlaws" and "A Christmas Guest" demonstrate Lagerlöf's characteristic style of moral storytelling infused with mysticism and deep psychological insight. The work showcases her ability to find the extraordinary within ordinary lives and to explore themes of redemption, fate, and the unseen connections between people.
+"""
+
+Notes = """
+The original Swedish edition "Osynliga länkar" was published in 1894. This English translation by Pauline Bancroft Flach was published later. The year 1894 is chosen as it represents the original publication of the work.
+"""
+</result>

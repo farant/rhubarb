@@ -1,0 +1,17 @@
+Let me try to read more context from what you've provided. Based on the Project Gutenberg header you shared, I can identify this work:
+
+<result>
+Title = "A Strange Story / The Haunted and the Haunters"
+Author = "Edward Bulwer-Lytton"
+Year = 1862
+
+Tags = ["fiction", "gothic", "supernatural", "occult"]
+
+Summary = """
+This volume contains two works by Edward Bulwer-Lytton. "A Strange Story" (1862) is an occult novel exploring mesmerism, the supernatural, and the nature of the soul through the story of a skeptical physician whose rationalist worldview is challenged by strange events. "The Haunted and the Haunters; or, The House and the Brain" (1859) is a famous ghost story, often considered one of the finest Victorian supernatural tales, about a narrator who investigates a haunted house in London and discovers the source of its spectral phenomena.
+"""
+
+Notes = """
+"A Strange Story" was first serialized in All the Year Round (Dickens's journal) in 1861-1862 and published as a book in 1862. "The Haunted and the Haunters" first appeared in Blackwood's Magazine in 1859. This appears to be an 1897 Boston edition combining both works. I chose 1862 as it represents the primary work in this collection. Bulwer-Lytton was interested in the occult and Rosicrucian themes; while he was nominally Anglican, his works explore esoteric rather than Catholic spirituality.
+"""
+</result>

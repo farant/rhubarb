@@ -1,0 +1,17 @@
+Let me read this differently - I see you've included the text in your message. Based on what you've shared:
+
+<result>
+Title = "Wagner"
+Author = "John F. Runciman"
+Year = 1913
+
+Tags = ["non-fiction", "biography", "music"]
+
+Summary = """
+A biographical study of Richard Wagner (1813-1883), the German composer and opera reformer. Part of Bell's Miniature Series of Musicians, this concise biography covers Wagner's life from his youth through his establishment of the Bayreuth Festival, along with analysis of his works. Runciman was a British music critic known for his accessible writing on classical composers.
+"""
+
+Notes = """
+Using 1913 as this is the second edition publication date shown. The first edition was likely published a few years earlier. This is a secondary work of music criticism/biography rather than a primary historical document, so the publication date of this specific work is most relevant for timeline purposes.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Notes of an Overland Journey Through France and Egypt to Bombay"
+Author = "Emma Roberts"
+Year = 1841
+
+Tags = ["non-fiction", "travel-literature", "historical-document"]
+
+Summary = """
+This is a posthumously published travel narrative by Emma Roberts (1794-1840), a British travel writer and poet. The work documents her overland journey from London to Bombay (Mumbai) via France and Egypt, following the popular pre-Suez Canal route used by travelers to India in the early 19th century. Roberts was known for her detailed and engaging descriptions of the places she visited and the customs she observed. She spent considerable time in India and became one of the most prominent female travel writers of her era. The book includes a memoir of her life, as she died in Pune, India in 1840, shortly before this work was published.
+"""
+
+Notes = """
+The year 1841 represents the publication date of this posthumous work. Emma Roberts died in 1840 in India, and this travel account was published the following year with an accompanying memoir. This is the most historically accurate date for this specific work, as it represents when the compiled journey notes were made available to the public.
+"""
+</result>

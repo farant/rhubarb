@@ -1,0 +1,15 @@
+<result>
+Title = "Ethel Hollister's Second Summer as a Campfire Girl"
+Author = "Irene Elliott Benson"
+Year = 1912
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a juvenile fiction novel and part of a series following Ethel Hollister, a young woman involved in the Camp Fire Girls movement. The Camp Fire Girls was founded in 1910 as a counterpart to the Boy Scouts, promoting outdoor activities, self-reliance, and character development for girls. This book follows Ethel through her second summer at camp, her entry into college, interactions with Boy Scouts, and various holiday celebrations. The series was popular in the early 20th century as part of a wave of youth organization fiction.
+"""
+
+Notes = """
+The year 1912 is printed directly on the title page. This was published just two years after the Camp Fire Girls organization was founded (1910), making it an early entry in what became a popular genre of Camp Fire Girls fiction.
+"""
+</result>

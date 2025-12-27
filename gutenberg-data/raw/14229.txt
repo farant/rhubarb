@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, November 21st, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["non-fiction", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or the London Charivari was a British weekly magazine of humor and satire published from 1841 to 2002. It was founded by Henry Mayhew and engraver Ebenezer Landells and became one of the most influential humor magazines in the English-speaking world. The magazine featured satirical commentary on politics, society, and current events, along with cartoons, parodies, and comic verse. This particular issue from November 1891 includes commentary on the Lord Mayor's procession, references to Daniel O'Connell ("the Liberator"), and a parody poem titled "The Ancient Milliner" (playing on Coleridge's "Rime of the Ancient Mariner").
+"""
+
+Notes = """
+The year 1891 is the publication date of this specific issue. Punch as a periodical had no single author - it featured contributions from numerous writers and cartoonists throughout its run. The reference to "the most distinguished Irishman of this century" and "the Liberator" refers to Daniel O'Connell (1775-1847), the famous Irish political leader.
+"""
+</result>

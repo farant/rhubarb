@@ -1,0 +1,15 @@
+<result>
+Title = "Ancient Town-Planning"
+Author = "F. Haverfield"
+Year = 1913
+
+Tags = ["non-fiction", "history", "architecture", "urban-planning"]
+
+Summary = """
+This work by Francis Haverfield, a distinguished Oxford classical scholar and archaeologist, examines the history of town planning from ancient times, particularly focusing on Greek and Roman urban design. The book originated as the Creighton Lecture delivered at the University of London in 1910 and was also presented at the London Conference on Town-planning. Haverfield was one of the foremost authorities on Roman Britain and Roman archaeology of his era. The work connects ancient urban planning practices to the then-emerging modern town-planning movement, treating the subject as relevant to contemporary social reform efforts focused on housing, health, and domestic environment rather than purely political concerns.
+"""
+
+Notes = """
+1913 is the original publication date as clearly stated in the book itself. Francis Haverfield (1860-1919) was Regius Professor of Ancient History at Oxford and a pioneering figure in Romano-British studies.
+"""
+</result>

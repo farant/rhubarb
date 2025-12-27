@@ -1,0 +1,15 @@
+<result>
+Title = "One of the 28th: A Tale of Waterloo"
+Author = "G. A. Henty"
+Year = 1898
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is a historical adventure novel by G. A. Henty, the prolific Victorian author known for his boys' adventure stories set against historical backdrops. The story follows a young protagonist through adventures by land and sea during the Napoleonic Wars, culminating around the Battle of Waterloo (1815). As Henty notes in his preface, while a boy is the main character, the true heroine is a woman whose courage and nerve equal that of any soldier. Henty uses the preface to make a characteristically progressive point about female courage, arguing that women are often braver than men in moments of true danger.
+"""
+
+Notes = """
+G. A. Henty (1832-1902) wrote over 100 adventure novels primarily aimed at young boys. "One of the 28th" refers to the 28th Regiment of Foot (later the Gloucestershire Regiment), a British Army infantry regiment that fought at Waterloo. The book was first published in 1898. Henty's works were extremely popular in the late Victorian era and were known for combining exciting adventure with historical education.
+"""
+</result>

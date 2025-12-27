@@ -1,0 +1,15 @@
+<result>
+Title = "The Inner Shrine"
+Author = "Basil King"
+Year = 1909
+
+Tags = ["fiction"]
+
+Summary = """
+The Inner Shrine is a novel by Canadian-American author Basil King (1859-1928). King was an Episcopal clergyman who turned to writing after losing his sight. This novel, published in 1909, was one of his popular works of the era. His fiction typically dealt with moral and spiritual themes, exploring questions of conscience, redemption, and social relationships in early 20th century American society. The novel was published by Harper & Brothers and was illustrated, indicating it was marketed as a mainstream popular novel of the period.
+"""
+
+Notes = """
+The copyright page shows 1908-1909, with publication date of May 1909. The transcriber's note confirms the author is Basil King, whose name did not appear in the original text (it was published anonymously initially). King was known for publishing some works anonymously or under pseudonyms before revealing his authorship. While King was an Episcopal minister (not Catholic), the work is general fiction without specific Catholic content.
+"""
+</result>

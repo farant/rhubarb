@@ -1,0 +1,15 @@
+<result>
+Title = "Beautiful Stories from Shakespeare"
+Author = "E. Nesbit"
+Year = 1907
+
+Tags = ["non-fiction", "appropriate-for-children", "educational", "literary-adaptation"]
+
+Summary = """
+This is a collection of Shakespeare's plays retold in simplified prose form for children and young readers. E. Nesbit (Edith Nesbit), better known for her children's novels like "The Railway Children" and "Five Children and It," adapted Shakespeare's major works into accessible narratives that preserve the essential plots and characters while removing the complexity of the original verse. The book was intended to introduce young readers to Shakespeare's stories before they encountered the original plays.
+"""
+
+Notes = """
+E. Nesbit published this work in 1907. While Shakespeare's original plays date from the late 16th and early 17th centuries, this is a distinct work of adaptation by Nesbit, so the publication year of her retelling is the appropriate date. This follows in the tradition of Charles and Mary Lamb's "Tales from Shakespeare" (1807), which served a similar purpose a century earlier.
+"""
+</result>

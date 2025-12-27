@@ -1,0 +1,15 @@
+<result>
+Title = "Ma Pettengill"
+Author = "Harry Leon Wilson"
+Year = 1919
+
+Tags = ["fiction"]
+
+Summary = """
+Ma Pettengill is a collection of humorous short stories by Harry Leon Wilson featuring the character of Ma Pettengill, a sharp-tongued, witty ranch owner in the fictional Western town of Red Gap. The stories are narrated through conversations with the protagonist and showcase Wilson's talent for dialect humor and satirical observations of small-town American life in the early 20th century. This book is part of Wilson's "Red Gap" series, which also includes the more famous "Ruggles of Red Gap" (1915). Wilson was known for his comedic novels depicting American life with gentle satire.
+"""
+
+Notes = """
+The 1919 date is taken directly from the title page of the Gutenberg text. Harry Leon Wilson (1867-1939) was an American novelist and playwright best known for his humorous fiction.
+"""
+</result>

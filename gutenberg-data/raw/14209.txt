@@ -1,0 +1,15 @@
+<result>
+Title = "The Kybalion: A Study of The Hermetic Philosophy of Ancient Egypt and Greece"
+Author = "Three Initiates"
+Year = 1912
+
+Tags = ["non-fiction", "esoteric", "philosophy"]
+
+Summary = """
+The Kybalion is a foundational text of the New Thought movement, presenting seven "Hermetic principles" attributed to the legendary Hermes Trismegistus. The work covers concepts such as mentalism, correspondence, vibration, polarity, rhythm, cause and effect, and gender as universal laws. Despite its claims to ancient Egyptian and Greek origins, the text is actually a product of early 20th century American occultism, likely authored by William Walker Atkinson (possibly with others). It synthesizes various esoteric traditions into an accessible framework that influenced later New Age and self-help movements.
+"""
+
+Notes = """
+The attribution to "Three Initiates" is a pseudonym. The work claims ancient Hermetic lineage but is a modern composition from 1912. While it references Hermes Trismegistus and the Hermetic tradition, it should not be confused with the authentic Corpus Hermeticum from late antiquity. The ideas presented diverge significantly from classical Hermeticism and traditional philosophy. Not marked as Catholic as the work comes from an occult/New Thought tradition rather than Christian philosophical tradition.
+"""
+</result>

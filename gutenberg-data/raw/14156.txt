@@ -1,0 +1,15 @@
+<result>
+Title = "Dictionnaire des idées reçues"
+Author = "Gustave Flaubert"
+Year = 1913
+
+Tags = ["non-fiction", "satire", "french-literature"]
+
+Summary = """
+The "Dictionary of Received Ideas" (Dictionnaire des idées reçues) is a satirical work by Gustave Flaubert, the renowned French novelist best known for Madame Bovary. This dictionary is an alphabetical compendium of clichés, commonplaces, and bourgeois platitudes that Flaubert collected throughout his life. Each entry mocks the conventional wisdom and empty phrases that middle-class society repeats without thought. Flaubert worked on this project intermittently for decades as a way of cataloguing the stupidity and intellectual conformity he despised in 19th century French society. The work is deeply ironic - presenting banal received ideas as if they were profound truths, thereby exposing their absurdity.
+"""
+
+Notes = """
+Flaubert worked on this dictionary throughout much of his adult life but never published it himself. It was published posthumously in 1913, over thirty years after his death in 1880. Some scholars consider it related to his unfinished novel "Bouvard et Pécuchet." I chose 1913 as the year since this is when the work was first made available to readers as a distinct publication, and Flaubert never finalized it for publication during his lifetime.
+"""
+</result>

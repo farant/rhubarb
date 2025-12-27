@@ -1,0 +1,15 @@
+<result>
+Title = "Life & Times of Col. Daniel Boone"
+Author = "Cecil B. Hartley"
+Year = 1859
+
+Tags = ["non-fiction", "biography", "historical-document", "appropriate-for-children"]
+
+Summary = """
+This is a biography of Daniel Boone (1734-1820), the famous American frontiersman and pioneer who played a central role in the exploration and settlement of Kentucky. The work covers his early life, his expeditions into the Kentucky wilderness, his founding of Boonesborough, his numerous encounters and conflicts with Native Americans, and his later years. The book notably includes Boone's autobiography as dictated by himself, providing a first-person account of his adventures and his belief that he was divinely ordained to settle the wilderness. Cecil B. Hartley was a prolific 19th-century American author who wrote numerous popular biographies and adventure stories.
+"""
+
+Notes = """
+Cecil B. Hartley published this biography in 1859. He was known for writing accessible popular histories and biographies during the mid-19th century. This work appeared during a period of great American interest in frontier heroes and westward expansion narratives.
+"""
+</result>

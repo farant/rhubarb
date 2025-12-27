@@ -1,0 +1,15 @@
+<result>
+Title = "Orjan oppi"
+Author = "Arvid Järnefelt"
+Year = 1902
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+"Orjan oppi" (The Slave's Teaching or The Doctrine of the Slave) is a five-act play by Finnish author Arvid Järnefelt (1861-1932). The drama is set during the Roman period (68-81 AD) and centers on Titus Flavius, the destroyer of Jerusalem, along with his father Vespasian, brother Domitian, and the Jewish princess Berenice. The play explores themes of power, morality, and the relationship between master and slave through the character of Lysimachos, a slave and physician. Järnefelt was a prominent Finnish writer known for his Tolstoyan ideals and works dealing with social justice, ethical questions, and the conflict between worldly power and spiritual values.
+"""
+
+Notes = """
+The year 1902 is the original publication date by Otava in Helsinki, as indicated in the text itself. This is Järnefelt's original work, not a translation.
+"""
+</result>

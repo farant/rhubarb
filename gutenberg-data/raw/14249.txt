@@ -1,0 +1,15 @@
+<result>
+Title = "Half a Chance"
+Author = "Frederic S. Isham"
+Year = 1909
+
+Tags = ["fiction"]
+
+Summary = """
+Half a Chance is a romantic adventure novel by Frederic S. Isham, a popular American author of the early 20th century known for his historical romances. The novel follows a convict who escapes from a prison ship and later rises in society, exploring themes of redemption, identity, and second chances. Isham was known for fast-paced narratives with melodramatic plots, and this work fits that pattern. He was a bestselling author of his era, with several of his novels adapted for film.
+"""
+
+Notes = """
+The copyright page clearly states 1909, which is the original publication year.
+"""
+</result>

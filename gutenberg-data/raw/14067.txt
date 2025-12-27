@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or the London Charivari, Vol. 101, November 7, 1891"
+Author = "Various"
+Year = 1891
+
+Tags = ["fiction", "satire", "periodical"]
+
+Summary = """
+Punch, or the London Charivari, was a British weekly magazine of humour and satire established in 1841. It became one of the most influential and long-running satirical publications in history, running until 2002. The magazine was known for its witty commentary on British politics, society, and culture, as well as its distinctive cartoons and illustrations. This particular issue from November 1891 contains typical Punch content: satirical news items poking fun at European royalty (Kaiser Wilhelm II's beard-shaving causing chaos among portrait makers, the young King of Spain cutting a tooth), theatrical gossip, and social commentary. The magazine coined the term "cartoon" in its modern sense and was highly influential in Victorian and Edwardian British culture.
+"""
+
+Notes = """
+The year 1891 is the publication date of this specific issue. Punch as a publication began in 1841, but each issue is its own work. The reference to Kaiser Wilhelm II and his famous moustache/beard changes, and the young King Alfonso XIII of Spain (who was only 5 years old in 1891, hence the tooth-cutting), helps confirm the dating.
+"""
+</result>

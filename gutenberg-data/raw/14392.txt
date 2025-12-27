@@ -1,0 +1,15 @@
+<result>
+Title = "George Du Maurier, The Satirist of the Victorians: A Review of His Art and Personality"
+Author = "T. Martin Wood"
+Year = 1913
+
+Tags = ["non-fiction", "biography", "art-criticism"]
+
+Summary = """
+This is a biographical and critical study of George du Maurier (1834-1896), the Anglo-French artist and author who became one of the most celebrated cartoonists and social satirists of Victorian England. Du Maurier is best known for his illustrations in Punch magazine, where he lampooned the pretensions of Victorian society, and for his novels, particularly "Trilby" (1894), which introduced the character of Svengali and became a sensation. T. Martin Wood examines du Maurier's artistic career, his distinctive style of social commentary through illustration, and his personality. The book includes forty-one illustrations of du Maurier's work.
+"""
+
+Notes = """
+1913 is the original publication year by Chatto & Windus in London. This is a primary work of art criticism and biography, not a reprint or translation of an earlier work.
+"""
+</result>

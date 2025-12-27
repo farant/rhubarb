@@ -1,0 +1,15 @@
+<result>
+Title = "The Mirror of Literature, Amusement, and Instruction, Vol. 17, No. 479"
+Author = "Various"
+Year = 1831
+
+Tags = ["non-fiction", "periodical", "historical-document"]
+
+Summary = """
+The Mirror of Literature, Amusement, and Instruction was a British weekly magazine published from 1822 to 1849. It was one of the earliest cheap popular periodicals in England, founded by John Limbird. The magazine featured miscellaneous content including essays on architecture, history, literature, and current events, often accompanied by engravings. This particular issue (No. 479) from March 5, 1831 features an article about Holyrood Palace in Edinburgh, prompted by the exile of Charles X of France (the "Ex-King of France") who took refuge there after the July Revolution of 1830.
+"""
+
+Notes = """
+The year 1831 is the publication date of this specific issue. The magazine itself ran from 1822-1849. The reference to the "Ex-King of France" at Holyrood dates this precisely, as Charles X fled to Britain after being deposed in July 1830 and resided at Holyrood Palace from late 1830 until 1832.
+"""
+</result>

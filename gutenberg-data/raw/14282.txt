@@ -1,0 +1,15 @@
+<result>
+Title = "A Merry Dialogue, Declaring the Properties of Shrewd Shrews and Honest Wives"
+Author = "Desiderius Erasmus (translated into English)"
+Year = 1523
+
+Tags = ["fiction", "dialogue", "humanist", "marriage"]
+
+Summary = """
+This is an English translation of one of Erasmus's Colloquia Familiaria (Familiar Colloquies), specifically the colloquy known as "Uxor Mempsigamos" or "The Discontented Wife." The dialogue features two women, Eulalia and Xanthippe, discussing marriage and how to deal with difficult husbands. Eulalia, who has a happy marriage, counsels the shrewish Xanthippe on how to manage her husband through patience, wisdom, and gentle persuasion rather than nagging and conflict. It is a humanist work that uses humor and classical dialogue form to offer practical moral instruction on domestic life. The Colloquia were immensely popular in the Renaissance as both Latin learning texts and moral literature.
+"""
+
+Notes = """
+The original Latin colloquy was published in 1523 as part of the expanded Colloquia Familiaria. This English translation is dated 1557 (Anno M.CCCCC.LVII on the title page). I chose 1523 as that is when Erasmus composed this particular dialogue, which is the historically significant date for the work itself. The 1557 date represents merely when this English translation was published during the reign of Mary I.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Readings on Fascism and National Socialism"
+Author = "Various (edited by Members of the Department of Philosophy, University of Colorado)"
+Year = 1952
+
+Tags = ["non-fiction", "historical-document", "political-philosophy", "primary-sources"]
+
+Summary = """
+This is an academic anthology compiled for educational purposes, collecting primary source documents and analyses of fascist and National Socialist ideology. It includes Mussolini's "The Doctrine of Fascism" (1932), Alfredo Rocco's political analysis, Giovanni Gentile's philosophical foundations of fascism, and materials on National Socialism including a piece on Nazi medical ideology. The collection was designed to help students critically examine these ideologies by presenting the movements' own articulations of their beliefs.
+"""
+
+Notes = """
+Alan Swallow was a small press publisher based in Denver who published academic and literary works from the 1940s-1960s. This appears to be an early 1950s educational compilation. The individual texts within have various original dates (Mussolini's Doctrine of Fascism is from 1932, for example), but as a compiled anthology the publication date reflects when this particular collection was assembled for American university students, likely in the post-WWII period when there was significant academic interest in understanding the ideologies that had led to the war.
+"""
+</result>

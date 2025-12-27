@@ -1,0 +1,17 @@
+I recognize this work. *Amours de Voyage* is a verse novel by Arthur Hugh Clough, written during and about the Roman Republic of 1849. Let me provide the structured output:
+
+<result>
+Title = "Amours de Voyage"
+Author = "Arthur Hugh Clough"
+Year = 1858
+
+Tags = ["fiction", "poetry"]
+
+Summary = """
+A verse novel written in classical hexameters, telling the story of Claude, a young English intellectual traveling in Italy during the Roman Republic uprising of 1849. The poem explores themes of doubt, indecision, romantic hesitation, and the difficulty of authentic action in the modern world. Claude encounters the Trevellyn family and develops feelings for Mary, but his over-analytical nature and constant self-questioning prevent him from acting decisively. The work is notable for its psychological depth, its epistolary structure (letters home), and its wry, ironic treatment of the educated Victorian's paralysis before both love and political engagement. Often considered a precursor to modernist interior monologue.
+"""
+
+Notes = """
+Written 1849 during the siege of Rome, first published serially in The Atlantic Monthly in 1858. The 1903 Macmillan edition referenced in the text is a later printing. Year chosen is 1858 as the first publication date, though composition was 1849.
+"""
+</result>

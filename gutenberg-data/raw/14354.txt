@@ -1,0 +1,20 @@
+<result>
+Title = "Gwaith Samuel Roberts"
+Author = "Samuel Roberts"
+Year = 1906
+
+Tags = ["non-fiction", "collected-works", "Welsh-language"]
+
+Summary = """
+This is a collected works (gwaith) of Samuel Roberts (1800-1885), known simply as "S.R." - one of Wales's most prominent 19th century reformers, writers, and Independent ministers. Roberts was a pioneering figure in Welsh nonconformist culture who founded and edited influential Welsh-language journals including Y Cronicl (1843), Y Dydd (1868), and Y Celt (1878). He was an early advocate for postal reform (recognized by Gladstone with a Royal Bounty Fund grant), disestablishment of the Church, and various radical causes. His life included a dramatic but ill-fated attempt to establish a Welsh colony in Tennessee, disrupted by the American Civil War. This edition was compiled and edited by Owen Morgan Edwards, a significant Welsh educator and publisher.
+"""
+
+Notes = """
+The year 1906 is chosen as this is the Ab Owen edition date - this is a posthumous collection of Roberts's works edited by Owen M. Edwards, not a single work published during Roberts's lifetime. Roberts's original writings span from the 1820s through the 1880s, but this particular anthology represents a scholarly compilation published 21 years after his death.
+"""
+</result>
+
+Sources:
+- [Dictionary of Welsh Biography - Samuel Roberts](https://biography.wales/article/s-ROBE-SAM-1800)
+- [Wikipedia - Samuel Roberts (Welsh writer)](https://en.wikipedia.org/wiki/Samuel_Roberts_(Welsh_writer))
+- [Dictionary of National Biography](https://en.wikisource.org/wiki/Dictionary_of_National_Biography,_1885-1900/Roberts,_Samuel_(1800-1885))

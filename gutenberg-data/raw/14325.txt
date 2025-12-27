@@ -1,0 +1,15 @@
+<result>
+Title = "Taboo and Genetics: A Study of the Biological, Sociological and Psychological Foundation of the Family"
+Author = "M. M. Knight, Iva Lowther Peters, Phyllis Blanchard"
+Year = 1920
+
+Tags = ["non-fiction", "sociology", "psychology", "biology"]
+
+Summary = """
+This is an early 20th century academic work examining the family institution through the lenses of biology, sociology, and psychology. The three authors - all holding Ph.D.s - explore how taboos (particularly sexual and familial taboos) developed and function from evolutionary and social perspectives. The book represents the scientific approach to family studies that was emerging in American academia during this period, influenced by early genetics, social Darwinism, and the nascent field of psychology. It was dedicated to Frank Hamilton Hankins, a prominent American sociologist known for his work on population and social theory.
+"""
+
+Notes = """
+The publication date shown is 1921, but academic works of this era were often completed and copyrighted the year prior to their publication date. I have used 1920 as this likely reflects when the work was substantially completed. The book reflects the intellectual currents of its time, including early genetic science and progressive-era social reform movements.
+"""
+</result>

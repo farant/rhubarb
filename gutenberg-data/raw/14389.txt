@@ -1,0 +1,17 @@
+The file appears to be empty locally. Based on what you've pasted in your message, this is from **Punch, or The London Charivari**, Volume 102, specifically the issue from March 26, 1892.
+
+<result>
+Title = "Punch, or The London Charivari, Vol. 102"
+Author = "Various"
+Year = 1892
+
+Tags = ["periodical", "satire", "fiction", "humor", "british"]
+
+Summary = """
+Punch, or The London Charivari was a British weekly magazine of humour and satire established in 1841 and published until 1992 (with a brief revival 1996-2002). It was famous for its satirical cartoons, witty commentary on British politics and society, and coined the term "cartoon" in its modern sense. Volume 102 covers issues from early 1892, during the late Victorian era. This particular issue contains satirical verse about London County Council elections and the tension between "Moderates" (conservatives) and "Progressives" on municipal reform issues like tramways, utilities, and taxation.
+"""
+
+Notes = """
+Year is straightforward - the issue is dated March 26, 1892. As a periodical with multiple contributors, "Various" is the appropriate author attribution. Not marked appropriate-for-children due to political satire that requires adult context to understand. Not marked 'catholic' as Punch was a secular British publication.
+"""
+</result>

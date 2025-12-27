@@ -1,0 +1,15 @@
+<result>
+Title = "The Living Present"
+Author = "Gertrude Atherton"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A collection of essays by American novelist Gertrude Atherton documenting French women's contributions during World War I. Atherton traveled to France during the war and observed firsthand the various roles women assumed on the home front - working in munitions factories, caring for wounded soldiers, organizing relief efforts, and stepping into positions previously held by men. The book is divided into sections covering "French Women in War Time" and "Feminism in Peace and War." Atherton's service in French hospitals during WWI earned her the Legion d'Honneur. The work serves both as war reportage and as an argument for women's expanded social and political roles.
+"""
+
+Notes = """
+Published 1917 by Frederick A. Stokes Company, New York. This is contemporary war journalism/essays, not a later historical account.
+"""
+</result>

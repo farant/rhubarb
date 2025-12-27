@@ -1,0 +1,15 @@
+<result>
+Title = "Punch, or The London Charivari, Vol. 152, January 10, 1917"
+Author = "Various"
+Year = 1917
+
+Tags = ["non-fiction", "historical-document", "periodical", "satire", "humor"]
+
+Summary = """
+Punch, or The London Charivari, was a British weekly magazine of humour and satire established in 1841 and published until 2002. It was famous for its satirical cartoons, wit, and social commentary. This particular issue is from January 1917, during World War I, and contains the typical "Charivaria" section of short humorous observations on current events. The jokes reference wartime conditions such as curtailed train services, new Treasury Notes, and sardonic commentary on German military practices and British military leadership.
+"""
+
+Notes = """
+The year 1917 is the original publication date of this specific issue. Punch magazine ran continuously from 1841-1992 and briefly 1996-2002. Each issue is a standalone periodical, so the publication date of this specific issue is the appropriate year. The humor is very much of its time, reflecting wartime Britain's dry wit about the difficulties and absurdities of the Great War.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Bracebridge Hall"
+Author = "Washington Irving"
+Year = 1822
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+Bracebridge Hall is a collection of tales and sketches by American author Washington Irving, serving as a sequel to his earlier work "The Sketch Book of Geoffrey Crayon, Gent." (which included the famous "Old Christmas" pieces). The work is set at a fictional English manor house and presents a nostalgic, romanticized portrait of English country life, customs, and characters. Irving uses the framing device of an American visitor observing traditional English rural society, weaving together character sketches, local legends, and reflections on vanishing customs and hospitality. The work reflects Irving's deep affection for English traditions and his skill as a prose stylist.
+"""
+
+Notes = """
+Originally published in 1822. The excerpt shown is from an 1877 illustrated edition by Macmillan with illustrations by Randolph Caldecott, but the work itself dates to 1822 when Irving first published it.
+"""
+</result>

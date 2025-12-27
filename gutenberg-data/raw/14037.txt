@@ -1,0 +1,15 @@
+<result>
+Title = "The Life of Hugo Grotius"
+Author = "Charles Butler"
+Year = 1826
+
+Tags = ["non-fiction", "biography", "historical"]
+
+Summary = """
+A biographical work about Hugo Grotius (1583-1645), the Dutch jurist, philosopher, and theologian often called the "father of international law." Written by Charles Butler, an English Catholic lawyer and legal writer, this book presents Grotius's life alongside contextual notes on the civil, ecclesiastical, and literary history of the Netherlands. Grotius was famous for his works on the law of war and peace, natural law theory, and theological writings. He was imprisoned for his Arminian sympathies during the Dutch religious controversies but famously escaped in a book chest.
+"""
+
+Notes = """
+The publication date M.DCCC.XXVI (1826) appears on the title page, and the dedication is dated 29 Sept. 1826. Charles Butler (1750-1832) was a prominent English Catholic lawyer and author who wrote extensively on legal and religious topics.
+"""
+</result>

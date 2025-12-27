@@ -1,0 +1,15 @@
+<result>
+Title = "The Art of Interior Decoration"
+Author = "Grace Wood, Emily Burbank"
+Year = 1917
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A guide to interior decoration and home furnishing from the early 20th century. The book covers principles of design, color schemes, furniture arrangement, and the use of antiques in home decoration. It reflects the aesthetic sensibilities of the Edwardian and early modern period, with particular attention to European styles including French Louis XVI and Italian influences. The work served as a practical manual for homeowners seeking to create harmonious and tasteful living spaces.
+"""
+
+Notes = """
+First published in 1917 by Dodd, Mead and Company. This was during a period of significant interest in interior decoration as a professional discipline and as a subject of popular education in America.
+"""
+</result>

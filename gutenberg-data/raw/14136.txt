@@ -1,0 +1,17 @@
+<result>
+Title = "The Outdoor Girls at the Hostess House"
+Author = "Laura Lee Hope"
+Year = 1919
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+This is part of the "Outdoor Girls" series, a popular children's book series published by the Stratemeyer Syndicate under the pseudonym "Laura Lee Hope" (the same house name used for the Bobbsey Twins). The series follows four teenage girls—Betty Nelson, Mollie Billette, Grace Ford, and Amy Blackford—through various adventures.
+
+This particular installment, subtitled "Doing Their Best for the Soldiers," is set during World War I and involves the girls volunteering at a Hostess House. Hostess Houses were facilities established by the YWCA and other organizations near military training camps to provide a comfortable, supervised space where soldiers could meet with their families and female visitors. The book reflects the wartime spirit of civilian support for the troops that was prevalent during WWI.
+"""
+
+Notes = """
+The Outdoor Girls series ran from 1913-1933. This title appears to be from 1919 based on its position in the series (following "The Outdoor Girls in Army Service") and the WWI Hostess House setting, which places it firmly in the 1917-1919 wartime period. "Laura Lee Hope" was a Stratemeyer Syndicate pseudonym used by multiple ghostwriters.
+"""
+</result>

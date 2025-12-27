@@ -1,0 +1,19 @@
+<result>
+Title = "Jaakko Jaakonpoika"
+Author = "Santeri Alkio"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+A Finnish novel by Santeri Alkio (1862-1930), a significant Finnish author, politician, journalist, and ideological father of the Finnish Centre Party. The novel is set in early 20th century Finland and tells the story of Jaakko, a young man struggling to find his place in a changing world. Alkio uses realistic prose with strong symbolism to highlight social issues of the time, including poverty and class dynamics in rural Finnish society. The opening scene depicts Jaakko counting out money to pay off a debt, establishing themes of economic struggle and social mobility that were central to Finnish agrarian life.
+"""
+
+Notes = """
+First published by Werner Söderström Osakeyhtiö in 1913, as stated in the text itself. Alkio was part of the Finnish nationalist movement and his works often dealt with themes of national identity and social reform in the context of Finland's path toward independence (achieved 1917).
+"""
+</result>
+
+Sources:
+- [Santeri Alkio - Wikipedia](https://en.wikipedia.org/wiki/Santeri_Alkio)
+- [Jaakko Jaakonpoika - Project Gutenberg](https://www.gutenberg.org/ebooks/14349)

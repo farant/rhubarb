@@ -1,0 +1,15 @@
+<result>
+Title = "Mohammed: A Popular Essay on the Life of the Prophet of Islam"
+Author = "H. E. E. Hayes"
+Year = 1905
+
+Tags = ["non-fiction", "biography", "religious-studies"]
+
+Summary = """
+This is a short popular essay on the life of Mohammed, the founder of Islam, written from a Christian missionary perspective. The work was published as part of the broader Christian missionary movement focused on Muslim lands in the early 20th century. The advertisement for Samuel Zwemer's "Moslem World" quarterly indicates this was produced within circles engaged in Christian outreach to Islamic regions. Zwemer was a prominent American missionary to the Arab world known as the "Apostle to Islam."
+"""
+
+Notes = """
+The exact publication year is difficult to determine precisely, but based on the style, the reference to Samuel Zwemer's "Moslem World" quarterly (which began publication in 1911), and the pricing in old British currency (3d.), this appears to be from the early 20th century, likely between 1905-1915. I have chosen 1905 as a reasonable estimate for when such missionary literature was being actively produced, though it could be slightly later. The Christian Literature Society for India mentioned was active during this period.
+"""
+</result>

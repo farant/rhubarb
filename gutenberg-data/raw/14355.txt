@@ -1,0 +1,15 @@
+<result>
+Title = "54-40 or Fight"
+Author = "Emerson Hough"
+Year = 1909
+
+Tags = ["fiction", "historical-fiction"]
+
+Summary = """
+A historical novel set during the 1840s Oregon boundary dispute between the United States and Great Britain. The title refers to the expansionist slogan "Fifty-Four Forty or Fight!" which demanded the U.S. border extend to the 54°40' parallel (the southern boundary of Russian Alaska). The novel blends romance and political intrigue during this period of American expansion, featuring fictional characters involved in the diplomatic tensions of the era. Emerson Hough was known for his historical fiction and westerns, including "The Covered Wagon" and "The Mississippi Bubble."
+"""
+
+Notes = """
+1909 is the original publication year. The dedication to Theodore Roosevelt as sitting President confirms this timeframe. Hough was a popular American novelist and journalist who specialized in Western and historical American themes.
+"""
+</result>

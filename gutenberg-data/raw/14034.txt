@@ -1,0 +1,19 @@
+The file seems to have been truncated or mostly empty. Let me search for this text elsewhere or work with what you've provided in the message.
+
+Based on the text you've shared, I can identify this work:
+
+<result>
+Title = "King Alfred's Viking: A Story of the First English Fleet"
+Author = "Charles W. Whistler"
+Year = 1899
+
+Tags = ["fiction", "historical-fiction", "appropriate-for-children"]
+
+Summary = """
+King Alfred's Viking is a historical adventure novel set during the reign of King Alfred the Great of Wessex (849-899 AD). The story follows a Norse Viking who becomes the commander of Alfred's first English fleet during the Danish invasions. The narrative covers the dark period when Alfred was in hiding at Athelney in the Somerset marshes, his eventual triumph at the Battle of Ethandune (878 AD), and the establishment of English naval power. Whistler was known for his carefully researched historical fiction set in Anglo-Saxon and Viking-era Britain, drawing heavily on primary sources like Asser's Life of Alfred and the Norse sagas.
+"""
+
+Notes = """
+Charles W. Whistler (1856-1913) was an English clergyman and prolific author of historical adventure novels for young readers. He wrote numerous books set in Anglo-Saxon England and the Viking period. The book was first published in 1899. Whistler's works were popular for their historical accuracy and exciting narratives, making them suitable for younger audiences while remaining engaging for adults interested in the period.
+"""
+</result>

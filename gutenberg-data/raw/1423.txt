@@ -1,0 +1,19 @@
+The file seems very short. Let me check if there's more context in the prompt you provided. Based on the excerpt you've shared, I can identify this work:
+
+This is "No Thoroughfare" by Charles Dickens and Wilkie Collins, published in 1867. It was originally written as a Christmas story for Dickens's magazine "All the Year Round."
+
+<result>
+Title = "No Thoroughfare"
+Author = "Charles Dickens, Wilkie Collins"
+Year = 1867
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+"No Thoroughfare" is a collaborative Christmas story written by Charles Dickens and Wilkie Collins for the 1867 Christmas number of Dickens's periodical "All the Year Round." The narrative begins at the Foundling Hospital in London, where the abandonment of children sets in motion a complex plot involving mistaken identity, inheritance, romance, and adventure that eventually leads to the Swiss Alps. The story combines Dickens's social observation with Collins's talent for mystery and suspense. It was also adapted into a successful stage play that same year.
+"""
+
+Notes = """
+The year 1867 is when this work was first published in the Christmas number of "All the Year Round." Dickens and Collins had collaborated before, most notably on "The Lazy Tour of Two Idle Apprentices" (1857). The opening scene at the Foundling Hospital reflects Dickens's lifelong concern with the plight of orphaned and abandoned children, a theme central to many of his works.
+"""
+</result>

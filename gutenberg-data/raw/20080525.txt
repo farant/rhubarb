@@ -1,0 +1,15 @@
+<result>
+Title = "Studies in Literature"
+Author = "John Morley"
+Year = 1890
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A collection of literary essays by John Morley, the distinguished Victorian statesman, journalist, and man of letters. The volume contains critical essays on various literary subjects including Wordsworth, Victor Hugo's Ninety-Three, Browning's The Ring and the Book, and reflections on the study of literature and French literary models. Morley was editor of the Fortnightly Review and later served in Parliament and as Secretary of State for India.
+"""
+
+Notes = """
+The note indicates October 1890 as the date of compilation, and the title page shows 1907 which appears to be a later edition. I have chosen 1890 as this represents the original publication date of this collected volume. The individual essays were previously published in periodicals like the Nineteenth Century and Fortnightly Review.
+"""
+</result>

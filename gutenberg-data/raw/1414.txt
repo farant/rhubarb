@@ -1,0 +1,15 @@
+<result>
+Title = "Somebody's Luggage"
+Author = "Charles Dickens"
+Year = 1862
+
+Tags = ["fiction"]
+
+Summary = """
+"Somebody's Luggage" is a Christmas story by Charles Dickens, originally published as the extra Christmas number of his weekly magazine "All the Year Round" in December 1862. The story is narrated by Christopher, a head waiter at a London coffee-house, who discovers a collection of manuscripts in unclaimed luggage left behind by a mysterious guest. The frame narrative connects several shorter tales that were written collaboratively with other authors for the Christmas number, though this excerpt shows only Dickens's portions. The story is characteristic of Dickens's later Christmas stories, blending humor with social observation through the voice of an earnest working-class narrator.
+"""
+
+Notes = """
+The 1862 date reflects the original magazine publication. The 1894 Chapman and Hall edition mentioned in the Gutenberg metadata is a later collected edition of Dickens's Christmas stories. For historical timeline purposes, 1862 is the appropriate date as this represents when the work first appeared and had its cultural impact.
+"""
+</result>

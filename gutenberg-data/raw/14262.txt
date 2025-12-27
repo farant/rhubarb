@@ -1,0 +1,15 @@
+<result>
+Title = "The Shadow of a Crime: A Cumbrian Romance"
+Author = "Hall Caine"
+Year = 1885
+
+Tags = ["fiction"]
+
+Summary = """
+The Shadow of a Crime is Hall Caine's first novel, set in the Lake District of Cumberland (Cumbria) in northwest England. The story is a romantic drama involving mystery and moral struggle in a rural English community. Hall Caine (1853-1931) was a highly popular English novelist of the late Victorian and Edwardian eras, known for melodramatic novels with strong moral themes. This work launched his successful literary career, which would later include bestsellers like "The Deemster" and "The Manxman."
+"""
+
+Notes = """
+The title page lists both 1885 (the original publication year) and 1895 (this particular Hurst & Company edition). I chose 1885 as it represents the novel's first publication.
+"""
+</result>

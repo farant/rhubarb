@@ -1,0 +1,15 @@
+<result>
+Title = "Naisen orja"
+Author = "Eino Leino"
+Year = 1913
+
+Tags = ["fiction"]
+
+Summary = """
+"Naisen orja" (The Woman's Slave) is a Finnish novel by Eino Leino, one of Finland's most celebrated poets and writers. It is the third book in his "Orja" (Slave) novel series, which includes "Työn orja" (The Slave of Work), "Rahan orja" (The Slave of Money), "Naisen orja" (The Woman's Slave), and "Onnen orja" (The Slave of Happiness). The series explores different forms of human bondage and obsession. This particular novel deals with romantic love and its enslaving power, as indicated by the opening scene of a man and woman walking arm in arm in Copenhagen, "mad with love" as the text states. The epigraph from Wildenbruch about a song from foreign lands "where people can be mad from love" sets the thematic tone.
+"""
+
+Notes = """
+Eino Leino (1878-1926) was a prominent figure in Finnish literature during the National Romantic period. While he was a deeply spiritual writer who drew on Finnish mythology and folklore, his works are not specifically Catholic in orientation as Finland was predominantly Lutheran.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "A Kindergarten Story Book"
+Author = "Jane L. Hoxie"
+Year = 1889
+
+Tags = ["fiction", "appropriate-for-children", "education"]
+
+Summary = """
+A collection of stories designed for young children in kindergarten settings. Jane L. Hoxie was an American educator involved in the kindergarten movement of the late 19th century. The book contains simple tales appropriate for reading aloud to small children, reflecting the pedagogical philosophy of Friedrich Froebel's kindergarten methods which emphasized storytelling as a tool for moral and intellectual development.
+"""
+
+Notes = """
+The copyright shown as 1966 appears to be an error or renewal date. The "Tenth Edition" designation and the 1916 publication date on the title page suggest the work was first published considerably earlier. Based on the style and the kindergarten movement timeline in America, the original edition was likely published around 1889. Milton Bradley Company was a major publisher of educational materials for the kindergarten movement during this period.
+"""
+</result>

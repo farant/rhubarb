@@ -1,0 +1,15 @@
+<result>
+Title = "Alla kasvon kaikkivallan"
+Author = "Eino Leino"
+Year = 1917
+
+Tags = ["poetry", "mysticism", "fiction"]
+
+Summary = """
+"Alla kasvon kaikkivallan" (Under the Face of the Almighty) is a mystical trilogy by Eino Leino, one of Finland's most celebrated poets. The work is subtitled "Mystillinen trilogia" (Mystical Trilogy) and described as containing the thoughts, confessions, and distant visions of "a child of his time." The structure includes sections on divine knowledge (Jumaltieto) and divine feeling (Jumaltunto), containing various hymn-like poems (virsi) addressing themes of love, knowledge, craft, church, kingship, judgment, spring sowing, and wandering. Leino was a prolific Finnish poet known for his neo-romantic style and works drawing on Finnish mythology and Christian mysticism.
+"""
+
+Notes = """
+Eino Leino (1878-1926) was a Finnish poet writing during Finland's national romantic period and independence movement. While Leino engaged with Christian and mystical themes extensively, he was not a Catholic author in the doctrinal sense - Finland was predominantly Lutheran. The work represents his personal spiritual and philosophical explorations rather than Catholic theology.
+"""
+</result>

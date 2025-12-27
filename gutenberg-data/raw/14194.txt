@@ -1,0 +1,15 @@
+<result>
+Title = "France in the Nineteenth Century 1830-1890"
+Author = "Elizabeth Wormeley Latimer"
+Year = 1892
+
+Tags = ["non-fiction", "history"]
+
+Summary = """
+A historical survey of France from 1830 to 1890, covering the tumultuous period from the July Revolution through the reign of Charles X, Louis-Philippe, the Second Republic, Napoleon III's Second Empire, and into the Third Republic. Elizabeth Wormeley Latimer (1822-1904) was an American author known for her accessible historical works. This book draws from private papers, magazine articles, and newspaper accounts from French, English, and American contemporary sources.
+"""
+
+Notes = """
+Year 1892 chosen based on the author's note dated "September, 1892" which indicates the publication date.
+"""
+</result>

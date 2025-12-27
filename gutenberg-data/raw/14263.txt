@@ -1,0 +1,15 @@
+<result>
+Title = "Katrine"
+Author = "Elinor Macartney Lane"
+Year = 1909
+
+Tags = ["fiction"]
+
+Summary = """
+Katrine is a romantic novel by Elinor Macartney Lane, an American author known for her historical romances. Lane was also the author of "Nancy Stair" (1904) and "Mills of God." The dedication references literary characters from Thackeray's works (Esmond, Colonel Newcome) and Walter Scott (Alan Breck from Kidnapped), suggesting the novel situates itself in the tradition of romantic historical fiction. The book appears to be a sentimental romance, as indicated by the frontispiece illustration caption "I have waited all these years."
+"""
+
+Notes = """
+The copyright page clearly states 1909 and "Published March, 1909." The dedication is dated Paris, 1909. This is the original publication year.
+"""
+</result>

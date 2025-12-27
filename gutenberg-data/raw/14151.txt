@@ -1,0 +1,17 @@
+Let me check if there's more content in what you pasted. Based on the text you've provided, I can identify this work:
+
+<result>
+Title = "Le Vieux Muet ou Un Héros de Châteauguay"
+Author = "Jean-Baptiste Caouette"
+Year = 1901
+
+Tags = ["fiction", "appropriate-for-children", "catholic", "french-canadian-literature"]
+
+Summary = """
+"Le Vieux Muet" (The Old Mute Man) is a French-Canadian historical novel by Jean-Baptiste Caouette, a Quebec author and journalist. The novel is set during the War of 1812, specifically around the Battle of Châteauguay (1813), where French-Canadian forces under Lieutenant Colonel Charles de Salaberry defeated a much larger American army. The story combines patriotic themes celebrating French-Canadian identity and Catholic faith with romantic elements. The preface, written by a priest, emphasizes the novel's moral purity and its depiction of good Christian characters who act according to their Catholic faith. The work is notable for its strong French-Canadian nationalist sentiment during a period of cultural affirmation in Quebec.
+"""
+
+Notes = """
+Jean-Baptiste Caouette (1854-1922) was a Quebec journalist and author. "Le Vieux Muet ou Un Héros de Châteauguay" was published in 1901. The Battle of Châteauguay (October 26, 1813) remains an important symbol of French-Canadian military valor and is referenced frequently in Quebec nationalist literature. The priestly preface is characteristic of the era when the Catholic Church played a central role in French-Canadian cultural life.
+"""
+</result>

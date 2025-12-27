@@ -1,0 +1,15 @@
+<result>
+Title = "The Elephant God"
+Author = "Gordon Casserly"
+Year = 1920
+
+Tags = ["fiction", "adventure"]
+
+Summary = """
+A novel set in the Terai forest region along the foothills of the Himalayas in India. The story involves elephants, jungle life, and the interaction between British colonial figures and the wild landscape of India. Gordon Casserly (note: spelled "Gasserly" in some printings but correctly "Casserly") was a British military officer who served in India and wrote several adventure novels and non-fiction works based on his experiences there. The book draws on the author's firsthand knowledge of Indian wildlife, particularly elephants, and the dangerous frontier regions of British India.
+"""
+
+Notes = """
+The 1921 date shown is the American edition. The novel was first published in London in 1920 by Philip Allan & Co. I have used 1920 as the year of original publication. The author's name appears as "Gasserly" in this Gutenberg text but is correctly spelled "Casserly" - Gordon Casserly (1869-1947) was a Lieutenant-Colonel in the British Indian Army who wrote extensively about India.
+"""
+</result>

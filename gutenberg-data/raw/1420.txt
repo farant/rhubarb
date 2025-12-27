@@ -1,0 +1,15 @@
+<result>
+Title = "London's Underworld"
+Author = "Thomas Holmes"
+Year = 1912
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+A social study of poverty, crime, and marginalized populations in early 20th century London. Thomas Holmes, who served as Secretary of the Howard Association (a prison reform organization), draws on his extensive experience working with criminals, the poor, and other inhabitants of London's 'underworld' to examine social problems and critique existing institutional approaches. The work combines firsthand accounts with policy analysis and reform proposals, representing the Progressive Era concern with urban poverty and criminal justice reform.
+"""
+
+Notes = """
+The 1912 date appears in the text itself. Thomas Holmes (1846-1918) was a well-known English social reformer and police court missionary who wrote several books on crime and poverty based on his decades of practical experience. The Howard Association, named after prison reformer John Howard, was dedicated to penal reform.
+"""
+</result>

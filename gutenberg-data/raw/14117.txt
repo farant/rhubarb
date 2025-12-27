@@ -1,0 +1,15 @@
+<result>
+Title = "Wanted, A Young Woman to Do Housework: Business Principles Applied to Housework"
+Author = "C. Hélène Barker"
+Year = 1915
+
+Tags = ["non-fiction"]
+
+Summary = """
+This is a Progressive Era guide to household management and the "servant problem" that plagued middle and upper-class American households in the early 20th century. The author applies business management principles to domestic labor, arguing for more systematic and professional approaches to hiring and managing household help. The book addresses the growing difficulty of finding reliable domestic servants as women increasingly found employment opportunities in factories and offices. Barker's approach reflects the era's broader interest in "scientific management" and efficiency, applying these industrial concepts to the domestic sphere.
+"""
+
+Notes = """
+Published in 1915 by Moffat, Yard & Company in New York. The author is also known for "Automobile French." This work is a primary historical document reflecting early 20th century American attitudes toward domestic labor, class relations, and the changing role of women in the workforce during the Progressive Era.
+"""
+</result>

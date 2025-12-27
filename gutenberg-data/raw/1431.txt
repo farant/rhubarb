@@ -1,0 +1,15 @@
+<result>
+Title = "Trooper Peter Halket of Mashonaland"
+Author = "Olive Schreiner"
+Year = 1897
+
+Tags = ["fiction", "historical-document"]
+
+Summary = """
+A novella by South African author Olive Schreiner, published in 1897. The work is a sharp critique of British imperialism and the brutality of the British South Africa Company's conquest of Mashonaland and Matabeleland (modern Zimbabwe) during the 1890s. The story follows a young British trooper who has a spiritual encounter that forces him to confront the moral implications of colonial violence against indigenous Africans. The book was controversial upon publication due to its unflinching depiction of colonial atrocities, including a frontispiece photograph showing actual executions. Schreiner, already famous for "The Story of an African Farm," wrote this as a direct response to the Matabele rebellions and Cecil Rhodes's colonial expansion.
+"""
+
+Notes = """
+The date February 1897 appears in the dedication, confirming this as the year of first publication. The work was written in direct response to contemporary events in Rhodesia (1893-1896 conflicts). Olive Schreiner was a freethinker and feminist, not a Catholic author.
+"""
+</result>

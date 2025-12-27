@@ -1,0 +1,17 @@
+Based on the text you provided, I have enough information to identify this work:
+
+<result>
+Title = "Heroes of the Great Conflict; Life and Services of William Farrar Smith, Major General, United States Volunteer in the Civil War"
+Author = "James Harrison Wilson"
+Year = 1904
+
+Tags = ["non-fiction", "historical-document", "biography"]
+
+Summary = """
+This is a biographical sketch of William Farrar Smith (1824-1903), a Union general in the American Civil War. Smith graduated from West Point in 1845 and served in various capacities during the war, including as a corps commander. The work was written by James Harrison Wilson, himself a Major General of U.S. Volunteers and a cavalry commander during the war who served with Smith. Wilson was known for writing several military biographies and histories. The sketch aims to supplement the dry official Rebellion Records with personal insights into Smith's character, motivations, and the context of his service.
+"""
+
+Notes = """
+The year 1904 is explicitly stated on the title page of the work ("1904") and represents the original publication by The John M. Rogers Press in Wilmington, Delaware. Smith had died the previous year (February 28, 1903), making this a posthumous tribute by a fellow officer.
+"""
+</result>

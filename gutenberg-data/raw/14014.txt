@@ -1,0 +1,17 @@
+Based on the text you provided in your message, I can identify this work:
+
+<result>
+Title = "Dangers on the Ice Off the Coast of Labrador"
+Author = "Religious Tract Society"
+Year = 1782
+
+Tags = ["non-fiction", "appropriate-for-children", "historical-document"]
+
+Summary = """
+This is a tract published by the Religious Tract Society of London recounting the harrowing survival story of Moravian missionaries Liebisch and Turner during their journey from Nain to Okkak in Labrador in March 1782. The Moravian Brethren (Unitas Fratrum) established missions among the Inuit of Labrador beginning in 1771. This tract describes the dangers of ice travel in the Arctic and the breaking up of sea ice that threatened the missionaries' lives. It was written as an inspirational religious tract demonstrating divine providence and the hardships endured by missionaries bringing Christianity to the Inuit people.
+"""
+
+Notes = """
+The year 1782 is chosen as it is the date of the actual events described. The tract itself was published later by the Religious Tract Society (founded 1799), probably in the early-to-mid 19th century given the "No. 556" numbering and penny price format typical of their popular tract series. However, the historical events themselves are the substance of the work, making 1782 the most educationally relevant date for a historical timeline. The Moravians were Protestant missionaries, not Catholic.
+"""
+</result>

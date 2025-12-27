@@ -1,0 +1,17 @@
+I can see from the text you provided directly that this is "Books and Habits" by Lafcadio Hearn, edited by John Erskine, published in 1922.
+
+<result>
+Title = "Books and Habits"
+Author = "Lafcadio Hearn"
+Year = 1922
+
+Tags = ["non-fiction", "literary-criticism"]
+
+Summary = """
+A posthumous collection of lectures delivered by Lafcadio Hearn during his tenure as professor of English literature at Tokyo Imperial University (1896-1903). The lectures cover a wide range of literary topics including English poetry, the Bible's influence on English literature, Old Norse poetry (the Havamal), Greek fragments, medieval romance, and several pieces on insect poetry from both English and French traditions. Hearn's unique perspective as a Western writer who spent his final years in Japan gives these lectures a distinctive cross-cultural dimension. The collection was edited by John Erskine, a Columbia professor and novelist, who selected and arranged the lectures for publication nearly two decades after Hearn's death in 1904.
+"""
+
+Notes = """
+Lafcadio Hearn (1850-1904) was a Greek-Irish writer who became a Japanese citizen under the name Koizumi Yakumo. He is best known for his books about Japan and his collections of Japanese folklore and ghost stories. These lectures represent his academic work in Japan. The 1922 date is correct as this is the publication date of this particular edited collection by Heinemann in London.
+"""
+</result>

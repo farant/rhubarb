@@ -1,0 +1,19 @@
+The file appears to be empty but you've provided the text directly in your message. Based on the text you provided, I can identify this work:
+
+This is **L'Atlantide** (Atlantida) by **Pierre Benoit**, a French novel originally published in 1919. The English translation by Mary C. Tongue and Mary Ross was published in 1920.
+
+<result>
+Title = "L'Atlantide (Atlantida)"
+Author = "Pierre Benoit"
+Year = 1919
+
+Tags = ["fiction", "adventure", "romance"]
+
+Summary = """
+L'Atlantide is a French novel by Pierre Benoit, one of the most popular French adventure novels of the early 20th century. It tells the story of two French Foreign Legion officers in the Sahara Desert who discover the lost civilization of Atlantis, ruled by the immortal Queen Antinéa, a femme fatale who seduces men and then has them killed and preserved in a gallery of golden statues. The novel combines adventure, romance, and the mythic elements of the Atlantis legend transposed to the Hoggar Mountains of Algeria. It won the Grand Prix du roman de l'Académie française in 1919 and was hugely successful, spawning multiple film adaptations. The novel draws on the Plato's description of Atlantis (as referenced in the epigraph from the Critias) while reimagining it as a hidden Saharan kingdom.
+"""
+
+Notes = """
+Year 1919 chosen as the original French publication date. The English translation shown here (by Tongue and Ross) was published in 1920. Pierre Benoit (1886-1962) was a member of the Académie française. While Benoit was nominally Catholic (French), the novel is a secular adventure/romance and would not carry ecclesiastical approval - it's essentially a pulp adventure with occult/pagan themes.
+"""
+</result>

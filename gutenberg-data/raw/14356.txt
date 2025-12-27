@@ -1,0 +1,15 @@
+<result>
+Title = "The Emperor of Portugallia"
+Author = "Selma Lagerlöf"
+Year = 1914
+
+Tags = ["fiction", "appropriate-for-children"]
+
+Summary = """
+The Emperor of Portugallia (Swedish: Kejsarn av Portugallien) is a novel by Swedish author Selma Lagerlöf, the first woman to win the Nobel Prize in Literature (1909). The story follows Jan of Ruffluck Croft, a poor Swedish farmer who develops an intense, almost worshipful love for his daughter Glory Goldie. When she leaves for the city to work and support the family, Jan's longing for her gradually transforms into a gentle madness - he begins to believe he is the Emperor of Portugallia and that his daughter is an empress. The novel is a deeply moving exploration of parental love, poverty, mental illness, and the power of imagination to both protect and destroy. It is considered one of Lagerlöf's most psychologically profound works.
+"""
+
+Notes = """
+The novel was first published in Swedish in 1914. This translation by Velma Swanston Howard was published in English. Selma Lagerlöf (1858-1940) was Swedish and Lutheran, not Catholic.
+"""
+</result>

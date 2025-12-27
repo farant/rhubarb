@@ -1,0 +1,15 @@
+<result>
+Title = "Homes, and How to Make Them"
+Author = "E.C. Gardner"
+Year = 1874
+
+Tags = ["non-fiction", "architecture", "domestic-life", "appropriate-for-children"]
+
+Summary = """
+This is a practical guide to home building written in epistolary form as letters between an architect and his friends. E.C. Gardner was an American architect who wrote several popular books on domestic architecture during the latter half of the 19th century. The work aims to provide practical advice to those planning to build homes while also cultivating an appreciation for honest, simple design over false ornamentation. It reflects the growing interest in the "American home" movement of the post-Civil War era, when expanding middle-class prosperity created demand for guidance on building tasteful, well-designed residences.
+"""
+
+Notes = """
+The copyright date of 1874 is used rather than the publication date of 1875, as this represents when the work was completed and registered. Gardner was based in Springfield, Massachusetts and was known for advocating sensible, unpretentious domestic architecture.
+"""
+</result>

@@ -1,0 +1,15 @@
+<result>
+Title = "Principles of Home Decoration With Practical Examples"
+Author = "Candace Wheeler"
+Year = 1903
+
+Tags = ["non-fiction", "appropriate-for-children"]
+
+Summary = """
+A practical guide to interior decoration written by Candace Wheeler, a pioneering American interior and textile designer who was instrumental in establishing interior design as a profession for women in America. Wheeler was a co-founder of the Society of Decorative Art and later Associated Artists with Louis Comfort Tiffany. This book covers the principles of home decoration including color theory, character in homes, and practical advice for beautifying living spaces. It reflects the American Arts and Crafts movement sensibilities of the early 20th century and was written to help ordinary homeowners apply artistic principles to their domestic environments.
+"""
+
+Notes = """
+1903 is the original publication date as indicated in the frontmatter. Candace Wheeler (1827-1923) was a significant figure in American decorative arts and one of the first women to achieve prominence in interior design.
+"""
+</result>

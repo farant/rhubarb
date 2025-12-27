@@ -1,0 +1,15 @@
+<result>
+Title = "Native Races and the War"
+Author = "Josephine Elizabeth Grey Butler"
+Year = 1900
+
+Tags = ["non-fiction", "historical-document", "appropriate-for-children"]
+
+Summary = """
+A polemical work written during the Second Boer War (1899-1902) by Josephine Butler, a prominent British feminist and social reformer best known for her campaigns against the Contagious Diseases Acts. In this pamphlet, Butler argues that the treatment of native African peoples—and the question of slavery in the Transvaal—lies at the heart of the South African conflict, even though it was not commonly cited as a cause of the war. She gathers testimonies from native chiefs, missionaries, and other witnesses to document the conditions of indigenous populations under British, Dutch, and Boer rule. The work is dedicated to her children and grandchildren and reflects her lifelong commitment to justice for the oppressed.
+"""
+
+Notes = """
+Published in 1900 during the war itself. Butler (1828-1906) was Anglican rather than Catholic, so the 'catholic' tag does not apply. The work is appropriate for children in the sense that it contains no objectionable content, though the subject matter (slavery, colonial injustice) is serious and may require adult context for younger readers.
+"""
+</result>

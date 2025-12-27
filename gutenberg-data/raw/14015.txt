@@ -1,0 +1,15 @@
+<result>
+Title = "The Discovery of Witches"
+Author = "Matthew Hopkins"
+Year = 1647
+
+Tags = ["non-fiction", "historical-document"]
+
+Summary = """
+This is a notorious pamphlet written by Matthew Hopkins, the self-styled "Witchfinder General" of England during the English Civil War period. Hopkins was responsible for the execution of more alleged witches than any other witch-hunter in English history, primarily active in East Anglia between 1644-1647. The pamphlet is structured as a series of queries and answers defending his methods of identifying witches against various objections. It represents a primary historical document of the witch trial hysteria that gripped parts of England during this period. Hopkins' methods included sleep deprivation, "swimming" tests, and searching for "witch marks" on the body.
+"""
+
+Notes = """
+The date 1647 (M.DC.XLVII in Roman numerals) appears on the title page. Hopkins died shortly after this publication, likely in 1647. This is a significant primary source for understanding the witch panic in Civil War-era England.
+"""
+</result>

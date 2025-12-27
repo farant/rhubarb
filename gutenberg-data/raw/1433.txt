@@ -1,0 +1,15 @@
+<result>
+Title = "The Red Inn"
+Author = "Honoré de Balzac"
+Year = 1831
+
+Tags = ["fiction", "philosophical-fiction"]
+
+Summary = """
+"The Red Inn" (L'Auberge rouge) is a novella by Honoré de Balzac, part of his massive literary project La Comédie humaine. The story is a philosophical tale about guilt, moral responsibility, and the nature of crime. It involves a frame narrative where guests at a dinner party hear the tale of a murder committed at a German inn, raising questions about whether someone can be held morally responsible for a crime they intended to commit but did not actually carry out. The story explores themes of conscience, justice, and the psychological burden of guilt.
+"""
+
+Notes = """
+First published in 1831 in the Revue de Paris. This English translation is by Katharine Prescott Wormeley, a prolific translator of Balzac's works in the late 19th century.
+"""
+</result>

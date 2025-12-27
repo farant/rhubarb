@@ -1,0 +1,15 @@
+<result>
+Title = "Les Portes de l'Enfer"
+Author = "Maurice Level"
+Year = 1910
+
+Tags = ["fiction"]
+
+Summary = """
+"Les Portes de l'Enfer" (The Gates of Hell) is a collection of short stories by French author Maurice Level (1875-1926), who was known for his horror and suspense tales. Level was a master of the "conte cruel" (cruel tale) genre, writing compact, often macabre stories with twist endings. This collection, like much of his work, explores dark psychological themes - the excerpt shown deals with grief and loss after a wife's departure. Level was popular in his time and influenced later horror writers; his work was frequently adapted for the Grand Guignol theater in Paris.
+"""
+
+Notes = """
+The year 1910 is printed directly on the title page of this Gutenberg edition, published by "Le Monde Illustré" in Paris. This appears to be the original publication date of this collection.
+"""
+</result>

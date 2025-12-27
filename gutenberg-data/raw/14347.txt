@@ -1,0 +1,15 @@
+<result>
+Title = "Plays by August Strindberg: Second Series"
+Author = "August Strindberg"
+Year = 1899
+
+Tags = ["fiction", "drama"]
+
+Summary = """
+This is a collection of five plays by the Swedish dramatist August Strindberg, translated into English by Edwin Björkman. The collection includes "There Are Crimes and Crimes" (1899), "Miss Julia" (1888), "The Stronger" (1889), "Creditors" (1888), and "Pariah" (1889). These works represent Strindberg's naturalistic period and his later psychological-spiritual phase. "Miss Julia" is particularly famous as a landmark of naturalistic drama, while "There Are Crimes and Crimes" reflects his post-Inferno religious crisis period. Strindberg is considered one of the founders of modern drama alongside Ibsen.
+"""
+
+Notes = """
+The individual plays span 1888-1899, but I chose 1899 as it is when the latest play ("There Are Crimes and Crimes") was written and represents when this collection could have been assembled. The English translation by Björkman was published later (around 1912-1913), but the original Swedish works date to the late 1880s-1899.
+"""
+</result>
