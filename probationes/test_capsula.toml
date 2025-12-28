@@ -1,0 +1,2 @@
+assets_files = ["test_assets/hello.txt", "test_assets/lorem.txt"]
+assets_compress = true

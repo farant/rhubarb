@@ -20,6 +20,7 @@ declare -a GCC_FLAGS=(
 # Include paths
 declare -a INCLUDE_FLAGS=(
     "-Iinclude"
+    "-Iprobationes"
 )
 
 # Source files to compile to object files
@@ -103,6 +104,8 @@ declare -a SOURCE_FILES=(
     "lib/router.c"
     "lib/flatura.c"
     "lib/quaerere.c"
+    "lib/capsula.c"
+    "probationes/capsula_assets.c"
 )
 
 # Objective-C sources (compiled separately)

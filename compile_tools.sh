@@ -82,7 +82,7 @@ compile_tool() {
     echo ""
 
     # Compile
-    if clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_file" $obj_files -framework Cocoa -o "$output_binary" 2>&1; then
+    if clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
         echo ""
         echo -e "${GREEN}✓ $tool_name compiled successfully${RESET}"
         echo -e "Run with: ./$output_binary"
