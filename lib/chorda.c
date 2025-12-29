@@ -1943,3 +1943,81 @@ chorda_iungere (
 
     redde chorda_aedificator_finire(aed);
 }
+
+
+/* ==================================================
+ * Formatatio
+ * ================================================== */
+
+chorda
+chorda_ex_bytes_legibilis (
+           i64  bytes,
+        Piscina* piscina)
+{
+    chorda      fructus;
+    character   buffer[XXXII];
+    constans character* suffixum;
+    f64         valor;
+    integer     longitudo;
+
+    fructus.datum = NIHIL;
+    fructus.mensura = 0;
+
+    si (piscina == NIHIL)
+    {
+        redde fructus;
+    }
+
+    si (bytes < 0)
+    {
+        bytes = 0;
+    }
+
+    /* Determinare suffixum et valorem */
+    si (bytes < M * M)  /* < 1 MB */
+    {
+        si (bytes < M)  /* < 1 KB */
+        {
+            valor = (f64)bytes;
+            suffixum = " B";
+        }
+        alioquin
+        {
+            valor = (f64)bytes / (f64)M;
+            suffixum = " KB";
+        }
+    }
+    alioquin si (bytes < (i64)M * (i64)M * (i64)M)  /* < 1 GB */
+    {
+        valor = (f64)bytes / (f64)(M * M);
+        suffixum = " MB";
+    }
+    alioquin
+    {
+        valor = (f64)bytes / (f64)((i64)M * (i64)M * (i64)M);
+        suffixum = " GB";
+    }
+
+    /* Formatare */
+    si (valor < 10.0)
+    {
+        longitudo = snprintf(buffer, XXXII, "%.1f%s", valor, suffixum);
+    }
+    alioquin si (valor < 100.0)
+    {
+        longitudo = snprintf(buffer, XXXII, "%.1f%s", valor, suffixum);
+    }
+    alioquin
+    {
+        longitudo = snprintf(buffer, XXXII, "%.0f%s", valor, suffixum);
+    }
+
+    si (longitudo <= 0 || longitudo >= (integer)XXXII)
+    {
+        redde fructus;
+    }
+
+    fructus = chorda_ex_literis(buffer, piscina);
+
+    redde fructus;
+}

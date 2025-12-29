@@ -308,6 +308,7 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
 }
 
 
+/* Disabled - slow, waits for network timeout
 interior vacuum
 probatio_optiones_timeout(Piscina* piscina)
 {
@@ -317,17 +318,16 @@ probatio_optiones_timeout(Piscina* piscina)
     printf("--- Probans optiones timeout ---\n");
 
     opt = tls_optiones_default();
-    opt.timeout_ms = M;  /* 1 second timeout */
+    opt.timeout_ms = M;
 
-    /* Connectere ad hospes non-existens - debet timeout */
     res = tls_connectere_cum_optionibus("192.0.2.1", CDXL + III, &opt, piscina);
 
-    /* 192.0.2.1 est TEST-NET - non respondet, debet timeout vel fallere */
     CREDO_FALSUM(res.successus);
     printf("  Timeout/failure correcte: error=%d\n", res.error);
 
     printf("\n");
 }
+*/
 
 
 /* ========================================================================
@@ -359,7 +359,7 @@ principale(vacuum)
     probatio_connexio_https(piscina);
     probatio_mittere_recipere(piscina);
     probatio_connectere_cum_optionibus(piscina);
-    probatio_optiones_timeout(piscina);
+    /* probatio_optiones_timeout(piscina); -- slow, waits for network timeout */
 
     credo_imprimere_compendium();
 

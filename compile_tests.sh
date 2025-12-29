@@ -21,6 +21,7 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-Iinclude"
     "-Iprobationes"
+    "-Ibook_assets"
 )
 
 # Source files to compile to object files
@@ -105,7 +106,9 @@ declare -a SOURCE_FILES=(
     "lib/flatura.c"
     "lib/quaerere.c"
     "lib/capsula.c"
+    "lib/capsula_caudae.c"
     "probationes/capsula_assets.c"
+    "book_assets/capsula_libri.c"
 )
 
 # Objective-C sources (compiled separately)
@@ -275,6 +278,34 @@ compile_gui_app() {
 
     echo -e "${GREEN}✓ GUI APP BUILT: $app_name (run with: ./$output_binary)${RESET}"
     GUI_APPS_BUILT=$((GUI_APPS_BUILT + 1))
+
+    # Auto-append assets for capsula_caudae tests
+    # Look for matching config: probationes/<name>_caudae_assets.toml
+    local caudae_config="probationes/${app_name}_caudae_assets.toml"
+    if [[ -f "$caudae_config" ]] && [[ -f "bin/capsula_caudae_adiungere" ]]; then
+        echo -e "${YELLOW}Appending assets from $caudae_config${RESET}"
+        local start_time=$(date +%s.%N)
+        if ./bin/capsula_caudae_adiungere "$caudae_config" "$output_binary" 2>&1; then
+            local end_time=$(date +%s.%N)
+            local duration=$(echo "$end_time - $start_time" | bc)
+            echo -e "${GREEN}✓ Assets appended (${duration}s)${RESET}"
+            # Run the test after appending
+            echo -e "${BLUE}Running $app_name...${RESET}"
+            if $output_binary 2>&1; then
+                echo -e "${GREEN}✓ TEST PASSED: $app_name${RESET}"
+                TESTS_PASSED=$((TESTS_PASSED + 1))
+                TESTS_TOTAL=$((TESTS_TOTAL + 1))
+            else
+                echo -e "${RED}✗ TEST FAILED: $app_name${RESET}"
+                TESTS_FAILED=$((TESTS_FAILED + 1))
+                TESTS_TOTAL=$((TESTS_TOTAL + 1))
+                FAILED_TESTS="$FAILED_TESTS $app_name"
+            fi
+        else
+            echo -e "${RED}✗ Failed to append assets${RESET}"
+        fi
+    fi
+
     echo ""
     return 0
 }
@@ -359,7 +390,7 @@ run_all_tests() {
     local test_files=""
 
     while IFS= read -r file; do
-        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]]; then
+        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'

@@ -1,0 +1,5 @@
+# Config pro probatio_capsula_caudae
+# Assets appenduntur ad caudam binarii
+
+libri_files = ["../book_assets/*.txt", "../book_assets/librarium.stml"]
+libri_compress = true

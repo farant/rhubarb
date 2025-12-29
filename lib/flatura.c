@@ -23,10 +23,11 @@
 
 
 /* ========================================================================
- * CRC-32 TABULA
+ * CRC-32 TABULA (Slice-by-4 optimizatio)
  * ======================================================================== */
 
-hic_manens i32 crc32_tabula[CCLVI];
+/* Quattuor tabulae pro slice-by-4 algorithm */
+hic_manens i32 crc32_tabula[IV][CCLVI];
 hic_manens b32 crc32_initiatum = FALSUM;
 
 interior vacuum
@@ -41,6 +42,7 @@ _flatura_crc32_initium(vacuum)
         redde;
     }
 
+    /* Prima tabula: standard CRC32 */
     per (i = 0; i < CCLVI; i++)
     {
         c = i;
@@ -55,7 +57,18 @@ _flatura_crc32_initium(vacuum)
                 c = (c >> I) & 0x7FFFFFFF;
             }
         }
-        crc32_tabula[i] = c;
+        crc32_tabula[0][i] = c;
+    }
+
+    /* Tabulae 1-3: derivatae ex prima tabula */
+    per (i = 0; i < CCLVI; i++)
+    {
+        c = crc32_tabula[0][i];
+        per (j = I; j < IV; j++)
+        {
+            c = crc32_tabula[0][c & 0xFF] ^ ((c >> VIII) & 0xFFFFFF);
+            crc32_tabula[j][i] = c;
+        }
     }
 
     crc32_initiatum = VERUM;
@@ -69,12 +82,40 @@ flatura_crc32_continuare(
     i32          mensura)
 {
     i32 i;
+    i32 remaining;
 
     _flatura_crc32_initium();
 
-    per (i = 0; i < mensura; i++)
+    /* Processare 4 bytes simul (slice-by-4) */
+    remaining = mensura;
+    i = 0;
+
+    dum (remaining >= IV)
     {
-        crc = crc32_tabula[(crc ^ datum[i]) & 0xFF] ^ ((crc >> VIII) & 0xFFFFFF);
+        i32 word;
+
+        /* Legere 4 bytes et XOR cum CRC */
+        word = crc ^ (
+               ((i32)(datum[i] & 0xFF)) |
+               ((i32)(datum[i + I] & 0xFF) << VIII) |
+               ((i32)(datum[i + II] & 0xFF) << XVI) |
+               ((i32)(datum[i + III] & 0xFF) << XXIV));
+
+        crc = crc32_tabula[III][word & 0xFF] ^
+              crc32_tabula[II][(word >> VIII) & 0xFF] ^
+              crc32_tabula[I][(word >> XVI) & 0xFF] ^
+              crc32_tabula[0][(word >> XXIV) & 0xFF];
+
+        i += IV;
+        remaining -= IV;
+    }
+
+    /* Processare bytes residuos */
+    dum (remaining > 0)
+    {
+        crc = crc32_tabula[0][(crc ^ datum[i]) & 0xFF] ^ ((crc >> VIII) & 0xFFFFFF);
+        i++;
+        remaining--;
     }
 
     redde crc;
@@ -202,26 +243,32 @@ _flatura_scriptor_crescere(FlaturaScriptor* scriptor)
 }
 
 
+/* Macro pro scribere bits (inlined pro velocitate) */
+#define FLATURA_SCRIBERE_BITS(scriptor, valor, numerus_bits) \
+    fac { \
+        (scriptor)->bit_buffer |= ((valor) << (scriptor)->bits_in_buffer); \
+        (scriptor)->bits_in_buffer += (numerus_bits); \
+        dum ((scriptor)->bits_in_buffer >= VIII) \
+        { \
+            si ((scriptor)->positus >= (scriptor)->capacitas) \
+            { \
+                _flatura_scriptor_crescere(scriptor); \
+            } \
+            (scriptor)->datum[(scriptor)->positus] = (i8)((scriptor)->bit_buffer & 0xFF); \
+            (scriptor)->positus++; \
+            (scriptor)->bit_buffer >>= VIII; \
+            (scriptor)->bits_in_buffer -= VIII; \
+        } \
+    } dum (0)
+
+/* Keep function version for complex cases */
 interior vacuum
 _flatura_scribere_bits(
     FlaturaScriptor* scriptor,
     i32              valor,
     i32              numerus_bits)
 {
-    scriptor->bit_buffer |= (valor << scriptor->bits_in_buffer);
-    scriptor->bits_in_buffer += numerus_bits;
-
-    dum (scriptor->bits_in_buffer >= VIII)
-    {
-        si (scriptor->positus >= scriptor->capacitas)
-        {
-            _flatura_scriptor_crescere(scriptor);
-        }
-        scriptor->datum[scriptor->positus] = (i8)(scriptor->bit_buffer & 0xFF);
-        scriptor->positus++;
-        scriptor->bit_buffer >>= VIII;
-        scriptor->bits_in_buffer -= VIII;
-    }
+    FLATURA_SCRIBERE_BITS(scriptor, valor, numerus_bits);
 }
 
 
@@ -1291,6 +1338,131 @@ flatura_gzip_inflare(
 #define MIN_MATCH       III
 #define MAX_MATCH       258
 
+/* Catena limites per compression level */
+#define CATENA_RAPIDA    VIII      /* Level 1: fast, minimal searching */
+#define CATENA_ORDINARIA CXXVIII   /* Level 6: default balance */
+#define CATENA_OPTIMA    MMMMXCVI  /* Level 9: thorough searching */
+
+
+/* ========================================================================
+ * PRE-COMPUTED HUFFMAN TABULAE (pro compressione veloce)
+ * ======================================================================== */
+
+/* Pre-computed fixed Huffman codes (iam reversed) */
+hic_manens i16 huffman_literal_codes[288];
+hic_manens i8  huffman_literal_bits[288];
+hic_manens i8  huffman_distance_codes[XXX];  /* 5 bits, reversed */
+hic_manens b32 huffman_tabulae_initiatae = FALSUM;
+
+/* Direct lookup: length (3-258) -> symbol index (0-28) */
+hic_manens i8 longitudo_ad_indicem[CCLVI];  /* 256 entries covers 3-258 */
+
+/* Direct lookup: distance (1-256) -> symbol */
+hic_manens i8 distantia_ad_symbolum_tabula[CCLVI];
+
+interior vacuum
+_flatura_huffman_tabulae_initium(vacuum)
+{
+    i32 i;
+    i32 j;
+    i32 codex;
+    i32 bits;
+    i32 rev_codex;
+
+    si (huffman_tabulae_initiatae)
+    {
+        redde;
+    }
+
+    /* Build literal/length codes (reversed) */
+    per (i = 0; i < 288; i++)
+    {
+        si (i <= CXLIII)
+        {
+            codex = 0x30 + i;
+            bits = VIII;
+        }
+        alioquin si (i <= CCLV)
+        {
+            codex = 0x190 + (i - CXLIV);
+            bits = IX;
+        }
+        alioquin si (i <= 279)
+        {
+            codex = i - FLATURA_END_BLOCK;
+            bits = VII;
+        }
+        alioquin
+        {
+            codex = 0xC0 + (i - CCLXXX);
+            bits = VIII;
+        }
+
+        /* Reverse bits */
+        rev_codex = 0;
+        per (j = 0; j < bits; j++)
+        {
+            rev_codex = (rev_codex << I) | ((codex >> j) & I);
+        }
+
+        huffman_literal_codes[i] = (i16)rev_codex;
+        huffman_literal_bits[i] = (i8)bits;
+    }
+
+    /* Build distance codes (5 bits, reversed) */
+    per (i = 0; i < XXX; i++)
+    {
+        rev_codex = 0;
+        per (j = 0; j < V; j++)
+        {
+            rev_codex = (rev_codex << I) | ((i >> j) & I);
+        }
+        huffman_distance_codes[i] = (i8)rev_codex;
+    }
+
+    /* Build length -> symbol index lookup */
+    per (i = 0; i < CCLVI; i++)
+    {
+        i32 len = i + III;  /* lengths 3-258 */
+        i32 idx;
+
+        per (idx = 0; idx < XXVIII; idx++)
+        {
+            si (len <= longitudo_basis[idx + I] - I)
+            {
+                longitudo_ad_indicem[i] = (i8)idx;
+                frange;
+            }
+        }
+        si (idx == XXVIII)
+        {
+            longitudo_ad_indicem[i] = XXVIII;  /* 258 */
+        }
+    }
+
+    /* Build distance -> symbol lookup (1-256) */
+    per (i = 0; i < CCLVI; i++)
+    {
+        i32 dist = i + I;  /* distances 1-256 */
+        i32 sym;
+
+        per (sym = 0; sym < XXIX; sym++)
+        {
+            si (dist <= distantia_basis[sym + I] - I)
+            {
+                distantia_ad_symbolum_tabula[i] = (i8)sym;
+                frange;
+            }
+        }
+        si (sym == XXIX)
+        {
+            distantia_ad_symbolum_tabula[i] = XXIX;
+        }
+    }
+
+    huffman_tabulae_initiatae = VERUM;
+}
+
 nomen structura {
     s16* capites;     /* Caput catenarum hash (-1 = nullus) */
     s16* praevia;     /* Praevius in catena */
@@ -1316,35 +1488,20 @@ _flatura_hash_initium(
 }
 
 
-interior i32
-_flatura_hash_calculare(
-    constans i8* datum,
-    i32          positus)
-{
-    i32 h;
-    h = ((i32)datum[positus] << X) ^
-        ((i32)datum[positus + I] << V) ^
-        ((i32)datum[positus + II]);
-    redde h & HASH_MASK;
-}
+/* Macro pro hash calculation (inlined pro velocitate) */
+#define FLATURA_HASH_CALCULARE(datum, positus) \
+    ((((i32)(datum)[(positus)] << X) ^ \
+      ((i32)(datum)[(positus) + I] << V) ^ \
+      ((i32)(datum)[(positus) + II])) & HASH_MASK)
 
-
-interior vacuum
-_flatura_hash_inserere(
-    HashTabula*  hash,
-    constans i8* datum,
-    i32          positus)
-{
-    i32 h;
-    i32 fenestra_index;
-
-    h = _flatura_hash_calculare(datum, positus);
-    fenestra_index = positus & (FLATURA_FENESTRA_MAGNITUDO - I);
-
-    hash->praevia[fenestra_index] = hash->capites[h];
-    hash->capites[h] = (s16)fenestra_index;
-}
-
+/* Macro pro hash insertion (inlined pro velocitate) */
+#define FLATURA_HASH_INSERERE(hash, datum, positus) \
+    fac { \
+        i32 _h = FLATURA_HASH_CALCULARE(datum, positus); \
+        i32 _fi = (positus) & (FLATURA_FENESTRA_MAGNITUDO - I); \
+        (hash)->praevia[_fi] = (hash)->capites[_h]; \
+        (hash)->capites[_h] = (s16)_fi; \
+    } dum (0)
 
 interior i32
 _flatura_quaerere_concordantiam(
@@ -1352,6 +1509,7 @@ _flatura_quaerere_concordantiam(
     constans i8* datum,
     i32          positus,
     i32          mensura,
+    i32          catena_maxima,
     i32*         distantia_output)
 {
     i32 h;
@@ -1365,13 +1523,13 @@ _flatura_quaerere_concordantiam(
         redde 0;
     }
 
-    h = _flatura_hash_calculare(datum, positus);
+    h = FLATURA_HASH_CALCULARE(datum, positus);
     currens = hash->capites[h];
     optima_longitudo = 0;
     optima_distantia = 0;
     catena_longitudo = 0;
 
-    dum (currens >= 0 && catena_longitudo < CXXVIII)
+    dum (currens >= 0 && catena_longitudo < catena_maxima)
     {
         i32 candidatus_positus;
         i32 distantia;
@@ -1400,7 +1558,24 @@ _flatura_quaerere_concordantiam(
             max_longitudo = MAX_MATCH;
         }
 
+        /* Compare 4 bytes at a time for speed */
         longitudo = 0;
+        dum (longitudo + IV <= max_longitudo)
+        {
+            i32 a;
+            i32 b;
+
+            memcpy(&a, datum + candidatus_positus + longitudo, IV);
+            memcpy(&b, datum + positus + longitudo, IV);
+
+            si (a != b)
+            {
+                frange;
+            }
+            longitudo += IV;
+        }
+
+        /* Finish with byte-by-byte (remainder or finding exact mismatch) */
         dum (longitudo < max_longitudo &&
              datum[candidatus_positus + longitudo] == datum[positus + longitudo])
         {
@@ -1432,25 +1607,7 @@ _flatura_quaerere_concordantiam(
 }
 
 
-/* Invenire symbolum longitudinis */
-interior i32
-_flatura_longitudo_ad_symbolum(i32 longitudo)
-{
-    i32 i;
-
-    per (i = 0; i < XXVIII; i++)
-    {
-        si (longitudo <= longitudo_basis[i + I] - I)
-        {
-            redde FLATURA_FIRST_LEN + i;
-        }
-    }
-
-    redde 285;  /* 258 */
-}
-
-
-/* Invenire symbolum distantiae */
+/* Invenire symbolum distantiae (used for distances > 256) */
 interior i32
 _flatura_distantia_ad_symbolum(i32 distantia)
 {
@@ -1468,67 +1625,13 @@ _flatura_distantia_ad_symbolum(i32 distantia)
 }
 
 
-/* Scribere fixed Huffman codex pro literal/length */
-interior vacuum
-_flatura_scribere_literalem_fixam(
-    FlaturaScriptor* scriptor,
-    i32              symbolum)
-{
-    i32 codex;
-    i32 bits;
-    i32 rev_codex;
-    i32 i;
+/* Scribere fixed Huffman codex pro literal/length (using pre-computed table) */
+#define FLATURA_SCRIBERE_LITERALEM_FIXAM(scriptor, symbolum) \
+    FLATURA_SCRIBERE_BITS(scriptor, (i32)huffman_literal_codes[symbolum], (i32)huffman_literal_bits[symbolum])
 
-    si (symbolum <= CXLIII)
-    {
-        codex = 0x30 + symbolum;
-        bits = VIII;
-    }
-    alioquin si (symbolum <= CCLV)
-    {
-        codex = 0x190 + (symbolum - CXLIV);
-        bits = IX;
-    }
-    alioquin si (symbolum <= 279)
-    {
-        codex = symbolum - FLATURA_END_BLOCK;
-        bits = VII;
-    }
-    alioquin
-    {
-        codex = 0xC0 + (symbolum - CCLXXX);
-        bits = VIII;
-    }
-
-    /* Invertere bits */
-    rev_codex = 0;
-    per (i = 0; i < bits; i++)
-    {
-        rev_codex = (rev_codex << I) | ((codex >> i) & I);
-    }
-
-    _flatura_scribere_bits(scriptor, rev_codex, bits);
-}
-
-
-/* Scribere fixed Huffman codex pro distantia */
-interior vacuum
-_flatura_scribere_distantiam_fixam(
-    FlaturaScriptor* scriptor,
-    i32              symbolum)
-{
-    i32 rev_codex;
-    i32 i;
-
-    /* 5 bits, reversed */
-    rev_codex = 0;
-    per (i = 0; i < V; i++)
-    {
-        rev_codex = (rev_codex << I) | ((symbolum >> i) & I);
-    }
-
-    _flatura_scribere_bits(scriptor, rev_codex, V);
-}
+/* Scribere fixed Huffman codex pro distantia (using pre-computed table) */
+#define FLATURA_SCRIBERE_DISTANTIAM_FIXAM(scriptor, symbolum) \
+    FLATURA_SCRIBERE_BITS(scriptor, (i32)huffman_distance_codes[symbolum], V)
 
 
 FlaturaFructus
@@ -1542,6 +1645,7 @@ flatura_deflare(
     FlaturaScriptor  scriptor;
     HashTabula       hash;
     i32              positus;
+    i32              catena_maxima;
 
     si (datum == NIHIL || piscina == NIHIL)
     {
@@ -1549,6 +1653,23 @@ flatura_deflare(
         fructus.datum = NIHIL;
         fructus.mensura = 0;
         redde fructus;
+    }
+
+    /* Initialize lookup tables (once) */
+    _flatura_huffman_tabulae_initium();
+
+    /* Determinare catena limit ex compression level */
+    si (nivellus <= FLATURA_COMPRESSIO_RAPIDA)
+    {
+        catena_maxima = CATENA_RAPIDA;
+    }
+    alioquin si (nivellus >= FLATURA_COMPRESSIO_OPTIMA)
+    {
+        catena_maxima = CATENA_OPTIMA;
+    }
+    alioquin
+    {
+        catena_maxima = CATENA_ORDINARIA;
     }
 
     _flatura_scriptor_initium(&scriptor, piscina, mensura + CCLVI);
@@ -1632,7 +1753,7 @@ flatura_deflare(
             longitudo = 0;
             si (positus + MIN_MATCH <= mensura)
             {
-                longitudo = _flatura_quaerere_concordantiam(&hash, datum, positus, mensura, &distantia);
+                longitudo = _flatura_quaerere_concordantiam(&hash, datum, positus, mensura, catena_maxima, &distantia);
             }
 
             si (longitudo >= MIN_MATCH)
@@ -1645,31 +1766,40 @@ flatura_deflare(
                 i32 len_index;
                 i32 i;
 
-                len_sym = _flatura_longitudo_ad_symbolum(longitudo);
-                len_index = len_sym - FLATURA_FIRST_LEN;
-                _flatura_scribere_literalem_fixam(&scriptor, len_sym);
+                /* Use lookup table for length->symbol */
+                len_index = longitudo_ad_indicem[longitudo - III];
+                len_sym = FLATURA_FIRST_LEN + len_index;
+                FLATURA_SCRIBERE_LITERALEM_FIXAM(&scriptor, len_sym);
 
                 si (longitudo_extra_bits[len_index] > 0)
                 {
                     len_extra = longitudo - longitudo_basis[len_index];
-                    _flatura_scribere_bits(&scriptor, len_extra, (i32)longitudo_extra_bits[len_index]);
+                    FLATURA_SCRIBERE_BITS(&scriptor, len_extra, (i32)longitudo_extra_bits[len_index]);
                 }
 
-                dist_sym = _flatura_distantia_ad_symbolum(distantia);
-                _flatura_scribere_distantiam_fixam(&scriptor, dist_sym);
+                /* Use lookup table for distance->symbol (or linear for large) */
+                si (distantia <= CCLVI)
+                {
+                    dist_sym = distantia_ad_symbolum_tabula[distantia - I];
+                }
+                alioquin
+                {
+                    dist_sym = _flatura_distantia_ad_symbolum(distantia);
+                }
+                FLATURA_SCRIBERE_DISTANTIAM_FIXAM(&scriptor, dist_sym);
 
                 si (distantia_extra_bits[dist_sym] > 0)
                 {
                     dist_extra = distantia - distantia_basis[dist_sym];
-                    _flatura_scribere_bits(&scriptor, dist_extra, (i32)distantia_extra_bits[dist_sym]);
+                    FLATURA_SCRIBERE_BITS(&scriptor, dist_extra, (i32)distantia_extra_bits[dist_sym]);
                 }
 
-                /* Inserere in hash */
+                /* Inserere in hash (using inlined macro) */
                 per (i = 0; i < longitudo; i++)
                 {
                     si (positus + i + MIN_MATCH <= mensura)
                     {
-                        _flatura_hash_inserere(&hash, datum, positus + i);
+                        FLATURA_HASH_INSERERE(&hash, datum, positus + i);
                     }
                 }
 
@@ -1678,11 +1808,11 @@ flatura_deflare(
             alioquin
             {
                 /* Emit literal */
-                _flatura_scribere_literalem_fixam(&scriptor, (i32)datum[positus]);
+                FLATURA_SCRIBERE_LITERALEM_FIXAM(&scriptor, (i32)(datum[positus] & 0xFF));
 
                 si (positus + MIN_MATCH <= mensura)
                 {
-                    _flatura_hash_inserere(&hash, datum, positus);
+                    FLATURA_HASH_INSERERE(&hash, datum, positus);
                 }
 
                 positus++;
@@ -1690,7 +1820,7 @@ flatura_deflare(
         }
 
         /* End of block symbol (256) */
-        _flatura_scribere_literalem_fixam(&scriptor, CCLVI);
+        FLATURA_SCRIBERE_LITERALEM_FIXAM(&scriptor, CCLVI);
     }
 
     _flatura_scriptor_finire(&scriptor);

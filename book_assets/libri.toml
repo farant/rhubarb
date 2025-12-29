@@ -1,0 +1,5 @@
+# Capsula config pro libri
+# Generatum a librarium_collector
+
+libri_files = ["*.txt", "librarium.stml"]
+libri_compress = true

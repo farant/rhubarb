@@ -11,3 +11,5 @@ data/
 stml-parser-reference
 
 events.db
+
+book_assets/*.txt

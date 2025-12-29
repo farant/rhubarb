@@ -66,6 +66,7 @@ filum_legere_totum(
 	constans character* via,
 	           Piscina* piscina)
 {
+	  structura stat st;
 	         FILUM* f;
 	memoriae_index  mensura;
 	            i8* buffer;
@@ -82,43 +83,22 @@ filum_legere_totum(
 
 	_filum_error_purgare();
 
+	/* Invenire mensuram per stat() - velocius quam fseek/ftell */
+	si (stat(via, &st) != ZEPHYRUM)
+	{
+		_filum_error_ponere("stat fracta");
+		fructus.mensura = ZEPHYRUM;
+		fructus.datum   = NIHIL;
+		redde fructus;
+	}
+
+	mensura = (memoriae_index)st.st_size;
+
 	/* Aperire filum */
 	f = fopen(via, "rb");
 	si (!f)
 	{
 		_filum_error_ponere("fopen fracta");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
-
-	/* Invenire mensuram */
-	si (fseek(f, ZEPHYRUM, SEEK_END) != ZEPHYRUM)
-	{
-		fclose(f);
-		_filum_error_ponere("fseek fracta");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
-
-	{
-		longus mensura_signed = ftell(f);
-		si (mensura_signed < ZEPHYRUM)
-		{
-			fclose(f);
-			_filum_error_ponere("ftell fracta");
-			fructus.mensura = ZEPHYRUM;
-			fructus.datum   = NIHIL;
-			redde fructus;
-		}
-		mensura = (memoriae_index)mensura_signed;
-	}
-
-	si (fseek(f, ZEPHYRUM, SEEK_SET) != ZEPHYRUM)
-	{
-		fclose(f);
-		_filum_error_ponere("fseek ad initium fracta");
 		fructus.mensura = ZEPHYRUM;
 		fructus.datum   = NIHIL;
 		redde fructus;

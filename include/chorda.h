@@ -338,6 +338,23 @@ chorda_pascalis_serpens (
 
 
 /* ==================================================
+ * Formatatio
+ * ================================================= */
+
+/* chorda_ex_bytes_legibilis - Convertere bytes ad formam legibilem
+ * Exempla:
+ *   1024      → "1.0 KB"
+ *   1536      → "1.5 KB"
+ *   1048576   → "1.0 MB"
+ *   1073741824 → "1.0 GB"
+ */
+chorda
+chorda_ex_bytes_legibilis (
+		   i64  bytes,
+		Piscina* piscina);
+
+
+/* ==================================================
  * Friatio
  * ================================================= */
 

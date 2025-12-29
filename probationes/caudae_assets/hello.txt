@@ -1,0 +1,2 @@
+Hello from capsula_caudae!
+This tests tail-appended assets.
