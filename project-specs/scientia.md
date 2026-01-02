@@ -2,7 +2,7 @@
 
 Date: 2025-12-31
 Status: Draft
-Related: mercatura.md, iustitia.md, salve.md, smaragda.md, lapideus.md
+Related: mercatura.md, iustitia.md, salve.md, smaragda.md, lapideus.md, scriptoria.md (authoring tools)
 Etymology: Latin "scientia" = "knowledge, science" — the systematic understanding of any domain
 
 ---
@@ -130,7 +130,7 @@ Science: "Scientia Lignarii" (Woodworking)
 
 ### 1. Standard Taxonomy of Sciences
 
-Every science follows the same category structure:
+Standard categories form a "ubiquitous language" for sciences (DDD-style) — not all required for every science, but a finite vocabulary of core types that recur across domains:
 
 | Category | Description | Integration |
 |----------|-------------|-------------|
@@ -142,15 +142,17 @@ Every science follows the same category structure:
 | Projects | Things to build/do | Skill tree milestones |
 | Complications | Emergent difficulties | Smaragda scenarios |
 | Masters | Notable practitioners | People cards, inspiration |
-| Philosophy | Contemplative insights | Catholic mystical connections |
+| Philosophy | Contemplative insights | Syllogism DAG, Catholic connections |
+
+A purely theoretical science might lack Materials; a purely practical one might have sparse Philosophy. The categories are a shared vocabulary, not a checklist.
 
 ### 2. Canonical Books
 
 One definitive text per science, addressable like the Bible:
 
 ```
-Reference: "Scientia.Lignarii:3.7"
-           (Woodworking, paragraph 3, sentence 7)
+Reference: "Scientia.Lignarii:Historia:3:7"
+           (Woodworking, History chapter, paragraph 3, sentence 7)
 
 Properties:
 ├─ Improved across centuries (long-term investment)
@@ -158,8 +160,16 @@ Properties:
 ├─ Printable or purchasable as physical book
 ├─ 16-color aesthetic, monospace font
 ├─ 640x720 two-panel widget display
-└─ Version + content-following addressing
+└─ Versioned + content-hash dual addressing
 ```
+
+**Addressing Stability:**
+- Each paragraph has UUID + content hash
+- Versioned addresses: "v1:Historia:3:7" stays stable within version
+- Content hash enables tracking across edits/moves
+- Multiple techniques for identity: hash, position, edit tracking, manual linking
+- Tools to migrate glosses when underlying content changes
+- Event sourcing enables jumping to historical versions
 
 **Authority hierarchy:**
 1. Content producers (authors)
@@ -185,6 +195,8 @@ Glosses:
 - Layer depth (glosses on glosses)
 - The closest thing to "discussion" in Lapideus
 
+**Display:** Split view with synced navigation — text on left, glosses for current paragraph on right. Forward/back buttons for gloss navigation. Facing panel updates sync with text panel interactions.
+
 ### 4. Skill Trees
 
 Progression tracking for each science:
@@ -207,9 +219,13 @@ Skill Tree Node:
 
 **Visualization:**
 - Dedicated tree widget (no scrolling, only pagination)
-- Fixed chunks of nodes per page
-- Navigate by clicking nodes (like folders)
-- Breadcrumb trail for context
+- DAG structure (skills can have multiple prerequisites from different branches)
+- Navigation options:
+  - Folder-style: click node to see its subgraph
+  - Zelda 1 style: room-based with N/S/E/W exits to adjacent clusters
+  - Memory palace mode: 2D game world where objects are hyperlinks to content
+- Memory palace is ubiquitous UI affordance across all of Lapideus (like list vs icon view)
+- Buildable worlds: users/authors place objects as spatial hyperlinks
 
 ### 5. Card Deck System (LCG Model)
 
@@ -236,6 +252,19 @@ Printable poker-size cards functioning as learning state machines:
 - Unlock new cards by completing scenarios
 - Minimal sync burden (just track unlocks)
 - Physical deck is primary, digital tracks progress
+
+**Discrete Physics Engine:**
+Card interactions follow a moderate realist model:
+- Tools act on Materials to produce Products
+- Skills modify Tool effectiveness
+- People provide Skills
+- Locations constrain available Tools/Materials
+
+**Tag System:**
+- Cards have hierarchical tags (Wood > Hardwood > Oak)
+- Rules written on cards can target tags/categories, not just specific cards
+- Enables generic interactions across sciences
+- Similar to Marvel Champions / LOTR LCG targeting approach
 
 ### 6. Roguelike Generation
 
@@ -378,6 +407,39 @@ Curriculum Entity:
 - Content federated from internets
 - Daily sync for encyclopedia updates
 - Merged views with configurable filtering
+
+### Scriptoria (Authoring)
+
+Separate sphere for book writing tools, but deeply integrated with Scientia:
+- PDF library and output format transformation (Kindle, KDP, etc.)
+- Snowflake method outlining, brainstorm notes, references
+- Synergistic: use Scientia features when writing, best writing tools when creating content
+
+**Telos-based editing modes** — organized by purpose, not output format:
+- Book writing mode (for science chapters)
+- Skill tree authoring mode
+- Card authoring mode
+- Gloss writing mode
+
+### Syllogism DAG (Core Affordance)
+
+Structured argumentation system used across all spheres:
+```
+Syllogism Node:
+├─ proposition: Statement being claimed
+├─ type: "premise" | "conclusion" | "objection" | "evidence"
+├─ dependencies: Other nodes this relies on
+├─ confidence: Degree of certainty
+└─ case_reference: Link to supporting case if needed
+```
+
+Features:
+- Visualize dependency chains in arguments
+- "What if" toggles: enable/disable premises to see effects
+- Identify where disagreements actually diverge
+- Richer metadata: evidence, objections, cases
+- Usable as easily as the entity graph across all systems
+- Helps prevent heretical philosophical content through structured expression
 
 ---
 
@@ -539,15 +601,30 @@ Develop alongside either milestone:
 
 ---
 
+## Content Seeding Strategy
+
+### LLM-Generated Content
+
+Taking the moderate realist bet that real things are finite and predominantly stable:
+- **Development-time seeding**: Generate substantial content via LLM, bake into release
+- **User-triggered generation**: Plugin architecture for LLM integration
+- **File import**: Strongly supported pattern — bundle information as files, easy import
+- **Internet-provided**: New content arrives via federated internets
+
+This allows shipping a useful product without requiring users to connect to any internet.
+
+---
+
 ## Open Questions
 
-1. **Game design**: What's the core card game loop that's generic enough for any cards but engaging?
-2. **Addressing stability**: Exact mechanism for paragraph:sentence addressing across edits?
+1. **Game design**: What's the core card game loop that's generic enough for any cards but engaging? (Discrete physics engine model established, needs playtesting)
+2. ~~**Addressing stability**: Exact mechanism for paragraph:sentence addressing across edits?~~ (Resolved: versioned + content-hash dual addressing)
 3. **Generation seeds**: Full specification for roguelike procedural generation?
 4. **Simulation library**: What hardcoded simulation modes are needed?
-5. **Gloss threading**: Maximum depth? Display constraints?
+5. ~~**Gloss threading**: Maximum depth? Display constraints?~~ (Resolved: split view with synced navigation)
 6. **3D assets**: STL format constraints? Level of detail?
 7. **Math notation**: Full specification of lisp-syntax math system?
+8. **Memory palace implementation**: Exact mechanics for buildable 2D worlds as navigation
 
 ---
 
