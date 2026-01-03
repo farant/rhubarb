@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aquinas Palette Dithering Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #B4947C;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            background: #383838;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .control-group h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #B4947C;
+        }
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+        }
+        .palette-color {
+            width: 32px;
+            height: 32px;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+        .palette-color.selected {
+            border-color: #fff;
+        }
+        .palette-color.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-shadow: 0 0 3px #000, 0 0 3px #000;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .palette-color[data-light="true"].selected::after {
+            color: #000;
+            text-shadow: 0 0 3px #fff, 0 0 3px #fff;
+        }
+        .slider-group {
+            margin: 10px 0;
+        }
+        .slider-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        .slider-group input[type="range"] {
+            width: 200px;
+        }
+        .slider-value {
+            display: inline-block;
+            width: 40px;
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+        }
+        button {
+            background: #B4947C;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #C8A88C;
+        }
+        button:disabled {
+            background: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+        .upload-area {
+            border: 2px dashed #555;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .upload-area:hover {
+            border-color: #B4947C;
+        }
+        .upload-area.dragover {
+            border-color: #B4947C;
+            background: rgba(180, 148, 124, 0.1);
+        }
+        #fileInput {
+            display: none;
+        }
+        .canvas-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .canvas-wrapper {
+            background: #383838;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .canvas-wrapper h4 {
+            margin: 0 0 10px 0;
+            font-size: 12px;
+            color: #888;
+        }
+        canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            max-width: 100%;
+            height: auto;
+        }
+        .presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .preset-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+            background: #555;
+        }
+        .preset-btn:hover {
+            background: #666;
+        }
+        .breakpoints-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .pixel-size-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .download-btn {
+            background: #408020;
+        }
+        .download-btn:hover {
+            background: #509030;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aquinas Palette Dithering Tool</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Upload Image</h3>
+                <div class="upload-area" id="uploadArea">
+                    <p>Click or drag image here</p>
+                    <input type="file" id="fileInput" accept="image/*">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Palette (click to toggle)</h3>
+                <div class="presets">
+                    <button class="preset-btn" data-preset="all">All</button>
+                    <button class="preset-btn" data-preset="none">None</button>
+                    <button class="preset-btn" data-preset="grayscale">Grays</button>
+                    <button class="preset-btn" data-preset="warm">Warm</button>
+                    <button class="preset-btn" data-preset="cool">Cool</button>
+                    <button class="preset-btn" data-preset="mono">Mono</button>
+                </div>
+                <div class="palette-grid" id="paletteGrid"></div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Breakpoints (gray thresholds)</h3>
+                <div class="breakpoints-container">
+                    <div class="slider-group">
+                        <label>Breakpoint 1: <span class="slider-value" id="bp1Val">64</span></label>
+                        <input type="range" id="bp1" min="0" max="255" value="64">
+                    </div>
+                    <div class="slider-group">
+                        <label>Breakpoint 2: <span class="slider-value" id="bp2Val">128</span></label>
+                        <input type="range" id="bp2" min="0" max="255" value="128">
+                    </div>
+                    <div class="slider-group">
+                        <label>Breakpoint 3: <span class="slider-value" id="bp3Val">192</span></label>
+                        <input type="range" id="bp3" min="0" max="255" value="192">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Settings</h3>
+                <div class="slider-group">
+                    <label>Pixel Size: <span class="slider-value" id="pixelSizeVal">2</span></label>
+                    <div class="pixel-size-group">
+                        <input type="range" id="pixelSize" min="1" max="8" value="2">
+                    </div>
+                </div>
+                <div class="slider-group">
+                    <label>
+                        <input type="checkbox" id="useColorDither" checked>
+                        Color dithering (vs grayscale bucketing)
+                    </label>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button id="processBtn" disabled>Process Image</button>
+                    <button id="downloadBtn" class="download-btn" disabled>Download</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="canvas-container">
+            <div class="canvas-wrapper">
+                <h4>Original</h4>
+                <canvas id="originalCanvas"></canvas>
+            </div>
+            <div class="canvas-wrapper">
+                <h4>Dithered</h4>
+                <canvas id="outputCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Palette Aquinas */
+        const PALETTE = [
+            { r: 0x00, g: 0x00, b: 0x00, name: 'Black' },
+            { r: 0x34, g: 0x44, b: 0x24, name: 'Dark Gray' },
+            { r: 0x7C, g: 0x5C, b: 0x7C, name: 'Mauve' },
+            { r: 0xC8, g: 0xB8, b: 0xA0, name: 'Medium Gray' },
+            { r: 0xE8, g: 0xD8, b: 0xC0, name: 'Light Gray' },
+            { r: 0xFC, g: 0xF0, b: 0xE8, name: 'White' },
+            { r: 0x80, g: 0x20, b: 0x20, name: 'Dark Red' },
+            { r: 0x60, g: 0xBC, b: 0xFC, name: 'Blue' },
+            { r: 0xFC, g: 0x18, b: 0x70, name: 'Pink' },
+            { r: 0xA4, g: 0x68, b: 0x00, name: 'Dark Gold' },
+            { r: 0xE8, g: 0xB4, b: 0x00, name: 'Medium Gold' },
+            { r: 0xFC, g: 0xD8, b: 0x40, name: 'Bright Gold' },
+            { r: 0x40, g: 0x80, b: 0x20, name: 'Dark Leaf' },
+            { r: 0x80, g: 0xC0, b: 0x40, name: 'Medium Leaf' },
+            { r: 0xA0, g: 0xF0, b: 0x60, name: 'Bright Leaf' },
+            { r: 0xB4, g: 0x94, b: 0x7C, name: 'Warm Gray' }
+        ];
+
+        /* Presets */
+        const PRESETS = {
+            all: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+            none: [],
+            grayscale: [0,1,3,4,5,15],
+            warm: [0,5,6,9,10,11,15],
+            cool: [0,1,5,7,12,13,14],
+            mono: [0,5]
+        };
+
+        /* State */
+        let selectedColors = new Set(PRESETS.all);
+        let originalImage = null;
+        let breakpoints = [64, 128, 192];
+        let pixelSize = 2;
+
+        /* DOM elements */
+        const paletteGrid = document.getElementById('paletteGrid');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const originalCanvas = document.getElementById('originalCanvas');
+        const outputCanvas = document.getElementById('outputCanvas');
+        const processBtn = document.getElementById('processBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const bp1 = document.getElementById('bp1');
+        const bp2 = document.getElementById('bp2');
+        const bp3 = document.getElementById('bp3');
+        const pixelSizeSlider = document.getElementById('pixelSize');
+        const useColorDither = document.getElementById('useColorDither');
+
+        /* Build palette grid */
+        PALETTE.forEach((color, idx) => {
+            const div = document.createElement('div');
+            div.className = 'palette-color selected';
+            div.style.backgroundColor = `rgb(${color.r},${color.g},${color.b})`;
+            div.title = color.name;
+            div.dataset.idx = idx;
+            
+            /* Mark light colors for checkmark visibility */
+            const lum = color.r * 0.3 + color.g * 0.59 + color.b * 0.11;
+            if (lum > 160) {
+                div.dataset.light = 'true';
+            }
+            
+            div.addEventListener('click', () => {
+                if (selectedColors.has(idx)) {
+                    selectedColors.delete(idx);
+                    div.classList.remove('selected');
+                } else {
+                    selectedColors.add(idx);
+                    div.classList.add('selected');
+                }
+            });
+            
+            paletteGrid.appendChild(div);
+        });
+
+        /* Preset buttons */
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const preset = PRESETS[btn.dataset.preset];
+                selectedColors = new Set(preset);
+                updatePaletteUI();
+            });
+        });
+
+        function updatePaletteUI() {
+            document.querySelectorAll('.palette-color').forEach(div => {
+                const idx = parseInt(div.dataset.idx);
+                if (selectedColors.has(idx)) {
+                    div.classList.add('selected');
+                } else {
+                    div.classList.remove('selected');
+                }
+            });
+        }
+
+        /* File upload */
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                handleFile(fileInput.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImage = img;
+                    drawOriginal();
+                    processBtn.disabled = false;
+                    processImage();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function drawOriginal() {
+            if (!originalImage) return;
+            originalCanvas.width = originalImage.width;
+            originalCanvas.height = originalImage.height;
+            const ctx = originalCanvas.getContext('2d');
+            ctx.drawImage(originalImage, 0, 0);
+        }
+
+        /* Sliders */
+        bp1.addEventListener('input', () => {
+            breakpoints[0] = parseInt(bp1.value);
+            document.getElementById('bp1Val').textContent = bp1.value;
+        });
+        bp2.addEventListener('input', () => {
+            breakpoints[1] = parseInt(bp2.value);
+            document.getElementById('bp2Val').textContent = bp2.value;
+        });
+        bp3.addEventListener('input', () => {
+            breakpoints[2] = parseInt(bp3.value);
+            document.getElementById('bp3Val').textContent = bp3.value;
+        });
+        pixelSizeSlider.addEventListener('input', () => {
+            pixelSize = parseInt(pixelSizeSlider.value);
+            document.getElementById('pixelSizeVal').textContent = pixelSize;
+        });
+
+        processBtn.addEventListener('click', processImage);
+        downloadBtn.addEventListener('click', downloadImage);
+
+        function getActivePalette() {
+            return Array.from(selectedColors)
+                .sort((a, b) => a - b)
+                .map(idx => PALETTE[idx]);
+        }
+
+        function findNearestColor(r, g, b, palette) {
+            let bestDist = Infinity;
+            let bestColor = palette[0];
+            
+            for (const c of palette) {
+                const dr = r - c.r;
+                const dg = g - c.g;
+                const db = b - c.b;
+                const dist = dr * dr + dg * dg + db * db;
+                
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestColor = c;
+                }
+            }
+            
+            return bestColor;
+        }
+
+        function processImage() {
+            if (!originalImage) return;
+            
+            const palette = getActivePalette();
+            if (palette.length === 0) {
+                alert('Please select at least one color');
+                return;
+            }
+
+            /* Sort palette by luminance for grayscale bucketing mode */
+            const sortedPalette = [...palette].sort((a, b) => {
+                const lumA = a.r * 0.3 + a.g * 0.59 + a.b * 0.11;
+                const lumB = b.r * 0.3 + b.g * 0.59 + b.b * 0.11;
+                return lumA - lumB;
+            });
+
+            /* Scale down for processing, with max height of 480 */
+            const maxHeight = 480;
+            let scaledWidth = Math.floor(originalImage.width / pixelSize);
+            let scaledHeight = Math.floor(originalImage.height / pixelSize);
+            
+            /* Apply max height constraint */
+            if (scaledHeight > maxHeight) {
+                const scale = maxHeight / scaledHeight;
+                scaledHeight = maxHeight;
+                scaledWidth = Math.floor(scaledWidth * scale);
+            }
+
+            /* Create temp canvas for scaled image */
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = scaledWidth;
+            tempCanvas.height = scaledHeight;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.imageSmoothingEnabled = true;
+            tempCtx.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight);
+
+            const imageData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
+            const data = imageData.data;
+
+            /* Output at scaled up size */
+            outputCanvas.width = scaledWidth * pixelSize;
+            outputCanvas.height = scaledHeight * pixelSize;
+            const outCtx = outputCanvas.getContext('2d');
+            const outData = outCtx.createImageData(outputCanvas.width, outputCanvas.height);
+
+            const useColor = useColorDither.checked;
+
+            if (useColor) {
+                /* Color Atkinson dithering */
+                const colorBuffer = {
+                    r: new Float32Array(scaledWidth * scaledHeight),
+                    g: new Float32Array(scaledWidth * scaledHeight),
+                    b: new Float32Array(scaledWidth * scaledHeight)
+                };
+
+                /* Copy image data to float buffer */
+                for (let i = 0; i < scaledWidth * scaledHeight; i++) {
+                    colorBuffer.r[i] = data[i * 4];
+                    colorBuffer.g[i] = data[i * 4 + 1];
+                    colorBuffer.b[i] = data[i * 4 + 2];
+                }
+
+                const offsets = [
+                    [1, 0], [2, 0],
+                    [-1, 1], [0, 1], [1, 1],
+                    [0, 2]
+                ];
+
+                /* Process with Atkinson dithering */
+                for (let y = 0; y < scaledHeight; y++) {
+                    for (let x = 0; x < scaledWidth; x++) {
+                        const idx = y * scaledWidth + x;
+
+                        const oldR = colorBuffer.r[idx];
+                        const oldG = colorBuffer.g[idx];
+                        const oldB = colorBuffer.b[idx];
+
+                        const newColor = findNearestColor(oldR, oldG, oldB, palette);
+
+                        /* Write to output (scaled up) */
+                        for (let sy = 0; sy < pixelSize; sy++) {
+                            for (let sx = 0; sx < pixelSize; sx++) {
+                                const outIdx = ((y * pixelSize + sy) * outputCanvas.width + (x * pixelSize + sx)) * 4;
+                                outData.data[outIdx] = newColor.r;
+                                outData.data[outIdx + 1] = newColor.g;
+                                outData.data[outIdx + 2] = newColor.b;
+                                outData.data[outIdx + 3] = 255;
+                            }
+                        }
+
+                        /* Atkinson error diffusion */
+                        const errR = (oldR - newColor.r) / 8.0;
+                        const errG = (oldG - newColor.g) / 8.0;
+                        const errB = (oldB - newColor.b) / 8.0;
+
+                        for (const [ox, oy] of offsets) {
+                            const nx = x + ox;
+                            const ny = y + oy;
+                            if (nx >= 0 && nx < scaledWidth && ny >= 0 && ny < scaledHeight) {
+                                const nidx = ny * scaledWidth + nx;
+                                colorBuffer.r[nidx] += errR;
+                                colorBuffer.g[nidx] += errG;
+                                colorBuffer.b[nidx] += errB;
+                            }
+                        }
+                    }
+                }
+            } else {
+                /* Grayscale bucketing mode (like original code) */
+                const grayBuffer = new Float32Array(scaledWidth * scaledHeight);
+
+                /* Convert to grayscale */
+                for (let i = 0; i < scaledWidth * scaledHeight; i++) {
+                    grayBuffer[i] = data[i * 4] * 0.3 + data[i * 4 + 1] * 0.59 + data[i * 4 + 2] * 0.11;
+                }
+
+                const offsets = [
+                    [1, 0], [2, 0],
+                    [-1, 1], [0, 1], [1, 1],
+                    [0, 2]
+                ];
+
+                /* Build gray levels from breakpoints */
+                const numColors = sortedPalette.length;
+                const grayLevels = [];
+                for (let i = 0; i < numColors; i++) {
+                    grayLevels.push((i / (numColors - 1)) * 255);
+                }
+
+                /* Build thresholds from breakpoints */
+                const thresholds = breakpoints.slice(0, numColors - 1);
+
+                for (let y = 0; y < scaledHeight; y++) {
+                    for (let x = 0; x < scaledWidth; x++) {
+                        const idx = y * scaledWidth + x;
+                        const expectedGray = grayBuffer[idx];
+
+                        /* Find color bucket */
+                        let colorIndex = numColors - 1;
+                        for (let i = 0; i < thresholds.length; i++) {
+                            if (expectedGray < thresholds[i]) {
+                                colorIndex = i;
+                                break;
+                            }
+                        }
+
+                        const newGray = grayLevels[colorIndex];
+                        const newColor = sortedPalette[colorIndex];
+
+                        /* Write to output */
+                        for (let sy = 0; sy < pixelSize; sy++) {
+                            for (let sx = 0; sx < pixelSize; sx++) {
+                                const outIdx = ((y * pixelSize + sy) * outputCanvas.width + (x * pixelSize + sx)) * 4;
+                                outData.data[outIdx] = newColor.r;
+                                outData.data[outIdx + 1] = newColor.g;
+                                outData.data[outIdx + 2] = newColor.b;
+                                outData.data[outIdx + 3] = 255;
+                            }
+                        }
+
+                        /* Atkinson error diffusion */
+                        const error = (expectedGray - newGray) / 8.0;
+
+                        for (const [ox, oy] of offsets) {
+                            const nx = x + ox;
+                            const ny = y + oy;
+                            if (nx >= 0 && nx < scaledWidth && ny >= 0 && ny < scaledHeight) {
+                                grayBuffer[ny * scaledWidth + nx] += error;
+                            }
+                        }
+                    }
+                }
+            }
+
+            outCtx.putImageData(outData, 0, 0);
+            downloadBtn.disabled = false;
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'dithered.png';
+            link.href = outputCanvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
+
