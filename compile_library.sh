@@ -57,6 +57,8 @@ declare -a SOURCE_FILES=(
     "lib/paginarium.c"
     "lib/librarium_lector.c"
     "lib/elementa.c"
+    "lib/imago.c"
+    "lib/imago_opus.c"
 )
 
 # Color codes
