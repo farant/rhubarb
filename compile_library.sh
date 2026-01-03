@@ -59,6 +59,7 @@ declare -a SOURCE_FILES=(
     "lib/elementa.c"
     "lib/imago.c"
     "lib/imago_opus.c"
+    "lib/dithering.c"
 )
 
 # Color codes
