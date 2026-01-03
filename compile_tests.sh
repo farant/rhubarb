@@ -107,6 +107,7 @@ declare -a SOURCE_FILES=(
     "lib/quaerere.c"
     "lib/capsula.c"
     "lib/capsula_caudae.c"
+    "lib/elementa.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
 )
@@ -410,7 +411,7 @@ run_all_tests() {
         # Skip benchmark files - run separately via run_benchmark.sh
         if [[ "$file" == *"_benchmark.c"* ]]; then
             continue
-        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]]; then
+        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]] || [[ "$file" == *"probatio_elementa.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'
