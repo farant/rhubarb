@@ -36,6 +36,8 @@ _credo_allocare_notatio (
         redde NIHIL;
     }
 
+    notatio->sequens = NIHIL;  /* Initiare sequens ad NIHIL */
+
     return notatio;
 }
 
@@ -101,7 +103,7 @@ credo_numerus_praeteriti (
     vacuum)
 {
     memoriae_index  summa   = ZEPHYRUM;
-      CredoNotatio* notatio     = _credo_primus;
+      CredoNotatio* notatio = _credo_primus;
 
     dum (notatio)
     {
@@ -109,7 +111,7 @@ credo_numerus_praeteriti (
         {
             summa++;
         }
-        notatio = notatio->sequens; /* Procedere in catena ad sequens */
+        notatio = notatio->sequens;
     }
 
     redde summa;

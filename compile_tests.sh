@@ -136,6 +136,11 @@ TESTS_PASSED=0
 TESTS_FAILED=0
 FAILED_TESTS=""
 
+# Timing
+START_TIME=0
+TOTAL_START_TIME=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+TEST_TIMES_FILE=$(mktemp)
+
 # GUI app results
 GUI_APPS_BUILT=0
 GUI_APPS_FAILED=0
@@ -315,6 +320,9 @@ compile_and_run_test() {
     local test_name=$(basename "$test_file" .c)
     local output_binary="/tmp/$test_name"
     local obj_files
+    local test_start_time
+    local test_end_time
+    local test_duration
 
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
 
@@ -333,7 +341,9 @@ compile_and_run_test() {
         return 1
     fi
 
-    # Run
+    # Run with timing
+    test_start_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+
     if [ $DEBUG_MODE -eq 1 ]; then
         echo -e "${YELLOW}Running in lldb batch mode${RESET}"
         lldb -b -o "run" -o "bt" -o "quit" $output_binary
@@ -343,14 +353,20 @@ compile_and_run_test() {
     fi
 
     if ! $output_binary 2>&1; then
-        echo -e "${RED}✗ TEST FAILED: $test_name${RESET}"
+        test_end_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+        test_duration=$(echo "$test_end_time - $test_start_time" | bc)
+        echo "$test_duration $test_name" >> "$TEST_TIMES_FILE"
+        echo -e "${RED}✗ TEST FAILED: $test_name ${YELLOW}(${test_duration}s)${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
         echo ""
         return 1
     fi
 
-    echo -e "${GREEN}✓ TEST PASSED: $test_name${RESET}"
+    test_end_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    test_duration=$(echo "$test_end_time - $test_start_time" | bc)
+    echo "$test_duration $test_name" >> "$TEST_TIMES_FILE"
+    echo -e "${GREEN}✓ TEST PASSED: $test_name ${YELLOW}(${test_duration}s)${RESET}"
     TESTS_PASSED=$((TESTS_PASSED + 1))
     echo ""
     return 0
@@ -386,11 +402,15 @@ run_all_tests() {
     fi
 
     # Separate GUI apps from regular tests
+    # Also skip benchmark files (run via run_benchmark.sh)
     local gui_apps=""
     local test_files=""
 
     while IFS= read -r file; do
-        if [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]]; then
+        # Skip benchmark files - run separately via run_benchmark.sh
+        if [[ "$file" == *"_benchmark.c"* ]]; then
+            continue
+        elif [[ "$file" == *"probatio_fenestra.c"* ]] || [[ "$file" == *"probatio_delineare.c"* ]] || [[ "$file" == *"probatio_tempus.c"* ]] || [[ "$file" == *"probatio_pagina.c"* ]] || [[ "$file" == *"probatio_navigator.c"* ]] || [[ "$file" == *"probatio_combinado.c"* ]] || [[ "$file" == *"probatio_gradientum.c"* ]] || [[ "$file" == *"probatio_capsula_caudae.c"* ]]; then
             gui_apps="$gui_apps$file"$'\n'
         else
             test_files="$test_files$file"$'\n'
@@ -420,6 +440,12 @@ run_all_tests() {
 }
 
 print_summary() {
+    local total_end_time
+    local total_duration
+
+    total_end_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    total_duration=$(echo "$total_end_time - $TOTAL_START_TIME" | bc)
+
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo -e "${BLUE}SUMMARY${RESET}"
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
@@ -446,8 +472,22 @@ print_summary() {
         fi
     fi
 
+    # Show slowest tests (up to 5)
+    if [ -s "$TEST_TIMES_FILE" ]; then
+        echo ""
+        echo -e "${BLUE}Slowest tests:${RESET}"
+        sort -rn "$TEST_TIMES_FILE" | head -5 | while read duration name; do
+            printf "  ${YELLOW}%8ss${RESET}  %s\n" "$duration" "$name"
+        done
+    fi
+
+    echo ""
+    echo -e "Total Time:   ${YELLOW}${total_duration}s${RESET}"
     echo -e "${BLUE}═══════════════════════════════════════${RESET}"
     echo ""
+
+    # Cleanup temp file
+    rm -f "$TEST_TIMES_FILE"
 }
 
 # Parse arguments

@@ -71,6 +71,24 @@ nomen structura EntitasRepositorium {
 		vacuum*              datum,
 		constans character*  query);
 
+	/* Quaerere entitates cum genere exacto
+	 * e.g., genus="Vultus::Imago" invenit omnes imagines
+	 *
+	 * Redde: Xar de Entitas*, vel NIHIL si nullae
+	 */
+	Xar* (*quaerere_cum_genere)(
+		vacuum*              datum,
+		constans character*  genus);
+
+	/* Quaerere entitates cum praefixo generis
+	 * e.g., "Vultus::" invenit "Vultus::Imago", "Vultus::Icon"
+	 *
+	 * Redde: Xar de Entitas*, vel NIHIL si nullae
+	 */
+	Xar* (*quaerere_cum_praefixo_generis)(
+		vacuum*              datum,
+		constans character*  praefixum);
+
 	/* Capere entitates radices (initium navigationis)
 	 * Implementatio potest usare notam "#root" vel aliam logicam
 	 *
@@ -148,6 +166,33 @@ nomen structura EntitasRepositorium {
 		vacuum*             datum,
 		Entitas*            entitas,
 		constans character* clavis);
+
+	/* Ponere proprietatem blobum (datum binarium)
+	 * Datum comprimetur automatice cum flatura gzip
+	 *
+	 * Redde: VERUM si successus, FALSUM si error
+	 */
+	b32 (*proprietas_ponere_blobum)(
+		vacuum*             datum,
+		Entitas*            entitas,
+		constans character* clavis,
+		const i8*           blobum,
+		i32                 mensura);
+
+	/* Capere proprietatem blobum (datum binarium)
+	 * Datum decomprimetur automatice ex flatura gzip
+	 *
+	 * datum_output: [output] indicem ad datum decompressum
+	 * mensura_output: [output] longitudo dati decompressum
+	 *
+	 * Redde: VERUM si successus, FALSUM si non inventum vel error
+	 */
+	b32 (*proprietas_capere_blobum)(
+		vacuum*             datum,
+		Entitas*            entitas,
+		constans character* clavis,
+		i8**                datum_output,
+		i32*                mensura_output);
 
 	/* Addere relationem cum UUIDv7 auto-generato
 	 *

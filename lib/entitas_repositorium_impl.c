@@ -3,6 +3,7 @@
 #include "tabula_dispersa.h"
 #include "internamentum.h"
 #include "uuid.h"
+#include "flatura.h"
 #include <string.h>
 
 /* ==================================================
@@ -473,6 +474,101 @@ _impl_quaerere_textum(
         }
 
         si (inventum)
+        {
+            slot = (Entitas**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = entitas;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+interior Xar*
+_impl_quaerere_cum_genere(
+    vacuum*              datum,
+    constans character*  genus)
+{
+    RepositoriumData* data;
+    Xar*              resultus;
+    TabulaIterator    iter;
+    chorda            clavis;
+    vacuum*           valor;
+    Entitas*          entitas;
+    Entitas**         slot;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !genus)
+    {
+        redde NIHIL;
+    }
+
+    resultus = xar_creare(data->piscina, magnitudo(Entitas*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    iter = tabula_dispersa_iterator_initium(data->entitates);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        entitas = (Entitas*)valor;
+
+        si (entitas->genus &&
+            chorda_aequalis_literis(*entitas->genus, genus))
+        {
+            slot = (Entitas**)xar_addere(resultus);
+            si (slot)
+            {
+                *slot = entitas;
+            }
+        }
+    }
+
+    redde resultus;
+}
+
+interior Xar*
+_impl_quaerere_cum_praefixo_generis(
+    vacuum*              datum,
+    constans character*  praefixum)
+{
+    RepositoriumData* data;
+    Xar*              resultus;
+    TabulaIterator    iter;
+    chorda            clavis;
+    vacuum*           valor;
+    Entitas*          entitas;
+    Entitas**         slot;
+    i32               praefixum_len;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !praefixum)
+    {
+        redde NIHIL;
+    }
+
+    praefixum_len = (i32)strlen(praefixum);
+
+    resultus = xar_creare(data->piscina, magnitudo(Entitas*));
+    si (!resultus)
+    {
+        redde NIHIL;
+    }
+
+    iter = tabula_dispersa_iterator_initium(data->entitates);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        entitas = (Entitas*)valor;
+
+        si (entitas->genus &&
+            entitas->genus->mensura >= praefixum_len &&
+            memcmp(entitas->genus->datum, praefixum,
+                   (memoriae_index)praefixum_len) == ZEPHYRUM)
         {
             slot = (Entitas**)xar_addere(resultus);
             si (slot)
@@ -1071,6 +1167,93 @@ _impl_proprietas_delere(
 
     /* Update in memoria */
     redde entitas_proprietas_delere(entitas, clavis_internata);
+}
+
+interior b32
+_impl_proprietas_ponere_blobum(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* clavis,
+    const i8*           blobum,
+    i32                 mensura)
+{
+    RepositoriumData* data;
+    chorda*           clavis_internata;
+    chorda*           valor_compressus;
+    FlaturaFructus    fructus;
+    Eventum*          e;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !entitas || !clavis || !blobum || mensura <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    clavis_internata = chorda_internare_ex_literis(data->intern, clavis);
+    si (!clavis_internata)
+    {
+        redde FALSUM;
+    }
+
+    /* Comprimere datum cum gzip */
+    fructus = flatura_gzip_deflare(blobum, mensura,
+                                    FLATURA_COMPRESSIO_ORDINARIA, data->piscina);
+    si (fructus.status != FLATURA_STATUS_OK || !fructus.datum)
+    {
+        redde FALSUM;
+    }
+
+    /* Creare chorda ex buffer compressum (non internare - datum binarium) */
+    valor_compressus = piscina_allocare(data->piscina, magnitudo(chorda));
+    si (!valor_compressus)
+    {
+        redde FALSUM;
+    }
+    valor_compressus->datum = fructus.datum;
+    valor_compressus->mensura = fructus.mensura;
+
+    /* Emit event - usare valor compressum ut chorda */
+    e = eventum_ponere_proprietas(data->piscina, entitas->id, entitas->genus,
+                                   clavis_internata, valor_compressus);
+    si (!e || !data->persistentia->scribere_eventum(data->persistentia->datum, e))
+    {
+        redde FALSUM;
+    }
+
+    /* Update in memoria - directe ponere blobum */
+    redde entitas_proprietas_ponere_blobum(entitas, clavis_internata,
+                                            blobum, mensura, data->piscina);
+}
+
+interior b32
+_impl_proprietas_capere_blobum(
+    vacuum*             datum,
+    Entitas*            entitas,
+    constans character* clavis,
+    i8**                datum_output,
+    i32*                mensura_output)
+{
+    RepositoriumData* data;
+    chorda*           clavis_internata;
+
+    data = (RepositoriumData*)datum;
+
+    si (!data || !entitas || !clavis || !datum_output || !mensura_output)
+    {
+        redde FALSUM;
+    }
+
+    clavis_internata = chorda_internare_ex_literis(data->intern, clavis);
+    si (!clavis_internata)
+    {
+        redde FALSUM;
+    }
+
+    /* Delegare ad entitas functio */
+    redde entitas_proprietas_capere_blobum(entitas, clavis_internata,
+                                            datum_output, mensura_output,
+                                            data->piscina);
 }
 
 interior Relatio*
@@ -1922,6 +2105,8 @@ entitas_repositorium_creare(
     repo->quaerere_cum_nota = _impl_quaerere_cum_nota;
     repo->quaerere_cum_praefixo_notae = _impl_quaerere_cum_praefixo_notae;
     repo->quaerere_textum = _impl_quaerere_textum;
+    repo->quaerere_cum_genere = _impl_quaerere_cum_genere;
+    repo->quaerere_cum_praefixo_generis = _impl_quaerere_cum_praefixo_generis;
     repo->capere_radices = _impl_capere_radices;
     repo->capere_relatio = _impl_capere_relatio;
     repo->capere_relationes_ad = _impl_capere_relationes_ad;
@@ -1931,6 +2116,8 @@ entitas_repositorium_creare(
     repo->entitas_delere = _impl_entitas_delere;
     repo->proprietas_ponere = _impl_proprietas_ponere;
     repo->proprietas_delere = _impl_proprietas_delere;
+    repo->proprietas_ponere_blobum = _impl_proprietas_ponere_blobum;
+    repo->proprietas_capere_blobum = _impl_proprietas_capere_blobum;
     repo->relatio_addere = _impl_relatio_addere;
     repo->relatio_delere = _impl_relatio_delere;
     repo->nota_addere = _impl_nota_addere;

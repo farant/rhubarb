@@ -22,7 +22,8 @@ nomen enumeratio {
     TYPUS_S64     = III, /* Signed 64-bit integer */
     TYPUS_F64     = IV,  /* 64-bit floating point */
     TYPUS_B32     = V,   /* Boolean */
-    TYPUS_TEMPUS  = VI   /* Timestamp (s64 milliseconds since epoch) */
+    TYPUS_TEMPUS  = VI,  /* Timestamp (s64 milliseconds since epoch) */
+    TYPUS_BLOBUM  = VII  /* Binary blob, auto-compressed with flatura */
 } TypusLiteralis;
 
 /* Convertere chorda typus literalis ad enum
@@ -169,6 +170,44 @@ entitas_proprietas_capere_tempus(
     Entitas* entitas,
     chorda*  clavis,
     s64*     valor);
+
+/* Ponere proprietatem blobum (datum binarium)
+ * Datum comprimetur automatice cum flatura gzip
+ *
+ * entitas: entitas
+ * clavis: clavis proprietatis (internata)
+ * datum: datum binarium crudus
+ * mensura: longitudo dati in bytes
+ * piscina: piscina pro allocare datum compressum
+ *
+ * Redde: VERUM si successus, FALSUM si fractura
+ */
+b32
+entitas_proprietas_ponere_blobum(
+    Entitas*     entitas,
+    chorda*      clavis,
+    const i8*    datum,
+    i32          mensura,
+    Piscina*     piscina);
+
+/* Capere proprietatem blobum (datum binarium)
+ * Datum decomprimetur automatice ex flatura gzip
+ *
+ * entitas: entitas
+ * clavis: clavis proprietatis (internata)
+ * datum: [output] indicem ad datum decompressum
+ * mensura: [output] longitudo dati decompressum
+ * piscina: piscina pro allocare datum decompressum
+ *
+ * Redde: VERUM si successus, FALSUM si non inventum vel fractura
+ */
+b32
+entitas_proprietas_capere_blobum(
+    Entitas*     entitas,
+    chorda*      clavis,
+    i8**         datum,
+    i32*         mensura,
+    Piscina*     piscina);
 
 /* Verificare si entitas proprietatem habet
  *

@@ -1,4 +1,5 @@
 #include "entitas.h"
+#include "flatura.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>  /* strtod, strtol */
@@ -266,6 +267,10 @@ typus_literalis_ex_chorda(
     si (chorda_aequalis_literis(typus, "tempus"))
     {
         redde TYPUS_TEMPUS;
+    }
+    si (chorda_aequalis_literis(typus, "blobum"))
+    {
+        redde TYPUS_BLOBUM;
     }
 
     redde TYPUS_NIHIL;  /* Typus non cognitus */
@@ -716,6 +721,123 @@ entitas_proprietas_capere_tempus(
     }
 
     redde FALSUM;
+}
+
+b32
+entitas_proprietas_ponere_blobum(
+    Entitas*     entitas,
+    chorda*      clavis,
+    const i8*    datum,
+    i32          mensura,
+    Piscina*     piscina)
+{
+    FlaturaFructus  compressus;
+    chorda*         valor_chorda;
+    Proprietas*     prop;
+    i32             i;
+    i32             numerus;
+
+    si (!entitas || !clavis || !datum || mensura <= 0 || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    /* Comprimere datum cum gzip */
+    compressus = flatura_gzip_deflare(
+        datum,
+        mensura,
+        FLATURA_COMPRESSIO_ORDINARIA,
+        piscina);
+
+    si (compressus.status != FLATURA_STATUS_OK || !compressus.datum)
+    {
+        redde FALSUM;
+    }
+
+    /* Creare chorda pro valore (non internata - datum binarium) */
+    valor_chorda = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+    si (!valor_chorda)
+    {
+        redde FALSUM;
+    }
+    valor_chorda->datum   = compressus.datum;
+    valor_chorda->mensura = compressus.mensura;
+
+    /* Quaerere si clavis iam existit (renovare valorem) */
+    numerus = xar_numerus(entitas->proprietates);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+        si (prop && prop->clavis == clavis)
+        {
+            /* Renovare valorem existentem */
+            prop->valor            = valor_chorda;
+            prop->typus_literalis  = TYPUS_BLOBUM;
+            prop->parsitus_validus = FALSUM;
+            redde VERUM;
+        }
+    }
+
+    /* Clavis non existit - addere novam */
+    prop = (Proprietas*)xar_addere(entitas->proprietates);
+    si (!prop)
+    {
+        redde FALSUM;
+    }
+
+    prop->clavis           = clavis;
+    prop->valor            = valor_chorda;
+    prop->typus_semanticus = NIHIL;
+    prop->typus_literalis  = TYPUS_BLOBUM;
+    prop->parsitus_validus = FALSUM;
+
+    redde VERUM;
+}
+
+b32
+entitas_proprietas_capere_blobum(
+    Entitas*     entitas,
+    chorda*      clavis,
+    i8**         datum,
+    i32*         mensura,
+    Piscina*     piscina)
+{
+    Proprietas*    prop;
+    FlaturaFructus decompressus;
+
+    si (!entitas || !clavis || !datum || !mensura || !piscina)
+    {
+        redde FALSUM;
+    }
+
+    /* Capere proprietatem */
+    prop = entitas_proprietas_capere_plena(entitas, clavis);
+    si (!prop || !prop->valor)
+    {
+        redde FALSUM;
+    }
+
+    /* Verificare typus */
+    si (prop->typus_literalis != TYPUS_BLOBUM)
+    {
+        redde FALSUM;
+    }
+
+    /* Decomprimere datum */
+    decompressus = flatura_gzip_inflare(
+        prop->valor->datum,
+        prop->valor->mensura,
+        piscina);
+
+    si (decompressus.status != FLATURA_STATUS_OK || !decompressus.datum)
+    {
+        redde FALSUM;
+    }
+
+    *datum   = decompressus.datum;
+    *mensura = decompressus.mensura;
+
+    redde VERUM;
 }
 
 b32
