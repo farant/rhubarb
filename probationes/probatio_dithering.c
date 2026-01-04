@@ -7,6 +7,7 @@
 #include "elementa.h"
 #include "thema.h"
 #include "color.h"
+#include "clipboard_platform.h"
 #include <stdio.h>
 
 /*
@@ -18,6 +19,7 @@
  * 5 = Monochromaticus (black & white)
  * C = Color mode
  * G = Grayscale bucketing mode
+ * V = Paste from clipboard
  */
 
 s32
@@ -39,47 +41,64 @@ principale(s32 argc, character** argv)
         DitheringFructus  dithering_fructus;
                      i8*  rgba_dithered;
                      b32  necesse_redithering;
+                     b32  necesse_rescalare;
+                     b32  habet_imaginem;
                      s32  x, y;
 
-    /* Requirere via ad imaginem */
-    si (argc < 2)
-    {
-        fprintf(stderr, "Usus: %s <via_ad_imaginem>\n", argv[0]);
-        fprintf(stderr, "Claves:\n");
-        fprintf(stderr, "  1 = Omnes colores\n");
-        fprintf(stderr, "  2 = Griseum\n");
-        fprintf(stderr, "  3 = Calidus\n");
-        fprintf(stderr, "  4 = Frigidus\n");
-        fprintf(stderr, "  5 = Monochromaticus\n");
-        fprintf(stderr, "  C = Modus coloris\n");
-        fprintf(stderr, "  G = Modus griseus\n");
-        fprintf(stderr, "  Esc = Exire\n");
-        redde 1;
-    }
+    /* Monstrare usus */
+    fprintf(stderr, "Usus: %s [via_ad_imaginem]\n", argv[0]);
+    fprintf(stderr, "Claves:\n");
+    fprintf(stderr, "  1 = Omnes colores\n");
+    fprintf(stderr, "  2 = Griseum\n");
+    fprintf(stderr, "  3 = Calidus\n");
+    fprintf(stderr, "  4 = Frigidus\n");
+    fprintf(stderr, "  5 = Monochromaticus\n");
+    fprintf(stderr, "  C = Modus coloris\n");
+    fprintf(stderr, "  G = Modus griseus\n");
+    fprintf(stderr, "  V = Paste ex clipboard\n");
+    fprintf(stderr, "  Esc = Exire\n");
 
     /* Creare piscinam */
-    piscina = piscina_generare_dynamicum("dithering", M * M * XX);  /* 20MB */
+    piscina = piscina_generare_dynamicum("dithering", M * M * L);  /* 50MB */
     si (piscina == NIHIL)
     {
         fprintf(stderr, "Errore: non possum creare piscinam\n");
         redde 1;
     }
 
-    /* Caricare imaginem */
-    fprintf(stderr, "Caricare: %s\n", argv[1]);
-    imago_fructus = imago_caricare_ex_file(argv[1], piscina);
-    si (!imago_fructus.successus)
-    {
-        fprintf(stderr, "Errore: %.*s\n",
-            (integer)imago_fructus.error.mensura,
-            imago_fructus.error.datum);
-        piscina_destruere(piscina);
-        redde 1;
-    }
+    /* Initiare status imaginis */
+    habet_imaginem = FALSUM;
+    imago = NIHIL;
+    imago_scalata.pixela = NIHIL;
+    imago_scalata.latitudo = 0;
+    imago_scalata.altitudo = 0;
+    rgba_dithered = NIHIL;
+    necesse_rescalare = FALSUM;
 
-    imago = &imago_fructus.imago;
-    fprintf(stderr, "Imago carricata: %u x %u pixela\n",
-        imago->latitudo, imago->altitudo);
+    /* Caricare imaginem si argumentum datum */
+    si (argc >= 2)
+    {
+        fprintf(stderr, "Caricare: %s\n", argv[1]);
+        imago_fructus = imago_caricare_ex_file(argv[1], piscina);
+        si (imago_fructus.successus)
+        {
+            imago = &imago_fructus.imago;
+            habet_imaginem = VERUM;
+            necesse_rescalare = VERUM;
+            fprintf(stderr, "Imago carricata: %u x %u pixela\n",
+                imago->latitudo, imago->altitudo);
+        }
+        alioquin
+        {
+            fprintf(stderr, "Errore: %.*s\n",
+                (integer)imago_fructus.error.mensura,
+                imago_fructus.error.datum);
+        }
+    }
+    alioquin
+    {
+        fprintf(stderr, "Nulla imago. Preme V pro paste ex clipboard.\n");
+    }
 
     /* Initiare thema */
     thema_initiare();
@@ -114,36 +133,13 @@ principale(s32 argc, character** argv)
     /* Monstrare fenestram */
     fenestra_monstrare(fenestra);
 
-    /* Scalare imaginem - fit in remaining space after palette (300px left margin) */
-    imago_scalata = imago_scalare_ad_limites(
-        imago,
-        (i32)((s32)tabula->latitudo - 320),  /* Leave 300 for palette + margins */
-        CDLXXX,  /* 480 */
-        IMAGO_SCALA_BILINEARIS,
-        piscina);
-
-    si (imago_scalata.pixela == NIHIL)
-    {
-        fprintf(stderr, "Errore: non possum scalare imaginem\n");
-        fenestra_destruere(fenestra);
-        piscina_destruere(piscina);
-        redde 1;
-    }
-
-    fprintf(stderr, "Imago scalata: %u x %u\n",
-        imago_scalata.latitudo, imago_scalata.altitudo);
-
     /* Initiare colores (omnes) */
     dithering_praeparare_omnes(colores_activi);
     modus_coloris = VERUM;
     puncta[0] = 64;
     puncta[1] = 128;
     puncta[2] = 192;
-    necesse_redithering = VERUM;
-
-    /* Allocare buffer pro RGBA dithered */
-    rgba_dithered = (i8*)piscina_allocare(piscina,
-        (memoriae_index)(imago_scalata.latitudo * imago_scalata.altitudo * 4));
+    necesse_redithering = FALSUM;
 
     /* Initiare dithering fructus */
     dithering_fructus.successus = FALSUM;
@@ -216,6 +212,34 @@ principale(s32 argc, character** argv)
                             necesse_redithering = VERUM;
                             fprintf(stderr, "Modus: Griseus\n");
                         }
+                        alioquin si (k == 'v' || k == 'V')
+                        {
+                            /* Paste ex clipboard */
+                            si (clipboard_habet_imaginem())
+                            {
+                                ImagoFructus clipboard_fructus;
+                                clipboard_fructus = clipboard_capere_imaginem(piscina);
+                                si (clipboard_fructus.successus)
+                                {
+                                    imago_fructus = clipboard_fructus;
+                                    imago = &imago_fructus.imago;
+                                    habet_imaginem = VERUM;
+                                    necesse_rescalare = VERUM;
+                                    fprintf(stderr, "Clipboard: %u x %u pixela\n",
+                                        imago->latitudo, imago->altitudo);
+                                }
+                                alioquin
+                                {
+                                    fprintf(stderr, "Errore clipboard: %.*s\n",
+                                        (integer)clipboard_fructus.error.mensura,
+                                        clipboard_fructus.error.datum);
+                                }
+                            }
+                            alioquin
+                            {
+                                fprintf(stderr, "Nulla imago in clipboard\n");
+                            }
+                        }
                     }
                     frange;
 
@@ -230,8 +254,37 @@ principale(s32 argc, character** argv)
             }
         }
 
+        /* Rescalare imaginem si necesse */
+        si (necesse_rescalare && habet_imaginem && imago != NIHIL)
+        {
+            imago_scalata = imago_scalare_ad_limites(
+                imago,
+                (i32)((s32)tabula->latitudo - 320),  /* Leave 300 for palette + margins */
+                CDLXXX,  /* 480 */
+                IMAGO_SCALA_BILINEARIS,
+                piscina);
+
+            si (imago_scalata.pixela != NIHIL)
+            {
+                fprintf(stderr, "Imago scalata: %u x %u\n",
+                    imago_scalata.latitudo, imago_scalata.altitudo);
+
+                /* Allocare buffer pro RGBA dithered */
+                rgba_dithered = (i8*)piscina_allocare(piscina,
+                    (memoriae_index)(imago_scalata.latitudo * imago_scalata.altitudo * 4));
+
+                necesse_redithering = VERUM;
+            }
+            alioquin
+            {
+                fprintf(stderr, "Errore: non possum scalare imaginem\n");
+                habet_imaginem = FALSUM;
+            }
+            necesse_rescalare = FALSUM;
+        }
+
         /* Redithering si necesse */
-        si (necesse_redithering)
+        si (necesse_redithering && habet_imaginem)
         {
             si (modus_coloris)
             {
@@ -293,7 +346,7 @@ principale(s32 argc, character** argv)
         }
 
         /* Delineare imaginem dithered (post palette grid) */
-        si (dithering_fructus.successus)
+        si (habet_imaginem && dithering_fructus.successus && rgba_dithered != NIHIL)
         {
             s32 dest_x = 300;  /* Post graticula colorum */
             s32 dest_y = ((s32)tabula->altitudo - (s32)imago_scalata.altitudo) / 2;

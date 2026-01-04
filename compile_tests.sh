@@ -119,6 +119,7 @@ declare -a SOURCE_FILES=(
 declare -a OBJC_SOURCES=(
     "lib/fenestra_macos.m"
     "lib/tls_macos.m"
+    "lib/clipboard_platform_macos.m"
 )
 
 # Build directory for object files
