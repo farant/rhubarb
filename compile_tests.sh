@@ -111,6 +111,9 @@ declare -a SOURCE_FILES=(
     "lib/imago.c"
     "lib/imago_opus.c"
     "lib/dithering.c"
+    "lib/dialogus.c"
+    "lib/dialogus_importatio.c"
+    "lib/importatio_visus.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
 )

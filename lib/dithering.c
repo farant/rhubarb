@@ -68,39 +68,6 @@ hic_manens constans s32 ATKINSON_OFFSETS[VI][II] = {
  * ============================================================ */
 
 /*
- * Invenire colorem proximum per distantiam RGB
- */
-hic_manens s32
-_invenire_proximum_colorem(
-    s32 r, s32 g, s32 b,
-    constans b32 colores_activi[XVI])
-{
-    s32 optimus_index = 0;
-    s32 optima_distantia = 0x7FFFFFFF;  /* Maximum s32 */
-    s32 i;
-
-    per (i = 0; i < XVI; i++)
-    {
-        s32 dr, dg, db, dist;
-
-        si (!colores_activi[i]) perge;
-
-        dr = r - (s32)(insignatus character)AQUINAS_PALETTE[i][0];
-        dg = g - (s32)(insignatus character)AQUINAS_PALETTE[i][1];
-        db = b - (s32)(insignatus character)AQUINAS_PALETTE[i][2];
-        dist = dr * dr + dg * dg + db * db;
-
-        si (dist < optima_distantia)
-        {
-            optima_distantia = dist;
-            optimus_index = i;
-        }
-    }
-
-    redde optimus_index;
-}
-
-/*
  * Computare luminantiam (0-255)
  * Formula: 0.3*R + 0.59*G + 0.11*B
  * In fixed point: (77*R + 150*G + 28*B) >> 8
@@ -135,13 +102,17 @@ dithering_atkinson_colorum(
     Piscina*      piscina)
 {
     DitheringFructus fructus;
-    s32* error_r;
-    s32* error_g;
-    s32* error_b;
+    s16* error_buf;  /* Interleaved RGB error: 3 rows only */
     s32 x, y, i;
     s32 lat = (s32)latitudo;
     s32 alt = (s32)altitudo;
     s32 num_pixela = lat * alt;
+    s32 row_stride;
+
+    /* Pre-compute active palette for faster lookup */
+    s32 active_palette[XVI][III];
+    s32 num_active = 0;
+    s32 active_indices[XVI];
 
     /* Initiare fructum */
     fructus.successus = FALSUM;
@@ -155,6 +126,24 @@ dithering_atkinson_colorum(
         redde fructus;
     }
 
+    /* Build active palette array */
+    per (i = 0; i < XVI; i++)
+    {
+        si (colores_activi[i])
+        {
+            active_palette[num_active][0] = (s32)(insignatus character)AQUINAS_PALETTE[i][0];
+            active_palette[num_active][1] = (s32)(insignatus character)AQUINAS_PALETTE[i][1];
+            active_palette[num_active][2] = (s32)(insignatus character)AQUINAS_PALETTE[i][2];
+            active_indices[num_active] = i;
+            num_active++;
+        }
+    }
+
+    si (num_active == 0)
+    {
+        redde fructus;
+    }
+
     /* Allocare output indices */
     fructus.indices = (i8*)piscina_allocare(piscina, (memoriae_index)num_pixela);
     si (fructus.indices == NIHIL)
@@ -162,66 +151,114 @@ dithering_atkinson_colorum(
         redde fructus;
     }
 
-    /* Allocare error buffers (usant s32 pro negativis valoribus) */
-    error_r = (s32*)piscina_allocare(piscina, (memoriae_index)(num_pixela * (s32)magnitudo(s32)));
-    error_g = (s32*)piscina_allocare(piscina, (memoriae_index)(num_pixela * (s32)magnitudo(s32)));
-    error_b = (s32*)piscina_allocare(piscina, (memoriae_index)(num_pixela * (s32)magnitudo(s32)));
-
-    si (error_r == NIHIL || error_g == NIHIL || error_b == NIHIL)
+    /* Allocare error buffer - only 3 rows needed, interleaved RGB (s16 sufficient) */
+    row_stride = lat * III;
+    error_buf = (s16*)piscina_allocare(piscina, (memoriae_index)(row_stride * III * (s32)magnitudo(s16)));
+    si (error_buf == NIHIL)
     {
         redde fructus;
     }
+    memset(error_buf, 0, (memoriae_index)(row_stride * III * (s32)magnitudo(s16)));
 
-    /* Copiare RGBA ad error buffers */
-    per (i = 0; i < num_pixela; i++)
-    {
-        error_r[i] = (s32)(insignatus character)rgba[i * 4 + 0];
-        error_g[i] = (s32)(insignatus character)rgba[i * 4 + 1];
-        error_b[i] = (s32)(insignatus character)rgba[i * 4 + 2];
-    }
-
-    /* Atkinson dithering */
+    /* Single-pass Atkinson dithering */
     per (y = 0; y < alt; y++)
     {
+        s32 row0 = (y % III) * row_stride;
+        s32 row1 = ((y + I) % III) * row_stride;
+        s32 row2 = ((y + II) % III) * row_stride;
+        s32 rgba_row = y * lat * IV;
+
         per (x = 0; x < lat; x++)
         {
-            s32 idx = y * lat + x;
-            s32 old_r = _clamp(error_r[idx]);
-            s32 old_g = _clamp(error_g[idx]);
-            s32 old_b = _clamp(error_b[idx]);
-            s32 color_idx;
-            s32 new_r, new_g, new_b;
-            s32 err_r, err_g, err_b;
-            s32 j;
+            s32 ex = x * III;
+            s32 rgba_idx = rgba_row + x * IV;
 
-            /* Invenire colorem proximum */
-            color_idx = _invenire_proximum_colorem(old_r, old_g, old_b, colores_activi);
-            fructus.indices[idx] = (i8)color_idx;
+            /* Get pixel + accumulated error */
+            s32 old_r = (s32)(insignatus character)rgba[rgba_idx + 0] + error_buf[row0 + ex + 0];
+            s32 old_g = (s32)(insignatus character)rgba[rgba_idx + 1] + error_buf[row0 + ex + 1];
+            s32 old_b = (s32)(insignatus character)rgba[rgba_idx + 2] + error_buf[row0 + ex + 2];
 
-            /* Obtinere RGB coloris electi */
-            new_r = (s32)(insignatus character)AQUINAS_PALETTE[color_idx][0];
-            new_g = (s32)(insignatus character)AQUINAS_PALETTE[color_idx][1];
-            new_b = (s32)(insignatus character)AQUINAS_PALETTE[color_idx][2];
+            /* Clamp inline */
+            si (old_r < 0) old_r = 0; alioquin si (old_r > 255) old_r = 255;
+            si (old_g < 0) old_g = 0; alioquin si (old_g > 255) old_g = 255;
+            si (old_b < 0) old_b = 0; alioquin si (old_b > 255) old_b = 255;
 
-            /* Computare errorem (dividere per 8 pro Atkinson) */
-            err_r = (old_r - new_r) / 8;
-            err_g = (old_g - new_g) / 8;
-            err_b = (old_b - new_b) / 8;
-
-            /* Diffundere errorem ad 6 vicinos */
-            per (j = 0; j < VI; j++)
+            /* Find closest color - inline */
             {
-                s32 nx = x + ATKINSON_OFFSETS[j][0];
-                s32 ny = y + ATKINSON_OFFSETS[j][1];
+                s32 best_idx = 0;
+                s32 best_dist = 0x7FFFFFFF;
+                s32 j;
 
-                si (nx >= 0 && nx < lat && ny >= 0 && ny < alt)
+                per (j = 0; j < num_active; j++)
                 {
-                    s32 nidx = ny * lat + nx;
-                    error_r[nidx] += err_r;
-                    error_g[nidx] += err_g;
-                    error_b[nidx] += err_b;
+                    s32 dr = old_r - active_palette[j][0];
+                    s32 dg = old_g - active_palette[j][1];
+                    s32 db = old_b - active_palette[j][2];
+                    s32 dist = dr * dr + dg * dg + db * db;
+
+                    si (dist < best_dist)
+                    {
+                        best_dist = dist;
+                        best_idx = j;
+                    }
+                }
+
+                fructus.indices[y * lat + x] = (i8)active_indices[best_idx];
+
+                /* Compute error (>> 3 = divide by 8) */
+                {
+                    s32 err_r = (old_r - active_palette[best_idx][0]) >> III;
+                    s32 err_g = (old_g - active_palette[best_idx][1]) >> III;
+                    s32 err_b = (old_b - active_palette[best_idx][2]) >> III;
+
+                    /* Diffuse to 6 neighbors - unrolled with bounds checks */
+                    /* Right 1: (x+1, y) */
+                    si (x + I < lat)
+                    {
+                        error_buf[row0 + (x + I) * III + 0] += (s16)err_r;
+                        error_buf[row0 + (x + I) * III + 1] += (s16)err_g;
+                        error_buf[row0 + (x + I) * III + 2] += (s16)err_b;
+                    }
+                    /* Right 2: (x+2, y) */
+                    si (x + II < lat)
+                    {
+                        error_buf[row0 + (x + II) * III + 0] += (s16)err_r;
+                        error_buf[row0 + (x + II) * III + 1] += (s16)err_g;
+                        error_buf[row0 + (x + II) * III + 2] += (s16)err_b;
+                    }
+                    /* Next row: (x-1, y+1), (x, y+1), (x+1, y+1) */
+                    si (y + I < alt)
+                    {
+                        si (x > 0)
+                        {
+                            error_buf[row1 + (x - I) * III + 0] += (s16)err_r;
+                            error_buf[row1 + (x - I) * III + 1] += (s16)err_g;
+                            error_buf[row1 + (x - I) * III + 2] += (s16)err_b;
+                        }
+                        error_buf[row1 + x * III + 0] += (s16)err_r;
+                        error_buf[row1 + x * III + 1] += (s16)err_g;
+                        error_buf[row1 + x * III + 2] += (s16)err_b;
+                        si (x + I < lat)
+                        {
+                            error_buf[row1 + (x + I) * III + 0] += (s16)err_r;
+                            error_buf[row1 + (x + I) * III + 1] += (s16)err_g;
+                            error_buf[row1 + (x + I) * III + 2] += (s16)err_b;
+                        }
+                    }
+                    /* Two rows down: (x, y+2) */
+                    si (y + II < alt)
+                    {
+                        error_buf[row2 + x * III + 0] += (s16)err_r;
+                        error_buf[row2 + x * III + 1] += (s16)err_g;
+                        error_buf[row2 + x * III + 2] += (s16)err_b;
+                    }
                 }
             }
+
+            /* Clear this error cell for reuse */
+            error_buf[row0 + ex + 0] = 0;
+            error_buf[row0 + ex + 1] = 0;
+            error_buf[row0 + ex + 2] = 0;
         }
     }
 

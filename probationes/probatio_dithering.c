@@ -8,6 +8,9 @@
 #include "thema.h"
 #include "color.h"
 #include "clipboard_platform.h"
+#include "importatio_visus.h"
+#include "dialogus_importatio.h"
+#include "dialogus.h"
 #include <stdio.h>
 
 /*
@@ -20,6 +23,7 @@
  * C = Color mode
  * G = Grayscale bucketing mode
  * V = Paste from clipboard
+ * D = Open import dialog (when image loaded)
  */
 
 s32
@@ -44,6 +48,9 @@ principale(s32 argc, character** argv)
                      b32  necesse_rescalare;
                      b32  habet_imaginem;
                      s32  x, y;
+      DialogusImportatio*  dialogus_importatio;
+          ImportatioVisus*  importatio_visus;
+                     b32  dialogus_activus;
 
     /* Monstrare usus */
     fprintf(stderr, "Usus: %s [via_ad_imaginem]\n", argv[0]);
@@ -56,6 +63,7 @@ principale(s32 argc, character** argv)
     fprintf(stderr, "  C = Modus coloris\n");
     fprintf(stderr, "  G = Modus griseus\n");
     fprintf(stderr, "  V = Paste ex clipboard\n");
+    fprintf(stderr, "  D = Aperire dialogum importationis\n");
     fprintf(stderr, "  Esc = Exire\n");
 
     /* Creare piscinam */
@@ -145,6 +153,11 @@ principale(s32 argc, character** argv)
     dithering_fructus.successus = FALSUM;
     dithering_fructus.indices = NIHIL;
 
+    /* Initiare dialog state */
+    dialogus_importatio = NIHIL;
+    importatio_visus = NIHIL;
+    dialogus_activus = FALSUM;
+
     /* Ansa eventuum */
     currens = VERUM;
     dum (currens && !fenestra_debet_claudere(fenestra))
@@ -156,6 +169,45 @@ principale(s32 argc, character** argv)
         eventus_ptr = NIHIL;
         dum (fenestra_obtinere_eventus(fenestra, &eventus))
         {
+            /* Si dialogus activus, tractare eventus per dialogum */
+            si (dialogus_activus && dialogus_importatio != NIHIL)
+            {
+                Dialogus* dlg;
+                DialogusFructus fructus;
+
+                dlg = dialogus_importatio_obtinere_dialogum(dialogus_importatio);
+                si (dlg != NIHIL && dlg->tractare_eventum != NIHIL)
+                {
+                    fructus = dlg->tractare_eventum(dlg, &eventus);
+
+                    si (fructus == DIALOGUS_CONFIRMATUS)
+                    {
+                        constans i8* indices;
+                        i32 lat, alt;
+                        chorda tit;
+
+                        si (dialogus_importatio_obtinere_fructum(
+                                dialogus_importatio, &indices, &lat, &alt, &tit))
+                        {
+                            fprintf(stderr, "Imago salvata: %.*s (%d x %d)\n",
+                                (integer)tit.mensura, tit.datum, lat, alt);
+                        }
+
+                        dialogus_activus = FALSUM;
+                        dialogus_importatio = NIHIL;
+                        importatio_visus = NIHIL;
+                    }
+                    alioquin si (fructus == DIALOGUS_ABORTUS)
+                    {
+                        fprintf(stderr, "Dialogus abortus\n");
+                        dialogus_activus = FALSUM;
+                        dialogus_importatio = NIHIL;
+                        importatio_visus = NIHIL;
+                    }
+                }
+                perge;  /* Non tractare eventus per normale via */
+            }
+
             commutatio (eventus.genus)
             {
                 casus EVENTUS_CLAUDERE:
@@ -238,6 +290,22 @@ principale(s32 argc, character** argv)
                             alioquin
                             {
                                 fprintf(stderr, "Nulla imago in clipboard\n");
+                            }
+                        }
+                        alioquin si ((k == 'd' || k == 'D') && habet_imaginem && !dialogus_activus)
+                        {
+                            /* Aperire dialogum importationis */
+                            /* Creare ImportatioVisus et initiare sessionem */
+                            importatio_visus = importatio_visus_creare(piscina);
+                            si (importatio_visus != NIHIL)
+                            {
+                                importatio_visus_initiare_sessionem(importatio_visus, imago);
+                                dialogus_importatio = dialogus_importatio_creare(piscina, importatio_visus);
+                                si (dialogus_importatio != NIHIL)
+                                {
+                                    dialogus_activus = VERUM;
+                                    fprintf(stderr, "Dialogus apertus\n");
+                                }
                             }
                         }
                     }
@@ -369,6 +437,23 @@ principale(s32 argc, character** argv)
                         tabula->pixela[dest_idx] = (i32)RGB(r, g, b);
                     }
                 }
+            }
+        }
+
+        /* Reddere dialogum si activus */
+        si (dialogus_activus && dialogus_importatio != NIHIL)
+        {
+            Dialogus* dlg;
+            dlg = dialogus_importatio_obtinere_dialogum(dialogus_importatio);
+            si (dlg != NIHIL)
+            {
+                /* Reddere dialog overlay super totam fenestram */
+                dialogus_reddere_overlay(
+                    dlg,
+                    tabula,
+                    ZEPHYRUM, ZEPHYRUM,   /* panel position */
+                    LXXI, LX,              /* panel size (71x60 chars) */
+                    1.0f);
             }
         }
 

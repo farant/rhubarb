@@ -34,7 +34,7 @@ elementa_slider(
     i32              valor,
     i32              valor_min,
     i32              valor_max,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala);
 
 /* ============================================================
@@ -53,7 +53,7 @@ elementa_bottone(
     i32              x,
     i32              y,
     chorda*          label,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala);
 
 /* ============================================================
@@ -74,7 +74,7 @@ elementa_capsa_optandi(
     i32              y,
     chorda*          label,
     b32              valor,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala);
 
 /* ============================================================
@@ -98,7 +98,7 @@ elementa_campus_textus(
     chorda*          textus,
     s32              cursor,
     b32              focused,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala);
 
 /* ============================================================
@@ -118,7 +118,7 @@ elementa_graticula_colorum(
     i32              x,
     i32              y,
     constans b32*    colores,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala);
 
 #endif /* ELEMENTA_H */

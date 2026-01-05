@@ -16,6 +16,8 @@
 #include "librarium_visus.h"
 #include "fons_visus.h"
 #include "calendario_visus.h"
+#include "dialogus.h"
+#include "importatio_visus.h"
 
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
@@ -69,6 +71,12 @@ nomen structura {
     b32 modus_biblia_visus;           /* VERUM = Bible viewer mode */
     b32 modus_librarium;              /* VERUM = library viewer mode */
     b32 modus_calendario_visus;       /* VERUM = calendar viewer mode */
+    b32 modus_importatio_visus;       /* VERUM = import preview mode */
+    /* Import state */
+    ImportatioVisus* importatio_visus; /* Import preview (during import) */
+    /* Dialogus modalis */
+    Dialogus* dialogus;               /* Dialogus activus, vel NIHIL */
+    s32       dialogus_panel;         /* Quod panel: 0=sinister, 1=dexter */
 } Schirma;
 
 /* Controller schirmarum */
@@ -211,6 +219,53 @@ schirmata_commutare_ad_fons_visus(
  */
 vacuum
 schirmata_commutare_ad_calendario_visus(
+    Schirmata* schirmata);
+
+/* Initiare import imaginis ex clipboard
+ *
+ * schirmata: controller
+ *
+ * Redde: VERUM si importatio initiata
+ */
+b32
+schirmata_initiare_importationem_ex_clipboard(
+    Schirmata* schirmata);
+
+
+/* ==================================================
+ * Dialogi
+ * ================================================== */
+
+/* Aperire dialogum in panel
+ *
+ * Dialogus captabit omnes eventus usque ad clauditur.
+ *
+ * schirmata: controller
+ * dialogus: dialogus aperiendus
+ * panel: quod panel (0=sinister, 1=dexter)
+ */
+vacuum
+schirmata_aperire_dialogum(
+    Schirmata* schirmata,
+    Dialogus*  dialogus,
+    s32        panel);
+
+/* Claudere dialogum currentem
+ *
+ * schirmata: controller
+ */
+vacuum
+schirmata_claudere_dialogum(
+    Schirmata* schirmata);
+
+/* Quaerere an dialogus activus
+ *
+ * schirmata: controller
+ *
+ * Redde: VERUM si dialogus activus
+ */
+b32
+schirmata_habet_dialogum(
     Schirmata* schirmata);
 
 

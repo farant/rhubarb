@@ -44,7 +44,7 @@ _elementa_punctum_in_recto(i32 px, i32 py, i32 rx, i32 ry, i32 rl, i32 ra)
 
 /* Renovare positio muris ex eventu */
 interior vacuum
-_elementa_renovare_mus(Eventus* eventus)
+_elementa_renovare_mus(constans Eventus* eventus)
 {
     si (eventus != NIHIL)
     {
@@ -62,11 +62,10 @@ _elementa_renovare_mus(Eventus* eventus)
         si (eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
             _elementa_status.mus_depressus = FALSUM;
-            /* Finis omnium drag/press states */
+            /* Finis slider drag state - bottone state managed by bottone itself */
             _elementa_status.slider_dragging = FALSUM;
             _elementa_status.slider_drag_id = 0;
-            _elementa_status.bottone_pressed = FALSUM;
-            _elementa_status.bottone_pressed_id = 0;
+            /* NON clariare bottone_pressed hic - bottone facit in suo codice */
         }
     }
 }
@@ -85,7 +84,7 @@ elementa_slider(
     i32              valor,
     i32              valor_min,
     i32              valor_max,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala)
 {
     FructusSlider fructus;
@@ -169,21 +168,25 @@ elementa_slider(
     /* Si trahitur hic slider (et mus adhuc depressus) */
     si (_elementa_status.slider_dragging && _elementa_status.slider_drag_id == id && _elementa_status.mus_depressus)
     {
-        i32 valor_novus;
+        s32 valor_novus;
         f32 pos_ratio;
+        s32 numerator;   /* MUST be signed - can be negative */
+        s32 denominator;
 
         fructus.dragging = VERUM;
 
         /* Computare novum valorem ex positione muris */
-        pos_ratio = (f32)(_elementa_status.mus_x - px - thumb_radius) / (f32)(track_latitudo - thumb_radius * 2);
+        numerator = (s32)_elementa_status.mus_x - (s32)px - (s32)thumb_radius;
+        denominator = (s32)track_latitudo - (s32)thumb_radius * 2;
+        pos_ratio = (f32)numerator / (f32)denominator;
         si (pos_ratio < 0.0f) pos_ratio = 0.0f;
         si (pos_ratio > 1.0f) pos_ratio = 1.0f;
 
-        valor_novus = valor_min + (i32)(pos_ratio * (f32)(valor_max - valor_min));
+        valor_novus = (s32)valor_min + (s32)(pos_ratio * (f32)((s32)valor_max - (s32)valor_min));
 
-        si (valor_novus != fructus.valor)
+        si (valor_novus != (s32)fructus.valor)
         {
-            fructus.valor = valor_novus;
+            fructus.valor = (i32)valor_novus;
             fructus.mutatum = VERUM;
         }
 
@@ -221,7 +224,7 @@ elementa_bottone(
     i32              x,
     i32              y,
     chorda*          label,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala)
 {
     FructusBottone fructus;
@@ -267,11 +270,20 @@ elementa_bottone(
     }
     altitudo = (i32)(8.0f * scala) + padding * 2;
 
-    /* Renovare positio muris */
-    _elementa_renovare_mus(eventus);
-
     /* Tractare eventus */
     pressed = FALSUM;
+
+    /* Renovare positio muris (sed NON clariare button state - facimus hic) */
+    si (eventus != NIHIL)
+    {
+        si (eventus->genus == EVENTUS_MUS_MOTUS ||
+            eventus->genus == EVENTUS_MUS_DEPRESSUS ||
+            eventus->genus == EVENTUS_MUS_LIBERATUS)
+        {
+            _elementa_status.mus_x = eventus->datum.mus.x;
+            _elementa_status.mus_y = eventus->datum.mus.y;
+        }
+    }
 
     /* Hover sempre ex positione muris currente */
     fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, px, py, latitudo, altitudo);
@@ -288,12 +300,17 @@ elementa_bottone(
         /* Mouse up - end press, trigger click if still over button */
         si (eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
-            si (_elementa_status.bottone_pressed && _elementa_status.bottone_pressed_id == id && fructus.hover)
+            si (_elementa_status.bottone_pressed && _elementa_status.bottone_pressed_id == id)
             {
-                fructus.clicked = VERUM;
+                /* Hic bottone erat depressus - clariare statum */
+                si (fructus.hover)
+                {
+                    fructus.clicked = VERUM;
+                }
+                /* Solum clariare si hic bottone erat depressus */
+                _elementa_status.bottone_pressed = FALSUM;
+                _elementa_status.bottone_pressed_id = 0;
             }
-            _elementa_status.bottone_pressed = FALSUM;
-            _elementa_status.bottone_pressed_id = 0;
         }
     }
 
@@ -354,7 +371,7 @@ elementa_capsa_optandi(
     i32              y,
     chorda*          label,
     b32              valor,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala)
 {
     FructusCapsaOptandi fructus;
@@ -451,7 +468,7 @@ elementa_campus_textus(
     chorda*          textus,
     s32              cursor,
     b32              focused,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala)
 {
     FructusCampusTextus fructus;
@@ -664,7 +681,7 @@ elementa_graticula_colorum(
     i32              x,
     i32              y,
     constans b32*    colores,
-    Eventus*         eventus,
+    constans Eventus* eventus,
     f32              scala)
 {
     FructusGraticulaColorum fructus;

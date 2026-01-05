@@ -70,4 +70,34 @@ imago_scalare_ad_limites(
     ImagoScalaModus modus,
     Piscina*        piscina);
 
+/*
+ * imago_extrahere_et_scalare - Extrahere regionem et scalare
+ *
+ * Extrahit regionem rectangularem ab imagine fonte et scalat
+ * ad limites datos, servando proportionem aspectus.
+ *
+ * @fons:          Imago originalis
+ * @crop_x:        X originis regionis in fonte
+ * @crop_y:        Y originis regionis in fonte
+ * @crop_lat:      Latitudo regionis
+ * @crop_alt:      Altitudo regionis
+ * @max_latitudo:  Latitudo maxima output
+ * @max_altitudo:  Altitudo maxima output
+ * @modus:         Algorithmus scalandi
+ * @piscina:       Piscina pro allocare novam imaginem
+ *
+ * Redde: Nova imago extracta et scalata
+ */
+Imago
+imago_extrahere_et_scalare(
+    constans Imago* fons,
+    i32             crop_x,
+    i32             crop_y,
+    i32             crop_lat,
+    i32             crop_alt,
+    i32             max_latitudo,
+    i32             max_altitudo,
+    ImagoScalaModus modus,
+    Piscina*        piscina);
+
 #endif /* IMAGO_OPUS_H */

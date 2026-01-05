@@ -6,6 +6,8 @@
 #include "fasti.h"
 #include "calendarium_liturgicum.h"
 #include "chorda_aedificator.h"
+#include "clipboard_platform.h"
+#include "dialogus_importatio.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -519,6 +521,12 @@ nomen structura {
     Schirmata*        schirmata;
 } SchirmataCalendarioVisusDatum;
 
+/* Datum pro importatio visus widget wrapper */
+nomen structura {
+    ImportatioVisus*  importatio_visus;
+    Schirmata*        schirmata;
+} SchirmataImportatioVisusDatum;
+
 hic_manens vacuum
 _schirmata_librarium_visus_reddere(
     Widget*          widget,
@@ -641,6 +649,49 @@ _schirmata_calendario_visus_tractare_eventum(
     datum = (SchirmataCalendarioVisusDatum*)widget->datum;
 
     redde calendario_visus_tractare_eventum(datum->calendario_visus, eventus);
+}
+
+
+/* ==================================================
+ * Widget Wrapper Functiones - Importatio Visus
+ * ================================================== */
+
+hic_manens vacuum
+_schirmata_importatio_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataImportatioVisusDatum* datum;
+
+    datum = (SchirmataImportatioVisusDatum*)widget->datum;
+
+    importatio_visus_reddere(
+        datum->importatio_visus,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_importatio_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataImportatioVisusDatum* datum;
+
+    datum = (SchirmataImportatioVisusDatum*)widget->datum;
+
+    redde importatio_visus_tractare_eventum(datum->importatio_visus, eventus);
 }
 
 
@@ -855,6 +906,10 @@ _creare_schirma_layout(
     schirma->modus_biblia_visus = FALSUM;
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
+
+    /* Initiare dialogum */
+    schirma->dialogus = NIHIL;
+    schirma->dialogus_panel = ZEPHYRUM;
 
     schirma->initiatus = VERUM;
 
@@ -1184,10 +1239,92 @@ schirmata_tractare_eventum(
     constans Eventus* eventus)
 {
     ManagerWidget* manager;
+    Schirma*       schirma;
 
     si (!schirmata || !eventus)
     {
         redde FALSUM;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    /* Tractare dialogum si activus */
+    si (schirma->dialogus != NIHIL && schirma->dialogus->tractare_eventum != NIHIL)
+    {
+        DialogusFructus fructus;
+        b32 in_right_panel = FALSUM;
+
+        /* Si in modus importatio, tractare mouse events in right panel separatim */
+        si (schirma->modus_importatio_visus && schirma->importatio_visus != NIHIL)
+        {
+            /* Determinare si mouse est in right panel (secunda dimidia fenestrae) */
+            si (eventus->genus == EVENTUS_MUS_DEPRESSUS ||
+                eventus->genus == EVENTUS_MUS_LIBERATUS ||
+                eventus->genus == EVENTUS_MUS_MOTUS ||
+                eventus->genus == EVENTUS_MUS_ROTULA)
+            {
+                i32 fenestra_latitudo = 640; /* hardcoded ut in probatio_combinado */
+                i32 mus_x = eventus->datum.mus.x;
+
+                /* Right panel starts at half width */
+                si (mus_x >= fenestra_latitudo / II)
+                {
+                    in_right_panel = VERUM;
+                    /* Tradere eventum ad importatio_visus */
+                    importatio_visus_tractare_eventum(schirma->importatio_visus, eventus);
+                }
+            }
+        }
+
+        /* Tradere eventum ad dialogum (nisi erat in right panel) */
+        si (!in_right_panel)
+        {
+            fructus = schirma->dialogus->tractare_eventum(schirma->dialogus, eventus);
+        }
+        alioquin
+        {
+            fructus = DIALOGUS_CURRENS;
+        }
+
+        si (fructus == DIALOGUS_CONFIRMATUS || fructus == DIALOGUS_ABORTUS)
+        {
+            /* Si erat importatio, tractare fructum */
+            si (schirma->modus_importatio_visus && schirma->importatio_visus != NIHIL)
+            {
+                si (fructus == DIALOGUS_CONFIRMATUS)
+                {
+                    /* TODO: Salvare imaginem ad repositorium */
+                    constans i8* indices;
+                    i32 lat, alt;
+                    chorda titulus;
+
+                    si (importatio_visus_obtinere_fructum(
+                            schirma->importatio_visus, &indices, &lat, &alt, &titulus))
+                    {
+                        fprintf(stderr, "Imago importata: %.*s (%d x %d)\n",
+                            (integer)titulus.mensura, titulus.datum, lat, alt);
+                    }
+                }
+
+                /* Terminare sessionem importationis */
+                importatio_visus_terminare_sessionem(schirma->importatio_visus);
+                schirma->importatio_visus = NIHIL;
+                schirma->modus_importatio_visus = FALSUM;
+
+                /* Commutare ad navigator */
+                schirmata_commutare_ad_navigator(schirmata);
+            }
+
+            /* Claudere dialogum */
+            si (schirma->dialogus->destruere != NIHIL)
+            {
+                schirma->dialogus->destruere(schirma->dialogus);
+            }
+            schirma->dialogus = NIHIL;
+        }
+
+        /* Dialogus tractavit eventum */
+        redde VERUM;
     }
 
     /* Tractare mouse click in tab bar */
@@ -1309,6 +1446,17 @@ schirmata_tractare_eventum(
             schirmata->tempus_praefixum = tempus_nunc();
             redde VERUM;
         }
+
+        /* Detegere Cmd+V (paste) - initiare importationem imaginis */
+        si ((eventus->datum.clavis.clavis == 'v' || eventus->datum.clavis.clavis == 'V') &&
+            (eventus->datum.clavis.modificantes & MOD_SUPER))
+        {
+            si (schirmata_initiare_importationem_ex_clipboard(schirmata))
+            {
+                redde VERUM;
+            }
+            /* Si non successus, fall through ad manager */
+        }
     }
 
     /* Delegare ad manager schirmae currentis */
@@ -1323,15 +1471,49 @@ schirmata_reddere(
     i32              scala)
 {
     ManagerWidget* manager;
+    Schirma*       schirma;
 
     si (!schirmata || !tabula)
     {
         redde;
     }
 
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
     /* Reddere widgets schirmae currentis */
-    manager = schirmata->schirmae[schirmata->index_currens].manager;
+    manager = schirma->manager;
     manager_widget_reddere(manager, tabula, scala);
+
+    /* Reddere dialogum si activus */
+    si (schirma->dialogus != NIHIL)
+    {
+        i32 panel_x, panel_y, panel_w, panel_h;
+
+        /* Computare limites panel basatus in dialogus_panel */
+        si (schirma->dialogus_panel == ZEPHYRUM)
+        {
+            /* Panel sinister */
+            panel_x = ZEPHYRUM;
+            panel_y = ZEPHYRUM;
+            panel_w = LXXI;   /* 71 characteres */
+            panel_h = LIX;    /* 59 characteres */
+        }
+        alioquin
+        {
+            /* Panel dexter */
+            panel_x = LXXI;
+            panel_y = ZEPHYRUM;
+            panel_w = LXXI;
+            panel_h = LIX;
+        }
+
+        dialogus_reddere_overlay(
+            schirma->dialogus,
+            tabula,
+            panel_x, panel_y,
+            panel_w, panel_h,
+            (f32)scala);
+    }
 
     /* Reddere tab bar */
     _reddere_tabulam_schirmarum(schirmata, tabula, scala);
@@ -1417,6 +1599,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirmata->arx_caeli, slug);
@@ -1479,6 +1662,7 @@ schirmata_commutare_ad_navigator(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 }
 
 
@@ -1535,6 +1719,7 @@ schirmata_commutare_ad_thema_visus(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 }
 
 
@@ -1591,6 +1776,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 }
 
 
@@ -1647,6 +1833,7 @@ schirmata_commutare_ad_biblia_visus(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 }
 
 
@@ -1714,6 +1901,7 @@ schirmata_commutare_ad_librarium(
     schirma->modus_librarium = VERUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 
     /* Quaerere si quaestio */
     si (quaestio)
@@ -1775,6 +1963,7 @@ schirmata_commutare_ad_fons_visus(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = VERUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
 }
 
 
@@ -1831,6 +2020,110 @@ schirmata_commutare_ad_calendario_visus(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = VERUM;
+    schirma->modus_importatio_visus = FALSUM;
+}
+
+
+/* ==================================================
+ * Import Imaginis
+ * ================================================== */
+
+b32
+schirmata_initiare_importationem_ex_clipboard(
+    Schirmata* schirmata)
+{
+    Schirma*                       schirma;
+    ManagerWidget*                 manager;
+    ImagoFructus                   imago_fructus;
+    ImportatioVisus*               visus;
+    DialogusImportatio*            di;
+    Dialogus*                      dlg;
+    SchirmataImportatioVisusDatum* import_datum;
+
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+    manager = schirma->manager;
+
+    /* Verificare an dialogus iam activus */
+    si (schirma->dialogus != NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Obtinere imaginem ex clipboard */
+    imago_fructus = clipboard_capere_imaginem(schirmata->ctx->piscina);
+    si (!imago_fructus.successus)
+    {
+        fprintf(stderr, "Nulla imago in clipboard\n");
+        redde FALSUM;
+    }
+
+    fprintf(stderr, "Imago obtenta ex clipboard: %u x %u\n",
+        imago_fructus.imago.latitudo, imago_fructus.imago.altitudo);
+
+    /* Creare ImportatioVisus */
+    visus = importatio_visus_creare(schirmata->ctx->piscina);
+    si (visus == NIHIL)
+    {
+        fprintf(stderr, "Errore: non possum creare ImportatioVisus\n");
+        redde FALSUM;
+    }
+
+    /* Initiare sessionem */
+    importatio_visus_initiare_sessionem(visus, &imago_fructus.imago);
+    schirma->importatio_visus = visus;
+
+    /* Creare dialogum importationis */
+    di = dialogus_importatio_creare(schirmata->ctx->piscina, visus);
+    si (di == NIHIL)
+    {
+        fprintf(stderr, "Errore: non possum creare DialogusImportatio\n");
+        schirma->importatio_visus = NIHIL;
+        redde FALSUM;
+    }
+
+    dlg = dialogus_importatio_obtinere_dialogum(di);
+
+    /* Creare import_datum pro widget */
+    import_datum = piscina_allocare(schirmata->ctx->piscina,
+                                    magnitudo(SchirmataImportatioVisusDatum));
+    si (!import_datum)
+    {
+        schirma->importatio_visus = NIHIL;
+        redde FALSUM;
+    }
+    import_datum->importatio_visus = visus;
+    import_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 (right panel) cum importatio_visus */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = import_datum;
+        manager->widgets[I].reddere = _schirmata_importatio_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_importatio_visus_tractare_eventum;
+    }
+
+    /* Reset omnes modi, activare importatio */
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = VERUM;
+
+    /* Aperire dialogum in left panel */
+    schirma->dialogus = dlg;
+    schirma->dialogus_panel = 0;  /* Sinister */
+
+    fprintf(stderr, "Importatio initiata\n");
+
+    redde VERUM;
 }
 
 
@@ -1844,6 +2137,78 @@ schirmata_libro(
     }
 
     redde schirmata->libro;
+}
+
+
+/* ==================================================
+ * Dialogi
+ * ================================================== */
+
+vacuum
+schirmata_aperire_dialogum(
+    Schirmata* schirmata,
+    Dialogus*  dialogus,
+    s32        panel)
+{
+    Schirma* schirma;
+
+    si (!schirmata || !dialogus)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    /* Claudere dialogum priorem si existit */
+    si (schirma->dialogus != NIHIL)
+    {
+        si (schirma->dialogus->destruere != NIHIL)
+        {
+            schirma->dialogus->destruere(schirma->dialogus);
+        }
+    }
+
+    schirma->dialogus = dialogus;
+    schirma->dialogus_panel = panel;
+}
+
+vacuum
+schirmata_claudere_dialogum(
+    Schirmata* schirmata)
+{
+    Schirma* schirma;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    si (schirma->dialogus != NIHIL)
+    {
+        si (schirma->dialogus->destruere != NIHIL)
+        {
+            schirma->dialogus->destruere(schirma->dialogus);
+        }
+        schirma->dialogus = NIHIL;
+    }
+}
+
+b32
+schirmata_habet_dialogum(
+    Schirmata* schirmata)
+{
+    Schirma* schirma;
+
+    si (!schirmata)
+    {
+        redde FALSUM;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+
+    redde (schirma->dialogus != NIHIL);
 }
 
 
