@@ -641,11 +641,11 @@ _colorare_links(
                 initium = col;
                 col++;
 
-                /* Scandere verbum (permittere - pro nomina paginarum) */
+                /* Scandere verbum (permittere - et . pro nomina paginarum) */
                 dum (col < tabula->latitudo)
                 {
                     c = tabula_cellula(tabula, linea, col);
-                    si (!_est_character_verbi(c) && c != '-')
+                    si (!_est_character_verbi(c) && c != '-' && c != '.')
                     {
                         frange;
                     }

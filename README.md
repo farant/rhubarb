@@ -1,3 +1,12 @@
+if you want to run something can try:
+
+```sh
+$> ./compile_tests.sh combinado
+$> ./bin/probatio_combinado
+```
+
+only works on macos so far
+
 <img width="726" height="960" alt="image" src="https://github.com/user-attachments/assets/6d96896a-9a2f-4875-8de6-9e45c8c94547" />
 <img width="2000" height="1250" alt="image" src="https://github.com/user-attachments/assets/9cfbd509-5f8f-4d67-a7df-b5538359ce68" />
 

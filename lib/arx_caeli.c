@@ -397,7 +397,7 @@ _est_character_link(
     redde (c >= 'a' && c <= 'z') ||
            (c >= 'A' && c <= 'Z') ||
            (c >= '0' && c <= '9') ||
-           (c == '_') || (c == '-');
+           (c == '_') || (c == '-') || (c == '.');
 }
 
 /* Detectare link in textu ad positionem
