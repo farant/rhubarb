@@ -1293,7 +1293,7 @@ schirmata_tractare_eventum(
             {
                 si (fructus == DIALOGUS_CONFIRMATUS)
                 {
-                    /* TODO: Salvare imaginem ad repositorium */
+                    /* Salvare imaginem ad repositorium */
                     constans i8* indices;
                     i32 lat, alt;
                     chorda titulus;
@@ -1301,8 +1301,60 @@ schirmata_tractare_eventum(
                     si (importatio_visus_obtinere_fructum(
                             schirma->importatio_visus, &indices, &lat, &alt, &titulus))
                     {
-                        fprintf(stderr, "Imago importata: %.*s (%d x %d)\n",
-                            (integer)titulus.mensura, titulus.datum, lat, alt);
+                        EntitasRepositorium* repo;
+                        Entitas* imago;
+                        i32 mensura_indices;
+                        character titulus_buf[CXXVIII];
+                        character lat_buf[XXXII];
+                        character alt_buf[XXXII];
+
+                        repo = schirmata->ctx->repo;
+
+                        si (repo == NIHIL)
+                        {
+                            fprintf(stderr, "Fractura: repositorium non disponibilis\n");
+                        }
+                        alioquin
+                        {
+                            /* Creare entitatem per repositorium (auto-generato UUID) */
+                            imago = repo->entitas_creare(repo->datum, "Vultus::Imago");
+                            si (imago != NIHIL)
+                            {
+                                /* Convertere titulum ad null-terminated */
+                                si (titulus.mensura < CXXVIII)
+                                {
+                                    memcpy(titulus_buf, titulus.datum, titulus.mensura);
+                                    titulus_buf[titulus.mensura] = '\0';
+                                }
+                                alioquin
+                                {
+                                    memcpy(titulus_buf, titulus.datum, CXXVII);
+                                    titulus_buf[CXXVII] = '\0';
+                                }
+
+                                /* Convertere dimensiones ad strings */
+                                sprintf(lat_buf, "%d", lat);
+                                sprintf(alt_buf, "%d", alt);
+
+                                /* Ponere proprietates */
+                                repo->proprietas_ponere(repo->datum, imago, "titulus", titulus_buf);
+                                repo->proprietas_ponere(repo->datum, imago, "latitudo", lat_buf);
+                                repo->proprietas_ponere(repo->datum, imago, "altitudo", alt_buf);
+
+                                /* Ponere datum (palette indices) ut blobum */
+                                mensura_indices = lat * alt;
+                                repo->proprietas_ponere_blobum(
+                                    repo->datum, imago, "datum",
+                                    indices, mensura_indices);
+
+                                fprintf(stderr, "Imago salvata: %s (%d x %d, %d bytes)\n",
+                                    titulus_buf, lat, alt, mensura_indices);
+                            }
+                            alioquin
+                            {
+                                fprintf(stderr, "Fractura: non potest creare entitatem\n");
+                            }
+                        }
                     }
                 }
 

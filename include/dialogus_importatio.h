@@ -40,6 +40,10 @@ struct DialogusImportatio {
     /* Mouse position (renovatur per omnes mouse events) */
     i32               eventus_mus_x;
     i32               eventus_mus_y;
+
+    /* Button click flags (set in reddere, checked in tractare_eventum) */
+    b32               salvare_clicked;
+    b32               abicere_clicked;
 };
 
 /* ============================================================

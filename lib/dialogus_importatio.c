@@ -299,7 +299,10 @@ _dialogus_importatio_reddere(
             di->eventus_currens,
             scala);
 
-        /* Click handled in tractare_eventum */
+        si (fructus.clicked)
+        {
+            di->abicere_clicked = VERUM;
+        }
 
         fructus = elementa_bottone(
             tabula, di->piscina,
@@ -308,7 +311,10 @@ _dialogus_importatio_reddere(
             di->eventus_currens,
             scala);
 
-        (vacuum)fructus;
+        si (fructus.clicked)
+        {
+            di->salvare_clicked = VERUM;
+        }
     }
 
     /* Clariare eventum post rendering ut non processum iterum */
@@ -337,6 +343,19 @@ _dialogus_importatio_tractare_eventum(
     }
 
     visus = di->visus;
+
+    /* Verificare button clicks (set in reddere on previous frame) */
+    si (di->salvare_clicked)
+    {
+        di->salvare_clicked = FALSUM;
+        visus->titulus = di->titulus;
+        redde DIALOGUS_CONFIRMATUS;
+    }
+    si (di->abicere_clicked)
+    {
+        di->abicere_clicked = FALSUM;
+        redde DIALOGUS_ABORTUS;
+    }
 
     /* Salvare eventus pro elementa in reddere
      * Click/release/key events semper salvare.
@@ -460,6 +479,8 @@ dialogus_importatio_creare(
     di->titulus_focused = FALSUM;
     di->focus_index = 0;
     di->eventus_currens = NIHIL;
+    di->salvare_clicked = FALSUM;
+    di->abicere_clicked = FALSUM;
 
     /* Configurare dialogus base */
     di->dialogus.datum = di;
