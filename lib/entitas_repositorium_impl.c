@@ -1535,7 +1535,9 @@ _applicare_eventum(
         casus EVENTUS_PONERE_PROPRIETAS:
         {
             chorda* clavis_internata;
-            chorda* valor_internatus;
+            chorda* valor_chorda;
+            chorda* valor_prop;
+            b32 est_blobum;
 
             si (!tabula_dispersa_invenire(data->entitates, *id_internatum,
                                           (vacuum**)&entitas))
@@ -1545,15 +1547,75 @@ _applicare_eventum(
 
             clavis_internata = chorda_internare(data->intern,
                                                 *eventum->datum.proprietas.clavis);
-            valor_internatus = chorda_internare(data->intern,
-                                                *eventum->datum.proprietas.valor);
+            valor_chorda = eventum->datum.proprietas.valor;
 
-            si (!clavis_internata || !valor_internatus)
+            si (!clavis_internata || !valor_chorda)
             {
                 redde FALSUM;
             }
 
-            redde entitas_proprietas_ponere(entitas, clavis_internata, valor_internatus);
+            /* Detegere si blobum per gzip magic bytes (0x1f 0x8b) */
+            est_blobum = FALSUM;
+            si (valor_chorda->mensura >= II &&
+                valor_chorda->datum[ZEPHYRUM] == (i8)0x1f &&
+                valor_chorda->datum[I] == (i8)0x8b)
+            {
+                est_blobum = VERUM;
+            }
+
+            si (est_blobum)
+            {
+                /* Pro blobum: non internare valor, ponere directe cum typus */
+                Proprietas* prop;
+                i32 i;
+                i32 numerus;
+
+                /* Creare chorda non-internata pro valor */
+                valor_prop = piscina_allocare(data->piscina, magnitudo(chorda));
+                si (!valor_prop)
+                {
+                    redde FALSUM;
+                }
+                valor_prop->datum = valor_chorda->datum;
+                valor_prop->mensura = valor_chorda->mensura;
+
+                /* Quaerere vel addere proprietas */
+                numerus = xar_numerus(entitas->proprietates);
+                per (i = ZEPHYRUM; i < numerus; i++)
+                {
+                    prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
+                    si (prop && prop->clavis == clavis_internata)
+                    {
+                        prop->valor = valor_prop;
+                        prop->typus_literalis = TYPUS_BLOBUM;
+                        prop->parsitus_validus = FALSUM;
+                        redde VERUM;
+                    }
+                }
+
+                /* Non inventum - addere novam */
+                prop = (Proprietas*)xar_addere(entitas->proprietates);
+                si (!prop)
+                {
+                    redde FALSUM;
+                }
+                prop->clavis = clavis_internata;
+                prop->valor = valor_prop;
+                prop->typus_semanticus = NIHIL;
+                prop->typus_literalis = TYPUS_BLOBUM;
+                prop->parsitus_validus = FALSUM;
+                redde VERUM;
+            }
+            alioquin
+            {
+                /* Non-blobum: internare et ponere normaliter */
+                valor_prop = chorda_internare(data->intern, *valor_chorda);
+                si (!valor_prop)
+                {
+                    redde FALSUM;
+                }
+                redde entitas_proprietas_ponere(entitas, clavis_internata, valor_prop);
+            }
         }
 
         casus EVENTUS_DELERE_PROPRIETAS:

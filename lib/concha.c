@@ -13,6 +13,7 @@
 #include "libro_paginarum.h"
 #include "fons_visus.h"
 #include "calendario_visus.h"
+#include "pinacotheca_visus.h"
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -245,6 +246,7 @@ concha_creare(ConchaConfiguratio* config)
     navigator_entitatum_init(ctx);
     libro_paginarum_init(ctx);
     calendario_visus_init(ctx);
+    pinacotheca_visus_init(ctx);
 
     /* Registrare built-in commands (non-widget) */
     registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);

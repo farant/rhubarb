@@ -90,6 +90,10 @@ _schirmata_commutare_widget_callback(
     {
         schirmata_commutare_ad_calendario_visus(schirmata);
     }
+    alioquin si (strcmp(widget_titulus, "pinacotheca") == ZEPHYRUM)
+    {
+        schirmata_commutare_ad_pinacotheca(schirmata, argumentum);
+    }
 }
 
 
@@ -527,6 +531,12 @@ nomen structura {
     Schirmata*        schirmata;
 } SchirmataImportatioVisusDatum;
 
+/* Datum pro pinacotheca visus widget wrapper */
+nomen structura {
+    PinacothecaVisus* pinacotheca_visus;
+    Schirmata*        schirmata;
+} SchirmataPinacothecaVisusDatum;
+
 hic_manens vacuum
 _schirmata_librarium_visus_reddere(
     Widget*          widget,
@@ -692,6 +702,49 @@ _schirmata_importatio_visus_tractare_eventum(
     datum = (SchirmataImportatioVisusDatum*)widget->datum;
 
     redde importatio_visus_tractare_eventum(datum->importatio_visus, eventus);
+}
+
+
+/* ==================================================
+ * Widget Wrapper Functiones - Pinacotheca Visus
+ * ================================================== */
+
+hic_manens vacuum
+_schirmata_pinacotheca_visus_reddere(
+    Widget*          widget,
+    TabulaPixelorum* tabula,
+    i32              x,
+    i32              y,
+    i32              latitudo,
+    i32              altitudo,
+    i32              scala,
+    b32              focused)
+{
+    SchirmataPinacothecaVisusDatum* datum;
+
+    datum = (SchirmataPinacothecaVisusDatum*)widget->datum;
+
+    pinacotheca_visus_reddere(
+        datum->pinacotheca_visus,
+        tabula,
+        x,
+        y,
+        latitudo,
+        altitudo,
+        scala,
+        focused);
+}
+
+hic_manens b32
+_schirmata_pinacotheca_visus_tractare_eventum(
+    Widget*           widget,
+    constans Eventus* eventus)
+{
+    SchirmataPinacothecaVisusDatum* datum;
+
+    datum = (SchirmataPinacothecaVisusDatum*)widget->datum;
+
+    redde pinacotheca_visus_tractare_eventum(datum->pinacotheca_visus, eventus);
 }
 
 
@@ -1147,6 +1200,7 @@ schirmata_creare(
     schirmata->librarium_visus = librarium_visus_creare(ctx->piscina, ctx);
     schirmata->fons_visus = fons_visus_creare(ctx->piscina);
     schirmata->calendario_visus = calendario_visus_creare(ctx->piscina);
+    schirmata->pinacotheca_visus = pinacotheca_visus_creare(ctx);
 
     /* Configurare callback pro widget switching */
     ctx->commutare_widget = _schirmata_commutare_widget_callback;
@@ -1291,6 +1345,12 @@ schirmata_tractare_eventum(
             /* Si erat importatio, tractare fructum */
             si (schirma->modus_importatio_visus && schirma->importatio_visus != NIHIL)
             {
+                character titulus_salvatus[CXXVIII];
+                b32 salvatum;
+
+                titulus_salvatus[ZEPHYRUM] = '\0';
+                salvatum = FALSUM;
+
                 si (fructus == DIALOGUS_CONFIRMATUS)
                 {
                     /* Salvare imaginem ad repositorium */
@@ -1349,6 +1409,10 @@ schirmata_tractare_eventum(
 
                                 fprintf(stderr, "Imago salvata: %s (%d x %d, %d bytes)\n",
                                     titulus_buf, lat, alt, mensura_indices);
+
+                                /* Memorare titulum pro navigatio */
+                                strcpy(titulus_salvatus, titulus_buf);
+                                salvatum = VERUM;
                             }
                             alioquin
                             {
@@ -1363,8 +1427,15 @@ schirmata_tractare_eventum(
                 schirma->importatio_visus = NIHIL;
                 schirma->modus_importatio_visus = FALSUM;
 
-                /* Commutare ad navigator */
-                schirmata_commutare_ad_navigator(schirmata);
+                /* Commutare ad pinacotheca (si salvatum) vel navigator */
+                si (salvatum)
+                {
+                    schirmata_commutare_ad_pinacotheca(schirmata, titulus_salvatus);
+                }
+                alioquin
+                {
+                    schirmata_commutare_ad_navigator(schirmata);
+                }
             }
 
             /* Claudere dialogum */
@@ -1513,6 +1584,7 @@ schirmata_tractare_eventum(
 
     /* Delegare ad manager schirmae currentis */
     manager = schirmata->schirmae[schirmata->index_currens].manager;
+
     redde manager_widget_tractare_eventum(manager, eventus);
 }
 
@@ -1652,6 +1724,7 @@ schirmata_commutare_ad_arx_caeli(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 
     /* Navigare ad slug */
     arx_caeli_navigare_ad(schirmata->arx_caeli, slug);
@@ -1715,6 +1788,7 @@ schirmata_commutare_ad_navigator(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 }
 
 
@@ -1772,6 +1846,7 @@ schirmata_commutare_ad_thema_visus(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 }
 
 
@@ -1829,6 +1904,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 }
 
 
@@ -1886,6 +1962,7 @@ schirmata_commutare_ad_biblia_visus(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 }
 
 
@@ -1954,6 +2031,7 @@ schirmata_commutare_ad_librarium(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 
     /* Quaerere si quaestio */
     si (quaestio)
@@ -2016,6 +2094,7 @@ schirmata_commutare_ad_fons_visus(
     schirma->modus_fons_visus = VERUM;
     schirma->modus_calendario_visus = FALSUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
 }
 
 
@@ -2073,6 +2152,74 @@ schirmata_commutare_ad_calendario_visus(
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = VERUM;
     schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
+}
+
+
+/* ==================================================
+ * Mode Switching - Pinacotheca
+ * ================================================== */
+
+vacuum
+schirmata_commutare_ad_pinacotheca(
+    Schirmata*          schirmata,
+    constans character* titulus)
+{
+    Schirma*                        schirma;
+    ManagerWidget*                  manager;
+    SchirmataPinacothecaVisusDatum* pinacotheca_datum;
+
+    si (!schirmata)
+    {
+        redde;
+    }
+
+    schirma = &schirmata->schirmae[schirmata->index_currens];
+    manager = schirma->manager;
+
+    /* Reficere lista imaginum */
+    pinacotheca_visus_reficere(schirmata->pinacotheca_visus);
+
+    /* Si titulus datus, navigare ad imaginem */
+    si (titulus != NIHIL && titulus[ZEPHYRUM] != '\0')
+    {
+        pinacotheca_visus_navigare_ad(schirmata->pinacotheca_visus, titulus);
+    }
+
+    /* Si iam in modus pinacotheca, solum navigare */
+    si (schirma->modus_pinacotheca)
+    {
+        redde;
+    }
+
+    /* Creare pinacotheca datum */
+    pinacotheca_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataPinacothecaVisusDatum));
+    si (!pinacotheca_datum)
+    {
+        redde;
+    }
+    pinacotheca_datum->pinacotheca_visus = schirmata->pinacotheca_visus;
+    pinacotheca_datum->schirmata = schirmata;
+
+    /* Substituere widget index 1 */
+    si (manager->numerus_widgetorum > I)
+    {
+        manager->widgets[I].datum = pinacotheca_datum;
+        manager->widgets[I].reddere = _schirmata_pinacotheca_visus_reddere;
+        manager->widgets[I].tractare_eventum = _schirmata_pinacotheca_visus_tractare_eventum;
+        manager->focus_index = I;  /* Focus ad pinacotheca */
+    }
+
+    schirma->modus_arx_caeli = FALSUM;
+    schirma->modus_thema_visus = FALSUM;
+    schirma->modus_sputnik_syntaxis = FALSUM;
+    schirma->modus_biblia_visus = FALSUM;
+    schirma->modus_librarium = FALSUM;
+    schirma->modus_fons_visus = FALSUM;
+    schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_importatio_visus = FALSUM;
+    schirma->modus_pinacotheca = VERUM;
 }
 
 
@@ -2167,6 +2314,7 @@ schirmata_initiare_importationem_ex_clipboard(
     schirma->modus_librarium = FALSUM;
     schirma->modus_fons_visus = FALSUM;
     schirma->modus_calendario_visus = FALSUM;
+    schirma->modus_pinacotheca = FALSUM;
     schirma->modus_importatio_visus = VERUM;
 
     /* Aperire dialogum in left panel */
@@ -2300,6 +2448,10 @@ _modus_ad_chorda(
     si (schirma->modus_calendario_visus)
     {
         redde "calendario";
+    }
+    si (schirma->modus_pinacotheca)
+    {
+        redde "pinacotheca";
     }
     redde "navigator";
 }

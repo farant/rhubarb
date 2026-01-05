@@ -16,6 +16,7 @@
 #include "librarium_visus.h"
 #include "fons_visus.h"
 #include "calendario_visus.h"
+#include "pinacotheca_visus.h"
 #include "dialogus.h"
 #include "importatio_visus.h"
 
@@ -72,6 +73,7 @@ nomen structura {
     b32 modus_librarium;              /* VERUM = library viewer mode */
     b32 modus_calendario_visus;       /* VERUM = calendar viewer mode */
     b32 modus_importatio_visus;       /* VERUM = import preview mode */
+    b32 modus_pinacotheca;            /* VERUM = gallery viewer mode */
     /* Import state */
     ImportatioVisus* importatio_visus; /* Import preview (during import) */
     /* Dialogus modalis */
@@ -99,6 +101,7 @@ nomen structura {
     LibrariumVisus*  librarium_visus;     /* Library viewer widget */
     FonsVisus*       fons_visus;          /* Font glyph viewer widget */
     CalendarioVisus* calendario_visus;    /* Calendar viewer widget */
+    PinacothecaVisus* pinacotheca_visus;  /* Gallery viewer widget */
 } Schirmata;
 
 
@@ -220,6 +223,16 @@ schirmata_commutare_ad_fons_visus(
 vacuum
 schirmata_commutare_ad_calendario_visus(
     Schirmata* schirmata);
+
+/* Commutare ad modus pinacotheca (gallery viewer)
+ *
+ * schirmata: controller
+ * titulus: optional image title to navigate to (NIHIL = browser)
+ */
+vacuum
+schirmata_commutare_ad_pinacotheca(
+    Schirmata*          schirmata,
+    constans character* titulus);
 
 /* Initiare import imaginis ex clipboard
  *
