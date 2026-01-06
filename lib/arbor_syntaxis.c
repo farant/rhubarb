@@ -4,6 +4,7 @@
  */
 
 #include "arbor_syntaxis.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -43,6 +44,7 @@ structura ArborSyntaxis {
     i32                   numerus;      /* Total token count */
     Xar*                  errores;      /* Xar of ArborError */
     b32                   panico;       /* Error recovery mode */
+    TabulaDispersa*       typedef_nomina;  /* Typedef name table */
 };
 
 /* ==================================================
@@ -57,6 +59,10 @@ interior b32 _est_declaration_start(ArborSyntaxis* syn);
 interior b32 _est_type_specifier(ArborLexemaGenus g);
 interior b32 _est_type_qualifier(ArborLexemaGenus g);
 interior b32 _est_storage_class(ArborLexemaGenus g);
+interior ArborNodus* _parsere_struct_specifier(ArborSyntaxis* syn, b32 est_unio);
+interior ArborNodus* _parsere_enum_specifier(ArborSyntaxis* syn);
+interior ArborNodus* _parsere_type_specifier(ArborSyntaxis* syn);
+interior ArborNodus* _parsere_declarator(ArborSyntaxis* syn);
 
 /* ==================================================
  * Adiutores Interni - Navigation
@@ -447,6 +453,80 @@ _est_dexter_associativum(ArborLexemaGenus genus)
 }
 
 /* ==================================================
+ * Typedef Name Tracking
+ * ================================================== */
+
+interior vacuum
+_registrare_typedef(ArborSyntaxis* syn, chorda* titulus)
+{
+    si (syn == NIHIL || titulus == NIHIL || syn->typedef_nomina == NIHIL)
+    {
+        redde;
+    }
+    /* Valor non gravis, solum clavis importat */
+    tabula_dispersa_inserere(syn->typedef_nomina, *titulus, (vacuum*)(longus)VERUM);
+}
+
+interior b32
+_est_typedef_nomen(ArborSyntaxis* syn, chorda* titulus)
+{
+    si (syn == NIHIL || titulus == NIHIL || syn->typedef_nomina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde tabula_dispersa_continet(syn->typedef_nomina, *titulus);
+}
+
+/* Extrahere nomen ex declarator (recursivo per nested declarators) */
+interior chorda*
+_extrahere_declarator_nomen(ArborNodus* decl)
+{
+    i32 i;
+    i32 n;
+
+    si (decl == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* IDENTIFIER nodus habet nomen directe */
+    si (decl->genus == ARBOR_NODUS_IDENTIFIER)
+    {
+        redde decl->datum.folium.valor;
+    }
+
+    /* DECLARATOR habet liberi - iter per eos */
+    si (decl->genus == ARBOR_NODUS_DECLARATOR)
+    {
+        si (decl->datum.genericum.liberi == NIHIL)
+        {
+            redde NIHIL;
+        }
+        n = xar_numerus(decl->datum.genericum.liberi);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            ArborNodus** child_ptr = xar_obtinere(decl->datum.genericum.liberi, i);
+            si (child_ptr != NIHIL && *child_ptr != NIHIL)
+            {
+                chorda* res = _extrahere_declarator_nomen(*child_ptr);
+                si (res != NIHIL)
+                {
+                    redde res;
+                }
+            }
+        }
+    }
+
+    /* INIT_DECLARATOR wraps declarator */
+    si (decl->genus == ARBOR_NODUS_INIT_DECLARATOR)
+    {
+        redde _extrahere_declarator_nomen(decl->datum.init_decl.declarator);
+    }
+
+    redde NIHIL;
+}
+
+/* ==================================================
  * Type Checking Helpers
  * ================================================== */
 
@@ -495,6 +575,72 @@ _est_storage_class(ArborLexemaGenus g)
     }
 }
 
+/* Verifica si identificator est extensio (__attribute__, __extension__, etc.) */
+interior b32
+_est_extension_keyword(ArborSyntaxis* syn)
+{
+    ArborLexema* lex;
+    lex = _currens_lex(syn);
+    si (lex == NIHIL || lex->genus != ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+    /* Identifica keywords cum __ praefixo */
+    si (lex->valor.mensura >= II &&
+        lex->valor.datum[ZEPHYRUM] == '_' &&
+        lex->valor.datum[I] == '_')
+    {
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* Parse extension node (__attribute__, __extension__, __asm__, etc.) */
+interior ArborNodus*
+_parsere_extension(ArborSyntaxis* syn)
+{
+    ArborNodus* nodus;
+    ArborLexema* lex;
+    i32 paren_depth;
+
+    nodus = _creare_nodum(syn, ARBOR_NODUS_EXTENSION);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    lex = _currens_lex(syn);
+    si (lex == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Conservare nomen extensionis */
+    nodus->datum.folium.valor = chorda_internare(syn->intern, lex->valor);
+    _progredi(syn);
+
+    /* Saltare parentheses balancitas si praesentes: __attribute__((xxx)) */
+    si (_congruit(syn, ARBOR_LEXEMA_PAREN_APERTA))
+    {
+        paren_depth = ZEPHYRUM;
+        fac
+        {
+            si (_congruit(syn, ARBOR_LEXEMA_PAREN_APERTA))
+            {
+                paren_depth++;
+            }
+            alioquin si (_congruit(syn, ARBOR_LEXEMA_PAREN_CLAUSA))
+            {
+                paren_depth--;
+            }
+            _progredi(syn);
+        } dum (paren_depth > ZEPHYRUM && !_est_finis(syn));
+    }
+
+    _finire_nodum(syn, nodus);
+    redde nodus;
+}
+
 interior b32
 _est_declaration_start(ArborSyntaxis* syn)
 {
@@ -504,9 +650,26 @@ _est_declaration_start(ArborSyntaxis* syn)
     {
         redde FALSUM;
     }
-    redde _est_type_specifier(lex->genus) ||
-           _est_type_qualifier(lex->genus) ||
-           _est_storage_class(lex->genus);
+
+    /* Verifica keywords typorum */
+    si (_est_type_specifier(lex->genus) ||
+        _est_type_qualifier(lex->genus) ||
+        _est_storage_class(lex->genus))
+    {
+        redde VERUM;
+    }
+
+    /* Verifica typedef nomen */
+    si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        chorda* titulus = chorda_internare(syn->intern, lex->valor);
+        si (_est_typedef_nomen(syn, titulus))
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
 }
 
 /* ==================================================
@@ -2007,6 +2170,230 @@ _parsere_sententia(ArborSyntaxis* syn)
  * Declaration Parsing
  * ================================================== */
 
+/* Parse struct member declaration (allows bitfields) */
+interior ArborNodus*
+_parsere_struct_declaration(ArborSyntaxis* syn)
+{
+    ArborNodus* nodus;
+    Xar* specifiers;
+    Xar* declaratores;
+    ArborLexema* lex;
+
+    nodus = _creare_nodum(syn, ARBOR_NODUS_DECLARATION);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    specifiers = xar_creare(syn->piscina, magnitudo(ArborNodus*));
+    declaratores = xar_creare(syn->piscina, magnitudo(ArborNodus*));
+
+    /* Parse type specifiers */
+    lex = _currens_lex(syn);
+    dum (lex != NIHIL &&
+         (_est_type_specifier(lex->genus) || _est_type_qualifier(lex->genus)))
+    {
+        ArborNodus* spec = _parsere_type_specifier(syn);
+        si (spec != NIHIL)
+        {
+            ArborNodus** slot = xar_addere(specifiers);
+            si (slot != NIHIL) { *slot = spec; spec->pater = nodus; }
+        }
+        lex = _currens_lex(syn);
+    }
+
+    /* Parse struct declarators with optional bitfields */
+    si (!_congruit(syn, ARBOR_LEXEMA_SEMICOLON))
+    {
+        fac
+        {
+            ArborNodus* init_decl;
+            ArborNodus* declarator = NIHIL;
+            ArborNodus* bitfield = NIHIL;
+
+            init_decl = _creare_nodum(syn, ARBOR_NODUS_INIT_DECLARATOR);
+            si (init_decl == NIHIL)
+            {
+                redde NIHIL;
+            }
+
+            /* Optional declarator (can be just `: width` for anonymous bitfield) */
+            si (!_congruit(syn, ARBOR_LEXEMA_COLON))
+            {
+                declarator = _parsere_declarator(syn);
+            }
+
+            /* Optional bitfield width */
+            si (_consumere(syn, ARBOR_LEXEMA_COLON))
+            {
+                bitfield = _parsere_expressio(syn, PREC_TERNARIUS);
+            }
+
+            init_decl->datum.init_decl.declarator = declarator;
+            init_decl->datum.init_decl.initializer = bitfield;  /* Repurpose for bitfield */
+            si (declarator != NIHIL) declarator->pater = init_decl;
+            si (bitfield != NIHIL) bitfield->pater = init_decl;
+
+            _finire_nodum(syn, init_decl);
+            init_decl->pater = nodus;
+            {
+                ArborNodus** slot = xar_addere(declaratores);
+                si (slot != NIHIL) { *slot = init_decl; }
+            }
+        } dum (_consumere(syn, ARBOR_LEXEMA_COMMA));
+    }
+
+    _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
+    nodus->datum.declaratio.specifiers = specifiers;
+    nodus->datum.declaratio.declaratores = declaratores;
+    _finire_nodum(syn, nodus);
+    redde nodus;
+}
+
+/* Parse struct or union specifier */
+interior ArborNodus*
+_parsere_struct_specifier(ArborSyntaxis* syn, b32 est_unio)
+{
+    ArborNodus* nodus;
+    ArborNodusGenus genus;
+    chorda* titulus = NIHIL;
+
+    genus = est_unio ? ARBOR_NODUS_UNION_SPECIFIER : ARBOR_NODUS_STRUCT_SPECIFIER;
+    nodus = _creare_nodum(syn, genus);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Skip 'struct' or 'union' */
+    _progredi(syn);
+
+    /* Optional tag name */
+    si (_congruit(syn, ARBOR_LEXEMA_IDENTIFICATOR))
+    {
+        ArborLexema* lex = _currens_lex(syn);
+        titulus = chorda_internare(syn->intern, lex->valor);
+        _progredi(syn);
+    }
+    nodus->datum.aggregatum.titulus = titulus;
+
+    /* Optional { members } */
+    si (_consumere(syn, ARBOR_LEXEMA_BRACE_APERTA))
+    {
+        nodus->datum.aggregatum.membra = xar_creare(syn->piscina, magnitudo(ArborNodus*));
+        dum (!_congruit(syn, ARBOR_LEXEMA_BRACE_CLAUSA) && !_est_finis(syn))
+        {
+            ArborNodus* membrum = _parsere_struct_declaration(syn);
+            si (membrum != NIHIL)
+            {
+                ArborNodus** slot = xar_addere(nodus->datum.aggregatum.membra);
+                si (slot != NIHIL) { *slot = membrum; membrum->pater = nodus; }
+            }
+        }
+        _expectare(syn, ARBOR_LEXEMA_BRACE_CLAUSA, "Expectabatur }");
+    }
+    alioquin
+    {
+        nodus->datum.aggregatum.membra = NIHIL;  /* Forward decl or reference */
+    }
+
+    _finire_nodum(syn, nodus);
+    redde nodus;
+}
+
+/* Parse enumerator constant */
+interior ArborNodus*
+_parsere_enumerator(ArborSyntaxis* syn)
+{
+    ArborNodus* nodus;
+    ArborLexema* lex;
+
+    si (!_congruit(syn, ARBOR_LEXEMA_IDENTIFICATOR))
+    {
+        redde NIHIL;
+    }
+
+    nodus = _creare_nodum(syn, ARBOR_NODUS_ENUMERATOR);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    lex = _currens_lex(syn);
+    nodus->datum.folium.valor = chorda_internare(syn->intern, lex->valor);
+    _progredi(syn);
+
+    /* Optional = value - use genericum.liberi to store */
+    si (_consumere(syn, ARBOR_LEXEMA_ASSIGNATIO))
+    {
+        ArborNodus* valor = _parsere_expressio(syn, PREC_TERNARIUS);
+        si (valor != NIHIL)
+        {
+            ArborNodus** slot;
+            nodus->datum.genericum.liberi = xar_creare(syn->piscina, magnitudo(ArborNodus*));
+            slot = xar_addere(nodus->datum.genericum.liberi);
+            si (slot != NIHIL) { *slot = valor; valor->pater = nodus; }
+        }
+    }
+
+    _finire_nodum(syn, nodus);
+    redde nodus;
+}
+
+/* Parse enum specifier */
+interior ArborNodus*
+_parsere_enum_specifier(ArborSyntaxis* syn)
+{
+    ArborNodus* nodus;
+    chorda* titulus = NIHIL;
+
+    nodus = _creare_nodum(syn, ARBOR_NODUS_ENUM_SPECIFIER);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Skip 'enum' */
+    _progredi(syn);
+
+    /* Optional tag name */
+    si (_congruit(syn, ARBOR_LEXEMA_IDENTIFICATOR))
+    {
+        ArborLexema* lex = _currens_lex(syn);
+        titulus = chorda_internare(syn->intern, lex->valor);
+        _progredi(syn);
+    }
+    nodus->datum.enum_spec.titulus = titulus;
+
+    /* Optional { enumerators } */
+    si (_consumere(syn, ARBOR_LEXEMA_BRACE_APERTA))
+    {
+        nodus->datum.enum_spec.enumeratores = xar_creare(syn->piscina, magnitudo(ArborNodus*));
+        si (!_congruit(syn, ARBOR_LEXEMA_BRACE_CLAUSA))
+        {
+            fac
+            {
+                ArborNodus* enumator = _parsere_enumerator(syn);
+                si (enumator != NIHIL)
+                {
+                    ArborNodus** slot = xar_addere(nodus->datum.enum_spec.enumeratores);
+                    si (slot != NIHIL) { *slot = enumator; enumator->pater = nodus; }
+                }
+            } dum (_consumere(syn, ARBOR_LEXEMA_COMMA) &&
+                   !_congruit(syn, ARBOR_LEXEMA_BRACE_CLAUSA));
+        }
+        _expectare(syn, ARBOR_LEXEMA_BRACE_CLAUSA, "Expectabatur }");
+    }
+    alioquin
+    {
+        nodus->datum.enum_spec.enumeratores = NIHIL;
+    }
+
+    _finire_nodum(syn, nodus);
+    redde nodus;
+}
+
+/* Parse type specifier - dispatch for struct/union/enum */
 interior ArborNodus*
 _parsere_type_specifier(ArborSyntaxis* syn)
 {
@@ -2019,18 +2406,33 @@ _parsere_type_specifier(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
-    nodus = _creare_nodum(syn, ARBOR_NODUS_TYPE_SPECIFIER);
-    si (nodus == NIHIL)
+    /* Dispatch for struct/union/enum */
+    commutatio (lex->genus)
     {
-        redde NIHIL;
+        casus ARBOR_LEXEMA_STRUCT:
+            redde _parsere_struct_specifier(syn, FALSUM);
+
+        casus ARBOR_LEXEMA_UNION:
+            redde _parsere_struct_specifier(syn, VERUM);
+
+        casus ARBOR_LEXEMA_ENUM:
+            redde _parsere_enum_specifier(syn);
+
+        ordinarius:
+            /* Simple type specifier (int, char, etc.) */
+            nodus = _creare_nodum(syn, ARBOR_NODUS_TYPE_SPECIFIER);
+            si (nodus == NIHIL)
+            {
+                redde NIHIL;
+            }
+
+            nodus->datum.folium.keyword = lex->genus;
+            nodus->datum.folium.valor = chorda_internare(syn->intern, lex->valor);
+
+            _progredi(syn);
+            _finire_nodum(syn, nodus);
+            redde nodus;
     }
-
-    nodus->datum.folium.keyword = lex->genus;
-    nodus->datum.folium.valor = chorda_internare(syn->intern, lex->valor);
-
-    _progredi(syn);
-    _finire_nodum(syn, nodus);
-    redde nodus;
 }
 
 interior ArborNodus*
@@ -2090,6 +2492,9 @@ _parsere_specifiers(ArborSyntaxis* syn, Xar* specifiers)
 {
     ArborLexema* lex;
     ArborNodus* spec;
+    b32 habet_typedef_nomen;
+
+    habet_typedef_nomen = FALSUM;
 
     dum (!_est_finis(syn))
     {
@@ -2110,6 +2515,31 @@ _parsere_specifiers(ArborSyntaxis* syn, Xar* specifiers)
         alioquin si (_est_type_specifier(lex->genus))
         {
             spec = _parsere_type_specifier(syn);
+        }
+        alioquin si (_est_extension_keyword(syn))
+        {
+            /* Extensio: __attribute__, __extension__, etc. */
+            spec = _parsere_extension(syn);
+        }
+        alioquin si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && !habet_typedef_nomen)
+        {
+            /* Verifica typedef nomen - solum unum permissum */
+            chorda* titulus = chorda_internare(syn->intern, lex->valor);
+            si (_est_typedef_nomen(syn, titulus))
+            {
+                spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
+                si (spec != NIHIL)
+                {
+                    spec->datum.folium.valor = titulus;
+                    _progredi(syn);
+                    _finire_nodum(syn, spec);
+                }
+                habet_typedef_nomen = VERUM;
+            }
+            alioquin
+            {
+                frange;
+            }
         }
         alioquin
         {
@@ -2386,6 +2816,9 @@ _parsere_declaratio(ArborSyntaxis* syn)
     ArborNodus* decl;
     ArborNodus* init;
     Xar* specifiers;
+    b32 habet_typedef;
+    i32 i;
+    i32 n;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_DECLARATION);
     si (nodus == NIHIL)
@@ -2399,6 +2832,24 @@ _parsere_declaratio(ArborSyntaxis* syn)
 
     /* Parse specifiers */
     _parsere_specifiers(syn, specifiers);
+
+    /* Verifica si typedef est in specifiers */
+    habet_typedef = FALSUM;
+    n = xar_numerus(specifiers);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        ArborNodus** spec_ptr = xar_obtinere(specifiers, i);
+        si (spec_ptr != NIHIL && *spec_ptr != NIHIL)
+        {
+            ArborNodus* spec = *spec_ptr;
+            si (spec->genus == ARBOR_NODUS_STORAGE_CLASS &&
+                spec->datum.folium.keyword == ARBOR_LEXEMA_TYPEDEF)
+            {
+                habet_typedef = VERUM;
+                frange;
+            }
+        }
+    }
 
     /* Parse declarators */
     si (!_congruit(syn, ARBOR_LEXEMA_SEMICOLON))
@@ -2447,6 +2898,24 @@ _parsere_declaratio(ArborSyntaxis* syn)
     }
 
     _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
+
+    /* Registrare typedef nomina */
+    si (habet_typedef)
+    {
+        n = xar_numerus(nodus->datum.declaratio.declaratores);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            ArborNodus** decl_ptr = xar_obtinere(nodus->datum.declaratio.declaratores, i);
+            si (decl_ptr != NIHIL && *decl_ptr != NIHIL)
+            {
+                chorda* titulus = _extrahere_declarator_nomen(*decl_ptr);
+                si (titulus != NIHIL)
+                {
+                    _registrare_typedef(syn, titulus);
+                }
+            }
+        }
+    }
 
     _finire_nodum(syn, nodus);
     redde nodus;
@@ -2610,6 +3079,48 @@ _parsere_external_declaration(ArborSyntaxis* syn)
         }
 
         _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
+
+        /* Registrare typedef nomina */
+        {
+            b32 habet_typedef;
+            i32 i;
+            i32 n;
+
+            habet_typedef = FALSUM;
+            n = xar_numerus(specifiers);
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                ArborNodus** spec_ptr = xar_obtinere(specifiers, i);
+                si (spec_ptr != NIHIL && *spec_ptr != NIHIL)
+                {
+                    ArborNodus* spec = *spec_ptr;
+                    si (spec->genus == ARBOR_NODUS_STORAGE_CLASS &&
+                        spec->datum.folium.keyword == ARBOR_LEXEMA_TYPEDEF)
+                    {
+                        habet_typedef = VERUM;
+                        frange;
+                    }
+                }
+            }
+
+            si (habet_typedef)
+            {
+                n = xar_numerus(nodus->datum.declaratio.declaratores);
+                per (i = ZEPHYRUM; i < n; i++)
+                {
+                    ArborNodus** decl_ptr = xar_obtinere(nodus->datum.declaratio.declaratores, i);
+                    si (decl_ptr != NIHIL && *decl_ptr != NIHIL)
+                    {
+                        chorda* titulus = _extrahere_declarator_nomen(*decl_ptr);
+                        si (titulus != NIHIL)
+                        {
+                            _registrare_typedef(syn, titulus);
+                        }
+                    }
+                }
+            }
+        }
+
         _finire_nodum(syn, nodus);
         result = nodus;
     }
@@ -2688,6 +3199,7 @@ arbor_syntaxis_creare(
     syn->numerus = ZEPHYRUM;
     syn->errores = xar_creare(piscina, magnitudo(ArborError));
     syn->panico = FALSUM;
+    syn->typedef_nomina = tabula_dispersa_creare_chorda(piscina, CXXVIII);
 
     redde syn;
 }

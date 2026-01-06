@@ -1103,6 +1103,271 @@ test_parentheses(Piscina* piscina, InternamentumChorda* intern)
     imprimere("  Nested parens: OK\n");
 }
 
+/* ==================================================
+ * Test: Struct Definition
+ * ================================================== */
+
+interior vacuum
+test_struct_definition(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl;
+    ArborNodus* spec;
+
+    imprimere("\n--- Struct Definition ---\n");
+
+    /* Simplex struct declaration */
+    res = _parsere_fontem(piscina, intern, "struct Point { int x; int y; };");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(decl->genus, ARBOR_NODUS_DECLARATION);
+    spec = *(ArborNodus**)xar_obtinere(decl->datum.declaratio.specifiers, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(spec->genus, ARBOR_NODUS_STRUCT_SPECIFIER);
+    CREDO_NON_NIHIL(spec->datum.aggregatum.titulus);
+    CREDO_NON_NIHIL(spec->datum.aggregatum.membra);
+    CREDO_AEQUALIS_I32(xar_numerus(spec->datum.aggregatum.membra), II);
+    imprimere("  Struct simplex: OK\n");
+
+    /* Struct variable declaration */
+    res = _parsere_fontem(piscina, intern, "struct Point p;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Struct variabilis: OK\n");
+
+    /* Forward declaration */
+    res = _parsere_fontem(piscina, intern, "struct Node;");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    spec = *(ArborNodus**)xar_obtinere(decl->datum.declaratio.specifiers, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(spec->genus, ARBOR_NODUS_STRUCT_SPECIFIER);
+    CREDO_NIHIL(spec->datum.aggregatum.membra);
+    imprimere("  Forward decl: OK\n");
+
+    /* Anonymous struct */
+    res = _parsere_fontem(piscina, intern, "struct { int a; } anon;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Anonymous struct: OK\n");
+
+    /* Nested struct */
+    res = _parsere_fontem(piscina, intern,
+        "struct Outer { struct Inner { int x; } inner; int y; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Nested struct: OK\n");
+
+    /* Struct with pointer member */
+    res = _parsere_fontem(piscina, intern,
+        "struct Node { int val; struct Node *next; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Self-referential: OK\n");
+}
+
+/* ==================================================
+ * Test: Union Definition
+ * ================================================== */
+
+interior vacuum
+test_union_definition(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl;
+    ArborNodus* spec;
+
+    imprimere("\n--- Union Definition ---\n");
+
+    /* Simplex union */
+    res = _parsere_fontem(piscina, intern, "union Value { int i; float f; };");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    spec = *(ArborNodus**)xar_obtinere(decl->datum.declaratio.specifiers, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(spec->genus, ARBOR_NODUS_UNION_SPECIFIER);
+    CREDO_NON_NIHIL(spec->datum.aggregatum.membra);
+    CREDO_AEQUALIS_I32(xar_numerus(spec->datum.aggregatum.membra), II);
+    imprimere("  Union simplex: OK\n");
+
+    /* Union variable */
+    res = _parsere_fontem(piscina, intern, "union Value v;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Union variabilis: OK\n");
+
+    /* Anonymous union */
+    res = _parsere_fontem(piscina, intern, "union { int a; char b; } u;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Anonymous union: OK\n");
+}
+
+/* ==================================================
+ * Test: Enum Definition
+ * ================================================== */
+
+interior vacuum
+test_enum_definition(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl;
+    ArborNodus* spec;
+
+    imprimere("\n--- Enum Definition ---\n");
+
+    /* Simplex enum */
+    res = _parsere_fontem(piscina, intern, "enum Color { RED, GREEN, BLUE };");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    spec = *(ArborNodus**)xar_obtinere(decl->datum.declaratio.specifiers, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(spec->genus, ARBOR_NODUS_ENUM_SPECIFIER);
+    CREDO_NON_NIHIL(spec->datum.enum_spec.enumeratores);
+    CREDO_AEQUALIS_I32(xar_numerus(spec->datum.enum_spec.enumeratores), III);
+    imprimere("  Enum simplex: OK\n");
+
+    /* Enum with values */
+    res = _parsere_fontem(piscina, intern, "enum Status { OK = 0, ERROR = 1, PENDING = 2 };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Enum cum valoribus: OK\n");
+
+    /* Enum variable */
+    res = _parsere_fontem(piscina, intern, "enum Color c;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Enum variabilis: OK\n");
+
+    /* Anonymous enum */
+    res = _parsere_fontem(piscina, intern, "enum { A, B, C } e;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Anonymous enum: OK\n");
+
+    /* Enum with trailing comma (C89 extension, common) */
+    res = _parsere_fontem(piscina, intern, "enum Flags { F1 = 1, F2 = 2, };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Trailing comma: OK\n");
+}
+
+/* ==================================================
+ * Test: Typedef Declarations
+ * ================================================== */
+
+interior vacuum
+test_typedef(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl;
+
+    imprimere("\n--- Typedef ---\n");
+
+    /* Simple typedef */
+    res = _parsere_fontem(piscina, intern, "typedef int Int32;");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(decl->genus, ARBOR_NODUS_DECLARATION);
+    imprimere("  Typedef simplex: OK\n");
+
+    /* Typedef pointer */
+    res = _parsere_fontem(piscina, intern, "typedef char *String;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Typedef pointer: OK\n");
+
+    /* Typedef struct */
+    res = _parsere_fontem(piscina, intern, "typedef struct Point Point;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Typedef struct: OK\n");
+
+    /* Typedef struct definition */
+    res = _parsere_fontem(piscina, intern, "typedef struct { int x; int y; } Point;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Typedef struct def: OK\n");
+
+    /* Using typedef'd name in declaration */
+    res = _parsere_fontem(piscina, intern,
+        "typedef int Int32;\n"
+        "Int32 x;");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    CREDO_AEQUALIS_I32(xar_numerus(radix->datum.genericum.liberi), II);
+    imprimere("  Typedef usus: OK\n");
+
+    /* Typedef function pointer */
+    res = _parsere_fontem(piscina, intern, "typedef int (*Comparator)(int, int);");
+    CREDO_VERUM(res.successus);
+    imprimere("  Typedef func ptr: OK\n");
+}
+
+/* ==================================================
+ * Test: Bitfields
+ * ================================================== */
+
+interior vacuum
+test_bitfields(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+
+    imprimere("\n--- Bitfields ---\n");
+
+    /* Simple bitfield */
+    res = _parsere_fontem(piscina, intern, "struct Flags { int a : 4; int b : 4; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Bitfield simplex: OK\n");
+
+    /* Unsigned bitfield */
+    res = _parsere_fontem(piscina, intern, "struct Bits { unsigned flags : 8; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Unsigned bitfield: OK\n");
+
+    /* Mixed members */
+    res = _parsere_fontem(piscina, intern, "struct Mixed { int x; int b : 3; int y; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Mixed members: OK\n");
+}
+
+/* ==================================================
+ * Test: Extensions (__attribute__, etc.)
+ * ================================================== */
+
+interior vacuum
+test_extensions(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl;
+    ArborNodus* spec;
+
+    imprimere("\n--- Extensions ---\n");
+
+    /* __extension__ int x */
+    res = _parsere_fontem(piscina, intern, "__extension__ int x;");
+    CREDO_VERUM(res.successus);
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(decl->genus, ARBOR_NODUS_DECLARATION);
+    spec = *(ArborNodus**)xar_obtinere(decl->datum.declaratio.specifiers, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(spec->genus, ARBOR_NODUS_EXTENSION);
+    imprimere("  __extension__: OK\n");
+
+    /* __attribute__((packed)) before type */
+    res = _parsere_fontem(piscina, intern, "__attribute__((packed)) int x;");
+    CREDO_VERUM(res.successus);
+    imprimere("  __attribute__: OK\n");
+
+    /* __inline__ function */
+    res = _parsere_fontem(piscina, intern, "__inline__ int foo(void) { return 0; }");
+    CREDO_VERUM(res.successus);
+    imprimere("  __inline__: OK\n");
+
+    /* __volatile__ qualifier */
+    res = _parsere_fontem(piscina, intern, "__volatile__ int v;");
+    CREDO_VERUM(res.successus);
+    imprimere("  __volatile__: OK\n");
+
+    /* Multiple extensions */
+    res = _parsere_fontem(piscina, intern, "__extension__ __attribute__((unused)) int y;");
+    CREDO_VERUM(res.successus);
+    imprimere("  Multiple ext: OK\n");
+}
+
 #endif /* Full tests block 2 */
 
 /* ==================================================
@@ -1179,6 +1444,14 @@ principale(vacuum)
     test_function_definition(piscina, intern);
     test_multiple_functions(piscina, intern);
     test_mixed_toplevel(piscina, intern);
+
+    /* Phase 4: Struct/Union/Enum/Typedef */
+    test_struct_definition(piscina, intern);
+    test_union_definition(piscina, intern);
+    test_enum_definition(piscina, intern);
+    test_typedef(piscina, intern);
+    test_bitfields(piscina, intern);
+    test_extensions(piscina, intern);
 
     /* Utilities */
     test_imprimere(piscina, intern);
