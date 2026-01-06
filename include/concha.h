@@ -83,6 +83,10 @@ nomen structura {
 
     /* Status */
     b32                  currens;
+
+    /* Cursor */
+    i32                  mus_x;
+    i32                  mus_y;
 } Concha;
 
 

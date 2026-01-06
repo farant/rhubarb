@@ -76,6 +76,7 @@ declare -a SOURCE_FILES=(
     "lib/schirmata.c"
     "lib/arx_caeli.c"
     "lib/concha.c"
+    "lib/cursor.c"
     "lib/thema_visus.c"
     "lib/sputnik_syntaxis.c"
     "lib/biblia_dr.c"

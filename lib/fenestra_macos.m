@@ -8,6 +8,25 @@
 #include <unistd.h>
 #include "fenestra.h"
 
+/* Forward declarations pro struct Fenestra */
+@class FenestraVisus;
+@class FenestraDelegatus;
+
+#define MAXIMUS_EVENTUUM CCLVI
+
+structura Fenestra {
+    Piscina* piscina;
+    NSWindow *fenestra_ns;
+    FenestraVisus *visus;
+    FenestraDelegatus *delegatus;
+    Eventus eventus[MAXIMUS_EVENTUUM];
+    i32 eventus_caput;
+    i32 eventus_cauda;
+    i32 eventus_numerus;
+    b32 plena_visio;      /* Status plenae visionis */
+    b32 cursor_occultus;  /* Si cursor systematis occultatus */
+};
+
 @interface FenestraDelegatus : NSObject <NSWindowDelegate>
 @property (assign) BOOL debet_claudere;
 @property (assign) Fenestra *fenestra;
@@ -29,6 +48,23 @@
 
 - (void)windowDidResignKey:(NSNotification *)notification {
     /* Tractare eventus defocus */
+}
+
+- (void)windowWillEnterFullScreen:(NSNotification *)notification {
+    /* Intrare plenam visionem - occultare cursor systematis */
+    self.fenestra->plena_visio = VERUM;
+    [NSCursor hide];
+    self.fenestra->cursor_occultus = VERUM;
+}
+
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
+    /* Exire plenam visionem - ostendere cursor systematis */
+    self.fenestra->plena_visio = FALSUM;
+    si (self.fenestra->cursor_occultus)
+    {
+        [NSCursor unhide];
+        self.fenestra->cursor_occultus = FALSUM;
+    }
 }
 @end
 
@@ -97,19 +133,6 @@
     }
 }
 @end
-
-#define MAXIMUS_EVENTUUM CCLVI
-
-structura Fenestra {
-    Piscina* piscina;
-    NSWindow *fenestra_ns;
-    FenestraVisus *visus;
-    FenestraDelegatus *delegatus;
-    Eventus eventus[MAXIMUS_EVENTUUM];
-    i32 eventus_caput;
-    i32 eventus_cauda;
-    i32 eventus_numerus;
-};
 
 interior clavis_t
 convertere_clavem (
@@ -543,6 +566,14 @@ fenestra_perscrutari_eventus (
                     }
 
                     eventus.datum.mus.modificantes = (i32)[eventus_ns modifierFlags];
+
+                    /* Re-occultare cursor si in plena visione
+                     * (macOS potest ostendere cursor si mus movetur violenter) */
+                    si (fenestra->plena_visio && fenestra->cursor_occultus)
+                    {
+                        [NSCursor hide];
+                    }
+
                     impellere_eventum(fenestra, &eventus);
                     frange;
                 }
@@ -764,6 +795,42 @@ fenestra_commutare_plenam_visionem (
 
     @autoreleasepool {
         [fenestra->fenestra_ns toggleFullScreen:nil];
+    }
+}
+
+b32
+fenestra_est_plena_visio (
+    constans Fenestra* fenestra)
+{
+    si (!fenestra) redde FALSUM;
+    redde fenestra->plena_visio;
+}
+
+vacuum
+fenestra_occultare_cursorem (
+    Fenestra* fenestra)
+{
+    si (!fenestra) redde;
+    si (!fenestra->cursor_occultus)
+    {
+        @autoreleasepool {
+            [NSCursor hide];
+        }
+        fenestra->cursor_occultus = VERUM;
+    }
+}
+
+vacuum
+fenestra_ostendere_cursorem (
+    Fenestra* fenestra)
+{
+    si (!fenestra) redde;
+    si (fenestra->cursor_occultus)
+    {
+        @autoreleasepool {
+            [NSCursor unhide];
+        }
+        fenestra->cursor_occultus = FALSUM;
     }
 }
 

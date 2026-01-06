@@ -2,6 +2,7 @@
 #include "filum.h"
 #include "delineare.h"
 #include "thema.h"
+#include "cursor.h"
 #include "tempus.h"
 #include "layout.h"
 #include "biblia_visus.h"
@@ -374,6 +375,15 @@ concha_currere(Concha* concha)
         /* Tractare eventus */
         dum (fenestra_obtinere_eventus(concha->fenestra, &eventus))
         {
+            /* Sequi positionem muris pro cursore */
+            si (eventus.genus == EVENTUS_MUS_MOTUS ||
+                eventus.genus == EVENTUS_MUS_DEPRESSUS ||
+                eventus.genus == EVENTUS_MUS_LIBERATUS)
+            {
+                concha->mus_x = eventus.datum.mus.x;
+                concha->mus_y = eventus.datum.mus.y;
+            }
+
             si (eventus.genus == EVENTUS_CLAUDERE)
             {
                 concha->currens = FALSUM;
@@ -405,6 +415,12 @@ concha_currere(Concha* concha)
 
         /* Schirmata reddit schirmam currentem et tab bar */
         schirmata_reddere(concha->schirmata, concha->tabula, I);
+
+        /* Reddere cursor si plena visio */
+        si (fenestra_est_plena_visio(concha->fenestra))
+        {
+            cursor_reddere(concha->tabula, concha->mus_x, concha->mus_y);
+        }
 
         /* Praesentare pixela */
         fenestra_praesentare_pixela(concha->fenestra, concha->tabula);

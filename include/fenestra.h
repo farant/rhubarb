@@ -463,6 +463,37 @@ vacuum
 fenestra_commutare_plenam_visionem (
     Fenestra* fenestra);
 
+/* Verificare si fenestra est in plena visione
+ *
+ * fenestra: fenestra
+ *
+ * Reddit: VERUM si plena visio
+ */
+b32
+fenestra_est_plena_visio (
+    constans Fenestra* fenestra);
+
+/* Occultare cursorem muris systematis
+ *
+ * Pro modo plena visio - occultare cursor systematis
+ * ut possimus reddere cursorem nostrum.
+ *
+ * fenestra: fenestra
+ */
+vacuum
+fenestra_occultare_cursorem (
+    Fenestra* fenestra);
+
+/* Ostendere cursorem muris systematis
+ *
+ * Restituere cursorem systematis post modum plena visio.
+ *
+ * fenestra: fenestra
+ */
+vacuum
+fenestra_ostendere_cursorem (
+    Fenestra* fenestra);
+
 /* Obtinere tractationem nativam
  *
  * Pro accessu ad platformam specificam (NSWindow in macOS)
