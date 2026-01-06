@@ -167,6 +167,9 @@ structura ArborNodus {
     /* Parent for navigation */
     ArborNodus*        pater;
 
+    /* Resolved type (populated by arbor_typus, NULL until then) */
+    structura ArborTypus*  typus_resolutum;
+
     /* Type-specific data */
     unio {
         /* function-definition */
