@@ -60,6 +60,7 @@ declare -a SOURCE_FILES=(
     "lib/imago.c"
     "lib/imago_opus.c"
     "lib/dithering.c"
+    "lib/arbor_lexema.c"
 )
 
 # Color codes
