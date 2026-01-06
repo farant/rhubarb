@@ -13,3 +13,7 @@ stml-parser-reference
 events.db
 
 book_assets/*.txt
+
+# Test fixture binaries
+probationes/fixa/cum_functione
+probationes/fixa/simplex

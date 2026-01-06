@@ -647,6 +647,382 @@ test_conditionales(Piscina* piscina, InternamentumChorda* intern)
 }
 
 /* ==================================================
+ * Test: #if Expressions
+ * ================================================== */
+
+interior vacuum
+test_if_expressions(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborPraeparator* pp;
+    ArborLexator* lexator;
+    Xar* lexemata;
+    Xar* fructus;
+    i32 i;
+    i32 num_out;
+
+    imprimere("\n--- If Expressions ---\n");
+
+    /* Test 1: #if 1 (verum) */
+    {
+        constans character* fons =
+            "#if 1\n"
+            "int a;\n"
+            "#endif";
+        b32 invenit_a;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_a = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I &&
+                lo->lexema->valor.datum[ZEPHYRUM] == 'a')
+            {
+                invenit_a = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_a);
+
+        imprimere("  #if 1 verum: OK\n");
+    }
+
+    /* Test 2: #if 0 (falsum) */
+    {
+        constans character* fons =
+            "#if 0\n"
+            "int a;\n"
+            "#endif";
+        b32 invenit_a;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_a = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I &&
+                lo->lexema->valor.datum[ZEPHYRUM] == 'a')
+            {
+                invenit_a = VERUM;
+            }
+        }
+        CREDO_FALSUM(invenit_a);
+
+        imprimere("  #if 0 falsum: OK\n");
+    }
+
+    /* Test 3: #if defined(MACRO) */
+    {
+        constans character* fons =
+            "#define FOO\n"
+            "#if defined(FOO)\n"
+            "int a;\n"
+            "#endif";
+        b32 invenit_a;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_a = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I &&
+                lo->lexema->valor.datum[ZEPHYRUM] == 'a')
+            {
+                invenit_a = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_a);
+
+        imprimere("  #if defined: OK\n");
+    }
+
+    /* Test 4: #if !defined(MACRO) */
+    {
+        constans character* fons =
+            "#if !defined(BAR)\n"
+            "int b;\n"
+            "#endif";
+        b32 invenit_b;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_b = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I &&
+                lo->lexema->valor.datum[ZEPHYRUM] == 'b')
+            {
+                invenit_b = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_b);
+
+        imprimere("  #if !defined: OK\n");
+    }
+
+    /* Test 5: #if with arithmetic */
+    {
+        constans character* fons =
+            "#if 2 + 3 == 5\n"
+            "int c;\n"
+            "#endif";
+        b32 invenit_c;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_c = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I &&
+                lo->lexema->valor.datum[ZEPHYRUM] == 'c')
+            {
+                invenit_c = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_c);
+
+        imprimere("  #if arithmetic: OK\n");
+    }
+
+    /* Test 6: #elif */
+    {
+        constans character* fons =
+            "#if 0\n"
+            "int a;\n"
+            "#elif 1\n"
+            "int b;\n"
+            "#endif";
+        b32 invenit_a;
+        b32 invenit_b;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_a = FALSUM;
+        invenit_b = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I)
+            {
+                si (lo->lexema->valor.datum[ZEPHYRUM] == 'a')
+                {
+                    invenit_a = VERUM;
+                }
+                si (lo->lexema->valor.datum[ZEPHYRUM] == 'b')
+                {
+                    invenit_b = VERUM;
+                }
+            }
+        }
+        CREDO_FALSUM(invenit_a);
+        CREDO_VERUM(invenit_b);
+
+        imprimere("  #elif: OK\n");
+    }
+
+    /* Test 7: #if with logical AND */
+    {
+        constans character* fons =
+            "#define A 1\n"
+            "#define B 1\n"
+            "#if A && B\n"
+            "int d;\n"
+            "#endif";
+        b32 invenit_d;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        num_out = xar_numerus(fructus);
+        invenit_d = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == I &&
+                lo->lexema->valor.datum[ZEPHYRUM] == 'd')
+            {
+                invenit_d = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_d);
+
+        imprimere("  #if &&: OK\n");
+    }
+}
+
+/* ==================================================
+ * Test: Special Operators (# and ##)
+ * ================================================== */
+
+interior vacuum
+test_special_operators(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborPraeparator* pp;
+    ArborLexator* lexator;
+    Xar* lexemata;
+    Xar* fructus;
+    i32 i;
+    i32 num_out;
+
+    imprimere("\n--- Special Operators ---\n");
+
+    /* Test 1: Simple function-like macro expansion */
+    {
+        constans character* fons =
+            "#define ADD(a, b) a + b\n"
+            "int x = ADD(1, 2);";
+        i32 count_plus;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* Should have '1', '+', '2' in output */
+        num_out = xar_numerus(fructus);
+        count_plus = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_PLUS)
+            {
+                count_plus++;
+            }
+        }
+        CREDO_AEQUALIS_I32(count_plus, I);
+
+        imprimere("  Function-like simplex: OK\n");
+    }
+
+    /* Test 2: Stringification (#) */
+    {
+        constans character* fons =
+            "#define STR(x) #x\n"
+            "char* s = STR(hello);";
+        b32 invenit_string;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* Should have string literal in output */
+        num_out = xar_numerus(fructus);
+        invenit_string = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_STRING_LIT)
+            {
+                invenit_string = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_string);
+
+        imprimere("  Stringification #: OK\n");
+    }
+
+    /* Test 3: Token pasting (##) */
+    {
+        constans character* fons =
+            "#define PASTE(a, b) a ## b\n"
+            "int PASTE(foo, bar);";
+        b32 invenit_foobar;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* Should have 'foobar' identifier in output */
+        num_out = xar_numerus(fructus);
+        invenit_foobar = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == VI)
+            {
+                si (memcmp(lo->lexema->valor.datum, "foobar", VI) == ZEPHYRUM)
+                {
+                    invenit_foobar = VERUM;
+                }
+            }
+        }
+        CREDO_VERUM(invenit_foobar);
+
+        imprimere("  Token pasting ##: OK\n");
+    }
+}
+
+/* ==================================================
  * Test: Macro Expansion
  * ================================================== */
 
@@ -874,6 +1250,155 @@ test_macro_expansion(Piscina* piscina, InternamentumChorda* intern)
 }
 
 /* ==================================================
+ * Test: #include
+ * ================================================== */
+
+interior vacuum
+test_include(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborPraeparator* pp;
+    ArborLexator* lexator;
+    Xar* lexemata;
+    Xar* fructus;
+    i32 num_out;
+    i32 i;
+
+    imprimere("\n--- Include ---\n");
+
+    /* Test 1: Include with quoted path */
+    {
+        constans character* fons = "#include \"probationes/fixa/pp_test_simple.h\"";
+        b32 invenit_int;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* Should have included 'int' keyword */
+        num_out = xar_numerus(fructus);
+        invenit_int = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_INT)
+            {
+                invenit_int = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_int);
+
+        imprimere("  Include quoted: OK\n");
+    }
+
+    /* Test 2: Include with macro in included file */
+    {
+        constans character* fons =
+            "#include \"probationes/fixa/pp_test_macro.h\"\n"
+            "int x = INCLUDED_MACRO;";
+        b32 invenit_42;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* Macro from included file should be expanded */
+        num_out = xar_numerus(fructus);
+        invenit_42 = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_INTEGER &&
+                lo->lexema->valor.mensura == II)
+            {
+                si (lo->lexema->valor.datum[ZEPHYRUM] == '4' &&
+                    lo->lexema->valor.datum[I] == '2')
+                {
+                    invenit_42 = VERUM;
+                }
+            }
+        }
+        CREDO_VERUM(invenit_42);
+
+        imprimere("  Include with macro: OK\n");
+    }
+
+    /* Test 3: Include guard (file not re-included) */
+    {
+        constans character* fons =
+            "#include \"probationes/fixa/pp_test_guard.h\"\n"
+            "#include \"probationes/fixa/pp_test_guard.h\"\n"
+            "int final;";
+        i32 count_guarded;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* guarded_var should only appear once due to include guard */
+        num_out = xar_numerus(fructus);
+        count_guarded = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                lo->lexema->valor.mensura == XI)
+            {
+                /* guarded_var = 11 chars */
+                si (memcmp(lo->lexema->valor.datum, "guarded_var", XI) == ZEPHYRUM)
+                {
+                    count_guarded++;
+                }
+            }
+        }
+        CREDO_AEQUALIS_I32(count_guarded, I);
+
+        imprimere("  Include guard: OK\n");
+    }
+
+    /* Test 4: Include with search path */
+    {
+        constans character* fons = "#include \"pp_test_simple.h\"";
+        b32 invenit_int;
+
+        pp = arbor_praeparator_creare(piscina, intern);
+        arbor_praeparator_addere_via(pp, "probationes/fixa");
+        lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+        lexemata = arbor_lexema_omnia(lexator);
+        fructus = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+        CREDO_NON_NIHIL(fructus);
+
+        /* Should find file via search path */
+        num_out = xar_numerus(fructus);
+        invenit_int = FALSUM;
+        per (i = ZEPHYRUM; i < num_out; i++)
+        {
+            ArborLexemaOrigo* lo;
+            lo = *(ArborLexemaOrigo**)xar_obtinere(fructus, i);
+            si (lo != NIHIL && lo->lexema != NIHIL &&
+                lo->lexema->genus == ARBOR_LEXEMA_INT)
+            {
+                invenit_int = VERUM;
+            }
+        }
+        CREDO_VERUM(invenit_int);
+
+        imprimere("  Include search path: OK\n");
+    }
+}
+
+/* ==================================================
  * Test: Nomen Directiva
  * ================================================== */
 
@@ -928,7 +1453,10 @@ s32 principale(vacuum)
     test_directivae_saltantur(piscina, intern);
     test_parsere_define(piscina, intern);
     test_conditionales(piscina, intern);
+    test_if_expressions(piscina, intern);
+    test_special_operators(piscina, intern);
     test_macro_expansion(piscina, intern);
+    test_include(piscina, intern);
     test_directiva_nomina();
 
     imprimere("\n========================================\n");
