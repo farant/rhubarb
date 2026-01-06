@@ -117,6 +117,7 @@ declare -a SOURCE_FILES=(
     "lib/importatio_visus.c"
     "lib/arbor_lexema.c"
     "lib/arbor_praeparator.c"
+    "lib/arbor_syntaxis.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
 )

@@ -172,6 +172,8 @@ also just write everything in latin. you want to do identifiers, function names,
 
 oh, and when you read a file for the first time at least and as appropriate just read the whole thing. i think it tends to save time in the long run.
 
+another tip is that when you are trying to debug stuff don't be afraid of printf statements. it's kind of like the duct tape of debugging, it seems like it can always get you there eventually.
+
 anyway!
 
 
