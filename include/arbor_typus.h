@@ -58,7 +58,7 @@ structura ArborTypus {
     ArborTypusGenus    genus;
     chorda*            titulus;         /* Pro struct/union/enum/typedef tag */
     ArborTypus*        basis;           /* Pro pointer/array/typedef */
-    i32                array_mensura;   /* -1 pro unsized [] */
+    s32                array_mensura;   /* -1 pro unsized [] */
     Xar*               parametra;       /* Functio param types (Xar of ArborTypus*) */
     ArborTypus*        reditum;         /* Functio return type */
     Xar*               membra;          /* Struct/union members (Xar of ArborMembrum*) */

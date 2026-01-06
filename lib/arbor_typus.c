@@ -57,7 +57,7 @@ _creare_typus(ArborTypusResolver* res, ArborTypusGenus genus)
     t->genus = genus;
     t->titulus = NIHIL;
     t->basis = NIHIL;
-    t->array_mensura = (i32)-1;
+    t->array_mensura = -I;
     t->parametra = NIHIL;
     t->reditum = NIHIL;
     t->membra = NIHIL;
@@ -84,7 +84,7 @@ _creare_pointer_typus(ArborTypusResolver* res, ArborTypus* basis)
 }
 
 interior ArborTypus*
-_creare_array_typus(ArborTypusResolver* res, ArborTypus* basis, i32 mensura)
+_creare_array_typus(ArborTypusResolver* res, ArborTypus* basis, s32 mensura)
 {
     ArborTypus* t;
 
@@ -191,7 +191,7 @@ _registrare_symbolum(ArborTypusResolver* res, chorda* titulus, ArborTypus* typus
 interior ArborSymbolum*
 _quaerere_symbolum(ArborTypusResolver* res, chorda* titulus)
 {
-    i32 i;
+    s32 i;
     TabulaDispersa* scopum;
     TabulaDispersa** scopum_ptr;
     vacuum* valor;
@@ -202,9 +202,9 @@ _quaerere_symbolum(ArborTypusResolver* res, chorda* titulus)
     }
 
     /* Search scopes from innermost to outermost */
-    per (i = xar_numerus(res->scopes) - I; i >= ZEPHYRUM; i--)
+    per (i = (s32)xar_numerus(res->scopes) - I; i >= ZEPHYRUM; i--)
     {
-        scopum_ptr = xar_obtinere(res->scopes, i);
+        scopum_ptr = xar_obtinere(res->scopes, (i32)i);
         scopum = *scopum_ptr;
 
         si (tabula_dispersa_invenire(scopum, *titulus, &valor))
@@ -453,12 +453,12 @@ _applicare_declarator(ArborTypusResolver* res, ArborTypus* basis, ArborNodus* de
 
                 casus ARBOR_NODUS_ARRAY_DECLARATOR:
                     {
-                        i32 mensura = (i32)-1;
+                        s32 mensura = -I;
                         /* Extract array size if present */
                         si (child->datum.array.size != NIHIL &&
                             child->datum.array.size->genus == ARBOR_NODUS_INTEGER_LITERAL)
                         {
-                            mensura = (i32)child->datum.array.size->datum.numerus.valor;
+                            mensura = (s32)child->datum.array.size->datum.numerus.valor;
                         }
                         basis = _creare_array_typus(res, basis, mensura);
                     }
