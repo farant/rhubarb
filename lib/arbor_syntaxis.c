@@ -257,18 +257,21 @@ _creare_nodum(ArborSyntaxis* syn, ArborNodusGenus genus)
 interior vacuum
 _finire_nodum(ArborSyntaxis* syn, ArborNodus* nodus)
 {
-    ArborLexemaOrigo* lo;
-    ArborLexema* lex;
+    ArborLexemaOrigo** ptr;
+    ArborLexemaOrigo*  lo;
+    ArborLexema*       lex;
 
     /* Capere locum finis ex praecedente token */
+    lo = NIHIL;
     si (syn->positus > ZEPHYRUM)
     {
-        lo = xar_obtinere(syn->lexemata, syn->positus - I);
+        ptr = xar_obtinere(syn->lexemata, syn->positus - I);
+        si (ptr != NIHIL)
+        {
+            lo = *ptr;
+        }
     }
-    alioquin
-    {
-        lo = NIHIL;
-    }
+
     si (lo != NIHIL && lo->lexema != NIHIL)
     {
         lex = lo->lexema;
