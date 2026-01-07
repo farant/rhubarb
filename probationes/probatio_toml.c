@@ -405,6 +405,7 @@ probatio_format_llm(vacuum)
 s32 principale(s32 argc, character** argv)
 {
     Piscina* piscina;
+    b32 praeteritus;
 
     (vacuum)argc;
     (vacuum)argv;
@@ -449,10 +450,17 @@ s32 principale(s32 argc, character** argv)
     probatio_format_llm();
 
     credo_imprimere_compendium();
-    credo_claudere();
+
+    praeteritus = credo_omnia_praeterierunt();
+
     piscina_destruere(piscina);
 
-    imprimere("\n=== OMNES PROBATIONES SUCCESSERUNT ===\n");
-
-    redde 0;
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }

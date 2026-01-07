@@ -447,6 +447,7 @@ s32 principale(vacuum)
 {
     Piscina* piscina;
     InternamentumChorda* intern;
+    b32 praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_sputnik_lexema", MMMMXCVI * IV);
     intern = internamentum_creare(piscina);
@@ -468,9 +469,18 @@ s32 principale(vacuum)
     _probare_errores(piscina, intern);
 
     imprimere("\n");
-    credo_claudere();
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
 
     piscina_destruere(piscina);
 
-    redde ZEPHYRUM;
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }

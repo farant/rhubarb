@@ -1379,6 +1379,7 @@ principale(vacuum)
 {
     Piscina* piscina;
     InternamentumChorda* intern;
+    b32 praeteritus;
 
     imprimere("===========================================\n");
     imprimere("PROBATIO ARBOR SYNTAXIS\n");
@@ -1456,11 +1457,19 @@ principale(vacuum)
     /* Utilities */
     test_imprimere(piscina, intern);
 
-    imprimere("\n===========================================\n");
-    imprimere("OMNIA PROBATIONES SUCCESSAE!\n");
-    imprimere("===========================================\n");
+    imprimere("\n");
+    credo_imprimere_compendium();
 
-    credo_claudere();
+    praeteritus = credo_omnia_praeterierunt();
+
     piscina_destruere(piscina);
-    redde ZEPHYRUM;
+
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }

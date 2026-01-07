@@ -318,15 +318,103 @@ probatio_fidelis_expressions (
 }
 
 /* ===========================================================
+ * PROBATIO - FIDELIS ROUNDTRIP (Exact Match)
+ *
+ * These tests verify byte-for-byte roundtrip preservation.
+ * They should FAIL until parser properly captures punctuation.
+ * =========================================================== */
+
+interior vacuum
+_credo_roundtrip (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* input,
+       constans character* titulus)
+{
+    ArborNodus* radix;
+    chorda      fructus;
+    memoriae_index input_len;
+
+    imprimere("    %s: ", titulus);
+
+    radix = _parsere_fontem(piscina, intern, input);
+    si (radix == NIHIL)
+    {
+        imprimere("[FAIL - parse error]\n");
+        CREDO_VERUM(radix != NIHIL);
+        redde;
+    }
+
+    fructus = arbor_formator_emittere_fidelis(piscina, radix);
+    input_len = (memoriae_index)strlen(input);
+
+    /* Print what we got for debugging */
+    imprimere("'");
+    fwrite(fructus.datum, I, (memoriae_index)fructus.mensura, stdout);
+    imprimere("' ");
+
+    /* Check exact length match */
+    si (fructus.mensura != (i32)input_len)
+    {
+        imprimere("[FAIL - length %d != %d]\n",
+            (int)fructus.mensura, (int)input_len);
+        CREDO_VERUM(fructus.mensura == (i32)input_len);
+        redde;
+    }
+
+    /* Check exact content match */
+    si (strncmp((constans character*)fructus.datum, input, input_len) != ZEPHYRUM)
+    {
+        imprimere("[FAIL - content mismatch]\n");
+        imprimere("      expected: '%s'\n", input);
+        CREDO_VERUM(strncmp((constans character*)fructus.datum, input, input_len) == ZEPHYRUM);
+        redde;
+    }
+
+    imprimere("[OK]\n");
+}
+
+interior vacuum
+probatio_fidelis_roundtrip (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_fidelis_roundtrip...\n");
+
+    /* Test declaration with semicolon */
+    _credo_roundtrip(piscina, intern,
+        "int x = 42;",
+        "declaration");
+
+    /* Test function with parentheses */
+    _credo_roundtrip(piscina, intern,
+        "int main() { return 0; }",
+        "function");
+
+    /* Test struct with member semicolons */
+    _credo_roundtrip(piscina, intern,
+        "struct Point { int x; int y; };",
+        "struct");
+
+    /* Test control flow */
+    _credo_roundtrip(piscina, intern,
+        "void f() { if (x) { y = 1; } }",
+        "control");
+
+    imprimere("    [OK]\n");
+}
+
+/* ===========================================================
  * PRINCIPALE
  * =========================================================== */
 
-int
+s32
 main (
     vacuum)
 {
                Piscina* piscina;
     InternamentumChorda* intern;
+                    b32  praeteritus;
 
     imprimere("=== PROBATIO ARBOR FORMATOR ===\n\n");
 
@@ -346,11 +434,21 @@ main (
     probatio_fidelis_control_flow(piscina, intern);
     probatio_fidelis_struct(piscina, intern);
     probatio_fidelis_expressions(piscina, intern);
+    probatio_fidelis_roundtrip(piscina, intern);
 
-    imprimere("\n=== OMNES PROBATIONES SUCCESSERUNT ===\n");
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
 
     piscina_destruere(piscina);
-    credo_claudere();
 
-    redde ZEPHYRUM;
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }

@@ -174,6 +174,8 @@ oh, and when you read a file for the first time at least and as appropriate just
 
 another tip is that when you are trying to debug stuff don't be afraid of printf statements. it's kind of like the duct tape of debugging, it seems like it can always get you there eventually.
 
+when you are writing tests look at probationes/probatio_piscina.c to see the proper usage of the credo library for returning test results, etc
+
 anyway!
 
 

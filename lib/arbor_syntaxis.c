@@ -283,6 +283,99 @@ _finire_nodum(ArborSyntaxis* syn, ArborNodus* nodus)
 }
 
 /* ==================================================
+ * Punctuation Attachment for Roundtrip
+ *
+ * Stores punctuation as synthetic trivia entries so
+ * fidelis mode can emit them during roundtrip.
+ * ================================================== */
+
+interior ArborTrivia*
+_creare_trivia_punctuationis (
+    ArborSyntaxis*      syn,
+    constans character* textus)
+{
+    ArborTrivia* trivia;
+    chorda       temp;
+    chorda*      internata;
+
+    trivia = piscina_allocare(syn->piscina, magnitudo(ArborTrivia));
+    trivia->linea = ZEPHYRUM;
+    trivia->columna = ZEPHYRUM;
+    trivia->est_commentum = FALSUM;
+    trivia->est_c99 = FALSUM;
+
+    temp = chorda_ex_literis(textus, syn->piscina);
+    internata = chorda_internare(syn->intern, temp);
+    trivia->valor = *internata;
+
+    redde trivia;
+}
+
+/* Attach punctuation to trivia_ante (emitted BEFORE node content) */
+interior vacuum
+_praeponere_punctuationem (
+    ArborSyntaxis*      syn,
+    ArborNodus*         nodus,
+    constans character* textus)
+{
+    ArborTrivia*  trivia;
+    ArborTrivia** locus;
+
+    si (nodus == NIHIL || textus == NIHIL) redde;
+
+    si (nodus->trivia_ante == NIHIL)
+    {
+        nodus->trivia_ante = xar_creare(syn->piscina, magnitudo(ArborTrivia*));
+    }
+
+    trivia = _creare_trivia_punctuationis(syn, textus);
+    locus = xar_addere(nodus->trivia_ante);
+    *locus = trivia;
+}
+
+/* Attach punctuation to trivia_post (emitted AFTER node content) */
+interior vacuum
+_attachere_punctuationem (
+    ArborSyntaxis*      syn,
+    ArborNodus*         nodus,
+    constans character* textus)
+{
+    ArborTrivia*   trivia;
+    ArborTrivia**  locus;
+    Xar*           new_xar;
+    i32            i;
+    i32            num;
+
+    si (nodus == NIHIL || textus == NIHIL) redde;
+
+    /* Si trivia_post iam existit (ex _finire_nodum), copiare ad novum xar
+     * ut non modifcemus arrays lexematis originalis */
+    si (nodus->trivia_post != NIHIL)
+    {
+        new_xar = xar_creare(syn->piscina, magnitudo(ArborTrivia*));
+        num = xar_numerus(nodus->trivia_post);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            ArborTrivia** tp = xar_obtinere(nodus->trivia_post, i);
+            si (tp != NIHIL)
+            {
+                ArborTrivia** slot = xar_addere(new_xar);
+                *slot = *tp;
+            }
+        }
+        nodus->trivia_post = new_xar;
+    }
+    alioquin
+    {
+        nodus->trivia_post = xar_creare(syn->piscina, magnitudo(ArborTrivia*));
+    }
+
+    trivia = _creare_trivia_punctuationis(syn, textus);
+    locus = xar_addere(nodus->trivia_post);
+    *locus = trivia;
+}
+
+/* ==================================================
  * Error Recovery
  * ================================================== */
 
@@ -2250,6 +2343,7 @@ _parsere_struct_declaration(ArborSyntaxis* syn)
     nodus->datum.declaratio.specifiers = specifiers;
     nodus->datum.declaratio.declaratores = declaratores;
     _finire_nodum(syn, nodus);
+    _attachere_punctuationem(syn, nodus, ";");
     redde nodus;
 }
 
@@ -2687,6 +2781,7 @@ _parsere_declarator(ArborSyntaxis* syn)
             redde NIHIL;
         }
         func->datum.genericum.liberi = xar_creare(syn->piscina, magnitudo(ArborNodus*));
+        _praeponere_punctuationem(syn, func, "(");
 
         _progredi(syn);  /* Skip ( */
 
@@ -2753,6 +2848,7 @@ parse_params:
 
         _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
         _finire_nodum(syn, func);
+        _attachere_punctuationem(syn, func, ")");
         {
             ArborNodus** slot = xar_addere(nodus->datum.genericum.liberi);
             si (slot != NIHIL) { *slot = func; }
@@ -2921,6 +3017,7 @@ _parsere_declaratio(ArborSyntaxis* syn)
     }
 
     _finire_nodum(syn, nodus);
+    _attachere_punctuationem(syn, nodus, ";");
     redde nodus;
 }
 
@@ -2986,6 +3083,7 @@ _parsere_external_declaration(ArborSyntaxis* syn)
         }
         _progredi(syn);
         _finire_nodum(syn, decl);
+        _attachere_punctuationem(syn, decl, ";");
         redde decl;
     }
 
@@ -3125,6 +3223,7 @@ _parsere_external_declaration(ArborSyntaxis* syn)
         }
 
         _finire_nodum(syn, nodus);
+        _attachere_punctuationem(syn, nodus, ";");
         result = nodus;
     }
 

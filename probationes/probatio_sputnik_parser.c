@@ -802,6 +802,7 @@ s32 principale(vacuum)
 {
     Piscina* piscina;
     InternamentumChorda* intern;
+    b32 praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_parser", MMMMXCVI * IV);
     intern = internamentum_creare(piscina);
@@ -827,11 +828,19 @@ s32 principale(vacuum)
     _probare_programma_complexum(piscina, intern);
     _probare_errores(piscina, intern);
 
-    imprimere("\n========================================\n");
-    imprimere("OMNES PROBATIONES: SUCCESSUS\n");
-    imprimere("========================================\n");
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
 
     piscina_destruere(piscina);
 
-    redde ZEPHYRUM;
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }

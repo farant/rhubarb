@@ -681,6 +681,7 @@ probare_tag_cum_commando(Piscina* piscina)
 integer principale(vacuum)
 {
     Piscina* piscina;
+    b32 praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_coloratio", M * LXIV);
 
@@ -727,9 +728,19 @@ integer principale(vacuum)
     probare_tag_bare_value(piscina);
     probare_tag_cum_commando(piscina);
 
-    credo_claudere();
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
 
     piscina_destruere(piscina);
 
-    redde ZEPHYRUM;
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }
