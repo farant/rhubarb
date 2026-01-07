@@ -1148,14 +1148,46 @@ _parsere_identificator(ArborSyntaxis* syn)
 interior ArborNodus*
 _parsere_parenthesis(ArborSyntaxis* syn)
 {
-    ArborNodus* nodus;
+    ArborNodus*  nodus;
+    ArborLexema* open_lex;
+    ArborLexema* close_lex;
+    Xar*         trivia_post_open;
+    Xar*         old_ante;
+
+    /* Capere trivia ex '(' ante consumere */
+    open_lex = _currens_lex(syn);
+    trivia_post_open = (open_lex != NIHIL) ? open_lex->trivia_post : NIHIL;
 
     /* Skip ( */
     _progredi(syn);
 
     /* TODO: detect cast expression (type-name) */
     nodus = _parsere_expressio(syn, PREC_NIHIL);
+    si (nodus == NIHIL)
+    {
+        _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
+        redde NIHIL;
+    }
 
+    /* Praepone "(" + trivia ad nodus.trivia_ante */
+    old_ante = nodus->trivia_ante;
+    nodus->trivia_ante = NIHIL;
+    si (open_lex != NIHIL)
+    {
+        _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, open_lex->trivia_ante);
+    }
+    _addere_synth_trivia(syn, &nodus->trivia_ante, "(");
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, trivia_post_open);
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, old_ante);
+
+    /* Capere trivia ex ')' et attachere */
+    close_lex = _currens_lex(syn);
+    si (close_lex != NIHIL && close_lex->genus == ARBOR_LEXEMA_PAREN_CLAUSA)
+    {
+        _copiare_trivia_ad_xar(syn, &nodus->trivia_post, close_lex->trivia_ante);
+        _addere_synth_trivia(syn, &nodus->trivia_post, ")");
+        _copiare_trivia_ad_xar(syn, &nodus->trivia_post, close_lex->trivia_post);
+    }
     _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
 
     redde nodus;
@@ -1201,7 +1233,7 @@ _parsere_unarium_prefix(ArborSyntaxis* syn)
     nodus->datum.unarium.operandum = operandum;
     operandum->pater = nodus;
 
-    _finire_nodum(syn, nodus);
+    /* NON vocare _finire_nodum - operandum iam habet trivia */
     redde nodus;
 }
 
@@ -1487,6 +1519,10 @@ _parsere_vocatio(ArborSyntaxis* syn, ArborNodus* callee)
 {
     ArborNodus* nodus;
     ArborNodus* argumentum;
+    ArborNodus* prev_arg;
+    ArborLexema* comma_lex;
+    Xar* trivia_post_comma;
+    Xar* old_ante;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_CALL_EXPRESSION);
     si (nodus == NIHIL)
@@ -1502,20 +1538,49 @@ _parsere_vocatio(ArborSyntaxis* syn, ArborNodus* callee)
     _progredi(syn);
 
     /* Parsere argumenta */
+    prev_arg = NIHIL;
+    trivia_post_comma = NIHIL;
     si (!_congruit(syn, ARBOR_LEXEMA_PAREN_CLAUSA))
     {
         fac {
-            argumentum = _parsere_expressio(syn, PREC_ASSIGNATIO);  /* No comma at this level */
+            argumentum = _parsere_expressio(syn, PREC_ASSIGNATIO);
             si (argumentum == NIHIL)
             {
                 redde NIHIL;
             }
+
+            /* Praepone trivia_post de comma praecedenti */
+            si (trivia_post_comma != NIHIL)
+            {
+                old_ante = argumentum->trivia_ante;
+                argumentum->trivia_ante = NIHIL;
+                _copiare_trivia_ad_xar(syn, &argumentum->trivia_ante, trivia_post_comma);
+                _copiare_trivia_ad_xar(syn, &argumentum->trivia_ante, old_ante);
+            }
+
             argumentum->pater = nodus;
             {
                 ArborNodus** slot = xar_addere(nodus->datum.vocatio.argumenta);
                 si (slot != NIHIL) { *slot = argumentum; }
             }
-        } dum (_consumere(syn, ARBOR_LEXEMA_COMMA));
+            prev_arg = argumentum;
+
+            /* Capere comma trivia si praesens */
+            si (_congruit(syn, ARBOR_LEXEMA_COMMA))
+            {
+                comma_lex = _currens_lex(syn);
+                si (comma_lex != NIHIL && prev_arg != NIHIL)
+                {
+                    _copiare_trivia_ad_xar(syn, &prev_arg->trivia_post, comma_lex->trivia_ante);
+                    trivia_post_comma = comma_lex->trivia_post;
+                }
+                _progredi(syn);
+            }
+            alioquin
+            {
+                frange;
+            }
+        } dum (VERUM);
     }
 
     _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
@@ -1909,13 +1974,40 @@ _parsere_if(ArborSyntaxis* syn)
     consequens->pater = nodus;
 
     /* optionalis else */
-    si (_consumere(syn, ARBOR_LEXEMA_ELSE))
+    si (_congruit(syn, ARBOR_LEXEMA_ELSE))
     {
+        ArborLexema* else_lex;
+        Xar*         trivia_post_else;
+        Xar*         old_ante_alt;
+
+        /* Capere trivia ex 'else' */
+        else_lex = _currens_lex(syn);
+
+        /* Attachere trivia_ante + "else" ad consequens.trivia_post */
+        si (else_lex != NIHIL)
+        {
+            _copiare_trivia_ad_xar(syn, &consequens->trivia_post, else_lex->trivia_ante);
+        }
+        _addere_synth_trivia(syn, &consequens->trivia_post, "else");
+        trivia_post_else = (else_lex != NIHIL) ? else_lex->trivia_post : NIHIL;
+
+        _progredi(syn);
+
         alternans = _parsere_sententia(syn);
         si (alternans == NIHIL)
         {
             redde _creare_error_nodum(syn, "else sine corpore");
         }
+
+        /* Praepone trivia_post_else ad alternans.trivia_ante */
+        si (trivia_post_else != NIHIL)
+        {
+            old_ante_alt = alternans->trivia_ante;
+            alternans->trivia_ante = NIHIL;
+            _copiare_trivia_ad_xar(syn, &alternans->trivia_ante, trivia_post_else);
+            _copiare_trivia_ad_xar(syn, &alternans->trivia_ante, old_ante_alt);
+        }
+
         nodus->datum.conditionale.alternans = alternans;
         alternans->pater = nodus;
     }
@@ -1931,9 +2023,15 @@ _parsere_if(ArborSyntaxis* syn)
 interior ArborNodus*
 _parsere_while(ArborSyntaxis* syn)
 {
-    ArborNodus* nodus;
-    ArborNodus* conditio;
-    ArborNodus* corpus;
+    ArborNodus*  nodus;
+    ArborNodus*  conditio;
+    ArborNodus*  corpus;
+    ArborLexema* while_lex;
+    ArborLexema* open_lex;
+    ArborLexema* close_lex;
+    Xar*         trivia_post_while;
+    Xar*         trivia_post_open;
+    Xar*         old_ante;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_WHILE_STATEMENT);
     si (nodus == NIHIL)
@@ -1941,8 +2039,16 @@ _parsere_while(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
+    /* Capere trivia ex 'while' ante skip */
+    while_lex = _currens_lex(syn);
+    trivia_post_while = (while_lex != NIHIL) ? while_lex->trivia_post : NIHIL;
+
     /* Skip while */
     _progredi(syn);
+
+    /* Capere trivia ex '(' */
+    open_lex = _currens_lex(syn);
+    trivia_post_open = (open_lex != NIHIL) ? open_lex->trivia_post : NIHIL;
 
     /* ( conditio ) */
     _expectare(syn, ARBOR_LEXEMA_PAREN_APERTA, "Expectabatur (");
@@ -1951,8 +2057,26 @@ _parsere_while(ArborSyntaxis* syn)
     {
         redde NIHIL;
     }
+
+    /* Praepone trivia: trivia_post_while + "(" + trivia_post_open */
+    old_ante = conditio->trivia_ante;
+    conditio->trivia_ante = NIHIL;
+    _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, trivia_post_while);
+    _addere_synth_trivia(syn, &conditio->trivia_ante, "(");
+    _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, trivia_post_open);
+    _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, old_ante);
+
     nodus->datum.iteratio.conditio = conditio;
     conditio->pater = nodus;
+
+    /* Capere trivia ex ')' */
+    close_lex = _currens_lex(syn);
+
+    /* Attachere ')' et trivia_post ad conditio.trivia_post */
+    _copiare_trivia_ad_xar(syn, &conditio->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_ante : NIHIL);
+    _addere_synth_trivia(syn, &conditio->trivia_post, ")");
+    _copiare_trivia_ad_xar(syn, &conditio->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_post : NIHIL);
+
     _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
 
     /* corpus */
@@ -1964,7 +2088,7 @@ _parsere_while(ArborSyntaxis* syn)
     nodus->datum.iteratio.corpus = corpus;
     corpus->pater = nodus;
 
-    _finire_nodum(syn, nodus);
+    /* NON vocare _finire_nodum - corpus iam habet trivia_post */
     redde nodus;
 }
 
@@ -2015,11 +2139,21 @@ _parsere_do(ArborSyntaxis* syn)
 interior ArborNodus*
 _parsere_for(ArborSyntaxis* syn)
 {
-    ArborNodus* nodus;
-    ArborNodus* init;
-    ArborNodus* conditio;
-    ArborNodus* post;
-    ArborNodus* corpus;
+    ArborNodus*  nodus;
+    ArborNodus*  init;
+    ArborNodus*  conditio;
+    ArborNodus*  post;
+    ArborNodus*  corpus;
+    ArborLexema* for_lex;
+    ArborLexema* open_lex;
+    ArborLexema* semi1_lex;
+    ArborLexema* semi2_lex;
+    ArborLexema* close_lex;
+    Xar*         trivia_post_for;
+    Xar*         trivia_post_open;
+    Xar*         trivia_post_semi1;
+    Xar*         trivia_post_semi2;
+    Xar*         old_ante;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_FOR_STATEMENT);
     si (nodus == NIHIL)
@@ -2027,8 +2161,16 @@ _parsere_for(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
+    /* Capere trivia ex 'for' */
+    for_lex = _currens_lex(syn);
+    trivia_post_for = (for_lex != NIHIL) ? for_lex->trivia_post : NIHIL;
+
     /* Skip for */
     _progredi(syn);
+
+    /* Capere trivia ex '(' */
+    open_lex = _currens_lex(syn);
+    trivia_post_open = (open_lex != NIHIL) ? open_lex->trivia_post : NIHIL;
 
     _expectare(syn, ARBOR_LEXEMA_PAREN_APERTA, "Expectabatur (");
 
@@ -2040,7 +2182,16 @@ _parsere_for(ArborSyntaxis* syn)
     alioquin si (_est_declaration_start(syn))
     {
         init = _parsere_declaratio(syn);
-        /* Declaratio iam habet ; */
+        /* Declaratio iam habet ; - applicare trivia ad init */
+        si (init != NIHIL)
+        {
+            old_ante = init->trivia_ante;
+            init->trivia_ante = NIHIL;
+            _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_for);
+            _addere_synth_trivia(syn, &init->trivia_ante, "(");
+            _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_open);
+            _copiare_trivia_ad_xar(syn, &init->trivia_ante, old_ante);
+        }
         nodus->datum.circuitus.init = init;
         si (init != NIHIL) init->pater = nodus;
 
@@ -2053,6 +2204,16 @@ _parsere_for(ArborSyntaxis* syn)
         {
             conditio = _parsere_expressio(syn, PREC_NIHIL);
         }
+
+        /* Capere trivia ex ';' ante conditio */
+        semi2_lex = _currens_lex(syn);
+        si (conditio != NIHIL)
+        {
+            _copiare_trivia_ad_xar(syn, &conditio->trivia_post, (semi2_lex != NIHIL) ? semi2_lex->trivia_ante : NIHIL);
+            _addere_synth_trivia(syn, &conditio->trivia_post, ";");
+        }
+        trivia_post_semi2 = (semi2_lex != NIHIL) ? semi2_lex->trivia_post : NIHIL;
+
         _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
         nodus->datum.circuitus.conditio = conditio;
         si (conditio != NIHIL) conditio->pater = nodus;
@@ -2065,9 +2226,31 @@ _parsere_for(ArborSyntaxis* syn)
         alioquin
         {
             post = _parsere_expressio(syn, PREC_NIHIL);
+            /* Applicare trivia_post_semi2 ad post.trivia_ante */
+            si (post != NIHIL && trivia_post_semi2 != NIHIL)
+            {
+                old_ante = post->trivia_ante;
+                post->trivia_ante = NIHIL;
+                _copiare_trivia_ad_xar(syn, &post->trivia_ante, trivia_post_semi2);
+                _copiare_trivia_ad_xar(syn, &post->trivia_ante, old_ante);
+            }
         }
         nodus->datum.circuitus.post = post;
         si (post != NIHIL) post->pater = nodus;
+
+        /* Capere trivia ex ')' */
+        close_lex = _currens_lex(syn);
+        si (post != NIHIL)
+        {
+            _copiare_trivia_ad_xar(syn, &post->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_ante : NIHIL);
+            _addere_synth_trivia(syn, &post->trivia_post, ")");
+            _copiare_trivia_ad_xar(syn, &post->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_post : NIHIL);
+        }
+        alioquin si (conditio != NIHIL)
+        {
+            _addere_synth_trivia(syn, &conditio->trivia_post, ")");
+            _copiare_trivia_ad_xar(syn, &conditio->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_post : NIHIL);
+        }
 
         _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
 
@@ -2080,13 +2263,34 @@ _parsere_for(ArborSyntaxis* syn)
         nodus->datum.circuitus.corpus = corpus;
         corpus->pater = nodus;
 
-        _finire_nodum(syn, nodus);
+        /* NON vocare _finire_nodum - corpus iam habet trivia_post */
         redde nodus;
     }
     alioquin
     {
         init = _parsere_expressio(syn, PREC_NIHIL);
     }
+
+    /* Applicare trivia: trivia_post_for + "(" + trivia_post_open ad init */
+    si (init != NIHIL)
+    {
+        old_ante = init->trivia_ante;
+        init->trivia_ante = NIHIL;
+        _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_for);
+        _addere_synth_trivia(syn, &init->trivia_ante, "(");
+        _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_open);
+        _copiare_trivia_ad_xar(syn, &init->trivia_ante, old_ante);
+    }
+
+    /* Capere trivia ex prima ';' */
+    semi1_lex = _currens_lex(syn);
+    si (init != NIHIL)
+    {
+        _copiare_trivia_ad_xar(syn, &init->trivia_post, (semi1_lex != NIHIL) ? semi1_lex->trivia_ante : NIHIL);
+        _addere_synth_trivia(syn, &init->trivia_post, ";");
+    }
+    trivia_post_semi1 = (semi1_lex != NIHIL) ? semi1_lex->trivia_post : NIHIL;
+
     _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
     nodus->datum.circuitus.init = init;
     si (init != NIHIL) init->pater = nodus;
@@ -2099,7 +2303,25 @@ _parsere_for(ArborSyntaxis* syn)
     alioquin
     {
         conditio = _parsere_expressio(syn, PREC_NIHIL);
+        /* Applicare trivia_post_semi1 ad conditio.trivia_ante */
+        si (conditio != NIHIL && trivia_post_semi1 != NIHIL)
+        {
+            old_ante = conditio->trivia_ante;
+            conditio->trivia_ante = NIHIL;
+            _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, trivia_post_semi1);
+            _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, old_ante);
+        }
     }
+
+    /* Capere trivia ex secunda ';' */
+    semi2_lex = _currens_lex(syn);
+    si (conditio != NIHIL)
+    {
+        _copiare_trivia_ad_xar(syn, &conditio->trivia_post, (semi2_lex != NIHIL) ? semi2_lex->trivia_ante : NIHIL);
+        _addere_synth_trivia(syn, &conditio->trivia_post, ";");
+    }
+    trivia_post_semi2 = (semi2_lex != NIHIL) ? semi2_lex->trivia_post : NIHIL;
+
     _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
     nodus->datum.circuitus.conditio = conditio;
     si (conditio != NIHIL) conditio->pater = nodus;
@@ -2112,7 +2334,31 @@ _parsere_for(ArborSyntaxis* syn)
     alioquin
     {
         post = _parsere_expressio(syn, PREC_NIHIL);
+        /* Applicare trivia_post_semi2 ad post.trivia_ante */
+        si (post != NIHIL && trivia_post_semi2 != NIHIL)
+        {
+            old_ante = post->trivia_ante;
+            post->trivia_ante = NIHIL;
+            _copiare_trivia_ad_xar(syn, &post->trivia_ante, trivia_post_semi2);
+            _copiare_trivia_ad_xar(syn, &post->trivia_ante, old_ante);
+        }
     }
+
+    /* Capere trivia ex ')' */
+    close_lex = _currens_lex(syn);
+    si (post != NIHIL)
+    {
+        _copiare_trivia_ad_xar(syn, &post->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_ante : NIHIL);
+        _addere_synth_trivia(syn, &post->trivia_post, ")");
+        /* Addere trivia_post ex ')' (spatium ante corpus) */
+        _copiare_trivia_ad_xar(syn, &post->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_post : NIHIL);
+    }
+    alioquin si (conditio != NIHIL)
+    {
+        _addere_synth_trivia(syn, &conditio->trivia_post, ")");
+        _copiare_trivia_ad_xar(syn, &conditio->trivia_post, (close_lex != NIHIL) ? close_lex->trivia_post : NIHIL);
+    }
+
     _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur )");
     nodus->datum.circuitus.post = post;
     si (post != NIHIL) post->pater = nodus;
@@ -2123,10 +2369,11 @@ _parsere_for(ArborSyntaxis* syn)
     {
         redde NIHIL;
     }
+
     nodus->datum.circuitus.corpus = corpus;
     corpus->pater = nodus;
 
-    _finire_nodum(syn, nodus);
+    /* NON vocare _finire_nodum - corpus iam habet trivia_post */
     redde nodus;
 }
 
@@ -2980,7 +3227,14 @@ _parsere_declarator(ArborSyntaxis* syn)
 {
     ArborNodus* nodus;
     ArborNodus* inner;
+    ArborNodus* prev_param;
     ArborLexema* lex;
+    ArborLexema* comma_lex;
+    Xar* trivia_post_comma;
+    Xar* old_ante;
+
+    prev_param = NIHIL;
+    trivia_post_comma = NIHIL;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_DECLARATOR);
     si (nodus == NIHIL)
@@ -3126,6 +3380,7 @@ _parsere_declarator(ArborSyntaxis* syn)
             alioquin
             {
 parse_params:
+                trivia_post_comma = NIHIL;
                 fac {
                     ArborNodus* param;
                     Xar* param_specs;
@@ -3139,6 +3394,19 @@ parse_params:
                     param_specs = xar_creare(syn->piscina, magnitudo(ArborNodus*));
                     _parsere_specifiers(syn, param_specs);
                     param->datum.parametrum.specifiers = param_specs;
+
+                    /* Praepone trivia_post de comma praecedenti */
+                    si (trivia_post_comma != NIHIL)
+                    {
+                        ArborNodus** first_spec = xar_obtinere(param_specs, ZEPHYRUM);
+                        si (first_spec != NIHIL && *first_spec != NIHIL)
+                        {
+                            old_ante = (*first_spec)->trivia_ante;
+                            (*first_spec)->trivia_ante = NIHIL;
+                            _copiare_trivia_ad_xar(syn, &(*first_spec)->trivia_ante, trivia_post_comma);
+                            _copiare_trivia_ad_xar(syn, &(*first_spec)->trivia_ante, old_ante);
+                        }
+                    }
 
                     /* Optional declarator */
                     lex = _currens_lex(syn);
@@ -3160,8 +3428,25 @@ parse_params:
                         ArborNodus** slot = xar_addere(func->datum.genericum.liberi);
                         si (slot != NIHIL) { *slot = param; }
                     }
+                    prev_param = param;
 
-                } dum (_consumere(syn, ARBOR_LEXEMA_COMMA));
+                    /* Capere comma trivia si praesens */
+                    si (_congruit(syn, ARBOR_LEXEMA_COMMA))
+                    {
+                        comma_lex = _currens_lex(syn);
+                        si (comma_lex != NIHIL && prev_param != NIHIL)
+                        {
+                            _copiare_trivia_ad_xar(syn, &prev_param->trivia_post, comma_lex->trivia_ante);
+                            _addere_synth_trivia(syn, &prev_param->trivia_post, ",");
+                            trivia_post_comma = comma_lex->trivia_post;
+                        }
+                        _progredi(syn);
+                    }
+                    alioquin
+                    {
+                        frange;
+                    }
+                } dum (VERUM);
             }
         }
 
@@ -3234,7 +3519,11 @@ _parsere_declaratio(ArborSyntaxis* syn)
     ArborNodus* nodus;
     ArborNodus* decl;
     ArborNodus* init;
+    ArborNodus* prev_decl;
+    ArborLexema* comma_lex;
     Xar* specifiers;
+    Xar* trivia_post_comma;
+    Xar* old_ante;
     b32 habet_typedef;
     i32 i;
     i32 n;
@@ -3271,6 +3560,8 @@ _parsere_declaratio(ArborSyntaxis* syn)
     }
 
     /* Parse declarators */
+    prev_decl = NIHIL;
+    trivia_post_comma = NIHIL;
     si (!_congruit(syn, ARBOR_LEXEMA_SEMICOLON))
     {
         fac {
@@ -3287,6 +3578,16 @@ _parsere_declaratio(ArborSyntaxis* syn)
             {
                 redde NIHIL;
             }
+
+            /* Praepone trivia_post de comma praecedenti */
+            si (trivia_post_comma != NIHIL)
+            {
+                old_ante = decl->trivia_ante;
+                decl->trivia_ante = NIHIL;
+                _copiare_trivia_ad_xar(syn, &decl->trivia_ante, trivia_post_comma);
+                _copiare_trivia_ad_xar(syn, &decl->trivia_ante, old_ante);
+            }
+
             init_decl->datum.init_decl.declarator = decl;
             decl->pater = init_decl;
 
@@ -3326,8 +3627,25 @@ _parsere_declaratio(ArborSyntaxis* syn)
                 ArborNodus** slot = xar_addere(nodus->datum.declaratio.declaratores);
                 si (slot != NIHIL) { *slot = init_decl; }
             }
+            prev_decl = init_decl;
 
-        } dum (_consumere(syn, ARBOR_LEXEMA_COMMA));
+            /* Capere comma trivia si praesens */
+            si (_congruit(syn, ARBOR_LEXEMA_COMMA))
+            {
+                comma_lex = _currens_lex(syn);
+                si (comma_lex != NIHIL && prev_decl != NIHIL)
+                {
+                    _copiare_trivia_ad_xar(syn, &prev_decl->trivia_post, comma_lex->trivia_ante);
+                    _addere_synth_trivia(syn, &prev_decl->trivia_post, ",");
+                    trivia_post_comma = comma_lex->trivia_post;
+                }
+                _progredi(syn);
+            }
+            alioquin
+            {
+                frange;
+            }
+        } dum (VERUM);
     }
 
     _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
@@ -3491,50 +3809,82 @@ _parsere_external_declaration(ArborSyntaxis* syn)
         }
 
         /* More declarators? */
-        dum (_consumere(syn, ARBOR_LEXEMA_COMMA))
         {
-            declarator = _parsere_declarator(syn);
-            si (declarator == NIHIL)
+            ArborNodus* prev_decl;
+            ArborLexema* comma_lex;
+            Xar* trivia_post_comma;
+            Xar* old_ante;
+
+            prev_decl = init_decl;
+            trivia_post_comma = NIHIL;
+
+            dum (_congruit(syn, ARBOR_LEXEMA_COMMA))
             {
-                redde NIHIL;
-            }
-
-            init_decl = _creare_nodum(syn, ARBOR_NODUS_INIT_DECLARATOR);
-            si (init_decl == NIHIL)
-            {
-                redde NIHIL;
-            }
-            init_decl->datum.init_decl.declarator = declarator;
-            declarator->pater = init_decl;
-
-            si (_congruit(syn, ARBOR_LEXEMA_ASSIGNATIO))
-            {
-                ArborLexema* eq_lex;
-                Xar*         trivia_post_eq;
-
-                eq_lex = _currens_lex(syn);
-                trivia_post_eq = (eq_lex != NIHIL) ? eq_lex->trivia_post : NIHIL;
-
-                _consumere_cum_trivia(syn, ARBOR_LEXEMA_ASSIGNATIO, declarator, NIHIL);
-
-                init = _parsere_initializer(syn);
-                si (init != NIHIL)
+                /* Capere comma trivia ante consumere */
+                comma_lex = _currens_lex(syn);
+                si (comma_lex != NIHIL && prev_decl != NIHIL)
                 {
-                    _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_eq);
+                    _copiare_trivia_ad_xar(syn, &prev_decl->trivia_post, comma_lex->trivia_ante);
+                    _addere_synth_trivia(syn, &prev_decl->trivia_post, ",");
+                    trivia_post_comma = comma_lex->trivia_post;
                 }
-                init_decl->datum.init_decl.initializer = init;
-                si (init != NIHIL) init->pater = init_decl;
-            }
-            alioquin
-            {
-                init_decl->datum.init_decl.initializer = NIHIL;
-            }
+                _progredi(syn);
 
-            _finire_nodum(syn, init_decl);
-            init_decl->pater = nodus;
-            {
-                ArborNodus** slot = xar_addere(nodus->datum.declaratio.declaratores);
-                si (slot != NIHIL) { *slot = init_decl; }
+                declarator = _parsere_declarator(syn);
+                si (declarator == NIHIL)
+                {
+                    redde NIHIL;
+                }
+
+                /* Apply trivia_post_comma to declarator's trivia_ante */
+                si (trivia_post_comma != NIHIL)
+                {
+                    old_ante = declarator->trivia_ante;
+                    declarator->trivia_ante = NIHIL;
+                    _copiare_trivia_ad_xar(syn, &declarator->trivia_ante, trivia_post_comma);
+                    _copiare_trivia_ad_xar(syn, &declarator->trivia_ante, old_ante);
+                }
+
+                init_decl = _creare_nodum(syn, ARBOR_NODUS_INIT_DECLARATOR);
+                si (init_decl == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                init_decl->datum.init_decl.declarator = declarator;
+                declarator->pater = init_decl;
+
+                si (_congruit(syn, ARBOR_LEXEMA_ASSIGNATIO))
+                {
+                    ArborLexema* eq_lex;
+                    Xar*         trivia_post_eq;
+
+                    eq_lex = _currens_lex(syn);
+                    trivia_post_eq = (eq_lex != NIHIL) ? eq_lex->trivia_post : NIHIL;
+
+                    _consumere_cum_trivia(syn, ARBOR_LEXEMA_ASSIGNATIO, declarator, NIHIL);
+
+                    init = _parsere_initializer(syn);
+                    si (init != NIHIL)
+                    {
+                        _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_eq);
+                    }
+                    init_decl->datum.init_decl.initializer = init;
+                    si (init != NIHIL) init->pater = init_decl;
+                }
+                alioquin
+                {
+                    init_decl->datum.init_decl.initializer = NIHIL;
+                }
+
+                _finire_nodum(syn, init_decl);
+                init_decl->pater = nodus;
+                {
+                    ArborNodus** slot = xar_addere(nodus->datum.declaratio.declaratores);
+                    si (slot != NIHIL) { *slot = init_decl; }
+                }
+
+                prev_decl = init_decl;
+                trivia_post_comma = NIHIL;
             }
         }
 

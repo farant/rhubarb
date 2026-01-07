@@ -406,6 +406,86 @@ probatio_fidelis_roundtrip (
         "int f() { return a + b * c - d / e; }",
         "expressions");
 
+    /* Test function call with arguments */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return foo(a, b, c); }",
+        "call");
+
+    /* Test array subscript */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return arr[i]; }",
+        "subscript");
+
+    /* Test pointer declaration */
+    _credo_roundtrip(piscina, intern,
+        "int *p = &x;",
+        "pointer");
+
+    /* Test ternary expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return x ? a : b; }",
+        "ternary");
+
+    /* Test assignment expression */
+    _credo_roundtrip(piscina, intern,
+        "void f() { x = y + z; }",
+        "assign");
+
+    /* Test unary operators */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return -x + !y; }",
+        "unary");
+
+    /* Test parenthesized expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (a + b) * c; }",
+        "parens");
+
+    /* Test for loop */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i = 0; i < n; i++) { x++; } }",
+        "for");
+
+    /* Test while loop */
+    _credo_roundtrip(piscina, intern,
+        "void f() { while (x > 0) { x--; } }",
+        "while");
+
+    /* Test nested if-else */
+    _credo_roundtrip(piscina, intern,
+        "void f() { if (a) { if (b) { x = 1; } } else { x = 2; } }",
+        "nested-if");
+
+    /* Test complex expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (a + b) * (c - d) / e; }",
+        "complex");
+
+    /* Test member access */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return p->x + s.y; }",
+        "member");
+
+    /* Test comparison operators */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a < b && c >= d; }",
+        "compare");
+
+    /* Test bitwise operators */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a | b & c ^ d; }",
+        "bitwise");
+
+    /* Test multiple declarations */
+    _credo_roundtrip(piscina, intern,
+        "int a, b, c;",
+        "multi-decl");
+
+    /* Test function with multiple parameters */
+    _credo_roundtrip(piscina, intern,
+        "int add(int a, int b) { return a + b; }",
+        "func-params");
+
     imprimere("    [OK]\n");
 }
 

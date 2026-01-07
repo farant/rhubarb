@@ -1604,6 +1604,67 @@ test_trivia_binary_op(Piscina* piscina, InternamentumChorda* intern)
 }
 
 interior vacuum
+test_trivia_multi_decl(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl;
+    ArborNodus* init_decl;
+    i32 i;
+    i32 num;
+
+    imprimere("\n--- Trivia Multi Decl ---\n");
+
+    res = _parsere_fontem(piscina, intern, "int a, b, c;");
+    CREDO_VERUM(res.successus);
+    CREDO_NON_NIHIL(res.radix);
+
+    radix = res.radix;
+    decl = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(decl->genus, ARBOR_NODUS_DECLARATION);
+
+    num = xar_numerus(decl->datum.declaratio.declaratores);
+    imprimere("  num declaratores: %d\n", num);
+    CREDO_AEQUALIS_I32(num, III);
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        init_decl = *(ArborNodus**)xar_obtinere(decl->datum.declaratio.declaratores, i);
+        imprimere("  init_decl[%d]:\n", i);
+        imprimere("    trivia_ante: %s",
+                  init_decl->trivia_ante != NIHIL ? "praesens" : "nihil");
+        si (init_decl->trivia_ante != NIHIL)
+        {
+            imprimere(" (num: %d)", xar_numerus(init_decl->trivia_ante));
+        }
+        imprimere("\n");
+        imprimere("    trivia_post: %s",
+                  init_decl->trivia_post != NIHIL ? "praesens" : "nihil");
+        si (init_decl->trivia_post != NIHIL)
+        {
+            imprimere(" (num: %d)", xar_numerus(init_decl->trivia_post));
+            /* Print actual trivia content */
+            {
+                i32 j;
+                i32 tnum = xar_numerus(init_decl->trivia_post);
+                per (j = ZEPHYRUM; j < tnum; j++)
+                {
+                    ArborTrivia** tp = xar_obtinere(init_decl->trivia_post, j);
+                    si (tp != NIHIL && *tp != NIHIL)
+                    {
+                        ArborTrivia* t = *tp;
+                        imprimere(" ['%.*s']", (int)t->valor.mensura, t->valor.datum);
+                    }
+                }
+            }
+        }
+        imprimere("\n");
+    }
+
+    imprimere("  Multi decl trivia: INSPECTUM\n");
+}
+
+interior vacuum
 test_trivia(Piscina* piscina, InternamentumChorda* intern)
 {
     /* Suppress unused warnings for helper functions */
@@ -1612,6 +1673,7 @@ test_trivia(Piscina* piscina, InternamentumChorda* intern)
 
     test_trivia_declaratio(piscina, intern);
     test_trivia_braces(piscina, intern);
+    test_trivia_multi_decl(piscina, intern);
     test_trivia_binary_op(piscina, intern);
 }
 

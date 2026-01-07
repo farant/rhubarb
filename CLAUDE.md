@@ -176,6 +176,12 @@ another tip is that when you are trying to debug stuff don't be afraid of printf
 
 when you are writing tests look at probationes/probatio_piscina.c to see the proper usage of the credo library for returning test results, etc
 
+WORKLOG FORMAT
+
+say you are working on a file lib/chorda.c. lets also as needed create a file called lib/chorda.worklog.md that you can add dated notes to. basically the log is append only so just add a new dated note to the end as you ened to. not every change needs an entry but if there are tricky bugs to diagnose, non-obvious patterns, design decisions, etc. this is a place that you can add them.
+
+/WORKLOG FORMAT
+
 anyway!
 
 

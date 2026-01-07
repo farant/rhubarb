@@ -315,7 +315,7 @@ _emittere_nodum_fidelis (
         _emittere_nodum_fidelis(status, nodus->datum.conditionale.consequens);
         si (nodus->datum.conditionale.alternans)
         {
-            chorda_aedificator_appendere_literis(status->aedificator, "else");
+            /* NON emittere "else" - trivia consequens iam continet "else" */
             _emittere_nodum_fidelis(status, nodus->datum.conditionale.alternans);
         }
         frange;
@@ -323,9 +323,8 @@ _emittere_nodum_fidelis (
     /* ===== WHILE STATEMENT ===== */
     casus ARBOR_NODUS_WHILE_STATEMENT:
         chorda_aedificator_appendere_literis(status->aedificator, "while");
-        chorda_aedificator_appendere_literis(status->aedificator, "(");
+        /* NON emittere () - trivia conditionis iam continet punctuationem */
         _emittere_nodum_fidelis(status, nodus->datum.iteratio.conditio);
-        chorda_aedificator_appendere_literis(status->aedificator, ")");
         _emittere_nodum_fidelis(status, nodus->datum.iteratio.corpus);
         frange;
 
@@ -343,16 +342,13 @@ _emittere_nodum_fidelis (
     /* ===== FOR STATEMENT ===== */
     casus ARBOR_NODUS_FOR_STATEMENT:
         chorda_aedificator_appendere_literis(status->aedificator, "for");
-        chorda_aedificator_appendere_literis(status->aedificator, "(");
+        /* NON emittere punctuationem - trivia nodorum iam continet "(", ";", ")" */
         si (nodus->datum.circuitus.init)
             _emittere_nodum_fidelis(status, nodus->datum.circuitus.init);
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
         si (nodus->datum.circuitus.conditio)
             _emittere_nodum_fidelis(status, nodus->datum.circuitus.conditio);
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
         si (nodus->datum.circuitus.post)
             _emittere_nodum_fidelis(status, nodus->datum.circuitus.post);
-        chorda_aedificator_appendere_literis(status->aedificator, ")");
         _emittere_nodum_fidelis(status, nodus->datum.circuitus.corpus);
         frange;
 
