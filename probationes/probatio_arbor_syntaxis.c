@@ -1368,6 +1368,253 @@ test_extensions(Piscina* piscina, InternamentumChorda* intern)
     imprimere("  Multiple ext: OK\n");
 }
 
+/* ==================================================
+ * Trivia Preservation Tests
+ * ================================================== */
+
+/* Adiutor: Obtinere trivia textum ex Xar */
+interior chorda
+_trivia_textum(Xar* trivia)
+{
+    chorda resultus;
+    i32 i;
+    i32 num;
+    i32 longitudo;
+    ArborTrivia** tp;
+
+    resultus.datum = NIHIL;
+    resultus.mensura = ZEPHYRUM;
+
+    si (trivia == NIHIL)
+    {
+        redde resultus;
+    }
+
+    num = xar_numerus(trivia);
+    si (num == ZEPHYRUM)
+    {
+        redde resultus;
+    }
+
+    /* Pro simplice casu, redde primum trivia valor */
+    /* Pro completiore implementatione, concatenare omnes */
+    longitudo = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        tp = (ArborTrivia**)xar_obtinere(trivia, i);
+        si (tp != NIHIL && *tp != NIHIL)
+        {
+            longitudo += (*tp)->valor.mensura;
+        }
+    }
+    resultus.mensura = longitudo;
+
+    /* Si unum trivia, redde directe */
+    si (num == I)
+    {
+        tp = (ArborTrivia**)xar_obtinere(trivia, ZEPHYRUM);
+        si (tp != NIHIL && *tp != NIHIL)
+        {
+            redde (*tp)->valor;
+        }
+    }
+
+    redde resultus;
+}
+
+/* Adiutor: Verificare trivia continet expectatum */
+interior b32
+_trivia_continet(Xar* trivia, constans character* expectatum)
+{
+    i32 i;
+    i32 num;
+    i32 exp_len;
+    ArborTrivia** tp;
+
+    si (trivia == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    num = xar_numerus(trivia);
+    exp_len = (i32)strlen(expectatum);
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        tp = (ArborTrivia**)xar_obtinere(trivia, i);
+        si (tp != NIHIL && *tp != NIHIL)
+        {
+            chorda v = (*tp)->valor;
+            si (v.mensura == exp_len &&
+                memcmp(v.datum, expectatum, (size_t)exp_len) == ZEPHYRUM)
+            {
+                redde VERUM;
+            }
+        }
+    }
+
+    redde FALSUM;
+}
+
+interior vacuum
+test_trivia_declaratio(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* decl_nodus;
+    ArborNodus* init_decl;
+    ArborNodus* declarator;
+    ArborNodus* initializer;
+
+    imprimere("\n--- Trivia Declaratio ---\n");
+
+    /* Parsere "int x = 42;" - spatium ante et post = */
+    res = _parsere_fontem(piscina, intern, "int x = 42;");
+    CREDO_VERUM(res.successus);
+    CREDO_NON_NIHIL(res.radix);
+
+    radix = res.radix;
+    decl_nodus = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(decl_nodus->genus, ARBOR_NODUS_DECLARATION);
+
+    /* Obtinere init-declarator */
+    init_decl = *(ArborNodus**)xar_obtinere(decl_nodus->datum.declaratio.declaratores, ZEPHYRUM);
+    CREDO_NON_NIHIL(init_decl);
+    CREDO_AEQUALIS_I32(init_decl->genus, ARBOR_NODUS_INIT_DECLARATOR);
+
+    /* Obtinere declarator (x) - hic est ubi "= " debet esse in trivia_post */
+    declarator = init_decl->datum.init_decl.declarator;
+    CREDO_NON_NIHIL(declarator);
+
+    /* Initializer (42) debet habere trivia_ante cum spatio post = */
+    initializer = init_decl->datum.init_decl.initializer;
+    CREDO_NON_NIHIL(initializer);
+
+    /* Diagnostica: imprimere status trivia */
+    imprimere("  declarator trivia_post: %s\n",
+              declarator->trivia_post != NIHIL ? "praesens" : "nihil");
+    si (declarator->trivia_post != NIHIL)
+    {
+        imprimere("    (num trivia: %d)\n", xar_numerus(declarator->trivia_post));
+    }
+    imprimere("  initializer trivia_ante: %s\n",
+              initializer->trivia_ante != NIHIL ? "praesens" : "nihil");
+    si (initializer->trivia_ante != NIHIL)
+    {
+        imprimere("    (num trivia: %d)\n", xar_numerus(initializer->trivia_ante));
+    }
+
+    /* CREDO quod trivia debet esse praesens post = fix */
+    /* Pro nunc, haec est diagnostica probatio */
+    imprimere("  Declaratio trivia: INSPECTUM\n");
+}
+
+interior vacuum
+test_trivia_braces(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* func;
+    ArborNodus* corpus;
+    ArborNodus* declarator_f;
+
+    imprimere("\n--- Trivia Braces ---\n");
+
+    /* Parsere functio cum spatiis circa { } */
+    res = _parsere_fontem(piscina, intern, "int f() { return 0; }");
+    CREDO_VERUM(res.successus);
+    CREDO_NON_NIHIL(res.radix);
+
+    radix = res.radix;
+    func = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(func->genus, ARBOR_NODUS_FUNCTION_DEFINITION);
+
+    /* Obtinere declarator (f) - spatium ante { debet esse in trivia_post */
+    declarator_f = func->datum.functio.declarator;
+    CREDO_NON_NIHIL(declarator_f);
+
+    corpus = func->datum.functio.corpus;
+    CREDO_NON_NIHIL(corpus);
+    CREDO_AEQUALIS_I32(corpus->genus, ARBOR_NODUS_COMPOUND_STATEMENT);
+
+    /* Inspicere trivia */
+    imprimere("  declarator trivia_post: %s\n",
+              declarator_f->trivia_post != NIHIL ? "praesens" : "nihil");
+    si (declarator_f->trivia_post != NIHIL)
+    {
+        imprimere("    (num: %d)\n", xar_numerus(declarator_f->trivia_post));
+    }
+    imprimere("  corpus trivia_ante: %s\n",
+              corpus->trivia_ante != NIHIL ? "praesens" : "nihil");
+    si (corpus->trivia_ante != NIHIL)
+    {
+        imprimere("    (num: %d)\n", xar_numerus(corpus->trivia_ante));
+    }
+    imprimere("  corpus trivia_post: %s\n",
+              corpus->trivia_post != NIHIL ? "praesens" : "nihil");
+
+    imprimere("  Braces trivia: INSPECTUM\n");
+}
+
+interior vacuum
+test_trivia_binary_op(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborSyntaxisResultus res;
+    ArborNodus* radix;
+    ArborNodus* func;
+    ArborNodus* corpus;
+    ArborNodus* stmt;
+    ArborNodus* expr;
+
+    imprimere("\n--- Trivia Binary Op ---\n");
+
+    /* Parsere expressio binaria cum spatiis */
+    res = _parsere_fontem(piscina, intern, "int f() { return a + b; }");
+    CREDO_VERUM(res.successus);
+    CREDO_NON_NIHIL(res.radix);
+
+    radix = res.radix;
+    func = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    corpus = func->datum.functio.corpus;
+    CREDO_NON_NIHIL(corpus);
+
+    /* Obtinere return statement ex compositum.sententiae */
+    si (corpus->datum.compositum.sententiae != NIHIL &&
+        xar_numerus(corpus->datum.compositum.sententiae) > ZEPHYRUM)
+    {
+        stmt = *(ArborNodus**)xar_obtinere(corpus->datum.compositum.sententiae, ZEPHYRUM);
+        si (stmt->genus == ARBOR_NODUS_RETURN_STATEMENT &&
+            stmt->datum.reditio.valor != NIHIL)
+        {
+            expr = stmt->datum.reditio.valor;
+            si (expr->genus == ARBOR_NODUS_BINARY_EXPRESSION)
+            {
+                ArborNodus* sinister = expr->datum.binarium.sinister;
+                ArborNodus* dexter = expr->datum.binarium.dexter;
+
+                imprimere("  sinister trivia_post: %s\n",
+                          sinister->trivia_post != NIHIL ? "praesens" : "nihil");
+                imprimere("  dexter trivia_ante: %s\n",
+                          dexter->trivia_ante != NIHIL ? "praesens" : "nihil");
+            }
+        }
+    }
+
+    imprimere("  Binary op trivia: INSPECTUM\n");
+}
+
+interior vacuum
+test_trivia(Piscina* piscina, InternamentumChorda* intern)
+{
+    /* Suppress unused warnings for helper functions */
+    (vacuum)_trivia_textum;
+    (vacuum)_trivia_continet;
+
+    test_trivia_declaratio(piscina, intern);
+    test_trivia_braces(piscina, intern);
+    test_trivia_binary_op(piscina, intern);
+}
+
 #endif /* Full tests block 2 */
 
 /* ==================================================
@@ -1456,6 +1703,9 @@ principale(vacuum)
 
     /* Utilities */
     test_imprimere(piscina, intern);
+
+    /* Trivia Preservation */
+    test_trivia(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

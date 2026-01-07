@@ -401,6 +401,11 @@ probatio_fidelis_roundtrip (
         "void f() { if (x) { y = 1; } }",
         "control");
 
+    /* Test expressions with binary operators */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a + b * c - d / e; }",
+        "expressions");
+
     imprimere("    [OK]\n");
 }
 

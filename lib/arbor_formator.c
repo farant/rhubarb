@@ -310,9 +310,8 @@ _emittere_nodum_fidelis (
     /* ===== IF STATEMENT ===== */
     casus ARBOR_NODUS_IF_STATEMENT:
         chorda_aedificator_appendere_literis(status->aedificator, "if");
-        chorda_aedificator_appendere_literis(status->aedificator, "(");
+        /* NON emittere () - trivia conditionis iam continet punctuationem */
         _emittere_nodum_fidelis(status, nodus->datum.conditionale.conditio);
-        chorda_aedificator_appendere_literis(status->aedificator, ")");
         _emittere_nodum_fidelis(status, nodus->datum.conditionale.consequens);
         si (nodus->datum.conditionale.alternans)
         {
@@ -632,14 +631,13 @@ _emittere_nodum_fidelis (
         }
         si (nodus->datum.aggregatum.membra)
         {
-            chorda_aedificator_appendere_literis(status->aedificator, "{");
+            /* NON emittere {} - trivia membrorum iam continet punctuationem */
             num = xar_numerus(nodus->datum.aggregatum.membra);
             per (i = ZEPHYRUM; i < num; i++)
             {
                 ArborNodus** np = xar_obtinere(nodus->datum.aggregatum.membra, i);
                 si (np && *np) _emittere_nodum_fidelis(status, *np);
             }
-            chorda_aedificator_appendere_literis(status->aedificator, "}");
         }
         frange;
 
@@ -653,14 +651,13 @@ _emittere_nodum_fidelis (
         }
         si (nodus->datum.aggregatum.membra)
         {
-            chorda_aedificator_appendere_literis(status->aedificator, "{");
+            /* NON emittere {} - trivia membrorum iam continet punctuationem */
             num = xar_numerus(nodus->datum.aggregatum.membra);
             per (i = ZEPHYRUM; i < num; i++)
             {
                 ArborNodus** np = xar_obtinere(nodus->datum.aggregatum.membra, i);
                 si (np && *np) _emittere_nodum_fidelis(status, *np);
             }
-            chorda_aedificator_appendere_literis(status->aedificator, "}");
         }
         frange;
 
