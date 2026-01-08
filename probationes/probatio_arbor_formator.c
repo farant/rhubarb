@@ -5,6 +5,7 @@
 #include "arbor_formator.h"
 #include "arbor_praeparator.h"
 #include "arbor_lexema.h"
+#include "tabula_dispersa.h"
 #include "filum.h"
 #include <stdio.h>
 #include <string.h>
@@ -84,6 +85,64 @@ _parsere_fontem_preservare (
 
     /* Parse */
     syn = arbor_syntaxis_creare(piscina, intern);
+    res = arbor_syntaxis_parsere(syn, processata);
+
+    si (res.successus)
+    {
+        redde res.radix;
+    }
+
+    redde NIHIL;
+}
+
+/* Parsere cum HYBRID mode (discere macros, preservare tokens) */
+interior ArborNodus*
+_parsere_fontem_hybrid (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* fons)
+{
+    ArborSyntaxis*        syn;
+    ArborSyntaxisResultus res;
+    ArborLexator*         lexator;
+    ArborPraeparator*     pp;
+    Xar*                  lexemata;
+    Xar*                  processata;
+    TabulaDispersa*       keyword_macros;
+
+    /* Lex */
+    lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+    si (lexator == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    lexemata = arbor_lexema_omnia(lexator);
+    si (lexemata == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Praeparator cum HYBRID mode */
+    pp = arbor_praeparator_creare(piscina, intern);
+    si (pp == NIHIL)
+    {
+        redde NIHIL;
+    }
+    arbor_praeparator_ponere_modum(pp, ARBOR_PP_MODUS_HYBRID);
+
+    processata = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+    si (processata == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Obtinere keyword macros et transferre ad parser */
+    keyword_macros = arbor_praeparator_obtinere_keyword_macros(pp);
+
+    /* Parse */
+    syn = arbor_syntaxis_creare(piscina, intern);
+    arbor_syntaxis_ponere_keyword_macros(syn, keyword_macros);
     res = arbor_syntaxis_parsere(syn, processata);
 
     si (res.successus)
@@ -481,6 +540,57 @@ _credo_roundtrip_preservare (
     imprimere("[OK]\n");
 }
 
+/* Roundtrip cum HYBRID mode (discere macros, preservare tokens) */
+interior vacuum
+_credo_roundtrip_hybrid (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* input,
+       constans character* titulus)
+{
+    ArborNodus* radix;
+    chorda      fructus;
+    memoriae_index input_len;
+
+    imprimere("    %s: ", titulus);
+
+    radix = _parsere_fontem_hybrid(piscina, intern, input);
+    si (radix == NIHIL)
+    {
+        imprimere("[FAIL - parse error]\n");
+        CREDO_VERUM(radix != NIHIL);
+        redde;
+    }
+
+    fructus = arbor_formator_emittere_fidelis(piscina, radix);
+    input_len = (memoriae_index)strlen(input);
+
+    /* Print what we got for debugging */
+    imprimere("'");
+    fwrite(fructus.datum, I, (memoriae_index)fructus.mensura, stdout);
+    imprimere("' ");
+
+    /* Check exact length match */
+    si (fructus.mensura != (i32)input_len)
+    {
+        imprimere("[FAIL - length %d != %d]\n",
+            (int)fructus.mensura, (int)input_len);
+        CREDO_VERUM(fructus.mensura == (i32)input_len);
+        redde;
+    }
+
+    /* Check exact content match */
+    si (strncmp((constans character*)fructus.datum, input, input_len) != ZEPHYRUM)
+    {
+        imprimere("[FAIL - content mismatch]\n");
+        imprimere("      expected: '%s'\n", input);
+        CREDO_VERUM(strncmp((constans character*)fructus.datum, input, input_len) == ZEPHYRUM);
+        redde;
+    }
+
+    imprimere("[OK]\n");
+}
+
 /* Roundtrip filum cum PRESERVARE mode (pro directivas) */
 interior vacuum
 _credo_roundtrip_filum_preservare (
@@ -556,6 +666,192 @@ _credo_roundtrip_filum_preservare (
     si (!res.successus)
     {
         imprimere("[FAIL - parse error]\n");
+        CREDO_VERUM(res.successus);
+        redde;
+    }
+    radix = res.radix;
+
+    si (radix == NIHIL)
+    {
+        imprimere("[FAIL - null AST]\n");
+        CREDO_VERUM(radix != NIHIL);
+        redde;
+    }
+
+    /* Emittere fidelis */
+    fructus = arbor_formator_emittere_fidelis(piscina, radix);
+
+    /* Comparare longitudinem */
+    si (fructus.mensura != fons.mensura)
+    {
+        imprimere("[FAIL - length %d != %d]\n",
+            (int)fructus.mensura, (int)fons.mensura);
+
+        /* Invenire primam differentiam */
+        per (i = ZEPHYRUM; i < fructus.mensura && i < fons.mensura; i++)
+        {
+            si (fructus.datum[i] != fons.datum[i])
+            {
+                imprimere("      first diff at byte %d: got '%c' (0x%02x), expected '%c' (0x%02x)\n",
+                    i,
+                    fructus.datum[i] >= 32 ? fructus.datum[i] : '?',
+                    (insignatus character)fructus.datum[i],
+                    fons.datum[i] >= 32 ? fons.datum[i] : '?',
+                    (insignatus character)fons.datum[i]);
+                frange;
+            }
+        }
+
+        CREDO_VERUM(fructus.mensura == fons.mensura);
+        redde;
+    }
+
+    /* Comparare contentum byte-per-byte */
+    per (i = ZEPHYRUM; i < fons.mensura; i++)
+    {
+        si (fructus.datum[i] != fons.datum[i])
+        {
+            imprimere("[FAIL - content mismatch at byte %d]\n", i);
+            imprimere("      got '%c' (0x%02x), expected '%c' (0x%02x)\n",
+                fructus.datum[i] >= 32 ? fructus.datum[i] : '?',
+                (insignatus character)fructus.datum[i],
+                fons.datum[i] >= 32 ? fons.datum[i] : '?',
+                (insignatus character)fons.datum[i]);
+
+            /* Ostendere contextum */
+            imprimere("      context: '");
+            {
+                i32 start = i > X ? i - X : ZEPHYRUM;
+                i32 end = i + X < fons.mensura ? i + X : fons.mensura;
+                i32 j;
+                per (j = start; j < end; j++)
+                {
+                    si (fons.datum[j] == '\n')
+                    {
+                        imprimere("\\n");
+                    }
+                    alioquin si (fons.datum[j] == '\t')
+                    {
+                        imprimere("\\t");
+                    }
+                    alioquin
+                    {
+                        imprimere("%c", fons.datum[j]);
+                    }
+                }
+            }
+            imprimere("'\n");
+
+            CREDO_VERUM(fructus.datum[i] == fons.datum[i]);
+            redde;
+        }
+    }
+
+    imprimere("[OK]\n");
+}
+
+/* Roundtrip filum cum HYBRID mode (discere macros, preservare tokens) */
+interior vacuum
+_credo_roundtrip_filum_hybrid (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* via,
+       constans character* titulus)
+{
+    ArborNodus*       radix;
+    chorda            fons;
+    chorda            fructus;
+    i32               i;
+    ArborLexator*     lexator;
+    ArborPraeparator* pp;
+    ArborSyntaxis*    syn;
+    Xar*              lexemata;
+    Xar*              processata;
+    TabulaDispersa*   keyword_macros;
+    ArborSyntaxisResultus res;
+
+    imprimere("    %s: ", titulus);
+
+    /* Legere filum */
+    fons = filum_legere_totum(via, piscina);
+    si (fons.datum == NIHIL || fons.mensura == ZEPHYRUM)
+    {
+        imprimere("[FAIL - cannot read file: %s]\n", via);
+        CREDO_VERUM(fons.datum != NIHIL);
+        redde;
+    }
+
+    imprimere("(%d bytes) ", (int)fons.mensura);
+
+    /* Lex */
+    lexator = arbor_lexator_creare(piscina, intern,
+        (constans character*)fons.datum, fons.mensura);
+    si (lexator == NIHIL)
+    {
+        imprimere("[FAIL - lexer creation]\n");
+        CREDO_VERUM(lexator != NIHIL);
+        redde;
+    }
+
+    lexemata = arbor_lexema_omnia(lexator);
+    si (lexemata == NIHIL)
+    {
+        imprimere("[FAIL - lexing]\n");
+        CREDO_VERUM(lexemata != NIHIL);
+        redde;
+    }
+
+    /* Praeparator cum HYBRID mode */
+    pp = arbor_praeparator_creare(piscina, intern);
+    si (pp == NIHIL)
+    {
+        imprimere("[FAIL - preprocessor creation]\n");
+        CREDO_VERUM(pp != NIHIL);
+        redde;
+    }
+    arbor_praeparator_ponere_modum(pp, ARBOR_PP_MODUS_HYBRID);
+
+    /* Addere include paths pro latina.h et aliis headers */
+    imprimere("\n      [debug] adding include paths...\n");
+    arbor_praeparator_addere_via(pp, "include");
+    arbor_praeparator_addere_via(pp, "probationes/fixa/roundtrip");
+
+    imprimere("      [debug] processare lexemata...\n");
+    fflush(stdout);
+    processata = arbor_praeparator_processare_lexemata(pp, lexemata, via);
+    si (processata == NIHIL)
+    {
+        imprimere("[FAIL - preprocessing]\n");
+        CREDO_VERUM(processata != NIHIL);
+        redde;
+    }
+    imprimere("      [debug] preprocessing complete, %d tokens\n", xar_numerus(processata));
+
+    /* Obtinere keyword macros et transferre ad parser */
+    keyword_macros = arbor_praeparator_obtinere_keyword_macros(pp);
+
+    /* Parse */
+    syn = arbor_syntaxis_creare(piscina, intern);
+    arbor_syntaxis_ponere_keyword_macros(syn, keyword_macros);
+    res = arbor_syntaxis_parsere(syn, processata);
+
+    si (!res.successus)
+    {
+        imprimere("[FAIL - parse error]\n");
+        si (res.errores != NIHIL)
+        {
+            i32 e;
+            per (e = ZEPHYRUM; e < xar_numerus(res.errores) && e < III; e++)
+            {
+                ArborError* err = *(ArborError**)xar_obtinere(res.errores, e);
+                si (err != NIHIL)
+                {
+                    imprimere("      error %d: %.*s (line %d)\n", e,
+                        err->nuntius.mensura, err->nuntius.datum,
+                        err->linea);
+                }
+            }
+        }
         CREDO_VERUM(res.successus);
         redde;
     }
@@ -1387,6 +1683,92 @@ probatio_roundtrip_preservare (
         "probationes/fixa/roundtrip/cursor.h",
         "cursor.h");
 
+    /* Test cursor.c constructs incrementally */
+
+    /* 1. Define macro */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#define FOO 10\n",
+        "define-macro");
+
+    /* 2. Static const array with literal size */
+    _credo_roundtrip_preservare(piscina, intern,
+        "static const int arr[3] = {1, 2, 3};\n",
+        "static-const-array-literal");
+
+    /* 3. Static const array with macro size (but macro unexpanded) */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#define SIZE 3\nstatic const int arr[SIZE] = {1, 2, 3};\n",
+        "static-const-array-macro");
+
+    /* 4. 2D array with literal sizes */
+    _credo_roundtrip_preservare(piscina, intern,
+        "static const int arr[2][3] = {{1,2,3}, {4,5,6}};\n",
+        "2d-array-literal");
+
+    /* 5. 2D array with macro sizes */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#define ROWS 2\n#define COLS 3\nstatic const int arr[ROWS][COLS] = {{1,2,3}, {4,5,6}};\n",
+        "2d-array-macro");
+
+    /* cursor.c uses Latin macros (hic_manens, constans, i8) from latina.h
+     * which aren't expanded in PRESERVARE mode. The parser doesn't recognize
+     * these identifiers as storage class specifiers or type qualifiers.
+     * See probatio_roundtrip_hybrid for HYBRID mode tests.
+     */
+
+    imprimere("    [OK]\n");
+}
+
+/* ===========================================================
+ * PROBATIO - HYBRID MODE ROUNDTRIP (Latin Macros)
+ *
+ * Test that Latin keyword macros (hic_manens, constans, i8, etc.)
+ * are properly recognized using HYBRID mode which learns macros
+ * from includes but preserves original tokens for roundtrip.
+ * =========================================================== */
+
+interior vacuum
+probatio_roundtrip_hybrid (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_roundtrip_hybrid...\n");
+
+    /* Simple keyword macro (storage class) */
+    _credo_roundtrip_hybrid(piscina, intern,
+        "#define hic_manens static\nhic_manens int x;\n",
+        "latin-static");
+
+    /* Type qualifier macro */
+    _credo_roundtrip_hybrid(piscina, intern,
+        "#define constans const\nconstans int x;\n",
+        "latin-const");
+
+    /* Type macro (typedef) */
+    _credo_roundtrip_hybrid(piscina, intern,
+        "#define i32 int\ni32 x;\n",
+        "latin-i32");
+
+    /* Multiple keyword macros */
+    _credo_roundtrip_hybrid(piscina, intern,
+        "#define hic_manens static\n#define constans const\nhic_manens constans int x;\n",
+        "latin-static-const");
+
+    /* Type macro in function parameter */
+    _credo_roundtrip_hybrid(piscina, intern,
+        "#define i32 int\nvoid foo(i32 x);\n",
+        "latin-param");
+
+    /* Pointer to type macro */
+    _credo_roundtrip_hybrid(piscina, intern,
+        "#define i32 int\ni32* p;\n",
+        "latin-ptr");
+
+    /* Test cursor.c with Latin macros from latina.h */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/cursor.c",
+        "cursor.c");
+
     imprimere("    [OK]\n");
 }
 
@@ -1426,6 +1808,7 @@ main (
     probatio_fidelis_tabs_newlines(piscina, intern);
     probatio_roundtrip_fila(piscina, intern);
     probatio_roundtrip_preservare(piscina, intern);
+    probatio_roundtrip_hybrid(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

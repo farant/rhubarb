@@ -822,6 +822,91 @@ Heuristics for type detection must be conservative to avoid breaking declarator 
 
 ---
 
+## 2026-01-08: HYBRID Preprocessor Mode and Keyword Macro Roundtrip
+
+### Problem
+
+cursor.c (2813 bytes) uses Latin keyword macros from `latina.h` like `si` (→`if`), `redde` (→`return`), `perge` (→`continue`), `per` (→`for`). These couldn't roundtrip because:
+
+1. **PROCESSARE mode**: Expands macros → loses original token text
+2. **PRESERVARE mode**: Doesn't process includes → parser doesn't recognize Latin keywords
+
+### Solution: HYBRID Mode
+
+Created `ARBOR_PP_MODUS_HYBRID` that:
+1. **Follows `#include`** to learn macro definitions (like PROCESSARE)
+2. **Preserves directive tokens** in output (like PRESERVARE)
+3. **Does NOT expand macros** in code - keeps original tokens
+4. **Exports keyword macro table** for parser to recognize Latin keywords
+
+### Key Implementation Details
+
+**1. Keyword Macro Table (arbor_praeparator.c)**
+
+When processing `#define`, check if body is a single keyword token:
+```c
+si (def->corpus != NIHIL && xar_numerus(def->corpus) == I)
+{
+    ArborLexema* body_tok = *(ArborLexema**)xar_obtinere(def->corpus, ZEPHYRUM);
+    si (body_tok != NIHIL && _est_keyword_vel_typus(body_tok->genus))
+    {
+        i32* slot = tabula_dispersa_inserere(pp->keyword_macros, def->titulus);
+        si (slot) *slot = (i32)body_tok->genus;
+    }
+}
+```
+
+**2. Parser Integration (arbor_syntaxis.c)**
+
+Multiple changes to check keyword_macros table:
+
+- `_est_declaration_start()`: Check if identifier maps to declaration keyword
+- `_parsere_sententia()`: Use `effective_genus` from keyword_macros for statement dispatch
+- `_congruit_effectivum()`: New helper that checks both actual genus AND keyword_macros
+- Used for `else` handling in if-statements
+
+**3. Keyword Text Preservation for Roundtrip**
+
+Control flow keywords needed original text preserved in trivia. Created `_addere_synth_trivia_chorda()` helper.
+
+For each keyword statement:
+- **if-statement**: Add `if_lex->valor` to condition's trivia_ante
+- **else**: Add `else_lex->valor` to consequens's trivia_post
+- **for-statement**: Add `for_lex->valor` to init's trivia_ante
+- **return-statement**: Add `return_lex->valor` to valor's trivia_ante (or nodus if no value)
+- **continue-statement**: Add `continue_lex->valor` to nodus's trivia_ante
+
+**4. Formatter Updates (arbor_formator.c)**
+
+Remove hardcoded keyword strings - they now come from trivia:
+- IF_STATEMENT: Remove `"if"` output
+- FOR_STATEMENT: Remove `"for"` output
+- RETURN_STATEMENT: Remove `"return"` output
+- CONTINUE_STATEMENT: Remove `"continue"` and `";"` output
+
+### Edge Cases
+
+**Control flow keywords in `_est_keyword_vel_typus()`**: Had to add `IF`, `ELSE`, `SWITCH`, `CASE`, `DEFAULT`, `FOR`, `WHILE`, `DO`, `BREAK`, `CONTINUE`, `GOTO`, `RETURN`, `SIZEOF` for keyword macro detection.
+
+**`_est_declaration_start()` conflict**: When identifier maps to control flow keyword (like `si` → IF), must return FALSUM to prevent treating it as declaration start. Previously `_est_probable_typedef_nomen()` would return true for `si (x)` pattern.
+
+### Test Results
+
+- cursor.c (2813 bytes) roundtrips byte-exact
+- All 54 formator tests pass
+- All project tests pass
+
+### Files Modified
+
+- `include/arbor_praeparator.h`: Added `ARBOR_PP_MODUS_HYBRID`, `arbor_praeparator_obtinere_keyword_macros()`
+- `lib/arbor_praeparator.c`: HYBRID mode implementation, keyword macro table building
+- `include/arbor_syntaxis.h`: (already had `arbor_syntaxis_ponere_keyword_macros`)
+- `lib/arbor_syntaxis.c`: keyword_macros integration in parser, keyword text preservation
+- `lib/arbor_formator.c`: Removed hardcoded keyword strings
+- `probationes/probatio_arbor_formator.c`: Added `_parsere_fontem_hybrid()` and HYBRID mode tests
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:

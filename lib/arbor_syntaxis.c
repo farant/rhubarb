@@ -45,6 +45,7 @@ structura ArborSyntaxis {
     Xar*                  errores;      /* Xar of ArborError */
     b32                   panico;       /* Error recovery mode */
     TabulaDispersa*       typedef_nomina;  /* Typedef name table */
+    TabulaDispersa*       keyword_macros;  /* From preprocessor: macro -> keyword type */
 };
 
 /* ==================================================
@@ -160,6 +161,34 @@ _congruit(ArborSyntaxis* syn, ArborLexemaGenus genus)
     redde lex != NIHIL && lex->genus == genus;
 }
 
+/* Verifica si currens token congruit genus, etiam per keyword macros */
+interior b32
+_congruit_effectivum(ArborSyntaxis* syn, ArborLexemaGenus genus)
+{
+    ArborLexema* lex;
+    lex = _currens_lex(syn);
+    si (lex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* Check actual genus first */
+    si (lex->genus == genus)
+    {
+        redde VERUM;
+    }
+    /* Check keyword macros */
+    si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && syn->keyword_macros != NIHIL)
+    {
+        chorda* titulus = chorda_internare(syn->intern, lex->valor);
+        vacuum* keyword_val = NIHIL;
+        si (tabula_dispersa_invenire(syn->keyword_macros, *titulus, &keyword_val))
+        {
+            redde (ArborLexemaGenus)(*(i32*)keyword_val) == genus;
+        }
+    }
+    redde FALSUM;
+}
+
 interior b32
 _consumere(ArborSyntaxis* syn, ArborLexemaGenus genus)
 {
@@ -259,6 +288,43 @@ _addere_synth_trivia (
 
     temp = chorda_ex_literis(textus, syn->piscina);
     internata = chorda_internare(syn->intern, temp);
+    trivia->valor = *internata;
+
+    locus = xar_addere(*dest_xar);
+    si (locus != NIHIL)
+    {
+        *locus = trivia;
+    }
+}
+
+/* Addere synthetic trivia ex chorda (pro keyword text preservation) */
+interior vacuum
+_addere_synth_trivia_chorda (
+    ArborSyntaxis*       syn,
+    Xar**                dest_xar,
+    chorda               textus)
+{
+    ArborTrivia*  trivia;
+    ArborTrivia** locus;
+    chorda*       internata;
+
+    si (textus.datum == NIHIL || textus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+
+    si (*dest_xar == NIHIL)
+    {
+        *dest_xar = xar_creare(syn->piscina, magnitudo(ArborTrivia*));
+    }
+
+    trivia = piscina_allocare(syn->piscina, magnitudo(ArborTrivia));
+    trivia->linea = ZEPHYRUM;
+    trivia->columna = ZEPHYRUM;
+    trivia->est_commentum = FALSUM;
+    trivia->est_c99 = FALSUM;
+
+    internata = chorda_internare(syn->intern, textus);
     trivia->valor = *internata;
 
     locus = xar_addere(*dest_xar);
@@ -949,11 +1015,54 @@ _est_declaration_start(ArborSyntaxis* syn)
         redde VERUM;
     }
 
-    /* Verifica typedef nomen */
+    /* Verifica typedef nomen et keyword macros */
     si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR)
     {
         chorda* titulus = chorda_internare(syn->intern, lex->valor);
+
+        /* Verifica registered typedef nomen */
         si (_est_typedef_nomen(syn, titulus))
+        {
+            redde VERUM;
+        }
+
+        /* Verifica keyword macros - sed solum pro declaration-related keywords */
+        si (syn->keyword_macros != NIHIL)
+        {
+            vacuum* keyword_val = NIHIL;
+            si (tabula_dispersa_invenire(syn->keyword_macros, *titulus, &keyword_val))
+            {
+                i32 keyword_type = *(i32*)keyword_val;
+                /* Solo return VERUM pro declaration-starting keywords (non control flow) */
+                si (keyword_type == ARBOR_LEXEMA_AUTO ||
+                    keyword_type == ARBOR_LEXEMA_REGISTER ||
+                    keyword_type == ARBOR_LEXEMA_STATIC ||
+                    keyword_type == ARBOR_LEXEMA_EXTERN ||
+                    keyword_type == ARBOR_LEXEMA_TYPEDEF ||
+                    keyword_type == ARBOR_LEXEMA_CONST ||
+                    keyword_type == ARBOR_LEXEMA_VOLATILE ||
+                    keyword_type == ARBOR_LEXEMA_VOID ||
+                    keyword_type == ARBOR_LEXEMA_CHAR ||
+                    keyword_type == ARBOR_LEXEMA_SHORT ||
+                    keyword_type == ARBOR_LEXEMA_INT ||
+                    keyword_type == ARBOR_LEXEMA_LONG ||
+                    keyword_type == ARBOR_LEXEMA_FLOAT ||
+                    keyword_type == ARBOR_LEXEMA_DOUBLE ||
+                    keyword_type == ARBOR_LEXEMA_SIGNED ||
+                    keyword_type == ARBOR_LEXEMA_UNSIGNED ||
+                    keyword_type == ARBOR_LEXEMA_STRUCT ||
+                    keyword_type == ARBOR_LEXEMA_UNION ||
+                    keyword_type == ARBOR_LEXEMA_ENUM)
+                {
+                    redde VERUM;
+                }
+                /* Control flow keywords (if, else, while, etc.) - NOT declaration starters */
+                redde FALSUM;
+            }
+        }
+
+        /* Verifica probable typedef nomen per heuristic (i32 -> identifier identifier) */
+        si (_est_probable_typedef_nomen(syn))
         {
             redde VERUM;
         }
@@ -2246,9 +2355,14 @@ _parsere_if(ArborSyntaxis* syn)
         redde _creare_error_nodum(syn, "if conditio invalida");
     }
 
-    /* Praepone trivia: trivia_post_if + "(" + trivia_post_open */
+    /* Praepone trivia: keyword_text + trivia_post_if + "(" + trivia_post_open */
     old_ante = conditio->trivia_ante;
     conditio->trivia_ante = NIHIL;
+    /* Preserve original keyword text (si -> if, etc.) */
+    si (if_lex != NIHIL)
+    {
+        _addere_synth_trivia_chorda(syn, &conditio->trivia_ante, if_lex->valor);
+    }
     _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, trivia_post_if);
     _addere_synth_trivia(syn, &conditio->trivia_ante, "(");
     _copiare_trivia_ad_xar(syn, &conditio->trivia_ante, trivia_post_open);
@@ -2280,8 +2394,8 @@ _parsere_if(ArborSyntaxis* syn)
     nodus->datum.conditionale.consequens = consequens;
     consequens->pater = nodus;
 
-    /* optionalis else */
-    si (_congruit(syn, ARBOR_LEXEMA_ELSE))
+    /* optionalis else (vel alioquin keyword macro) */
+    si (_congruit_effectivum(syn, ARBOR_LEXEMA_ELSE))
     {
         ArborLexema* else_lex;
         Xar*         trivia_post_else;
@@ -2290,12 +2404,13 @@ _parsere_if(ArborSyntaxis* syn)
         /* Capere trivia ex 'else' */
         else_lex = _currens_lex(syn);
 
-        /* Attachere trivia_ante + "else" ad consequens.trivia_post */
+        /* Attachere trivia_ante + keyword_text (else/alioquin) ad consequens.trivia_post */
         si (else_lex != NIHIL)
         {
             _copiare_trivia_ad_xar(syn, &consequens->trivia_post, else_lex->trivia_ante);
+            /* Preserve original keyword text (alioquin -> else, etc.) */
+            _addere_synth_trivia_chorda(syn, &consequens->trivia_post, else_lex->valor);
         }
-        _addere_synth_trivia(syn, &consequens->trivia_post, "else");
         trivia_post_else = (else_lex != NIHIL) ? else_lex->trivia_post : NIHIL;
 
         _progredi(syn);
@@ -2641,11 +2756,16 @@ _parsere_for(ArborSyntaxis* syn)
         init = _parsere_expressio(syn, PREC_NIHIL);
     }
 
-    /* Applicare trivia: trivia_post_for + "(" + trivia_post_open ad init */
+    /* Applicare trivia: keyword + trivia_post_for + "(" + trivia_post_open ad init */
     si (init != NIHIL)
     {
         old_ante = init->trivia_ante;
         init->trivia_ante = NIHIL;
+        /* Preserve original keyword text (per -> for, etc.) */
+        si (for_lex != NIHIL)
+        {
+            _addere_synth_trivia_chorda(syn, &init->trivia_ante, for_lex->valor);
+        }
         _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_for);
         _addere_synth_trivia(syn, &init->trivia_ante, "(");
         _copiare_trivia_ad_xar(syn, &init->trivia_ante, trivia_post_open);
@@ -2871,14 +2991,15 @@ _parsere_return(ArborSyntaxis* syn)
             redde NIHIL;
         }
 
-        /* Praepone trivia_post_return ad valor.trivia_ante */
-        si (trivia_post_return != NIHIL)
+        /* Praepone keyword + trivia_post_return ad valor.trivia_ante */
+        old_ante = valor->trivia_ante;
+        valor->trivia_ante = NIHIL;
+        si (return_lex != NIHIL)
         {
-            old_ante = valor->trivia_ante;
-            valor->trivia_ante = NIHIL;
-            _copiare_trivia_ad_xar(syn, &valor->trivia_ante, trivia_post_return);
-            _copiare_trivia_ad_xar(syn, &valor->trivia_ante, old_ante);
+            _addere_synth_trivia_chorda(syn, &valor->trivia_ante, return_lex->valor);
         }
+        _copiare_trivia_ad_xar(syn, &valor->trivia_ante, trivia_post_return);
+        _copiare_trivia_ad_xar(syn, &valor->trivia_ante, old_ante);
 
         /* Capere ';' trivia */
         semi_lex = _currens_lex(syn);
@@ -2893,6 +3014,12 @@ _parsere_return(ArborSyntaxis* syn)
     {
         /* return; sine valore - trivia ad nodum ipsum */
         nodus->datum.reditio.valor = NIHIL;
+
+        /* Keyword ad trivia_ante */
+        si (return_lex != NIHIL)
+        {
+            _addere_synth_trivia_chorda(syn, &nodus->trivia_ante, return_lex->valor);
+        }
 
         /* Capere ';' trivia */
         semi_lex = _currens_lex(syn);
@@ -2931,7 +3058,9 @@ _parsere_break(ArborSyntaxis* syn)
 interior ArborNodus*
 _parsere_continue(ArborSyntaxis* syn)
 {
-    ArborNodus* nodus;
+    ArborNodus*  nodus;
+    ArborLexema* continue_lex;
+    ArborLexema* semi_lex;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_CONTINUE_STATEMENT);
     si (nodus == NIHIL)
@@ -2939,12 +3068,28 @@ _parsere_continue(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
+    /* Capere keyword */
+    continue_lex = _currens_lex(syn);
+
     /* Skip continue */
     _progredi(syn);
 
+    /* Keyword ad trivia_ante */
+    si (continue_lex != NIHIL)
+    {
+        _addere_synth_trivia_chorda(syn, &nodus->trivia_ante, continue_lex->valor);
+    }
+
+    /* Capere ';' trivia */
+    semi_lex = _currens_lex(syn);
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_post, (continue_lex != NIHIL) ? continue_lex->trivia_post : NIHIL);
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_post, (semi_lex != NIHIL) ? semi_lex->trivia_ante : NIHIL);
+    _addere_synth_trivia(syn, &nodus->trivia_post, ";");
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_post, (semi_lex != NIHIL) ? semi_lex->trivia_post : NIHIL);
+
     _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
 
-    _finire_nodum(syn, nodus);
+    /* NON vocare _finire_nodum - iam habet trivia */
     redde nodus;
 }
 
@@ -3117,6 +3262,7 @@ interior ArborNodus*
 _parsere_sententia(ArborSyntaxis* syn)
 {
     ArborLexema* lex;
+    ArborLexemaGenus effective_genus;
 
     si (syn->panico)
     {
@@ -3129,7 +3275,19 @@ _parsere_sententia(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
-    commutatio (lex->genus)
+    /* Determinate effective genus - check keyword macros for identifiers */
+    effective_genus = lex->genus;
+    si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && syn->keyword_macros != NIHIL)
+    {
+        chorda* titulus = chorda_internare(syn->intern, lex->valor);
+        vacuum* keyword_val = NIHIL;
+        si (tabula_dispersa_invenire(syn->keyword_macros, *titulus, &keyword_val))
+        {
+            effective_genus = (ArborLexemaGenus)(*(i32*)keyword_val);
+        }
+    }
+
+    commutatio (effective_genus)
     {
         casus ARBOR_LEXEMA_BRACE_APERTA:
             redde _parsere_compound(syn);
@@ -3624,6 +3782,8 @@ _parsere_specifiers(ArborSyntaxis* syn, Xar* specifiers)
             frange;
         }
 
+        spec = NIHIL;
+
         si (_est_storage_class(lex->genus))
         {
             spec = _parsere_storage_class(syn);
@@ -3641,24 +3801,102 @@ _parsere_specifiers(ArborSyntaxis* syn, Xar* specifiers)
             /* Extensio: __attribute__, __extension__, etc. */
             spec = _parsere_extension(syn);
         }
-        alioquin si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && !habet_typedef_nomen)
+        alioquin si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR)
         {
-            /* Verifica typedef nomen - solum unum permissum.
-             * Usamus heuristic si non registratum (pro PRESERVARE modo). */
             chorda* titulus = chorda_internare(syn->intern, lex->valor);
-            si (_est_typedef_nomen(syn, titulus) || _est_probable_typedef_nomen(syn))
+
+            /* Verifica keyword macros (hic_manens -> static, constans -> const, etc.) */
+            si (syn->keyword_macros != NIHIL)
             {
-                /* Registratum vel probabiliter typedef nomen per heuristic */
-                spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
-                si (spec != NIHIL)
+                vacuum* keyword_val = NIHIL;
+                b32 found = tabula_dispersa_invenire(syn->keyword_macros, *titulus, &keyword_val);
+                si (found)
                 {
-                    spec->datum.folium.valor = titulus;
-                    _progredi(syn);
-                    _finire_nodum(syn, spec);
+                    i32 keyword_type = *(i32*)keyword_val;
+
+                    /* Storage class specifiers */
+                    si (keyword_type == ARBOR_LEXEMA_STATIC ||
+                        keyword_type == ARBOR_LEXEMA_EXTERN ||
+                        keyword_type == ARBOR_LEXEMA_AUTO ||
+                        keyword_type == ARBOR_LEXEMA_REGISTER ||
+                        keyword_type == ARBOR_LEXEMA_TYPEDEF)
+                    {
+                        /* Creare STORAGE_CLASS node cum originale valor */
+                        spec = _creare_nodum(syn, ARBOR_NODUS_STORAGE_CLASS);
+                        si (spec != NIHIL)
+                        {
+                            spec->datum.folium.keyword = (ArborLexemaGenus)keyword_type;
+                            spec->datum.folium.valor = titulus;  /* Keep original text */
+                            _progredi(syn);
+                            _finire_nodum(syn, spec);
+                        }
+                    }
+                    /* Type qualifiers */
+                    alioquin si (keyword_type == ARBOR_LEXEMA_CONST ||
+                                 keyword_type == ARBOR_LEXEMA_VOLATILE)
+                    {
+                        spec = _creare_nodum(syn, ARBOR_NODUS_TYPE_QUALIFIER);
+                        si (spec != NIHIL)
+                        {
+                            spec->datum.folium.keyword = (ArborLexemaGenus)keyword_type;
+                            spec->datum.folium.valor = titulus;
+                            _progredi(syn);
+                            _finire_nodum(syn, spec);
+                        }
+                    }
+                    /* Type specifiers */
+                    alioquin si (keyword_type == ARBOR_LEXEMA_VOID ||
+                                 keyword_type == ARBOR_LEXEMA_CHAR ||
+                                 keyword_type == ARBOR_LEXEMA_SHORT ||
+                                 keyword_type == ARBOR_LEXEMA_INT ||
+                                 keyword_type == ARBOR_LEXEMA_LONG ||
+                                 keyword_type == ARBOR_LEXEMA_FLOAT ||
+                                 keyword_type == ARBOR_LEXEMA_DOUBLE ||
+                                 keyword_type == ARBOR_LEXEMA_SIGNED ||
+                                 keyword_type == ARBOR_LEXEMA_UNSIGNED)
+                    {
+                        spec = _creare_nodum(syn, ARBOR_NODUS_TYPE_SPECIFIER);
+                        si (spec != NIHIL)
+                        {
+                            spec->datum.folium.keyword = (ArborLexemaGenus)keyword_type;
+                            spec->datum.folium.valor = titulus;
+                            _progredi(syn);
+                            _finire_nodum(syn, spec);
+                        }
+                    }
+                    /* Typedef macro (i8, i32, etc.) - treat as typedef name */
+                    alioquin si (keyword_type == ARBOR_LEXEMA_TYPEDEF_MACRO && !habet_typedef_nomen)
+                    {
+                        spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
+                        si (spec != NIHIL)
+                        {
+                            spec->datum.folium.valor = titulus;
+                            _progredi(syn);
+                            _finire_nodum(syn, spec);
+                        }
+                        habet_typedef_nomen = VERUM;
+                    }
                 }
-                habet_typedef_nomen = VERUM;
             }
-            alioquin
+
+            /* Si non keyword macro, verifica typedef nomen */
+            si (spec == NIHIL && !habet_typedef_nomen)
+            {
+                si (_est_typedef_nomen(syn, titulus) || _est_probable_typedef_nomen(syn))
+                {
+                    /* Registratum vel probabiliter typedef nomen per heuristic */
+                    spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
+                    si (spec != NIHIL)
+                    {
+                        spec->datum.folium.valor = titulus;
+                        _progredi(syn);
+                        _finire_nodum(syn, spec);
+                    }
+                    habet_typedef_nomen = VERUM;
+                }
+            }
+
+            si (spec == NIHIL)
             {
                 frange;
             }
@@ -4059,7 +4297,11 @@ parse_params:
 interior ArborNodus*
 _parsere_initializer(ArborSyntaxis* syn)
 {
-    ArborNodus* nodus;
+    ArborNodus*  nodus;
+    ArborLexema* open_lex;
+    ArborLexema* close_lex;
+    ArborLexema* comma_lex;
+    ArborNodus*  prev_elem;
 
     si (_congruit(syn, ARBOR_LEXEMA_BRACE_APERTA))
     {
@@ -4074,8 +4316,20 @@ _parsere_initializer(ArborSyntaxis* syn)
 
         nodus->datum.init_list.elementa = xar_creare(syn->piscina, magnitudo(ArborNodus*));
 
+        /* Capere { trivia */
+        open_lex = _currens_lex(syn);
+        /* trivia_ante of { is captured by _creare_nodum into nodus->trivia_ante */
+        /* Capere trivia_post of { + synthetic "{" ad primum elementum */
+        _addere_synth_trivia(syn, &nodus->datum.init_list.trivia_post_open, "{");
+        si (open_lex != NIHIL)
+        {
+            _copiare_trivia_ad_xar(syn, &nodus->datum.init_list.trivia_post_open,
+                                   open_lex->trivia_post);
+        }
+
         _progredi(syn);  /* Skip { */
 
+        prev_elem = NIHIL;
         si (!_congruit(syn, ARBOR_LEXEMA_BRACE_CLAUSA))
         {
             fac {
@@ -4089,12 +4343,60 @@ _parsere_initializer(ArborSyntaxis* syn)
                     ArborNodus** slot = xar_addere(nodus->datum.init_list.elementa);
                     si (slot != NIHIL) { *slot = elem; }
                 }
-            } dum (_consumere(syn, ARBOR_LEXEMA_COMMA) &&
-                   !_congruit(syn, ARBOR_LEXEMA_BRACE_CLAUSA));
+
+                /* Si comma sequitur, capere trivia */
+                si (_congruit(syn, ARBOR_LEXEMA_COMMA))
+                {
+                    comma_lex = _currens_lex(syn);
+                    /* trivia_ante + "," ad elem.trivia_post */
+                    si (comma_lex != NIHIL)
+                    {
+                        _copiare_trivia_ad_xar(syn, &elem->trivia_post, comma_lex->trivia_ante);
+                    }
+                    _addere_synth_trivia(syn, &elem->trivia_post, ",");
+                    si (comma_lex != NIHIL)
+                    {
+                        _copiare_trivia_ad_xar(syn, &elem->trivia_post, comma_lex->trivia_post);
+                    }
+                    _progredi(syn);  /* Skip comma */
+
+                    si (_congruit(syn, ARBOR_LEXEMA_BRACE_CLAUSA))
+                    {
+                        /* Trailing comma before } */
+                        prev_elem = elem;
+                        frange;
+                    }
+                }
+                alioquin
+                {
+                    prev_elem = elem;
+                    frange;
+                }
+            } dum (VERUM);
         }
 
-        _expectare(syn, ARBOR_LEXEMA_BRACE_CLAUSA, "Expectabatur }");
-        _finire_nodum(syn, nodus);
+        /* Capere } trivia */
+        close_lex = _currens_lex(syn);
+        si (close_lex != NIHIL)
+        {
+            si (prev_elem != NIHIL)
+            {
+                /* trivia_ante of } ad ultimum elementum */
+                _copiare_trivia_ad_xar(syn, &prev_elem->trivia_post, close_lex->trivia_ante);
+            }
+            alioquin
+            {
+                /* Empty list {} - trivia_ante of } post trivia_post_open */
+                _copiare_trivia_ad_xar(syn, &nodus->datum.init_list.trivia_post_open,
+                                       close_lex->trivia_ante);
+            }
+            /* "}" + trivia_post ad nodus.trivia_post */
+            _addere_synth_trivia(syn, &nodus->trivia_post, "}");
+            _copiare_trivia_ad_xar(syn, &nodus->trivia_post, close_lex->trivia_post);
+        }
+
+        _progredi(syn);  /* Skip } */
+        /* NON vocare _finire_nodum - trivia iam captata */
     }
     alioquin
     {
@@ -4867,8 +5169,20 @@ arbor_syntaxis_creare(
     syn->errores = xar_creare(piscina, magnitudo(ArborError));
     syn->panico = FALSUM;
     syn->typedef_nomina = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    syn->keyword_macros = NIHIL;  /* Set via arbor_syntaxis_ponere_keyword_macros */
 
     redde syn;
+}
+
+vacuum
+arbor_syntaxis_ponere_keyword_macros(
+    ArborSyntaxis*    syn,
+    TabulaDispersa*   keyword_macros)
+{
+    si (syn != NIHIL)
+    {
+        syn->keyword_macros = keyword_macros;
+    }
 }
 
 ArborSyntaxisResultus

@@ -373,6 +373,7 @@ structura ArborNodus {
         /* initializer list { a, b, c } */
         structura {
             Xar*          elementa;
+            Xar*          trivia_post_open;  /* "{" + trivia post { */
         } init_list;
 
         /* error node */
@@ -424,6 +425,13 @@ nomen structura ArborSyntaxis ArborSyntaxis;
 ArborSyntaxis* arbor_syntaxis_creare(
     Piscina*              piscina,
     InternamentumChorda*  intern);
+
+/* Ponere keyword macros table (from preprocessor HYBRID mode)
+ * Maps macro names to keyword token types.
+ * E.g., "hic_manens" -> ARBOR_LEXEMA_STATIC */
+vacuum arbor_syntaxis_ponere_keyword_macros(
+    ArborSyntaxis*        syn,
+    TabulaDispersa*       keyword_macros);
 
 /* ==================================================
  * API - Parsing

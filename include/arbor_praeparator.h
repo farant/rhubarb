@@ -78,11 +78,13 @@ nomen enumeratio {
  *
  * PROCESSARE: Normal mode - expand macros, follow includes
  * PRESERVARE: Preserve mode - keep directives as tokens for fidelis formatting
+ * HYBRID:     Learn macros from includes, but preserve original tokens
  * ================================================== */
 
 nomen enumeratio {
     ARBOR_PP_MODUS_PROCESSARE,    /* Normal: expand macros, follow includes */
-    ARBOR_PP_MODUS_PRESERVARE     /* Preserve: keep directives as nodes */
+    ARBOR_PP_MODUS_PRESERVARE,    /* Preserve: keep directives as nodes */
+    ARBOR_PP_MODUS_HYBRID         /* Hybrid: learn macros, preserve tokens */
 } ArborPPModus;
 
 /* ==================================================
@@ -197,6 +199,13 @@ b32 arbor_praeparator_est_definitum(
 
 /* Obtinere errores */
 Xar* arbor_praeparator_errores(ArborPraeparator* pp);
+
+/* Obtinere keyword macros (for hybrid mode)
+ * Returns TabulaDispersa mapping macro name (chorda*) -> keyword token type (i32)
+ * E.g., "hic_manens" -> ARBOR_LEXEMA_STATIC
+ * Caller should NOT free the table.
+ */
+TabulaDispersa* arbor_praeparator_obtinere_keyword_macros(ArborPraeparator* pp);
 
 /* ==================================================
  * API - Utilities

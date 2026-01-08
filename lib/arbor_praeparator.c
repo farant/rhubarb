@@ -28,8 +28,9 @@ nomen structura {
 structura ArborPraeparator {
     Piscina*              piscina;
     InternamentumChorda*  intern;
-    ArborPPModus          modus;            /* PROCESSARE vel PRESERVARE */
+    ArborPPModus          modus;            /* PROCESSARE vel PRESERVARE vel HYBRID */
     TabulaDispersa*       macros;           /* chorda -> ArborMacroDefinitio* */
+    TabulaDispersa*       keyword_macros;   /* chorda -> i32 (keyword token type) */
     Xar*                  viae_include;     /* Xar<chorda*> viae quaestionis */
     Xar*                  fila_inclusa;     /* Xar<chorda*> jam inclusa (custodia) */
 
@@ -68,6 +69,9 @@ hic_manens constans character* NOMINA_DIRECTIVARUM[] = {
     "unknown"
 };
 
+/* Forward declaration */
+interior vacuum _registrare_keyword_macro(ArborPraeparator* pp, ArborMacroDefinitio* macro);
+
 /* ==================================================
  * API - Creatio et Configuratio
  * ================================================== */
@@ -97,6 +101,13 @@ arbor_praeparator_creare(
     /* Creare tabula macro */
     pp->macros = tabula_dispersa_creare_chorda(piscina, CXXVIII);
     si (pp->macros == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Creare tabula keyword macros (macro_name -> keyword token type) */
+    pp->keyword_macros = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    si (pp->keyword_macros == NIHIL)
     {
         redde NIHIL;
     }
@@ -282,6 +293,9 @@ arbor_praeparator_definire(
     /* Inserere in tabula */
     nomen_ch = *nomen_internatum;
     tabula_dispersa_inserere(pp->macros, nomen_ch, macro);
+
+    /* Registrare si keyword macro */
+    _registrare_keyword_macro(pp, macro);
 }
 
 vacuum
@@ -354,6 +368,17 @@ arbor_praeparator_errores(ArborPraeparator* pp)
     redde pp->errores;
 }
 
+TabulaDispersa*
+arbor_praeparator_obtinere_keyword_macros(ArborPraeparator* pp)
+{
+    si (pp == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    redde pp->keyword_macros;
+}
+
 /* ==================================================
  * API - Utilities
  * ================================================== */
@@ -412,6 +437,129 @@ arbor_pp_error_formare(Piscina* piscina, ArborPPError* err)
     fructus.mensura = len;
 
     redde fructus;
+}
+
+/* ==================================================
+ * Functiones Internae - Keyword Macro Detection
+ * ================================================== */
+
+/* Verifica si token genus est keyword quod parser debet cognoscere */
+interior b32
+_est_keyword_vel_typus(ArborLexemaGenus genus)
+{
+    /* Storage class specifiers */
+    si (genus == ARBOR_LEXEMA_AUTO ||
+        genus == ARBOR_LEXEMA_REGISTER ||
+        genus == ARBOR_LEXEMA_STATIC ||
+        genus == ARBOR_LEXEMA_EXTERN ||
+        genus == ARBOR_LEXEMA_TYPEDEF)
+    {
+        redde VERUM;
+    }
+
+    /* Type qualifiers */
+    si (genus == ARBOR_LEXEMA_CONST ||
+        genus == ARBOR_LEXEMA_VOLATILE)
+    {
+        redde VERUM;
+    }
+
+    /* Type specifiers */
+    si (genus == ARBOR_LEXEMA_VOID ||
+        genus == ARBOR_LEXEMA_CHAR ||
+        genus == ARBOR_LEXEMA_SHORT ||
+        genus == ARBOR_LEXEMA_INT ||
+        genus == ARBOR_LEXEMA_LONG ||
+        genus == ARBOR_LEXEMA_FLOAT ||
+        genus == ARBOR_LEXEMA_DOUBLE ||
+        genus == ARBOR_LEXEMA_SIGNED ||
+        genus == ARBOR_LEXEMA_UNSIGNED ||
+        genus == ARBOR_LEXEMA_STRUCT ||
+        genus == ARBOR_LEXEMA_UNION ||
+        genus == ARBOR_LEXEMA_ENUM)
+    {
+        redde VERUM;
+    }
+
+    /* Control flow keywords */
+    si (genus == ARBOR_LEXEMA_IF ||
+        genus == ARBOR_LEXEMA_ELSE ||
+        genus == ARBOR_LEXEMA_SWITCH ||
+        genus == ARBOR_LEXEMA_CASE ||
+        genus == ARBOR_LEXEMA_DEFAULT ||
+        genus == ARBOR_LEXEMA_FOR ||
+        genus == ARBOR_LEXEMA_WHILE ||
+        genus == ARBOR_LEXEMA_DO ||
+        genus == ARBOR_LEXEMA_BREAK ||
+        genus == ARBOR_LEXEMA_CONTINUE ||
+        genus == ARBOR_LEXEMA_GOTO ||
+        genus == ARBOR_LEXEMA_RETURN ||
+        genus == ARBOR_LEXEMA_SIZEOF)
+    {
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+/* Registrare macro in keyword_macros tabula si expandit ad keyword vel typus */
+interior vacuum
+_registrare_keyword_macro(
+    ArborPraeparator*      pp,
+    ArborMacroDefinitio*   macro)
+{
+    ArborLexema* body_tok;
+    i32* keyword_ptr;
+    vacuum* existing_val;
+
+    si (pp == NIHIL || macro == NIHIL)
+    {
+        redde;
+    }
+
+    /* Solum object-like macros (non function-like) */
+    si (macro->est_functio)
+    {
+        redde;
+    }
+
+    /* Corpus debet habere exacte unum token */
+    si (macro->corpus == NIHIL || xar_numerus(macro->corpus) != I)
+    {
+        redde;
+    }
+
+    body_tok = *(ArborLexema**)xar_obtinere(macro->corpus, ZEPHYRUM);
+    si (body_tok == NIHIL)
+    {
+        redde;
+    }
+
+    /* Si corpus est keyword vel typus, registrare */
+    si (_est_keyword_vel_typus(body_tok->genus))
+    {
+        /* Allocare i32 pro valore */
+        keyword_ptr = piscina_allocare(pp->piscina, magnitudo(i32));
+        si (keyword_ptr != NIHIL)
+        {
+            *keyword_ptr = (i32)body_tok->genus;
+            tabula_dispersa_inserere(pp->keyword_macros, *macro->titulus, keyword_ptr);
+        }
+    }
+    /* Si corpus est identifier, potentialiter typedef macro (i8 -> char via typedef) */
+    alioquin si (body_tok->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        /* Verificare si body identifier est ipse keyword macro */
+        chorda* body_name = chorda_internare(pp->intern, body_tok->valor);
+        si (body_name != NIHIL)
+        {
+            si (tabula_dispersa_invenire(pp->keyword_macros, *body_name, &existing_val))
+            {
+                /* Propagare: si i32 -> int, et i8 -> i32, tunc i8 -> int */
+                tabula_dispersa_inserere(pp->keyword_macros, *macro->titulus, existing_val);
+            }
+        }
+    }
 }
 
 /* ==================================================
@@ -1470,7 +1618,7 @@ _processare_directiva(
                 lexemata_inclusa = _processare_include(
                     pp, lexemata, pos, pos_finis, via_file);
 
-                si (lexemata_inclusa != NIHIL)
+                si (lexemata_inclusa != NIHIL && fructus != NIHIL)
                 {
                     /* Addere lexemata inclusa ad output */
                     i32 j;
@@ -1508,6 +1656,9 @@ _processare_directiva(
                 {
                     nomen_ch = *macro->titulus;
                     tabula_dispersa_inserere(pp->macros, nomen_ch, macro);
+
+                    /* Registrare si keyword macro */
+                    _registrare_keyword_macro(pp, macro);
                 }
             }
             frange;
@@ -1984,8 +2135,9 @@ _processare_include(
         i32 j;
         i32 start_pos;
         i32 end_pos;
-        ArborLexema* lex_start;
-        ArborLexema* lex_end;
+        i32 total_len;
+        i8* buf;
+        i8* p;
 
         est_angularis = VERUM;
         start_pos = pos_post_include + I;
@@ -2008,17 +2160,44 @@ _processare_include(
             redde NIHIL;
         }
 
-        /* Extrahere filename inter < et > */
-        lex_start = *(ArborLexema**)xar_obtinere(lexemata, start_pos);
-        lex_end = *(ArborLexema**)xar_obtinere(lexemata, end_pos - I);
-        si (lex_start == NIHIL || lex_end == NIHIL)
+        /* Computare longitudinem totalem et concatenare tokens */
+        total_len = ZEPHYRUM;
+        per (j = start_pos; j < end_pos; j++)
+        {
+            ArborLexema* lex_j;
+            lex_j = *(ArborLexema**)xar_obtinere(lexemata, j);
+            si (lex_j != NIHIL)
+            {
+                total_len += lex_j->valor.mensura;
+            }
+        }
+
+        si (total_len == ZEPHYRUM)
         {
             redde NIHIL;
         }
 
-        /* Computare span inter primo et ultimo token */
-        filename.datum = lex_start->valor.datum;
-        filename.mensura = (i32)((lex_end->valor.datum + lex_end->valor.mensura) - lex_start->valor.datum);
+        /* Allocare et concatenare */
+        buf = piscina_allocare(pp->piscina, total_len);
+        si (buf == NIHIL)
+        {
+            redde NIHIL;
+        }
+
+        p = buf;
+        per (j = start_pos; j < end_pos; j++)
+        {
+            ArborLexema* lex_j;
+            lex_j = *(ArborLexema**)xar_obtinere(lexemata, j);
+            si (lex_j != NIHIL && lex_j->valor.mensura > ZEPHYRUM)
+            {
+                memcpy(p, lex_j->valor.datum, (size_t)lex_j->valor.mensura);
+                p += lex_j->valor.mensura;
+            }
+        }
+
+        filename.datum = buf;
+        filename.mensura = total_len;
     }
     alioquin
     {
@@ -2797,17 +2976,9 @@ _invenire_finem_lineae(Xar* lexemata, i32 pos_initium, i32 num)
     ArborLexema* lex_init;
     i32 linea_init;
 
-    /* Obtinere lineam initialem */
-    si (pos_initium > ZEPHYRUM)
-    {
-        lex_init = *(ArborLexema**)xar_obtinere(lexemata, pos_initium - I);
-        linea_init = (lex_init != NIHIL) ? lex_init->linea : I;
-    }
-    alioquin
-    {
-        lex_init = *(ArborLexema**)xar_obtinere(lexemata, ZEPHYRUM);
-        linea_init = (lex_init != NIHIL) ? lex_init->linea : I;
-    }
+    /* Obtinere lineam initialem - usare pos_initium, non pos_initium - 1 */
+    lex_init = *(ArborLexema**)xar_obtinere(lexemata, pos_initium);
+    linea_init = (lex_init != NIHIL) ? lex_init->linea : I;
 
     per (pos = pos_initium; pos < num; pos++)
     {
@@ -2884,6 +3055,94 @@ arbor_praeparator_processare_lexemata(
                     }
                 }
             }
+            pos++;
+        }
+        redde output;
+    }
+
+    /* HYBRID mode: processare directivas (discere macros), sed emittere
+     * originales tokens (sine expansione). Combines learning from PROCESSARE
+     * with output preservation from PRESERVARE. */
+    si (pp->modus == ARBOR_PP_MODUS_HYBRID)
+    {
+        dum (pos < num)
+        {
+            ArborLexema* lex_curr;
+            ArborLexemaOrigo* lo;
+            ArborLexemaOrigo** slotus;
+            b32 ad_initium;
+
+            lex_curr = *(ArborLexema**)xar_obtinere(lexemata, pos);
+            si (lex_curr == NIHIL)
+            {
+                pos++;
+                perge;
+            }
+
+            /* EOF - finis */
+            si (lex_curr->genus == ARBOR_LEXEMA_EOF)
+            {
+                lo = _creare_lexema_origo(pp, lex_curr, NIHIL);
+                si (lo != NIHIL)
+                {
+                    slotus = xar_addere(output);
+                    si (slotus != NIHIL)
+                    {
+                        *slotus = lo;
+                    }
+                }
+                frange;
+            }
+
+            /* Detectare si ad initium lineae */
+            ad_initium = _est_ad_initium_lineae(lex_curr, lex_praevius);
+
+            /* Detectare directiva: # ad initium lineae */
+            si (ad_initium && _est_hash(lex_curr))
+            {
+                i32 pos_finis;
+
+                /* Invenire finem lineae */
+                pos_finis = _invenire_finem_lineae(lexemata, pos, num);
+
+                /* Processare directiva INTERNE (discere macros, sequi includes)
+                 * sed non emittere - nos emittimus originales tokens infra */
+                _processare_directiva(pp, lexemata, pos, num, via_file, NIHIL);
+
+                /* Emittere originales directive tokens */
+                dum (pos < pos_finis)
+                {
+                    ArborLexema* dir_lex;
+                    dir_lex = *(ArborLexema**)xar_obtinere(lexemata, pos);
+                    si (dir_lex != NIHIL)
+                    {
+                        lo = _creare_lexema_origo(pp, dir_lex, NIHIL);
+                        si (lo != NIHIL)
+                        {
+                            slotus = xar_addere(output);
+                            si (slotus != NIHIL)
+                            {
+                                *slotus = lo;
+                            }
+                        }
+                    }
+                    lex_praevius = dir_lex;
+                    pos++;
+                }
+                perge;
+            }
+
+            /* Regular token: emittere sine expansione */
+            lo = _creare_lexema_origo(pp, lex_curr, NIHIL);
+            si (lo != NIHIL)
+            {
+                slotus = xar_addere(output);
+                si (slotus != NIHIL)
+                {
+                    *slotus = lo;
+                }
+            }
+            lex_praevius = lex_curr;
             pos++;
         }
         redde output;

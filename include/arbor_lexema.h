@@ -155,7 +155,10 @@ nomen enumeratio {
 
     /* Special */
     ARBOR_LEXEMA_EOF,
-    ARBOR_LEXEMA_ERROR
+    ARBOR_LEXEMA_ERROR,
+
+    /* Pseudo-type for keyword macro table */
+    ARBOR_LEXEMA_TYPEDEF_MACRO    /* Macro expands to a type (e.g., i8 -> char) */
 } ArborLexemaGenus;
 
 /* ==================================================

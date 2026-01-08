@@ -328,7 +328,7 @@ _emittere_nodum_fidelis (
 
     /* ===== IF STATEMENT ===== */
     casus ARBOR_NODUS_IF_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "if");
+        /* NON emittere "if" - trivia conditionis iam continet keyword */
         /* NON emittere () - trivia conditionis iam continet punctuationem */
         _emittere_nodum_fidelis(status, nodus->datum.conditionale.conditio);
         _emittere_nodum_fidelis(status, nodus->datum.conditionale.consequens);
@@ -357,7 +357,7 @@ _emittere_nodum_fidelis (
 
     /* ===== FOR STATEMENT ===== */
     casus ARBOR_NODUS_FOR_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "for");
+        /* NON emittere "for" - trivia init/conditio iam continet keyword */
         /* NON emittere punctuationem - trivia nodorum iam continet "(", ";", ")" */
         si (nodus->datum.circuitus.init)
             _emittere_nodum_fidelis(status, nodus->datum.circuitus.init);
@@ -394,14 +394,14 @@ _emittere_nodum_fidelis (
 
     /* ===== RETURN STATEMENT ===== */
     casus ARBOR_NODUS_RETURN_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "return");
+        /* Keyword in trivia - valor.trivia_ante vel nodus.trivia_ante */
         si (nodus->datum.reditio.valor)
         {
-            /* valor.trivia_ante continet spatium post 'return' */
+            /* valor.trivia_ante continet keyword + spatium post 'return' */
             /* valor.trivia_post continet ';' */
             _emittere_nodum_fidelis(status, nodus->datum.reditio.valor);
         }
-        /* Sine valore: nodus.trivia_post continet ';' - emittitur in linea 842 */
+        /* Sine valore: nodus.trivia_ante/post continet keyword et ';' */
         frange;
 
     /* ===== BREAK/CONTINUE/GOTO ===== */
@@ -411,8 +411,7 @@ _emittere_nodum_fidelis (
         frange;
 
     casus ARBOR_NODUS_CONTINUE_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "continue");
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
+        /* Keyword in nodus.trivia_ante, ';' in nodus.trivia_post */
         frange;
 
     casus ARBOR_NODUS_GOTO_STATEMENT:
@@ -621,8 +620,17 @@ _emittere_nodum_fidelis (
     /* ===== STORAGE CLASS / TYPE QUALIFIER ===== */
     casus ARBOR_NODUS_STORAGE_CLASS:
     casus ARBOR_NODUS_TYPE_QUALIFIER:
-        chorda_aedificator_appendere_literis(status->aedificator,
-            _lexema_genus_ad_symbolum(nodus->datum.folium.keyword));
+        /* Si valor existit, usare (pro keyword macros ut hic_manens) */
+        si (nodus->datum.folium.valor != NIHIL)
+        {
+            chorda_aedificator_appendere_chorda(status->aedificator,
+                *nodus->datum.folium.valor);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(status->aedificator,
+                _lexema_genus_ad_symbolum(nodus->datum.folium.keyword));
+        }
         frange;
 
     /* ===== STRUCT/UNION SPECIFIER ===== */
@@ -808,20 +816,20 @@ _emittere_nodum_fidelis (
 
     /* ===== INITIALIZER LIST ===== */
     casus ARBOR_NODUS_INITIALIZER_LIST:
-        chorda_aedificator_appendere_literis(status->aedificator, "{");
+        /* Emittere "{" + trivia post open (trivia continet "{") */
+        _emittere_trivia(status, nodus->datum.init_list.trivia_post_open);
         si (nodus->datum.init_list.elementa)
         {
             num = xar_numerus(nodus->datum.init_list.elementa);
             per (i = ZEPHYRUM; i < num; i++)
             {
                 ArborNodus** np;
-                si (i > ZEPHYRUM)
-                    chorda_aedificator_appendere_literis(status->aedificator, ",");
+                /* Commas iam in elemento trivia_post - non emittere hic */
                 np = xar_obtinere(nodus->datum.init_list.elementa, i);
                 si (np && *np) _emittere_nodum_fidelis(status, *np);
             }
         }
-        chorda_aedificator_appendere_literis(status->aedificator, "}");
+        /* "}" iam in nodus->trivia_post - non emittere hic */
         frange;
 
     /* ===== TYPEDEF NAME ===== */
