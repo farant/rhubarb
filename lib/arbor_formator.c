@@ -496,9 +496,9 @@ _emittere_nodum_fidelis (
 
     /* ===== CAST EXPRESSION ===== */
     casus ARBOR_NODUS_CAST_EXPRESSION:
-        chorda_aedificator_appendere_literis(status->aedificator, "(");
+        /* typus.trivia_ante continet "(" */
+        /* typus.trivia_post continet ")" */
         _emittere_nodum_fidelis(status, nodus->datum.conversio.typus);
-        chorda_aedificator_appendere_literis(status->aedificator, ")");
         _emittere_nodum_fidelis(status, nodus->datum.conversio.expressio);
         frange;
 

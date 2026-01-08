@@ -630,10 +630,18 @@ probatio_fidelis_complex_structures (
         "int f() { return a->b[i].c + d->e[j].f; }",
         "complex-member-subscript");
 
-    /* Cast expression - TODO: parser treats (int) as parenthesized expression */
-    /* _credo_roundtrip(piscina, intern,
-        "int f() { return (int)x + (long)y; }",
-        "cast"); */
+    /* Cast expressions */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (int)x; }",
+        "cast-simple");
+
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (long)y + (char)z; }",
+        "cast-multi");
+
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (int)(x + y); }",
+        "cast-expr");
 
     /* Sizeof expression */
     _credo_roundtrip(piscina, intern,

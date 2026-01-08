@@ -294,8 +294,53 @@ This applies to any nested `_creare_nodum` pattern where the outer node is creat
 
 ---
 
+## 2026-01-07: Cast Expression Parsing
+
+### Problem
+
+Parser couldn't parse cast expressions like `(int)x`. Input `int f() { return (int)x; }` would fail to parse entirely.
+
+### Root Cause
+
+`_parsere_parenthesis` always assumed content after `(` was an expression, not a type-name. It would try to parse `int` as an expression and fail.
+
+### Solution
+
+Added type detection in `_parsere_parenthesis`:
+
+1. Created `_est_type_initium` helper to check if current token starts a type-name:
+   - Type specifiers: `void`, `char`, `int`, `long`, `float`, `double`, `signed`, `unsigned`, `struct`, `union`, `enum`
+   - Type qualifiers: `const`, `volatile`
+   - Typedef names (using existing `_est_typedef_nomen` lookup)
+
+2. Modified `_parsere_parenthesis`:
+   - After `(`, call `_est_type_initium`
+   - If true: create CAST_EXPRESSION node, parse type, consume `)`, parse cast operand
+   - If false: parse as parenthesized expression (existing behavior)
+
+3. Trivia handling for cast:
+   - Type node's `trivia_ante`: `(` trivia + synthetic `"("` + post-`(` trivia
+   - Type node's `trivia_post`: pre-`)` trivia + synthetic `")"` + post-`)` trivia
+   - Expression inherits its own trivia
+
+4. Formatter updated to just emit `typus` and `expressio` - parentheses come from trivia.
+
+### Test Coverage
+
+Added roundtrip tests:
+- `(int)x` - simple cast
+- `(long)y + (char)z` - multiple casts
+- `(int)(x + y)` - cast of parenthesized expression
+
+### Limitations
+
+Current implementation only handles simple single-specifier types. Complex type-names like `(const int *)x` or `(struct foo *)x` would need additional work to parse the full type-name including abstract declarators.
+
+---
+
 ## Known TODOs
 
-Constructs that still need trivia handling for full roundtrip:
+All basic constructs now have trivia handling. Remaining advanced features:
 
-1. **cast expressions**: Parser treats `(int)x` as parenthesized expression, not cast
+1. **Complex cast types**: Multi-specifier casts like `(const int *)x`, pointer casts `(int *)x`
+2. **Abstract declarators in casts**: Full C grammar compliance for type-names

@@ -1145,6 +1145,44 @@ _parsere_identificator(ArborSyntaxis* syn)
     redde nodus;
 }
 
+/* Detegere si token currens est initium type-name (pro cast) */
+interior b32
+_est_type_initium(ArborSyntaxis* syn)
+{
+    ArborLexema* lex;
+    chorda*      titulus;
+
+    lex = _currens_lex(syn);
+    si (lex == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Type specifiers: void, char, int, long, etc. */
+    si (_est_type_specifier(lex->genus))
+    {
+        redde VERUM;
+    }
+
+    /* Type qualifiers: const, volatile */
+    si (_est_type_qualifier(lex->genus))
+    {
+        redde VERUM;
+    }
+
+    /* Typedef nomen */
+    si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        titulus = chorda_internare(syn->intern, lex->valor);
+        si (_est_typedef_nomen(syn, titulus))
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
 interior ArborNodus*
 _parsere_parenthesis(ArborSyntaxis* syn)
 {
@@ -1152,16 +1190,81 @@ _parsere_parenthesis(ArborSyntaxis* syn)
     ArborLexema* open_lex;
     ArborLexema* close_lex;
     Xar*         trivia_post_open;
+    Xar*         trivia_ante_open;
     Xar*         old_ante;
 
     /* Capere trivia ex '(' ante consumere */
     open_lex = _currens_lex(syn);
+    trivia_ante_open = (open_lex != NIHIL) ? open_lex->trivia_ante : NIHIL;
     trivia_post_open = (open_lex != NIHIL) ? open_lex->trivia_post : NIHIL;
 
     /* Skip ( */
     _progredi(syn);
 
-    /* TODO: detect cast expression (type-name) */
+    /* Detegere cast expression: (type-name)expr */
+    si (_est_type_initium(syn))
+    {
+        /* Cast expression */
+        ArborNodus* type_node;
+        ArborNodus* cast_expr;
+        ArborLexema* type_lex;
+        Xar* trivia_post_close;
+
+        cast_expr = _creare_nodum(syn, ARBOR_NODUS_CAST_EXPRESSION);
+        si (cast_expr == NIHIL)
+        {
+            redde NIHIL;
+        }
+
+        /* Parsere type specifier (simplex - solum unum specifier pro nunc) */
+        type_node = _creare_nodum(syn, ARBOR_NODUS_TYPE_SPECIFIER);
+        si (type_node == NIHIL)
+        {
+            redde NIHIL;
+        }
+
+        type_lex = _currens_lex(syn);
+        si (type_lex != NIHIL)
+        {
+            type_node->datum.folium.keyword = type_lex->genus;
+            type_node->datum.folium.valor = chorda_internare(syn->intern, type_lex->valor);
+        }
+        _progredi(syn);  /* Skip type specifier */
+
+        /* Consumere ')' */
+        close_lex = _currens_lex(syn);
+        trivia_post_close = (close_lex != NIHIL) ? close_lex->trivia_post : NIHIL;
+        _expectare(syn, ARBOR_LEXEMA_PAREN_CLAUSA, "Expectabatur ) post type in cast");
+
+        /* Trivia pro type:
+         * trivia_ante: trivia_ante_open + "(" + trivia_post_open
+         * trivia_post: trivia_ante_close + ")" */
+        _copiare_trivia_ad_xar(syn, &type_node->trivia_ante, trivia_ante_open);
+        _addere_synth_trivia(syn, &type_node->trivia_ante, "(");
+        _copiare_trivia_ad_xar(syn, &type_node->trivia_ante, trivia_post_open);
+
+        si (close_lex != NIHIL)
+        {
+            _copiare_trivia_ad_xar(syn, &type_node->trivia_post, close_lex->trivia_ante);
+        }
+        _addere_synth_trivia(syn, &type_node->trivia_post, ")");
+        _copiare_trivia_ad_xar(syn, &type_node->trivia_post, trivia_post_close);
+
+        cast_expr->datum.conversio.typus = type_node;
+        type_node->pater = cast_expr;
+
+        /* Parsere cast operand */
+        cast_expr->datum.conversio.expressio = _parsere_expressio(syn, PREC_UNARIUS);
+        si (cast_expr->datum.conversio.expressio != NIHIL)
+        {
+            cast_expr->datum.conversio.expressio->pater = cast_expr;
+        }
+
+        /* NON vocare _finire_nodum - expressio iam habet trivia_post */
+        redde cast_expr;
+    }
+
+    /* Parenthesized expression */
     nodus = _parsere_expressio(syn, PREC_NIHIL);
     si (nodus == NIHIL)
     {
@@ -1172,10 +1275,7 @@ _parsere_parenthesis(ArborSyntaxis* syn)
     /* Praepone "(" + trivia ad nodus.trivia_ante */
     old_ante = nodus->trivia_ante;
     nodus->trivia_ante = NIHIL;
-    si (open_lex != NIHIL)
-    {
-        _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, open_lex->trivia_ante);
-    }
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, trivia_ante_open);
     _addere_synth_trivia(syn, &nodus->trivia_ante, "(");
     _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, trivia_post_open);
     _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, old_ante);
