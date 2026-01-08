@@ -62,6 +62,7 @@ interior b32 _est_storage_class(ArborLexemaGenus g);
 interior ArborNodus* _parsere_struct_specifier(ArborSyntaxis* syn, b32 est_unio);
 interior ArborNodus* _parsere_enum_specifier(ArborSyntaxis* syn);
 interior ArborNodus* _parsere_type_specifier(ArborSyntaxis* syn);
+interior ArborNodus* _parsere_type_qualifier(ArborSyntaxis* syn);
 interior ArborNodus* _parsere_declarator(ArborSyntaxis* syn);
 
 /* ==================================================
@@ -3127,24 +3128,60 @@ _parsere_struct_declaration(ArborSyntaxis* syn)
     specifiers = xar_creare(syn->piscina, magnitudo(ArborNodus*));
     declaratores = xar_creare(syn->piscina, magnitudo(ArborNodus*));
 
-    /* Parse type specifiers */
-    lex = _currens_lex(syn);
-    dum (lex != NIHIL &&
-         (_est_type_specifier(lex->genus) || _est_type_qualifier(lex->genus)))
+    /* Parse type specifiers (including typedef names) */
     {
-        ArborNodus* spec = _parsere_type_specifier(syn);
-        si (spec != NIHIL)
-        {
-            ArborNodus** slot;
-            /* Clear duplicate trivia from first specifier */
-            si (spec->trivia_ante == nodus->trivia_ante)
-            {
-                spec->trivia_ante = NIHIL;
-            }
-            slot = xar_addere(specifiers);
-            si (slot != NIHIL) { *slot = spec; spec->pater = nodus; }
-        }
+        b32 habet_typedef_nomen = FALSUM;
         lex = _currens_lex(syn);
+        dum (lex != NIHIL)
+        {
+            ArborNodus* spec = NIHIL;
+
+            si (_est_type_specifier(lex->genus))
+            {
+                spec = _parsere_type_specifier(syn);
+            }
+            alioquin si (_est_type_qualifier(lex->genus))
+            {
+                spec = _parsere_type_qualifier(syn);
+            }
+            alioquin si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && !habet_typedef_nomen)
+            {
+                /* Verifica typedef nomen - solum unum permissum */
+                chorda* titulus = chorda_internare(syn->intern, lex->valor);
+                si (_est_typedef_nomen(syn, titulus))
+                {
+                    spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
+                    si (spec != NIHIL)
+                    {
+                        spec->datum.folium.valor = titulus;
+                        _progredi(syn);
+                        _finire_nodum(syn, spec);
+                    }
+                    habet_typedef_nomen = VERUM;
+                }
+                alioquin
+                {
+                    frange;
+                }
+            }
+            alioquin
+            {
+                frange;
+            }
+
+            si (spec != NIHIL)
+            {
+                ArborNodus** slot;
+                /* Clear duplicate trivia from first specifier */
+                si (spec->trivia_ante == nodus->trivia_ante)
+                {
+                    spec->trivia_ante = NIHIL;
+                }
+                slot = xar_addere(specifiers);
+                si (slot != NIHIL) { *slot = spec; spec->pater = nodus; }
+            }
+            lex = _currens_lex(syn);
+        }
     }
 
     /* Parse struct declarators with optional bitfields */

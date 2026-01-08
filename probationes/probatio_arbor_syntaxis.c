@@ -1294,6 +1294,21 @@ test_typedef(Piscina* piscina, InternamentumChorda* intern)
     res = _parsere_fontem(piscina, intern, "typedef int (*Comparator)(int, int);");
     CREDO_VERUM(res.successus);
     imprimere("  Typedef func ptr: OK\n");
+
+    /* Typedef name in struct member - parser bug fixed 2026-01-07 */
+    res = _parsere_fontem(piscina, intern,
+        "typedef long Size;\n"
+        "struct S { Size len; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Typedef in struct: OK\n");
+
+    /* Multiple typedef names in struct members */
+    res = _parsere_fontem(piscina, intern,
+        "typedef int Int;\n"
+        "typedef char Char;\n"
+        "struct S { Int x; Char c; };");
+    CREDO_VERUM(res.successus);
+    imprimere("  Multi typedef in struct: OK\n");
 }
 
 /* ==================================================

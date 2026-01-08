@@ -668,6 +668,80 @@ probatio_typus_typedef_usage(Piscina* piscina, InternamentumChorda* intern)
         arbor_typus_genus_nomen(typus->basis->genus));
 }
 
+interior vacuum
+probatio_typus_typedef_in_struct(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborTypusResolver* res;
+    ArborSyntaxisResultus ast;
+    ArborTypus* typus;
+    ArborMembrum* membrum;
+    chorda* titulus;
+
+    imprimere("\n--- Typedef in Struct Members ---\n");
+
+    /* typedef long Size; struct S { Size len; } s; */
+    ast = _parsere(piscina, intern,
+        "typedef long Size;\n"
+        "struct S { Size len; } s;");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    /* Quaerere struct S per variable s */
+    titulus = chorda_internare_ex_literis(intern, "s");
+    typus = arbor_typus_identificatoris(res, titulus);
+    CREDO_NON_NIHIL(typus);
+    CREDO_VERUM(typus->genus == ARBOR_TYPUS_STRUCT);
+    CREDO_NON_NIHIL(typus->membra);
+    CREDO_AEQUALIS_I32(xar_numerus(typus->membra), I);
+
+    /* Verificare membrum 'len' */
+    membrum = *(ArborMembrum**)xar_obtinere(typus->membra, ZEPHYRUM);
+    CREDO_NON_NIHIL(membrum);
+    CREDO_NON_NIHIL(membrum->titulus);
+    CREDO_NON_NIHIL(membrum->typus);
+
+    /* Membrum type debet esse TYPEDEF cum basis LONG */
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_TYPEDEF);
+    CREDO_NON_NIHIL(membrum->typus->basis);
+    CREDO_VERUM(membrum->typus->basis->genus == ARBOR_TYPUS_LONG);
+
+    imprimere("  Struct member typedef (Size len): basis=%s - OK\n",
+        arbor_typus_genus_nomen(membrum->typus->basis->genus));
+
+    /* Multi-typedef struct members */
+    ast = _parsere(piscina, intern,
+        "typedef int Int;\n"
+        "typedef char Char;\n"
+        "struct Data { Int x; Char c; } d;");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    titulus = chorda_internare_ex_literis(intern, "d");
+    typus = arbor_typus_identificatoris(res, titulus);
+    CREDO_NON_NIHIL(typus);
+    CREDO_VERUM(typus->genus == ARBOR_TYPUS_STRUCT);
+    CREDO_NON_NIHIL(typus->membra);
+    CREDO_AEQUALIS_I32(xar_numerus(typus->membra), II);
+
+    /* Verificare membrum 'x' - typedef Int -> int */
+    membrum = *(ArborMembrum**)xar_obtinere(typus->membra, ZEPHYRUM);
+    CREDO_NON_NIHIL(membrum);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_TYPEDEF);
+    CREDO_VERUM(membrum->typus->basis->genus == ARBOR_TYPUS_INT);
+
+    /* Verificare membrum 'c' - typedef Char -> char */
+    membrum = *(ArborMembrum**)xar_obtinere(typus->membra, I);
+    CREDO_NON_NIHIL(membrum);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_TYPEDEF);
+    CREDO_VERUM(membrum->typus->basis->genus == ARBOR_TYPUS_CHAR);
+
+    imprimere("  Multi typedef members: OK\n");
+}
+
 /* ==================================================
  * Probationes - Type Utilities
  * ================================================== */
@@ -873,6 +947,7 @@ integer principale(vacuum)
     probatio_typus_typedef(piscina, intern);
     probatio_typus_typedef_pointer(piscina, intern);
     probatio_typus_typedef_usage(piscina, intern);
+    probatio_typus_typedef_in_struct(piscina, intern);
 
     /* Utilities */
     probatio_typus_utilities();

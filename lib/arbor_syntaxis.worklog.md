@@ -338,6 +338,104 @@ Current implementation only handles simple single-specifier types. Complex type-
 
 ---
 
+## 2026-01-07: Typedef Names in Struct Member Declarations - FIXED
+
+### Problem
+
+Parser couldn't parse typedef names as types inside struct member declarations:
+
+```c
+typedef long Size;
+struct S { Size len; };  /* FAILED - parser didn't recognize "Size" as a type */
+```
+
+Parsing succeeded for regular declarations (`Size x;`) but failed when the same typedef name appeared in a struct member.
+
+### Root Cause
+
+`_parsere_struct_declaration` had a simpler type parsing loop than regular declarations. It only checked:
+
+```c
+dum (lex != NIHIL &&
+     (_est_type_specifier(lex->genus) || _est_type_qualifier(lex->genus)))
+```
+
+This recognized keywords (`int`, `char`, `const`, etc.) but NOT typedef names (which are IDENTIFIER tokens that need lookup in the typedef table).
+
+Meanwhile, regular declaration parsing in `_parsere_declaratio` had full typedef name handling via `_est_typedef_nomen()`.
+
+### Fix
+
+Expanded `_parsere_struct_declaration`'s type parsing loop to match regular declarations:
+
+```c
+/* Parse type specifiers (including typedef names) */
+{
+    b32 habet_typedef_nomen = FALSUM;
+    lex = _currens_lex(syn);
+    dum (lex != NIHIL)
+    {
+        ArborNodus* spec = NIHIL;
+
+        si (_est_type_specifier(lex->genus))
+        {
+            spec = _parsere_type_specifier(syn);
+        }
+        alioquin si (_est_type_qualifier(lex->genus))
+        {
+            spec = _parsere_type_qualifier(syn);
+        }
+        alioquin si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && !habet_typedef_nomen)
+        {
+            /* Verifica typedef nomen - solum unum permissum */
+            chorda* titulus = chorda_internare(syn->intern, lex->valor);
+            si (_est_typedef_nomen(syn, titulus))
+            {
+                spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
+                si (spec != NIHIL)
+                {
+                    spec->datum.folium.valor = titulus;
+                    _progredi(syn);
+                    _finire_nodum(syn, spec);
+                }
+                habet_typedef_nomen = VERUM;
+            }
+            alioquin
+            {
+                frange;
+            }
+        }
+        alioquin
+        {
+            frange;
+        }
+
+        /* ... add spec to specifiers ... */
+    }
+}
+```
+
+Also added forward declaration for `_parsere_type_qualifier`.
+
+### Test Coverage
+
+Added to `probatio_arbor_syntaxis.c`:
+- `typedef long Size; struct S { Size len; };` - single typedef member
+- `typedef int Int; typedef char Char; struct S { Int x; Char c; };` - multiple typedef members
+
+Added to `probatio_arbor_typus.c`:
+- `probatio_typus_typedef_in_struct` - verifies typedef types resolve correctly in struct members
+
+### Key Pattern
+
+Anywhere the parser needs to recognize types, it must check for typedef names in addition to type keywords. This includes:
+- Regular declarations (already working)
+- Struct/union member declarations (now fixed)
+- Cast expressions (already working)
+- Function parameter declarations (already working)
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:
