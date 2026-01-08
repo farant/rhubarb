@@ -222,8 +222,12 @@ _emittere_nodum_fidelis (
 
     si (nodus == NIHIL) redde;
 
-    /* Emittere trivia ante nodum (saltare pro translation_unit - non habet token) */
-    si (nodus->genus != ARBOR_NODUS_TRANSLATION_UNIT)
+    /* Emittere trivia ante nodum
+     * Saltare pro translation_unit (non habet token) et
+     * directives (trivia emittitur per lexemata)
+     */
+    si (nodus->genus != ARBOR_NODUS_TRANSLATION_UNIT &&
+        nodus->genus != ARBOR_NODUS_DIRECTIVE)
     {
         _emittere_trivia(status, nodus->trivia_ante);
     }
@@ -826,6 +830,29 @@ _emittere_nodum_fidelis (
         {
             chorda_aedificator_appendere_chorda(status->aedificator,
                 *nodus->datum.folium.valor);
+        }
+        frange;
+
+    /* ===== PREPROCESSOR DIRECTIVE (PRESERVARE mode) ===== */
+    casus ARBOR_NODUS_DIRECTIVE:
+        /* Emit all tokens from directive with their trivia */
+        si (nodus->datum.directiva.lexemata)
+        {
+            num = xar_numerus(nodus->datum.directiva.lexemata);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                ArborLexema** lp = xar_obtinere(nodus->datum.directiva.lexemata, i);
+                si (lp && *lp)
+                {
+                    ArborLexema* lex_dir = *lp;
+                    /* Emittere trivia ante */
+                    _emittere_trivia(status, lex_dir->trivia_ante);
+                    /* Emittere token valor */
+                    chorda_aedificator_appendere_chorda(status->aedificator, lex_dir->valor);
+                    /* Emittere trivia post */
+                    _emittere_trivia(status, lex_dir->trivia_post);
+                }
+            }
         }
         frange;
 

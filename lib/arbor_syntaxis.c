@@ -66,6 +66,8 @@ interior ArborNodus* _parsere_type_qualifier(ArborSyntaxis* syn);
 interior ArborNodus* _parsere_declarator(ArborSyntaxis* syn);
 interior ArborNodus* _parsere_specifiers(ArborSyntaxis* syn, Xar* specifiers);
 interior ArborNodus* _parsere_type_name(ArborSyntaxis* syn);
+interior ArborNodus* _parsere_directiva(ArborSyntaxis* syn);
+interior b32 _est_directiva_initium(ArborSyntaxis* syn);
 
 /* ==================================================
  * Adiutores Interni - Navigation
@@ -2992,7 +2994,12 @@ _parsere_compound(ArborSyntaxis* syn)
     {
         prev_pos = syn->positus;
 
-        si (_est_declaration_start(syn))
+        /* Verificare si directiva (PRESERVARE mode) */
+        si (_est_directiva_initium(syn))
+        {
+            item = _parsere_directiva(syn);
+        }
+        alioquin si (_est_declaration_start(syn))
         {
             item = _parsere_declaratio(syn);
         }
@@ -4479,6 +4486,189 @@ _parsere_external_declaration(ArborSyntaxis* syn)
     redde result;
 }
 
+/* ==================================================
+ * Directive Parsing (PRESERVARE mode)
+ * ================================================== */
+
+/* Verificare si currens token initiat directivam (# ad initium lineae) */
+interior b32
+_est_directiva_initium(ArborSyntaxis* syn)
+{
+    ArborLexema* lex;
+    ArborLexema* lex_praev;
+    ArborLexemaOrigo** ptr;
+
+    lex = _currens_lex(syn);
+    si (lex == NIHIL || lex->genus != ARBOR_LEXEMA_HASH)
+    {
+        redde FALSUM;
+    }
+
+    /* Verificare si ad initium lineae */
+    si (syn->positus == ZEPHYRUM)
+    {
+        /* Primum token - est ad initium */
+        redde VERUM;
+    }
+
+    /* Obtinere praevium lexema */
+    lex_praev = NIHIL;
+    ptr = xar_obtinere(syn->lexemata, syn->positus - I);
+    si (ptr != NIHIL && *ptr != NIHIL)
+    {
+        lex_praev = (*ptr)->lexema;
+    }
+
+    si (lex_praev == NIHIL)
+    {
+        redde VERUM;
+    }
+
+    /* Si in linea diversa a praevio, ad initium novae lineae */
+    si (lex->linea > lex_praev->linea)
+    {
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+/* Identificare genus directivae ex token */
+interior ArborDirectivaGenus
+_identificare_directiva_genus(ArborLexema* lex)
+{
+    chorda valor;
+
+    si (lex == NIHIL || lex->genus != ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        redde ARBOR_DIRECTIVA_UNKNOWN;
+    }
+
+    valor = lex->valor;
+
+    si (chorda_aequalis_literis(valor, "include"))
+    {
+        redde ARBOR_DIRECTIVA_INCLUDE;
+    }
+    si (chorda_aequalis_literis(valor, "define"))
+    {
+        redde ARBOR_DIRECTIVA_DEFINE;
+    }
+    si (chorda_aequalis_literis(valor, "undef"))
+    {
+        redde ARBOR_DIRECTIVA_UNDEF;
+    }
+    si (chorda_aequalis_literis(valor, "if"))
+    {
+        redde ARBOR_DIRECTIVA_IF;
+    }
+    si (chorda_aequalis_literis(valor, "ifdef"))
+    {
+        redde ARBOR_DIRECTIVA_IFDEF;
+    }
+    si (chorda_aequalis_literis(valor, "ifndef"))
+    {
+        redde ARBOR_DIRECTIVA_IFNDEF;
+    }
+    si (chorda_aequalis_literis(valor, "elif"))
+    {
+        redde ARBOR_DIRECTIVA_ELIF;
+    }
+    si (chorda_aequalis_literis(valor, "else"))
+    {
+        redde ARBOR_DIRECTIVA_ELSE;
+    }
+    si (chorda_aequalis_literis(valor, "endif"))
+    {
+        redde ARBOR_DIRECTIVA_ENDIF;
+    }
+    si (chorda_aequalis_literis(valor, "line"))
+    {
+        redde ARBOR_DIRECTIVA_LINE;
+    }
+    si (chorda_aequalis_literis(valor, "error"))
+    {
+        redde ARBOR_DIRECTIVA_ERROR;
+    }
+    si (chorda_aequalis_literis(valor, "pragma"))
+    {
+        redde ARBOR_DIRECTIVA_PRAGMA;
+    }
+
+    redde ARBOR_DIRECTIVA_UNKNOWN;
+}
+
+/* Parsere directiva: colligere omnia lexemata usque ad finem lineae */
+interior ArborNodus*
+_parsere_directiva(ArborSyntaxis* syn)
+{
+    ArborNodus* nodus;
+    ArborLexema* lex;
+    ArborLexema* lex_directiva;
+    i32 linea_directivae;
+    Xar* lexemata_directivae;
+    ArborLexema** slot;
+
+    nodus = _creare_nodum(syn, ARBOR_NODUS_DIRECTIVE);
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    lexemata_directivae = xar_creare(syn->piscina, magnitudo(ArborLexema*));
+    si (lexemata_directivae == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    nodus->datum.directiva.lexemata = lexemata_directivae;
+    nodus->datum.directiva.genus = ARBOR_DIRECTIVA_UNKNOWN;
+
+    /* Addere # ad lexemata */
+    lex = _currens_lex(syn);
+    linea_directivae = lex->linea;
+    slot = xar_addere(lexemata_directivae);
+    si (slot != NIHIL)
+    {
+        *slot = lex;
+    }
+    _progredi(syn);
+
+    /* Obtinere genus directivae ex proximo token */
+    lex_directiva = _currens_lex(syn);
+    si (lex_directiva != NIHIL && lex_directiva->linea == linea_directivae)
+    {
+        nodus->datum.directiva.genus = _identificare_directiva_genus(lex_directiva);
+    }
+
+    /* Colligere omnia lexemata in eadem linea */
+    dum (!_est_finis(syn))
+    {
+        lex = _currens_lex(syn);
+        si (lex == NIHIL)
+        {
+            frange;
+        }
+
+        /* Si in linea diversa, finire directivam */
+        si (lex->linea > linea_directivae)
+        {
+            frange;
+        }
+
+        /* Addere lexema ad collectio */
+        slot = xar_addere(lexemata_directivae);
+        si (slot != NIHIL)
+        {
+            *slot = lex;
+        }
+        _progredi(syn);
+    }
+
+    _finire_nodum(syn, nodus);
+    redde nodus;
+}
+
 interior ArborNodus*
 _parsere_translation_unit(ArborSyntaxis* syn)
 {
@@ -4497,7 +4687,16 @@ _parsere_translation_unit(ArborSyntaxis* syn)
     dum (!_est_finis(syn))
     {
         prev_pos = syn->positus;
-        decl = _parsere_external_declaration(syn);
+
+        /* Verificare si directiva (PRESERVARE mode) */
+        si (_est_directiva_initium(syn))
+        {
+            decl = _parsere_directiva(syn);
+        }
+        alioquin
+        {
+            decl = _parsere_external_declaration(syn);
+        }
 
         si (decl == NIHIL)
         {

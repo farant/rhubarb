@@ -3,6 +3,8 @@
 #include "internamentum.h"
 #include "arbor_syntaxis.h"
 #include "arbor_formator.h"
+#include "arbor_praeparator.h"
+#include "arbor_lexema.h"
 #include "filum.h"
 #include <stdio.h>
 #include <string.h>
@@ -30,6 +32,59 @@ _parsere_fontem (
         fons,
         (i32)strlen(fons),
         "test.c");
+
+    si (res.successus)
+    {
+        redde res.radix;
+    }
+
+    redde NIHIL;
+}
+
+/* Parsere cum PRESERVARE mode (conservare directivas) */
+interior ArborNodus*
+_parsere_fontem_preservare (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* fons)
+{
+    ArborSyntaxis*        syn;
+    ArborSyntaxisResultus res;
+    ArborLexator*         lexator;
+    ArborPraeparator*     pp;
+    Xar*                  lexemata;
+    Xar*                  processata;
+
+    /* Lex */
+    lexator = arbor_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+    si (lexator == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    lexemata = arbor_lexema_omnia(lexator);
+    si (lexemata == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Praeparator cum PRESERVARE mode */
+    pp = arbor_praeparator_creare(piscina, intern);
+    si (pp == NIHIL)
+    {
+        redde NIHIL;
+    }
+    arbor_praeparator_ponere_modum(pp, ARBOR_PP_MODUS_PRESERVARE);
+
+    processata = arbor_praeparator_processare_lexemata(pp, lexemata, "test.c");
+    si (processata == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Parse */
+    syn = arbor_syntaxis_creare(piscina, intern);
+    res = arbor_syntaxis_parsere(syn, processata);
 
     si (res.successus)
     {
@@ -339,6 +394,57 @@ _credo_roundtrip (
     imprimere("    %s: ", titulus);
 
     radix = _parsere_fontem(piscina, intern, input);
+    si (radix == NIHIL)
+    {
+        imprimere("[FAIL - parse error]\n");
+        CREDO_VERUM(radix != NIHIL);
+        redde;
+    }
+
+    fructus = arbor_formator_emittere_fidelis(piscina, radix);
+    input_len = (memoriae_index)strlen(input);
+
+    /* Print what we got for debugging */
+    imprimere("'");
+    fwrite(fructus.datum, I, (memoriae_index)fructus.mensura, stdout);
+    imprimere("' ");
+
+    /* Check exact length match */
+    si (fructus.mensura != (i32)input_len)
+    {
+        imprimere("[FAIL - length %d != %d]\n",
+            (int)fructus.mensura, (int)input_len);
+        CREDO_VERUM(fructus.mensura == (i32)input_len);
+        redde;
+    }
+
+    /* Check exact content match */
+    si (strncmp((constans character*)fructus.datum, input, input_len) != ZEPHYRUM)
+    {
+        imprimere("[FAIL - content mismatch]\n");
+        imprimere("      expected: '%s'\n", input);
+        CREDO_VERUM(strncmp((constans character*)fructus.datum, input, input_len) == ZEPHYRUM);
+        redde;
+    }
+
+    imprimere("[OK]\n");
+}
+
+/* Roundtrip cum PRESERVARE mode (pro directivas) */
+interior vacuum
+_credo_roundtrip_preservare (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* input,
+       constans character* titulus)
+{
+    ArborNodus* radix;
+    chorda      fructus;
+    memoriae_index input_len;
+
+    imprimere("    %s: ", titulus);
+
+    radix = _parsere_fontem_preservare(piscina, intern, input);
     si (radix == NIHIL)
     {
         imprimere("[FAIL - parse error]\n");
@@ -984,6 +1090,73 @@ probatio_roundtrip_fila (
 }
 
 /* ===========================================================
+ * PROBATIO - PRESERVE MODE ROUNDTRIP (Directives)
+ *
+ * Test that preprocessor directives are preserved through
+ * the parse/format cycle when using PRESERVARE mode.
+ * =========================================================== */
+
+interior vacuum
+probatio_roundtrip_preservare (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_roundtrip_preservare...\n");
+
+    /* Simplex #include */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#include <stdio.h>\n",
+        "include-system");
+
+    /* #include cum declaratio */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#include <stdio.h>\nint x;",
+        "include-then-decl");
+
+    /* #define simplex */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#define FOO 42\n",
+        "define-simple");
+
+    /* #define cum declaratio */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#define FOO 42\nint x = FOO;",
+        "define-then-use");
+
+    /* Multiple #defines */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#define FOO 42\n#define BAR 99\n",
+        "multiple-defines");
+
+    /* #ifdef block */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#ifdef DEBUG\nint debug = 1;\n#endif\n",
+        "ifdef-block");
+
+    /* #ifndef guard pattern */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#ifndef HEADER_H\n#define HEADER_H\nint x;\n#endif\n",
+        "include-guard");
+
+    /* #if / #else / #endif */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#if 1\nint a;\n#else\nint b;\n#endif\n",
+        "if-else-endif");
+
+    /* #pragma */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#pragma once\nint x;",
+        "pragma-once");
+
+    /* Mixed directives and code */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#include <stdio.h>\n\nint main() {\n#ifdef DEBUG\n    printf(\"debug\");\n#endif\n    return 0;\n}",
+        "mixed-directives-code");
+
+    imprimere("    [OK]\n");
+}
+
+/* ===========================================================
  * PRINCIPALE
  * =========================================================== */
 
@@ -1018,6 +1191,7 @@ main (
     probatio_fidelis_complex_structures(piscina, intern);
     probatio_fidelis_tabs_newlines(piscina, intern);
     probatio_roundtrip_fila(piscina, intern);
+    probatio_roundtrip_preservare(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

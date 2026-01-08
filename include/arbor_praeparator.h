@@ -74,6 +74,18 @@ nomen enumeratio {
 } ArborDirectivaGenus;
 
 /* ==================================================
+ * Preprocessor Mode
+ *
+ * PROCESSARE: Normal mode - expand macros, follow includes
+ * PRESERVARE: Preserve mode - keep directives as tokens for fidelis formatting
+ * ================================================== */
+
+nomen enumeratio {
+    ARBOR_PP_MODUS_PROCESSARE,    /* Normal: expand macros, follow includes */
+    ARBOR_PP_MODUS_PRESERVARE     /* Preserve: keep directives as nodes */
+} ArborPPModus;
+
+/* ==================================================
  * Macro Definition
  * ================================================== */
 
@@ -122,6 +134,15 @@ nomen structura {
 ArborPraeparator* arbor_praeparator_creare(
     Piscina*              piscina,
     InternamentumChorda*  intern);
+
+/* Ponere modum (PROCESSARE vel PRESERVARE) */
+vacuum arbor_praeparator_ponere_modum(
+    ArborPraeparator*     pp,
+    ArborPPModus          modus);
+
+/* Obtinere modum */
+ArborPPModus arbor_praeparator_obtinere_modum(
+    ArborPraeparator*     pp);
 
 /* Addere via include (search path) */
 vacuum arbor_praeparator_addere_via(

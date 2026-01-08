@@ -101,6 +101,9 @@ nomen enumeratio {
     ARBOR_NODUS_INITIALIZER,
     ARBOR_NODUS_INITIALIZER_LIST,
 
+    /* Preprocessor (preserve mode) */
+    ARBOR_NODUS_DIRECTIVE,
+
     /* Special */
     ARBOR_NODUS_ERROR,
     ARBOR_NODUS_EXTENSION
@@ -387,6 +390,12 @@ structura ArborNodus {
         structura {
             Xar*          expressiones;  /* Xar of ArborNodus* */
         } comma;
+
+        /* preprocessor directive (preserve mode) */
+        structura {
+            ArborDirectivaGenus   genus;      /* Which directive (#include, #define, etc) */
+            Xar*                  lexemata;   /* All tokens on directive line */
+        } directiva;
 
     } datum;
 };

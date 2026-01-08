@@ -588,12 +588,74 @@ res = arbor_syntaxis_parsere_fontem(
 
 All 54 formator tests pass including whole-file roundtrip of `simple.c` (419 bytes).
 
-### Files Modified
+## 2026-01-07: Preprocessor Directive Preservation
 
-- `include/arbor_syntaxis.h` - Added `trivia_vacuum` to compositum
-- `lib/arbor_syntaxis.c` - Fixed empty compound, void parameter
-- `lib/arbor_formator.c` - Skip translation_unit trivia, emit trivia_vacuum
-- `probationes/probatio_arbor_formator.c` - Fixed strlen bug in file test
+### Problem
+
+Real C files contain preprocessor directives (`#include`, `#define`, `#ifdef`, etc.) that were being expanded/processed by the preprocessor, making byte-exact roundtrip formatting impossible.
+
+### Solution: PRESERVARE Mode
+
+Added a mode flag to the preprocessor that passes all tokens through unchanged, allowing the parser to preserve directives as AST nodes.
+
+### Changes Made
+
+**1. include/arbor_praeparator.h**
+- Added `ArborPPModus` enum with `ARBOR_PP_MODUS_PROCESSARE` (default: expand) and `ARBOR_PP_MODUS_PRESERVARE` (pass through)
+- Added `arbor_praeparator_ponere_modum()` and `arbor_praeparator_obtinere_modum()` API functions
+
+**2. include/arbor_syntaxis.h**
+- Added `ARBOR_NODUS_DIRECTIVE` to `ArborNodusGenus` enum
+- Added `datum.directiva` struct with `genus` (ArborDirectivaGenus) and `lexemata` (Xar of tokens)
+
+**3. lib/arbor_praeparator.c**
+- Added `modus` field to `ArborPraeparator` struct
+- In `arbor_praeparator_processare_lexemata()`, when PRESERVARE mode, simply wrap all tokens as ArborLexemaOrigo and pass through without processing
+
+**4. lib/arbor_syntaxis.c**
+- Added `_est_directiva_initium()` - detects `#` at line start
+- Added `_identificare_directiva_genus()` - identifies directive type from keyword
+- Added `_parsere_directiva()` - collects all tokens on directive line into DIRECTIVE node
+- Modified `_parsere_translation_unit()` to check for directives before declarations
+- Modified `_parsere_compound()` to check for directives before statements/declarations
+
+**5. lib/arbor_formator.c**
+- Added `ARBOR_NODUS_DIRECTIVE` case: emit all tokens with their trivia
+- Skip `trivia_ante` for DIRECTIVE nodes (since token trivia handles it)
+
+### Key Design Decisions
+
+1. **Mode on praeparator, not separate code path**: Reuses existing infrastructure for lexing, keeps directive identification logic
+2. **Parser detects directives itself**: No special markers needed from praeparator; parser checks `#` at line start just like praeparator does
+3. **Directive tokens stored in node**: All tokens from `#` through end of line stored in `datum.directiva.lexemata`, preserving exact formatting
+4. **Skip double trivia emission**: DIRECTIVE nodes skip `trivia_ante` emission in formatter since individual token trivia is emitted
+
+### Test Coverage
+
+Added 10 preserve mode roundtrip tests:
+- `#include <stdio.h>` - system include
+- `#include` + declaration - mixed content
+- `#define FOO 42` - simple macro
+- `#define` + use - macro with usage
+- Multiple defines - consecutive directives
+- `#ifdef` block - conditional compilation
+- `#ifndef` guard - include guard pattern
+- `#if`/`#else`/`#endif` - full conditional
+- `#pragma once` - pragma directive
+- Mixed directives and code - directives inside functions
+
+### Usage
+
+```c
+/* For fidelis formatting with directive preservation */
+ArborPraeparator* pp = arbor_praeparator_creare(piscina, intern);
+arbor_praeparator_ponere_modum(pp, ARBOR_PP_MODUS_PRESERVARE);
+/* ... then normal parse/format flow */
+```
+
+### Test Results
+
+All 54 formator tests pass including 10 new preserve mode tests. All 71 project tests pass.
 
 ---
 

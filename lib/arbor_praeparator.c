@@ -28,6 +28,7 @@ nomen structura {
 structura ArborPraeparator {
     Piscina*              piscina;
     InternamentumChorda*  intern;
+    ArborPPModus          modus;            /* PROCESSARE vel PRESERVARE */
     TabulaDispersa*       macros;           /* chorda -> ArborMacroDefinitio* */
     Xar*                  viae_include;     /* Xar<chorda*> viae quaestionis */
     Xar*                  fila_inclusa;     /* Xar<chorda*> jam inclusa (custodia) */
@@ -91,6 +92,7 @@ arbor_praeparator_creare(
 
     pp->piscina = piscina;
     pp->intern = intern;
+    pp->modus = ARBOR_PP_MODUS_PROCESSARE;  /* Default: expandere */
 
     /* Creare tabula macro */
     pp->macros = tabula_dispersa_creare_chorda(piscina, CXXVIII);
@@ -140,6 +142,28 @@ arbor_praeparator_creare(
     pp->profunditas_expansionis = ZEPHYRUM;
 
     redde pp;
+}
+
+vacuum
+arbor_praeparator_ponere_modum(
+    ArborPraeparator*     pp,
+    ArborPPModus          modus)
+{
+    si (pp != NIHIL)
+    {
+        pp->modus = modus;
+    }
+}
+
+ArborPPModus
+arbor_praeparator_obtinere_modum(
+    ArborPraeparator*     pp)
+{
+    si (pp == NIHIL)
+    {
+        redde ARBOR_PP_MODUS_PROCESSARE;
+    }
+    redde pp->modus;
 }
 
 vacuum
@@ -2837,6 +2861,33 @@ arbor_praeparator_processare_lexemata(
     pos = ZEPHYRUM;
     num = xar_numerus(lexemata);
     lex_praevius = NIHIL;
+
+    /* PRESERVARE mode: emittere omnia lexemata sine processamento */
+    si (pp->modus == ARBOR_PP_MODUS_PRESERVARE)
+    {
+        dum (pos < num)
+        {
+            ArborLexema* lex_curr;
+            ArborLexemaOrigo* lo;
+            ArborLexemaOrigo** slotus;
+
+            lex_curr = *(ArborLexema**)xar_obtinere(lexemata, pos);
+            si (lex_curr != NIHIL)
+            {
+                lo = _creare_lexema_origo(pp, lex_curr, NIHIL);
+                si (lo != NIHIL)
+                {
+                    slotus = xar_addere(output);
+                    si (slotus != NIHIL)
+                    {
+                        *slotus = lo;
+                    }
+                }
+            }
+            pos++;
+        }
+        redde output;
+    }
 
     dum (pos < num)
     {
