@@ -335,6 +335,109 @@ probatio_typus_functio_pointer(Piscina* piscina, InternamentumChorda* intern)
     }
 }
 
+interior vacuum
+probatio_typus_functio_parametra(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborTypusResolver* res;
+    ArborSyntaxisResultus ast;
+    ArborTypus* func_typus;
+    ArborTypus** param_ptr;
+    ArborTypus* param_typus;
+    chorda* titulus;
+    i32 n;
+
+    imprimere("\n--- Function Parameter Types ---\n");
+
+    ast = _parsere(piscina, intern, "int f(int x, char c, long *p) { return 0; }");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    /* Obtinere typum functionis */
+    titulus = chorda_internare_ex_literis(intern, "f");
+    func_typus = arbor_typus_identificatoris(res, titulus);
+    CREDO_NON_NIHIL(func_typus);
+    CREDO_VERUM(func_typus->genus == ARBOR_TYPUS_FUNCTION);
+
+    /* Verificare parametra resoluta */
+    CREDO_NON_NIHIL(func_typus->parametra);
+    n = xar_numerus(func_typus->parametra);
+    CREDO_VERUM(n == III);
+
+    /* Primus: int x */
+    param_ptr = xar_obtinere(func_typus->parametra, ZEPHYRUM);
+    CREDO_NON_NIHIL(param_ptr);
+    param_typus = *param_ptr;
+    CREDO_NON_NIHIL(param_typus);
+    CREDO_VERUM(param_typus->genus == ARBOR_TYPUS_INT);
+    imprimere("  Param 0 (int x): genus=%s - OK\n", arbor_typus_genus_nomen(param_typus->genus));
+
+    /* Secundus: char c */
+    param_ptr = xar_obtinere(func_typus->parametra, I);
+    CREDO_NON_NIHIL(param_ptr);
+    param_typus = *param_ptr;
+    CREDO_NON_NIHIL(param_typus);
+    CREDO_VERUM(param_typus->genus == ARBOR_TYPUS_CHAR);
+    imprimere("  Param 1 (char c): genus=%s - OK\n", arbor_typus_genus_nomen(param_typus->genus));
+
+    /* Tertius: long *p */
+    param_ptr = xar_obtinere(func_typus->parametra, II);
+    CREDO_NON_NIHIL(param_ptr);
+    param_typus = *param_ptr;
+    CREDO_NON_NIHIL(param_typus);
+    CREDO_VERUM(param_typus->genus == ARBOR_TYPUS_POINTER);
+    CREDO_NON_NIHIL(param_typus->basis);
+    CREDO_VERUM(param_typus->basis->genus == ARBOR_TYPUS_LONG);
+    imprimere("  Param 2 (long *p): pointer to %s - OK\n", arbor_typus_genus_nomen(param_typus->basis->genus));
+}
+
+interior vacuum
+probatio_typus_param_in_scope(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborTypusResolver* res;
+    ArborSyntaxisResultus ast;
+    ArborNodus* radix;
+    ArborNodus* func_def;
+    ArborNodus* corpus;
+    ArborNodus* return_stmt;
+    ArborNodus* ident_x;
+    ArborTypus* typus;
+
+    ast = _parsere(piscina, intern, "int f(int x) { return x; }");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    /* Navigate to the identifier 'x' in return statement */
+    radix = ast.radix;
+    CREDO_NON_NIHIL(radix);
+    CREDO_VERUM(radix->genus == ARBOR_NODUS_TRANSLATION_UNIT);
+
+    func_def = *(ArborNodus**)xar_obtinere(radix->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_NON_NIHIL(func_def);
+    CREDO_VERUM(func_def->genus == ARBOR_NODUS_FUNCTION_DEFINITION);
+
+    corpus = func_def->datum.functio.corpus;
+    CREDO_NON_NIHIL(corpus);
+
+    return_stmt = *(ArborNodus**)xar_obtinere(corpus->datum.genericum.liberi, ZEPHYRUM);
+    CREDO_NON_NIHIL(return_stmt);
+    CREDO_VERUM(return_stmt->genus == ARBOR_NODUS_RETURN_STATEMENT);
+
+    ident_x = return_stmt->datum.reditio.valor;
+    CREDO_NON_NIHIL(ident_x);
+    CREDO_VERUM(ident_x->genus == ARBOR_NODUS_IDENTIFIER);
+
+    /* Verificare typum resolutum de 'x' */
+    typus = ident_x->typus_resolutum;
+    CREDO_NON_NIHIL(typus);
+    CREDO_VERUM(typus->genus == ARBOR_TYPUS_INT);
+
+    imprimere("  Param x in scope: typus=%s - OK\n", arbor_typus_genus_nomen(typus->genus));
+}
+
 /* ==================================================
  * Probationes - Struct Types
  * ================================================== */
@@ -378,6 +481,129 @@ probatio_typus_struct_variabilis(Piscina* piscina, InternamentumChorda* intern)
     imprimere("  Struct with variable: genus=%s - OK\n", arbor_typus_genus_nomen(typus->genus));
 }
 
+interior vacuum
+probatio_typus_struct_membra(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborTypusResolver* res;
+    ArborSyntaxisResultus ast;
+    ArborTypus* typus;
+    ArborMembrum* membrum;
+    ArborMembrum** membrum_ptr;
+    chorda* titulus;
+    i32 n;
+
+    imprimere("\n--- Struct Member Types ---\n");
+
+    ast = _parsere(piscina, intern, "struct S { int x; char *name; long arr[10]; } s;");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    titulus = chorda_internare_ex_literis(intern, "s");
+    typus = arbor_typus_identificatoris(res, titulus);
+    CREDO_NON_NIHIL(typus);
+    CREDO_VERUM(typus->genus == ARBOR_TYPUS_STRUCT);
+
+    /* Verificare membra */
+    CREDO_NON_NIHIL(typus->membra);
+    n = xar_numerus(typus->membra);
+    CREDO_VERUM(n == III);
+    imprimere("  Struct has %d members - OK\n", (integer)n);
+
+    /* Member 0: int x */
+    membrum_ptr = xar_obtinere(typus->membra, ZEPHYRUM);
+    CREDO_NON_NIHIL(membrum_ptr);
+    membrum = *membrum_ptr;
+    CREDO_NON_NIHIL(membrum);
+    CREDO_NON_NIHIL(membrum->titulus);
+    CREDO_NON_NIHIL(membrum->typus);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_INT);
+    imprimere("  Member 0 (x): %s - OK\n", arbor_typus_genus_nomen(membrum->typus->genus));
+
+    /* Member 1: char *name */
+    membrum_ptr = xar_obtinere(typus->membra, I);
+    CREDO_NON_NIHIL(membrum_ptr);
+    membrum = *membrum_ptr;
+    CREDO_NON_NIHIL(membrum);
+    CREDO_NON_NIHIL(membrum->typus);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_POINTER);
+    CREDO_NON_NIHIL(membrum->typus->basis);
+    CREDO_VERUM(membrum->typus->basis->genus == ARBOR_TYPUS_CHAR);
+    imprimere("  Member 1 (name): pointer to %s - OK\n", arbor_typus_genus_nomen(membrum->typus->basis->genus));
+
+    /* Member 2: long arr[10] */
+    membrum_ptr = xar_obtinere(typus->membra, II);
+    CREDO_NON_NIHIL(membrum_ptr);
+    membrum = *membrum_ptr;
+    CREDO_NON_NIHIL(membrum);
+    CREDO_NON_NIHIL(membrum->typus);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_ARRAY);
+    CREDO_VERUM(membrum->typus->array_mensura == X);
+    CREDO_NON_NIHIL(membrum->typus->basis);
+    CREDO_VERUM(membrum->typus->basis->genus == ARBOR_TYPUS_LONG);
+    imprimere("  Member 2 (arr): array[%d] of %s - OK\n",
+        (integer)membrum->typus->array_mensura,
+        arbor_typus_genus_nomen(membrum->typus->basis->genus));
+}
+
+interior vacuum
+probatio_typus_union_membra(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborTypusResolver* res;
+    ArborSyntaxisResultus ast;
+    ArborTypus* typus;
+    ArborMembrum* membrum;
+    ArborMembrum** membrum_ptr;
+    chorda* titulus;
+    i32 n;
+
+    imprimere("\n--- Union Member Types ---\n");
+
+    ast = _parsere(piscina, intern, "union Value { int i; float f; char *s; } v;");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    titulus = chorda_internare_ex_literis(intern, "v");
+    typus = arbor_typus_identificatoris(res, titulus);
+    CREDO_NON_NIHIL(typus);
+    CREDO_VERUM(typus->genus == ARBOR_TYPUS_UNION);
+
+    /* Verificare membra */
+    CREDO_NON_NIHIL(typus->membra);
+    n = xar_numerus(typus->membra);
+    CREDO_VERUM(n == III);
+    imprimere("  Union has %d members - OK\n", (integer)n);
+
+    /* Member 0: int i */
+    membrum_ptr = xar_obtinere(typus->membra, ZEPHYRUM);
+    CREDO_NON_NIHIL(membrum_ptr);
+    membrum = *membrum_ptr;
+    CREDO_NON_NIHIL(membrum);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_INT);
+    imprimere("  Member 0 (i): %s - OK\n", arbor_typus_genus_nomen(membrum->typus->genus));
+
+    /* Member 1: float f */
+    membrum_ptr = xar_obtinere(typus->membra, I);
+    CREDO_NON_NIHIL(membrum_ptr);
+    membrum = *membrum_ptr;
+    CREDO_NON_NIHIL(membrum);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_FLOAT);
+    imprimere("  Member 1 (f): %s - OK\n", arbor_typus_genus_nomen(membrum->typus->genus));
+
+    /* Member 2: char *s */
+    membrum_ptr = xar_obtinere(typus->membra, II);
+    CREDO_NON_NIHIL(membrum_ptr);
+    membrum = *membrum_ptr;
+    CREDO_NON_NIHIL(membrum);
+    CREDO_VERUM(membrum->typus->genus == ARBOR_TYPUS_POINTER);
+    CREDO_NON_NIHIL(membrum->typus->basis);
+    CREDO_VERUM(membrum->typus->basis->genus == ARBOR_TYPUS_CHAR);
+    imprimere("  Member 2 (s): pointer to %s - OK\n", arbor_typus_genus_nomen(membrum->typus->basis->genus));
+}
+
 /* ==================================================
  * Probationes - Typedef
  * ================================================== */
@@ -412,6 +638,34 @@ probatio_typus_typedef_pointer(Piscina* piscina, InternamentumChorda* intern)
     res = arbor_typus_creare(piscina, intern);
     arbor_typus_resolvere(res, ast.radix);
     imprimere("  Typedef pointer: OK\n");
+}
+
+interior vacuum
+probatio_typus_typedef_usage(Piscina* piscina, InternamentumChorda* intern)
+{
+    ArborTypusResolver* res;
+    ArborSyntaxisResultus ast;
+    ArborTypus* typus;
+    chorda* titulus;
+
+    imprimere("\n--- Typedef Usage ---\n");
+
+    /* typedef int MyInt; MyInt x; */
+    ast = _parsere(piscina, intern, "typedef int MyInt; MyInt x;");
+    CREDO_VERUM(ast.successus);
+
+    res = arbor_typus_creare(piscina, intern);
+    arbor_typus_resolvere(res, ast.radix);
+
+    titulus = chorda_internare_ex_literis(intern, "x");
+    typus = arbor_typus_identificatoris(res, titulus);
+    CREDO_NON_NIHIL(typus);
+    CREDO_VERUM(typus->genus == ARBOR_TYPUS_TYPEDEF);
+    CREDO_NON_NIHIL(typus->basis);
+    CREDO_VERUM(typus->basis->genus == ARBOR_TYPUS_INT);
+
+    imprimere("  Typedef usage (MyInt x): basis=%s - OK\n",
+        arbor_typus_genus_nomen(typus->basis->genus));
 }
 
 /* ==================================================
@@ -606,14 +860,19 @@ integer principale(vacuum)
     /* Function types */
     probatio_typus_functio(piscina, intern);
     probatio_typus_functio_pointer(piscina, intern);
+    probatio_typus_functio_parametra(piscina, intern);
+    probatio_typus_param_in_scope(piscina, intern);
 
     /* Struct types */
     probatio_typus_struct(piscina, intern);
     probatio_typus_struct_variabilis(piscina, intern);
+    probatio_typus_struct_membra(piscina, intern);
+    probatio_typus_union_membra(piscina, intern);
 
     /* Typedef */
     probatio_typus_typedef(piscina, intern);
     probatio_typus_typedef_pointer(piscina, intern);
+    probatio_typus_typedef_usage(piscina, intern);
 
     /* Utilities */
     probatio_typus_utilities();

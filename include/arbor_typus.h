@@ -75,7 +75,7 @@ structura ArborTypus {
 nomen structura {
     chorda*            titulus;
     ArborTypus*        typus;
-    i32                bitfield_width;  /* -1 si non bitfield */
+    s32                bitfield_width;  /* -1 si non bitfield */
 } ArborMembrum;
 
 /* ==================================================

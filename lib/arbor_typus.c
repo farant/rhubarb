@@ -38,6 +38,7 @@ interior ArborTypus* _applicare_declarator(ArborTypusResolver* res, ArborTypus* 
 interior vacuum _resolvere_declaratio(ArborTypusResolver* res, ArborNodus* decl);
 interior vacuum _resolvere_functio(ArborTypusResolver* res, ArborNodus* func);
 interior vacuum _resolvere_nodus(ArborTypusResolver* res, ArborNodus* nodus);
+interior chorda* _extrahere_declarator_nomen(ArborNodus* decl);
 
 /* ==================================================
  * Type Creation
@@ -318,7 +319,114 @@ _resolvere_specifiers(ArborTypusResolver* res, Xar* specifiers)
                 si (typus != NIHIL)
                 {
                     typus->titulus = spec->datum.aggregatum.titulus;
-                    /* TODO: resolve members */
+
+                    /* Resolvere membra */
+                    si (spec->datum.aggregatum.membra != NIHIL)
+                    {
+                        i32 m_i;
+                        i32 m_n;
+                        Xar* membra_ast;
+
+                        typus->membra = xar_creare(res->piscina, magnitudo(ArborMembrum*));
+                        membra_ast = spec->datum.aggregatum.membra;
+                        m_n = xar_numerus(membra_ast);
+
+                        per (m_i = ZEPHYRUM; m_i < m_n; m_i++)
+                        {
+                            ArborNodus** decl_ptr;
+                            ArborNodus* decl;
+                            ArborTypus* member_base;
+                            Xar* decl_list;
+                            i32 d_i;
+                            i32 d_n;
+
+                            decl_ptr = xar_obtinere(membra_ast, m_i);
+                            si (decl_ptr == NIHIL || *decl_ptr == NIHIL)
+                            {
+                                perge;
+                            }
+                            decl = *decl_ptr;
+
+                            si (decl->genus != ARBOR_NODUS_DECLARATION)
+                            {
+                                perge;
+                            }
+
+                            /* Resolvere typum basis de specifiers */
+                            member_base = _resolvere_specifiers(res, decl->datum.declaratio.specifiers);
+                            si (member_base == NIHIL)
+                            {
+                                perge;
+                            }
+
+                            /* Iterare per declaratores */
+                            decl_list = decl->datum.declaratio.declaratores;
+                            si (decl_list == NIHIL)
+                            {
+                                perge;
+                            }
+
+                            d_n = xar_numerus(decl_list);
+                            per (d_i = ZEPHYRUM; d_i < d_n; d_i++)
+                            {
+                                ArborNodus** init_ptr;
+                                ArborNodus* init_decl;
+                                ArborNodus* declarator;
+                                ArborTypus* member_typus;
+                                chorda* member_nomen;
+                                ArborMembrum* membrum;
+                                ArborMembrum** slot;
+
+                                init_ptr = xar_obtinere(decl_list, d_i);
+                                si (init_ptr == NIHIL || *init_ptr == NIHIL)
+                                {
+                                    perge;
+                                }
+                                init_decl = *init_ptr;
+
+                                si (init_decl->genus == ARBOR_NODUS_INIT_DECLARATOR)
+                                {
+                                    declarator = init_decl->datum.init_decl.declarator;
+                                }
+                                alioquin
+                                {
+                                    declarator = init_decl;
+                                }
+
+                                /* Applicare declarator ad typum */
+                                member_typus = _applicare_declarator(res, member_base, declarator);
+
+                                /* Extrahere nomen membri */
+                                member_nomen = _extrahere_declarator_nomen(declarator);
+
+                                /* Creare ArborMembrum */
+                                si (member_nomen != NIHIL && member_typus != NIHIL)
+                                {
+                                    membrum = piscina_allocare(res->piscina, magnitudo(ArborMembrum));
+                                    si (membrum != NIHIL)
+                                    {
+                                        membrum->titulus = member_nomen;
+                                        membrum->typus = member_typus;
+                                        membrum->bitfield_width = -I;
+
+                                        /* Bitfield width (stored in init_decl.initializer) */
+                                        si (init_decl->genus == ARBOR_NODUS_INIT_DECLARATOR &&
+                                            init_decl->datum.init_decl.initializer != NIHIL &&
+                                            init_decl->datum.init_decl.initializer->genus == ARBOR_NODUS_INTEGER_LITERAL)
+                                        {
+                                            membrum->bitfield_width = (s32)init_decl->datum.init_decl.initializer->datum.numerus.valor;
+                                        }
+
+                                        slot = xar_addere(typus->membra);
+                                        si (slot != NIHIL)
+                                        {
+                                            *slot = membrum;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 typus->est_const = est_const;
                 typus->est_volatile = est_volatile;
@@ -329,6 +437,100 @@ _resolvere_specifiers(ArborTypusResolver* res, Xar* specifiers)
                 si (typus != NIHIL)
                 {
                     typus->titulus = spec->datum.aggregatum.titulus;
+
+                    /* Resolvere membra (idem pattern ut struct) */
+                    si (spec->datum.aggregatum.membra != NIHIL)
+                    {
+                        i32 m_i;
+                        i32 m_n;
+                        Xar* membra_ast;
+
+                        typus->membra = xar_creare(res->piscina, magnitudo(ArborMembrum*));
+                        membra_ast = spec->datum.aggregatum.membra;
+                        m_n = xar_numerus(membra_ast);
+
+                        per (m_i = ZEPHYRUM; m_i < m_n; m_i++)
+                        {
+                            ArborNodus** decl_ptr;
+                            ArborNodus* decl;
+                            ArborTypus* member_base;
+                            Xar* decl_list;
+                            i32 d_i;
+                            i32 d_n;
+
+                            decl_ptr = xar_obtinere(membra_ast, m_i);
+                            si (decl_ptr == NIHIL || *decl_ptr == NIHIL)
+                            {
+                                perge;
+                            }
+                            decl = *decl_ptr;
+
+                            si (decl->genus != ARBOR_NODUS_DECLARATION)
+                            {
+                                perge;
+                            }
+
+                            member_base = _resolvere_specifiers(res, decl->datum.declaratio.specifiers);
+                            si (member_base == NIHIL)
+                            {
+                                perge;
+                            }
+
+                            decl_list = decl->datum.declaratio.declaratores;
+                            si (decl_list == NIHIL)
+                            {
+                                perge;
+                            }
+
+                            d_n = xar_numerus(decl_list);
+                            per (d_i = ZEPHYRUM; d_i < d_n; d_i++)
+                            {
+                                ArborNodus** init_ptr;
+                                ArborNodus* init_decl;
+                                ArborNodus* declarator;
+                                ArborTypus* member_typus;
+                                chorda* member_nomen;
+                                ArborMembrum* membrum;
+                                ArborMembrum** slot;
+
+                                init_ptr = xar_obtinere(decl_list, d_i);
+                                si (init_ptr == NIHIL || *init_ptr == NIHIL)
+                                {
+                                    perge;
+                                }
+                                init_decl = *init_ptr;
+
+                                si (init_decl->genus == ARBOR_NODUS_INIT_DECLARATOR)
+                                {
+                                    declarator = init_decl->datum.init_decl.declarator;
+                                }
+                                alioquin
+                                {
+                                    declarator = init_decl;
+                                }
+
+                                member_typus = _applicare_declarator(res, member_base, declarator);
+                                member_nomen = _extrahere_declarator_nomen(declarator);
+
+                                si (member_nomen != NIHIL && member_typus != NIHIL)
+                                {
+                                    membrum = piscina_allocare(res->piscina, magnitudo(ArborMembrum));
+                                    si (membrum != NIHIL)
+                                    {
+                                        membrum->titulus = member_nomen;
+                                        membrum->typus = member_typus;
+                                        membrum->bitfield_width = -I;
+
+                                        slot = xar_addere(typus->membra);
+                                        si (slot != NIHIL)
+                                        {
+                                            *slot = membrum;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 typus->est_const = est_const;
                 typus->est_volatile = est_volatile;
@@ -346,15 +548,22 @@ _resolvere_specifiers(ArborTypusResolver* res, Xar* specifiers)
 
             casus ARBOR_NODUS_TYPEDEF_NAME:
                 {
-                    ArborSymbolum* sym;
-                    sym = _quaerere_symbolum(res, spec->datum.folium.valor);
-                    si (sym != NIHIL)
+                    vacuum* valor_ptr;
+                    chorda* typedef_nomen;
+
+                    typedef_nomen = spec->datum.folium.valor;
+                    si (typedef_nomen != NIHIL &&
+                        tabula_dispersa_invenire(res->typedef_nomina, *typedef_nomen, &valor_ptr))
                     {
+                        ArborTypus* typedef_basis;
+                        typedef_basis = (ArborTypus*)valor_ptr;
                         typus = _creare_typus(res, ARBOR_TYPUS_TYPEDEF);
                         si (typus != NIHIL)
                         {
-                            typus->titulus = spec->datum.folium.valor;
-                            typus->basis = sym->typus;
+                            typus->titulus = typedef_nomen;
+                            typus->basis = typedef_basis;
+                            typus->est_const = est_const;
+                            typus->est_volatile = est_volatile;
                         }
                         redde typus;
                     }
@@ -467,8 +676,56 @@ _applicare_declarator(ArborTypusResolver* res, ArborTypus* basis, ArborNodus* de
                 casus ARBOR_NODUS_FUNCTION_DECLARATOR:
                     {
                         Xar* param_types;
+                        Xar* func_children;
+                        i32 fc_i;
+                        i32 fc_n;
+
                         param_types = xar_creare(res->piscina, magnitudo(ArborTypus*));
-                        /* TODO: resolve parameter types */
+
+                        /* Resolvere typos parametrorum */
+                        func_children = child->datum.genericum.liberi;
+                        si (func_children != NIHIL)
+                        {
+                            fc_n = xar_numerus(func_children);
+                            per (fc_i = ZEPHYRUM; fc_i < fc_n; fc_i++)
+                            {
+                                ArborNodus** fc_ptr;
+                                ArborNodus*  fc_child;
+                                ArborTypus*  param_typus;
+                                ArborTypus** slot;
+
+                                fc_ptr = xar_obtinere(func_children, fc_i);
+                                si (fc_ptr == NIHIL || *fc_ptr == NIHIL)
+                                {
+                                    perge;
+                                }
+                                fc_child = *fc_ptr;
+
+                                si (fc_child->genus == ARBOR_NODUS_PARAMETER_DECLARATION)
+                                {
+                                    /* Resolvere typum parametri */
+                                    param_typus = _resolvere_specifiers(res, fc_child->datum.parametrum.specifiers);
+                                    si (param_typus != NIHIL && fc_child->datum.parametrum.declarator != NIHIL)
+                                    {
+                                        param_typus = _applicare_declarator(res, param_typus, fc_child->datum.parametrum.declarator);
+                                    }
+
+                                    /* Addere ad param_types */
+                                    si (param_typus != NIHIL)
+                                    {
+                                        slot = xar_addere(param_types);
+                                        si (slot != NIHIL)
+                                        {
+                                            *slot = param_typus;
+                                        }
+                                    }
+
+                                    /* Ponere typus_resolutum in nodo parametri */
+                                    fc_child->typus_resolutum = param_typus;
+                                }
+                            }
+                        }
+
                         basis = _creare_function_typus(res, basis, param_types);
                     }
                     frange;
@@ -668,7 +925,73 @@ _resolvere_functio(ArborTypusResolver* res, ArborNodus* func)
     /* Open scope for function body */
     _aperire_scopum(res);
 
-    /* TODO: Add parameters to scope */
+    /* Addere parametra ad scopum */
+    si (func->datum.functio.declarator != NIHIL)
+    {
+        ArborNodus* decl;
+        Xar* decl_children;
+        i32 d_i;
+        i32 d_n;
+
+        decl = func->datum.functio.declarator;
+        si (decl->genus == ARBOR_NODUS_DECLARATOR && decl->datum.genericum.liberi != NIHIL)
+        {
+            decl_children = decl->datum.genericum.liberi;
+            d_n = xar_numerus(decl_children);
+
+            /* Invenire FUNCTION_DECLARATOR inter liberos */
+            per (d_i = ZEPHYRUM; d_i < d_n; d_i++)
+            {
+                ArborNodus** dc_ptr;
+                ArborNodus* dc_child;
+
+                dc_ptr = xar_obtinere(decl_children, d_i);
+                si (dc_ptr == NIHIL || *dc_ptr == NIHIL)
+                {
+                    perge;
+                }
+                dc_child = *dc_ptr;
+
+                si (dc_child->genus == ARBOR_NODUS_FUNCTION_DECLARATOR)
+                {
+                    /* Iterare per parametra */
+                    Xar* func_children;
+                    i32 p_i;
+                    i32 p_n;
+
+                    func_children = dc_child->datum.genericum.liberi;
+                    si (func_children != NIHIL)
+                    {
+                        p_n = xar_numerus(func_children);
+                        per (p_i = ZEPHYRUM; p_i < p_n; p_i++)
+                        {
+                            ArborNodus** p_ptr;
+                            ArborNodus* param;
+                            chorda* param_nomen;
+
+                            p_ptr = xar_obtinere(func_children, p_i);
+                            si (p_ptr == NIHIL || *p_ptr == NIHIL)
+                            {
+                                perge;
+                            }
+                            param = *p_ptr;
+
+                            si (param->genus == ARBOR_NODUS_PARAMETER_DECLARATION)
+                            {
+                                /* Extrahere nomen parametri */
+                                param_nomen = _extrahere_declarator_nomen(param->datum.parametrum.declarator);
+                                si (param_nomen != NIHIL && param->typus_resolutum != NIHIL)
+                                {
+                                    _registrare_symbolum(res, param_nomen, param->typus_resolutum, param);
+                                }
+                            }
+                        }
+                    }
+                    frange;
+                }
+            }
+        }
+    }
 
     /* Resolve function body */
     si (func->datum.functio.corpus != NIHIL)
