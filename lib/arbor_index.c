@@ -788,9 +788,38 @@ _extrahere_symbola(ArborProiectum* proj, ArborFilum* filum,
             frange;
         }
 
-        ordinarius:
+        /* Nodes cum liberis specificis - recurse explicite */
+        casus ARBOR_NODUS_RETURN_STATEMENT:
+            _extrahere_symbola(proj, filum, nodus->datum.reditio.valor, in_scopo_fili);
+            frange;
+
+        casus ARBOR_NODUS_IF_STATEMENT:
+            _extrahere_symbola(proj, filum, nodus->datum.conditionale.conditio, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.conditionale.consequens, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.conditionale.alternans, in_scopo_fili);
+            frange;
+
+        casus ARBOR_NODUS_WHILE_STATEMENT:
+        casus ARBOR_NODUS_DO_STATEMENT:
+            _extrahere_symbola(proj, filum, nodus->datum.iteratio.conditio, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.iteratio.corpus, in_scopo_fili);
+            frange;
+
+        casus ARBOR_NODUS_FOR_STATEMENT:
+            _extrahere_symbola(proj, filum, nodus->datum.circuitus.init, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.circuitus.conditio, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.circuitus.post, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.circuitus.corpus, in_scopo_fili);
+            frange;
+
+        casus ARBOR_NODUS_SWITCH_STATEMENT:
+            _extrahere_symbola(proj, filum, nodus->datum.selectio.conditio, in_scopo_fili);
+            _extrahere_symbola(proj, filum, nodus->datum.selectio.corpus, in_scopo_fili);
+            frange;
+
+        casus ARBOR_NODUS_EXPRESSION_STATEMENT:
         {
-            /* For other nodes, try to recurse into children */
+            /* Expression statement uses genericum.liberi */
             Xar* liberi = nodus->datum.genericum.liberi;
             si (liberi != NIHIL)
             {
@@ -806,6 +835,24 @@ _extrahere_symbola(ArborProiectum* proj, ArborFilum* filum,
             }
             frange;
         }
+
+        /* Nodi terminales - nihil facere */
+        casus ARBOR_NODUS_IDENTIFIER:
+        casus ARBOR_NODUS_INTEGER_LITERAL:
+        casus ARBOR_NODUS_FLOAT_LITERAL:
+        casus ARBOR_NODUS_CHAR_LITERAL:
+        casus ARBOR_NODUS_STRING_LITERAL:
+        casus ARBOR_NODUS_BREAK_STATEMENT:
+        casus ARBOR_NODUS_CONTINUE_STATEMENT:
+        casus ARBOR_NODUS_GOTO_STATEMENT:
+        casus ARBOR_NODUS_TYPE_SPECIFIER:
+        casus ARBOR_NODUS_STORAGE_CLASS:
+        casus ARBOR_NODUS_TYPE_QUALIFIER:
+            frange;
+
+        ordinarius:
+            /* For unhandled nodes, do not access genericum.liberi blindly */
+            frange;
     }
 }
 
@@ -991,23 +1038,8 @@ _colligere_referentias(ArborProiectum* proj, ArborFilum* filum, ArborNodus* nodu
         }
 
         ordinarius:
-        {
-            /* Generic fallback: try to iterate children */
-            Xar* liberi = nodus->datum.genericum.liberi;
-            si (liberi != NIHIL)
-            {
-                i32 i;
-                per (i = ZEPHYRUM; i < xar_numerus(liberi); i++)
-                {
-                    ArborNodus** child_ptr = xar_obtinere(liberi, i);
-                    si (child_ptr != NIHIL)
-                    {
-                        _colligere_referentias(proj, filum, *child_ptr);
-                    }
-                }
-            }
+            /* Do not access genericum.liberi for nodes that don't use it */
             frange;
-        }
     }
 }
 
@@ -1072,7 +1104,8 @@ _invenire_nodum_ad_punctum(ArborNodus* radix, i32 linea, i32 columna)
             }
             redde optimum;
         ordinarius:
-            liberi = radix->datum.genericum.liberi;
+            /* Do not access genericum.liberi for nodes that don't use it */
+            liberi = NIHIL;
             frange;
     }
 

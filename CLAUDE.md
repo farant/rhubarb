@@ -178,7 +178,11 @@ when you are writing tests look at probationes/probatio_piscina.c to see the pro
 
 WORKLOG FORMAT
 
-say you are working on a file lib/chorda.c. lets also as needed create a file called lib/chorda.worklog.md that you can add dated notes to. basically the log is append only so just add a new dated note to the end as you ened to. not every change needs an entry but if there are tricky bugs to diagnose, non-obvious patterns, design decisions, etc. this is a place that you can add them.
+say you are working on a file lib/chorda.c. lets also as needed create a file called lib/chorda.worklog.md that you can add dated notes to. basically the log is append only so just add a new dated note to the end as you ened to. not every change needs an entry but if there are tricky bugs to diagnose, non-obvious patterns, design decisions, etc. this is a place that you can add them. worklog notes can be in english!
+
+there is not an exact format you have to follow other than including the date. if it's a paragraph that's fine, if it is helpful to break it down into sections that is ok too!
+
+it might be worthwhile to create an entry as needed before compaction and to re-read worklogs for relevant files if available after a compaction.
 
 /WORKLOG FORMAT
 

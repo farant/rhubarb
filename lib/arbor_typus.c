@@ -690,24 +690,45 @@ _resolvere_liberos(ArborTypusResolver* res, ArborNodus* nodus)
     i32 i;
     i32 n;
     ArborNodus** child_ptr;
+    Xar* liberi;
 
     si (nodus == NIHIL)
     {
         redde;
     }
 
-    /* Check for genericum.liberi */
-    si (nodus->datum.genericum.liberi != NIHIL)
+    /* Tantum nodi qui utuntur genericum.liberi:
+     * TRANSLATION_UNIT, DECLARATOR, ABSTRACT_DECLARATOR, DESIGNATOR_LIST,
+     * INIT_DECLARATOR, PARAMETER_LIST
+     *
+     * Alii nodi utuntur uniones specificas - NON accedere genericum.liberi!
+     */
+    commutatio (nodus->genus)
     {
-        n = xar_numerus(nodus->datum.genericum.liberi);
-        per (i = ZEPHYRUM; i < n; i++)
+    casus ARBOR_NODUS_TRANSLATION_UNIT:
+    casus ARBOR_NODUS_DECLARATOR:
+    casus ARBOR_NODUS_INIT_DECLARATOR:
+    casus ARBOR_NODUS_PARAMETER_LIST:
+    casus ARBOR_NODUS_EXPRESSION_STATEMENT:
+    casus ARBOR_NODUS_FUNCTION_DECLARATOR:
+        liberi = nodus->datum.genericum.liberi;
+        si (liberi != NIHIL)
         {
-            child_ptr = xar_obtinere(nodus->datum.genericum.liberi, i);
-            si (child_ptr != NIHIL && *child_ptr != NIHIL)
+            n = xar_numerus(liberi);
+            per (i = ZEPHYRUM; i < n; i++)
             {
-                _resolvere_nodus(res, *child_ptr);
+                child_ptr = xar_obtinere(liberi, i);
+                si (child_ptr != NIHIL && *child_ptr != NIHIL)
+                {
+                    _resolvere_nodus(res, *child_ptr);
+                }
             }
         }
+        frange;
+
+    ordinarius:
+        /* Alii nodi - non habent genericum.liberi */
+        frange;
     }
 }
 
@@ -762,8 +783,106 @@ _resolvere_nodus(ArborTypusResolver* res, ArborNodus* nodus)
             }
             frange;
 
+        /* Statements cum liberis specificis */
+        casus ARBOR_NODUS_RETURN_STATEMENT:
+            _resolvere_nodus(res, nodus->datum.reditio.valor);
+            frange;
+
+        casus ARBOR_NODUS_IF_STATEMENT:
+            _resolvere_nodus(res, nodus->datum.conditionale.conditio);
+            _resolvere_nodus(res, nodus->datum.conditionale.consequens);
+            _resolvere_nodus(res, nodus->datum.conditionale.alternans);
+            frange;
+
+        casus ARBOR_NODUS_WHILE_STATEMENT:
+        casus ARBOR_NODUS_DO_STATEMENT:
+            _resolvere_nodus(res, nodus->datum.iteratio.conditio);
+            _resolvere_nodus(res, nodus->datum.iteratio.corpus);
+            frange;
+
+        casus ARBOR_NODUS_FOR_STATEMENT:
+            _resolvere_nodus(res, nodus->datum.circuitus.init);
+            _resolvere_nodus(res, nodus->datum.circuitus.conditio);
+            _resolvere_nodus(res, nodus->datum.circuitus.post);
+            _resolvere_nodus(res, nodus->datum.circuitus.corpus);
+            frange;
+
+        casus ARBOR_NODUS_SWITCH_STATEMENT:
+            _resolvere_nodus(res, nodus->datum.selectio.conditio);
+            _resolvere_nodus(res, nodus->datum.selectio.corpus);
+            frange;
+
+        /* Expressions cum liberis */
+        casus ARBOR_NODUS_BINARY_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.binarium.sinister);
+            _resolvere_nodus(res, nodus->datum.binarium.dexter);
+            frange;
+
+        casus ARBOR_NODUS_UNARY_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.unarium.operandum);
+            frange;
+
+        casus ARBOR_NODUS_CONDITIONAL_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.ternarium.conditio);
+            _resolvere_nodus(res, nodus->datum.ternarium.verum);
+            _resolvere_nodus(res, nodus->datum.ternarium.falsum);
+            frange;
+
+        casus ARBOR_NODUS_CALL_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.vocatio.callee);
+            si (nodus->datum.vocatio.argumenta != NIHIL)
+            {
+                i32 i;
+                i32 n = xar_numerus(nodus->datum.vocatio.argumenta);
+                per (i = ZEPHYRUM; i < n; i++)
+                {
+                    ArborNodus** arg_ptr = xar_obtinere(nodus->datum.vocatio.argumenta, i);
+                    si (arg_ptr != NIHIL && *arg_ptr != NIHIL)
+                    {
+                        _resolvere_nodus(res, *arg_ptr);
+                    }
+                }
+            }
+            frange;
+
+        casus ARBOR_NODUS_SUBSCRIPT_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.subscriptum.array);
+            _resolvere_nodus(res, nodus->datum.subscriptum.index);
+            frange;
+
+        casus ARBOR_NODUS_MEMBER_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.membrum.objectum);
+            frange;
+
+        casus ARBOR_NODUS_CAST_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.conversio.typus);
+            _resolvere_nodus(res, nodus->datum.conversio.expressio);
+            frange;
+
+        casus ARBOR_NODUS_SIZEOF_EXPRESSION:
+            _resolvere_nodus(res, nodus->datum.sizeof_expr.operandum);
+            frange;
+
+        /* EXPRESSION_STATEMENT uses genericum.liberi - handled by _resolvere_liberos */
+
+        /* Nodi terminales - nihil facere */
+        casus ARBOR_NODUS_INTEGER_LITERAL:
+        casus ARBOR_NODUS_FLOAT_LITERAL:
+        casus ARBOR_NODUS_CHAR_LITERAL:
+        casus ARBOR_NODUS_STRING_LITERAL:
+        casus ARBOR_NODUS_BREAK_STATEMENT:
+        casus ARBOR_NODUS_CONTINUE_STATEMENT:
+        casus ARBOR_NODUS_GOTO_STATEMENT:
+        casus ARBOR_NODUS_LABELED_STATEMENT:
+        casus ARBOR_NODUS_CASE_LABEL:
+        casus ARBOR_NODUS_DEFAULT_LABEL:
+        casus ARBOR_NODUS_TYPE_SPECIFIER:
+        casus ARBOR_NODUS_STORAGE_CLASS:
+        casus ARBOR_NODUS_TYPE_QUALIFIER:
+            frange;
+
         ordinarius:
-            /* For other nodes, just recurse into children */
+            /* For other nodes, try genericum.liberi via _resolvere_liberos */
             _resolvere_liberos(res, nodus);
             frange;
     }

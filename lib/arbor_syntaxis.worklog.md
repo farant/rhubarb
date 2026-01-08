@@ -56,7 +56,246 @@ The lexer assigns trailing same-line whitespace to `trivia_post`. Anything not c
 
 ### Test Coverage
 
-21 roundtrip tests in `probatio_arbor_formator.c`:
+55+ roundtrip tests in `probatio_arbor_formator.c` across four test suites:
+
+**Basic roundtrip (21 tests):**
 - declaration, function, struct, control, expressions, call, subscript
 - pointer, ternary, assign, unary, parens, for, while, nested-if
 - complex, member, compare, bitwise, multi-decl, func-params
+
+**Irregular whitespace (16 tests):**
+- double-space-assign, no-space-assign, triple-space
+- mixed-spacing-expr, no-space-expr
+- double-space-comma, no-space-comma
+- space-inside-parens, space-inside-braces, no-space-before-brace
+- double-space-else, compact-for, extra-space-for
+- asymmetric-left, asymmetric-right, irregular-multi-decl
+
+**Complex structures (19 tests):**
+- deep-nested-if, nested-for, for-while, pointer-params
+- deep-parens, chained-arrow, mixed-member, multi-subscript
+- complex-member-subscript, inc-dec, addr-deref
+- nested-ternary, logical-chain, compound-assign
+- comma-in-for, do-while, break-continue, complex-return, multi-statement
+
+**Tabs/newlines (7 tests):**
+- tabs-basic, mixed-tab-space, tabs-expr, tabs-braces
+- tabs-for, tabs-if, tabs-function
+
+---
+
+## 2026-01-07: Function Parameter Trivia Fix
+
+### Problem
+
+Input `int f( int x ) { return x; }` was outputting `int f(int x  ) { return x; }`:
+- Space after `(` was lost
+- Double space before `)`
+
+### Root Cause
+
+Two issues in function declarator parameter parsing:
+
+1. **`(`'s trivia_post lost**: When skipping `(`, its trivia_post (space after `(`) was not captured and applied to the first parameter.
+
+2. **Double trivia_post emission**: `_finire_nodum(param)` captured trivia_post from the identifier token, but the identifier node inside the declarator ALREADY captured that same trivia. Result: emitted twice.
+
+### Fix
+
+1. Capture `(`'s trivia_post before skipping, prepend to first parameter's first specifier's trivia_ante
+2. Remove `_finire_nodum(param)` - declarator children already have trivia
+3. Capture `)`'s trivia_ante and append to last parameter's trivia_post
+
+```c
+/* Capere trivia_post de '(' ante progredi */
+open_paren_lex = _currens_lex(syn);
+trivia_post_open_paren = (open_paren_lex != NIHIL) ? open_paren_lex->trivia_post : NIHIL;
+
+/* In first param: prepend trivia_post_open_paren to first specifier */
+si (first_param && trivia_post_open_paren != NIHIL)
+{
+    _copiare_trivia_ad_xar(syn, &first_spec->trivia_ante, trivia_post_open_paren);
+}
+
+/* Before consuming ')': capture trivia_ante for last param */
+close_paren_lex = _currens_lex(syn);
+si (close_paren_lex != NIHIL && prev_param != NIHIL)
+{
+    _copiare_trivia_ad_xar(syn, &prev_param->trivia_post, close_paren_lex->trivia_ante);
+}
+```
+
+### Extends the Pattern
+
+Parameter declarations now follow the same rule: don't call `_finire_nodum` when children capture final trivia.
+
+---
+
+---
+
+## 2026-01-07: Do-While Trivia Fix
+
+### Problem
+
+Input `void f() { do { x++; } while (x < 10); }` was outputting `void f() { do{ x++; } while(x < 10); }`:
+- Space after `do` lost
+- Space after `while` lost
+
+### Fix
+
+Applied same pattern as for/while:
+1. Capture `do` keyword's trivia_post → prepend to corpus's trivia_ante
+2. Capture `while` keyword's trivia_ante + "while" → append to corpus's trivia_post
+3. Capture `while` keyword's trivia_post + "(" + `(`.trivia_post → prepend to conditio's trivia_ante
+4. Capture `)` and `;` trivia → append to conditio's trivia_post
+
+Updated formatter to not emit hardcoded `while`, `(`, `)`, `;` - these are now in trivia.
+
+---
+
+## 2026-01-07: Tab Whitespace Tests
+
+Tabs work correctly for most constructs. Added tests:
+- tabs-basic, mixed-tab-space, tabs-expr, tabs-braces, tabs-for, tabs-if
+
+### Known Issues
+
+1. **Return keyword trivia**: Tab between `return` and value lost in `return\t0;`
+2. **Newline trivia**: Multi-line code gets extra whitespace - leading trivia handling needs work
+
+---
+
+## 2026-01-07: Return Statement Trivia Fix
+
+### Problem
+
+Input `return\t0;` (tab after return) was outputting `return0;` - tab lost.
+Input `void f(){ return; }` was outputting `void f(){ return; ; }` - double semicolon.
+
+### Root Cause
+
+Two issues in `_parsere_return`:
+
+1. **`return` keyword's trivia_post lost**: When `_progredi` skips the `return` keyword, its trivia_post (whitespace after `return`) is discarded.
+
+2. **Double semicolon emission for return without value**: The formatter's RETURN_STATEMENT case was manually emitting `nodus->trivia_post`, but `_emittere_nodum_fidelis` also emits `nodus->trivia_post` at line 842. Result: semicolon emitted twice.
+
+### Fix
+
+1. Capture `return` keyword's trivia_post before `_progredi`
+2. Prepend to valor's trivia_ante (or nodus's trivia_post for bare `return;`)
+3. Capture `;` trivia_ante, synthetic ";", and trivia_post → append to valor's trivia_post
+4. Remove `_finire_nodum` - valor already has trivia_post
+5. **Formatter**: Remove manual `nodus->trivia_post` emission - let line 842 handle it
+
+```c
+/* Capere trivia_post de 'return' ante progredi */
+return_lex = _currens_lex(syn);
+trivia_post_return = (return_lex != NIHIL) ? return_lex->trivia_post : NIHIL;
+
+_progredi(syn);
+
+/* Cum valore */
+si (!_congruit(syn, ARBOR_LEXEMA_SEMICOLON))
+{
+    valor = _parsere_expressio(syn, PREC_NIHIL);
+
+    /* Praepone trivia_post_return ad valor.trivia_ante */
+    si (trivia_post_return != NIHIL)
+    {
+        old_ante = valor->trivia_ante;
+        valor->trivia_ante = NIHIL;
+        _copiare_trivia_ad_xar(syn, &valor->trivia_ante, trivia_post_return);
+        _copiare_trivia_ad_xar(syn, &valor->trivia_ante, old_ante);
+    }
+
+    /* Capere ';' trivia */
+    semi_lex = _currens_lex(syn);
+    _copiare_trivia_ad_xar(syn, &valor->trivia_post, semi_lex->trivia_ante);
+    _addere_synth_trivia(syn, &valor->trivia_post, ";");
+    _copiare_trivia_ad_xar(syn, &valor->trivia_post, semi_lex->trivia_post);
+}
+```
+
+### Key Insight: Formatter Double Emission
+
+`_emittere_nodum_fidelis` always emits `nodus->trivia_post` at the end (line 842). If a case handler also emits it manually, you get double emission. For return without value, the fix was to let line 842 handle it instead of emitting in the case handler.
+
+---
+
+## 2026-01-07: Sizeof Trivia Fix
+
+### Problem
+
+Input `sizeof (int)` (with space before paren) was outputting `sizeof(int)` - space lost.
+
+### Root Cause
+
+Two issues in `_parsere_sizeof`:
+
+1. **`sizeof` keyword's trivia_post lost**: When `_progredi` skips `sizeof`, its trivia_post (space after `sizeof`) is discarded.
+
+2. **Formatter hardcodes punctuation**: For `sizeof(type)`, formatter hardcoded `"("` and `")"`, losing any space before `(`.
+
+### Fix
+
+Applied same trivia pattern:
+
+1. Capture `sizeof` keyword's trivia_post before `_progredi`
+2. For sizeof(type):
+   - Prepend trivia_post_sizeof + "(" + trivia_post_open to type's trivia_ante
+   - Append trivia_ante_close + ")" + trivia_post_close to type's trivia_post
+3. For sizeof expr:
+   - Prepend trivia_post_sizeof to expr's trivia_ante
+4. Formatter: just emit "sizeof" + operandum (trivia carries everything else)
+5. Don't call `_finire_nodum` - operandum already has trivia_post
+
+---
+
+## 2026-01-07: Newline Trivia Duplication Fix
+
+### Problem
+
+Multi-line code with newlines and indentation caused double whitespace emission:
+
+Input: `void f() {\n    int a;\n    int b;\n}`
+Output: `void f() {\n    \n    int a;\n    \n    int b;\n}` (extra blank lines)
+
+### Root Cause
+
+When `_creare_nodum` creates a node, it captures `trivia_ante` from the current token. For declarations:
+
+1. `_creare_nodum(DECLARATION)` captures `int`'s trivia_ante (`\n    `)
+2. `_parsere_specifiers()` creates TYPE_SPECIFIER, which ALSO calls `_creare_nodum` and captures the SAME `int`'s trivia_ante (`\n    `)
+
+Both parent (DECLARATION) and child (TYPE_SPECIFIER) have the same trivia_ante. When emitted via `_emittere_nodum_fidelis`, both emit their trivia_ante → double emission.
+
+### Fix
+
+After parsing specifiers, clear the declaration's trivia_ante since the first specifier will have it:
+
+```c
+/* Parse specifiers */
+_parsere_specifiers(syn, specifiers);
+
+/* Evitare trivia duplicata - primus specifier iam habet trivia_ante.
+ * Si non clearimus, emittitur bis: semel de declaration, semel de specifier. */
+si (xar_numerus(specifiers) > ZEPHYRUM)
+{
+    nodus->trivia_ante = NIHIL;
+}
+```
+
+### Key Rule: Parent-Child Trivia Duplication
+
+When a parent node and its first child are created at the same token position, they both capture the same trivia_ante. The parent should clear its trivia_ante to avoid double emission.
+
+This applies to any nested `_creare_nodum` pattern where the outer node is created before parsing children that will capture the same starting token's trivia.
+
+---
+
+## Known TODOs
+
+Constructs that still need trivia handling for full roundtrip:
+
+1. **cast expressions**: Parser treats `(int)x` as parenthesized expression, not cast

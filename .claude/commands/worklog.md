@@ -1,0 +1,1 @@
+look at the uncomitted changed files and see if there are any that you have recently worked on that you should add a path/to/file/[filename].worklog.md entry for as described at the end of CLAUDE.md? It's okay if there are not any recent changes that warrant an entry.

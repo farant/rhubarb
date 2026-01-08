@@ -331,12 +331,9 @@ _emittere_nodum_fidelis (
     /* ===== DO STATEMENT ===== */
     casus ARBOR_NODUS_DO_STATEMENT:
         chorda_aedificator_appendere_literis(status->aedificator, "do");
+        /* corpus.trivia_post continet "while", conditio.trivia continet "(", ")", ";" */
         _emittere_nodum_fidelis(status, nodus->datum.iteratio.corpus);
-        chorda_aedificator_appendere_literis(status->aedificator, "while");
-        chorda_aedificator_appendere_literis(status->aedificator, "(");
         _emittere_nodum_fidelis(status, nodus->datum.iteratio.conditio);
-        chorda_aedificator_appendere_literis(status->aedificator, ")");
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
         frange;
 
     /* ===== FOR STATEMENT ===== */
@@ -381,10 +378,11 @@ _emittere_nodum_fidelis (
         chorda_aedificator_appendere_literis(status->aedificator, "return");
         si (nodus->datum.reditio.valor)
         {
-            chorda_aedificator_appendere_literis(status->aedificator, " ");
+            /* valor.trivia_ante continet spatium post 'return' */
+            /* valor.trivia_post continet ';' */
             _emittere_nodum_fidelis(status, nodus->datum.reditio.valor);
         }
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
+        /* Sine valore: nodus.trivia_post continet ';' - emittitur in linea 842 */
         frange;
 
     /* ===== BREAK/CONTINUE/GOTO ===== */
@@ -507,17 +505,9 @@ _emittere_nodum_fidelis (
     /* ===== SIZEOF EXPRESSION ===== */
     casus ARBOR_NODUS_SIZEOF_EXPRESSION:
         chorda_aedificator_appendere_literis(status->aedificator, "sizeof");
-        si (nodus->datum.sizeof_expr.est_typus)
-        {
-            chorda_aedificator_appendere_literis(status->aedificator, "(");
-            _emittere_nodum_fidelis(status, nodus->datum.sizeof_expr.operandum);
-            chorda_aedificator_appendere_literis(status->aedificator, ")");
-        }
-        alioquin
-        {
-            chorda_aedificator_appendere_literis(status->aedificator, " ");
-            _emittere_nodum_fidelis(status, nodus->datum.sizeof_expr.operandum);
-        }
+        /* operandum.trivia_ante continet spatium vel "(" */
+        /* operandum.trivia_post continet ")" si est_typus */
+        _emittere_nodum_fidelis(status, nodus->datum.sizeof_expr.operandum);
         frange;
 
     /* ===== CONDITIONAL EXPRESSION ===== */

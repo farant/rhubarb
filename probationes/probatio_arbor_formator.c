@@ -489,6 +489,289 @@ probatio_fidelis_roundtrip (
     imprimere("    [OK]\n");
 }
 
+interior vacuum
+probatio_fidelis_irregular_whitespace (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_fidelis_irregular_whitespace...\n");
+
+    /* Double spaces around = */
+    _credo_roundtrip(piscina, intern,
+        "int x  =  42;",
+        "double-space-assign");
+
+    /* No spaces around = */
+    _credo_roundtrip(piscina, intern,
+        "int x=42;",
+        "no-space-assign");
+
+    /* Triple spaces */
+    _credo_roundtrip(piscina, intern,
+        "int   x   =   42;",
+        "triple-space");
+
+    /* Mixed spacing in expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a+b * c-d; }",
+        "mixed-spacing-expr");
+
+    /* No spaces in expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a+b+c; }",
+        "no-space-expr");
+
+    /* Double space after comma */
+    _credo_roundtrip(piscina, intern,
+        "int f(int a,  int b,  int c) { return a; }",
+        "double-space-comma");
+
+    /* No space after comma */
+    _credo_roundtrip(piscina, intern,
+        "int f(int a,int b,int c) { return a; }",
+        "no-space-comma");
+
+    /* Extra space inside parens */
+    _credo_roundtrip(piscina, intern,
+        "int f( int x ) { return x; }",
+        "space-inside-parens");
+
+    /* Extra space inside braces */
+    _credo_roundtrip(piscina, intern,
+        "void f() {  x = 1;  }",
+        "space-inside-braces");
+
+    /* No space before brace */
+    _credo_roundtrip(piscina, intern,
+        "void f(){ return; }",
+        "no-space-before-brace");
+
+    /* Double space before else */
+    _credo_roundtrip(piscina, intern,
+        "void f() { if (x) { a = 1; }  else { b = 2; } }",
+        "double-space-else");
+
+    /* No space around semicolons in for */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i=0;i<n;i++) { x++; } }",
+        "compact-for");
+
+    /* Extra spaces in for */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i = 0;  i < n;  i++) { x++; } }",
+        "extra-space-for");
+
+    /* Asymmetric spacing */
+    _credo_roundtrip(piscina, intern,
+        "int x= 42;",
+        "asymmetric-left");
+
+    _credo_roundtrip(piscina, intern,
+        "int x =42;",
+        "asymmetric-right");
+
+    /* Multiple declarations with irregular spacing */
+    _credo_roundtrip(piscina, intern,
+        "int a,b,  c,   d;",
+        "irregular-multi-decl");
+
+    imprimere("    [OK]\n");
+}
+
+interior vacuum
+probatio_fidelis_complex_structures (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_fidelis_complex_structures...\n");
+
+    /* Deeply nested control flow */
+    _credo_roundtrip(piscina, intern,
+        "void f() { if (a) { if (b) { if (c) { x = 1; } } } }",
+        "deep-nested-if");
+
+    /* Nested loops */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i = 0; i < n; i++) { for (j = 0; j < m; j++) { x++; } } }",
+        "nested-for");
+
+    /* While inside for */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i = 0; i < n; i++) { while (x > 0) { x--; } } }",
+        "for-while");
+
+    /* Pointer parameters */
+    _credo_roundtrip(piscina, intern,
+        "int f(int *a, int **b, int ***c) { return *a; }",
+        "pointer-params");
+
+    /* Deeply nested parens */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return ((((a + b)))); }",
+        "deep-parens");
+
+    /* Chained member access */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a->b->c->d; }",
+        "chained-arrow");
+
+    /* Mixed member access */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a.b->c.d->e; }",
+        "mixed-member");
+
+    /* Multiple array subscripts */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a[i][j][k]; }",
+        "multi-subscript");
+
+    /* Complex expression mix */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a->b[i].c + d->e[j].f; }",
+        "complex-member-subscript");
+
+    /* Cast expression - TODO: parser treats (int) as parenthesized expression */
+    /* _credo_roundtrip(piscina, intern,
+        "int f() { return (int)x + (long)y; }",
+        "cast"); */
+
+    /* Sizeof expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return sizeof(int) + sizeof(x); }",
+        "sizeof");
+
+    _credo_roundtrip(piscina, intern,
+        "int f() { return sizeof (int); }",
+        "sizeof-space");
+
+    /* Pre/post increment/decrement */
+    _credo_roundtrip(piscina, intern,
+        "void f() { ++a; --b; c++; d--; }",
+        "inc-dec");
+
+    /* Address-of and dereference */
+    _credo_roundtrip(piscina, intern,
+        "void f() { int *p = &x; int y = *p; }",
+        "addr-deref");
+
+    /* Complex conditional */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a ? b ? c : d : e ? f : g; }",
+        "nested-ternary");
+
+    /* Logical operators */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a && b || c && d || e; }",
+        "logical-chain");
+
+    /* Compound assignment */
+    _credo_roundtrip(piscina, intern,
+        "void f() { a += b; c -= d; e *= f; g /= h; }",
+        "compound-assign");
+
+    /* Comma expression in for */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i = 0, j = 0; i < n; i++, j++) { x++; } }",
+        "comma-in-for");
+
+    /* Do-while */
+    _credo_roundtrip(piscina, intern,
+        "void f() { do { x++; } while (x < 10); }",
+        "do-while");
+
+    /* Break and continue */
+    _credo_roundtrip(piscina, intern,
+        "void f() { while (1) { if (a) break; if (b) continue; } }",
+        "break-continue");
+
+    /* Return with complex expression */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (a + b) * (c - d) / (e + f) % (g - h); }",
+        "complex-return");
+
+    /* Multiple statements */
+    _credo_roundtrip(piscina, intern,
+        "void f() { int a; int b; a = 1; b = 2; }",
+        "multi-statement");
+
+    imprimere("    [OK]\n");
+}
+
+interior vacuum
+probatio_fidelis_tabs_newlines (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_fidelis_tabs_newlines...\n");
+
+    /* Tab instead of space - basic */
+    _credo_roundtrip(piscina, intern,
+        "int\tx\t=\t42;",
+        "tabs-basic");
+
+    /* Mixed tabs and spaces */
+    _credo_roundtrip(piscina, intern,
+        "int x\t= 42;",
+        "mixed-tab-space");
+
+    /* Tabs in expressions */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return a\t+\tb; }",
+        "tabs-expr");
+
+    /* Tabs around braces */
+    _credo_roundtrip(piscina, intern,
+        "void f()\t{\tx = 1;\t}",
+        "tabs-braces");
+
+    /* Tabs in for loop */
+    _credo_roundtrip(piscina, intern,
+        "void f() { for (i\t=\t0;\ti\t<\tn;\ti++) { x++; } }",
+        "tabs-for");
+
+    /* Tabs in if */
+    _credo_roundtrip(piscina, intern,
+        "void f() { if\t(x)\t{\ty = 1;\t} }",
+        "tabs-if");
+
+    /* Return keyword trivia now preserved */
+    _credo_roundtrip(piscina, intern,
+        "int\tf()\t{\treturn\t0;\t}",
+        "tabs-function");
+
+    /* Newline tests */
+    _credo_roundtrip(piscina, intern,
+        "void f() {\nx = 1;\n}",
+        "newline-basic");
+
+    /* Newline with indentation */
+    _credo_roundtrip(piscina, intern,
+        "void f() {\n    x = 1;\n}",
+        "newline-indent");
+
+    /* Multiple lines */
+    _credo_roundtrip(piscina, intern,
+        "void f() {\n    int a;\n    int b;\n}",
+        "newline-multi");
+
+    /* Newline in if-else */
+    _credo_roundtrip(piscina, intern,
+        "void f() {\n    if (x) {\n        y = 1;\n    }\n}",
+        "newline-if");
+
+    /* Newline before opening brace */
+    _credo_roundtrip(piscina, intern,
+        "void f()\n{\n    x = 1;\n}",
+        "newline-before-brace");
+
+    /* Declaration on separate line */
+    _credo_roundtrip(piscina, intern,
+        "int x;\nint y;",
+        "newline-decls");
+
+    imprimere("    [OK]\n");
+}
+
 /* ===========================================================
  * PRINCIPALE
  * =========================================================== */
@@ -520,6 +803,9 @@ main (
     probatio_fidelis_struct(piscina, intern);
     probatio_fidelis_expressions(piscina, intern);
     probatio_fidelis_roundtrip(piscina, intern);
+    probatio_fidelis_irregular_whitespace(piscina, intern);
+    probatio_fidelis_complex_structures(piscina, intern);
+    probatio_fidelis_tabs_newlines(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();
