@@ -481,6 +481,165 @@ _credo_roundtrip_preservare (
     imprimere("[OK]\n");
 }
 
+/* Roundtrip filum cum PRESERVARE mode (pro directivas) */
+interior vacuum
+_credo_roundtrip_filum_preservare (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* via,
+       constans character* titulus)
+{
+    ArborNodus*       radix;
+    chorda            fons;
+    chorda            fructus;
+    i32               i;
+    ArborLexator*     lexator;
+    ArborPraeparator* pp;
+    ArborSyntaxis*    syn;
+    Xar*              lexemata;
+    Xar*              processata;
+    ArborSyntaxisResultus res;
+
+    imprimere("    %s: ", titulus);
+
+    /* Legere filum */
+    fons = filum_legere_totum(via, piscina);
+    si (fons.datum == NIHIL || fons.mensura == ZEPHYRUM)
+    {
+        imprimere("[FAIL - cannot read file: %s]\n", via);
+        CREDO_VERUM(fons.datum != NIHIL);
+        redde;
+    }
+
+    imprimere("(%d bytes) ", (int)fons.mensura);
+
+    /* Lex */
+    lexator = arbor_lexator_creare(piscina, intern,
+        (constans character*)fons.datum, fons.mensura);
+    si (lexator == NIHIL)
+    {
+        imprimere("[FAIL - lexer creation]\n");
+        CREDO_VERUM(lexator != NIHIL);
+        redde;
+    }
+
+    lexemata = arbor_lexema_omnia(lexator);
+    si (lexemata == NIHIL)
+    {
+        imprimere("[FAIL - lexing]\n");
+        CREDO_VERUM(lexemata != NIHIL);
+        redde;
+    }
+
+    /* Praeparator cum PRESERVARE mode */
+    pp = arbor_praeparator_creare(piscina, intern);
+    si (pp == NIHIL)
+    {
+        imprimere("[FAIL - preprocessor creation]\n");
+        CREDO_VERUM(pp != NIHIL);
+        redde;
+    }
+    arbor_praeparator_ponere_modum(pp, ARBOR_PP_MODUS_PRESERVARE);
+
+    processata = arbor_praeparator_processare_lexemata(pp, lexemata, via);
+    si (processata == NIHIL)
+    {
+        imprimere("[FAIL - preprocessing]\n");
+        CREDO_VERUM(processata != NIHIL);
+        redde;
+    }
+
+    /* Parse */
+    syn = arbor_syntaxis_creare(piscina, intern);
+    res = arbor_syntaxis_parsere(syn, processata);
+
+    si (!res.successus)
+    {
+        imprimere("[FAIL - parse error]\n");
+        CREDO_VERUM(res.successus);
+        redde;
+    }
+    radix = res.radix;
+
+    si (radix == NIHIL)
+    {
+        imprimere("[FAIL - null AST]\n");
+        CREDO_VERUM(radix != NIHIL);
+        redde;
+    }
+
+    /* Emittere fidelis */
+    fructus = arbor_formator_emittere_fidelis(piscina, radix);
+
+    /* Comparare longitudinem */
+    si (fructus.mensura != fons.mensura)
+    {
+        imprimere("[FAIL - length %d != %d]\n",
+            (int)fructus.mensura, (int)fons.mensura);
+
+        /* Invenire primam differentiam */
+        per (i = ZEPHYRUM; i < fructus.mensura && i < fons.mensura; i++)
+        {
+            si (fructus.datum[i] != fons.datum[i])
+            {
+                imprimere("      first diff at byte %d: got '%c' (0x%02x), expected '%c' (0x%02x)\n",
+                    i,
+                    fructus.datum[i] >= 32 ? fructus.datum[i] : '?',
+                    (insignatus character)fructus.datum[i],
+                    fons.datum[i] >= 32 ? fons.datum[i] : '?',
+                    (insignatus character)fons.datum[i]);
+                frange;
+            }
+        }
+
+        CREDO_VERUM(fructus.mensura == fons.mensura);
+        redde;
+    }
+
+    /* Comparare contentum byte-per-byte */
+    per (i = ZEPHYRUM; i < fons.mensura; i++)
+    {
+        si (fructus.datum[i] != fons.datum[i])
+        {
+            imprimere("[FAIL - content mismatch at byte %d]\n", i);
+            imprimere("      got '%c' (0x%02x), expected '%c' (0x%02x)\n",
+                fructus.datum[i] >= 32 ? fructus.datum[i] : '?',
+                (insignatus character)fructus.datum[i],
+                fons.datum[i] >= 32 ? fons.datum[i] : '?',
+                (insignatus character)fons.datum[i]);
+
+            /* Ostendere contextum */
+            imprimere("      context: '");
+            {
+                i32 start = i > X ? i - X : ZEPHYRUM;
+                i32 end = i + X < fons.mensura ? i + X : fons.mensura;
+                i32 j;
+                per (j = start; j < end; j++)
+                {
+                    si (fons.datum[j] == '\n')
+                    {
+                        imprimere("\\n");
+                    }
+                    alioquin si (fons.datum[j] == '\t')
+                    {
+                        imprimere("\\t");
+                    }
+                    alioquin
+                    {
+                        imprimere("%c", fons.datum[j]);
+                    }
+                }
+            }
+            imprimere("'\n");
+
+            CREDO_VERUM(fructus.datum[i] == fons.datum[i]);
+            redde;
+        }
+    }
+
+    imprimere("[OK]\n");
+}
+
 interior vacuum
 probatio_fidelis_roundtrip (
                Piscina* piscina,
@@ -1152,6 +1311,81 @@ probatio_roundtrip_preservare (
     _credo_roundtrip_preservare(piscina, intern,
         "#include <stdio.h>\n\nint main() {\n#ifdef DEBUG\n    printf(\"debug\");\n#endif\n    return 0;\n}",
         "mixed-directives-code");
+
+    /* Test block comments */
+    _credo_roundtrip_preservare(piscina, intern,
+        "/* comment */\n",
+        "block-comment");
+
+    _credo_roundtrip_preservare(piscina, intern,
+        "/* comment */\nint x;\n",
+        "block-comment-then-code");
+
+    _credo_roundtrip_preservare(piscina, intern,
+        "/* line 1\n * line 2\n */\nint x;\n",
+        "multiline-block-comment");
+
+    /* Test function declarations */
+    _credo_roundtrip_preservare(piscina, intern,
+        "void foo(int x);\n",
+        "func-decl");
+
+    _credo_roundtrip_preservare(piscina, intern,
+        "void foo(int* x);\n",
+        "func-decl-ptr-param");
+
+    /* Local include (quotes) */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#include \"header.h\"\n",
+        "include-local");
+
+    /* Multiple local includes */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#include \"latina.h\"\n#include \"fenestra.h\"\n",
+        "multiple-local-includes");
+
+    /* #endif with trailing comment */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#ifndef FOO_H\n#define FOO_H\nint x;\n#endif /* FOO_H */\n",
+        "endif-with-comment");
+
+    /* Multi-line function declarations */
+    _credo_roundtrip(piscina, intern,
+        "void\nfoo(void);",
+        "multiline-func-decl-simple");
+
+    _credo_roundtrip_preservare(piscina, intern,
+        "void\nfoo(\n    int* x,\n    int y);\n",
+        "multiline-func-decl-params");
+
+    /* Include guard with content */
+    _credo_roundtrip_preservare(piscina, intern,
+        "#ifndef FOO_H\n#define FOO_H\n\n#include \"bar.h\"\n\nvoid foo(int x);\n\n#endif /* FOO_H */\n",
+        "full-header-pattern");
+
+    /* Test cursor.h function declaration pattern */
+    _credo_roundtrip_preservare(piscina, intern,
+        "void\nfoo(\n    int* x,\n    int y,\n    int z);\n",
+        "cursor-func-pattern");
+
+    /* Test large comment block followed by function */
+    _credo_roundtrip_preservare(piscina, intern,
+        "/* ==================================================\n"
+        " * CURSOR - Cursor Muris\n"
+        " * ================================================== */\n"
+        "\n"
+        "void\nfoo(\n    int* x,\n    int y);\n",
+        "comment-block-then-func");
+
+    /* Custom type with heuristic recognition */
+    _credo_roundtrip_preservare(piscina, intern,
+        "void\nfoo(\n    MyType* x);\n",
+        "custom-type-ptr-param");
+
+    /* Test full cursor.h file with heuristics */
+    _credo_roundtrip_filum_preservare(piscina, intern,
+        "probationes/fixa/roundtrip/cursor.h",
+        "cursor.h");
 
     imprimere("    [OK]\n");
 }

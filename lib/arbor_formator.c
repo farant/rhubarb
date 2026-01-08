@@ -868,8 +868,13 @@ _emittere_nodum_fidelis (
         frange;
     }
 
-    /* Emittere trivia post nodum */
-    _emittere_trivia(status, nodus->trivia_post);
+    /* Emittere trivia post nodum
+     * Saltare pro directives - trivia iam emissa per lexemata
+     */
+    si (nodus->genus != ARBOR_NODUS_DIRECTIVE)
+    {
+        _emittere_trivia(status, nodus->trivia_post);
+    }
 }
 
 /* ===========================================================

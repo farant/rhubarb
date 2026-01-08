@@ -659,6 +659,169 @@ All 54 formator tests pass including 10 new preserve mode tests. All 71 project 
 
 ---
 
+## 2026-01-07: Directive and Declaration Trivia Duplication Fixes
+
+### Problem 1: Directive Trivia Duplication
+
+Input `#endif /* FOO_H */\n` was outputting `#endif /* FOO_H */\n /* FOO_H */\n` - comment duplicated.
+
+### Root Cause
+
+Multiple layers capturing the same trivia:
+
+1. **Directive token trivia**: The `endif` token had ` /* FOO_H */` as `trivia_post`, emitted when formatting directive lexemata
+2. **Directive node trivia_post**: `_finire_nodum` set directive's `trivia_post` from `endif`'s `trivia_post` → duplicate
+3. **Translation unit trivia_post**: `_finire_nodum` for translation_unit also captured `endif`'s `trivia_post`, PLUS EOF trivia was appended → triple
+
+### Fix
+
+1. **Directive parsing**: Don't call `_finire_nodum` for directive nodes. Only set byte/line/column positions, not `trivia_post`. Directive tokens already have all trivia.
+
+2. **Translation unit parsing**: Don't call `_finire_nodum` for translation_unit. Only capture EOF's `trivia_ante` as the unit's `trivia_post`, not from the last consumed token.
+
+3. **Formatter**: Skip `nodus->trivia_post` emission for DIRECTIVE nodes (token trivia handles it).
+
+---
+
+### Problem 2: Multi-line Declaration Trivia Duplication
+
+Input `void\nfoo(void);` was outputting `void\n\nfoo(void);` - extra newline.
+
+### Root Cause
+
+When parsing a declaration, multiple nested nodes captured the same `trivia_ante` from the `foo` token:
+
+- `INIT_DECLARATOR.trivia_ante = "\n"` (from `_creare_nodum`)
+- `DECLARATOR.trivia_ante = "\n"` (from `_creare_nodum` inside `_parsere_declarator`)
+- `IDENTIFIER.trivia_ante = "\n"` (from `_parsere_identificator`)
+
+All three emit their trivia_ante → three newlines instead of one.
+
+### Fix
+
+Added trivia deduplication checks:
+
+1. **In `_parsere_declaratio`**: After creating `init_decl` and parsing `decl`:
+   ```c
+   si (init_decl->trivia_ante == decl->trivia_ante && decl->trivia_ante != NIHIL)
+   {
+       init_decl->trivia_ante = NIHIL;
+   }
+   ```
+
+2. **In `_parsere_declarator`**: After creating `nodus` and parsing `inner` identifier:
+   ```c
+   si (nodus->trivia_ante == inner->trivia_ante && inner->trivia_ante != NIHIL)
+   {
+       nodus->trivia_ante = NIHIL;
+   }
+   ```
+
+### Key Pattern
+
+When parent and child nodes are created at the same token position, they capture the same `trivia_ante`. Clear the parent's `trivia_ante` to avoid double emission. The child (innermost node) should own the trivia.
+
+---
+
+### Problem 3: Custom Type Names in PRESERVARE Mode - NOT FIXED
+
+Files with custom typedef names like `TabulaPixelorum*` or `i32` cause infinite loops in PRESERVARE mode.
+
+### Root Cause
+
+In PRESERVARE mode, `#include` directives are not processed, so typedef names from headers are never registered. When the parser encounters `TabulaPixelorum* x` in a parameter list:
+
+- `TabulaPixelorum` is just an IDENTIFIER token
+- Parser doesn't recognize it as a type
+- Parsing enters infinite loop trying to find a valid parameter
+
+### Current Status
+
+This is a fundamental limitation of PRESERVARE mode. Files using custom types cannot roundtrip until either:
+
+1. Type annotations/configuration allow pre-registering typedef names
+2. Parser uses heuristics (e.g., identifier followed by `*` before `,` or `)` is likely a type)
+3. Multi-pass approach: first pass to collect typedef names, second pass to parse
+
+### Test Coverage
+
+Added 8 new preserve mode tests (all passing):
+- `#endif /* FOO_H */` - directive with trailing comment
+- `void\nfoo(void);` - multi-line simple function declaration
+- `void\nfoo(\n    int* x,\n    int y);` - multi-line with params
+- `/* comment */\nvoid\nfoo(...);` - comment block then function
+- Full header pattern with guards, includes, blank lines
+
+---
+
+## 2026-01-08: Typedef Name Heuristics in PRESERVARE Mode
+
+### Problem
+
+In PRESERVARE mode, `#include` directives are not processed, so typedef names from headers are never registered. Files using custom types like `TabulaPixelorum*` or `i32` caused infinite loops because the parser didn't recognize them as types.
+
+### Solution: Heuristic Type Detection
+
+Added `_est_probable_typedef_nomen()` function that uses heuristics to detect likely typedef names based on what follows the identifier:
+
+```c
+interior b32
+_est_probable_typedef_nomen(ArborSyntaxis* syn)
+{
+    ArborLexema* next = _prospicere_lex(syn, I);
+    si (next == NIHIL) redde FALSUM;
+
+    /* IDENTIFIER * - pointer to type (e.g., TabulaPixelorum*) */
+    si (next->genus == ARBOR_LEXEMA_ASTERISCUS)
+        redde VERUM;
+
+    /* IDENTIFIER IDENTIFIER - type followed by name (e.g., i32 x) */
+    si (next->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+        redde VERUM;
+
+    redde FALSUM;
+}
+```
+
+Modified `_parsere_specifiers` to use this heuristic when no registered typedef is found:
+```c
+si (_est_typedef_nomen(syn, titulus) || _est_probable_typedef_nomen(syn))
+```
+
+### Initial Bug: Overly Aggressive Heuristic
+
+First implementation also checked for:
+- `IDENTIFIER )` - end of parameter list
+- `IDENTIFIER ,` - parameter separator
+- `IDENTIFIER [` - array declarator
+
+This caused a **segfault** in `probatio_arbor_typus` with function pointer declarations like `int (*fp)(int);`. When parsing at `fp`, the lookahead was `)`, which incorrectly triggered the heuristic - treating `fp` as a typedef name instead of a declarator identifier.
+
+### Fix
+
+Removed the aggressive patterns. The simplified heuristic only checks:
+1. `IDENTIFIER *` - pointer to type
+2. `IDENTIFIER IDENTIFIER` - type followed by name
+
+These patterns are reliable because:
+- A type name followed by `*` is unambiguously a pointer-to-type declaration
+- A type name followed by another identifier is unambiguously type + variable name
+
+The removed patterns had too many false positives in declarator contexts.
+
+### Test Results
+
+- cursor.h (1052 bytes) roundtrips successfully with the simplified heuristic
+- All 179 arbor_typus tests pass (no segfault)
+- All 54 arbor_formator tests pass
+- All 71 project tests pass
+
+### Key Insight
+
+Heuristics for type detection must be conservative to avoid breaking declarator parsing. Function pointers like `int (*fp)(int)` have identifiers in positions that superficially look like type positions. The `*` and `IDENTIFIER IDENTIFIER` patterns are safe because they're unambiguous in C grammar.
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:

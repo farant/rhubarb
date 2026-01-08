@@ -717,6 +717,56 @@ _est_typedef_nomen(ArborSyntaxis* syn, chorda* titulus)
     redde tabula_dispersa_continet(syn->typedef_nomina, *titulus);
 }
 
+/* Heuristic: identifier probabiliter est typedef nomen si sequitur:
+ * - '*' (pointer ad typum)
+ * - identifier (typus + nomen variabilis)
+ * - ')' (abstract declarator vel finis parametrorum)
+ * - ',' (separator parametrorum)
+ *
+ * Hoc est utile in PRESERVARE modo ubi typedef nomina
+ * ex #include non sunt registrata.
+ *
+ * NOTA: Non verificamus _est_typedef_nomen hic quia iam verificatum
+ * in vocante. Solum inspicimus quid sequitur.
+ */
+interior b32
+_est_probable_typedef_nomen(ArborSyntaxis* syn)
+{
+    ArborLexema* next;
+
+    si (syn == NIHIL || syn->lexemata == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Inspicere quid sequitur currentem token */
+    next = _prospicere_lex(syn, I);
+    si (next == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* IDENTIFIER * - pointer ad typum */
+    si (next->genus == ARBOR_LEXEMA_ASTERISCUS)
+    {
+        redde VERUM;
+    }
+
+    /* IDENTIFIER IDENTIFIER - typus + nomen */
+    si (next->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        redde VERUM;
+    }
+
+    /* NOTA: Non includimus PAREN_CLAUSA vel COMMA hic quia
+     * possunt causare falsos positivos in contextu ut:
+     * - int (*fp)(int);  -- fp sequitur )
+     * - int f(a, b);     -- a sequitur ,
+     * Heuristic IDENTIFIER* et IDENTIFIER IDENTIFIER sunt satis. */
+
+    redde FALSUM;
+}
+
 /* Extrahere nomen ex declarator (recursivo per nested declarators) */
 interior chorda*
 _extrahere_declarator_nomen(ArborNodus* decl)
@@ -3593,10 +3643,12 @@ _parsere_specifiers(ArborSyntaxis* syn, Xar* specifiers)
         }
         alioquin si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && !habet_typedef_nomen)
         {
-            /* Verifica typedef nomen - solum unum permissum */
+            /* Verifica typedef nomen - solum unum permissum.
+             * Usamus heuristic si non registratum (pro PRESERVARE modo). */
             chorda* titulus = chorda_internare(syn->intern, lex->valor);
-            si (_est_typedef_nomen(syn, titulus))
+            si (_est_typedef_nomen(syn, titulus) || _est_probable_typedef_nomen(syn))
             {
+                /* Registratum vel probabiliter typedef nomen per heuristic */
                 spec = _creare_nodum(syn, ARBOR_NODUS_TYPEDEF_NAME);
                 si (spec != NIHIL)
                 {
@@ -3751,6 +3803,13 @@ _parsere_declarator(ArborSyntaxis* syn)
         si (inner != NIHIL)
         {
             inner->pater = nodus;
+
+            /* Evitare trivia duplicata: nodus et inner habent idem trivia_ante */
+            si (nodus->trivia_ante == inner->trivia_ante && inner->trivia_ante != NIHIL)
+            {
+                nodus->trivia_ante = NIHIL;
+            }
+
             {
                 ArborNodus** slot = xar_addere(nodus->datum.genericum.liberi);
                 si (slot != NIHIL) { *slot = inner; }
@@ -4130,6 +4189,12 @@ _parsere_declaratio(ArborSyntaxis* syn)
 
             init_decl->datum.init_decl.declarator = decl;
             decl->pater = init_decl;
+
+            /* Evitare trivia duplicata: init_decl et decl habent idem trivia_ante */
+            si (init_decl->trivia_ante == decl->trivia_ante && decl->trivia_ante != NIHIL)
+            {
+                init_decl->trivia_ante = NIHIL;
+            }
 
             /* Optional initializer */
             si (_congruit(syn, ARBOR_LEXEMA_ASSIGNATIO))
@@ -4665,7 +4730,32 @@ _parsere_directiva(ArborSyntaxis* syn)
         _progredi(syn);
     }
 
-    _finire_nodum(syn, nodus);
+    /* NON vocare _finire_nodum - trivia iam inclusa in lexemata directivae */
+    /* Tantum ponere locum finis */
+    {
+        ArborLexemaOrigo** ptr;
+        ArborLexemaOrigo*  lo;
+        ArborLexema*       lex_finis;
+
+        lo = NIHIL;
+        si (syn->positus > ZEPHYRUM)
+        {
+            ptr = xar_obtinere(syn->lexemata, syn->positus - I);
+            si (ptr != NIHIL)
+            {
+                lo = *ptr;
+            }
+        }
+
+        si (lo != NIHIL && lo->lexema != NIHIL)
+        {
+            lex_finis = lo->lexema;
+            nodus->byte_finis = lex_finis->byte_offset + lex_finis->longitudo;
+            nodus->linea_finis = lex_finis->linea;
+            nodus->columna_finis = lex_finis->columna + lex_finis->longitudo;
+            /* NON ponere trivia_post - evitare duplicationem */
+        }
+    }
     redde nodus;
 }
 
@@ -4716,9 +4806,9 @@ _parsere_translation_unit(ArborSyntaxis* syn)
         }
     }
 
-    _finire_nodum(syn, unit);
-
-    /* Capere trivia EOF (trailing newlines post ultimum token) */
+    /* NON vocare _finire_nodum pro translation_unit -
+     * evitare duplicationem trivia si ultimum child est directiva.
+     * Tantum capere trivia ex EOF. */
     si (_est_finis(syn))
     {
         ArborLexemaOrigo** ptr;
@@ -4728,10 +4818,18 @@ _parsere_translation_unit(ArborSyntaxis* syn)
         si (ptr != NIHIL && *ptr != NIHIL)
         {
             lo = *ptr;
-            si (lo->lexema != NIHIL && lo->lexema->trivia_ante != NIHIL)
+            si (lo->lexema != NIHIL)
             {
-                /* Addere EOF trivia_ante ad unit trivia_post */
-                _copiare_trivia_ad_xar(syn, &unit->trivia_post, lo->lexema->trivia_ante);
+                /* Ponere locum finis */
+                unit->byte_finis = lo->lexema->byte_offset;
+                unit->linea_finis = lo->lexema->linea;
+                unit->columna_finis = lo->lexema->columna;
+
+                /* Capere EOF trivia_ante tantum - non ex ultimo token */
+                si (lo->lexema->trivia_ante != NIHIL)
+                {
+                    _copiare_trivia_ad_xar(syn, &unit->trivia_post, lo->lexema->trivia_ante);
+                }
             }
         }
     }
