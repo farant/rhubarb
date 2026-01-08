@@ -287,6 +287,7 @@ structura ArborNodus {
         /* compound-statement */
         structura {
             Xar*          sententiae;    /* statements + declarations */
+            Xar*          trivia_vacuum; /* trivia for empty body (between { and }) */
         } compositum;
 
         /* return-statement */

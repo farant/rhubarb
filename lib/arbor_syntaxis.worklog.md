@@ -436,9 +436,170 @@ Anywhere the parser needs to recognize types, it must check for typedef names in
 
 ---
 
+## 2026-01-07: Complex Cast Types - IMPLEMENTED
+
+### Problem
+
+Parser only supported simple single-specifier casts like `(int)x`. Complex casts with pointers or multiple specifiers failed:
+- `(int *)x` - pointer cast
+- `(const int *)x` - qualified pointer cast
+- `(unsigned long)x` - multi-specifier cast
+
+Similarly, `sizeof(int *)` was not supported.
+
+### Solution
+
+Created `_parsere_type_name()` function that parses the C grammar for type-name:
+```
+type-name:
+    specifier-qualifier-list abstract-declarator_opt
+```
+
+The function:
+1. Creates a PARAMETER_DECLARATION node (which has `specifiers` + `declarator` fields)
+2. Parses multiple specifiers via existing `_parsere_specifiers()`
+3. If `*` or `(` follows, parses abstract declarator via existing `_parsere_declarator()`
+
+The abstract declarator is the pointer chain without an identifier - e.g., for `int *`, the declarator is just a POINTER node.
+
+### Files Modified
+
+**`lib/arbor_syntaxis.c`**:
+- Added `_parsere_type_name()` function (~50 lines)
+- Modified `_parsere_parenthesis()` to use `_parsere_type_name()` for casts
+- Modified `_parsere_sizeof()` to use `_parsere_type_name()` for sizeof(type)
+- Added forward declarations
+
+**`probationes/probatio_arbor_formator.c`**:
+- Added 9 roundtrip tests for complex casts
+
+### Trivia Handling
+
+For casts, trivia is attached as follows:
+- `(` trivia → prepended to first specifier's trivia_ante
+- `)` trivia → appended to type_name node's trivia_post
+- The type_name's trivia_post is emitted after specifiers/declarator
+
+### Test Cases
+
+All passing:
+- `(int)x` - simple cast (baseline)
+- `(int *)x` - pointer cast
+- `(int **)x` - double pointer cast
+- `(const int *)x` - const pointer cast
+- `(unsigned long)x` - multi-specifier cast
+- `(void *)x` - void pointer cast
+- `(char *)x` - char pointer cast
+- `sizeof(int *)` - sizeof with pointer type
+- `sizeof(const int)` - sizeof with multiple specifiers
+
+### Key Design Decision
+
+Reused PARAMETER_DECLARATION node type for type-names since it has exactly the structure needed (`Xar* specifiers` + `ArborNodus* declarator`). The formatter's existing PARAMETER_DECLARATION handler already emits specifiers + declarator correctly.
+
+---
+
+## 2026-01-07: Whole-File Roundtrip Testing Fixes
+
+### Goal
+
+Set up whole-file roundtrip testing by copying real C files to `probationes/fixa/roundtrip/` and testing byte-exact formatting.
+
+### Issues Fixed
+
+**1. Empty Compound Statement Trivia Loss**
+
+Problem: `void f()\n{\n}\n` was outputting `void f()\n{}\n` - newline between braces lost.
+
+Root cause: In `_parsere_compound`, when the body is empty (no statements), the `}` token's trivia_ante (the newline) was only captured if `ultimum_item != NIHIL`. For empty bodies, this trivia was lost.
+
+Fix: Added `trivia_vacuum` field to compositum structure. When body is empty, store `}` trivia_ante in this field. Formatter emits it between `{` and `}`:
+
+```c
+/* In parser - _parsere_compound */
+si (ultimum_item != NIHIL)
+{
+    _copiare_trivia_ad_xar(syn, &ultimum_item->trivia_post, close_lex->trivia_ante);
+}
+alioquin
+{
+    _copiare_trivia_ad_xar(syn, &nodus->datum.compositum.trivia_vacuum, close_lex->trivia_ante);
+}
+
+/* In formatter */
+si (num > ZEPHYRUM) { /* emit statements */ }
+alioquin
+{
+    si (nodus->datum.compositum.trivia_vacuum)
+    {
+        _emittere_trivia(status, nodus->datum.compositum.trivia_vacuum);
+    }
+}
+```
+
+**2. Void Parameter Lost**
+
+Problem: `void f(void)` was outputting `void f()` - the explicit `void` parameter was lost.
+
+Root cause: Parser special-cased `(void)` to mean "no parameters" and just skipped the `void` token entirely (lines 3828-3837). This was semantically correct but broke fidelis roundtrip.
+
+Fix: Instead of skipping `void`, create a proper PARAMETER_DECLARATION node with a TYPE_SPECIFIER for `void`:
+
+```c
+void_param = _creare_nodum(syn, ARBOR_NODUS_PARAMETER_DECLARATION);
+void_spec = _creare_nodum(syn, ARBOR_NODUS_TYPE_SPECIFIER);
+void_spec->datum.folium.keyword = ARBOR_LEXEMA_VOID;
+/* Capture trivia from void token */
+/* Add to specifiers and parameter list */
+```
+
+**3. Comment Duplication in Translation Unit**
+
+Problem: Leading comments were emitted twice. `/* comment */\nint x;` became `/* comment */\n/* comment */\nint x;`.
+
+Root cause: Both the translation unit AND its first child (external declaration) captured the same first token's trivia_ante via `_creare_nodum`. When `_emittere_nodum_fidelis` emits trivia_ante for both, it's emitted twice.
+
+Fix: Skip trivia_ante emission for TRANSLATION_UNIT in the formatter since it has no actual leading token - it's just a container:
+
+```c
+si (nodus->genus != ARBOR_NODUS_TRANSLATION_UNIT)
+{
+    _emittere_trivia(status, nodus->trivia_ante);
+}
+```
+
+**4. File Roundtrip Test strlen Bug**
+
+Problem: Test was hanging indefinitely when reading files.
+
+Root cause: `_credo_roundtrip_filum` used `_parsere_fontem` helper which calls `strlen(fons)`. But chorda data from `filum_legere_totum` is NOT null-terminated. This caused `strlen` to read past the buffer until finding a random null byte.
+
+Fix: Call `arbor_syntaxis_parsere_fontem` directly with `fons.mensura`:
+
+```c
+res = arbor_syntaxis_parsere_fontem(
+    syn,
+    (constans character*)fons.datum,
+    fons.mensura,  /* Use actual length, not strlen */
+    via);
+```
+
+### Test Results
+
+All 54 formator tests pass including whole-file roundtrip of `simple.c` (419 bytes).
+
+### Files Modified
+
+- `include/arbor_syntaxis.h` - Added `trivia_vacuum` to compositum
+- `lib/arbor_syntaxis.c` - Fixed empty compound, void parameter
+- `lib/arbor_formator.c` - Skip translation_unit trivia, emit trivia_vacuum
+- `probationes/probatio_arbor_formator.c` - Fixed strlen bug in file test
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:
 
-1. **Complex cast types**: Multi-specifier casts like `(const int *)x`, pointer casts `(int *)x`
-2. **Abstract declarators in casts**: Full C grammar compliance for type-names
+1. **Array types in casts**: `(int[10])x` - array declarators in type-names
+2. **Function pointer casts**: `(int (*)(void))x` - function pointer type-names

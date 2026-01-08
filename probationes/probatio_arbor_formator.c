@@ -3,6 +3,7 @@
 #include "internamentum.h"
 #include "arbor_syntaxis.h"
 #include "arbor_formator.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -486,6 +487,53 @@ probatio_fidelis_roundtrip (
         "int add(int a, int b) { return a + b; }",
         "func-params");
 
+    /* ===== COMPLEX CAST TYPES ===== */
+
+    /* Simple cast (baseline) */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (int)x; }",
+        "simple-cast");
+
+    /* Pointer cast */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (int *)x; }",
+        "pointer-cast");
+
+    /* Double pointer cast */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (int **)x; }",
+        "double-ptr-cast");
+
+    /* Const pointer cast */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (const int *)x; }",
+        "const-ptr-cast");
+
+    /* Multiple specifiers cast */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (unsigned long)x; }",
+        "multi-spec-cast");
+
+    /* Void pointer cast */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (void *)x; }",
+        "void-ptr-cast");
+
+    /* Char pointer cast */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return (char *)x; }",
+        "char-ptr-cast");
+
+    /* sizeof with pointer type */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return sizeof(int *); }",
+        "sizeof-ptr");
+
+    /* sizeof with multiple specifiers */
+    _credo_roundtrip(piscina, intern,
+        "int f() { return sizeof(const int); }",
+        "sizeof-const");
+
     imprimere("    [OK]\n");
 }
 
@@ -781,6 +829,161 @@ probatio_fidelis_tabs_newlines (
 }
 
 /* ===========================================================
+ * PROBATIO - FIDELIS FILE ROUNDTRIP
+ *
+ * Test byte-exact roundtrip on complete source files.
+ * =========================================================== */
+
+interior vacuum
+_credo_roundtrip_filum (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* via,
+       constans character* titulus)
+{
+    ArborNodus*  radix;
+    chorda       fons;
+    chorda       fructus;
+    i32          i;
+
+    imprimere("    %s: ", titulus);
+
+    /* Legere filum */
+    fons = filum_legere_totum(via, piscina);
+    si (fons.datum == NIHIL || fons.mensura == ZEPHYRUM)
+    {
+        imprimere("[FAIL - cannot read file: %s]\n", via);
+        CREDO_VERUM(fons.datum != NIHIL);
+        redde;
+    }
+
+    imprimere("(%d bytes) ", (int)fons.mensura);
+
+    /* Parsere - NB: chorda non est null-terminata, ergo uti mensura */
+    {
+        ArborSyntaxis*        syn;
+        ArborSyntaxisResultus res;
+
+        syn = arbor_syntaxis_creare(piscina, intern);
+        res = arbor_syntaxis_parsere_fontem(
+            syn,
+            (constans character*)fons.datum,
+            fons.mensura,
+            via);
+
+        si (!res.successus)
+        {
+            imprimere("[FAIL - parse error]\n");
+            CREDO_VERUM(res.successus);
+            redde;
+        }
+        radix = res.radix;
+    }
+    si (radix == NIHIL)
+    {
+        imprimere("[FAIL - parse error]\n");
+        CREDO_VERUM(radix != NIHIL);
+        redde;
+    }
+
+    /* Emittere fidelis */
+    fructus = arbor_formator_emittere_fidelis(piscina, radix);
+
+    /* Comparare longitudinem */
+    si (fructus.mensura != fons.mensura)
+    {
+        imprimere("[FAIL - length %d != %d]\n",
+            (int)fructus.mensura, (int)fons.mensura);
+
+        /* Invenire primam differentiam */
+        per (i = ZEPHYRUM; i < fructus.mensura && i < fons.mensura; i++)
+        {
+            si (fructus.datum[i] != fons.datum[i])
+            {
+                imprimere("      first diff at byte %d: got '%c' (0x%02x), expected '%c' (0x%02x)\n",
+                    i,
+                    fructus.datum[i] >= 32 ? fructus.datum[i] : '?',
+                    (insignatus character)fructus.datum[i],
+                    fons.datum[i] >= 32 ? fons.datum[i] : '?',
+                    (insignatus character)fons.datum[i]);
+                frange;
+            }
+        }
+
+        CREDO_VERUM(fructus.mensura == fons.mensura);
+        redde;
+    }
+
+    /* Comparare contenta */
+    per (i = ZEPHYRUM; i < fons.mensura; i++)
+    {
+        si (fructus.datum[i] != fons.datum[i])
+        {
+            imprimere("[FAIL - content mismatch at byte %d]\n", i);
+            imprimere("      got '%c' (0x%02x), expected '%c' (0x%02x)\n",
+                fructus.datum[i] >= 32 ? fructus.datum[i] : '?',
+                (insignatus character)fructus.datum[i],
+                fons.datum[i] >= 32 ? fons.datum[i] : '?',
+                (insignatus character)fons.datum[i]);
+
+            /* Ostendere contextum */
+            imprimere("      context: '");
+            {
+                i32 start = i > X ? i - X : ZEPHYRUM;
+                i32 end = i + X < fons.mensura ? i + X : fons.mensura;
+                i32 j;
+                per (j = start; j < end; j++)
+                {
+                    si (fons.datum[j] == '\n')
+                    {
+                        imprimere("\\n");
+                    }
+                    alioquin si (fons.datum[j] == '\t')
+                    {
+                        imprimere("\\t");
+                    }
+                    alioquin
+                    {
+                        imprimere("%c", fons.datum[j]);
+                    }
+                }
+            }
+            imprimere("'\n");
+
+            CREDO_VERUM(fructus.datum[i] == fons.datum[i]);
+            redde;
+        }
+    }
+
+    imprimere("[OK]\n");
+}
+
+interior vacuum
+probatio_roundtrip_fila (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_roundtrip_fila...\n");
+
+    /* Start with simple file - no preprocessor directives */
+    _credo_roundtrip_filum(piscina, intern,
+        "probationes/fixa/roundtrip/simple.c",
+        "simple.c");
+
+    /* TODO: Files with preprocessor directives - need investigation
+    _credo_roundtrip_filum(piscina, intern,
+        "probationes/fixa/roundtrip/cursor.h",
+        "cursor.h");
+
+    _credo_roundtrip_filum(piscina, intern,
+        "probationes/fixa/roundtrip/cursor.c",
+        "cursor.c");
+    */
+
+    imprimere("    [OK]\n");
+}
+
+/* ===========================================================
  * PRINCIPALE
  * =========================================================== */
 
@@ -814,6 +1017,7 @@ main (
     probatio_fidelis_irregular_whitespace(piscina, intern);
     probatio_fidelis_complex_structures(piscina, intern);
     probatio_fidelis_tabs_newlines(piscina, intern);
+    probatio_roundtrip_fila(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

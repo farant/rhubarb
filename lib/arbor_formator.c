@@ -222,8 +222,11 @@ _emittere_nodum_fidelis (
 
     si (nodus == NIHIL) redde;
 
-    /* Emittere trivia ante nodum */
-    _emittere_trivia(status, nodus->trivia_ante);
+    /* Emittere trivia ante nodum (saltare pro translation_unit - non habet token) */
+    si (nodus->genus != ARBOR_NODUS_TRANSLATION_UNIT)
+    {
+        _emittere_trivia(status, nodus->trivia_ante);
+    }
 
     commutatio (nodus->genus)
     {
@@ -295,13 +298,25 @@ _emittere_nodum_fidelis (
     /* ===== COMPOUND STATEMENT ===== */
     casus ARBOR_NODUS_COMPOUND_STATEMENT:
         chorda_aedificator_appendere_literis(status->aedificator, "{");
+        num = ZEPHYRUM;
         si (nodus->datum.compositum.sententiae)
         {
             num = xar_numerus(nodus->datum.compositum.sententiae);
+        }
+        si (num > ZEPHYRUM)
+        {
             per (i = ZEPHYRUM; i < num; i++)
             {
                 ArborNodus** np = xar_obtinere(nodus->datum.compositum.sententiae, i);
                 si (np && *np) _emittere_nodum_fidelis(status, *np);
+            }
+        }
+        alioquin
+        {
+            /* Corpus vacuum - emittere trivia_vacuum si est */
+            si (nodus->datum.compositum.trivia_vacuum)
+            {
+                _emittere_trivia(status, nodus->datum.compositum.trivia_vacuum);
             }
         }
         chorda_aedificator_appendere_literis(status->aedificator, "}");
