@@ -263,12 +263,18 @@ arbor2_expansion_addere_typedef(
     constans character*     nomen_typedef)
 {
     chorda nomen_ch;
-    i32* flag;
+    Arbor2TypedefInfo* info;
 
     nomen_ch = _chorda_ex_cstring(nomen_typedef, exp->intern);
-    flag = piscina_allocare(exp->piscina, magnitudo(i32));
-    *flag = I;
-    tabula_dispersa_inserere(exp->typedefs, nomen_ch, flag);
+
+    info = piscina_allocare(exp->piscina, magnitudo(Arbor2TypedefInfo));
+    info->titulus = piscina_allocare(exp->piscina, magnitudo(chorda));
+    *(info->titulus) = nomen_ch;
+    info->layer_discovered = -I;  /* API-injected marker */
+    info->origo = NIHIL;
+    info->est_certum = VERUM;
+
+    tabula_dispersa_inserere(exp->typedefs, nomen_ch, info);
 }
 
 /* ==================================================
@@ -294,6 +300,19 @@ arbor2_expansion_est_typedef(
     chorda                  titulus)
 {
     redde tabula_dispersa_continet(exp->typedefs, titulus);
+}
+
+Arbor2TypedefInfo*
+arbor2_expansion_quaerere_typedef(
+    Arbor2Expansion*        exp,
+    chorda                  titulus)
+{
+    vacuum* valor;
+    si (tabula_dispersa_invenire(exp->typedefs, titulus, &valor))
+    {
+        redde (Arbor2TypedefInfo*)valor;
+    }
+    redde NIHIL;
 }
 
 /* ==================================================
@@ -349,6 +368,172 @@ _initium_segmentum(Arbor2Expansion* exp, i32 linea_initium)
     {
         /* Create first segment */
         _finire_segmentum(exp, linea_initium);
+    }
+}
+
+/* ==================================================
+ * Typedef Detection
+ * ================================================== */
+
+interior vacuum
+_detectare_typedef(
+    Arbor2Expansion*    exp,
+    Xar*                tokens,
+    i32                 pos_initium,
+    i32                 layer_index)
+{
+    i32 i;
+    i32 num;
+    i32 brace_depth;
+    i32 paren_depth;
+    b32 in_fn_ptr_name;
+    b32 fn_ptr_found;
+    Arbor2Token* fn_ptr_name;
+    Arbor2Token* last_id;
+    Arbor2Token* typedef_name;
+    Arbor2Token* tok;
+    Arbor2Token* prev;
+    b32 est_certum;
+
+    num = xar_numerus(tokens);
+    brace_depth = ZEPHYRUM;
+    paren_depth = ZEPHYRUM;
+    in_fn_ptr_name = FALSUM;
+    fn_ptr_found = FALSUM;
+    fn_ptr_name = NIHIL;
+    last_id = NIHIL;
+    typedef_name = NIHIL;
+
+    si (pos_initium >= num)
+    {
+        redde;
+    }
+
+    /* Check if starts with TYPEDEF keyword or "nomen" identifier */
+    tok = *(Arbor2Token**)xar_obtinere(tokens, pos_initium);
+    si (tok->lexema->genus == ARBOR2_LEXEMA_TYPEDEF)
+    {
+        est_certum = VERUM;
+    }
+    alioquin si (tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR &&
+                 tok->lexema->valor.mensura == V &&
+                 memcmp(tok->lexema->valor.datum, "nomen", V) == ZEPHYRUM)
+    {
+        est_certum = FALSUM;  /* Heuristic - could be variable named "nomen" */
+    }
+    alioquin
+    {
+        redde;  /* Not a typedef */
+    }
+
+    /* Scan to semicolon, tracking depths */
+    per (i = pos_initium + I; i < num; i++)
+    {
+        tok = *(Arbor2Token**)xar_obtinere(tokens, i);
+
+        /* Skip newlines */
+        si (tok->lexema->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+        {
+            perge;
+        }
+
+        si (tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON &&
+            brace_depth == ZEPHYRUM && paren_depth == ZEPHYRUM)
+        {
+            frange;
+        }
+
+        /* Track brace depth for struct bodies */
+        si (tok->lexema->genus == ARBOR2_LEXEMA_BRACE_APERTA)
+        {
+            brace_depth++;
+        }
+        alioquin si (tok->lexema->genus == ARBOR2_LEXEMA_BRACE_CLAUSA)
+        {
+            brace_depth--;
+        }
+
+        /* Track paren depth for function pointers */
+        si (tok->lexema->genus == ARBOR2_LEXEMA_PAREN_APERTA)
+        {
+            si (paren_depth == ZEPHYRUM && brace_depth == ZEPHYRUM)
+            {
+                in_fn_ptr_name = VERUM;
+            }
+            paren_depth++;
+        }
+        alioquin si (tok->lexema->genus == ARBOR2_LEXEMA_PAREN_CLAUSA)
+        {
+            paren_depth--;
+            si (paren_depth == ZEPHYRUM)
+            {
+                in_fn_ptr_name = FALSUM;
+            }
+        }
+
+        /* Detect function pointer: (* IDENTIFIER ) */
+        si (in_fn_ptr_name && !fn_ptr_found && brace_depth == ZEPHYRUM)
+        {
+            prev = (i > pos_initium + I) ?
+                   *(Arbor2Token**)xar_obtinere(tokens, i - I) : NIHIL;
+            si (prev != NIHIL &&
+                prev->lexema->genus == ARBOR2_LEXEMA_ASTERISCUS &&
+                tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+            {
+                fn_ptr_name = tok;
+                fn_ptr_found = VERUM;
+            }
+        }
+
+        /* Track last identifier at depth 0 */
+        si (tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR &&
+            brace_depth == ZEPHYRUM && paren_depth == ZEPHYRUM)
+        {
+            last_id = tok;
+        }
+    }
+
+    /* Determine typedef name */
+    si (fn_ptr_found)
+    {
+        typedef_name = fn_ptr_name;
+    }
+    alioquin
+    {
+        typedef_name = last_id;
+    }
+
+    /* Register typedef */
+    si (typedef_name != NIHIL)
+    {
+        chorda* interned;
+        Arbor2TypedefInfo* info;
+
+        interned = chorda_internare(exp->intern, typedef_name->lexema->valor);
+        si (interned != NIHIL)
+        {
+            /* Don't overwrite existing typedef */
+            si (tabula_dispersa_continet(exp->typedefs, *interned))
+            {
+                redde;
+            }
+
+            info = piscina_allocare(exp->piscina, magnitudo(Arbor2TypedefInfo));
+            info->titulus = interned;
+            info->layer_discovered = (s32)layer_index;
+            info->est_certum = est_certum;
+
+            /* Create origin metadata */
+            info->origo = piscina_allocare(exp->piscina, magnitudo(Arbor2OrigoMeta));
+            info->origo->genus = ARBOR2_ORIGO_FONS;
+            info->origo->nomen_macro = NIHIL;
+            info->origo->via_file = exp->via_current;
+            info->origo->linea = typedef_name->lexema->linea;
+            info->origo->columna = typedef_name->lexema->columna;
+            info->origo->layer_index = layer_index;
+
+            tabula_dispersa_inserere(exp->typedefs, *interned, info);
+        }
     }
 }
 
@@ -1132,10 +1317,32 @@ _expand_layer(Arbor2Expansion* exp, Arbor2Layer* input)
             perge;
         }
 
+        /* Check for typedef keyword */
+        si (tok->lexema->genus == ARBOR2_LEXEMA_TYPEDEF)
+        {
+            _detectare_typedef(exp, input->lexemata, i, input->layer_index);
+            /* Pass through typedef tokens to output */
+            locus = xar_addere(result);
+            si (locus != NIHIL)
+            {
+                *locus = tok;
+            }
+            perge;
+        }
+
         /* Check for macro invocation */
         si (tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
         {
             Arbor2MacroDef* def;
+
+            /* Check for "nomen" (Latin typedef) */
+            si (tok->lexema->valor.mensura == V &&
+                memcmp(tok->lexema->valor.datum, "nomen", V) == ZEPHYRUM)
+            {
+                _detectare_typedef(exp, input->lexemata, i, input->layer_index);
+                /* Pass through - don't skip, let it be processed as identifier */
+            }
+
             def = arbor2_expansion_quaerere_macro(exp, tok->lexema->valor);
 
             si (def != NIHIL && !_est_in_macro_stack(exp, tok->lexema->valor))

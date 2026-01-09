@@ -38,6 +38,19 @@ nomen structura {
 } Arbor2MacroDef;
 
 /* ==================================================
+ * Typedef Information
+ *
+ * Metadata about discovered typedefs.
+ * ================================================== */
+
+nomen structura {
+    chorda*         titulus;            /* Typedef name (interned) */
+    s32             layer_discovered;   /* Which layer found (-1 = API-injected) */
+    Arbor2OrigoMeta* origo;             /* Source location (NULL for API-injected) */
+    b32             est_certum;         /* VERUM if keyword, FALSUM if heuristic */
+} Arbor2TypedefInfo;
+
+/* ==================================================
  * Expansion Layer
  *
  * Each expansion pass produces a new layer.
@@ -172,6 +185,11 @@ Arbor2MacroDef* arbor2_expansion_quaerere_macro(
 
 /* Check if name is a typedef */
 b32 arbor2_expansion_est_typedef(
+    Arbor2Expansion*        exp,
+    chorda                  titulus);
+
+/* Get typedef info (returns NULL if not found) */
+Arbor2TypedefInfo* arbor2_expansion_quaerere_typedef(
     Arbor2Expansion*        exp,
     chorda                  titulus);
 

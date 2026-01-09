@@ -219,6 +219,159 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Simple typedef detection
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2TypedefInfo* info;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans simple typedef detection ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        fons = "typedef int MyInt;";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        u.c = "MyInt";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = V;
+
+        CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
+
+        info = arbor2_expansion_quaerere_typedef(exp, nomen_ch);
+        CREDO_NON_NIHIL(info);
+        CREDO_AEQUALIS_I32((i32)info->est_certum, (i32)VERUM);
+        CREDO_AEQUALIS_I32((i32)info->layer_discovered, (i32)ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Latin nomen typedef detection
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2TypedefInfo* info;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans nomen (Latin typedef) detection ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        fons = "nomen int MeusInt;";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        u.c = "MeusInt";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = VII;
+
+        CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
+
+        info = arbor2_expansion_quaerere_typedef(exp, nomen_ch);
+        CREDO_NON_NIHIL(info);
+        /* est_certum is FALSUM for heuristic nomen detection */
+        CREDO_AEQUALIS_I32((i32)info->est_certum, (i32)FALSUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Struct typedef detection
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans struct typedef detection ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        fons = "typedef struct { int x; int y; } Point;";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        u.c = "Point";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = V;
+
+        CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
+
+        /* Verify internal identifiers are not registered as typedefs */
+        u.c = "x";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = I;
+
+        CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), FALSUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function pointer typedef detection
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans function pointer typedef detection ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        fons = "typedef int (*Callback)(int, int);";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        u.c = "Callback";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = VIII;
+
+        CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Typedef with origo information
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2TypedefInfo* info;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans typedef origo information ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        fons = "typedef int TestType;";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        u.c = "TestType";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = VIII;
+
+        info = arbor2_expansion_quaerere_typedef(exp, nomen_ch);
+        CREDO_NON_NIHIL(info);
+        CREDO_NON_NIHIL(info->origo);
+        CREDO_AEQUALIS_I32(info->origo->linea, I);  /* First line */
+    }
+
+
     /* Claudere credo */
     credo_claudere();
     piscina_destruere(piscina);
