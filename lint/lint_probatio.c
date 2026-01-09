@@ -158,7 +158,8 @@ _lint_filum(constans character* via, Piscina* piscina, InternamentumChorda* inte
 
     imprimere("Linting: %s\n", via);
 
-    /* Use default HYBRID mode */
+    /* Use default HYBRID mode - learns macros but doesn't expand them,
+     * which handles __FILE__/__LINE__ gracefully */
     res = arbor_parsere_filum(via, piscina, intern, NIHIL);
 
     si (!res.successus)
