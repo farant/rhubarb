@@ -141,3 +141,44 @@ per (i = pos_initium + I; i < pos_finis; i++)
 - 54 formator tests pass
 
 ---
+
+## 2026-01-08: Function Pointer Typedef Detection
+
+### Problem
+
+Function pointer typedefs were not being detected by `_detectare_typedef()`:
+
+```c
+nomen b32 (*FunctioTractandi)(ContextusTractandi* ctx);
+```
+
+The original logic looked for the last identifier before the semicolon, which found `ctx` (the parameter name) instead of `FunctioTractandi` (the typedef name).
+
+### Solution
+
+Extended `_detectare_typedef()` to detect the function pointer pattern `(* IDENTIFIER )`:
+
+1. Track parenthesis depth in addition to brace depth
+2. Look for the pattern: `(` followed by `*` followed by `IDENTIFIER`
+3. If found, use that identifier as the typedef name instead of the last identifier
+
+```c
+/* Detectare function pointer pattern: (* IDENTIFIER ) */
+si (in_fn_ptr_name && !fn_ptr_found && brace_depth == ZEPHYRUM)
+{
+    si (prev_lex != NIHIL &&
+        prev_lex->genus == ARBOR_LEXEMA_ASTERISCUS &&
+        lex->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+    {
+        fn_ptr_name = lex;
+        fn_ptr_found = VERUM;
+    }
+}
+```
+
+### Test Results
+
+- tractator.c (7722 bytes) now roundtrips byte-exact
+- All 71 project tests pass
+
+---

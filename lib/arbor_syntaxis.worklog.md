@@ -1003,9 +1003,86 @@ Also handles typedef macros (e.g., `i32` → `int` typedef) within struct member
 
 ---
 
+---
+
+## 2026-01-08: Goto Statement Keyword Preservation
+
+### Problem
+
+`salta` (Latin for `goto`) was being output as `goto` in roundtrip tests. The goto statement parsing didn't preserve the original keyword token.
+
+### Solution
+
+Updated `_parsere_goto()` to capture the keyword token and assemble trivia properly:
+
+```c
+/* Capere goto keyword lexeme */
+goto_lex = _currens_lex(syn);
+_progredi(syn);
+
+/* ... get label and semicolon ... */
+
+/* Attachere keyword + trivia */
+si (goto_lex != NIHIL)
+{
+    _addere_synth_trivia_chorda(syn, &nodus->trivia_ante, goto_lex->valor);
+}
+_copiare_trivia_ad_xar(syn, &nodus->trivia_ante, goto_lex->trivia_post);
+_addere_synth_trivia_chorda(syn, &nodus->trivia_ante, label_lex->valor);
+/* ... etc ... */
+```
+
+Also updated the formatter (`arbor_formator.c`) to not emit anything for GOTO_STATEMENT - the trivia handles the entire statement.
+
+### Test Results
+
+- tractator.c (7722 bytes) roundtrips byte-exact
+- All 71 project tests pass
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:
 
 1. **Array types in casts**: `(int[10])x` - array declarators in type-names
 2. **Function pointer casts**: `(int (*)(void))x` - function pointer type-names
+
+---
+
+## 2026-01-08: Recursion Depth Limit
+
+### Problem
+
+Deeply nested code (e.g., `if(1)if(1)if(1)...` repeated 1000+ times) could cause stack overflow since the parser uses true recursion for statements and compound blocks.
+
+### Solution
+
+Added recursion depth tracking with a limit of 256 levels:
+
+**1. Added depth field to ArborSyntaxis struct:**
+```c
+#define ARBOR_MAX_RECURSIO_PROFUNDITAS  CCLVI  /* 256 */
+i32 recursio_profunditas;  /* in struct */
+```
+
+**2. Added helper function:**
+```c
+interior b32
+_recursio_nimis_profunda(ArborSyntaxis* syn)
+{
+    redde syn->recursio_profunditas >= ARBOR_MAX_RECURSIO_PROFUNDITAS;
+}
+```
+
+**3. Added depth checks to recursive functions:**
+- `_parsere_compound()` - increments at start, decrements at end
+- `_parsere_sententia()` - increments at start, decrements at end
+
+When depth limit is hit, an error is added and NULL is returned, preventing stack overflow.
+
+### Test Results
+
+All 71 project tests pass.
+
+---

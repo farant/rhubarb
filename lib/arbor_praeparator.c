@@ -653,13 +653,25 @@ _detectare_typedef(
         }
     }
 
-    /* Invenire ultimum identifier ante ; (vel finem lineae)
-     * Hoc est nomen typedef (assumendo simplex typedef)
-     * Tractare imbricatae braces: nomen structura X { int a; } X;
-     * Semicolon intra braces non est finis declarationis. */
+    /* Invenire nomen typedef
+     *
+     * Duo casus:
+     * 1. Simplex: nomen int MyInt;  -> ultimum identifier ante ;
+     * 2. Struct:  nomen structura X { int a; } X;  -> ultimum identifier extra braces
+     * 3. Functio pointer: nomen int (*FP)(int);  -> identifier post (*
+     *
+     * Pro functio pointer, pattern est: ( * IDENTIFIER ) (
+     * Si invenitur, nomen est identifier post (*
+     */
     lex_last_id = NIHIL;
     {
         i32 brace_depth = ZEPHYRUM;
+        i32 paren_depth = ZEPHYRUM;
+        b32 in_fn_ptr_name = FALSUM;  /* Post (* */
+        b32 fn_ptr_found = FALSUM;
+        ArborLexema* fn_ptr_name = NIHIL;
+        ArborLexema* prev_lex = NIHIL;
+
         per (i = pos_initium + I; i < pos_finis; i++)
         {
             ArborLexema* lex = *(ArborLexema**)xar_obtinere(lexemata, i);
@@ -678,17 +690,61 @@ _detectare_typedef(
                 brace_depth--;
             }
 
+            /* Traceare parentheses (tantum extra braces) */
+            si (brace_depth == ZEPHYRUM)
+            {
+                si (lex->genus == ARBOR_LEXEMA_PAREN_APERTA)
+                {
+                    paren_depth++;
+                    /* Verificare si (* pattern pro function pointer */
+                    si (paren_depth == I)
+                    {
+                        in_fn_ptr_name = VERUM;
+                    }
+                }
+                alioquin si (lex->genus == ARBOR_LEXEMA_PAREN_CLAUSA)
+                {
+                    in_fn_ptr_name = FALSUM;
+                    paren_depth--;
+                }
+            }
+
+            /* Detectare function pointer pattern: (* IDENTIFIER ) */
+            si (in_fn_ptr_name && !fn_ptr_found && brace_depth == ZEPHYRUM)
+            {
+                /* Verificare si prev est * et curr est identifier */
+                si (prev_lex != NIHIL &&
+                    prev_lex->genus == ARBOR_LEXEMA_ASTERISCUS &&
+                    lex->genus == ARBOR_LEXEMA_IDENTIFICATOR)
+                {
+                    fn_ptr_name = lex;
+                    fn_ptr_found = VERUM;
+                }
+            }
+
             /* Si semicolon ad brace_depth 0, finis declarationis */
             si (lex->genus == ARBOR_LEXEMA_SEMICOLON && brace_depth == ZEPHYRUM)
             {
                 frange;
             }
 
-            /* Traceare ultimum identifier (extra braces tantum) */
-            si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && brace_depth == ZEPHYRUM)
+            /* Traceare ultimum identifier (extra braces et extra parens tantum)
+             * Solum si non function pointer */
+            si (!fn_ptr_found &&
+                lex->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                brace_depth == ZEPHYRUM &&
+                paren_depth == ZEPHYRUM)
             {
                 lex_last_id = lex;
             }
+
+            prev_lex = lex;
+        }
+
+        /* Si function pointer inventum, usa fn_ptr_name */
+        si (fn_ptr_found && fn_ptr_name != NIHIL)
+        {
+            lex_last_id = fn_ptr_name;
         }
     }
 

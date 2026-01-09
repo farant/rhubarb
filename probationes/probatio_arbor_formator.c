@@ -1118,6 +1118,19 @@ probatio_fidelis_roundtrip (
         "int f() { return sizeof(const int); }",
         "sizeof-const");
 
+    /* ===== ADVANCED CAST TYPES (TODO) ===== */
+    /* These are valid C89 but require extended type-name parsing */
+
+    /* Array type cast - TODO: requires array declarator in type-name */
+    /* _credo_roundtrip(piscina, intern,
+        "int *f() { return (int[10])x; }",
+        "array-type-cast"); */
+
+    /* Function pointer cast - TODO: requires fn ptr declarator in type-name */
+    /* _credo_roundtrip(piscina, intern,
+        "int f() { return (int (*)(void))ptr; }",
+        "fn-ptr-cast"); */
+
     imprimere("    [OK]\n");
 }
 
@@ -1843,6 +1856,11 @@ probatio_roundtrip_hybrid (
     _credo_roundtrip_filum_hybrid(piscina, intern,
         "probationes/fixa/roundtrip/sectio.h",
         "sectio.h");
+
+    /* Test tractator.c - function pointer typedef casts */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/tractator.c",
+        "tractator.c");
 
     imprimere("    [OK]\n");
 }

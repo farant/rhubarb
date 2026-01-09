@@ -411,7 +411,10 @@ _colligere_trivia(ArborLexator* lex)
                 FALSUM   /* non est c99 */
             );
             locus = xar_addere(lex->trivia_pendente);
-            *locus = trivia;
+            si (locus != NIHIL)
+            {
+                *locus = trivia;
+            }
         }
         /* Block comment: slash star ... star slash */
         alioquin si (c == '/' && _aspicere(lex, I) == '*')
@@ -442,7 +445,10 @@ _colligere_trivia(ArborLexator* lex)
                 FALSUM   /* non est c99 */
             );
             locus = xar_addere(lex->trivia_pendente);
-            *locus = trivia;
+            si (locus != NIHIL)
+            {
+                *locus = trivia;
+            }
         }
         /* Line comment: slash slash (C99) */
         alioquin si (c == '/' && _aspicere(lex, I) == '/')
@@ -468,7 +474,10 @@ _colligere_trivia(ArborLexator* lex)
                 VERUM    /* EST c99 */
             );
             locus = xar_addere(lex->trivia_pendente);
-            *locus = trivia;
+            si (locus != NIHIL)
+            {
+                *locus = trivia;
+            }
         }
         alioquin
         {
@@ -524,7 +533,10 @@ _colligere_trivia_trailing(ArborLexator* lex, ArborLexema* lexema)
                 FALSUM
             );
             locus = xar_addere(trailing);
-            *locus = trivia;
+            si (locus != NIHIL)
+            {
+                *locus = trivia;
+            }
         }
         /* Block comment on same line */
         alioquin si (c == '/' && _aspicere(lex, I) == '*')
@@ -555,7 +567,10 @@ _colligere_trivia_trailing(ArborLexator* lex, ArborLexema* lexema)
                 FALSUM
             );
             locus = xar_addere(trailing);
-            *locus = trivia;
+            si (locus != NIHIL)
+            {
+                *locus = trivia;
+            }
         }
         /* Line comment on same line */
         alioquin si (c == '/' && _aspicere(lex, I) == '/')
@@ -581,7 +596,10 @@ _colligere_trivia_trailing(ArborLexator* lex, ArborLexema* lexema)
                 VERUM
             );
             locus = xar_addere(trailing);
-            *locus = trivia;
+            si (locus != NIHIL)
+            {
+                *locus = trivia;
+            }
         }
         alioquin
         {
@@ -1271,6 +1289,10 @@ arbor_lexema_omnia(ArborLexator* lex)
     {
         lexema = arbor_lexema_proximum(lex);
         locus = xar_addere(lexemata);
+        si (locus == NIHIL)
+        {
+            frange;
+        }
         *locus = lexema;
     }
     dum (lexema->genus != ARBOR_LEXEMA_EOF && lexema->genus != ARBOR_LEXEMA_ERROR);

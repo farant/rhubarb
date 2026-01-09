@@ -32,6 +32,9 @@
 #define PREC_UNARIUS         XIV    /* - ! ~ ++ -- & * sizeof (cast) */
 #define PREC_POSTFIX         XV     /* () [] . -> ++ -- */
 
+/* Maximum recursion depth to prevent stack overflow on malformed input */
+#define ARBOR_MAX_RECURSIO_PROFUNDITAS  CCLVI  /* 256 */
+
 /* ==================================================
  * Parser State
  * ================================================== */
@@ -46,6 +49,7 @@ structura ArborSyntaxis {
     b32                   panico;       /* Error recovery mode */
     TabulaDispersa*       typedef_nomina;  /* Typedef name table */
     TabulaDispersa*       keyword_macros;  /* From preprocessor: macro -> keyword type */
+    i32                   recursio_profunditas;  /* Current recursion depth */
 };
 
 /* ==================================================
@@ -142,6 +146,12 @@ _est_finis(ArborSyntaxis* syn)
     ArborLexema* lex;
     lex = _currens_lex(syn);
     redde lex == NIHIL || lex->genus == ARBOR_LEXEMA_EOF;
+}
+
+interior b32
+_recursio_nimis_profunda(ArborSyntaxis* syn)
+{
+    redde syn->recursio_profunditas >= ARBOR_MAX_RECURSIO_PROFUNDITAS;
 }
 
 interior vacuum
@@ -3161,8 +3171,10 @@ _parsere_continue(ArborSyntaxis* syn)
 interior ArborNodus*
 _parsere_goto(ArborSyntaxis* syn)
 {
-    ArborNodus* nodus;
-    ArborLexema* lex;
+    ArborNodus*  nodus;
+    ArborLexema* goto_lex;
+    ArborLexema* label_lex;
+    ArborLexema* semi_lex;
 
     nodus = _creare_nodum(syn, ARBOR_NODUS_GOTO_STATEMENT);
     si (nodus == NIHIL)
@@ -3170,22 +3182,41 @@ _parsere_goto(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
+    /* Capere goto keyword lexeme */
+    goto_lex = _currens_lex(syn);
+
     /* Skip goto */
     _progredi(syn);
 
-    lex = _currens_lex(syn);
-    si (lex == NIHIL || lex->genus != ARBOR_LEXEMA_IDENTIFICATOR)
+    label_lex = _currens_lex(syn);
+    si (label_lex == NIHIL || label_lex->genus != ARBOR_LEXEMA_IDENTIFICATOR)
     {
         _error(syn, "Expectabatur label post 'goto'");
         redde NIHIL;
     }
 
-    nodus->datum.saltus.label = chorda_internare(syn->intern, lex->valor);
+    nodus->datum.saltus.label = chorda_internare(syn->intern, label_lex->valor);
     _progredi(syn);
+
+    /* Capere trivia ex ';' */
+    semi_lex = _currens_lex(syn);
+
+    /* Attachere keyword + trivia */
+    /* "goto label;" vel "salta label;" */
+    si (goto_lex != NIHIL)
+    {
+        _addere_synth_trivia_chorda(syn, &nodus->trivia_ante, goto_lex->valor);
+    }
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, (goto_lex != NIHIL) ? goto_lex->trivia_post : NIHIL);
+    _addere_synth_trivia_chorda(syn, &nodus->trivia_ante, label_lex->valor);
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, (label_lex != NIHIL) ? label_lex->trivia_post : NIHIL);
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_ante, (semi_lex != NIHIL) ? semi_lex->trivia_ante : NIHIL);
+    _addere_synth_trivia(syn, &nodus->trivia_ante, ";");
+    _copiare_trivia_ad_xar(syn, &nodus->trivia_post, (semi_lex != NIHIL) ? semi_lex->trivia_post : NIHIL);
 
     _expectare(syn, ARBOR_LEXEMA_SEMICOLON, "Expectabatur ;");
 
-    _finire_nodum(syn, nodus);
+    /* NON vocare _finire_nodum - trivia iam set */
     redde nodus;
 }
 
@@ -3231,9 +3262,19 @@ _parsere_compound(ArborSyntaxis* syn)
     ArborLexema* close_lex;
     Xar* trivia_post_open;
 
+    /* Check recursion depth */
+    syn->recursio_profunditas++;
+    si (_recursio_nimis_profunda(syn))
+    {
+        _error(syn, "Recursio nimis profunda (maximum CCLVI)");
+        syn->recursio_profunditas--;
+        redde NIHIL;
+    }
+
     nodus = _creare_nodum(syn, ARBOR_NODUS_COMPOUND_STATEMENT);
     si (nodus == NIHIL)
     {
+        syn->recursio_profunditas--;
         redde NIHIL;
     }
 
@@ -3320,6 +3361,7 @@ _parsere_compound(ArborSyntaxis* syn)
     _expectare(syn, ARBOR_LEXEMA_BRACE_CLAUSA, "Expectabatur }");
 
     _finire_nodum(syn, nodus);
+    syn->recursio_profunditas--;
     redde nodus;
 }
 
@@ -3328,15 +3370,26 @@ _parsere_sententia(ArborSyntaxis* syn)
 {
     ArborLexema* lex;
     ArborLexemaGenus effective_genus;
+    ArborNodus* resultatus;
 
     si (syn->panico)
     {
         redde NIHIL;
     }
 
+    /* Check recursion depth */
+    syn->recursio_profunditas++;
+    si (_recursio_nimis_profunda(syn))
+    {
+        _error(syn, "Recursio nimis profunda (maximum CCLVI)");
+        syn->recursio_profunditas--;
+        redde NIHIL;
+    }
+
     lex = _currens_lex(syn);
     si (lex == NIHIL || lex->genus == ARBOR_LEXEMA_EOF)
     {
+        syn->recursio_profunditas--;
         redde NIHIL;
     }
 
@@ -3355,40 +3408,52 @@ _parsere_sententia(ArborSyntaxis* syn)
     commutatio (effective_genus)
     {
         casus ARBOR_LEXEMA_BRACE_APERTA:
-            redde _parsere_compound(syn);
+            resultatus = _parsere_compound(syn);
+            frange;
 
         casus ARBOR_LEXEMA_IF:
-            redde _parsere_if(syn);
+            resultatus = _parsere_if(syn);
+            frange;
 
         casus ARBOR_LEXEMA_SWITCH:
-            redde _parsere_switch(syn);
+            resultatus = _parsere_switch(syn);
+            frange;
 
         casus ARBOR_LEXEMA_WHILE:
-            redde _parsere_while(syn);
+            resultatus = _parsere_while(syn);
+            frange;
 
         casus ARBOR_LEXEMA_DO:
-            redde _parsere_do(syn);
+            resultatus = _parsere_do(syn);
+            frange;
 
         casus ARBOR_LEXEMA_FOR:
-            redde _parsere_for(syn);
+            resultatus = _parsere_for(syn);
+            frange;
 
         casus ARBOR_LEXEMA_GOTO:
-            redde _parsere_goto(syn);
+            resultatus = _parsere_goto(syn);
+            frange;
 
         casus ARBOR_LEXEMA_CONTINUE:
-            redde _parsere_continue(syn);
+            resultatus = _parsere_continue(syn);
+            frange;
 
         casus ARBOR_LEXEMA_BREAK:
-            redde _parsere_break(syn);
+            resultatus = _parsere_break(syn);
+            frange;
 
         casus ARBOR_LEXEMA_RETURN:
-            redde _parsere_return(syn);
+            resultatus = _parsere_return(syn);
+            frange;
 
         casus ARBOR_LEXEMA_CASE:
-            redde _parsere_case(syn);
+            resultatus = _parsere_case(syn);
+            frange;
 
         casus ARBOR_LEXEMA_DEFAULT:
-            redde _parsere_default(syn);
+            resultatus = _parsere_default(syn);
+            frange;
 
         casus ARBOR_LEXEMA_SEMICOLON:
             /* Empty statement */
@@ -3401,8 +3466,9 @@ _parsere_sententia(ArborSyntaxis* syn)
                 }
                 _progredi(syn);
                 _finire_nodum(syn, empty);
-                redde empty;
+                resultatus = empty;
             }
+            frange;
 
         casus ARBOR_LEXEMA_IDENTIFICATOR:
             /* Check for label: */
@@ -3411,14 +3477,19 @@ _parsere_sententia(ArborSyntaxis* syn)
                 next = _prospicere_lex(syn, I);
                 si (next != NIHIL && next->genus == ARBOR_LEXEMA_COLON)
                 {
-                    redde _parsere_labeled(syn);
+                    resultatus = _parsere_labeled(syn);
+                    frange;
                 }
             }
             /* Fall through to expression statement */
 
         ordinarius:
-            redde _parsere_expression_statement(syn);
+            resultatus = _parsere_expression_statement(syn);
+            frange;
     }
+
+    syn->recursio_profunditas--;
+    redde resultatus;
 }
 
 /* ==================================================

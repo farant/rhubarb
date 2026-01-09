@@ -412,14 +412,7 @@ _emittere_nodum_fidelis (
         frange;
 
     casus ARBOR_NODUS_GOTO_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "goto");
-        chorda_aedificator_appendere_literis(status->aedificator, " ");
-        si (nodus->datum.saltus.label)
-        {
-            chorda_aedificator_appendere_chorda(status->aedificator,
-                *nodus->datum.saltus.label);
-        }
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
+        /* Keyword + label + ';' in nodus.trivia_ante/trivia_post */
         frange;
 
     /* ===== LABELED STATEMENT ===== */
