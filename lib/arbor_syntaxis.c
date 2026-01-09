@@ -3594,8 +3594,22 @@ _parsere_struct_declaration(ArborSyntaxis* syn)
                             habet_typedef_nomen = VERUM;
                             handled = VERUM;
                         }
-                        /* NOTE: struct/union/enum NOT handled here to avoid complexity.
-                         * They would need to be parsed at declaration level. */
+                        /* Struct/union/enum keyword macros */
+                        alioquin si (keyword_type == ARBOR_LEXEMA_STRUCT)
+                        {
+                            spec = _parsere_struct_specifier(syn, FALSUM);
+                            handled = VERUM;
+                        }
+                        alioquin si (keyword_type == ARBOR_LEXEMA_UNION)
+                        {
+                            spec = _parsere_struct_specifier(syn, VERUM);
+                            handled = VERUM;
+                        }
+                        alioquin si (keyword_type == ARBOR_LEXEMA_ENUM)
+                        {
+                            spec = _parsere_enum_specifier(syn);
+                            handled = VERUM;
+                        }
                     }
                 }
 
@@ -3902,6 +3916,7 @@ _parsere_type_specifier(ArborSyntaxis* syn)
 {
     ArborNodus* nodus;
     ArborLexema* lex;
+    ArborLexemaGenus effectivum_genus;
 
     lex = _currens_lex(syn);
     si (lex == NIHIL)
@@ -3909,8 +3924,20 @@ _parsere_type_specifier(ArborSyntaxis* syn)
         redde NIHIL;
     }
 
+    /* Resolve effective genus via keyword_macros */
+    effectivum_genus = lex->genus;
+    si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && syn->keyword_macros != NIHIL)
+    {
+        chorda* titulus = chorda_internare(syn->intern, lex->valor);
+        vacuum* keyword_val = NIHIL;
+        si (tabula_dispersa_invenire(syn->keyword_macros, *titulus, &keyword_val))
+        {
+            effectivum_genus = (ArborLexemaGenus)(*(i32*)keyword_val);
+        }
+    }
+
     /* Dispatch for struct/union/enum */
-    commutatio (lex->genus)
+    commutatio (effectivum_genus)
     {
         casus ARBOR_LEXEMA_STRUCT:
             redde _parsere_struct_specifier(syn, FALSUM);
@@ -5405,7 +5432,7 @@ arbor_syntaxis_creare(
     syn->lexemata = NIHIL;
     syn->positus = ZEPHYRUM;
     syn->numerus = ZEPHYRUM;
-    syn->errores = xar_creare(piscina, magnitudo(ArborError));
+    syn->errores = xar_creare(piscina, magnitudo(ArborError*));
     syn->panico = FALSUM;
     syn->typedef_nomina = tabula_dispersa_creare_chorda(piscina, CXXVIII);
     syn->keyword_macros = NIHIL;  /* Set via arbor_syntaxis_ponere_keyword_macros */
@@ -5467,7 +5494,7 @@ arbor_syntaxis_parsere(
     syn->panico = FALSUM;
 
     /* Clear previous errors */
-    syn->errores = xar_creare(syn->piscina, magnitudo(ArborError));
+    syn->errores = xar_creare(syn->piscina, magnitudo(ArborError*));
 
     /* Parse */
     res.radix = _parsere_translation_unit(syn);

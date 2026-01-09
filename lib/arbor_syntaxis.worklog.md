@@ -1041,6 +1041,63 @@ Also updated the formatter (`arbor_formator.c`) to not emit anything for GOTO_ST
 
 ---
 
+## 2026-01-08: STRUCT/UNION/ENUM Keyword Macros in Struct Members
+
+### Problem
+
+Struct member declarations using `structura` (Latin for `struct`) weren't parsing:
+```c
+structura Alveus {
+    structura Alveus* sequens;  /* FAILED - "Expectabatur ;" at col 15 */
+};
+```
+
+The parser expected a type specifier but saw `structura` as an IDENTIFIER.
+
+### Root Cause
+
+`_parsere_struct_declaration()` had a comment explicitly noting that STRUCT/UNION/ENUM keyword macros were "NOT handled here to avoid complexity." The function checked for type specifiers, type qualifiers, and basic keyword macros (void, int, const, etc.) but skipped struct/union/enum.
+
+When encountering `structura`:
+1. Parser saw IDENTIFIER token
+2. Checked keyword_macros → found it maps to STRUCT
+3. But no handling code existed for STRUCT case
+4. Loop broke with no specifiers parsed
+5. Parser tried to parse declarator starting at `structura`
+6. Then saw `Alveus` and expected semicolon
+
+### Fix
+
+Added STRUCT/UNION/ENUM handling to `_parsere_struct_declaration()` keyword macro checks:
+
+```c
+/* Struct/union/enum keyword macros */
+alioquin si (keyword_type == ARBOR_LEXEMA_STRUCT)
+{
+    spec = _parsere_struct_specifier(syn, FALSUM);
+    handled = VERUM;
+}
+alioquin si (keyword_type == ARBOR_LEXEMA_UNION)
+{
+    spec = _parsere_struct_specifier(syn, VERUM);
+    handled = VERUM;
+}
+alioquin si (keyword_type == ARBOR_LEXEMA_ENUM)
+{
+    spec = _parsere_enum_specifier(syn);
+    handled = VERUM;
+}
+```
+
+This reuses the existing `_parsere_struct_specifier` and `_parsere_enum_specifier` functions which already handle keyword macro identifiers correctly at their start.
+
+### Test Results
+
+- lib/piscina.c parses successfully with HYBRID mode
+- All 72 project tests pass
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:

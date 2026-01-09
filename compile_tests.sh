@@ -123,6 +123,7 @@ declare -a SOURCE_FILES=(
     "lib/arbor_index.c"
     "lib/arbor_quaestio.c"
     "lib/arbor_formator.c"
+    "lib/arbor.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
 )
