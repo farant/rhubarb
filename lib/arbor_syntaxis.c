@@ -1263,6 +1263,7 @@ _parsere_string_lit(ArborSyntaxis* syn)
 {
     ArborNodus* nodus;
     ArborLexema* lex;
+    ArborLexema** slot;
 
     lex = _currens_lex(syn);
     si (lex == NIHIL)
@@ -1278,14 +1279,28 @@ _parsere_string_lit(ArborSyntaxis* syn)
     }
 
     nodus->datum.string_lit.textus = chorda_internare(syn->intern, lex->valor);
+    nodus->datum.string_lit.partes = NIHIL;
 
     _progredi(syn);
 
     /* Concatenare adjacent string literals */
-    dum (_congruit(syn, ARBOR_LEXEMA_STRING_LIT))
+    si (_congruit(syn, ARBOR_LEXEMA_STRING_LIT))
     {
-        /* TODO: proper string concatenation */
-        _progredi(syn);
+        /* Multiple strings - store all parts for fidelis roundtrip */
+        nodus->datum.string_lit.partes = xar_creare(syn->piscina, magnitudo(ArborLexema*));
+
+        /* Add first lexeme */
+        slot = xar_addere(nodus->datum.string_lit.partes);
+        si (slot != NIHIL) *slot = lex;
+
+        /* Add remaining lexemes */
+        dum (_congruit(syn, ARBOR_LEXEMA_STRING_LIT))
+        {
+            lex = _currens_lex(syn);
+            slot = xar_addere(nodus->datum.string_lit.partes);
+            si (slot != NIHIL) *slot = lex;
+            _progredi(syn);
+        }
     }
 
     _finire_nodum(syn, nodus);

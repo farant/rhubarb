@@ -586,7 +586,24 @@ _emittere_nodum_fidelis (
         frange;
 
     casus ARBOR_NODUS_STRING_LITERAL:
-        si (nodus->datum.string_lit.textus)
+        si (nodus->datum.string_lit.partes != NIHIL)
+        {
+            /* Adjacent string literals - emit each with trivia_post between */
+            i32 n = xar_numerus(nodus->datum.string_lit.partes);
+            i32 j;
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                ArborLexema** lex_ptr = xar_obtinere(nodus->datum.string_lit.partes, j);
+                ArborLexema* lex = *lex_ptr;
+                chorda_aedificator_appendere_chorda(status->aedificator, lex->valor);
+                /* Emit trivia_post for all but last (space between strings) */
+                si (j < n - I && lex->trivia_post != NIHIL)
+                {
+                    _emittere_trivia(status, lex->trivia_post);
+                }
+            }
+        }
+        alioquin si (nodus->datum.string_lit.textus)
         {
             chorda_aedificator_appendere_chorda(status->aedificator,
                 *nodus->datum.string_lit.textus);

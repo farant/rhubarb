@@ -1131,6 +1131,23 @@ probatio_fidelis_roundtrip (
         "int f() { return (int (*)(void))ptr; }",
         "fn-ptr-cast"); */
 
+    /* ===== STRING CONCATENATION ===== */
+    _credo_roundtrip(piscina, intern,
+        "char *s = \"hello\" \"world\";",
+        "string-concat-simple");
+
+    _credo_roundtrip(piscina, intern,
+        "char *s = \"a\" \"b\" \"c\";",
+        "string-concat-triple");
+
+    _credo_roundtrip(piscina, intern,
+        "char *s = \"hello\"  \"world\";",
+        "string-concat-extra-space");
+
+    _credo_roundtrip(piscina, intern,
+        "void f() { printf(\"hello\" \"world\"); }",
+        "string-concat-in-call");
+
     imprimere("    [OK]\n");
 }
 

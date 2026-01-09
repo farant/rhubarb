@@ -345,6 +345,7 @@ structura ArborNodus {
         /* string literal */
         structura {
             chorda*       textus;
+            Xar*          partes;      /* For adjacent strings: Xar of ArborLexema* */
         } string_lit;
 
         /* pointer declarator */
