@@ -341,7 +341,7 @@ _emittere_nodum_fidelis (
 
     /* ===== WHILE STATEMENT ===== */
     casus ARBOR_NODUS_WHILE_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "while");
+        /* NON emittere "while" - trivia conditionis iam continet keyword */
         /* NON emittere () - trivia conditionis iam continet punctuationem */
         _emittere_nodum_fidelis(status, nodus->datum.iteratio.conditio);
         _emittere_nodum_fidelis(status, nodus->datum.iteratio.corpus);
@@ -370,26 +370,24 @@ _emittere_nodum_fidelis (
 
     /* ===== SWITCH STATEMENT ===== */
     casus ARBOR_NODUS_SWITCH_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "switch");
-        chorda_aedificator_appendere_literis(status->aedificator, "(");
+        /* NON emittere "switch" - trivia conditionis iam continet keyword */
+        /* NON emittere () - trivia conditionis iam continet punctuationem */
         _emittere_nodum_fidelis(status, nodus->datum.selectio.conditio);
-        chorda_aedificator_appendere_literis(status->aedificator, ")");
         _emittere_nodum_fidelis(status, nodus->datum.selectio.corpus);
         frange;
 
     /* ===== CASE LABEL ===== */
     casus ARBOR_NODUS_CASE_LABEL:
-        chorda_aedificator_appendere_literis(status->aedificator, "case");
+        /* NON emittere "case" - trivia valoris iam continet keyword */
+        /* NON emittere ":" - trivia valoris iam continet punctuationem */
         _emittere_nodum_fidelis(status, nodus->datum.eventus.valor);
-        chorda_aedificator_appendere_literis(status->aedificator, ":");
         si (nodus->datum.eventus.sententia)
             _emittere_nodum_fidelis(status, nodus->datum.eventus.sententia);
         frange;
 
     /* ===== DEFAULT LABEL ===== */
     casus ARBOR_NODUS_DEFAULT_LABEL:
-        chorda_aedificator_appendere_literis(status->aedificator, "default");
-        chorda_aedificator_appendere_literis(status->aedificator, ":");
+        /* NON emittere "default:" - trivia nodi iam continet totum */
         frange;
 
     /* ===== RETURN STATEMENT ===== */
@@ -406,8 +404,7 @@ _emittere_nodum_fidelis (
 
     /* ===== BREAK/CONTINUE/GOTO ===== */
     casus ARBOR_NODUS_BREAK_STATEMENT:
-        chorda_aedificator_appendere_literis(status->aedificator, "break");
-        chorda_aedificator_appendere_literis(status->aedificator, ";");
+        /* NON emittere "break;" - trivia nodi iam continet totum */
         frange;
 
     casus ARBOR_NODUS_CONTINUE_STATEMENT:
@@ -635,7 +632,16 @@ _emittere_nodum_fidelis (
 
     /* ===== STRUCT/UNION SPECIFIER ===== */
     casus ARBOR_NODUS_STRUCT_SPECIFIER:
-        chorda_aedificator_appendere_literis(status->aedificator, "struct");
+        /* Use original keyword text if available (e.g., "structura" instead of "struct") */
+        si (nodus->datum.aggregatum.keyword_valor != NIHIL)
+        {
+            chorda_aedificator_appendere_chorda(status->aedificator,
+                *nodus->datum.aggregatum.keyword_valor);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(status->aedificator, "struct");
+        }
         si (nodus->datum.aggregatum.titulus)
         {
             chorda_aedificator_appendere_literis(status->aedificator, " ");
@@ -655,7 +661,16 @@ _emittere_nodum_fidelis (
         frange;
 
     casus ARBOR_NODUS_UNION_SPECIFIER:
-        chorda_aedificator_appendere_literis(status->aedificator, "union");
+        /* Use original keyword text if available */
+        si (nodus->datum.aggregatum.keyword_valor != NIHIL)
+        {
+            chorda_aedificator_appendere_chorda(status->aedificator,
+                *nodus->datum.aggregatum.keyword_valor);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(status->aedificator, "union");
+        }
         si (nodus->datum.aggregatum.titulus)
         {
             chorda_aedificator_appendere_literis(status->aedificator, " ");

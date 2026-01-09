@@ -193,6 +193,7 @@ structura ArborNodus {
         structura {
             chorda*       titulus;       /* Tag name (may be NULL) */
             Xar*          membra;        /* Member declarations */
+            chorda*       keyword_valor; /* Original keyword text (e.g., "structura") */
         } aggregatum;
 
         /* enum-specifier */
@@ -432,6 +433,13 @@ ArborSyntaxis* arbor_syntaxis_creare(
 vacuum arbor_syntaxis_ponere_keyword_macros(
     ArborSyntaxis*        syn,
     TabulaDispersa*       keyword_macros);
+
+/* Ponere typedef nomina table (from preprocessor HYBRID mode)
+ * Contains typedef names learned from included files.
+ * E.g., "i8", "i32", etc. */
+vacuum arbor_syntaxis_ponere_typedef_nomina(
+    ArborSyntaxis*        syn,
+    TabulaDispersa*       typedef_nomina);
 
 /* ==================================================
  * API - Parsing

@@ -684,8 +684,20 @@ _credo_roundtrip_filum_preservare (
     /* Comparare longitudinem */
     si (fructus.mensura != fons.mensura)
     {
+        {
+        FILE* debug_fp;
         imprimere("[FAIL - length %d != %d]\n",
             (int)fructus.mensura, (int)fons.mensura);
+
+        /* DEBUG: Write output to file for inspection */
+        debug_fp = fopen("/tmp/roundtrip_output.c", "wb");
+        si (debug_fp != NIHIL)
+        {
+            fwrite(fructus.datum, 1, (size_t)fructus.mensura, debug_fp);
+            fclose(debug_fp);
+            imprimere("      output written to /tmp/roundtrip_output.c\n");
+        }
+        }
 
         /* Invenire primam differentiam */
         per (i = ZEPHYRUM; i < fructus.mensura && i < fons.mensura; i++)
@@ -768,6 +780,7 @@ _credo_roundtrip_filum_hybrid (
     Xar*              lexemata;
     Xar*              processata;
     TabulaDispersa*   keyword_macros;
+    TabulaDispersa*   typedef_nomina;
     ArborSyntaxisResultus res;
 
     imprimere("    %s: ", titulus);
@@ -811,13 +824,10 @@ _credo_roundtrip_filum_hybrid (
     }
     arbor_praeparator_ponere_modum(pp, ARBOR_PP_MODUS_HYBRID);
 
-    /* Addere include paths pro latina.h et aliis headers */
-    imprimere("\n      [debug] adding include paths...\n");
+    /* Addere include paths */
     arbor_praeparator_addere_via(pp, "include");
     arbor_praeparator_addere_via(pp, "probationes/fixa/roundtrip");
 
-    imprimere("      [debug] processare lexemata...\n");
-    fflush(stdout);
     processata = arbor_praeparator_processare_lexemata(pp, lexemata, via);
     si (processata == NIHIL)
     {
@@ -825,14 +835,15 @@ _credo_roundtrip_filum_hybrid (
         CREDO_VERUM(processata != NIHIL);
         redde;
     }
-    imprimere("      [debug] preprocessing complete, %d tokens\n", xar_numerus(processata));
 
-    /* Obtinere keyword macros et transferre ad parser */
+    /* Obtinere keyword macros et typedef nomina */
     keyword_macros = arbor_praeparator_obtinere_keyword_macros(pp);
+    typedef_nomina = arbor_praeparator_obtinere_typedef_nomina(pp);
 
     /* Parse */
     syn = arbor_syntaxis_creare(piscina, intern);
     arbor_syntaxis_ponere_keyword_macros(syn, keyword_macros);
+    arbor_syntaxis_ponere_typedef_nomina(syn, typedef_nomina);
     res = arbor_syntaxis_parsere(syn, processata);
 
     si (!res.successus)
@@ -870,8 +881,20 @@ _credo_roundtrip_filum_hybrid (
     /* Comparare longitudinem */
     si (fructus.mensura != fons.mensura)
     {
+        {
+        FILE* debug_fp;
         imprimere("[FAIL - length %d != %d]\n",
             (int)fructus.mensura, (int)fons.mensura);
+
+        /* DEBUG: Write output to file for inspection */
+        debug_fp = fopen("/tmp/roundtrip_output.c", "wb");
+        si (debug_fp != NIHIL)
+        {
+            fwrite(fructus.datum, 1, (size_t)fructus.mensura, debug_fp);
+            fclose(debug_fp);
+            imprimere("      output written to /tmp/roundtrip_output.c\n");
+        }
+        }
 
         /* Invenire primam differentiam */
         per (i = ZEPHYRUM; i < fructus.mensura && i < fons.mensura; i++)
@@ -1453,8 +1476,20 @@ _credo_roundtrip_filum (
     /* Comparare longitudinem */
     si (fructus.mensura != fons.mensura)
     {
+        {
+        FILE* debug_fp;
         imprimere("[FAIL - length %d != %d]\n",
             (int)fructus.mensura, (int)fons.mensura);
+
+        /* DEBUG: Write output to file for inspection */
+        debug_fp = fopen("/tmp/roundtrip_output.c", "wb");
+        si (debug_fp != NIHIL)
+        {
+            fwrite(fructus.datum, 1, (size_t)fructus.mensura, debug_fp);
+            fclose(debug_fp);
+            imprimere("      output written to /tmp/roundtrip_output.c\n");
+        }
+        }
 
         /* Invenire primam differentiam */
         per (i = ZEPHYRUM; i < fructus.mensura && i < fons.mensura; i++)
@@ -1768,6 +1803,46 @@ probatio_roundtrip_hybrid (
     _credo_roundtrip_filum_hybrid(piscina, intern,
         "probationes/fixa/roundtrip/cursor.c",
         "cursor.c");
+
+    /* Test color.c - basic flow, casts, simple structs */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/color.c",
+        "color.c");
+
+    /* Test color.h - typedef structs, constants */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/color.h",
+        "color.h");
+
+    /* Test utf8.c - switch/case, bit ops, ptr-to-ptr */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/utf8.c",
+        "utf8.c");
+
+    /* Test piscina.h - opaque types, function signatures */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/piscina.h",
+        "piscina.h");
+
+    /* Test base64.c - large lookup tables, complex conditionals */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/base64.c",
+        "base64.c");
+
+    /* Test sectio.c - iterators, unions, const-casting */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/sectio.c",
+        "sectio.c");
+
+    /* Test dialogus.c - multi-line function calls */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/dialogus.c",
+        "dialogus.c");
+
+    /* Test sectio.h - extensive docs, macros, complex structs */
+    _credo_roundtrip_filum_hybrid(piscina, intern,
+        "probationes/fixa/roundtrip/sectio.h",
+        "sectio.h");
 
     imprimere("    [OK]\n");
 }

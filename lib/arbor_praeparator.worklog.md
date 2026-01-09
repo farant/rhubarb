@@ -89,3 +89,55 @@ When processing `interior`'s definition, check if body identifier is itself a ke
 - All 71 project tests pass
 
 ---
+
+## 2026-01-08: Typedef Detection Brace Tracking
+
+### Problem
+
+Typedef detection in HYBRID mode failed for struct/union typedefs with inline definitions:
+
+```c
+nomen structura MachoIteratorMandatum {
+    constans MachO* macho;
+    i32 index_currens;
+} MachoIteratorMandatum;
+```
+
+The `_detectare_typedef()` function was finding `macho` as the typedef name instead of `MachoIteratorMandatum` because it broke on the first semicolon encountered (inside the struct body).
+
+### Solution
+
+Added brace depth tracking to both:
+
+1. **Pre-scan loop** in HYBRID mode processing - already had this fix but needed the next fix too
+
+2. **`_detectare_typedef()` function** - track brace depth when iterating through tokens:
+   - Only break on semicolons when `brace_depth == 0`
+   - Only track identifiers as potential typedef names when `brace_depth == 0`
+
+```c
+per (i = pos_initium + I; i < pos_finis; i++)
+{
+    /* Traceare braces */
+    si (lex->genus == ARBOR_LEXEMA_BRACE_APERTA)
+        brace_depth++;
+    alioquin si (lex->genus == ARBOR_LEXEMA_BRACE_CLAUSA)
+        brace_depth--;
+
+    /* Si semicolon ad brace_depth 0, finis declarationis */
+    si (lex->genus == ARBOR_LEXEMA_SEMICOLON && brace_depth == ZEPHYRUM)
+        frange;
+
+    /* Traceare ultimum identifier (extra braces tantum) */
+    si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && brace_depth == ZEPHYRUM)
+        lex_last_id = lex;
+}
+```
+
+### Test Results
+
+- sectio.h (7858 bytes) now roundtrips byte-exact
+- All 8 candidate files pass roundtrip tests
+- 54 formator tests pass
+
+---

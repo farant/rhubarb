@@ -117,7 +117,8 @@ nomen enumeratio {
     ARBOR_PP_ERROR_UNTERMINATED_CONDITIONAL,
     ARBOR_PP_ERROR_UNEXPECTED_DIRECTIVE,
     ARBOR_PP_ERROR_INVALID_EXPRESSION,
-    ARBOR_PP_ERROR_MACRO_RECURSION
+    ARBOR_PP_ERROR_MACRO_RECURSION,
+    ARBOR_PP_ERROR_INCLUDE_DEPTH
 } ArborPPErrorGenus;
 
 nomen structura {
@@ -206,6 +207,13 @@ Xar* arbor_praeparator_errores(ArborPraeparator* pp);
  * Caller should NOT free the table.
  */
 TabulaDispersa* arbor_praeparator_obtinere_keyword_macros(ArborPraeparator* pp);
+
+/* Obtinere typedef nomina (for hybrid mode)
+ * Returns TabulaDispersa of typedef names learned from included files.
+ * E.g., "i8", "i32", etc.
+ * Caller should NOT free the table.
+ */
+TabulaDispersa* arbor_praeparator_obtinere_typedef_nomina(ArborPraeparator* pp);
 
 /* ==================================================
  * API - Utilities

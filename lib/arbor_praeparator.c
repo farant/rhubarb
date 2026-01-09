@@ -11,6 +11,9 @@
 #include <string.h>
 #include <stdio.h>
 
+/* Maximum include depth to prevent infinite recursion */
+#define ARBOR_MAX_INCLUDE_PROFUNDITAS  LXIV
+
 /* ==================================================
  * Status Conditionalis (pro #if stack)
  * ================================================== */
@@ -31,6 +34,7 @@ structura ArborPraeparator {
     ArborPPModus          modus;            /* PROCESSARE vel PRESERVARE vel HYBRID */
     TabulaDispersa*       macros;           /* chorda -> ArborMacroDefinitio* */
     TabulaDispersa*       keyword_macros;   /* chorda -> i32 (keyword token type) */
+    TabulaDispersa*       typedef_nomina;   /* chorda -> VERUM (typedef names) */
     Xar*                  viae_include;     /* Xar<chorda*> viae quaestionis */
     Xar*                  fila_inclusa;     /* Xar<chorda*> jam inclusa (custodia) */
 
@@ -69,8 +73,9 @@ hic_manens constans character* NOMINA_DIRECTIVARUM[] = {
     "unknown"
 };
 
-/* Forward declaration */
+/* Forward declarations */
 interior vacuum _registrare_keyword_macro(ArborPraeparator* pp, ArborMacroDefinitio* macro);
+interior vacuum _detectare_typedef(ArborPraeparator* pp, Xar* lexemata, i32 pos_initium, i32 pos_finis);
 
 /* ==================================================
  * API - Creatio et Configuratio
@@ -110,6 +115,34 @@ arbor_praeparator_creare(
     si (pp->keyword_macros == NIHIL)
     {
         redde NIHIL;
+    }
+
+    /* Creare tabula typedef nomina */
+    pp->typedef_nomina = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    si (pp->typedef_nomina == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Registrare standard C typedef nomina (size_t, FILE, etc.) */
+    {
+        constans character* std_typedefs[] = {
+            "size_t", "ptrdiff_t", "FILE", "fpos_t",
+            "wchar_t", "wint_t", "time_t", "clock_t",
+            "va_list", "jmp_buf", "sig_atomic_t",
+            NIHIL
+        };
+        i32 i;
+        per (i = ZEPHYRUM; std_typedefs[i] != NIHIL; i++)
+        {
+            chorda std_ch = chorda_ex_literis(std_typedefs[i], piscina);
+            chorda* std_name = chorda_internare(pp->intern, std_ch);
+            si (std_name != NIHIL)
+            {
+                tabula_dispersa_inserere(pp->typedef_nomina, *std_name,
+                    (vacuum*)(longus)VERUM);
+            }
+        }
     }
 
     /* Creare viae include */
@@ -379,6 +412,17 @@ arbor_praeparator_obtinere_keyword_macros(ArborPraeparator* pp)
     redde pp->keyword_macros;
 }
 
+TabulaDispersa*
+arbor_praeparator_obtinere_typedef_nomina(ArborPraeparator* pp)
+{
+    si (pp == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    redde pp->typedef_nomina;
+}
+
 /* ==================================================
  * API - Utilities
  * ================================================== */
@@ -558,6 +602,104 @@ _registrare_keyword_macro(
                 /* Propagare: si i32 -> int, et i8 -> i32, tunc i8 -> int */
                 tabula_dispersa_inserere(pp->keyword_macros, *macro->titulus, existing_val);
             }
+        }
+    }
+}
+
+/* Detectare typedef in token stream et registrare nomen.
+ * Detectat patterns:
+ *   typedef <type-specifiers> <name>;
+ *   nomen <type-specifiers> <name>;
+ *
+ * Pro simplicitate, assumimus nomen typedef est ultimum identifier ante ;
+ */
+interior vacuum
+_detectare_typedef(
+    ArborPraeparator*     pp,
+    Xar*                  lexemata,
+    i32                   pos_initium,
+    i32                   pos_finis)
+{
+    ArborLexema* lex_first;
+    ArborLexema* lex_last_id;
+    chorda*      typedef_nomen;
+    i32          i;
+
+    si (pp == NIHIL || lexemata == NIHIL || pos_initium >= pos_finis)
+    {
+        redde;
+    }
+
+    /* Verificare si primum token est typedef/nomen keyword */
+    lex_first = *(ArborLexema**)xar_obtinere(lexemata, pos_initium);
+    si (lex_first == NIHIL)
+    {
+        redde;
+    }
+
+    /* Verificare si est typedef keyword (ARBOR_LEXEMA_TYPEDEF) vel
+     * identifier "nomen" (Latin alias pro typedef) */
+    si (lex_first->genus != ARBOR_LEXEMA_TYPEDEF)
+    {
+        /* Verificare si est "nomen" identifier */
+        si (lex_first->genus != ARBOR_LEXEMA_IDENTIFICATOR)
+        {
+            redde;
+        }
+        si (lex_first->valor.mensura != V ||
+            memcmp(lex_first->valor.datum, "nomen", V) != ZEPHYRUM)
+        {
+            redde;
+        }
+    }
+
+    /* Invenire ultimum identifier ante ; (vel finem lineae)
+     * Hoc est nomen typedef (assumendo simplex typedef)
+     * Tractare imbricatae braces: nomen structura X { int a; } X;
+     * Semicolon intra braces non est finis declarationis. */
+    lex_last_id = NIHIL;
+    {
+        i32 brace_depth = ZEPHYRUM;
+        per (i = pos_initium + I; i < pos_finis; i++)
+        {
+            ArborLexema* lex = *(ArborLexema**)xar_obtinere(lexemata, i);
+            si (lex == NIHIL)
+            {
+                perge;
+            }
+
+            /* Traceare braces */
+            si (lex->genus == ARBOR_LEXEMA_BRACE_APERTA)
+            {
+                brace_depth++;
+            }
+            alioquin si (lex->genus == ARBOR_LEXEMA_BRACE_CLAUSA)
+            {
+                brace_depth--;
+            }
+
+            /* Si semicolon ad brace_depth 0, finis declarationis */
+            si (lex->genus == ARBOR_LEXEMA_SEMICOLON && brace_depth == ZEPHYRUM)
+            {
+                frange;
+            }
+
+            /* Traceare ultimum identifier (extra braces tantum) */
+            si (lex->genus == ARBOR_LEXEMA_IDENTIFICATOR && brace_depth == ZEPHYRUM)
+            {
+                lex_last_id = lex;
+            }
+        }
+    }
+
+    /* Registrare nomen typedef si inventum */
+    si (lex_last_id != NIHIL)
+    {
+        typedef_nomen = chorda_internare(pp->intern, lex_last_id->valor);
+        si (typedef_nomen != NIHIL)
+        {
+            tabula_dispersa_inserere(pp->typedef_nomina, *typedef_nomen,
+                (vacuum*)(longus)VERUM);
         }
     }
 }
@@ -2280,6 +2422,15 @@ _processare_include(
     origo_include = _creare_origo_include(pp, via_resoluta,
         lex_path->linea, lex_path->columna, pp->origo_currens);
 
+    /* Verificare profunditatem maximam */
+    si (pp->profunditas_expansionis >= ARBOR_MAX_INCLUDE_PROFUNDITAS)
+    {
+        _addere_error(pp, ARBOR_PP_ERROR_INCLUDE_DEPTH,
+            "maximum include depth exceeded", via_file_currens,
+            lex_path->linea, lex_path->columna);
+        redde NIHIL;
+    }
+
     /* Incrementare profunditatem */
     pp->profunditas_expansionis++;
 
@@ -3065,6 +3216,55 @@ arbor_praeparator_processare_lexemata(
      * with output preservation from PRESERVARE. */
     si (pp->modus == ARBOR_PP_MODUS_HYBRID)
     {
+        /* Pre-scan pro typedefs (detectare nomen/typedef declarationes) */
+        {
+            i32 scan_pos = ZEPHYRUM;
+            dum (scan_pos < num)
+            {
+                ArborLexema* scan_lex = *(ArborLexema**)xar_obtinere(lexemata, scan_pos);
+                si (scan_lex != NIHIL)
+                {
+                    /* Detectare typedef/nomen keyword */
+                    si (scan_lex->genus == ARBOR_LEXEMA_TYPEDEF ||
+                        (scan_lex->genus == ARBOR_LEXEMA_IDENTIFICATOR &&
+                         scan_lex->valor.mensura == V &&
+                         memcmp(scan_lex->valor.datum, "nomen", V) == ZEPHYRUM))
+                    {
+                        /* Invenire finem statementum (;)
+                         * Tractare imbricatae braces pro struct/union typedefs:
+                         * nomen structura X { int a; } X;
+                         * Semicolon post "a" non est finis, semicolon post "X" est. */
+                        i32 end_pos = scan_pos + I;
+                        i32 brace_depth = ZEPHYRUM;
+                        dum (end_pos < num)
+                        {
+                            ArborLexema* end_lex = *(ArborLexema**)xar_obtinere(lexemata, end_pos);
+                            si (end_lex != NIHIL)
+                            {
+                                si (end_lex->genus == ARBOR_LEXEMA_BRACE_APERTA)
+                                {
+                                    brace_depth++;
+                                }
+                                alioquin si (end_lex->genus == ARBOR_LEXEMA_BRACE_CLAUSA)
+                                {
+                                    brace_depth--;
+                                }
+                                alioquin si (end_lex->genus == ARBOR_LEXEMA_SEMICOLON &&
+                                             brace_depth == ZEPHYRUM)
+                                {
+                                    frange;
+                                }
+                            }
+                            end_pos++;
+                        }
+                        _detectare_typedef(pp, lexemata, scan_pos, end_pos + I);
+                        scan_pos = end_pos;
+                    }
+                }
+                scan_pos++;
+            }
+        }
+
         dum (pos < num)
         {
             ArborLexema* lex_curr;

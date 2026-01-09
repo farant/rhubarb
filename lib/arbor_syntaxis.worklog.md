@@ -907,6 +907,102 @@ Remove hardcoded keyword strings - they now come from trivia:
 
 ---
 
+## 2026-01-08: Expression Statement Trivia Transfer Fix
+
+### Problem
+
+Multi-line code was getting extra blank lines after `{` in compound statements. Input like:
+```c
+void f() {
+    int x;
+}
+```
+Was outputting:
+```c
+void f() {
+
+    int x;
+}
+```
+
+### Root Cause
+
+The `_clarum_duplicatum_trivia()` function compared Xar **pointers** to detect duplicate trivia between parent and child nodes. When `_parsere_parenthesis` created a new Xar with copied trivia (not the same pointer), the duplicate check failed, causing both the expression and the expression statement to emit the same trivia.
+
+### Fix
+
+Removed `_clarum_duplicatum_trivia()` entirely. Instead, in `_parsere_expression_statement`, explicitly transfer trivia ownership from expression to statement:
+
+```c
+/* Transfer leading trivia from expression to statement
+ * This avoids duplication when parenthesized expressions
+ * prepend trivia to a new Xar (breaking pointer equality check).
+ */
+nodus->trivia_ante = expr->trivia_ante;
+expr->trivia_ante = NIHIL;
+```
+
+This ensures the statement owns the leading trivia, and the expression's trivia_ante is cleared.
+
+---
+
+## 2026-01-08: Keyword Macro Support in Struct Members
+
+### Problem
+
+Struct member declarations using Latin keyword macros weren't parsing:
+```c
+structura Piscina {
+    vacuum* alveus_nunc;  /* FAILED - "Expectabatur ;" */
+};
+```
+
+The parser recognized `vacuum` as a typedef macro but not as a type specifier inside struct declarations.
+
+### Root Cause
+
+`_parsere_struct_declaration()` only checked raw token types (`ARBOR_LEXEMA_VOID`, `ARBOR_LEXEMA_INT`, etc.) for type specifiers. It didn't check the `keyword_macros` table to see if an identifier like `vacuum` maps to `ARBOR_LEXEMA_VOID`.
+
+### Fix
+
+Added keyword macro lookup to `_parsere_struct_declaration()`:
+
+```c
+/* Verifica keyword macros (vacuum -> void, integer -> int, etc.) */
+si (syn->keyword_macros != NIHIL)
+{
+    vacuum* keyword_val = NIHIL;
+    b32 found = tabula_dispersa_invenire(syn->keyword_macros, *titulus, &keyword_val);
+    si (found)
+    {
+        i32 keyword_type = *(i32*)keyword_val;
+        /* Type specifiers */
+        si (keyword_type == ARBOR_LEXEMA_VOID ||
+            keyword_type == ARBOR_LEXEMA_CHAR ||
+            keyword_type == ARBOR_LEXEMA_INT || ...)
+        {
+            spec = _creare_nodum(syn, ARBOR_NODUS_TYPE_SPECIFIER);
+            spec->datum.folium.keyword = (ArborLexemaGenus)keyword_type;
+            spec->datum.folium.valor = titulus;
+            _progredi(syn);
+            _finire_nodum(syn, spec);
+            handled = VERUM;
+        }
+        /* Type qualifiers (constans -> const) similarly... */
+    }
+}
+```
+
+Also handles typedef macros (e.g., `i32` → `int` typedef) within struct members.
+
+### Test Results
+
+- piscina.h (3181 bytes) roundtrips byte-exact
+- All 8 candidate files pass roundtrip tests
+- 54 formator tests pass
+
+---
+
 ## Known TODOs
 
 All basic constructs now have trivia handling. Remaining advanced features:
