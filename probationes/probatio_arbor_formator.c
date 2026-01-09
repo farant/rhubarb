@@ -5,6 +5,7 @@
 #include "arbor_formator.h"
 #include "arbor_praeparator.h"
 #include "arbor_lexema.h"
+#include "arbor.h"
 #include "tabula_dispersa.h"
 #include "filum.h"
 #include <stdio.h>
@@ -93,6 +94,24 @@ _parsere_fontem_preservare (
     }
 
     redde NIHIL;
+}
+
+/* Parsere filum cum PROCESSARE mode (full macro expansion) */
+interior b32
+_parsere_filum_processare (
+               Piscina* piscina,
+    InternamentumChorda* intern,
+       constans character* via)
+{
+    ArborResultus res;
+    ArborOptiones opt;
+
+    opt = arbor_optiones_default();
+    opt.pp_modus = ARBOR_PP_MODUS_PROCESSARE;
+
+    res = arbor_parsere_filum(via, piscina, intern, &opt);
+
+    redde res.successus;
 }
 
 /* Parsere cum HYBRID mode (discere macros, preservare tokens) */
@@ -1883,6 +1902,95 @@ probatio_roundtrip_hybrid (
 }
 
 /* ===========================================================
+ * PROBATIO - PROCESSARE MODE PARSE
+ *
+ * Test that files parse correctly with full macro expansion.
+ * Not byte-for-byte roundtrip, just verify no hangs/crashes.
+ * =========================================================== */
+
+interior vacuum
+probatio_processare_parse (
+               Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    imprimere("  probatio_processare_parse...\n");
+
+    /* Test .c files in roundtrip directory with PROCESSARE mode */
+    /* Adding one at a time to identify any hangs */
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/minimal.c"));
+    imprimere("    minimal.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/minimal2.c"));
+    imprimere("    minimal2.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/minimal3.c"));
+    imprimere("    minimal3.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/simple.c"));
+    imprimere("    simple.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/include_test.c"));
+    imprimere("    include_test.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/include_stddef.c"));
+    imprimere("    include_stddef.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/piscina_mini.c"));
+    imprimere("    piscina_mini.c [OK]\n");
+
+    /* Real library files - same as HYBRID roundtrip tests */
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/cursor.c"));
+    imprimere("    cursor.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/color.c"));
+    imprimere("    color.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/color.h"));
+    imprimere("    color.h [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/utf8.c"));
+    imprimere("    utf8.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/piscina.h"));
+    imprimere("    piscina.h [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/base64.c"));
+    imprimere("    base64.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/sectio.c"));
+    imprimere("    sectio.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/dialogus.c"));
+    imprimere("    dialogus.c [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/sectio.h"));
+    imprimere("    sectio.h [OK]\n");
+
+    CREDO_VERUM(_parsere_filum_processare(piscina, intern,
+        "probationes/fixa/roundtrip/tractator.c"));
+    imprimere("    tractator.c [OK]\n");
+
+    imprimere("    [OK]\n");
+}
+
+/* ===========================================================
  * PRINCIPALE
  * =========================================================== */
 
@@ -1919,6 +2027,7 @@ main (
     probatio_roundtrip_fila(piscina, intern);
     probatio_roundtrip_preservare(piscina, intern);
     probatio_roundtrip_hybrid(piscina, intern);
+    probatio_processare_parse(piscina, intern);
 
     imprimere("\n");
     credo_imprimere_compendium();

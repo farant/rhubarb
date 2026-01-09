@@ -1,6 +1,11 @@
 #include "arbor.h"
 #include "filum.h"
 #include "arbor_lexema.h"
+#include "xar.h"
+#include <stdio.h>
+
+/* DEBUG flag - set to 1 to enable debug output */
+#define ARBOR_DEBUG 0
 
 /* ==================================================
  * Default Options
@@ -62,25 +67,40 @@ arbor_parsere_fontem(
     }
 
     /* Lexere */
+#if ARBOR_DEBUG
+    printf("  [arbor] lexator_creare...\n"); fflush(stdout);
+#endif
     lexator = arbor_lexator_creare(piscina, intern, fons, longitudo);
     si (lexator == NIHIL)
     {
         redde res;
     }
 
+#if ARBOR_DEBUG
+    printf("  [arbor] lexema_omnia...\n"); fflush(stdout);
+#endif
     lexemata = arbor_lexema_omnia(lexator);
     si (lexemata == NIHIL)
     {
         redde res;
     }
+#if ARBOR_DEBUG
+    printf("  [arbor] lexemata count: %d\n", xar_numerus(lexemata)); fflush(stdout);
+#endif
 
     /* Praeparare */
+#if ARBOR_DEBUG
+    printf("  [arbor] praeparator_creare...\n"); fflush(stdout);
+#endif
     pp = arbor_praeparator_creare(piscina, intern);
     si (pp == NIHIL)
     {
         redde res;
     }
 
+#if ARBOR_DEBUG
+    printf("  [arbor] ponere_modum: %d\n", optiones->pp_modus); fflush(stdout);
+#endif
     arbor_praeparator_ponere_modum(pp, optiones->pp_modus);
 
     per (i = ZEPHYRUM; i < optiones->include_numerus; i++)
@@ -88,13 +108,25 @@ arbor_parsere_fontem(
         arbor_praeparator_addere_via(pp, optiones->include_viae[i]);
     }
 
+#if ARBOR_DEBUG
+    printf("  [arbor] processare_lexemata...\n"); fflush(stdout);
+#endif
     processata = arbor_praeparator_processare_lexemata(pp, lexemata, NIHIL);
+#if ARBOR_DEBUG
+    printf("  [arbor] processare_lexemata returned\n"); fflush(stdout);
+#endif
     si (processata == NIHIL)
     {
         redde res;
     }
+#if ARBOR_DEBUG
+    printf("  [arbor] processata count: %d\n", xar_numerus(processata)); fflush(stdout);
+#endif
 
     /* Parsere */
+#if ARBOR_DEBUG
+    printf("  [arbor] syntaxis_creare...\n"); fflush(stdout);
+#endif
     syn = arbor_syntaxis_creare(piscina, intern);
     si (syn == NIHIL)
     {

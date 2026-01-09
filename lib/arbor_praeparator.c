@@ -2523,21 +2523,13 @@ _processare_include(
                 perge;
             }
 
-            /* Si origo est NIHIL, ponere origo_include */
-            si (lo->origo == NIHIL)
-            {
-                lo->origo = origo_include;
-            }
-            alioquin
-            {
-                /* Traversare ad radicem et ponere pater */
-                ArborOrigo* o = lo->origo;
-                dum (o->pater != NIHIL)
-                {
-                    o = o->pater;
-                }
-                o->pater = origo_include;
-            }
+            /*
+             * Ponere origo_include ut origo.
+             * Non mutare origines existentes - hoc evitat cycles quando
+             * plura lexemata habent eundem originem obiectum.
+             * Perditur catena originis interior sed evitantur cycles.
+             */
+            lo->origo = origo_include;
 
             slotus = xar_addere(output);
             si (slotus != NIHIL)
@@ -3410,6 +3402,7 @@ arbor_praeparator_processare_lexemata(
         ArborLexemaOrigo* lo;
         ArborLexemaOrigo** slotus;
         b32 ad_initium;
+        i32 pos_novus;
 
         lex = *(ArborLexema**)xar_obtinere(lexemata, pos);
         si (lex == NIHIL)
@@ -3440,7 +3433,7 @@ arbor_praeparator_processare_lexemata(
         si (ad_initium && _est_hash(lex))
         {
             /* Processare directiva et obtinere novam positionem */
-            i32 pos_novus = _processare_directiva(pp, lexemata, pos, num, via_file, output);
+            pos_novus = _processare_directiva(pp, lexemata, pos, num, via_file, output);
 
             /* Actualizare lex_praevius ad ultimum token ante novam positionem */
             si (pos_novus > ZEPHYRUM)

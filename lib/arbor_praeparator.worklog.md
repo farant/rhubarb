@@ -182,3 +182,59 @@ si (in_fn_ptr_name && !fn_ptr_found && brace_depth == ZEPHYRUM)
 - All 71 project tests pass
 
 ---
+
+## 2026-01-09: PROCESSARE Mode Origin Chain Cycle Fix
+
+### Problem
+
+PROCESSARE mode tests were hanging infinitely when processing files with nested includes:
+
+```
+include_piscina.c → piscina.h → latina.h → stddef.h
+```
+
+Debug output showed the hang occurred when processing tokens from nested includes. Cycle detection revealed parent chain depths exceeding 100, indicating infinite loops in the origin traversal.
+
+### Root Cause
+
+In `_processare_include()`, when merging tokens from an included file, the code was mutating shared origin objects:
+
+```c
+/* Old problematic code */
+ArborOrigo* o = lo->origo;
+dum (o->pater != NIHIL)
+    o = o->pater;
+o->pater = origo_include;  /* MUTATION OF SHARED OBJECT */
+```
+
+When multiple tokens share the same origin object (common for tokens from the same line), setting `o->pater` for one token affected all tokens sharing that origin. This created cycles when:
+
+1. Token A's origin chain: `A_origin → root → NULL`
+2. We set `root->pater = origo_include`
+3. Token B also uses `A_origin`, now chain is: `A_origin → root → origo_include`
+4. If `origo_include`'s chain loops back, we get a cycle
+
+### Solution
+
+Instead of traversing and mutating the shared origin chain, simply replace the origin reference:
+
+```c
+/* Fixed code */
+/* Non mutare origines existentes - hoc evitat cycles quando
+ * plura lexemata habent eundem originem obiectum.
+ * Perditur catena originis interior sed evitantur cycles. */
+lo->origo = origo_include;
+```
+
+This loses the inner origin chain information but:
+- Avoids all cycle issues
+- Origin chain is primarily for error reporting - knowing token came from include is sufficient
+- All tests pass (72/72)
+
+### Test Results
+
+- All 72 tests pass
+- PROCESSARE mode now works correctly for files with nested includes
+- `probatio_processare_parse` tests: minimal.c, minimal2.c, minimal3.c, simple.c, include_test.c, include_stddef.c, piscina_mini.c all pass
+
+---
