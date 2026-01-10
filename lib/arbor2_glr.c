@@ -724,6 +724,30 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_SENTENTIA:
+                        /* P13: statement -> expression ';' */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_SENTENTIA;
+                        valor_novus->lexema = lexemata[ZEPHYRUM];  /* semicolon */
+                        /* Expression is at index 1 (before semicolon) */
+                        si (num_pop >= II && valori[I] != NIHIL)
+                        {
+                            valor_novus->datum.sententia.expressio = valori[I];
+                        }
+                        alioquin
+                        {
+                            valor_novus->datum.sententia.expressio = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_SENTENTIA_VACUA:
+                        /* P14: statement -> ';' */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_SENTENTIA_VACUA;
+                        valor_novus->lexema = lexemata[ZEPHYRUM];  /* semicolon */
+                        valor_novus->datum.sententia.expressio = NIHIL;
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */

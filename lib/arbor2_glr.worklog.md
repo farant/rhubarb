@@ -130,6 +130,47 @@ In `_processare_unam_actionem()`, when multiple actions found:
 
 ### Still TODO
 
-- Add statement parsing (if, while, for, etc.)
+- Add more statement types (if, while, for, compound, etc.)
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-09 (Milestone 3 continued: Expression Statements)
+
+### Phase A: Expression Statements Complete
+
+Added support for basic C89 statements:
+
+**New Grammar Rules:**
+- P13: `statement -> expression ';'`
+- P14: `statement -> ';'` (empty statement)
+
+**New Node Types:**
+- `ARBOR2_NODUS_SENTENTIA` - Expression statement (wrapper around expression)
+- `ARBOR2_NODUS_SENTENTIA_VACUA` - Empty statement
+
+**New Non-Terminal:**
+- `ARBOR2_NT_SENTENTIA`
+
+**Implementation:**
+1. Added SEMICOLON action to State 0 (shift to state 23 for empty statement)
+2. Added SEMICOLON action to State 1 (shift to state 22 after expression)
+3. Added SEMICOLON to reduce sets of states 2, 3, 4, 5, 12, 13, 14, 15, 16
+4. Added State 22: After `expression ;` → reduce P13
+5. Added State 23: After lone `;` → reduce P14
+6. Added State 24: Accept state after statement
+7. Added GOTO[0, SENTENTIA] = 24
+
+**Key Fix:**
+Initial implementation hung because states 2-5, 12-16 didn't have SEMICOLON in their reduce sets. The parser couldn't see how to continue after building an expression. Added SEMICOLON to all states that can precede the end of an expression.
+
+**Tests Passing:**
+- `x + 1;` → SENTENTIA containing BINARIUM
+- `;` → SENTENTIA_VACUA
+- `42;` → SENTENTIA containing INTEGER
+
+**Grammar Now:**
+- 25 states (was 22)
+- 103 action entries (was 94)
+- 15 grammar rules (was 13)

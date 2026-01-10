@@ -59,6 +59,7 @@ nomen enumeratio {
     ARBOR2_NT_DECLARATOR,           /* Declarator */
     ARBOR2_NT_CONVERSIO,            /* Cast */
     ARBOR2_NT_SIZEOF,
+    ARBOR2_NT_SENTENTIA,            /* Statement */
     ARBOR2_NT_NUMERUS               /* Count */
 } Arbor2NonTerminalis;
 
@@ -75,6 +76,8 @@ nomen enumeratio {
     ARBOR2_NODUS_SIZEOF,
     ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
+    ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
+    ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -131,6 +134,11 @@ structura Arbor2Nodus {
             s32                 num_stellae;    /* Number of * pointers */
             chorda              titulus;        /* Variable name */
         } declarator;
+
+        /* SENTENTIA (expression statement) */
+        structura {
+            Arbor2Nodus*        expressio;      /* The expression (NULL for empty stmt) */
+        } sententia;
 
         /* AMBIGUUS */
         structura {

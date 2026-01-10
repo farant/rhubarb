@@ -70,7 +70,13 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_DECLARATOR, 2, ARBOR2_NODUS_DECLARATOR },
 
     /* P12: declarator -> IDENTIFIER */
-    { ARBOR2_NT_DECLARATOR, 1, ARBOR2_NODUS_DECLARATOR }
+    { ARBOR2_NT_DECLARATOR, 1, ARBOR2_NODUS_DECLARATOR },
+
+    /* P13: statement -> expression ';' */
+    { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_SENTENTIA },
+
+    /* P14: statement -> ';' (empty statement) */
+    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_SENTENTIA_VACUA }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -105,27 +111,31 @@ hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
 #define ERROR_ACT   (-2000)
 
 hic_manens Arbor2TabulaActio ACTIONES[] = {
-    /* State 0: Initial - expect factor-starting tokens */
+    /* State 0: Initial - expect factor-starting tokens or ';' */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 23 },   /* empty statement */
 
-    /* State 1: After expression - expect '+' or end */
+    /* State 1: After expression - expect '+', ';', or end */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 22 },   /* expression statement */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 0 },  /* for nested */
 
-    /* State 2: After term - expect '*', '+', or end */
+    /* State 2: After term - expect '*', '+', ';', or end */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10 },
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 2 },  /* expression -> term */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 2 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 2 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 2 },
 
     /* State 3: After factor - reduce to term */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 4 },  /* term -> factor */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 4 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 4 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 4 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 4 },
 
@@ -133,12 +143,14 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 5 },  /* expr: factor -> ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },  /* decl: start declarator */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 5 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 5 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 5 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 5 },
 
     /* State 5: After INTEGER - reduce to factor */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 6 },  /* factor -> INT */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 6 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 6 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 6 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 6 },
 
@@ -184,30 +196,35 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* State 12: After '(' expression ')' - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 7 },  /* factor -> (expr) */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 7 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 7 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 7 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 7 },
 
     /* State 13: After expression '+' term - reduce or continue */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10 },  /* * binds tighter */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 1 },   /* expr -> expr + term */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 1 },   /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 1 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 1 },
 
     /* State 14: After term '*' factor - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 3 },  /* term -> term * factor */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 3 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 3 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 3 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 3 },
 
     /* State 15: After '*' factor (unary) - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 8 },  /* factor -> * factor */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 8 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 8 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 8 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 8 },
 
     /* State 16: After '&' factor (unary) - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 9 },  /* factor -> & factor */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 9 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 9 },  /* for statements */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 9 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 },
 
@@ -234,6 +251,17 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_ERROR,  0 },
 
     /* State 21: After declaration - accept */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
+
+    /* State 22: After 'expression ;' - reduce to statement */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 13 },  /* P13: statement -> expr ; */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 13 },  /* for compound stmts */
+
+    /* State 23: After lone ';' - reduce to empty statement */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 14 },  /* P14: statement -> ; */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 14 },  /* for compound stmts */
+
+    /* State 24: After statement - accept */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 }
 };
 
@@ -241,32 +269,35 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 
 /* State -> first action index mapping */
 hic_manens i32 ACTIO_INDICES[] = {
-    0,      /* State 0: 5 actions */
-    5,      /* State 1: 3 actions */
-    8,      /* State 2: 4 actions */
-    12,     /* State 3: 4 actions */
-    16,     /* State 4: 5 actions (AMBIGUOUS - 2 actions for *) */
-    21,     /* State 5: 4 actions */
-    25,     /* State 6: 5 actions */
-    30,     /* State 7: 5 actions */
-    35,     /* State 8: 5 actions */
-    40,     /* State 9: 5 actions */
-    45,     /* State 10: 5 actions */
-    50,     /* State 11: 2 actions */
-    52,     /* State 12: 4 actions */
-    56,     /* State 13: 4 actions */
-    60,     /* State 14: 4 actions */
-    64,     /* State 15: 4 actions */
-    68,     /* State 16: 4 actions */
-    72,     /* State 17: 2 actions (declarator path) */
-    74,     /* State 18: 4 actions (reduce P12) */
-    78,     /* State 19: 4 actions (reduce P11) */
-    82,     /* State 20: 4 actions (reduce P10) */
-    86,     /* State 21: 1 action (accept declaration) */
-    87      /* End marker */
+    0,      /* State 0: 6 actions */
+    6,      /* State 1: 4 actions */
+    10,     /* State 2: 5 actions (added SEMICOLON) */
+    15,     /* State 3: 5 actions (added SEMICOLON) */
+    20,     /* State 4: 6 actions (added SEMICOLON) */
+    26,     /* State 5: 5 actions (added SEMICOLON) */
+    31,     /* State 6: 5 actions */
+    36,     /* State 7: 5 actions */
+    41,     /* State 8: 5 actions */
+    46,     /* State 9: 5 actions */
+    51,     /* State 10: 5 actions */
+    56,     /* State 11: 2 actions */
+    58,     /* State 12: 5 actions (added SEMICOLON) */
+    63,     /* State 13: 5 actions (added SEMICOLON) */
+    68,     /* State 14: 5 actions (added SEMICOLON) */
+    73,     /* State 15: 5 actions (added SEMICOLON) */
+    78,     /* State 16: 5 actions (added SEMICOLON) */
+    83,     /* State 17: 2 actions (declarator path) */
+    85,     /* State 18: 4 actions (reduce P12) */
+    89,     /* State 19: 4 actions (reduce P11) */
+    93,     /* State 20: 4 actions (reduce P10) */
+    97,     /* State 21: 1 action (accept declaration) */
+    98,     /* State 22: 2 actions (reduce P13 statement) */
+    100,    /* State 23: 2 actions (reduce P14 empty stmt) */
+    102,    /* State 24: 1 action (accept statement) */
+    103     /* End marker */
 };
 
-#define NUM_STATES 22
+#define NUM_STATES 25
 
 /* ==================================================
  * GOTO Table
@@ -282,6 +313,7 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_DECLARATIO   3
 #define INT_NT_DECLARATOR   4
 #define INT_NT_DECLARATION  5
+#define INT_NT_SENTENTIA    6
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
@@ -314,7 +346,10 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 17, INT_NT_DECLARATOR, 19 },
 
     /* From state 0: after declaration */
-    { 0, INT_NT_DECLARATIO, 21 }
+    { 0, INT_NT_DECLARATIO, 21 },
+
+    /* From state 0: after statement */
+    { 0, INT_NT_SENTENTIA, 24 }
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));
@@ -382,6 +417,9 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_DECLARATOR:
             nt_int = INT_NT_DECLARATOR;
+            frange;
+        casus ARBOR2_NT_SENTENTIA:
+            nt_int = INT_NT_SENTENTIA;
             frange;
         ordinarius:
             nt_int = -I;
@@ -466,6 +504,7 @@ arbor2_nt_nomen(Arbor2NonTerminalis nt)
         casus ARBOR2_NT_DECLARATOR:     redde "DECLARATOR";
         casus ARBOR2_NT_CONVERSIO:      redde "CONVERSIO";
         casus ARBOR2_NT_SIZEOF:         redde "SIZEOF";
+        casus ARBOR2_NT_SENTENTIA:      redde "SENTENTIA";
         ordinarius:                     redde "IGNOTUM";
     }
 }
@@ -483,6 +522,8 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_SIZEOF:        redde "SIZEOF";
         casus ARBOR2_NODUS_DECLARATIO:    redde "DECLARATIO";
         casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
+        casus ARBOR2_NODUS_SENTENTIA:     redde "SENTENTIA";
+        casus ARBOR2_NODUS_SENTENTIA_VACUA: redde "SENTENTIA_VACUA";
         casus ARBOR2_NODUS_AMBIGUUS:      redde "AMBIGUUS";
         casus ARBOR2_NODUS_ERROR:         redde "ERROR";
         ordinarius:                       redde "IGNOTUM";

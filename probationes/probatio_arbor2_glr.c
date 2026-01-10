@@ -112,6 +112,18 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             _imprimere_arborem(nodus->datum.unarium.operandum, profunditas + I);
             frange;
 
+        casus ARBOR2_NODUS_SENTENTIA:
+            imprimere("SENTENTIA:\n");
+            si (nodus->datum.sententia.expressio != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.sententia.expressio, profunditas + I);
+            }
+            frange;
+
+        casus ARBOR2_NODUS_SENTENTIA_VACUA:
+            imprimere("SENTENTIA_VACUA\n");
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -495,6 +507,105 @@ s32 principale(vacuum)
         /* Should NOT have forked (pruned expression path) */
         imprimere("  furcae: %d\n", glr->num_furcae);
         CREDO_AEQUALIS_I32((i32)glr->num_furcae, ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Expression statement: x + 1;
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans expression statement: x + 1; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "x + 1;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SENTENTIA);
+            /* Check that expression is preserved */
+            CREDO_NON_NIHIL(res.radix->datum.sententia.expressio);
+            si (res.radix->datum.sententia.expressio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sententia.expressio->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Empty statement: ;
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans empty statement: ; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, ";");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SENTENTIA_VACUA);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Simple statement: 42;
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans simple statement: 42; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "42;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SENTENTIA);
+            si (res.radix->datum.sententia.expressio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sententia.expressio->genus,
+                                   (i32)ARBOR2_NODUS_INTEGER);
+            }
+        }
     }
 
 
