@@ -72,7 +72,10 @@ nomen enumeratio {
     ARBOR2_NT_PARAMETER_DECL,       /* Parameter declaration */
     ARBOR2_NT_DEFINITIO_FUNCTI,     /* Function definition */
     ARBOR2_NT_STRUCT_SPECIFIER,     /* struct_specifier */
-    ARBOR2_NT_STRUCT_MEMBER_LIST    /* struct_member_list */
+    ARBOR2_NT_STRUCT_MEMBER_LIST,   /* struct_member_list */
+    ARBOR2_NT_ENUM_SPECIFIER,       /* enum_specifier */
+    ARBOR2_NT_ENUMERATOR_LIST,      /* enumerator_list */
+    ARBOR2_NT_ENUMERATOR            /* single enumerator */
 } Arbor2NonTerminalis;
 
 /* ==================================================
@@ -92,6 +95,8 @@ nomen enumeratio {
     ARBOR2_NODUS_PARAMETER_DECL,    /* Parameter declaration: type name */
     ARBOR2_NODUS_DEFINITIO_FUNCTI,  /* Function definition: type name() { body } */
     ARBOR2_NODUS_STRUCT_SPECIFIER,  /* Struct specifier: struct name { members } */
+    ARBOR2_NODUS_ENUM_SPECIFIER,    /* Enum specifier: enum name { enumerators } */
+    ARBOR2_NODUS_ENUMERATOR,        /* Single enumerator: NAME or NAME = value */
     ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
@@ -191,6 +196,18 @@ structura Arbor2Nodus {
             Xar*                membra;               /* List of member declarations (DECLARATIO nodes) */
             b32                 est_unio;             /* VERUM for union, FALSUM for struct */
         } struct_specifier;
+
+        /* ENUM_SPECIFIER */
+        structura {
+            Arbor2Nodus*        tag;                  /* Tag name (IDENTIFICATOR) or NIHIL for anonymous */
+            Xar*                enumeratores;         /* List of ENUMERATOR nodes */
+        } enum_specifier;
+
+        /* ENUMERATOR */
+        structura {
+            chorda              titulus;              /* Enumerator name */
+            Arbor2Nodus*        valor;                /* Optional value expr, NIHIL if not specified */
+        } enumerator;
 
         /* SENTENTIA (expression statement) */
         structura {

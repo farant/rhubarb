@@ -1054,9 +1054,137 @@ Updated `_imprimere_arborem` to show "UNION_SPECIFIER" vs "STRUCT_SPECIFIER" bas
 
 ### Still TODO
 
-- Enum support (different: constant list)
 - Bit fields: `int x : 3;`
-- Nested structs/unions
+- Nested structs/unions/enums
 - `typedef struct { } Foo;` pattern
+- Test with real library files
+- Error recovery
+
+---
+
+## 2026-01-10 (Phase E3: Enum Definitions)
+
+### Phase E3: Enum Definitions Complete
+
+Added enum type specifier support:
+
+```c
+enum foo { A, B, C };                /* Named enum definition */
+enum { A, B, C };                    /* Anonymous enum */
+enum foo { A = 1, B, C = 10 };       /* With explicit values */
+enum foo x;                          /* Forward reference / variable */
+enum { A = 1 + 2 };                  /* Expression as value */
+```
+
+**Key Difference from Struct/Union:**
+- Enumerators are comma-separated, not semicolon-terminated
+- Enumerators are just identifiers with optional `= constant_expression`
+- No nested type declarations, just simple name/value pairs
+
+**Design Decision: Separate Node Types**
+
+Unlike union (which reused struct_specifier with `est_unio` flag), enum gets dedicated node types:
+
+```c
+ARBOR2_NODUS_ENUM_SPECIFIER     /* enum tag { enumerators } */
+ARBOR2_NODUS_ENUMERATOR         /* NAME or NAME = value */
+```
+
+**Rationale:**
+- Enum semantics differ significantly from struct/union
+- Enumerators have completely different structure (name + optional value)
+- Separate handling is cleaner than overloading struct_specifier further
+
+**Grammar Rules Added (P55-P61):**
+- P55: `enum_specifier -> 'enum' IDENTIFIER '{' enumerator_list '}'` (5 symbols, named)
+- P56: `enum_specifier -> 'enum' '{' enumerator_list '}'` (4 symbols, anonymous)
+- P57: `enum_specifier -> 'enum' IDENTIFIER` (2 symbols, forward ref)
+- P58: `enumerator_list -> enumerator` (1 symbol, starts Xar)
+- P59: `enumerator_list -> enumerator_list ',' enumerator` (3 symbols, appends)
+- P60: `enumerator -> IDENTIFIER` (1 symbol, plain enumerator)
+- P61: `enumerator -> IDENTIFIER '=' expression` (3 symbols, with value)
+
+**New AST Structures:**
+
+```c
+/* ENUM_SPECIFIER */
+structura {
+    Arbor2Nodus*        tag;           /* Tag name or NIHIL */
+    Xar*                enumeratores;  /* List of ENUMERATOR nodes */
+} enum_specifier;
+
+/* ENUMERATOR */
+structura {
+    chorda              titulus;       /* Enumerator name */
+    Arbor2Nodus*        valor;         /* Optional value expr, NIHIL if not specified */
+} enumerator;
+```
+
+**New States (145-161):**
+- State 145: After `enum` - expect ID or `{`
+- State 146: After `enum ID` - expect `{` or reduce P57
+- State 147: After `enum {` (anon) - start enumerator list
+- State 148: After `enum ID {` (named) - start enumerator list
+- State 149: After first enumerator ID - expect `=` or `,` or `}`
+- State 150: After first `ID =` - parse expression
+- State 151: After first `ID = expr` - continue expr with `+` or reduce P61
+- State 152: After first enumerator - reduce P58 (creates Xar)
+- State 153: After enum_list in anon - expect `,` or `}`
+- State 154: After `enum { list }` - reduce P56
+- State 155: After enum_list in named - expect `,` or `}`
+- State 156: After `,` - expect next enumerator
+- State 157: After `enum ID { list }` - reduce P55
+- State 158: After subsequent ID - expect `=` or `,` or `}`
+- State 159: After subsequent `ID =` - parse expression
+- State 160: After subsequent `ID = expr` - continue expr with `+` or reduce P61
+- State 161: After subsequent enumerator - reduce P59
+
+**Expression Reuse:**
+Expression parsing for enum values reuses existing states via GOTO entries:
+```c
+{ 150, INT_NT_EXPR,   151 },
+{ 150, INT_NT_TERM,   2 },
+{ 150, INT_NT_FACTOR, 3 },
+{ 159, INT_NT_EXPR,   160 },
+{ 159, INT_NT_TERM,   2 },
+{ 159, INT_NT_FACTOR, 3 },
+```
+
+**Key Bug Fixed:**
+
+**Expressions failing in enum values**: Initial implementation could not parse `enum { A = 1 + 2 }`. After reducing `1` to expression, the parser ended up in state 151 but couldn't handle `+`.
+
+**Root cause:** State 151 (after `ID = expr`) only had COMMA and BRACE_CLAUSA actions (to reduce P61). It didn't have PLUS to continue the expression.
+
+**Fix:** Added PLUS -> SHIFT 9 to states 151 and 160 to allow expression continuation:
+```c
+/* State 151: After 'ID = expr' - continue expr or reduce P61 */
+{ ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },   /* expr + term */
+{ ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 61 },
+{ ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 61 },
+```
+
+**Additional Changes:**
+- Added COMMA to expression reduce sets (states 2, 3, 4, 5, 12, 13, 14, 15, 16) so expressions terminate on `,` in enum context
+
+**Tests Passing:**
+- `enum foo` → ENUM_SPECIFIER (forward reference)
+- `enum { A, B, C }` → ENUM_SPECIFIER (anonymous, 3 enumerators)
+- `enum foo { A, B, C }` → ENUM_SPECIFIER (named)
+- `enum foo { A = 1, B, C = 10 }` → ENUM_SPECIFIER with mixed values
+- `enum foo x` → DECLARATIO with enum type
+- `enum { A = 1 + 2 }` → ENUM_SPECIFIER with binary expression value
+
+**Grammar Summary:**
+- 162 states (was 145)
+- ~1119 action entries (was ~1064)
+- 62 grammar rules (was 55)
+
+### Still TODO
+
+- Bit fields: `int x : 3;`
+- Nested struct/union/enum
+- `typedef enum { } Foo;` pattern
+- Array declarators `int arr[10]`
 - Test with real library files
 - Error recovery

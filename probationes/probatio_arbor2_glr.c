@@ -414,6 +414,69 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             frange;
         }
 
+        casus ARBOR2_NODUS_ENUM_SPECIFIER:
+        {
+            Arbor2Nodus* tag = nodus->datum.enum_specifier.tag;
+            Xar* enumeratores = nodus->datum.enum_specifier.enumeratores;
+
+            si (tag != NIHIL)
+            {
+                imprimere("ENUM_SPECIFIER: %.*s\n",
+                    (i32)tag->datum.folium.valor.mensura,
+                    tag->datum.folium.valor.datum);
+            }
+            alioquin
+            {
+                imprimere("ENUM_SPECIFIER: (anonymous)\n");
+            }
+
+            si (enumeratores != NIHIL)
+            {
+                i32 num = xar_numerus(enumeratores);
+                i32 j;
+                per (j = ZEPHYRUM; j < num; j++)
+                {
+                    Arbor2Nodus** slot = xar_obtinere(enumeratores, j);
+                    si (slot != NIHIL && *slot != NIHIL)
+                    {
+                        _imprimere_arborem(*slot, profunditas + I);
+                    }
+                }
+            }
+            frange;
+        }
+
+        casus ARBOR2_NODUS_ENUMERATOR:
+        {
+            chorda titulus = nodus->datum.enumerator.titulus;
+            Arbor2Nodus* valor = nodus->datum.enumerator.valor;
+
+            imprimere("ENUMERATOR: %.*s",
+                (i32)titulus.mensura, titulus.datum);
+
+            si (valor != NIHIL)
+            {
+                imprimere(" = ");
+                /* Imprimere valor inline */
+                si (valor->genus == ARBOR2_NODUS_INTEGER)
+                {
+                    imprimere("%.*s", (i32)valor->datum.folium.valor.mensura,
+                        valor->datum.folium.valor.datum);
+                }
+                alioquin si (valor->genus == ARBOR2_NODUS_IDENTIFICATOR)
+                {
+                    imprimere("%.*s", (i32)valor->datum.folium.valor.mensura,
+                        valor->datum.folium.valor.datum);
+                }
+                alioquin
+                {
+                    imprimere("(expr)");
+                }
+            }
+            imprimere("\n");
+            frange;
+        }
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -2770,6 +2833,217 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
                 CREDO_VERUM(spec->datum.struct_specifier.est_unio);  /* Is union */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Enum specifier (E3)
+     * ======================================================== */
+
+    /* Test enum forward reference: enum foo */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum forward ref: enum foo ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum foo");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.enum_specifier.tag);          /* Has tag */
+            CREDO_NIHIL(res.radix->datum.enum_specifier.enumeratores);     /* No body */
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test anonymous enum: enum { A, B, C } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum anon: enum { A, B, C } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A, B, C }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            CREDO_NIHIL(res.radix->datum.enum_specifier.tag);              /* No tag (anonymous) */
+            CREDO_NON_NIHIL(res.radix->datum.enum_specifier.enumeratores); /* Has body */
+            si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.enum_specifier.enumeratores), III);  /* 3 enumerators */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test named enum: enum foo { A, B, C } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum named: enum foo { A, B, C } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum foo { A, B, C }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.enum_specifier.tag);          /* Has tag */
+            CREDO_NON_NIHIL(res.radix->datum.enum_specifier.enumeratores); /* Has body */
+            si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.enum_specifier.enumeratores), III);  /* 3 enumerators */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test enum with values: enum foo { A = 1, B, C = 10 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum with values: enum foo { A = 1, B, C = 10 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum foo { A = 1, B, C = 10 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.enum_specifier.tag);          /* Has tag */
+            CREDO_NON_NIHIL(res.radix->datum.enum_specifier.enumeratores); /* Has body */
+            si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
+            {
+                Xar* enums = res.radix->datum.enum_specifier.enumeratores;
+                Arbor2Nodus** e0;
+                Arbor2Nodus** e1;
+                Arbor2Nodus** e2;
+
+                CREDO_AEQUALIS_I32(xar_numerus(enums), III);  /* 3 enumerators */
+
+                /* Check first enumerator has value */
+                e0 = xar_obtinere(enums, ZEPHYRUM);
+                si (e0 != NIHIL && *e0 != NIHIL)
+                {
+                    CREDO_NON_NIHIL((*e0)->datum.enumerator.valor);  /* A = 1 */
+                }
+
+                /* Check second enumerator has no value */
+                e1 = xar_obtinere(enums, I);
+                si (e1 != NIHIL && *e1 != NIHIL)
+                {
+                    CREDO_NIHIL((*e1)->datum.enumerator.valor);  /* B (no value) */
+                }
+
+                /* Check third enumerator has value */
+                e2 = xar_obtinere(enums, II);
+                si (e2 != NIHIL && *e2 != NIHIL)
+                {
+                    CREDO_NON_NIHIL((*e2)->datum.enumerator.valor);  /* C = 10 */
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test enum as type in declaration: enum foo x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum decl: enum foo x ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum foo x");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* spec;
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            spec = res.radix->datum.declaratio.specifier;
+            si (spec != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+                CREDO_NON_NIHIL(spec->datum.enum_specifier.tag);       /* Has tag */
+                CREDO_NIHIL(spec->datum.enum_specifier.enumeratores);  /* No body */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test enum with expression value: enum { A = 1 + 2 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum expr value: enum { A = 1 + 2 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = 1 + 2 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
+            {
+                Xar* enums = res.radix->datum.enum_specifier.enumeratores;
+                Arbor2Nodus** e0;
+
+                CREDO_AEQUALIS_I32(xar_numerus(enums), I);  /* 1 enumerator */
+
+                e0 = xar_obtinere(enums, ZEPHYRUM);
+                si (e0 != NIHIL && *e0 != NIHIL)
+                {
+                    /* Check the value is a binary expression */
+                    CREDO_NON_NIHIL((*e0)->datum.enumerator.valor);
+                    si ((*e0)->datum.enumerator.valor != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)(*e0)->datum.enumerator.valor->genus,
+                            (i32)ARBOR2_NODUS_BINARIUM);
+                    }
+                }
             }
         }
 

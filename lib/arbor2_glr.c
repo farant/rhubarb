@@ -1294,6 +1294,81 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_ENUM_SPECIFIER:
+                        /* P55: enum ID { enumerator_list } (5 symbols) - named */
+                        /* P56: enum { enumerator_list } (4 symbols) - anonymous */
+                        /* P57: enum ID (2 symbols) - forward reference */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_ENUM_SPECIFIER;
+
+                        si (num_pop == V)
+                        {
+                            /* P55: enum ID { enumerator_list } */
+                            /* valori: [4]=enum, [3]=ID, [2]={, [1]=enumerator_list, [0]=} */
+                            Arbor2Nodus* tag_nodus;
+                            Arbor2Token* id_tok = lexemata[III];
+
+                            tag_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            tag_nodus->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            tag_nodus->lexema = id_tok;
+                            tag_nodus->datum.folium.valor = id_tok->lexema->valor;
+
+                            valor_novus->lexema = lexemata[IV];  /* enum token */
+                            valor_novus->datum.enum_specifier.tag = tag_nodus;
+                            valor_novus->datum.enum_specifier.enumeratores = (Xar*)valori[I];
+                        }
+                        alioquin si (num_pop == IV)
+                        {
+                            /* P56: enum { enumerator_list } (anonymous) */
+                            /* valori: [3]=enum, [2]={, [1]=enumerator_list, [0]=} */
+                            valor_novus->lexema = lexemata[III];  /* enum token */
+                            valor_novus->datum.enum_specifier.tag = NIHIL;
+                            valor_novus->datum.enum_specifier.enumeratores = (Xar*)valori[I];
+                        }
+                        alioquin si (num_pop == II)
+                        {
+                            /* P57: enum ID (forward reference) */
+                            /* valori: [1]=enum, [0]=ID */
+                            Arbor2Nodus* tag_nodus;
+                            Arbor2Token* id_tok = lexemata[ZEPHYRUM];
+
+                            tag_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            tag_nodus->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            tag_nodus->lexema = id_tok;
+                            tag_nodus->datum.folium.valor = id_tok->lexema->valor;
+
+                            valor_novus->lexema = lexemata[I];  /* enum token */
+                            valor_novus->datum.enum_specifier.tag = tag_nodus;
+                            valor_novus->datum.enum_specifier.enumeratores = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_ENUMERATOR:
+                        /* P60: enumerator -> IDENTIFIER (1 symbol) - plain */
+                        /* P61: enumerator -> IDENTIFIER '=' expression (3 symbols) - with value */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_ENUMERATOR;
+
+                        si (num_pop == I)
+                        {
+                            /* P60: enumerator -> IDENTIFIER */
+                            /* valori: [0]=ID token (no AST node, just token) */
+                            Arbor2Token* id_tok = lexemata[ZEPHYRUM];
+                            valor_novus->lexema = id_tok;
+                            valor_novus->datum.enumerator.titulus = id_tok->lexema->valor;
+                            valor_novus->datum.enumerator.valor = NIHIL;
+                        }
+                        alioquin si (num_pop == III)
+                        {
+                            /* P61: enumerator -> IDENTIFIER '=' expression */
+                            /* valori: [2]=ID, [1]='=', [0]=expression */
+                            Arbor2Token* id_tok = lexemata[II];
+                            valor_novus->lexema = id_tok;
+                            valor_novus->datum.enumerator.titulus = id_tok->lexema->valor;
+                            valor_novus->datum.enumerator.valor = valori[ZEPHYRUM];
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
@@ -1313,6 +1388,24 @@ _processare_unam_actionem(
                         {
                             /* P42: parameter_list -> parameter_list ',' parameter_declaration */
                             /* valori[2]=existing list, valori[1]=',', valori[0]=new param */
+                            Xar* lista = (Xar*)valori[II];
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 58)
+                        {
+                            /* P58: enumerator_list -> enumerator */
+                            /* Create Xar with single enumerator */
+                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 59)
+                        {
+                            /* P59: enumerator_list -> enumerator_list ',' enumerator */
+                            /* valori[2]=existing list, valori[1]=',', valori[0]=new enumerator */
                             Xar* lista = (Xar*)valori[II];
                             Arbor2Nodus** slot = xar_addere(lista);
                             *slot = valori[ZEPHYRUM];
