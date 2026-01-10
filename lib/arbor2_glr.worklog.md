@@ -174,3 +174,69 @@ Initial implementation hung because states 2-5, 12-16 didn't have SEMICOLON in t
 - 25 states (was 22)
 - 103 action entries (was 94)
 - 15 grammar rules (was 13)
+
+---
+
+## 2026-01-09 (Milestone 3 Phase B: Compound Statements)
+
+### Phase B: Compound Statements Complete
+
+Added support for compound statements `{ stmt1; stmt2; ... }`:
+
+**New Grammar Rules:**
+- P15: `statement -> compound_statement` (pass-through)
+- P16: `compound_statement -> '{' statement_list '}'`
+- P17: `statement_list -> statement_list statement` (left-recursive)
+- P18: `statement_list -> ε` (epsilon for empty list)
+
+**New Node Type:**
+- `ARBOR2_NODUS_CORPUS` - Compound statement containing `Xar* sententiae`
+
+**New Non-Terminals:**
+- `ARBOR2_NT_CORPUS`
+- `ARBOR2_NT_ELENCHUS_SENTENTIARUM`
+
+**New States:**
+- State 25: After `{` - epsilon reduce P18 for all lookaheads
+- State 26: After `{ statement_list` - expect more statements or `}`
+- State 27: After `{ statement_list }` - reduce P16
+- State 28: After statement in list - reduce P17
+- State 29: After compound_statement - accept or reduce P15
+
+**Key Design Decisions:**
+
+1. **Left-recursive statement_list**: The rule `list -> list stmt` is left-recursive, which is natural for LR parsing. The epsilon production `list -> ε` provides the base case.
+
+2. **Epsilon reduction strategy**: State 25 (after `{`) immediately does an epsilon reduction to create an empty statement_list. This transitions to state 26 where we can add statements or close with `}`.
+
+3. **Reusing expression states**: States 2, 3, 4, 5, etc. for expression parsing are reused inside compound statements. The GOTO entries determine flow based on the originating state (0 vs 26).
+
+4. **BRACE_CLAUSA in reduce sets**: Just like we added SEMICOLON to expression reduce states for Phase A, we added BRACE_CLAUSA (`}`) to states 2-5, 12-16 so expressions can complete inside compound statements.
+
+5. **Statement starters in reduce sets**: States 22 and 23 (after statement completes) now reduce on all statement starters (ID, INT, `;`, `{`, etc.) so we can continue parsing the next statement in a list.
+
+**GOTO Entries Added:**
+- GOTO(0, CORPUS) = 29
+- GOTO(25, ELENCHUS) = 26
+- GOTO(26, EXPR) = 1 (reuse)
+- GOTO(26, TERM) = 2 (reuse)
+- GOTO(26, FACTOR) = 3 (reuse)
+- GOTO(26, SENTENTIA) = 28
+- GOTO(26, CORPUS) = 29
+
+**Tests Passing:**
+- `{ }` → CORPUS with 0 statements
+- `{ x; }` → CORPUS with 1 statement
+- `{ x; y + 1; }` → CORPUS with 2 statements
+- `{ { x; } }` → Nested CORPUS
+
+**Grammar Now:**
+- 30 states (was 25)
+- 169 action entries (was 103)
+- 19 grammar rules (was 15)
+
+### Still TODO
+
+- Control flow statements (if, while, for, etc.)
+- Test with real library files
+- Error recovery

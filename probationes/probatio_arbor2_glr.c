@@ -124,6 +124,24 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             imprimere("SENTENTIA_VACUA\n");
             frange;
 
+        casus ARBOR2_NODUS_CORPUS:
+            {
+                i32 j;
+                imprimere("CORPUS: %d sententiae\n",
+                    nodus->datum.corpus.sententiae != NIHIL ?
+                    xar_numerus(nodus->datum.corpus.sententiae) : ZEPHYRUM);
+                si (nodus->datum.corpus.sententiae != NIHIL)
+                {
+                    per (j = ZEPHYRUM; j < xar_numerus(nodus->datum.corpus.sententiae); j++)
+                    {
+                        Arbor2Nodus* stmt;
+                        stmt = *(Arbor2Nodus**)xar_obtinere(nodus->datum.corpus.sententiae, j);
+                        _imprimere_arborem(stmt, profunditas + I);
+                    }
+                }
+            }
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -604,6 +622,154 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.sententia.expressio->genus,
                                    (i32)ARBOR2_NODUS_INTEGER);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Empty compound statement: { }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans empty compound: { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "{ }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            /* Empty compound should have 0 statements */
+            CREDO_NON_NIHIL(res.radix->datum.corpus.sententiae);
+            si (res.radix->datum.corpus.sententiae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), ZEPHYRUM);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Compound with one statement: { x; }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound with one stmt: { x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "{ x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            /* Should have 1 statement */
+            si (res.radix->datum.corpus.sententiae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), I);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Compound with multiple statements: { x; y + 1; }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound multi stmt: { x; y + 1; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "{ x; y + 1; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            /* Should have 2 statements */
+            si (res.radix->datum.corpus.sententiae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), II);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Nested compound: { { x; } }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* inner;
+
+        imprimere("\n--- Probans nested compound: { { x; } } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "{ { x; } }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            /* Outer should have 1 statement (the inner compound) */
+            si (res.radix->datum.corpus.sententiae != NIHIL &&
+                xar_numerus(res.radix->datum.corpus.sententiae) > ZEPHYRUM)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), I);
+
+                /* Get first statement - should be CORPUS (compound became stmt) */
+                inner = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.corpus.sententiae, ZEPHYRUM);
+                CREDO_NON_NIHIL(inner);
+                /* Inner compound is wrapped as CORPUS (via P15 stmt->compound passthrough) */
+                si (inner != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)inner->genus, (i32)ARBOR2_NODUS_CORPUS);
+                }
             }
         }
     }

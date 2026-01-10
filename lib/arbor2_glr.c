@@ -748,6 +748,71 @@ _processare_unam_actionem(
                         valor_novus->datum.sententia.expressio = NIHIL;
                         frange;
 
+                    casus ARBOR2_NODUS_CORPUS:
+                        si (num_pop == ZEPHYRUM)
+                        {
+                            /* P18: statement_list -> ε (empty) */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_CORPUS;
+                            valor_novus->lexema = NIHIL;
+                            valor_novus->datum.corpus.sententiae =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                        }
+                        alioquin si (num_pop == II)
+                        {
+                            /* P17: statement_list -> statement_list statement */
+                            /* valori[1] = list, valori[0] = new statement */
+                            Arbor2Nodus* lista = valori[I];
+                            Arbor2Nodus* stmt = valori[ZEPHYRUM];
+                            Arbor2Nodus** slot_stmt;
+
+                            si (lista != NIHIL && lista->genus == ARBOR2_NODUS_CORPUS)
+                            {
+                                /* Append statement to existing list */
+                                slot_stmt = xar_addere(lista->datum.corpus.sententiae);
+                                *slot_stmt = stmt;
+                                valor_novus = lista;
+                            }
+                            alioquin
+                            {
+                                /* Create new list with this statement */
+                                valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                valor_novus->genus = ARBOR2_NODUS_CORPUS;
+                                valor_novus->lexema = NIHIL;
+                                valor_novus->datum.corpus.sententiae =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                                slot_stmt = xar_addere(valor_novus->datum.corpus.sententiae);
+                                *slot_stmt = stmt;
+                            }
+                        }
+                        alioquin si (num_pop == III)
+                        {
+                            /* P16: compound_statement -> '{' statement_list '}' */
+                            /* valori[2] = '{', valori[1] = list, valori[0] = '}' */
+                            Arbor2Nodus* lista = valori[I];
+
+                            si (lista != NIHIL && lista->genus == ARBOR2_NODUS_CORPUS)
+                            {
+                                /* Already have CORPUS node from stmt_list, just use it */
+                                valor_novus = lista;
+                                valor_novus->lexema = lexemata[II];  /* '{' token */
+                            }
+                            alioquin
+                            {
+                                /* Create new CORPUS */
+                                valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                valor_novus->genus = ARBOR2_NODUS_CORPUS;
+                                valor_novus->lexema = lexemata[II];
+                                valor_novus->datum.corpus.sententiae =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            }
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
