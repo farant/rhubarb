@@ -62,6 +62,7 @@ nomen enumeratio {
     ARBOR2_NT_SENTENTIA,            /* Statement */
     ARBOR2_NT_CORPUS,               /* Compound statement */
     ARBOR2_NT_ELENCHUS_SENTENTIARUM, /* Statement list */
+    ARBOR2_NT_SI,                   /* If statement */
     ARBOR2_NT_NUMERUS               /* Count */
 } Arbor2NonTerminalis;
 
@@ -81,6 +82,7 @@ nomen enumeratio {
     ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
+    ARBOR2_NODUS_SI,                /* If statement */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -147,6 +149,13 @@ structura Arbor2Nodus {
         structura {
             Xar*                sententiae;     /* Xar of Arbor2Nodus* - list of statements */
         } corpus;
+
+        /* SI (if statement) */
+        structura {
+            Arbor2Nodus*        conditio;       /* condition expression */
+            Arbor2Nodus*        consequens;     /* then-branch */
+            Arbor2Nodus*        alternans;      /* else-branch (NULL if no else) */
+        } conditionale;
 
         /* AMBIGUUS */
         structura {

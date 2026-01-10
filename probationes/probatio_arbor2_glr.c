@@ -142,6 +142,25 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             }
             frange;
 
+        casus ARBOR2_NODUS_SI:
+            imprimere("SI:\n");
+            /* Print condition */
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("conditio:\n");
+            _imprimere_arborem(nodus->datum.conditionale.conditio, profunditas + II);
+            /* Print then-branch */
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("consequens:\n");
+            _imprimere_arborem(nodus->datum.conditionale.consequens, profunditas + II);
+            /* Print else-branch if present */
+            si (nodus->datum.conditionale.alternans != NIHIL)
+            {
+                per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+                imprimere("alternans:\n");
+                _imprimere_arborem(nodus->datum.conditionale.alternans, profunditas + II);
+            }
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -770,6 +789,149 @@ s32 principale(vacuum)
                 {
                     CREDO_AEQUALIS_I32((i32)inner->genus, (i32)ARBOR2_NODUS_CORPUS);
                 }
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Simple if statement: if (x) y;
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans simple if: if (x) y; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "if (x) y;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SI);
+            /* Should have condition and consequens, no alternans */
+            CREDO_NON_NIHIL(res.radix->datum.conditionale.conditio);
+            CREDO_NON_NIHIL(res.radix->datum.conditionale.consequens);
+            CREDO_NIHIL(res.radix->datum.conditionale.alternans);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: If-else statement: if (x) y; else z;
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans if-else: if (x) y; else z; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "if (x) y; else z;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SI);
+            /* Should have condition, consequens, AND alternans */
+            CREDO_NON_NIHIL(res.radix->datum.conditionale.conditio);
+            CREDO_NON_NIHIL(res.radix->datum.conditionale.consequens);
+            CREDO_NON_NIHIL(res.radix->datum.conditionale.alternans);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: If with compound body: if (x) { y; }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans if with compound: if (x) { y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "if (x) { y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SI);
+            /* Consequens should be CORPUS */
+            si (res.radix->datum.conditionale.consequens != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.consequens->genus,
+                                   (i32)ARBOR2_NODUS_CORPUS);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Dangling else: if (a) if (b) c; else d;
+     * else should bind to inner if (b), not outer if (a)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* inner_if;
+
+        imprimere("\n--- Probans dangling else: if (a) if (b) c; else d; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "if (a) if (b) c; else d;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Outer if should NOT have an else */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SI);
+            CREDO_NIHIL(res.radix->datum.conditionale.alternans);
+
+            /* Inner if (consequens of outer) SHOULD have an else */
+            inner_if = res.radix->datum.conditionale.consequens;
+            CREDO_NON_NIHIL(inner_if);
+            si (inner_if != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)inner_if->genus, (i32)ARBOR2_NODUS_SI);
+                CREDO_NON_NIHIL(inner_if->datum.conditionale.alternans);
             }
         }
     }

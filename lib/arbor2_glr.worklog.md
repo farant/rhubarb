@@ -240,3 +240,66 @@ Added support for compound statements `{ stmt1; stmt2; ... }`:
 - Control flow statements (if, while, for, etc.)
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase C1: if/else Statements)
+
+### Phase C1: If/Else Statements Complete
+
+Added if/else statements with proper dangling-else resolution:
+
+**New Grammar Rules:**
+- P19: `statement -> if_statement` (pass-through)
+- P20: `if_statement -> 'if' '(' expression ')' statement` (5 symbols)
+- P21: `if_statement -> 'if' '(' expression ')' statement 'else' statement` (7 symbols)
+
+**New Node Type:**
+- `ARBOR2_NODUS_SI` - If statement with conditio, consequens, alternans
+
+**New Non-Terminal:**
+- `ARBOR2_NT_SI`
+
+**New States:**
+- State 30: After `if` - expect `(`
+- State 31: After `if (` - parse condition expression
+- State 32: After `if ( expr` - expect `)`
+- State 33: After `if ( expr )` - parse then-branch statement
+- State 34: After `if ( expr ) stmt` - dangling else resolution
+- State 35: After `if ( expr ) stmt else` - parse else-branch statement
+- State 36: After `if ( expr ) stmt else stmt` - reduce P21
+- State 37: After if_statement - reduce P19 (stmt -> if_stmt)
+- State 38: Nested compound statement - always reduces P15 (never accepts)
+
+**Key Design Decisions:**
+
+1. **Dangling Else Resolution**: In state 34 (after parsing if-body), when we see `else`, we prefer SHIFT (continuing to P21) over REDUCE (completing P20). This causes `else` to bind to the nearest `if`, matching C89 semantics.
+
+2. **Separate State for Nested Compounds**: State 38 is like state 29 but without the EOF accept action. When compound statements appear as if/else bodies, they go through state 38 which reduces P15 (statement -> compound_statement), ensuring the if statement gets the SENTENTIA and can complete.
+
+3. **GOTO Entries for Expression Parsing**: States 31, 33, and 35 need GOTO entries for EXPR, TERM, FACTOR to handle expressions (condition and expression-statements in bodies).
+
+**Bugs Fixed:**
+
+- **Infinite loop at semicolon**: States 33 and 35 were missing GOTO entries for EXPR/TERM/FACTOR, so after parsing expression in the body, reductions couldn't find their next state.
+
+- **Wrong result for compound body**: `if (x) { y; }` was returning CORPUS instead of SI because GOTO(33, CORPUS) = 29, and state 29 accepts on EOF. Fixed by creating state 38 which always reduces P15.
+
+**Tests Passing:**
+- `if (x) y;` → SI with conditio=x, consequens=y, alternans=NULL
+- `if (x) y; else z;` → SI with conditio=x, consequens=y, alternans=z
+- `if (x) { y; }` → SI with CORPUS as consequens
+- `if (a) if (b) c; else d;` → Nested SI, else binds to inner if
+
+**Grammar Now:**
+- 39 states (was 30)
+- ~249 action entries (was 169)
+- 22 grammar rules (was 19)
+
+### Still TODO
+
+- while/do-while statements (Phase C2)
+- for statements (Phase C3)
+- switch/case/default + jump statements (Phase C4)
+- Test with real library files
+- Error recovery

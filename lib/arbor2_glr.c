@@ -813,6 +813,38 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_SI:
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_SI;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'if' token */
+
+                        si (num_pop == V)
+                        {
+                            /* P20: if_statement -> 'if' '(' expression ')' statement */
+                            /* valori[4] = if, valori[3] = (, valori[2] = expr,
+                               valori[1] = ), valori[0] = stmt */
+                            valor_novus->datum.conditionale.conditio = valori[II];
+                            valor_novus->datum.conditionale.consequens = valori[ZEPHYRUM];
+                            valor_novus->datum.conditionale.alternans = NIHIL;
+                        }
+                        alioquin si (num_pop == VII)
+                        {
+                            /* P21: if_statement -> 'if' '(' expression ')' statement 'else' statement */
+                            /* valori[6] = if, valori[5] = (, valori[4] = expr,
+                               valori[3] = ), valori[2] = stmt, valori[1] = else,
+                               valori[0] = stmt */
+                            valor_novus->datum.conditionale.conditio = valori[IV];
+                            valor_novus->datum.conditionale.consequens = valori[II];
+                            valor_novus->datum.conditionale.alternans = valori[ZEPHYRUM];
+                        }
+                        alioquin
+                        {
+                            valor_novus->datum.conditionale.conditio = NIHIL;
+                            valor_novus->datum.conditionale.consequens = NIHIL;
+                            valor_novus->datum.conditionale.alternans = NIHIL;
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
