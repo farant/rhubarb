@@ -67,7 +67,9 @@ nomen enumeratio {
     ARBOR2_NT_FAC,                  /* Do-while statement */
     ARBOR2_NT_PER,                  /* For statement */
     ARBOR2_NT_EXPRESSIO_OPTATIVA,   /* Optional expression (for for-loops) */
-    ARBOR2_NT_NUMERUS               /* Count */
+    ARBOR2_NT_NUMERUS,              /* Count */
+    ARBOR2_NT_PARAMETER_LIST,       /* Parameter list */
+    ARBOR2_NT_PARAMETER_DECL        /* Parameter declaration */
 } Arbor2NonTerminalis;
 
 /* ==================================================
@@ -84,6 +86,7 @@ nomen enumeratio {
     ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
     ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
+    ARBOR2_NODUS_PARAMETER_DECL,    /* Parameter declaration: type name */
     ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
@@ -163,6 +166,12 @@ structura Arbor2Nodus {
             b32                 habet_void;           /* true if explicitly (void) */
             s32                 num_stellae;          /* Pointer depth (for * fn()) */
         } declarator_functi;
+
+        /* PARAMETER_DECL (parameter declaration) */
+        structura {
+            Arbor2Nodus*        type_specifier;       /* Type (identifier node) */
+            Arbor2Nodus*        declarator;           /* Name + pointers */
+        } parameter_decl;
 
         /* SENTENTIA (expression statement) */
         structura {

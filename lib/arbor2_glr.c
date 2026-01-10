@@ -5,6 +5,9 @@
 #include "xar.h"
 #include <string.h>
 
+/* Debug flag - set to 1 to enable tracing */
+#define GLR_DEBUG 0
+
 /* ==================================================
  * Internal Forward Declarations
  * ================================================== */
@@ -534,8 +537,16 @@ _processare_unam_actionem(
     actiones = arbor2_glr_quaerere_actiones(glr, (i32)nodus->status, genus);
     num_actiones = xar_numerus(actiones);
 
+#if GLR_DEBUG
+    printf("  [DEBUG] State %d, token %s: %d actions\n",
+           nodus->status, arbor2_lexema_genus_nomen(genus), num_actiones);
+#endif
+
     si (num_actiones == ZEPHYRUM)
     {
+#if GLR_DEBUG
+        printf("  [DEBUG] NO ACTIONS - path dies\n");
+#endif
         redde FALSUM;  /* No valid action - this path dies */
     }
 
@@ -581,6 +592,9 @@ _processare_unam_actionem(
         commutatio (actio->actio)
         {
             casus ARBOR2_ACTIO_SHIFT:
+#if GLR_DEBUG
+                printf("  [DEBUG] -> SHIFT to state %d\n", actio->valor);
+#endif
                 _exequi_shift(glr, nodus, (s32)actio->valor);
                 habuit_shift = VERUM;
                 frange;
@@ -604,6 +618,11 @@ _processare_unam_actionem(
                 {
                     frange;
                 }
+
+#if GLR_DEBUG
+                printf("  [DEBUG] -> REDUCE P%d (pop %d, NT=%s)\n",
+                       actio->valor, regula->longitudo, arbor2_nt_nomen(regula->sinister));
+#endif
 
                 cursor = nodus;
                 num_pop = ZEPHYRUM;
@@ -746,7 +765,8 @@ _processare_unam_actionem(
 
                     casus ARBOR2_NODUS_DECLARATOR_FUNCTI:
                         /* P38: declarator -> declarator '(' ')' (3 symbols)
-                         * P39: declarator -> declarator '(' VOID ')' (4 symbols) */
+                         * P39: declarator -> declarator '(' VOID ')' (4 symbols)
+                         * P40: declarator -> declarator '(' param_list ')' (4 symbols) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
                         si (num_pop == III)
@@ -761,13 +781,23 @@ _processare_unam_actionem(
                         }
                         alioquin si (num_pop == IV)
                         {
-                            /* P39: declarator (void) */
-                            /* valori[3]=declarator, [2]='(', [1]='void', [0]=')' */
+                            /* P39 or P40: 4 symbols */
+                            /* valori[3]=declarator, [2]='(', [1]=void/param_list, [0]=')' */
                             valor_novus->lexema = lexemata[III];
                             valor_novus->datum.declarator_functi.declarator_interior = valori[III];
-                            valor_novus->datum.declarator_functi.parametri = NIHIL;
-                            valor_novus->datum.declarator_functi.habet_void = VERUM;
                             valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
+                            si (valori[I] == NIHIL)
+                            {
+                                /* P39: (void) - valori[1] is NULL from VOID token */
+                                valor_novus->datum.declarator_functi.parametri = NIHIL;
+                                valor_novus->datum.declarator_functi.habet_void = VERUM;
+                            }
+                            alioquin
+                            {
+                                /* P40: (param_list) - valori[1] is the Xar* */
+                                valor_novus->datum.declarator_functi.parametri = (Xar*)valori[I];
+                                valor_novus->datum.declarator_functi.habet_void = FALSUM;
+                            }
                         }
                         alioquin
                         {
@@ -1043,11 +1073,41 @@ _processare_unam_actionem(
                         valor_novus->datum.defectus.sententia = valori[ZEPHYRUM];
                         frange;
 
+                    casus ARBOR2_NODUS_PARAMETER_DECL:
+                        /* P43: parameter_declaration -> type_specifier declarator */
+                        /* valori[1]=type_spec, valori[0]=declarator */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                        valor_novus->lexema = lexemata[I];  /* type_specifier token */
+                        valor_novus->datum.parameter_decl.type_specifier = valori[I];
+                        valor_novus->datum.parameter_decl.declarator = valori[ZEPHYRUM];
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
                         /* For 3-symbol rules like (expr), valori[1] is the inner expr */
-                        si (num_pop == III)
+
+                        /* Special handling for parameter list rules */
+                        si (actio->valor == 41)
+                        {
+                            /* P41: parameter_list -> parameter_declaration */
+                            /* Create Xar with single param */
+                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;  /* Return as "Arbor2Nodus*" */
+                        }
+                        alioquin si (actio->valor == 42)
+                        {
+                            /* P42: parameter_list -> parameter_list ',' parameter_declaration */
+                            /* valori[2]=existing list, valori[1]=',', valori[0]=new param */
+                            Xar* lista = (Xar*)valori[II];
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (num_pop == III)
                         {
                             valor_novus = valori[I];  /* Middle element */
                         }
@@ -1069,10 +1129,17 @@ _processare_unam_actionem(
                 alioquin
                 {
                     goto_status = arbor2_glr_quaerere_goto(glr, cursor->status, regula->sinister);
+#if GLR_DEBUG
+                    printf("  [DEBUG]    GOTO(%d, %s) = %d\n",
+                           cursor->status, arbor2_nt_nomen(regula->sinister), goto_status);
+#endif
                 }
 
                 si (goto_status < ZEPHYRUM)
                 {
+#if GLR_DEBUG
+                    printf("  [DEBUG]    GOTO failed! path dies\n");
+#endif
                     frange;
                 }
 

@@ -151,7 +151,19 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR_FUNCTI },
 
     /* P39: declarator -> declarator '(' VOID ')' (function declarator with void) */
-    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI }
+    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI },
+
+    /* P40: declarator -> declarator '(' parameter_list ')' */
+    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI },
+
+    /* P41: parameter_list -> parameter_declaration */
+    { ARBOR2_NT_PARAMETER_LIST, 1, ARBOR2_NODUS_ERROR },  /* builds Xar */
+
+    /* P42: parameter_list -> parameter_list ',' parameter_declaration */
+    { ARBOR2_NT_PARAMETER_LIST, 3, ARBOR2_NODUS_ERROR },  /* extends Xar */
+
+    /* P43: parameter_declaration -> type_specifier declarator */
+    { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -1293,9 +1305,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
      * FUNCTION DECLARATOR STATES (Phase D1)
      * ================================================== */
 
-    /* State 91: After 'declarator (' - expect ')' or 'void' */
+    /* State 91: After 'declarator (' - expect ')' or 'void' or parameter type */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 92 },   /* () */
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 93 },   /* (void */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 95 },   /* param type (typedef) */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 95 },   /* param type (int) */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 95 },   /* param type (char) */
 
     /* State 92: After 'declarator ( )' - reduce P38 */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 38 },  /* declarator -> declarator () */
@@ -1312,7 +1327,83 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 39 },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 39 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 39 },
-    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 39 }   /* for chained fn decl */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 39 },  /* for chained fn decl */
+
+    /* ==================================================
+     * Phase D2: Parameter List States (95-111)
+     * ================================================== */
+
+    /* State 95: After '( type_specifier' - expect '*' or param name */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 96 },   /* pointer param */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 97 },   /* param name */
+
+    /* State 96: After '( type_spec *' - expect '*' or param name */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 96 },   /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 98 },   /* param name after * */
+
+    /* State 97: After '( type_spec name' - reduce P12 (declarator -> IDENTIFIER) */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12 },
+
+    /* State 98: After '( type_spec *...* name' - reduce P12 */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12 },
+
+    /* State 99: After '( type_spec declarator' - reduce P43 (param_decl) */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 43 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43 },
+
+    /* State 100: After '( type_spec * declarator' - reduce P11 (declarator -> * declarator) */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11 },
+
+    /* State 101: After '( param_decl' - reduce P41 (param_list -> param_decl) */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 41 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 41 },
+
+    /* State 102: After '( param_list' - expect ')' or ',' */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 103 },  /* close params */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 104 },  /* more params */
+
+    /* State 103: After '( param_list )' - reduce P40 */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 40 },
+
+    /* State 104: After 'param_list ,' - expect next type_specifier */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 105 },  /* next param type (typedef) */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 105 },  /* next param type (int) */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 105 },  /* next param type (char) */
+
+    /* State 105: After 'param_list , type_spec' - expect '*' or param name */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106 },  /* pointer param */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 107 },  /* param name */
+
+    /* State 106: After 'param_list , type_spec *' - expect '*' or param name */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 108 },  /* param name */
+
+    /* State 107: After 'param_list , type_spec name' - reduce P12 */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12 },
+
+    /* State 108: After 'param_list , type_spec *...* name' - reduce P12 */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12 },
+
+    /* State 109: After 'param_list , type_spec declarator' - reduce P43 */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 43 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43 },
+
+    /* State 110: After 'param_list , type_spec * declarator' - reduce P11 */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11 },
+
+    /* State 111: After 'param_list , param_decl' - reduce P42 */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 42 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 42 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -1410,14 +1501,31 @@ hic_manens i32 ACTIO_INDICES[] = {
     853,    /* State 88: 1 action (after 'default') */
     854,    /* State 89: 18 actions (after 'default :') */
     872,    /* State 90: 21 actions (reduce P37) */
-    893,    /* State 91: 2 actions (after 'declarator (') */
-    895,    /* State 92: 5 actions (reduce P38) */
-    900,    /* State 93: 1 action (after 'declarator ( void') */
-    901,    /* State 94: 5 actions (reduce P39) */
-    906     /* End marker */
+    893,    /* State 91: 5 actions (after 'declarator (', +IDENTIFIER/INT/CHAR) */
+    898,    /* State 92: 5 actions (reduce P38) */
+    903,    /* State 93: 1 action (after 'declarator ( void') */
+    904,    /* State 94: 5 actions (reduce P39) */
+    909,    /* State 95: 2 actions (after '( type_spec') */
+    911,    /* State 96: 2 actions (after '( type_spec *') */
+    913,    /* State 97: 2 actions (reduce P12) */
+    915,    /* State 98: 2 actions (reduce P12 after *) */
+    917,    /* State 99: 2 actions (reduce P43) */
+    919,    /* State 100: 2 actions (reduce P11) */
+    921,    /* State 101: 2 actions (reduce P41) */
+    923,    /* State 102: 2 actions (after param_list) */
+    925,    /* State 103: 5 actions (reduce P40) */
+    930,    /* State 104: 3 actions (after param_list ,, +INT/CHAR) */
+    933,    /* State 105: 2 actions (after , type_spec) */
+    935,    /* State 106: 2 actions (after , type_spec *) */
+    937,    /* State 107: 2 actions (reduce P12) */
+    939,    /* State 108: 2 actions (reduce P12 after *) */
+    941,    /* State 109: 2 actions (reduce P43) */
+    943,    /* State 110: 2 actions (reduce P11) */
+    945,    /* State 111: 2 actions (reduce P42) */
+    947     /* End marker */
 };
 
-#define NUM_STATES 95
+#define NUM_STATES 112
 
 /* ==================================================
  * GOTO Table
@@ -1441,6 +1549,8 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_FAC          11
 #define INT_NT_PER          12
 #define INT_NT_EXPRESSIO_OPT 13
+#define INT_NT_PARAM_LIST    14
+#define INT_NT_PARAM_DECL    15
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
@@ -1681,7 +1791,16 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 89, INT_NT_SI,                37 },   /* if in body */
     { 89, INT_NT_DUM,               44 },   /* while in body */
     { 89, INT_NT_FAC,               52 },   /* do-while in body */
-    { 89, INT_NT_PER,               65 }    /* for in body */
+    { 89, INT_NT_PER,               65 },   /* for in body */
+
+    /* Phase D2: Parameter list GOTO entries */
+    { 95, INT_NT_DECLARATOR,        99 },   /* After type_spec + declarator */
+    { 96, INT_NT_DECLARATOR,        100 },  /* After type_spec * + declarator */
+    { 91, INT_NT_PARAM_DECL,        101 },  /* After param_decl */
+    { 91, INT_NT_PARAM_LIST,        102 },  /* After param_list */
+    { 105, INT_NT_DECLARATOR,       109 },  /* After , type_spec + declarator */
+    { 106, INT_NT_DECLARATOR,       110 },  /* After , type_spec * + declarator */
+    { 104, INT_NT_PARAM_DECL,       111 }   /* After , + param_decl */
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));
@@ -1773,6 +1892,12 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_EXPRESSIO_OPTATIVA:
             nt_int = INT_NT_EXPRESSIO_OPT;
+            frange;
+        casus ARBOR2_NT_PARAMETER_LIST:
+            nt_int = INT_NT_PARAM_LIST;
+            frange;
+        casus ARBOR2_NT_PARAMETER_DECL:
+            nt_int = INT_NT_PARAM_DECL;
             frange;
         ordinarius:
             nt_int = -I;
@@ -1883,6 +2008,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_DECLARATIO:    redde "DECLARATIO";
         casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI: redde "DECLARATOR_FUNCTI";
+        casus ARBOR2_NODUS_PARAMETER_DECL:    redde "PARAMETER_DECL";
         casus ARBOR2_NODUS_SENTENTIA:     redde "SENTENTIA";
         casus ARBOR2_NODUS_SENTENTIA_VACUA: redde "SENTENTIA_VACUA";
         casus ARBOR2_NODUS_CORPUS:        redde "CORPUS";

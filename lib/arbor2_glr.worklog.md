@@ -712,7 +712,101 @@ si (valori[ZEPHYRUM] != NIHIL &&
 
 ### Still TODO
 
-- Phase D2: Parameter lists (`int x, int y`)
+- Phase D3: Function definitions (`type fn() { body }`)
+- More declaration specifiers (struct, union, enum, const, etc.)
+- Array declarators `int arr[10]`
+- Test with real library files
+- Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase D2: Parameter Lists)
+
+### Phase D2: Parameter Lists Complete
+
+Added typed parameter lists for function declarations:
+
+**New Grammar Rules:**
+- P40: `declarator -> declarator '(' parameter_list ')'` (4 symbols)
+- P41: `parameter_list -> parameter_declaration` (1 symbol, starts list)
+- P42: `parameter_list -> parameter_list ',' parameter_declaration` (3 symbols, extends list)
+- P43: `parameter_declaration -> type_specifier declarator` (2 symbols)
+
+**New Node Type:**
+- `ARBOR2_NODUS_PARAMETER_DECL` - Parameter declaration with `parameter_decl.type_specifier` and `parameter_decl.declarator`
+
+**New Non-Terminals:**
+- `ARBOR2_NT_PARAMETER_LIST`
+- `ARBOR2_NT_PARAMETER_DECL`
+
+**New States (95-111):**
+First parameter path (95-101):
+- State 95: After `( type_spec` - expect `*` or param name
+- State 96: After `( type_spec *` - more pointers or param name
+- State 97: After `( type_spec name` - reduce P12 (declarator → ID)
+- State 98: After `( type_spec *...* name` - reduce P12
+- State 99: After `( type_spec declarator` - reduce P43 (param_decl)
+- State 100: After `( type_spec * declarator` - reduce P11 (declarator → * declarator)
+- State 101: After `( param_decl` - reduce P41 (param_list → param_decl)
+
+Parameter list continuation (102-103):
+- State 102: After `( param_list` - expect `)` or `,`
+- State 103: After `( param_list )` - reduce P40
+
+Subsequent parameters (104-111):
+- State 104: After `param_list ,` - expect next type
+- State 105-108: Same pattern as 95-98 for subsequent params
+- State 109-111: Same pattern as 99-101 for subsequent params
+
+**Key Bug Found:**
+
+**Token mismatch for `int` keyword**: Initial tests failed with "NO ACTIONS" at state 91 for token `INT`. The issue was that `int` is a keyword (ARBOR2_LEXEMA_INT), not an identifier. State 91 only had an action for IDENTIFICATOR.
+
+**Fix**: Added INT and CHAR keywords as valid type specifiers in states 91 and 104:
+```c
+/* State 91: After 'declarator (' - expect ')' or 'void' or parameter type */
+{ ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 92 },   /* () */
+{ ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 93 },   /* (void */
+{ ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 95 },   /* param type (typedef) */
+{ ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 95 },   /* param type (int) */
+{ ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 95 },   /* param type (char) */
+```
+
+**AST Construction:**
+
+P41 and P42 build an Xar of parameter nodes instead of wrapping in an AST node:
+```c
+/* P41: parameter_list -> parameter_declaration */
+Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+Arbor2Nodus** slot = xar_addere(lista);
+*slot = valori[ZEPHYRUM];
+valor_novus = (Arbor2Nodus*)lista;  /* Cast Xar* to Arbor2Nodus* */
+
+/* P42: parameter_list -> parameter_list ',' parameter_declaration */
+Xar* lista = (Xar*)valori[II];  /* Existing list */
+Arbor2Nodus** slot = xar_addere(lista);
+*slot = valori[ZEPHYRUM];  /* Append new param */
+valor_novus = lista;
+```
+
+P40 stores the list in `declarator_functi.parametri`:
+```c
+/* P40: declarator -> declarator '(' parameter_list ')' */
+valor_novus->datum.declarator_functi.parametri = (Xar*)valori[I];
+```
+
+**Tests Passing:**
+- `MyType * fn(int x)` → DECLARATIO with DECLARATOR_FUNCTI with 1 param
+- `MyType * fn(int x, int y)` → DECLARATOR_FUNCTI with 2 params
+- `MyType * fn(int *ptr)` → DECLARATOR_FUNCTI with pointer param
+
+**Grammar Now:**
+- 112 states (was 95)
+- ~950 action entries (was ~900)
+- 44 grammar rules (was 40)
+
+### Still TODO
+
 - Phase D3: Function definitions (`type fn() { body }`)
 - More declaration specifiers (struct, union, enum, const, etc.)
 - Array declarators `int arr[10]`

@@ -311,11 +311,48 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             frange;
 
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI:
-            imprimere("DECLARATOR_FUNCTI: habet_void=%s\n",
-                     nodus->datum.declarator_functi.habet_void ? "VERUM" : "FALSUM");
-            si (nodus->datum.declarator_functi.declarator_interior != NIHIL)
             {
-                _imprimere_arborem(nodus->datum.declarator_functi.declarator_interior, profunditas + I);
+                i32 num_params = ZEPHYRUM;
+                si (nodus->datum.declarator_functi.parametri != NIHIL)
+                {
+                    num_params = xar_numerus(nodus->datum.declarator_functi.parametri);
+                }
+                imprimere("DECLARATOR_FUNCTI: habet_void=%s, params=%d\n",
+                         nodus->datum.declarator_functi.habet_void ? "VERUM" : "FALSUM",
+                         num_params);
+                si (nodus->datum.declarator_functi.declarator_interior != NIHIL)
+                {
+                    _imprimere_arborem(nodus->datum.declarator_functi.declarator_interior, profunditas + I);
+                }
+                /* Print parameters if present */
+                si (nodus->datum.declarator_functi.parametri != NIHIL)
+                {
+                    i32 j;
+                    per (j = ZEPHYRUM; j < num_params; j++)
+                    {
+                        Arbor2Nodus* param;
+                        param = *(Arbor2Nodus**)xar_obtinere(nodus->datum.declarator_functi.parametri, j);
+                        per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+                        imprimere("param[%d]:\n", j);
+                        _imprimere_arborem(param, profunditas + II);
+                    }
+                }
+            }
+            frange;
+
+        casus ARBOR2_NODUS_PARAMETER_DECL:
+            imprimere("PARAMETER_DECL:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("type:\n");
+            si (nodus->datum.parameter_decl.type_specifier != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.parameter_decl.type_specifier, profunditas + II);
+            }
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("declarator:\n");
+            si (nodus->datum.parameter_decl.declarator != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.parameter_decl.declarator, profunditas + II);
             }
             frange;
 
@@ -788,6 +825,150 @@ s32 principale(vacuum)
                 /* Check habet_void is true for (void) */
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator_functi.habet_void,
                                    VERUM);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* ========================================================
+     * PROBARE: Single parameter: MyType * fn(int x)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans single param: MyType * fn(int x) ---\n");
+
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * fn(int x)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* Should be DECLARATIO with DECLARATOR_FUNCTI with 1 param */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                CREDO_AEQUALIS_I32((i32)decl->datum.declarator_functi.habet_void, FALSUM);
+                CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
+                si (decl->datum.declarator_functi.parametri != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), I);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* ========================================================
+     * PROBARE: Multiple params: MyType * fn(int x, int y)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans multi param: MyType * fn(int x, int y) ---\n");
+
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * fn(int x, int y)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* Should be DECLARATIO with DECLARATOR_FUNCTI with 2 params */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
+                si (decl->datum.declarator_functi.parametri != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), II);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* ========================================================
+     * PROBARE: Pointer param: MyType * fn(int *ptr)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans pointer param: MyType * fn(int *ptr) ---\n");
+
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * fn(int *ptr)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* Should be DECLARATIO with DECLARATOR_FUNCTI with 1 pointer param */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
+                si (decl->datum.declarator_functi.parametri != NIHIL)
+                {
+                    Arbor2Nodus* param;
+                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), I);
+                    param = *(Arbor2Nodus**)xar_obtinere(decl->datum.declarator_functi.parametri, ZEPHYRUM);
+                    CREDO_AEQUALIS_I32((i32)param->genus, (i32)ARBOR2_NODUS_PARAMETER_DECL);
+                    /* Check param declarator has pointer */
+                    si (param->datum.parameter_decl.declarator != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)param->datum.parameter_decl.declarator->datum.declarator.num_stellae, I);
+                    }
+                }
             }
         }
 
