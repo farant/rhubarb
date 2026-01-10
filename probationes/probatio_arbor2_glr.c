@@ -3770,6 +3770,77 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
+    /* Test typedef named struct: typedef struct MyStruct { int x; } MyStruct; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef struct nominatum: typedef struct MyStruct { int x; } MyStruct; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef struct MyStruct { int x; } MyStruct;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
+            si (res.radix->datum.declaratio.specifier != NIHIL)
+            {
+                /* Specifier should be STRUCT_SPECIFIER with a tag */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.specifier->genus,
+                                  (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier->datum.struct_specifier.tag);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test typedef forward ref: typedef struct Foo Foo; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef struct forward: typedef struct Foo Foo; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef struct Foo Foo;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
+            si (res.radix->datum.declaratio.specifier != NIHIL)
+            {
+                /* Specifier should be STRUCT_SPECIFIER (forward ref) */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.specifier->genus,
+                                  (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
 
     /* ========================================================
      * PROBARE: Parser statistics
