@@ -477,6 +477,48 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             frange;
         }
 
+        casus ARBOR2_NODUS_DECLARATOR:
+        {
+            chorda titulus = nodus->datum.declarator.titulus;
+            Arbor2Nodus* latitudo = nodus->datum.declarator.latitudo_biti;
+
+            si (titulus.mensura > ZEPHYRUM)
+            {
+                imprimere("DECLARATOR: %.*s", (i32)titulus.mensura, titulus.datum);
+            }
+            alioquin
+            {
+                imprimere("DECLARATOR: (anonymous)");
+            }
+
+            si (nodus->datum.declarator.num_stellae > ZEPHYRUM)
+            {
+                imprimere(" (ptr=%d)", nodus->datum.declarator.num_stellae);
+            }
+
+            si (latitudo != NIHIL)
+            {
+                imprimere(" : ");
+                /* Print bit width inline */
+                si (latitudo->genus == ARBOR2_NODUS_INTEGER)
+                {
+                    imprimere("%.*s", (i32)latitudo->datum.folium.valor.mensura,
+                        latitudo->datum.folium.valor.datum);
+                }
+                alioquin si (latitudo->genus == ARBOR2_NODUS_IDENTIFICATOR)
+                {
+                    imprimere("%.*s", (i32)latitudo->datum.folium.valor.mensura,
+                        latitudo->datum.folium.valor.datum);
+                }
+                alioquin
+                {
+                    imprimere("(expr)");
+                }
+            }
+            imprimere("\n");
+            frange;
+        }
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -2712,6 +2754,244 @@ s32 principale(vacuum)
             si (spec != NIHIL)
             {
                 CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Bit fields (E4)
+     * ======================================================== */
+
+    /* Test single named bit field: struct foo { int x : 3; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans bit field: struct foo { int x : 3; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 3; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.struct_specifier.membra);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                Arbor2Nodus* decl;
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                CREDO_NON_NIHIL(member);
+                si (member != NIHIL)
+                {
+                    decl = member->datum.declaratio.declarator;
+                    CREDO_NON_NIHIL(decl);
+                    si (decl != NIHIL)
+                    {
+                        CREDO_NON_NIHIL(decl->datum.declarator.latitudo_biti);  /* Has bit width */
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test multiple bit fields: struct foo { int x : 3; int y : 5; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans bit fields: struct foo { int x : 3; int y : 5; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 3; int y : 5; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.struct_specifier.membra);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), II);  /* 2 members */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test anonymous bit field: struct foo { int : 4; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans anonymous bit field: struct foo { int : 4; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int : 4; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                Arbor2Nodus* decl;
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                CREDO_NON_NIHIL(member);
+                si (member != NIHIL)
+                {
+                    decl = member->datum.declaratio.declarator;
+                    CREDO_NON_NIHIL(decl);
+                    si (decl != NIHIL)
+                    {
+                        /* Anonymous: titulus.mensura == 0 */
+                        CREDO_AEQUALIS_I32((i32)decl->datum.declarator.titulus.mensura, ZEPHYRUM);
+                        CREDO_NON_NIHIL(decl->datum.declarator.latitudo_biti);  /* Has bit width */
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test mixed named and anonymous: struct foo { int x : 3; int : 0; int y : 5; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans mixed bit fields: struct foo { int x : 3; int : 0; int y : 5; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 3; int : 0; int y : 5; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), III);  /* 3 members */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test expression bit width: struct foo { int x : 1 + 2; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans expression bit field: struct foo { int x : 1 + 2; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x : 1 + 2; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                Arbor2Nodus* decl;
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                si (member != NIHIL)
+                {
+                    decl = member->datum.declaratio.declarator;
+                    si (decl != NIHIL)
+                    {
+                        /* latitudo_biti should be a BINARIUM node (1 + 2) */
+                        CREDO_NON_NIHIL(decl->datum.declarator.latitudo_biti);
+                        si (decl->datum.declarator.latitudo_biti != NIHIL)
+                        {
+                            CREDO_AEQUALIS_I32((i32)decl->datum.declarator.latitudo_biti->genus,
+                                               (i32)ARBOR2_NODUS_BINARIUM);
+                        }
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test bit field in union: union foo { int x : 3; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans bit field in union: union foo { int x : 3; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "union foo { int x : 3; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            CREDO_VERUM(res.radix->datum.struct_specifier.est_unio);  /* Is union */
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
             }
         }
 

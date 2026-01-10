@@ -705,6 +705,7 @@ _processare_unam_actionem(
                             decl_node->lexema = name_tok;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+                            decl_node->datum.declarator.latitudo_biti = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -740,6 +741,7 @@ _processare_unam_actionem(
                             decl_node->lexema = name_tok;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+                            decl_node->datum.declarator.latitudo_biti = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -770,6 +772,7 @@ _processare_unam_actionem(
                             decl_node->lexema = name_tok;
                             decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+                            decl_node->datum.declarator.latitudo_biti = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -801,6 +804,149 @@ _processare_unam_actionem(
                             decl_node->lexema = name_tok;
                             decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+                            decl_node->datum.declarator.latitudo_biti = NIHIL;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        /* ========== BIT FIELD RULES P62-P65 ========== */
+                        alioquin si (actio->valor == 62)
+                        {
+                            /* P62: type_spec ID ':' expr ';' (5 symbols, first named bit field) */
+                            /* lexemata: [4]=type, [3]=name, [2]=':', [1]=expr_tok, [0]=';' */
+                            /* valori: [1]=expr_node */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[IV];
+                            Arbor2Token* name_tok = lexemata[III];
+                            Arbor2Nodus* expr_node = valori[I];
+#if GLR_DEBUG
+                            printf("  [DEBUG P62] Creating bit field member, type=%.*s, name=%.*s\n",
+                                   (integer)type_tok->lexema->valor.mensura, type_tok->lexema->valor.datum,
+                                   (integer)name_tok->lexema->valor.mensura, name_tok->lexema->valor.datum);
+#endif
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = name_tok;
+                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+                            decl_node->datum.declarator.latitudo_biti = expr_node;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 63)
+                        {
+                            /* P63: member_list type_spec ID ':' expr ';' (6 symbols, append named bit field) */
+                            /* valori: [5]=list, [1]=expr_node */
+                            /* lexemata: [4]=type, [3]=name */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista = (Xar*)valori[V];
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[IV];
+                            Arbor2Token* name_tok = lexemata[III];
+                            Arbor2Nodus* expr_node = valori[I];
+
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = name_tok;
+                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+                            decl_node->datum.declarator.latitudo_biti = expr_node;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 64)
+                        {
+                            /* P64: type_spec ':' expr ';' (4 symbols, first anonymous bit field) */
+                            /* lexemata: [3]=type, [2]=':', [0]=';' */
+                            /* valori: [1]=expr_node */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[III];
+                            Arbor2Nodus* expr_node = valori[I];
+#if GLR_DEBUG
+                            printf("  [DEBUG P64] Creating anonymous bit field member, type=%.*s\n",
+                                   (integer)type_tok->lexema->valor.mensura, type_tok->lexema->valor.datum);
+#endif
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = type_tok;  /* use type token since no name */
+                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.titulus.datum = NIHIL;
+                            decl_node->datum.declarator.titulus.mensura = ZEPHYRUM;  /* anonymous */
+                            decl_node->datum.declarator.latitudo_biti = expr_node;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 65)
+                        {
+                            /* P65: member_list type_spec ':' expr ';' (5 symbols, append anonymous bit field) */
+                            /* valori: [4]=list, [1]=expr_node */
+                            /* lexemata: [3]=type */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista = (Xar*)valori[IV];
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[III];
+                            Arbor2Nodus* expr_node = valori[I];
+
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = type_tok;  /* use type token since no name */
+                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.titulus.datum = NIHIL;
+                            decl_node->datum.declarator.titulus.mensura = ZEPHYRUM;  /* anonymous */
+                            decl_node->datum.declarator.latitudo_biti = expr_node;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;

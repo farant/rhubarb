@@ -1188,3 +1188,115 @@ Expression parsing for enum values reuses existing states via GOTO entries:
 - Array declarators `int arr[10]`
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Phase E4: Bit Fields)
+
+### Phase E4: Bit Fields Complete
+
+Added bit field syntax for struct and union members:
+
+```c
+struct foo { int x : 3; };          /* Named 3-bit field */
+struct foo { int : 4; };            /* Anonymous 4-bit padding */
+struct foo { int : 0; };            /* Anonymous - forces alignment */
+struct foo { int x : 1 + 2; };      /* Expression width */
+union foo { int x : 3; };           /* Bit field in union */
+```
+
+**Design Decision: Extend DECLARATOR**
+
+Rather than creating a new node type, extended the existing DECLARATOR with a bit field width:
+
+```c
+structura {
+    s32                 num_stellae;    /* Number of * pointers */
+    chorda              titulus;        /* Variable name (empty for anonymous bit fields) */
+    Arbor2Nodus*        latitudo_biti;  /* Bit field width expr, NIHIL if not bit field */
+} declarator;
+```
+
+**Anonymous bit fields:** Use empty `titulus` (mensura = 0) to indicate anonymous field.
+
+**Rationale:**
+- Minimal code changes (no new node type)
+- Bit fields are just a property of declarators
+- Shared printing/traversal with existing declarator handling
+
+**Grammar Rules Added (P62-P65):**
+- P62: `struct_member_list -> type_spec ID ':' expr ';'` (5 symbols, first named bit field)
+- P63: `struct_member_list -> member_list type_spec ID ':' expr ';'` (6 symbols, append named)
+- P64: `struct_member_list -> type_spec ':' expr ';'` (4 symbols, first anonymous bit field)
+- P65: `struct_member_list -> member_list type_spec ':' expr ';'` (5 symbols, append anonymous)
+
+**Note:** No pointer bit field rules needed - pointer bit fields are invalid C.
+
+**New States (162-173):**
+
+Named bit field paths (from states 123/133 after `type_spec ID`):
+- State 162: After `type_spec ID :` (first) - parse expression
+- State 163: After `type_spec ID : expr` (first) - expect `;` or continue expr
+- State 164: After `type_spec ID : expr ;` (first) - reduce P62
+- State 165-167: Same pattern for subsequent named bit fields (reduce P63)
+
+Anonymous bit field paths (from states 121/131 after `type_spec`):
+- State 168: After `type_spec :` (first) - parse expression
+- State 169: After `type_spec : expr` (first) - expect `;` or continue expr
+- State 170: After `type_spec : expr ;` (first) - reduce P64
+- State 171-173: Same pattern for subsequent anonymous bit fields (reduce P65)
+
+**State Machine Modifications:**
+
+Added COLON shifts to existing member states:
+- State 121: `COLON` → SHIFT 168 (anonymous bit field, first)
+- State 123: `COLON` → SHIFT 162 (named bit field, first)
+- State 131: `COLON` → SHIFT 171 (anonymous bit field, subsequent)
+- State 133: `COLON` → SHIFT 165 (named bit field, subsequent)
+
+**Expression Reuse:**
+
+Bit field width expressions reuse existing expression parsing via GOTO entries:
+```c
+{ 162, INT_NT_EXPR,   163 },  { 162, INT_NT_TERM, 2 },  { 162, INT_NT_FACTOR, 3 },
+{ 165, INT_NT_EXPR,   166 },  { 165, INT_NT_TERM, 2 },  { 165, INT_NT_FACTOR, 3 },
+{ 168, INT_NT_EXPR,   169 },  { 168, INT_NT_TERM, 2 },  { 168, INT_NT_FACTOR, 3 },
+{ 171, INT_NT_EXPR,   172 },  { 171, INT_NT_TERM, 2 },  { 171, INT_NT_FACTOR, 3 },
+```
+
+Expression continuation (`+`) is supported in states 163, 166, 169, 172 for expressions like `int x : 1 + 2;`.
+
+**AST Construction:**
+
+For P62-P65, the bit field width expression is stored in `decl_node->datum.declarator.latitudo_biti`. For anonymous bit fields (P64/P65), `titulus.mensura = 0` indicates no name.
+
+Updated P48-P51 to initialize `latitudo_biti = NIHIL` for regular (non-bit-field) members.
+
+**ACTIO_INDICES Calculation:**
+
+Adding COLON to states 121, 123, 131, 133 required careful index adjustment:
+- +1 after state 121 (now 5 actions instead of 4)
+- +2 after state 123 (cumulative)
+- +3 after state 131 (cumulative)
+- +4 after state 133 (cumulative, propagates to all states 134+)
+
+**Tests Passing:**
+- `struct foo { int x : 3; }` → STRUCT_SPECIFIER with bit field member
+- `struct foo { int x : 3; int y : 5; }` → 2 bit field members
+- `struct foo { int : 4; }` → Anonymous bit field (titulus.mensura = 0)
+- `struct foo { int x : 3; int : 0; int y : 5; }` → Mixed named/anonymous
+- `struct foo { int x : 1 + 2; }` → Expression width (BINARIUM node)
+- `union foo { int x : 3; }` → Bit field in union
+
+**Grammar Summary:**
+- 174 states (was 162)
+- ~1171 action entries (was ~1119)
+- 66 grammar rules (was 62)
+
+### Still TODO
+
+- Nested struct/union/enum
+- `typedef struct { } Foo;` pattern
+- Array declarators `int arr[10]`
+- Test with real library files
+- Error recovery
