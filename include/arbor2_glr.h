@@ -83,6 +83,7 @@ nomen enumeratio {
     ARBOR2_NODUS_SIZEOF,
     ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
+    ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
     ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
@@ -154,6 +155,14 @@ structura Arbor2Nodus {
             s32                 num_stellae;    /* Number of * pointers */
             chorda              titulus;        /* Variable name */
         } declarator;
+
+        /* DECLARATOR_FUNCTI (function declarator) */
+        structura {
+            Arbor2Nodus*        declarator_interior;  /* Inner declarator (name + pointers) */
+            Xar*                parametri;            /* NULL for (), params for D2 */
+            b32                 habet_void;           /* true if explicitly (void) */
+            s32                 num_stellae;          /* Pointer depth (for * fn()) */
+        } declarator_functi;
 
         /* SENTENTIA (expression statement) */
         structura {

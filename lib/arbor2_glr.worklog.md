@@ -642,3 +642,79 @@ With Phase C4c, all C89 control flow constructs are now supported:
 - Array and function declarators
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase D1: Function Declarators)
+
+### Phase D1: Function Declarators Complete
+
+Added function declarator syntax (`id()`, `id(void)`) as the first step toward function definitions:
+
+**New Grammar Rules:**
+- P38: `declarator -> declarator '(' ')'` (3 symbols, function with unspecified params)
+- P39: `declarator -> declarator '(' VOID ')'` (4 symbols, function with no params)
+
+**New Node Type:**
+- `ARBOR2_NODUS_DECLARATOR_FUNCTI` - Function declarator with `declarator_functi` struct
+
+**New AST Structure:**
+```c
+/* DECLARATOR_FUNCTI (function declarator) */
+structura {
+    Arbor2Nodus*        declarator_interior;  /* Inner declarator (name + pointers) */
+    Xar*                parametri;            /* NULL for (), params for D2 */
+    b32                 habet_void;           /* true if explicitly (void) */
+    s32                 num_stellae;          /* Pointer depth (for * fn()) */
+} declarator_functi;
+```
+
+**New States (91-94):**
+- State 91: After `declarator (` - expect `)` or `void`
+- State 92: After `declarator ( )` - reduce P38 on statement followers
+- State 93: After `declarator ( void` - expect `)`
+- State 94: After `declarator ( void )` - reduce P39 on statement followers
+
+**Key Design Decisions:**
+
+1. **State 18 reduces before shift**: Originally tried to shift `(` directly in state 18 (after IDENTIFIER), but P38 expects `declarator ( )`, not `IDENTIFIER ( )`. Fixed by having state 18 reduce P12 (IDENTIFIER → declarator) when it sees `(`, then state 19 handles the `(` shift.
+
+2. **P11 preserves DECLARATOR_FUNCTI**: When parsing `* fn()`, P38 first creates DECLARATOR_FUNCTI for `fn()`, then P11 wraps it with `*`. Originally P11 always created DECLARATOR, overwriting the function declarator. Fixed by checking if inner is DECLARATOR_FUNCTI and preserving the genus while incrementing `num_stellae`.
+
+3. **num_stellae field**: Added to DECLARATOR_FUNCTI to track pointer depth when P11 wraps function declarators. For `int *fn()`, the result is DECLARATOR_FUNCTI with num_stellae=1 (not a plain DECLARATOR wrapping DECLARATOR_FUNCTI).
+
+**Implementation Details:**
+
+Modified arbor2_glr.c P11 handling (lines 680-725):
+```c
+/* P11: declarator -> '*' declarator */
+/* Si interior est DECLARATOR_FUNCTI, preservare genus functi */
+si (valori[ZEPHYRUM] != NIHIL &&
+    valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
+{
+    /* Wrap function declarator with pointer - preservare FUNCTI */
+    valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+    valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+    /* ... copy declarator_interior, parametri, habet_void from inner ... */
+    valor_novus->datum.declarator_functi.num_stellae =
+        valori[ZEPHYRUM]->datum.declarator_functi.num_stellae + I;
+}
+```
+
+**Tests Passing:**
+- `MyType * fn()` → DECLARATIO with DECLARATOR_FUNCTI (habet_void=false)
+- `MyType * fn(void)` → DECLARATIO with DECLARATOR_FUNCTI (habet_void=true)
+
+**Grammar Now:**
+- 95 states (was 91)
+- ~900+ action entries (was ~891)
+- 40 grammar rules (was 38)
+
+### Still TODO
+
+- Phase D2: Parameter lists (`int x, int y`)
+- Phase D3: Function definitions (`type fn() { body }`)
+- More declaration specifiers (struct, union, enum, const, etc.)
+- Array declarators `int arr[10]`
+- Test with real library files
+- Error recovery

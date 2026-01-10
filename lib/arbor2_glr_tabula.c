@@ -145,7 +145,13 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_SENTENTIA, 4, ARBOR2_NODUS_CASUS },
 
     /* P37: statement -> 'default' ':' statement */
-    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_ORDINARIUS }
+    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_ORDINARIUS },
+
+    /* P38: declarator -> declarator '(' ')' (function declarator) */
+    { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR_FUNCTI },
+
+    /* P39: declarator -> declarator '(' VOID ')' (function declarator with void) */
+    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -333,16 +339,19 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* more pointers */
 
     /* State 18: After IDENTIFIER in declarator - reduce P12 */
+    /* When we see '(' we reduce first, then state 19 handles the shift */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 12 },  /* declarator -> ID */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then fn decl */
 
-    /* State 19: After '* declarator' - reduce P11 */
+    /* State 19: After '* declarator' - reduce P11 or shift ( for fn */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 11 },  /* declarator -> * declarator */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
 
     /* State 20: After 'type_specifier declarator' - reduce P10 */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10 },  /* declaration -> type declarator */
@@ -1278,7 +1287,32 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 37 },
     { ARBOR2_LEXEMA_SWITCH,         ARBOR2_ACTIO_REDUCE, 37 },
     { ARBOR2_LEXEMA_CASE,           ARBOR2_ACTIO_REDUCE, 37 },
-    { ARBOR2_LEXEMA_DEFAULT,        ARBOR2_ACTIO_REDUCE, 37 }
+    { ARBOR2_LEXEMA_DEFAULT,        ARBOR2_ACTIO_REDUCE, 37 },
+
+    /* ==================================================
+     * FUNCTION DECLARATOR STATES (Phase D1)
+     * ================================================== */
+
+    /* State 91: After 'declarator (' - expect ')' or 'void' */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 92 },   /* () */
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 93 },   /* (void */
+
+    /* State 92: After 'declarator ( )' - reduce P38 */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 38 },  /* declarator -> declarator () */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 38 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 38 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 38 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 38 },  /* for chained fn decl */
+
+    /* State 93: After 'declarator ( void' - expect ')' */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 94 },   /* (void) */
+
+    /* State 94: After 'declarator ( void )' - reduce P39 */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 39 },  /* declarator -> declarator (void) */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 39 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 39 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 39 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 39 }   /* for chained fn decl */
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -1303,83 +1337,87 @@ hic_manens i32 ACTIO_INDICES[] = {
     100,    /* State 15: 7 actions (added COLON) */
     107,    /* State 16: 7 actions (added COLON) */
     114,    /* State 17: 2 actions (declarator path) */
-    116,    /* State 18: 4 actions (reduce P12) */
-    120,    /* State 19: 4 actions (reduce P11) */
-    124,    /* State 20: 4 actions (reduce P10) */
-    128,    /* State 21: 1 action (accept declaration) */
-    129,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
-    150,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
-    171,    /* State 24: 1 action (accept statement) */
-    172,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
-    191,    /* State 26: 19 actions (+switch, case, default) */
-    210,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
-    231,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
-    250,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
-    271,    /* State 30: 1 action (after 'if') */
-    272,    /* State 31: 5 actions (after 'if (') */
-    277,    /* State 32: 2 actions (after 'if ( expr') */
-    279,    /* State 33: 18 actions (+switch, case, default) */
-    297,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
-    318,    /* State 35: 18 actions (+switch, case, default) */
-    336,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
-    357,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
-    378,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
-    399,    /* State 39: 1 action (after 'while') */
-    400,    /* State 40: 5 actions (after 'while (') */
-    405,    /* State 41: 2 actions (after 'while ( expr') */
-    407,    /* State 42: 18 actions (+switch, case, default) */
-    425,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
-    446,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
-    467,    /* State 45: 18 actions (+switch, case, default) */
-    485,    /* State 46: 1 action (after 'do stmt') */
-    486,    /* State 47: 1 action (after 'do stmt while') */
-    487,    /* State 48: 5 actions (after 'do stmt while (') */
-    492,    /* State 49: 2 actions (after 'do stmt while ( expr') */
-    494,    /* State 50: 1 action (after 'do stmt while ( expr )') */
-    495,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
-    516,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
-    537,    /* State 53: 1 action (after 'for') */
-    538,    /* State 54: 6 actions (after 'for (') */
-    544,    /* State 55: 1 action (after 'for ( expr') */
-    545,    /* State 56: 1 action (after 'for ( expr_opt') */
-    546,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
-    552,    /* State 58: 1 action (after 'for ( ... ; expr') */
-    553,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
-    554,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
-    560,    /* State 61: 1 action (after 'for ( ... ; expr') */
-    561,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
-    562,    /* State 63: 18 actions (+switch, case, default) */
-    580,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
-    601,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
-    622,    /* State 66: 1 action (after 'break') */
-    623,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
-    644,    /* State 68: 1 action (after 'continue') */
-    645,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
-    666,    /* State 70: 6 actions (after 'return') */
-    672,    /* State 71: 2 actions (after 'return expr' + continue) */
-    674,    /* State 72: 1 action (after 'return expr_opt') */
-    675,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
-    696,    /* State 74: 1 action (after 'goto') */
-    697,    /* State 75: 1 action (after 'goto ID') */
-    698,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
-    719,    /* State 77: 18 actions (+switch, case, default) */
-    737,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
-    758,    /* State 79: 1 action (after 'switch') */
-    759,    /* State 80: 5 actions (after 'switch (') */
-    764,    /* State 81: 2 actions (after 'switch ( expr') */
-    766,    /* State 82: 18 actions (after 'switch ( expr )') */
-    784,    /* State 83: 21 actions (reduce P35) */
-    805,    /* State 84: 5 actions (after 'case') */
-    810,    /* State 85: 2 actions (after 'case expr') */
-    812,    /* State 86: 18 actions (after 'case expr :') */
-    830,    /* State 87: 21 actions (reduce P36) */
-    851,    /* State 88: 1 action (after 'default') */
-    852,    /* State 89: 18 actions (after 'default :') */
-    870,    /* State 90: 21 actions (reduce P37) */
-    891     /* End marker */
+    116,    /* State 18: 5 actions (reduce P12 + fn decl) */
+    121,    /* State 19: 5 actions (reduce P11 + fn decl) */
+    126,    /* State 20: 4 actions (reduce P10) */
+    130,    /* State 21: 1 action (accept declaration) */
+    131,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
+    152,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
+    173,    /* State 24: 1 action (accept statement) */
+    174,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
+    193,    /* State 26: 19 actions (+switch, case, default) */
+    212,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
+    233,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
+    252,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
+    273,    /* State 30: 1 action (after 'if') */
+    274,    /* State 31: 5 actions (after 'if (') */
+    279,    /* State 32: 2 actions (after 'if ( expr') */
+    281,    /* State 33: 18 actions (+switch, case, default) */
+    299,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
+    320,    /* State 35: 18 actions (+switch, case, default) */
+    338,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
+    359,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
+    380,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
+    401,    /* State 39: 1 action (after 'while') */
+    402,    /* State 40: 5 actions (after 'while (') */
+    407,    /* State 41: 2 actions (after 'while ( expr') */
+    409,    /* State 42: 18 actions (+switch, case, default) */
+    427,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
+    448,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
+    469,    /* State 45: 18 actions (+switch, case, default) */
+    487,    /* State 46: 1 action (after 'do stmt') */
+    488,    /* State 47: 1 action (after 'do stmt while') */
+    489,    /* State 48: 5 actions (after 'do stmt while (') */
+    494,    /* State 49: 2 actions (after 'do stmt while ( expr') */
+    496,    /* State 50: 1 action (after 'do stmt while ( expr )') */
+    497,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
+    518,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
+    539,    /* State 53: 1 action (after 'for') */
+    540,    /* State 54: 6 actions (after 'for (') */
+    546,    /* State 55: 1 action (after 'for ( expr') */
+    547,    /* State 56: 1 action (after 'for ( expr_opt') */
+    548,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
+    554,    /* State 58: 1 action (after 'for ( ... ; expr') */
+    555,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
+    556,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
+    562,    /* State 61: 1 action (after 'for ( ... ; expr') */
+    563,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
+    564,    /* State 63: 18 actions (+switch, case, default) */
+    582,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
+    603,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
+    624,    /* State 66: 1 action (after 'break') */
+    625,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
+    646,    /* State 68: 1 action (after 'continue') */
+    647,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
+    668,    /* State 70: 6 actions (after 'return') */
+    674,    /* State 71: 2 actions (after 'return expr' + continue) */
+    676,    /* State 72: 1 action (after 'return expr_opt') */
+    677,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
+    698,    /* State 74: 1 action (after 'goto') */
+    699,    /* State 75: 1 action (after 'goto ID') */
+    700,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
+    721,    /* State 77: 18 actions (+switch, case, default) */
+    739,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
+    760,    /* State 79: 1 action (after 'switch') */
+    761,    /* State 80: 5 actions (after 'switch (') */
+    766,    /* State 81: 2 actions (after 'switch ( expr') */
+    768,    /* State 82: 18 actions (after 'switch ( expr )') */
+    786,    /* State 83: 21 actions (reduce P35) */
+    807,    /* State 84: 5 actions (after 'case') */
+    812,    /* State 85: 2 actions (after 'case expr') */
+    814,    /* State 86: 18 actions (after 'case expr :') */
+    832,    /* State 87: 21 actions (reduce P36) */
+    853,    /* State 88: 1 action (after 'default') */
+    854,    /* State 89: 18 actions (after 'default :') */
+    872,    /* State 90: 21 actions (reduce P37) */
+    893,    /* State 91: 2 actions (after 'declarator (') */
+    895,    /* State 92: 5 actions (reduce P38) */
+    900,    /* State 93: 1 action (after 'declarator ( void') */
+    901,    /* State 94: 5 actions (reduce P39) */
+    906     /* End marker */
 };
 
-#define NUM_STATES 91
+#define NUM_STATES 95
 
 /* ==================================================
  * GOTO Table
@@ -1844,6 +1882,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_SIZEOF:        redde "SIZEOF";
         casus ARBOR2_NODUS_DECLARATIO:    redde "DECLARATIO";
         casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
+        casus ARBOR2_NODUS_DECLARATOR_FUNCTI: redde "DECLARATOR_FUNCTI";
         casus ARBOR2_NODUS_SENTENTIA:     redde "SENTENTIA";
         casus ARBOR2_NODUS_SENTENTIA_VACUA: redde "SENTENTIA_VACUA";
         casus ARBOR2_NODUS_CORPUS:        redde "CORPUS";

@@ -310,6 +310,15 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             }
             frange;
 
+        casus ARBOR2_NODUS_DECLARATOR_FUNCTI:
+            imprimere("DECLARATOR_FUNCTI: habet_void=%s\n",
+                     nodus->datum.declarator_functi.habet_void ? "VERUM" : "FALSUM");
+            si (nodus->datum.declarator_functi.declarator_interior != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.declarator_functi.declarator_interior, profunditas + I);
+            }
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -693,6 +702,96 @@ s32 principale(vacuum)
         /* Should NOT have forked (pruned expression path) */
         imprimere("  furcae: %d\n", glr->num_furcae);
         CREDO_AEQUALIS_I32((i32)glr->num_furcae, ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function declarator: MyType * fn()
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans function declarator: MyType * fn() ---\n");
+
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * fn()");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* Should be DECLARATIO with DECLARATOR_FUNCTI */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            /* Check declarator is function declarator */
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                /* Check habet_void is false for () */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator_functi.habet_void,
+                                   FALSUM);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function declarator with void: MyType * fn(void)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans function declarator: MyType * fn(void) ---\n");
+
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * fn(void)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* Should be DECLARATIO with DECLARATOR_FUNCTI */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            /* Check declarator is function declarator */
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                /* Check habet_void is true for (void) */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator_functi.habet_void,
+                                   VERUM);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
 

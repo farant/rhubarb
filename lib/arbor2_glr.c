@@ -681,23 +681,43 @@ _processare_unam_actionem(
                         si (num_pop == II)
                         {
                             /* P11: declarator -> '*' declarator */
-                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
-                            valor_novus->lexema = lexemata[I];  /* The '*' token */
-                            /* Count stars: inner declarator's count + 1 */
+                            /* Si interior est DECLARATOR_FUNCTI, preservare genus functi */
                             si (valori[ZEPHYRUM] != NIHIL &&
-                                valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR)
+                                valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
                             {
-                                valor_novus->datum.declarator.num_stellae =
-                                    valori[ZEPHYRUM]->datum.declarator.num_stellae + I;
-                                valor_novus->datum.declarator.titulus =
-                                    valori[ZEPHYRUM]->datum.declarator.titulus;
+                                /* Wrap function declarator with pointer - preservare FUNCTI */
+                                valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+                                valor_novus->lexema = lexemata[I];  /* The '*' token */
+                                valor_novus->datum.declarator_functi.declarator_interior =
+                                    valori[ZEPHYRUM]->datum.declarator_functi.declarator_interior;
+                                valor_novus->datum.declarator_functi.parametri =
+                                    valori[ZEPHYRUM]->datum.declarator_functi.parametri;
+                                valor_novus->datum.declarator_functi.habet_void =
+                                    valori[ZEPHYRUM]->datum.declarator_functi.habet_void;
+                                valor_novus->datum.declarator_functi.num_stellae =
+                                    valori[ZEPHYRUM]->datum.declarator_functi.num_stellae + I;
                             }
                             alioquin
                             {
-                                valor_novus->datum.declarator.num_stellae = I;
-                                valor_novus->datum.declarator.titulus.datum = NIHIL;
-                                valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                                valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                                valor_novus->lexema = lexemata[I];  /* The '*' token */
+                                /* Count stars: inner declarator's count + 1 */
+                                si (valori[ZEPHYRUM] != NIHIL &&
+                                    valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR)
+                                {
+                                    valor_novus->datum.declarator.num_stellae =
+                                        valori[ZEPHYRUM]->datum.declarator.num_stellae + I;
+                                    valor_novus->datum.declarator.titulus =
+                                        valori[ZEPHYRUM]->datum.declarator.titulus;
+                                }
+                                alioquin
+                                {
+                                    valor_novus->datum.declarator.num_stellae = I;
+                                    valor_novus->datum.declarator.titulus.datum = NIHIL;
+                                    valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                                }
                             }
                         }
                         alioquin si (num_pop == I)
@@ -721,6 +741,41 @@ _processare_unam_actionem(
                         alioquin
                         {
                             valor_novus = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_DECLARATOR_FUNCTI:
+                        /* P38: declarator -> declarator '(' ')' (3 symbols)
+                         * P39: declarator -> declarator '(' VOID ')' (4 symbols) */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+                        si (num_pop == III)
+                        {
+                            /* P38: declarator () */
+                            /* valori[2]=declarator, [1]='(', [0]=')' */
+                            valor_novus->lexema = lexemata[II];
+                            valor_novus->datum.declarator_functi.declarator_interior = valori[II];
+                            valor_novus->datum.declarator_functi.parametri = NIHIL;
+                            valor_novus->datum.declarator_functi.habet_void = FALSUM;
+                            valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
+                        }
+                        alioquin si (num_pop == IV)
+                        {
+                            /* P39: declarator (void) */
+                            /* valori[3]=declarator, [2]='(', [1]='void', [0]=')' */
+                            valor_novus->lexema = lexemata[III];
+                            valor_novus->datum.declarator_functi.declarator_interior = valori[III];
+                            valor_novus->datum.declarator_functi.parametri = NIHIL;
+                            valor_novus->datum.declarator_functi.habet_void = VERUM;
+                            valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
+                        }
+                        alioquin
+                        {
+                            valor_novus->lexema = NIHIL;
+                            valor_novus->datum.declarator_functi.declarator_interior = NIHIL;
+                            valor_novus->datum.declarator_functi.parametri = NIHIL;
+                            valor_novus->datum.declarator_functi.habet_void = FALSUM;
+                            valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
                         }
                         frange;
 
