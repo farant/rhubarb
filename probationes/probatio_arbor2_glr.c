@@ -268,6 +268,48 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             }
             frange;
 
+        casus ARBOR2_NODUS_COMMUTATIO:
+            imprimere("COMMUTATIO:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("expressio:\n");
+            si (nodus->datum.selectivum.expressio != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.selectivum.expressio, profunditas + II);
+            }
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("corpus:\n");
+            si (nodus->datum.selectivum.corpus != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.selectivum.corpus, profunditas + II);
+            }
+            frange;
+
+        casus ARBOR2_NODUS_CASUS:
+            imprimere("CASUS:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("valor:\n");
+            si (nodus->datum.electio.valor != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.electio.valor, profunditas + II);
+            }
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("sententia:\n");
+            si (nodus->datum.electio.sententia != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.electio.sententia, profunditas + II);
+            }
+            frange;
+
+        casus ARBOR2_NODUS_ORDINARIUS:
+            imprimere("ORDINARIUS:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("sententia:\n");
+            si (nodus->datum.defectus.sententia != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.defectus.sententia, profunditas + II);
+            }
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -1848,6 +1890,124 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)label_node->genus, (i32)ARBOR2_NODUS_TITULATUM);
             }
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Switch/case/default statements (Phase C4c)
+     * ======================================================== */
+
+    /* Simple switch with one case */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans switch with case: switch (x) { case 1: y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_COMMUTATIO);
+        }
+    }
+
+    /* Switch with default */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans switch with default: switch (x) { default: y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { default: y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_COMMUTATIO);
+        }
+    }
+
+    /* Switch with case and break */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans switch case break: switch (x) { case 1: break; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: break; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Multiple cases (fall-through) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans fall-through: switch (x) { case 1: case 2: y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: case 2: y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Case with expression */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans case expr: switch (x) { case 1 + 2: y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1 + 2: y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
     }
 
 

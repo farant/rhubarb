@@ -959,6 +959,35 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_COMMUTATIO:
+                        /* P35: statement -> 'switch' '(' expression ')' statement */
+                        /* valori[4]=switch, [3]='(', [2]=expr, [1]=')', [0]=stmt */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_COMMUTATIO;
+                        valor_novus->lexema = lexemata[IV];
+                        valor_novus->datum.selectivum.expressio = valori[II];
+                        valor_novus->datum.selectivum.corpus = valori[ZEPHYRUM];
+                        frange;
+
+                    casus ARBOR2_NODUS_CASUS:
+                        /* P36: statement -> 'case' expression ':' statement */
+                        /* valori[3]=case, [2]=expr, [1]=':', [0]=stmt */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_CASUS;
+                        valor_novus->lexema = lexemata[III];
+                        valor_novus->datum.electio.valor = valori[II];
+                        valor_novus->datum.electio.sententia = valori[ZEPHYRUM];
+                        frange;
+
+                    casus ARBOR2_NODUS_ORDINARIUS:
+                        /* P37: statement -> 'default' ':' statement */
+                        /* valori[2]=default, [1]=':', [0]=stmt */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_ORDINARIUS;
+                        valor_novus->lexema = lexemata[II];
+                        valor_novus->datum.defectus.sententia = valori[ZEPHYRUM];
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
@@ -1178,11 +1207,9 @@ arbor2_glr_parsere_expressio(
         }
         alioquin
         {
-            /* No shifts possible - all paths died */
-            si (xar_numerus(glr->frons_activa) == ZEPHYRUM)
-            {
-                frange;
-            }
+            /* No shifts possible - clear active frontier to avoid infinite loop */
+            xar_vacare(glr->frons_activa);
+            frange;
         }
     }
 

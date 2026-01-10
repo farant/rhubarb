@@ -558,3 +558,87 @@ Added labeled statements for goto targets (`identifier: statement`):
 - switch/case/default (Phase C4c)
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase C4c: Switch/Case/Default)
+
+### Phase C4c: Switch/Case/Default Complete
+
+Added switch statement with case and default labels:
+
+**New Grammar Rules:**
+- P35: `statement -> 'switch' '(' expression ')' statement` (5 symbols)
+- P36: `statement -> 'case' expression ':' statement` (4 symbols)
+- P37: `statement -> 'default' ':' statement` (3 symbols)
+
+**New Node Types:**
+- `ARBOR2_NODUS_COMMUTATIO` - Switch statement with `selectivum.expressio` and `selectivum.corpus`
+- `ARBOR2_NODUS_CASUS` - Case label with `electio.valor` (constant expr) and `electio.sententia`
+- `ARBOR2_NODUS_ORDINARIUS` - Default label with `defectus.sententia`
+
+**Note on naming:** The union field names differ from the node type names because `commutatio`, `casus`, and `ordinarius` are C89 keywords via `latina.h` macros.
+
+**New States (79-90):**
+- State 79: After `switch` - expect `(`
+- State 80: After `switch (` - parse expression
+- State 81: After `switch ( expr` - expect `)`
+- State 82: After `switch ( expr )` - parse body statement
+- State 83: After `switch ( expr ) stmt` - reduce P35
+- State 84: After `case` - parse expression
+- State 85: After `case expr` - expect `:`
+- State 86: After `case expr :` - parse statement
+- State 87: After `case expr : stmt` - reduce P36
+- State 88: After `default` - expect `:`
+- State 89: After `default :` - parse statement
+- State 90: After `default : stmt` - reduce P37
+
+**Key Design Decisions:**
+
+1. **Case/default as statement variants**: In C89, `case` and `default` are labeled statement forms (like `identifier:`), not separate constructs. They can only appear inside switch bodies (semantic constraint, not syntactic).
+
+2. **Fall-through semantics**: The grammar naturally supports fall-through because `case 1: case 2: x;` parses as `case 1: (case 2: (x;))` via right-recursion in the statement rule.
+
+3. **Case expressions are general expressions**: While C89 requires constant expressions in case labels, we parse any expression and leave semantic validation for later.
+
+**Bug Fixes During Implementation:**
+
+1. **Infinite loop (initial)**: Tests killed after 33 seconds. Root cause: reduce states didn't have SWITCH/CASE/DEFAULT tokens in their reduce sets, and the main parse loop didn't clear `frons_activa` when no shifts were possible. Fixed by:
+   - Adding SWITCH/CASE/DEFAULT to ~20 reduce states (22, 23, 27, 28, 29, 34, 36, 37, 38, 43, 44, 51, 52, 64, 65, 67, 69, 73, 76, 78, 83, 87, 90)
+   - Modifying main loop to clear `frons_activa` and break when no shifts occur
+
+2. **Case expressions failing**: After fixing infinite loop, `case` tests failed while `default` worked. Root cause: expression reduce states (2, 3, 4, 5, 12, 13, 14, 15, 16) didn't have COLON in their reduce sets. When parsing `case 1:`, the `1` couldn't reduce through factor→term→expression because there was no reduce action for COLON. Fixed by adding COLON reduce actions to all expression-related states.
+
+3. **ACTIO_INDICES off-by-one**: State 4 had 8 actions in the comment but actually 9 (two COLON entries: one SHIFT for labels, one REDUCE for case expressions). This caused all subsequent state indices to be off by varying amounts. Fixed by recalculating all indices after adding COLON to states 2, 3, 4, 5, 12, 13, 14, 15, 16.
+
+**Tests Passing:**
+- `switch (x) { case 1: y; }` → COMMUTATIO with CORPUS containing CASUS
+- `switch (x) { default: y; }` → COMMUTATIO with CORPUS containing ORDINARIUS
+- `switch (x) { case 1: break; }` → COMMUTATIO with CASUS containing FRANGE
+- `switch (x) { case 1: case 2: y; }` → Fall-through with nested CASUS
+- `switch (x) { case 1 + 2: y; }` → CASUS with BINARIUM expression
+
+**Grammar Now:**
+- 91 states (was 79)
+- ~891 action entries (was ~661)
+- 38 grammar rules (was 35)
+
+### Control Flow Grammar Complete
+
+With Phase C4c, all C89 control flow constructs are now supported:
+- Expression statements (`x;`, `;`)
+- Compound statements (`{ stmt; stmt; }`)
+- If/else statements
+- While/do-while loops
+- For loops
+- Jump statements (break, continue, return, goto)
+- Labeled statements (`label: stmt`)
+- Switch/case/default
+
+### Still TODO
+
+- Function definitions and declarations
+- More declaration specifiers (struct, union, enum, const, etc.)
+- Array and function declarators
+- Test with real library files
+- Error recovery

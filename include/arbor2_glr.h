@@ -95,6 +95,9 @@ nomen enumeratio {
     ARBOR2_NODUS_REDDE,             /* return statement */
     ARBOR2_NODUS_SALTA,             /* goto statement */
     ARBOR2_NODUS_TITULATUM,         /* labeled statement */
+    ARBOR2_NODUS_COMMUTATIO,        /* switch statement */
+    ARBOR2_NODUS_CASUS,             /* case label */
+    ARBOR2_NODUS_ORDINARIUS,        /* default label */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -198,6 +201,23 @@ structura Arbor2Nodus {
             chorda              titulus;        /* label name */
             Arbor2Nodus*        sententia;      /* the labeled statement */
         } titulatum;
+
+        /* COMMUTATIO (switch statement) */
+        structura {
+            Arbor2Nodus*        expressio;      /* switch expression */
+            Arbor2Nodus*        corpus;         /* body (usually compound) */
+        } selectivum;  /* 'commutatio' expands to 'switch' keyword */
+
+        /* CASUS (case label) */
+        structura {
+            Arbor2Nodus*        valor;          /* constant expression */
+            Arbor2Nodus*        sententia;      /* following statement */
+        } electio;  /* 'casus' expands to 'case' keyword */
+
+        /* ORDINARIUS (default label) */
+        structura {
+            Arbor2Nodus*        sententia;      /* following statement */
+        } defectus;  /* 'ordinarius' expands to 'default' keyword */
 
         /* AMBIGUUS */
         structura {
