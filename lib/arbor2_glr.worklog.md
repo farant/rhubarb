@@ -298,8 +298,143 @@ Added if/else statements with proper dangling-else resolution:
 
 ### Still TODO
 
-- while/do-while statements (Phase C2)
 - for statements (Phase C3)
+- switch/case/default + jump statements (Phase C4)
+- Test with real library files
+- Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase C2: while/do-while Statements)
+
+### Phase C2: While/Do-While Statements Complete
+
+Added while and do-while loop statements:
+
+**New Grammar Rules:**
+- P22: `statement -> while_statement` (pass-through)
+- P23: `while_statement -> 'while' '(' expression ')' statement` (5 symbols)
+- P24: `statement -> do_statement` (pass-through)
+- P25: `do_statement -> 'do' statement 'while' '(' expression ')' ';'` (7 symbols)
+
+**New Node Types:**
+- `ARBOR2_NODUS_DUM` - While statement
+- `ARBOR2_NODUS_FAC` - Do-while statement
+
+**New Non-Terminals:**
+- `ARBOR2_NT_DUM`
+- `ARBOR2_NT_FAC`
+
+**New AST Structure:**
+Both while and do-while share the `iteratio` struct with `conditio` and `corpus` fields.
+
+**New States (39-52):**
+- States 39-44: While parsing (`while` -> `(` -> expr -> `)` -> stmt -> reduce)
+- States 45-52: Do-while parsing (`do` -> stmt -> `while` -> `(` -> expr -> `)` -> `;` -> reduce)
+
+**Key Design Decisions:**
+
+1. **Shared iteratio struct**: Both while and do-while use the same struct since they both have a condition and a body.
+
+2. **State reuse**: States 40 and 48 (after `(`) reuse expression parsing states via GOTO entries for EXPR/TERM/FACTOR.
+
+3. **Body state reuse**: States 42 and 45 (expecting body) need full statement parsing capability including nested control flow, so they have GOTO entries for SENTENTIA, CORPUS, SI, DUM, FAC.
+
+4. **Nested compound handling**: Uses state 38 for compound bodies to ensure proper reduction before continuing.
+
+**Tests Passing:**
+- `while (x) y;` → DUM with conditio=x, corpus=y
+- `while (x) { a; b; }` → DUM with CORPUS as corpus
+- `do x; while (y);` → FAC with corpus=x, conditio=y
+- `do { a; b; } while (c);` → FAC with CORPUS as corpus
+- `while (a) while (b) c;` → Nested DUM
+
+**Grammar Now:**
+- 53 states (was 39)
+- ~367 action entries (was ~249)
+- 26 grammar rules (was 22)
+
+---
+
+## 2026-01-10 (Milestone 3 Phase C3: for Statements)
+
+### Phase C3: For Statements Complete
+
+Added for loop statements with optional expression handling:
+
+**New Grammar Rules:**
+- P26: `statement -> for_statement` (pass-through)
+- P27: `for_statement -> 'for' '(' expr_opt ';' expr_opt ';' expr_opt ')' statement` (9 symbols)
+- P28: `expression_opt -> expression` (pass-through)
+- P29: `expression_opt -> ε` (epsilon, produces NULL)
+
+**New Node Type:**
+- `ARBOR2_NODUS_PER` - For statement
+
+**New Non-Terminals:**
+- `ARBOR2_NT_PER`
+- `ARBOR2_NT_EXPRESSIO_OPTATIVA`
+
+**New AST Structure:**
+The `circuitus` struct contains:
+- `initium`: init expression (NULL if omitted)
+- `conditio`: condition expression (NULL if omitted)
+- `incrementum`: increment expression (NULL if omitted)
+- `corpus`: loop body
+
+**New States (53-65):**
+- State 53: After `for` - expect `(`
+- State 54: After `for (` - parse init or epsilon reduce on `;`
+- State 55: After `for ( expression` - reduce P28 on `;`
+- State 56: After `for ( expr_opt` - expect `;`
+- State 57: After `for ( expr_opt ;` - parse condition or epsilon reduce on `;`
+- State 58: After `for ( expr_opt ; expression` - reduce P28 on `;`
+- State 59: After `for ( expr_opt ; expr_opt` - expect `;`
+- State 60: After `for ( expr_opt ; expr_opt ;` - parse increment or epsilon reduce on `)`
+- State 61: After `for ( expr_opt ; expr_opt ; expression` - reduce P28 on `)`
+- State 62: After `for ( expr_opt ; expr_opt ; expr_opt` - expect `)`
+- State 63: After `for ( ... )` - parse body statement
+- State 64: After `for ( ... ) stmt` - reduce P27
+- State 65: After for_statement - reduce P26
+
+**Key Design Decisions:**
+
+1. **Optional expressions via expression_opt**: Instead of complex grammar rules, we use a simple `expression_opt` non-terminal with epsilon production. This keeps the stack depth uniform for all for-loop variants.
+
+2. **Epsilon reductions at specific lookaheads**:
+   - State 54: When `;` seen immediately, reduce P29 (empty init)
+   - State 57: When `;` seen immediately, reduce P29 (empty condition)
+   - State 60: When `)` seen immediately, reduce P29 (empty increment)
+
+3. **9-symbol production P27**: The for-statement rule has 9 symbols, the longest in our grammar. Stack layout:
+   - valori[8] = 'for' token
+   - valori[7] = '(' token
+   - valori[6] = expr_opt (init, may be NULL)
+   - valori[5] = ';' token
+   - valori[4] = expr_opt (condition, may be NULL)
+   - valori[3] = ';' token
+   - valori[2] = expr_opt (increment, may be NULL)
+   - valori[1] = ')' token
+   - valori[0] = statement
+
+4. **Internal NT constants**: Added INT_NT_PER (12) and INT_NT_EXPRESSIO_OPT (13) for GOTO lookups.
+
+**Tests Passing:**
+- `for (i; c; n) x;` → PER with all 4 parts
+- `for (; c; n) x;` → PER with initium=NULL
+- `for (i; ; n) x;` → PER with conditio=NULL
+- `for (i; c; ) x;` → PER with incrementum=NULL
+- `for (;;) x;` → PER with all optional parts NULL
+- `for (i; c; n) { a; b; }` → PER with CORPUS as corpus
+- `for (;;) for (;;) x;` → Nested PER
+
+**Grammar Now:**
+- 66 states (was 53)
+- ~500+ action entries (was ~367)
+- 30 grammar rules (was 26)
+
+### Still TODO
+
 - switch/case/default + jump statements (Phase C4)
 - Test with real library files
 - Error recovery

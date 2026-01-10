@@ -845,6 +845,69 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_DUM:
+                        /* P23: while_statement -> 'while' '(' expression ')' statement */
+                        /* valori[4] = while, valori[3] = (, valori[2] = expr,
+                           valori[1] = ), valori[0] = stmt */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_DUM;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'while' token */
+                        si (num_pop == V)
+                        {
+                            valor_novus->datum.iteratio.conditio = valori[II];
+                            valor_novus->datum.iteratio.corpus = valori[ZEPHYRUM];
+                        }
+                        alioquin
+                        {
+                            valor_novus->datum.iteratio.conditio = NIHIL;
+                            valor_novus->datum.iteratio.corpus = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_FAC:
+                        /* P25: do_statement -> 'do' statement 'while' '(' expression ')' ';' */
+                        /* valori[6] = do, valori[5] = stmt, valori[4] = while,
+                           valori[3] = (, valori[2] = expr, valori[1] = ),
+                           valori[0] = ; */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_FAC;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'do' token */
+                        si (num_pop == VII)
+                        {
+                            valor_novus->datum.iteratio.corpus = valori[V];
+                            valor_novus->datum.iteratio.conditio = valori[II];
+                        }
+                        alioquin
+                        {
+                            valor_novus->datum.iteratio.conditio = NIHIL;
+                            valor_novus->datum.iteratio.corpus = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_PER:
+                        /* P27: for_statement -> 'for' '(' expr_opt ';' expr_opt ';' expr_opt ')' stmt */
+                        /* valori[8] = for, valori[7] = (, valori[6] = init,
+                           valori[5] = ;, valori[4] = cond, valori[3] = ;,
+                           valori[2] = incr, valori[1] = ), valori[0] = stmt */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_PER;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'for' token */
+                        si (num_pop == 9)
+                        {
+                            valor_novus->datum.circuitus.initium = valori[VI];
+                            valor_novus->datum.circuitus.conditio = valori[IV];
+                            valor_novus->datum.circuitus.incrementum = valori[II];
+                            valor_novus->datum.circuitus.corpus = valori[ZEPHYRUM];
+                        }
+                        alioquin
+                        {
+                            valor_novus->datum.circuitus.initium = NIHIL;
+                            valor_novus->datum.circuitus.conditio = NIHIL;
+                            valor_novus->datum.circuitus.incrementum = NIHIL;
+                            valor_novus->datum.circuitus.corpus = NIHIL;
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */

@@ -63,6 +63,10 @@ nomen enumeratio {
     ARBOR2_NT_CORPUS,               /* Compound statement */
     ARBOR2_NT_ELENCHUS_SENTENTIARUM, /* Statement list */
     ARBOR2_NT_SI,                   /* If statement */
+    ARBOR2_NT_DUM,                  /* While statement */
+    ARBOR2_NT_FAC,                  /* Do-while statement */
+    ARBOR2_NT_PER,                  /* For statement */
+    ARBOR2_NT_EXPRESSIO_OPTATIVA,   /* Optional expression (for for-loops) */
     ARBOR2_NT_NUMERUS               /* Count */
 } Arbor2NonTerminalis;
 
@@ -83,6 +87,9 @@ nomen enumeratio {
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
     ARBOR2_NODUS_SI,                /* If statement */
+    ARBOR2_NODUS_DUM,               /* While statement */
+    ARBOR2_NODUS_FAC,               /* Do-while statement */
+    ARBOR2_NODUS_PER,               /* For statement */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -156,6 +163,20 @@ structura Arbor2Nodus {
             Arbor2Nodus*        consequens;     /* then-branch */
             Arbor2Nodus*        alternans;      /* else-branch (NULL if no else) */
         } conditionale;
+
+        /* DUM/FAC (while/do-while statement) */
+        structura {
+            Arbor2Nodus*        conditio;       /* loop condition */
+            Arbor2Nodus*        corpus;         /* loop body */
+        } iteratio;
+
+        /* PER (for statement) */
+        structura {
+            Arbor2Nodus*        initium;        /* init expression (NULL if omitted) */
+            Arbor2Nodus*        conditio;       /* condition (NULL if omitted) */
+            Arbor2Nodus*        incrementum;    /* increment (NULL if omitted) */
+            Arbor2Nodus*        corpus;         /* loop body */
+        } circuitus;
 
         /* AMBIGUUS */
         structura {
