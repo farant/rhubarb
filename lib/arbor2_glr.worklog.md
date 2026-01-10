@@ -1383,3 +1383,124 @@ Adding 2 actions to each of states 119, 120, 127, 129 required cumulative offset
 - Array declarators `int arr[10]`
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Phase E6: Typedef Declarations)
+
+### Phase E6: Typedef Declarations Complete
+
+Added typedef declarations as a parseable syntactic construct:
+
+```c
+typedef int MyInt;                    /* Simple typedef */
+typedef int* IntPtr;                  /* Pointer typedef */
+typedef struct { int x; } Point;      /* Typedef struct */
+typedef struct { int x; } *PointPtr;  /* Typedef struct pointer */
+typedef enum { A, B } Status;         /* Typedef enum */
+typedef enum { A, B } *StatusPtr;     /* Typedef enum pointer */
+```
+
+**Design Decision: est_typedef Flag**
+
+Rather than creating a new node type, added `est_typedef` boolean to existing `declaratio`:
+
+```c
+structura {
+    Arbor2Nodus*        specifier;      /* Type specifier (identifier or struct/enum) */
+    Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
+    b32                 est_typedef;    /* VERUM if this is a typedef declaration */
+} declaratio;
+```
+
+**Rationale:**
+- Typedef IS a declaration, just with special storage class semantics
+- Minimal AST change (1 field)
+- Existing code that handles DECLARATIO continues to work
+- Consistent with how C compilers model typedef
+
+**Grammar Rules Added (P74-P79):**
+- P74: `typedef_decl -> 'typedef' type_specifier ID ';'` (4 symbols, simple)
+- P75: `typedef_decl -> 'typedef' type_specifier '*' ID ';'` (5 symbols, pointer)
+- P76: `typedef_decl -> 'typedef' struct_specifier ID ';'` (4 symbols, struct)
+- P77: `typedef_decl -> 'typedef' struct_specifier '*' ID ';'` (5 symbols, struct ptr)
+- P78: `typedef_decl -> 'typedef' enum_specifier ID ';'` (4 symbols, enum)
+- P79: `typedef_decl -> 'typedef' enum_specifier '*' ID ';'` (5 symbols, enum ptr)
+
+All produce `ARBOR2_NODUS_DECLARATIO` with `est_typedef = VERUM`.
+
+**State Machine Changes:**
+
+Added TYPEDEF entry point to state 0:
+```c
+{ ARBOR2_LEXEMA_TYPEDEF, ARBOR2_ACTIO_SHIFT, 198 }
+```
+
+**New States (198-216):**
+- State 198: After `typedef` - expect type_specifier (routes to 117/137/145 for struct/union/enum)
+- State 199: After `typedef type_spec` - expect `*` or ID
+- State 200: After `typedef type_spec *` - more `*` or ID
+- State 201: After `typedef type_spec ID` - expect `;`
+- State 202: After `typedef type_spec *... ID` - expect `;`
+- State 203: Reduce P74 (typedef type_spec ID ;)
+- State 204: Reduce P75 (typedef type_spec * ID ;)
+- State 205: After `typedef struct_spec` - expect `*` or ID
+- State 206: After `typedef struct_spec *` - more `*` or ID
+- State 207: After `typedef struct_spec ID` - expect `;`
+- State 208: After `typedef struct_spec *... ID` - expect `;`
+- State 209: Reduce P76 (typedef struct_spec ID ;)
+- State 210: Reduce P77 (typedef struct_spec * ID ;)
+- State 211-216: Same pattern for enum_specifier → P78/P79
+
+**State Reuse:**
+State 198 shifts to existing struct/union/enum entry states:
+- STRUCT → 117 (reuse struct parsing)
+- UNION → 137 (reuse union parsing)
+- ENUM → 145 (reuse enum parsing)
+
+**GOTO Entries Added:**
+```c
+{ 198, INT_NT_STRUCT_SPEC, 205 },  /* typedef struct { } → ID path */
+{ 198, INT_NT_ENUM_SPEC,   211 }   /* typedef enum { } → ID path */
+```
+
+**AST Construction:**
+
+For P74/P75 (simple typedef):
+- Type specifier is a token, so create new IDENTIFICATOR node
+- Set `est_typedef = VERUM`
+
+For P76-P79 (struct/enum typedef):
+- Specifier is already a node in `valori` (STRUCT_SPECIFIER or ENUM_SPECIFIER)
+- Use node directly as specifier
+- Set `est_typedef = VERUM`
+
+**ACTIO_INDICES Update:**
+- Updated state 0 from 21 to 22 actions
+- Incremented all subsequent indices by 1 (states 2-197)
+- Added new entries for states 198-216
+- Updated NUM_STATES from 198 to 217
+
+**Tests Passing:**
+- `typedef int MyInt;` → DECLARATIO with est_typedef=VERUM, num_stellae=0
+- `typedef int* IntPtr;` → DECLARATIO with est_typedef=VERUM, num_stellae=1
+- `typedef struct { int x; } Point;` → DECLARATIO with STRUCT_SPECIFIER
+- `typedef struct { int x; } *PointPtr;` → DECLARATIO with STRUCT_SPECIFIER, num_stellae=1
+- `typedef enum { A, B } Status;` → DECLARATIO with ENUM_SPECIFIER
+- `typedef enum { A, B } *StatusPtr;` → DECLARATIO with ENUM_SPECIFIER, num_stellae=1
+
+**Grammar Summary:**
+- 217 states (was 198)
+- ~1332 action entries (was ~1271)
+- 80 grammar rules (was 74)
+
+### Deferred to Future Phase
+
+- Function pointer typedefs: `typedef int (*Callback)(int, int);`
+- Multiple declarators: `typedef int Int, *IntPtr;`
+
+### Still TODO
+
+- Array declarators `int arr[10]`
+- Test with real library files
+- Error recovery

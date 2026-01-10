@@ -161,6 +161,7 @@ structura Arbor2Nodus {
         structura {
             Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
             Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
+            b32                 est_typedef;    /* VERUM if this is a typedef declaration */
         } declaratio;
 
         /* DECLARATOR */

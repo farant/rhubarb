@@ -262,7 +262,27 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
 
     /* P73: struct_member_list -> member_list enum_specifier '*' ID ';' (append nested enum ptr) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO }
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
+
+    /* ========== TYPEDEF DECLARATIONS (P74-P79) ========== */
+
+    /* P74: typedef_decl -> 'typedef' type_specifier ID ';' (simple typedef) */
+    { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P75: typedef_decl -> 'typedef' type_specifier '*' ID ';' (pointer typedef) */
+    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO },
+
+    /* P76: typedef_decl -> 'typedef' struct_specifier ID ';' (typedef struct) */
+    { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P77: typedef_decl -> 'typedef' struct_specifier '*' ID ';' (typedef struct pointer) */
+    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO },
+
+    /* P78: typedef_decl -> 'typedef' enum_specifier ID ';' (typedef enum) */
+    { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P79: typedef_decl -> 'typedef' enum_specifier '*' ID ';' (typedef enum pointer) */
+    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -319,6 +339,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117 },  /* struct type specifier */
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* union type specifier */
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* enum type specifier */
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_SHIFT, 198 },  /* typedef declaration */
 
     /* State 1: After expression - expect '+', ';', or end */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
@@ -2018,216 +2039,348 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 73 },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 73 },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 73 },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 73 }
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 73 },
+
+    /* ========== TYPEDEF DECLARATION STATES (198-216) ========== */
+
+    /* State 198: After 'typedef' - expect type_specifier */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 199 },  /* typedef SomeType */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 199 },  /* typedef int */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 199 },  /* typedef char */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117 },  /* typedef struct {...} */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* typedef union {...} */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* typedef enum {...} */
+
+    /* State 199: After 'typedef type_spec' - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 200 },  /* pointer typedef */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 201 },  /* typedef name */
+
+    /* State 200: After 'typedef type_spec *' - expect more '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 200 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 202 },  /* typedef name */
+
+    /* State 201: After 'typedef type_spec ID' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 203 },
+
+    /* State 202: After 'typedef type_spec *... ID' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 204 },
+
+    /* State 203: Reduce P74 (typedef type_spec ID ;) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 74 },
+
+    /* State 204: Reduce P75 (typedef type_spec *... ID ;) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 75 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 75 },
+
+    /* State 205: After 'typedef struct_spec' - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 206 },  /* pointer typedef */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 207 },  /* typedef name */
+
+    /* State 206: After 'typedef struct_spec *' - expect more '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 206 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 208 },  /* typedef name */
+
+    /* State 207: After 'typedef struct_spec ID' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 209 },
+
+    /* State 208: After 'typedef struct_spec *... ID' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 210 },
+
+    /* State 209: Reduce P76 (typedef struct_spec ID ;) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 76 },
+
+    /* State 210: Reduce P77 (typedef struct_spec *... ID ;) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 77 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 77 },
+
+    /* State 211: After 'typedef enum_spec' - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 212 },  /* pointer typedef */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 213 },  /* typedef name */
+
+    /* State 212: After 'typedef enum_spec *' - expect more '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 212 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 214 },  /* typedef name */
+
+    /* State 213: After 'typedef enum_spec ID' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 215 },
+
+    /* State 214: After 'typedef enum_spec *... ID' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 216 },
+
+    /* State 215: Reduce P78 (typedef enum_spec ID ;) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 78 },
+
+    /* State 216: Reduce P79 (typedef enum_spec *... ID ;) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 79 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 79 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
 
 /* State -> first action index mapping */
 hic_manens i32 ACTIO_INDICES[] = {
-    0,      /* State 0: 21 actions (+struct, +union, +enum) */
-    21,     /* State 1: 4 actions */
-    25,     /* State 2: 8 actions (added COLON, COMMA) */
-    33,     /* State 3: 8 actions (added COLON, COMMA) */
-    41,     /* State 4: 11 actions (2x COLON + IDENTIFIER + COMMA) */
-    52,     /* State 5: 8 actions (added COLON, COMMA) */
-    60,     /* State 6: 5 actions */
-    65,     /* State 7: 5 actions */
-    70,     /* State 8: 5 actions */
-    75,     /* State 9: 5 actions */
-    80,     /* State 10: 5 actions */
-    85,     /* State 11: 2 actions */
-    87,     /* State 12: 8 actions (added COLON, COMMA) */
-    95,     /* State 13: 8 actions (added COLON, COMMA) */
-    103,    /* State 14: 8 actions (added COLON, COMMA) */
-    111,    /* State 15: 8 actions (added COLON, COMMA) */
-    119,    /* State 16: 8 actions (added COLON, COMMA) */
-    127,    /* State 17: 2 actions (declarator path) */
-    129,    /* State 18: 5 actions (reduce P12 + fn decl) */
-    134,    /* State 19: 6 actions (reduce P11 + fn decl + BRACE_APERTA) */
-    140,    /* State 20: 6 actions (reduce P10 + fn decl (/) + fn def ({)) */
-    146,    /* State 21: 1 action (accept declaration) */
-    147,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
-    168,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
-    189,    /* State 24: 1 action (accept statement) */
-    190,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
-    209,    /* State 26: 19 actions (+switch, case, default) */
-    228,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
-    249,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
-    268,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
-    289,    /* State 30: 1 action (after 'if') */
-    290,    /* State 31: 5 actions (after 'if (') */
-    295,    /* State 32: 2 actions (after 'if ( expr') */
-    297,    /* State 33: 18 actions (+switch, case, default) */
-    315,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
-    336,    /* State 35: 18 actions (+switch, case, default) */
-    354,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
-    375,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
-    396,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
-    417,    /* State 39: 1 action (after 'while') */
-    418,    /* State 40: 5 actions (after 'while (') */
-    423,    /* State 41: 2 actions (after 'while ( expr') */
-    425,    /* State 42: 18 actions (+switch, case, default) */
-    443,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
-    464,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
-    485,    /* State 45: 18 actions (+switch, case, default) */
-    503,    /* State 46: 1 action (after 'do stmt') */
-    504,    /* State 47: 1 action (after 'do stmt while') */
-    505,    /* State 48: 5 actions (after 'do stmt while (') */
-    510,    /* State 49: 2 actions (after 'do stmt while ( expr') */
-    512,    /* State 50: 1 action (after 'do stmt while ( expr )') */
-    513,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
-    534,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
-    555,    /* State 53: 1 action (after 'for') */
-    556,    /* State 54: 6 actions (after 'for (') */
-    562,    /* State 55: 1 action (after 'for ( expr') */
-    563,    /* State 56: 1 action (after 'for ( expr_opt') */
-    564,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
-    570,    /* State 58: 1 action (after 'for ( ... ; expr') */
-    571,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
-    572,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
-    578,    /* State 61: 1 action (after 'for ( ... ; expr') */
-    579,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
-    580,    /* State 63: 18 actions (+switch, case, default) */
-    598,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
-    619,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
-    640,    /* State 66: 1 action (after 'break') */
-    641,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
-    662,    /* State 68: 1 action (after 'continue') */
-    663,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
-    684,    /* State 70: 6 actions (after 'return') */
-    690,    /* State 71: 2 actions (after 'return expr' + continue) */
-    692,    /* State 72: 1 action (after 'return expr_opt') */
-    693,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
-    714,    /* State 74: 1 action (after 'goto') */
-    715,    /* State 75: 1 action (after 'goto ID') */
-    716,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
-    737,    /* State 77: 18 actions (+switch, case, default) */
-    755,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
-    776,    /* State 79: 1 action (after 'switch') */
-    777,    /* State 80: 5 actions (after 'switch (') */
-    782,    /* State 81: 2 actions (after 'switch ( expr') */
-    784,    /* State 82: 18 actions (after 'switch ( expr )') */
-    802,    /* State 83: 21 actions (reduce P35) */
-    823,    /* State 84: 5 actions (after 'case') */
-    828,    /* State 85: 2 actions (after 'case expr') */
-    830,    /* State 86: 18 actions (after 'case expr :') */
-    848,    /* State 87: 21 actions (reduce P36) */
-    869,    /* State 88: 1 action (after 'default') */
-    870,    /* State 89: 18 actions (after 'default :') */
-    888,    /* State 90: 21 actions (reduce P37) */
-    909,    /* State 91: 5 actions (after 'declarator (', +IDENTIFIER/INT/CHAR) */
-    914,    /* State 92: 6 actions (reduce P38 + BRACE_APERTA) */
-    920,    /* State 93: 1 action (after 'declarator ( void') */
-    921,    /* State 94: 6 actions (reduce P39 + BRACE_APERTA) */
-    927,    /* State 95: 2 actions (after '( type_spec') */
-    929,    /* State 96: 2 actions (after '( type_spec *') */
-    931,    /* State 97: 2 actions (reduce P12) */
-    933,    /* State 98: 2 actions (reduce P12 after *) */
-    935,    /* State 99: 2 actions (reduce P43) */
-    937,    /* State 100: 2 actions (reduce P11) */
-    939,    /* State 101: 2 actions (reduce P41) */
-    941,    /* State 102: 2 actions (after param_list) */
-    943,    /* State 103: 6 actions (reduce P40 + BRACE_APERTA) */
-    949,    /* State 104: 3 actions (after param_list ,, +INT/CHAR) */
-    952,    /* State 105: 2 actions (after , type_spec) */
-    954,    /* State 106: 2 actions (after , type_spec *) */
-    956,    /* State 107: 2 actions (reduce P12) */
-    958,    /* State 108: 2 actions (reduce P12 after *) */
-    960,    /* State 109: 2 actions (reduce P43) */
-    962,    /* State 110: 2 actions (reduce P11) */
-    964,    /* State 111: 2 actions (reduce P42) */
-    966,    /* State 112: (unused) */
-    966,    /* State 113: 1 action (reduce P44 function_definition) */
-    967,    /* State 114: 1 action (accept function_definition) */
-    968,    /* State 115: (unused) */
-    968,    /* State 116: 6 actions (reduce P12 for direct declarator) */
-    974,    /* State 117: 2 actions (after 'struct') */
-    976,    /* State 118: 4 actions (after 'struct ID') */
-    980,    /* State 119: 7 actions (after 'struct {', +UNION, +ENUM) */
-    987,    /* State 120: 7 actions (after 'struct ID {', +UNION, +ENUM) */
-    994,    /* State 121: 3 actions (after member type_spec, +COLON) */
-    997,    /* State 122: 2 actions (after member type_spec *) */
-    999,    /* State 123: 2 actions (after member type name, +COLON) */
-    1001,   /* State 124: 1 action (after member type * name) */
-    1002,   /* State 125: 5 actions (after member ;) */
-    1007,   /* State 126: 5 actions (after pointer member ;) */
-    1012,   /* State 127: 7 actions (after member_list in anon, +UNION, +ENUM) */
-    1019,   /* State 128: 3 actions (after anon struct }) */
-    1022,   /* State 129: 7 actions (after member_list in named, +UNION, +ENUM) */
-    1029,   /* State 130: 3 actions (after named struct }) */
-    1032,   /* State 131: 3 actions (subsequent member type_spec, +COLON) */
-    1035,   /* State 132: 2 actions (subsequent member type_spec *) */
-    1037,   /* State 133: 2 actions (subsequent member type name, +COLON) */
-    1039,   /* State 134: 1 action (subsequent member type * name) */
-    1040,   /* State 135: 5 actions (subsequent non-pointer ;) */
-    1045,   /* State 136: 5 actions (subsequent pointer ;) */
-    1050,   /* State 137: 2 actions (after 'union') */
-    1052,   /* State 138: 4 actions (after 'union ID') */
-    1056,   /* State 139: 6 actions (after 'union {') */
-    1062,   /* State 140: 6 actions (after 'union ID {') */
-    1068,   /* State 141: 6 actions (after member_list in anon union) */
-    1074,   /* State 142: 3 actions (after anon union }) */
-    1077,   /* State 143: 6 actions (after member_list in named union) */
-    1083,   /* State 144: 3 actions (after named union }) */
-    1086,   /* State 145: 2 actions (after 'enum') */
-    1088,   /* State 146: 4 actions (after 'enum ID') */
-    1092,   /* State 147: 1 action (after 'enum {') */
-    1093,   /* State 148: 1 action (after 'enum ID {') */
-    1094,   /* State 149: 3 actions (after enumerator ID) */
-    1097,   /* State 150: 5 actions (after 'ID =') */
-    1102,   /* State 151: 3 actions (after 'ID = expr', +PLUS) */
-    1105,   /* State 152: 2 actions (after first enumerator) */
-    1107,   /* State 153: 2 actions (after enum_list in anon) */
-    1109,   /* State 154: 3 actions (after 'enum { list }') */
-    1112,   /* State 155: 2 actions (after enum_list in named) */
-    1114,   /* State 156: 1 action (after ',') */
-    1115,   /* State 157: 3 actions (after 'enum ID { list }') */
-    1118,   /* State 158: 3 actions (after subsequent ID) */
-    1121,   /* State 159: 5 actions (after subsequent 'ID =') */
-    1126,   /* State 160: 3 actions (after subsequent 'ID = expr', +PLUS) */
-    1129,   /* State 161: 2 actions (after subsequent enumerator) */
-    1131,   /* State 162: 5 actions (first named bit field ':' expr) */
-    1136,   /* State 163: 2 actions (first named bit field expr done) */
-    1138,   /* State 164: 5 actions (reduce P62) */
-    1143,   /* State 165: 5 actions (subsequent named bit field ':' expr) */
-    1148,   /* State 166: 2 actions (subsequent named bit field expr done) */
-    1150,   /* State 167: 5 actions (reduce P63) */
-    1155,   /* State 168: 5 actions (first anon bit field ':' expr) */
-    1160,   /* State 169: 2 actions (first anon bit field expr done) */
-    1162,   /* State 170: 5 actions (reduce P64) */
-    1167,   /* State 171: 5 actions (subsequent anon bit field ':' expr) */
-    1172,   /* State 172: 2 actions (subsequent anon bit field expr done) */
-    1174,   /* State 173: 5 actions (reduce P65) */
+    0,      /* State 0: 22 actions (+struct, +union, +enum, +typedef) */
+    22,     /* State 1: 4 actions */
+    26,     /* State 2: 8 actions (added COLON, COMMA) */
+    34,     /* State 3: 8 actions (added COLON, COMMA) */
+    42,     /* State 4: 11 actions (2x COLON + IDENTIFIER + COMMA) */
+    53,     /* State 5: 8 actions (added COLON, COMMA) */
+    61,     /* State 6: 5 actions */
+    66,     /* State 7: 5 actions */
+    71,     /* State 8: 5 actions */
+    76,     /* State 9: 5 actions */
+    81,     /* State 10: 5 actions */
+    86,     /* State 11: 2 actions */
+    88,     /* State 12: 8 actions (added COLON, COMMA) */
+    96,     /* State 13: 8 actions (added COLON, COMMA) */
+    104,    /* State 14: 8 actions (added COLON, COMMA) */
+    112,    /* State 15: 8 actions (added COLON, COMMA) */
+    120,    /* State 16: 8 actions (added COLON, COMMA) */
+    128,    /* State 17: 2 actions (declarator path) */
+    130,    /* State 18: 5 actions (reduce P12 + fn decl) */
+    135,    /* State 19: 6 actions (reduce P11 + fn decl + BRACE_APERTA) */
+    141,    /* State 20: 6 actions (reduce P10 + fn decl (/) + fn def ({)) */
+    147,    /* State 21: 1 action (accept declaration) */
+    148,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
+    169,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
+    190,    /* State 24: 1 action (accept statement) */
+    191,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
+    210,    /* State 26: 19 actions (+switch, case, default) */
+    229,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
+    250,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
+    269,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
+    290,    /* State 30: 1 action (after 'if') */
+    291,    /* State 31: 5 actions (after 'if (') */
+    296,    /* State 32: 2 actions (after 'if ( expr') */
+    298,    /* State 33: 18 actions (+switch, case, default) */
+    316,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
+    337,    /* State 35: 18 actions (+switch, case, default) */
+    355,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
+    376,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
+    397,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
+    418,    /* State 39: 1 action (after 'while') */
+    419,    /* State 40: 5 actions (after 'while (') */
+    424,    /* State 41: 2 actions (after 'while ( expr') */
+    426,    /* State 42: 18 actions (+switch, case, default) */
+    444,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
+    465,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
+    486,    /* State 45: 18 actions (+switch, case, default) */
+    504,    /* State 46: 1 action (after 'do stmt') */
+    505,    /* State 47: 1 action (after 'do stmt while') */
+    506,    /* State 48: 5 actions (after 'do stmt while (') */
+    511,    /* State 49: 2 actions (after 'do stmt while ( expr') */
+    513,    /* State 50: 1 action (after 'do stmt while ( expr )') */
+    514,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
+    535,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
+    556,    /* State 53: 1 action (after 'for') */
+    557,    /* State 54: 6 actions (after 'for (') */
+    563,    /* State 55: 1 action (after 'for ( expr') */
+    564,    /* State 56: 1 action (after 'for ( expr_opt') */
+    565,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
+    571,    /* State 58: 1 action (after 'for ( ... ; expr') */
+    572,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
+    573,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
+    579,    /* State 61: 1 action (after 'for ( ... ; expr') */
+    580,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
+    581,    /* State 63: 18 actions (+switch, case, default) */
+    599,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
+    620,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
+    641,    /* State 66: 1 action (after 'break') */
+    642,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
+    663,    /* State 68: 1 action (after 'continue') */
+    664,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
+    685,    /* State 70: 6 actions (after 'return') */
+    691,    /* State 71: 2 actions (after 'return expr' + continue) */
+    693,    /* State 72: 1 action (after 'return expr_opt') */
+    694,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
+    715,    /* State 74: 1 action (after 'goto') */
+    716,    /* State 75: 1 action (after 'goto ID') */
+    717,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
+    738,    /* State 77: 18 actions (+switch, case, default) */
+    756,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
+    777,    /* State 79: 1 action (after 'switch') */
+    778,    /* State 80: 5 actions (after 'switch (') */
+    783,    /* State 81: 2 actions (after 'switch ( expr') */
+    785,    /* State 82: 18 actions (after 'switch ( expr )') */
+    803,    /* State 83: 21 actions (reduce P35) */
+    824,    /* State 84: 5 actions (after 'case') */
+    829,    /* State 85: 2 actions (after 'case expr') */
+    831,    /* State 86: 18 actions (after 'case expr :') */
+    849,    /* State 87: 21 actions (reduce P36) */
+    870,    /* State 88: 1 action (after 'default') */
+    871,    /* State 89: 18 actions (after 'default :') */
+    889,    /* State 90: 21 actions (reduce P37) */
+    910,    /* State 91: 5 actions (after 'declarator (', +IDENTIFIER/INT/CHAR) */
+    915,    /* State 92: 6 actions (reduce P38 + BRACE_APERTA) */
+    921,    /* State 93: 1 action (after 'declarator ( void') */
+    922,    /* State 94: 6 actions (reduce P39 + BRACE_APERTA) */
+    928,    /* State 95: 2 actions (after '( type_spec') */
+    930,    /* State 96: 2 actions (after '( type_spec *') */
+    932,    /* State 97: 2 actions (reduce P12) */
+    934,    /* State 98: 2 actions (reduce P12 after *) */
+    936,    /* State 99: 2 actions (reduce P43) */
+    938,    /* State 100: 2 actions (reduce P11) */
+    940,    /* State 101: 2 actions (reduce P41) */
+    942,    /* State 102: 2 actions (after param_list) */
+    944,    /* State 103: 6 actions (reduce P40 + BRACE_APERTA) */
+    950,    /* State 104: 3 actions (after param_list ,, +INT/CHAR) */
+    953,    /* State 105: 2 actions (after , type_spec) */
+    955,    /* State 106: 2 actions (after , type_spec *) */
+    957,    /* State 107: 2 actions (reduce P12) */
+    959,    /* State 108: 2 actions (reduce P12 after *) */
+    961,    /* State 109: 2 actions (reduce P43) */
+    963,    /* State 110: 2 actions (reduce P11) */
+    965,    /* State 111: 2 actions (reduce P42) */
+    967,    /* State 112: (unused) */
+    967,    /* State 113: 1 action (reduce P44 function_definition) */
+    968,    /* State 114: 1 action (accept function_definition) */
+    969,    /* State 115: (unused) */
+    969,    /* State 116: 6 actions (reduce P12 for direct declarator) */
+    975,    /* State 117: 2 actions (after 'struct') */
+    977,    /* State 118: 4 actions (after 'struct ID') */
+    981,    /* State 119: 7 actions (after 'struct {', +UNION, +ENUM) */
+    988,    /* State 120: 7 actions (after 'struct ID {', +UNION, +ENUM) */
+    995,    /* State 121: 3 actions (after member type_spec, +COLON) */
+    998,    /* State 122: 2 actions (after member type_spec *) */
+    1000,   /* State 123: 2 actions (after member type name, +COLON) */
+    1002,   /* State 124: 1 action (after member type * name) */
+    1003,   /* State 125: 5 actions (after member ;) */
+    1008,   /* State 126: 5 actions (after pointer member ;) */
+    1013,   /* State 127: 7 actions (after member_list in anon, +UNION, +ENUM) */
+    1020,   /* State 128: 3 actions (after anon struct }) */
+    1023,   /* State 129: 7 actions (after member_list in named, +UNION, +ENUM) */
+    1030,   /* State 130: 3 actions (after named struct }) */
+    1033,   /* State 131: 3 actions (subsequent member type_spec, +COLON) */
+    1036,   /* State 132: 2 actions (subsequent member type_spec *) */
+    1038,   /* State 133: 2 actions (subsequent member type name, +COLON) */
+    1040,   /* State 134: 1 action (subsequent member type * name) */
+    1041,   /* State 135: 5 actions (subsequent non-pointer ;) */
+    1046,   /* State 136: 5 actions (subsequent pointer ;) */
+    1051,   /* State 137: 2 actions (after 'union') */
+    1053,   /* State 138: 4 actions (after 'union ID') */
+    1057,   /* State 139: 6 actions (after 'union {') */
+    1063,   /* State 140: 6 actions (after 'union ID {') */
+    1069,   /* State 141: 6 actions (after member_list in anon union) */
+    1075,   /* State 142: 3 actions (after anon union }) */
+    1078,   /* State 143: 6 actions (after member_list in named union) */
+    1084,   /* State 144: 3 actions (after named union }) */
+    1087,   /* State 145: 2 actions (after 'enum') */
+    1089,   /* State 146: 4 actions (after 'enum ID') */
+    1093,   /* State 147: 1 action (after 'enum {') */
+    1094,   /* State 148: 1 action (after 'enum ID {') */
+    1095,   /* State 149: 3 actions (after enumerator ID) */
+    1098,   /* State 150: 5 actions (after 'ID =') */
+    1103,   /* State 151: 3 actions (after 'ID = expr', +PLUS) */
+    1106,   /* State 152: 2 actions (after first enumerator) */
+    1108,   /* State 153: 2 actions (after enum_list in anon) */
+    1110,   /* State 154: 3 actions (after 'enum { list }') */
+    1113,   /* State 155: 2 actions (after enum_list in named) */
+    1115,   /* State 156: 1 action (after ',') */
+    1116,   /* State 157: 3 actions (after 'enum ID { list }') */
+    1119,   /* State 158: 3 actions (after subsequent ID) */
+    1122,   /* State 159: 5 actions (after subsequent 'ID =') */
+    1127,   /* State 160: 3 actions (after subsequent 'ID = expr', +PLUS) */
+    1130,   /* State 161: 2 actions (after subsequent enumerator) */
+    1132,   /* State 162: 5 actions (first named bit field ':' expr) */
+    1137,   /* State 163: 2 actions (first named bit field expr done) */
+    1139,   /* State 164: 5 actions (reduce P62) */
+    1144,   /* State 165: 5 actions (subsequent named bit field ':' expr) */
+    1149,   /* State 166: 2 actions (subsequent named bit field expr done) */
+    1151,   /* State 167: 5 actions (reduce P63) */
+    1156,   /* State 168: 5 actions (first anon bit field ':' expr) */
+    1161,   /* State 169: 2 actions (first anon bit field expr done) */
+    1163,   /* State 170: 5 actions (reduce P64) */
+    1168,   /* State 171: 5 actions (subsequent anon bit field ':' expr) */
+    1173,   /* State 172: 2 actions (subsequent anon bit field expr done) */
+    1175,   /* State 173: 5 actions (reduce P65) */
     /* ========== NESTED TYPE MEMBER STATES (E5) ========== */
-    1179,   /* State 174: 2 actions (after struct_spec first) */
-    1181,   /* State 175: 2 actions (after struct_spec * first) */
-    1183,   /* State 176: 1 action (after struct_spec ID first) */
-    1184,   /* State 177: 1 action (after struct_spec * ID first) */
-    1185,   /* State 178: 7 actions (reduce P66) */
-    1192,   /* State 179: 7 actions (reduce P67) */
-    1199,   /* State 180: 2 actions (after struct_spec subsequent) */
-    1201,   /* State 181: 2 actions (after struct_spec * subsequent) */
-    1203,   /* State 182: 1 action (after struct_spec ID subsequent) */
-    1204,   /* State 183: 1 action (after struct_spec * ID subsequent) */
-    1205,   /* State 184: 7 actions (reduce P68) */
-    1212,   /* State 185: 7 actions (reduce P69) */
-    1219,   /* State 186: 2 actions (after enum_spec first) */
-    1221,   /* State 187: 2 actions (after enum_spec * first) */
-    1223,   /* State 188: 1 action (after enum_spec ID first) */
-    1224,   /* State 189: 1 action (after enum_spec * ID first) */
-    1225,   /* State 190: 7 actions (reduce P70) */
-    1232,   /* State 191: 7 actions (reduce P71) */
-    1239,   /* State 192: 2 actions (after enum_spec subsequent) */
-    1241,   /* State 193: 2 actions (after enum_spec * subsequent) */
-    1243,   /* State 194: 1 action (after enum_spec ID subsequent) */
-    1244,   /* State 195: 1 action (after enum_spec * ID subsequent) */
-    1245,   /* State 196: 7 actions (reduce P72) */
-    1252,   /* State 197: 7 actions (reduce P73) */
-    1259    /* End marker */
+    1180,   /* State 174: 2 actions (after struct_spec first) */
+    1182,   /* State 175: 2 actions (after struct_spec * first) */
+    1184,   /* State 176: 1 action (after struct_spec ID first) */
+    1185,   /* State 177: 1 action (after struct_spec * ID first) */
+    1186,   /* State 178: 7 actions (reduce P66) */
+    1193,   /* State 179: 7 actions (reduce P67) */
+    1200,   /* State 180: 2 actions (after struct_spec subsequent) */
+    1202,   /* State 181: 2 actions (after struct_spec * subsequent) */
+    1204,   /* State 182: 1 action (after struct_spec ID subsequent) */
+    1205,   /* State 183: 1 action (after struct_spec * ID subsequent) */
+    1206,   /* State 184: 7 actions (reduce P68) */
+    1213,   /* State 185: 7 actions (reduce P69) */
+    1220,   /* State 186: 2 actions (after enum_spec first) */
+    1222,   /* State 187: 2 actions (after enum_spec * first) */
+    1224,   /* State 188: 1 action (after enum_spec ID first) */
+    1225,   /* State 189: 1 action (after enum_spec * ID first) */
+    1226,   /* State 190: 7 actions (reduce P70) */
+    1233,   /* State 191: 7 actions (reduce P71) */
+    1240,   /* State 192: 2 actions (after enum_spec subsequent) */
+    1242,   /* State 193: 2 actions (after enum_spec * subsequent) */
+    1244,   /* State 194: 1 action (after enum_spec ID subsequent) */
+    1245,   /* State 195: 1 action (after enum_spec * ID subsequent) */
+    1246,   /* State 196: 7 actions (reduce P72) */
+    1253,   /* State 197: 7 actions (reduce P73) */
+    /* ========== TYPEDEF DECLARATION STATES (E6) ========== */
+    1260,   /* State 198: 6 actions (after 'typedef') */
+    1266,   /* State 199: 2 actions (after 'typedef type_spec') */
+    1268,   /* State 200: 2 actions (after 'typedef type_spec *') */
+    1270,   /* State 201: 1 action (after 'typedef type_spec ID') */
+    1271,   /* State 202: 1 action (after 'typedef type_spec *... ID') */
+    1272,   /* State 203: 8 actions (reduce P74) */
+    1280,   /* State 204: 8 actions (reduce P75) */
+    1288,   /* State 205: 2 actions (after 'typedef struct_spec') */
+    1290,   /* State 206: 2 actions (after 'typedef struct_spec *') */
+    1292,   /* State 207: 1 action (after 'typedef struct_spec ID') */
+    1293,   /* State 208: 1 action (after 'typedef struct_spec *... ID') */
+    1294,   /* State 209: 8 actions (reduce P76) */
+    1302,   /* State 210: 8 actions (reduce P77) */
+    1310,   /* State 211: 2 actions (after 'typedef enum_spec') */
+    1312,   /* State 212: 2 actions (after 'typedef enum_spec *') */
+    1314,   /* State 213: 1 action (after 'typedef enum_spec ID') */
+    1315,   /* State 214: 1 action (after 'typedef enum_spec *... ID') */
+    1316,   /* State 215: 8 actions (reduce P78) */
+    1324,   /* State 216: 8 actions (reduce P79) */
+    1332    /* End marker */
 };
 
-#define NUM_STATES 198
+#define NUM_STATES 217
 
 /* ==================================================
  * GOTO Table
@@ -2623,7 +2776,13 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 171: expression for subsequent anonymous bit field */
     { 171, INT_NT_EXPR,             172 },  /* bit field width done */
     { 171, INT_NT_TERM,             2 },
-    { 171, INT_NT_FACTOR,           3 }
+    { 171, INT_NT_FACTOR,           3 },
+
+    /* ========== TYPEDEF GOTO ENTRIES (E6) ========== */
+
+    /* From state 198: after 'typedef' - struct/enum specifier reduces */
+    { 198, INT_NT_STRUCT_SPEC,      205 },  /* typedef struct { } → ID path */
+    { 198, INT_NT_ENUM_SPEC,        211 }   /* typedef enum { } → ID path */
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));

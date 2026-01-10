@@ -3553,6 +3553,223 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
+    /* ========================================================
+     * PROBARE: Typedef declarations (P74-P79)
+     * ======================================================== */
+
+    /* Test simple typedef: typedef int MyInt; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef simplex: typedef int MyInt; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef int MyInt;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, ZEPHYRUM);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test pointer typedef: typedef int* IntPtr; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef pointer: typedef int* IntPtr; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef int* IntPtr;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test typedef struct: typedef struct { int x; } Point; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef struct: typedef struct { int x; } Point; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef struct { int x; } Point;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            /* Specifier should be a STRUCT_SPECIFIER */
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
+            si (res.radix->datum.declaratio.specifier != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.specifier->genus,
+                                  (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test typedef struct pointer: typedef struct { int x; } *PointPtr; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef struct pointer: typedef struct { int x; } *PointPtr; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef struct { int x; } *PointPtr;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+            }
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
+            si (res.radix->datum.declaratio.specifier != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.specifier->genus,
+                                  (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test typedef enum: typedef enum { A, B } Status; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef enum: typedef enum { A, B } Status; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef enum { A, B } Status;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
+            si (res.radix->datum.declaratio.specifier != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.specifier->genus,
+                                  (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test typedef enum pointer: typedef enum { A, B } *StatusPtr; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef enum pointer: typedef enum { A, B } *StatusPtr; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef enum { A, B } *StatusPtr;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+            }
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
+            si (res.radix->datum.declaratio.specifier != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.specifier->genus,
+                                  (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
 
     /* ========================================================
      * PROBARE: Parser statistics
