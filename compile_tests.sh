@@ -127,6 +127,8 @@ declare -a SOURCE_FILES=(
     "lib/arbor2_lexema.c"
     "lib/arbor2_token.c"
     "lib/arbor2_expandere.c"
+    "lib/arbor2_glr.c"
+    "lib/arbor2_glr_tabula.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
 )
