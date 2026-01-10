@@ -356,6 +356,28 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             }
             frange;
 
+        casus ARBOR2_NODUS_DEFINITIO_FUNCTI:
+            imprimere("DEFINITIO_FUNCTI:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("specifier:\n");
+            si (nodus->datum.definitio_functi.specifier != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.definitio_functi.specifier, profunditas + II);
+            }
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("declarator:\n");
+            si (nodus->datum.definitio_functi.declarator != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.definitio_functi.declarator, profunditas + II);
+            }
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("corpus:\n");
+            si (nodus->datum.definitio_functi.corpus != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.definitio_functi.corpus, profunditas + II);
+            }
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -2288,6 +2310,173 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function definition: MyType fn(void) { }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans function definition: MyType fn(void) { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType fn(void) { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* decl;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            /* Check specifier */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.specifier);
+            /* Check declarator is function declarator */
+            decl = res.radix->datum.definitio_functi.declarator;
+            CREDO_NON_NIHIL(decl);
+            si (decl != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                CREDO_AEQUALIS_I32((i32)decl->datum.declarator_functi.habet_void, VERUM);
+            }
+            /* Check corpus exists */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.corpus);
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function definition with body: MyType fn(void) { return x; }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans function definition: MyType fn(void) { return x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType fn(void) { return x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* corpus;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            /* Check corpus has statement */
+            corpus = res.radix->datum.definitio_functi.corpus;
+            CREDO_NON_NIHIL(corpus);
+            si (corpus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)corpus->genus, (i32)ARBOR2_NODUS_CORPUS);
+                CREDO_AEQUALIS_I32(xar_numerus(corpus->datum.corpus.sententiae), I);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function with params: MyType foo(int x, int y) { return x; }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans function: MyType foo(int x, int y) { return x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType foo(int x, int y) { return x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* decl;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            decl = res.radix->datum.definitio_functi.declarator;
+            CREDO_NON_NIHIL(decl);
+            si (decl != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
+                si (decl->datum.declarator_functi.parametri != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), II);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Pointer return type: MyType * bar(void) { }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans pointer return: MyType * bar(void) { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * bar(void) { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* decl;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            decl = res.radix->datum.definitio_functi.declarator;
+            CREDO_NON_NIHIL(decl);
+            si (decl != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
+                /* Check there's a pointer in the declarator chain */
+                CREDO_AEQUALIS_I32((i32)decl->datum.declarator_functi.num_stellae, I);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
 

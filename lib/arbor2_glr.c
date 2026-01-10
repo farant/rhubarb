@@ -1083,6 +1083,17 @@ _processare_unam_actionem(
                         valor_novus->datum.parameter_decl.declarator = valori[ZEPHYRUM];
                         frange;
 
+                    casus ARBOR2_NODUS_DEFINITIO_FUNCTI:
+                        /* P44: function_definition -> type_specifier declarator compound_statement */
+                        /* valori[2]=type_spec, valori[1]=declarator, valori[0]=corpus */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_DEFINITIO_FUNCTI;
+                        valor_novus->lexema = lexemata[II];  /* type_specifier token */
+                        valor_novus->datum.definitio_functi.specifier = valori[II];
+                        valor_novus->datum.definitio_functi.declarator = valori[I];
+                        valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */

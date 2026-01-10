@@ -805,10 +805,87 @@ valor_novus->datum.declarator_functi.parametri = (Xar*)valori[I];
 - ~950 action entries (was ~900)
 - 44 grammar rules (was 40)
 
+---
+
+## 2026-01-10
+
+### Phase D3: Function Definitions
+
+Implemented function definition syntax, combining declarations with bodies:
+
+```c
+MyType fn(void) { }
+MyType fn(void) { return x; }
+MyType foo(int x, int y) { return x; }
+MyType * bar(void) { }
+```
+
+**Grammar Rule Added:**
+- P44: `function_definition -> type_specifier declarator compound_statement` (3 symbols)
+
+**New Types:**
+- `ARBOR2_NT_DEFINITIO_FUNCTI` - non-terminal for function definitions
+- `ARBOR2_NODUS_DEFINITIO_FUNCTI` - AST node type
+- `definitio_functi` struct with: specifier, declarator, corpus
+
+**State Machine Changes:**
+
+1. **State 4 (after IDENTIFIER):** Added IDENTIFIER → SHIFT 116 for direct declarators (`MyType fn` without `*`)
+
+2. **State 20 (after type_specifier declarator):** Added:
+   - `(` → SHIFT 91 (function params)
+   - `{` → SHIFT 25 (function body)
+
+3. **State 19 (after `* declarator`):** Added `{` → REDUCE P11 to allow `MyType * fn() {}`
+
+4. **States 92, 94, 103 (after function declarator reductions):** Added `{` → REDUCE for function body support
+
+5. **New States:**
+   - State 113: After `type_spec declarator compound` → REDUCE P44
+   - State 114: After function_definition → ACCEPT
+   - State 116: After direct declarator (`type_spec name`) → REDUCE P12
+
+6. **New GOTO entries:**
+   - GOTO(20, CORPUS) = 113 (after function body)
+   - GOTO(0, DEFINITIO) = 114 (accept function definition)
+
+**Key Implementation Insight:**
+
+The compound statement parsing (`{` to `}`) is reused from the existing statement grammar. The key was adding `{` as a valid lookahead in the function declarator reduction states (92, 94, 103, 19). When we see `{` after a function declarator:
+1. Reduce the declarator (P38/P39/P40/P11)
+2. GOTO to state 20
+3. Shift `{` to state 25 (compound entry)
+4. Parse compound statement, reduce P16 (CORPUS)
+5. GOTO(20, CORPUS) = 113
+6. State 113 reduces P44 (function_definition)
+7. GOTO(0, DEFINITIO) = 114, ACCEPT
+
+**Side Effect - Direct Declarators:**
+
+Adding state 116 also enables simple declarations like `MyType x` (without pointer). This was previously only supported via the `*` path.
+
+**Tests Passing:**
+- `MyType fn(void) { }` → DEFINITIO_FUNCTI with empty body
+- `MyType fn(void) { return x; }` → DEFINITIO_FUNCTI with return statement
+- `MyType foo(int x, int y) { return x; }` → DEFINITIO_FUNCTI with 2 params
+- `MyType * bar(void) { }` → pointer return function definition
+
+**Grammar Summary:**
+- 117 states (was 112)
+- ~962 action entries (was ~950)
+- 45 grammar rules (was 44)
+
+### Debugging Notes
+
+**ACTIO_INDICES Bug:** When adding actions to existing states, must carefully update all subsequent state indices. An off-by-one error in state 4's action count caused a segfault in the ambiguity handling.
+
+**Missing Lookahead Bug:** The function declarator reduction states (92, 94, 103) originally didn't have `{` in their lookahead sets, causing parse failures for function definitions. Same issue affected state 19 (pointer declarator).
+
 ### Still TODO
 
-- Phase D3: Function definitions (`type fn() { body }`)
 - More declaration specifiers (struct, union, enum, const, etc.)
 - Array declarators `int arr[10]`
+- Multiple declarators in one declaration (`int a, b, c;`)
+- Initializers (`int x = 5;`)
 - Test with real library files
 - Error recovery

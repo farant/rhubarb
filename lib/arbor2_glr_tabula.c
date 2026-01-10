@@ -163,7 +163,10 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_PARAMETER_LIST, 3, ARBOR2_NODUS_ERROR },  /* extends Xar */
 
     /* P43: parameter_declaration -> type_specifier declarator */
-    { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL }
+    { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL },
+
+    /* P44: function_definition -> type_specifier declarator compound_statement */
+    { ARBOR2_NT_DEFINITIO_FUNCTI, 3, ARBOR2_NODUS_DEFINITIO_FUNCTI }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -245,6 +248,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* State 4: After IDENTIFIER - AMBIGUOUS for '*' (expr vs decl), or label with ':' */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 5 },  /* expr: factor -> ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },  /* decl: start declarator */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116 }, /* decl: direct declarator name */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 5 },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 5 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 5 },  /* for compound */
@@ -364,9 +368,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 11 },  /* for function definition body */
 
-    /* State 20: After 'type_specifier declarator' - reduce P10 */
+    /* State 20: After 'type_specifier declarator' - reduce P10 or continue to function */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10 },  /* declaration -> type declarator */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 25 },   /* function definition body */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_ERROR,  0 },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_ERROR,  0 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_ERROR,  0 },
@@ -1318,6 +1325,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 38 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 38 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 38 },  /* for chained fn decl */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 38 },  /* for function definition body */
 
     /* State 93: After 'declarator ( void' - expect ')' */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 94 },   /* (void) */
@@ -1328,6 +1336,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 39 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 39 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 39 },  /* for chained fn decl */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 39 },  /* for function definition body */
 
     /* ==================================================
      * Phase D2: Parameter List States (95-111)
@@ -1371,6 +1380,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 40 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 40 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 40 },  /* for function definition body */
 
     /* State 104: After 'param_list ,' - expect next type_specifier */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 105 },  /* next param type (typedef) */
@@ -1403,7 +1413,27 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 111: After 'param_list , param_decl' - reduce P42 */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 42 },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 42 }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 42 },
+
+    /* ==================================================
+     * Phase D3: Function Definition States (113-116)
+     * ================================================== */
+
+    /* State 113: After 'type_spec declarator compound' - reduce P44 (function_definition) */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 44 },
+
+    /* State 114: After function_definition - accept */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
+
+    /* State 115: (reserved) */
+
+    /* State 116: After 'type_spec name' (direct declarator) - reduce P12 */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -1414,118 +1444,123 @@ hic_manens i32 ACTIO_INDICES[] = {
     18,     /* State 1: 4 actions */
     22,     /* State 2: 7 actions (added COLON) */
     29,     /* State 3: 7 actions (added COLON) */
-    36,     /* State 4: 9 actions (2x COLON for label/case) */
-    45,     /* State 5: 7 actions (added COLON) */
-    52,     /* State 6: 5 actions */
-    57,     /* State 7: 5 actions */
-    62,     /* State 8: 5 actions */
-    67,     /* State 9: 5 actions */
-    72,     /* State 10: 5 actions */
-    77,     /* State 11: 2 actions */
-    79,     /* State 12: 7 actions (added COLON) */
-    86,     /* State 13: 7 actions (added COLON) */
-    93,     /* State 14: 7 actions (added COLON) */
-    100,    /* State 15: 7 actions (added COLON) */
-    107,    /* State 16: 7 actions (added COLON) */
-    114,    /* State 17: 2 actions (declarator path) */
-    116,    /* State 18: 5 actions (reduce P12 + fn decl) */
-    121,    /* State 19: 5 actions (reduce P11 + fn decl) */
-    126,    /* State 20: 4 actions (reduce P10) */
-    130,    /* State 21: 1 action (accept declaration) */
-    131,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
-    152,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
-    173,    /* State 24: 1 action (accept statement) */
-    174,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
-    193,    /* State 26: 19 actions (+switch, case, default) */
-    212,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
-    233,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
-    252,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
-    273,    /* State 30: 1 action (after 'if') */
-    274,    /* State 31: 5 actions (after 'if (') */
-    279,    /* State 32: 2 actions (after 'if ( expr') */
-    281,    /* State 33: 18 actions (+switch, case, default) */
-    299,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
-    320,    /* State 35: 18 actions (+switch, case, default) */
-    338,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
-    359,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
-    380,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
-    401,    /* State 39: 1 action (after 'while') */
-    402,    /* State 40: 5 actions (after 'while (') */
-    407,    /* State 41: 2 actions (after 'while ( expr') */
-    409,    /* State 42: 18 actions (+switch, case, default) */
-    427,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
-    448,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
-    469,    /* State 45: 18 actions (+switch, case, default) */
-    487,    /* State 46: 1 action (after 'do stmt') */
-    488,    /* State 47: 1 action (after 'do stmt while') */
-    489,    /* State 48: 5 actions (after 'do stmt while (') */
-    494,    /* State 49: 2 actions (after 'do stmt while ( expr') */
-    496,    /* State 50: 1 action (after 'do stmt while ( expr )') */
-    497,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
-    518,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
-    539,    /* State 53: 1 action (after 'for') */
-    540,    /* State 54: 6 actions (after 'for (') */
-    546,    /* State 55: 1 action (after 'for ( expr') */
-    547,    /* State 56: 1 action (after 'for ( expr_opt') */
-    548,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
-    554,    /* State 58: 1 action (after 'for ( ... ; expr') */
-    555,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
-    556,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
-    562,    /* State 61: 1 action (after 'for ( ... ; expr') */
-    563,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
-    564,    /* State 63: 18 actions (+switch, case, default) */
-    582,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
-    603,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
-    624,    /* State 66: 1 action (after 'break') */
-    625,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
-    646,    /* State 68: 1 action (after 'continue') */
-    647,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
-    668,    /* State 70: 6 actions (after 'return') */
-    674,    /* State 71: 2 actions (after 'return expr' + continue) */
-    676,    /* State 72: 1 action (after 'return expr_opt') */
-    677,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
-    698,    /* State 74: 1 action (after 'goto') */
-    699,    /* State 75: 1 action (after 'goto ID') */
-    700,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
-    721,    /* State 77: 18 actions (+switch, case, default) */
-    739,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
-    760,    /* State 79: 1 action (after 'switch') */
-    761,    /* State 80: 5 actions (after 'switch (') */
-    766,    /* State 81: 2 actions (after 'switch ( expr') */
-    768,    /* State 82: 18 actions (after 'switch ( expr )') */
-    786,    /* State 83: 21 actions (reduce P35) */
-    807,    /* State 84: 5 actions (after 'case') */
-    812,    /* State 85: 2 actions (after 'case expr') */
-    814,    /* State 86: 18 actions (after 'case expr :') */
-    832,    /* State 87: 21 actions (reduce P36) */
-    853,    /* State 88: 1 action (after 'default') */
-    854,    /* State 89: 18 actions (after 'default :') */
-    872,    /* State 90: 21 actions (reduce P37) */
-    893,    /* State 91: 5 actions (after 'declarator (', +IDENTIFIER/INT/CHAR) */
-    898,    /* State 92: 5 actions (reduce P38) */
-    903,    /* State 93: 1 action (after 'declarator ( void') */
-    904,    /* State 94: 5 actions (reduce P39) */
-    909,    /* State 95: 2 actions (after '( type_spec') */
-    911,    /* State 96: 2 actions (after '( type_spec *') */
-    913,    /* State 97: 2 actions (reduce P12) */
-    915,    /* State 98: 2 actions (reduce P12 after *) */
-    917,    /* State 99: 2 actions (reduce P43) */
-    919,    /* State 100: 2 actions (reduce P11) */
-    921,    /* State 101: 2 actions (reduce P41) */
-    923,    /* State 102: 2 actions (after param_list) */
-    925,    /* State 103: 5 actions (reduce P40) */
-    930,    /* State 104: 3 actions (after param_list ,, +INT/CHAR) */
-    933,    /* State 105: 2 actions (after , type_spec) */
-    935,    /* State 106: 2 actions (after , type_spec *) */
-    937,    /* State 107: 2 actions (reduce P12) */
-    939,    /* State 108: 2 actions (reduce P12 after *) */
-    941,    /* State 109: 2 actions (reduce P43) */
-    943,    /* State 110: 2 actions (reduce P11) */
-    945,    /* State 111: 2 actions (reduce P42) */
-    947     /* End marker */
+    36,     /* State 4: 10 actions (2x COLON + IDENTIFIER for direct decl) */
+    46,     /* State 5: 7 actions (added COLON) */
+    53,     /* State 6: 5 actions */
+    58,     /* State 7: 5 actions */
+    63,     /* State 8: 5 actions */
+    68,     /* State 9: 5 actions */
+    73,     /* State 10: 5 actions */
+    78,     /* State 11: 2 actions */
+    80,     /* State 12: 7 actions (added COLON) */
+    87,     /* State 13: 7 actions (added COLON) */
+    94,     /* State 14: 7 actions (added COLON) */
+    101,    /* State 15: 7 actions (added COLON) */
+    108,    /* State 16: 7 actions (added COLON) */
+    115,    /* State 17: 2 actions (declarator path) */
+    117,    /* State 18: 5 actions (reduce P12 + fn decl) */
+    122,    /* State 19: 6 actions (reduce P11 + fn decl + BRACE_APERTA) */
+    128,    /* State 20: 6 actions (reduce P10 + fn decl (/) + fn def ({)) */
+    134,    /* State 21: 1 action (accept declaration) */
+    135,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
+    156,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
+    177,    /* State 24: 1 action (accept statement) */
+    178,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
+    197,    /* State 26: 19 actions (+switch, case, default) */
+    216,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
+    237,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
+    256,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
+    277,    /* State 30: 1 action (after 'if') */
+    278,    /* State 31: 5 actions (after 'if (') */
+    283,    /* State 32: 2 actions (after 'if ( expr') */
+    285,    /* State 33: 18 actions (+switch, case, default) */
+    303,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
+    324,    /* State 35: 18 actions (+switch, case, default) */
+    342,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
+    363,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
+    384,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
+    405,    /* State 39: 1 action (after 'while') */
+    406,    /* State 40: 5 actions (after 'while (') */
+    411,    /* State 41: 2 actions (after 'while ( expr') */
+    413,    /* State 42: 18 actions (+switch, case, default) */
+    431,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
+    452,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
+    473,    /* State 45: 18 actions (+switch, case, default) */
+    491,    /* State 46: 1 action (after 'do stmt') */
+    492,    /* State 47: 1 action (after 'do stmt while') */
+    493,    /* State 48: 5 actions (after 'do stmt while (') */
+    498,    /* State 49: 2 actions (after 'do stmt while ( expr') */
+    500,    /* State 50: 1 action (after 'do stmt while ( expr )') */
+    501,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
+    522,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
+    543,    /* State 53: 1 action (after 'for') */
+    544,    /* State 54: 6 actions (after 'for (') */
+    550,    /* State 55: 1 action (after 'for ( expr') */
+    551,    /* State 56: 1 action (after 'for ( expr_opt') */
+    552,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
+    558,    /* State 58: 1 action (after 'for ( ... ; expr') */
+    559,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
+    560,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
+    566,    /* State 61: 1 action (after 'for ( ... ; expr') */
+    567,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
+    568,    /* State 63: 18 actions (+switch, case, default) */
+    586,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
+    607,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
+    628,    /* State 66: 1 action (after 'break') */
+    629,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
+    650,    /* State 68: 1 action (after 'continue') */
+    651,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
+    672,    /* State 70: 6 actions (after 'return') */
+    678,    /* State 71: 2 actions (after 'return expr' + continue) */
+    680,    /* State 72: 1 action (after 'return expr_opt') */
+    681,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
+    702,    /* State 74: 1 action (after 'goto') */
+    703,    /* State 75: 1 action (after 'goto ID') */
+    704,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
+    725,    /* State 77: 18 actions (+switch, case, default) */
+    743,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
+    764,    /* State 79: 1 action (after 'switch') */
+    765,    /* State 80: 5 actions (after 'switch (') */
+    770,    /* State 81: 2 actions (after 'switch ( expr') */
+    772,    /* State 82: 18 actions (after 'switch ( expr )') */
+    790,    /* State 83: 21 actions (reduce P35) */
+    811,    /* State 84: 5 actions (after 'case') */
+    816,    /* State 85: 2 actions (after 'case expr') */
+    818,    /* State 86: 18 actions (after 'case expr :') */
+    836,    /* State 87: 21 actions (reduce P36) */
+    857,    /* State 88: 1 action (after 'default') */
+    858,    /* State 89: 18 actions (after 'default :') */
+    876,    /* State 90: 21 actions (reduce P37) */
+    897,    /* State 91: 5 actions (after 'declarator (', +IDENTIFIER/INT/CHAR) */
+    902,    /* State 92: 6 actions (reduce P38 + BRACE_APERTA) */
+    908,    /* State 93: 1 action (after 'declarator ( void') */
+    909,    /* State 94: 6 actions (reduce P39 + BRACE_APERTA) */
+    915,    /* State 95: 2 actions (after '( type_spec') */
+    917,    /* State 96: 2 actions (after '( type_spec *') */
+    919,    /* State 97: 2 actions (reduce P12) */
+    921,    /* State 98: 2 actions (reduce P12 after *) */
+    923,    /* State 99: 2 actions (reduce P43) */
+    925,    /* State 100: 2 actions (reduce P11) */
+    927,    /* State 101: 2 actions (reduce P41) */
+    929,    /* State 102: 2 actions (after param_list) */
+    931,    /* State 103: 6 actions (reduce P40 + BRACE_APERTA) */
+    937,    /* State 104: 3 actions (after param_list ,, +INT/CHAR) */
+    940,    /* State 105: 2 actions (after , type_spec) */
+    942,    /* State 106: 2 actions (after , type_spec *) */
+    944,    /* State 107: 2 actions (reduce P12) */
+    946,    /* State 108: 2 actions (reduce P12 after *) */
+    948,    /* State 109: 2 actions (reduce P43) */
+    950,    /* State 110: 2 actions (reduce P11) */
+    952,    /* State 111: 2 actions (reduce P42) */
+    954,    /* State 112: (unused) */
+    954,    /* State 113: 1 action (reduce P44 function_definition) */
+    955,    /* State 114: 1 action (accept function_definition) */
+    956,    /* State 115: (unused) */
+    956,    /* State 116: 6 actions (reduce P12 for direct declarator) */
+    962     /* End marker */
 };
 
-#define NUM_STATES 112
+#define NUM_STATES 117
 
 /* ==================================================
  * GOTO Table
@@ -1551,6 +1586,7 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_EXPRESSIO_OPT 13
 #define INT_NT_PARAM_LIST    14
 #define INT_NT_PARAM_DECL    15
+#define INT_NT_DEFINITIO     16
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
@@ -1800,7 +1836,11 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 91, INT_NT_PARAM_LIST,        102 },  /* After param_list */
     { 105, INT_NT_DECLARATOR,       109 },  /* After , type_spec + declarator */
     { 106, INT_NT_DECLARATOR,       110 },  /* After , type_spec * + declarator */
-    { 104, INT_NT_PARAM_DECL,       111 }   /* After , + param_decl */
+    { 104, INT_NT_PARAM_DECL,       111 },  /* After , + param_decl */
+
+    /* Phase D3: Function definition GOTO entries */
+    { 20, INT_NT_CORPUS,            113 },  /* After declarator + compound body */
+    { 0, INT_NT_DEFINITIO,          114 }   /* After function_definition */
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));
@@ -1898,6 +1938,9 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_PARAMETER_DECL:
             nt_int = INT_NT_PARAM_DECL;
+            frange;
+        casus ARBOR2_NT_DEFINITIO_FUNCTI:
+            nt_int = INT_NT_DEFINITIO;
             frange;
         ordinarius:
             nt_int = -I;

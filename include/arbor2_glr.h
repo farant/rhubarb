@@ -69,7 +69,8 @@ nomen enumeratio {
     ARBOR2_NT_EXPRESSIO_OPTATIVA,   /* Optional expression (for for-loops) */
     ARBOR2_NT_NUMERUS,              /* Count */
     ARBOR2_NT_PARAMETER_LIST,       /* Parameter list */
-    ARBOR2_NT_PARAMETER_DECL        /* Parameter declaration */
+    ARBOR2_NT_PARAMETER_DECL,       /* Parameter declaration */
+    ARBOR2_NT_DEFINITIO_FUNCTI      /* Function definition */
 } Arbor2NonTerminalis;
 
 /* ==================================================
@@ -87,6 +88,7 @@ nomen enumeratio {
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
     ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
     ARBOR2_NODUS_PARAMETER_DECL,    /* Parameter declaration: type name */
+    ARBOR2_NODUS_DEFINITIO_FUNCTI,  /* Function definition: type name() { body } */
     ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
@@ -172,6 +174,13 @@ structura Arbor2Nodus {
             Arbor2Nodus*        type_specifier;       /* Type (identifier node) */
             Arbor2Nodus*        declarator;           /* Name + pointers */
         } parameter_decl;
+
+        /* DEFINITIO_FUNCTI (function definition) */
+        structura {
+            Arbor2Nodus*        specifier;            /* Return type (identifier node) */
+            Arbor2Nodus*        declarator;           /* Function declarator (DECLARATOR_FUNCTI) */
+            Arbor2Nodus*        corpus;               /* Function body (CORPUS node) */
+        } definitio_functi;
 
         /* SENTENTIA (expression statement) */
         structura {
