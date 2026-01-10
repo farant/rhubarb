@@ -7,6 +7,9 @@
 
 /* Debug flag - set to 1 to enable tracing */
 #define GLR_DEBUG 0
+#if GLR_DEBUG
+#include <stdio.h>
+#endif
 
 /* ==================================================
  * Internal Forward Declarations
@@ -681,9 +684,140 @@ _processare_unam_actionem(
                         frange;
 
                     casus ARBOR2_NODUS_DECLARATIO:
-                        /* P10: declaration -> type_specifier declarator */
-                        si (num_pop >= II)
+                        /* Check for struct member rules P48-P51 first */
+                        si (actio->valor == 48)
                         {
+                            /* P48: struct_member_list -> type_spec ID ';' (3 symbols) */
+                            /* lexemata: [2]=type, [1]=name, [0]=; */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[II];
+                            Arbor2Token* name_tok = lexemata[I];
+#if GLR_DEBUG
+                            printf("  [DEBUG P48] Creating member list, type=%.*s, name=%.*s\n",
+                                   (integer)type_tok->lexema->valor.mensura, type_tok->lexema->valor.datum,
+                                   (integer)name_tok->lexema->valor.mensura, name_tok->lexema->valor.datum);
+#endif
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = name_tok;
+                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+#if GLR_DEBUG
+                            printf("  [DEBUG P48] Created lista=%p with %d members\n",
+                                   (vacuum*)lista, xar_numerus(lista));
+#endif
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 49)
+                        {
+                            /* P49: member_list type_spec ID ';' (4 symbols) */
+                            /* valori: [3]=list, [2]=type, [1]=name, [0]=; */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista = (Xar*)valori[III];
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[II];
+                            Arbor2Token* name_tok = lexemata[I];
+
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = name_tok;
+                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 50)
+                        {
+                            /* P50: type_spec '*' ID ';' (4 symbols, pointer first member) */
+                            /* lexemata: [3]=type, [2]=*, [1]=name, [0]=; */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[III];
+                            Arbor2Token* name_tok = lexemata[I];
+
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = name_tok;
+                            decl_node->datum.declarator.num_stellae = I;
+                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 51)
+                        {
+                            /* P51: member_list type_spec '*' ID ';' (5 symbols, append pointer) */
+                            /* valori: [4]=list, [3]=type, [2]=*, [1]=name, [0]=; */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista = (Xar*)valori[IV];
+                            Arbor2Nodus** slot;
+                            Arbor2Token* type_tok = lexemata[III];
+                            Arbor2Token* name_tok = lexemata[I];
+
+                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
+                            decl_node->lexema = name_tok;
+                            decl_node->datum.declarator.num_stellae = I;
+                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->datum.declaratio.declarator = decl_node;
+
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (num_pop >= II)
+                        {
+                            /* P10: declaration -> type_specifier declarator */
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = lexemata[I];  /* type_specifier token */
@@ -1092,6 +1226,72 @@ _processare_unam_actionem(
                         valor_novus->datum.definitio_functi.specifier = valori[II];
                         valor_novus->datum.definitio_functi.declarator = valori[I];
                         valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                        frange;
+
+                    casus ARBOR2_NODUS_STRUCT_SPECIFIER:
+                        /* P45: struct ID { members } (5 symbols) */
+                        /* P46: struct { members } (4 symbols, anonymous) */
+                        /* P47: struct ID (2 symbols, forward ref) */
+                        /* P52: union ID { members } (5 symbols) */
+                        /* P53: union { members } (4 symbols, anonymous) */
+                        /* P54: union ID (2 symbols, forward ref) */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_STRUCT_SPECIFIER;
+
+                        si (num_pop == V)
+                        {
+                            /* P45: struct ID { member_list } or P52: union ID { member_list } */
+                            /* valori: [4]=keyword, [3]=ID, [2]={, [1]=member_list, [0]=} */
+                            /* lexemata: [4]=keyword, [3]=ID, [2]={, [1]=?, [0]=} */
+                            Arbor2Nodus* tag_nodus;
+                            Arbor2Token* id_tok = lexemata[III];
+#if GLR_DEBUG
+                            printf("  [DEBUG P45/P52] valori[0]=%p, valori[1]=%p, valori[2]=%p, valori[3]=%p, valori[4]=%p\n",
+                                   (vacuum*)valori[0], (vacuum*)valori[1], (vacuum*)valori[2],
+                                   (vacuum*)valori[3], (vacuum*)valori[4]);
+                            si (valori[I] != NIHIL) {
+                                Xar* test = (Xar*)valori[I];
+                                printf("  [DEBUG P45/P52] valori[1] as Xar: numerus=%d\n", xar_numerus(test));
+                            }
+#endif
+                            tag_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            tag_nodus->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            tag_nodus->lexema = id_tok;
+                            tag_nodus->datum.folium.valor = id_tok->lexema->valor;
+
+                            valor_novus->lexema = lexemata[IV];  /* struct/union token */
+                            valor_novus->datum.struct_specifier.tag = tag_nodus;
+                            valor_novus->datum.struct_specifier.membra = (Xar*)valori[I];
+                            valor_novus->datum.struct_specifier.est_unio = (actio->valor == 52);
+                        }
+                        alioquin si (num_pop == IV)
+                        {
+                            /* P46: struct { member_list } or P53: union { member_list } (anonymous) */
+                            /* valori: [3]=keyword, [2]={, [1]=member_list, [0]=} */
+                            /* lexemata: [3]=keyword, [2]={, [1]=?, [0]=} */
+                            valor_novus->lexema = lexemata[III];  /* struct/union token */
+                            valor_novus->datum.struct_specifier.tag = NIHIL;
+                            valor_novus->datum.struct_specifier.membra = (Xar*)valori[I];
+                            valor_novus->datum.struct_specifier.est_unio = (actio->valor == 53);
+                        }
+                        alioquin si (num_pop == II)
+                        {
+                            /* P47: struct ID or P54: union ID (forward reference) */
+                            /* valori: [1]=keyword, [0]=ID */
+                            /* lexemata: [1]=keyword, [0]=ID */
+                            Arbor2Nodus* tag_nodus;
+                            Arbor2Token* id_tok = lexemata[ZEPHYRUM];
+
+                            tag_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            tag_nodus->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            tag_nodus->lexema = id_tok;
+                            tag_nodus->datum.folium.valor = id_tok->lexema->valor;
+
+                            valor_novus->lexema = lexemata[I];  /* struct/union token */
+                            valor_novus->datum.struct_specifier.tag = tag_nodus;
+                            valor_novus->datum.struct_specifier.membra = NIHIL;
+                            valor_novus->datum.struct_specifier.est_unio = (actio->valor == 54);
+                        }
                         frange;
 
                     ordinarius:

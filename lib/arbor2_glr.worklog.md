@@ -889,3 +889,174 @@ Adding state 116 also enables simple declarations like `MyType x` (without point
 - Initializers (`int x = 5;`)
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Phase E1: Struct Definitions)
+
+### Phase E1: Struct Definitions Complete
+
+Added struct type specifier support:
+
+```c
+struct foo { int x; char y; };      /* Named struct definition */
+struct foo x;                        /* Struct variable declaration */
+struct { int x; } anon;             /* Anonymous struct */
+struct foo * ptr;                   /* Pointer to struct */
+```
+
+**Grammar Rules Added (P45-P51):**
+- P45: `struct_specifier -> 'struct' IDENTIFIER '{' struct_member_list '}'` (5 symbols)
+- P46: `struct_specifier -> 'struct' '{' struct_member_list '}'` (4 symbols, anonymous)
+- P47: `struct_specifier -> 'struct' IDENTIFIER` (2 symbols, forward ref)
+- P48: `struct_member_list -> type_specifier IDENTIFIER ';'` (3 symbols, first member)
+- P49: `struct_member_list -> struct_member_list type_specifier IDENTIFIER ';'` (4 symbols, append)
+- P50: `struct_member_list -> type_specifier '*' IDENTIFIER ';'` (4 symbols, first pointer member)
+- P51: `struct_member_list -> struct_member_list type_specifier '*' IDENTIFIER ';'` (5 symbols, append pointer)
+
+**New Types:**
+- `ARBOR2_NT_STRUCT_SPECIFIER` - non-terminal for struct specifiers
+- `ARBOR2_NT_STRUCT_MEMBER_LIST` - non-terminal for member lists
+- `ARBOR2_NODUS_STRUCT_SPECIFIER` - AST node type
+- `struct_specifier` struct with: tag (Arbor2Nodus* for name or NULL), membra (Xar* of member declarations)
+
+**State Machine Changes:**
+
+Added ~20 new states (117-136):
+- State 117: After `struct` - expect IDENTIFIER or `{`
+- State 118: After `struct ID` - expect `{` or reduce P47 (forward ref)
+- State 119: After `struct {` (anonymous) - start member list
+- State 120: After `struct ID {` (named) - start member list
+- States 121-126: First member path (non-pointer and pointer variants)
+- States 127-130: After member list in anonymous/named struct
+- States 131-136: Subsequent member path (for P49/P51 vs P48/P50)
+
+**Key Design Decisions:**
+
+1. **Separate paths for first vs subsequent members**: P48/P50 create a new Xar, while P49/P51 append to an existing Xar. This required separate state paths (121-126 for first member, 131-136 for subsequent) to ensure the correct reduction rule is applied.
+
+2. **struct_specifier integrates with type_specifier**: After reducing struct_specifier, GOTO leads to the type_specifier path, allowing `struct foo { int x; } var;` to parse correctly.
+
+3. **Members reuse declaration patterns**: Each struct member is a declaration ending with `;`. The member states parallel the regular declaration states but with `;` as the terminator.
+
+**Key Bugs Fixed:**
+
+1. **Wrong switch case for P48-P51**: The grammar rules specify `nodus = ARBOR2_NODUS_DECLARATIO` for P48-P51, which routed them to the generic DECLARATIO case instead of the custom handling in the `ordinarius` section. Fixed by adding P48-P51 handling at the start of the DECLARATIO case before the generic handling.
+
+2. **Wrong valori/lexemata indexing**: The valori array is populated from top of stack (rightmost symbol at index 0) to bottom (leftmost symbol at highest index). Initial code had indices reversed. For P45 `struct ID { member_list }` (5 symbols):
+   - valori[4] = struct
+   - valori[3] = ID
+   - valori[2] = {
+   - valori[1] = member_list  ← this is what we need for membra
+   - valori[0] = }
+
+3. **Missing INT/CHAR handling in member states**: States expecting member type specifiers initially only handled IDENTIFICATOR, causing failures for `int` and `char` members.
+
+**Tests Passing:**
+- `struct foo x` → DECLARATIO with forward reference STRUCT_SPECIFIER
+- `struct foo { int x; }` → STRUCT_SPECIFIER with 1 member
+- `struct foo { int x; int y; }` → STRUCT_SPECIFIER with 2 members
+- `struct foo { int x; } var` → DECLARATIO with struct type
+
+**Grammar Summary:**
+- 137 states (was 117)
+- ~1020 action entries (was ~962)
+- 52 grammar rules (was 45)
+
+### Still TODO
+
+- Enum support (different: constant list)
+- Bit fields: `int x : 3;`
+- Nested structs
+- `typedef struct { } Foo;` pattern
+- Test with real library files
+- Error recovery
+
+---
+
+## 2026-01-10 (Phase E2: Union Definitions)
+
+### Phase E2: Union Definitions Complete
+
+Added union type specifier support (mirrors struct syntax exactly):
+
+```c
+union foo { int x; char y; };       /* Named union definition */
+union foo x;                         /* Union variable declaration */
+union { int x; } anon;              /* Anonymous union */
+union foo * ptr;                    /* Pointer to union */
+```
+
+**Design Decision: est_unio Flag**
+
+Rather than creating a separate union node type, added `est_unio` boolean to existing `struct_specifier`:
+
+```c
+structura {
+    Arbor2Nodus*        tag;        /* Tag name or NIHIL */
+    Xar*                membra;     /* Member declarations */
+    b32                 est_unio;   /* VERUM for union, FALSUM for struct */
+} struct_specifier;
+```
+
+**Rationale:**
+- Minimal code changes (no new node type)
+- Struct and union are semantically similar (aggregate types)
+- Shared printing/traversal logic with a simple flag check
+- Member list rules P48-P51 are reused for both
+
+**Grammar Rules Added (P52-P54):**
+- P52: `struct_specifier -> 'union' IDENTIFIER '{' struct_member_list '}'` (5 symbols)
+- P53: `struct_specifier -> 'union' '{' struct_member_list '}'` (4 symbols, anonymous)
+- P54: `struct_specifier -> 'union' IDENTIFIER` (2 symbols, forward ref)
+
+Note: These produce `ARBOR2_NODUS_STRUCT_SPECIFIER` with `est_unio = VERUM`.
+
+**New States (137-144):**
+- State 137: After `union` - expect ID or `{`
+- State 138: After `union ID` - expect `{` or reduce P54
+- State 139: After `union {` (anonymous) - start member list
+- State 140: After `union ID {` (named) - start member list
+- State 141: After member_list in anonymous union - expect `}`
+- State 142: After anonymous union `}` - reduce P53
+- State 143: After member_list in named union - expect `}`
+- State 144: After named union `}` - reduce P52
+
+**State Reuse:**
+States 139 and 140 share member parsing with struct states via GOTO entries. The same member states (121-136) handle both struct and union members. Only the final reduction states (141-144 for union vs 127-130 for struct) differ.
+
+**GOTO Entries Added:**
+```c
+{ 139, INT_NT_STRUCT_MEMBERS, 141 },  /* anon union member list */
+{ 140, INT_NT_STRUCT_MEMBERS, 143 },  /* named union member list */
+{ 141, INT_NT_STRUCT_MEMBERS, 141 },  /* more anon union members */
+{ 143, INT_NT_STRUCT_MEMBERS, 143 },  /* more named union members */
+```
+
+**AST Construction:**
+In arbor2_glr.c, the STRUCT_SPECIFIER case now handles both struct and union:
+- P45/P46/P47: `est_unio = FALSUM` (determined by `actio->valor != 52/53/54`)
+- P52/P53/P54: `est_unio = VERUM` (determined by `actio->valor == 52/53/54`)
+
+**Test Printing:**
+Updated `_imprimere_arborem` to show "UNION_SPECIFIER" vs "STRUCT_SPECIFIER" based on `est_unio` flag.
+
+**Tests Passing:**
+- `union foo` → UNION_SPECIFIER (forward reference)
+- `union foo { int x; }` → UNION_SPECIFIER with 1 member
+- `union foo { int x; int y; }` → UNION_SPECIFIER with 2 members
+- `union { int x; } anon` → DECLARATIO with anonymous union type
+
+**Grammar Summary:**
+- 145 states (was 137)
+- ~1064 action entries (was ~1020)
+- 55 grammar rules (was 52)
+
+### Still TODO
+
+- Enum support (different: constant list)
+- Bit fields: `int x : 3;`
+- Nested structs/unions
+- `typedef struct { } Foo;` pattern
+- Test with real library files
+- Error recovery

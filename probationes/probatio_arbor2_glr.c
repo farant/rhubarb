@@ -378,6 +378,42 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             }
             frange;
 
+        casus ARBOR2_NODUS_STRUCT_SPECIFIER:
+        {
+            Arbor2Nodus* tag = nodus->datum.struct_specifier.tag;
+            Xar* membra = nodus->datum.struct_specifier.membra;
+            character constans* genus_nomen = nodus->datum.struct_specifier.est_unio ?
+                "UNION_SPECIFIER" : "STRUCT_SPECIFIER";
+
+            si (tag != NIHIL)
+            {
+                imprimere("%s: %.*s\n", genus_nomen,
+                    (i32)tag->datum.folium.valor.mensura,
+                    tag->datum.folium.valor.datum);
+            }
+            alioquin
+            {
+                imprimere("%s: (anonymous)\n", genus_nomen);
+            }
+
+            si (membra != NIHIL)
+            {
+                i32 num = xar_numerus(membra);
+                i32 j;
+                per (j = ZEPHYRUM; j < num; j++)
+                {
+                    Arbor2Nodus** slot = xar_obtinere(membra, j);
+                    per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+                    imprimere("member[%d]:\n", j);
+                    si (slot != NIHIL && *slot != NIHIL)
+                    {
+                        _imprimere_arborem(*slot, profunditas + II);
+                    }
+                }
+            }
+            frange;
+        }
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -2473,6 +2509,267 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
                 /* Check there's a pointer in the declarator chain */
                 CREDO_AEQUALIS_I32((i32)decl->datum.declarator_functi.num_stellae, I);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Struct specifier tests
+     * ======================================================== */
+
+    /* Test forward reference: struct foo x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct forward ref: struct foo x ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo x");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* spec;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            /* Check type specifier is a struct */
+            spec = res.radix->datum.declaratio.specifier;
+            CREDO_NON_NIHIL(spec);
+            si (spec != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                CREDO_NON_NIHIL(spec->datum.struct_specifier.tag);  /* Has tag */
+                CREDO_NIHIL(spec->datum.struct_specifier.membra);   /* No body */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test named struct with single member: struct foo { int x; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct named: struct foo { int x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.struct_specifier.tag);     /* Has tag */
+            CREDO_NON_NIHIL(res.radix->datum.struct_specifier.membra);  /* Has body */
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);  /* 1 member */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test named struct with multiple members */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct multi-member: struct foo { int x; int y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; int y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), II);  /* 2 members */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test struct variable declaration: struct foo { int x; } var */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct var decl: struct foo { int x; } var ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; } var");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* spec;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            /* Check specifier is struct */
+            spec = res.radix->datum.declaratio.specifier;
+            si (spec != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Union specifier
+     * ======================================================== */
+
+    /* Test union forward reference: union foo */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans union forward ref: union foo ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "union foo");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* spec = res.radix;
+            imprimere("  genus: %d\n", (i32)spec->genus);
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+
+            si (spec != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                CREDO_NON_NIHIL(spec->datum.struct_specifier.tag);  /* Has tag */
+                CREDO_NIHIL(spec->datum.struct_specifier.membra);   /* No body */
+                CREDO_VERUM(spec->datum.struct_specifier.est_unio); /* Is union */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test named union with single member: union foo { int x; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans union named: union foo { int x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "union foo { int x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            CREDO_NON_NIHIL(res.radix->datum.struct_specifier.tag);     /* Has tag */
+            CREDO_NON_NIHIL(res.radix->datum.struct_specifier.membra);  /* Has body */
+            CREDO_VERUM(res.radix->datum.struct_specifier.est_unio);    /* Is union */
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);  /* 1 member */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test named union with multiple members: union foo { int x; int y; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans union multi-member: union foo { int x; int y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "union foo { int x; int y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            CREDO_VERUM(res.radix->datum.struct_specifier.est_unio);  /* Is union */
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), II);  /* 2 members */
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test anonymous union: union { int x; } anon */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans union anon: union { int x; } anon ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "union { int x; } anon");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            Arbor2Nodus* spec;
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            /* This should be a DECLARATIO with a union type */
+            spec = res.radix->datum.declaratio.specifier;
+            si (spec != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)spec->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                CREDO_VERUM(spec->datum.struct_specifier.est_unio);  /* Is union */
             }
         }
 

@@ -70,7 +70,9 @@ nomen enumeratio {
     ARBOR2_NT_NUMERUS,              /* Count */
     ARBOR2_NT_PARAMETER_LIST,       /* Parameter list */
     ARBOR2_NT_PARAMETER_DECL,       /* Parameter declaration */
-    ARBOR2_NT_DEFINITIO_FUNCTI      /* Function definition */
+    ARBOR2_NT_DEFINITIO_FUNCTI,     /* Function definition */
+    ARBOR2_NT_STRUCT_SPECIFIER,     /* struct_specifier */
+    ARBOR2_NT_STRUCT_MEMBER_LIST    /* struct_member_list */
 } Arbor2NonTerminalis;
 
 /* ==================================================
@@ -89,6 +91,7 @@ nomen enumeratio {
     ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
     ARBOR2_NODUS_PARAMETER_DECL,    /* Parameter declaration: type name */
     ARBOR2_NODUS_DEFINITIO_FUNCTI,  /* Function definition: type name() { body } */
+    ARBOR2_NODUS_STRUCT_SPECIFIER,  /* Struct specifier: struct name { members } */
     ARBOR2_NODUS_SENTENTIA,         /* Expression statement */
     ARBOR2_NODUS_SENTENTIA_VACUA,   /* Empty statement ; */
     ARBOR2_NODUS_CORPUS,            /* Compound statement { ... } */
@@ -181,6 +184,13 @@ structura Arbor2Nodus {
             Arbor2Nodus*        declarator;           /* Function declarator (DECLARATOR_FUNCTI) */
             Arbor2Nodus*        corpus;               /* Function body (CORPUS node) */
         } definitio_functi;
+
+        /* STRUCT_SPECIFIER (also used for union) */
+        structura {
+            Arbor2Nodus*        tag;                  /* Tag name (IDENTIFICATOR) or NIHIL for anonymous */
+            Xar*                membra;               /* List of member declarations (DECLARATIO nodes) */
+            b32                 est_unio;             /* VERUM for union, FALSUM for struct */
+        } struct_specifier;
 
         /* SENTENTIA (expression statement) */
         structura {
