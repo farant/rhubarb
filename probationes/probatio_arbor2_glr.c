@@ -258,6 +258,16 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
                      nodus->datum.saltus.destinatio.datum);
             frange;
 
+        casus ARBOR2_NODUS_TITULATUM:
+            imprimere("TITULATUM: %.*s\n",
+                     (integer)nodus->datum.titulatum.titulus.mensura,
+                     nodus->datum.titulatum.titulus.datum);
+            si (nodus->datum.titulatum.sententia != NIHIL)
+            {
+                _imprimere_arborem(nodus->datum.titulatum.sententia, profunditas + I);
+            }
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -1666,6 +1676,176 @@ s32 principale(vacuum)
                 Arbor2Nodus* ret = *(Arbor2Nodus**)xar_obtinere(sententiae, ZEPHYRUM);
                 CREDO_AEQUALIS_I32((i32)ret->genus, (i32)ARBOR2_NODUS_REDDE);
                 CREDO_NON_NIHIL(ret->datum.reditio.valor);  /* Has expression x + 1 */
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Labeled statements (Phase C4b)
+     * ======================================================== */
+
+    /* Simple label */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans simple label: foo: x; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo: x;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TITULATUM);
+            CREDO_NON_NIHIL(res.radix->datum.titulatum.sententia);
+        }
+    }
+
+    /* Label with empty statement */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans label with empty: foo: ; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo: ;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TITULATUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_SENTENTIA_VACUA);
+        }
+    }
+
+    /* Nested labels */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested labels: foo: bar: x; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo: bar: x;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TITULATUM);
+            CREDO_NON_NIHIL(res.radix->datum.titulatum.sententia);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_TITULATUM);
+        }
+    }
+
+    /* Label with compound */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans label with compound: foo: { x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo: { x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TITULATUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_CORPUS);
+        }
+    }
+
+    /* Label with if */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans label with if: foo: if (x) y; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo: if (x) y;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TITULATUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.titulatum.sententia->genus, (i32)ARBOR2_NODUS_SI);
+        }
+    }
+
+    /* Label as goto target in compound */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Xar* sententiae;
+
+        imprimere("\n--- Probans label as goto target: { goto foo; foo: x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "{ goto foo; foo: x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            sententiae = res.radix->datum.corpus.sententiae;
+            CREDO_NON_NIHIL(sententiae);
+            si (sententiae != NIHIL && xar_numerus(sententiae) >= II)
+            {
+                Arbor2Nodus* salta_node = *(Arbor2Nodus**)xar_obtinere(sententiae, ZEPHYRUM);
+                Arbor2Nodus* label_node = *(Arbor2Nodus**)xar_obtinere(sententiae, I);
+                CREDO_AEQUALIS_I32((i32)salta_node->genus, (i32)ARBOR2_NODUS_SALTA);
+                CREDO_AEQUALIS_I32((i32)label_node->genus, (i32)ARBOR2_NODUS_TITULATUM);
             }
         }
     }

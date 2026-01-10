@@ -94,6 +94,7 @@ nomen enumeratio {
     ARBOR2_NODUS_PERGE,             /* continue statement */
     ARBOR2_NODUS_REDDE,             /* return statement */
     ARBOR2_NODUS_SALTA,             /* goto statement */
+    ARBOR2_NODUS_TITULATUM,         /* labeled statement */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -191,6 +192,12 @@ structura Arbor2Nodus {
         structura {
             chorda              destinatio;     /* label name */
         } saltus;
+
+        /* TITULATUM (labeled statement) */
+        structura {
+            chorda              titulus;        /* label name */
+            Arbor2Nodus*        sententia;      /* the labeled statement */
+        } titulatum;
 
         /* AMBIGUUS */
         structura {

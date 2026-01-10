@@ -945,6 +945,20 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_TITULATUM:
+                        /* P34: statement -> IDENTIFIER ':' statement */
+                        /* valori[2] = ID node, valori[1] = ':', valori[0] = statement */
+                        {
+                            Arbor2Token* id_tok;
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_TITULATUM;
+                            valor_novus->lexema = lexemata[II];  /* IDENTIFIER token */
+                            id_tok = lexemata[II];
+                            valor_novus->datum.titulatum.titulus = id_tok->lexema->valor;
+                            valor_novus->datum.titulatum.sententia = valori[ZEPHYRUM];
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */

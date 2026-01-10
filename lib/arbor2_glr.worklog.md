@@ -504,3 +504,57 @@ Added the four C89 jump statements: break, continue, return, goto.
 - switch/case/default (Phase C4c)
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase C4b: Labeled Statements)
+
+### Phase C4b: Labeled Statements Complete
+
+Added labeled statements for goto targets (`identifier: statement`):
+
+**New Grammar Rule:**
+- P34: `statement -> IDENTIFIER ':' statement` (3 symbols)
+
+**New Node Type:**
+- `ARBOR2_NODUS_TITULATUM` - Labeled statement with `titulatum.titulus` (label name) and `titulatum.sententia` (the labeled statement)
+
+**New States (77-78):**
+- State 77: After `IDENTIFIER :` - expects statement (all statement starters)
+- State 78: After `IDENTIFIER : statement` - reduce P34
+
+**Key Design Decisions:**
+
+1. **Right-recursive through statement**: The rule `statement -> IDENTIFIER ':' statement` is right-recursive, allowing nested labels like `foo: bar: x;`. This naturally parses as `foo: (bar: (x;))`.
+
+2. **Clean addition to state 4**: State 4 (after IDENTIFIER) already handles identifiers in various contexts (expression, declaration). Adding COLON as a shift action doesn't conflict with existing actions since COLON wasn't in state 4's action set.
+
+3. **State 77 mirrors statement-expecting states**: State 77 has the same structure as states 33, 35, 42, 45, 63 (all states that expect a statement). It shifts on expression starters, control flow keywords, and braces.
+
+4. **GOTO entries for state 77**: Full set of GOTO entries needed for all constructs that can appear as labeled statements (expressions, compounds, control flow).
+
+**Implementation Details:**
+
+- Added `ARBOR2_LEXEMA_COLON` shift to state 77 in state 4's actions
+- State 77 has 15 actions for statement starters
+- State 78 has 18 reduce actions on all statement followers
+- 9 GOTO entries for state 77 covering EXPR, TERM, FACTOR, SENTENTIA, CORPUS, SI, DUM, FAC, PER
+
+**Tests Passing:**
+- `foo: x;` → TITULATUM("foo", SENTENTIA(x))
+- `foo: ;` → TITULATUM("foo", SENTENTIA_VACUA)
+- `foo: bar: x;` → TITULATUM("foo", TITULATUM("bar", SENTENTIA(x)))
+- `foo: { x; }` → TITULATUM("foo", CORPUS)
+- `foo: if (x) y;` → TITULATUM("foo", SI)
+- `{ goto foo; foo: x; }` → CORPUS containing SALTA and TITULATUM
+
+**Grammar Now:**
+- 79 states (was 77)
+- ~661 action entries (was 628)
+- 35 grammar rules (was 34)
+
+### Still TODO
+
+- switch/case/default (Phase C4c)
+- Test with real library files
+- Error recovery
