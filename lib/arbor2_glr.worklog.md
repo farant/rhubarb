@@ -42,7 +42,43 @@ Created the basic GLR parser infrastructure:
 
 ### Still TODO
 
-- Fork mechanism with piscina checkpointing for true ambiguity handling
-- Merge mechanism for compatible states
-- Macro lookahead integration with Arbor2Expansion
+- Add ambiguous states to grammar tables (IDENTIFIER could start expr or decl)
+- Action filtering in `_processare_unam_actionem()` to prune using typedef info
 - Error recovery
+
+---
+
+## 2026-01-09 (continued)
+
+### Fork/Merge/Typedef Pruning Infrastructure Complete
+
+Added infrastructure for handling C89 ambiguities like `foo * bar`:
+
+**Fork tracking:**
+- Added `furca_id` field to `Arbor2GSSNodus` to group forked paths
+- When multiple actions found, `num_furcae` is incremented
+
+**Merge mechanism:**
+- `_mergere_compatibiles()`: Scans frontier for nodes with same state
+- `_nodi_aequales()`: Compares AST nodes for equality (shallow)
+- `_creare_nodum_ambiguum()`: Creates `ARBOR2_NODUS_AMBIGUUS` holding multiple interpretations
+- `_copiare_praedecessores()`: Copies predecessor links when merging
+- Merge is called in `_processare_actiones()` after processing each token
+
+**Typedef pruning API:**
+- `_potest_esse_typus()`: Checks if identifier is registered typedef via `arbor2_expansion_est_typedef()`
+- `_macro_suggerit_typum()`: Checks if macro expands to type keyword
+- `arbor2_glr_est_probabiliter_typus()`: Public API combining both checks
+
+**Grammar extensions:**
+- Added rules P10-P12 for declarations (type_specifier, declarator)
+- Added `ARBOR2_NT_DECLARATIO` and `ARBOR2_NT_DECLARATOR` non-terminals
+- Added `ARBOR2_NODUS_DECLARATIO` and `ARBOR2_NODUS_DECLARATOR` node types
+
+**Note:** The infrastructure is in place but the current action tables don't have ambiguous states (each state/token pair has exactly one action). To test actual fork/merge/pruning, we need to add states where IDENTIFIER can start either expression or declaration.
+
+### New tests
+
+- Typedef detection: `MyType` registered as typedef is correctly detected
+- Non-typedef: `unknown` is correctly identified as not a typedef
+- `foo * bar`: Parses as multiplication with current expression-only grammar

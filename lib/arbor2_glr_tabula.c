@@ -61,7 +61,16 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM },
 
     /* P9: factor -> '&' factor (address-of) */
-    { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM }
+    { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM },
+
+    /* P10: declaration -> type_specifier declarator */
+    { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO },
+
+    /* P11: declarator -> '*' declarator */
+    { ARBOR2_NT_DECLARATOR, 2, ARBOR2_NODUS_DECLARATOR },
+
+    /* P12: declarator -> IDENTIFIER */
+    { ARBOR2_NT_DECLARATOR, 1, ARBOR2_NODUS_DECLARATOR }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -236,9 +245,11 @@ hic_manens i32 ACTIO_INDICES[] = {
  * ================================================== */
 
 /* Internal non-terminals for goto */
-#define INT_NT_EXPR     0
-#define INT_NT_TERM     1
-#define INT_NT_FACTOR   2
+#define INT_NT_EXPR         0
+#define INT_NT_TERM         1
+#define INT_NT_FACTOR       2
+#define INT_NT_DECLARATIO   3
+#define INT_NT_DECLARATOR   4
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
@@ -325,6 +336,12 @@ arbor2_glr_quaerere_goto(
         casus ARBOR2_NT_FACTOR:
             nt_int = INT_NT_FACTOR;
             frange;
+        casus ARBOR2_NT_DECLARATIO:
+            nt_int = INT_NT_DECLARATIO;
+            frange;
+        casus ARBOR2_NT_DECLARATOR:
+            nt_int = INT_NT_DECLARATOR;
+            frange;
         ordinarius:
             nt_int = -I;
             frange;
@@ -404,6 +421,8 @@ arbor2_nt_nomen(Arbor2NonTerminalis nt)
         casus ARBOR2_NT_BINARIUM:       redde "BINARIUM";
         casus ARBOR2_NT_NOMEN_TYPI:     redde "NOMEN_TYPI";
         casus ARBOR2_NT_SPECIFIER_TYPI: redde "SPECIFIER_TYPI";
+        casus ARBOR2_NT_DECLARATIO:     redde "DECLARATIO";
+        casus ARBOR2_NT_DECLARATOR:     redde "DECLARATOR";
         casus ARBOR2_NT_CONVERSIO:      redde "CONVERSIO";
         casus ARBOR2_NT_SIZEOF:         redde "SIZEOF";
         ordinarius:                     redde "IGNOTUM";
@@ -421,6 +440,8 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_UNARIUM:       redde "UNARIUM";
         casus ARBOR2_NODUS_CONVERSIO:     redde "CONVERSIO";
         casus ARBOR2_NODUS_SIZEOF:        redde "SIZEOF";
+        casus ARBOR2_NODUS_DECLARATIO:    redde "DECLARATIO";
+        casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
         casus ARBOR2_NODUS_AMBIGUUS:      redde "AMBIGUUS";
         casus ARBOR2_NODUS_ERROR:         redde "ERROR";
         ordinarius:                       redde "IGNOTUM";

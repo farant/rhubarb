@@ -94,6 +94,7 @@ _creare_gss_nodum(
     nodus->valor = valor;
     nodus->lexema = lexema;
     nodus->punctum_salutis = piscina_notare(glr->piscina);
+    nodus->furca_id = ZEPHYRUM;  /* No fork by default */
 
     redde nodus;
 }
@@ -265,6 +266,209 @@ _construere_nodum_unarium(
     }
 
     redde nodus;
+}
+
+/* ==================================================
+ * GLR Algorithm - Typedef Pruning
+ * ================================================== */
+
+/* Check if an identifier token might be a type name */
+interior b32
+_potest_esse_typus(Arbor2GLR* glr, Arbor2Token* tok)
+{
+    si (tok == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    si (tok->lexema->genus != ARBOR2_LEXEMA_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+
+    /* Check if registered as typedef */
+    si (glr->expansion != NIHIL)
+    {
+        redde arbor2_expansion_est_typedef(glr->expansion, tok->lexema->valor);
+    }
+
+    redde FALSUM;
+}
+
+/* Check if a macro might expand to a type */
+interior b32
+_macro_suggerit_typum(Arbor2GLR* glr, Arbor2Token* tok)
+{
+    Arbor2MacroDef* macro;
+
+    si (tok == NIHIL || glr->expansion == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    si (tok->lexema->genus != ARBOR2_LEXEMA_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+
+    macro = arbor2_expansion_quaerere_macro(glr->expansion, tok->lexema->valor);
+    si (macro == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* Check first token of expansion for type keyword */
+    si (xar_numerus(macro->corpus) > ZEPHYRUM)
+    {
+        Arbor2Lexema* primus;
+        primus = *(Arbor2Lexema**)xar_obtinere(macro->corpus, ZEPHYRUM);
+
+        /* Check for type keywords: int, char, void, etc. */
+        commutatio (primus->genus)
+        {
+            casus ARBOR2_LEXEMA_INT:
+            casus ARBOR2_LEXEMA_CHAR:
+            casus ARBOR2_LEXEMA_VOID:
+            casus ARBOR2_LEXEMA_FLOAT:
+            casus ARBOR2_LEXEMA_DOUBLE:
+            casus ARBOR2_LEXEMA_LONG:
+            casus ARBOR2_LEXEMA_SHORT:
+            casus ARBOR2_LEXEMA_SIGNED:
+            casus ARBOR2_LEXEMA_UNSIGNED:
+            casus ARBOR2_LEXEMA_STRUCT:
+            casus ARBOR2_LEXEMA_UNION:
+            casus ARBOR2_LEXEMA_ENUM:
+                redde VERUM;
+            ordinarius:
+                frange;
+        }
+    }
+
+    redde FALSUM;
+}
+
+/* Check if an identifier is likely a type (typedef or type-suggesting macro) */
+b32
+arbor2_glr_est_probabiliter_typus(Arbor2GLR* glr, Arbor2Token* tok)
+{
+    redde _potest_esse_typus(glr, tok) || _macro_suggerit_typum(glr, tok);
+}
+
+/* ==================================================
+ * GLR Algorithm - Merge Support
+ * ================================================== */
+
+/* Compare two AST nodes for equality (shallow) */
+interior b32
+_nodi_aequales(Arbor2Nodus* a, Arbor2Nodus* b)
+{
+    si (a == NIHIL && b == NIHIL) redde VERUM;
+    si (a == NIHIL || b == NIHIL) redde FALSUM;
+    si (a->genus != b->genus) redde FALSUM;
+
+    /* For now, just compare genus - could add deeper comparison */
+    redde VERUM;
+}
+
+/* Create an ambiguous node holding multiple interpretations */
+interior Arbor2Nodus*
+_creare_nodum_ambiguum(
+    Arbor2GLR*      glr,
+    Arbor2Nodus*    a,
+    Arbor2Nodus*    b,
+    Arbor2Token*    lexema)
+{
+    Arbor2Nodus* nodus;
+    Arbor2Nodus** slot;
+
+    nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    nodus->genus = ARBOR2_NODUS_AMBIGUUS;
+    nodus->lexema = lexema;
+    nodus->datum.ambiguus.genus = ARBOR2_AMBIG_TYPEDEF_IGNOTUM;
+    nodus->datum.ambiguus.identificator = NIHIL;
+    nodus->datum.ambiguus.interpretationes = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+
+    slot = xar_addere(nodus->datum.ambiguus.interpretationes);
+    *slot = a;
+    slot = xar_addere(nodus->datum.ambiguus.interpretationes);
+    *slot = b;
+
+    /* Track ambiguous node for later resolution */
+    slot = xar_addere(glr->ambigui);
+    *slot = nodus;
+
+    redde nodus;
+}
+
+/* Copy predecessors from one node to another */
+interior vacuum
+_copiare_praedecessores(
+    Arbor2GLR*      glr,
+    Arbor2GSSNodus* dest,
+    Arbor2GSSNodus* src)
+{
+    s32 i;
+    per (i = ZEPHYRUM; i < src->num_praed; i++)
+    {
+        _addere_praedecessorem(glr, dest, src->praedecessores[i]);
+    }
+}
+
+/* Merge compatible nodes in frontier */
+interior vacuum
+_mergere_compatibiles(Arbor2GLR* glr, Xar* frontier)
+{
+    i32 i, j;
+    i32 num;
+
+    num = xar_numerus(frontier);
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        Arbor2GSSNodus* a;
+        Arbor2GSSNodus** slot_a;
+
+        slot_a = xar_obtinere(frontier, i);
+        a = *slot_a;
+
+        si (a == NIHIL) perge;  /* Already merged away */
+
+        per (j = i + I; j < num; j++)
+        {
+            Arbor2GSSNodus* b;
+            Arbor2GSSNodus** slot_b;
+
+            slot_b = xar_obtinere(frontier, j);
+            b = *slot_b;
+
+            si (b == NIHIL) perge;
+
+            si (a->status == b->status)
+            {
+                /* Same state - merge! */
+                si (_nodi_aequales(a->valor, b->valor))
+                {
+                    /* True merge - just combine predecessors */
+                    _copiare_praedecessores(glr, a, b);
+                    glr->num_mergae++;
+                }
+                alioquin
+                {
+                    /* Different values - create ambiguous node */
+                    a->valor = _creare_nodum_ambiguum(glr, a->valor, b->valor, a->lexema);
+                    _copiare_praedecessores(glr, a, b);
+                }
+
+                /* Mark b as merged away */
+                *slot_b = NIHIL;
+            }
+        }
+    }
 }
 
 /* ==================================================
@@ -534,6 +738,12 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     }
 
     *acceptatum_out = acceptatum;
+
+    /* Merge compatible nodes in the new frontier */
+    si (xar_numerus(glr->frons_nova) > I)
+    {
+        _mergere_compatibiles(glr, glr->frons_nova);
+    }
 
     /* Track max frontier size */
     si (xar_numerus(glr->frons_nova) > (i32)glr->max_frons)

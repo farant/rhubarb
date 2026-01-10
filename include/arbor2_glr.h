@@ -55,6 +55,8 @@ nomen enumeratio {
     ARBOR2_NT_BINARIUM,
     ARBOR2_NT_NOMEN_TYPI,
     ARBOR2_NT_SPECIFIER_TYPI,
+    ARBOR2_NT_DECLARATIO,           /* Declaration */
+    ARBOR2_NT_DECLARATOR,           /* Declarator */
     ARBOR2_NT_CONVERSIO,            /* Cast */
     ARBOR2_NT_SIZEOF,
     ARBOR2_NT_NUMERUS               /* Count */
@@ -71,6 +73,8 @@ nomen enumeratio {
     ARBOR2_NODUS_UNARIUM,           /* Unary operation */
     ARBOR2_NODUS_CONVERSIO,         /* Cast expression */
     ARBOR2_NODUS_SIZEOF,
+    ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
+    ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -116,6 +120,18 @@ structura Arbor2Nodus {
             Arbor2Nodus*        operandum;
         } sizeof_expr;
 
+        /* DECLARATIO */
+        structura {
+            Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
+            Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
+        } declaratio;
+
+        /* DECLARATOR */
+        structura {
+            s32                 num_stellae;    /* Number of * pointers */
+            chorda              titulus;        /* Variable name */
+        } declarator;
+
         /* AMBIGUUS */
         structura {
             Arbor2AmbigGenus    genus;
@@ -145,6 +161,7 @@ structura Arbor2GSSNodus {
     Arbor2Nodus*                valor;              /* Semantic value (AST node) */
     Arbor2Token*                lexema;             /* Token at this point */
     PiscinaNotatio              punctum_salutis;    /* Checkpoint for rollback */
+    s32                         furca_id;           /* Fork group ID (0 = no fork) */
 };
 
 /* ==================================================
@@ -255,6 +272,9 @@ constans character* arbor2_nt_nomen(Arbor2NonTerminalis nt);
 
 /* Get node type name */
 constans character* arbor2_nodus_genus_nomen(Arbor2NodusGenus genus);
+
+/* Check if token is probably a type (typedef or type-suggesting macro) */
+b32 arbor2_glr_est_probabiliter_typus(Arbor2GLR* glr, Arbor2Token* tok);
 
 /* ==================================================
  * API - AST Utilities

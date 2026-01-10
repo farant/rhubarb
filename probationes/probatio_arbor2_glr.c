@@ -379,6 +379,75 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Typedef detection API
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans typedef detection API ---\n");
+
+        /* Register a typedef */
+        arbor2_expansion_addere_typedef(expansion, "MyType");
+
+        /* Test with known typedef */
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType");
+        tok = *(Arbor2Token**)xar_obtinere(tokens, ZEPHYRUM);
+
+        imprimere("  MyType est typus: %s\n",
+            arbor2_glr_est_probabiliter_typus(glr, tok) ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)arbor2_glr_est_probabiliter_typus(glr, tok), VERUM);
+
+        /* Test with unknown identifier */
+        tokens = _lexare_ad_tokens(piscina, intern, "unknown");
+        tok = *(Arbor2Token**)xar_obtinere(tokens, ZEPHYRUM);
+
+        imprimere("  unknown est typus: %s\n",
+            arbor2_glr_est_probabiliter_typus(glr, tok) ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)arbor2_glr_est_probabiliter_typus(glr, tok), FALSUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: foo * bar (currently unambiguous - expression only)
+     * When we add ambiguous states, this will fork and potentially merge
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans foo * bar (expression grammar) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo * bar");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* With current expression-only grammar, foo * bar is multiplication */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_ASTERISCUS);
+        }
+
+        /* No ambiguities with current grammar */
+        imprimere("  ambigui: %d\n", xar_numerus(res.ambigui));
+    }
+
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 
