@@ -438,3 +438,69 @@ The `circuitus` struct contains:
 - switch/case/default + jump statements (Phase C4)
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Milestone 3 Phase C4a: Jump Statements)
+
+### Phase C4a: Jump Statements Complete
+
+Added the four C89 jump statements: break, continue, return, goto.
+
+**New Grammar Rules:**
+- P30: `statement -> 'break' ';'` (2 symbols)
+- P31: `statement -> 'continue' ';'` (2 symbols)
+- P32: `statement -> 'return' expr_opt ';'` (3 symbols, reuses P28/P29)
+- P33: `statement -> 'goto' IDENTIFIER ';'` (3 symbols)
+
+**New Node Types:**
+- `ARBOR2_NODUS_FRANGE` - break statement (no additional data needed)
+- `ARBOR2_NODUS_PERGE` - continue statement (no additional data needed)
+- `ARBOR2_NODUS_REDDE` - return statement with optional `reditio.valor`
+- `ARBOR2_NODUS_SALTA` - goto statement with `saltus.destinatio` label
+
+**New States (66-76):**
+- State 66: After `break` - expect `;`
+- State 67: After `break ;` - reduce P30
+- State 68: After `continue` - expect `;`
+- State 69: After `continue ;` - reduce P31
+- State 70: After `return` - parse expression or epsilon reduce on `;`
+- State 71: After `return expression` - can continue expr with `+` or reduce P28
+- State 72: After `return expr_opt` - expect `;`
+- State 73: After `return expr_opt ;` - reduce P32
+- State 74: After `goto` - expect IDENTIFIER
+- State 75: After `goto IDENTIFIER` - expect `;`
+- State 76: After `goto IDENTIFIER ;` - reduce P33
+
+**Key Design Decisions:**
+
+1. **Reusing expression_opt**: The `return` statement reuses the existing P28/P29 rules for optional expressions. This avoids duplicating grammar infrastructure.
+
+2. **State 70 expression starters**: State 70 needs shift actions for all expression starters (ID, INT, `(`, `*`, `&`) to handle `return value;`, plus epsilon reduce on `;` for `return;`.
+
+3. **GOTO entries for state 70**: When expressions are parsed after `return`, reductions need GOTO(70, EXPR/TERM/FACTOR/EXPRESSIO_OPT) entries to transition correctly.
+
+**Bug Fixed:**
+
+**Infinite loop in `{ return x + 1; }`**: State 71 (after `return expression`) originally only had an action for SEMICOLON (reduce P28). When the parser saw PLUS after parsing `x`, it had no valid action and got stuck looping. Fixed by adding `{ ARBOR2_LEXEMA_PLUS, ARBOR2_ACTIO_SHIFT, 9 }` to state 71, allowing binary expressions like `x + 1` to continue parsing.
+
+**Tests Passing:**
+- `break;` → FRANGE
+- `continue;` → PERGE
+- `return;` → REDDE with valor=NULL
+- `return x;` → REDDE with valor=IDENTIFICATOR(x)
+- `goto label;` → SALTA with destinatio="label"
+- `while (x) break;` → DUM with FRANGE as corpus
+- `{ return x + 1; }` → CORPUS containing REDDE with BINARIUM
+
+**Grammar Now:**
+- 77 states (was 66)
+- 628 action entries (was ~500+)
+- 34 grammar rules (was 30)
+
+### Still TODO
+
+- Labeled statements (Phase C4b): `identifier: statement`
+- switch/case/default (Phase C4c)
+- Test with real library files
+- Error recovery

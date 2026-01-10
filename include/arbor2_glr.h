@@ -90,6 +90,10 @@ nomen enumeratio {
     ARBOR2_NODUS_DUM,               /* While statement */
     ARBOR2_NODUS_FAC,               /* Do-while statement */
     ARBOR2_NODUS_PER,               /* For statement */
+    ARBOR2_NODUS_FRANGE,            /* break statement */
+    ARBOR2_NODUS_PERGE,             /* continue statement */
+    ARBOR2_NODUS_REDDE,             /* return statement */
+    ARBOR2_NODUS_SALTA,             /* goto statement */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -177,6 +181,16 @@ structura Arbor2Nodus {
             Arbor2Nodus*        incrementum;    /* increment (NULL if omitted) */
             Arbor2Nodus*        corpus;         /* loop body */
         } circuitus;
+
+        /* REDDE (return statement) */
+        structura {
+            Arbor2Nodus*        valor;          /* return value (NULL if omitted) */
+        } reditio;
+
+        /* SALTA (goto statement) */
+        structura {
+            chorda              destinatio;     /* label name */
+        } saltus;
 
         /* AMBIGUUS */
         structura {

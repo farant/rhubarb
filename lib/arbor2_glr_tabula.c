@@ -121,7 +121,19 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_EXPRESSIO_OPTATIVA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
 
     /* P29: expression_opt -> epsilon */
-    { ARBOR2_NT_EXPRESSIO_OPTATIVA, 0, ARBOR2_NODUS_ERROR }   /* epsilon, NULL value */
+    { ARBOR2_NT_EXPRESSIO_OPTATIVA, 0, ARBOR2_NODUS_ERROR },  /* epsilon, NULL value */
+
+    /* P30: statement -> 'break' ';' */
+    { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_FRANGE },
+
+    /* P31: statement -> 'continue' ';' */
+    { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_PERGE },
+
+    /* P32: statement -> 'return' expression_opt ';' */
+    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_REDDE },
+
+    /* P33: statement -> 'goto' IDENTIFIER ';' */
+    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_SALTA }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -156,7 +168,7 @@ hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
 #define ERROR_ACT   (-2000)
 
 hic_manens Arbor2TabulaActio ACTIONES[] = {
-    /* State 0: Initial - expect factor-starting tokens, ';', '{', 'if', 'while', 'do', 'for' */
+    /* State 0: Initial - expect factor-starting tokens, ';', '{', 'if', 'while', 'do', 'for', jump */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
@@ -168,6 +180,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },   /* while statement */
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },   /* do-while statement */
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },   /* for statement */
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },   /* break statement */
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },   /* continue statement */
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },   /* return statement */
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },   /* goto statement */
 
     /* State 1: After expression - expect '+', ';', or end */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
@@ -327,6 +343,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 13 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 13 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 13 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 13 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 13 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 13 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 13 },
 
     /* State 23: After lone ';' - reduce to empty statement */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 14 },  /* P14: statement -> ; */
@@ -343,6 +363,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 14 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 14 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 14 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 14 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 14 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 14 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 14 },
 
     /* State 24: After statement - accept */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
@@ -361,6 +385,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 18 },  /* while stmt */
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 18 },  /* do-while stmt */
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 18 },  /* for stmt */
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 18 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 18 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 18 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 18 },
 
     /* State 26: After '{ stmt_list' - expect more statements or '}' */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 27 },   /* end compound */
@@ -375,6 +403,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },   /* while statement */
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },   /* do-while statement */
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },   /* for statement */
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },   /* break statement */
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },   /* continue statement */
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },   /* return statement */
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },   /* goto statement */
 
     /* State 27: After '{ stmt_list }' - reduce to compound (P16) */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 16 },
@@ -391,6 +423,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 16 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 16 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 16 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 16 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 16 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 16 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 16 },
 
     /* State 28: After stmt in stmt_list - reduce P17 (list -> list stmt) */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 17 },
@@ -405,6 +441,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 17 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 17 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 17 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 17 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 17 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 17 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 17 },
 
     /* State 29: After compound_statement - accept or reduce P15 */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },   /* top level */
@@ -421,6 +461,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 15 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 15 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 15 },
 
     /* ==================================================
      * IF/ELSE States (30-36)
@@ -452,6 +496,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },
 
     /* State 34: After 'if ( expr ) stmt' - dangling else resolution */
     /* SHIFT else wins over REDUCE P20 (prefer else binding to nearest if) */
@@ -469,6 +517,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 20 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 20 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 20 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 20 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 20 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 20 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 20 },
 
     /* State 35: After 'if ( expr ) stmt else' - expect statement */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
@@ -482,6 +534,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },
 
     /* State 36: After 'if ( expr ) stmt else stmt' - reduce P21 */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 21 },
@@ -498,6 +554,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 21 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 21 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 21 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 21 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 21 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 21 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 21 },
 
     /* State 37: After if_statement - reduce P19 (stmt -> if_stmt) */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 19 },
@@ -514,6 +574,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 19 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 19 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 19 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 19 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 19 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 19 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 19 },
 
     /* State 38: Nested compound_statement - always reduce P15 (never accept) */
     /* Used for compound statements inside if/else/while/for bodies */
@@ -531,6 +595,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 15 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 15 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 15 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 15 },
 
     /* ==================================================
      * WHILE States (39-44)
@@ -562,6 +630,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },
 
     /* State 43: After 'while ( expr ) stmt' - reduce P23 */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 23 },
@@ -578,6 +650,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 23 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 23 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 23 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 23 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 23 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 23 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 23 },
 
     /* State 44: After while_statement - reduce P22 (stmt -> while_stmt) */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 22 },
@@ -594,6 +670,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 22 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 22 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 22 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 22 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 22 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 22 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 22 },
 
     /* ==================================================
      * DO-WHILE States (45-52)
@@ -611,6 +691,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },
 
     /* State 46: After 'do stmt' - expect 'while' */
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 47 },
@@ -647,6 +731,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 25 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 25 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 25 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 25 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 25 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 25 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 25 },
 
     /* State 52: After do_statement - reduce P24 (stmt -> do_stmt) */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 24 },
@@ -663,6 +751,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 24 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 24 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 24 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 24 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 24 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 24 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 24 },
 
     /* ==================================================
      * FOR States (53-65)
@@ -725,6 +817,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT, 39 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT, 45 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_SHIFT, 53 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_SHIFT, 66 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_SHIFT, 68 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_SHIFT, 70 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT, 74 },
 
     /* State 64: After 'for ( ... ) stmt' - reduce P27 */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 27 },
@@ -741,6 +837,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 27 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 27 },
     { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 27 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 27 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 27 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 27 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 27 },
 
     /* State 65: After for_statement - reduce P26 (stmt -> for_stmt) */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 26 },
@@ -756,83 +856,209 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ELSE,           ARBOR2_ACTIO_REDUCE, 26 },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 26 },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 26 },
-    { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 26 }
+    { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 26 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 26 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 26 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 26 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 26 },
+
+    /* ==================================================
+     * JUMP STATEMENT States (66-76)
+     * ================================================== */
+
+    /* State 66: After 'break' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 67 },
+
+    /* State 67: After 'break ;' - reduce P30 */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_ELSE,           ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 30 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 30 },
+
+    /* State 68: After 'continue' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 69 },
+
+    /* State 69: After 'continue ;' - reduce P31 */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_ELSE,           ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 31 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 31 },
+
+    /* State 70: After 'return' - expect expression or ';' */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 29 },  /* epsilon: expr_opt -> ε */
+
+    /* State 71: After 'return expression' - can continue or reduce */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },   /* continue expr with + */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 28 },  /* expr_opt -> expression */
+
+    /* State 72: After 'return expr_opt' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 73 },
+
+    /* State 73: After 'return expr_opt ;' - reduce P32 */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_ELSE,           ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 32 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 32 },
+
+    /* State 74: After 'goto' - expect IDENTIFIER */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 75 },
+
+    /* State 75: After 'goto IDENTIFIER' - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 76 },
+
+    /* State 76: After 'goto IDENTIFIER ;' - reduce P33 */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_ELSE,           ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_FOR,            ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_BREAK,          ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_CONTINUE,       ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_RETURN,         ARBOR2_ACTIO_REDUCE, 33 },
+    { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_REDUCE, 33 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
 
 /* State -> first action index mapping */
 hic_manens i32 ACTIO_INDICES[] = {
-    0,      /* State 0: 11 actions (ID, INT, (, *, &, ;, {, if, while, do, for) */
-    11,     /* State 1: 4 actions */
-    15,     /* State 2: 6 actions */
-    21,     /* State 3: 6 actions */
-    27,     /* State 4: 7 actions */
-    34,     /* State 5: 6 actions */
-    40,     /* State 6: 5 actions */
-    45,     /* State 7: 5 actions */
-    50,     /* State 8: 5 actions */
-    55,     /* State 9: 5 actions */
-    60,     /* State 10: 5 actions */
-    65,     /* State 11: 2 actions */
-    67,     /* State 12: 6 actions */
-    73,     /* State 13: 6 actions */
-    79,     /* State 14: 6 actions */
-    85,     /* State 15: 6 actions */
-    91,     /* State 16: 6 actions */
-    97,     /* State 17: 2 actions (declarator path) */
-    99,     /* State 18: 4 actions (reduce P12) */
-    103,    /* State 19: 4 actions (reduce P11) */
-    107,    /* State 20: 4 actions (reduce P10) */
-    111,    /* State 21: 1 action (accept declaration) */
-    112,    /* State 22: 14 actions (reduce P13 + for) */
-    126,    /* State 23: 14 actions (reduce P14 + for) */
-    140,    /* State 24: 1 action (accept statement) */
-    141,    /* State 25: 12 actions (epsilon reduce P18 + for) */
-    153,    /* State 26: 12 actions (inside compound + for) */
-    165,    /* State 27: 14 actions (reduce P16 + for) */
-    179,    /* State 28: 12 actions (reduce P17 + for) */
-    191,    /* State 29: 14 actions (accept/reduce P15 + for) */
-    205,    /* State 30: 1 action (after 'if') */
-    206,    /* State 31: 5 actions (after 'if (') */
-    211,    /* State 32: 2 actions (after 'if ( expr') */
-    213,    /* State 33: 11 actions (after 'if ( expr )' + for) */
-    224,    /* State 34: 14 actions (after 'if ( expr ) stmt' + for) */
-    238,    /* State 35: 11 actions (after 'if ( expr ) stmt else' + for) */
-    249,    /* State 36: 14 actions (reduce P21 + for) */
-    263,    /* State 37: 14 actions (reduce P19 + for) */
-    277,    /* State 38: 14 actions (reduce P15 for nested compound + for) */
-    291,    /* State 39: 1 action (after 'while') */
-    292,    /* State 40: 5 actions (after 'while (') */
-    297,    /* State 41: 2 actions (after 'while ( expr') */
-    299,    /* State 42: 11 actions (after 'while ( expr )' + for) */
-    310,    /* State 43: 14 actions (reduce P23 + for) */
-    324,    /* State 44: 14 actions (reduce P22 + for) */
-    338,    /* State 45: 11 actions (after 'do' + for) */
-    349,    /* State 46: 1 action (after 'do stmt') */
-    350,    /* State 47: 1 action (after 'do stmt while') */
-    351,    /* State 48: 5 actions (after 'do stmt while (') */
-    356,    /* State 49: 2 actions (after 'do stmt while ( expr') */
-    358,    /* State 50: 1 action (after 'do stmt while ( expr )') */
-    359,    /* State 51: 14 actions (reduce P25 + for) */
-    373,    /* State 52: 14 actions (reduce P24 + for) */
-    387,    /* State 53: 1 action (after 'for') */
-    388,    /* State 54: 6 actions (after 'for (') */
-    394,    /* State 55: 1 action (after 'for ( expr') */
-    395,    /* State 56: 1 action (after 'for ( expr_opt') */
-    396,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
-    402,    /* State 58: 1 action (after 'for ( ... ; expr') */
-    403,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
-    404,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
-    410,    /* State 61: 1 action (after 'for ( ... ; expr') */
-    411,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
-    412,    /* State 63: 11 actions (after 'for ( ... )') */
-    423,    /* State 64: 14 actions (reduce P27) */
-    437,    /* State 65: 14 actions (reduce P26) */
-    451     /* End marker */
+    0,      /* State 0: 15 actions (ID, INT, (, *, &, ;, {, if, while, do, for, break, continue, return, goto) */
+    15,     /* State 1: 4 actions */
+    19,     /* State 2: 6 actions */
+    25,     /* State 3: 6 actions */
+    31,     /* State 4: 7 actions */
+    38,     /* State 5: 6 actions */
+    44,     /* State 6: 5 actions */
+    49,     /* State 7: 5 actions */
+    54,     /* State 8: 5 actions */
+    59,     /* State 9: 5 actions */
+    64,     /* State 10: 5 actions */
+    69,     /* State 11: 2 actions */
+    71,     /* State 12: 6 actions */
+    77,     /* State 13: 6 actions */
+    83,     /* State 14: 6 actions */
+    89,     /* State 15: 6 actions */
+    95,     /* State 16: 6 actions */
+    101,    /* State 17: 2 actions (declarator path) */
+    103,    /* State 18: 4 actions (reduce P12) */
+    107,    /* State 19: 4 actions (reduce P11) */
+    111,    /* State 20: 4 actions (reduce P10) */
+    115,    /* State 21: 1 action (accept declaration) */
+    116,    /* State 22: 18 actions (reduce P13 + jump) */
+    134,    /* State 23: 18 actions (reduce P14 + jump) */
+    152,    /* State 24: 1 action (accept statement) */
+    153,    /* State 25: 16 actions (epsilon reduce P18 + jump) */
+    169,    /* State 26: 16 actions (inside compound + jump) */
+    185,    /* State 27: 18 actions (reduce P16 + jump) */
+    203,    /* State 28: 16 actions (reduce P17 + jump) */
+    219,    /* State 29: 18 actions (accept/reduce P15 + jump) */
+    237,    /* State 30: 1 action (after 'if') */
+    238,    /* State 31: 5 actions (after 'if (') */
+    243,    /* State 32: 2 actions (after 'if ( expr') */
+    245,    /* State 33: 15 actions (after 'if ( expr )' + jump) */
+    260,    /* State 34: 18 actions (after 'if ( expr ) stmt' + jump) */
+    278,    /* State 35: 15 actions (after 'if ( expr ) stmt else' + jump) */
+    293,    /* State 36: 18 actions (reduce P21 + jump) */
+    311,    /* State 37: 18 actions (reduce P19 + jump) */
+    329,    /* State 38: 18 actions (reduce P15 for nested compound + jump) */
+    347,    /* State 39: 1 action (after 'while') */
+    348,    /* State 40: 5 actions (after 'while (') */
+    353,    /* State 41: 2 actions (after 'while ( expr') */
+    355,    /* State 42: 15 actions (after 'while ( expr )' + jump) */
+    370,    /* State 43: 18 actions (reduce P23 + jump) */
+    388,    /* State 44: 18 actions (reduce P22 + jump) */
+    406,    /* State 45: 15 actions (after 'do' + jump) */
+    421,    /* State 46: 1 action (after 'do stmt') */
+    422,    /* State 47: 1 action (after 'do stmt while') */
+    423,    /* State 48: 5 actions (after 'do stmt while (') */
+    428,    /* State 49: 2 actions (after 'do stmt while ( expr') */
+    430,    /* State 50: 1 action (after 'do stmt while ( expr )') */
+    431,    /* State 51: 18 actions (reduce P25 + jump) */
+    449,    /* State 52: 18 actions (reduce P24 + jump) */
+    467,    /* State 53: 1 action (after 'for') */
+    468,    /* State 54: 6 actions (after 'for (') */
+    474,    /* State 55: 1 action (after 'for ( expr') */
+    475,    /* State 56: 1 action (after 'for ( expr_opt') */
+    476,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
+    482,    /* State 58: 1 action (after 'for ( ... ; expr') */
+    483,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
+    484,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
+    490,    /* State 61: 1 action (after 'for ( ... ; expr') */
+    491,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
+    492,    /* State 63: 15 actions (after 'for ( ... )' + jump) */
+    507,    /* State 64: 18 actions (reduce P27 + jump) */
+    525,    /* State 65: 18 actions (reduce P26 + jump) */
+    543,    /* State 66: 1 action (after 'break') */
+    544,    /* State 67: 18 actions (reduce P30) */
+    562,    /* State 68: 1 action (after 'continue') */
+    563,    /* State 69: 18 actions (reduce P31) */
+    581,    /* State 70: 6 actions (after 'return') */
+    587,    /* State 71: 2 actions (after 'return expr' + continue) */
+    589,    /* State 72: 1 action (after 'return expr_opt') */
+    590,    /* State 73: 18 actions (reduce P32) */
+    608,    /* State 74: 1 action (after 'goto') */
+    609,    /* State 75: 1 action (after 'goto ID') */
+    610,    /* State 76: 18 actions (reduce P33) */
+    628     /* End marker */
 };
 
-#define NUM_STATES 66
+#define NUM_STATES 77
 
 /* ==================================================
  * GOTO Table
@@ -1028,7 +1254,17 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 63, INT_NT_SI,                37 },   /* if in body */
     { 63, INT_NT_DUM,               44 },   /* while in body */
     { 63, INT_NT_FAC,               52 },   /* do-while in body */
-    { 63, INT_NT_PER,               65 }    /* nested for */
+    { 63, INT_NT_PER,               65 },   /* nested for */
+
+    /* ==================================================
+     * JUMP STATEMENT GOTO Entries
+     * ================================================== */
+
+    /* From state 70: after 'return' - expression for return value */
+    { 70, INT_NT_EXPR,              71 },   /* return expression */
+    { 70, INT_NT_TERM,              2 },    /* term in expression */
+    { 70, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 70, INT_NT_EXPRESSIO_OPT,     72 }    /* expr_opt (return value) */
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));
@@ -1236,6 +1472,10 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_DUM:           redde "DUM";
         casus ARBOR2_NODUS_FAC:           redde "FAC";
         casus ARBOR2_NODUS_PER:           redde "PER";
+        casus ARBOR2_NODUS_FRANGE:        redde "FRANGE";
+        casus ARBOR2_NODUS_PERGE:         redde "PERGE";
+        casus ARBOR2_NODUS_REDDE:         redde "REDDE";
+        casus ARBOR2_NODUS_SALTA:         redde "SALTA";
         casus ARBOR2_NODUS_AMBIGUUS:      redde "AMBIGUUS";
         casus ARBOR2_NODUS_ERROR:         redde "ERROR";
         ordinarius:                       redde "IGNOTUM";

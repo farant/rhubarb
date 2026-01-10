@@ -908,6 +908,43 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_FRANGE:
+                        /* P30: statement -> 'break' ';' */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_FRANGE;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'break' token */
+                        frange;
+
+                    casus ARBOR2_NODUS_PERGE:
+                        /* P31: statement -> 'continue' ';' */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_PERGE;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'continue' token */
+                        frange;
+
+                    casus ARBOR2_NODUS_REDDE:
+                        /* P32: statement -> 'return' expr_opt ';' */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_REDDE;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* 'return' token */
+                        /* valori[2] = return, valori[1] = expr_opt, valori[0] = ; */
+                        valor_novus->datum.reditio.valor = valori[I];  /* expr_opt (may be NULL) */
+                        frange;
+
+                    casus ARBOR2_NODUS_SALTA:
+                        /* P33: statement -> 'goto' IDENTIFIER ';' */
+                        {
+                            Arbor2Token* id_tok;
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_SALTA;
+                            valor_novus->lexema = lexemata[num_pop - I];  /* 'goto' token */
+                            /* valori[2] = goto, valori[1] = ID (as token), valori[0] = ; */
+                            /* Get label from identifier token - lexemata[1] is the ID token */
+                            id_tok = lexemata[I];
+                            valor_novus->datum.saltus.destinatio = id_tok->lexema->valor;
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */

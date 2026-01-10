@@ -229,6 +229,35 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             _imprimere_arborem(nodus->datum.circuitus.corpus, profunditas + II);
             frange;
 
+        casus ARBOR2_NODUS_FRANGE:
+            imprimere("FRANGE\n");
+            frange;
+
+        casus ARBOR2_NODUS_PERGE:
+            imprimere("PERGE\n");
+            frange;
+
+        casus ARBOR2_NODUS_REDDE:
+            imprimere("REDDE:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("valor: ");
+            si (nodus->datum.reditio.valor != NIHIL)
+            {
+                imprimere("\n");
+                _imprimere_arborem(nodus->datum.reditio.valor, profunditas + II);
+            }
+            alioquin
+            {
+                imprimere("(nihil)\n");
+            }
+            frange;
+
+        casus ARBOR2_NODUS_SALTA:
+            imprimere("SALTA: %.*s\n",
+                     (integer)nodus->datum.saltus.destinatio.mensura,
+                     nodus->datum.saltus.destinatio.datum);
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -1418,6 +1447,225 @@ s32 principale(vacuum)
             si (inner_for != NIHIL)
             {
                 CREDO_AEQUALIS_I32((i32)inner_for->genus, (i32)ARBOR2_NODUS_PER);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: break statement
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans break statement ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "break;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_FRANGE);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: continue statement
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans continue statement ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "continue;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PERGE);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: return statement without value
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans return without value ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "return;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_REDDE);
+            CREDO_NIHIL(res.radix->datum.reditio.valor);  /* No return value */
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: return statement with value
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans return with value ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "return x;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_REDDE);
+            CREDO_NON_NIHIL(res.radix->datum.reditio.valor);  /* Has return value */
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: goto statement
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans goto statement ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "goto label;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SALTA);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: break inside while loop
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans break inside while ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "while (x) break;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DUM);
+            CREDO_NON_NIHIL(res.radix->datum.iteratio.corpus);
+            si (res.radix->datum.iteratio.corpus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.iteratio.corpus->genus, (i32)ARBOR2_NODUS_FRANGE);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: return with expression in compound
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Xar* sententiae;
+
+        imprimere("\n--- Probans return in compound ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "{ return x + 1; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            sententiae = res.radix->datum.corpus.sententiae;
+            CREDO_NON_NIHIL(sententiae);
+            si (sententiae != NIHIL && xar_numerus(sententiae) > ZEPHYRUM)
+            {
+                Arbor2Nodus* ret = *(Arbor2Nodus**)xar_obtinere(sententiae, ZEPHYRUM);
+                CREDO_AEQUALIS_I32((i32)ret->genus, (i32)ARBOR2_NODUS_REDDE);
+                CREDO_NON_NIHIL(ret->datum.reditio.valor);  /* Has expression x + 1 */
             }
         }
     }
