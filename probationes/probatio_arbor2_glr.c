@@ -3332,6 +3332,229 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Nested type specifiers (Phase E5)
+     * ======================================================== */
+
+    /* Test nested struct: struct outer { struct inner { int a; } x; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested struct: struct outer { struct inner { int a; } x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct outer { struct inner { int a; } x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                CREDO_NON_NIHIL(member);
+                si (member != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)member->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+                    /* Specifier should be nested struct_specifier */
+                    CREDO_NON_NIHIL(member->datum.declaratio.specifier);
+                    si (member->datum.declaratio.specifier != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)member->datum.declaratio.specifier->genus,
+                                          (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test nested enum: struct outer { enum { A, B } status; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested enum: struct outer { enum { A, B } status; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct outer { enum { A, B } status; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                CREDO_NON_NIHIL(member);
+                si (member != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)member->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+                    /* Specifier should be enum_specifier */
+                    CREDO_NON_NIHIL(member->datum.declaratio.specifier);
+                    si (member->datum.declaratio.specifier != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)member->datum.declaratio.specifier->genus,
+                                          (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test nested union: struct outer { union { int i; int j; } data; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested union: struct outer { union { int i; int j; } data; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct outer { union { int i; int j; } data; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                CREDO_NON_NIHIL(member);
+                si (member != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)member->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+                    /* Specifier should be union (struct_specifier with est_unio flag) */
+                    CREDO_NON_NIHIL(member->datum.declaratio.specifier);
+                    si (member->datum.declaratio.specifier != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)member->datum.declaratio.specifier->genus,
+                                          (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                        CREDO_VERUM(member->datum.declaratio.specifier->datum.struct_specifier.est_unio);
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test nested pointer: struct outer { struct inner { int a; } *ptr; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested pointer: struct outer { struct inner { int a; } *ptr; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct outer { struct inner { int a; } *ptr; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member;
+                member = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, ZEPHYRUM);
+                CREDO_NON_NIHIL(member);
+                si (member != NIHIL)
+                {
+                    /* Declarator should have num_stellae = 1 */
+                    CREDO_NON_NIHIL(member->datum.declaratio.declarator);
+                    si (member->datum.declaratio.declarator != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)member->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+                    }
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test multiple members with nested: struct outer { int x; struct { int a; } nested; int y; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans multiple with nested: struct outer { int x; struct { int a; } nested; int y; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct outer { int x; struct { int a; } nested; int y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                Arbor2Nodus* member1;
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), III);
+                /* Second member (index 1) should be the nested struct */
+                member1 = *(Arbor2Nodus**)xar_obtinere(res.radix->datum.struct_specifier.membra, I);
+                CREDO_NON_NIHIL(member1);
+                si (member1 != NIHIL && member1->datum.declaratio.specifier != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)member1->datum.declaratio.specifier->genus,
+                                      (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

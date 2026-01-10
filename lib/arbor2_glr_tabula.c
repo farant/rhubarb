@@ -236,6 +236,32 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
 
     /* P65: struct_member_list -> member_list type_spec ':' expr ';' (append anonymous bit field) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
+
+    /* ========== NESTED TYPE MEMBERS (P66-P73) ========== */
+
+    /* P66: struct_member_list -> struct_specifier ID ';' (first nested struct/union member) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO },
+
+    /* P67: struct_member_list -> struct_specifier '*' ID ';' (first nested struct/union ptr member) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P68: struct_member_list -> member_list struct_specifier ID ';' (append nested struct/union) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P69: struct_member_list -> member_list struct_specifier '*' ID ';' (append nested struct/union ptr) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
+
+    /* P70: struct_member_list -> enum_specifier ID ';' (first nested enum member) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO },
+
+    /* P71: struct_member_list -> enum_specifier '*' ID ';' (first nested enum ptr member) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P72: struct_member_list -> member_list enum_specifier ID ';' (append nested enum) */
+    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
+
+    /* P73: struct_member_list -> member_list enum_specifier '*' ID ';' (append nested enum ptr) */
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO }
 };
 
@@ -1532,11 +1558,13 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 47 },  /* forward ref */
 
     /* State 119: After 'struct {' (anonymous) - start member list */
-    /* Members start with type specifier (ID, int, char, or struct) */
+    /* Members start with type specifier (ID, int, char, struct, union, enum) */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 121 },  /* member type spec */
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 121 },  /* int member */
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 121 },  /* char member */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117 },  /* nested struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* nested union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* nested enum */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48 },  /* empty struct (edge case) */
 
     /* State 120: After 'struct ID {' (named) - start member list */
@@ -1544,6 +1572,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 121 },  /* int member */
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 121 },  /* char member */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117 },  /* nested struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* nested union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* nested enum */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48 },  /* empty struct (edge case) */
 
     /* State 121: After member type_specifier (ID) - expect '*' or member name or ':' (anon bit field) */
@@ -1581,6 +1611,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 131 },  /* subsequent int member */
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 131 },  /* subsequent char member */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117 },  /* nested struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* nested union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* nested enum */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 128 },  /* end anonymous struct */
 
     /* State 128: After 'struct { members }' - reduce P46 (anonymous) */
@@ -1593,6 +1625,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 131 },  /* subsequent int member */
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 131 },  /* subsequent char member */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117 },  /* nested struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* nested union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* nested enum */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 130 },  /* end named struct */
 
     /* State 130: After 'struct ID { members }' - reduce P45 (named) */
@@ -1844,7 +1878,147 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 65 },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 65 },
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 65 },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 65 }   /* end struct */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 65 },  /* end struct */
+
+    /* ==================================================
+     * States 174-197: Nested struct/union/enum as member type (E5)
+     * ================================================== */
+
+    /* ========== FIRST MEMBER WITH NESTED STRUCT/UNION (P66/P67) ========== */
+
+    /* State 174: After struct_specifier (first member) - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 175 },  /* pointer member */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 176 },  /* member name */
+
+    /* State 175: After struct_specifier '*' (first member) - expect ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 175 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 177 },  /* member name */
+
+    /* State 176: After struct_specifier ID (first member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 178 },
+
+    /* State 177: After struct_specifier '*' ID (first member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 179 },
+
+    /* State 178: After struct_specifier ID ';' (first member) - reduce P66 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 66 },
+
+    /* State 179: After struct_specifier '*' ID ';' (first member) - reduce P67 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 67 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 67 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 67 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 67 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 67 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 67 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 67 },
+
+    /* ========== SUBSEQUENT MEMBER WITH NESTED STRUCT/UNION (P68/P69) ========== */
+
+    /* State 180: After struct_specifier (subsequent member) - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 181 },  /* pointer member */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 182 },  /* member name */
+
+    /* State 181: After struct_specifier '*' (subsequent member) - expect ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 181 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 183 },  /* member name */
+
+    /* State 182: After struct_specifier ID (subsequent member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 184 },
+
+    /* State 183: After struct_specifier '*' ID (subsequent member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 185 },
+
+    /* State 184: After struct_specifier ID ';' (subsequent member) - reduce P68 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 68 },
+
+    /* State 185: After struct_specifier '*' ID ';' (subsequent member) - reduce P69 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 69 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 69 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 69 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 69 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 69 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 69 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 69 },
+
+    /* ========== FIRST MEMBER WITH NESTED ENUM (P70/P71) ========== */
+
+    /* State 186: After enum_specifier (first member) - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 187 },  /* pointer member */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 188 },  /* member name */
+
+    /* State 187: After enum_specifier '*' (first member) - expect ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 187 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 189 },  /* member name */
+
+    /* State 188: After enum_specifier ID (first member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 190 },
+
+    /* State 189: After enum_specifier '*' ID (first member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 191 },
+
+    /* State 190: After enum_specifier ID ';' (first member) - reduce P70 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 70 },
+
+    /* State 191: After enum_specifier '*' ID ';' (first member) - reduce P71 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 71 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 71 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 71 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 71 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 71 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 71 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 71 },
+
+    /* ========== SUBSEQUENT MEMBER WITH NESTED ENUM (P72/P73) ========== */
+
+    /* State 192: After enum_specifier (subsequent member) - expect '*' or ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 193 },  /* pointer member */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 194 },  /* member name */
+
+    /* State 193: After enum_specifier '*' (subsequent member) - expect ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 193 },  /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 195 },  /* member name */
+
+    /* State 194: After enum_specifier ID (subsequent member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 196 },
+
+    /* State 195: After enum_specifier '*' ID (subsequent member) - expect ';' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 197 },
+
+    /* State 196: After enum_specifier ID ';' (subsequent member) - reduce P72 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 72 },
+
+    /* State 197: After enum_specifier '*' ID ';' (subsequent member) - reduce P73 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 73 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 73 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 73 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 73 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 73 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 73 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 73 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -1970,65 +2144,90 @@ hic_manens i32 ACTIO_INDICES[] = {
     968,    /* State 116: 6 actions (reduce P12 for direct declarator) */
     974,    /* State 117: 2 actions (after 'struct') */
     976,    /* State 118: 4 actions (after 'struct ID') */
-    980,    /* State 119: 5 actions (after 'struct {') */
-    985,    /* State 120: 5 actions (after 'struct ID {') */
-    990,    /* State 121: 3 actions (after member type_spec, +COLON) */
-    993,    /* State 122: 2 actions (after member type_spec *) */
-    995,    /* State 123: 2 actions (after member type name, +COLON) */
-    997,    /* State 124: 1 action (after member type * name) */
-    998,    /* State 125: 5 actions (after member ;) */
-    1003,   /* State 126: 5 actions (after pointer member ;) */
-    1008,   /* State 127: 5 actions (after member_list in anon) */
-    1013,   /* State 128: 3 actions (after anon struct }) */
-    1016,   /* State 129: 5 actions (after member_list in named) */
-    1021,   /* State 130: 3 actions (after named struct }) */
-    1024,   /* State 131: 3 actions (subsequent member type_spec, +COLON) */
-    1027,   /* State 132: 2 actions (subsequent member type_spec *) */
-    1029,   /* State 133: 2 actions (subsequent member type name, +COLON) */
-    1031,   /* State 134: 1 action (subsequent member type * name) */
-    1032,   /* State 135: 5 actions (subsequent non-pointer ;) */
-    1037,   /* State 136: 5 actions (subsequent pointer ;) */
-    1042,   /* State 137: 2 actions (after 'union') */
-    1044,   /* State 138: 4 actions (after 'union ID') */
-    1048,   /* State 139: 6 actions (after 'union {') */
-    1054,   /* State 140: 6 actions (after 'union ID {') */
-    1060,   /* State 141: 6 actions (after member_list in anon union) */
-    1066,   /* State 142: 3 actions (after anon union }) */
-    1069,   /* State 143: 6 actions (after member_list in named union) */
-    1075,   /* State 144: 3 actions (after named union }) */
-    1078,   /* State 145: 2 actions (after 'enum') */
-    1080,   /* State 146: 4 actions (after 'enum ID') */
-    1084,   /* State 147: 1 action (after 'enum {') */
-    1085,   /* State 148: 1 action (after 'enum ID {') */
-    1086,   /* State 149: 3 actions (after enumerator ID) */
-    1089,   /* State 150: 5 actions (after 'ID =') */
-    1094,   /* State 151: 3 actions (after 'ID = expr', +PLUS) */
-    1097,   /* State 152: 2 actions (after first enumerator) */
-    1099,   /* State 153: 2 actions (after enum_list in anon) */
-    1101,   /* State 154: 3 actions (after 'enum { list }') */
-    1104,   /* State 155: 2 actions (after enum_list in named) */
-    1106,   /* State 156: 1 action (after ',') */
-    1107,   /* State 157: 3 actions (after 'enum ID { list }') */
-    1110,   /* State 158: 3 actions (after subsequent ID) */
-    1113,   /* State 159: 5 actions (after subsequent 'ID =') */
-    1118,   /* State 160: 3 actions (after subsequent 'ID = expr', +PLUS) */
-    1121,   /* State 161: 2 actions (after subsequent enumerator) */
-    1123,   /* State 162: 5 actions (first named bit field ':' expr) */
-    1128,   /* State 163: 2 actions (first named bit field expr done) */
-    1130,   /* State 164: 5 actions (reduce P62) */
-    1135,   /* State 165: 5 actions (subsequent named bit field ':' expr) */
-    1140,   /* State 166: 2 actions (subsequent named bit field expr done) */
-    1142,   /* State 167: 5 actions (reduce P63) */
-    1147,   /* State 168: 5 actions (first anon bit field ':' expr) */
-    1152,   /* State 169: 2 actions (first anon bit field expr done) */
-    1154,   /* State 170: 5 actions (reduce P64) */
-    1159,   /* State 171: 5 actions (subsequent anon bit field ':' expr) */
-    1164,   /* State 172: 2 actions (subsequent anon bit field expr done) */
-    1166,   /* State 173: 5 actions (reduce P65) */
-    1171    /* End marker */
+    980,    /* State 119: 7 actions (after 'struct {', +UNION, +ENUM) */
+    987,    /* State 120: 7 actions (after 'struct ID {', +UNION, +ENUM) */
+    994,    /* State 121: 3 actions (after member type_spec, +COLON) */
+    997,    /* State 122: 2 actions (after member type_spec *) */
+    999,    /* State 123: 2 actions (after member type name, +COLON) */
+    1001,   /* State 124: 1 action (after member type * name) */
+    1002,   /* State 125: 5 actions (after member ;) */
+    1007,   /* State 126: 5 actions (after pointer member ;) */
+    1012,   /* State 127: 7 actions (after member_list in anon, +UNION, +ENUM) */
+    1019,   /* State 128: 3 actions (after anon struct }) */
+    1022,   /* State 129: 7 actions (after member_list in named, +UNION, +ENUM) */
+    1029,   /* State 130: 3 actions (after named struct }) */
+    1032,   /* State 131: 3 actions (subsequent member type_spec, +COLON) */
+    1035,   /* State 132: 2 actions (subsequent member type_spec *) */
+    1037,   /* State 133: 2 actions (subsequent member type name, +COLON) */
+    1039,   /* State 134: 1 action (subsequent member type * name) */
+    1040,   /* State 135: 5 actions (subsequent non-pointer ;) */
+    1045,   /* State 136: 5 actions (subsequent pointer ;) */
+    1050,   /* State 137: 2 actions (after 'union') */
+    1052,   /* State 138: 4 actions (after 'union ID') */
+    1056,   /* State 139: 6 actions (after 'union {') */
+    1062,   /* State 140: 6 actions (after 'union ID {') */
+    1068,   /* State 141: 6 actions (after member_list in anon union) */
+    1074,   /* State 142: 3 actions (after anon union }) */
+    1077,   /* State 143: 6 actions (after member_list in named union) */
+    1083,   /* State 144: 3 actions (after named union }) */
+    1086,   /* State 145: 2 actions (after 'enum') */
+    1088,   /* State 146: 4 actions (after 'enum ID') */
+    1092,   /* State 147: 1 action (after 'enum {') */
+    1093,   /* State 148: 1 action (after 'enum ID {') */
+    1094,   /* State 149: 3 actions (after enumerator ID) */
+    1097,   /* State 150: 5 actions (after 'ID =') */
+    1102,   /* State 151: 3 actions (after 'ID = expr', +PLUS) */
+    1105,   /* State 152: 2 actions (after first enumerator) */
+    1107,   /* State 153: 2 actions (after enum_list in anon) */
+    1109,   /* State 154: 3 actions (after 'enum { list }') */
+    1112,   /* State 155: 2 actions (after enum_list in named) */
+    1114,   /* State 156: 1 action (after ',') */
+    1115,   /* State 157: 3 actions (after 'enum ID { list }') */
+    1118,   /* State 158: 3 actions (after subsequent ID) */
+    1121,   /* State 159: 5 actions (after subsequent 'ID =') */
+    1126,   /* State 160: 3 actions (after subsequent 'ID = expr', +PLUS) */
+    1129,   /* State 161: 2 actions (after subsequent enumerator) */
+    1131,   /* State 162: 5 actions (first named bit field ':' expr) */
+    1136,   /* State 163: 2 actions (first named bit field expr done) */
+    1138,   /* State 164: 5 actions (reduce P62) */
+    1143,   /* State 165: 5 actions (subsequent named bit field ':' expr) */
+    1148,   /* State 166: 2 actions (subsequent named bit field expr done) */
+    1150,   /* State 167: 5 actions (reduce P63) */
+    1155,   /* State 168: 5 actions (first anon bit field ':' expr) */
+    1160,   /* State 169: 2 actions (first anon bit field expr done) */
+    1162,   /* State 170: 5 actions (reduce P64) */
+    1167,   /* State 171: 5 actions (subsequent anon bit field ':' expr) */
+    1172,   /* State 172: 2 actions (subsequent anon bit field expr done) */
+    1174,   /* State 173: 5 actions (reduce P65) */
+    /* ========== NESTED TYPE MEMBER STATES (E5) ========== */
+    1179,   /* State 174: 2 actions (after struct_spec first) */
+    1181,   /* State 175: 2 actions (after struct_spec * first) */
+    1183,   /* State 176: 1 action (after struct_spec ID first) */
+    1184,   /* State 177: 1 action (after struct_spec * ID first) */
+    1185,   /* State 178: 7 actions (reduce P66) */
+    1192,   /* State 179: 7 actions (reduce P67) */
+    1199,   /* State 180: 2 actions (after struct_spec subsequent) */
+    1201,   /* State 181: 2 actions (after struct_spec * subsequent) */
+    1203,   /* State 182: 1 action (after struct_spec ID subsequent) */
+    1204,   /* State 183: 1 action (after struct_spec * ID subsequent) */
+    1205,   /* State 184: 7 actions (reduce P68) */
+    1212,   /* State 185: 7 actions (reduce P69) */
+    1219,   /* State 186: 2 actions (after enum_spec first) */
+    1221,   /* State 187: 2 actions (after enum_spec * first) */
+    1223,   /* State 188: 1 action (after enum_spec ID first) */
+    1224,   /* State 189: 1 action (after enum_spec * ID first) */
+    1225,   /* State 190: 7 actions (reduce P70) */
+    1232,   /* State 191: 7 actions (reduce P71) */
+    1239,   /* State 192: 2 actions (after enum_spec subsequent) */
+    1241,   /* State 193: 2 actions (after enum_spec * subsequent) */
+    1243,   /* State 194: 1 action (after enum_spec ID subsequent) */
+    1244,   /* State 195: 1 action (after enum_spec * ID subsequent) */
+    1245,   /* State 196: 7 actions (reduce P72) */
+    1252,   /* State 197: 7 actions (reduce P73) */
+    1259    /* End marker */
 };
 
-#define NUM_STATES 174
+#define NUM_STATES 198
 
 /* ==================================================
  * GOTO Table
@@ -2334,6 +2533,19 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 129: more members in named struct */
     { 129, INT_NT_STRUCT_MEMBERS,   129 },  /* append member to list (P49) */
 
+    /* Nested type specifiers as struct member types (Phase E5) */
+    /* First member context (from states 119/120) */
+    { 119, INT_NT_STRUCT_SPEC,      174 },  /* nested struct/union → first member path */
+    { 119, INT_NT_ENUM_SPEC,        186 },  /* nested enum → first member path */
+    { 120, INT_NT_STRUCT_SPEC,      174 },  /* nested struct/union → first member path */
+    { 120, INT_NT_ENUM_SPEC,        186 },  /* nested enum → first member path */
+
+    /* Subsequent member context (from states 127/129) */
+    { 127, INT_NT_STRUCT_SPEC,      180 },  /* nested struct/union → subsequent member path */
+    { 127, INT_NT_ENUM_SPEC,        192 },  /* nested enum → subsequent member path */
+    { 129, INT_NT_STRUCT_SPEC,      180 },  /* nested struct/union → subsequent member path */
+    { 129, INT_NT_ENUM_SPEC,        192 },  /* nested enum → subsequent member path */
+
     /* ==================================================
      * UNION GOTO Entries
      * ================================================== */
@@ -2349,6 +2561,19 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
 
     /* From state 143: more members in named union */
     { 143, INT_NT_STRUCT_MEMBERS,   143 },  /* append member to list */
+
+    /* Nested type specifiers as union member types (Phase E5) */
+    /* First member context (from states 139/140) */
+    { 139, INT_NT_STRUCT_SPEC,      174 },  /* nested struct/union → first member path */
+    { 139, INT_NT_ENUM_SPEC,        186 },  /* nested enum → first member path */
+    { 140, INT_NT_STRUCT_SPEC,      174 },  /* nested struct/union → first member path */
+    { 140, INT_NT_ENUM_SPEC,        186 },  /* nested enum → first member path */
+
+    /* Subsequent member context (from states 141/143) */
+    { 141, INT_NT_STRUCT_SPEC,      180 },  /* nested struct/union → subsequent member path */
+    { 141, INT_NT_ENUM_SPEC,        192 },  /* nested enum → subsequent member path */
+    { 143, INT_NT_STRUCT_SPEC,      180 },  /* nested struct/union → subsequent member path */
+    { 143, INT_NT_ENUM_SPEC,        192 },  /* nested enum → subsequent member path */
 
     /* ==================================================
      * ENUM GOTO Entries

@@ -1300,3 +1300,86 @@ Adding COLON to states 121, 123, 131, 133 required careful index adjustment:
 - Array declarators `int arr[10]`
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10
+
+### Phase E5: Nested struct/union/enum as member types
+
+Added support for using struct/union/enum as member type specifiers within other struct/union definitions.
+
+**New Grammar Rules (P66-P73):**
+```
+P66: struct_member_list -> struct_specifier ID ';'               (3 symbols, first)
+P67: struct_member_list -> struct_specifier '*' ID ';'           (4 symbols, first ptr)
+P68: struct_member_list -> member_list struct_specifier ID ';'   (4 symbols, append)
+P69: struct_member_list -> member_list struct_specifier '*' ID ';' (5 symbols, append ptr)
+P70-P73: Same pattern for enum_specifier
+```
+
+**Key insight:** struct_specifier covers both `struct` and `union` (via `est_unio` flag), so P66-P69 handle nested structs AND unions.
+
+**State Machine Changes:**
+
+Added UNION/ENUM shifts to states 119, 120, 127, 129, 139, 140, 141, 143:
+```c
+{ ARBOR2_LEXEMA_UNION,  ARBOR2_ACTIO_SHIFT, 137 },  /* nested union */
+{ ARBOR2_LEXEMA_ENUM,   ARBOR2_ACTIO_SHIFT, 145 },  /* nested enum */
+```
+
+**New States (174-197):**
+
+24 new states for nested type member paths, split into:
+- First member struct path: 174-179
+- Subsequent member struct path: 180-185
+- First member enum path: 186-191
+- Subsequent member enum path: 192-197
+
+Each path handles: `specifier → '*'? → ID → ';' → reduce`
+
+**GOTO Entries:**
+
+Added GOTO from struct member states (119/120/127/129) and union member states (139/140/141/143) to route STRUCT_SPECIFIER and ENUM_SPECIFIER to new paths:
+```c
+{ 119, INT_NT_STRUCT_SPEC,  174 },  /* nested struct/union → first member path */
+{ 119, INT_NT_ENUM_SPEC,    186 },  /* nested enum → first member path */
+{ 127, INT_NT_STRUCT_SPEC,  180 },  /* nested struct/union → subsequent member path */
+/* ... etc */
+```
+
+**AST Construction (P66-P73):**
+
+Key difference from P48-P51: the specifier is already a node in `valori`, not a token:
+```c
+/* P66: struct_specifier ID ';' */
+Arbor2Nodus* spec_node = valori[II];  /* Already STRUCT_SPECIFIER or ENUM_SPECIFIER */
+member->datum.declaratio.specifier = spec_node;  /* Use node directly! */
+```
+
+**ACTIO_INDICES Calculation:**
+
+Adding 2 actions to each of states 119, 120, 127, 129 required cumulative offset adjustment:
+- +2 after state 119
+- +4 after state 120
+- +6 after state 127
+- +8 after state 129 (propagates to all states 130+)
+
+**Tests Passing:**
+- `struct outer { struct inner { int a; } x; }` → nested struct definition
+- `struct outer { struct { int a; } *ptr; }` → pointer to anonymous nested
+- `struct outer { union { int i; int j; } data; }` → nested union
+- `struct outer { enum { A, B } status; }` → nested enum
+- `struct outer { int x; struct { int a; } nested; int y; }` → mixed members
+
+**Grammar Summary:**
+- 198 states (was 174)
+- ~1271 action entries (was ~1171)
+- 74 grammar rules (was 66)
+
+### Still TODO
+
+- `typedef struct { } Foo;` pattern
+- Array declarators `int arr[10]`
+- Test with real library files
+- Error recovery
