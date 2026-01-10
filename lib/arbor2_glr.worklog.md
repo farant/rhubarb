@@ -82,3 +82,54 @@ Added infrastructure for handling C89 ambiguities like `foo * bar`:
 - Typedef detection: `MyType` registered as typedef is correctly detected
 - Non-typedef: `unknown` is correctly identified as not a typedef
 - `foo * bar`: Parses as multiplication with current expression-only grammar
+
+---
+
+## 2026-01-09 (Milestone 3: Ambiguous Grammar)
+
+### Ambiguous Grammar States Added
+
+Extended the LR tables to create actual ambiguity for `IDENTIFIER *`:
+
+**State 4 (after IDENTIFIER)** now has TWO actions for `*`:
+1. REDUCE P5 (factor → ID) - expression path
+2. SHIFT S17 - declaration path
+
+**New states added:**
+- State 17: After `*` in declarator path
+- State 18: After declarator name (reduce P12)
+- State 19: After `* declarator` (reduce P11)
+- State 20: After `type_specifier declarator` (reduce P10)
+- State 21: Accept declaration
+
+### Multiple Accept Handling
+
+Fixed GLR to properly handle multiple accepting paths:
+- Collect ALL accepting nodes in `acceptati` array instead of stopping at first
+- Continue processing reductions even after first accept
+- If multiple paths accept with different values, create AMBIGUUS node
+
+### AST Construction for Declarations
+
+Added proper AST node construction for:
+- `ARBOR2_NODUS_DECLARATIO`: type_specifier + declarator
+- `ARBOR2_NODUS_DECLARATOR`: handles `*` chains and identifier name
+
+### Typedef Pruning Integrated
+
+In `_processare_unam_actionem()`, when multiple actions found:
+- Check if node holds identifier that is known typedef via `arbor2_glr_est_probabiliter_typus()`
+- If typedef, filter out REDUCE actions (expression path)
+- Keep only SHIFT actions (declaration path)
+- Pruning happens before fork count increment
+
+### Test Results
+
+- `foo * bar` (unknown identifier) → AMBIGUUS with 2 interpretations, furcae: 1
+- `MyType * ptr` (registered typedef) → DECLARATIO only, furcae: 0
+
+### Still TODO
+
+- Add statement parsing (if, while, for, etc.)
+- Test with real library files
+- Error recovery

@@ -539,6 +539,32 @@ _processare_unam_actionem(
         redde FALSUM;  /* No valid action - this path dies */
     }
 
+    /* Typedef pruning: if multiple actions and node has identifier that is typedef,
+     * filter out REDUCE actions (expression path) and keep only SHIFT (declaration) */
+    si (num_actiones > I && nodus->lexema != NIHIL)
+    {
+        si (arbor2_glr_est_probabiliter_typus(glr, nodus->lexema))
+        {
+            /* Prune expression path - keep only SHIFT actions */
+            Xar* filtered = xar_creare(glr->piscina, magnitudo(Arbor2TabulaActio*));
+            i32 k;
+            per (k = ZEPHYRUM; k < num_actiones; k++)
+            {
+                Arbor2TabulaActio* act = *(Arbor2TabulaActio**)xar_obtinere(actiones, k);
+                si (act->actio == ARBOR2_ACTIO_SHIFT)
+                {
+                    Arbor2TabulaActio** slot = xar_addere(filtered);
+                    *slot = act;
+                }
+            }
+            si (xar_numerus(filtered) > ZEPHYRUM)
+            {
+                actiones = filtered;
+                num_actiones = xar_numerus(actiones);
+            }
+        }
+    }
+
     si (num_actiones > I)
     {
         glr->num_furcae++;
@@ -635,6 +661,69 @@ _processare_unam_actionem(
                         valor_novus = (num_pop > ZEPHYRUM) ? valori[ZEPHYRUM] : NIHIL;
                         frange;
 
+                    casus ARBOR2_NODUS_DECLARATIO:
+                        /* P10: declaration -> type_specifier declarator */
+                        si (num_pop >= II)
+                        {
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = lexemata[I];  /* type_specifier token */
+                            valor_novus->datum.declaratio.specifier = valori[I];
+                            valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_DECLARATOR:
+                        si (num_pop == II)
+                        {
+                            /* P11: declarator -> '*' declarator */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                            valor_novus->lexema = lexemata[I];  /* The '*' token */
+                            /* Count stars: inner declarator's count + 1 */
+                            si (valori[ZEPHYRUM] != NIHIL &&
+                                valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR)
+                            {
+                                valor_novus->datum.declarator.num_stellae =
+                                    valori[ZEPHYRUM]->datum.declarator.num_stellae + I;
+                                valor_novus->datum.declarator.titulus =
+                                    valori[ZEPHYRUM]->datum.declarator.titulus;
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.declarator.num_stellae = I;
+                                valor_novus->datum.declarator.titulus.datum = NIHIL;
+                                valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                            }
+                        }
+                        alioquin si (num_pop == I)
+                        {
+                            /* P12: declarator -> IDENTIFIER */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                            valor_novus->lexema = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declarator.num_stellae = ZEPHYRUM;
+                            si (valori[ZEPHYRUM] != NIHIL)
+                            {
+                                valor_novus->datum.declarator.titulus =
+                                    valori[ZEPHYRUM]->datum.folium.valor;
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.declarator.titulus.datum = NIHIL;
+                                valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                            }
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
@@ -700,6 +789,7 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     Arbor2LexemaGenus genus;
     b32 acceptatum;
     Xar* reducenda;     /* Queue of nodes pending reduction */
+    Xar* acceptati;     /* Collect all accepting nodes */
     i32 i;
     Arbor2GSSNodus* nodus_acceptatus;
 
@@ -719,22 +809,63 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     /* Create pending reduction queue */
     reducenda = xar_creare(glr->piscina, magnitudo(Arbor2GSSNodus*));
 
+    /* Create list for accepting nodes */
+    acceptati = xar_creare(glr->piscina, magnitudo(Arbor2GSSNodus*));
+
     /* First pass: process original frontier, collect reductions */
     per (i = ZEPHYRUM; i < xar_numerus(glr->frons_activa); i++)
     {
         Arbor2GSSNodus* nodus;
         nodus = *(Arbor2GSSNodus**)xar_obtinere(glr->frons_activa, i);
         _processare_unam_actionem(glr, nodus, genus, reducenda, &acceptatum, &nodus_acceptatus);
+        si (acceptatum && nodus_acceptatus != NIHIL)
+        {
+            Arbor2GSSNodus** slot = xar_addere(acceptati);
+            *slot = nodus_acceptatus;
+            acceptatum = FALSUM;  /* Reset to continue processing */
+            nodus_acceptatus = NIHIL;
+        }
     }
 
-    /* Process reductions until queue is empty */
+    /* Process reductions until queue is empty - don't stop on accept! */
     i = ZEPHYRUM;
-    dum (i < xar_numerus(reducenda) && !acceptatum)
+    dum (i < xar_numerus(reducenda))
     {
         Arbor2GSSNodus* nodus;
         nodus = *(Arbor2GSSNodus**)xar_obtinere(reducenda, i);
         _processare_unam_actionem(glr, nodus, genus, reducenda, &acceptatum, &nodus_acceptatus);
+        si (acceptatum && nodus_acceptatus != NIHIL)
+        {
+            Arbor2GSSNodus** slot = xar_addere(acceptati);
+            *slot = nodus_acceptatus;
+            acceptatum = FALSUM;
+            nodus_acceptatus = NIHIL;
+        }
         i++;
+    }
+
+    /* Handle multiple accepting paths */
+    si (xar_numerus(acceptati) > I)
+    {
+        /* Multiple accepts - create ambiguous node */
+        Arbor2GSSNodus* primus = *(Arbor2GSSNodus**)xar_obtinere(acceptati, ZEPHYRUM);
+        i32 j;
+
+        per (j = I; j < xar_numerus(acceptati); j++)
+        {
+            Arbor2GSSNodus* alius = *(Arbor2GSSNodus**)xar_obtinere(acceptati, j);
+            si (primus->valor != NIHIL && alius->valor != NIHIL)
+            {
+                primus->valor = _creare_nodum_ambiguum(glr, primus->valor, alius->valor, primus->lexema);
+            }
+        }
+        nodus_acceptatus = primus;
+        acceptatum = VERUM;
+    }
+    alioquin si (xar_numerus(acceptati) == I)
+    {
+        nodus_acceptatus = *(Arbor2GSSNodus**)xar_obtinere(acceptati, ZEPHYRUM);
+        acceptatum = VERUM;
     }
 
     *acceptatum_out = acceptatum;

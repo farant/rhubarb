@@ -129,8 +129,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 4 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 4 },
 
-    /* State 4: After IDENTIFIER - reduce to factor */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 5 },  /* factor -> ID */
+    /* State 4: After IDENTIFIER - AMBIGUOUS for '*' (expr vs decl) */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 5 },  /* expr: factor -> ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },  /* decl: start declarator */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 5 },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 5 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 5 },
@@ -208,7 +209,32 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 9 },  /* factor -> & factor */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 9 },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 9 },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 },
+
+    /* State 17: After '*' in declarator - expect ID or more '*' */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* declarator name */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* more pointers */
+
+    /* State 18: After IDENTIFIER in declarator - reduce P12 */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 12 },  /* declarator -> ID */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
+
+    /* State 19: After '* declarator' - reduce P11 */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 11 },  /* declarator -> * declarator */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 11 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
+
+    /* State 20: After 'type_specifier declarator' - reduce P10 */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10 },  /* declaration -> type declarator */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_ERROR,  0 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_ERROR,  0 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_ERROR,  0 },
+
+    /* State 21: After declaration - accept */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -219,23 +245,28 @@ hic_manens i32 ACTIO_INDICES[] = {
     5,      /* State 1: 3 actions */
     8,      /* State 2: 4 actions */
     12,     /* State 3: 4 actions */
-    16,     /* State 4: 4 actions */
-    20,     /* State 5: 4 actions */
-    24,     /* State 6: 5 actions */
-    29,     /* State 7: 5 actions */
-    34,     /* State 8: 5 actions */
-    39,     /* State 9: 5 actions */
-    44,     /* State 10: 5 actions */
-    49,     /* State 11: 2 actions */
-    51,     /* State 12: 4 actions */
-    55,     /* State 13: 4 actions */
-    59,     /* State 14: 4 actions */
-    63,     /* State 15: 4 actions */
-    67,     /* State 16: 4 actions */
-    71      /* End marker */
+    16,     /* State 4: 5 actions (AMBIGUOUS - 2 actions for *) */
+    21,     /* State 5: 4 actions */
+    25,     /* State 6: 5 actions */
+    30,     /* State 7: 5 actions */
+    35,     /* State 8: 5 actions */
+    40,     /* State 9: 5 actions */
+    45,     /* State 10: 5 actions */
+    50,     /* State 11: 2 actions */
+    52,     /* State 12: 4 actions */
+    56,     /* State 13: 4 actions */
+    60,     /* State 14: 4 actions */
+    64,     /* State 15: 4 actions */
+    68,     /* State 16: 4 actions */
+    72,     /* State 17: 2 actions (declarator path) */
+    74,     /* State 18: 4 actions (reduce P12) */
+    78,     /* State 19: 4 actions (reduce P11) */
+    82,     /* State 20: 4 actions (reduce P10) */
+    86,     /* State 21: 1 action (accept declaration) */
+    87      /* End marker */
 };
 
-#define NUM_STATES 17
+#define NUM_STATES 22
 
 /* ==================================================
  * GOTO Table
@@ -250,6 +281,7 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_FACTOR       2
 #define INT_NT_DECLARATIO   3
 #define INT_NT_DECLARATOR   4
+#define INT_NT_DECLARATION  5
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
@@ -273,7 +305,16 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 9, INT_NT_FACTOR, 3 },
 
     /* From state 10: after term '*' */
-    { 10, INT_NT_FACTOR, 14 }
+    { 10, INT_NT_FACTOR, 14 },
+
+    /* From state 4: after identifier as type_specifier */
+    { 4, INT_NT_DECLARATOR, 20 },
+
+    /* From state 17: after '*' in declarator */
+    { 17, INT_NT_DECLARATOR, 19 },
+
+    /* From state 0: after declaration */
+    { 0, INT_NT_DECLARATIO, 21 }
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));

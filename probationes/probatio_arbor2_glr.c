@@ -412,15 +412,19 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: foo * bar (currently unambiguous - expression only)
-     * When we add ambiguous states, this will fork and potentially merge
+     * PROBARE: foo * bar (ambiguous - could be expr or decl)
+     * With no typedef info, should produce AMBIGUUS node
      * ======================================================== */
 
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans foo * bar (expression grammar) ---\n");
+        imprimere("\n--- Probans foo * bar (ambiguus) ---\n");
+
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
 
         tokens = _lexare_ad_tokens(piscina, intern, "foo * bar");
         res = arbor2_glr_parsere_expressio(glr, tokens);
@@ -432,18 +436,65 @@ s32 principale(vacuum)
             _imprimere_arborem(res.radix, II);
         }
 
-        /* With current expression-only grammar, foo * bar is multiplication */
+        /* Without typedef info, foo * bar is ambiguous */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
         {
-            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
-            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
-                               (i32)ARBOR2_LEXEMA_ASTERISCUS);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_AMBIGUUS);
+            /* Should have 2 interpretations */
+            si (res.radix->datum.ambiguus.interpretationes != NIHIL)
+            {
+                imprimere("  interpretationes: %d\n",
+                    xar_numerus(res.radix->datum.ambiguus.interpretationes));
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.ambiguus.interpretationes), II);
+            }
         }
 
-        /* No ambiguities with current grammar */
+        /* Should have forked */
+        imprimere("  furcae: %d\n", glr->num_furcae);
+        CREDO_AEQUALIS_I32((i32)(glr->num_furcae > ZEPHYRUM), VERUM);
+
         imprimere("  ambigui: %d\n", xar_numerus(res.ambigui));
+    }
+
+
+    /* ========================================================
+     * PROBARE: MyType * ptr (typedef -> declaration only)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans MyType * ptr (typedef pruning) ---\n");
+
+        /* MyType was already registered as typedef in earlier test */
+        /* Reset statistics */
+        glr->num_furcae = ZEPHYRUM;
+        glr->num_mergae = ZEPHYRUM;
+
+        tokens = _lexare_ad_tokens(piscina, intern, "MyType * ptr");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        /* With MyType as typedef, should be DECLARATIO not AMBIGUUS */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+        }
+
+        /* Should NOT have forked (pruned expression path) */
+        imprimere("  furcae: %d\n", glr->num_furcae);
+        CREDO_AEQUALIS_I32((i32)glr->num_furcae, ZEPHYRUM);
     }
 
 
