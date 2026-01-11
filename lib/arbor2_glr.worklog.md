@@ -1656,3 +1656,112 @@ These tests are disabled with `#if 0` and TODO comments.
 - 221 states (was 217, added 4 for array parsing)
 - 82 grammar rules (P80-P81 already in REGULAE)
 - Action table uses chained macro indices for maintainability
+
+---
+
+## 2026-01-10
+
+### Phase E8: Struct Member Array Support
+
+Implemented array support for struct members by refactoring to use the declarator non-terminal. This was the first part of the E8 plan.
+
+**Problem:** Struct member rules (P48-P51) used explicit patterns like `type_spec ID ;` that didn't route through declarator, so array syntax `int arr[5];` wasn't possible.
+
+**Solution:** Refactor state machine to route struct member declarations through existing declarator states (17, 18, 19) which already handle arrays via states 217-220.
+
+### Changes Made
+
+1. **States 18 and 19**: Added SEMICOLON and COLON to follow sets (REDUCE P12/P11)
+   - Allows declarator reduction when followed by `;` (member end) or `:` (bit field)
+
+2. **State 121** (first member after type_spec): Changed routing
+   - ID → state 18 (was 123, now uses declarator path)
+   - `*` → state 17 (was 122, now uses declarator path)
+   - `:` → state 168 (unchanged, anonymous bit field)
+
+3. **State 131** (subsequent member): Same changes as state 121
+   - ID → state 18 (was 133)
+   - `*` → state 17 (was 132)
+
+4. **New States 221-224**:
+   - State 221: After `type_spec declarator` in struct (first member)
+     - SEMICOLON → 222, BRACKET_APERTA → 217, COLON → 162
+   - State 222: Reduce P48 (first member)
+   - State 223: After `list type_spec declarator` (subsequent member)
+     - SEMICOLON → 224, BRACKET_APERTA → 217, COLON → 165
+   - State 224: Reduce P49 (subsequent member)
+
+5. **GOTO Table**: Added entries
+   - { 121, INT_NT_DECLARATOR, 221 }
+   - { 131, INT_NT_DECLARATOR, 223 }
+
+### Tests Passing
+
+All struct member array tests now pass:
+- `struct { int arr[5]; }` - simple array member
+- `struct { int *ptrs[5]; }` - pointer array member
+- `struct { int matrix[3][4]; }` - multi-dimensional array member
+- `struct { int a[5]; int b[10]; }` - multiple array members
+
+### State Machine Summary
+
+- 225 states (was 221, added 4 for struct member declarator completion)
+- Grammar rule symbol counts unchanged (P48-P51 still 3/4 symbols)
+- Chained macro indices handle automatic recalculation
+
+### Next: Typedef Arrays
+
+The typedef rules (P74-P79) need similar refactoring to support `typedef int IntArray[10];`. This will follow the same pattern: route typedef states through declarator path and add completion states.
+
+### Phase E8 Part 2: Typedef Array Support
+
+Extended the declarator refactor to typedef rules (P74-P79).
+
+**Problem:** Typedef rules used explicit patterns like `typedef type_spec ID ;` that didn't route through declarator, so array syntax `typedef int IntArray[10];` wasn't possible.
+
+**Solution:** Same approach as struct members - route typedef states through existing declarator states.
+
+### Changes Made
+
+1. **States 199, 205, 211** (after typedef type/struct/enum_spec): Changed routing
+   - ID → state 18 (was 201/207/213, now uses declarator path)
+   - `*` → state 17 (was 200/206/212, now uses declarator path)
+
+2. **New States 225-230**:
+   - State 225: After `typedef type_spec declarator` - expect `;` or `[`
+   - State 226: Reduce P74 (simple typedef)
+   - State 227: After `typedef struct_spec declarator` - expect `;` or `[`
+   - State 228: Reduce P76 (struct typedef)
+   - State 229: After `typedef enum_spec declarator` - expect `;` or `[`
+   - State 230: Reduce P78 (enum typedef)
+
+3. **GOTO Table**: Added entries
+   - { 199, INT_NT_DECLARATOR, 225 }
+   - { 205, INT_NT_DECLARATOR, 227 }
+   - { 211, INT_NT_DECLARATOR, 229 }
+
+4. **Reduction Handlers**: Updated P74, P76, P78 to use pre-built declarator from valori[1]. Marked P75, P77, P79 as UNUSED.
+
+### Tests Passing
+
+All typedef array tests now pass:
+- `typedef int IntArray[10];` - simple array typedef
+- `typedef int* IntPtrArray[10];` - pointer array typedef
+- `typedef int Matrix[3][4];` - multi-dimensional array typedef
+
+All existing typedef tests continue to pass:
+- `typedef int MyInt;`
+- `typedef int* IntPtr;`
+- `typedef struct { int x; } Point;`
+- `typedef struct { int x; } *PointPtr;`
+- etc.
+
+### State Machine Summary
+
+- 231 states (was 225, added 6 for typedef declarator completion)
+- P75, P77, P79 marked UNUSED (pointer typedefs now handled via declarator)
+- Chained macro indices handle automatic recalculation
+
+### Phase E8 Complete
+
+Both struct member arrays and typedef arrays are now fully supported via the declarator refactor. The grammar reduces 18 explicit rules to 9 unified rules that support all declarator forms (simple, pointer, array, multi-dimensional).

@@ -3997,10 +3997,7 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
-    /* TODO: Struct member arrays require grammar rule changes (P48-P51)
-     * Disable test until struct_member_list rules support array declarators.
-     */
-#if 0
+    /* E8: Struct member arrays now supported via declarator refactor */
     /* Test struct member array: struct { int arr[5]; } */
     {
         Xar* tokens;
@@ -4023,12 +4020,77 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-#endif
 
-    /* TODO: Typedef arrays require grammar rule changes (P74-P79)
-     * Disable test until typedef rules use declarator non-terminal.
-     */
-#if 0
+    /* Test struct member pointer array: struct { int *ptrs[5]; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct member ptr array: struct { int *ptrs[5]; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct { int *ptrs[5]; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test struct multi-dimensional array: struct { int matrix[3][4]; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct multi-dim array: struct { int matrix[3][4]; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct { int matrix[3][4]; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test struct multiple array members: struct { int a[5]; int b[10]; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct multi arrays: struct { int a[5]; int b[10]; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct { int a[5]; int b[10]; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* E8: Typedef arrays now supported via declarator refactor */
     /* Test typedef array: typedef int IntArray[10] */
     {
         Xar* tokens;
@@ -4061,7 +4123,52 @@ s32 principale(vacuum)
 
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
-#endif
+
+    /* Test typedef pointer array: typedef int* IntPtrArray[10]; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef pointer array: typedef int* IntPtrArray[10]; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef int* IntPtrArray[10];");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test typedef multi-dim array: typedef int Matrix[3][4]; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef multi-dim: typedef int Matrix[3][4]; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef int Matrix[3][4];");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
 
     /* Test expression size: int arr[1 + 2] */
     {

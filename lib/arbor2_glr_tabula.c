@@ -178,16 +178,19 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P47: struct_specifier -> 'struct' IDENTIFIER (forward reference) */
     { ARBOR2_NT_STRUCT_SPECIFIER, 2, ARBOR2_NODUS_STRUCT_SPECIFIER },
 
-    /* P48: struct_member_list -> type_specifier IDENTIFIER ';' (non-pointer first member) */
+    /* P48: struct_member_list -> type_specifier declarator ';' (first member)
+     * Handles simple, pointer, and array members via declarator non-terminal.
+     * Symbol count: type_spec(1) + declarator(1) + ;(1) = 3 */
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO },
 
-    /* P49: struct_member_list -> struct_member_list type_specifier IDENTIFIER ';' (append non-pointer) */
+    /* P49: struct_member_list -> struct_member_list type_specifier declarator ';' (append member)
+     * Symbol count: list(1) + type_spec(1) + declarator(1) + ;(1) = 4 */
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
 
-    /* P50: struct_member_list -> type_specifier '*' IDENTIFIER ';' (pointer first member) */
+    /* P50: UNUSED - pointer members now handled by P48/P49 via declarator */
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
 
-    /* P51: struct_member_list -> struct_member_list type_specifier '*' IDENTIFIER ';' (append pointer) */
+    /* P51: UNUSED - pointer members now handled by P48/P49 via declarator */
     { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
 
     /* P52: struct_specifier -> 'union' IDENTIFIER '{' struct_member_list '}' (named union) */
@@ -508,6 +511,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then fn decl */
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then array decl */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12 },  /* for struct member ending */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 12 },  /* for bit field (E4) */
 
     /* State 19: After '* declarator' - reduce P11 or shift ( for fn */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 11 },  /* declarator -> * declarator */
@@ -517,6 +522,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 11 },  /* for function definition body */
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 11 },  /* reduce first, then array decl */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 11 },  /* for struct member ending */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 11 },  /* for bit field (E4) */
 
     /* State 20: After 'type_specifier declarator' - reduce P10 or continue to function/array */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10 },  /* declaration -> type declarator */
@@ -1619,8 +1626,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48 },  /* empty struct (edge case) */
 
     /* State 121: After member type_specifier (ID) - expect '*' or member name or ':' (anon bit field) */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 122 },  /* pointer member */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 123 },  /* member name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* member name - use declarator states */
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 168 },  /* anonymous bit field */
 
     /* State 122: After member type_spec '*' - expect more '*' or member name */
@@ -1682,8 +1690,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
      * ================================================== */
 
     /* State 131: After type_specifier in subsequent member - expect '*' or name or ':' */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 132 },  /* pointer member */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 133 },  /* member name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* member name - use declarator states */
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 171 },  /* anonymous bit field */
 
     /* State 132: After type_spec '*' in subsequent member - expect more '*' or name */
@@ -2073,8 +2082,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* typedef enum {...} */
 
     /* State 199: After 'typedef type_spec' - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 200 },  /* pointer typedef */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 201 },  /* typedef name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* typedef name - use declarator states */
 
     /* State 200: After 'typedef type_spec *' - expect more '*' or ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 200 },  /* more pointers */
@@ -2107,8 +2117,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 75 },
 
     /* State 205: After 'typedef struct_spec' - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 206 },  /* pointer typedef */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 207 },  /* typedef name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* typedef name - use declarator states */
 
     /* State 206: After 'typedef struct_spec *' - expect more '*' or ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 206 },  /* more pointers */
@@ -2141,8 +2152,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 77 },
 
     /* State 211: After 'typedef enum_spec' - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 212 },  /* pointer typedef */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 213 },  /* typedef name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* typedef name - use declarator states */
 
     /* State 212: After 'typedef enum_spec *' - expect more '*' or ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 212 },  /* more pointers */
@@ -2204,7 +2216,83 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 80 },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 80 },
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 80 },  /* multi-dim: [n][] */
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 80 }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 80 },
+
+    /* ==================================================
+     * E8: Struct Member Declarator Completion States (221-224)
+     * ================================================== */
+
+    /* State 221: After 'type_spec declarator' in struct (first member) */
+    /* Expects ';' to end member, '[' for array, or ':' for bit field */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 222 },  /* end member decl */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 162 },  /* bit field width */
+
+    /* State 222: After 'type_spec declarator ;' (first member) - reduce P48 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 48 },  /* reduce, more members */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 48 },  /* reduce, int member */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 48 },  /* reduce, char member */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 48 },  /* reduce, nested struct */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48 },  /* reduce, end struct */
+
+    /* State 223: After 'list type_spec declarator' (subsequent member) */
+    /* Expects ';' to end member, '[' for array, or ':' for bit field */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 224 },  /* end member decl */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 165 },  /* bit field width */
+
+    /* State 224: After 'list type_spec declarator ;' (subsequent member) - reduce P49 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 49 },  /* reduce, more members */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 49 },  /* reduce, int member */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 49 },  /* reduce, char member */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 49 },  /* reduce, nested struct */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 49 },  /* reduce, end struct */
+
+    /* ==================================================
+     * E8: Typedef Declarator Completion States (225-230)
+     * ================================================== */
+
+    /* State 225: After 'typedef type_spec declarator' - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 226 },  /* end typedef */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 226: After 'typedef type_spec declarator ;' - reduce P74 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 74 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 74 },
+
+    /* State 227: After 'typedef struct_spec declarator' - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 228 },  /* end typedef */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 228: After 'typedef struct_spec declarator ;' - reduce P76 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 76 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 76 },
+
+    /* State 229: After 'typedef enum_spec declarator' - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 230 },  /* end typedef */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 230: After 'typedef enum_spec declarator ;' - reduce P78 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 78 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 78 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -2236,8 +2324,8 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_15_COUNT  9
 #define STATE_16_COUNT  9
 #define STATE_17_COUNT  2
-#define STATE_18_COUNT  6
-#define STATE_19_COUNT  7
+#define STATE_18_COUNT  8
+#define STATE_19_COUNT  9
 #define STATE_20_COUNT  7
 #define STATE_21_COUNT  1
 #define STATE_22_COUNT  21
@@ -2439,6 +2527,16 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_218_COUNT 6
 #define STATE_219_COUNT 2
 #define STATE_220_COUNT 6
+#define STATE_221_COUNT 3
+#define STATE_222_COUNT 5
+#define STATE_223_COUNT 3
+#define STATE_224_COUNT 5
+#define STATE_225_COUNT 2
+#define STATE_226_COUNT 8
+#define STATE_227_COUNT 2
+#define STATE_228_COUNT 8
+#define STATE_229_COUNT 2
+#define STATE_230_COUNT 8
 
 /* ==================================================
  * CHAINED INDEX MACROS
@@ -2670,6 +2768,16 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define IDX_STATE_219   (IDX_STATE_218 + STATE_218_COUNT)
 #define IDX_STATE_220   (IDX_STATE_219 + STATE_219_COUNT)
 #define IDX_STATE_221   (IDX_STATE_220 + STATE_220_COUNT)
+#define IDX_STATE_222   (IDX_STATE_221 + STATE_221_COUNT)
+#define IDX_STATE_223   (IDX_STATE_222 + STATE_222_COUNT)
+#define IDX_STATE_224   (IDX_STATE_223 + STATE_223_COUNT)
+#define IDX_STATE_225   (IDX_STATE_224 + STATE_224_COUNT)
+#define IDX_STATE_226   (IDX_STATE_225 + STATE_225_COUNT)
+#define IDX_STATE_227   (IDX_STATE_226 + STATE_226_COUNT)
+#define IDX_STATE_228   (IDX_STATE_227 + STATE_227_COUNT)
+#define IDX_STATE_229   (IDX_STATE_228 + STATE_228_COUNT)
+#define IDX_STATE_230   (IDX_STATE_229 + STATE_229_COUNT)
+#define IDX_STATE_231   (IDX_STATE_230 + STATE_230_COUNT)
 
 /* State -> first action index mapping (using chained macros)
  *
@@ -2900,7 +3008,17 @@ hic_manens i32 ACTIO_INDICES[] = {
     IDX_STATE_218,  /* after 'declarator []' - unsized array reduce */
     IDX_STATE_219,  /* after 'declarator [ expr' - expect ] */
     IDX_STATE_220,  /* after 'declarator [ expr ]' - sized array reduce */
-    IDX_STATE_221   /* End marker */
+    IDX_STATE_221,  /* after type_spec declarator in struct (first member) */
+    IDX_STATE_222,  /* reduce P48 (first member with declarator) */
+    IDX_STATE_223,  /* after list type_spec declarator (subsequent member) */
+    IDX_STATE_224,  /* reduce P49 (subsequent member with declarator) */
+    IDX_STATE_225,  /* after typedef type_spec declarator */
+    IDX_STATE_226,  /* reduce P74 (typedef with declarator) */
+    IDX_STATE_227,  /* after typedef struct_spec declarator */
+    IDX_STATE_228,  /* reduce P76 (typedef struct with declarator) */
+    IDX_STATE_229,  /* after typedef enum_spec declarator */
+    IDX_STATE_230,  /* reduce P78 (typedef enum with declarator) */
+    IDX_STATE_231   /* End marker */
 };
 
 /* NUM_STATES derived from array size (array has NUM_STATES + 1 entries for end marker) */
@@ -3204,6 +3322,12 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 120: named struct member list */
     { 120, INT_NT_STRUCT_MEMBERS,   129 },  /* member_list accumulation */
 
+    /* E8: Declarator in struct member context (first member) */
+    { 121, INT_NT_DECLARATOR,       221 },  /* type_spec declarator → completion state */
+
+    /* E8: Declarator in struct member context (subsequent member) */
+    { 131, INT_NT_DECLARATOR,       223 },  /* list type_spec declarator → completion state */
+
     /* From state 127: more members in anonymous struct */
     { 127, INT_NT_STRUCT_MEMBERS,   127 },  /* append member to list (P49) */
 
@@ -3307,6 +3431,11 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 198: after 'typedef' - struct/enum specifier reduces */
     { 198, INT_NT_STRUCT_SPEC,      205 },  /* typedef struct { } → ID path */
     { 198, INT_NT_ENUM_SPEC,        211 },  /* typedef enum { } → ID path */
+
+    /* E8: Declarator in typedef context */
+    { 199, INT_NT_DECLARATOR,       225 },  /* typedef type_spec declarator → completion */
+    { 205, INT_NT_DECLARATOR,       227 },  /* typedef struct_spec declarator → completion */
+    { 211, INT_NT_DECLARATOR,       229 },  /* typedef enum_spec declarator → completion */
 
     /* ==================================================
      * Array Declarator GOTO Entries (State 217)
