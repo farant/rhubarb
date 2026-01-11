@@ -282,7 +282,13 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
 
     /* P79: typedef_decl -> 'typedef' enum_specifier '*' ID ';' (typedef enum pointer) */
-    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO }
+    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO },
+
+    /* P80: declarator -> declarator '[' expression ']' (sized array) */
+    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR },
+
+    /* P81: declarator -> declarator '[' ']' (unsized array) */
+    { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -340,6 +346,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137 },  /* union type specifier */
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145 },  /* enum type specifier */
     { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_SHIFT, 198 },  /* typedef declaration */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,  4 },   /* int type specifier */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,  4 },   /* char type specifier */
 
     /* State 1: After expression - expect '+', ';', or end */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
@@ -356,6 +364,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 2 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 2 },  /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 2 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 2 },  /* for array size */
 
     /* State 3: After factor - reduce to term */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 4 },  /* term -> factor */
@@ -366,6 +375,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 4 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 4 },  /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 4 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 4 },  /* for array size */
 
     /* State 4: After IDENTIFIER - AMBIGUOUS for '*' (expr vs decl), or label with ':' */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 5 },  /* expr: factor -> ID */
@@ -379,6 +389,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 77 },  /* label: shift to labeled stmt */
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 5 },  /* case expr: reduce ID to factor */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 5 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 5 },  /* for array size */
 
     /* State 5: After INTEGER - reduce to factor */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 6 },  /* factor -> INT */
@@ -389,6 +400,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 6 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 6 },  /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 6 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 6 },  /* for array size */
 
     /* State 6: After '(' - expect expression */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
@@ -438,6 +450,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 7 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 7 },  /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 7 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 7 },  /* for array size */
 
     /* State 13: After expression '+' term - reduce or continue */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10 },  /* * binds tighter */
@@ -448,6 +461,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 1 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 1 },   /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 1 },   /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 1 },   /* for array size */
 
     /* State 14: After term '*' factor - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 3 },  /* term -> term * factor */
@@ -458,6 +472,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 3 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 3 },  /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 3 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 3 },  /* for array size */
 
     /* State 15: After '*' factor (unary) - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 8 },  /* factor -> * factor */
@@ -468,6 +483,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 8 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 8 },  /* for case expression */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 8 },  /* for enum values */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 8 },  /* for array size */
 
     /* State 16: After '&' factor (unary) - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 9 },  /* factor -> & factor */
@@ -478,6 +494,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 9 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 9 },  /* for case expression */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 9 },  /* for array size */
 
     /* State 17: After '*' in declarator - expect ID or more '*' */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* declarator name */
@@ -490,6 +507,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then fn decl */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then array decl */
 
     /* State 19: After '* declarator' - reduce P11 or shift ( for fn */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 11 },  /* declarator -> * declarator */
@@ -498,11 +516,13 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 11 },  /* for function definition body */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 11 },  /* reduce first, then array decl */
 
-    /* State 20: After 'type_specifier declarator' - reduce P10 or continue to function */
+    /* State 20: After 'type_specifier declarator' - reduce P10 or continue to function/array */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10 },  /* declaration -> type declarator */
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator params */
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 25 },   /* function definition body */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array declarator */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_ERROR,  0 },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_ERROR,  0 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_ERROR,  0 },
@@ -1563,6 +1583,7 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then array decl */
 
     /* ==================================================
      * Phase E1: Struct States (117-130)
@@ -2151,236 +2172,739 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 79 },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 79 },
     { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 79 },
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 79 }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 79 },
+
+    /* ==================================================
+     * Array Declarator States (217-220)
+     * ================================================== */
+
+    /* State 217: After 'declarator [' - expect expression or ']' */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },   /* expression start */
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },   /* expression start */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 218 },  /* unsized array [] */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },   /* parenthesized expr */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },   /* unary * */
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },   /* unary & */
+
+    /* State 218: After 'declarator [ ]' - reduce P81 (unsized array) */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 81 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 81 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 81 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 81 },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 81 },  /* multi-dim: [][] */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 81 },
+
+    /* State 219: After 'declarator [ expression' - expect ']' or continue expr */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 220 },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },   /* continue expression */
+
+    /* State 220: After 'declarator [ expression ]' - reduce P80 (sized array) */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 80 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 80 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 80 },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 80 },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 80 },  /* multi-dim: [n][] */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 80 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
 
-/* State -> first action index mapping */
+/* ==================================================
+ * STATE ACTION COUNTS
+ *
+ * Each macro defines how many actions a state has.
+ * When adding/removing actions from a state, only
+ * update that state's count - indices recalculate
+ * automatically at compile time.
+ * ================================================== */
+
+#define STATE_0_COUNT   24
+#define STATE_1_COUNT   4
+#define STATE_2_COUNT   9
+#define STATE_3_COUNT   9
+#define STATE_4_COUNT   12
+#define STATE_5_COUNT   9
+#define STATE_6_COUNT   5
+#define STATE_7_COUNT   5
+#define STATE_8_COUNT   5
+#define STATE_9_COUNT   5
+#define STATE_10_COUNT  5
+#define STATE_11_COUNT  2
+#define STATE_12_COUNT  9
+#define STATE_13_COUNT  9
+#define STATE_14_COUNT  9
+#define STATE_15_COUNT  9
+#define STATE_16_COUNT  9
+#define STATE_17_COUNT  2
+#define STATE_18_COUNT  6
+#define STATE_19_COUNT  7
+#define STATE_20_COUNT  7
+#define STATE_21_COUNT  1
+#define STATE_22_COUNT  21
+#define STATE_23_COUNT  21
+#define STATE_24_COUNT  1
+#define STATE_25_COUNT  19
+#define STATE_26_COUNT  19
+#define STATE_27_COUNT  21
+#define STATE_28_COUNT  19
+#define STATE_29_COUNT  21
+#define STATE_30_COUNT  1
+#define STATE_31_COUNT  5
+#define STATE_32_COUNT  2
+#define STATE_33_COUNT  18
+#define STATE_34_COUNT  21
+#define STATE_35_COUNT  18
+#define STATE_36_COUNT  21
+#define STATE_37_COUNT  21
+#define STATE_38_COUNT  21
+#define STATE_39_COUNT  1
+#define STATE_40_COUNT  5
+#define STATE_41_COUNT  2
+#define STATE_42_COUNT  18
+#define STATE_43_COUNT  21
+#define STATE_44_COUNT  21
+#define STATE_45_COUNT  18
+#define STATE_46_COUNT  1
+#define STATE_47_COUNT  1
+#define STATE_48_COUNT  5
+#define STATE_49_COUNT  2
+#define STATE_50_COUNT  1
+#define STATE_51_COUNT  21
+#define STATE_52_COUNT  21
+#define STATE_53_COUNT  1
+#define STATE_54_COUNT  6
+#define STATE_55_COUNT  1
+#define STATE_56_COUNT  1
+#define STATE_57_COUNT  6
+#define STATE_58_COUNT  1
+#define STATE_59_COUNT  1
+#define STATE_60_COUNT  6
+#define STATE_61_COUNT  1
+#define STATE_62_COUNT  1
+#define STATE_63_COUNT  18
+#define STATE_64_COUNT  21
+#define STATE_65_COUNT  21
+#define STATE_66_COUNT  1
+#define STATE_67_COUNT  21
+#define STATE_68_COUNT  1
+#define STATE_69_COUNT  21
+#define STATE_70_COUNT  6
+#define STATE_71_COUNT  2
+#define STATE_72_COUNT  1
+#define STATE_73_COUNT  21
+#define STATE_74_COUNT  1
+#define STATE_75_COUNT  1
+#define STATE_76_COUNT  21
+#define STATE_77_COUNT  18
+#define STATE_78_COUNT  21
+#define STATE_79_COUNT  1
+#define STATE_80_COUNT  5
+#define STATE_81_COUNT  2
+#define STATE_82_COUNT  18
+#define STATE_83_COUNT  21
+#define STATE_84_COUNT  5
+#define STATE_85_COUNT  2
+#define STATE_86_COUNT  18
+#define STATE_87_COUNT  21
+#define STATE_88_COUNT  1
+#define STATE_89_COUNT  18
+#define STATE_90_COUNT  21
+#define STATE_91_COUNT  5
+#define STATE_92_COUNT  6
+#define STATE_93_COUNT  1
+#define STATE_94_COUNT  6
+#define STATE_95_COUNT  2
+#define STATE_96_COUNT  2
+#define STATE_97_COUNT  2
+#define STATE_98_COUNT  2
+#define STATE_99_COUNT  2
+#define STATE_100_COUNT 2
+#define STATE_101_COUNT 2
+#define STATE_102_COUNT 2
+#define STATE_103_COUNT 6
+#define STATE_104_COUNT 3
+#define STATE_105_COUNT 2
+#define STATE_106_COUNT 2
+#define STATE_107_COUNT 2
+#define STATE_108_COUNT 2
+#define STATE_109_COUNT 2
+#define STATE_110_COUNT 2
+#define STATE_111_COUNT 2
+#define STATE_112_COUNT 0
+#define STATE_113_COUNT 1
+#define STATE_114_COUNT 1
+#define STATE_115_COUNT 0
+#define STATE_116_COUNT 7
+#define STATE_117_COUNT 2
+#define STATE_118_COUNT 4
+#define STATE_119_COUNT 7
+#define STATE_120_COUNT 7
+#define STATE_121_COUNT 3
+#define STATE_122_COUNT 2
+#define STATE_123_COUNT 2
+#define STATE_124_COUNT 1
+#define STATE_125_COUNT 5
+#define STATE_126_COUNT 5
+#define STATE_127_COUNT 7
+#define STATE_128_COUNT 3
+#define STATE_129_COUNT 7
+#define STATE_130_COUNT 3
+#define STATE_131_COUNT 3
+#define STATE_132_COUNT 2
+#define STATE_133_COUNT 2
+#define STATE_134_COUNT 1
+#define STATE_135_COUNT 5
+#define STATE_136_COUNT 5
+#define STATE_137_COUNT 2
+#define STATE_138_COUNT 4
+#define STATE_139_COUNT 6
+#define STATE_140_COUNT 6
+#define STATE_141_COUNT 6
+#define STATE_142_COUNT 3
+#define STATE_143_COUNT 6
+#define STATE_144_COUNT 3
+#define STATE_145_COUNT 2
+#define STATE_146_COUNT 4
+#define STATE_147_COUNT 1
+#define STATE_148_COUNT 1
+#define STATE_149_COUNT 3
+#define STATE_150_COUNT 5
+#define STATE_151_COUNT 3
+#define STATE_152_COUNT 2
+#define STATE_153_COUNT 2
+#define STATE_154_COUNT 3
+#define STATE_155_COUNT 2
+#define STATE_156_COUNT 1
+#define STATE_157_COUNT 3
+#define STATE_158_COUNT 3
+#define STATE_159_COUNT 5
+#define STATE_160_COUNT 3
+#define STATE_161_COUNT 2
+#define STATE_162_COUNT 5
+#define STATE_163_COUNT 2
+#define STATE_164_COUNT 5
+#define STATE_165_COUNT 5
+#define STATE_166_COUNT 2
+#define STATE_167_COUNT 5
+#define STATE_168_COUNT 5
+#define STATE_169_COUNT 2
+#define STATE_170_COUNT 5
+#define STATE_171_COUNT 5
+#define STATE_172_COUNT 2
+#define STATE_173_COUNT 5
+#define STATE_174_COUNT 2
+#define STATE_175_COUNT 2
+#define STATE_176_COUNT 1
+#define STATE_177_COUNT 1
+#define STATE_178_COUNT 7
+#define STATE_179_COUNT 7
+#define STATE_180_COUNT 2
+#define STATE_181_COUNT 2
+#define STATE_182_COUNT 1
+#define STATE_183_COUNT 1
+#define STATE_184_COUNT 7
+#define STATE_185_COUNT 7
+#define STATE_186_COUNT 2
+#define STATE_187_COUNT 2
+#define STATE_188_COUNT 1
+#define STATE_189_COUNT 1
+#define STATE_190_COUNT 7
+#define STATE_191_COUNT 7
+#define STATE_192_COUNT 2
+#define STATE_193_COUNT 2
+#define STATE_194_COUNT 1
+#define STATE_195_COUNT 1
+#define STATE_196_COUNT 7
+#define STATE_197_COUNT 7
+#define STATE_198_COUNT 6
+#define STATE_199_COUNT 2
+#define STATE_200_COUNT 2
+#define STATE_201_COUNT 1
+#define STATE_202_COUNT 1
+#define STATE_203_COUNT 8
+#define STATE_204_COUNT 8
+#define STATE_205_COUNT 2
+#define STATE_206_COUNT 2
+#define STATE_207_COUNT 1
+#define STATE_208_COUNT 1
+#define STATE_209_COUNT 8
+#define STATE_210_COUNT 8
+#define STATE_211_COUNT 2
+#define STATE_212_COUNT 2
+#define STATE_213_COUNT 1
+#define STATE_214_COUNT 1
+#define STATE_215_COUNT 8
+#define STATE_216_COUNT 8
+#define STATE_217_COUNT 6
+#define STATE_218_COUNT 6
+#define STATE_219_COUNT 2
+#define STATE_220_COUNT 6
+
+/* ==================================================
+ * CHAINED INDEX MACROS
+ *
+ * Each IDX_STATE_N computes its index from the
+ * previous state's index plus that state's count.
+ * The compiler evaluates these at compile time.
+ * ================================================== */
+
+#define IDX_STATE_0     0
+#define IDX_STATE_1     (IDX_STATE_0 + STATE_0_COUNT)
+#define IDX_STATE_2     (IDX_STATE_1 + STATE_1_COUNT)
+#define IDX_STATE_3     (IDX_STATE_2 + STATE_2_COUNT)
+#define IDX_STATE_4     (IDX_STATE_3 + STATE_3_COUNT)
+#define IDX_STATE_5     (IDX_STATE_4 + STATE_4_COUNT)
+#define IDX_STATE_6     (IDX_STATE_5 + STATE_5_COUNT)
+#define IDX_STATE_7     (IDX_STATE_6 + STATE_6_COUNT)
+#define IDX_STATE_8     (IDX_STATE_7 + STATE_7_COUNT)
+#define IDX_STATE_9     (IDX_STATE_8 + STATE_8_COUNT)
+#define IDX_STATE_10    (IDX_STATE_9 + STATE_9_COUNT)
+#define IDX_STATE_11    (IDX_STATE_10 + STATE_10_COUNT)
+#define IDX_STATE_12    (IDX_STATE_11 + STATE_11_COUNT)
+#define IDX_STATE_13    (IDX_STATE_12 + STATE_12_COUNT)
+#define IDX_STATE_14    (IDX_STATE_13 + STATE_13_COUNT)
+#define IDX_STATE_15    (IDX_STATE_14 + STATE_14_COUNT)
+#define IDX_STATE_16    (IDX_STATE_15 + STATE_15_COUNT)
+#define IDX_STATE_17    (IDX_STATE_16 + STATE_16_COUNT)
+#define IDX_STATE_18    (IDX_STATE_17 + STATE_17_COUNT)
+#define IDX_STATE_19    (IDX_STATE_18 + STATE_18_COUNT)
+#define IDX_STATE_20    (IDX_STATE_19 + STATE_19_COUNT)
+#define IDX_STATE_21    (IDX_STATE_20 + STATE_20_COUNT)
+#define IDX_STATE_22    (IDX_STATE_21 + STATE_21_COUNT)
+#define IDX_STATE_23    (IDX_STATE_22 + STATE_22_COUNT)
+#define IDX_STATE_24    (IDX_STATE_23 + STATE_23_COUNT)
+#define IDX_STATE_25    (IDX_STATE_24 + STATE_24_COUNT)
+#define IDX_STATE_26    (IDX_STATE_25 + STATE_25_COUNT)
+#define IDX_STATE_27    (IDX_STATE_26 + STATE_26_COUNT)
+#define IDX_STATE_28    (IDX_STATE_27 + STATE_27_COUNT)
+#define IDX_STATE_29    (IDX_STATE_28 + STATE_28_COUNT)
+#define IDX_STATE_30    (IDX_STATE_29 + STATE_29_COUNT)
+#define IDX_STATE_31    (IDX_STATE_30 + STATE_30_COUNT)
+#define IDX_STATE_32    (IDX_STATE_31 + STATE_31_COUNT)
+#define IDX_STATE_33    (IDX_STATE_32 + STATE_32_COUNT)
+#define IDX_STATE_34    (IDX_STATE_33 + STATE_33_COUNT)
+#define IDX_STATE_35    (IDX_STATE_34 + STATE_34_COUNT)
+#define IDX_STATE_36    (IDX_STATE_35 + STATE_35_COUNT)
+#define IDX_STATE_37    (IDX_STATE_36 + STATE_36_COUNT)
+#define IDX_STATE_38    (IDX_STATE_37 + STATE_37_COUNT)
+#define IDX_STATE_39    (IDX_STATE_38 + STATE_38_COUNT)
+#define IDX_STATE_40    (IDX_STATE_39 + STATE_39_COUNT)
+#define IDX_STATE_41    (IDX_STATE_40 + STATE_40_COUNT)
+#define IDX_STATE_42    (IDX_STATE_41 + STATE_41_COUNT)
+#define IDX_STATE_43    (IDX_STATE_42 + STATE_42_COUNT)
+#define IDX_STATE_44    (IDX_STATE_43 + STATE_43_COUNT)
+#define IDX_STATE_45    (IDX_STATE_44 + STATE_44_COUNT)
+#define IDX_STATE_46    (IDX_STATE_45 + STATE_45_COUNT)
+#define IDX_STATE_47    (IDX_STATE_46 + STATE_46_COUNT)
+#define IDX_STATE_48    (IDX_STATE_47 + STATE_47_COUNT)
+#define IDX_STATE_49    (IDX_STATE_48 + STATE_48_COUNT)
+#define IDX_STATE_50    (IDX_STATE_49 + STATE_49_COUNT)
+#define IDX_STATE_51    (IDX_STATE_50 + STATE_50_COUNT)
+#define IDX_STATE_52    (IDX_STATE_51 + STATE_51_COUNT)
+#define IDX_STATE_53    (IDX_STATE_52 + STATE_52_COUNT)
+#define IDX_STATE_54    (IDX_STATE_53 + STATE_53_COUNT)
+#define IDX_STATE_55    (IDX_STATE_54 + STATE_54_COUNT)
+#define IDX_STATE_56    (IDX_STATE_55 + STATE_55_COUNT)
+#define IDX_STATE_57    (IDX_STATE_56 + STATE_56_COUNT)
+#define IDX_STATE_58    (IDX_STATE_57 + STATE_57_COUNT)
+#define IDX_STATE_59    (IDX_STATE_58 + STATE_58_COUNT)
+#define IDX_STATE_60    (IDX_STATE_59 + STATE_59_COUNT)
+#define IDX_STATE_61    (IDX_STATE_60 + STATE_60_COUNT)
+#define IDX_STATE_62    (IDX_STATE_61 + STATE_61_COUNT)
+#define IDX_STATE_63    (IDX_STATE_62 + STATE_62_COUNT)
+#define IDX_STATE_64    (IDX_STATE_63 + STATE_63_COUNT)
+#define IDX_STATE_65    (IDX_STATE_64 + STATE_64_COUNT)
+#define IDX_STATE_66    (IDX_STATE_65 + STATE_65_COUNT)
+#define IDX_STATE_67    (IDX_STATE_66 + STATE_66_COUNT)
+#define IDX_STATE_68    (IDX_STATE_67 + STATE_67_COUNT)
+#define IDX_STATE_69    (IDX_STATE_68 + STATE_68_COUNT)
+#define IDX_STATE_70    (IDX_STATE_69 + STATE_69_COUNT)
+#define IDX_STATE_71    (IDX_STATE_70 + STATE_70_COUNT)
+#define IDX_STATE_72    (IDX_STATE_71 + STATE_71_COUNT)
+#define IDX_STATE_73    (IDX_STATE_72 + STATE_72_COUNT)
+#define IDX_STATE_74    (IDX_STATE_73 + STATE_73_COUNT)
+#define IDX_STATE_75    (IDX_STATE_74 + STATE_74_COUNT)
+#define IDX_STATE_76    (IDX_STATE_75 + STATE_75_COUNT)
+#define IDX_STATE_77    (IDX_STATE_76 + STATE_76_COUNT)
+#define IDX_STATE_78    (IDX_STATE_77 + STATE_77_COUNT)
+#define IDX_STATE_79    (IDX_STATE_78 + STATE_78_COUNT)
+#define IDX_STATE_80    (IDX_STATE_79 + STATE_79_COUNT)
+#define IDX_STATE_81    (IDX_STATE_80 + STATE_80_COUNT)
+#define IDX_STATE_82    (IDX_STATE_81 + STATE_81_COUNT)
+#define IDX_STATE_83    (IDX_STATE_82 + STATE_82_COUNT)
+#define IDX_STATE_84    (IDX_STATE_83 + STATE_83_COUNT)
+#define IDX_STATE_85    (IDX_STATE_84 + STATE_84_COUNT)
+#define IDX_STATE_86    (IDX_STATE_85 + STATE_85_COUNT)
+#define IDX_STATE_87    (IDX_STATE_86 + STATE_86_COUNT)
+#define IDX_STATE_88    (IDX_STATE_87 + STATE_87_COUNT)
+#define IDX_STATE_89    (IDX_STATE_88 + STATE_88_COUNT)
+#define IDX_STATE_90    (IDX_STATE_89 + STATE_89_COUNT)
+#define IDX_STATE_91    (IDX_STATE_90 + STATE_90_COUNT)
+#define IDX_STATE_92    (IDX_STATE_91 + STATE_91_COUNT)
+#define IDX_STATE_93    (IDX_STATE_92 + STATE_92_COUNT)
+#define IDX_STATE_94    (IDX_STATE_93 + STATE_93_COUNT)
+#define IDX_STATE_95    (IDX_STATE_94 + STATE_94_COUNT)
+#define IDX_STATE_96    (IDX_STATE_95 + STATE_95_COUNT)
+#define IDX_STATE_97    (IDX_STATE_96 + STATE_96_COUNT)
+#define IDX_STATE_98    (IDX_STATE_97 + STATE_97_COUNT)
+#define IDX_STATE_99    (IDX_STATE_98 + STATE_98_COUNT)
+#define IDX_STATE_100   (IDX_STATE_99 + STATE_99_COUNT)
+#define IDX_STATE_101   (IDX_STATE_100 + STATE_100_COUNT)
+#define IDX_STATE_102   (IDX_STATE_101 + STATE_101_COUNT)
+#define IDX_STATE_103   (IDX_STATE_102 + STATE_102_COUNT)
+#define IDX_STATE_104   (IDX_STATE_103 + STATE_103_COUNT)
+#define IDX_STATE_105   (IDX_STATE_104 + STATE_104_COUNT)
+#define IDX_STATE_106   (IDX_STATE_105 + STATE_105_COUNT)
+#define IDX_STATE_107   (IDX_STATE_106 + STATE_106_COUNT)
+#define IDX_STATE_108   (IDX_STATE_107 + STATE_107_COUNT)
+#define IDX_STATE_109   (IDX_STATE_108 + STATE_108_COUNT)
+#define IDX_STATE_110   (IDX_STATE_109 + STATE_109_COUNT)
+#define IDX_STATE_111   (IDX_STATE_110 + STATE_110_COUNT)
+#define IDX_STATE_112   (IDX_STATE_111 + STATE_111_COUNT)
+#define IDX_STATE_113   (IDX_STATE_112 + STATE_112_COUNT)
+#define IDX_STATE_114   (IDX_STATE_113 + STATE_113_COUNT)
+#define IDX_STATE_115   (IDX_STATE_114 + STATE_114_COUNT)
+#define IDX_STATE_116   (IDX_STATE_115 + STATE_115_COUNT)
+#define IDX_STATE_117   (IDX_STATE_116 + STATE_116_COUNT)
+#define IDX_STATE_118   (IDX_STATE_117 + STATE_117_COUNT)
+#define IDX_STATE_119   (IDX_STATE_118 + STATE_118_COUNT)
+#define IDX_STATE_120   (IDX_STATE_119 + STATE_119_COUNT)
+#define IDX_STATE_121   (IDX_STATE_120 + STATE_120_COUNT)
+#define IDX_STATE_122   (IDX_STATE_121 + STATE_121_COUNT)
+#define IDX_STATE_123   (IDX_STATE_122 + STATE_122_COUNT)
+#define IDX_STATE_124   (IDX_STATE_123 + STATE_123_COUNT)
+#define IDX_STATE_125   (IDX_STATE_124 + STATE_124_COUNT)
+#define IDX_STATE_126   (IDX_STATE_125 + STATE_125_COUNT)
+#define IDX_STATE_127   (IDX_STATE_126 + STATE_126_COUNT)
+#define IDX_STATE_128   (IDX_STATE_127 + STATE_127_COUNT)
+#define IDX_STATE_129   (IDX_STATE_128 + STATE_128_COUNT)
+#define IDX_STATE_130   (IDX_STATE_129 + STATE_129_COUNT)
+#define IDX_STATE_131   (IDX_STATE_130 + STATE_130_COUNT)
+#define IDX_STATE_132   (IDX_STATE_131 + STATE_131_COUNT)
+#define IDX_STATE_133   (IDX_STATE_132 + STATE_132_COUNT)
+#define IDX_STATE_134   (IDX_STATE_133 + STATE_133_COUNT)
+#define IDX_STATE_135   (IDX_STATE_134 + STATE_134_COUNT)
+#define IDX_STATE_136   (IDX_STATE_135 + STATE_135_COUNT)
+#define IDX_STATE_137   (IDX_STATE_136 + STATE_136_COUNT)
+#define IDX_STATE_138   (IDX_STATE_137 + STATE_137_COUNT)
+#define IDX_STATE_139   (IDX_STATE_138 + STATE_138_COUNT)
+#define IDX_STATE_140   (IDX_STATE_139 + STATE_139_COUNT)
+#define IDX_STATE_141   (IDX_STATE_140 + STATE_140_COUNT)
+#define IDX_STATE_142   (IDX_STATE_141 + STATE_141_COUNT)
+#define IDX_STATE_143   (IDX_STATE_142 + STATE_142_COUNT)
+#define IDX_STATE_144   (IDX_STATE_143 + STATE_143_COUNT)
+#define IDX_STATE_145   (IDX_STATE_144 + STATE_144_COUNT)
+#define IDX_STATE_146   (IDX_STATE_145 + STATE_145_COUNT)
+#define IDX_STATE_147   (IDX_STATE_146 + STATE_146_COUNT)
+#define IDX_STATE_148   (IDX_STATE_147 + STATE_147_COUNT)
+#define IDX_STATE_149   (IDX_STATE_148 + STATE_148_COUNT)
+#define IDX_STATE_150   (IDX_STATE_149 + STATE_149_COUNT)
+#define IDX_STATE_151   (IDX_STATE_150 + STATE_150_COUNT)
+#define IDX_STATE_152   (IDX_STATE_151 + STATE_151_COUNT)
+#define IDX_STATE_153   (IDX_STATE_152 + STATE_152_COUNT)
+#define IDX_STATE_154   (IDX_STATE_153 + STATE_153_COUNT)
+#define IDX_STATE_155   (IDX_STATE_154 + STATE_154_COUNT)
+#define IDX_STATE_156   (IDX_STATE_155 + STATE_155_COUNT)
+#define IDX_STATE_157   (IDX_STATE_156 + STATE_156_COUNT)
+#define IDX_STATE_158   (IDX_STATE_157 + STATE_157_COUNT)
+#define IDX_STATE_159   (IDX_STATE_158 + STATE_158_COUNT)
+#define IDX_STATE_160   (IDX_STATE_159 + STATE_159_COUNT)
+#define IDX_STATE_161   (IDX_STATE_160 + STATE_160_COUNT)
+#define IDX_STATE_162   (IDX_STATE_161 + STATE_161_COUNT)
+#define IDX_STATE_163   (IDX_STATE_162 + STATE_162_COUNT)
+#define IDX_STATE_164   (IDX_STATE_163 + STATE_163_COUNT)
+#define IDX_STATE_165   (IDX_STATE_164 + STATE_164_COUNT)
+#define IDX_STATE_166   (IDX_STATE_165 + STATE_165_COUNT)
+#define IDX_STATE_167   (IDX_STATE_166 + STATE_166_COUNT)
+#define IDX_STATE_168   (IDX_STATE_167 + STATE_167_COUNT)
+#define IDX_STATE_169   (IDX_STATE_168 + STATE_168_COUNT)
+#define IDX_STATE_170   (IDX_STATE_169 + STATE_169_COUNT)
+#define IDX_STATE_171   (IDX_STATE_170 + STATE_170_COUNT)
+#define IDX_STATE_172   (IDX_STATE_171 + STATE_171_COUNT)
+#define IDX_STATE_173   (IDX_STATE_172 + STATE_172_COUNT)
+#define IDX_STATE_174   (IDX_STATE_173 + STATE_173_COUNT)
+#define IDX_STATE_175   (IDX_STATE_174 + STATE_174_COUNT)
+#define IDX_STATE_176   (IDX_STATE_175 + STATE_175_COUNT)
+#define IDX_STATE_177   (IDX_STATE_176 + STATE_176_COUNT)
+#define IDX_STATE_178   (IDX_STATE_177 + STATE_177_COUNT)
+#define IDX_STATE_179   (IDX_STATE_178 + STATE_178_COUNT)
+#define IDX_STATE_180   (IDX_STATE_179 + STATE_179_COUNT)
+#define IDX_STATE_181   (IDX_STATE_180 + STATE_180_COUNT)
+#define IDX_STATE_182   (IDX_STATE_181 + STATE_181_COUNT)
+#define IDX_STATE_183   (IDX_STATE_182 + STATE_182_COUNT)
+#define IDX_STATE_184   (IDX_STATE_183 + STATE_183_COUNT)
+#define IDX_STATE_185   (IDX_STATE_184 + STATE_184_COUNT)
+#define IDX_STATE_186   (IDX_STATE_185 + STATE_185_COUNT)
+#define IDX_STATE_187   (IDX_STATE_186 + STATE_186_COUNT)
+#define IDX_STATE_188   (IDX_STATE_187 + STATE_187_COUNT)
+#define IDX_STATE_189   (IDX_STATE_188 + STATE_188_COUNT)
+#define IDX_STATE_190   (IDX_STATE_189 + STATE_189_COUNT)
+#define IDX_STATE_191   (IDX_STATE_190 + STATE_190_COUNT)
+#define IDX_STATE_192   (IDX_STATE_191 + STATE_191_COUNT)
+#define IDX_STATE_193   (IDX_STATE_192 + STATE_192_COUNT)
+#define IDX_STATE_194   (IDX_STATE_193 + STATE_193_COUNT)
+#define IDX_STATE_195   (IDX_STATE_194 + STATE_194_COUNT)
+#define IDX_STATE_196   (IDX_STATE_195 + STATE_195_COUNT)
+#define IDX_STATE_197   (IDX_STATE_196 + STATE_196_COUNT)
+#define IDX_STATE_198   (IDX_STATE_197 + STATE_197_COUNT)
+#define IDX_STATE_199   (IDX_STATE_198 + STATE_198_COUNT)
+#define IDX_STATE_200   (IDX_STATE_199 + STATE_199_COUNT)
+#define IDX_STATE_201   (IDX_STATE_200 + STATE_200_COUNT)
+#define IDX_STATE_202   (IDX_STATE_201 + STATE_201_COUNT)
+#define IDX_STATE_203   (IDX_STATE_202 + STATE_202_COUNT)
+#define IDX_STATE_204   (IDX_STATE_203 + STATE_203_COUNT)
+#define IDX_STATE_205   (IDX_STATE_204 + STATE_204_COUNT)
+#define IDX_STATE_206   (IDX_STATE_205 + STATE_205_COUNT)
+#define IDX_STATE_207   (IDX_STATE_206 + STATE_206_COUNT)
+#define IDX_STATE_208   (IDX_STATE_207 + STATE_207_COUNT)
+#define IDX_STATE_209   (IDX_STATE_208 + STATE_208_COUNT)
+#define IDX_STATE_210   (IDX_STATE_209 + STATE_209_COUNT)
+#define IDX_STATE_211   (IDX_STATE_210 + STATE_210_COUNT)
+#define IDX_STATE_212   (IDX_STATE_211 + STATE_211_COUNT)
+#define IDX_STATE_213   (IDX_STATE_212 + STATE_212_COUNT)
+#define IDX_STATE_214   (IDX_STATE_213 + STATE_213_COUNT)
+#define IDX_STATE_215   (IDX_STATE_214 + STATE_214_COUNT)
+#define IDX_STATE_216   (IDX_STATE_215 + STATE_215_COUNT)
+#define IDX_STATE_217   (IDX_STATE_216 + STATE_216_COUNT)
+#define IDX_STATE_218   (IDX_STATE_217 + STATE_217_COUNT)
+#define IDX_STATE_219   (IDX_STATE_218 + STATE_218_COUNT)
+#define IDX_STATE_220   (IDX_STATE_219 + STATE_219_COUNT)
+#define IDX_STATE_221   (IDX_STATE_220 + STATE_220_COUNT)
+
+/* State -> first action index mapping (using chained macros)
+ *
+ * To modify a state's action count, update STATE_N_COUNT above.
+ * All downstream indices recalculate automatically.
+ */
 hic_manens i32 ACTIO_INDICES[] = {
-    0,      /* State 0: 22 actions (+struct, +union, +enum, +typedef) */
-    22,     /* State 1: 4 actions */
-    26,     /* State 2: 8 actions (added COLON, COMMA) */
-    34,     /* State 3: 8 actions (added COLON, COMMA) */
-    42,     /* State 4: 11 actions (2x COLON + IDENTIFIER + COMMA) */
-    53,     /* State 5: 8 actions (added COLON, COMMA) */
-    61,     /* State 6: 5 actions */
-    66,     /* State 7: 5 actions */
-    71,     /* State 8: 5 actions */
-    76,     /* State 9: 5 actions */
-    81,     /* State 10: 5 actions */
-    86,     /* State 11: 2 actions */
-    88,     /* State 12: 8 actions (added COLON, COMMA) */
-    96,     /* State 13: 8 actions (added COLON, COMMA) */
-    104,    /* State 14: 8 actions (added COLON, COMMA) */
-    112,    /* State 15: 8 actions (added COLON, COMMA) */
-    120,    /* State 16: 8 actions (added COLON, COMMA) */
-    128,    /* State 17: 2 actions (declarator path) */
-    130,    /* State 18: 5 actions (reduce P12 + fn decl) */
-    135,    /* State 19: 6 actions (reduce P11 + fn decl + BRACE_APERTA) */
-    141,    /* State 20: 6 actions (reduce P10 + fn decl (/) + fn def ({)) */
-    147,    /* State 21: 1 action (accept declaration) */
-    148,    /* State 22: 21 actions (reduce P13 + switch/case/default) */
-    169,    /* State 23: 21 actions (reduce P14 + switch/case/default) */
-    190,    /* State 24: 1 action (accept statement) */
-    191,    /* State 25: 19 actions (epsilon reduce P18 + switch/case/default) */
-    210,    /* State 26: 19 actions (+switch, case, default) */
-    229,    /* State 27: 21 actions (reduce P16 + switch/case/default) */
-    250,    /* State 28: 19 actions (reduce P17 + switch/case/default) */
-    269,    /* State 29: 21 actions (accept/reduce P15 + switch/case/default) */
-    290,    /* State 30: 1 action (after 'if') */
-    291,    /* State 31: 5 actions (after 'if (') */
-    296,    /* State 32: 2 actions (after 'if ( expr') */
-    298,    /* State 33: 18 actions (+switch, case, default) */
-    316,    /* State 34: 21 actions (after 'if ( expr ) stmt' + switch/case/default) */
-    337,    /* State 35: 18 actions (+switch, case, default) */
-    355,    /* State 36: 21 actions (reduce P21 + switch/case/default) */
-    376,    /* State 37: 21 actions (reduce P19 + switch/case/default) */
-    397,    /* State 38: 21 actions (reduce P15 for nested compound + switch/case/default) */
-    418,    /* State 39: 1 action (after 'while') */
-    419,    /* State 40: 5 actions (after 'while (') */
-    424,    /* State 41: 2 actions (after 'while ( expr') */
-    426,    /* State 42: 18 actions (+switch, case, default) */
-    444,    /* State 43: 21 actions (reduce P23 + switch/case/default) */
-    465,    /* State 44: 21 actions (reduce P22 + switch/case/default) */
-    486,    /* State 45: 18 actions (+switch, case, default) */
-    504,    /* State 46: 1 action (after 'do stmt') */
-    505,    /* State 47: 1 action (after 'do stmt while') */
-    506,    /* State 48: 5 actions (after 'do stmt while (') */
-    511,    /* State 49: 2 actions (after 'do stmt while ( expr') */
-    513,    /* State 50: 1 action (after 'do stmt while ( expr )') */
-    514,    /* State 51: 21 actions (reduce P25 + switch/case/default) */
-    535,    /* State 52: 21 actions (reduce P24 + switch/case/default) */
-    556,    /* State 53: 1 action (after 'for') */
-    557,    /* State 54: 6 actions (after 'for (') */
-    563,    /* State 55: 1 action (after 'for ( expr') */
-    564,    /* State 56: 1 action (after 'for ( expr_opt') */
-    565,    /* State 57: 6 actions (after 'for ( expr_opt ;') */
-    571,    /* State 58: 1 action (after 'for ( ... ; expr') */
-    572,    /* State 59: 1 action (after 'for ( ... ; expr_opt') */
-    573,    /* State 60: 6 actions (after 'for ( ... ; expr_opt ;') */
-    579,    /* State 61: 1 action (after 'for ( ... ; expr') */
-    580,    /* State 62: 1 action (after 'for ( ... ; expr_opt') */
-    581,    /* State 63: 18 actions (+switch, case, default) */
-    599,    /* State 64: 21 actions (reduce P27 + switch/case/default) */
-    620,    /* State 65: 21 actions (reduce P26 + switch/case/default) */
-    641,    /* State 66: 1 action (after 'break') */
-    642,    /* State 67: 21 actions (reduce P30 + switch/case/default) */
-    663,    /* State 68: 1 action (after 'continue') */
-    664,    /* State 69: 21 actions (reduce P31 + switch/case/default) */
-    685,    /* State 70: 6 actions (after 'return') */
-    691,    /* State 71: 2 actions (after 'return expr' + continue) */
-    693,    /* State 72: 1 action (after 'return expr_opt') */
-    694,    /* State 73: 21 actions (reduce P32 + switch/case/default) */
-    715,    /* State 74: 1 action (after 'goto') */
-    716,    /* State 75: 1 action (after 'goto ID') */
-    717,    /* State 76: 21 actions (reduce P33 + switch/case/default) */
-    738,    /* State 77: 18 actions (+switch, case, default) */
-    756,    /* State 78: 21 actions (reduce P34 +switch, case, default) */
-    777,    /* State 79: 1 action (after 'switch') */
-    778,    /* State 80: 5 actions (after 'switch (') */
-    783,    /* State 81: 2 actions (after 'switch ( expr') */
-    785,    /* State 82: 18 actions (after 'switch ( expr )') */
-    803,    /* State 83: 21 actions (reduce P35) */
-    824,    /* State 84: 5 actions (after 'case') */
-    829,    /* State 85: 2 actions (after 'case expr') */
-    831,    /* State 86: 18 actions (after 'case expr :') */
-    849,    /* State 87: 21 actions (reduce P36) */
-    870,    /* State 88: 1 action (after 'default') */
-    871,    /* State 89: 18 actions (after 'default :') */
-    889,    /* State 90: 21 actions (reduce P37) */
-    910,    /* State 91: 5 actions (after 'declarator (', +IDENTIFIER/INT/CHAR) */
-    915,    /* State 92: 6 actions (reduce P38 + BRACE_APERTA) */
-    921,    /* State 93: 1 action (after 'declarator ( void') */
-    922,    /* State 94: 6 actions (reduce P39 + BRACE_APERTA) */
-    928,    /* State 95: 2 actions (after '( type_spec') */
-    930,    /* State 96: 2 actions (after '( type_spec *') */
-    932,    /* State 97: 2 actions (reduce P12) */
-    934,    /* State 98: 2 actions (reduce P12 after *) */
-    936,    /* State 99: 2 actions (reduce P43) */
-    938,    /* State 100: 2 actions (reduce P11) */
-    940,    /* State 101: 2 actions (reduce P41) */
-    942,    /* State 102: 2 actions (after param_list) */
-    944,    /* State 103: 6 actions (reduce P40 + BRACE_APERTA) */
-    950,    /* State 104: 3 actions (after param_list ,, +INT/CHAR) */
-    953,    /* State 105: 2 actions (after , type_spec) */
-    955,    /* State 106: 2 actions (after , type_spec *) */
-    957,    /* State 107: 2 actions (reduce P12) */
-    959,    /* State 108: 2 actions (reduce P12 after *) */
-    961,    /* State 109: 2 actions (reduce P43) */
-    963,    /* State 110: 2 actions (reduce P11) */
-    965,    /* State 111: 2 actions (reduce P42) */
-    967,    /* State 112: (unused) */
-    967,    /* State 113: 1 action (reduce P44 function_definition) */
-    968,    /* State 114: 1 action (accept function_definition) */
-    969,    /* State 115: (unused) */
-    969,    /* State 116: 6 actions (reduce P12 for direct declarator) */
-    975,    /* State 117: 2 actions (after 'struct') */
-    977,    /* State 118: 4 actions (after 'struct ID') */
-    981,    /* State 119: 7 actions (after 'struct {', +UNION, +ENUM) */
-    988,    /* State 120: 7 actions (after 'struct ID {', +UNION, +ENUM) */
-    995,    /* State 121: 3 actions (after member type_spec, +COLON) */
-    998,    /* State 122: 2 actions (after member type_spec *) */
-    1000,   /* State 123: 2 actions (after member type name, +COLON) */
-    1002,   /* State 124: 1 action (after member type * name) */
-    1003,   /* State 125: 5 actions (after member ;) */
-    1008,   /* State 126: 5 actions (after pointer member ;) */
-    1013,   /* State 127: 7 actions (after member_list in anon, +UNION, +ENUM) */
-    1020,   /* State 128: 3 actions (after anon struct }) */
-    1023,   /* State 129: 7 actions (after member_list in named, +UNION, +ENUM) */
-    1030,   /* State 130: 3 actions (after named struct }) */
-    1033,   /* State 131: 3 actions (subsequent member type_spec, +COLON) */
-    1036,   /* State 132: 2 actions (subsequent member type_spec *) */
-    1038,   /* State 133: 2 actions (subsequent member type name, +COLON) */
-    1040,   /* State 134: 1 action (subsequent member type * name) */
-    1041,   /* State 135: 5 actions (subsequent non-pointer ;) */
-    1046,   /* State 136: 5 actions (subsequent pointer ;) */
-    1051,   /* State 137: 2 actions (after 'union') */
-    1053,   /* State 138: 4 actions (after 'union ID') */
-    1057,   /* State 139: 6 actions (after 'union {') */
-    1063,   /* State 140: 6 actions (after 'union ID {') */
-    1069,   /* State 141: 6 actions (after member_list in anon union) */
-    1075,   /* State 142: 3 actions (after anon union }) */
-    1078,   /* State 143: 6 actions (after member_list in named union) */
-    1084,   /* State 144: 3 actions (after named union }) */
-    1087,   /* State 145: 2 actions (after 'enum') */
-    1089,   /* State 146: 4 actions (after 'enum ID') */
-    1093,   /* State 147: 1 action (after 'enum {') */
-    1094,   /* State 148: 1 action (after 'enum ID {') */
-    1095,   /* State 149: 3 actions (after enumerator ID) */
-    1098,   /* State 150: 5 actions (after 'ID =') */
-    1103,   /* State 151: 3 actions (after 'ID = expr', +PLUS) */
-    1106,   /* State 152: 2 actions (after first enumerator) */
-    1108,   /* State 153: 2 actions (after enum_list in anon) */
-    1110,   /* State 154: 3 actions (after 'enum { list }') */
-    1113,   /* State 155: 2 actions (after enum_list in named) */
-    1115,   /* State 156: 1 action (after ',') */
-    1116,   /* State 157: 3 actions (after 'enum ID { list }') */
-    1119,   /* State 158: 3 actions (after subsequent ID) */
-    1122,   /* State 159: 5 actions (after subsequent 'ID =') */
-    1127,   /* State 160: 3 actions (after subsequent 'ID = expr', +PLUS) */
-    1130,   /* State 161: 2 actions (after subsequent enumerator) */
-    1132,   /* State 162: 5 actions (first named bit field ':' expr) */
-    1137,   /* State 163: 2 actions (first named bit field expr done) */
-    1139,   /* State 164: 5 actions (reduce P62) */
-    1144,   /* State 165: 5 actions (subsequent named bit field ':' expr) */
-    1149,   /* State 166: 2 actions (subsequent named bit field expr done) */
-    1151,   /* State 167: 5 actions (reduce P63) */
-    1156,   /* State 168: 5 actions (first anon bit field ':' expr) */
-    1161,   /* State 169: 2 actions (first anon bit field expr done) */
-    1163,   /* State 170: 5 actions (reduce P64) */
-    1168,   /* State 171: 5 actions (subsequent anon bit field ':' expr) */
-    1173,   /* State 172: 2 actions (subsequent anon bit field expr done) */
-    1175,   /* State 173: 5 actions (reduce P65) */
+    IDX_STATE_0,    /* initial state */
+    IDX_STATE_1,    /* after expression */
+    IDX_STATE_2,    /* after term */
+    IDX_STATE_3,    /* after factor */
+    IDX_STATE_4,    /* after IDENTIFIER */
+    IDX_STATE_5,    /* after INTEGER */
+    IDX_STATE_6,    /* after '(' */
+    IDX_STATE_7,    /* after unary '*' */
+    IDX_STATE_8,    /* after unary '&' */
+    IDX_STATE_9,    /* after expr '+' */
+    IDX_STATE_10,   /* after term '*' */
+    IDX_STATE_11,   /* after '( expr' */
+    IDX_STATE_12,   /* after '( expr' (term reduce) */
+    IDX_STATE_13,   /* after 'expr + term' */
+    IDX_STATE_14,   /* after 'term * factor' */
+    IDX_STATE_15,   /* after '* factor' (unary) */
+    IDX_STATE_16,   /* after '& factor' (unary) */
+    IDX_STATE_17,   /* after '*' in declarator path */
+    IDX_STATE_18,   /* after declarator IDENTIFIER (reduce P12) */
+    IDX_STATE_19,   /* after '* declarator' (reduce P11) */
+    IDX_STATE_20,   /* after 'type_specifier declarator' (reduce P10) */
+    IDX_STATE_21,   /* accept declaration */
+    IDX_STATE_22,   /* reduce P13 (expression statement) */
+    IDX_STATE_23,   /* reduce P14 (empty statement) */
+    IDX_STATE_24,   /* accept statement */
+    IDX_STATE_25,   /* after '{' (epsilon reduce P18) */
+    IDX_STATE_26,   /* after '{ statement_list' */
+    IDX_STATE_27,   /* reduce P16 (compound_statement) */
+    IDX_STATE_28,   /* reduce P17 (statement_list) */
+    IDX_STATE_29,   /* accept/reduce P15 (compound) */
+    IDX_STATE_30,   /* after 'if' */
+    IDX_STATE_31,   /* after 'if (' */
+    IDX_STATE_32,   /* after 'if ( expr' */
+    IDX_STATE_33,   /* after 'if ( expr )' */
+    IDX_STATE_34,   /* after 'if ( expr ) stmt' (dangling else) */
+    IDX_STATE_35,   /* after 'if ( expr ) stmt else' */
+    IDX_STATE_36,   /* reduce P21 (if-else) */
+    IDX_STATE_37,   /* reduce P19 (if statement) */
+    IDX_STATE_38,   /* reduce P15 for nested compound */
+    IDX_STATE_39,   /* after 'while' */
+    IDX_STATE_40,   /* after 'while (' */
+    IDX_STATE_41,   /* after 'while ( expr' */
+    IDX_STATE_42,   /* after 'while ( expr )' */
+    IDX_STATE_43,   /* reduce P23 (while body) */
+    IDX_STATE_44,   /* reduce P22 (while statement) */
+    IDX_STATE_45,   /* after 'do' body */
+    IDX_STATE_46,   /* after 'do stmt' */
+    IDX_STATE_47,   /* after 'do stmt while' */
+    IDX_STATE_48,   /* after 'do stmt while (' */
+    IDX_STATE_49,   /* after 'do stmt while ( expr' */
+    IDX_STATE_50,   /* after 'do stmt while ( expr )' */
+    IDX_STATE_51,   /* reduce P25 (do-while body) */
+    IDX_STATE_52,   /* reduce P24 (do-while statement) */
+    IDX_STATE_53,   /* after 'for' */
+    IDX_STATE_54,   /* after 'for (' */
+    IDX_STATE_55,   /* after 'for ( expr' */
+    IDX_STATE_56,   /* after 'for ( expr_opt' */
+    IDX_STATE_57,   /* after 'for ( expr_opt ;' */
+    IDX_STATE_58,   /* after 'for ( ... ; expr' */
+    IDX_STATE_59,   /* after 'for ( ... ; expr_opt' */
+    IDX_STATE_60,   /* after 'for ( ... ; expr_opt ;' */
+    IDX_STATE_61,   /* after 'for ( ... ; ... ; expr' */
+    IDX_STATE_62,   /* after 'for ( ... ; ... ; expr_opt' */
+    IDX_STATE_63,   /* after 'for ( ... )' */
+    IDX_STATE_64,   /* reduce P27 (for body) */
+    IDX_STATE_65,   /* reduce P26 (for statement) */
+    IDX_STATE_66,   /* after 'break' */
+    IDX_STATE_67,   /* reduce P30 (break) */
+    IDX_STATE_68,   /* after 'continue' */
+    IDX_STATE_69,   /* reduce P31 (continue) */
+    IDX_STATE_70,   /* after 'return' */
+    IDX_STATE_71,   /* after 'return expr' */
+    IDX_STATE_72,   /* after 'return expr_opt' */
+    IDX_STATE_73,   /* reduce P32 (return) */
+    IDX_STATE_74,   /* after 'goto' */
+    IDX_STATE_75,   /* after 'goto ID' */
+    IDX_STATE_76,   /* reduce P33 (goto) */
+    IDX_STATE_77,   /* after 'ID :' (labeled statement) */
+    IDX_STATE_78,   /* reduce P34 (labeled statement) */
+    IDX_STATE_79,   /* after 'switch' */
+    IDX_STATE_80,   /* after 'switch (' */
+    IDX_STATE_81,   /* after 'switch ( expr' */
+    IDX_STATE_82,   /* after 'switch ( expr )' */
+    IDX_STATE_83,   /* reduce P35 (switch) */
+    IDX_STATE_84,   /* after 'case' */
+    IDX_STATE_85,   /* after 'case expr' */
+    IDX_STATE_86,   /* after 'case expr :' */
+    IDX_STATE_87,   /* reduce P36 (case) */
+    IDX_STATE_88,   /* after 'default' */
+    IDX_STATE_89,   /* after 'default :' */
+    IDX_STATE_90,   /* reduce P37 (default) */
+    IDX_STATE_91,   /* after 'declarator (' */
+    IDX_STATE_92,   /* reduce P38 (fn decl empty params) */
+    IDX_STATE_93,   /* after 'declarator ( void' */
+    IDX_STATE_94,   /* reduce P39 (fn decl void) */
+    IDX_STATE_95,   /* after '( type_spec' (param) */
+    IDX_STATE_96,   /* after '( type_spec *' (param) */
+    IDX_STATE_97,   /* reduce P12 (param declarator) */
+    IDX_STATE_98,   /* reduce P12 after * (param declarator) */
+    IDX_STATE_99,   /* reduce P43 (parameter_declaration) */
+    IDX_STATE_100,  /* reduce P11 (pointer param declarator) */
+    IDX_STATE_101,  /* reduce P41 (parameter_list start) */
+    IDX_STATE_102,  /* after param_list */
+    IDX_STATE_103,  /* reduce P40 (fn decl with params) */
+    IDX_STATE_104,  /* after 'param_list ,' */
+    IDX_STATE_105,  /* after ', type_spec' */
+    IDX_STATE_106,  /* after ', type_spec *' */
+    IDX_STATE_107,  /* reduce P12 (subsequent param) */
+    IDX_STATE_108,  /* reduce P12 after * (subsequent param) */
+    IDX_STATE_109,  /* reduce P43 (subsequent param_decl) */
+    IDX_STATE_110,  /* reduce P11 (subsequent pointer param) */
+    IDX_STATE_111,  /* reduce P42 (parameter_list extend) */
+    IDX_STATE_112,  /* (unused) */
+    IDX_STATE_113,  /* reduce P44 (function_definition) */
+    IDX_STATE_114,  /* accept function_definition */
+    IDX_STATE_115,  /* (unused) */
+    IDX_STATE_116,  /* reduce P12 (direct declarator) */
+    IDX_STATE_117,  /* after 'struct' */
+    IDX_STATE_118,  /* after 'struct ID' */
+    IDX_STATE_119,  /* after 'struct {' */
+    IDX_STATE_120,  /* after 'struct ID {' */
+    IDX_STATE_121,  /* after member type_spec */
+    IDX_STATE_122,  /* after member type_spec * */
+    IDX_STATE_123,  /* after member type_spec name */
+    IDX_STATE_124,  /* after member type_spec * name */
+    IDX_STATE_125,  /* after member ; (first) */
+    IDX_STATE_126,  /* after pointer member ; (first) */
+    IDX_STATE_127,  /* after member_list (anon struct) */
+    IDX_STATE_128,  /* after anon struct } */
+    IDX_STATE_129,  /* after member_list (named struct) */
+    IDX_STATE_130,  /* after named struct } */
+    IDX_STATE_131,  /* subsequent member type_spec */
+    IDX_STATE_132,  /* subsequent member type_spec * */
+    IDX_STATE_133,  /* subsequent member type_spec name */
+    IDX_STATE_134,  /* subsequent member type_spec * name */
+    IDX_STATE_135,  /* subsequent member ; */
+    IDX_STATE_136,  /* subsequent pointer member ; */
+    IDX_STATE_137,  /* after 'union' */
+    IDX_STATE_138,  /* after 'union ID' */
+    IDX_STATE_139,  /* after 'union {' */
+    IDX_STATE_140,  /* after 'union ID {' */
+    IDX_STATE_141,  /* after member_list (anon union) */
+    IDX_STATE_142,  /* after anon union } */
+    IDX_STATE_143,  /* after member_list (named union) */
+    IDX_STATE_144,  /* after named union } */
+    IDX_STATE_145,  /* after 'enum' */
+    IDX_STATE_146,  /* after 'enum ID' */
+    IDX_STATE_147,  /* after 'enum {' */
+    IDX_STATE_148,  /* after 'enum ID {' */
+    IDX_STATE_149,  /* after enumerator ID */
+    IDX_STATE_150,  /* after 'ID =' (enum value) */
+    IDX_STATE_151,  /* after 'ID = expr' (enum value) */
+    IDX_STATE_152,  /* after first enumerator */
+    IDX_STATE_153,  /* after enum_list (anon) */
+    IDX_STATE_154,  /* after 'enum { list }' */
+    IDX_STATE_155,  /* after enum_list (named) */
+    IDX_STATE_156,  /* after ',' (enum) */
+    IDX_STATE_157,  /* after 'enum ID { list }' */
+    IDX_STATE_158,  /* after subsequent enumerator ID */
+    IDX_STATE_159,  /* after subsequent 'ID =' */
+    IDX_STATE_160,  /* after subsequent 'ID = expr' */
+    IDX_STATE_161,  /* after subsequent enumerator */
+    IDX_STATE_162,  /* first named bit field ':' */
+    IDX_STATE_163,  /* first named bit field expr done */
+    IDX_STATE_164,  /* reduce P62 (first named bit field) */
+    IDX_STATE_165,  /* subsequent named bit field ':' */
+    IDX_STATE_166,  /* subsequent named bit field expr done */
+    IDX_STATE_167,  /* reduce P63 (subsequent named bit field) */
+    IDX_STATE_168,  /* first anon bit field ':' */
+    IDX_STATE_169,  /* first anon bit field expr done */
+    IDX_STATE_170,  /* reduce P64 (first anon bit field) */
+    IDX_STATE_171,  /* subsequent anon bit field ':' */
+    IDX_STATE_172,  /* subsequent anon bit field expr done */
+    IDX_STATE_173,  /* reduce P65 (subsequent anon bit field) */
     /* ========== NESTED TYPE MEMBER STATES (E5) ========== */
-    1180,   /* State 174: 2 actions (after struct_spec first) */
-    1182,   /* State 175: 2 actions (after struct_spec * first) */
-    1184,   /* State 176: 1 action (after struct_spec ID first) */
-    1185,   /* State 177: 1 action (after struct_spec * ID first) */
-    1186,   /* State 178: 7 actions (reduce P66) */
-    1193,   /* State 179: 7 actions (reduce P67) */
-    1200,   /* State 180: 2 actions (after struct_spec subsequent) */
-    1202,   /* State 181: 2 actions (after struct_spec * subsequent) */
-    1204,   /* State 182: 1 action (after struct_spec ID subsequent) */
-    1205,   /* State 183: 1 action (after struct_spec * ID subsequent) */
-    1206,   /* State 184: 7 actions (reduce P68) */
-    1213,   /* State 185: 7 actions (reduce P69) */
-    1220,   /* State 186: 2 actions (after enum_spec first) */
-    1222,   /* State 187: 2 actions (after enum_spec * first) */
-    1224,   /* State 188: 1 action (after enum_spec ID first) */
-    1225,   /* State 189: 1 action (after enum_spec * ID first) */
-    1226,   /* State 190: 7 actions (reduce P70) */
-    1233,   /* State 191: 7 actions (reduce P71) */
-    1240,   /* State 192: 2 actions (after enum_spec subsequent) */
-    1242,   /* State 193: 2 actions (after enum_spec * subsequent) */
-    1244,   /* State 194: 1 action (after enum_spec ID subsequent) */
-    1245,   /* State 195: 1 action (after enum_spec * ID subsequent) */
-    1246,   /* State 196: 7 actions (reduce P72) */
-    1253,   /* State 197: 7 actions (reduce P73) */
+    IDX_STATE_174,  /* after struct_spec (first member) */
+    IDX_STATE_175,  /* after struct_spec * (first member) */
+    IDX_STATE_176,  /* after struct_spec ID (first member) */
+    IDX_STATE_177,  /* after struct_spec * ID (first member) */
+    IDX_STATE_178,  /* reduce P66 (nested struct member) */
+    IDX_STATE_179,  /* reduce P67 (nested struct ptr member) */
+    IDX_STATE_180,  /* after struct_spec (subsequent member) */
+    IDX_STATE_181,  /* after struct_spec * (subsequent member) */
+    IDX_STATE_182,  /* after struct_spec ID (subsequent member) */
+    IDX_STATE_183,  /* after struct_spec * ID (subsequent member) */
+    IDX_STATE_184,  /* reduce P68 (subsequent nested struct) */
+    IDX_STATE_185,  /* reduce P69 (subsequent nested struct ptr) */
+    IDX_STATE_186,  /* after enum_spec (first member) */
+    IDX_STATE_187,  /* after enum_spec * (first member) */
+    IDX_STATE_188,  /* after enum_spec ID (first member) */
+    IDX_STATE_189,  /* after enum_spec * ID (first member) */
+    IDX_STATE_190,  /* reduce P70 (nested enum member) */
+    IDX_STATE_191,  /* reduce P71 (nested enum ptr member) */
+    IDX_STATE_192,  /* after enum_spec (subsequent member) */
+    IDX_STATE_193,  /* after enum_spec * (subsequent member) */
+    IDX_STATE_194,  /* after enum_spec ID (subsequent member) */
+    IDX_STATE_195,  /* after enum_spec * ID (subsequent member) */
+    IDX_STATE_196,  /* reduce P72 (subsequent nested enum) */
+    IDX_STATE_197,  /* reduce P73 (subsequent nested enum ptr) */
     /* ========== TYPEDEF DECLARATION STATES (E6) ========== */
-    1260,   /* State 198: 6 actions (after 'typedef') */
-    1266,   /* State 199: 2 actions (after 'typedef type_spec') */
-    1268,   /* State 200: 2 actions (after 'typedef type_spec *') */
-    1270,   /* State 201: 1 action (after 'typedef type_spec ID') */
-    1271,   /* State 202: 1 action (after 'typedef type_spec *... ID') */
-    1272,   /* State 203: 8 actions (reduce P74) */
-    1280,   /* State 204: 8 actions (reduce P75) */
-    1288,   /* State 205: 2 actions (after 'typedef struct_spec') */
-    1290,   /* State 206: 2 actions (after 'typedef struct_spec *') */
-    1292,   /* State 207: 1 action (after 'typedef struct_spec ID') */
-    1293,   /* State 208: 1 action (after 'typedef struct_spec *... ID') */
-    1294,   /* State 209: 8 actions (reduce P76) */
-    1302,   /* State 210: 8 actions (reduce P77) */
-    1310,   /* State 211: 2 actions (after 'typedef enum_spec') */
-    1312,   /* State 212: 2 actions (after 'typedef enum_spec *') */
-    1314,   /* State 213: 1 action (after 'typedef enum_spec ID') */
-    1315,   /* State 214: 1 action (after 'typedef enum_spec *... ID') */
-    1316,   /* State 215: 8 actions (reduce P78) */
-    1324,   /* State 216: 8 actions (reduce P79) */
-    1332    /* End marker */
+    IDX_STATE_198,  /* after 'typedef' */
+    IDX_STATE_199,  /* after 'typedef type_spec' */
+    IDX_STATE_200,  /* after 'typedef type_spec *' */
+    IDX_STATE_201,  /* after 'typedef type_spec ID' */
+    IDX_STATE_202,  /* after 'typedef type_spec *... ID' */
+    IDX_STATE_203,  /* reduce P74 (typedef simple) */
+    IDX_STATE_204,  /* reduce P75 (typedef pointer) */
+    IDX_STATE_205,  /* after 'typedef struct_spec' */
+    IDX_STATE_206,  /* after 'typedef struct_spec *' */
+    IDX_STATE_207,  /* after 'typedef struct_spec ID' */
+    IDX_STATE_208,  /* after 'typedef struct_spec *... ID' */
+    IDX_STATE_209,  /* reduce P76 (typedef struct) */
+    IDX_STATE_210,  /* reduce P77 (typedef struct ptr) */
+    IDX_STATE_211,  /* after 'typedef enum_spec' */
+    IDX_STATE_212,  /* after 'typedef enum_spec *' */
+    IDX_STATE_213,  /* after 'typedef enum_spec ID' */
+    IDX_STATE_214,  /* after 'typedef enum_spec *... ID' */
+    IDX_STATE_215,  /* reduce P78 (typedef enum) */
+    IDX_STATE_216,  /* reduce P79 (typedef enum ptr) */
+    IDX_STATE_217,  /* after 'declarator [' - array dimension start */
+    IDX_STATE_218,  /* after 'declarator []' - unsized array reduce */
+    IDX_STATE_219,  /* after 'declarator [ expr' - expect ] */
+    IDX_STATE_220,  /* after 'declarator [ expr ]' - sized array reduce */
+    IDX_STATE_221   /* End marker */
 };
 
-#define NUM_STATES 217
+/* NUM_STATES derived from array size (array has NUM_STATES + 1 entries for end marker) */
+#define NUM_STATES ((i32)(magnitudo(ACTIO_INDICES) / magnitudo(ACTIO_INDICES[0])) - 1)
 
 /* ==================================================
  * GOTO Table
@@ -2782,7 +3306,16 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
 
     /* From state 198: after 'typedef' - struct/enum specifier reduces */
     { 198, INT_NT_STRUCT_SPEC,      205 },  /* typedef struct { } → ID path */
-    { 198, INT_NT_ENUM_SPEC,        211 }   /* typedef enum { } → ID path */
+    { 198, INT_NT_ENUM_SPEC,        211 },  /* typedef enum { } → ID path */
+
+    /* ==================================================
+     * Array Declarator GOTO Entries (State 217)
+     * ================================================== */
+
+    /* From state 217: after 'declarator [' - expression for array size */
+    { 217, INT_NT_EXPR,   219 },  /* array size expression -> state 219 */
+    { 217, INT_NT_TERM,   2 },    /* reuse term state */
+    { 217, INT_NT_FACTOR, 3 }     /* reuse factor state */
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));

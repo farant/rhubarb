@@ -3843,6 +3843,265 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Array declarators (Phase E7)
+     * ========================================================
+     *
+     * Phase E7 state machine complete - array tests enabled.
+     */
+
+    /* Test fixed size array: int arr[10] */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans array fixed: int arr[10] ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int arr[10]");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+                si (decl->datum.declarator.dimensiones != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator.dimensiones), 1);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test unsized array: int arr[] */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans array unsized: int arr[] ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int arr[]");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+                si (decl->datum.declarator.dimensiones != NIHIL)
+                {
+                    Arbor2Nodus** dim;
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator.dimensiones), 1);
+                    dim = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
+                    CREDO_NIHIL(*dim);  /* Unsized array has NIHIL dimension */
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test multi-dimensional array: int matrix[10][20] */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans array multi-dim: int matrix[10][20] ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int matrix[10][20]");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+                si (decl->datum.declarator.dimensiones != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator.dimensiones), 2);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* Test array of pointers: int *arr[10] */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans array of pointers: int *arr[10] ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int *arr[10]");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)decl->datum.declarator.num_stellae, 1);
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+    /* TODO: Struct member arrays require grammar rule changes (P48-P51)
+     * Disable test until struct_member_list rules support array declarators.
+     */
+#if 0
+    /* Test struct member array: struct { int arr[5]; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct member array: struct { int arr[5]; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct { int arr[5]; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+#endif
+
+    /* TODO: Typedef arrays require grammar rule changes (P74-P79)
+     * Disable test until typedef rules use declarator non-terminal.
+     */
+#if 0
+    /* Test typedef array: typedef int IntArray[10] */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef array: typedef int IntArray[10]; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef int IntArray[10];");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_VERUM(res.radix->datum.declaratio.est_typedef);
+            si (res.radix->datum.declaratio.declarator != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+#endif
+
+    /* Test expression size: int arr[1 + 2] */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans array expr size: int arr[1 + 2] ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int arr[1 + 2]");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.declarator != NIHIL)
+        {
+            Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
+            CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+            si (decl->datum.declarator.dimensiones != NIHIL)
+            {
+                Arbor2Nodus** dim = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
+                CREDO_NON_NIHIL(*dim);  /* Should have expression node */
+                si (*dim != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)(*dim)->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                }
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

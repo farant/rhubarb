@@ -169,6 +169,7 @@ structura Arbor2Nodus {
             s32                 num_stellae;    /* Number of * pointers */
             chorda              titulus;        /* Variable name (empty for anonymous bit fields) */
             Arbor2Nodus*        latitudo_biti;  /* Bit field width expr, NIHIL if not bit field */
+            Xar*                dimensiones;    /* Array dimensions (Xar of Arbor2Nodus*), NIHIL if not array */
         } declarator;
 
         /* DECLARATOR_FUNCTI (function declarator) */

@@ -706,6 +706,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -742,6 +743,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -773,6 +775,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -805,6 +808,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -843,6 +847,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = expr_node;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -877,6 +882,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = expr_node;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -913,6 +919,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus.datum = NIHIL;
                             decl_node->datum.declarator.titulus.mensura = ZEPHYRUM;  /* anonymous */
                             decl_node->datum.declarator.latitudo_biti = expr_node;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -947,6 +954,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus.datum = NIHIL;
                             decl_node->datum.declarator.titulus.mensura = ZEPHYRUM;  /* anonymous */
                             decl_node->datum.declarator.latitudo_biti = expr_node;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -983,6 +991,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1013,6 +1022,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;  /* pointer */
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1043,6 +1053,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1072,6 +1083,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;  /* pointer */
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1100,6 +1112,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1128,6 +1141,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1156,6 +1170,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1183,6 +1198,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1210,6 +1226,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             spec_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             spec_node->genus = ARBOR2_NODUS_IDENTIFICATOR;
@@ -1238,6 +1255,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;  /* pointer */
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             spec_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             spec_node->genus = ARBOR2_NODUS_IDENTIFICATOR;
@@ -1266,6 +1284,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1289,6 +1308,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;  /* pointer */
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1312,6 +1332,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = ZEPHYRUM;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1335,6 +1356,7 @@ _processare_unam_actionem(
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.num_stellae = I;  /* pointer */
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
+                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1359,7 +1381,71 @@ _processare_unam_actionem(
                         frange;
 
                     casus ARBOR2_NODUS_DECLARATOR:
-                        si (num_pop == II)
+                        /* ========== ARRAY DECLARATOR P80-P81 ========== */
+                        si (actio->valor == 80)
+                        {
+                            /* P80: declarator '[' expression ']' (4 symbols, sized array) */
+                            /* valori: [3]=declarator, [2]='[', [1]=expr, [0]=']' */
+                            Arbor2Nodus* inner = valori[III];
+                            Arbor2Nodus* size_expr = valori[I];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                            valor_novus->lexema = inner->lexema;
+
+                            /* Copy base declarator fields */
+                            valor_novus->datum.declarator.num_stellae = inner->datum.declarator.num_stellae;
+                            valor_novus->datum.declarator.titulus = inner->datum.declarator.titulus;
+                            valor_novus->datum.declarator.latitudo_biti = inner->datum.declarator.latitudo_biti;
+
+                            /* Create or extend dimensions array */
+                            si (inner->datum.declarator.dimensiones != NIHIL)
+                            {
+                                valor_novus->datum.declarator.dimensiones = inner->datum.declarator.dimensiones;
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            }
+
+                            /* Add this dimension (expression for sized array) */
+                            {
+                                Arbor2Nodus** slot = xar_addere(valor_novus->datum.declarator.dimensiones);
+                                *slot = size_expr;
+                            }
+                        }
+                        alioquin si (actio->valor == 81)
+                        {
+                            /* P81: declarator '[' ']' (3 symbols, unsized array) */
+                            /* valori: [2]=declarator, [1]='[', [0]=']' */
+                            Arbor2Nodus* inner = valori[II];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                            valor_novus->lexema = inner->lexema;
+
+                            /* Copy base declarator fields */
+                            valor_novus->datum.declarator.num_stellae = inner->datum.declarator.num_stellae;
+                            valor_novus->datum.declarator.titulus = inner->datum.declarator.titulus;
+                            valor_novus->datum.declarator.latitudo_biti = inner->datum.declarator.latitudo_biti;
+
+                            /* Create or extend dimensions array */
+                            si (inner->datum.declarator.dimensiones != NIHIL)
+                            {
+                                valor_novus->datum.declarator.dimensiones = inner->datum.declarator.dimensiones;
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            }
+
+                            /* Add NIHIL dimension for unsized array */
+                            {
+                                Arbor2Nodus** slot = xar_addere(valor_novus->datum.declarator.dimensiones);
+                                *slot = NIHIL;
+                            }
+                        }
+                        alioquin si (num_pop == II)
                         {
                             /* P11: declarator -> '*' declarator */
                             /* Si interior est DECLARATOR_FUNCTI, preservare genus functi */
@@ -1392,12 +1478,18 @@ _processare_unam_actionem(
                                         valori[ZEPHYRUM]->datum.declarator.num_stellae + I;
                                     valor_novus->datum.declarator.titulus =
                                         valori[ZEPHYRUM]->datum.declarator.titulus;
+                                    valor_novus->datum.declarator.latitudo_biti =
+                                        valori[ZEPHYRUM]->datum.declarator.latitudo_biti;
+                                    valor_novus->datum.declarator.dimensiones =
+                                        valori[ZEPHYRUM]->datum.declarator.dimensiones;
                                 }
                                 alioquin
                                 {
                                     valor_novus->datum.declarator.num_stellae = I;
                                     valor_novus->datum.declarator.titulus.datum = NIHIL;
                                     valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                                    valor_novus->datum.declarator.latitudo_biti = NIHIL;
+                                    valor_novus->datum.declarator.dimensiones = NIHIL;
                                 }
                             }
                         }
@@ -1408,6 +1500,8 @@ _processare_unam_actionem(
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
                             valor_novus->lexema = lexemata[ZEPHYRUM];
                             valor_novus->datum.declarator.num_stellae = ZEPHYRUM;
+                            valor_novus->datum.declarator.latitudo_biti = NIHIL;
+                            valor_novus->datum.declarator.dimensiones = NIHIL;
                             si (valori[ZEPHYRUM] != NIHIL)
                             {
                                 valor_novus->datum.declarator.titulus =

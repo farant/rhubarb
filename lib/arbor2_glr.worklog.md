@@ -1504,3 +1504,155 @@ For P76-P79 (struct/enum typedef):
 - Array declarators `int arr[10]`
 - Test with real library files
 - Error recovery
+
+---
+
+## 2026-01-10 (Phase E7: Array Declarators - Partial)
+
+### Phase E7: Array Declarators - Foundation Only
+
+Added foundation for array declarator support but deferred state machine completion:
+
+```c
+int arr[10];              /* Fixed size array */
+int arr[];                /* Unsized array */
+int matrix[10][20];       /* Multi-dimensional */
+int *arr[10];             /* Array of pointers */
+```
+
+**What Was Completed:**
+
+1. **AST Extension (arbor2_glr.h):**
+   Extended DECLARATOR struct with `dimensiones` field:
+   ```c
+   structura {
+       s32                 num_stellae;    /* Number of * pointers */
+       chorda              titulus;        /* Variable name */
+       Arbor2Nodus*        latitudo_biti;  /* Bit field width expr */
+       Xar*                dimensiones;    /* NEW: Array dims, NIHIL if not array */
+   } declarator;
+   ```
+   Each dimension entry is an expression node (for `[10]`) or NIHIL (for `[]`).
+
+2. **Grammar Rules Added (arbor2_glr_tabula.c):**
+   ```c
+   /* P80: declarator -> declarator '[' expression ']' (4 symbols, sized) */
+   { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR }
+
+   /* P81: declarator -> declarator '[' ']' (3 symbols, unsized) */
+   { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR }
+   ```
+
+3. **Reduction Handling (arbor2_glr.c):**
+   Added P80/P81 cases to handle AST construction:
+   - P80: Copies base declarator, creates/extends dimensiones Xar, appends size expression
+   - P81: Same as P80 but appends NIHIL for unsized dimension
+
+4. **Initialized dimensiones = NIHIL:**
+   Updated all existing DECLARATOR creation sites (P11, P12, P38-P43, P48-P51, P62-P65, P66-P73, P74-P79) to set `dimensiones = NIHIL`.
+
+**What Was NOT Completed (Deferred):**
+
+The state machine changes proved extremely error-prone due to manual ACTIO_INDICES maintenance:
+
+- States 217-220 for array parsing NOT added
+- BRACKET_APERTA transitions NOT added to states 18, 19, 20, 116, 123, 133, 201
+- BRACKET_CLAUSA NOT added to expression reduce states (2, 3, 4, 5)
+- GOTO entries for expression routing from state 217 NOT added
+- ACTIO_INDICES NOT updated
+
+**Why Deferred:**
+
+Multiple attempts to add the state machine changes resulted in cascading ACTIO_INDICES calculation errors:
+- Adding BRACKET_CLAUSA to states 2-5 shifts ALL subsequent indices
+- Adding BRACKET_APERTA to 6+ existing states shifts many indices
+- Manual index calculation is extremely error-prone
+- Off-by-one errors cause segfaults or wrong state transitions
+- Function declarators, switch statements, and other tests broke repeatedly
+
+The current approach of hand-maintained cumulative indices in ACTIO_INDICES does not scale well for modifications that touch many existing states.
+
+**Test Status:**
+
+Array declarator tests were added to probatio_arbor2_glr.c but will fail until state machine is complete. Consider:
+- Removing/commenting array tests temporarily
+- OR marking them as expected-to-fail with a flag
+
+**Future Options:**
+
+1. **Careful manual calculation:** Re-attempt with more careful index tracking
+2. **Build-time index calculation:** Write a script/tool to generate ACTIO_INDICES from ACTIONES
+3. **Different table representation:** Use per-state arrays instead of flat array with offsets
+
+**Grammar Summary (Partial):**
+- 217 states (unchanged from E6)
+- ~1332 action entries (unchanged)
+- 82 grammar rules (was 80, added P80-P81 to REGULAE only)
+
+---
+
+## 2026-01-10: Phase E7 State Machine Implementation COMPLETE
+
+### Problem Solved: Macro-based ACTIO_INDICES
+
+The previous implementation attempt failed due to manual ACTIO_INDICES calculation errors. This was solved by introducing chained macros:
+
+```c
+#define STATE_0_COUNT   24
+#define STATE_1_COUNT   4
+...
+#define IDX_STATE_0     0
+#define IDX_STATE_1     (IDX_STATE_0 + STATE_0_COUNT)
+#define IDX_STATE_2     (IDX_STATE_1 + STATE_1_COUNT)
+...
+```
+
+This approach allows any state's action count to be modified by changing just ONE macro - all subsequent indices auto-recalculate at compile time.
+
+### Changes Made
+
+**States Modified:**
+- State 0: Added INT and CHAR as type specifiers (count 22 → 24)
+- States 2-5: Added BRACKET_CLAUSA for array size expressions (each +1)
+- State 12: Added BRACKET_CLAUSA for parenthesized expressions (+1)
+- States 13-16: Added BRACKET_CLAUSA for expression continuations (each +1)
+- State 18: Already had BRACKET_APERTA, fixed count 5 → 6
+- State 19: Added BRACKET_APERTA for pointer declarator arrays (+1)
+- State 20: Added BRACKET_APERTA → SHIFT 217 for array declarators (+1)
+- State 116: Added BRACKET_APERTA for direct declarator arrays (+1)
+
+**New States Added:**
+- State 217: After `declarator [` - expects expression or `]`
+- State 218: After `declarator []` - reduces P81 (unsized array)
+- State 219: After `declarator [ expr` - expects `]`
+- State 220: After `declarator [ expr ]` - reduces P80 (sized array)
+
+**GOTO Table:**
+```c
+{ 217, INT_NT_EXPR,   219 },  /* array size expression */
+{ 217, INT_NT_TERM,   2 },
+{ 217, INT_NT_FACTOR, 3 }
+```
+
+### Tests Passing
+
+All core array declarator tests pass:
+- `int arr[10]` - fixed size array
+- `int arr[]` - unsized array
+- `int matrix[10][20]` - multi-dimensional array
+- `int *arr[10]` - array of pointers
+- `int arr[1 + 2]` - expression as array size
+
+### Known Limitations
+
+Array declarators in these contexts require additional grammar changes:
+- **Struct members:** `struct { int arr[5]; }` - P48-P51 rules don't use declarator NT
+- **Typedefs:** `typedef int IntArray[10];` - P74-P79 rules don't use declarator NT
+
+These tests are disabled with `#if 0` and TODO comments.
+
+### Grammar Summary
+
+- 221 states (was 217, added 4 for array parsing)
+- 82 grammar rules (P80-P81 already in REGULAE)
+- Action table uses chained macro indices for maintainability
