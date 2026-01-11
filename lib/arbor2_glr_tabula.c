@@ -302,7 +302,33 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM },
 
     /* P84: term -> term '%' factor */
-    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM }
+    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* ========== COMPARISON OPERATORS (P85-P92) ========== */
+
+    /* P85: aequalitas -> aequalitas '==' comparatio */
+    { ARBOR2_NT_AEQUALITAS, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P86: aequalitas -> aequalitas '!=' comparatio */
+    { ARBOR2_NT_AEQUALITAS, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P87: aequalitas -> comparatio (pass-through) */
+    { ARBOR2_NT_AEQUALITAS, 1, ARBOR2_NODUS_ERROR },
+
+    /* P88: comparatio -> comparatio '<' expressio */
+    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P89: comparatio -> comparatio '>' expressio */
+    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P90: comparatio -> comparatio '<=' expressio */
+    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P91: comparatio -> comparatio '>=' expressio */
+    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P92: comparatio -> expressio (pass-through) */
+    { ARBOR2_NT_COMPARATIO, 1, ARBOR2_NODUS_ERROR }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -363,19 +389,35 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,  4 },   /* int type specifier */
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,  4 },   /* char type specifier */
 
-    /* State 1: After expression - expect '+', '-', ';', or end */
-    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    /* State 1: After expression - continue with +/-, start comparison, or reduce to comparatio */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },   /* continue expression */
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },   /* E9: subtraction */
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 22 },   /* expression statement */
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 0 },  /* for nested */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* for compound */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 92 },  /* for case/label */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 92 },  /* for enums/params */
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 92 },  /* for array size */
 
-    /* State 2: After term - expect '*', '/', '%', '+', '-', ';', '}', ':', ',', or end */
+    /* State 2: After term - expect '*', '/', '%', '+', '-', comparison ops, or end */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10 },
     { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10 },  /* E9: division */
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10 },  /* E9: modulo */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 2 },  /* expression -> term */
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 2 },  /* E9: reduce for - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 2 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 2 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 2 },
@@ -390,6 +432,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 4 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 4 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 4 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 4 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 4 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 4 },
@@ -406,6 +454,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116 }, /* decl: direct declarator name */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 5 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 5 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 5 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 5 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 5 },
@@ -421,6 +475,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 6 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 6 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 6 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 6 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 6 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 6 },
@@ -464,10 +524,16 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
 
-    /* State 11: After '(' expression - expect ')' or '+' or '-' */
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT,  12 },
-    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    /* State 11: After '(' expression - expect ')' or operators */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },   /* continue expression */
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },   /* E9: subtraction */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio before ) */
 
     /* State 12: After '(' expression ')' - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 7 },  /* factor -> (expr) */
@@ -475,6 +541,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 7 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 7 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 7 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 7 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 7 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 7 },
@@ -489,6 +561,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10 },  /* E9: % binds tighter */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 1 },   /* expr -> expr + term */
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 1 },   /* E9: same precedence */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: < lower prec */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: > lower prec */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: <= lower prec */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: >= lower prec */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: == lower prec */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: != lower prec */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 1 },   /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 1 },   /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 1 },
@@ -503,6 +581,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 3 },  /* E9: same precedence */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 3 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 3 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 3 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 3 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 3 },
@@ -517,6 +601,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 8 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 8 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 8 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 8 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 8 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 8 },
@@ -531,6 +621,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 9 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 9 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 9 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: != */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 9 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 },  /* for compound */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 9 },  /* for enum values */
@@ -550,6 +646,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 12 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 12 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: != */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then fn decl */
@@ -563,6 +665,12 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 11 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 11 },  /* E9: - */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: < */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: > */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: <= */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: >= */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: == */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: != */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
@@ -756,9 +864,16 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
 
-    /* State 32: After 'if ( expr' - expect ')' */
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 33 },
+    /* State 32: After 'if ( expr' - expect ')' or continue expression */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },
 
     /* State 33: After 'if ( expr )' - expect statement */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
@@ -908,9 +1023,16 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
 
-    /* State 41: After 'while ( expr' - expect ')' */
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 42 },
+    /* State 41: After 'while ( expr' - expect ')' or continue expression */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },
 
     /* State 42: After 'while ( expr )' - expect statement (loop body) */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
@@ -1015,9 +1137,16 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
 
-    /* State 49: After 'do stmt while ( expr' - expect ')' */
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 50 },
+    /* State 49: After 'do stmt while ( expr' - expect ')' or continue */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },
 
     /* State 50: After 'do stmt while ( expr )' - expect ';' */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 51 },
@@ -1097,8 +1226,16 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 29 },  /* epsilon: expr_opt -> ε */
 
-    /* State 58: After 'for ( expr_opt ; expression' - reduce to expr_opt */
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 28 },  /* expr_opt -> expression */
+    /* State 58: After 'for ( expr_opt ; expression' - continue or reduce to comparatio */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },
 
     /* State 59: After 'for ( expr_opt ; expr_opt' - expect second ';' */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 60 },
@@ -1363,9 +1500,16 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
 
-    /* State 81: After 'switch ( expr' - expect ')' */
+    /* State 81: After 'switch ( expr' - expect ')' or continue */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 82 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },
 
     /* State 82: After 'switch ( expr )' - expect statement (body) */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
@@ -2410,7 +2554,120 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 72 },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 72 },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 72 },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 72 }
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 72 },
+
+    /* ========== COMPARISON/EQUALITY STATES (E9 Part 2) ========== */
+
+    /* State 239: After comparatio - shift to continue chain or reduce to aequalitas */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* start equality */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },  /* start equality */
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* chain: comp < ... */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* chain: comp > ... */
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* chain: comp <= ... */
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* chain: comp >= ... */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 87 },  /* comparatio -> aequalitas */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 87 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87 },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 87 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 87 },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 87 },
+
+    /* State 240: After aequalitas at top-level - accept or continue equality chain */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 22 },   /* expression statement */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality: aeq == ... */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality: aeq != ... */
+
+    /* State 241: After 'comparatio <|>|<=|>=' - expect expression starters */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+
+    /* State 242: After 'aequalitas ==|!=' - expect comparatio (expression starters) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+
+    /* State 243: After 'comparatio <|>|<=|>= expression' - continue expr or reduce P88 */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },   /* +/- have higher prec: continue expr */
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 88 },  /* left-associativity: reduce then continue */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 88 },  /* lower prec: reduce */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 88 },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 88 },
+
+    /* State 244: After 'aequalitas ==|!= comparatio' - reduce P85 */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 85 },  /* left-associativity */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 85 },
+
+    /* State 245: After aequalitas inside parens - shift ) or continue equality chain */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 12 },   /* complete paren-expr */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue: aeq == ... */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },  /* continue: aeq != ... */
+
+    /* State 246: After comparatio in if condition - reduce to aequalitas or continue chain */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87 },  /* comparatio -> aequalitas */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* start equality */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* chain comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+
+    /* State 247: After aequalitas in if condition - shift ) or continue equality chain */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 33 },   /* continue to then-branch */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+
+    /* State 248: After aequalitas in while condition - shift ) or continue equality chain */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 42 },   /* continue to while body */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+
+    /* State 249: After comparatio in for condition - reduce to aequalitas or continue */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 87 },  /* reduce to aequalitas */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* start equality */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241 },  /* chain comparison */
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },
+
+    /* State 250: After aequalitas in for condition - reduce to expr_opt or continue equality */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 28 },  /* reduce to expr_opt */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+
+    /* State 251: After aequalitas in do-while condition - shift ) or continue equality */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 50 },   /* continue to do-while completion */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+
+    /* State 252: After aequalitas in switch condition - shift ) or continue equality */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 82 },   /* continue to switch body */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -2425,25 +2682,25 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
  * ================================================== */
 
 #define STATE_0_COUNT   24
-#define STATE_1_COUNT   5   /* E9: +1 for MINUS */
-#define STATE_2_COUNT   12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_3_COUNT   12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_4_COUNT   15  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_5_COUNT   12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_1_COUNT   15  /* E9.2: +10 for comparison/equality ops */
+#define STATE_2_COUNT   18  /* E9.2: +6 for comparison ops */
+#define STATE_3_COUNT   18  /* E9.2: +6 for comparison ops */
+#define STATE_4_COUNT   21  /* E9.2: +6 for comparison ops */
+#define STATE_5_COUNT   18  /* E9.2: +6 for comparison ops */
 #define STATE_6_COUNT   5
 #define STATE_7_COUNT   5
 #define STATE_8_COUNT   5
 #define STATE_9_COUNT   5
 #define STATE_10_COUNT  5
-#define STATE_11_COUNT  3   /* E9: +1 for MINUS */
-#define STATE_12_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_13_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_14_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_15_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
-#define STATE_16_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_11_COUNT  9   /* E9.2: +6 for comparison ops */
+#define STATE_12_COUNT  18  /* E9.2: +6 for comparison ops */
+#define STATE_13_COUNT  18  /* E9.2: +6 for comparison ops */
+#define STATE_14_COUNT  18  /* E9.2: +6 for comparison ops */
+#define STATE_15_COUNT  18  /* E9.2: +6 for comparison ops */
+#define STATE_16_COUNT  18  /* E9.2: +6 for comparison ops */
 #define STATE_17_COUNT  2
-#define STATE_18_COUNT  11  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS (was 8) */
-#define STATE_19_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS (was 9) */
+#define STATE_18_COUNT  17  /* E9.2: +6 for comparison ops */
+#define STATE_19_COUNT  18  /* E9.2: +6 for comparison ops */
 #define STATE_20_COUNT  7
 #define STATE_21_COUNT  1
 #define STATE_22_COUNT  21
@@ -2456,7 +2713,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_29_COUNT  21
 #define STATE_30_COUNT  1
 #define STATE_31_COUNT  5
-#define STATE_32_COUNT  2
+#define STATE_32_COUNT  9   /* E9.2: added comparison operators */
 #define STATE_33_COUNT  18
 #define STATE_34_COUNT  21
 #define STATE_35_COUNT  18
@@ -2465,7 +2722,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_38_COUNT  21
 #define STATE_39_COUNT  1
 #define STATE_40_COUNT  5
-#define STATE_41_COUNT  2
+#define STATE_41_COUNT  9   /* E9.2: added comparison operators */
 #define STATE_42_COUNT  18
 #define STATE_43_COUNT  21
 #define STATE_44_COUNT  21
@@ -2473,7 +2730,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_46_COUNT  1
 #define STATE_47_COUNT  1
 #define STATE_48_COUNT  5
-#define STATE_49_COUNT  2
+#define STATE_49_COUNT  9   /* E9.2: added comparison operators */
 #define STATE_50_COUNT  1
 #define STATE_51_COUNT  21
 #define STATE_52_COUNT  21
@@ -2482,7 +2739,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_55_COUNT  1
 #define STATE_56_COUNT  1
 #define STATE_57_COUNT  6
-#define STATE_58_COUNT  1
+#define STATE_58_COUNT  9   /* E9.2: added comparison operators */
 #define STATE_59_COUNT  1
 #define STATE_60_COUNT  6
 #define STATE_61_COUNT  1
@@ -2505,7 +2762,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_78_COUNT  21
 #define STATE_79_COUNT  1
 #define STATE_80_COUNT  5
-#define STATE_81_COUNT  2
+#define STATE_81_COUNT  9   /* E9.2: added comparison operators */
 #define STATE_82_COUNT  18
 #define STATE_83_COUNT  21
 #define STATE_84_COUNT  5
@@ -2663,6 +2920,22 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_236_COUNT 7
 #define STATE_237_COUNT 2
 #define STATE_238_COUNT 7
+
+/* E9.2 Comparison/Equality States */
+#define STATE_239_COUNT 13  /* after comparatio */
+#define STATE_240_COUNT 4   /* after aequalitas at top-level (accept) */
+#define STATE_241_COUNT 5   /* after comparison op */
+#define STATE_242_COUNT 5   /* after equality op */
+#define STATE_243_COUNT 15  /* after comp op expr (reduce P88) */
+#define STATE_244_COUNT 9   /* after eq op comparatio (reduce P85) */
+#define STATE_245_COUNT 3   /* after aequalitas inside parens */
+#define STATE_246_COUNT 7   /* after comparatio in if condition */
+#define STATE_247_COUNT 3   /* after aequalitas in if condition */
+#define STATE_248_COUNT 3   /* after aequalitas in while condition */
+#define STATE_249_COUNT 7   /* after comparatio in for condition */
+#define STATE_250_COUNT 3   /* after aequalitas in for condition */
+#define STATE_251_COUNT 3   /* after aequalitas in do-while condition */
+#define STATE_252_COUNT 3   /* after aequalitas in switch condition */
 
 /* ==================================================
  * CHAINED INDEX MACROS
@@ -2912,6 +3185,19 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define IDX_STATE_237   (IDX_STATE_236 + STATE_236_COUNT)
 #define IDX_STATE_238   (IDX_STATE_237 + STATE_237_COUNT)
 #define IDX_STATE_239   (IDX_STATE_238 + STATE_238_COUNT)
+#define IDX_STATE_240   (IDX_STATE_239 + STATE_239_COUNT)
+#define IDX_STATE_241   (IDX_STATE_240 + STATE_240_COUNT)
+#define IDX_STATE_242   (IDX_STATE_241 + STATE_241_COUNT)
+#define IDX_STATE_243   (IDX_STATE_242 + STATE_242_COUNT)
+#define IDX_STATE_244   (IDX_STATE_243 + STATE_243_COUNT)
+#define IDX_STATE_245   (IDX_STATE_244 + STATE_244_COUNT)
+#define IDX_STATE_246   (IDX_STATE_245 + STATE_245_COUNT)
+#define IDX_STATE_247   (IDX_STATE_246 + STATE_246_COUNT)
+#define IDX_STATE_248   (IDX_STATE_247 + STATE_247_COUNT)
+#define IDX_STATE_249   (IDX_STATE_248 + STATE_248_COUNT)
+#define IDX_STATE_250   (IDX_STATE_249 + STATE_249_COUNT)
+#define IDX_STATE_251   (IDX_STATE_250 + STATE_250_COUNT)
+#define IDX_STATE_252   (IDX_STATE_251 + STATE_251_COUNT)
 
 /* State -> first action index mapping (using chained macros)
  *
@@ -3160,7 +3446,21 @@ hic_manens i32 ACTIO_INDICES[] = {
     IDX_STATE_236,  /* reduce P70 (first nested enum member) */
     IDX_STATE_237,  /* after list enum_spec declarator (subsequent nested) */
     IDX_STATE_238,  /* reduce P72 (subsequent nested enum member) */
-    IDX_STATE_239   /* End marker */
+    IDX_STATE_239,  /* E9.2: after comparatio */
+    IDX_STATE_240,  /* E9.2: after aequalitas (accept) */
+    IDX_STATE_241,  /* E9.2: after comparison op */
+    IDX_STATE_242,  /* E9.2: after equality op */
+    IDX_STATE_243,  /* E9.2: after comp op expr (reduce P88) */
+    IDX_STATE_244,  /* E9.2: after eq op comparatio (reduce P85) */
+    IDX_STATE_245,  /* E9.2: after aequalitas inside parens */
+    IDX_STATE_246,  /* E9.2: after comparatio in if condition */
+    IDX_STATE_247,  /* E9.2: after aequalitas in if condition */
+    IDX_STATE_248,  /* E9.2: after aequalitas in while condition */
+    IDX_STATE_249,  /* E9.2: after comparatio in for condition */
+    IDX_STATE_250,  /* E9.2: after aequalitas in for condition */
+    IDX_STATE_251,  /* E9.2: after aequalitas in do-while condition */
+    IDX_STATE_252,  /* E9.2: after aequalitas in switch condition */
+    (IDX_STATE_252 + STATE_252_COUNT) /* End marker */
 };
 
 /* NUM_STATES derived from array size (array has NUM_STATES + 1 entries for end marker) */
@@ -3196,17 +3496,23 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_ENUM_SPEC     19
 #define INT_NT_ENUM_LIST     20
 #define INT_NT_ENUMERATOR    21
+#define INT_NT_AEQUALITAS    22
+#define INT_NT_COMPARATIO    23
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
     { 0, INT_NT_EXPR,   1 },
     { 0, INT_NT_TERM,   2 },
     { 0, INT_NT_FACTOR, 3 },
+    { 0, INT_NT_COMPARATIO, 239 },      /* E9.2: after comparatio */
+    { 0, INT_NT_AEQUALITAS, 240 },      /* E9.2: after aequalitas (accept) */
 
-    /* From state 6: after '(' */
+    /* From state 6: after '(' - full expression chain inside parens */
     { 6, INT_NT_EXPR,   11 },
     { 6, INT_NT_TERM,   2 },
     { 6, INT_NT_FACTOR, 3 },
+    { 6, INT_NT_COMPARATIO, 239 },      /* E9.2 */
+    { 6, INT_NT_AEQUALITAS, 245 },      /* E9.2: inside-parens aequalitas */
 
     /* From state 7: after unary '*' */
     { 7, INT_NT_FACTOR, 15 },
@@ -3220,6 +3526,17 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
 
     /* From state 10: after term '*' */
     { 10, INT_NT_FACTOR, 14 },
+
+    /* From state 241: after 'comparatio <|>|<=|>=' - E9.2 */
+    { 241, INT_NT_EXPR,   243 },        /* RHS expression → state 247 (reduce P88) */
+    { 241, INT_NT_TERM,   2 },
+    { 241, INT_NT_FACTOR, 3 },
+
+    /* From state 242: after 'aequalitas ==|!=' - E9.2 */
+    { 242, INT_NT_EXPR,   1 },          /* parse expression, then chain to comparatio */
+    { 242, INT_NT_TERM,   2 },
+    { 242, INT_NT_FACTOR, 3 },
+    { 242, INT_NT_COMPARATIO, 244 },    /* RHS comparatio → state 244 (reduce P85) */
 
     /* From state 4: after identifier as type_specifier */
     { 4, INT_NT_DECLARATOR, 20 },
@@ -3243,6 +3560,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 26, INT_NT_EXPR,      1 },    /* reuse expression state */
     { 26, INT_NT_TERM,      2 },    /* reuse term state */
     { 26, INT_NT_FACTOR,    3 },    /* reuse factor state */
+    { 26, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in compound */
+    { 26, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in compound */
     { 26, INT_NT_SENTENTIA, 28 },   /* statement in list */
     { 26, INT_NT_CORPUS,    29 },   /* nested compound */
     { 26, INT_NT_SI,        37 },   /* if statement in list */
@@ -3254,11 +3573,15 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 31, INT_NT_EXPR,      32 },   /* condition expression */
     { 31, INT_NT_TERM,      2 },    /* reuse term state */
     { 31, INT_NT_FACTOR,    3 },    /* reuse factor state */
+    { 31, INT_NT_COMPARATIO, 246 }, /* E9.2: after comparatio in if condition */
+    { 31, INT_NT_AEQUALITAS, 247 }, /* E9.2: after aequalitas in if condition */
 
     /* From state 33: after 'if ( expr )' - then-branch statement */
     { 33, INT_NT_EXPR,      1 },    /* expression in then-branch */
     { 33, INT_NT_TERM,      2 },    /* term in expression */
     { 33, INT_NT_FACTOR,    3 },    /* factor in expression */
+    { 33, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in then-branch */
+    { 33, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in then-branch */
     { 33, INT_NT_SENTENTIA, 34 },   /* then-branch statement */
     { 33, INT_NT_CORPUS,    38 },   /* nested compound - reduce P15 first */
     { 33, INT_NT_SI,        37 },   /* nested if statement */
@@ -3267,6 +3590,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 35, INT_NT_EXPR,      1 },    /* expression in else-branch */
     { 35, INT_NT_TERM,      2 },    /* term in expression */
     { 35, INT_NT_FACTOR,    3 },    /* factor in expression */
+    { 35, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in else-branch */
+    { 35, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in else-branch */
     { 35, INT_NT_SENTENTIA, 36 },   /* else-branch statement */
     { 35, INT_NT_CORPUS,    38 },   /* nested compound - reduce P15 first */
     { 35, INT_NT_SI,        37 },   /* nested if statement in else-branch */
@@ -3293,11 +3618,15 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 40, INT_NT_EXPR,      41 },   /* condition expression */
     { 40, INT_NT_TERM,      2 },    /* term in expression */
     { 40, INT_NT_FACTOR,    3 },    /* factor in expression */
+    { 40, INT_NT_COMPARATIO, 246 }, /* E9.2: after comparatio in while condition */
+    { 40, INT_NT_AEQUALITAS, 248 }, /* E9.2: after aequalitas in while condition */
 
     /* From state 42: after 'while ( expr )' - loop body */
     { 42, INT_NT_EXPR,      1 },    /* expression in body */
     { 42, INT_NT_TERM,      2 },    /* term in expression */
     { 42, INT_NT_FACTOR,    3 },    /* factor in expression */
+    { 42, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in while body */
+    { 42, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in while body */
     { 42, INT_NT_SENTENTIA, 43 },   /* loop body statement */
     { 42, INT_NT_CORPUS,    38 },   /* compound body */
     { 42, INT_NT_SI,        37 },   /* if in body */
@@ -3308,6 +3637,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 45, INT_NT_EXPR,      1 },    /* expression in body */
     { 45, INT_NT_TERM,      2 },    /* term in expression */
     { 45, INT_NT_FACTOR,    3 },    /* factor in expression */
+    { 45, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in do body */
+    { 45, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in do body */
     { 45, INT_NT_SENTENTIA, 46 },   /* loop body statement */
     { 45, INT_NT_CORPUS,    38 },   /* compound body */
     { 45, INT_NT_SI,        37 },   /* if in body */
@@ -3318,6 +3649,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 48, INT_NT_EXPR,      49 },   /* condition expression */
     { 48, INT_NT_TERM,      2 },    /* term in expression */
     { 48, INT_NT_FACTOR,    3 },    /* factor in expression */
+    { 48, INT_NT_COMPARATIO, 246 }, /* E9.2: after comparatio in do-while condition */
+    { 48, INT_NT_AEQUALITAS, 251 }, /* E9.2: after aequalitas in do-while condition */
 
     /* ==================================================
      * FOR GOTO Entries
@@ -3351,6 +3684,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 57, INT_NT_EXPR,              58 },   /* condition expression */
     { 57, INT_NT_TERM,              2 },    /* term in expression */
     { 57, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 57, INT_NT_COMPARATIO,        249 },  /* E9.2: comparatio in for condition */
+    { 57, INT_NT_AEQUALITAS,        250 },  /* E9.2: aequalitas in for condition */
     { 57, INT_NT_EXPRESSIO_OPT,     59 },   /* expr_opt (condition) */
 
     /* From state 60: after 'for ( ... ;' - increment expression */
@@ -3363,6 +3698,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 63, INT_NT_EXPR,              1 },    /* expression in body */
     { 63, INT_NT_TERM,              2 },    /* term in expression */
     { 63, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 63, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in for body */
+    { 63, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in for body */
     { 63, INT_NT_SENTENTIA,         64 },   /* loop body statement */
     { 63, INT_NT_CORPUS,            38 },   /* compound body */
     { 63, INT_NT_SI,                37 },   /* if in body */
@@ -3384,6 +3721,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 77, INT_NT_EXPR,              1 },    /* expression in label body */
     { 77, INT_NT_TERM,              2 },    /* term in expression */
     { 77, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 77, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in label body */
+    { 77, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in label body */
     { 77, INT_NT_SENTENTIA,         78 },   /* labeled statement */
     { 77, INT_NT_CORPUS,            38 },   /* compound body */
     { 77, INT_NT_SI,                37 },   /* if in body */
@@ -3399,11 +3738,15 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 80, INT_NT_EXPR,              81 },   /* switch condition expression */
     { 80, INT_NT_TERM,              2 },    /* term in expression */
     { 80, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 80, INT_NT_COMPARATIO,        246 },  /* E9.2: after comparatio in switch condition */
+    { 80, INT_NT_AEQUALITAS,        252 },  /* E9.2: after aequalitas in switch condition */
 
     /* From state 82: after 'switch ( expr )' - body statement */
     { 82, INT_NT_EXPR,              1 },    /* expression in body */
     { 82, INT_NT_TERM,              2 },    /* term in expression */
     { 82, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 82, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in switch body */
+    { 82, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in switch body */
     { 82, INT_NT_SENTENTIA,         83 },   /* switch body statement */
     { 82, INT_NT_CORPUS,            38 },   /* compound body */
     { 82, INT_NT_SI,                37 },   /* if in body */
@@ -3420,6 +3763,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 86, INT_NT_EXPR,              1 },    /* expression in body */
     { 86, INT_NT_TERM,              2 },    /* term in expression */
     { 86, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 86, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in case body */
+    { 86, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in case body */
     { 86, INT_NT_SENTENTIA,         87 },   /* case body statement */
     { 86, INT_NT_CORPUS,            38 },   /* compound body */
     { 86, INT_NT_SI,                37 },   /* if in body */
@@ -3431,6 +3776,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 89, INT_NT_EXPR,              1 },    /* expression in body */
     { 89, INT_NT_TERM,              2 },    /* term in expression */
     { 89, INT_NT_FACTOR,            3 },    /* factor in expression */
+    { 89, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in default body */
+    { 89, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in default body */
     { 89, INT_NT_SENTENTIA,         90 },   /* default body statement */
     { 89, INT_NT_CORPUS,            38 },   /* compound body */
     { 89, INT_NT_SI,                37 },   /* if in body */
@@ -3708,6 +4055,12 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_ENUMERATOR:
             nt_int = INT_NT_ENUMERATOR;
+            frange;
+        casus ARBOR2_NT_AEQUALITAS:
+            nt_int = INT_NT_AEQUALITAS;
+            frange;
+        casus ARBOR2_NT_COMPARATIO:
+            nt_int = INT_NT_COMPARATIO;
             frange;
         ordinarius:
             nt_int = -I;

@@ -47,6 +47,8 @@ nomen enumeratio {
  * ================================================== */
 
 nomen enumeratio {
+    ARBOR2_NT_AEQUALITAS,           /* equality expressions (==, !=) - lowest precedence */
+    ARBOR2_NT_COMPARATIO,           /* relational expressions (<, >, <=, >=) */
     ARBOR2_NT_EXPRESSIO,
     ARBOR2_NT_TERMINUS,             /* term in expr grammar */
     ARBOR2_NT_FACTOR,               /* factor in expr grammar */

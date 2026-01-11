@@ -1865,7 +1865,171 @@ The mixed precedence test confirms `/` binds tighter than `-`.
 
 ### Future Work
 
-- Part 2: Comparison operators (<, >, <=, >=)
-- Part 3: Equality operators (==, !=)
+- Part 2: Comparison operators (<, >, <=, >=) - DONE (see below)
+- Part 3: Equality operators (==, !=) - DONE (see below)
 - Part 4: Logical operators (&&, ||)
 - Part 5: Bitwise operators (&, |, ^, <<, >>)
+
+---
+
+## 2026-01-10: Phase E9 Part 2 Complete - Comparison & Equality Operators
+
+Added relational (`<`, `>`, `<=`, `>=`) and equality (`==`, `!=`) operators with two new precedence levels below expression.
+
+### New Precedence Hierarchy
+
+```
+aequalitas (==, !=)     ← lowest (new)
+comparatio (<, >, <=, >=)  (new)
+expressio (+, -)        ← was lowest, now middle
+terminus (*, /, %)
+factor (unary, atoms)   ← highest
+```
+
+### New Non-Terminals (arbor2_glr.h)
+
+Added at TOP of enum (shifts all other values):
+- `ARBOR2_NT_AEQUALITAS` - equality expressions
+- `ARBOR2_NT_COMPARATIO` - relational expressions
+
+Internal macros in arbor2_glr_tabula.c:
+- `INT_NT_AEQUALITAS 22`
+- `INT_NT_COMPARATIO 23`
+
+### Grammar Rules Added (P85-P92)
+
+```c
+P85: aequalitas -> aequalitas '==' comparatio
+P86: aequalitas -> aequalitas '!=' comparatio
+P87: aequalitas -> comparatio              (pass-through)
+P88: comparatio -> comparatio '<' expressio
+P89: comparatio -> comparatio '>' expressio
+P90: comparatio -> comparatio '<=' expressio
+P91: comparatio -> comparatio '>=' expressio
+P92: comparatio -> expressio               (pass-through)
+```
+
+### New States (239-245)
+
+- State 239: After comparatio - shift ==|!= or reduce P87 (to aequalitas)
+- State 240: After aequalitas at top-level - ACCEPT on EOF, shift ==|!= to continue chain
+- State 241: After comparison operator (<|>|<=|>=) - expect expression starters
+- State 242: After equality operator (==|!=) - expect expression starters
+- State 243: After comparatio op expression - shift +/- to continue, reduce P88 on other tokens
+- State 244: After aequalitas op comparatio - reduce P85
+- State 245: After aequalitas inside parentheses - shift `)` to complete paren-expression
+
+### Key Design Decisions
+
+1. **State 1 restructured**: Now reduces P92 (expression → comparatio) instead of ACCEPT. Comparison operators shift to state 241.
+
+2. **Separate inside-parens state (245)**: State 240 is for top-level accept. For expressions inside parentheses, GOTO(6, AEQUALITAS) = 245 which shifts `)` to state 12 instead of reducing P0.
+
+3. **State 243 continues expression with +/-**: Originally reduced P88 on `+`/`-`, but since `+`/`-` have higher precedence than comparison, we should continue parsing the expression. Fixed to shift `+`/`-` to state 9.
+
+4. **State 240 continues equality chain**: Shifts `==`/`!=` to state 242 instead of reducing P85, enabling chained equalities like `1 == 2 == 3`.
+
+### Bugs Fixed
+
+1. **GOTO entries used non-existent state 245**: The GOTO entries for state 242 (after equality op) were incorrectly labeled as state 245. Fixed to use 242.
+
+2. **State 240 had wrong actions for ==|!=**: Was REDUCE P85 (which expects 3 symbols but we only have 1). Changed to SHIFT 242 to continue chain.
+
+3. **Infinite loop in parenthesized expressions**: GOTO(6, AEQUALITAS) = 240 caused loop because state 240 reduced P0 on `)`. Fixed by creating state 245 specifically for inside-parens context.
+
+4. **`1 + 2 < 3 + 4` failed**: State 243 reduced P88 on `+` before parsing `+ 4`. Fixed by shifting `+`/`-` to continue expression first.
+
+### Tests Passing
+
+All comparison/equality operator tests pass:
+- `1 < 2` → BINARIUM(op=MINOR)
+- `3 > 1` → BINARIUM(op=MAIOR)
+- `2 <= 3` → BINARIUM(op=MINOR_AEQ)
+- `5 >= 4` → BINARIUM(op=MAIOR_AEQ)
+- `1 == 1` → BINARIUM(op=AEQUALIS)
+- `1 != 2` → BINARIUM(op=NON_AEQUALIS)
+- `1 + 2 < 3 + 4` → BINARIUM(op=MINOR, left=BINARIUM(+), right=BINARIUM(+))
+- `1 < 2 == 3 < 4` → BINARIUM(op=AEQUALIS, left=BINARIUM(<), right=BINARIUM(<))
+- `1 + 2 < 3 * 4` → BINARIUM(op=MINOR, left=BINARIUM(+), right=BINARIUM(*))
+- `(1 < 2)` → BINARIUM(op=MINOR) (parens unwrapped correctly)
+
+### Grammar Summary
+
+- 246 states (was 239, added 7 for comparison/equality)
+- 93 grammar rules (was 85, added P85-P92)
+- Validation script confirms all STATE_*_COUNT macros match actual entries
+
+---
+
+## 2026-01-10
+
+### Phase E9.2 Completion: Missing GOTO entries for comparison operators in control flow
+
+After Phase E9.2 added the comparatio/aequalitas precedence levels, expressions in control flow bodies and conditions failed to parse because the expression chain (expression → comparatio → aequalitas) couldn't complete without proper GOTO entries.
+
+### Problem
+
+When parsing `if (x) y;`, the expression `y` in the then-branch:
+1. Reduces through factor → term → expression (to state 1)
+2. State 1 reduces P92 (expression → comparatio)
+3. GOTO(33, COMPARATIO) was missing → parse fails
+
+Similarly, conditions like `while (a == b)` and `for (; i < 10; )` failed because their expression states didn't handle comparison operators.
+
+### Fixes Applied
+
+#### 1. Statement body states - added COMPARATIO/AEQUALITAS GOTO entries
+
+States that can contain expression statements needed GOTO entries to complete the precedence chain:
+- State 26 (compound statement body)
+- State 33 (if then-branch)
+- State 35 (if else-branch)
+- State 42 (while body)
+- State 45 (do body)
+- State 63 (for body)
+- State 77 (label body)
+- State 82 (switch body)
+- State 86 (case body)
+- State 89 (default body)
+
+All route COMPARATIO → 239, AEQUALITAS → 240 (reusing top-level states).
+
+#### 2. Condition states - added comparison operator handling
+
+States after condition expressions needed comparison operator shifts:
+- State 32 (if condition) - already had from earlier
+- State 41 (while condition) - added 7 new actions
+- State 49 (do-while condition) - added 7 new actions
+- State 58 (for condition) - added 8 new actions
+- State 81 (switch condition) - added 7 new actions
+
+Each reduces P92 on `)` or `;` (depending on context), shifts comparison/equality operators to continue.
+
+#### 3. New aequalitas states for each condition context
+
+Created context-specific aequalitas states that complete to the correct follow state:
+- State 248: while condition → shifts `)` to state 42 (while body)
+- State 249: for condition comparatio → reduces P87 on `;`
+- State 250: for condition aequalitas → reduces P28 (expr_opt) on `;`
+- State 251: do-while condition → shifts `)` to state 50
+- State 252: switch condition → shifts `)` to state 82 (switch body)
+
+Also added GOTO entries to condition states (40, 48, 57, 80) for COMPARATIO and AEQUALITAS.
+
+### Tests Now Passing
+
+All edge case tests for comparison operators in control flow:
+- `if (x < 10) y;` → SI with BINARIUM(op=MINOR) condition
+- `while (a == b) x;` → DUM with BINARIUM(op=AEQUALIS) condition  
+- `for (; i < 10; ) x;` → PER with BINARIUM(op=MINOR) condition
+
+Plus earlier tests:
+- `((1 < 2))` → nested parens with comparison
+- `1 == 2 == 3` → chained equality (left-associative)
+- `1 < 2 < 3` → chained comparison (left-associative)
+- `1 < 2 * 3 + 4` → correct precedence with complex RHS
+
+### State Summary
+
+- 253 states (was 248, added 5 new aequalitas context states)
+- Updated state counts: 41, 49, 58, 81 (each +7 for comparison operators)
