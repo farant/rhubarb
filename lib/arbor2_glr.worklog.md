@@ -1765,3 +1765,107 @@ All existing typedef tests continue to pass:
 ### Phase E8 Complete
 
 Both struct member arrays and typedef arrays are now fully supported via the declarator refactor. The grammar reduces 18 explicit rules to 9 unified rules that support all declarator forms (simple, pointer, array, multi-dimensional).
+
+## 2026-01-10: Phase E8 Part 3 Complete - Nested Type Member Arrays
+
+Completed array declarator support for nested struct/enum members. All three parts of Phase E8 are now complete.
+
+### Changes Made
+
+**State Machine (arbor2_glr_tabula.c):**
+- Modified states 174, 180, 186, 192 to route through declarator states (17, 18)
+- Added GOTO entries for DECLARATOR from these states to completion states 231, 233, 235, 237
+- Created completion states 231-238:
+  - 231/232: First nested struct member completion/reduce P66
+  - 233/234: Subsequent nested struct member completion/reduce P68
+  - 235/236: First nested enum member completion/reduce P70
+  - 237/238: Subsequent nested enum member completion/reduce P72
+- All completion states allow `[` for arrays (→217) or `;` for end of member
+
+**Reduction Handlers (arbor2_glr.c):**
+- Updated P66, P68, P70, P72 to use pre-built declarator from `valori[I]`
+- Marked P67, P69, P71, P73 as UNUSED (pointer variants handled via declarator)
+
+**Tests Added:**
+- `struct { struct Inner items[10]; }` - array of nested structs
+- `struct { enum { A, B } status[5]; }` - array of nested enums
+- `struct { struct Inner *ptrs[3]; }` - pointer arrays of nested structs
+
+### Phase E8 Summary
+
+All three parts completed:
+1. **Part 1**: Struct member arrays (P48-P51) - type_spec declarator path
+2. **Part 2**: Typedef arrays (P74-P79) - typedef declarator path  
+3. **Part 3**: Nested type member arrays (P66-P73) - nested specifier declarator path
+
+State count: 239 states total (217-220 for array declarator, 221-230 for struct/typedef completions, 231-238 for nested type completions).
+
+---
+
+## 2026-01-10: Phase E9 Complete - Arithmetic Operators Part 1
+
+Added `-`, `/`, `%` operators at existing precedence levels (same as `+` and `*`).
+
+### What Was Already in Place
+
+- Lexer tokens: MINUS, SOLIDUS, PERCENTUM already existed
+- Binary node structure: `binarium.operator` stores any `Arbor2LexemaGenus`
+- Reduction handler: Generic BINARIUM case works for any operator
+
+### Grammar Rules Added (P82-P84)
+
+```c
+/* P82: expression -> expression '-' term */
+{ ARBOR2_NT_EXPRESSIO, 3, ARBOR2_NODUS_BINARIUM }
+
+/* P83: term -> term '/' factor */
+{ ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM }
+
+/* P84: term -> term '%' factor */
+{ ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM }
+```
+
+### State Machine Changes
+
+**Key states modified:**
+- State 1: Added `MINUS → SHIFT 9` (same as PLUS)
+- State 2: Added `SOLIDUS/PERCENTUM → SHIFT 10` (same as ASTERISCUS), `MINUS → REDUCE P2`
+- State 13: Added `SOLIDUS/PERCENTUM → SHIFT 10` (higher precedence), `MINUS → REDUCE P1`
+- State 14: Added `SOLIDUS/PERCENTUM/MINUS → REDUCE P3`
+
+**All states with `+` or `*` in follow sets updated:**
+States 3, 4, 5, 11, 12, 15, 16, 18, 19, 92, 94, 103, 116
+
+### Bug Fixed: State Count Macros
+
+After adding entries, tests failed with segfault. Root cause: STATE_*_COUNT macros were not updated. Used awk to count actual entries:
+
+```bash
+awk '/\/\* State [0-9]+:.*\*\//,/\/\* State [0-9]+:/{print}' ... | grep -c ARBOR2_ACTIO
+```
+
+Corrected counts for all modified states.
+
+### Tests Added
+
+```c
+5 - 3       → BINARIUM(op=MINUS, left=5, right=3)
+6 / 2       → BINARIUM(op=SOLIDUS, left=6, right=2)
+7 % 3       → BINARIUM(op=PERCENTUM, left=7, right=3)
+10 - 6 / 2  → BINARIUM(op=MINUS, left=10, right=BINARIUM(op=SOLIDUS, left=6, right=2))
+```
+
+The mixed precedence test confirms `/` binds tighter than `-`.
+
+### Grammar Summary
+
+- 239 states (unchanged)
+- 85 grammar rules (was 82, added P82-P84)
+- All existing tests pass
+
+### Future Work
+
+- Part 2: Comparison operators (<, >, <=, >=)
+- Part 3: Equality operators (==, !=)
+- Part 4: Logical operators (&&, ||)
+- Part 5: Bitwise operators (&, |, ^, <<, >>)

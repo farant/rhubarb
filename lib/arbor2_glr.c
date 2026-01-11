@@ -959,58 +959,18 @@ _processare_unam_actionem(
                         /* ========== NESTED TYPE AS MEMBER P66-P73 ========== */
                         alioquin si (actio->valor == 66)
                         {
-                            /* P66: struct_specifier ID ';' (3 symbols, first nested struct/union member) */
-                            /* valori: [2]=struct_specifier_node, [1]=?, [0]=? */
-                            /* lexemata: [1]=ID, [0]=';' */
+                            /* P66: struct_specifier declarator ';' (3 symbols, first nested struct member)
+                             * E8: Uses pre-built declarator from valori[I] */
                             Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
+                            Arbor2Nodus* decl_node = valori[I];  /* Pre-built declarator! */
                             Xar* lista;
                             Arbor2Nodus** slot;
                             Arbor2Nodus* spec_node = valori[II];
-                            Arbor2Token* name_tok = lexemata[I];
 #ifdef DEBUG_PARSER
-                            printf("  [DEBUG P66] Creating nested type member, name=%.*s\n",
-                                   (integer)name_tok->lexema->valor.mensura, name_tok->lexema->valor.datum);
+                            printf("  [DEBUG P66] Nested struct member with declarator, name=%.*s\n",
+                                   (integer)decl_node->datum.declarator.titulus.mensura,
+                                   decl_node->datum.declarator.titulus.datum);
 #endif
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
-
-                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            member->genus = ARBOR2_NODUS_DECLARATIO;
-                            member->lexema = spec_node->lexema;
-                            member->datum.declaratio.specifier = spec_node;  /* Use node directly */
-                            member->datum.declaratio.declarator = decl_node;
-
-                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            slot = xar_addere(lista);
-                            *slot = member;
-                            valor_novus = (Arbor2Nodus*)lista;
-                        }
-                        alioquin si (actio->valor == 67)
-                        {
-                            /* P67: struct_specifier '*' ID ';' (4 symbols, first nested ptr member) */
-                            /* valori: [3]=struct_specifier_node */
-                            /* lexemata: [2]='*', [1]=ID, [0]=';' */
-                            Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
-                            Xar* lista;
-                            Arbor2Nodus** slot;
-                            Arbor2Nodus* spec_node = valori[III];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = I;  /* pointer */
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
-
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = spec_node->lexema;
@@ -1022,25 +982,20 @@ _processare_unam_actionem(
                             *slot = member;
                             valor_novus = (Arbor2Nodus*)lista;
                         }
+                        alioquin si (actio->valor == 67)
+                        {
+                            /* P67: UNUSED - pointer variants now handled via declarator */
+                            valor_novus = NIHIL;
+                        }
                         alioquin si (actio->valor == 68)
                         {
-                            /* P68: member_list struct_specifier ID ';' (4 symbols, append nested) */
-                            /* valori: [3]=list, [2]=struct_specifier_node */
-                            /* lexemata: [1]=ID, [0]=';' */
+                            /* P68: member_list struct_specifier declarator ';' (4 symbols, append nested)
+                             * E8: Uses pre-built declarator from valori[I] */
                             Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
+                            Arbor2Nodus* decl_node = valori[I];  /* Pre-built declarator! */
                             Xar* lista = (Xar*)valori[III];
                             Arbor2Nodus** slot;
                             Arbor2Nodus* spec_node = valori[II];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1054,52 +1009,19 @@ _processare_unam_actionem(
                         }
                         alioquin si (actio->valor == 69)
                         {
-                            /* P69: member_list struct_specifier '*' ID ';' (5 symbols, append nested ptr) */
-                            /* valori: [4]=list, [3]=struct_specifier_node */
-                            /* lexemata: [2]='*', [1]=ID, [0]=';' */
-                            Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
-                            Xar* lista = (Xar*)valori[IV];
-                            Arbor2Nodus** slot;
-                            Arbor2Nodus* spec_node = valori[III];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = I;  /* pointer */
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
-
-                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            member->genus = ARBOR2_NODUS_DECLARATIO;
-                            member->lexema = spec_node->lexema;
-                            member->datum.declaratio.specifier = spec_node;
-                            member->datum.declaratio.declarator = decl_node;
-
-                            slot = xar_addere(lista);
-                            *slot = member;
-                            valor_novus = (Arbor2Nodus*)lista;
+                            /* P69: UNUSED - pointer variants now handled via declarator */
+                            valor_novus = NIHIL;
                         }
                         /* P70-P73: Same as P66-P69 but for enum_specifier */
                         alioquin si (actio->valor == 70)
                         {
-                            /* P70: enum_specifier ID ';' (3 symbols, first nested enum member) */
+                            /* P70: enum_specifier declarator ';' (3 symbols, first nested enum member)
+                             * E8: Uses pre-built declarator from valori[I] */
                             Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
+                            Arbor2Nodus* decl_node = valori[I];  /* Pre-built declarator! */
                             Xar* lista;
                             Arbor2Nodus** slot;
                             Arbor2Nodus* spec_node = valori[II];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1114,50 +1036,18 @@ _processare_unam_actionem(
                         }
                         alioquin si (actio->valor == 71)
                         {
-                            /* P71: enum_specifier '*' ID ';' (4 symbols, first nested enum ptr) */
-                            Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
-                            Xar* lista;
-                            Arbor2Nodus** slot;
-                            Arbor2Nodus* spec_node = valori[III];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = I;
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
-
-                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            member->genus = ARBOR2_NODUS_DECLARATIO;
-                            member->lexema = spec_node->lexema;
-                            member->datum.declaratio.specifier = spec_node;
-                            member->datum.declaratio.declarator = decl_node;
-
-                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            slot = xar_addere(lista);
-                            *slot = member;
-                            valor_novus = (Arbor2Nodus*)lista;
+                            /* P71: UNUSED - pointer variants now handled via declarator */
+                            valor_novus = NIHIL;
                         }
                         alioquin si (actio->valor == 72)
                         {
-                            /* P72: member_list enum_specifier ID ';' (4 symbols, append nested enum) */
+                            /* P72: member_list enum_specifier declarator ';' (4 symbols, append nested enum)
+                             * E8: Uses pre-built declarator from valori[I] */
                             Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
+                            Arbor2Nodus* decl_node = valori[I];  /* Pre-built declarator! */
                             Xar* lista = (Xar*)valori[III];
                             Arbor2Nodus** slot;
                             Arbor2Nodus* spec_node = valori[II];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
@@ -1171,31 +1061,8 @@ _processare_unam_actionem(
                         }
                         alioquin si (actio->valor == 73)
                         {
-                            /* P73: member_list enum_specifier '*' ID ';' (5 symbols, append nested enum ptr) */
-                            Arbor2Nodus* member;
-                            Arbor2Nodus* decl_node;
-                            Xar* lista = (Xar*)valori[IV];
-                            Arbor2Nodus** slot;
-                            Arbor2Nodus* spec_node = valori[III];
-                            Arbor2Token* name_tok = lexemata[I];
-
-                            decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            decl_node->genus = ARBOR2_NODUS_DECLARATOR;
-                            decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.titulus = name_tok->lexema->valor;
-                            decl_node->datum.declarator.num_stellae = I;
-                            decl_node->datum.declarator.latitudo_biti = NIHIL;
-                            decl_node->datum.declarator.dimensiones = NIHIL;
-
-                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            member->genus = ARBOR2_NODUS_DECLARATIO;
-                            member->lexema = spec_node->lexema;
-                            member->datum.declaratio.specifier = spec_node;
-                            member->datum.declaratio.declarator = decl_node;
-
-                            slot = xar_addere(lista);
-                            *slot = member;
-                            valor_novus = (Arbor2Nodus*)lista;
+                            /* P73: UNUSED - pointer variants now handled via declarator */
+                            valor_novus = NIHIL;
                         }
                         /* ========== TYPEDEF DECLARATIONS P74-P79 ========== */
                         alioquin si (actio->valor == 74)

@@ -291,7 +291,18 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR },
 
     /* P81: declarator -> declarator '[' ']' (unsized array) */
-    { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR }
+    { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR },
+
+    /* ========== ADDITIONAL ARITHMETIC OPERATORS (P82-P84) ========== */
+
+    /* P82: expression -> expression '-' term */
+    { ARBOR2_NT_EXPRESSIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P83: term -> term '/' factor */
+    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P84: term -> term '%' factor */
+    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -352,15 +363,19 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,  4 },   /* int type specifier */
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,  4 },   /* char type specifier */
 
-    /* State 1: After expression - expect '+', ';', or end */
+    /* State 1: After expression - expect '+', '-', ';', or end */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },   /* E9: subtraction */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 22 },   /* expression statement */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 0 },  /* for nested */
 
-    /* State 2: After term - expect '*', '+', ';', '}', ':', ',', or end */
+    /* State 2: After term - expect '*', '/', '%', '+', '-', ';', '}', ':', ',', or end */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10 },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10 },  /* E9: division */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10 },  /* E9: modulo */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 2 },  /* expression -> term */
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 2 },  /* E9: reduce for - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 2 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 2 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 2 },
@@ -371,7 +386,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 3: After factor - reduce to term */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 4 },  /* term -> factor */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 4 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 4 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 4 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 4 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 4 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 4 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 4 },
@@ -383,8 +401,11 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* State 4: After IDENTIFIER - AMBIGUOUS for '*' (expr vs decl), or label with ':' */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 5 },  /* expr: factor -> ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },  /* decl: start declarator */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 5 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 5 },  /* E9: % */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116 }, /* decl: direct declarator name */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 5 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 5 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 5 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 5 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 5 },
@@ -396,7 +417,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 5: After INTEGER - reduce to factor */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 6 },  /* factor -> INT */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 6 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 6 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 6 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 6 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 6 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 6 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 6 },
@@ -440,13 +464,17 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
 
-    /* State 11: After '(' expression - expect ')' or '+' */
+    /* State 11: After '(' expression - expect ')' or '+' or '-' */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT,  12 },
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9 },   /* E9: subtraction */
 
     /* State 12: After '(' expression ')' - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 7 },  /* factor -> (expr) */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 7 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 7 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 7 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 7 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 7 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 7 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 7 },
@@ -457,7 +485,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 13: After expression '+' term - reduce or continue */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10 },  /* * binds tighter */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10 },  /* E9: / binds tighter */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10 },  /* E9: % binds tighter */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 1 },   /* expr -> expr + term */
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 1 },   /* E9: same precedence */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 1 },   /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 1 },   /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 1 },
@@ -468,7 +499,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 14: After term '*' factor - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 3 },  /* term -> term * factor */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 3 },  /* E9: same precedence */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 3 },  /* E9: same precedence */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 3 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 3 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 3 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 3 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 3 },
@@ -479,7 +513,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 15: After '*' factor (unary) - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 8 },  /* factor -> * factor */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 8 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 8 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 8 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 8 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 8 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 8 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 8 },
@@ -490,7 +527,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 16: After '&' factor (unary) - reduce */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 9 },  /* factor -> & factor */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 9 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 9 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 9 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 9 },  /* E9: - */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 9 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 },  /* for compound */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 9 },  /* for enum values */
@@ -506,7 +546,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* State 18: After IDENTIFIER in declarator - reduce P12 */
     /* When we see '(' we reduce first, then state 19 handles the shift */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 12 },  /* declarator -> ID */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 12 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 12 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 12 },  /* E9: - */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then fn decl */
@@ -516,7 +559,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 19: After '* declarator' - reduce P11 or shift ( for fn */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 11 },  /* declarator -> * declarator */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 11 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 11 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 11 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 11 },  /* E9: - */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
@@ -1477,7 +1523,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 92: After 'declarator ( )' - reduce P38 */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 38 },  /* declarator -> declarator () */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 38 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 38 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 38 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 38 },  /* E9: - */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 38 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 38 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 38 },  /* for chained fn decl */
@@ -1488,7 +1537,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 94: After 'declarator ( void )' - reduce P39 */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 39 },  /* declarator -> declarator (void) */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 39 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 39 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 39 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 39 },  /* E9: - */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 39 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 39 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 39 },  /* for chained fn decl */
@@ -1532,7 +1584,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
 
     /* State 103: After '( param_list )' - reduce P40 */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 40 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 40 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 40 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 40 },  /* E9: - */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 40 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 40 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 40 },
@@ -1589,7 +1644,10 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 12 },  /* E9: / */
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 12 },  /* E9: % */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12 },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 12 },  /* E9: - */
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then array decl */
 
     /* ==================================================
@@ -1938,8 +1996,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* ========== FIRST MEMBER WITH NESTED STRUCT/UNION (P66/P67) ========== */
 
     /* State 174: After struct_specifier (first member) - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 175 },  /* pointer member */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 176 },  /* member name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* member name - use declarator states */
 
     /* State 175: After struct_specifier '*' (first member) - expect ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 175 },  /* more pointers */
@@ -1972,8 +2031,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* ========== SUBSEQUENT MEMBER WITH NESTED STRUCT/UNION (P68/P69) ========== */
 
     /* State 180: After struct_specifier (subsequent member) - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 181 },  /* pointer member */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 182 },  /* member name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* member name - use declarator states */
 
     /* State 181: After struct_specifier '*' (subsequent member) - expect ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 181 },  /* more pointers */
@@ -2006,8 +2066,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* ========== FIRST MEMBER WITH NESTED ENUM (P70/P71) ========== */
 
     /* State 186: After enum_specifier (first member) - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 187 },  /* pointer member */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 188 },  /* member name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* member name - use declarator states */
 
     /* State 187: After enum_specifier '*' (first member) - expect ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 187 },  /* more pointers */
@@ -2040,8 +2101,9 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* ========== SUBSEQUENT MEMBER WITH NESTED ENUM (P72/P73) ========== */
 
     /* State 192: After enum_specifier (subsequent member) - expect '*' or ID */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 193 },  /* pointer member */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 194 },  /* member name */
+    /* E8: Route through declarator states for array support */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17 },   /* pointer - use declarator states */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18 },   /* member name - use declarator states */
 
     /* State 193: After enum_specifier '*' (subsequent member) - expect ID */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 193 },  /* more pointers */
@@ -2292,7 +2354,63 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 78 },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 78 },
     { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 78 },
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 78 }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 78 },
+
+    /* ==================================================
+     * E8: Nested Type Member Declarator Completion States (231-238)
+     * ================================================== */
+
+    /* State 231: After 'struct_spec declarator' (first member) - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 232 },  /* end member */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 232: After 'struct_spec declarator ;' (first member) - reduce P66 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 66 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 66 },
+
+    /* State 233: After 'list struct_spec declarator' (subsequent member) - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 234 },  /* end member */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 234: After 'list struct_spec declarator ;' (subsequent member) - reduce P68 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 68 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 68 },
+
+    /* State 235: After 'enum_spec declarator' (first member) - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 236 },  /* end member */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 236: After 'enum_spec declarator ;' (first member) - reduce P70 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 70 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 70 },
+
+    /* State 237: After 'list enum_spec declarator' (subsequent member) - expect ';' or '[' */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 238 },  /* end member */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217 },  /* array continuation */
+
+    /* State 238: After 'list enum_spec declarator ;' (subsequent member) - reduce P72 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 72 },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 72 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -2307,25 +2425,25 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
  * ================================================== */
 
 #define STATE_0_COUNT   24
-#define STATE_1_COUNT   4
-#define STATE_2_COUNT   9
-#define STATE_3_COUNT   9
-#define STATE_4_COUNT   12
-#define STATE_5_COUNT   9
+#define STATE_1_COUNT   5   /* E9: +1 for MINUS */
+#define STATE_2_COUNT   12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_3_COUNT   12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_4_COUNT   15  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_5_COUNT   12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
 #define STATE_6_COUNT   5
 #define STATE_7_COUNT   5
 #define STATE_8_COUNT   5
 #define STATE_9_COUNT   5
 #define STATE_10_COUNT  5
-#define STATE_11_COUNT  2
-#define STATE_12_COUNT  9
-#define STATE_13_COUNT  9
-#define STATE_14_COUNT  9
-#define STATE_15_COUNT  9
-#define STATE_16_COUNT  9
+#define STATE_11_COUNT  3   /* E9: +1 for MINUS */
+#define STATE_12_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_13_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_14_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_15_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
+#define STATE_16_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
 #define STATE_17_COUNT  2
-#define STATE_18_COUNT  8
-#define STATE_19_COUNT  9
+#define STATE_18_COUNT  11  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS (was 8) */
+#define STATE_19_COUNT  12  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS (was 9) */
 #define STATE_20_COUNT  7
 #define STATE_21_COUNT  1
 #define STATE_22_COUNT  21
@@ -2398,9 +2516,9 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_89_COUNT  18
 #define STATE_90_COUNT  21
 #define STATE_91_COUNT  5
-#define STATE_92_COUNT  6
+#define STATE_92_COUNT  9   /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
 #define STATE_93_COUNT  1
-#define STATE_94_COUNT  6
+#define STATE_94_COUNT  9   /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
 #define STATE_95_COUNT  2
 #define STATE_96_COUNT  2
 #define STATE_97_COUNT  2
@@ -2409,7 +2527,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_100_COUNT 2
 #define STATE_101_COUNT 2
 #define STATE_102_COUNT 2
-#define STATE_103_COUNT 6
+#define STATE_103_COUNT 9   /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
 #define STATE_104_COUNT 3
 #define STATE_105_COUNT 2
 #define STATE_106_COUNT 2
@@ -2422,7 +2540,7 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_113_COUNT 1
 #define STATE_114_COUNT 1
 #define STATE_115_COUNT 0
-#define STATE_116_COUNT 7
+#define STATE_116_COUNT 10  /* E9: +3 for SOLIDUS, PERCENTUM, MINUS */
 #define STATE_117_COUNT 2
 #define STATE_118_COUNT 4
 #define STATE_119_COUNT 7
@@ -2537,6 +2655,14 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_228_COUNT 8
 #define STATE_229_COUNT 2
 #define STATE_230_COUNT 8
+#define STATE_231_COUNT 2
+#define STATE_232_COUNT 7
+#define STATE_233_COUNT 2
+#define STATE_234_COUNT 7
+#define STATE_235_COUNT 2
+#define STATE_236_COUNT 7
+#define STATE_237_COUNT 2
+#define STATE_238_COUNT 7
 
 /* ==================================================
  * CHAINED INDEX MACROS
@@ -2778,6 +2904,14 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define IDX_STATE_229   (IDX_STATE_228 + STATE_228_COUNT)
 #define IDX_STATE_230   (IDX_STATE_229 + STATE_229_COUNT)
 #define IDX_STATE_231   (IDX_STATE_230 + STATE_230_COUNT)
+#define IDX_STATE_232   (IDX_STATE_231 + STATE_231_COUNT)
+#define IDX_STATE_233   (IDX_STATE_232 + STATE_232_COUNT)
+#define IDX_STATE_234   (IDX_STATE_233 + STATE_233_COUNT)
+#define IDX_STATE_235   (IDX_STATE_234 + STATE_234_COUNT)
+#define IDX_STATE_236   (IDX_STATE_235 + STATE_235_COUNT)
+#define IDX_STATE_237   (IDX_STATE_236 + STATE_236_COUNT)
+#define IDX_STATE_238   (IDX_STATE_237 + STATE_237_COUNT)
+#define IDX_STATE_239   (IDX_STATE_238 + STATE_238_COUNT)
 
 /* State -> first action index mapping (using chained macros)
  *
@@ -3018,7 +3152,15 @@ hic_manens i32 ACTIO_INDICES[] = {
     IDX_STATE_228,  /* reduce P76 (typedef struct with declarator) */
     IDX_STATE_229,  /* after typedef enum_spec declarator */
     IDX_STATE_230,  /* reduce P78 (typedef enum with declarator) */
-    IDX_STATE_231   /* End marker */
+    IDX_STATE_231,  /* after struct_spec declarator (first nested) */
+    IDX_STATE_232,  /* reduce P66 (first nested struct member) */
+    IDX_STATE_233,  /* after list struct_spec declarator (subsequent nested) */
+    IDX_STATE_234,  /* reduce P68 (subsequent nested struct member) */
+    IDX_STATE_235,  /* after enum_spec declarator (first nested) */
+    IDX_STATE_236,  /* reduce P70 (first nested enum member) */
+    IDX_STATE_237,  /* after list enum_spec declarator (subsequent nested) */
+    IDX_STATE_238,  /* reduce P72 (subsequent nested enum member) */
+    IDX_STATE_239   /* End marker */
 };
 
 /* NUM_STATES derived from array size (array has NUM_STATES + 1 entries for end marker) */
@@ -3436,6 +3578,12 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 199, INT_NT_DECLARATOR,       225 },  /* typedef type_spec declarator → completion */
     { 205, INT_NT_DECLARATOR,       227 },  /* typedef struct_spec declarator → completion */
     { 211, INT_NT_DECLARATOR,       229 },  /* typedef enum_spec declarator → completion */
+
+    /* E8: Declarator in nested type member context */
+    { 174, INT_NT_DECLARATOR,       231 },  /* struct_spec declarator (first) → completion */
+    { 180, INT_NT_DECLARATOR,       233 },  /* struct_spec declarator (subseq) → completion */
+    { 186, INT_NT_DECLARATOR,       235 },  /* enum_spec declarator (first) → completion */
+    { 192, INT_NT_DECLARATOR,       237 },  /* enum_spec declarator (subseq) → completion */
 
     /* ==================================================
      * Array Declarator GOTO Entries (State 217)
