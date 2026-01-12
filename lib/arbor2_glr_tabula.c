@@ -328,7 +328,19 @@ hic_manens Arbor2Regula REGULAE[] = {
     { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
 
     /* P92: comparatio -> expressio (pass-through) */
-    { ARBOR2_NT_COMPARATIO, 1, ARBOR2_NODUS_ERROR }
+    { ARBOR2_NT_COMPARATIO, 1, ARBOR2_NODUS_ERROR },
+
+    /* P93: disiunctio -> disiunctio '||' coniunctio */
+    { ARBOR2_NT_DISIUNCTIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P94: disiunctio -> coniunctio (pass-through) */
+    { ARBOR2_NT_DISIUNCTIO, 1, ARBOR2_NODUS_ERROR },
+
+    /* P95: coniunctio -> coniunctio '&&' aequalitas */
+    { ARBOR2_NT_CONIUNCTIO, 3, ARBOR2_NODUS_BINARIUM },
+
+    /* P96: coniunctio -> aequalitas (pass-through) */
+    { ARBOR2_NT_CONIUNCTIO, 1, ARBOR2_NODUS_ERROR }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -398,6 +410,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 92 },  /* E10: && reduce to comparatio */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 92 },  /* E10: || reduce to comparatio */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio */
@@ -418,6 +432,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 2 },  /* E9.2: reduce for != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 2 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 2 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 2 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 2 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 2 },
@@ -438,6 +454,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 4 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 4 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 4 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 4 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 4 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 4 },
@@ -460,6 +478,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 5 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 5 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 5 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 5 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 5 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 5 },
@@ -481,6 +501,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 6 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 6 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 6 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 6 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 6 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 6 },
@@ -533,6 +555,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* E9.2: start comparison */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio first */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 92 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 92 },  /* E10: || */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92 },  /* reduce to comparatio before ) */
 
     /* State 12: After '(' expression ')' - reduce */
@@ -547,6 +571,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 7 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 7 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 7 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 7 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 7 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 7 },
@@ -567,6 +593,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: >= lower prec */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: == lower prec */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 1 },   /* E9.2: != lower prec */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 1 },   /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 1 },   /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 1 },   /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 1 },   /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 1 },
@@ -587,6 +615,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 3 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 3 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 3 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 3 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 3 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 3 },
@@ -607,6 +637,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 8 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 8 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 8 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 8 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 8 },  /* for compound */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 8 },
@@ -627,6 +659,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 9 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 9 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 9 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 9 },  /* for statements */
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 9 },  /* for compound */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 9 },  /* for enum values */
@@ -652,6 +686,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 12 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 12 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 12 },  /* E10: || */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12 },  /* reduce first, then fn decl */
@@ -671,6 +707,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: >= */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: == */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 11 },  /* E9.2: != */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 11 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 11 },  /* E10: || */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11 },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 91 },   /* function declarator */
@@ -2567,17 +2605,21 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241 },  /* chain: comp >= ... */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 87 },  /* comparatio -> aequalitas */
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 87 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 87 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 87 },  /* E10: || */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87 },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87 },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 87 },
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 87 },
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 87 },
 
-    /* State 240: After aequalitas at top-level - accept or continue equality chain */
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 22 },   /* expression statement */
+    /* State 240: After aequalitas at top-level - reduce to coniunctio or continue equality */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality: aeq == ... */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality: aeq != ... */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96 },  /* reduce P96: coniunctio -> aequalitas */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 96 },  /* && triggers reduce to coniunctio */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 96 },  /* || triggers reduce to coniunctio */
 
     /* State 241: After 'comparatio <|>|<=|>=' - expect expression starters */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
@@ -2613,6 +2655,8 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* State 244: After 'aequalitas ==|!= comparatio' - reduce P85 */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 85 },  /* left-associativity */
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 85 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 85 },  /* E10: && */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 85 },  /* E10: || */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 85 },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 85 },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 85 },
@@ -2667,7 +2711,87 @@ hic_manens Arbor2TabulaActio ACTIONES[] = {
     /* State 252: After aequalitas in switch condition - shift ) or continue equality */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 82 },   /* continue to switch body */
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+
+    /* ==== E10: Logical Operators (&&, ||) ==== */
+
+    /* State 253: After coniunctio at top-level - reduce to disiunctio or continue && chain */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_SHIFT, 254 },  /* continue && chain */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 94 },  /* reduce P94: disiunctio -> coniunctio */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 94 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 94 },  /* || triggers reduce to disiunctio */
+
+    /* State 254: After 'coniunctio &&' - expect aequalitas (expression starters) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+
+    /* State 255: After disiunctio at top-level - ACCEPT or continue || chain */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_SHIFT, 256 },  /* continue || chain */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT, 0 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 22 },   /* expression statement */
+
+    /* State 256: After 'disiunctio ||' - expect coniunctio (expression starters) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+
+    /* State 257: After aequalitas in && context (top-level) - reduce P96 or continue equality */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 96 },
+
+    /* State 258: After 'coniunctio && aequalitas' (via coniunctio) - reduce P95 */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 95 },  /* left-associativity */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 95 },
+
+    /* State 259: After aequalitas in || context - reduce P96 to coniunctio */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },  /* continue equality chain */
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 96 },
+
+    /* State 260: After coniunctio in || context - reduce P93 or continue && */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_SHIFT, 261 },  /* continue && within || RHS */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 93 },  /* reduce P93: disiunctio -> disiunctio || coniunctio */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 93 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 93 },
+
+    /* State 261: After 'coniunctio &&' in || context - expect aequalitas */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4 },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5 },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6 },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7 },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8 },
+
+    /* State 262: After aequalitas in && within || context - reduce P96 */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242 },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 96 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 96 },
+
+    /* State 263: After 'coniunctio && aequalitas' in || context - reduce P95 */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 95 },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 95 }
 };
 
 hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0]));
@@ -2682,25 +2806,25 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
  * ================================================== */
 
 #define STATE_0_COUNT   24
-#define STATE_1_COUNT   15  /* E9.2: +10 for comparison/equality ops */
-#define STATE_2_COUNT   18  /* E9.2: +6 for comparison ops */
-#define STATE_3_COUNT   18  /* E9.2: +6 for comparison ops */
-#define STATE_4_COUNT   21  /* E9.2: +6 for comparison ops */
-#define STATE_5_COUNT   18  /* E9.2: +6 for comparison ops */
+#define STATE_1_COUNT   17  /* E9.2: +10 for comparison/equality ops, E10: +2 for &&,|| */
+#define STATE_2_COUNT   20  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_3_COUNT   20  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_4_COUNT   23  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_5_COUNT   20  /* E9.2: +6 for comparison ops, E10: +2 */
 #define STATE_6_COUNT   5
 #define STATE_7_COUNT   5
 #define STATE_8_COUNT   5
 #define STATE_9_COUNT   5
 #define STATE_10_COUNT  5
-#define STATE_11_COUNT  9   /* E9.2: +6 for comparison ops */
-#define STATE_12_COUNT  18  /* E9.2: +6 for comparison ops */
-#define STATE_13_COUNT  18  /* E9.2: +6 for comparison ops */
-#define STATE_14_COUNT  18  /* E9.2: +6 for comparison ops */
-#define STATE_15_COUNT  18  /* E9.2: +6 for comparison ops */
-#define STATE_16_COUNT  18  /* E9.2: +6 for comparison ops */
+#define STATE_11_COUNT  11  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_12_COUNT  20  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_13_COUNT  20  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_14_COUNT  20  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_15_COUNT  20  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_16_COUNT  20  /* E9.2: +6 for comparison ops, E10: +2 */
 #define STATE_17_COUNT  2
-#define STATE_18_COUNT  17  /* E9.2: +6 for comparison ops */
-#define STATE_19_COUNT  18  /* E9.2: +6 for comparison ops */
+#define STATE_18_COUNT  19  /* E9.2: +6 for comparison ops, E10: +2 */
+#define STATE_19_COUNT  20  /* E9.2: +6 for comparison ops, E10: +2 */
 #define STATE_20_COUNT  7
 #define STATE_21_COUNT  1
 #define STATE_22_COUNT  21
@@ -2922,12 +3046,12 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_238_COUNT 7
 
 /* E9.2 Comparison/Equality States */
-#define STATE_239_COUNT 13  /* after comparatio */
-#define STATE_240_COUNT 4   /* after aequalitas at top-level (accept) */
+#define STATE_239_COUNT 15  /* after comparatio, E10: +2 */
+#define STATE_240_COUNT 6   /* after aequalitas at top-level (reduce P96) E10: +2 for &&,|| */
 #define STATE_241_COUNT 5   /* after comparison op */
 #define STATE_242_COUNT 5   /* after equality op */
 #define STATE_243_COUNT 15  /* after comp op expr (reduce P88) */
-#define STATE_244_COUNT 9   /* after eq op comparatio (reduce P85) */
+#define STATE_244_COUNT 11  /* after eq op comparatio (reduce P85), E10: +2 */
 #define STATE_245_COUNT 3   /* after aequalitas inside parens */
 #define STATE_246_COUNT 7   /* after comparatio in if condition */
 #define STATE_247_COUNT 3   /* after aequalitas in if condition */
@@ -2936,6 +3060,19 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define STATE_250_COUNT 3   /* after aequalitas in for condition */
 #define STATE_251_COUNT 3   /* after aequalitas in do-while condition */
 #define STATE_252_COUNT 3   /* after aequalitas in switch condition */
+
+/* E10: Logical Operators States */
+#define STATE_253_COUNT 4   /* after coniunctio at top-level */
+#define STATE_254_COUNT 5   /* after 'coniunctio &&' */
+#define STATE_255_COUNT 3   /* after disiunctio at top-level (accept) */
+#define STATE_256_COUNT 5   /* after 'disiunctio ||' */
+#define STATE_257_COUNT 6   /* after aequalitas in && context */
+#define STATE_258_COUNT 6   /* after 'coniunctio && aequalitas' (reduce P95) */
+#define STATE_259_COUNT 6   /* after aequalitas in || context */
+#define STATE_260_COUNT 4   /* after coniunctio in || context */
+#define STATE_261_COUNT 5   /* after 'coniunctio &&' in || context */
+#define STATE_262_COUNT 6   /* after aequalitas in && within || */
+#define STATE_263_COUNT 6   /* after 'coniunctio && aequalitas' in || (reduce P95) */
 
 /* ==================================================
  * CHAINED INDEX MACROS
@@ -3198,6 +3335,17 @@ hic_manens i32 NUM_ACTIONES = (i32)(magnitudo(ACTIONES) / magnitudo(ACTIONES[0])
 #define IDX_STATE_250   (IDX_STATE_249 + STATE_249_COUNT)
 #define IDX_STATE_251   (IDX_STATE_250 + STATE_250_COUNT)
 #define IDX_STATE_252   (IDX_STATE_251 + STATE_251_COUNT)
+#define IDX_STATE_253   (IDX_STATE_252 + STATE_252_COUNT)
+#define IDX_STATE_254   (IDX_STATE_253 + STATE_253_COUNT)
+#define IDX_STATE_255   (IDX_STATE_254 + STATE_254_COUNT)
+#define IDX_STATE_256   (IDX_STATE_255 + STATE_255_COUNT)
+#define IDX_STATE_257   (IDX_STATE_256 + STATE_256_COUNT)
+#define IDX_STATE_258   (IDX_STATE_257 + STATE_257_COUNT)
+#define IDX_STATE_259   (IDX_STATE_258 + STATE_258_COUNT)
+#define IDX_STATE_260   (IDX_STATE_259 + STATE_259_COUNT)
+#define IDX_STATE_261   (IDX_STATE_260 + STATE_260_COUNT)
+#define IDX_STATE_262   (IDX_STATE_261 + STATE_261_COUNT)
+#define IDX_STATE_263   (IDX_STATE_262 + STATE_262_COUNT)
 
 /* State -> first action index mapping (using chained macros)
  *
@@ -3460,7 +3608,18 @@ hic_manens i32 ACTIO_INDICES[] = {
     IDX_STATE_250,  /* E9.2: after aequalitas in for condition */
     IDX_STATE_251,  /* E9.2: after aequalitas in do-while condition */
     IDX_STATE_252,  /* E9.2: after aequalitas in switch condition */
-    (IDX_STATE_252 + STATE_252_COUNT) /* End marker */
+    IDX_STATE_253,  /* E10: after coniunctio at top-level */
+    IDX_STATE_254,  /* E10: after 'coniunctio &&' */
+    IDX_STATE_255,  /* E10: after disiunctio at top-level (accept) */
+    IDX_STATE_256,  /* E10: after 'disiunctio ||' */
+    IDX_STATE_257,  /* E10: after aequalitas in && context */
+    IDX_STATE_258,  /* E10: after 'coniunctio && aequalitas' */
+    IDX_STATE_259,  /* E10: after aequalitas in || context */
+    IDX_STATE_260,  /* E10: after coniunctio in || context */
+    IDX_STATE_261,  /* E10: after 'coniunctio &&' in || context */
+    IDX_STATE_262,  /* E10: after aequalitas in && within || */
+    IDX_STATE_263,  /* E10: after 'coniunctio && aequalitas' in || */
+    (IDX_STATE_263 + STATE_263_COUNT) /* End marker */
 };
 
 /* NUM_STATES derived from array size (array has NUM_STATES + 1 entries for end marker) */
@@ -3498,6 +3657,8 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_ENUMERATOR    21
 #define INT_NT_AEQUALITAS    22
 #define INT_NT_COMPARATIO    23
+#define INT_NT_CONIUNCTIO    24
+#define INT_NT_DISIUNCTIO    25
 
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
@@ -3505,7 +3666,9 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 0, INT_NT_TERM,   2 },
     { 0, INT_NT_FACTOR, 3 },
     { 0, INT_NT_COMPARATIO, 239 },      /* E9.2: after comparatio */
-    { 0, INT_NT_AEQUALITAS, 240 },      /* E9.2: after aequalitas (accept) */
+    { 0, INT_NT_AEQUALITAS, 240 },      /* E9.2: after aequalitas */
+    { 0, INT_NT_CONIUNCTIO, 253 },      /* E10: after coniunctio */
+    { 0, INT_NT_DISIUNCTIO, 255 },      /* E10: after disiunctio (accept) */
 
     /* From state 6: after '(' - full expression chain inside parens */
     { 6, INT_NT_EXPR,   11 },
@@ -3939,7 +4102,35 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 217: after 'declarator [' - expression for array size */
     { 217, INT_NT_EXPR,   219 },  /* array size expression -> state 219 */
     { 217, INT_NT_TERM,   2 },    /* reuse term state */
-    { 217, INT_NT_FACTOR, 3 }     /* reuse factor state */
+    { 217, INT_NT_FACTOR, 3 },    /* reuse factor state */
+
+    /* ==================================================
+     * E10: Logical Operators GOTO Entries
+     * ================================================== */
+
+    /* From state 254: after 'coniunctio &&' - parse RHS aequalitas */
+    { 254, INT_NT_EXPR,       1 },
+    { 254, INT_NT_TERM,       2 },
+    { 254, INT_NT_FACTOR,     3 },
+    { 254, INT_NT_COMPARATIO, 239 },     /* reuse comparatio state */
+    { 254, INT_NT_AEQUALITAS, 257 },     /* RHS aequalitas in && context */
+    { 254, INT_NT_CONIUNCTIO, 258 },     /* after building coniunctio -> reduce P95 */
+
+    /* From state 256: after 'disiunctio ||' - parse RHS coniunctio */
+    { 256, INT_NT_EXPR,       1 },
+    { 256, INT_NT_TERM,       2 },
+    { 256, INT_NT_FACTOR,     3 },
+    { 256, INT_NT_COMPARATIO, 239 },
+    { 256, INT_NT_AEQUALITAS, 259 },     /* aequalitas in || context -> reduce P96 */
+    { 256, INT_NT_CONIUNCTIO, 260 },     /* coniunctio in || context -> reduce P93 or && */
+
+    /* From state 261: after 'coniunctio &&' within || context */
+    { 261, INT_NT_EXPR,       1 },
+    { 261, INT_NT_TERM,       2 },
+    { 261, INT_NT_FACTOR,     3 },
+    { 261, INT_NT_COMPARATIO, 239 },
+    { 261, INT_NT_AEQUALITAS, 262 },     /* aequalitas in && within || */
+    { 261, INT_NT_CONIUNCTIO, 263 }      /* coniunctio from && within || -> reduce P95 */
 };
 
 hic_manens i32 NUM_GOTO = (i32)(magnitudo(GOTO_TABULA) / magnitudo(GOTO_TABULA[0]));
@@ -4062,6 +4253,12 @@ arbor2_glr_quaerere_goto(
         casus ARBOR2_NT_COMPARATIO:
             nt_int = INT_NT_COMPARATIO;
             frange;
+        casus ARBOR2_NT_CONIUNCTIO:
+            nt_int = INT_NT_CONIUNCTIO;
+            frange;
+        casus ARBOR2_NT_DISIUNCTIO:
+            nt_int = INT_NT_DISIUNCTIO;
+            frange;
         ordinarius:
             nt_int = -I;
             frange;
@@ -4112,6 +4309,112 @@ arbor2_glr_initializare_tabulas(Arbor2GLR* glr)
 }
 
 /* ==================================================
+ * Table Query API (no GLR instance required)
+ * ================================================== */
+
+i32
+arbor2_tabula_numerus_statuum(vacuum)
+{
+    redde NUM_STATES;
+}
+
+i32
+arbor2_tabula_numerus_regularum(vacuum)
+{
+    redde NUM_REGULAE;
+}
+
+i32
+arbor2_tabula_numerus_actionum(vacuum)
+{
+    redde NUM_ACTIONES;
+}
+
+i32
+arbor2_tabula_numerus_goto(vacuum)
+{
+    redde NUM_GOTO;
+}
+
+vacuum
+arbor2_tabula_iterare_actiones_status(
+    i32 status,
+    vacuum (*callback)(constans Arbor2TabulaActio* actio, vacuum* ctx),
+    vacuum* ctx)
+{
+    i32 initium;
+    i32 finis;
+    i32 i;
+
+    si (status < ZEPHYRUM || status >= NUM_STATES)
+    {
+        redde;
+    }
+
+    initium = ACTIO_INDICES[status];
+    finis = ACTIO_INDICES[status + I];
+
+    per (i = initium; i < finis; i++)
+    {
+        callback(&ACTIONES[i], ctx);
+    }
+}
+
+vacuum
+arbor2_tabula_iterare_actiones_lexema(
+    Arbor2LexemaGenus lexema,
+    vacuum (*callback)(i32 status, constans Arbor2TabulaActio* actio, vacuum* ctx),
+    vacuum* ctx)
+{
+    i32 status;
+    i32 initium;
+    i32 finis;
+    i32 i;
+
+    per (status = ZEPHYRUM; status < NUM_STATES; status++)
+    {
+        initium = ACTIO_INDICES[status];
+        finis = ACTIO_INDICES[status + I];
+
+        per (i = initium; i < finis; i++)
+        {
+            si (ACTIONES[i].lexema == lexema)
+            {
+                callback(status, &ACTIONES[i], ctx);
+            }
+        }
+    }
+}
+
+vacuum
+arbor2_tabula_iterare_goto_nt(
+    s32 nt,
+    vacuum (*callback)(constans Arbor2TabulaGoto* entry, vacuum* ctx),
+    vacuum* ctx)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < NUM_GOTO; i++)
+    {
+        si (GOTO_TABULA[i].non_terminalis == nt)
+        {
+            callback(&GOTO_TABULA[i], ctx);
+        }
+    }
+}
+
+Arbor2Regula*
+arbor2_tabula_obtinere_regula(i32 index)
+{
+    si (index < ZEPHYRUM || index >= NUM_REGULAE)
+    {
+        redde NIHIL;
+    }
+
+    redde &REGULAE[index];
+}
+
+/* ==================================================
  * Name Functions
  * ================================================== */
 
@@ -4155,6 +4458,10 @@ arbor2_nt_nomen(Arbor2NonTerminalis nt)
         casus ARBOR2_NT_EXPRESSIO_OPTATIVA: redde "EXPRESSIO_OPTATIVA";
         casus ARBOR2_NT_STRUCT_SPECIFIER:   redde "STRUCT_SPECIFIER";
         casus ARBOR2_NT_STRUCT_MEMBER_LIST: redde "STRUCT_MEMBER_LIST";
+        casus ARBOR2_NT_COMPARATIO:     redde "COMPARATIO";
+        casus ARBOR2_NT_AEQUALITAS:     redde "AEQUALITAS";
+        casus ARBOR2_NT_CONIUNCTIO:     redde "CONIUNCTIO";
+        casus ARBOR2_NT_DISIUNCTIO:     redde "DISIUNCTIO";
         ordinarius:                     redde "IGNOTUM";
     }
 }

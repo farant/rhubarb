@@ -47,7 +47,9 @@ nomen enumeratio {
  * ================================================== */
 
 nomen enumeratio {
-    ARBOR2_NT_AEQUALITAS,           /* equality expressions (==, !=) - lowest precedence */
+    ARBOR2_NT_DISIUNCTIO,           /* logical OR expressions (||) - lowest precedence */
+    ARBOR2_NT_CONIUNCTIO,           /* logical AND expressions (&&) */
+    ARBOR2_NT_AEQUALITAS,           /* equality expressions (==, !=) */
     ARBOR2_NT_COMPARATIO,           /* relational expressions (<, >, <=, >=) */
     ARBOR2_NT_EXPRESSIO,
     ARBOR2_NT_TERMINUS,             /* term in expr grammar */
@@ -466,5 +468,37 @@ Arbor2Regula* arbor2_glr_obtinere_regula(
 
 /* Initialize tables (called during glr_creare) */
 vacuum arbor2_glr_initializare_tabulas(Arbor2GLR* glr);
+
+/* ==================================================
+ * Table Query API (no GLR instance required)
+ * For tools and debugging
+ * ================================================== */
+
+/* Table statistics */
+i32 arbor2_tabula_numerus_statuum(vacuum);
+i32 arbor2_tabula_numerus_regularum(vacuum);
+i32 arbor2_tabula_numerus_actionum(vacuum);
+i32 arbor2_tabula_numerus_goto(vacuum);
+
+/* Iterate actions for a specific state */
+vacuum arbor2_tabula_iterare_actiones_status(
+    i32 status,
+    vacuum (*callback)(constans Arbor2TabulaActio* actio, vacuum* ctx),
+    vacuum* ctx);
+
+/* Iterate all states for a specific token */
+vacuum arbor2_tabula_iterare_actiones_lexema(
+    Arbor2LexemaGenus lexema,
+    vacuum (*callback)(i32 status, constans Arbor2TabulaActio* actio, vacuum* ctx),
+    vacuum* ctx);
+
+/* Iterate goto entries for a specific non-terminal */
+vacuum arbor2_tabula_iterare_goto_nt(
+    s32 nt,
+    vacuum (*callback)(constans Arbor2TabulaGoto* entry, vacuum* ctx),
+    vacuum* ctx);
+
+/* Get rule by index (no GLR instance needed) */
+Arbor2Regula* arbor2_tabula_obtinere_regula(i32 index);
 
 #endif /* ARBOR2_GLR_H */

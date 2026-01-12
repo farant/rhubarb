@@ -15,6 +15,7 @@ declare -a GCC_FLAGS=(
     "-Wwrite-strings"
     "-Wno-long-long"
     "-Wno-overlength-strings"
+    "-fbracket-depth=512"
 )
 
 # Include paths

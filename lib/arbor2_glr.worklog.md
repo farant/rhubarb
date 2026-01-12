@@ -2033,3 +2033,58 @@ Plus earlier tests:
 
 - 253 states (was 248, added 5 new aequalitas context states)
 - Updated state counts: 41, 49, 58, 81 (each +7 for comparison operators)
+
+## 2026-01-12: Phase E10 Complete - Logical Operators (&&, ||)
+
+Added logical AND (`&&`) and logical OR (`||`) operators with proper C89 precedence:
+
+```
+disiunctio (||)    <- lowest
+coniunctio (&&)
+aequalitas (==, !=)
+comparatio (<, >, <=, >=)
+expressio (+, -)
+terminus (*, /, %)
+factor (unary, atoms) <- highest
+```
+
+### Implementation Summary
+
+#### 1. New non-terminals
+- `ARBOR2_NT_CONIUNCTIO` (&&) - logical AND expressions
+- `ARBOR2_NT_DISIUNCTIO` (||) - logical OR expressions
+
+#### 2. New grammar rules (P93-P96)
+- P93: `disiunctio -> disiunctio '||' coniunctio` (BINARIUM)
+- P94: `disiunctio -> coniunctio` (pass-through)
+- P95: `coniunctio -> coniunctio '&&' aequalitas` (BINARIUM)
+- P96: `coniunctio -> aequalitas` (pass-through)
+
+#### 3. State machine changes
+- State 240 (after aequalitas): Changed from ACCEPT to REDUCE P96
+- New states 253-263 for logical operator parsing:
+  - 253: after coniunctio at top-level
+  - 254: after 'coniunctio &&'
+  - 255: after disiunctio at top-level (new ACCEPT state)
+  - 256: after 'disiunctio ||'
+  - 257-263: context states for && and || in various contexts
+
+#### 4. Many states updated to handle && and ||
+Added REDUCE actions for DUAMPERSAND and DUPIPA to states:
+1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16, 18, 19, 239, 244
+
+These all reduce to lower-precedence non-terminals when seeing && or ||.
+
+#### 5. Build system change
+Added `-fbracket-depth=512` to compiler flags because the chained IDX_STATE_* macros exceeded clang's default limit of 256 with 264 states.
+
+### Tests
+- `a && b` -> BINARIUM(op=DUAMPERSAND)
+- `a || b` -> BINARIUM(op=DUPIPA)
+- `a || b && c` -> DISIUNCTIO(a, CONIUNCTIO(b, c)) - correct precedence
+- `a && b && c` -> CONIUNCTIO(CONIUNCTIO(a, b), c) - left-associative
+- `a == b && c < d` -> CONIUNCTIO(AEQUALITAS(a, b), COMPARATIO(c, d))
+
+### State Summary
+- 264 states (was 253, added 11 new logical operator states)
+- All existing tests still pass
