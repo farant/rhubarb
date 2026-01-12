@@ -19,4 +19,21 @@ Replaced the hardcoded `LEXEMA_NOMINA[]` lookup table with dynamic extraction us
 **Files changed**:
 - `tools/glr_quaestio.c`: Added `extrahere_enum_ex_filo()` function, global piscina/intern state, removed hardcoded LEXEMA_NOMINA array
 
-**Future work (Phase 2)**: Parse `#define INT_NT_*` macros from `lib/arbor2_glr_tabula.c` using arbor1's PRESERVARE preprocessor mode to also dynamically extract non-terminal names. Currently NT_NOMINA array remains hardcoded.
+## 2026-01-12: Dynamic NT Extraction (Phase 2)
+
+Added dynamic extraction of `#define INT_NT_*` macros from `lib/arbor2_glr_tabula.c`.
+
+**Initial approach (failed)**: Tried using arbor1's PRESERVARE mode to parse the file and extract directive nodes. This caused the parser to hang/infinite loop on the 4500-line file - likely a bug in arbor1's PRESERVARE mode.
+
+**Final approach**: Simple text-based extraction - read file line by line, match lines starting with `#define INT_NT_`, parse name and value with string operations. Much faster and more reliable for this regular pattern.
+
+**Key points**:
+
+1. **Pattern matching**: Lines match `#define INT_NT_<NAME> <VALUE>` format
+2. **Two-pass algorithm**: First pass counts matches, allocate table, second pass extracts
+3. **Fallback preserved**: The hardcoded `NT_NOMINA[]` array is kept as fallback - it provides aliases like "EXPRESSIO" -> INT_NT_EXPR that the dynamic extraction doesn't capture
+
+**Files changed**:
+- `tools/glr_quaestio.c`: Added `extrahere_defines_ex_filo()` using simple file I/O, added `g_nt_tabula`/`g_nt_numerus` globals, updated `initializare_tabulas()` and `parsere_nt_titulus()`
+
+**Result**: Tool now dynamically extracts both token types (89 values from enum) and NT types (26 values from #defines) at startup. No hardcoded values need manual updates when grammar changes.

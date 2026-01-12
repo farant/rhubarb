@@ -36,6 +36,10 @@ nomen structura {
 hic_manens TitulusValor* g_lexema_tabula = NIHIL;
 hic_manens i32 g_lexema_numerus = ZEPHYRUM;
 
+/* Dynamic NT lookup table (built from parsing arbor2_glr_tabula.c #defines) */
+hic_manens TitulusValor* g_nt_tabula = NIHIL;
+hic_manens i32 g_nt_numerus = ZEPHYRUM;
+
 /* ==================================================
  * Dynamic Enum Extraction
  * ================================================== */
@@ -379,6 +383,147 @@ extrahere_enum_ex_filo(
 }
 
 /* ==================================================
+ * Dynamic #define Extraction (Phase 2) - Simple Text Parsing
+ * ================================================== */
+
+/*
+ * Extrahere #define macros ex filo using simple text parsing.
+ * Much faster than full C parsing for this regular pattern.
+ *
+ * Looks for lines matching: #define <PREFIX><NAME> <VALUE>
+ * e.g., "#define INT_NT_EXPR 0"
+ *
+ * via:         Path to C file (e.g., "lib/arbor2_glr_tabula.c")
+ * praefixum:   Prefix to match and strip (e.g., "INT_NT_")
+ * tabula_out:  Output array of TitulusValor
+ * numerus_out: Output count
+ *
+ * Returns: VERUM if successful
+ */
+interior b32
+extrahere_defines_ex_filo(
+    constans character* via,
+    constans character* praefixum,
+    TitulusValor** tabula_out,
+    i32* numerus_out)
+{
+    FILE* fp;
+    character linea[256];
+    i32 praefixum_len;
+    i32 count;
+    i32 idx;
+    TitulusValor* tabula;
+    constans character* define_prefix = "#define ";
+    i32 define_len;
+
+    *tabula_out = NIHIL;
+    *numerus_out = ZEPHYRUM;
+
+    praefixum_len = (i32)strlen(praefixum);
+    define_len = (i32)strlen(define_prefix);
+
+    fp = fopen(via, "r");
+    si (fp == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* First pass: count matching #defines */
+    count = ZEPHYRUM;
+    dum (fgets(linea, (integer)magnitudo(linea), fp) != NIHIL)
+    {
+        /* Check for "#define <PREFIX>" */
+        si (strncmp(linea, define_prefix, (size_t)define_len) == ZEPHYRUM &&
+            strncmp(linea + define_len, praefixum, (size_t)praefixum_len) == ZEPHYRUM)
+        {
+            count++;
+        }
+    }
+
+    si (count == ZEPHYRUM)
+    {
+        fclose(fp);
+        redde FALSUM;
+    }
+
+    /* Allocate table */
+    tabula = piscina_allocare(g_piscina,
+        (memoriae_index)(count * (i32)magnitudo(TitulusValor)));
+    si (tabula == NIHIL)
+    {
+        fclose(fp);
+        redde FALSUM;
+    }
+
+    /* Second pass: extract matching #defines */
+    rewind(fp);
+    idx = ZEPHYRUM;
+    dum (fgets(linea, (integer)magnitudo(linea), fp) != NIHIL && idx < count)
+    {
+        character* name_start;
+        character* name_end;
+        character* value_start;
+        character* stripped;
+        i32 name_len;
+        i32 stripped_len;
+        s32 valor;
+
+        /* Check for "#define <PREFIX>" */
+        si (strncmp(linea, define_prefix, (size_t)define_len) != ZEPHYRUM ||
+            strncmp(linea + define_len, praefixum, (size_t)praefixum_len) != ZEPHYRUM)
+        {
+            perge;
+        }
+
+        /* Parse: "#define INT_NT_NAME VALUE" */
+        name_start = linea + define_len;  /* Points to "INT_NT_NAME VALUE" */
+
+        /* Find end of name (space or tab) */
+        name_end = name_start;
+        dum (*name_end != '\0' && *name_end != ' ' && *name_end != '\t')
+        {
+            name_end++;
+        }
+        name_len = (i32)(name_end - name_start);
+
+        /* Skip whitespace to find value */
+        value_start = name_end;
+        dum (*value_start == ' ' || *value_start == '\t')
+        {
+            value_start++;
+        }
+
+        /* Strip prefix from name */
+        stripped_len = name_len - praefixum_len;
+        si (stripped_len <= ZEPHYRUM)
+        {
+            perge;
+        }
+
+        stripped = piscina_allocare(g_piscina, (memoriae_index)(stripped_len + I));
+        si (stripped == NIHIL)
+        {
+            perge;
+        }
+        memcpy(stripped, name_start + praefixum_len, (size_t)stripped_len);
+        stripped[stripped_len] = '\0';
+
+        /* Parse integer value */
+        valor = (s32)atoi(value_start);
+
+        tabula[idx].titulus = stripped;
+        tabula[idx].valor = valor;
+        idx++;
+    }
+
+    fclose(fp);
+
+    *tabula_out = tabula;
+    *numerus_out = idx;
+    redde VERUM;
+}
+
+/* ==================================================
  * Internal NT Values (must match arbor2_glr_tabula.c)
  * ================================================== */
 
@@ -476,6 +621,20 @@ parsere_nt_titulus(constans character* titulus)
 {
     i32 i;
 
+    /* Use dynamic table if available */
+    si (g_nt_tabula != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < g_nt_numerus; i++)
+        {
+            si (g_nt_tabula[i].titulus != NIHIL &&
+                strcmp(g_nt_tabula[i].titulus, titulus) == ZEPHYRUM)
+            {
+                redde g_nt_tabula[i].valor;
+            }
+        }
+    }
+
+    /* Fall back to hardcoded table (includes aliases) */
     per (i = ZEPHYRUM; NT_NOMINA[i].titulus != NIHIL; i++)
     {
         si (strcmp(NT_NOMINA[i].titulus, titulus) == ZEPHYRUM)
@@ -710,6 +869,17 @@ initializare_tabulas(vacuum)
     {
         fprintf(stderr, "Warning: Non potest extrahere lexema enum - using fallback\n");
         /* Continue anyway - token lookup will fail but other commands work */
+    }
+
+    /* Extract NT defines from arbor2_glr_tabula.c using simple text parsing */
+    si (!extrahere_defines_ex_filo(
+            "lib/arbor2_glr_tabula.c",
+            "INT_NT_",
+            &g_nt_tabula,
+            &g_nt_numerus))
+    {
+        fprintf(stderr, "Warning: Non potest extrahere NT defines - using fallback\n");
+        /* Continue anyway - NT lookup will use hardcoded table */
     }
 
     redde VERUM;
