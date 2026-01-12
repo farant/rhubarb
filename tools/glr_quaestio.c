@@ -383,147 +383,6 @@ extrahere_enum_ex_filo(
 }
 
 /* ==================================================
- * Dynamic #define Extraction (Phase 2) - Simple Text Parsing
- * ================================================== */
-
-/*
- * Extrahere #define macros ex filo using simple text parsing.
- * Much faster than full C parsing for this regular pattern.
- *
- * Looks for lines matching: #define <PREFIX><NAME> <VALUE>
- * e.g., "#define INT_NT_EXPR 0"
- *
- * via:         Path to C file (e.g., "lib/arbor2_glr_tabula.c")
- * praefixum:   Prefix to match and strip (e.g., "INT_NT_")
- * tabula_out:  Output array of TitulusValor
- * numerus_out: Output count
- *
- * Returns: VERUM if successful
- */
-interior b32
-extrahere_defines_ex_filo(
-    constans character* via,
-    constans character* praefixum,
-    TitulusValor** tabula_out,
-    i32* numerus_out)
-{
-    FILE* fp;
-    character linea[256];
-    i32 praefixum_len;
-    i32 count;
-    i32 idx;
-    TitulusValor* tabula;
-    constans character* define_prefix = "#define ";
-    i32 define_len;
-
-    *tabula_out = NIHIL;
-    *numerus_out = ZEPHYRUM;
-
-    praefixum_len = (i32)strlen(praefixum);
-    define_len = (i32)strlen(define_prefix);
-
-    fp = fopen(via, "r");
-    si (fp == NIHIL)
-    {
-        redde FALSUM;
-    }
-
-    /* First pass: count matching #defines */
-    count = ZEPHYRUM;
-    dum (fgets(linea, (integer)magnitudo(linea), fp) != NIHIL)
-    {
-        /* Check for "#define <PREFIX>" */
-        si (strncmp(linea, define_prefix, (size_t)define_len) == ZEPHYRUM &&
-            strncmp(linea + define_len, praefixum, (size_t)praefixum_len) == ZEPHYRUM)
-        {
-            count++;
-        }
-    }
-
-    si (count == ZEPHYRUM)
-    {
-        fclose(fp);
-        redde FALSUM;
-    }
-
-    /* Allocate table */
-    tabula = piscina_allocare(g_piscina,
-        (memoriae_index)(count * (i32)magnitudo(TitulusValor)));
-    si (tabula == NIHIL)
-    {
-        fclose(fp);
-        redde FALSUM;
-    }
-
-    /* Second pass: extract matching #defines */
-    rewind(fp);
-    idx = ZEPHYRUM;
-    dum (fgets(linea, (integer)magnitudo(linea), fp) != NIHIL && idx < count)
-    {
-        character* name_start;
-        character* name_end;
-        character* value_start;
-        character* stripped;
-        i32 name_len;
-        i32 stripped_len;
-        s32 valor;
-
-        /* Check for "#define <PREFIX>" */
-        si (strncmp(linea, define_prefix, (size_t)define_len) != ZEPHYRUM ||
-            strncmp(linea + define_len, praefixum, (size_t)praefixum_len) != ZEPHYRUM)
-        {
-            perge;
-        }
-
-        /* Parse: "#define INT_NT_NAME VALUE" */
-        name_start = linea + define_len;  /* Points to "INT_NT_NAME VALUE" */
-
-        /* Find end of name (space or tab) */
-        name_end = name_start;
-        dum (*name_end != '\0' && *name_end != ' ' && *name_end != '\t')
-        {
-            name_end++;
-        }
-        name_len = (i32)(name_end - name_start);
-
-        /* Skip whitespace to find value */
-        value_start = name_end;
-        dum (*value_start == ' ' || *value_start == '\t')
-        {
-            value_start++;
-        }
-
-        /* Strip prefix from name */
-        stripped_len = name_len - praefixum_len;
-        si (stripped_len <= ZEPHYRUM)
-        {
-            perge;
-        }
-
-        stripped = piscina_allocare(g_piscina, (memoriae_index)(stripped_len + I));
-        si (stripped == NIHIL)
-        {
-            perge;
-        }
-        memcpy(stripped, name_start + praefixum_len, (size_t)stripped_len);
-        stripped[stripped_len] = '\0';
-
-        /* Parse integer value */
-        valor = (s32)atoi(value_start);
-
-        tabula[idx].titulus = stripped;
-        tabula[idx].valor = valor;
-        idx++;
-    }
-
-    fclose(fp);
-
-    *tabula_out = tabula;
-    *numerus_out = idx;
-    redde VERUM;
-}
-
-/* ==================================================
  * Internal NT Values (must match arbor2_glr_tabula.c)
  * ================================================== */
 
@@ -836,10 +695,181 @@ imprimere_auxilium(vacuum)
     printf("  glr_quaestio token <NAME>   Find states with token\n");
     printf("  glr_quaestio goto <NT>      Find goto entries for non-terminal\n");
     printf("  glr_quaestio rule <P>       Show rule P details\n");
+    printf("  glr_quaestio rules <NT>     Find all rules producing NT\n");
+    printf("  glr_quaestio conflicts      Find shift/reduce conflicts\n");
     printf("  glr_quaestio stats          Show table statistics\n");
+    printf("  glr_quaestio tokens         List all known tokens\n");
+    printf("  glr_quaestio nts            List all known non-terminals\n");
     printf("  glr_quaestio --help         Show this help\n\n");
     printf("Token examples: DUAMPERSAND, DUPIPA, SEMICOLON, EOF\n");
     printf("NT examples: CONIUNCTIO, DISIUNCTIO, AEQUALITAS, EXPR\n");
+}
+
+interior integer
+cmd_tokens(vacuum)
+{
+    i32 i;
+
+    si (g_lexema_tabula == NIHIL || g_lexema_numerus == ZEPHYRUM)
+    {
+        printf("No tokens loaded (extraction failed)\n");
+        redde I;
+    }
+
+    printf("Known tokens (%d):\n", g_lexema_numerus);
+    per (i = ZEPHYRUM; i < g_lexema_numerus; i++)
+    {
+        printf("  %3d: %s\n", g_lexema_tabula[i].valor, g_lexema_tabula[i].titulus);
+    }
+    redde ZEPHYRUM;
+}
+
+interior integer
+cmd_nts(vacuum)
+{
+    i32 i;
+
+    si (g_nt_tabula == NIHIL || g_nt_numerus == ZEPHYRUM)
+    {
+        printf("No NTs loaded (extraction failed), using hardcoded:\n");
+        per (i = ZEPHYRUM; NT_NOMINA[i].titulus != NIHIL; i++)
+        {
+            printf("  %3d: %s\n", NT_NOMINA[i].valor, NT_NOMINA[i].titulus);
+        }
+        redde ZEPHYRUM;
+    }
+
+    printf("Known non-terminals (%d):\n", g_nt_numerus);
+    per (i = ZEPHYRUM; i < g_nt_numerus; i++)
+    {
+        printf("  %3d: %s\n", g_nt_tabula[i].valor, g_nt_tabula[i].titulus);
+    }
+    redde ZEPHYRUM;
+}
+
+interior integer
+cmd_rules(constans character* nt_titulus)
+{
+    s32 nt;
+    i32 num_regulae;
+    i32 inventa;
+    i32 i;
+
+    nt = parsere_nt_titulus(nt_titulus);
+    si (nt < (s32)ZEPHYRUM)
+    {
+        fprintf(stderr, "Error: Non-terminalis '%s' ignotum\n", nt_titulus);
+        fprintf(stderr, "Exempla: CONIUNCTIO, DISIUNCTIO, AEQUALITAS, EXPR\n");
+        redde I;
+    }
+
+    num_regulae = arbor2_tabula_numerus_regularum();
+    inventa = ZEPHYRUM;
+
+    printf("Rules with LHS = %s:\n", nt_titulus);
+    per (i = ZEPHYRUM; i < num_regulae; i++)
+    {
+        Arbor2Regula* regula;
+
+        regula = arbor2_tabula_obtinere_regula(i);
+        si (regula != NIHIL && (s32)regula->sinister == nt)
+        {
+            printf("  P%d: %s -> (longitudo %d) [%s]\n",
+                   i,
+                   arbor2_nt_nomen(regula->sinister),
+                   regula->longitudo,
+                   arbor2_nodus_genus_nomen(regula->nodus_genus));
+            inventa++;
+        }
+    }
+
+    printf("\nInventa: %d regulae\n", inventa);
+    redde ZEPHYRUM;
+}
+
+/* Contextus pro detectione conflictuum */
+nomen structura {
+    i32 status;
+    Arbor2LexemaGenus* lexemata_visa;
+    Arbor2ActioGenus* actiones_visae;
+    i32* valores_visi;
+    i32 numerus_visorum;
+    i32 capacitas;
+    i32 conflictus_numerus;
+} ConflictusContextus;
+
+interior vacuum
+cb_detectere_conflictum(constans Arbor2TabulaActio* actio, vacuum* ctx)
+{
+    ConflictusContextus* cctx;
+    i32 i;
+
+    cctx = (ConflictusContextus*)ctx;
+
+    /* Quaerere si hoc lexema iam visum est in hoc statu */
+    per (i = ZEPHYRUM; i < cctx->numerus_visorum; i++)
+    {
+        si (cctx->lexemata_visa[i] == actio->lexema)
+        {
+            /* Conflictus! Duo actiones pro eodem lexema */
+            printf("  State %d: CONFLICTUS pro %s\n",
+                   cctx->status,
+                   arbor2_lexema_genus_nomen(actio->lexema));
+            printf("    Prior: %-7s %3d\n",
+                   arbor2_actio_genus_nomen(cctx->actiones_visae[i]),
+                   cctx->valores_visi[i]);
+            printf("    Nova:  %-7s %3d\n",
+                   arbor2_actio_genus_nomen(actio->actio),
+                   actio->valor);
+            cctx->conflictus_numerus++;
+            redde;
+        }
+    }
+
+    /* Addere ad visorum tabulam */
+    si (cctx->numerus_visorum < cctx->capacitas)
+    {
+        cctx->lexemata_visa[cctx->numerus_visorum] = actio->lexema;
+        cctx->actiones_visae[cctx->numerus_visorum] = actio->actio;
+        cctx->valores_visi[cctx->numerus_visorum] = actio->valor;
+        cctx->numerus_visorum++;
+    }
+}
+
+interior integer
+cmd_conflicts(vacuum)
+{
+    i32 status;
+    i32 num_status;
+    i32 total_conflicts;
+    ConflictusContextus ctx;
+    Arbor2LexemaGenus lexemata_buffer[256];
+    Arbor2ActioGenus actiones_buffer[256];
+    i32 valores_buffer[256];
+
+    num_status = arbor2_tabula_numerus_statuum();
+    total_conflicts = ZEPHYRUM;
+
+    printf("Quaerendo conflictus in %d statibus...\n\n", num_status);
+
+    ctx.lexemata_visa = lexemata_buffer;
+    ctx.actiones_visae = actiones_buffer;
+    ctx.valores_visi = valores_buffer;
+    ctx.capacitas = 256;
+
+    per (status = ZEPHYRUM; status < num_status; status++)
+    {
+        ctx.status = status;
+        ctx.numerus_visorum = ZEPHYRUM;
+        ctx.conflictus_numerus = ZEPHYRUM;
+
+        arbor2_tabula_iterare_actiones_status(status, cb_detectere_conflictum, &ctx);
+
+        total_conflicts += ctx.conflictus_numerus;
+    }
+
+    printf("\nConflictus totales: %d\n", total_conflicts);
+    redde ZEPHYRUM;
 }
 
 /* ==================================================
@@ -871,14 +901,15 @@ initializare_tabulas(vacuum)
         /* Continue anyway - token lookup will fail but other commands work */
     }
 
-    /* Extract NT defines from arbor2_glr_tabula.c using simple text parsing */
-    si (!extrahere_defines_ex_filo(
-            "lib/arbor2_glr_tabula.c",
-            "INT_NT_",
+    /* Extract NT enum from arbor2_glr.h (Arbor2NonTerminalis enum) */
+    si (!extrahere_enum_ex_filo(
+            "include/arbor2_glr.h",
+            "Arbor2NonTerminalis",
+            "ARBOR2_NT_",
             &g_nt_tabula,
             &g_nt_numerus))
     {
-        fprintf(stderr, "Warning: Non potest extrahere NT defines - using fallback\n");
+        fprintf(stderr, "Warning: Non potest extrahere NT enum - using fallback\n");
         /* Continue anyway - NT lookup will use hardcoded table */
     }
 
@@ -911,6 +942,21 @@ integer principale(integer argc, constans character* constans* argv)
         redde cmd_stats();
     }
 
+    si (strcmp(argv[I], "tokens") == ZEPHYRUM)
+    {
+        redde cmd_tokens();
+    }
+
+    si (strcmp(argv[I], "nts") == ZEPHYRUM)
+    {
+        redde cmd_nts();
+    }
+
+    si (strcmp(argv[I], "conflicts") == ZEPHYRUM)
+    {
+        redde cmd_conflicts();
+    }
+
     si (argc < III)
     {
         fprintf(stderr, "Error: Argumentum deest\n");
@@ -936,6 +982,11 @@ integer principale(integer argc, constans character* constans* argv)
     si (strcmp(argv[I], "rule") == ZEPHYRUM)
     {
         redde cmd_rule(argv[II]);
+    }
+
+    si (strcmp(argv[I], "rules") == ZEPHYRUM)
+    {
+        redde cmd_rules(argv[II]);
     }
 
     fprintf(stderr, "Error: Mandatum '%s' ignotum\n", argv[I]);

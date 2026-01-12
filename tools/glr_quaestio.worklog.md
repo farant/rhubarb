@@ -37,3 +37,30 @@ Added dynamic extraction of `#define INT_NT_*` macros from `lib/arbor2_glr_tabul
 - `tools/glr_quaestio.c`: Added `extrahere_defines_ex_filo()` using simple file I/O, added `g_nt_tabula`/`g_nt_numerus` globals, updated `initializare_tabulas()` and `parsere_nt_titulus()`
 
 **Result**: Tool now dynamically extracts both token types (89 values from enum) and NT types (26 values from #defines) at startup. No hardcoded values need manual updates when grammar changes.
+
+## 2026-01-12: NT Extraction Bug Fix + Phase 3 Commands
+
+### Bug Fix: Wrong NT Source
+
+The Phase 2 extraction of `#define INT_NT_*` macros from `arbor2_glr_tabula.c` was incorrect. The REGULAE array uses `Arbor2NonTerminalis` enum values from `arbor2_glr.h`, NOT the `INT_NT_*` defines. The INT_NT_ defines are only used for the GOTO table.
+
+**Symptom**: `rules EXPR` returned rules with LHS=DISIUNCTIO because INT_NT_EXPR=0 maps to ARBOR2_NT_DISIUNCTIO=0, but they're different numbering schemes.
+
+**Fix**: Changed NT extraction to use `extrahere_enum_ex_filo()` on `include/arbor2_glr.h` with prefix `ARBOR2_NT_` instead of text parsing #defines. Removed the now-unused `extrahere_defines_ex_filo()` function.
+
+### Phase 3: New Query Commands
+
+Added two new commands:
+
+1. **`rules <NT>`** - Find all grammar rules where the left-hand side equals the given non-terminal
+   - Linear scan through all rules checking `regula->sinister == nt`
+   - Prints rule index, LHS name, RHS length, and node type
+
+2. **`conflicts`** - Find shift/reduce and reduce/reduce conflicts in the parse tables
+   - Iterates all states
+   - For each state, tracks which tokens have actions
+   - Reports when multiple actions exist for the same token
+   - Found 2 conflicts in state 4: ASTERISCUS (shift/reduce) and COLON (shift/reduce)
+
+**Files changed**:
+- `tools/glr_quaestio.c`: Added `cmd_rules()`, `cmd_conflicts()`, `ConflictusContextus` struct, `cb_detectere_conflictum()` callback. Updated help text and principale() dispatch. Fixed NT extraction source.
