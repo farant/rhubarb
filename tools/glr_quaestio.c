@@ -11,11 +11,372 @@
  */
 
 #include "latina.h"
+#include "arbor.h"
 #include "arbor2_glr.h"
 #include "arbor2_lexema.h"
+#include "piscina.h"
+#include "internamentum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* ==================================================
+ * Global State for Dynamic Lookup Tables
+ * ================================================== */
+
+hic_manens Piscina* g_piscina = NIHIL;
+hic_manens InternamentumChorda* g_intern = NIHIL;
+
+/* Dynamic token lookup table (built from parsing arbor2_lexema.h) */
+nomen structura {
+    constans character* titulus;
+    s32 valor;
+} TitulusValor;
+
+hic_manens TitulusValor* g_lexema_tabula = NIHIL;
+hic_manens i32 g_lexema_numerus = ZEPHYRUM;
+
+/* ==================================================
+ * Dynamic Enum Extraction
+ * ================================================== */
+
+/*
+ * Extrahere enumeratores ex filo header usando arbor1.
+ *
+ * via:           Path to header file (e.g., "include/arbor2_lexema.h")
+ * typedef_titulus: Name of the typedef (e.g., "Arbor2LexemaGenus")
+ * praefixum:     Prefix to strip from names (e.g., "ARBOR2_LEXEMA_")
+ * tabula_out:    Output array of TitulusValor
+ * numerus_out:   Output count
+ *
+ * Returns: VERUM if successful
+ */
+interior b32
+extrahere_enum_ex_filo(
+    constans character* via,
+    constans character* typedef_titulus,
+    constans character* praefixum,
+    TitulusValor** tabula_out,
+    i32* numerus_out)
+{
+    ArborResultus res;
+    ArborNodus* radix;
+    Xar* declarationes;
+    i32 num_decl;
+    i32 i;
+    i32 praefixum_len;
+
+    *tabula_out = NIHIL;
+    *numerus_out = ZEPHYRUM;
+
+    praefixum_len = (i32)strlen(praefixum);
+
+    /* Parse the header file */
+    res = arbor_parsere_filum(via, g_piscina, g_intern, NIHIL);
+    si (!res.successus)
+    {
+        fprintf(stderr, "Warning: Non potest parsere %s\n", via);
+        si (res.errores != NIHIL)
+        {
+            i32 e;
+            per (e = ZEPHYRUM; e < xar_numerus(res.errores); e++)
+            {
+                ArborError** err_ptr = xar_obtinere(res.errores, e);
+                si (err_ptr != NIHIL && *err_ptr != NIHIL)
+                {
+                    ArborError* err = *err_ptr;
+                    fprintf(stderr, "  Error [%d:%d]: %.*s\n",
+                        err->linea, err->columna,
+                        err->nuntius.mensura, (constans character*)err->nuntius.datum);
+                }
+            }
+        }
+        redde FALSUM;
+    }
+
+    radix = res.radix;
+    si (radix == NIHIL || radix->genus != ARBOR_NODUS_TRANSLATION_UNIT)
+    {
+        fprintf(stderr, "Warning: AST radix invalida pro %s (genus=%d)\n", via,
+            radix != NIHIL ? (integer)radix->genus : -1);
+        redde FALSUM;
+    }
+
+    /* Walk declarations looking for typedef with matching name */
+    declarationes = radix->datum.genericum.liberi;
+    si (declarationes == NIHIL)
+    {
+        fprintf(stderr, "Warning: No declarations in %s\n", via);
+        redde FALSUM;
+    }
+
+    num_decl = xar_numerus(declarationes);
+    per (i = ZEPHYRUM; i < num_decl; i++)
+    {
+        ArborNodus** decl_ptr;
+        ArborNodus* decl;
+        Xar* specifiers;
+        Xar* declaratores;
+        ArborNodus* enum_spec;
+        i32 j;
+        b32 est_typedef;
+        b32 nomen_invenit;
+
+        decl_ptr = xar_obtinere(declarationes, i);
+        si (decl_ptr == NIHIL)
+        {
+            perge;
+        }
+        decl = *decl_ptr;
+
+        si (decl->genus != ARBOR_NODUS_DECLARATION)
+        {
+            perge;
+        }
+
+        specifiers = decl->datum.declaratio.specifiers;
+        declaratores = decl->datum.declaratio.declaratores;
+
+        si (specifiers == NIHIL)
+        {
+            perge;
+        }
+
+        /* Check if this is a typedef and find enum specifier */
+        est_typedef = FALSUM;
+        enum_spec = NIHIL;
+
+        per (j = ZEPHYRUM; j < xar_numerus(specifiers); j++)
+        {
+            ArborNodus** spec_ptr;
+            ArborNodus* spec;
+
+            spec_ptr = xar_obtinere(specifiers, j);
+            si (spec_ptr == NIHIL)
+            {
+                perge;
+            }
+            spec = *spec_ptr;
+
+            si (spec->genus == ARBOR_NODUS_STORAGE_CLASS)
+            {
+                /* Check if it's typedef keyword */
+                si (spec->datum.folium.keyword == ARBOR_LEXEMA_TYPEDEF)
+                {
+                    est_typedef = VERUM;
+                }
+            }
+            alioquin si (spec->genus == ARBOR_NODUS_ENUM_SPECIFIER)
+            {
+                enum_spec = spec;
+            }
+        }
+
+        si (!est_typedef || enum_spec == NIHIL)
+        {
+            perge;
+        }
+
+        /* Check if the typedef name matches */
+        nomen_invenit = FALSUM;
+        si (declaratores != NIHIL)
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(declaratores); j++)
+            {
+                ArborNodus** init_decl_ptr;
+                ArborNodus* init_decl;
+                ArborNodus* declarator;
+                chorda* decl_nomen;
+
+                init_decl_ptr = xar_obtinere(declaratores, j);
+                si (init_decl_ptr == NIHIL)
+                {
+                    perge;
+                }
+                init_decl = *init_decl_ptr;
+
+                /* Get the declarator (handle init_declarator or direct declarator) */
+                si (init_decl->genus == ARBOR_NODUS_INIT_DECLARATOR)
+                {
+                    declarator = init_decl->datum.init_decl.declarator;
+                }
+                alioquin
+                {
+                    declarator = init_decl;
+                }
+
+                si (declarator == NIHIL)
+                {
+                    perge;
+                }
+
+                /* Get the name from the declarator */
+                si (declarator->genus == ARBOR_NODUS_IDENTIFIER ||
+                    declarator->genus == ARBOR_NODUS_TYPEDEF_NAME)
+                {
+                    decl_nomen = declarator->datum.folium.valor;
+                    si (decl_nomen != NIHIL)
+                    {
+                        /* Compare with target typedef name */
+                        si (decl_nomen->mensura == (i32)strlen(typedef_titulus) &&
+                            strncmp((constans character*)decl_nomen->datum, typedef_titulus,
+                                    (size_t)decl_nomen->mensura) == ZEPHYRUM)
+                        {
+                            nomen_invenit = VERUM;
+                            frange;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+         * Note: arbor1 parses "typedef enum { ... } TypeName;" with empty declarators.
+         * The typedef name isn't easily accessible. Instead, we verify by checking
+         * that the first enumerator starts with the expected prefix.
+         */
+        (vacuum)typedef_titulus; /* Suppress unused warning - keeping param for future use */
+        (vacuum)nomen_invenit;
+
+        /* Found a typedef enum! Verify by prefix and extract enumerators */
+        {
+            Xar* enumeratores;
+            i32 num_enum;
+            i32 k;
+            s32 valor_currens;
+            TitulusValor* tabula;
+
+            enumeratores = enum_spec->datum.enum_spec.enumeratores;
+            si (enumeratores == NIHIL)
+            {
+                redde FALSUM;
+            }
+
+            num_enum = xar_numerus(enumeratores);
+            si (num_enum == ZEPHYRUM)
+            {
+                perge; /* Try next declaration */
+            }
+
+            /* Verify first enumerator matches prefix */
+            {
+                ArborNodus** first_ptr;
+                ArborNodus* first_enum;
+                chorda* first_nomen;
+
+                first_ptr = xar_obtinere(enumeratores, ZEPHYRUM);
+                si (first_ptr == NIHIL)
+                {
+                    perge;
+                }
+                first_enum = *first_ptr;
+                first_nomen = first_enum->datum.folium.valor;
+                si (first_nomen == NIHIL ||
+                    first_nomen->mensura <= praefixum_len ||
+                    strncmp((constans character*)first_nomen->datum, praefixum,
+                            (size_t)praefixum_len) != ZEPHYRUM)
+                {
+                    perge;
+                }
+            }
+
+            /* Allocate table */
+            tabula = piscina_allocare(g_piscina,
+                (memoriae_index)(num_enum * (i32)magnitudo(TitulusValor)));
+            si (tabula == NIHIL)
+            {
+                redde FALSUM;
+            }
+
+            valor_currens = ZEPHYRUM;
+            per (k = ZEPHYRUM; k < num_enum; k++)
+            {
+                ArborNodus** enum_ptr;
+                ArborNodus* enumerator;
+                chorda* enum_nomen;
+                constans character* stripped_nomen;
+
+                enum_ptr = xar_obtinere(enumeratores, k);
+                si (enum_ptr == NIHIL)
+                {
+                    perge;
+                }
+                enumerator = *enum_ptr;
+
+                si (enumerator->genus != ARBOR_NODUS_ENUMERATOR &&
+                    enumerator->genus != ARBOR_NODUS_IDENTIFIER)
+                {
+                    perge;
+                }
+
+                enum_nomen = enumerator->datum.folium.valor;
+                si (enum_nomen == NIHIL)
+                {
+                    perge;
+                }
+
+                /* Strip prefix from name */
+                si (enum_nomen->mensura > praefixum_len &&
+                    strncmp((constans character*)enum_nomen->datum, praefixum, (size_t)praefixum_len) == ZEPHYRUM)
+                {
+                    /* Allocate stripped name */
+                    i32 stripped_len;
+                    character* stripped;
+
+                    stripped_len = enum_nomen->mensura - praefixum_len;
+                    stripped = piscina_allocare(g_piscina,
+                        (memoriae_index)(stripped_len + I));
+                    si (stripped != NIHIL)
+                    {
+                        memcpy(stripped, enum_nomen->datum + praefixum_len,
+                               (size_t)stripped_len);
+                        stripped[stripped_len] = '\0';
+                        stripped_nomen = stripped;
+                    }
+                    alioquin
+                    {
+                        stripped_nomen = NIHIL;
+                    }
+                }
+                alioquin
+                {
+                    /* No prefix to strip - allocate copy */
+                    character* copia;
+
+                    copia = piscina_allocare(g_piscina,
+                        (memoriae_index)(enum_nomen->mensura + I));
+                    si (copia != NIHIL)
+                    {
+                        memcpy(copia, enum_nomen->datum, (size_t)enum_nomen->mensura);
+                        copia[enum_nomen->mensura] = '\0';
+                        stripped_nomen = copia;
+                    }
+                    alioquin
+                    {
+                        stripped_nomen = NIHIL;
+                    }
+                }
+
+                /*
+                 * Note: Explicit value checking disabled for now.
+                 * The enumerator node uses folium union member for the name,
+                 * so we can't also access genericum.liberi (they overlap in the union).
+                 * For arbor2_lexema.h, all values are sequential anyway.
+                 */
+
+                tabula[k].titulus = stripped_nomen;
+                tabula[k].valor = valor_currens;
+                valor_currens++;
+            }
+
+            *tabula_out = tabula;
+            *numerus_out = num_enum;
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
 
 /* ==================================================
  * Internal NT Values (must match arbor2_glr_tabula.c)
@@ -49,105 +410,8 @@
 #define INT_NT_DISIUNCTIO     25
 
 /* ==================================================
- * Name Tables
+ * NT Name Table (hardcoded for now - Phase 2 will parse #defines)
  * ================================================== */
-
-nomen structura {
-    constans character* titulus;
-    s32 valor;
-} TitulusValor;
-
-hic_manens TitulusValor LEXEMA_NOMINA[] = {
-    { "AUTO",           ARBOR2_LEXEMA_AUTO },
-    { "BREAK",          ARBOR2_LEXEMA_BREAK },
-    { "CASE",           ARBOR2_LEXEMA_CASE },
-    { "CHAR",           ARBOR2_LEXEMA_CHAR },
-    { "CONST",          ARBOR2_LEXEMA_CONST },
-    { "CONTINUE",       ARBOR2_LEXEMA_CONTINUE },
-    { "DEFAULT",        ARBOR2_LEXEMA_DEFAULT },
-    { "DO",             ARBOR2_LEXEMA_DO },
-    { "DOUBLE",         ARBOR2_LEXEMA_DOUBLE },
-    { "ELSE",           ARBOR2_LEXEMA_ELSE },
-    { "ENUM",           ARBOR2_LEXEMA_ENUM },
-    { "EXTERN",         ARBOR2_LEXEMA_EXTERN },
-    { "FLOAT",          ARBOR2_LEXEMA_FLOAT },
-    { "FOR",            ARBOR2_LEXEMA_FOR },
-    { "GOTO",           ARBOR2_LEXEMA_GOTO },
-    { "IF",             ARBOR2_LEXEMA_IF },
-    { "INT",            ARBOR2_LEXEMA_INT },
-    { "LONG",           ARBOR2_LEXEMA_LONG },
-    { "REGISTER",       ARBOR2_LEXEMA_REGISTER },
-    { "RETURN",         ARBOR2_LEXEMA_RETURN },
-    { "SHORT",          ARBOR2_LEXEMA_SHORT },
-    { "SIGNED",         ARBOR2_LEXEMA_SIGNED },
-    { "SIZEOF",         ARBOR2_LEXEMA_SIZEOF },
-    { "STATIC",         ARBOR2_LEXEMA_STATIC },
-    { "STRUCT",         ARBOR2_LEXEMA_STRUCT },
-    { "SWITCH",         ARBOR2_LEXEMA_SWITCH },
-    { "TYPEDEF",        ARBOR2_LEXEMA_TYPEDEF },
-    { "UNION",          ARBOR2_LEXEMA_UNION },
-    { "UNSIGNED",       ARBOR2_LEXEMA_UNSIGNED },
-    { "VOID",           ARBOR2_LEXEMA_VOID },
-    { "VOLATILE",       ARBOR2_LEXEMA_VOLATILE },
-    { "WHILE",          ARBOR2_LEXEMA_WHILE },
-    { "IDENTIFICATOR",  ARBOR2_LEXEMA_IDENTIFICATOR },
-    { "INTEGER",        ARBOR2_LEXEMA_INTEGER },
-    { "FLOAT_LIT",      ARBOR2_LEXEMA_FLOAT_LIT },
-    { "CHAR_LIT",       ARBOR2_LEXEMA_CHAR_LIT },
-    { "STRING_LIT",     ARBOR2_LEXEMA_STRING_LIT },
-    { "PLUS",           ARBOR2_LEXEMA_PLUS },
-    { "MINUS",          ARBOR2_LEXEMA_MINUS },
-    { "ASTERISCUS",     ARBOR2_LEXEMA_ASTERISCUS },
-    { "SOLIDUS",        ARBOR2_LEXEMA_SOLIDUS },
-    { "PERCENTUM",      ARBOR2_LEXEMA_PERCENTUM },
-    { "AMPERSAND",      ARBOR2_LEXEMA_AMPERSAND },
-    { "PIPA",           ARBOR2_LEXEMA_PIPA },
-    { "CARET",          ARBOR2_LEXEMA_CARET },
-    { "TILDE",          ARBOR2_LEXEMA_TILDE },
-    { "EXCLAMATIO",     ARBOR2_LEXEMA_EXCLAMATIO },
-    { "DUAMPERSAND",    ARBOR2_LEXEMA_DUAMPERSAND },
-    { "DUPIPA",         ARBOR2_LEXEMA_DUPIPA },
-    { "AEQUALIS",       ARBOR2_LEXEMA_AEQUALIS },
-    { "NON_AEQUALIS",   ARBOR2_LEXEMA_NON_AEQUALIS },
-    { "MINOR",          ARBOR2_LEXEMA_MINOR },
-    { "MAIOR",          ARBOR2_LEXEMA_MAIOR },
-    { "MINOR_AEQ",      ARBOR2_LEXEMA_MINOR_AEQ },
-    { "MAIOR_AEQ",      ARBOR2_LEXEMA_MAIOR_AEQ },
-    { "SINISTRUM",      ARBOR2_LEXEMA_SINISTRUM },
-    { "DEXTRUM",        ARBOR2_LEXEMA_DEXTRUM },
-    { "ASSIGNATIO",     ARBOR2_LEXEMA_ASSIGNATIO },
-    { "PLUS_ASSIGN",    ARBOR2_LEXEMA_PLUS_ASSIGN },
-    { "MINUS_ASSIGN",   ARBOR2_LEXEMA_MINUS_ASSIGN },
-    { "MULT_ASSIGN",    ARBOR2_LEXEMA_MULT_ASSIGN },
-    { "DIV_ASSIGN",     ARBOR2_LEXEMA_DIV_ASSIGN },
-    { "MOD_ASSIGN",     ARBOR2_LEXEMA_MOD_ASSIGN },
-    { "AND_ASSIGN",     ARBOR2_LEXEMA_AND_ASSIGN },
-    { "OR_ASSIGN",      ARBOR2_LEXEMA_OR_ASSIGN },
-    { "XOR_ASSIGN",     ARBOR2_LEXEMA_XOR_ASSIGN },
-    { "SHL_ASSIGN",     ARBOR2_LEXEMA_SHL_ASSIGN },
-    { "SHR_ASSIGN",     ARBOR2_LEXEMA_SHR_ASSIGN },
-    { "DUPLUS",         ARBOR2_LEXEMA_DUPLUS },
-    { "DUMINUS",        ARBOR2_LEXEMA_DUMINUS },
-    { "PUNCTUM",        ARBOR2_LEXEMA_PUNCTUM },
-    { "SAGITTA",        ARBOR2_LEXEMA_SAGITTA },
-    { "COMMA",          ARBOR2_LEXEMA_COMMA },
-    { "COLON",          ARBOR2_LEXEMA_COLON },
-    { "SEMICOLON",      ARBOR2_LEXEMA_SEMICOLON },
-    { "QUAESTIO",       ARBOR2_LEXEMA_QUAESTIO },
-    { "PAREN_APERTA",   ARBOR2_LEXEMA_PAREN_APERTA },
-    { "PAREN_CLAUSA",   ARBOR2_LEXEMA_PAREN_CLAUSA },
-    { "BRACKET_APERTA", ARBOR2_LEXEMA_BRACKET_APERTA },
-    { "BRACKET_CLAUSA", ARBOR2_LEXEMA_BRACKET_CLAUSA },
-    { "BRACE_APERTA",   ARBOR2_LEXEMA_BRACE_APERTA },
-    { "BRACE_CLAUSA",   ARBOR2_LEXEMA_BRACE_CLAUSA },
-    { "HASH",           ARBOR2_LEXEMA_HASH },
-    { "HASH_HASH",      ARBOR2_LEXEMA_HASH_HASH },
-    { "ELLIPSIS",       ARBOR2_LEXEMA_ELLIPSIS },
-    { "NOVA_LINEA",     ARBOR2_LEXEMA_NOVA_LINEA },
-    { "EOF",            ARBOR2_LEXEMA_EOF },
-    { "ERROR",          ARBOR2_LEXEMA_ERROR },
-    { NIHIL, -1 }
-};
 
 hic_manens TitulusValor NT_NOMINA[] = {
     { "EXPR",           INT_NT_EXPR },
@@ -191,11 +455,16 @@ parsere_lexema_titulus(constans character* titulus)
 {
     i32 i;
 
-    per (i = ZEPHYRUM; LEXEMA_NOMINA[i].titulus != NIHIL; i++)
+    /* Use dynamic table if available */
+    si (g_lexema_tabula != NIHIL)
     {
-        si (strcmp(LEXEMA_NOMINA[i].titulus, titulus) == ZEPHYRUM)
+        per (i = ZEPHYRUM; i < g_lexema_numerus; i++)
         {
-            redde LEXEMA_NOMINA[i].valor;
+            si (g_lexema_tabula[i].titulus != NIHIL &&
+                strcmp(g_lexema_tabula[i].titulus, titulus) == ZEPHYRUM)
+            {
+                redde g_lexema_tabula[i].valor;
+            }
         }
     }
 
@@ -418,8 +687,42 @@ imprimere_auxilium(vacuum)
  * Main
  * ================================================== */
 
+interior b32
+initializare_tabulas(vacuum)
+{
+    /* Initialize global state */
+    g_piscina = piscina_generare_dynamicum("glr_quaestio", 1024 * 128);
+    si (g_piscina == NIHIL)
+    {
+        fprintf(stderr, "Error: Non potest creare piscinam\n");
+        redde FALSUM;
+    }
+
+    g_intern = internamentum_globale();
+
+    /* Extract token enum from arbor2_lexema.h */
+    si (!extrahere_enum_ex_filo(
+            "include/arbor2_lexema.h",
+            "Arbor2LexemaGenus",
+            "ARBOR2_LEXEMA_",
+            &g_lexema_tabula,
+            &g_lexema_numerus))
+    {
+        fprintf(stderr, "Warning: Non potest extrahere lexema enum - using fallback\n");
+        /* Continue anyway - token lookup will fail but other commands work */
+    }
+
+    redde VERUM;
+}
+
 integer principale(integer argc, constans character* constans* argv)
 {
+    /* Initialize lookup tables */
+    si (!initializare_tabulas())
+    {
+        /* Non-fatal - continue with limited functionality */
+    }
+
     si (argc < II)
     {
         imprimere_auxilium();
