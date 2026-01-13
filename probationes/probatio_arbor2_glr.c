@@ -6355,6 +6355,743 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Unary operators - more tests
+     * ======================================================== */
+
+    /* Bitwise NOT: ~x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise NOT: ~x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "~x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_TILDE);
+            }
+        }
+    }
+
+    /* Logical NOT: !x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans logical NOT: !x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "!x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_EXCLAMATIO);
+            }
+        }
+    }
+
+    /* Double NOT: !!x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans double NOT: !!x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "!!x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Mixed unary: ~!x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans mixed unary: ~!x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "~!x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_TILDE);
+            }
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Unary with binary: ~x + y */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans unary with binary: ~x + y ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "~x + y");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: (~x) + y */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.sinister->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Triple unary: ***ptr */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans triple deref: ***ptr ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "***ptr");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+                si (radix->datum.unarium.operandum->datum.unarium.operandum != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+                }
+            }
+        }
+    }
+
+    /* Address of address: & &x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans double address: & &x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "& &x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Deref then address: *&x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans deref-address: *&x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "*&x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_ASTERISCUS);
+            }
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Bitwise binary operators
+     * ======================================================== */
+
+    /* Bitwise AND: a & b */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise AND: a & b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a & b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_AMPERSAND);
+            }
+        }
+    }
+
+    /* Bitwise OR: a | b */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise OR: a | b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a | b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_PIPA);
+            }
+        }
+    }
+
+    /* Bitwise XOR: a ^ b */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise XOR: a ^ b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a ^ b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_CARET);
+            }
+        }
+    }
+
+    /* Bitwise precedence: a | b ^ c */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise precedence: a | b ^ c (| lower than ^) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a | b ^ c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a | (b ^ c) - | has lower precedence than ^ */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_PIPA);
+            }
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
+        }
+    }
+
+    /* Bitwise precedence: a ^ b & c */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise precedence: a ^ b & c (^ lower than &) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a ^ b & c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a ^ (b & c) - ^ has lower precedence than & */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_CARET);
+            }
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
+        }
+    }
+
+    /* Bitwise chain: a | b | c */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise chain: a | b | c (left-associative) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a | b | c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: (a | b) | c */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.sinister->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_IDENTIFICATOR);
+            }
+        }
+    }
+
+    /* Bitwise with comparison: a & b == c */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans bitwise/comparison: a & b == c ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a & b == c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* In C: & is lower precedence than ==, so (a & b) == c would be wrong
+             * but a & (b == c) is what most parsers do (including ours) */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+        }
+    }
+
+    /* All bitwise: a | b ^ c & d */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans all bitwise: a | b ^ c & d ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a | b ^ c & d");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a | (b ^ (c & d)) */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_PIPA);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Complex nested expressions
+     * ======================================================== */
+
+    /* Deeply nested parens: (((x))) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans deeply nested parens: (((x))) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(((x)))");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Complex arithmetic: (a + b) * (c - d) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans complex arithmetic: (a + b) * (c - d) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(a + b) * (c - d)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_ASTERISCUS);
+            }
+        }
+    }
+
+    /* Mixed precedence: a + b * c - d / e */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans mixed precedence: a + b * c - d / e ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a + b * c - d / e");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: ((a + (b * c)) - (d / e)) */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+        }
+    }
+
+    /* Logical with ternary: a && b ? 1 : 2 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans logical with ternary: a && b ? 1 : 2 ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a && b ? 1 : 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: ((a && b) ? 1 : 2) */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+        }
+    }
+
+    /* Multiple ternary: a ? b ? 1 : 2 : 3 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans nested ternary in true branch: a ? b ? 1 : 2 : 3 ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a ? b ? 1 : 2 : 3");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a ? (b ? 1 : 2) : 3 */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+            si (radix->datum.ternarius.verum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.verum->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+            }
+        }
+    }
+
+    /* Unary in expressions: ~a & !b | *c */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans unary in expressions: ~a & !b | *c ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "~a & !b | *c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+        }
+    }
+
+    /* Assignment chain: a = b = c = 1 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans assignment chain: a = b = c = 1 ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a = b = c = 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a = (b = (c = 1)) - right associative */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
+        }
+    }
+
+    /* Comma chain: a, b, c, d */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans comma chain: a, b, c, d ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a, b, c, d");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: ((a, b), c), d) - left associative */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.sinister->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
+        }
+    }
+
+    /* Shift with arithmetic: a << 2 + 1 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans shift with arithmetic: a << 2 + 1 ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a << 2 + 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a << (2 + 1) - shift has lower precedence than + */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Control flow edge cases
+     * ======================================================== */
+
+    /* if-else-if chain */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans if-else-if chain ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "if (a) x; else if (b) y; else z;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Deeply nested if: if (a) if (b) if (c) x; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans deeply nested if ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "if (a) if (b) if (c) x;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Nested loops: while (a) for (;;) if (b) break; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested loops with break ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "while (a) for (;;) if (b) break;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Complex for loop: for (a = 0; a < 10; a = a + 1) x; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans complex for loop ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "for (a = 0; a < 10; a = a + 1) x;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Switch with fallthrough cases */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans switch with multiple cases ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (x) { case 1: case 2: case 3: y; break; default: z; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* do-while with simple condition */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans do-while with simple condition ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "do { x; y; } while (a < b);");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Multiple statements in compound */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans multiple statements in compound ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ a; b; c; d; e; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Nested compound statements */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans nested compound statements ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ { { a; } } }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Return with expression */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans return with expression ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "return a + b * c;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Combined stress tests
+     * ======================================================== */
+
+    /* Function with complex body */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans function with complex body ---\n");
+        /* MyType already registered earlier in typedef tests */
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "MyType foo(int x, int y) { "
+            "if (x < y) return x; "
+            "while (x > 0) x = x - 1; "
+            "return y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Struct with complex members */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct with complex members ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "struct Point { "
+            "int x; "
+            "int y; "
+            "int z; "
+            "int flags; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Expression in for condition */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans expression in for ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "for (a = 0; a < 10; a = a + 1) x;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Comparison in if condition */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans comparison in if condition ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "if (a < b) x;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Assignment in while condition */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment in while ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "while (x = x + 1) y;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 
