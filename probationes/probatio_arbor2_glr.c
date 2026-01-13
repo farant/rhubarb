@@ -2704,6 +2704,92 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Assignment in for-init: for (a = 1; b; c) d;
+     * Common C idiom - assignment in for loop init
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment in for-init: for (a = 1; b; c) d; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "for (a = 1; b; c) d;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PER);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Assignment in do-while: do x; while (a = 1);
+     * Common C idiom - assignment in do-while condition
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment in do-while: do x; while (a = 1); ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "do x; while (a = 1);");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_FAC);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Assignment in switch: switch (a = 1) { }
+     * Less common but valid C
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment in switch: switch (a = 1) { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "switch (a = 1) { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+
+    /* ========================================================
      * PROBARE: Dangling else: if (a) if (b) c; else d;
      * else should bind to inner if (b), not outer if (a)
      * ======================================================== */
