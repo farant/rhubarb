@@ -51,6 +51,7 @@ nomen enumeratio {
     ARBOR2_NT_CONIUNCTIO,           /* logical AND expressions (&&) */
     ARBOR2_NT_AEQUALITAS,           /* equality expressions (==, !=) */
     ARBOR2_NT_COMPARATIO,           /* relational expressions (<, >, <=, >=) */
+    ARBOR2_NT_TRANSLATIO,           /* shift expressions (<<, >>) */
     ARBOR2_NT_EXPRESSIO,
     ARBOR2_NT_TERMINUS,             /* term in expr grammar */
     ARBOR2_NT_FACTOR,               /* factor in expr grammar */

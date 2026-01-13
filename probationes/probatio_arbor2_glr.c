@@ -1480,6 +1480,186 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Left shift operator << (E9.3 - translatio)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sinistrum shift: a << 2 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a << 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_SINISTRUM);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Right shift operator >> (E9.3 - translatio)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans dextrum shift: x >> 3 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "x >> 3");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_DEXTRUM);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Chained shifts: a << b >> c (E9.3)
+     * Should parse as (a << b) >> c (left associative)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans shift catena: a << b >> c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a << b >> c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Root should be >> */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_DEXTRUM);
+            /* Left child should be << */
+            si (res.radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_SINISTRUM);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Shift with addition: (x + y) << 2 (E9.3)
+     * Addition binds tighter, so x + y groups first
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans shift cum additione: x + y << 2 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "x + y << 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Root should be << (shift binds less tightly than +) */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_SINISTRUM);
+            /* Left child should be + */
+            si (res.radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_PLUS);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Comparison with shift: a < b << c (E9.3)
+     * Shift binds tighter than comparison
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans comparatio cum shift: a < b << c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a < b << c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Root should be < (comparison binds less tightly than shift) */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_MINOR);
+            /* Right child should be << */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_SINISTRUM);
+            }
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Logical AND operator && (E10)
      * ======================================================== */
 
