@@ -435,7 +435,9 @@ hic_manens constans Arbor2TabulaActio STATUS_6_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 7: after '*' (unary) - expects factor */
@@ -444,7 +446,9 @@ hic_manens constans Arbor2TabulaActio STATUS_7_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 8: after '&' (unary) - expects factor */
@@ -453,7 +457,9 @@ hic_manens constans Arbor2TabulaActio STATUS_8_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 9: after '+' or '-' - expects term */
@@ -462,7 +468,9 @@ hic_manens constans Arbor2TabulaActio STATUS_9_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 10: after '*', '/', '%' - expects factor */
@@ -471,7 +479,9 @@ hic_manens constans Arbor2TabulaActio STATUS_10_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 11: after '(' expression - expects ')' or operators */
@@ -782,6 +792,8 @@ hic_manens constans Arbor2TabulaActio STATUS_26_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -879,7 +891,9 @@ hic_manens constans Arbor2TabulaActio STATUS_31_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 32: after 'if ( expr' - expect ')' or continue */
@@ -916,6 +930,8 @@ hic_manens constans Arbor2TabulaActio STATUS_33_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -963,6 +979,8 @@ hic_manens constans Arbor2TabulaActio STATUS_35_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1062,7 +1080,9 @@ hic_manens constans Arbor2TabulaActio STATUS_40_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 41: after 'while ( expr' - expect ')' or continue */
@@ -1099,6 +1119,8 @@ hic_manens constans Arbor2TabulaActio STATUS_42_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1171,6 +1193,8 @@ hic_manens constans Arbor2TabulaActio STATUS_45_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1200,7 +1224,9 @@ hic_manens constans Arbor2TabulaActio STATUS_48_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 49: after 'do stmt while ( expr' - expect ')' or continue */
@@ -1301,6 +1327,8 @@ hic_manens constans Arbor2TabulaActio STATUS_54_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 29, FALSUM }
 };
 
@@ -1341,6 +1369,8 @@ hic_manens constans Arbor2TabulaActio STATUS_57_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 29, FALSUM }
 };
 
@@ -1381,6 +1411,8 @@ hic_manens constans Arbor2TabulaActio STATUS_60_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 29, FALSUM }
 };
 
@@ -1423,6 +1455,8 @@ hic_manens constans Arbor2TabulaActio STATUS_63_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1553,6 +1587,8 @@ hic_manens constans Arbor2TabulaActio STATUS_70_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 29, FALSUM }
 };
 
@@ -1636,6 +1672,8 @@ hic_manens constans Arbor2TabulaActio STATUS_77_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1685,7 +1723,9 @@ hic_manens constans Arbor2TabulaActio STATUS_80_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 81: after 'switch ( expr' - expect ')' or continue */
@@ -1722,6 +1762,8 @@ hic_manens constans Arbor2TabulaActio STATUS_82_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1766,7 +1808,9 @@ hic_manens constans Arbor2TabulaActio STATUS_84_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 85: after 'case expr' - expect ':' */
@@ -1784,6 +1828,8 @@ hic_manens constans Arbor2TabulaActio STATUS_86_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_IF,             ARBOR2_ACTIO_SHIFT,  30, FALSUM },
     { ARBOR2_LEXEMA_WHILE,          ARBOR2_ACTIO_SHIFT,  39, FALSUM },
     { ARBOR2_LEXEMA_DO,             ARBOR2_ACTIO_SHIFT,  45, FALSUM },
@@ -1846,7 +1892,9 @@ hic_manens constans Arbor2TabulaActio STATUS_89_ACTIONES[] = {
     { ARBOR2_LEXEMA_GOTO,           ARBOR2_ACTIO_SHIFT,  74, FALSUM },
     { ARBOR2_LEXEMA_SWITCH,         ARBOR2_ACTIO_SHIFT,  79, FALSUM },
     { ARBOR2_LEXEMA_CASE,           ARBOR2_ACTIO_SHIFT,  84, FALSUM },
-    { ARBOR2_LEXEMA_DEFAULT,        ARBOR2_ACTIO_SHIFT,  88, FALSUM }
+    { ARBOR2_LEXEMA_DEFAULT,        ARBOR2_ACTIO_SHIFT,  88, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 90: after 'default : stmt' - reduce P37 */
@@ -3092,7 +3140,9 @@ hic_manens constans Arbor2TabulaActio STATUS_241_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 242: after 'aequalitas ==|!=' - expect comparatio (expression starters) */
@@ -3101,7 +3151,9 @@ hic_manens constans Arbor2TabulaActio STATUS_242_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 243: after 'comparatio <|>|<=|>= expression' - continue or reduce P99 */
@@ -3328,7 +3380,9 @@ hic_manens constans Arbor2TabulaActio STATUS_254_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 255: after disiunctio at top-level - ternary or reduce to ternarius */
@@ -3361,7 +3415,9 @@ hic_manens constans Arbor2TabulaActio STATUS_256_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 257: after aequalitas in && context (top-level) - reduce P96 or continue */
@@ -3412,7 +3468,9 @@ hic_manens constans Arbor2TabulaActio STATUS_261_ACTIONES[] = {
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 262: after aequalitas in && within || context - reduce P96 */
@@ -3480,7 +3538,9 @@ hic_manens constans Arbor2TabulaActio STATUS_265_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   7, FALSUM },
-    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   7, FALSUM }
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
 };
 
 /* State 266: after translatio << expression - reduce P97 or continue expr */
@@ -6234,4 +6294,273 @@ arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status)
     }
 
     redde result;
+}
+
+/* ==================================================
+ * State Tag Validation System
+ *
+ * Defines tags for state categories and validates that
+ * tagged states have the required tokens.
+ * ================================================== */
+
+/* Required tokens for EXPR_INITIUM states (can start expressions) */
+hic_manens constans Arbor2LexemaGenus EXPR_INITIUM_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR,
+    ARBOR2_LEXEMA_INTEGER,
+    ARBOR2_LEXEMA_PAREN_APERTA,
+    ARBOR2_LEXEMA_ASTERISCUS,
+    ARBOR2_LEXEMA_AMPERSAND,
+    ARBOR2_LEXEMA_TILDE,
+    ARBOR2_LEXEMA_EXCLAMATIO
+};
+
+/* Required tokens for CONDITIO_CONTEXTUS states (condition expressions) */
+hic_manens constans Arbor2LexemaGenus CONDITIO_LEXEMATA[] = {
+    ARBOR2_LEXEMA_DUAMPERSAND,
+    ARBOR2_LEXEMA_DUPIPA,
+    ARBOR2_LEXEMA_QUAESTIO,
+    ARBOR2_LEXEMA_AMPERSAND,
+    ARBOR2_LEXEMA_PIPA,
+    ARBOR2_LEXEMA_CARET
+};
+
+/* Tag rule structure */
+nomen structura {
+    i32                         signum;        /* Tag bit flag */
+    constans character*         descriptio;    /* Human-readable name */
+    constans Arbor2LexemaGenus* lexemata;      /* Required tokens */
+    i32                         num_lexemata;  /* Number of required tokens */
+} Arbor2TagRegula;
+
+hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
+    {
+        ARBOR2_TAG_EXPR_INITIUM,
+        "EXPR_INITIUM",
+        EXPR_INITIUM_LEXEMATA,
+        (i32)(magnitudo(EXPR_INITIUM_LEXEMATA) / magnitudo(EXPR_INITIUM_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_CONDITIO_CONTEXTUS,
+        "CONDITIO_CONTEXTUS",
+        CONDITIO_LEXEMATA,
+        (i32)(magnitudo(CONDITIO_LEXEMATA) / magnitudo(CONDITIO_LEXEMATA[0]))
+    }
+};
+
+#define NUM_TAG_REGULAE (i32)(magnitudo(TAG_REGULAE) / magnitudo(TAG_REGULAE[0]))
+
+/* State tags array - index corresponds to state number.
+ * Zero means no tags. Multiple tags can be combined with |. */
+hic_manens constans i32 STATUS_TAGS[] = {
+    /* 0 */   ARBOR2_TAG_EXPR_INITIUM,  /* initial - expression start */
+    /* 1 */   0,
+    /* 2 */   0,
+    /* 3 */   0,
+    /* 4 */   0,
+    /* 5 */   0,
+    /* 6 */   ARBOR2_TAG_EXPR_INITIUM,  /* after '(' */
+    /* 7 */   ARBOR2_TAG_EXPR_INITIUM,  /* after unary '*' */
+    /* 8 */   ARBOR2_TAG_EXPR_INITIUM,  /* after unary '&' */
+    /* 9 */   ARBOR2_TAG_EXPR_INITIUM,  /* after '+' or '-' */
+    /* 10 */  ARBOR2_TAG_EXPR_INITIUM,  /* after '*' or '/' */
+    /* 11 */  0, /* 12 */ 0, /* 13 */ 0, /* 14 */ 0, /* 15 */ 0,
+    /* 16 */  0, /* 17 */ 0, /* 18 */ 0, /* 19 */ 0, /* 20 */ 0,
+    /* 21 */  0, /* 22 */ 0, /* 23 */ 0, /* 24 */ 0, /* 25 */ 0,
+    /* 26 */  ARBOR2_TAG_EXPR_INITIUM,  /* inside compound */
+    /* 27 */  0, /* 28 */ 0, /* 29 */ 0, /* 30 */ 0,
+    /* 31 */  ARBOR2_TAG_EXPR_INITIUM,  /* if condition - entry state */
+    /* 32 */  0,
+    /* 33 */  ARBOR2_TAG_EXPR_INITIUM,  /* after 'if (expr)' */
+    /* 34 */  0,
+    /* 35 */  ARBOR2_TAG_EXPR_INITIUM,  /* else branch */
+    /* 36 */  0, /* 37 */ 0, /* 38 */ 0, /* 39 */ 0,
+    /* 40 */  ARBOR2_TAG_EXPR_INITIUM,  /* while condition - entry state */
+    /* 41 */  0,
+    /* 42 */  ARBOR2_TAG_EXPR_INITIUM,  /* while body */
+    /* 43 */  0, /* 44 */ 0,
+    /* 45 */  ARBOR2_TAG_EXPR_INITIUM,  /* do body */
+    /* 46 */  0, /* 47 */ 0,
+    /* 48 */  ARBOR2_TAG_EXPR_INITIUM,  /* do-while condition - entry state */
+    /* 49 */  ARBOR2_TAG_CONDITIO_CONTEXTUS,  /* after do-while condition expression */
+    /* 50 */  0, /* 51 */ 0, /* 52 */ 0, /* 53 */ 0,
+    /* 54 */  ARBOR2_TAG_EXPR_INITIUM,  /* for init */
+    /* 55 */  0, /* 56 */ 0,
+    /* 57 */  ARBOR2_TAG_EXPR_INITIUM,  /* for condition - entry state */
+    /* 58 */  0, /* 59 */ 0,
+    /* 60 */  ARBOR2_TAG_EXPR_INITIUM,  /* for increment */
+    /* 61 */  0, /* 62 */ 0,
+    /* 63 */  ARBOR2_TAG_EXPR_INITIUM,  /* for body */
+    /* 64 */  0, /* 65 */ 0, /* 66 */ 0, /* 67 */ 0, /* 68 */ 0, /* 69 */ 0,
+    /* 70 */  ARBOR2_TAG_EXPR_INITIUM,  /* return expr */
+    /* 71 */  0, /* 72 */ 0, /* 73 */ 0, /* 74 */ 0, /* 75 */ 0, /* 76 */ 0,
+    /* 77 */  ARBOR2_TAG_EXPR_INITIUM,  /* labeled statement */
+    /* 78 */  0, /* 79 */ 0,
+    /* 80 */  ARBOR2_TAG_EXPR_INITIUM,  /* switch condition - entry state */
+    /* 81 */  0,
+    /* 82 */  ARBOR2_TAG_EXPR_INITIUM,  /* switch body */
+    /* 83 */  0,
+    /* 84 */  ARBOR2_TAG_EXPR_INITIUM,  /* case expression */
+    /* 85 */  0,
+    /* 86 */  ARBOR2_TAG_EXPR_INITIUM,  /* case body */
+    /* 87 */  0, /* 88 */ 0,
+    /* 89 */  ARBOR2_TAG_EXPR_INITIUM,  /* default body */
+    /* Rest are untagged for now - add as needed */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 90-99 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 100-109 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 110-119 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 120-129 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 130-139 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 140-149 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 150-159 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 160-169 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 170-179 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 180-189 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 190-199 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 200-209 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 210-219 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 220-229 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 230-239 */
+    0,  /* 240: after aequalitas - no tags yet */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 241: after comparison op */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 242: after equality op */
+    0, 0, 0,
+    ARBOR2_TAG_CONDITIO_CONTEXTUS,  /* 246: after comparatio in condition */
+    0, 0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 254: after && */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 256: after || */
+    0,  /* 257: after && RHS aequalitas - reduce state */
+    0,  /* 258: after && RHS coniunctio - reduce state */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 261: after && in || */
+    0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 265: after << or >> */
+    0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 269: after & bitwise */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 271: after ^ bitwise */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 273: after | bitwise */
+    0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 280: after & in ^ */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 281: after & in | */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 282: after ^ in | */
+    0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 287: after & in ^ in | */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 289: after ~ */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 291: after ! */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 293: after assignment op */
+    0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 297: after comma */
+    0, 0, 0, 0, 0, 0, 0, 0,  /* 298-305 */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 306: after ? */
+    0,  /* 307: after ? ternarius - expects : */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 308: after : */
+    0,  /* 309: reduce state */
+    0   /* 310: after TERNARIUS */
+};
+
+#define NUM_STATUS_TAGS (i32)(magnitudo(STATUS_TAGS) / magnitudo(STATUS_TAGS[0]))
+
+/* Helper: check if a state has an action for a token */
+hic_manens b32
+status_habet_lexema(i32 status, Arbor2LexemaGenus lexema)
+{
+    constans Arbor2StatusInfo* info;
+    i32 i;
+    i32 num_states;
+
+    num_states = (i32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+
+    si (status < ZEPHYRUM || status >= num_states)
+    {
+        redde FALSUM;
+    }
+
+    info = &STATUS_TABULA_PARTIAL[status];
+    si (info->actiones == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < (i32)info->numerus; i++)
+    {
+        si (info->actiones[i].lexema == lexema)
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
+b32
+arbor2_glr_validare_tags(vacuum)
+{
+    i32 status;
+    i32 r;
+    i32 t;
+    b32 valida = VERUM;
+    i32 num_states;
+    i32 num_tagged = ZEPHYRUM;
+    i32 num_missing = ZEPHYRUM;
+
+    num_states = (i32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+
+    /* Check each state */
+    per (status = ZEPHYRUM; status < num_states && status < NUM_STATUS_TAGS; status++)
+    {
+        i32 tags = STATUS_TAGS[status];
+
+        si (tags == ZEPHYRUM)
+        {
+            perge;  /* No tags for this state */
+        }
+
+        num_tagged++;
+
+        /* Check each tag rule */
+        per (r = ZEPHYRUM; r < NUM_TAG_REGULAE; r++)
+        {
+            constans Arbor2TagRegula* regula = &TAG_REGULAE[r];
+
+            /* Does this state have this tag? */
+            si ((tags & regula->signum) == ZEPHYRUM)
+            {
+                perge;
+            }
+
+            /* Check all required tokens */
+            per (t = ZEPHYRUM; t < regula->num_lexemata; t++)
+            {
+                Arbor2LexemaGenus lexema = regula->lexemata[t];
+
+                si (!status_habet_lexema(status, lexema))
+                {
+                    imprimere("TAG VALIDATIO: Status %d (%s) caret %s\n",
+                              status,
+                              regula->descriptio,
+                              arbor2_lexema_genus_nomen(lexema));
+                    valida = FALSUM;
+                    num_missing++;
+                }
+            }
+        }
+    }
+
+    si (valida)
+    {
+        imprimere("TAG VALIDATIO: Omnes %d status cum signis habent omnia lexemata necessaria.\n",
+                  num_tagged);
+    }
+    alioquin
+    {
+        imprimere("TAG VALIDATIO: %d lexemata desunt in %d statusibus cum signis.\n",
+                  num_missing, num_tagged);
+    }
+
+    redde valida;
 }

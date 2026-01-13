@@ -7092,6 +7092,119 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Unary ~ and ! in expression contexts
+     * (TAG VALIDATION: tests for missing TILDE/EXCLAMATIO)
+     * ======================================================== */
+
+    /* State 6: after '(' - tilde in parentheses */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans (~a) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(~a)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 7: after unary '*' */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans *~a ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "*~a");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 9: after '+' */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a + ~b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a + ~b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 10: after '*' (multiplication) */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a * !b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a * !b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 31: if condition with tilde */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans if (~a) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "if (~a) b;");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 241: after comparison - tilde after < */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a < ~b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a < ~b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 254: after && - tilde */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a && ~b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a && ~b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 256: after || - exclamatio */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a || !b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a || !b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* State 265: after << - tilde */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a << ~b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a << ~b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

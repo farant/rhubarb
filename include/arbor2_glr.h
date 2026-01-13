@@ -527,4 +527,18 @@ b32 arbor2_glr_validare_tabulas(vacuum);
 /* Get expected tokens for a state (for error messages) */
 chorda* arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status);
 
+/* ==================================================
+ * State Metadata Tags (for validation)
+ * ================================================== */
+
+#define ARBOR2_TAG_EXPR_INITIUM       0x0001  /* Can start an expression */
+#define ARBOR2_TAG_CONDITIO_CONTEXTUS 0x0002  /* Condition context (if, while, etc.) */
+#define ARBOR2_TAG_POST_COMPARATIO    0x0004  /* After comparison operator */
+#define ARBOR2_TAG_POST_BINARIUM      0x0008  /* After binary operator (expects operand) */
+#define ARBOR2_TAG_POST_DISIUNCTIO    0x0010  /* After || */
+#define ARBOR2_TAG_POST_CONIUNCTIO    0x0020  /* After && */
+
+/* Validate state tags - checks that tagged states have required tokens */
+b32 arbor2_glr_validare_tags(vacuum);
+
 #endif /* ARBOR2_GLR_H */

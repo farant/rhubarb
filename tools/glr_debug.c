@@ -168,6 +168,7 @@ principale(integer argc, constans character* constans* argv)
     {
         fprintf(stderr, "Usage: glr_debug <expression>\n");
         fprintf(stderr, "       glr_debug --validate\n");
+        fprintf(stderr, "       glr_debug --validate-tags\n");
         fprintf(stderr, "Example: glr_debug \"a + b * c\"\n");
         redde I;
     }
@@ -176,6 +177,13 @@ principale(integer argc, constans character* constans* argv)
     si (strcmp(argv[I], "--validate") == ZEPHYRUM)
     {
         b32 valida = arbor2_glr_validare_tabulas();
+        redde valida ? ZEPHYRUM : I;
+    }
+
+    /* Check for --validate-tags option */
+    si (strcmp(argv[I], "--validate-tags") == ZEPHYRUM)
+    {
+        b32 valida = arbor2_glr_validare_tags();
         redde valida ? ZEPHYRUM : I;
     }
 
