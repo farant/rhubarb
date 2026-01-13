@@ -790,9 +790,24 @@ parsere_actiones_tabula(constans character* via)
 
     /* First pass: count action entries across all STATUS_N_ACTIONES arrays */
     numerus = ZEPHYRUM;
+    in_array = FALSUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "{ ARBOR2_LEXEMA_") != NIHIL &&
+        /* Track when entering/exiting STATUS_N_ACTIONES arrays */
+        si (strstr(linea, "STATUS_") != NIHIL && strstr(linea, "_ACTIONES[]") != NIHIL)
+        {
+            in_array = VERUM;
+            perge;
+        }
+        si (in_array && strstr(linea, "};") != NIHIL)
+        {
+            in_array = FALSUM;
+            perge;
+        }
+
+        /* Only count entries within per-state arrays */
+        si (in_array &&
+            strstr(linea, "{ ARBOR2_LEXEMA_") != NIHIL &&
             strstr(linea, "ARBOR2_ACTIO_") != NIHIL)
         {
             numerus++;
@@ -849,7 +864,12 @@ parsere_actiones_tabula(constans character* via)
             perge;
         }
 
-        /* Parse action entry */
+        /* Parse action entry - only if inside a STATUS_N_ACTIONES array */
+        si (!in_array)
+        {
+            perge;
+        }
+
         p = strstr(linea, "{ ARBOR2_LEXEMA_");
         si (p == NIHIL)
         {
@@ -1785,6 +1805,7 @@ cmd_conflicts(vacuum)
     i32 intentional_conflicts;
     i32 i;
     i32 j;
+    b32 invenit_conflictum;
 
     /* Buffers for tracking seen actions per state */
     s32 lexemata_visa[256];
@@ -1817,38 +1838,52 @@ cmd_conflicts(vacuum)
                 perge;
             }
 
+            invenit_conflictum = FALSUM;
+
             /* Check if we've seen this lexema before in this state */
             per (j = ZEPHYRUM; j < numerus_visorum; j++)
             {
                 si (lexemata_visa[j] == g_actio_tabula[i].lexema)
                 {
-                    /* Conflictus! Duo actiones pro eodem lexema */
-                    b32 est_intentus;
-
-                    est_intentus = intentus_visi[j] ||
-                                   g_actio_tabula[i].conflictus_intentus;
-
-                    printf("  State %d: CONFLICTUS pro %s%s\n",
-                           status,
-                           obtinere_lexema_nomen(g_actio_tabula[i].lexema),
-                           est_intentus ? " (INTENTUS)" : "");
-                    printf("    Prior: %-7s %3d\n",
-                           obtinere_actio_nomen(actiones_visae[j]),
-                           valores_visi[j]);
-                    printf("    Nova:  %-7s %3d\n",
-                           obtinere_actio_nomen(g_actio_tabula[i].actio),
-                           g_actio_tabula[i].valor);
-                    total_conflicts++;
-                    si (est_intentus)
+                    /* Same lexema - check if actually different action */
+                    si (actiones_visae[j] == g_actio_tabula[i].actio &&
+                        valores_visi[j] == g_actio_tabula[i].valor)
                     {
-                        intentional_conflicts++;
+                        /* Identical entry (duplicate) - not a conflict */
+                        invenit_conflictum = VERUM; /* Skip adding again */
+                        frange;
                     }
+
+                    /* Conflictus! Duo actiones diversae pro eodem lexema */
+                    {
+                        b32 est_intentus;
+
+                        est_intentus = intentus_visi[j] ||
+                                       g_actio_tabula[i].conflictus_intentus;
+
+                        printf("  State %d: CONFLICTUS pro %s%s\n",
+                               status,
+                               obtinere_lexema_nomen(g_actio_tabula[i].lexema),
+                               est_intentus ? " (INTENTUS)" : "");
+                        printf("    Prior: %-7s %3d\n",
+                               obtinere_actio_nomen(actiones_visae[j]),
+                               valores_visi[j]);
+                        printf("    Nova:  %-7s %3d\n",
+                               obtinere_actio_nomen(g_actio_tabula[i].actio),
+                               g_actio_tabula[i].valor);
+                        total_conflicts++;
+                        si (est_intentus)
+                        {
+                            intentional_conflicts++;
+                        }
+                    }
+                    invenit_conflictum = VERUM;
                     frange;
                 }
             }
 
-            /* Add to seen list */
-            si (numerus_visorum < 256)
+            /* Only add to seen list if not a duplicate */
+            si (!invenit_conflictum && numerus_visorum < 256)
             {
                 lexemata_visa[numerus_visorum] = g_actio_tabula[i].lexema;
                 actiones_visae[numerus_visorum] = g_actio_tabula[i].actio;
