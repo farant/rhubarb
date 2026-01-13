@@ -5505,6 +5505,19 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Table validation
+     * ======================================================== */
+
+    {
+        b32 valida;
+
+        imprimere("\n--- Table validation ---\n");
+        valida = arbor2_glr_validare_tabulas();
+        CREDO_VERUM(valida);
+    }
+
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

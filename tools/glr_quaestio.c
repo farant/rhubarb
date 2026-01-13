@@ -1697,12 +1697,14 @@ imprimere_auxilium(vacuum)
     printf("  glr_quaestio rule <P>       Show rule P details\n");
     printf("  glr_quaestio rules <NT>     Find all rules producing NT\n");
     printf("  glr_quaestio conflicts      Find shift/reduce conflicts\n");
+    printf("  glr_quaestio clone <S> <T>  Generate entries for T based on S\n");
     printf("  glr_quaestio stats          Show table statistics\n");
     printf("  glr_quaestio tokens         List all known tokens\n");
     printf("  glr_quaestio nts            List all known non-terminals\n");
     printf("  glr_quaestio --help         Show this help\n\n");
     printf("Token examples: DUAMPERSAND, DUPIPA, SEMICOLON, EOF\n");
     printf("NT examples: CONIUNCTIO, DISIUNCTIO, AEQUALITAS, EXPR\n");
+    printf("Clone example: glr_quaestio clone PLUS SPACESHIP\n");
 }
 
 interior integer
@@ -1791,6 +1793,97 @@ cmd_rules(constans character* nt_titulus)
     }
 
     printf("\nInventa: %d regulae\n", inventa);
+    redde ZEPHYRUM;
+}
+
+/* ==================================================
+ * Command: clone - Generate entries for new token based on existing
+ *
+ * Usage: glr_quaestio clone LEXEMA_SOURCE LEXEMA_TARGET
+ *
+ * Finds all action entries for SOURCE token and outputs
+ * corresponding entries for TARGET token, organized by state.
+ * ================================================== */
+
+interior integer
+cmd_clone(constans character* fons_nomen, constans character* target_nomen)
+{
+    s32 fons_val;
+    i32 i;
+    i32 num_status;
+    i32 status;
+    i32 inventa;
+    constans character* actio_nomina[] = { "ERROR", "SHIFT", "REDUCE", "ACCEPT" };
+
+    si (g_actio_tabula == NIHIL)
+    {
+        fprintf(stderr, "Error: ACTIONES tabula non parsita\n");
+        redde I;
+    }
+
+    /* Resolve source token name to value */
+    fons_val = resolvere_lexema(fons_nomen, (i32)strlen(fons_nomen));
+    si (fons_val < ZEPHYRUM)
+    {
+        fprintf(stderr, "Error: Lexema '%s' ignotum\n", fons_nomen);
+        fprintf(stderr, "Usa 'glr_quaestio tokens' pro lista lexematum\n");
+        redde I;
+    }
+
+    num_status = computare_max_status();
+    inventa = ZEPHYRUM;
+
+    printf("/* ==================================================\n");
+    printf(" * Clone: ARBOR2_LEXEMA_%s -> ARBOR2_LEXEMA_%s\n", fons_nomen, target_nomen);
+    printf(" * ================================================== */\n\n");
+
+    /* Iterate through states in order */
+    per (status = ZEPHYRUM; status < num_status; status++)
+    {
+        b32 status_printed = FALSUM;
+
+        per (i = ZEPHYRUM; i < g_actio_numerus; i++)
+        {
+            si (g_actio_tabula[i].status != (s32)status)
+            {
+                perge;
+            }
+
+            si (g_actio_tabula[i].lexema != fons_val)
+            {
+                perge;
+            }
+
+            /* Found a match - print state header if first for this state */
+            si (!status_printed)
+            {
+                printf("/* STATUS_%d_ACTIONES - add: */\n", status);
+                status_printed = VERUM;
+            }
+
+            /* Output entry for target token */
+            printf("    { ARBOR2_LEXEMA_%s, ARBOR2_ACTIO_%s, %d, %s },\n",
+                   target_nomen,
+                   actio_nomina[g_actio_tabula[i].actio],
+                   g_actio_tabula[i].valor,
+                   g_actio_tabula[i].conflictus_intentus ? "VERUM" : "FALSUM");
+
+            inventa++;
+        }
+
+        si (status_printed)
+        {
+            printf("\n");
+        }
+    }
+
+    printf("/* Totalis: %d entries to add across %d states */\n", inventa, num_status);
+
+    si (inventa == ZEPHYRUM)
+    {
+        printf("/* Nulla entries inventa pro ARBOR2_LEXEMA_%s */\n", fons_nomen);
+    }
+
     redde ZEPHYRUM;
 }
 
@@ -2045,6 +2138,19 @@ integer principale(integer argc, constans character* constans* argv)
     si (strcmp(argv[I], "rules") == ZEPHYRUM)
     {
         redde cmd_rules(argv[II]);
+    }
+
+    /* Clone command needs 2 arguments */
+    si (strcmp(argv[I], "clone") == ZEPHYRUM)
+    {
+        si (argc < IV)
+        {
+            fprintf(stderr, "Error: clone requirit duo argumenta\n");
+            fprintf(stderr, "Usa: glr_quaestio clone SOURCE TARGET\n");
+            fprintf(stderr, "Exemplum: glr_quaestio clone PLUS SPACESHIP\n");
+            redde I;
+        }
+        redde cmd_clone(argv[II], argv[III]);
     }
 
     fprintf(stderr, "Error: Mandatum '%s' ignotum\n", argv[I]);

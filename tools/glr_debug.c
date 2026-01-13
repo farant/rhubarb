@@ -160,8 +160,16 @@ principale(integer argc, constans character* constans* argv)
     si (argc < II)
     {
         fprintf(stderr, "Usage: glr_debug <expression>\n");
+        fprintf(stderr, "       glr_debug --validate\n");
         fprintf(stderr, "Example: glr_debug \"a + b * c\"\n");
         redde I;
+    }
+
+    /* Check for --validate option */
+    si (strcmp(argv[I], "--validate") == ZEPHYRUM)
+    {
+        b32 valida = arbor2_glr_validare_tabulas();
+        redde valida ? ZEPHYRUM : I;
     }
 
     input = argv[I];
