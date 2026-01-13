@@ -1479,6 +1479,99 @@ obtinere_status_descriptio(i32 status)
     redde NIHIL;
 }
 
+/* ==================================================
+ * Helper: Expression-chain NT names (ordered by precedence, low to high)
+ *
+ * Used to filter chain states to just expression-related ones.
+ * ================================================== */
+
+hic_manens constans character* EXPR_CHAIN_NT_NOMINA[] = {
+    "VIRGA",
+    "ASSIGNATIO",
+    "DISIUNCTIO",
+    "CONIUNCTIO",
+    "PIPA_BITWISE",
+    "CARET_BITWISE",
+    "AMPERSAND_BITWISE",
+    "AEQUALITAS",
+    "COMPARATIO",
+    "TRANSLATIO",
+    "EXPRESSIO",
+    "TERMINUS",
+    NIHIL
+};
+
+/*
+ * collectare_expr_chain_states - Find chain states via GOTO table
+ *
+ * Deterministic approach: finds unique GOTO targets for expression NTs.
+ * These ARE the chain states by definition - where you land after
+ * reducing to that NT and decide whether to reduce further or shift.
+ *
+ * status_out:  Array to fill with state numbers (caller allocates)
+ * max_status:  Maximum size of status_out array
+ *
+ * Returns: Number of unique states found
+ */
+interior i32
+collectare_expr_chain_states(i32* status_out, i32 max_status)
+{
+    i32 count;
+    i32 i;
+    i32 n;
+    i32 j;
+    s32 nt_valor;
+    b32 already_have;
+
+    si (g_goto_tabula == NIHIL || status_out == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+
+    count = ZEPHYRUM;
+
+    /* For each expression chain NT (first 12 entries - Latin names only) */
+    per (n = ZEPHYRUM; EXPR_CHAIN_NT_NOMINA[n] != NIHIL && n < 12; n++)
+    {
+        /* Look up the INT_NT_* value for this NT */
+        nt_valor = parsere_int_nt_titulus(EXPR_CHAIN_NT_NOMINA[n]);
+        si (nt_valor < ZEPHYRUM)
+        {
+            /* NT not found - skip */
+            perge;
+        }
+
+        /* Find all GOTO entries for this NT and collect unique targets */
+        per (i = ZEPHYRUM; i < g_goto_numerus; i++)
+        {
+            si (g_goto_tabula[i].nt != nt_valor)
+            {
+                perge;
+            }
+
+            /* Check if we already have this target state */
+            already_have = FALSUM;
+            per (j = ZEPHYRUM; j < count; j++)
+            {
+                si (status_out[j] == g_goto_tabula[i].status_novus)
+                {
+                    already_have = VERUM;
+                    frange;
+                }
+            }
+
+            /* Add if new and have space */
+            si (!already_have && count < max_status)
+            {
+                status_out[count] = g_goto_tabula[i].status_novus;
+                count++;
+            }
+        }
+    }
+
+    redde count;
+}
+
 interior integer
 cmd_state(constans character* arg)
 {
@@ -2156,10 +2249,14 @@ interior integer
 cmd_checklist(vacuum)
 {
     i32 i;
+    i32 n;
     i32 expression_context_states[32];
     i32 expr_ctx_count;
     i32 basic_states[] = { 1, 2, 3, 4, 5 };
     i32 basic_count;
+    i32 expr_chain_states[64];
+    i32 expr_chain_count;
+    constans character* desc;
 
     si (g_goto_tabula == NIHIL || g_actio_tabula == NIHIL)
     {
@@ -2244,52 +2341,53 @@ cmd_checklist(vacuum)
     printf("{ ARBOR2_LEXEMA_YOUR_OP, ARBOR2_ACTIO_REDUCE, P<factor-rule>, FALSUM },\n");
     printf("```\n\n");
 
-    /* Section 3: Reduction chain states */
+    /* Section 3: Reduction chain states - DYNAMIC */
     printf("## 3. REDUCTION CHAIN STATES\n\n");
     printf("These are 'after higher-precedence NT' states that need\n");
     printf("REDUCE entries for lower-precedence operators.\n\n");
 
-    printf("Current chain (find via STATUS_TABULA_PARTIAL descriptions):\n");
+    /* Dynamically print the precedence chain (first 12 entries only - Latin NT names) */
+    printf("Expression precedence chain (low to high):\n");
     printf("```\n");
-    printf("DISIUNCTIO (||) <- lowest precedence\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("CONIUNCTIO (&&)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("PIPA_BITWISE (|)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("CARET_BITWISE (^)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("AMPERSAND_BITWISE (&)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("AEQUALITAS (== !=)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("COMPARATIO (< > <= >=)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("TRANSLATIO (<< >>)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("EXPRESSIO (+ -)\n");
-    printf("  |\n");
-    printf("  v\n");
-    printf("TERMINUS (* / %%)\n");
+    per (n = ZEPHYRUM; EXPR_CHAIN_NT_NOMINA[n] != NIHIL && n < 12; n++)
+    {
+        si (n == ZEPHYRUM)
+        {
+            printf("%s <- lowest precedence\n", EXPR_CHAIN_NT_NOMINA[n]);
+        }
+        alioquin
+        {
+            printf("  |\n");
+            printf("  v\n");
+            printf("%s\n", EXPR_CHAIN_NT_NOMINA[n]);
+        }
+    }
     printf("  |\n");
     printf("  v\n");
     printf("FACTOR <- highest precedence\n");
     printf("```\n\n");
 
-    printf("Find 'after <NT>' states in STATUS_TABULA_PARTIAL and ensure\n");
-    printf("they have REDUCE entries for your new operators.\n\n");
+    /* Dynamically find and display expression chain states */
+    expr_chain_count = collectare_expr_chain_states(expr_chain_states, 64);
 
-    printf("Key states from last implementation:\n");
-    printf("  - State 264: after TRANSLATIO - needed PIPA/CARET/AMPERSAND\n");
-    printf("  - State 239: after COMPARATIO - needed PIPA/CARET/AMPERSAND\n\n");
+    printf("Expression chain states found: %d\n\n", expr_chain_count);
+    printf("| State | Description |\n");
+    printf("|-------|-------------|\n");
+
+    per (i = ZEPHYRUM; i < expr_chain_count; i++)
+    {
+        desc = obtinere_status_descriptio(expr_chain_states[i]);
+        printf("| %5d | %s |\n",
+               expr_chain_states[i],
+               desc != NIHIL ? desc : "(no description)");
+    }
+    printf("\n");
+
+    printf("When inserting a new precedence level, states for levels\n");
+    printf("ABOVE your new level need REDUCE entries for your new operator.\n\n");
+
+    printf("TIP: Run `./glr_quaestio.sh chain-states` for all chain states,\n");
+    printf("or `./glr_quaestio.sh chain-states --expr` for just these.\n\n");
 
     /* Section 4: NT mapping switch */
     printf("## 4. NT MAPPING SWITCH\n\n");
@@ -2438,7 +2536,11 @@ cmd_expr_states(vacuum)
 
     printf("\n");
     printf("When adding a new NT at expression level, add GOTO entries\n");
-    printf("to ALL of these states!\n");
+    printf("to ALL of these states!\n\n");
+
+    printf("See also:\n");
+    printf("  ./glr_quaestio.sh checklist      - Full guide for adding precedence levels\n");
+    printf("  ./glr_quaestio.sh chain-states   - States needing REDUCE entries\n");
 
     redde ZEPHYRUM;
 }
@@ -2447,15 +2549,18 @@ cmd_expr_states(vacuum)
  * Command: chain-states - List reduction chain states
  *
  * Shows 'after NT' states that form the precedence reduction chain.
+ *
+ * flag: NIHIL for all chain states, "--expr" for expression-only
  * ================================================== */
 
 interior integer
-cmd_chain_states(vacuum)
+cmd_chain_states(constans character* flag)
 {
     i32 i;
     constans character* desc;
     i32 chain_states[64];
     i32 chain_count;
+    b32 expr_only;
 
     si (g_status_desc_tabula == NIHIL)
     {
@@ -2463,30 +2568,54 @@ cmd_chain_states(vacuum)
         redde I;
     }
 
-    printf("Reduction Chain States:\n\n");
-    printf("These are 'after NT' states that may need REDUCE entries\n");
-    printf("for lower-precedence operators.\n\n");
+    expr_only = (flag != NIHIL && strcmp(flag, "--expr") == ZEPHYRUM);
 
-    printf("| State | Description |\n");
-    printf("|-------|-------------|\n");
-
-    chain_count = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < g_status_desc_numerus; i++)
+    si (expr_only)
     {
-        desc = g_status_desc_tabula[i].descriptio;
-        si (desc != NIHIL && strstr(desc, "after ") != NIHIL)
+        printf("Expression Precedence Chain States:\n\n");
+        printf("These states handle expression-level reductions.\n\n");
+
+        /* Use the helper function for expr-only mode */
+        chain_count = collectare_expr_chain_states(chain_states, 64);
+
+        printf("| State | Description |\n");
+        printf("|-------|-------------|\n");
+
+        per (i = ZEPHYRUM; i < chain_count; i++)
         {
-            /* Check if it's an "after <NT>" pattern (not "after op") */
-            si (strstr(desc, "after '") == NIHIL &&
-                strstr(desc, "after FACTOR") == NIHIL)
+            desc = obtinere_status_descriptio(chain_states[i]);
+            printf("| %5d | %s |\n",
+                   chain_states[i],
+                   desc != NIHIL ? desc : "(no description)");
+        }
+    }
+    alioquin
+    {
+        printf("All Reduction Chain States:\n\n");
+        printf("These are 'after NT' states that may need REDUCE entries\n");
+        printf("for lower-precedence operators.\n\n");
+
+        printf("| State | Description |\n");
+        printf("|-------|-------------|\n");
+
+        chain_count = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < g_status_desc_numerus; i++)
+        {
+            desc = g_status_desc_tabula[i].descriptio;
+            si (desc != NIHIL && strstr(desc, "after ") != NIHIL)
             {
-                printf("| %5d | %s |\n",
-                       g_status_desc_tabula[i].status,
-                       desc);
-                si (chain_count < 64)
+                /* Check if it's an "after <NT>" pattern (not "after op") */
+                si (strstr(desc, "after '") == NIHIL &&
+                    strstr(desc, "after FACTOR") == NIHIL)
                 {
-                    chain_states[chain_count] = g_status_desc_tabula[i].status;
-                    chain_count++;
+                    printf("| %5d | %s |\n",
+                           g_status_desc_tabula[i].status,
+                           desc);
+                    si (chain_count < 64)
+                    {
+                        chain_states[chain_count] = g_status_desc_tabula[i].status;
+                        chain_count++;
+                    }
                 }
             }
         }
@@ -2495,6 +2624,16 @@ cmd_chain_states(vacuum)
     printf("\nTotal: %d chain states\n", chain_count);
     printf("\nWhen inserting a new precedence level, states for levels\n");
     printf("ABOVE your new level need REDUCE entries for your new operator.\n");
+
+    si (!expr_only)
+    {
+        printf("\nTIP: Run `./glr_quaestio.sh chain-states --expr` for just\n");
+        printf("expression precedence chain states.\n");
+    }
+
+    printf("\nSee also:\n");
+    printf("  ./glr_quaestio.sh checklist     - Full guide for adding precedence levels\n");
+    printf("  ./glr_quaestio.sh expr-states   - States needing GOTO entries\n");
 
     redde ZEPHYRUM;
 }
@@ -2732,7 +2871,9 @@ integer principale(integer argc, constans character* constans* argv)
 
     si (strcmp(argv[I], "chain-states") == ZEPHYRUM)
     {
-        redde cmd_chain_states();
+        /* Optional --expr flag for expression-only mode */
+        constans character* chain_flag = (argc >= III) ? argv[II] : NIHIL;
+        redde cmd_chain_states(chain_flag);
     }
 
     si (argc < III)

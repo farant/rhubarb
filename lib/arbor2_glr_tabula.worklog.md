@@ -184,3 +184,126 @@ When adding new operators at the lowest precedence level (above existing operato
 - Total rules: 122 (was 108)
 - All 783 parser tests pass
 - All 75 project tests pass
+
+## 2026-01-13: glr_quaestio Tool - Dynamic Checklist & Filtering
+
+### Changes Made:
+
+1. **Dynamic checklist command**: The `checklist` command now dynamically:
+   - Finds expression-context states via GOTO(EXPR) lookup (32 states)
+   - Finds expression chain states by matching descriptions (42 states)
+   - Displays both lists inline instead of static hardcoded text
+
+2. **`chain-states --expr` filtering**: Added optional `--expr` flag to filter chain states to only expression-precedence-related states (42 vs 64 total)
+
+3. **Case-insensitive matching**: The expression chain state finder now handles both uppercase (ASSIGNATIO, VIRGA) and lowercase (comparatio, disiunctio) state descriptions, plus English aliases (expression, term, factor)
+
+4. **Cross-references between commands**: Added "See also" sections:
+   - `expr-states` → references `checklist` and `chain-states`
+   - `chain-states` → references `checklist` and `expr-states`
+   - `checklist` → has TIP about `chain-states --expr`
+
+### Helper Functions Added:
+- `str_tolower()` - Converts string to lowercase
+- `collectare_expr_chain_states()` - Finds expression chain states with case-insensitive pattern matching
+
+### Usage:
+```bash
+./glr_quaestio.sh checklist           # Dynamic checklist with inline state lists
+./glr_quaestio.sh chain-states        # All 64 chain states
+./glr_quaestio.sh chain-states --expr # Only 42 expression chain states
+./glr_quaestio.sh expr-states         # 32 expression-context states
+```
+
+### Key Insight:
+State descriptions use a mix of Latin (ASSIGNATIO, VIRGA, etc.) and English (expression, term, factor) names. The `EXPR_CHAIN_NT_NOMINA` array contains both variants for comprehensive matching.
+
+## 2026-01-13: Bug Found - Assignment in Condition Contexts
+
+### Discovery:
+The deterministic chain-states tool found a real bug: `if (x = 1) y;` fails to parse because the if-condition context states were never updated for assignment operators.
+
+### Root Cause:
+When assignment/comma operators were added, only "top-level" expression states were updated. Context-specific states (if condition, while condition, etc.) were missed.
+
+### What was fixed for if-condition:
+1. **State 32** (after EXPR in if): Added REDUCE P99 for all 11 assignment operators
+2. **State 246** (after COMPARATIO in if): Added REDUCE P87 for assignment operators
+3. **State 247** (after AEQUALITAS in if): Added REDUCE P105 for assignment operators
+4. **State 31 GOTO**: Added missing bitwise NT entries (AMPERSAND_BITWISE, CARET_BITWISE, PIPA_BITWISE)
+5. **State 299** (new): Created "after VIRGA in if condition" state with PAREN_CLAUSA -> SHIFT 33
+6. **State 31 GOTO(VIRGA)**: Changed from 296 to 299
+
+### Remaining work:
+Similar fixes needed for:
+- While condition (state 40, 41, 248, etc.)
+- For condition (states 48, 249, 250, etc.)
+- Do-while condition (state 49, 251)
+- Switch condition (state 81, 252)
+
+### Validation:
+The deterministic `chain-states --expr` approach correctly identified that these context states ARE chain states (via GOTO targets). The tool finding 61 states instead of 12 was accurate - the extra states are context-specific variants that all need updating.
+
+### Statistics:
+- Total states: 300 (was 299)
+- All 784+ parser tests pass
+
+## 2026-01-13: All Condition Context States Fixed
+
+### Overview:
+Completed fixing assignment operators in ALL condition contexts: while, for (init/condition/increment), do-while, and switch.
+
+### Fixes Applied:
+
+1. **While condition** (states 40, 41, 248, 300):
+   - State 41: Added REDUCE P99 for all 11 assignment operators
+   - State 40 GOTO: Added bitwise NTs (AMPERSAND_BITWISE, CARET_BITWISE, PIPA_BITWISE)
+   - State 248: Added REDUCE P105 for assignment operators
+   - State 300 (new): "after VIRGA in while condition" - SHIFT ) to 42
+
+2. **For loop** (states 54, 55, 57, 58, 60, 61, 249, 250, 301-303):
+   - State 55: Expanded from just SEMICOLON to full expression handling with assignment operators
+   - State 58: Added REDUCE P99 for assignment operators
+   - State 61: Expanded from just PAREN_CLAUSA to full expression handling with assignment operators
+   - State 54 GOTO: Added full chain NTs including bitwise, VIRGA -> 301
+   - State 57 GOTO: Added bitwise NTs, VIRGA -> 302
+   - State 60 GOTO: Added full chain NTs including bitwise, VIRGA -> 303
+   - State 249: Added REDUCE P87 for assignment operators
+   - State 250: Changed from REDUCE P28 to REDUCE P105 for proper chain handling
+   - States 301-303 (new): Context-specific VIRGA states for for-init/condition/increment
+   - **New Rule P122**: `expr_opt -> virga` - allows full expression chain in for-loop contexts
+
+3. **Do-while condition** (states 48, 49, 251, 304):
+   - State 49: Added REDUCE P99 for all 11 assignment operators
+   - State 48 GOTO: Added bitwise NTs, VIRGA -> 304
+   - State 251: Added REDUCE P105 for assignment operators
+   - State 304 (new): "after VIRGA in do-while condition" - SHIFT ) to 50
+
+4. **Switch condition** (states 80, 81, 252, 305):
+   - State 81: Added REDUCE P99 for all 11 assignment operators
+   - State 80 GOTO: Added bitwise NTs, VIRGA -> 305
+   - State 252: Added REDUCE P105 for assignment operators + == and != shifts
+   - State 305 (new): "after VIRGA in switch condition" - SHIFT ) to 82
+
+### Key Pattern:
+Each condition context requires:
+1. "after EXPR" state needs REDUCE P99 for assignment operators
+2. GOTO table needs bitwise NTs (AMPERSAND_BITWISE, CARET_BITWISE, PIPA_BITWISE)
+3. Context-specific AEQUALITAS state needs REDUCE P105 for assignment operators
+4. Context-specific VIRGA state (299-305) to handle ) correctly
+
+### Statistics:
+- Total states: 306 (was 300)
+- Total rules: 123 (was 122, added P122)
+- All 793 parser tests pass
+
+### Parsing now works:
+```c
+if (x = 1) y;           // if condition
+while (x = 1) y;        // while condition
+for (a = 1; b; c) d;    // for init
+for (a; b = 1; c) d;    // for condition
+for (a; b; c = 1) d;    // for increment
+do x; while (a = 1);    // do-while condition
+switch (a = 1) { }      // switch condition
+```

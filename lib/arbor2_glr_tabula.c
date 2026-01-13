@@ -176,7 +176,8 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P118 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '^=' assignatio" },
     /* P119 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '<<=' assignatio" },
     /* P120 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '>>=' assignatio" },
-    /* P121 */ { ARBOR2_NT_ASSIGNATIO, 1, ARBOR2_NODUS_ERROR, "assignatio -> disiunctio" }
+    /* P121 */ { ARBOR2_NT_ASSIGNATIO, 1, ARBOR2_NODUS_ERROR, "assignatio -> disiunctio" },
+    /* P122 */ { ARBOR2_NT_EXPRESSIO_OPTATIVA, 1, ARBOR2_NODUS_ERROR, "expr_opt -> virga" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -880,7 +881,19 @@ hic_manens constans Arbor2TabulaActio STATUS_32_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 33: after 'if ( expr )' - expect statement */
@@ -1051,7 +1064,19 @@ hic_manens constans Arbor2TabulaActio STATUS_41_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 42: after 'while ( expr )' - expect statement */
@@ -1177,7 +1202,19 @@ hic_manens constans Arbor2TabulaActio STATUS_49_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 50: after 'do stmt while ( expr )' - expect ';' */
@@ -1250,9 +1287,29 @@ hic_manens constans Arbor2TabulaActio STATUS_54_ACTIONES[] = {
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 29, FALSUM }
 };
 
-/* State 55: after 'for ( expression' - reduce to expr_opt */
+/* State 55: after 'for ( expression' - reduce to expr_opt or continue */
 hic_manens constans Arbor2TabulaActio STATUS_55_ACTIONES[] = {
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 28, FALSUM }
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 56: after 'for ( expr_opt' - expect first ';' */
@@ -1280,7 +1337,19 @@ hic_manens constans Arbor2TabulaActio STATUS_58_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 59: after 'for ( expr_opt ; expr_opt' - expect second ';' */
@@ -1298,9 +1367,29 @@ hic_manens constans Arbor2TabulaActio STATUS_60_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 29, FALSUM }
 };
 
-/* State 61: after 'for ( ... ; expression' (increment) - reduce */
+/* State 61: after 'for ( ... ; expression' (increment) - reduce or continue */
 hic_manens constans Arbor2TabulaActio STATUS_61_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 28, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 62: after 'for ( expr_opt ; expr_opt ; expr_opt' - expect ')' */
@@ -1592,7 +1681,19 @@ hic_manens constans Arbor2TabulaActio STATUS_81_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    /* Assignment operators - reduce to TRANSLATIO, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM }
 };
 
 /* State 82: after 'switch ( expr )' - expect statement */
@@ -3036,21 +3137,57 @@ hic_manens constans Arbor2TabulaActio STATUS_246_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
-    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM }
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    /* Assignment operators - reduce to AEQUALITAS, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM }
 };
 
 /* State 247: after aequalitas in if condition - shift ) or continue */
 hic_manens constans Arbor2TabulaActio STATUS_247_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 33, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
 /* State 248: after aequalitas in while condition - shift ) or continue */
 hic_manens constans Arbor2TabulaActio STATUS_248_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 42, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
 /* State 249: after comparatio in for condition - reduce to aequalitas or continue */
@@ -3061,28 +3198,76 @@ hic_manens constans Arbor2TabulaActio STATUS_249_ACTIONES[] = {
     { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT, 241, FALSUM },
     { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
-    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM }
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT, 241, FALSUM },
+    /* Assignment operators - reduce to AEQUALITAS, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM }
 };
 
-/* State 250: after aequalitas in for condition - reduce to expr_opt or continue */
+/* State 250: after aequalitas in for condition - reduce to AMPERSAND_BITWISE or continue */
 hic_manens constans Arbor2TabulaActio STATUS_250_ACTIONES[] = {
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 28, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
 /* State 251: after aequalitas in do-while condition - shift ) or continue */
 hic_manens constans Arbor2TabulaActio STATUS_251_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 50, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
 /* State 252: after aequalitas in switch condition - shift ) or continue */
 hic_manens constans Arbor2TabulaActio STATUS_252_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 82, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
-    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM }
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
 /* ==== E10: Logical Operators (&&, ||) ==== */
@@ -3753,6 +3938,48 @@ hic_manens constans Arbor2TabulaActio STATUS_298_ACTIONES[] = {
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 108, FALSUM }
 };
 
+/* State 299: after VIRGA in if condition - shift ) to then-branch */
+hic_manens constans Arbor2TabulaActio STATUS_299_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 33, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
+/* State 300: after VIRGA in while condition - shift ) to loop body */
+hic_manens constans Arbor2TabulaActio STATUS_300_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 42, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
+/* State 301: after VIRGA in for-init - reduce P122 to expr_opt */
+hic_manens constans Arbor2TabulaActio STATUS_301_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 122, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
+/* State 302: after VIRGA in for-condition - reduce P122 to expr_opt */
+hic_manens constans Arbor2TabulaActio STATUS_302_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 122, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
+/* State 303: after VIRGA in for-increment - reduce P122 to expr_opt */
+hic_manens constans Arbor2TabulaActio STATUS_303_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 122, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
+/* State 304: after VIRGA in do-while condition - shift ) to semicolon state */
+hic_manens constans Arbor2TabulaActio STATUS_304_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 50, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
+/* State 305: after VIRGA in switch condition - shift ) to switch body */
+hic_manens constans Arbor2TabulaActio STATUS_305_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 82, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 297, FALSUM }
+};
+
 /* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
@@ -4070,7 +4297,14 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(295, "after ASSIGNATIO - comma or reduce P109"),
     STATUS_INFO(296, "after VIRGA - ACCEPT or continue comma"),
     STATUS_INFO(297, "after comma - expects assignatio"),
-    STATUS_INFO(298, "after virga , assignatio - reduce P108")
+    STATUS_INFO(298, "after virga , assignatio - reduce P108"),
+    STATUS_INFO(299, "after VIRGA in if condition - shift ) to 33"),
+    STATUS_INFO(300, "after VIRGA in while condition - shift ) to 42"),
+    STATUS_INFO(301, "after VIRGA in for-init - reduce P122"),
+    STATUS_INFO(302, "after VIRGA in for-condition - reduce P122"),
+    STATUS_INFO(303, "after VIRGA in for-increment - reduce P122"),
+    STATUS_INFO(304, "after VIRGA in do-while condition - shift ) to 50"),
+    STATUS_INFO(305, "after VIRGA in switch condition - shift ) to 82")
 };
 
 /* ==================================================
@@ -4258,10 +4492,13 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_31_GOTO[] = {
     { INT_NT_FACTOR,      3 },
     { INT_NT_COMPARATIO,  246 },
     { INT_NT_AEQUALITAS,  247 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
     { INT_NT_ASSIGNATIO,  295 },
-    { INT_NT_VIRGA,       296 },
+    { INT_NT_VIRGA,       299 },  /* if-context: shift ) to state 33 */
     { INT_NT_TRANSLATIO,  264 }
 };
 
@@ -4313,16 +4550,19 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_35_GOTO[] = {
 
 /* State 40: after 'while (' - condition expression */
 hic_manens constans Arbor2StatusGotoEntry STATUS_40_GOTO[] = {
-    { INT_NT_EXPR,        41 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  246 },
-    { INT_NT_AEQUALITAS,  248 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_ASSIGNATIO,  295 },
-    { INT_NT_VIRGA,       296 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,              41 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_COMPARATIO,        246 },
+    { INT_NT_AEQUALITAS,        248 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_ASSIGNATIO,        295 },
+    { INT_NT_VIRGA,             300 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 42: after 'while ( expr )' - loop body */
@@ -4373,49 +4613,73 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_45_GOTO[] = {
 
 /* State 48: after 'do stmt while (' - condition expression */
 hic_manens constans Arbor2StatusGotoEntry STATUS_48_GOTO[] = {
-    { INT_NT_EXPR,        49 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  246 },
-    { INT_NT_AEQUALITAS,  251 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_ASSIGNATIO,  295 },
-    { INT_NT_VIRGA,       296 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,              49 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_COMPARATIO,        246 },
+    { INT_NT_AEQUALITAS,        251 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_ASSIGNATIO,        295 },
+    { INT_NT_VIRGA,             304 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 54: after 'for (' - init expression */
 hic_manens constans Arbor2StatusGotoEntry STATUS_54_GOTO[] = {
-    { INT_NT_EXPR,          55 },
-    { INT_NT_TERM,          2 },
-    { INT_NT_FACTOR,        3 },
-    { INT_NT_EXPRESSIO_OPT, 56 },
-    { INT_NT_TRANSLATIO,    264 }
+    { INT_NT_EXPR,              55 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_ASSIGNATIO,        295 },
+    { INT_NT_VIRGA,             301 },
+    { INT_NT_EXPRESSIO_OPT,     56 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 57: after 'for ( expr_opt ;' - condition expression */
 hic_manens constans Arbor2StatusGotoEntry STATUS_57_GOTO[] = {
-    { INT_NT_EXPR,          58 },
-    { INT_NT_TERM,          2 },
-    { INT_NT_FACTOR,        3 },
-    { INT_NT_COMPARATIO,    249 },
-    { INT_NT_AEQUALITAS,    250 },
-    { INT_NT_CONIUNCTIO,    253 },
-    { INT_NT_DISIUNCTIO,    255 },
-    { INT_NT_ASSIGNATIO,    295 },
-    { INT_NT_VIRGA,         296 },
-    { INT_NT_EXPRESSIO_OPT, 59 },
-    { INT_NT_TRANSLATIO,    264 }
+    { INT_NT_EXPR,              58 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_COMPARATIO,        249 },
+    { INT_NT_AEQUALITAS,        250 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_ASSIGNATIO,        295 },
+    { INT_NT_VIRGA,             302 },
+    { INT_NT_EXPRESSIO_OPT,     59 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 60: after 'for ( ... ;' - increment expression */
 hic_manens constans Arbor2StatusGotoEntry STATUS_60_GOTO[] = {
-    { INT_NT_EXPR,          61 },
-    { INT_NT_TERM,          2 },
-    { INT_NT_FACTOR,        3 },
-    { INT_NT_EXPRESSIO_OPT, 62 },
-    { INT_NT_TRANSLATIO,    264 }
+    { INT_NT_EXPR,              61 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_ASSIGNATIO,        295 },
+    { INT_NT_VIRGA,             303 },
+    { INT_NT_EXPRESSIO_OPT,     62 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 63: after 'for ( ... )' - loop body */
@@ -4475,16 +4739,19 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_77_GOTO[] = {
 
 /* State 80: after 'switch (' - expression components */
 hic_manens constans Arbor2StatusGotoEntry STATUS_80_GOTO[] = {
-    { INT_NT_EXPR,        81 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  246 },
-    { INT_NT_AEQUALITAS,  252 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_ASSIGNATIO,  295 },
-    { INT_NT_VIRGA,       296 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,              81 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_COMPARATIO,        246 },
+    { INT_NT_AEQUALITAS,        252 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_ASSIGNATIO,        295 },
+    { INT_NT_VIRGA,             305 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 82: after 'switch ( expr )' - body statement */
@@ -5263,7 +5530,14 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 295: after ASSIGNATIO - comma or reduce P109 */
     STATUS_GOTO_NIL,   /* 296: after VIRGA - ACCEPT */
     STATUS_GOTO(297),  /* 297: after comma - expr -> assignatio */
-    STATUS_GOTO_NIL    /* 298: after virga , assignatio - reduce P108 */
+    STATUS_GOTO_NIL,   /* 298: after virga , assignatio - reduce P108 */
+    STATUS_GOTO_NIL,   /* 299: after VIRGA in if condition */
+    STATUS_GOTO_NIL,   /* 300: after VIRGA in while condition */
+    STATUS_GOTO_NIL,   /* 301: after VIRGA in for-init */
+    STATUS_GOTO_NIL,   /* 302: after VIRGA in for-condition */
+    STATUS_GOTO_NIL,   /* 303: after VIRGA in for-increment */
+    STATUS_GOTO_NIL,   /* 304: after VIRGA in do-while condition */
+    STATUS_GOTO_NIL    /* 305: after VIRGA in switch condition */
 };
 
 

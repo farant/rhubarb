@@ -2628,6 +2628,82 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Assignment inside if condition: if (x = 1) y;
+     * Common C idiom - assignment in condition
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment in if condition: if (x = 1) y; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "if (x = 1) y;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SI);
+            /* Condition should be an assignment */
+            si (res.radix->datum.conditionale.conditio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.conditio->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.conditio->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Assignment inside while condition: while (x = 1) y;
+     * Common C idiom - assignment in condition
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment in while condition: while (x = 1) y; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "while (x = 1) y;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DUM);
+            /* Condition should be an assignment */
+            si (res.radix->datum.conditionale.conditio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.conditio->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.conditio->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Dangling else: if (a) if (b) c; else d;
      * else should bind to inner if (b), not outer if (a)
      * ======================================================== */
