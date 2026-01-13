@@ -321,6 +321,7 @@ nomen structura {
     Arbor2LexemaGenus       lexema;         /* Token triggering action */
     Arbor2ActioGenus        actio;          /* SHIFT, REDUCE, ACCEPT, ERROR */
     i32                     valor;          /* State number or rule number */
+    b32                     conflictus_intentus;  /* VERUM if GLR fork expected */
 } Arbor2TabulaActio;
 
 nomen structura {
@@ -330,6 +331,26 @@ nomen structura {
 } Arbor2TabulaGoto;
 
 /* ==================================================
+ * State Metadata (for array-of-arrays structure)
+ * ================================================== */
+
+nomen structura {
+    constans Arbor2TabulaActio* actiones;   /* Actions for this state */
+    s32                         numerus;    /* Count (computed via sizeof) */
+    constans character*         descriptio; /* Human-readable state context */
+} Arbor2StatusInfo;
+
+nomen structura {
+    s32                     non_terminalis; /* Non-terminal symbol */
+    s32                     status_novus;   /* Target state */
+} Arbor2StatusGotoEntry;
+
+nomen structura {
+    constans Arbor2StatusGotoEntry* transitus;  /* GOTO entries for this state */
+    s32                             numerus;    /* Count */
+} Arbor2StatusGoto;
+
+/* ==================================================
  * Grammar Rule
  * ================================================== */
 
@@ -337,6 +358,7 @@ nomen structura {
     Arbor2NonTerminalis     sinister;       /* Left-hand side */
     i32                     longitudo;      /* Number of symbols on right */
     Arbor2NodusGenus        nodus_genus;    /* AST node type to create */
+    constans character*     descriptio;     /* Human-readable production */
 } Arbor2Regula;
 
 /* ==================================================
@@ -501,5 +523,11 @@ vacuum arbor2_tabula_iterare_goto_nt(
 
 /* Get rule by index (no GLR instance needed) */
 Arbor2Regula* arbor2_tabula_obtinere_regula(i32 index);
+
+/* Get state info (for new array-of-arrays structure) */
+constans Arbor2StatusInfo* arbor2_tabula_obtinere_status_info(i32 status);
+
+/* Validate table integrity (debug builds) */
+b32 arbor2_glr_validare_tabulas(vacuum);
 
 #endif /* ARBOR2_GLR_H */

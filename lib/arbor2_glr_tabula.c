@@ -1,4 +1,12 @@
 /* arbor2_glr_tabula.c - Hand-written LR tables for expression grammar */
+
+/* Temporarily suppress missing-field-initializers during refactor.
+ * TODO: Remove this pragma once Phase 3 (array-of-arrays) is complete. */
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#endif
+
 #include "latina.h"
 #include "arbor2_glr.h"
 #include "xar.h"
@@ -33,323 +41,106 @@
  * ================================================== */
 
 hic_manens Arbor2Regula REGULAE[] = {
-    /* P0: S' -> expression (accept rule, not used in reduce) */
-    { ARBOR2_NT_EXPRESSIO, 1, ARBOR2_NODUS_ERROR },
-
-    /* P1: expression -> expression '+' term */
-    { ARBOR2_NT_EXPRESSIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P2: expression -> term */
-    { ARBOR2_NT_EXPRESSIO, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P3: term -> term '*' factor */
-    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P4: term -> factor */
-    { ARBOR2_NT_TERMINUS, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P5: factor -> IDENTIFIER */
-    { ARBOR2_NT_FACTOR, 1, ARBOR2_NODUS_IDENTIFICATOR },
-
-    /* P6: factor -> INTEGER */
-    { ARBOR2_NT_FACTOR, 1, ARBOR2_NODUS_INTEGER },
-
-    /* P7: factor -> '(' expression ')' */
-    { ARBOR2_NT_FACTOR, 3, ARBOR2_NODUS_ERROR },  /* unwrap parens */
-
-    /* P8: factor -> '*' factor (dereference) */
-    { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM },
-
-    /* P9: factor -> '&' factor (address-of) */
-    { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM },
-
-    /* P10: declaration -> type_specifier declarator */
-    { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO },
-
-    /* P11: declarator -> '*' declarator */
-    { ARBOR2_NT_DECLARATOR, 2, ARBOR2_NODUS_DECLARATOR },
-
-    /* P12: declarator -> IDENTIFIER */
-    { ARBOR2_NT_DECLARATOR, 1, ARBOR2_NODUS_DECLARATOR },
-
-    /* P13: statement -> expression ';' */
-    { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_SENTENTIA },
-
-    /* P14: statement -> ';' (empty statement) */
-    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_SENTENTIA_VACUA },
-
-    /* P15: statement -> compound_statement */
-    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P16: compound_statement -> '{' statement_list '}' */
-    { ARBOR2_NT_CORPUS, 3, ARBOR2_NODUS_CORPUS },
-
-    /* P17: statement_list -> statement_list statement */
-    { ARBOR2_NT_ELENCHUS_SENTENTIARUM, 2, ARBOR2_NODUS_CORPUS },  /* accumulate */
-
-    /* P18: statement_list -> ε (empty) */
-    { ARBOR2_NT_ELENCHUS_SENTENTIARUM, 0, ARBOR2_NODUS_CORPUS },  /* empty list */
-
-    /* P19: statement -> if_statement */
-    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P20: if_statement -> 'if' '(' expression ')' statement */
-    { ARBOR2_NT_SI, 5, ARBOR2_NODUS_SI },
-
-    /* P21: if_statement -> 'if' '(' expression ')' statement 'else' statement */
-    { ARBOR2_NT_SI, 7, ARBOR2_NODUS_SI },
-
-    /* P22: statement -> while_statement */
-    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P23: while_statement -> 'while' '(' expression ')' statement */
-    { ARBOR2_NT_DUM, 5, ARBOR2_NODUS_DUM },
-
-    /* P24: statement -> do_statement */
-    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P25: do_statement -> 'do' statement 'while' '(' expression ')' ';' */
-    { ARBOR2_NT_FAC, 7, ARBOR2_NODUS_FAC },
-
-    /* P26: statement -> for_statement */
-    { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P27: for_statement -> 'for' '(' expr_opt ';' expr_opt ';' expr_opt ')' statement */
-    { ARBOR2_NT_PER, 9, ARBOR2_NODUS_PER },
-
-    /* P28: expression_opt -> expression */
-    { ARBOR2_NT_EXPRESSIO_OPTATIVA, 1, ARBOR2_NODUS_ERROR },  /* pass through */
-
-    /* P29: expression_opt -> epsilon */
-    { ARBOR2_NT_EXPRESSIO_OPTATIVA, 0, ARBOR2_NODUS_ERROR },  /* epsilon, NULL value */
-
-    /* P30: statement -> 'break' ';' */
-    { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_FRANGE },
-
-    /* P31: statement -> 'continue' ';' */
-    { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_PERGE },
-
-    /* P32: statement -> 'return' expression_opt ';' */
-    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_REDDE },
-
-    /* P33: statement -> 'goto' IDENTIFIER ';' */
-    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_SALTA },
-
-    /* P34: statement -> IDENTIFIER ':' statement */
-    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_TITULATUM },
-
-    /* P35: statement -> 'switch' '(' expression ')' statement */
-    { ARBOR2_NT_SENTENTIA, 5, ARBOR2_NODUS_COMMUTATIO },
-
-    /* P36: statement -> 'case' expression ':' statement */
-    { ARBOR2_NT_SENTENTIA, 4, ARBOR2_NODUS_CASUS },
-
-    /* P37: statement -> 'default' ':' statement */
-    { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_ORDINARIUS },
-
-    /* P38: declarator -> declarator '(' ')' (function declarator) */
-    { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR_FUNCTI },
-
-    /* P39: declarator -> declarator '(' VOID ')' (function declarator with void) */
-    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI },
-
-    /* P40: declarator -> declarator '(' parameter_list ')' */
-    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI },
-
-    /* P41: parameter_list -> parameter_declaration */
-    { ARBOR2_NT_PARAMETER_LIST, 1, ARBOR2_NODUS_ERROR },  /* builds Xar */
-
-    /* P42: parameter_list -> parameter_list ',' parameter_declaration */
-    { ARBOR2_NT_PARAMETER_LIST, 3, ARBOR2_NODUS_ERROR },  /* extends Xar */
-
-    /* P43: parameter_declaration -> type_specifier declarator */
-    { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL },
-
-    /* P44: function_definition -> type_specifier declarator compound_statement */
-    { ARBOR2_NT_DEFINITIO_FUNCTI, 3, ARBOR2_NODUS_DEFINITIO_FUNCTI },
-
-    /* Phase E1: Struct grammar rules */
-    /* P45: struct_specifier -> 'struct' IDENTIFIER '{' struct_member_list '}' */
-    { ARBOR2_NT_STRUCT_SPECIFIER, 5, ARBOR2_NODUS_STRUCT_SPECIFIER },
-
-    /* P46: struct_specifier -> 'struct' '{' struct_member_list '}' (anonymous) */
-    { ARBOR2_NT_STRUCT_SPECIFIER, 4, ARBOR2_NODUS_STRUCT_SPECIFIER },
-
-    /* P47: struct_specifier -> 'struct' IDENTIFIER (forward reference) */
-    { ARBOR2_NT_STRUCT_SPECIFIER, 2, ARBOR2_NODUS_STRUCT_SPECIFIER },
-
-    /* P48: struct_member_list -> type_specifier declarator ';' (first member)
-     * Handles simple, pointer, and array members via declarator non-terminal.
-     * Symbol count: type_spec(1) + declarator(1) + ;(1) = 3 */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO },
-
-    /* P49: struct_member_list -> struct_member_list type_specifier declarator ';' (append member)
-     * Symbol count: list(1) + type_spec(1) + declarator(1) + ;(1) = 4 */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P50: UNUSED - pointer members now handled by P48/P49 via declarator */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P51: UNUSED - pointer members now handled by P48/P49 via declarator */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* P52: struct_specifier -> 'union' IDENTIFIER '{' struct_member_list '}' (named union) */
-    { ARBOR2_NT_STRUCT_SPECIFIER, 5, ARBOR2_NODUS_STRUCT_SPECIFIER },
-
-    /* P53: struct_specifier -> 'union' '{' struct_member_list '}' (anonymous union) */
-    { ARBOR2_NT_STRUCT_SPECIFIER, 4, ARBOR2_NODUS_STRUCT_SPECIFIER },
-
-    /* P54: struct_specifier -> 'union' IDENTIFIER (union forward reference) */
-    { ARBOR2_NT_STRUCT_SPECIFIER, 2, ARBOR2_NODUS_STRUCT_SPECIFIER },
-
-    /* ==================================================
-     * Enum Specifier Rules (P55-P61)
-     * ================================================== */
-
-    /* P55: enum_specifier -> 'enum' IDENTIFIER '{' enumerator_list '}' (named enum) */
-    { ARBOR2_NT_ENUM_SPECIFIER, 5, ARBOR2_NODUS_ENUM_SPECIFIER },
-
-    /* P56: enum_specifier -> 'enum' '{' enumerator_list '}' (anonymous enum) */
-    { ARBOR2_NT_ENUM_SPECIFIER, 4, ARBOR2_NODUS_ENUM_SPECIFIER },
-
-    /* P57: enum_specifier -> 'enum' IDENTIFIER (forward reference) */
-    { ARBOR2_NT_ENUM_SPECIFIER, 2, ARBOR2_NODUS_ENUM_SPECIFIER },
-
-    /* P58: enumerator_list -> enumerator (first enumerator, creates Xar) */
-    { ARBOR2_NT_ENUMERATOR_LIST, 1, ARBOR2_NODUS_ERROR },
-
-    /* P59: enumerator_list -> enumerator_list ',' enumerator (append to list) */
-    { ARBOR2_NT_ENUMERATOR_LIST, 3, ARBOR2_NODUS_ERROR },
-
-    /* P60: enumerator -> IDENTIFIER (plain enumerator) */
-    { ARBOR2_NT_ENUMERATOR, 1, ARBOR2_NODUS_ENUMERATOR },
-
-    /* P61: enumerator -> IDENTIFIER '=' expression (enumerator with value) */
-    { ARBOR2_NT_ENUMERATOR, 3, ARBOR2_NODUS_ENUMERATOR },
-
-    /* ========== BIT FIELD RULES (P62-P65) ========== */
-
-    /* P62: struct_member_list -> type_spec ID ':' expr ';' (first named bit field) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* P63: struct_member_list -> member_list type_spec ID ':' expr ';' (append named bit field) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO },
-
-    /* P64: struct_member_list -> type_spec ':' expr ';' (first anonymous bit field) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P65: struct_member_list -> member_list type_spec ':' expr ';' (append anonymous bit field) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* ========== NESTED TYPE MEMBERS (P66-P73) ========== */
-
-    /* P66: struct_member_list -> struct_specifier ID ';' (first nested struct/union member) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO },
-
-    /* P67: struct_member_list -> struct_specifier '*' ID ';' (first nested struct/union ptr member) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P68: struct_member_list -> member_list struct_specifier ID ';' (append nested struct/union) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P69: struct_member_list -> member_list struct_specifier '*' ID ';' (append nested struct/union ptr) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* P70: struct_member_list -> enum_specifier ID ';' (first nested enum member) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO },
-
-    /* P71: struct_member_list -> enum_specifier '*' ID ';' (first nested enum ptr member) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P72: struct_member_list -> member_list enum_specifier ID ';' (append nested enum) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P73: struct_member_list -> member_list enum_specifier '*' ID ';' (append nested enum ptr) */
-    { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* ========== TYPEDEF DECLARATIONS (P74-P79) ========== */
-
-    /* P74: typedef_decl -> 'typedef' type_specifier ID ';' (simple typedef) */
-    { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P75: typedef_decl -> 'typedef' type_specifier '*' ID ';' (pointer typedef) */
-    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* P76: typedef_decl -> 'typedef' struct_specifier ID ';' (typedef struct) */
-    { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P77: typedef_decl -> 'typedef' struct_specifier '*' ID ';' (typedef struct pointer) */
-    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* P78: typedef_decl -> 'typedef' enum_specifier ID ';' (typedef enum) */
-    { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO },
-
-    /* P79: typedef_decl -> 'typedef' enum_specifier '*' ID ';' (typedef enum pointer) */
-    { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO },
-
-    /* P80: declarator -> declarator '[' expression ']' (sized array) */
-    { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR },
-
-    /* P81: declarator -> declarator '[' ']' (unsized array) */
-    { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR },
-
-    /* ========== ADDITIONAL ARITHMETIC OPERATORS (P82-P84) ========== */
-
-    /* P82: expression -> expression '-' term */
-    { ARBOR2_NT_EXPRESSIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P83: term -> term '/' factor */
-    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P84: term -> term '%' factor */
-    { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* ========== COMPARISON OPERATORS (P85-P92) ========== */
-
-    /* P85: aequalitas -> aequalitas '==' comparatio */
-    { ARBOR2_NT_AEQUALITAS, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P86: aequalitas -> aequalitas '!=' comparatio */
-    { ARBOR2_NT_AEQUALITAS, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P87: aequalitas -> comparatio (pass-through) */
-    { ARBOR2_NT_AEQUALITAS, 1, ARBOR2_NODUS_ERROR },
-
-    /* P88: comparatio -> comparatio '<' translatio */
-    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P89: comparatio -> comparatio '>' translatio */
-    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P90: comparatio -> comparatio '<=' translatio */
-    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P91: comparatio -> comparatio '>=' translatio */
-    { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P92: comparatio -> translatio (pass-through) */
-    { ARBOR2_NT_COMPARATIO, 1, ARBOR2_NODUS_ERROR },
-
-    /* P93: disiunctio -> disiunctio '||' coniunctio */
-    { ARBOR2_NT_DISIUNCTIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P94: disiunctio -> coniunctio (pass-through) */
-    { ARBOR2_NT_DISIUNCTIO, 1, ARBOR2_NODUS_ERROR },
-
-    /* P95: coniunctio -> coniunctio '&&' aequalitas */
-    { ARBOR2_NT_CONIUNCTIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P96: coniunctio -> aequalitas (pass-through) */
-    { ARBOR2_NT_CONIUNCTIO, 1, ARBOR2_NODUS_ERROR },
-
-    /* P97: translatio -> translatio '<<' expressio */
-    { ARBOR2_NT_TRANSLATIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P98: translatio -> translatio '>>' expressio */
-    { ARBOR2_NT_TRANSLATIO, 3, ARBOR2_NODUS_BINARIUM },
-
-    /* P99: translatio -> expressio (pass-through) */
-    { ARBOR2_NT_TRANSLATIO, 1, ARBOR2_NODUS_ERROR }
+    /* P0 */  { ARBOR2_NT_EXPRESSIO, 1, ARBOR2_NODUS_ERROR, "S' -> expr" },
+    /* P1 */  { ARBOR2_NT_EXPRESSIO, 3, ARBOR2_NODUS_BINARIUM, "expr -> expr '+' term" },
+    /* P2 */  { ARBOR2_NT_EXPRESSIO, 1, ARBOR2_NODUS_ERROR, "expr -> term" },
+    /* P3 */  { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM, "term -> term '*' factor" },
+    /* P4 */  { ARBOR2_NT_TERMINUS, 1, ARBOR2_NODUS_ERROR, "term -> factor" },
+    /* P5 */  { ARBOR2_NT_FACTOR, 1, ARBOR2_NODUS_IDENTIFICATOR, "factor -> ID" },
+    /* P6 */  { ARBOR2_NT_FACTOR, 1, ARBOR2_NODUS_INTEGER, "factor -> INT" },
+    /* P7 */  { ARBOR2_NT_FACTOR, 3, ARBOR2_NODUS_ERROR, "factor -> '(' expr ')'" },
+    /* P8 */  { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM, "factor -> '*' factor" },
+    /* P9 */  { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM, "factor -> '&' factor" },
+    /* P10 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "decl -> type declarator" },
+    /* P11 */ { ARBOR2_NT_DECLARATOR, 2, ARBOR2_NODUS_DECLARATOR, "declarator -> '*' declarator" },
+    /* P12 */ { ARBOR2_NT_DECLARATOR, 1, ARBOR2_NODUS_DECLARATOR, "declarator -> ID" },
+    /* P13 */ { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_SENTENTIA, "stmt -> expr ';'" },
+    /* P14 */ { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_SENTENTIA_VACUA, "stmt -> ';'" },
+    /* P15 */ { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR, "stmt -> compound" },
+    /* P16 */ { ARBOR2_NT_CORPUS, 3, ARBOR2_NODUS_CORPUS, "compound -> '{' stmts '}'" },
+    /* P17 */ { ARBOR2_NT_ELENCHUS_SENTENTIARUM, 2, ARBOR2_NODUS_CORPUS, "stmts -> stmts stmt" },
+    /* P18 */ { ARBOR2_NT_ELENCHUS_SENTENTIARUM, 0, ARBOR2_NODUS_CORPUS, "stmts -> e" },
+    /* P19 */ { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR, "stmt -> if_stmt" },
+    /* P20 */ { ARBOR2_NT_SI, 5, ARBOR2_NODUS_SI, "if -> 'if' '(' expr ')' stmt" },
+    /* P21 */ { ARBOR2_NT_SI, 7, ARBOR2_NODUS_SI, "if -> 'if' '(' expr ')' stmt 'else' stmt" },
+    /* P22 */ { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR, "stmt -> while_stmt" },
+    /* P23 */ { ARBOR2_NT_DUM, 5, ARBOR2_NODUS_DUM, "while -> 'while' '(' expr ')' stmt" },
+    /* P24 */ { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR, "stmt -> do_stmt" },
+    /* P25 */ { ARBOR2_NT_FAC, 7, ARBOR2_NODUS_FAC, "do -> 'do' stmt 'while' '(' expr ')' ';'" },
+    /* P26 */ { ARBOR2_NT_SENTENTIA, 1, ARBOR2_NODUS_ERROR, "stmt -> for_stmt" },
+    /* P27 */ { ARBOR2_NT_PER, 9, ARBOR2_NODUS_PER, "for -> 'for' '(' e ';' e ';' e ')' stmt" },
+    /* P28 */ { ARBOR2_NT_EXPRESSIO_OPTATIVA, 1, ARBOR2_NODUS_ERROR, "expr_opt -> expr" },
+    /* P29 */ { ARBOR2_NT_EXPRESSIO_OPTATIVA, 0, ARBOR2_NODUS_ERROR, "expr_opt -> e" },
+    /* P30 */ { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_FRANGE, "stmt -> 'break' ';'" },
+    /* P31 */ { ARBOR2_NT_SENTENTIA, 2, ARBOR2_NODUS_PERGE, "stmt -> 'continue' ';'" },
+    /* P32 */ { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_REDDE, "stmt -> 'return' expr_opt ';'" },
+    /* P33 */ { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_SALTA, "stmt -> 'goto' ID ';'" },
+    /* P34 */ { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_TITULATUM, "stmt -> ID ':' stmt" },
+    /* P35 */ { ARBOR2_NT_SENTENTIA, 5, ARBOR2_NODUS_COMMUTATIO, "stmt -> 'switch' '(' expr ')' stmt" },
+    /* P36 */ { ARBOR2_NT_SENTENTIA, 4, ARBOR2_NODUS_CASUS, "stmt -> 'case' expr ':' stmt" },
+    /* P37 */ { ARBOR2_NT_SENTENTIA, 3, ARBOR2_NODUS_ORDINARIUS, "stmt -> 'default' ':' stmt" },
+    /* P38 */ { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR_FUNCTI, "declarator -> declarator '(' ')'" },
+    /* P39 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI, "declarator -> declarator '(' 'void' ')'" },
+    /* P40 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR_FUNCTI, "declarator -> declarator '(' params ')'" },
+    /* P41 */ { ARBOR2_NT_PARAMETER_LIST, 1, ARBOR2_NODUS_ERROR, "params -> param" },
+    /* P42 */ { ARBOR2_NT_PARAMETER_LIST, 3, ARBOR2_NODUS_ERROR, "params -> params ',' param" },
+    /* P43 */ { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL, "param -> type declarator" },
+    /* P44 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 3, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> type declarator compound" },
+    /* P45 */ { ARBOR2_NT_STRUCT_SPECIFIER, 5, ARBOR2_NODUS_STRUCT_SPECIFIER, "struct -> 'struct' ID '{' members '}'" },
+    /* P46 */ { ARBOR2_NT_STRUCT_SPECIFIER, 4, ARBOR2_NODUS_STRUCT_SPECIFIER, "struct -> 'struct' '{' members '}'" },
+    /* P47 */ { ARBOR2_NT_STRUCT_SPECIFIER, 2, ARBOR2_NODUS_STRUCT_SPECIFIER, "struct -> 'struct' ID" },
+    /* P48 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO, "members -> type declarator ';'" },
+    /* P49 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "members -> members type declarator ';'" },
+    /* P50 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "UNUSED" },
+    /* P51 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "UNUSED" },
+    /* P52 */ { ARBOR2_NT_STRUCT_SPECIFIER, 5, ARBOR2_NODUS_STRUCT_SPECIFIER, "union -> 'union' ID '{' members '}'" },
+    /* P53 */ { ARBOR2_NT_STRUCT_SPECIFIER, 4, ARBOR2_NODUS_STRUCT_SPECIFIER, "union -> 'union' '{' members '}'" },
+    /* P54 */ { ARBOR2_NT_STRUCT_SPECIFIER, 2, ARBOR2_NODUS_STRUCT_SPECIFIER, "union -> 'union' ID" },
+    /* P55 */ { ARBOR2_NT_ENUM_SPECIFIER, 5, ARBOR2_NODUS_ENUM_SPECIFIER, "enum -> 'enum' ID '{' enums '}'" },
+    /* P56 */ { ARBOR2_NT_ENUM_SPECIFIER, 4, ARBOR2_NODUS_ENUM_SPECIFIER, "enum -> 'enum' '{' enums '}'" },
+    /* P57 */ { ARBOR2_NT_ENUM_SPECIFIER, 2, ARBOR2_NODUS_ENUM_SPECIFIER, "enum -> 'enum' ID" },
+    /* P58 */ { ARBOR2_NT_ENUMERATOR_LIST, 1, ARBOR2_NODUS_ERROR, "enums -> enumerator" },
+    /* P59 */ { ARBOR2_NT_ENUMERATOR_LIST, 3, ARBOR2_NODUS_ERROR, "enums -> enums ',' enumerator" },
+    /* P60 */ { ARBOR2_NT_ENUMERATOR, 1, ARBOR2_NODUS_ENUMERATOR, "enumerator -> ID" },
+    /* P61 */ { ARBOR2_NT_ENUMERATOR, 3, ARBOR2_NODUS_ENUMERATOR, "enumerator -> ID '=' expr" },
+    /* P62 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> type ID ':' expr ';'" },
+    /* P63 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> members type ID ':' expr ';'" },
+    /* P64 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "members -> type ':' expr ';'" },
+    /* P65 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> members type ':' expr ';'" },
+    /* P66 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO, "members -> struct ID ';'" },
+    /* P67 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "members -> struct '*' ID ';'" },
+    /* P68 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "members -> members struct ID ';'" },
+    /* P69 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> members struct '*' ID ';'" },
+    /* P70 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 3, ARBOR2_NODUS_DECLARATIO, "members -> enum ID ';'" },
+    /* P71 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "members -> enum '*' ID ';'" },
+    /* P72 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 4, ARBOR2_NODUS_DECLARATIO, "members -> members enum ID ';'" },
+    /* P73 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> members enum '*' ID ';'" },
+    /* P74 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type ID ';'" },
+    /* P75 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type '*' ID ';'" },
+    /* P76 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' struct ID ';'" },
+    /* P77 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' struct '*' ID ';'" },
+    /* P78 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' enum ID ';'" },
+    /* P79 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' enum '*' ID ';'" },
+    /* P80 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR, "declarator -> declarator '[' expr ']'" },
+    /* P81 */ { ARBOR2_NT_DECLARATOR, 3, ARBOR2_NODUS_DECLARATOR, "declarator -> declarator '[' ']'" },
+    /* P82 */ { ARBOR2_NT_EXPRESSIO, 3, ARBOR2_NODUS_BINARIUM, "expr -> expr '-' term" },
+    /* P83 */ { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM, "term -> term '/' factor" },
+    /* P84 */ { ARBOR2_NT_TERMINUS, 3, ARBOR2_NODUS_BINARIUM, "term -> term '%' factor" },
+    /* P85 */ { ARBOR2_NT_AEQUALITAS, 3, ARBOR2_NODUS_BINARIUM, "equality -> equality '==' comparison" },
+    /* P86 */ { ARBOR2_NT_AEQUALITAS, 3, ARBOR2_NODUS_BINARIUM, "equality -> equality '!=' comparison" },
+    /* P87 */ { ARBOR2_NT_AEQUALITAS, 1, ARBOR2_NODUS_ERROR, "equality -> comparison" },
+    /* P88 */ { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM, "comparison -> comparison '<' shift" },
+    /* P89 */ { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM, "comparison -> comparison '>' shift" },
+    /* P90 */ { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM, "comparison -> comparison '<=' shift" },
+    /* P91 */ { ARBOR2_NT_COMPARATIO, 3, ARBOR2_NODUS_BINARIUM, "comparison -> comparison '>=' shift" },
+    /* P92 */ { ARBOR2_NT_COMPARATIO, 1, ARBOR2_NODUS_ERROR, "comparison -> shift" },
+    /* P93 */ { ARBOR2_NT_DISIUNCTIO, 3, ARBOR2_NODUS_BINARIUM, "or -> or '||' and" },
+    /* P94 */ { ARBOR2_NT_DISIUNCTIO, 1, ARBOR2_NODUS_ERROR, "or -> and" },
+    /* P95 */ { ARBOR2_NT_CONIUNCTIO, 3, ARBOR2_NODUS_BINARIUM, "and -> and '&&' equality" },
+    /* P96 */ { ARBOR2_NT_CONIUNCTIO, 1, ARBOR2_NODUS_ERROR, "and -> equality" },
+    /* P97 */ { ARBOR2_NT_TRANSLATIO, 3, ARBOR2_NODUS_BINARIUM, "shift -> shift '<<' expr" },
+    /* P98 */ { ARBOR2_NT_TRANSLATIO, 3, ARBOR2_NODUS_BINARIUM, "shift -> shift '>>' expr" },
+    /* P99 */ { ARBOR2_NT_TRANSLATIO, 1, ARBOR2_NODUS_ERROR, "shift -> expr" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
