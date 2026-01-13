@@ -8764,3 +8764,86 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         ordinarius:                       redde "IGNOTUM";
     }
 }
+
+/*
+ * Obtinere list of expected tokens for a state.
+ * Returns comma-separated string of token names, or NIHIL if invalid state.
+ */
+chorda*
+arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status)
+{
+    constans Arbor2StatusInfo* info;
+    character* buffer;
+    i32 buffer_size;
+    i32 offset;
+    i32 i;
+    b32 first;
+    chorda* result;
+    i32 num_states;
+
+    num_states = (i32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+
+    si (status < ZEPHYRUM || status >= (s32)num_states)
+    {
+        redde NIHIL;
+    }
+
+    info = &STATUS_TABULA_PARTIAL[status];
+    si (info->actiones == NIHIL || info->numerus == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    /* Allocate buffer for result (generous size) */
+    buffer_size = 1024;
+    buffer = piscina_allocare(piscina, (memoriae_index)buffer_size);
+    si (buffer == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    offset = ZEPHYRUM;
+    first = VERUM;
+
+    per (i = ZEPHYRUM; (s32)i < info->numerus && offset < buffer_size - 32; i++)
+    {
+        constans Arbor2TabulaActio* actio = &info->actiones[i];
+
+        /* Skip ERROR actions */
+        si (actio->actio == ARBOR2_ACTIO_ERROR)
+        {
+            perge;
+        }
+
+        /* Get token name */
+        {
+            constans character* token_nomen = arbor2_lexema_genus_nomen(actio->lexema);
+
+            /* Add separator */
+            si (!first)
+            {
+                buffer[offset++] = ',';
+                buffer[offset++] = ' ';
+            }
+            first = FALSUM;
+
+            /* Copy token name */
+            dum (*token_nomen != '\0' && offset < buffer_size - I)
+            {
+                buffer[offset++] = *token_nomen++;
+            }
+        }
+    }
+
+    buffer[offset] = '\0';
+
+    /* Create chorda result */
+    result = piscina_allocare(piscina, (memoriae_index)magnitudo(chorda));
+    si (result != NIHIL)
+    {
+        result->datum = (i8*)buffer;
+        result->mensura = offset;
+    }
+
+    redde result;
+}

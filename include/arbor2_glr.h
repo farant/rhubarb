@@ -530,4 +530,7 @@ constans Arbor2StatusInfo* arbor2_tabula_obtinere_status_info(i32 status);
 /* Validate table integrity (debug builds) */
 b32 arbor2_glr_validare_tabulas(vacuum);
 
+/* Get expected tokens for a state (for error messages) */
+chorda* arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status);
+
 #endif /* ARBOR2_GLR_H */

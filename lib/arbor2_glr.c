@@ -4,12 +4,10 @@
 #include "piscina.h"
 #include "xar.h"
 #include <string.h>
+#include <stdio.h>
 
 /* Debug flag - set to 1 to enable tracing */
 #define GLR_DEBUG 0
-#if GLR_DEBUG
-#include <stdio.h>
-#endif
 
 /* ==================================================
  * Internal Forward Declarations
@@ -2030,7 +2028,58 @@ arbor2_glr_parsere_expressio(
         }
         alioquin
         {
-            /* No shifts possible - clear active frontier to avoid infinite loop */
+            /* No shifts possible - report error with expected tokens */
+            si (xar_numerus(glr->frons_activa) > ZEPHYRUM)
+            {
+                Arbor2GSSNodus** nodus_ptr;
+                Arbor2GSSNodus* nodus_err;
+                Arbor2Token* lexema_err;
+                chorda* exspectata;
+                character* error_msg;
+                i32 msg_len;
+                chorda** slot;
+                constans character* token_nomen;
+
+                nodus_ptr = xar_obtinere(glr->frons_activa, ZEPHYRUM);
+                nodus_err = *nodus_ptr;
+
+                lexema_err = _currens_lexema(glr);
+                token_nomen = lexema_err != NIHIL ?
+                    arbor2_lexema_genus_nomen(lexema_err->lexema->genus) : "EOF";
+
+                exspectata = arbor2_glr_exspectata_pro_statu(
+                    glr->piscina, nodus_err->status);
+
+                /* Build error message */
+                si (exspectata != NIHIL && exspectata->mensura > ZEPHYRUM)
+                {
+                    /* "Unexpected TOKEN, expected: ..." */
+                    msg_len = 32 + (i32)strlen(token_nomen) + exspectata->mensura;
+                    error_msg = piscina_allocare(glr->piscina, (memoriae_index)msg_len);
+                    si (error_msg != NIHIL)
+                    {
+                        chorda* err_chorda;
+                        i32 written;
+
+                        written = (i32)snprintf(error_msg, (size_t)msg_len,
+                            "Inexpectatum %s, exspectata: %.*s",
+                            token_nomen,
+                            exspectata->mensura, (constans character*)exspectata->datum);
+
+                        err_chorda = piscina_allocare(glr->piscina,
+                            (memoriae_index)magnitudo(chorda));
+                        si (err_chorda != NIHIL)
+                        {
+                            err_chorda->datum = (i8*)error_msg;
+                            err_chorda->mensura = written;
+
+                            slot = xar_addere(glr->errores);
+                            *slot = err_chorda;
+                        }
+                    }
+                }
+            }
+
             xar_vacare(glr->frons_activa);
             frange;
         }
