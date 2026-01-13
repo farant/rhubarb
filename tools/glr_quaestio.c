@@ -1699,6 +1699,9 @@ imprimere_auxilium(vacuum)
     printf("  glr_quaestio conflicts      Find shift/reduce conflicts\n");
     printf("  glr_quaestio clone <S> <T>  Generate entries for T based on S\n");
     printf("  glr_quaestio analyze-level <NT> <OP>  Document precedence level structure\n");
+    printf("  glr_quaestio checklist      Complete checklist for adding precedence level\n");
+    printf("  glr_quaestio expr-states    List expression-context states needing GOTOs\n");
+    printf("  glr_quaestio chain-states   List reduction chain states\n");
     printf("  glr_quaestio stats          Show table statistics\n");
     printf("  glr_quaestio tokens         List all known tokens\n");
     printf("  glr_quaestio nts            List all known non-terminals\n");
@@ -2139,6 +2142,363 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
     redde ZEPHYRUM;
 }
 
+/* ==================================================
+ * Command: checklist - Complete checklist for adding a new precedence level
+ *
+ * Usage: glr_quaestio checklist
+ *
+ * Outputs everything you need to check/modify when adding a new
+ * precedence level, based on lessons learned from implementing
+ * bitwise operators.
+ * ================================================== */
+
+interior integer
+cmd_checklist(vacuum)
+{
+    i32 i;
+    i32 expression_context_states[32];
+    i32 expr_ctx_count;
+    i32 basic_states[] = { 1, 2, 3, 4, 5 };
+    i32 basic_count;
+
+    si (g_goto_tabula == NIHIL || g_actio_tabula == NIHIL)
+    {
+        fprintf(stderr, "Error: Tabulae non parsitae\n");
+        redde I;
+    }
+
+    printf("=============================================================\n");
+    printf("CHECKLIST: Adding a New Precedence Level\n");
+    printf("=============================================================\n\n");
+
+    printf("This checklist is based on implementing bitwise operators\n");
+    printf("(&, |, ^) and unary operators (~, !). Follow each section.\n\n");
+
+    /* Section 1: Expression-context states (states with GOTO for EXPR/FACTOR) */
+    printf("## 1. EXPRESSION-CONTEXT STATES\n\n");
+    printf("These states can start an expression and need GOTO entries\n");
+    printf("for your new non-terminal.\n\n");
+
+    /* Find states that have GOTO entries for INT_NT_EXPR (0) - these are expr contexts */
+    expr_ctx_count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < g_goto_numerus; i++)
+    {
+        si (g_goto_tabula[i].nt == INT_NT_EXPR)
+        {
+            /* Check if we already have this state */
+            b32 found = FALSUM;
+            i32 j;
+            per (j = ZEPHYRUM; j < expr_ctx_count; j++)
+            {
+                si (expression_context_states[j] == g_goto_tabula[i].status)
+                {
+                    found = VERUM;
+                    frange;
+                }
+            }
+            si (!found && expr_ctx_count < 32)
+            {
+                expression_context_states[expr_ctx_count] = g_goto_tabula[i].status;
+                expr_ctx_count++;
+            }
+        }
+    }
+
+    printf("States with GOTO(EXPR) - add GOTO for your new NT to these:\n");
+    printf("  ");
+    per (i = ZEPHYRUM; i < expr_ctx_count; i++)
+    {
+        printf("%d", expression_context_states[i]);
+        si (i < expr_ctx_count - I)
+        {
+            printf(", ");
+        }
+    }
+    printf("\n\n");
+
+    printf("For each of these states, add:\n");
+    printf("```c\n");
+    printf("{ INT_NT_YOUR_NEW_NT, <after-nt-state> },\n");
+    printf("```\n\n");
+
+    /* Section 2: Basic expression states */
+    printf("## 2. BASIC EXPRESSION STATES (1-5)\n\n");
+    printf("These states handle the simplest expressions (identifier,\n");
+    printf("integer, after-paren, deref, addr-of). They need REDUCE\n");
+    printf("entries for ANY new binary operator.\n\n");
+
+    basic_count = (i32)(magnitudo(basic_states) / magnitudo(basic_states[ZEPHYRUM]));
+    printf("States: ");
+    per (i = ZEPHYRUM; i < basic_count; i++)
+    {
+        printf("%d", basic_states[i]);
+        si (i < basic_count - I)
+        {
+            printf(", ");
+        }
+    }
+    printf("\n\n");
+
+    printf("For each state, add:\n");
+    printf("```c\n");
+    printf("{ ARBOR2_LEXEMA_YOUR_OP, ARBOR2_ACTIO_REDUCE, P<factor-rule>, FALSUM },\n");
+    printf("```\n\n");
+
+    /* Section 3: Reduction chain states */
+    printf("## 3. REDUCTION CHAIN STATES\n\n");
+    printf("These are 'after higher-precedence NT' states that need\n");
+    printf("REDUCE entries for lower-precedence operators.\n\n");
+
+    printf("Current chain (find via STATUS_TABULA_PARTIAL descriptions):\n");
+    printf("```\n");
+    printf("DISIUNCTIO (||) <- lowest precedence\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("CONIUNCTIO (&&)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("PIPA_BITWISE (|)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("CARET_BITWISE (^)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("AMPERSAND_BITWISE (&)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("AEQUALITAS (== !=)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("COMPARATIO (< > <= >=)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("TRANSLATIO (<< >>)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("EXPRESSIO (+ -)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("TERMINUS (* / %%)\n");
+    printf("  |\n");
+    printf("  v\n");
+    printf("FACTOR <- highest precedence\n");
+    printf("```\n\n");
+
+    printf("Find 'after <NT>' states in STATUS_TABULA_PARTIAL and ensure\n");
+    printf("they have REDUCE entries for your new operators.\n\n");
+
+    printf("Key states from last implementation:\n");
+    printf("  - State 264: after TRANSLATIO - needed PIPA/CARET/AMPERSAND\n");
+    printf("  - State 239: after COMPARATIO - needed PIPA/CARET/AMPERSAND\n\n");
+
+    /* Section 4: NT mapping switch */
+    printf("## 4. NT MAPPING SWITCH\n\n");
+    printf("CRITICAL: In arbor2_glr.c, the function arbor2_glr_quaerere_goto\n");
+    printf("has a switch statement that maps ARBOR2_NT_* to INT_NT_* values.\n\n");
+
+    printf("You MUST add a case for your new NT:\n");
+    printf("```c\n");
+    printf("casus ARBOR2_NT_YOUR_NEW_NT:\n");
+    printf("    nt_internus = INT_NT_YOUR_NEW_NT;\n");
+    printf("    frange;\n");
+    printf("```\n\n");
+
+    printf("Without this, GOTO lookups will return -1 and parsing fails!\n\n");
+
+    /* Section 5: Unary operators */
+    printf("## 5. UNARY OPERATORS (special handling)\n\n");
+    printf("Unary operators (~, !) need DEDICATED states, NOT state 10!\n");
+    printf("State 10 is for binary * / %% context.\n\n");
+
+    printf("For a new unary operator:\n");
+    printf("```c\n");
+    printf("/* State N: after unary-op - expects factor starters */\n");
+    printf("hic_manens constans Arbor2TabulaActio STATUS_N_ACTIONES[] = {\n");
+    printf("    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT,   4, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_INTEGER,       ARBOR2_ACTIO_SHIFT,   5, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_PAREN_APERTA,  ARBOR2_ACTIO_SHIFT,   6, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_ASTERISCUS,    ARBOR2_ACTIO_SHIFT,   7, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_AMPERSAND,     ARBOR2_ACTIO_SHIFT,   8, FALSUM },\n");
+    printf("    /* Recursive unary ops: */\n");
+    printf("    { ARBOR2_LEXEMA_YOUR_UNARY_OP, ARBOR2_ACTIO_SHIFT,   N, FALSUM },\n");
+    printf("};\n");
+    printf("\n");
+    printf("/* GOTO: after reducing to FACTOR */\n");
+    printf("hic_manens constans Arbor2StatusGotoEntry STATUS_N_GOTO[] = {\n");
+    printf("    { INT_NT_FACTOR, N+1 }  /* goes to reduction state */\n");
+    printf("};\n");
+    printf("\n");
+    printf("/* State N+1: after FACTOR in unary context - reduce P_NEW */\n");
+    printf("hic_manens constans Arbor2TabulaActio STATUS_N1_ACTIONES[] = {\n");
+    printf("    /* All operators trigger REDUCE P_NEW (factor -> unary-op factor) */\n");
+    printf("    { ARBOR2_LEXEMA_PLUS,    ARBOR2_ACTIO_REDUCE, P_NEW, FALSUM },\n");
+    printf("    /* ... all operators ... */\n");
+    printf("};\n");
+    printf("```\n\n");
+
+    printf("Then update ALL expression-starter states to shift the new\n");
+    printf("unary operator to state N instead of state 10!\n\n");
+
+    /* Section 6: Files checklist */
+    printf("## 6. FILES TO MODIFY\n\n");
+
+    printf("[ ] include/arbor2_glr.h\n");
+    printf("    - Add NT to Arbor2NonTerminalis enum\n\n");
+
+    printf("[ ] lib/arbor2_glr_tabula.c\n");
+    printf("    - Add #define INT_NT_* for new NT\n");
+    printf("    - Add rules to REGULAE[]\n");
+    printf("    - Create 'after NT' and 'after OP' states\n");
+    printf("    - Add GOTO entries to expression-context states\n");
+    printf("    - Add REDUCE entries to basic states 1-5\n");
+    printf("    - Add REDUCE entries to reduction-chain states\n");
+    printf("    - Update STATUS_TABULA_PARTIAL with new states\n\n");
+
+    printf("[ ] lib/arbor2_glr.c\n");
+    printf("    - Add case to NT mapping switch in arbor2_glr_quaerere_goto\n\n");
+
+    printf("[ ] probationes/probatio_arbor2_glr.c\n");
+    printf("    - Add tests for new operator(s)\n");
+    printf("    - Add precedence tests\n\n");
+
+    /* Section 7: Testing */
+    printf("## 7. TESTING\n\n");
+    printf("./compile_tests.sh arbor2_glr  - run parser tests\n");
+    printf("./glr_debug.sh \"a OP b\"        - test simple expression\n");
+    printf("./glr_debug.sh \"a OP b OP2 c\"  - test precedence\n");
+    printf("./glr_quaestio.sh stats        - verify state/rule counts\n\n");
+
+    printf("=============================================================\n");
+    printf("Checklist complete. Good luck!\n");
+    printf("=============================================================\n");
+
+    redde ZEPHYRUM;
+}
+
+/* ==================================================
+ * Command: expr-states - List all expression-context states
+ *
+ * These are states that can start parsing an expression and
+ * thus need GOTO entries for expression-level NTs.
+ * ================================================== */
+
+interior integer
+cmd_expr_states(vacuum)
+{
+    i32 i;
+    i32 j;
+    i32 expression_context_states[64];
+    i32 expr_ctx_count;
+    constans character* desc;
+
+    si (g_goto_tabula == NIHIL)
+    {
+        fprintf(stderr, "Error: GOTO tabula non parsita\n");
+        redde I;
+    }
+
+    /* Find states that have GOTO entries for INT_NT_EXPR */
+    expr_ctx_count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < g_goto_numerus; i++)
+    {
+        si (g_goto_tabula[i].nt == INT_NT_EXPR)
+        {
+            /* Check if we already have this state */
+            b32 found = FALSUM;
+            per (j = ZEPHYRUM; j < expr_ctx_count; j++)
+            {
+                si (expression_context_states[j] == g_goto_tabula[i].status)
+                {
+                    found = VERUM;
+                    frange;
+                }
+            }
+            si (!found && expr_ctx_count < 64)
+            {
+                expression_context_states[expr_ctx_count] = g_goto_tabula[i].status;
+                expr_ctx_count++;
+            }
+        }
+    }
+
+    printf("Expression-Context States (%d found):\n\n", expr_ctx_count);
+    printf("These states can begin parsing an expression and need\n");
+    printf("GOTO entries for any new expression-level non-terminal.\n\n");
+
+    printf("| State | Description |\n");
+    printf("|-------|-------------|\n");
+
+    per (i = ZEPHYRUM; i < expr_ctx_count; i++)
+    {
+        desc = obtinere_status_descriptio(expression_context_states[i]);
+        printf("| %5d | %s |\n",
+               expression_context_states[i],
+               desc != NIHIL ? desc : "(no description)");
+    }
+
+    printf("\n");
+    printf("When adding a new NT at expression level, add GOTO entries\n");
+    printf("to ALL of these states!\n");
+
+    redde ZEPHYRUM;
+}
+
+/* ==================================================
+ * Command: chain-states - List reduction chain states
+ *
+ * Shows 'after NT' states that form the precedence reduction chain.
+ * ================================================== */
+
+interior integer
+cmd_chain_states(vacuum)
+{
+    i32 i;
+    constans character* desc;
+    i32 chain_states[64];
+    i32 chain_count;
+
+    si (g_status_desc_tabula == NIHIL)
+    {
+        fprintf(stderr, "Error: STATUS_TABULA descriptiones non parsitae\n");
+        redde I;
+    }
+
+    printf("Reduction Chain States:\n\n");
+    printf("These are 'after NT' states that may need REDUCE entries\n");
+    printf("for lower-precedence operators.\n\n");
+
+    printf("| State | Description |\n");
+    printf("|-------|-------------|\n");
+
+    chain_count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < g_status_desc_numerus; i++)
+    {
+        desc = g_status_desc_tabula[i].descriptio;
+        si (desc != NIHIL && strstr(desc, "after ") != NIHIL)
+        {
+            /* Check if it's an "after <NT>" pattern (not "after op") */
+            si (strstr(desc, "after '") == NIHIL &&
+                strstr(desc, "after FACTOR") == NIHIL)
+            {
+                printf("| %5d | %s |\n",
+                       g_status_desc_tabula[i].status,
+                       desc);
+                si (chain_count < 64)
+                {
+                    chain_states[chain_count] = g_status_desc_tabula[i].status;
+                    chain_count++;
+                }
+            }
+        }
+    }
+
+    printf("\nTotal: %d chain states\n", chain_count);
+    printf("\nWhen inserting a new precedence level, states for levels\n");
+    printf("ABOVE your new level need REDUCE entries for your new operator.\n");
+
+    redde ZEPHYRUM;
+}
+
 interior integer
 cmd_conflicts(vacuum)
 {
@@ -2358,6 +2718,21 @@ integer principale(integer argc, constans character* constans* argv)
     si (strcmp(argv[I], "conflicts") == ZEPHYRUM)
     {
         redde cmd_conflicts();
+    }
+
+    si (strcmp(argv[I], "checklist") == ZEPHYRUM)
+    {
+        redde cmd_checklist();
+    }
+
+    si (strcmp(argv[I], "expr-states") == ZEPHYRUM)
+    {
+        redde cmd_expr_states();
+    }
+
+    si (strcmp(argv[I], "chain-states") == ZEPHYRUM)
+    {
+        redde cmd_chain_states();
     }
 
     si (argc < III)

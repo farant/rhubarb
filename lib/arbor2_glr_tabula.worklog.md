@@ -75,3 +75,46 @@ Shows 27 states that need PIPA entries (based on DUAMPERSAND pattern), but the S
 - Total rules: 108 (was 106)
 - All 725 parser tests pass
 - All 75 project tests pass
+
+## 2026-01-13: glr_quaestio Tool Improvements
+
+### New Commands Added:
+
+Based on lessons learned from implementing bitwise operators, added three new commands to `tools/glr_quaestio.c`:
+
+1. **`checklist`** - Complete checklist for adding a new precedence level
+   - Lists all expression-context states needing GOTO entries
+   - Documents basic states 1-5 needing REDUCE entries
+   - Shows the full precedence chain diagram
+   - Documents the NT mapping switch requirement (CRITICAL!)
+   - Explains unary operator handling (dedicated states, not state 10)
+   - Provides file checklist and testing commands
+
+2. **`expr-states`** - Lists all expression-context states
+   - Finds states with GOTO(EXPR) entries
+   - Shows descriptions from STATUS_TABULA_PARTIAL
+   - Found 41 such states in current grammar
+
+3. **`chain-states`** - Lists reduction chain states
+   - Finds "after NT" states from descriptions
+   - Shows states that may need REDUCE entries for new operators
+   - Found 64 such states
+
+### Key Insights Documented:
+
+1. **Expression-context states**: Not just state 0! All states that can start an expression need GOTO entries for new NTs: 0, 6, 26, 31, 33, 35, 40, 42, 45, 48, 54, 57, 60, 63, 70, 77, 80, 82, 84, 86, 89, etc.
+
+2. **Reduction chain**: States 264 (after TRANSLATIO) and 239 (after COMPARATIO) needed REDUCE entries for bitwise operators to chain properly.
+
+3. **NT mapping switch**: `arbor2_glr_quaerere_goto` has a switch that maps ARBOR2_NT_* to INT_NT_*. Missing cases cause GOTO lookups to return -1!
+
+4. **Unary operators**: Need dedicated states with GOTO(FACTOR). State 10 is binary multiplication context - NOT for unary ops!
+
+5. **Basic states 1-5**: Always need REDUCE entries for any new binary operator.
+
+### Usage:
+```bash
+./glr_quaestio.sh checklist      # Full guide for adding precedence levels
+./glr_quaestio.sh expr-states    # List states needing GOTO entries
+./glr_quaestio.sh chain-states   # List reduction chain states
+```
