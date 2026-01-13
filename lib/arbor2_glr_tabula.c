@@ -138,11 +138,27 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P92 */ { ARBOR2_NT_COMPARATIO, 1, ARBOR2_NODUS_ERROR, "comparison -> shift" },
     /* P93 */ { ARBOR2_NT_DISIUNCTIO, 3, ARBOR2_NODUS_BINARIUM, "or -> or '||' and" },
     /* P94 */ { ARBOR2_NT_DISIUNCTIO, 1, ARBOR2_NODUS_ERROR, "or -> and" },
-    /* P95 */ { ARBOR2_NT_CONIUNCTIO, 3, ARBOR2_NODUS_BINARIUM, "and -> and '&&' equality" },
-    /* P96 */ { ARBOR2_NT_CONIUNCTIO, 1, ARBOR2_NODUS_ERROR, "and -> equality" },
+    /* P95 */ { ARBOR2_NT_CONIUNCTIO, 3, ARBOR2_NODUS_BINARIUM, "and -> and '&&' pipa_bitwise" },
+    /* P96 */ { ARBOR2_NT_CONIUNCTIO, 1, ARBOR2_NODUS_ERROR, "and -> pipa_bitwise" },
     /* P97 */ { ARBOR2_NT_TRANSLATIO, 3, ARBOR2_NODUS_BINARIUM, "shift -> shift '<<' expr" },
     /* P98 */ { ARBOR2_NT_TRANSLATIO, 3, ARBOR2_NODUS_BINARIUM, "shift -> shift '>>' expr" },
-    /* P99 */ { ARBOR2_NT_TRANSLATIO, 1, ARBOR2_NODUS_ERROR, "shift -> expr" }
+    /* P99 */ { ARBOR2_NT_TRANSLATIO, 1, ARBOR2_NODUS_ERROR, "shift -> expr" },
+
+    /* Bitwise OR (|) - between && and ^ */
+    /* P100 */ { ARBOR2_NT_PIPA_BITWISE, 3, ARBOR2_NODUS_BINARIUM, "pipa_bitwise -> pipa_bitwise '|' caret_bitwise" },
+    /* P101 */ { ARBOR2_NT_PIPA_BITWISE, 1, ARBOR2_NODUS_ERROR, "pipa_bitwise -> caret_bitwise" },
+
+    /* Bitwise XOR (^) - between | and & */
+    /* P102 */ { ARBOR2_NT_CARET_BITWISE, 3, ARBOR2_NODUS_BINARIUM, "caret_bitwise -> caret_bitwise '^' ampersand_bitwise" },
+    /* P103 */ { ARBOR2_NT_CARET_BITWISE, 1, ARBOR2_NODUS_ERROR, "caret_bitwise -> ampersand_bitwise" },
+
+    /* Bitwise AND (&) - between ^ and == */
+    /* P104 */ { ARBOR2_NT_AMPERSAND_BITWISE, 3, ARBOR2_NODUS_BINARIUM, "ampersand_bitwise -> ampersand_bitwise '&' aequalitas" },
+    /* P105 */ { ARBOR2_NT_AMPERSAND_BITWISE, 1, ARBOR2_NODUS_ERROR, "ampersand_bitwise -> aequalitas" },
+
+    /* Unary operators (bitwise NOT and logical NOT) */
+    /* P106 */ { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM, "factor -> '~' factor" },
+    /* P107 */ { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_UNARIUM, "factor -> '!' factor" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -196,6 +212,9 @@ hic_manens constans Arbor2TabulaActio STATUS_1_ACTIONES[] = {
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
@@ -222,6 +241,9 @@ hic_manens constans Arbor2TabulaActio STATUS_2_ACTIONES[] = {
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE,  2, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE,  2, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE,  2, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  2, FALSUM },
@@ -248,6 +270,9 @@ hic_manens constans Arbor2TabulaActio STATUS_3_ACTIONES[] = {
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE,  4, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE,  4, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE,  4, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  4, FALSUM },
@@ -276,6 +301,9 @@ hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* bitwise OR */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* bitwise XOR */
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* bitwise AND */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  5, FALSUM },
@@ -304,6 +332,9 @@ hic_manens constans Arbor2TabulaActio STATUS_5_ACTIONES[] = {
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE,  6, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE,  6, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE,  6, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  6, FALSUM },
@@ -2813,6 +2844,9 @@ hic_manens constans Arbor2TabulaActio STATUS_239_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 87, FALSUM },
@@ -2820,14 +2854,17 @@ hic_manens constans Arbor2TabulaActio STATUS_239_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 87, FALSUM }
 };
 
-/* State 240: after aequalitas at top-level - reduce to coniunctio or continue */
+/* State 240: after aequalitas at top-level - reduce P105 to ampersand_bitwise or continue */
 hic_manens constans Arbor2TabulaActio STATUS_240_ACTIONES[] = {
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96, FALSUM },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96, FALSUM },
-    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 96, FALSUM },
-    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 96, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },  /* bitwise AND */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 105, FALSUM },  /* bitwise XOR */
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 105, FALSUM },  /* bitwise OR */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
 /* State 241: after 'comparatio <|>|<=|>=' - expect expression starters */
@@ -3066,6 +3103,9 @@ hic_manens constans Arbor2TabulaActio STATUS_264_ACTIONES[] = {
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 92, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 92, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 92, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 92, FALSUM },
@@ -3120,6 +3160,349 @@ hic_manens constans Arbor2TabulaActio STATUS_267_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 88, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 88, FALSUM },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 88, FALSUM }
+};
+
+/* ==================================================
+ * States 268-273: Bitwise operator states (top-level context)
+ * ================================================== */
+
+/* State 268: after AMPERSAND_BITWISE at top-level - shift & or reduce P103 */
+hic_manens constans Arbor2TabulaActio STATUS_268_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT, 269, FALSUM },  /* bitwise AND */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 103, FALSUM }, /* reduce to caret_bitwise */
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 103, FALSUM }
+};
+
+/* State 269: after '&' bitwise - expect expression starters */
+hic_manens constans Arbor2TabulaActio STATUS_269_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 270: after CARET_BITWISE at top-level - shift ^ or reduce P101 */
+hic_manens constans Arbor2TabulaActio STATUS_270_ACTIONES[] = {
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_SHIFT, 271, FALSUM },  /* bitwise XOR */
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 101, FALSUM }, /* reduce to pipa_bitwise */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 101, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 101, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 101, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 101, FALSUM }
+};
+
+/* State 271: after '^' bitwise - expect expression starters */
+hic_manens constans Arbor2TabulaActio STATUS_271_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 272: after PIPA_BITWISE at top-level - shift | or reduce P96 */
+hic_manens constans Arbor2TabulaActio STATUS_272_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_SHIFT, 273, FALSUM },  /* bitwise OR */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 96, FALSUM },  /* reduce to coniunctio */
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 96, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96, FALSUM }
+};
+
+/* State 273: after '|' bitwise - expect expression starters */
+hic_manens constans Arbor2TabulaActio STATUS_273_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 274: after aequalitas in '&' context - reduce P104 or continue == */
+hic_manens constans Arbor2TabulaActio STATUS_274_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 104, FALSUM },  /* complete P104 */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 104, FALSUM }
+};
+
+/* State 275: after aequalitas in '^' context - reduce P105 to ampersand_bitwise */
+hic_manens constans Arbor2TabulaActio STATUS_275_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },  /* reduce to ampersand_bitwise */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 105, FALSUM }
+};
+
+/* State 276: after ampersand_bitwise in '^' context - shift & or reduce P102 */
+hic_manens constans Arbor2TabulaActio STATUS_276_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT, 280, FALSUM },  /* nested & */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 102, FALSUM }, /* complete P102 */
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 102, FALSUM }
+};
+
+/* State 277: after aequalitas in '|' context - reduce P105 to ampersand_bitwise */
+hic_manens constans Arbor2TabulaActio STATUS_277_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 105, FALSUM }
+};
+
+/* State 278: after ampersand_bitwise in '|' context - shift & or reduce P103 */
+hic_manens constans Arbor2TabulaActio STATUS_278_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT, 281, FALSUM },  /* nested & */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 103, FALSUM }, /* reduce to caret_bitwise */
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 103, FALSUM }
+};
+
+/* State 279: after caret_bitwise in '|' context - shift ^ or reduce P100 */
+hic_manens constans Arbor2TabulaActio STATUS_279_ACTIONES[] = {
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_SHIFT, 282, FALSUM },  /* nested ^ */
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 100, FALSUM }, /* complete P100 */
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 100, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 100, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 100, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 100, FALSUM }
+};
+
+/* States 280-282: Expression starters for nested bitwise within bitwise */
+
+/* State 280: after '&' within '^' context */
+hic_manens constans Arbor2TabulaActio STATUS_280_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 281: after '&' within '|' context */
+hic_manens constans Arbor2TabulaActio STATUS_281_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 282: after '^' within '|' context */
+hic_manens constans Arbor2TabulaActio STATUS_282_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 283: after aequalitas within '& in ^' context - reduce P104 */
+hic_manens constans Arbor2TabulaActio STATUS_283_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 104, FALSUM }
+};
+
+/* State 284: after aequalitas within '& in |' context - reduce P104 */
+hic_manens constans Arbor2TabulaActio STATUS_284_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 104, FALSUM }
+};
+
+/* State 285: after aequalitas within '^ in |' context - reduce P105 */
+hic_manens constans Arbor2TabulaActio STATUS_285_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 105, FALSUM }
+};
+
+/* State 286: after ampersand_bitwise within '^ in |' context - shift & or reduce P102 */
+hic_manens constans Arbor2TabulaActio STATUS_286_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT, 287, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 102, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 102, FALSUM }
+};
+
+/* State 287: after '&' within '^ in |' context - expression starters */
+hic_manens constans Arbor2TabulaActio STATUS_287_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }
+};
+
+/* State 288: after aequalitas within '& in ^ in |' context - reduce P104 */
+hic_manens constans Arbor2TabulaActio STATUS_288_ACTIONES[] = {
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 104, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 104, FALSUM }
+};
+
+/* States 289-292: Unary operators ~ and ! */
+
+/* State 289: after '~' - expects factor starters */
+hic_manens constans Arbor2TabulaActio STATUS_289_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 290: after '~' factor - reduce P106 */
+hic_manens constans Arbor2TabulaActio STATUS_290_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 106, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 106, FALSUM }
+};
+
+/* State 291: after '!' - expects factor starters */
+hic_manens constans Arbor2TabulaActio STATUS_291_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 292: after '!' factor - reduce P107 */
+hic_manens constans Arbor2TabulaActio STATUS_292_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 107, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 107, FALSUM }
 };
 
 /* ==================================================
@@ -3405,7 +3788,34 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(264, "after translatio - reduce P92 or continue shift"),
     STATUS_INFO(265, "after translatio << or >> - expect expression"),
     STATUS_INFO(266, "after translatio << expression - reduce P97 or cont"),
-    STATUS_INFO(267, "after translatio in 'comparatio <' - reduce P88")
+    STATUS_INFO(267, "after translatio in 'comparatio <' - reduce P88"),
+    /* States 268-288: Bitwise operator states */
+    STATUS_INFO(268, "after AMPERSAND_BITWISE top-level - shift & or P103"),
+    STATUS_INFO(269, "after '&' bitwise top-level - expr starters"),
+    STATUS_INFO(270, "after CARET_BITWISE top-level - shift ^ or P101"),
+    STATUS_INFO(271, "after '^' bitwise top-level - expr starters"),
+    STATUS_INFO(272, "after PIPA_BITWISE top-level - shift | or P96"),
+    STATUS_INFO(273, "after '|' bitwise top-level - expr starters"),
+    STATUS_INFO(274, "after aequalitas in & context - P104 or =="),
+    STATUS_INFO(275, "after aequalitas in ^ context - P105 or =="),
+    STATUS_INFO(276, "after ampersand_bitwise in ^ context - & or P102"),
+    STATUS_INFO(277, "after aequalitas in | context - P105 or =="),
+    STATUS_INFO(278, "after ampersand_bitwise in | context - & or P103"),
+    STATUS_INFO(279, "after caret_bitwise in | context - ^ or P100"),
+    STATUS_INFO(280, "after & within ^ context - expr starters"),
+    STATUS_INFO(281, "after & within | context - expr starters"),
+    STATUS_INFO(282, "after ^ within | context - expr starters"),
+    STATUS_INFO(283, "after aequalitas in & in ^ - P104 or =="),
+    STATUS_INFO(284, "after aequalitas in & in | - P104 or =="),
+    STATUS_INFO(285, "after aequalitas in ^ in | - P105 or =="),
+    STATUS_INFO(286, "after ampersand_bitwise in ^ in | - & or P102"),
+    STATUS_INFO(287, "after & in ^ in | context - expr starters"),
+    STATUS_INFO(288, "after aequalitas in & in ^ in | - P104 or =="),
+    /* States 289-292: Unary ~ and ! operators */
+    STATUS_INFO(289, "after ~ - expects factor starters"),
+    STATUS_INFO(290, "after ~ factor - reduce P106"),
+    STATUS_INFO(291, "after ! - expects factor starters"),
+    STATUS_INFO(292, "after ! factor - reduce P107")
 };
 
 /* ==================================================
@@ -3467,6 +3877,9 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 #define INT_NT_CONIUNCTIO    24
 #define INT_NT_DISIUNCTIO    25
 #define INT_NT_TRANSLATIO    26
+#define INT_NT_PIPA_BITWISE  27
+#define INT_NT_CARET_BITWISE 28
+#define INT_NT_AMPERSAND_BITWISE 29
 
 /* ==================================================
  * Per-State GOTO Arrays (Phase 4 refactor)
@@ -3477,13 +3890,16 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 
 /* State 0: initial - expects expression/declaration/statement */
 hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
     { INT_NT_DECLARATIO,  21 },
     { INT_NT_SENTENTIA,   24 },
     { INT_NT_CORPUS,      29 },
@@ -3553,20 +3969,23 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_25_GOTO[] = {
 
 /* State 26: inside compound, after expression components */
 hic_manens constans Arbor2StatusGotoEntry STATUS_26_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   28 },
-    { INT_NT_CORPUS,      29 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        28 },
+    { INT_NT_CORPUS,           29 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 31: after 'if (' - expression components */
@@ -3583,38 +4002,44 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_31_GOTO[] = {
 
 /* State 33: after 'if ( expr )' - then-branch statement */
 hic_manens constans Arbor2StatusGotoEntry STATUS_33_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   34 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        34 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 35: after 'if ( expr ) stmt else' - else-branch statement */
 hic_manens constans Arbor2StatusGotoEntry STATUS_35_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   36 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        36 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 40: after 'while (' - condition expression */
@@ -3631,38 +4056,44 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_40_GOTO[] = {
 
 /* State 42: after 'while ( expr )' - loop body */
 hic_manens constans Arbor2StatusGotoEntry STATUS_42_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   43 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        43 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 45: after 'do' - loop body */
 hic_manens constans Arbor2StatusGotoEntry STATUS_45_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   46 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        46 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 48: after 'do stmt while (' - condition expression */
@@ -3710,20 +4141,23 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_60_GOTO[] = {
 
 /* State 63: after 'for ( ... )' - loop body */
 hic_manens constans Arbor2StatusGotoEntry STATUS_63_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   64 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        64 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 70: after 'return' - expression for return value */
@@ -3737,20 +4171,23 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_70_GOTO[] = {
 
 /* State 77: after 'IDENTIFIER :' - labeled statement body */
 hic_manens constans Arbor2StatusGotoEntry STATUS_77_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   78 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        78 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 80: after 'switch (' - expression components */
@@ -3767,20 +4204,23 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_80_GOTO[] = {
 
 /* State 82: after 'switch ( expr )' - body statement */
 hic_manens constans Arbor2StatusGotoEntry STATUS_82_GOTO[] = {
-    { INT_NT_EXPR,        1 },
-    { INT_NT_TERM,        2 },
-    { INT_NT_FACTOR,      3 },
-    { INT_NT_COMPARATIO,  239 },
-    { INT_NT_AEQUALITAS,  240 },
-    { INT_NT_CONIUNCTIO,  253 },
-    { INT_NT_DISIUNCTIO,  255 },
-    { INT_NT_SENTENTIA,   83 },
-    { INT_NT_CORPUS,      38 },
-    { INT_NT_SI,          37 },
-    { INT_NT_DUM,         44 },
-    { INT_NT_FAC,         52 },
-    { INT_NT_PER,         65 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_SENTENTIA,        83 },
+    { INT_NT_CORPUS,           38 },
+    { INT_NT_SI,               37 },
+    { INT_NT_DUM,              44 },
+    { INT_NT_FAC,              52 },
+    { INT_NT_PER,              65 },
+    { INT_NT_TRANSLATIO,       264 }
 };
 
 /* State 84: after 'case' - expression components */
@@ -3798,6 +4238,9 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_86_GOTO[] = {
     { INT_NT_FACTOR,      3 },
     { INT_NT_COMPARATIO,  239 },
     { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
     { INT_NT_SENTENTIA,   87 },
@@ -3816,6 +4259,9 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_89_GOTO[] = {
     { INT_NT_FACTOR,      3 },
     { INT_NT_COMPARATIO,  239 },
     { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
     { INT_NT_SENTENTIA,   90 },
@@ -4094,6 +4540,90 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_265_GOTO[] = {
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
     { INT_NT_TRANSLATIO, 266 }
+};
+
+/* State 269: after '&' bitwise - parse RHS aequalitas */
+hic_manens constans Arbor2StatusGotoEntry STATUS_269_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  274 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 271: after '^' bitwise - parse RHS aequalitas->ampersand_bitwise chain */
+hic_manens constans Arbor2StatusGotoEntry STATUS_271_GOTO[] = {
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       275 },
+    { INT_NT_AMPERSAND_BITWISE, 276 },
+    { INT_NT_TRANSLATIO,       264 }
+};
+
+/* State 273: after '|' bitwise - parse RHS caret_bitwise chain */
+hic_manens constans Arbor2StatusGotoEntry STATUS_273_GOTO[] = {
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       277 },
+    { INT_NT_AMPERSAND_BITWISE, 278 },
+    { INT_NT_CARET_BITWISE,    279 },
+    { INT_NT_TRANSLATIO,       264 }
+};
+
+/* State 280: after '&' within '^' context - parse aequalitas for nested & */
+hic_manens constans Arbor2StatusGotoEntry STATUS_280_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  283 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 281: after '&' within '|' context - parse aequalitas for nested & */
+hic_manens constans Arbor2StatusGotoEntry STATUS_281_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  284 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 282: after '^' within '|' context - parse ampersand_bitwise for nested ^ */
+hic_manens constans Arbor2StatusGotoEntry STATUS_282_GOTO[] = {
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       285 },
+    { INT_NT_AMPERSAND_BITWISE, 286 },
+    { INT_NT_TRANSLATIO,       264 }
+};
+
+/* State 287: after '&' within '^ in |' context - parse aequalitas */
+hic_manens constans Arbor2StatusGotoEntry STATUS_287_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  288 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 289: after ~ - GOTO for FACTOR to state 290 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_289_GOTO[] = {
+    { INT_NT_FACTOR, 290 }
+};
+
+/* State 291: after ! - GOTO for FACTOR to state 292 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_291_GOTO[] = {
+    { INT_NT_FACTOR, 292 }
 };
 
 /* ==================================================
@@ -4376,7 +4906,34 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 264: after translatio */
     STATUS_GOTO(265),  /* 265: after translatio << or >> */
     STATUS_GOTO_NIL,   /* 266: after translatio << expr */
-    STATUS_GOTO_NIL    /* 267: after translatio in comp context */
+    STATUS_GOTO_NIL,   /* 267: after translatio in comp context */
+    /* States 268-288: Bitwise operator states */
+    STATUS_GOTO_NIL,   /* 268: after AMPERSAND_BITWISE top-level */
+    STATUS_GOTO(269),  /* 269: after & bitwise top-level */
+    STATUS_GOTO_NIL,   /* 270: after CARET_BITWISE top-level */
+    STATUS_GOTO(271),  /* 271: after ^ bitwise top-level */
+    STATUS_GOTO_NIL,   /* 272: after PIPA_BITWISE top-level */
+    STATUS_GOTO(273),  /* 273: after | bitwise top-level */
+    STATUS_GOTO_NIL,   /* 274: after aequalitas in & context */
+    STATUS_GOTO_NIL,   /* 275: after aequalitas in ^ context */
+    STATUS_GOTO_NIL,   /* 276: after ampersand_bitwise in ^ context */
+    STATUS_GOTO_NIL,   /* 277: after aequalitas in | context */
+    STATUS_GOTO_NIL,   /* 278: after ampersand_bitwise in | context */
+    STATUS_GOTO_NIL,   /* 279: after caret_bitwise in | context */
+    STATUS_GOTO(280),  /* 280: after & within ^ context */
+    STATUS_GOTO(281),  /* 281: after & within | context */
+    STATUS_GOTO(282),  /* 282: after ^ within | context */
+    STATUS_GOTO_NIL,   /* 283: after aequalitas in & in ^ context */
+    STATUS_GOTO_NIL,   /* 284: after aequalitas in & in | context */
+    STATUS_GOTO_NIL,   /* 285: after aequalitas in ^ in | context */
+    STATUS_GOTO_NIL,   /* 286: after ampersand_bitwise in ^ in | context */
+    STATUS_GOTO(287),  /* 287: after & in ^ in | context */
+    STATUS_GOTO_NIL,   /* 288: after aequalitas in & in ^ in | context */
+    /* States 289-292: Unary ~ and ! operators */
+    STATUS_GOTO(289),  /* 289: after ~ - FACTOR -> 290 */
+    STATUS_GOTO_NIL,   /* 290: after ~ factor - reduce P106 */
+    STATUS_GOTO(291),  /* 291: after ! - FACTOR -> 292 */
+    STATUS_GOTO_NIL    /* 292: after ! factor - reduce P107 */
 };
 
 
@@ -4515,6 +5072,15 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_DISIUNCTIO:
             nt_int = INT_NT_DISIUNCTIO;
+            frange;
+        casus ARBOR2_NT_PIPA_BITWISE:
+            nt_int = INT_NT_PIPA_BITWISE;
+            frange;
+        casus ARBOR2_NT_CARET_BITWISE:
+            nt_int = INT_NT_CARET_BITWISE;
+            frange;
+        casus ARBOR2_NT_AMPERSAND_BITWISE:
+            nt_int = INT_NT_AMPERSAND_BITWISE;
             frange;
         ordinarius:
             nt_int = -I;

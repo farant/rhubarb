@@ -1698,6 +1698,7 @@ imprimere_auxilium(vacuum)
     printf("  glr_quaestio rules <NT>     Find all rules producing NT\n");
     printf("  glr_quaestio conflicts      Find shift/reduce conflicts\n");
     printf("  glr_quaestio clone <S> <T>  Generate entries for T based on S\n");
+    printf("  glr_quaestio analyze-level <NT> <OP>  Document precedence level structure\n");
     printf("  glr_quaestio stats          Show table statistics\n");
     printf("  glr_quaestio tokens         List all known tokens\n");
     printf("  glr_quaestio nts            List all known non-terminals\n");
@@ -1883,6 +1884,257 @@ cmd_clone(constans character* fons_nomen, constans character* target_nomen)
     {
         printf("/* Nulla entries inventa pro ARBOR2_LEXEMA_%s */\n", fons_nomen);
     }
+
+    redde ZEPHYRUM;
+}
+
+/* ==================================================
+ * Command: analyze-level - Document what a precedence level consists of
+ *
+ * Usage: glr_quaestio analyze-level CONIUNCTIO DUAMPERSAND
+ *
+ * Analyzes an existing precedence level and outputs documentation
+ * showing all the components needed to add a similar level.
+ * ================================================== */
+
+interior integer
+cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
+{
+    s32 op_val;
+    i32 i;
+    i32 after_nt_state;
+    i32 after_op_state;
+    i32 shift_count;
+    i32 reduce_count;
+    i32 goto_count;
+
+    /* Arrays to track what we find */
+    i32 shift_states[64];
+    i32 shift_targets[64];
+    i32 reduce_states[64];
+    i32 reduce_rules[64];
+    i32 goto_from[64];
+    i32 goto_to[64];
+
+    si (g_actio_tabula == NIHIL || g_goto_tabula == NIHIL)
+    {
+        fprintf(stderr, "Error: Tabulae non parsitae\n");
+        redde I;
+    }
+
+    /* Resolve operator token */
+    op_val = resolvere_lexema(op_nomen, (i32)strlen(op_nomen));
+    si (op_val < ZEPHYRUM)
+    {
+        fprintf(stderr, "Error: Lexema '%s' ignotum\n", op_nomen);
+        redde I;
+    }
+
+    printf("=============================================================\n");
+    printf("PRECEDENCE LEVEL ANALYSIS: %s (operator: %s)\n", nt_nomen, op_nomen);
+    printf("=============================================================\n\n");
+
+    /* 1. Find all SHIFT entries for the operator */
+    printf("## 1. SHIFT Entries (where the operator is consumed)\n\n");
+    printf("These states SHIFT when they see %s, moving to a new state\n", op_nomen);
+    printf("to parse the right-hand side of the expression.\n\n");
+
+    shift_count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < g_actio_numerus; i++)
+    {
+        si (g_actio_tabula[i].lexema == op_val &&
+            g_actio_tabula[i].actio == I) /* SHIFT */
+        {
+            si (shift_count < 64)
+            {
+                shift_states[shift_count] = (i32)g_actio_tabula[i].status;
+                shift_targets[shift_count] = g_actio_tabula[i].valor;
+                shift_count++;
+            }
+        }
+    }
+
+    si (shift_count > ZEPHYRUM)
+    {
+        printf("| From State | To State | Description |\n");
+        printf("|------------|----------|-------------|\n");
+        per (i = ZEPHYRUM; i < shift_count; i++)
+        {
+            printf("| %10d | %8d | After %s, shift %s |\n",
+                   shift_states[i], shift_targets[i], nt_nomen, op_nomen);
+        }
+        printf("\n");
+
+        /* The first shift target is typically the "after operator" state */
+        after_nt_state = shift_states[ZEPHYRUM];
+        after_op_state = shift_targets[ZEPHYRUM];
+        printf("Key states identified:\n");
+        printf("  - State %d: 'after %s' state (where we decide to shift or reduce)\n",
+               after_nt_state, nt_nomen);
+        printf("  - State %d: 'after %s' state (where we parse RHS)\n\n",
+               after_op_state, op_nomen);
+    }
+    alioquin
+    {
+        printf("No SHIFT entries found for %s\n\n", op_nomen);
+        after_nt_state = (i32)-I;
+        after_op_state = (i32)-I;
+    }
+
+    /* 2. Find all REDUCE entries for the operator */
+    printf("## 2. REDUCE Entries (where the operator triggers reduction)\n\n");
+    printf("These states REDUCE when they see %s, building up the\n", op_nomen);
+    printf("parse tree before the operator can be processed.\n\n");
+
+    reduce_count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < g_actio_numerus; i++)
+    {
+        si (g_actio_tabula[i].lexema == op_val &&
+            g_actio_tabula[i].actio == II) /* REDUCE */
+        {
+            si (reduce_count < 64)
+            {
+                reduce_states[reduce_count] = (i32)g_actio_tabula[i].status;
+                reduce_rules[reduce_count] = g_actio_tabula[i].valor;
+                reduce_count++;
+            }
+        }
+    }
+
+    si (reduce_count > ZEPHYRUM)
+    {
+        printf("| State | Reduce Rule | Notes |\n");
+        printf("|-------|-------------|-------|\n");
+        per (i = ZEPHYRUM; i < reduce_count && i < 20; i++)
+        {
+            printf("| %5d | P%-10d | Reduce before %s |\n",
+                   reduce_states[i], reduce_rules[i], op_nomen);
+        }
+        si (reduce_count > 20)
+        {
+            printf("| ...   | ...         | (%d more) |\n", reduce_count - 20);
+        }
+        printf("\n");
+        printf("Total REDUCE entries: %d\n\n", reduce_count);
+    }
+    alioquin
+    {
+        printf("No REDUCE entries found for %s\n\n", op_nomen);
+    }
+
+    /* 3. Find GOTO entries for this NT */
+    printf("## 3. GOTO Entries (where reductions to %s lead)\n\n", nt_nomen);
+    printf("After reducing to %s, these GOTO entries determine\n", nt_nomen);
+    printf("which state to transition to.\n\n");
+
+    goto_count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < g_goto_numerus; i++)
+    {
+        /* Match NT name in the parsed goto table */
+        /* This is approximate - we're looking for gotos that go to after_nt_state */
+        si (g_goto_tabula[i].status_novus == after_nt_state)
+        {
+            si (goto_count < 64)
+            {
+                goto_from[goto_count] = g_goto_tabula[i].status;
+                goto_to[goto_count] = g_goto_tabula[i].status_novus;
+                goto_count++;
+            }
+        }
+    }
+
+    si (goto_count > ZEPHYRUM)
+    {
+        printf("| From State | To State | Notes |\n");
+        printf("|------------|----------|-------|\n");
+        per (i = ZEPHYRUM; i < goto_count && i < 20; i++)
+        {
+            printf("| %10d | %8d | GOTO %s |\n",
+                   goto_from[i], goto_to[i], nt_nomen);
+        }
+        si (goto_count > 20)
+        {
+            printf("| ...        | ...      | (%d more) |\n", goto_count - 20);
+        }
+        printf("\n");
+        printf("Total GOTO entries pointing to state %d: %d\n\n", after_nt_state, goto_count);
+    }
+    alioquin
+    {
+        printf("Could not identify GOTO entries (need NT value matching)\n\n");
+    }
+
+    /* 4. Summary and template for adding a new level */
+    printf("## 4. TEMPLATE: Adding a New Precedence Level\n\n");
+    printf("To add a new level (e.g., PIPA_BITWISE with '|') similar to %s:\n\n", nt_nomen);
+
+    printf("### Step 1: Add the non-terminal\n");
+    printf("```c\n");
+    printf("// In arbor2_glr.h, add to Arbor2NonTerminalis enum:\n");
+    printf("ARBOR2_NT_NEW_LEVEL,  /* new level */\n");
+    printf("\n");
+    printf("// In arbor2_glr_tabula.c, add INT_NT define:\n");
+    printf("#define INT_NT_NEW_LEVEL  <next_number>\n");
+    printf("```\n\n");
+
+    printf("### Step 2: Add grammar rules\n");
+    printf("```c\n");
+    printf("// Binary operation rule (3 symbols):\n");
+    printf("{ ARBOR2_NT_NEW_LEVEL, 3, ARBOR2_NODUS_BINARIUM, \"new -> new 'op' lower\" },\n");
+    printf("\n");
+    printf("// Pass-through rule (1 symbol):\n");
+    printf("{ ARBOR2_NT_NEW_LEVEL, 1, ARBOR2_NODUS_ERROR, \"new -> lower\" },\n");
+    printf("```\n\n");
+
+    printf("### Step 3: Create 'after NT' state (like state %d)\n", after_nt_state);
+    printf("```c\n");
+    printf("/* State N: after NEW_LEVEL - shift on new_op or reduce */\n");
+    printf("hic_manens constans Arbor2TabulaActio STATUS_N_ACTIONES[] = {\n");
+    printf("    { ARBOR2_LEXEMA_NEW_OP, ARBOR2_ACTIO_SHIFT, N+1, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_EOF,    ARBOR2_ACTIO_REDUCE, <pass-through-rule>, FALSUM },\n");
+    printf("    /* ... other higher-precedence operators cause REDUCE ... */\n");
+    printf("};\n");
+    printf("```\n\n");
+
+    printf("### Step 4: Create 'after operator' state (like state %d)\n", after_op_state);
+    printf("```c\n");
+    printf("/* State N+1: after 'new_op' - expect RHS expression */\n");
+    printf("hic_manens constans Arbor2TabulaActio STATUS_N1_ACTIONES[] = {\n");
+    printf("    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT, 4, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_INTEGER,       ARBOR2_ACTIO_SHIFT, 5, FALSUM },\n");
+    printf("    { ARBOR2_LEXEMA_PAREN_APERTA,  ARBOR2_ACTIO_SHIFT, 6, FALSUM },\n");
+    printf("    /* ... same as initial expression state ... */\n");
+    printf("};\n");
+    printf("```\n\n");
+
+    printf("### Step 5: Add GOTO entries\n");
+    printf("```c\n");
+    printf("// For each expression-starting state (0, 6, 26, 31, etc.):\n");
+    printf("// In STATUS_X_GOTO[], add:\n");
+    printf("{ INT_NT_NEW_LEVEL, <after-NT-state> },\n");
+    printf("```\n\n");
+
+    printf("### Step 6: Add REDUCE entries to existing states\n");
+    printf("```c\n");
+    printf("// In states 1-5, 11-19, etc. (basic expression states):\n");
+    printf("// Add entry for the new operator:\n");
+    printf("{ ARBOR2_LEXEMA_NEW_OP, ARBOR2_ACTIO_REDUCE, <rule>, FALSUM },\n");
+    printf("```\n\n");
+
+    printf("### Step 7: Update STATUS_TABULA_PARTIAL\n");
+    printf("```c\n");
+    printf("// Add entries for the new states:\n");
+    printf("STATUS_INFO_EMPTY(N,   \"after NEW_LEVEL\"),\n");
+    printf("STATUS_INFO_EMPTY(N+1, \"after new_op\"),\n");
+    printf("```\n\n");
+
+    printf("### Step 8: Wire up the precedence chain\n");
+    printf("The level above NEW_LEVEL should reduce TO NEW_LEVEL,\n");
+    printf("and NEW_LEVEL should reduce to the level below it.\n\n");
+
+    printf("=============================================================\n");
+    printf("Analysis complete. Use this as a guide for adding new levels.\n");
+    printf("=============================================================\n");
 
     redde ZEPHYRUM;
 }
@@ -2151,6 +2403,19 @@ integer principale(integer argc, constans character* constans* argv)
             redde I;
         }
         redde cmd_clone(argv[II], argv[III]);
+    }
+
+    /* Analyze-level command needs 2 arguments */
+    si (strcmp(argv[I], "analyze-level") == ZEPHYRUM)
+    {
+        si (argc < IV)
+        {
+            fprintf(stderr, "Error: analyze-level requirit duo argumenta\n");
+            fprintf(stderr, "Usa: glr_quaestio analyze-level NT OPERATOR\n");
+            fprintf(stderr, "Exemplum: glr_quaestio analyze-level CONIUNCTIO DUAMPERSAND\n");
+            redde I;
+        }
+        redde cmd_analyze_level(argv[II], argv[III]);
     }
 
     fprintf(stderr, "Error: Mandatum '%s' ignotum\n", argv[I]);

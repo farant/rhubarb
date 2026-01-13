@@ -1,0 +1,202 @@
+RHUBARB CODEBASE MAP
+====================
+Last updated: 2026-01-13
+
+A C89 monorepo for building catholic civilization.
+All identifiers in Latin. No dependencies. Long-term thinking.
+
+
+DIRECTORY STRUCTURE
+-------------------
+
+rhubarb/
+├── include/         105 header files (.h)
+├── lib/             114 implementation files (.c, .m)
+├── probationes/     87 test modules (probatio_*.c)
+├── tools/           13 utility executables
+├── bin/             compiled binaries
+├── build/           build artifacts
+├── data/            data files (bible, fonts, etc)
+├── docs/            documentation
+├── vendor/          third-party (stb_image)
+├── scripts/         helper scripts
+└── .claude/         claude code config
+
+
+LIBRARY DEPENDENCY TIERS
+------------------------
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │  TIER 0: FOUNDATION                                         │
+    │  (no dependencies, used by everything)                      │
+    │                                                             │
+    │  latina.h ──── Latin macros for C keywords                  │
+    │  piscina.h ─── Arena allocator (memory pools)               │
+    │  credo.h ───── Test framework                               │
+    │  chorda.h ──── String struct {mensura, datum} NOT null-term │
+    │  xar.h ─────── Variable-length array                        │
+    │  uuid.h ────── UUID generation                              │
+    │  utf8.h ────── UTF-8 encoding                               │
+    │  base64.h ──── Base64 encode/decode                         │
+    └─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+    ┌─────────────────────────────────────────────────────────────┐
+    │  TIER 1: DATA STRUCTURES & UTILITIES                        │
+    │                                                             │
+    │  ┌─ Strings ───────────┐  ┌─ Collections ─────────┐         │
+    │  │ chorda_aedificator  │  │ tabula_dispersa (hash)│         │
+    │  │ internamentum       │  │ filum (linked list)   │         │
+    │  └─────────────────────┘  │ friatio (hashing)     │         │
+    │                           └───────────────────────┘         │
+    │  ┌─ Data Formats ──────┐  ┌─ Entity System ───────┐         │
+    │  │ json, xml, toml     │  │ entitas               │         │
+    │  │ stml, nuntium       │  │ entitas_repositorium  │         │
+    │  └─────────────────────┘  │ persistentia          │         │
+    │                           └───────────────────────┘         │
+    │  ┌─ Utilities ─────────────────────────────────────┐        │
+    │  │ uri, url, via (paths), tempus, fasti            │        │
+    │  │ argumenta, sectio, symbola, iter_directoria     │        │
+    │  │ exemplar (templates), quaerere (search)         │        │
+    │  └─────────────────────────────────────────────────┘        │
+    └─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+    ┌─────────────────────────────────────────────────────────────┐
+    │  TIER 2: DOMAIN-SPECIFIC                                    │
+    │                                                             │
+    │  ┌─ ARBOR (C Parser) ──────────────────────────────────┐    │
+    │  │                                                     │    │
+    │  │  arbor_lexema ──► arbor_praeparator ──► arbor_syntaxis   │
+    │  │       │                                      │      │    │
+    │  │       └──────────────────┬────────────────────┘     │    │
+    │  │                          ▼                          │    │
+    │  │    arbor_quaestio    arbor_formator    arbor_index  │    │
+    │  │    arbor_typus                                      │    │
+    │  │                          │                          │    │
+    │  │                          ▼                          │    │
+    │  │                   arbor.h (facade)                  │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ ARBOR2 (GLR Parser Framework) ─────────────────────┐    │
+    │  │                                                     │    │
+    │  │  arbor2_lexema ──► arbor2_token ──► arbor2_glr      │    │
+    │  │                                     arbor2_glr_tabula│   │
+    │  │  arbor2_expandere (grammar expansion)               │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ SPUTNIK (Custom Language) ─────────────────────────┐    │
+    │  │  sputnik_lexema ──► sputnik_parser ──► sputnik_interpres │
+    │  │                     sputnik_syntaxis (GUI)          │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ Graphics/Rendering ────────────────────────────────┐    │
+    │  │  color, coloratio ─── color systems                 │    │
+    │  │  fons, fons_visus ─── font rendering                │    │
+    │  │  delineare ────────── 2D drawing primitives         │    │
+    │  │  imago, imago_opus ── image processing              │    │
+    │  │  dithering ────────── dithering algorithms          │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ UI Framework ──────────────────────────────────────┐    │
+    │  │                                                     │    │
+    │  │  fenestra (macOS native window)                     │    │
+    │  │      │                                              │    │
+    │  │      ▼                                              │    │
+    │  │  widget ──► layout ──► pagina ──► schirmata         │    │
+    │  │      │                                              │    │
+    │  │      ├── dialogus (dialogs)                         │    │
+    │  │      ├── registrum_commandi (commands)              │    │
+    │  │      ├── registrum_widget (widget registry)         │    │
+    │  │      ├── selectio (selection)                       │    │
+    │  │      └── paginarium, sententia_* (pagination)       │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ Domain Libraries ──────────────────────────────────┐    │
+    │  │  biblia, biblia_visus ──── Bible text + rendering   │    │
+    │  │  librarium_* ───────────── book library system      │    │
+    │  │  libro_paginarum ───────── book pagination          │    │
+    │  │  calendarium_liturgicum ── liturgical calendar      │    │
+    │  │  sanctorale ────────────── saints calendar          │    │
+    │  │  navigator_entitatum ───── entity navigation        │    │
+    │  │  vim ───────────────────── vim keybindings          │    │
+    │  │  thema, thema_visus ────── theming                  │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ Platform/Networking ───────────────────────────────┐    │
+    │  │  clipboard_platform ─── macOS clipboard             │    │
+    │  │  tcp, tls ───────────── networking (POSIX/macOS)    │    │
+    │  │  http, multipart ────── HTTP client                 │    │
+    │  │  router ─────────────── HTTP route matching         │    │
+    │  │  servitium, reactor ─── server/event loop           │    │
+    │  │  macho ──────────────── Mach-O binary format        │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    │                                                             │
+    │  ┌─ Utilities ─────────────────────────────────────────┐    │
+    │  │  capsula, capsula_caudae ── asset bundling          │    │
+    │  │  actor ──────────────────── actor/message passing   │    │
+    │  │  flatura ────────────────── compression (LZ77)      │    │
+    │  │  concha ─────────────────── shell/REPL              │    │
+    │  └─────────────────────────────────────────────────────┘    │
+    └─────────────────────────────────────────────────────────────┘
+
+
+TOOLS
+-----
+
+tools/
+├── glr_debug.c ─────────────────── Debug GLR parser
+├── glr_quaestio.c ──────────────── Query GLR parser (clone)
+├── sputnik.c ───────────────────── Sputnik interpreter
+├── genera_biblia.c ─────────────── Generate Bible database
+├── gutenberg_index.c ───────────── Index Gutenberg books
+├── gutenberg_census.c ──────────── Analyze Gutenberg collection
+├── lector_eventuum.c ───────────── Event/log reader
+├── librarium_collector.c ───────── Collect books into library
+├── librarium_merge.c ───────────── Merge library files
+├── capsula_generare.c ──────────── Generate asset capsule
+├── capsula_caudae_adiungere.c ─── Add assets to capsule
+├── fons_merge.c ─────────────────── Merge font files
+└── bitsyfont_ad_fons.c ─────────── Convert bitmap font
+
+
+KEY PATTERNS
+------------
+
+Memory:     piscina (arena) ──► all allocations tied to arena lifetime
+                               mark/reset with PiscinaNotatio
+                               no manual free()
+
+Strings:    chorda = {i32 mensura; i8* datum}
+            NOT null-terminated! Never use strcpy/strlen/etc.
+            Use internamentum for deduplication
+
+Data:       nuntium ──► protobuf-style binary (compact, typed)
+            json/xml/toml/stml ──► text formats
+
+Entity:     entitas ──► properties with typed values
+            entitas_repositorium ──► event sourcing storage
+            persistentia ──► memory or file backend
+
+
+BUILD
+-----
+
+Compiler:   C89 strict
+Flags:      -pedantic -Wall -Wextra -Werror -Wconversion
+            -Wsign-conversion -Wcast-qual -Wstrict-prototypes
+            -Wmissing-prototypes -Wwrite-strings
+
+Scripts:    ./compile_tests.sh <pattern>  ── run tests matching pattern
+            ./compile_tools.sh            ── compile all tools
+            ./compile_library.sh          ── compile library
+
+
+NOTES
+-----
+
+- All code in Latin (identifiers, comments, messages)
+- "nomen" is a macro for typedef, don't use as variable name
+- Platform: macOS only (platform layer exists for future porting)
+- Tests use credo.h framework (see probationes/probatio_piscina.c)
+- Worklogs: lib/foo.worklog.md for non-obvious decisions

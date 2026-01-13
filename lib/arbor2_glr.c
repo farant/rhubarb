@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 /* Debug flag - set to 1 to enable tracing */
-#define GLR_DEBUG 0
+#define GLR_DEBUG 1
 
 /* ==================================================
  * Internal Forward Declarations
