@@ -143,6 +143,17 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
             frange;
         }
 
+        casus ARBOR_NODUS_CONDITIONAL_EXPRESSION:
+        {
+            si (_habet_vocationem(radix->datum.ternarium.conditio, nomen_quaerendum, piscina))
+                redde VERUM;
+            si (_habet_vocationem(radix->datum.ternarium.verum, nomen_quaerendum, piscina))
+                redde VERUM;
+            si (_habet_vocationem(radix->datum.ternarium.falsum, nomen_quaerendum, piscina))
+                redde VERUM;
+            frange;
+        }
+
         ordinarius:
             frange;
     }

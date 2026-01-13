@@ -13,6 +13,7 @@ s32 principale(vacuum)
 {
     Piscina* piscina;
     InternamentumChorda* intern;
+    b32 praeteritus;
 
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("probatio_arbor2_expandere", 131072);
@@ -372,9 +373,21 @@ s32 principale(vacuum)
     }
 
 
-    /* Claudere credo */
+    /* Compendium */
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
+
     credo_claudere();
     piscina_destruere(piscina);
 
-    redde ZEPHYRUM;
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }
