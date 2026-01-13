@@ -139,6 +139,13 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             imprimere_nodus(nodus->datum.unarium.operandum, depth + I);
             frange;
 
+        casus ARBOR2_NODUS_TERNARIUS:
+            printf(" [?:]\n");
+            imprimere_nodus(nodus->datum.ternarius.conditio, depth + I);
+            imprimere_nodus(nodus->datum.ternarius.verum, depth + I);
+            imprimere_nodus(nodus->datum.ternarius.falsum, depth + I);
+            frange;
+
         ordinarius:
             printf("\n");
             frange;

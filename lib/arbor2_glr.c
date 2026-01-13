@@ -604,15 +604,8 @@ _processare_unam_actionem(
             {
                 /* Execute reduce and add result to pending queue */
                 Arbor2Regula* regula;
-                Arbor2GSSNodus* cursor;
-                Arbor2Nodus* valor_novus;
-                s32 goto_status;
-                Arbor2GSSNodus* nodus_novus;
-                Arbor2GSSNodus** slot;
-                s32 k;
-                Arbor2Nodus* valori[16];
-                Arbor2Token* lexemata[16];
-                s32 num_pop;
+                s32 praed_idx;
+                s32 num_praed_paths;
 
                 regula = arbor2_glr_obtinere_regula(glr, actio->valor);
                 si (regula == NIHIL)
@@ -625,29 +618,57 @@ _processare_unam_actionem(
                        actio->valor, regula->longitudo, arbor2_nt_nomen(regula->sinister));
 #endif
 
-                cursor = nodus;
-                num_pop = ZEPHYRUM;
-
-                per (k = ZEPHYRUM; k < (s32)regula->longitudo && cursor != NIHIL; k++)
+                /* For merged nodes, we need to explore ALL predecessor paths.
+                 * This is critical for GLR parsing correctness. */
+                num_praed_paths = (nodus->num_praed > ZEPHYRUM) ? nodus->num_praed : I;
+                si (regula->longitudo == ZEPHYRUM)
                 {
-                    valori[num_pop] = cursor->valor;
-                    lexemata[num_pop] = cursor->lexema;
-                    num_pop++;
-
-                    si (cursor->num_praed > ZEPHYRUM)
-                    {
-                        cursor = cursor->praedecessores[ZEPHYRUM];
-                    }
-                    alioquin
-                    {
-                        cursor = NIHIL;
-                    }
+                    num_praed_paths = I;  /* Epsilon rule - no predecessors to explore */
                 }
 
-                si (cursor == NIHIL && k < (s32)regula->longitudo)
+                per (praed_idx = ZEPHYRUM; praed_idx < num_praed_paths; praed_idx++)
                 {
-                    frange;  /* Not enough on stack */
-                }
+                    Arbor2GSSNodus* cursor;
+                    Arbor2Nodus* valor_novus;
+                    s32 goto_status;
+                    Arbor2GSSNodus* nodus_novus;
+                    Arbor2GSSNodus** slot;
+                    s32 k;
+                    Arbor2Nodus* valori[16];
+                    Arbor2Token* lexemata[16];
+                    s32 num_pop;
+
+                    cursor = nodus;
+                    num_pop = ZEPHYRUM;
+
+                    per (k = ZEPHYRUM; k < (s32)regula->longitudo && cursor != NIHIL; k++)
+                    {
+                        valori[num_pop] = cursor->valor;
+                        lexemata[num_pop] = cursor->lexema;
+                        num_pop++;
+
+                        si (cursor->num_praed > ZEPHYRUM)
+                        {
+                            /* For first symbol, follow the specific predecessor path */
+                            si (k == ZEPHYRUM && nodus->num_praed > I)
+                            {
+                                cursor = cursor->praedecessores[praed_idx];
+                            }
+                            alioquin
+                            {
+                                cursor = cursor->praedecessores[ZEPHYRUM];
+                            }
+                        }
+                        alioquin
+                        {
+                            cursor = NIHIL;
+                        }
+                    }
+
+                    si (cursor == NIHIL && k < (s32)regula->longitudo)
+                    {
+                        perge;  /* Not enough on stack for this path */
+                    }
 
                 /* Build AST node */
                 commutatio (regula->nodus_genus)
@@ -669,6 +690,26 @@ _processare_unam_actionem(
                         {
                             valor_novus = _construere_nodum_unarium(glr,
                                 lexemata[I], valori[ZEPHYRUM]);
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_TERNARIUS:
+                        /* P123: ternarius -> disiunctio '?' ternarius ':' ternarius
+                         * 5 symbols: valori[4]=cond, [3]=?, [2]=verum, [1]=:, [0]=falsum */
+                        si (num_pop >= V)
+                        {
+                            Arbor2Nodus* nodus_tern;
+                            nodus_tern = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_tern->genus = ARBOR2_NODUS_TERNARIUS;
+                            nodus_tern->lexema = lexemata[III];  /* ? token */
+                            nodus_tern->datum.ternarius.conditio = valori[IV];
+                            nodus_tern->datum.ternarius.verum = valori[II];
+                            nodus_tern->datum.ternarius.falsum = valori[ZEPHYRUM];
+                            valor_novus = nodus_tern;
                         }
                         alioquin
                         {
@@ -1839,10 +1880,17 @@ _processare_unam_actionem(
 #if GLR_DEBUG
                     printf("  [DEBUG]    GOTO failed! path dies\n");
 #endif
-                    frange;
+                    perge;  /* Try next predecessor path */
                 }
 
                 nodus_novus = _creare_gss_nodum(glr, goto_status, valor_novus, nodus->lexema);
+                si (nodus_novus == NIHIL)
+                {
+#if GLR_DEBUG
+                    printf("  [DEBUG] ERROR: Failed to create GSS node for state %d\n", goto_status);
+#endif
+                    perge;  /* Try next predecessor path */
+                }
                 si (cursor != NIHIL)
                 {
                     _addere_praedecessorem(glr, nodus_novus, cursor);
@@ -1851,6 +1899,8 @@ _processare_unam_actionem(
                 /* Add to pending queue for further processing */
                 slot = xar_addere(reducenda);
                 *slot = nodus_novus;
+                /* Continue to next predecessor path if any */
+                }  /* End of predecessor loop */
                 frange;
             }
 
@@ -1902,6 +1952,13 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     {
         Arbor2GSSNodus* nodus;
         nodus = *(Arbor2GSSNodus**)xar_obtinere(glr->frons_activa, i);
+        si (nodus == NIHIL)
+        {
+#if GLR_DEBUG
+            printf("  [DEBUG] WARNING: NULL node in frons_activa at index %d\n", i);
+#endif
+            perge;
+        }
         _processare_unam_actionem(glr, nodus, genus, reducenda, &acceptatum, &nodus_acceptatus);
         si (acceptatum && nodus_acceptatus != NIHIL)
         {
@@ -1918,6 +1975,14 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     {
         Arbor2GSSNodus* nodus;
         nodus = *(Arbor2GSSNodus**)xar_obtinere(reducenda, i);
+        si (nodus == NIHIL)
+        {
+#if GLR_DEBUG
+            printf("  [DEBUG] WARNING: NULL node in reducenda at index %d\n", i);
+#endif
+            i++;
+            perge;
+        }
         _processare_unam_actionem(glr, nodus, genus, reducenda, &acceptatum, &nodus_acceptatus);
         si (acceptatum && nodus_acceptatus != NIHIL)
         {

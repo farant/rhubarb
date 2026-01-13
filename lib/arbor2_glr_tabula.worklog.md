@@ -307,3 +307,94 @@ for (a; b; c = 1) d;    // for increment
 do x; while (a = 1);    // do-while condition
 switch (a = 1) { }      // switch condition
 ```
+
+## 2026-01-13: Ternary Conditional Operator - Complete Implementation
+
+### Overview:
+Added the ternary conditional operator (`?:`) to the expression grammar. The ternary operator is **right-associative** and sits between assignment and logical-or in precedence.
+
+### Precedence Chain (Updated):
+```
+VIRGA (,)              <- lowest precedence, left-associative
+  |
+  v
+ASSIGNATIO (= += etc)  <- right-associative
+  |
+  v
+TERNARIUS (? :)        <- NEW: right-associative!
+  |
+  v
+DISIUNCTIO (||)        <- existing
+  |
+  v
+... rest unchanged ...
+```
+
+### Grammar Rules Added (P123-P124):
+```c
+/* P123 */ { ARBOR2_NT_TERNARIUS, 5, ARBOR2_NODUS_TERNARIUS, "ternarius -> disiunctio '?' ternarius ':' ternarius" },
+/* P124 */ { ARBOR2_NT_TERNARIUS, 1, ARBOR2_NODUS_ERROR, "ternarius -> disiunctio" },
+```
+
+### Changes Made:
+
+1. **Header file (arbor2_glr.h)**:
+   - Added `ARBOR2_NT_TERNARIUS` to non-terminal enum
+   - Added `ARBOR2_NODUS_TERNARIUS` to node type enum
+   - Added `ternarius` union member with `conditio`, `verum`, `falsum` pointers
+
+2. **Parse tables (arbor2_glr_tabula.c)**:
+   - Added `INT_NT_TERNARIUS` define (32)
+   - Added 2 rules (P123, P124) to REGULAE[]
+   - Modified assignment rules (P110-P121) to use `ternarius` instead of `disiunctio`
+   - Created states 306-310 for ternary parsing:
+     - 306: after `?` - expects expression starters
+     - 307: after `disiunctio ? ternarius` - expects `:`
+     - 308: after `:` - expects expression starters
+     - 309: after `disiunctio ? ternarius : ternarius` - reduce P123
+     - 310: after TERNARIUS - assignment or reduce P121
+   - Added GOTO(TERNARIUS) to all expression-context states
+   - Added `?` and `:` tokens to chain states for reduction triggering
+
+3. **Parser core (arbor2_glr.c)**:
+   - Added NT mapping case for ARBOR2_NT_TERNARIUS
+   - Added AST construction for ARBOR2_NODUS_TERNARIUS
+   - **CRITICAL FIX**: Modified reduction code to explore ALL predecessor paths
+     - Previously only followed `praedecessores[ZEPHYRUM]`
+     - Now loops over all predecessors for merged nodes
+     - Required for correct GLR parsing with merges
+
+4. **Debug tool (glr_debug.c)**:
+   - Added display case for ARBOR2_NODUS_TERNARIUS
+
+5. **NT name functions**:
+   - Added all missing NT names (PIPA_BITWISE, CARET_BITWISE, AMPERSAND_BITWISE, TRANSLATIO, VIRGA, ASSIGNATIO, TERNARIUS)
+   - Debug output now shows actual NT names instead of "IGNOTUM"
+
+### GLR Multi-Predecessor Bug Fixed:
+When two parse paths merge (same state, same value), the merged node has multiple predecessors. Previously, reductions only followed the first predecessor, causing one valid path to be ignored. The fix adds a loop over all predecessors, creating reduction results for each path.
+
+Example: In `a ? b : c`, after parsing `c`:
+- Label path: state 77 (for `b:` as label)
+- Ternary path: state 308 (for `b` as true-branch)
+Both paths merge at state 4 (after identifier). Now both are explored during reduction.
+
+### Known Ambiguity:
+`a ? b : c` parses as ambiguous when `b` could be a label:
+- Ternary interpretation: `a ? b : c`
+- Label interpretation: `a ? (b: c)`
+
+Using numeric values avoids this: `a ? 1 : c` parses unambiguously as ternary.
+
+### Parsing now works:
+```c
+a ? 1 : c           // simple ternary
+a ? 1 : b ? 2 : 3   // nested ternary (right-associative)
+                    // parses as: a ? 1 : (b ? 2 : 3)
+a = x ? 1 : 2       // assignment with ternary (ternary binds tighter)
+```
+
+### Statistics:
+- Total states: 311 (was 306)
+- Total rules: 125 (was 123)
+- All 801 parser tests pass

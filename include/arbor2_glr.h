@@ -49,6 +49,7 @@ nomen enumeratio {
 nomen enumeratio {
     ARBOR2_NT_VIRGA,                /* comma expressions (,) - lowest precedence */
     ARBOR2_NT_ASSIGNATIO,           /* assignment expressions (= += -= etc) - right-associative */
+    ARBOR2_NT_TERNARIUS,            /* ternary conditional (? :) - right-associative */
     ARBOR2_NT_DISIUNCTIO,           /* logical OR expressions (||) */
     ARBOR2_NT_CONIUNCTIO,           /* logical AND expressions (&&) */
     ARBOR2_NT_PIPA_BITWISE,         /* bitwise OR expressions (|) */
@@ -98,6 +99,7 @@ nomen enumeratio {
     ARBOR2_NODUS_BINARIUM,          /* Binary operation */
     ARBOR2_NODUS_UNARIUM,           /* Unary operation */
     ARBOR2_NODUS_CONVERSIO,         /* Cast expression */
+    ARBOR2_NODUS_TERNARIUS,         /* Ternary conditional a ? b : c */
     ARBOR2_NODUS_SIZEOF,
     ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
@@ -160,6 +162,13 @@ structura Arbor2Nodus {
             Arbor2Nodus*        typus;
             Arbor2Nodus*        expressio;
         } conversio;
+
+        /* TERNARIUS (ternary conditional) */
+        structura {
+            Arbor2Nodus*        conditio;       /* condition */
+            Arbor2Nodus*        verum;          /* true-branch */
+            Arbor2Nodus*        falsum;         /* false-branch */
+        } ternarius;
 
         /* SIZEOF */
         structura {

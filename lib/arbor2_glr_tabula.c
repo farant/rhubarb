@@ -164,20 +164,24 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P108 */ { ARBOR2_NT_VIRGA, 3, ARBOR2_NODUS_BINARIUM, "virga -> virga ',' assignatio" },
     /* P109 */ { ARBOR2_NT_VIRGA, 1, ARBOR2_NODUS_ERROR, "virga -> assignatio" },
 
-    /* Assignment operators (right-associative) */
-    /* P110 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '=' assignatio" },
-    /* P111 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '+=' assignatio" },
-    /* P112 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '-=' assignatio" },
-    /* P113 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '*=' assignatio" },
-    /* P114 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '/=' assignatio" },
-    /* P115 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '%=' assignatio" },
-    /* P116 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '&=' assignatio" },
-    /* P117 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '|=' assignatio" },
-    /* P118 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '^=' assignatio" },
-    /* P119 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '<<=' assignatio" },
-    /* P120 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> disiunctio '>>=' assignatio" },
-    /* P121 */ { ARBOR2_NT_ASSIGNATIO, 1, ARBOR2_NODUS_ERROR, "assignatio -> disiunctio" },
-    /* P122 */ { ARBOR2_NT_EXPRESSIO_OPTATIVA, 1, ARBOR2_NODUS_ERROR, "expr_opt -> virga" }
+    /* Assignment operators (right-associative) - now from ternarius, not disiunctio */
+    /* P110 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '=' assignatio" },
+    /* P111 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '+=' assignatio" },
+    /* P112 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '-=' assignatio" },
+    /* P113 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '*=' assignatio" },
+    /* P114 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '/=' assignatio" },
+    /* P115 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '%=' assignatio" },
+    /* P116 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '&=' assignatio" },
+    /* P117 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '|=' assignatio" },
+    /* P118 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '^=' assignatio" },
+    /* P119 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '<<=' assignatio" },
+    /* P120 */ { ARBOR2_NT_ASSIGNATIO, 3, ARBOR2_NODUS_BINARIUM, "assignatio -> ternarius '>>=' assignatio" },
+    /* P121 */ { ARBOR2_NT_ASSIGNATIO, 1, ARBOR2_NODUS_ERROR, "assignatio -> ternarius" },
+    /* P122 */ { ARBOR2_NT_EXPRESSIO_OPTATIVA, 1, ARBOR2_NODUS_ERROR, "expr_opt -> virga" },
+
+    /* Ternary conditional operator (right-associative) */
+    /* P123 */ { ARBOR2_NT_TERNARIUS, 5, ARBOR2_NODUS_TERNARIUS, "ternarius -> disiunctio '?' ternarius ':' ternarius" },
+    /* P124 */ { ARBOR2_NT_TERNARIUS, 1, ARBOR2_NODUS_ERROR, "ternarius -> disiunctio" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -245,6 +249,7 @@ hic_manens constans Arbor2TabulaActio STATUS_1_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 99, FALSUM },  /* ? ternary */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 99, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 99, FALSUM },
@@ -285,6 +290,7 @@ hic_manens constans Arbor2TabulaActio STATUS_2_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  2, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE,  2, FALSUM },  /* ? ternary */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  2, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  2, FALSUM },
@@ -325,6 +331,7 @@ hic_manens constans Arbor2TabulaActio STATUS_3_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  4, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE,  4, FALSUM },  /* ? ternary */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  4, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  4, FALSUM },
@@ -367,6 +374,7 @@ hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* ^= */
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* <<= */
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* >>= */
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE,  5, FALSUM },  /* ? ternary */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  5, FALSUM },
@@ -409,6 +417,7 @@ hic_manens constans Arbor2TabulaActio STATUS_5_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  6, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE,  6, FALSUM },  /* ? ternary */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  6, FALSUM },
@@ -3032,9 +3041,10 @@ hic_manens constans Arbor2TabulaActio STATUS_239_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 87, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 87, FALSUM },  /* : ternary */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 87, FALSUM },
-    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 87, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 87, FALSUM }
 };
@@ -3059,6 +3069,8 @@ hic_manens constans Arbor2TabulaActio STATUS_240_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 105, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 105, FALSUM },  /* : ternary */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 105, FALSUM },
@@ -3152,9 +3164,9 @@ hic_manens constans Arbor2TabulaActio STATUS_246_ACTIONES[] = {
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 87, FALSUM }
 };
 
-/* State 247: after aequalitas in if condition - shift ) or continue */
+/* State 247: after aequalitas in if condition - reduce P105 to continue chain */
 hic_manens constans Arbor2TabulaActio STATUS_247_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 33, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
@@ -3171,9 +3183,9 @@ hic_manens constans Arbor2TabulaActio STATUS_247_ACTIONES[] = {
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
-/* State 248: after aequalitas in while condition - shift ) or continue */
+/* State 248: after aequalitas in while condition - reduce to continue chain */
 hic_manens constans Arbor2TabulaActio STATUS_248_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 42, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
@@ -3232,9 +3244,9 @@ hic_manens constans Arbor2TabulaActio STATUS_250_ACTIONES[] = {
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
-/* State 251: after aequalitas in do-while condition - shift ) or continue */
+/* State 251: after aequalitas in do-while condition - reduce to continue chain */
 hic_manens constans Arbor2TabulaActio STATUS_251_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 50, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
@@ -3251,9 +3263,9 @@ hic_manens constans Arbor2TabulaActio STATUS_251_ACTIONES[] = {
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 105, FALSUM }
 };
 
-/* State 252: after aequalitas in switch condition - shift ) or continue */
+/* State 252: after aequalitas in switch condition - reduce to continue chain */
 hic_manens constans Arbor2TabulaActio STATUS_252_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 82, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 105, FALSUM },
     { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT, 242, FALSUM },
     /* Assignment operators - reduce to AMPERSAND_BITWISE, chain continues */
@@ -3287,6 +3299,8 @@ hic_manens constans Arbor2TabulaActio STATUS_253_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 94, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 94, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 94, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 94, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 94, FALSUM },  /* : ternary */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 94, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 94, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 94, FALSUM },
@@ -3303,27 +3317,28 @@ hic_manens constans Arbor2TabulaActio STATUS_254_ACTIONES[] = {
     { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
 };
 
-/* State 255: after disiunctio at top-level - assignment ops or reduce to assignatio */
+/* State 255: after disiunctio at top-level - ternary or reduce to ternarius */
 hic_manens constans Arbor2TabulaActio STATUS_255_ACTIONES[] = {
     { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_SHIFT, 256, FALSUM },
-    /* Assignment operators - SHIFT to 293 (right-associative) */
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
-    /* No assignment - reduce to ASSIGNATIO (P121: assignatio -> disiunctio) */
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 121, FALSUM },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 121, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 121, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 121, FALSUM },
-    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 121, FALSUM }
+    /* Ternary operator - SHIFT to 306 */
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_SHIFT, 306, FALSUM },
+    /* No ternary - reduce to TERNARIUS (P124: ternarius -> disiunctio) */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 124, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 124, FALSUM }
 };
 
 /* State 256: after 'disiunctio ||' - expect coniunctio (expression starters) */
@@ -3430,6 +3445,7 @@ hic_manens constans Arbor2TabulaActio STATUS_264_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 92, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 92, FALSUM },  /* ? ternary */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 92, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 92, FALSUM },
@@ -3509,6 +3525,8 @@ hic_manens constans Arbor2TabulaActio STATUS_268_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 103, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 103, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 103, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 103, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 103, FALSUM },  /* : ternary */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 103, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 103, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 103, FALSUM },
@@ -3546,6 +3564,8 @@ hic_manens constans Arbor2TabulaActio STATUS_270_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 101, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 101, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 101, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 101, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 101, FALSUM },  /* : ternary */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 101, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 101, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 101, FALSUM },
@@ -3582,6 +3602,8 @@ hic_manens constans Arbor2TabulaActio STATUS_272_ACTIONES[] = {
     { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 96, FALSUM },
     { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 96, FALSUM },
     { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 96, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 96, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 96, FALSUM },  /* : ternary */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 96, FALSUM },
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 96, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 96, FALSUM },
@@ -3981,6 +4003,81 @@ hic_manens constans Arbor2TabulaActio STATUS_305_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Ternary Operator States (306-310)
+ * ================================================== */
+
+/* State 306: after 'disiunctio ?' - expect expression (true branch) */
+hic_manens constans Arbor2TabulaActio STATUS_306_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 307: after 'disiunctio ? ternarius' - expect ':' */
+hic_manens constans Arbor2TabulaActio STATUS_307_ACTIONES[] = {
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 308, FALSUM }
+};
+
+/* State 308: after 'disiunctio ? ternarius :' - expect expression (false branch) */
+hic_manens constans Arbor2TabulaActio STATUS_308_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 309: after 'disiunctio ? ternarius : ternarius' - reduce P123 */
+hic_manens constans Arbor2TabulaActio STATUS_309_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 123, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 123, FALSUM }
+};
+
+/* State 310: after TERNARIUS at top-level - assignment ops or reduce to assignatio */
+hic_manens constans Arbor2TabulaActio STATUS_310_ACTIONES[] = {
+    /* Ternary chains - shift ? for right-associativity */
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_SHIFT, 306, FALSUM },
+    /* Assignment operators - SHIFT to 293 (right-associative) */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_SHIFT, 293, FALSUM },
+    /* No assignment - reduce to ASSIGNATIO (P121: assignatio -> ternarius) */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 121, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 121, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 121, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 121, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 121, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -4304,7 +4401,13 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(302, "after VIRGA in for-condition - reduce P122"),
     STATUS_INFO(303, "after VIRGA in for-increment - reduce P122"),
     STATUS_INFO(304, "after VIRGA in do-while condition - shift ) to 50"),
-    STATUS_INFO(305, "after VIRGA in switch condition - shift ) to 82")
+    STATUS_INFO(305, "after VIRGA in switch condition - shift ) to 82"),
+    /* States 306-310: Ternary operator */
+    STATUS_INFO(306, "after ? - expects expression (true branch)"),
+    STATUS_INFO(307, "after disiunctio ? ternarius - expects :"),
+    STATUS_INFO(308, "after : - expects expression (false branch)"),
+    STATUS_INFO(309, "after disiunctio ? ternarius : ternarius - reduce P123"),
+    STATUS_INFO(310, "after TERNARIUS - assignment or reduce P121")
 };
 
 /* ==================================================
@@ -4371,6 +4474,7 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 #define INT_NT_AMPERSAND_BITWISE 29
 #define INT_NT_VIRGA             30
 #define INT_NT_ASSIGNATIO        31
+#define INT_NT_TERNARIUS         32
 
 /* ==================================================
  * Per-State GOTO Arrays (Phase 4 refactor)
@@ -4391,6 +4495,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_DECLARATIO,  21 },
@@ -4418,8 +4523,12 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_6_GOTO[] = {
     { INT_NT_FACTOR,      3 },
     { INT_NT_COMPARATIO,  239 },
     { INT_NT_AEQUALITAS,  245 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE, 270 },
+    { INT_NT_PIPA_BITWISE, 272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TERNARIUS,   310 },
     { INT_NT_ASSIGNATIO,  295 },
     { INT_NT_VIRGA,       296 },
     { INT_NT_TRANSLATIO,  264 }
@@ -4474,6 +4583,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_26_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        28 },
@@ -4497,6 +4607,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_31_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TERNARIUS,   310 },
     { INT_NT_ASSIGNATIO,  295 },
     { INT_NT_VIRGA,       299 },  /* if-context: shift ) to state 33 */
     { INT_NT_TRANSLATIO,  264 }
@@ -4514,6 +4625,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_33_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        34 },
@@ -4537,6 +4649,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_35_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        36 },
@@ -4560,6 +4673,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_40_GOTO[] = {
     { INT_NT_PIPA_BITWISE,      272 },
     { INT_NT_CONIUNCTIO,        253 },
     { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        295 },
     { INT_NT_VIRGA,             300 },
     { INT_NT_TRANSLATIO,        264 }
@@ -4577,6 +4691,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_42_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        43 },
@@ -4600,6 +4715,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_45_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        46 },
@@ -4623,6 +4739,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_48_GOTO[] = {
     { INT_NT_PIPA_BITWISE,      272 },
     { INT_NT_CONIUNCTIO,        253 },
     { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        295 },
     { INT_NT_VIRGA,             304 },
     { INT_NT_TRANSLATIO,        264 }
@@ -4640,6 +4757,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_54_GOTO[] = {
     { INT_NT_PIPA_BITWISE,      272 },
     { INT_NT_CONIUNCTIO,        253 },
     { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        295 },
     { INT_NT_VIRGA,             301 },
     { INT_NT_EXPRESSIO_OPT,     56 },
@@ -4658,6 +4776,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_57_GOTO[] = {
     { INT_NT_PIPA_BITWISE,      272 },
     { INT_NT_CONIUNCTIO,        253 },
     { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        295 },
     { INT_NT_VIRGA,             302 },
     { INT_NT_EXPRESSIO_OPT,     59 },
@@ -4676,6 +4795,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_60_GOTO[] = {
     { INT_NT_PIPA_BITWISE,      272 },
     { INT_NT_CONIUNCTIO,        253 },
     { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        295 },
     { INT_NT_VIRGA,             303 },
     { INT_NT_EXPRESSIO_OPT,     62 },
@@ -4694,6 +4814,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_63_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        64 },
@@ -4726,6 +4847,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_77_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        78 },
@@ -4749,6 +4871,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_80_GOTO[] = {
     { INT_NT_PIPA_BITWISE,      272 },
     { INT_NT_CONIUNCTIO,        253 },
     { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        295 },
     { INT_NT_VIRGA,             305 },
     { INT_NT_TRANSLATIO,        264 }
@@ -4766,6 +4889,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_82_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       295 },
     { INT_NT_VIRGA,            296 },
     { INT_NT_SENTENTIA,        83 },
@@ -4797,6 +4921,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_86_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TERNARIUS,   310 },
     { INT_NT_ASSIGNATIO,  295 },
     { INT_NT_VIRGA,       296 },
     { INT_NT_SENTENTIA,   87 },
@@ -4820,6 +4945,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_89_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,  253 },
     { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TERNARIUS,   310 },
     { INT_NT_ASSIGNATIO,  295 },
     { INT_NT_VIRGA,       296 },
     { INT_NT_SENTENTIA,   90 },
@@ -5196,6 +5322,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_293_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       294 },
     { INT_NT_TRANSLATIO,       264 }
 };
@@ -5212,7 +5339,40 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_297_GOTO[] = {
     { INT_NT_PIPA_BITWISE,     272 },
     { INT_NT_CONIUNCTIO,       253 },
     { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        310 },
     { INT_NT_ASSIGNATIO,       298 },
+    { INT_NT_TRANSLATIO,       264 }
+};
+
+/* State 306: after '?' - expects expression (true branch), needs TERNARIUS -> 307 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_306_GOTO[] = {
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        307 },
+    { INT_NT_TRANSLATIO,       264 }
+};
+
+/* State 308: after ':' - expects expression (false branch), needs TERNARIUS -> 309 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_308_GOTO[] = {
+    { INT_NT_EXPR,             1 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TERNARIUS,        309 },
     { INT_NT_TRANSLATIO,       264 }
 };
 
@@ -5537,7 +5697,13 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 302: after VIRGA in for-condition */
     STATUS_GOTO_NIL,   /* 303: after VIRGA in for-increment */
     STATUS_GOTO_NIL,   /* 304: after VIRGA in do-while condition */
-    STATUS_GOTO_NIL    /* 305: after VIRGA in switch condition */
+    STATUS_GOTO_NIL,   /* 305: after VIRGA in switch condition */
+    /* Ternary operator states */
+    STATUS_GOTO(306),  /* 306: after ? - expects true branch */
+    STATUS_GOTO_NIL,   /* 307: after disiunctio ? ternarius - expects : */
+    STATUS_GOTO(308),  /* 308: after : - expects false branch */
+    STATUS_GOTO_NIL,   /* 309: after disiunctio ? ternarius : ternarius - reduce P123 */
+    STATUS_GOTO_NIL    /* 310: after TERNARIUS - assignment or reduce P121 */
 };
 
 
@@ -5691,6 +5857,9 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_ASSIGNATIO:
             nt_int = INT_NT_ASSIGNATIO;
+            frange;
+        casus ARBOR2_NT_TERNARIUS:
+            nt_int = INT_NT_TERNARIUS;
             frange;
         ordinarius:
             nt_int = -I;
@@ -5917,6 +6086,13 @@ arbor2_nt_nomen(Arbor2NonTerminalis nt)
         casus ARBOR2_NT_AEQUALITAS:     redde "AEQUALITAS";
         casus ARBOR2_NT_CONIUNCTIO:     redde "CONIUNCTIO";
         casus ARBOR2_NT_DISIUNCTIO:     redde "DISIUNCTIO";
+        casus ARBOR2_NT_PIPA_BITWISE:   redde "PIPA_BITWISE";
+        casus ARBOR2_NT_CARET_BITWISE:  redde "CARET_BITWISE";
+        casus ARBOR2_NT_AMPERSAND_BITWISE: redde "AMPERSAND_BITWISE";
+        casus ARBOR2_NT_TRANSLATIO:     redde "TRANSLATIO";
+        casus ARBOR2_NT_VIRGA:          redde "VIRGA";
+        casus ARBOR2_NT_ASSIGNATIO:     redde "ASSIGNATIO";
+        casus ARBOR2_NT_TERNARIUS:      redde "TERNARIUS";
         ordinarius:                     redde "IGNOTUM";
     }
 }
@@ -5951,6 +6127,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_COMMUTATIO:    redde "COMMUTATIO";
         casus ARBOR2_NODUS_CASUS:         redde "CASUS";
         casus ARBOR2_NODUS_ORDINARIUS:    redde "ORDINARIUS";
+        casus ARBOR2_NODUS_TERNARIUS:     redde "TERNARIUS";
         casus ARBOR2_NODUS_AMBIGUUS:      redde "AMBIGUUS";
         casus ARBOR2_NODUS_STRUCT_SPECIFIER: redde "STRUCT_SPECIFIER";
         casus ARBOR2_NODUS_ERROR:         redde "ERROR";
