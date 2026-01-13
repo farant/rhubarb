@@ -32,6 +32,105 @@ interior Arbor2Nodus* _construere_nodum_unarium(
     Arbor2GLR* glr, Arbor2Token* operator, Arbor2Nodus* operandum);
 
 /* ==================================================
+ * GSS Path Enumeration for Reductions
+ *
+ * When reducing, we need to explore ALL paths through the GSS,
+ * not just paths starting from multi-predecessor nodes at the top.
+ * Multi-predecessor nodes can appear at ANY depth.
+ * ================================================== */
+
+#define MAX_GSS_PATHS 64
+#define MAX_POP_DEPTH 16
+
+nomen structura GSSPath GSSPath;
+structura GSSPath {
+    Arbor2GSSNodus* end_cursor;
+    Arbor2Nodus*    valori[MAX_POP_DEPTH];
+    Arbor2Token*    lexemata[MAX_POP_DEPTH];
+};
+
+/* Recursively enumerate all paths of given depth from start node.
+ * Stores results in paths array, returns number of paths found. */
+interior s32
+_enumerare_gss_vias(
+    Arbor2GSSNodus* cursor,
+    s32             depth,
+    s32             target_depth,
+    GSSPath*        current_path,
+    GSSPath*        paths,
+    s32             max_paths,
+    s32             num_paths)
+{
+    s32 i;
+
+    si (cursor == NIHIL)
+    {
+        redde num_paths;  /* Path died */
+    }
+
+    si (depth >= MAX_POP_DEPTH)
+    {
+        redde num_paths;  /* Safety limit */
+    }
+
+    /* Handle epsilon reduction (pop 0) - no popping needed */
+    si (target_depth == ZEPHYRUM)
+    {
+        si (num_paths < max_paths)
+        {
+            paths[num_paths].end_cursor = cursor;
+            num_paths++;
+        }
+        redde num_paths;
+    }
+
+    /* Store current node's data in path */
+    current_path->valori[depth] = cursor->valor;
+    current_path->lexemata[depth] = cursor->lexema;
+
+    si (depth + I >= target_depth)
+    {
+        /* Reached target depth - save path for each predecessor */
+        si (cursor->num_praed > ZEPHYRUM)
+        {
+            per (i = ZEPHYRUM; i < cursor->num_praed && num_paths < max_paths; i++)
+            {
+                s32 j;
+                paths[num_paths].end_cursor = cursor->praedecessores[i];
+                per (j = ZEPHYRUM; j <= depth; j++)
+                {
+                    paths[num_paths].valori[j] = current_path->valori[j];
+                    paths[num_paths].lexemata[j] = current_path->lexemata[j];
+                }
+                num_paths++;
+            }
+        }
+        /* If no predecessors at required depth, path is invalid - don't add it */
+    }
+    alioquin
+    {
+        /* Need to go deeper - recurse for each predecessor */
+        si (cursor->num_praed > ZEPHYRUM)
+        {
+            per (i = ZEPHYRUM; i < cursor->num_praed; i++)
+            {
+                num_paths = _enumerare_gss_vias(
+                    cursor->praedecessores[i],
+                    depth + I,
+                    target_depth,
+                    current_path,
+                    paths,
+                    max_paths,
+                    num_paths);
+            }
+        }
+        /* If no predecessors and we need to go deeper, path dies - don't add */
+    }
+
+    redde num_paths;
+}
+
+/* ==================================================
  * Creation
  * ================================================== */
 
@@ -604,8 +703,6 @@ _processare_unam_actionem(
             {
                 /* Execute reduce and add result to pending queue */
                 Arbor2Regula* regula;
-                s32 praed_idx;
-                s32 num_praed_paths;
 
                 regula = arbor2_glr_obtinere_regula(glr, actio->valor);
                 si (regula == NIHIL)
@@ -619,56 +716,51 @@ _processare_unam_actionem(
 #endif
 
                 /* For merged nodes, we need to explore ALL predecessor paths.
-                 * This is critical for GLR parsing correctness. */
-                num_praed_paths = (nodus->num_praed > ZEPHYRUM) ? nodus->num_praed : I;
-                si (regula->longitudo == ZEPHYRUM)
+                 * This is critical for GLR parsing correctness.
+                 * Multi-predecessors can occur at ANY depth of the GSS. */
                 {
-                    num_praed_paths = I;  /* Epsilon rule - no predecessors to explore */
-                }
+                    GSSPath gss_paths[MAX_GSS_PATHS];
+                    GSSPath current_path;
+                    s32 num_gss_paths;
+                    s32 path_idx;
 
-                per (praed_idx = ZEPHYRUM; praed_idx < num_praed_paths; praed_idx++)
-                {
-                    Arbor2GSSNodus* cursor;
-                    Arbor2Nodus* valor_novus;
-                    s32 goto_status;
-                    Arbor2GSSNodus* nodus_novus;
-                    Arbor2GSSNodus** slot;
-                    s32 k;
-                    Arbor2Nodus* valori[16];
-                    Arbor2Token* lexemata[16];
-                    s32 num_pop;
+                    /* Enumerate all paths of the required length through the GSS */
+                    num_gss_paths = _enumerare_gss_vias(
+                        nodus,
+                        ZEPHYRUM,
+                        (s32)regula->longitudo,
+                        &current_path,
+                        gss_paths,
+                        MAX_GSS_PATHS,
+                        ZEPHYRUM);
 
-                    cursor = nodus;
-                    num_pop = ZEPHYRUM;
-
-                    per (k = ZEPHYRUM; k < (s32)regula->longitudo && cursor != NIHIL; k++)
+                    /* Process each path */
+                    per (path_idx = ZEPHYRUM; path_idx < num_gss_paths; path_idx++)
                     {
-                        valori[num_pop] = cursor->valor;
-                        lexemata[num_pop] = cursor->lexema;
-                        num_pop++;
+                        Arbor2GSSNodus* cursor;
+                        Arbor2Nodus* valor_novus;
+                        s32 goto_status;
+                        Arbor2GSSNodus* nodus_novus;
+                        Arbor2GSSNodus** slot;
+                        Arbor2Nodus* valori[16];
+                        Arbor2Token* lexemata[16];
+                        s32 num_pop;
+                        s32 k;
 
-                        si (cursor->num_praed > ZEPHYRUM)
-                        {
-                            /* For first symbol, follow the specific predecessor path */
-                            si (k == ZEPHYRUM && nodus->num_praed > I)
-                            {
-                                cursor = cursor->praedecessores[praed_idx];
-                            }
-                            alioquin
-                            {
-                                cursor = cursor->praedecessores[ZEPHYRUM];
-                            }
-                        }
-                        alioquin
-                        {
-                            cursor = NIHIL;
-                        }
-                    }
+                        cursor = gss_paths[path_idx].end_cursor;
+                        num_pop = (s32)regula->longitudo;
 
-                    si (cursor == NIHIL && k < (s32)regula->longitudo)
-                    {
-                        perge;  /* Not enough on stack for this path */
-                    }
+                        /* Copy values and lexemes from the path */
+                        per (k = ZEPHYRUM; k < num_pop; k++)
+                        {
+                            valori[k] = gss_paths[path_idx].valori[k];
+                            lexemata[k] = gss_paths[path_idx].lexemata[k];
+                        }
+
+                        si (cursor == NIHIL && regula->longitudo > ZEPHYRUM)
+                        {
+                            perge;  /* Path died - not enough on stack */
+                        }
 
                 /* Build AST node */
                 commutatio (regula->nodus_genus)
@@ -1899,8 +1991,8 @@ _processare_unam_actionem(
                 /* Add to pending queue for further processing */
                 slot = xar_addere(reducenda);
                 *slot = nodus_novus;
-                /* Continue to next predecessor path if any */
-                }  /* End of predecessor loop */
+                    }  /* End of path loop */
+                }  /* End of path enumeration block */
                 frange;
             }
 

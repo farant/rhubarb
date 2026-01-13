@@ -519,6 +519,19 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
             frange;
         }
 
+        casus ARBOR2_NODUS_TERNARIUS:
+            imprimere("TERNARIUS: ?:\n");
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("conditio:\n");
+            _imprimere_arborem(nodus->datum.ternarius.conditio, profunditas + II);
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("verum:\n");
+            _imprimere_arborem(nodus->datum.ternarius.verum, profunditas + II);
+            per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
+            imprimere("falsum:\n");
+            _imprimere_arborem(nodus->datum.ternarius.falsum, profunditas + II);
+            frange;
+
         ordinarius:
             imprimere("NODUS: %s\n", arbor2_nodus_genus_nomen(nodus->genus));
             frange;
@@ -6030,6 +6043,312 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
                 CREDO_AEQUALIS_I32((i32)dexter->datum.binarium.operator,
                                    (i32)ARBOR2_LEXEMA_DUPIPA);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Ternary operator - simple
+     * a ? 1 : c -> TERNARIUS(a, 1, c)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans ternary operator: a ? 1 : c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a ? 1 : c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be ternary */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+
+            /* Condition should be identifier 'a' */
+            CREDO_NON_NIHIL(radix->datum.ternarius.conditio);
+            si (radix->datum.ternarius.conditio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.conditio->genus,
+                                   (i32)ARBOR2_NODUS_IDENTIFICATOR);
+            }
+
+            /* True branch should be integer '1' */
+            CREDO_NON_NIHIL(radix->datum.ternarius.verum);
+            si (radix->datum.ternarius.verum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.verum->genus,
+                                   (i32)ARBOR2_NODUS_INTEGER);
+            }
+
+            /* False branch should be identifier 'c' */
+            CREDO_NON_NIHIL(radix->datum.ternarius.falsum);
+            si (radix->datum.ternarius.falsum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.falsum->genus,
+                                   (i32)ARBOR2_NODUS_IDENTIFICATOR);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Ternary operator - right associativity
+     * a ? 1 : b ? 2 : 3 -> a ? 1 : (b ? 2 : 3)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* falsum;
+
+        imprimere("\n--- Probans ternary right-associativity: a ? 1 : b ? 2 : 3 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a ? 1 : b ? 2 : 3");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be ternary: a ? 1 : (nested) */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+
+            /* Condition = a */
+            CREDO_NON_NIHIL(radix->datum.ternarius.conditio);
+            si (radix->datum.ternarius.conditio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.conditio->genus,
+                                   (i32)ARBOR2_NODUS_IDENTIFICATOR);
+            }
+
+            /* True = 1 */
+            CREDO_NON_NIHIL(radix->datum.ternarius.verum);
+            si (radix->datum.ternarius.verum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.verum->genus,
+                                   (i32)ARBOR2_NODUS_INTEGER);
+            }
+
+            /* False = nested ternary (b ? 2 : 3) - proves right-associativity */
+            falsum = radix->datum.ternarius.falsum;
+            CREDO_NON_NIHIL(falsum);
+            si (falsum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)falsum->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+
+                /* Nested condition = b */
+                si (falsum->datum.ternarius.conditio != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)falsum->datum.ternarius.conditio->genus,
+                                       (i32)ARBOR2_NODUS_IDENTIFICATOR);
+                }
+
+                /* Nested true = 2 */
+                si (falsum->datum.ternarius.verum != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)falsum->datum.ternarius.verum->genus,
+                                       (i32)ARBOR2_NODUS_INTEGER);
+                }
+
+                /* Nested false = 3 */
+                si (falsum->datum.ternarius.falsum != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)falsum->datum.ternarius.falsum->genus,
+                                       (i32)ARBOR2_NODUS_INTEGER);
+                }
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Ternary with assignment
+     * a = x ? 1 : 2 -> a = (x ? 1 : 2)
+     * Ternary binds tighter than assignment
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* dexter;
+
+        imprimere("\n--- Probans ternary/assignment precedence: a = x ? 1 : 2 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a = x ? 1 : 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be assignment (=) */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+
+            /* Left = a */
+            CREDO_NON_NIHIL(radix->datum.binarium.sinister);
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.sinister->genus,
+                                   (i32)ARBOR2_NODUS_IDENTIFICATOR);
+            }
+
+            /* Right = ternary (x ? 1 : 2) */
+            dexter = radix->datum.binarium.dexter;
+            CREDO_NON_NIHIL(dexter);
+            si (dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)dexter->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Ternary with logical OR
+     * a || b ? 1 : 2 -> (a || b) ? 1 : 2
+     * Logical OR binds tighter than ternary
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* conditio;
+
+        imprimere("\n--- Probans ternary/logical-or precedence: a || b ? 1 : 2 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a || b ? 1 : 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be ternary */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+
+            /* Condition = (a || b) - || binds tighter */
+            conditio = radix->datum.ternarius.conditio;
+            CREDO_NON_NIHIL(conditio);
+            si (conditio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)conditio->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)conditio->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_DUPIPA);
+            }
+
+            /* True = 1 */
+            CREDO_NON_NIHIL(radix->datum.ternarius.verum);
+            si (radix->datum.ternarius.verum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.verum->genus,
+                                   (i32)ARBOR2_NODUS_INTEGER);
+            }
+
+            /* False = 2 */
+            CREDO_NON_NIHIL(radix->datum.ternarius.falsum);
+            si (radix->datum.ternarius.falsum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.falsum->genus,
+                                   (i32)ARBOR2_NODUS_INTEGER);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Ternary with expressions in branches
+     * a ? 1 + 2 : 3 * 4 (use integers to avoid label ambiguity)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans ternary with expressions: a ? 1 + 2 : 3 * 4 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a ? 1 + 2 : 3 * 4");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be ternary */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_TERNARIUS);
+
+            /* True branch = 1 + 2 */
+            si (radix->datum.ternarius.verum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.verum->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.verum->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_PLUS);
+            }
+
+            /* False branch = 3 * 4 */
+            si (radix->datum.ternarius.falsum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.falsum->genus,
+                                   (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)radix->datum.ternarius.falsum->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_ASTERISCUS);
             }
         }
     }
