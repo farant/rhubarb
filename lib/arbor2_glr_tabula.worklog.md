@@ -118,3 +118,69 @@ Based on lessons learned from implementing bitwise operators, added three new co
 ./glr_quaestio.sh expr-states    # List states needing GOTO entries
 ./glr_quaestio.sh chain-states   # List reduction chain states
 ```
+
+## 2026-01-13: Assignment and Comma Operators - Complete Implementation
+
+### New Precedence Chain:
+```
+VIRGA (,)              <- NEW: lowest precedence, left-associative
+  |
+  v
+ASSIGNATIO (= += etc)  <- NEW: right-associative!
+  |
+  v
+DISIUNCTIO (||)        <- existing
+  ... rest unchanged ...
+```
+
+### What was completed:
+
+1. **Added 2 new non-terminals**: `ARBOR2_NT_VIRGA` (comma) and `ARBOR2_NT_ASSIGNATIO`
+2. **Added 14 new rules (P108-P121)**:
+   - P108: `virga -> virga ',' assignatio` (left-associative comma)
+   - P109: `virga -> assignatio`
+   - P110-P120: Assignment operators (`=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`)
+   - P121: `assignatio -> disiunctio`
+
+3. **Created 6 new states (293-298)**:
+   - 293: after assignment operator - expects expression starters
+   - 294: after 'disiunctio = assignatio' - reduce P110
+   - 295: after ASSIGNATIO - handle comma or reduce P109
+   - 296: after VIRGA - end of expression
+   - 297: after comma - expects expression starters
+   - 298: after 'virga , assignatio' - reduce P108
+
+4. **Modified State 255**: Changed ACCEPT to REDUCE P121 on EOF/SEMICOLON/COMMA, added SHIFT on all 11 assignment operators to state 293
+
+5. **Added GOTO entries** for ASSIGNATIO and VIRGA to all 17+ expression-context states
+
+6. **Added REDUCE entries** for assignment operators to all reduction chain states:
+   - Basic states 1-5
+   - State 239 (after COMPARATIO)
+   - State 240 (after AEQUALITAS)
+   - State 253 (after CONIUNCTIO)
+   - State 264 (after TRANSLATIO)
+   - States 268, 270, 272 (bitwise chain)
+
+### Right-Associativity Implementation:
+For assignment operators, we SHIFT instead of REDUCE when seeing the same-precedence operator:
+- Left-assoc `a + b + c`: After `a + b`, REDUCE → `((a + b) + c)`
+- Right-assoc `a = b = c`: After `a = b`, SHIFT to parse RHS first → `(a = (b = c))`
+
+### Key Debugging Insight:
+When adding new operators at the lowest precedence level (above existing operators), ALL reduction chain states need REDUCE entries for the new operators to trigger the chain. The debug output `GOTO(state, IGNOTUM) = -1` when reducing meant the NT wasn't mapped in the switch statement. `NO ACTIONS - path dies` on a chain state meant that state needed REDUCE entries for the new operator tokens.
+
+### Parsing now works:
+- `a = 1` - simple assignment
+- `a = b = c` → `a = (b = c)` (right-associative)
+- `a += 1`, `a -= 1`, etc. - all compound assignments
+- `a, b` - comma expression
+- `a, b, c` → `((a, b), c)` (left-associative)
+- `a = 1, b = 2` → `(a = 1), (b = 2)` (comma binds looser than assignment)
+- `a = b || c` → `a = (b || c)` (assignment below ||)
+
+### Statistics:
+- Total states: 299 (was 293)
+- Total rules: 122 (was 108)
+- All 783 parser tests pass
+- All 75 project tests pass

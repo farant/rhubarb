@@ -5505,6 +5505,375 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Assignment operator - simple a = 1
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans assignment: a = 1 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a = 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Assignment right-associativity - a = b = c
+     * Should parse as a = (b = c), NOT (a = b) = c
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* dexter;
+
+        imprimere("\n--- Probans assignment right-associativity: a = b = c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a = b = c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be = with a on left, (b = c) on right */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+
+            /* Right should be b = c (another assignment) */
+            dexter = radix->datum.binarium.dexter;
+            CREDO_NON_NIHIL(dexter);
+            si (dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)dexter->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Compound assignment operators
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound assignments: += -= *= /= ---\n");
+
+        /* Test += */
+        tokens = _lexare_ad_tokens(piscina, intern, "a += 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_PLUS_ASSIGN);
+        }
+
+        /* Test -= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a -= 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_MINUS_ASSIGN);
+        }
+
+        /* Test *= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a *= 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_MULT_ASSIGN);
+        }
+
+        /* Test /= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a /= 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_DIV_ASSIGN);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Bitwise assignment operators
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans bitwise assignments: &= |= ^= <<= >>= ---\n");
+
+        /* Test &= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a &= 0xFF");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_AND_ASSIGN);
+        }
+
+        /* Test |= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a |= 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_OR_ASSIGN);
+        }
+
+        /* Test ^= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a ^= mask");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_XOR_ASSIGN);
+        }
+
+        /* Test <<= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a <<= 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_SHL_ASSIGN);
+        }
+
+        /* Test >>= */
+        tokens = _lexare_ad_tokens(piscina, intern, "a >>= 1");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_SHR_ASSIGN);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Comma operator - a, b
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans comma operator: a, b ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a, b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_COMMA);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Comma left-associativity - a, b, c
+     * Should parse as ((a, b), c)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* sinister;
+
+        imprimere("\n--- Probans comma left-associativity: a, b, c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a, b, c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be , with (a, b) on left, c on right */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_COMMA);
+
+            /* Left should be (a, b) another comma */
+            sinister = radix->datum.binarium.sinister;
+            CREDO_NON_NIHIL(sinister);
+            si (sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)sinister->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)sinister->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_COMMA);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Assignment / comma precedence - a = 1, b = 2
+     * Should parse as (a = 1), (b = 2) - comma binds looser
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* sinister;
+        Arbor2Nodus* dexter;
+
+        imprimere("\n--- Probans assignment/comma precedence: a = 1, b = 2 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a = 1, b = 2");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be comma */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_COMMA);
+
+            /* Left should be a = 1 */
+            sinister = radix->datum.binarium.sinister;
+            CREDO_NON_NIHIL(sinister);
+            si (sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)sinister->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)sinister->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+            }
+
+            /* Right should be b = 2 */
+            dexter = radix->datum.binarium.dexter;
+            CREDO_NON_NIHIL(dexter);
+            si (dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)dexter->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Assignment below logical OR - a = b || c
+     * Should parse as a = (b || c)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+        Arbor2Nodus* dexter;
+
+        imprimere("\n--- Probans assignment precedence: a = b || c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a = b || c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Root should be = */
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)radix->datum.binarium.operator,
+                               (i32)ARBOR2_LEXEMA_ASSIGNATIO);
+
+            /* Right should be || */
+            dexter = radix->datum.binarium.dexter;
+            CREDO_NON_NIHIL(dexter);
+            si (dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)dexter->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)dexter->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_DUPIPA);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

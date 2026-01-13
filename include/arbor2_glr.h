@@ -47,7 +47,9 @@ nomen enumeratio {
  * ================================================== */
 
 nomen enumeratio {
-    ARBOR2_NT_DISIUNCTIO,           /* logical OR expressions (||) - lowest precedence */
+    ARBOR2_NT_VIRGA,                /* comma expressions (,) - lowest precedence */
+    ARBOR2_NT_ASSIGNATIO,           /* assignment expressions (= += -= etc) - right-associative */
+    ARBOR2_NT_DISIUNCTIO,           /* logical OR expressions (||) */
     ARBOR2_NT_CONIUNCTIO,           /* logical AND expressions (&&) */
     ARBOR2_NT_PIPA_BITWISE,         /* bitwise OR expressions (|) */
     ARBOR2_NT_CARET_BITWISE,        /* bitwise XOR expressions (^) */
