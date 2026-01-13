@@ -620,17 +620,18 @@ resolvere_nt(constans character* titulus_nt, i32 titulus_len)
 }
 
 /*
- * Parse GOTO_TABULA[] from arbor2_glr_tabula.c source.
- * Format: { <state>, INT_NT_<name>, <new_state> },
+ * Parse per-state GOTO arrays from arbor2_glr_tabula.c source.
+ * Format: STATUS_N_GOTO[] = { { INT_NT_<name>, <new_state> }, ... }
  */
 interior b32
 parsere_goto_tabula(constans character* via)
 {
     FILE* f;
     character linea[512];
-    b32 in_tabula;
+    b32 in_array;
     i32 numerus;
     i32 capacitas;
+    s32 status_currens;
     ParsedGoto* tabula;
 
     f = fopen(via, "r");
@@ -640,30 +641,28 @@ parsere_goto_tabula(constans character* via)
         redde FALSUM;
     }
 
-    /* First pass: count entries */
-    in_tabula = FALSUM;
+    /* First pass: count entries across all STATUS_N_GOTO arrays */
     numerus = ZEPHYRUM;
+    in_array = FALSUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "GOTO_TABULA[]") != NIHIL)
+        /* Track when entering/exiting STATUS_N_GOTO arrays */
+        si (strstr(linea, "STATUS_") != NIHIL && strstr(linea, "_GOTO[]") != NIHIL)
         {
-            in_tabula = VERUM;
+            in_array = VERUM;
+            perge;
+        }
+        si (in_array && strstr(linea, "};") != NIHIL)
+        {
+            in_array = FALSUM;
             perge;
         }
 
-        si (in_tabula)
+        /* Only count entries within per-state arrays */
+        si (in_array &&
+            strstr(linea, "{ INT_NT_") != NIHIL)
         {
-            /* End of array */
-            si (strstr(linea, "};") != NIHIL)
-            {
-                frange;
-            }
-
-            /* Count lines with { number, INT_NT_ */
-            si (strstr(linea, "{ ") != NIHIL && strstr(linea, "INT_NT_") != NIHIL)
-            {
-                numerus++;
-            }
+            numerus++;
         }
     }
 
@@ -685,79 +684,78 @@ parsere_goto_tabula(constans character* via)
 
     /* Second pass: parse entries */
     rewind(f);
-    in_tabula = FALSUM;
+    in_array = FALSUM;
+    status_currens = -I;
     numerus = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "GOTO_TABULA[]") != NIHIL)
+        character* p;
+        character* nt_start;
+        character* nt_end;
+        s32 nt_val;
+        i32 status_novus;
+        i32 nt_len;
+
+        /* Check for STATUS_N_GOTO[] array start */
+        p = strstr(linea, "STATUS_");
+        si (p != NIHIL && strstr(linea, "_GOTO[]") != NIHIL)
         {
-            in_tabula = VERUM;
+            /* Extract state number from STATUS_N_GOTO */
+            status_currens = (s32)strtol(p + VII, NIHIL, 10);
+            in_array = VERUM;
             perge;
         }
 
-        si (in_tabula)
+        /* Check for array end */
+        si (in_array && strstr(linea, "};") != NIHIL)
         {
-            character* p;
-            character* nt_start;
-            character* nt_end;
-            i32 status;
-            s32 nt_val;
-            i32 status_novus;
-            i32 nt_len;
-
-            si (strstr(linea, "};") != NIHIL)
-            {
-                frange;
-            }
-
-            p = strstr(linea, "{ ");
-            si (p == NIHIL || strstr(linea, "INT_NT_") == NIHIL)
-            {
-                perge;
-            }
-
-            /* Parse: { <status>, INT_NT_<name>, <status_novus> } */
-            p += II; /* skip "{ " */
-            status = (i32)strtol(p, &p, 10);
-
-            /* Skip to INT_NT_ */
-            nt_start = strstr(p, "INT_NT_");
-            si (nt_start == NIHIL)
-            {
-                perge;
-            }
-            nt_start += VII; /* skip "INT_NT_" */
-
-            /* Find end of NT name */
-            nt_end = nt_start;
-            dum (*nt_end != '\0' && *nt_end != ',' && *nt_end != ' ' && *nt_end != '\t')
-            {
-                nt_end++;
-            }
-            nt_len = (i32)(nt_end - nt_start);
-
-            /* Resolve NT name to value */
-            nt_val = resolvere_int_nt(nt_start, nt_len);
-            si (nt_val < ZEPHYRUM)
-            {
-                /* Unknown NT - skip */
-                perge;
-            }
-
-            /* Parse status_novus */
-            p = nt_end;
-            dum (*p == ',' || *p == ' ' || *p == '\t')
-            {
-                p++;
-            }
-            status_novus = (i32)strtol(p, NIHIL, 10);
-
-            /* Store entry */
-            tabula[numerus].status = status;
-            tabula[numerus].nt = nt_val;
-            tabula[numerus].status_novus = status_novus;
-            numerus++;
+            in_array = FALSUM;
+            perge;
         }
+
+        /* Only parse entries within per-state arrays */
+        si (!in_array)
+        {
+            perge;
+        }
+
+        /* Parse entry: { INT_NT_<name>, <new_state> } */
+        p = strstr(linea, "{ INT_NT_");
+        si (p == NIHIL)
+        {
+            perge;
+        }
+
+        /* Parse NT name */
+        nt_start = p + IX; /* skip "{ INT_NT_" */
+        nt_end = nt_start;
+        dum (*nt_end != '\0' && *nt_end != ',' && *nt_end != ' ' && *nt_end != '\t')
+        {
+            nt_end++;
+        }
+        nt_len = (i32)(nt_end - nt_start);
+
+        /* Resolve NT name to value */
+        nt_val = resolvere_int_nt(nt_start, nt_len);
+        si (nt_val < ZEPHYRUM)
+        {
+            /* Unknown NT - skip */
+            perge;
+        }
+
+        /* Parse status_novus (second field) */
+        p = nt_end;
+        dum (*p == ',' || *p == ' ' || *p == '\t')
+        {
+            p++;
+        }
+        status_novus = (i32)strtol(p, NIHIL, 10);
+
+        /* Store entry */
+        tabula[numerus].status = (i32)status_currens;
+        tabula[numerus].nt = nt_val;
+        tabula[numerus].status_novus = status_novus;
+        numerus++;
     }
 
     fclose(f);
