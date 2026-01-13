@@ -3676,6 +3676,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 6, INT_NT_FACTOR, 3 },
     { 6, INT_NT_COMPARATIO, 239 },      /* E9.2 */
     { 6, INT_NT_AEQUALITAS, 245 },      /* E9.2: inside-parens aequalitas */
+    { 6, INT_NT_CONIUNCTIO, 253 },      /* E10: coniunctio inside parens */
+    { 6, INT_NT_DISIUNCTIO, 255 },      /* E10: disiunctio inside parens */
 
     /* From state 7: after unary '*' */
     { 7, INT_NT_FACTOR, 15 },
@@ -3725,6 +3727,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 26, INT_NT_FACTOR,    3 },    /* reuse factor state */
     { 26, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in compound */
     { 26, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in compound */
+    { 26, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in compound */
+    { 26, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in compound -> shift ';' for stmt */
     { 26, INT_NT_SENTENTIA, 28 },   /* statement in list */
     { 26, INT_NT_CORPUS,    29 },   /* nested compound */
     { 26, INT_NT_SI,        37 },   /* if statement in list */
@@ -3738,6 +3742,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 31, INT_NT_FACTOR,    3 },    /* reuse factor state */
     { 31, INT_NT_COMPARATIO, 246 }, /* E9.2: after comparatio in if condition */
     { 31, INT_NT_AEQUALITAS, 247 }, /* E9.2: after aequalitas in if condition */
+    { 31, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in if condition */
+    { 31, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in if condition */
 
     /* From state 33: after 'if ( expr )' - then-branch statement */
     { 33, INT_NT_EXPR,      1 },    /* expression in then-branch */
@@ -3745,6 +3751,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 33, INT_NT_FACTOR,    3 },    /* factor in expression */
     { 33, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in then-branch */
     { 33, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in then-branch */
+    { 33, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in then-branch */
+    { 33, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in then-branch */
     { 33, INT_NT_SENTENTIA, 34 },   /* then-branch statement */
     { 33, INT_NT_CORPUS,    38 },   /* nested compound - reduce P15 first */
     { 33, INT_NT_SI,        37 },   /* nested if statement */
@@ -3755,6 +3763,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 35, INT_NT_FACTOR,    3 },    /* factor in expression */
     { 35, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in else-branch */
     { 35, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in else-branch */
+    { 35, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in else-branch */
+    { 35, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in else-branch */
     { 35, INT_NT_SENTENTIA, 36 },   /* else-branch statement */
     { 35, INT_NT_CORPUS,    38 },   /* nested compound - reduce P15 first */
     { 35, INT_NT_SI,        37 },   /* nested if statement in else-branch */
@@ -3783,6 +3793,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 40, INT_NT_FACTOR,    3 },    /* factor in expression */
     { 40, INT_NT_COMPARATIO, 246 }, /* E9.2: after comparatio in while condition */
     { 40, INT_NT_AEQUALITAS, 248 }, /* E9.2: after aequalitas in while condition */
+    { 40, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in while condition */
+    { 40, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in while condition */
 
     /* From state 42: after 'while ( expr )' - loop body */
     { 42, INT_NT_EXPR,      1 },    /* expression in body */
@@ -3790,6 +3802,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 42, INT_NT_FACTOR,    3 },    /* factor in expression */
     { 42, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in while body */
     { 42, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in while body */
+    { 42, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in while body */
+    { 42, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in while body */
     { 42, INT_NT_SENTENTIA, 43 },   /* loop body statement */
     { 42, INT_NT_CORPUS,    38 },   /* compound body */
     { 42, INT_NT_SI,        37 },   /* if in body */
@@ -3802,6 +3816,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 45, INT_NT_FACTOR,    3 },    /* factor in expression */
     { 45, INT_NT_COMPARATIO, 239 }, /* E9.2: comparatio in do body */
     { 45, INT_NT_AEQUALITAS, 240 }, /* E9.2: aequalitas in do body */
+    { 45, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in do body */
+    { 45, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in do body */
     { 45, INT_NT_SENTENTIA, 46 },   /* loop body statement */
     { 45, INT_NT_CORPUS,    38 },   /* compound body */
     { 45, INT_NT_SI,        37 },   /* if in body */
@@ -3814,6 +3830,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 48, INT_NT_FACTOR,    3 },    /* factor in expression */
     { 48, INT_NT_COMPARATIO, 246 }, /* E9.2: after comparatio in do-while condition */
     { 48, INT_NT_AEQUALITAS, 251 }, /* E9.2: after aequalitas in do-while condition */
+    { 48, INT_NT_CONIUNCTIO, 253 }, /* E10: coniunctio in do-while condition */
+    { 48, INT_NT_DISIUNCTIO, 255 }, /* E10: disiunctio in do-while condition */
 
     /* ==================================================
      * FOR GOTO Entries
@@ -3849,6 +3867,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 57, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 57, INT_NT_COMPARATIO,        249 },  /* E9.2: comparatio in for condition */
     { 57, INT_NT_AEQUALITAS,        250 },  /* E9.2: aequalitas in for condition */
+    { 57, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in for condition */
+    { 57, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in for condition */
     { 57, INT_NT_EXPRESSIO_OPT,     59 },   /* expr_opt (condition) */
 
     /* From state 60: after 'for ( ... ;' - increment expression */
@@ -3863,6 +3883,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 63, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 63, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in for body */
     { 63, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in for body */
+    { 63, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in for body */
+    { 63, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in for body */
     { 63, INT_NT_SENTENTIA,         64 },   /* loop body statement */
     { 63, INT_NT_CORPUS,            38 },   /* compound body */
     { 63, INT_NT_SI,                37 },   /* if in body */
@@ -3886,6 +3908,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 77, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 77, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in label body */
     { 77, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in label body */
+    { 77, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in label body */
+    { 77, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in label body */
     { 77, INT_NT_SENTENTIA,         78 },   /* labeled statement */
     { 77, INT_NT_CORPUS,            38 },   /* compound body */
     { 77, INT_NT_SI,                37 },   /* if in body */
@@ -3903,6 +3927,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 80, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 80, INT_NT_COMPARATIO,        246 },  /* E9.2: after comparatio in switch condition */
     { 80, INT_NT_AEQUALITAS,        252 },  /* E9.2: after aequalitas in switch condition */
+    { 80, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in switch condition */
+    { 80, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in switch condition */
 
     /* From state 82: after 'switch ( expr )' - body statement */
     { 82, INT_NT_EXPR,              1 },    /* expression in body */
@@ -3910,6 +3936,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 82, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 82, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in switch body */
     { 82, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in switch body */
+    { 82, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in switch body */
+    { 82, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in switch body */
     { 82, INT_NT_SENTENTIA,         83 },   /* switch body statement */
     { 82, INT_NT_CORPUS,            38 },   /* compound body */
     { 82, INT_NT_SI,                37 },   /* if in body */
@@ -3928,6 +3956,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 86, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 86, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in case body */
     { 86, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in case body */
+    { 86, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in case body */
+    { 86, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in case body */
     { 86, INT_NT_SENTENTIA,         87 },   /* case body statement */
     { 86, INT_NT_CORPUS,            38 },   /* compound body */
     { 86, INT_NT_SI,                37 },   /* if in body */
@@ -3941,6 +3971,8 @@ hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     { 89, INT_NT_FACTOR,            3 },    /* factor in expression */
     { 89, INT_NT_COMPARATIO,        239 },  /* E9.2: comparatio in default body */
     { 89, INT_NT_AEQUALITAS,        240 },  /* E9.2: aequalitas in default body */
+    { 89, INT_NT_CONIUNCTIO,        253 },  /* E10: coniunctio in default body */
+    { 89, INT_NT_DISIUNCTIO,        255 },  /* E10: disiunctio in default body */
     { 89, INT_NT_SENTENTIA,         90 },   /* default body statement */
     { 89, INT_NT_CORPUS,            38 },   /* compound body */
     { 89, INT_NT_SI,                37 },   /* if in body */
