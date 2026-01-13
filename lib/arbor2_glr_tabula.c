@@ -12,6 +12,7 @@
 #include "arbor2_glr.h"
 #include "xar.h"
 #include <string.h>
+#include <stdio.h>
 
 /* ==================================================
  * Expression Grammar (simplified for initial testing)
@@ -1802,6 +1803,9 @@ hic_manens constans Arbor2TabulaActio STATUS_111_ACTIONES[] = {
 };
 
 /* State 112: (reserved/unused) */
+hic_manens constans Arbor2TabulaActio STATUS_112_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF, ARBOR2_ACTIO_ERROR, 0, FALSUM }
+};
 
 /* State 113: after 'type_spec declarator compound' - reduce P44 */
 hic_manens constans Arbor2TabulaActio STATUS_113_ACTIONES[] = {
@@ -1814,6 +1818,9 @@ hic_manens constans Arbor2TabulaActio STATUS_114_ACTIONES[] = {
 };
 
 /* State 115: (reserved/unused) */
+hic_manens constans Arbor2TabulaActio STATUS_115_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF, ARBOR2_ACTIO_ERROR, 0, FALSUM }
+};
 
 /* State 116: after 'type_spec name' (direct declarator) - reduce P12 */
 hic_manens constans Arbor2TabulaActio STATUS_116_ACTIONES[] = {
@@ -3243,8 +3250,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(109, "after 'param_list , type_spec declarator' - reduce P43"),
     STATUS_INFO(110, "after 'param_list , type_spec * decl' - reduce P11"),
     STATUS_INFO(111, "after 'param_list , param_decl' - reduce P42"),
+    STATUS_INFO(112, "(reserved/unused)"),
     STATUS_INFO(113, "after 'type_spec declarator compound' - reduce P44"),
     STATUS_INFO(114, "after function_definition - accept"),
+    STATUS_INFO(115, "(reserved/unused)"),
     STATUS_INFO(116, "after 'type_spec name' direct decl - reduce P12"),
     STATUS_INFO(117, "after 'struct' - expect ID or '{'"),
     STATUS_INFO(118, "after 'struct ID' - expect '{' or reduce P47"),
@@ -6823,6 +6832,921 @@ hic_manens i32 ACTIO_INDICES[] = {
 #define INT_NT_DISIUNCTIO    25
 #define INT_NT_TRANSLATIO    26
 
+/* ==================================================
+ * Per-State GOTO Arrays (Phase 4 refactor)
+ *
+ * New structure: Arbor2StatusGotoEntry { non_terminalis, status_novus }
+ * sizeof-computed counts eliminate manual maintenance
+ * ================================================== */
+
+/* State 0: initial - expects expression/declaration/statement */
+hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_DECLARATIO,  21 },
+    { INT_NT_SENTENTIA,   24 },
+    { INT_NT_CORPUS,      29 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_DEFINITIO,   114 },
+    { INT_NT_STRUCT_SPEC, 4 },
+    { INT_NT_ENUM_SPEC,   4 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 4: after identifier as type_specifier */
+hic_manens constans Arbor2StatusGotoEntry STATUS_4_GOTO[] = {
+    { INT_NT_DECLARATOR, 20 }
+};
+
+/* State 6: after '(' - full expression chain inside parens */
+hic_manens constans Arbor2StatusGotoEntry STATUS_6_GOTO[] = {
+    { INT_NT_EXPR,        11 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  245 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 7: after unary '*' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_7_GOTO[] = {
+    { INT_NT_FACTOR, 15 }
+};
+
+/* State 8: after unary '&' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_8_GOTO[] = {
+    { INT_NT_FACTOR, 16 }
+};
+
+/* State 9: after expr '+' or '-' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_9_GOTO[] = {
+    { INT_NT_TERM,       13 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 10: after term '*' or '/' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_10_GOTO[] = {
+    { INT_NT_FACTOR, 14 }
+};
+
+/* State 17: after '*' in declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_17_GOTO[] = {
+    { INT_NT_DECLARATOR, 19 }
+};
+
+/* State 20: after declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_20_GOTO[] = {
+    { INT_NT_CORPUS, 113 }
+};
+
+/* State 25: after epsilon reduce to empty list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_25_GOTO[] = {
+    { INT_NT_ELENCHUS, 26 }
+};
+
+/* State 26: inside compound, after expression components */
+hic_manens constans Arbor2StatusGotoEntry STATUS_26_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   28 },
+    { INT_NT_CORPUS,      29 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 31: after 'if (' - expression components */
+hic_manens constans Arbor2StatusGotoEntry STATUS_31_GOTO[] = {
+    { INT_NT_EXPR,        32 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  246 },
+    { INT_NT_AEQUALITAS,  247 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 33: after 'if ( expr )' - then-branch statement */
+hic_manens constans Arbor2StatusGotoEntry STATUS_33_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   34 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 35: after 'if ( expr ) stmt else' - else-branch statement */
+hic_manens constans Arbor2StatusGotoEntry STATUS_35_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   36 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 40: after 'while (' - condition expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_40_GOTO[] = {
+    { INT_NT_EXPR,        41 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  246 },
+    { INT_NT_AEQUALITAS,  248 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 42: after 'while ( expr )' - loop body */
+hic_manens constans Arbor2StatusGotoEntry STATUS_42_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   43 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 45: after 'do' - loop body */
+hic_manens constans Arbor2StatusGotoEntry STATUS_45_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   46 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 48: after 'do stmt while (' - condition expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_48_GOTO[] = {
+    { INT_NT_EXPR,        49 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  246 },
+    { INT_NT_AEQUALITAS,  251 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 54: after 'for (' - init expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_54_GOTO[] = {
+    { INT_NT_EXPR,          55 },
+    { INT_NT_TERM,          2 },
+    { INT_NT_FACTOR,        3 },
+    { INT_NT_EXPRESSIO_OPT, 56 },
+    { INT_NT_TRANSLATIO,    264 }
+};
+
+/* State 57: after 'for ( expr_opt ;' - condition expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_57_GOTO[] = {
+    { INT_NT_EXPR,          58 },
+    { INT_NT_TERM,          2 },
+    { INT_NT_FACTOR,        3 },
+    { INT_NT_COMPARATIO,    249 },
+    { INT_NT_AEQUALITAS,    250 },
+    { INT_NT_CONIUNCTIO,    253 },
+    { INT_NT_DISIUNCTIO,    255 },
+    { INT_NT_EXPRESSIO_OPT, 59 },
+    { INT_NT_TRANSLATIO,    264 }
+};
+
+/* State 60: after 'for ( ... ;' - increment expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_60_GOTO[] = {
+    { INT_NT_EXPR,          61 },
+    { INT_NT_TERM,          2 },
+    { INT_NT_FACTOR,        3 },
+    { INT_NT_EXPRESSIO_OPT, 62 },
+    { INT_NT_TRANSLATIO,    264 }
+};
+
+/* State 63: after 'for ( ... )' - loop body */
+hic_manens constans Arbor2StatusGotoEntry STATUS_63_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   64 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 70: after 'return' - expression for return value */
+hic_manens constans Arbor2StatusGotoEntry STATUS_70_GOTO[] = {
+    { INT_NT_EXPR,          71 },
+    { INT_NT_TERM,          2 },
+    { INT_NT_FACTOR,        3 },
+    { INT_NT_EXPRESSIO_OPT, 72 },
+    { INT_NT_TRANSLATIO,    264 }
+};
+
+/* State 77: after 'IDENTIFIER :' - labeled statement body */
+hic_manens constans Arbor2StatusGotoEntry STATUS_77_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   78 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 80: after 'switch (' - expression components */
+hic_manens constans Arbor2StatusGotoEntry STATUS_80_GOTO[] = {
+    { INT_NT_EXPR,        81 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  246 },
+    { INT_NT_AEQUALITAS,  252 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 82: after 'switch ( expr )' - body statement */
+hic_manens constans Arbor2StatusGotoEntry STATUS_82_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   83 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 84: after 'case' - expression components */
+hic_manens constans Arbor2StatusGotoEntry STATUS_84_GOTO[] = {
+    { INT_NT_EXPR,       85 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 86: after 'case expr :' - body statement */
+hic_manens constans Arbor2StatusGotoEntry STATUS_86_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   87 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 89: after 'default :' - body statement */
+hic_manens constans Arbor2StatusGotoEntry STATUS_89_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  240 },
+    { INT_NT_CONIUNCTIO,  253 },
+    { INT_NT_DISIUNCTIO,  255 },
+    { INT_NT_SENTENTIA,   90 },
+    { INT_NT_CORPUS,      38 },
+    { INT_NT_SI,          37 },
+    { INT_NT_DUM,         44 },
+    { INT_NT_FAC,         52 },
+    { INT_NT_PER,         65 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 91: parameter list start */
+hic_manens constans Arbor2StatusGotoEntry STATUS_91_GOTO[] = {
+    { INT_NT_PARAM_DECL, 101 },
+    { INT_NT_PARAM_LIST, 102 }
+};
+
+/* State 95: after type_spec in parameter */
+hic_manens constans Arbor2StatusGotoEntry STATUS_95_GOTO[] = {
+    { INT_NT_DECLARATOR, 99 }
+};
+
+/* State 96: after type_spec * in parameter */
+hic_manens constans Arbor2StatusGotoEntry STATUS_96_GOTO[] = {
+    { INT_NT_DECLARATOR, 100 }
+};
+
+/* State 104: after ',' in parameter list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_104_GOTO[] = {
+    { INT_NT_PARAM_DECL, 111 }
+};
+
+/* State 105: after ', type_spec' in parameter list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_105_GOTO[] = {
+    { INT_NT_DECLARATOR, 109 }
+};
+
+/* State 106: after ', type_spec *' in parameter list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_106_GOTO[] = {
+    { INT_NT_DECLARATOR, 110 }
+};
+
+/* State 119: anonymous struct - expects member list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_119_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 127 },
+    { INT_NT_STRUCT_SPEC,    174 },
+    { INT_NT_ENUM_SPEC,      186 }
+};
+
+/* State 120: named struct - expects member list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_120_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 129 },
+    { INT_NT_STRUCT_SPEC,    174 },
+    { INT_NT_ENUM_SPEC,      186 }
+};
+
+/* State 121: type_spec in first struct member */
+hic_manens constans Arbor2StatusGotoEntry STATUS_121_GOTO[] = {
+    { INT_NT_DECLARATOR, 221 }
+};
+
+/* State 127: more members in anonymous struct */
+hic_manens constans Arbor2StatusGotoEntry STATUS_127_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 127 },
+    { INT_NT_STRUCT_SPEC,    180 },
+    { INT_NT_ENUM_SPEC,      192 }
+};
+
+/* State 129: more members in named struct */
+hic_manens constans Arbor2StatusGotoEntry STATUS_129_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 129 },
+    { INT_NT_STRUCT_SPEC,    180 },
+    { INT_NT_ENUM_SPEC,      192 }
+};
+
+/* State 131: type_spec in subsequent struct member */
+hic_manens constans Arbor2StatusGotoEntry STATUS_131_GOTO[] = {
+    { INT_NT_DECLARATOR, 223 }
+};
+
+/* State 139: anonymous union - expects member list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_139_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 141 },
+    { INT_NT_STRUCT_SPEC,    174 },
+    { INT_NT_ENUM_SPEC,      186 }
+};
+
+/* State 140: named union - expects member list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_140_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 143 },
+    { INT_NT_STRUCT_SPEC,    174 },
+    { INT_NT_ENUM_SPEC,      186 }
+};
+
+/* State 141: more members in anonymous union */
+hic_manens constans Arbor2StatusGotoEntry STATUS_141_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 141 },
+    { INT_NT_STRUCT_SPEC,    180 },
+    { INT_NT_ENUM_SPEC,      192 }
+};
+
+/* State 143: more members in named union */
+hic_manens constans Arbor2StatusGotoEntry STATUS_143_GOTO[] = {
+    { INT_NT_STRUCT_MEMBERS, 143 },
+    { INT_NT_STRUCT_SPEC,    180 },
+    { INT_NT_ENUM_SPEC,      192 }
+};
+
+/* State 147: anonymous enum - expects enumerator list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_147_GOTO[] = {
+    { INT_NT_ENUMERATOR, 152 },
+    { INT_NT_ENUM_LIST,  153 }
+};
+
+/* State 148: named enum - expects enumerator list */
+hic_manens constans Arbor2StatusGotoEntry STATUS_148_GOTO[] = {
+    { INT_NT_ENUMERATOR, 152 },
+    { INT_NT_ENUM_LIST,  155 }
+};
+
+/* State 150: expression for enumerator value */
+hic_manens constans Arbor2StatusGotoEntry STATUS_150_GOTO[] = {
+    { INT_NT_EXPR,       151 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 156: subsequent enumerator after comma */
+hic_manens constans Arbor2StatusGotoEntry STATUS_156_GOTO[] = {
+    { INT_NT_ENUMERATOR, 161 }
+};
+
+/* State 159: expression for subsequent enumerator value */
+hic_manens constans Arbor2StatusGotoEntry STATUS_159_GOTO[] = {
+    { INT_NT_EXPR,       160 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 162: expression for first named bit field */
+hic_manens constans Arbor2StatusGotoEntry STATUS_162_GOTO[] = {
+    { INT_NT_EXPR,       163 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 165: expression for subsequent named bit field */
+hic_manens constans Arbor2StatusGotoEntry STATUS_165_GOTO[] = {
+    { INT_NT_EXPR,       166 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 168: expression for first anonymous bit field */
+hic_manens constans Arbor2StatusGotoEntry STATUS_168_GOTO[] = {
+    { INT_NT_EXPR,       169 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 171: expression for subsequent anonymous bit field */
+hic_manens constans Arbor2StatusGotoEntry STATUS_171_GOTO[] = {
+    { INT_NT_EXPR,       172 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 174: nested struct_spec in first member context */
+hic_manens constans Arbor2StatusGotoEntry STATUS_174_GOTO[] = {
+    { INT_NT_DECLARATOR, 231 }
+};
+
+/* State 180: nested struct_spec in subsequent member context */
+hic_manens constans Arbor2StatusGotoEntry STATUS_180_GOTO[] = {
+    { INT_NT_DECLARATOR, 233 }
+};
+
+/* State 186: nested enum_spec in first member context */
+hic_manens constans Arbor2StatusGotoEntry STATUS_186_GOTO[] = {
+    { INT_NT_DECLARATOR, 235 }
+};
+
+/* State 192: nested enum_spec in subsequent member context */
+hic_manens constans Arbor2StatusGotoEntry STATUS_192_GOTO[] = {
+    { INT_NT_DECLARATOR, 237 }
+};
+
+/* State 198: after 'typedef' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_198_GOTO[] = {
+    { INT_NT_STRUCT_SPEC, 205 },
+    { INT_NT_ENUM_SPEC,   211 }
+};
+
+/* State 199: typedef type_spec - expects declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_199_GOTO[] = {
+    { INT_NT_DECLARATOR, 225 }
+};
+
+/* State 205: typedef struct_spec - expects declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_205_GOTO[] = {
+    { INT_NT_DECLARATOR, 227 }
+};
+
+/* State 211: typedef enum_spec - expects declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_211_GOTO[] = {
+    { INT_NT_DECLARATOR, 229 }
+};
+
+/* State 217: after 'declarator [' - array size expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_217_GOTO[] = {
+    { INT_NT_EXPR,       219 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 241: after 'comparatio <|>|<=|>=' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_241_GOTO[] = {
+    { INT_NT_EXPR,       243 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 267 }
+};
+
+/* State 242: after 'aequalitas ==|!=' */
+hic_manens constans Arbor2StatusGotoEntry STATUS_242_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  244 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 254: after 'coniunctio &&' - parse RHS aequalitas */
+hic_manens constans Arbor2StatusGotoEntry STATUS_254_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  257 },
+    { INT_NT_CONIUNCTIO,  258 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 256: after 'disiunctio ||' - parse RHS coniunctio */
+hic_manens constans Arbor2StatusGotoEntry STATUS_256_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  259 },
+    { INT_NT_CONIUNCTIO,  260 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 261: after 'coniunctio &&' within || context */
+hic_manens constans Arbor2StatusGotoEntry STATUS_261_GOTO[] = {
+    { INT_NT_EXPR,        1 },
+    { INT_NT_TERM,        2 },
+    { INT_NT_FACTOR,      3 },
+    { INT_NT_COMPARATIO,  239 },
+    { INT_NT_AEQUALITAS,  262 },
+    { INT_NT_CONIUNCTIO,  263 },
+    { INT_NT_TRANSLATIO,  264 }
+};
+
+/* State 265: after translatio << or >> */
+hic_manens constans Arbor2StatusGotoEntry STATUS_265_GOTO[] = {
+    { INT_NT_EXPR,       266 },
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 266 }
+};
+
+/* ==================================================
+ * STATUS_GOTO Macro and Master Table
+ * ================================================== */
+
+#define STATUS_GOTO(n) { \
+    STATUS_##n##_GOTO, \
+    (s32)(magnitudo(STATUS_##n##_GOTO) / magnitudo(STATUS_##n##_GOTO[0])) \
+}
+
+#define STATUS_GOTO_NIL { NIHIL, 0 }
+
+/* Master GOTO table - indexed by state number */
+hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
+    STATUS_GOTO(0),    /* 0: initial */
+    STATUS_GOTO_NIL,   /* 1: after expression */
+    STATUS_GOTO_NIL,   /* 2: after term */
+    STATUS_GOTO_NIL,   /* 3: after factor */
+    STATUS_GOTO(4),    /* 4: after ID as type_spec */
+    STATUS_GOTO_NIL,   /* 5: after INTEGER */
+    STATUS_GOTO(6),    /* 6: after '(' */
+    STATUS_GOTO(7),    /* 7: after unary '*' */
+    STATUS_GOTO(8),    /* 8: after unary '&' */
+    STATUS_GOTO(9),    /* 9: after expr '+' */
+    STATUS_GOTO(10),   /* 10: after term '*' */
+    STATUS_GOTO_NIL,   /* 11: after '(' expression */
+    STATUS_GOTO_NIL,   /* 12: after '(' expression ')' */
+    STATUS_GOTO_NIL,   /* 13: after expression '+' term */
+    STATUS_GOTO_NIL,   /* 14: after term '*' factor */
+    STATUS_GOTO_NIL,   /* 15: after '*' factor (unary) */
+    STATUS_GOTO_NIL,   /* 16: after '&' factor (unary) */
+    STATUS_GOTO(17),   /* 17: after '*' in declarator */
+    STATUS_GOTO_NIL,   /* 18: after ID in declarator */
+    STATUS_GOTO_NIL,   /* 19: after pointer declarator */
+    STATUS_GOTO(20),   /* 20: after declarator */
+    STATUS_GOTO_NIL,   /* 21: after declaration */
+    STATUS_GOTO_NIL,   /* 22: reserved */
+    STATUS_GOTO_NIL,   /* 23: reserved */
+    STATUS_GOTO_NIL,   /* 24: after expression statement */
+    STATUS_GOTO(25),   /* 25: after '{' - epsilon reduce */
+    STATUS_GOTO(26),   /* 26: inside compound */
+    STATUS_GOTO_NIL,   /* 27: reserved */
+    STATUS_GOTO_NIL,   /* 28: statement in list */
+    STATUS_GOTO_NIL,   /* 29: after compound */
+    STATUS_GOTO_NIL,   /* 30: after 'if' */
+    STATUS_GOTO(31),   /* 31: after 'if (' */
+    STATUS_GOTO_NIL,   /* 32: after 'if (' expression */
+    STATUS_GOTO(33),   /* 33: after 'if ( expr )' */
+    STATUS_GOTO_NIL,   /* 34: then-branch statement */
+    STATUS_GOTO(35),   /* 35: after 'if ( expr ) stmt else' */
+    STATUS_GOTO_NIL,   /* 36: else-branch statement */
+    STATUS_GOTO_NIL,   /* 37: after if_statement */
+    STATUS_GOTO_NIL,   /* 38: nested compound */
+    STATUS_GOTO_NIL,   /* 39: after 'while' */
+    STATUS_GOTO(40),   /* 40: after 'while (' */
+    STATUS_GOTO_NIL,   /* 41: after 'while (' expression */
+    STATUS_GOTO(42),   /* 42: after 'while ( expr )' */
+    STATUS_GOTO_NIL,   /* 43: while body statement */
+    STATUS_GOTO_NIL,   /* 44: after while_statement */
+    STATUS_GOTO(45),   /* 45: after 'do' */
+    STATUS_GOTO_NIL,   /* 46: do body statement */
+    STATUS_GOTO_NIL,   /* 47: after 'do stmt while' */
+    STATUS_GOTO(48),   /* 48: after 'do stmt while (' */
+    STATUS_GOTO_NIL,   /* 49: after 'do stmt while (' expression */
+    STATUS_GOTO_NIL,   /* 50: after 'do stmt while ( expr )' */
+    STATUS_GOTO_NIL,   /* 51: reserved */
+    STATUS_GOTO_NIL,   /* 52: after do_statement */
+    STATUS_GOTO_NIL,   /* 53: after 'for' */
+    STATUS_GOTO(54),   /* 54: after 'for (' */
+    STATUS_GOTO_NIL,   /* 55: for init expression */
+    STATUS_GOTO_NIL,   /* 56: after for expr_opt (init) */
+    STATUS_GOTO(57),   /* 57: after 'for ( expr_opt ;' */
+    STATUS_GOTO_NIL,   /* 58: for condition expression */
+    STATUS_GOTO_NIL,   /* 59: after for expr_opt (condition) */
+    STATUS_GOTO(60),   /* 60: after 'for ( ... ;' */
+    STATUS_GOTO_NIL,   /* 61: for increment expression */
+    STATUS_GOTO_NIL,   /* 62: after for expr_opt (increment) */
+    STATUS_GOTO(63),   /* 63: after 'for ( ... )' */
+    STATUS_GOTO_NIL,   /* 64: for body statement */
+    STATUS_GOTO_NIL,   /* 65: after for_statement */
+    STATUS_GOTO_NIL,   /* 66: reserved */
+    STATUS_GOTO_NIL,   /* 67: reserved */
+    STATUS_GOTO_NIL,   /* 68: after 'break' */
+    STATUS_GOTO_NIL,   /* 69: after 'continue' */
+    STATUS_GOTO(70),   /* 70: after 'return' */
+    STATUS_GOTO_NIL,   /* 71: return expression */
+    STATUS_GOTO_NIL,   /* 72: after return expr_opt */
+    STATUS_GOTO_NIL,   /* 73: reserved */
+    STATUS_GOTO_NIL,   /* 74: reserved */
+    STATUS_GOTO_NIL,   /* 75: after 'goto' */
+    STATUS_GOTO_NIL,   /* 76: after 'goto ID' */
+    STATUS_GOTO(77),   /* 77: after 'ID :' */
+    STATUS_GOTO_NIL,   /* 78: labeled statement */
+    STATUS_GOTO_NIL,   /* 79: after 'switch' */
+    STATUS_GOTO(80),   /* 80: after 'switch (' */
+    STATUS_GOTO_NIL,   /* 81: switch condition expression */
+    STATUS_GOTO(82),   /* 82: after 'switch ( expr )' */
+    STATUS_GOTO_NIL,   /* 83: switch body statement */
+    STATUS_GOTO(84),   /* 84: after 'case' */
+    STATUS_GOTO_NIL,   /* 85: case expression */
+    STATUS_GOTO(86),   /* 86: after 'case expr :' */
+    STATUS_GOTO_NIL,   /* 87: case body statement */
+    STATUS_GOTO_NIL,   /* 88: after 'default' */
+    STATUS_GOTO(89),   /* 89: after 'default :' */
+    STATUS_GOTO_NIL,   /* 90: default body statement */
+    STATUS_GOTO(91),   /* 91: param list start */
+    STATUS_GOTO_NIL,   /* 92: reserved */
+    STATUS_GOTO_NIL,   /* 93: reserved */
+    STATUS_GOTO_NIL,   /* 94: reserved */
+    STATUS_GOTO(95),   /* 95: after type_spec in param */
+    STATUS_GOTO(96),   /* 96: after type_spec * in param */
+    STATUS_GOTO_NIL,   /* 97: reserved */
+    STATUS_GOTO_NIL,   /* 98: reserved */
+    STATUS_GOTO_NIL,   /* 99: param declarator */
+    STATUS_GOTO_NIL,   /* 100: pointer param declarator */
+    STATUS_GOTO_NIL,   /* 101: after param_decl */
+    STATUS_GOTO_NIL,   /* 102: after param_list */
+    STATUS_GOTO_NIL,   /* 103: reserved */
+    STATUS_GOTO(104),  /* 104: after ',' in param list */
+    STATUS_GOTO(105),  /* 105: after ', type_spec' */
+    STATUS_GOTO(106),  /* 106: after ', type_spec *' */
+    STATUS_GOTO_NIL,   /* 107: reserved */
+    STATUS_GOTO_NIL,   /* 108: reserved */
+    STATUS_GOTO_NIL,   /* 109: subsequent param declarator */
+    STATUS_GOTO_NIL,   /* 110: subsequent pointer param */
+    STATUS_GOTO_NIL,   /* 111: after , param_decl */
+    STATUS_GOTO_NIL,   /* 112: reserved */
+    STATUS_GOTO_NIL,   /* 113: after declarator + compound */
+    STATUS_GOTO_NIL,   /* 114: after function_definition */
+    STATUS_GOTO_NIL,   /* 115: reserved */
+    STATUS_GOTO_NIL,   /* 116: after 'struct' */
+    STATUS_GOTO_NIL,   /* 117: after 'struct ID' */
+    STATUS_GOTO_NIL,   /* 118: reserved */
+    STATUS_GOTO(119),  /* 119: anonymous struct '{' */
+    STATUS_GOTO(120),  /* 120: named struct '{' */
+    STATUS_GOTO(121),  /* 121: type_spec in first member */
+    STATUS_GOTO_NIL,   /* 122: reserved */
+    STATUS_GOTO_NIL,   /* 123: reserved */
+    STATUS_GOTO_NIL,   /* 124: reserved */
+    STATUS_GOTO_NIL,   /* 125: reserved */
+    STATUS_GOTO_NIL,   /* 126: reserved */
+    STATUS_GOTO(127),  /* 127: more anonymous struct members */
+    STATUS_GOTO_NIL,   /* 128: reserved */
+    STATUS_GOTO(129),  /* 129: more named struct members */
+    STATUS_GOTO_NIL,   /* 130: reserved */
+    STATUS_GOTO(131),  /* 131: type_spec in subseq member */
+    STATUS_GOTO_NIL,   /* 132: reserved */
+    STATUS_GOTO_NIL,   /* 133: reserved */
+    STATUS_GOTO_NIL,   /* 134: reserved */
+    STATUS_GOTO_NIL,   /* 135: after 'union' */
+    STATUS_GOTO_NIL,   /* 136: after 'union ID' */
+    STATUS_GOTO_NIL,   /* 137: reserved */
+    STATUS_GOTO_NIL,   /* 138: reserved */
+    STATUS_GOTO(139),  /* 139: anonymous union '{' */
+    STATUS_GOTO(140),  /* 140: named union '{' */
+    STATUS_GOTO(141),  /* 141: more anonymous union members */
+    STATUS_GOTO_NIL,   /* 142: reserved */
+    STATUS_GOTO(143),  /* 143: more named union members */
+    STATUS_GOTO_NIL,   /* 144: reserved */
+    STATUS_GOTO_NIL,   /* 145: after 'enum' */
+    STATUS_GOTO_NIL,   /* 146: after 'enum ID' */
+    STATUS_GOTO(147),  /* 147: anonymous enum '{' */
+    STATUS_GOTO(148),  /* 148: named enum '{' */
+    STATUS_GOTO_NIL,   /* 149: enumerator ID */
+    STATUS_GOTO(150),  /* 150: after enumerator '=' */
+    STATUS_GOTO_NIL,   /* 151: enumerator value expression */
+    STATUS_GOTO_NIL,   /* 152: after enumerator */
+    STATUS_GOTO_NIL,   /* 153: anon enum list */
+    STATUS_GOTO_NIL,   /* 154: reserved */
+    STATUS_GOTO_NIL,   /* 155: named enum list */
+    STATUS_GOTO(156),  /* 156: after enum list ',' */
+    STATUS_GOTO_NIL,   /* 157: reserved */
+    STATUS_GOTO_NIL,   /* 158: subsequent enumerator ID */
+    STATUS_GOTO(159),  /* 159: after subseq enumerator '=' */
+    STATUS_GOTO_NIL,   /* 160: subseq enumerator value */
+    STATUS_GOTO_NIL,   /* 161: after subsequent enumerator */
+    STATUS_GOTO(162),  /* 162: first named bit field ':' */
+    STATUS_GOTO_NIL,   /* 163: first named bit field width */
+    STATUS_GOTO_NIL,   /* 164: reserved */
+    STATUS_GOTO(165),  /* 165: subseq named bit field ':' */
+    STATUS_GOTO_NIL,   /* 166: subseq named bit field width */
+    STATUS_GOTO_NIL,   /* 167: reserved */
+    STATUS_GOTO(168),  /* 168: first anon bit field ':' */
+    STATUS_GOTO_NIL,   /* 169: first anon bit field width */
+    STATUS_GOTO_NIL,   /* 170: reserved */
+    STATUS_GOTO(171),  /* 171: subseq anon bit field ':' */
+    STATUS_GOTO_NIL,   /* 172: subseq anon bit field width */
+    STATUS_GOTO_NIL,   /* 173: reserved */
+    STATUS_GOTO(174),  /* 174: nested struct_spec (first) */
+    STATUS_GOTO_NIL,   /* 175: reserved */
+    STATUS_GOTO_NIL,   /* 176: reserved */
+    STATUS_GOTO_NIL,   /* 177: reserved */
+    STATUS_GOTO_NIL,   /* 178: reserved */
+    STATUS_GOTO_NIL,   /* 179: reserved */
+    STATUS_GOTO(180),  /* 180: nested struct_spec (subseq) */
+    STATUS_GOTO_NIL,   /* 181: reserved */
+    STATUS_GOTO_NIL,   /* 182: reserved */
+    STATUS_GOTO_NIL,   /* 183: reserved */
+    STATUS_GOTO_NIL,   /* 184: reserved */
+    STATUS_GOTO_NIL,   /* 185: reserved */
+    STATUS_GOTO(186),  /* 186: nested enum_spec (first) */
+    STATUS_GOTO_NIL,   /* 187: reserved */
+    STATUS_GOTO_NIL,   /* 188: reserved */
+    STATUS_GOTO_NIL,   /* 189: reserved */
+    STATUS_GOTO_NIL,   /* 190: reserved */
+    STATUS_GOTO_NIL,   /* 191: reserved */
+    STATUS_GOTO(192),  /* 192: nested enum_spec (subseq) */
+    STATUS_GOTO_NIL,   /* 193: reserved */
+    STATUS_GOTO_NIL,   /* 194: reserved */
+    STATUS_GOTO_NIL,   /* 195: reserved */
+    STATUS_GOTO_NIL,   /* 196: reserved */
+    STATUS_GOTO_NIL,   /* 197: reserved */
+    STATUS_GOTO(198),  /* 198: after 'typedef' */
+    STATUS_GOTO(199),  /* 199: typedef type_spec */
+    STATUS_GOTO_NIL,   /* 200: reserved */
+    STATUS_GOTO_NIL,   /* 201: reserved */
+    STATUS_GOTO_NIL,   /* 202: reserved */
+    STATUS_GOTO_NIL,   /* 203: reserved */
+    STATUS_GOTO_NIL,   /* 204: reserved */
+    STATUS_GOTO(205),  /* 205: typedef struct_spec */
+    STATUS_GOTO_NIL,   /* 206: reserved */
+    STATUS_GOTO_NIL,   /* 207: reserved */
+    STATUS_GOTO_NIL,   /* 208: reserved */
+    STATUS_GOTO_NIL,   /* 209: reserved */
+    STATUS_GOTO_NIL,   /* 210: reserved */
+    STATUS_GOTO(211),  /* 211: typedef enum_spec */
+    STATUS_GOTO_NIL,   /* 212: reserved */
+    STATUS_GOTO_NIL,   /* 213: reserved */
+    STATUS_GOTO_NIL,   /* 214: reserved */
+    STATUS_GOTO_NIL,   /* 215: reserved */
+    STATUS_GOTO_NIL,   /* 216: reserved */
+    STATUS_GOTO(217),  /* 217: declarator '[' */
+    STATUS_GOTO_NIL,   /* 218: reserved */
+    STATUS_GOTO_NIL,   /* 219: array size expression */
+    STATUS_GOTO_NIL,   /* 220: reserved */
+    STATUS_GOTO_NIL,   /* 221: first struct member declarator */
+    STATUS_GOTO_NIL,   /* 222: reserved */
+    STATUS_GOTO_NIL,   /* 223: subseq struct member declarator */
+    STATUS_GOTO_NIL,   /* 224: reserved */
+    STATUS_GOTO_NIL,   /* 225: typedef type_spec declarator */
+    STATUS_GOTO_NIL,   /* 226: reserved */
+    STATUS_GOTO_NIL,   /* 227: typedef struct_spec declarator */
+    STATUS_GOTO_NIL,   /* 228: reserved */
+    STATUS_GOTO_NIL,   /* 229: typedef enum_spec declarator */
+    STATUS_GOTO_NIL,   /* 230: reserved */
+    STATUS_GOTO_NIL,   /* 231: nested struct_spec declarator (first) */
+    STATUS_GOTO_NIL,   /* 232: reserved */
+    STATUS_GOTO_NIL,   /* 233: nested struct_spec declarator (subseq) */
+    STATUS_GOTO_NIL,   /* 234: reserved */
+    STATUS_GOTO_NIL,   /* 235: nested enum_spec declarator (first) */
+    STATUS_GOTO_NIL,   /* 236: reserved */
+    STATUS_GOTO_NIL,   /* 237: nested enum_spec declarator (subseq) */
+    STATUS_GOTO_NIL,   /* 238: reserved */
+    STATUS_GOTO_NIL,   /* 239: after comparatio */
+    STATUS_GOTO_NIL,   /* 240: after aequalitas (accept) */
+    STATUS_GOTO(241),  /* 241: after comparison op */
+    STATUS_GOTO(242),  /* 242: after equality op */
+    STATUS_GOTO_NIL,   /* 243: after comp op expr */
+    STATUS_GOTO_NIL,   /* 244: after eq op comparatio */
+    STATUS_GOTO_NIL,   /* 245: after aequalitas in parens */
+    STATUS_GOTO_NIL,   /* 246: after comparatio in condition */
+    STATUS_GOTO_NIL,   /* 247: after aequalitas in if cond */
+    STATUS_GOTO_NIL,   /* 248: after aequalitas in while cond */
+    STATUS_GOTO_NIL,   /* 249: after comparatio in for cond */
+    STATUS_GOTO_NIL,   /* 250: after aequalitas in for cond */
+    STATUS_GOTO_NIL,   /* 251: after aequalitas in do-while cond */
+    STATUS_GOTO_NIL,   /* 252: after aequalitas in switch cond */
+    STATUS_GOTO_NIL,   /* 253: after coniunctio */
+    STATUS_GOTO(254),  /* 254: after 'coniunctio &&' */
+    STATUS_GOTO_NIL,   /* 255: after disiunctio (accept) */
+    STATUS_GOTO(256),  /* 256: after 'disiunctio ||' */
+    STATUS_GOTO_NIL,   /* 257: after aequalitas in && */
+    STATUS_GOTO_NIL,   /* 258: after coniunctio && aequalitas */
+    STATUS_GOTO_NIL,   /* 259: after aequalitas in || */
+    STATUS_GOTO_NIL,   /* 260: after coniunctio in || */
+    STATUS_GOTO(261),  /* 261: after && in || */
+    STATUS_GOTO_NIL,   /* 262: after aequalitas in && within || */
+    STATUS_GOTO_NIL,   /* 263: after coniunctio && aequalitas in || */
+    STATUS_GOTO_NIL,   /* 264: after translatio */
+    STATUS_GOTO(265),  /* 265: after translatio << or >> */
+    STATUS_GOTO_NIL,   /* 266: after translatio << expr */
+    STATUS_GOTO_NIL    /* 267: after translatio in comp context */
+};
+
+/* ==================================================
+ * GOTO Table (OLD - to be removed after migration)
+ * ================================================== */
+
 hic_manens Arbor2TabulaGoto GOTO_TABULA[] = {
     /* From state 0 */
     { 0, INT_NT_EXPR,   1 },
@@ -7509,12 +8433,19 @@ arbor2_glr_quaerere_goto(
         redde -I;  /* Error */
     }
 
-    per (i = ZEPHYRUM; i < NUM_GOTO; i++)
+    /* Use new per-state GOTO table */
+    si (status >= ZEPHYRUM && status < (s32)(magnitudo(GOTO_TABULA_NOVA) / magnitudo(GOTO_TABULA_NOVA[0])))
     {
-        si (GOTO_TABULA[i].status == status &&
-            GOTO_TABULA[i].non_terminalis == nt_int)
+        constans Arbor2StatusGoto* sg = &GOTO_TABULA_NOVA[status];
+        si (sg->transitus != NIHIL)
         {
-            redde GOTO_TABULA[i].status_novus;
+            per (i = ZEPHYRUM; (s32)i < sg->numerus; i++)
+            {
+                si (sg->transitus[i].non_terminalis == nt_int)
+                {
+                    redde sg->transitus[i].status_novus;
+                }
+            }
         }
     }
 
@@ -7546,6 +8477,97 @@ arbor2_glr_initializare_tabulas(Arbor2GLR* glr)
     glr->num_goto = NUM_GOTO;
     glr->regulae = REGULAE;
     glr->num_regulae = NUM_REGULAE;
+}
+
+/* ==================================================
+ * Table Validation
+ *
+ * Verifies table integrity:
+ * - All SHIFT targets point to valid states
+ * - All REDUCE targets point to valid rules
+ * - All GOTO targets point to valid states
+ * ================================================== */
+
+b32
+arbor2_glr_validare_tabulas(vacuum)
+{
+    i32 status;
+    i32 j;
+    b32 valida = VERUM;
+    i32 num_action_states = (i32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+    i32 num_goto_states = (i32)(magnitudo(GOTO_TABULA_NOVA) / magnitudo(GOTO_TABULA_NOVA[0]));
+
+    /* Validate action table entries */
+    per (status = ZEPHYRUM; status < num_action_states; status++)
+    {
+        constans Arbor2StatusInfo* info = &STATUS_TABULA_PARTIAL[status];
+
+        si (info->actiones == NIHIL)
+        {
+            /* State has no actions - this is a bug */
+            imprimere("VALIDATIO: status %d habet actiones NIHIL\n", status);
+            valida = FALSUM;
+            perge;
+        }
+
+        per (j = ZEPHYRUM; (s32)j < info->numerus; j++)
+        {
+            constans Arbor2TabulaActio* actio = &info->actiones[j];
+
+            si (actio->actio == ARBOR2_ACTIO_SHIFT)
+            {
+                /* SHIFT target must be valid state */
+                si (actio->valor < ZEPHYRUM || actio->valor >= num_goto_states)
+                {
+                    imprimere("VALIDATIO: status %d SHIFT ad status invalidum %d\n",
+                              status, actio->valor);
+                    valida = FALSUM;
+                }
+            }
+            alioquin si (actio->actio == ARBOR2_ACTIO_REDUCE)
+            {
+                /* REDUCE target must be valid rule */
+                si (actio->valor < ZEPHYRUM || actio->valor >= NUM_REGULAE)
+                {
+                    imprimere("VALIDATIO: status %d REDUCE ad regulam invalidam %d\n",
+                              status, actio->valor);
+                    valida = FALSUM;
+                }
+            }
+        }
+    }
+
+    /* Validate GOTO table entries */
+    per (status = ZEPHYRUM; status < num_goto_states; status++)
+    {
+        constans Arbor2StatusGoto* sg = &GOTO_TABULA_NOVA[status];
+
+        si (sg->transitus == NIHIL)
+        {
+            /* State has no GOTO entries - this is normal */
+            perge;
+        }
+
+        per (j = ZEPHYRUM; (s32)j < sg->numerus; j++)
+        {
+            s32 target = sg->transitus[j].status_novus;
+
+            si (target < ZEPHYRUM || target >= (s32)num_goto_states)
+            {
+                imprimere("VALIDATIO: status %d GOTO ad status invalidum %d\n",
+                          status, target);
+                valida = FALSUM;
+            }
+        }
+    }
+
+    si (valida)
+    {
+        imprimere("VALIDATIO: Omnes tabulae validae sunt (%d actio, %d goto).\n",
+                  num_action_states, num_goto_states);
+    }
+
+    redde valida;
 }
 
 /* ==================================================

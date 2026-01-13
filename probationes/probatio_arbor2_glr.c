@@ -555,6 +555,21 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Table validation
+     * ======================================================== */
+
+    {
+        b32 tabula_valida;
+
+        imprimere("\n--- Probans table validation ---\n");
+
+        tabula_valida = arbor2_glr_validare_tabulas();
+
+        CREDO_AEQUALIS_I32((i32)tabula_valida, VERUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: Simple identifier
      * ======================================================== */
 

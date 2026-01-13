@@ -62,6 +62,7 @@ nomen structura {
     s32 lexema;       /* ARBOR2_LEXEMA_* value */
     i32 actio;        /* 0=ERROR, 1=SHIFT, 2=REDUCE, 3=ACCEPT */
     i32 valor;
+    b32 conflictus_intentus;  /* VERUM if intentional GLR conflict */
 } ParsedActio;
 
 hic_manens ParsedActio* g_actio_tabula = NIHIL;
@@ -72,10 +73,21 @@ nomen structura {
     s32 sinister;     /* ARBOR2_NT_* value */
     i32 longitudo;
     i32 nodus_genus;  /* ARBOR2_NODUS_* value */
+    constans character* descriptio;  /* Rule description (Phase 2) */
 } ParsedRegula;
+
+/* Parsed STATE description entry (Phase 6) */
+nomen structura {
+    i32 status;
+    constans character* descriptio;
+} ParsedStatusDesc;
 
 hic_manens ParsedRegula* g_regula_tabula = NIHIL;
 hic_manens i32 g_regula_numerus = ZEPHYRUM;
+
+/* State descriptions (from STATUS_TABULA_PARTIAL) */
+hic_manens ParsedStatusDesc* g_status_desc_tabula = NIHIL;
+hic_manens i32 g_status_desc_numerus = ZEPHYRUM;
 
 /* ==================================================
  * Dynamic Enum Extraction
@@ -756,19 +768,18 @@ parsere_goto_tabula(constans character* via)
 }
 
 /*
- * Parse ACTIONES[] from arbor2_glr_tabula.c source.
- * Format: { ARBOR2_LEXEMA_<name>, ARBOR2_ACTIO_<type>, <value> },
- * State boundaries marked by comments like: "State N:"
+ * Parse per-state action arrays from arbor2_glr_tabula.c source.
+ * Format: STATUS_N_ACTIONES[] = { { LEXEMA, ACTIO, value, conflict_flag }, ... }
  */
 interior b32
 parsere_actiones_tabula(constans character* via)
 {
     FILE* f;
     character linea[512];
-    b32 in_tabula;
     i32 numerus;
     i32 capacitas;
     s32 status_currens;
+    b32 in_array;
     ParsedActio* tabula;
 
     f = fopen(via, "r");
@@ -777,28 +788,14 @@ parsere_actiones_tabula(constans character* via)
         redde FALSUM;
     }
 
-    /* First pass: count entries */
-    in_tabula = FALSUM;
+    /* First pass: count action entries across all STATUS_N_ACTIONES arrays */
     numerus = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "ACTIONES[]") != NIHIL && strstr(linea, "Arbor2TabulaActio") != NIHIL)
+        si (strstr(linea, "{ ARBOR2_LEXEMA_") != NIHIL &&
+            strstr(linea, "ARBOR2_ACTIO_") != NIHIL)
         {
-            in_tabula = VERUM;
-            perge;
-        }
-
-        si (in_tabula)
-        {
-            si (strstr(linea, "};") != NIHIL && linea[ZEPHYRUM] != ' ')
-            {
-                frange;
-            }
-
-            si (strstr(linea, "{ ARBOR2_LEXEMA_") != NIHIL)
-            {
-                numerus++;
-            }
+            numerus++;
         }
     }
 
@@ -820,110 +817,119 @@ parsere_actiones_tabula(constans character* via)
 
     /* Second pass: parse entries */
     rewind(f);
-    in_tabula = FALSUM;
     numerus = ZEPHYRUM;
     status_currens = -I;
+    in_array = FALSUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "ACTIONES[]") != NIHIL && strstr(linea, "Arbor2TabulaActio") != NIHIL)
+        character* p;
+        character* lex_start;
+        character* lex_end;
+        character* actio_start;
+        character* actio_end;
+        s32 lex_val;
+        i32 actio_val;
+        i32 valor;
+        b32 conflict_flag;
+
+        /* Check for STATUS_N_ACTIONES[] array start */
+        p = strstr(linea, "STATUS_");
+        si (p != NIHIL && strstr(linea, "_ACTIONES[]") != NIHIL)
         {
-            in_tabula = VERUM;
+            /* Extract state number from STATUS_N_ACTIONES */
+            status_currens = (s32)strtol(p + VII, NIHIL, 10);
+            in_array = VERUM;
             perge;
         }
 
-        si (in_tabula)
+        /* Check for array end */
+        si (in_array && strstr(linea, "};") != NIHIL)
         {
-            character* p;
-            character* lex_start;
-            character* lex_end;
-            character* actio_start;
-            character* actio_end;
-            s32 lex_val;
-            i32 actio_val;
-            i32 valor;
-
-            si (strstr(linea, "};") != NIHIL && linea[ZEPHYRUM] != ' ')
-            {
-                frange;
-            }
-
-            /* Check for state boundary comment */
-            p = strstr(linea, "/* State ");
-            si (p != NIHIL)
-            {
-                status_currens = (s32)strtol(p + IX, NIHIL, 10);
-                perge;
-            }
-
-            p = strstr(linea, "{ ARBOR2_LEXEMA_");
-            si (p == NIHIL)
-            {
-                perge;
-            }
-
-            /* Parse lexema */
-            lex_start = p + XVI; /* skip "{ ARBOR2_LEXEMA_" */
-            lex_end = lex_start;
-            dum (*lex_end != '\0' && *lex_end != ',' && *lex_end != ' ')
-            {
-                lex_end++;
-            }
-            lex_val = resolvere_lexema(lex_start, (i32)(lex_end - lex_start));
-            si (lex_val < ZEPHYRUM)
-            {
-                perge;
-            }
-
-            /* Parse actio type */
-            actio_start = strstr(lex_end, "ARBOR2_ACTIO_");
-            si (actio_start == NIHIL)
-            {
-                perge;
-            }
-            actio_start += XIII; /* skip "ARBOR2_ACTIO_" */
-            actio_end = actio_start;
-            dum (*actio_end != '\0' && *actio_end != ',' && *actio_end != ' ')
-            {
-                actio_end++;
-            }
-
-            /* Map actio name to value */
-            si (strncmp(actio_start, "ERROR", V) == ZEPHYRUM)
-            {
-                actio_val = ZEPHYRUM;
-            }
-            alioquin si (strncmp(actio_start, "SHIFT", V) == ZEPHYRUM)
-            {
-                actio_val = I;
-            }
-            alioquin si (strncmp(actio_start, "REDUCE", VI) == ZEPHYRUM)
-            {
-                actio_val = II;
-            }
-            alioquin si (strncmp(actio_start, "ACCEPT", VI) == ZEPHYRUM)
-            {
-                actio_val = III;
-            }
-            alioquin
-            {
-                perge;
-            }
-
-            /* Parse value */
-            p = actio_end;
-            dum (*p == ',' || *p == ' ' || *p == '\t')
-            {
-                p++;
-            }
-            valor = (i32)strtol(p, NIHIL, 10);
-
-            /* Store entry */
-            tabula[numerus].status = status_currens;
-            tabula[numerus].lexema = lex_val;
-            tabula[numerus].actio = actio_val;
-            tabula[numerus].valor = valor;
-            numerus++;
+            in_array = FALSUM;
+            perge;
         }
+
+        /* Parse action entry */
+        p = strstr(linea, "{ ARBOR2_LEXEMA_");
+        si (p == NIHIL)
+        {
+            perge;
+        }
+
+        /* Parse lexema */
+        lex_start = p + XVI; /* skip "{ ARBOR2_LEXEMA_" */
+        lex_end = lex_start;
+        dum (*lex_end != '\0' && *lex_end != ',' && *lex_end != ' ')
+        {
+            lex_end++;
+        }
+        lex_val = resolvere_lexema(lex_start, (i32)(lex_end - lex_start));
+        si (lex_val < ZEPHYRUM)
+        {
+            perge;
+        }
+
+        /* Parse actio type */
+        actio_start = strstr(lex_end, "ARBOR2_ACTIO_");
+        si (actio_start == NIHIL)
+        {
+            perge;
+        }
+        actio_start += XIII; /* skip "ARBOR2_ACTIO_" */
+        actio_end = actio_start;
+        dum (*actio_end != '\0' && *actio_end != ',' && *actio_end != ' ')
+        {
+            actio_end++;
+        }
+
+        /* Map actio name to value */
+        si (strncmp(actio_start, "ERROR", V) == ZEPHYRUM)
+        {
+            actio_val = ZEPHYRUM;
+        }
+        alioquin si (strncmp(actio_start, "SHIFT", V) == ZEPHYRUM)
+        {
+            actio_val = I;
+        }
+        alioquin si (strncmp(actio_start, "REDUCE", VI) == ZEPHYRUM)
+        {
+            actio_val = II;
+        }
+        alioquin si (strncmp(actio_start, "ACCEPT", VI) == ZEPHYRUM)
+        {
+            actio_val = III;
+        }
+        alioquin
+        {
+            perge;
+        }
+
+        /* Parse value (3rd field) */
+        p = actio_end;
+        dum (*p == ',' || *p == ' ' || *p == '\t')
+        {
+            p++;
+        }
+        valor = (i32)strtol(p, &p, 10);
+
+        /* Parse conflict flag (4th field): VERUM or FALSUM */
+        conflict_flag = FALSUM;
+        dum (*p == ',' || *p == ' ' || *p == '\t')
+        {
+            p++;
+        }
+        si (strncmp(p, "VERUM", V) == ZEPHYRUM)
+        {
+            conflict_flag = VERUM;
+        }
+
+        /* Store entry */
+        tabula[numerus].status = status_currens;
+        tabula[numerus].lexema = lex_val;
+        tabula[numerus].actio = actio_val;
+        tabula[numerus].valor = valor;
+        tabula[numerus].conflictus_intentus = conflict_flag;
+        numerus++;
     }
 
     fclose(f);
@@ -935,7 +941,7 @@ parsere_actiones_tabula(constans character* via)
 
 /*
  * Parse REGULAE[] from arbor2_glr_tabula.c source.
- * Format: { ARBOR2_NT_<name>, <length>, ARBOR2_NODUS_<type> },
+ * Format: { ARBOR2_NT_<name>, <length>, ARBOR2_NODUS_<type>, "description" },
  */
 interior b32
 parsere_regulae_tabula(constans character* via)
@@ -1011,9 +1017,11 @@ parsere_regulae_tabula(constans character* via)
             character* p;
             character* nt_start;
             character* nt_end;
+            character* desc_start;
+            character* desc_end;
             s32 nt_val;
             i32 rhs_len;
-            /* nodus_genus parsing omitted for simplicity - not critical for queries */
+            constans character* descriptio;
 
             si (strstr(linea, "};") != NIHIL && linea[ZEPHYRUM] != ' ')
             {
@@ -1045,12 +1053,37 @@ parsere_regulae_tabula(constans character* via)
             {
                 p++;
             }
-            rhs_len = (i32)strtol(p, NIHIL, 10);
+            rhs_len = (i32)strtol(p, &p, 10);
 
-            /* Store entry (nodus_genus left as 0 for now) */
+            /* Parse description (4th field): "..." */
+            descriptio = NIHIL;
+            desc_start = strchr(p, '"');
+            si (desc_start != NIHIL)
+            {
+                desc_start++; /* skip opening quote */
+                desc_end = strchr(desc_start, '"');
+                si (desc_end != NIHIL)
+                {
+                    i32 desc_len;
+                    character* desc_copia;
+
+                    desc_len = (i32)(desc_end - desc_start);
+                    desc_copia = piscina_allocare(g_piscina,
+                        (memoriae_index)(desc_len + I));
+                    si (desc_copia != NIHIL)
+                    {
+                        memcpy(desc_copia, desc_start, (size_t)desc_len);
+                        desc_copia[desc_len] = '\0';
+                        descriptio = desc_copia;
+                    }
+                }
+            }
+
+            /* Store entry */
             tabula[numerus].sinister = nt_val;
             tabula[numerus].longitudo = rhs_len;
             tabula[numerus].nodus_genus = ZEPHYRUM;
+            tabula[numerus].descriptio = descriptio;
             numerus++;
         }
     }
@@ -1059,6 +1092,140 @@ parsere_regulae_tabula(constans character* via)
 
     g_regula_tabula = tabula;
     g_regula_numerus = numerus;
+    redde VERUM;
+}
+
+/*
+ * Parse STATUS_TABULA_PARTIAL from arbor2_glr_tabula.c source.
+ * Format: STATUS_INFO(N, "description"),
+ */
+interior b32
+parsere_status_descriptiones(constans character* via)
+{
+    FILE* f;
+    character linea[512];
+    b32 in_tabula;
+    i32 numerus;
+    i32 capacitas;
+    ParsedStatusDesc* tabula;
+
+    f = fopen(via, "r");
+    si (f == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    /* First pass: count STATUS_INFO entries */
+    in_tabula = FALSUM;
+    numerus = ZEPHYRUM;
+    dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
+    {
+        si (strstr(linea, "STATUS_TABULA_PARTIAL[]") != NIHIL)
+        {
+            in_tabula = VERUM;
+            perge;
+        }
+
+        si (in_tabula)
+        {
+            si (strstr(linea, "};") != NIHIL)
+            {
+                frange;
+            }
+
+            si (strstr(linea, "STATUS_INFO(") != NIHIL)
+            {
+                numerus++;
+            }
+        }
+    }
+
+    si (numerus == ZEPHYRUM)
+    {
+        fclose(f);
+        redde FALSUM;
+    }
+
+    /* Allocate table */
+    capacitas = numerus;
+    tabula = piscina_allocare(g_piscina,
+        (memoriae_index)(capacitas * (i32)magnitudo(ParsedStatusDesc)));
+    si (tabula == NIHIL)
+    {
+        fclose(f);
+        redde FALSUM;
+    }
+
+    /* Second pass: parse entries */
+    rewind(f);
+    in_tabula = FALSUM;
+    numerus = ZEPHYRUM;
+    dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
+    {
+        si (strstr(linea, "STATUS_TABULA_PARTIAL[]") != NIHIL)
+        {
+            in_tabula = VERUM;
+            perge;
+        }
+
+        si (in_tabula)
+        {
+            character* p;
+            character* desc_start;
+            character* desc_end;
+            i32 status_num;
+            constans character* descriptio;
+
+            si (strstr(linea, "};") != NIHIL)
+            {
+                frange;
+            }
+
+            p = strstr(linea, "STATUS_INFO(");
+            si (p == NIHIL)
+            {
+                perge;
+            }
+
+            /* Parse state number: STATUS_INFO(N, ... */
+            p += XII; /* skip "STATUS_INFO(" */
+            status_num = (i32)strtol(p, &p, 10);
+
+            /* Parse description: "..." */
+            descriptio = NIHIL;
+            desc_start = strchr(p, '"');
+            si (desc_start != NIHIL)
+            {
+                desc_start++; /* skip opening quote */
+                desc_end = strchr(desc_start, '"');
+                si (desc_end != NIHIL)
+                {
+                    i32 desc_len;
+                    character* desc_copia;
+
+                    desc_len = (i32)(desc_end - desc_start);
+                    desc_copia = piscina_allocare(g_piscina,
+                        (memoriae_index)(desc_len + I));
+                    si (desc_copia != NIHIL)
+                    {
+                        memcpy(desc_copia, desc_start, (size_t)desc_len);
+                        desc_copia[desc_len] = '\0';
+                        descriptio = desc_copia;
+                    }
+                }
+            }
+
+            /* Store entry */
+            tabula[numerus].status = status_num;
+            tabula[numerus].descriptio = descriptio;
+            numerus++;
+        }
+    }
+
+    fclose(f);
+
+    g_status_desc_tabula = tabula;
+    g_status_desc_numerus = numerus;
     redde VERUM;
 }
 
@@ -1275,6 +1442,25 @@ obtinere_nt_nomen(s32 nt_val)
     redde "???";
 }
 
+interior constans character*
+obtinere_status_descriptio(i32 status)
+{
+    i32 i;
+
+    si (g_status_desc_tabula != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < g_status_desc_numerus; i++)
+        {
+            si (g_status_desc_tabula[i].status == status)
+            {
+                redde g_status_desc_tabula[i].descriptio;
+            }
+        }
+    }
+
+    redde NIHIL;
+}
+
 interior integer
 cmd_state(constans character* arg)
 {
@@ -1282,6 +1468,7 @@ cmd_state(constans character* arg)
     i32 i;
     i32 inventa;
     character* endptr;
+    constans character* desc;
 
     status = (i32)strtol(arg, &endptr, 10);
     si (*endptr != '\0')
@@ -1296,9 +1483,18 @@ cmd_state(constans character* arg)
         redde I;
     }
 
-    inventa = ZEPHYRUM;
-    printf("State %d:\n", status);
+    /* Show state header with description if available */
+    desc = obtinere_status_descriptio(status);
+    si (desc != NIHIL)
+    {
+        printf("State %d: %s\n", status, desc);
+    }
+    alioquin
+    {
+        printf("State %d:\n", status);
+    }
 
+    inventa = ZEPHYRUM;
     per (i = ZEPHYRUM; i < g_actio_numerus; i++)
     {
         si (g_actio_tabula[i].status == (s32)status)
@@ -1431,6 +1627,10 @@ cmd_rule(constans character* arg)
     printf("Rule P%d:\n", index);
     printf("  LHS: %s\n", obtinere_nt_nomen(g_regula_tabula[index].sinister));
     printf("  RHS length: %d symbol(s)\n", g_regula_tabula[index].longitudo);
+    si (g_regula_tabula[index].descriptio != NIHIL)
+    {
+        printf("  Production: %s\n", g_regula_tabula[index].descriptio);
+    }
 
     redde ZEPHYRUM;
 }
@@ -1557,10 +1757,17 @@ cmd_rules(constans character* nt_titulus)
     {
         si (g_regula_tabula[i].sinister == nt)
         {
-            printf("  P%d: %s -> (longitudo %d)\n",
-                   i,
-                   obtinere_nt_nomen(g_regula_tabula[i].sinister),
-                   g_regula_tabula[i].longitudo);
+            si (g_regula_tabula[i].descriptio != NIHIL)
+            {
+                printf("  P%d: %s\n", i, g_regula_tabula[i].descriptio);
+            }
+            alioquin
+            {
+                printf("  P%d: %s -> (longitudo %d)\n",
+                       i,
+                       obtinere_nt_nomen(g_regula_tabula[i].sinister),
+                       g_regula_tabula[i].longitudo);
+            }
             inventa++;
         }
     }
@@ -1575,6 +1782,7 @@ cmd_conflicts(vacuum)
     i32 num_status;
     i32 status;
     i32 total_conflicts;
+    i32 intentional_conflicts;
     i32 i;
     i32 j;
 
@@ -1582,6 +1790,7 @@ cmd_conflicts(vacuum)
     s32 lexemata_visa[256];
     i32 actiones_visae[256];
     i32 valores_visi[256];
+    b32 intentus_visi[256];
     i32 numerus_visorum;
 
     si (g_actio_tabula == NIHIL)
@@ -1592,6 +1801,7 @@ cmd_conflicts(vacuum)
 
     num_status = computare_max_status();
     total_conflicts = ZEPHYRUM;
+    intentional_conflicts = ZEPHYRUM;
 
     printf("Quaerendo conflictus in %d statibus...\n\n", num_status);
 
@@ -1613,9 +1823,15 @@ cmd_conflicts(vacuum)
                 si (lexemata_visa[j] == g_actio_tabula[i].lexema)
                 {
                     /* Conflictus! Duo actiones pro eodem lexema */
-                    printf("  State %d: CONFLICTUS pro %s\n",
+                    b32 est_intentus;
+
+                    est_intentus = intentus_visi[j] ||
+                                   g_actio_tabula[i].conflictus_intentus;
+
+                    printf("  State %d: CONFLICTUS pro %s%s\n",
                            status,
-                           obtinere_lexema_nomen(g_actio_tabula[i].lexema));
+                           obtinere_lexema_nomen(g_actio_tabula[i].lexema),
+                           est_intentus ? " (INTENTUS)" : "");
                     printf("    Prior: %-7s %3d\n",
                            obtinere_actio_nomen(actiones_visae[j]),
                            valores_visi[j]);
@@ -1623,6 +1839,10 @@ cmd_conflicts(vacuum)
                            obtinere_actio_nomen(g_actio_tabula[i].actio),
                            g_actio_tabula[i].valor);
                     total_conflicts++;
+                    si (est_intentus)
+                    {
+                        intentional_conflicts++;
+                    }
                     frange;
                 }
             }
@@ -1633,12 +1853,16 @@ cmd_conflicts(vacuum)
                 lexemata_visa[numerus_visorum] = g_actio_tabula[i].lexema;
                 actiones_visae[numerus_visorum] = g_actio_tabula[i].actio;
                 valores_visi[numerus_visorum] = g_actio_tabula[i].valor;
+                intentus_visi[numerus_visorum] = g_actio_tabula[i].conflictus_intentus;
                 numerus_visorum++;
             }
         }
     }
 
-    printf("\nConflictus totales: %d\n", total_conflicts);
+    printf("\nConflictus totales: %d (%d intentus, %d inexpectatus)\n",
+           total_conflicts,
+           intentional_conflicts,
+           total_conflicts - intentional_conflicts);
     redde ZEPHYRUM;
 }
 
@@ -1707,6 +1931,11 @@ initializare_tabulas(vacuum)
     si (!parsere_regulae_tabula("lib/arbor2_glr_tabula.c"))
     {
         fprintf(stderr, "Warning: Non potest parsere REGULAE\n");
+    }
+
+    si (!parsere_status_descriptiones("lib/arbor2_glr_tabula.c"))
+    {
+        fprintf(stderr, "Warning: Non potest parsere STATUS_TABULA descriptiones\n");
     }
 
     redde VERUM;
