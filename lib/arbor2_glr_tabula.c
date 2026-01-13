@@ -6324,6 +6324,33 @@ hic_manens constans Arbor2LexemaGenus CONDITIO_LEXEMATA[] = {
     ARBOR2_LEXEMA_CARET
 };
 
+/* Required tokens for SENTENTIA_INITIUM states (statement starters) */
+hic_manens constans Arbor2LexemaGenus SENTENTIA_INITIUM_LEXEMATA[] = {
+    /* Expression starters */
+    ARBOR2_LEXEMA_IDENTIFICATOR,
+    ARBOR2_LEXEMA_INTEGER,
+    ARBOR2_LEXEMA_PAREN_APERTA,
+    ARBOR2_LEXEMA_ASTERISCUS,
+    ARBOR2_LEXEMA_AMPERSAND,
+    ARBOR2_LEXEMA_TILDE,
+    ARBOR2_LEXEMA_EXCLAMATIO,
+    /* Statement keywords */
+    ARBOR2_LEXEMA_IF,
+    ARBOR2_LEXEMA_WHILE,
+    ARBOR2_LEXEMA_DO,
+    ARBOR2_LEXEMA_FOR,
+    ARBOR2_LEXEMA_SWITCH,
+    ARBOR2_LEXEMA_RETURN,
+    ARBOR2_LEXEMA_BREAK,
+    ARBOR2_LEXEMA_CONTINUE,
+    ARBOR2_LEXEMA_GOTO,
+    ARBOR2_LEXEMA_CASE,
+    ARBOR2_LEXEMA_DEFAULT,
+    /* Empty and compound */
+    ARBOR2_LEXEMA_SEMICOLON,
+    ARBOR2_LEXEMA_BRACE_APERTA
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -6344,6 +6371,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "CONDITIO_CONTEXTUS",
         CONDITIO_LEXEMATA,
         (i32)(magnitudo(CONDITIO_LEXEMATA) / magnitudo(CONDITIO_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_SENTENTIA_INITIUM,
+        "SENTENTIA_INITIUM",
+        SENTENTIA_INITIUM_LEXEMATA,
+        (i32)(magnitudo(SENTENTIA_INITIUM_LEXEMATA) / magnitudo(SENTENTIA_INITIUM_LEXEMATA[0]))
     }
 };
 
@@ -6366,19 +6399,19 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 11 */  0, /* 12 */ 0, /* 13 */ 0, /* 14 */ 0, /* 15 */ 0,
     /* 16 */  0, /* 17 */ 0, /* 18 */ 0, /* 19 */ 0, /* 20 */ 0,
     /* 21 */  0, /* 22 */ 0, /* 23 */ 0, /* 24 */ 0, /* 25 */ 0,
-    /* 26 */  ARBOR2_TAG_EXPR_INITIUM,  /* inside compound */
+    /* 26 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* inside compound */
     /* 27 */  0, /* 28 */ 0, /* 29 */ 0, /* 30 */ 0,
     /* 31 */  ARBOR2_TAG_EXPR_INITIUM,  /* if condition - entry state */
     /* 32 */  0,
-    /* 33 */  ARBOR2_TAG_EXPR_INITIUM,  /* after 'if (expr)' */
+    /* 33 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* after 'if (expr)' - if body */
     /* 34 */  0,
-    /* 35 */  ARBOR2_TAG_EXPR_INITIUM,  /* else branch */
+    /* 35 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* else branch */
     /* 36 */  0, /* 37 */ 0, /* 38 */ 0, /* 39 */ 0,
     /* 40 */  ARBOR2_TAG_EXPR_INITIUM,  /* while condition - entry state */
     /* 41 */  0,
-    /* 42 */  ARBOR2_TAG_EXPR_INITIUM,  /* while body */
+    /* 42 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* while body */
     /* 43 */  0, /* 44 */ 0,
-    /* 45 */  ARBOR2_TAG_EXPR_INITIUM,  /* do body */
+    /* 45 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* do body */
     /* 46 */  0, /* 47 */ 0,
     /* 48 */  ARBOR2_TAG_EXPR_INITIUM,  /* do-while condition - entry state */
     /* 49 */  ARBOR2_TAG_CONDITIO_CONTEXTUS,  /* after do-while condition expression */
@@ -6389,21 +6422,21 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 58 */  0, /* 59 */ 0,
     /* 60 */  ARBOR2_TAG_EXPR_INITIUM,  /* for increment */
     /* 61 */  0, /* 62 */ 0,
-    /* 63 */  ARBOR2_TAG_EXPR_INITIUM,  /* for body */
+    /* 63 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* for body */
     /* 64 */  0, /* 65 */ 0, /* 66 */ 0, /* 67 */ 0, /* 68 */ 0, /* 69 */ 0,
     /* 70 */  ARBOR2_TAG_EXPR_INITIUM,  /* return expr */
     /* 71 */  0, /* 72 */ 0, /* 73 */ 0, /* 74 */ 0, /* 75 */ 0, /* 76 */ 0,
-    /* 77 */  ARBOR2_TAG_EXPR_INITIUM,  /* labeled statement */
+    /* 77 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* labeled statement */
     /* 78 */  0, /* 79 */ 0,
     /* 80 */  ARBOR2_TAG_EXPR_INITIUM,  /* switch condition - entry state */
     /* 81 */  0,
-    /* 82 */  ARBOR2_TAG_EXPR_INITIUM,  /* switch body */
+    /* 82 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* switch body */
     /* 83 */  0,
     /* 84 */  ARBOR2_TAG_EXPR_INITIUM,  /* case expression */
     /* 85 */  0,
-    /* 86 */  ARBOR2_TAG_EXPR_INITIUM,  /* case body */
+    /* 86 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* case body */
     /* 87 */  0, /* 88 */ 0,
-    /* 89 */  ARBOR2_TAG_EXPR_INITIUM,  /* default body */
+    /* 89 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* default body */
     /* Rest are untagged for now - add as needed */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 90-99 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 100-109 */
