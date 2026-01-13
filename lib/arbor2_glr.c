@@ -809,6 +809,65 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_SUBSCRIPTIO:
+                        /* P128: postfixum -> postfixum '[' expressio ']'
+                         * 4 symbols: valori[3]=base, [2]='[', [1]=index, [0]=']' */
+                        si (num_pop >= IV)
+                        {
+                            Arbor2Nodus* nodus_sub;
+                            nodus_sub = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_sub->genus = ARBOR2_NODUS_SUBSCRIPTIO;
+                            nodus_sub->lexema = lexemata[II];  /* '[' token */
+                            nodus_sub->datum.subscriptio.basis = valori[III];
+                            nodus_sub->datum.subscriptio.index = valori[I];
+                            valor_novus = nodus_sub;
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
+                    casus ARBOR2_NODUS_VOCATIO:
+                        /* P130: postfixum -> postfixum '(' ')'
+                         * 3 symbols: valori[2]=base, [1]='(', [0]=')'
+                         * P131: postfixum -> postfixum '(' argumenta ')'
+                         * 4 symbols: valori[3]=base, [2]='(', [1]=args, [0]=')' */
+                        si (actio->valor == 130)
+                        {
+                            /* Empty call: foo() */
+                            Arbor2Nodus* nodus_call;
+                            nodus_call = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_call->genus = ARBOR2_NODUS_VOCATIO;
+                            nodus_call->lexema = lexemata[I];  /* '(' token */
+                            nodus_call->datum.vocatio.basis = valori[II];
+                            nodus_call->datum.vocatio.argumenta = NIHIL;
+                            valor_novus = nodus_call;
+                        }
+                        alioquin si (actio->valor == 131 && num_pop >= IV)
+                        {
+                            /* Call with args: foo(a, b, c)
+                             * valori[1] is an argument list node we need to extract */
+                            Arbor2Nodus* nodus_call;
+                            nodus_call = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_call->genus = ARBOR2_NODUS_VOCATIO;
+                            nodus_call->lexema = lexemata[II];  /* '(' token */
+                            nodus_call->datum.vocatio.basis = valori[III];
+                            /* valori[I] is the argumenta - we need to collect the args */
+                            nodus_call->datum.vocatio.argumenta = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            /* For now, just store the single arg expression (TODO: handle multiple args properly) */
+                            {
+                                Arbor2Nodus** slot = xar_addere(nodus_call->datum.vocatio.argumenta);
+                                *slot = valori[I];  /* argumenta node contains the args */
+                            }
+                            valor_novus = nodus_call;
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     casus ARBOR2_NODUS_IDENTIFICATOR:
                     casus ARBOR2_NODUS_INTEGER:
                         valor_novus = (num_pop > ZEPHYRUM) ? valori[ZEPHYRUM] : NIHIL;

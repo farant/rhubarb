@@ -181,7 +181,32 @@ hic_manens Arbor2Regula REGULAE[] = {
 
     /* Ternary conditional operator (right-associative) */
     /* P123 */ { ARBOR2_NT_TERNARIUS, 5, ARBOR2_NODUS_TERNARIUS, "ternarius -> disiunctio '?' ternarius ':' ternarius" },
-    /* P124 */ { ARBOR2_NT_TERNARIUS, 1, ARBOR2_NODUS_ERROR, "ternarius -> disiunctio" }
+    /* P124 */ { ARBOR2_NT_TERNARIUS, 1, ARBOR2_NODUS_ERROR, "ternarius -> disiunctio" },
+
+    /* ========================================================
+     * Postfix expressions (highest precedence, left-to-right)
+     * ======================================================== */
+
+    /* Postfixum base cases */
+    /* P125 */ { ARBOR2_NT_POSTFIXUM, 1, ARBOR2_NODUS_IDENTIFICATOR, "postfixum -> ID" },
+    /* P126 */ { ARBOR2_NT_POSTFIXUM, 1, ARBOR2_NODUS_INTEGER, "postfixum -> INT" },
+    /* P127 */ { ARBOR2_NT_POSTFIXUM, 3, ARBOR2_NODUS_ERROR, "postfixum -> '(' expressio ')'" },
+
+    /* Postfix operators (left-recursive for chaining) */
+    /* P128 */ { ARBOR2_NT_POSTFIXUM, 4, ARBOR2_NODUS_SUBSCRIPTIO, "postfixum -> postfixum '[' expressio ']'" },
+
+    /* Factor from postfixum (bridge production) */
+    /* P129 */ { ARBOR2_NT_FACTOR, 1, ARBOR2_NODUS_ERROR, "factor -> postfixum" },
+
+    /* Function call (no args) */
+    /* P130 */ { ARBOR2_NT_POSTFIXUM, 3, ARBOR2_NODUS_VOCATIO, "postfixum -> postfixum '(' ')'" },
+
+    /* Function call (with args) */
+    /* P131 */ { ARBOR2_NT_POSTFIXUM, 4, ARBOR2_NODUS_VOCATIO, "postfixum -> postfixum '(' argumenta ')'" },
+
+    /* Argument list productions */
+    /* P132 */ { ARBOR2_NT_ARGUMENTA, 1, ARBOR2_NODUS_ERROR, "argumenta -> assignatio" },
+    /* P133 */ { ARBOR2_NT_ARGUMENTA, 3, ARBOR2_NODUS_ERROR, "argumenta -> argumenta ',' assignatio" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -343,7 +368,8 @@ hic_manens constans Arbor2TabulaActio STATUS_3_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE,  4, FALSUM }
 };
 
-/* State 4: after ID - reduce to factor OR shift for declarator (CONFLICT) */
+/* State 4: after ID - reduce to factor OR shift for declarator (CONFLICT)
+ * Also reduce to postfixum P125 for subscript/call/member handling */
 hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, VERUM },  /* intentional conflict */
@@ -385,10 +411,16 @@ hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE,  5, VERUM },   /* intentional conflict */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE,  5, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  20, FALSUM }
+    /* Function call: fork between postfixum and declarator paths */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 125, VERUM },  /* intentional fork for call: ID -> postfixum */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  20, VERUM },   /* declarator path */
+    /* Postfix subscript: reduce to postfixum first, then handle '[' */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 125, VERUM },  /* intentional fork for subscript */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,   5, VERUM }   /* regular factor path */
 };
 
-/* State 5: after INTEGER - reduce to factor */
+/* State 5: after INTEGER - reduce to factor
+ * Also reduce to postfixum P126 for subscript handling */
 hic_manens constans Arbor2TabulaActio STATUS_5_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE,  6, FALSUM },
@@ -426,7 +458,10 @@ hic_manens constans Arbor2TabulaActio STATUS_5_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE,  6, FALSUM },
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE,  6, FALSUM },
-    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE,  6, FALSUM }
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE,  6, FALSUM },
+    /* Postfix subscript: reduce to postfixum first, then handle '[' */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 126, VERUM },  /* intentional fork for subscript */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,   6, VERUM }   /* regular factor path */
 };
 
 /* State 6: after '(' - expects expression */
@@ -4155,6 +4190,281 @@ hic_manens constans Arbor2TabulaActio STATUS_310_ACTIONES[] = {
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 121, FALSUM }
 };
 
+/* ========================================================
+ * POSTFIX EXPRESSION STATES (311+)
+ * ======================================================== */
+
+/* State 311: after POSTFIXUM - check for postfix operators or reduce to factor
+ * This state handles: subscript '[', call '(', member '.', ptr-member '->'
+ * and post-increment '++', post-decrement '--' */
+hic_manens constans Arbor2TabulaActio STATUS_311_ACTIONES[] = {
+    /* Subscript: shift '[' to enter subscript expression */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 312, FALSUM },
+    /* Function call: shift '(' to enter call expression */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 315, FALSUM },
+    /* No postfix operator - reduce to factor P129 */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 129, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 129, FALSUM }
+};
+
+/* State 312: after 'postfixum [' - expect expression for subscript */
+hic_manens constans Arbor2TabulaActio STATUS_312_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 313: after 'postfixum [ expression' - continue expr or expect ']' */
+hic_manens constans Arbor2TabulaActio STATUS_313_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 314, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_SHIFT, 256, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_SHIFT, 256, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT,  12, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT,  12, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT, 274, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_SHIFT, 276, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_SHIFT, 278, FALSUM }
+};
+
+/* State 314: after 'postfixum [ expression ]' - reduce P128 (subscript)
+ * This creates a SUBSCRIPTIO node. After reduction, GOTO[parent, POSTFIXUM] -> 311
+ * which allows chaining (arr[i][j]) or eventual reduction to factor */
+hic_manens constans Arbor2TabulaActio STATUS_314_ACTIONES[] = {
+    /* Always reduce P128 (subscript) - the resulting postfixum will be handled by state 311 */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 128, FALSUM },  /* chain: arr[i][j] */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 128, FALSUM },  /* chain: arr[i]() */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 128, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 128, FALSUM }
+};
+
+/* State 315: after 'postfixum (' - expects ')' for no-arg call or expression for args
+ * On ')': shift to 318 and reduce P130 (call no args)
+ * On expr start: shift to parse first argument, eventually reduce P132 -> ARGUMENTA */
+hic_manens constans Arbor2TabulaActio STATUS_315_ACTIONES[] = {
+    /* Empty call: foo() */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 318, FALSUM },
+    /* Call with args: foo(expr) - shift to parse expression */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 316: after 'postfixum ( assignatio' - have one argument
+ * On ')': shift to 319 and reduce P131 (call with args)
+ * On ',': shift to 317 for more args */
+hic_manens constans Arbor2TabulaActio STATUS_316_ACTIONES[] = {
+    /* End of args: foo(a) */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 319, FALSUM },
+    /* More args: foo(a, ... */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 317, FALSUM }
+};
+
+/* State 317: after 'postfixum ( argumenta ,' - expects next argument */
+hic_manens constans Arbor2TabulaActio STATUS_317_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }
+};
+
+/* State 318: after 'postfixum ( )' - reduce P130 (empty call) */
+hic_manens constans Arbor2TabulaActio STATUS_318_ACTIONES[] = {
+    /* Reduce P130: postfixum -> postfixum '(' ')' */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 130, FALSUM },  /* chain: foo()[i] */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 130, FALSUM },  /* chain: foo()() */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 130, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 130, FALSUM }
+};
+
+/* State 319: after 'postfixum ( argumenta )' - reduce P131 (call with args) */
+hic_manens constans Arbor2TabulaActio STATUS_319_ACTIONES[] = {
+    /* Reduce P131: postfixum -> postfixum '(' argumenta ')' */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 131, FALSUM },  /* chain: foo(a)[i] */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 131, FALSUM },  /* chain: foo(a)() */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 131, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 131, FALSUM }
+};
+
+/* State 320: after 'postfixum ( argumenta , assignatio' - have another arg
+ * On ')': reduce P133 first (argumenta -> argumenta ',' assignatio), then eventually P131
+ * On ',': reduce P133 first, then shift comma for more args */
+hic_manens constans Arbor2TabulaActio STATUS_320_ACTIONES[] = {
+    /* Reduce P133: argumenta -> argumenta ',' assignatio */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 133, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 133, FALSUM }
+};
+
+/* State 321: after 'postfixum ( assignatio' - first argument parsed
+ * Reduce P132: argumenta -> assignatio
+ * Then GOTO[315, ARGUMENTA] -> 316 */
+hic_manens constans Arbor2TabulaActio STATUS_321_ACTIONES[] = {
+    /* Reduce P132: argumenta -> assignatio */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 132, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 132, FALSUM }
+};
+
 /* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
@@ -4485,7 +4795,22 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(307, "after disiunctio ? ternarius - expects :"),
     STATUS_INFO(308, "after : - expects expression (false branch)"),
     STATUS_INFO(309, "after disiunctio ? ternarius : ternarius - reduce P123"),
-    STATUS_INFO(310, "after TERNARIUS - assignment or reduce P121")
+    STATUS_INFO(310, "after TERNARIUS - assignment or reduce P121"),
+
+    /* States 311-314: Postfix operators (subscript) */
+    STATUS_INFO(311, "after POSTFIXUM - check for postfix ops or reduce to factor"),
+    STATUS_INFO(312, "after postfixum '[' - expects subscript expression"),
+    STATUS_INFO(313, "after postfixum '[' expr - expects ']' or continue expr"),
+    STATUS_INFO(314, "after postfixum '[' expr ']' - reduce P128 subscript"),
+
+    /* States 315-321: Function call */
+    STATUS_INFO(315, "after postfixum '(' - expects ')' or arguments"),
+    STATUS_INFO(316, "after postfixum '(' argumenta - expects ')' or ','"),
+    STATUS_INFO(317, "after postfixum '(' argumenta ',' - expects next argument"),
+    STATUS_INFO(318, "after postfixum '(' ')' - reduce P130 empty call"),
+    STATUS_INFO(319, "after postfixum '(' argumenta ')' - reduce P131 call with args"),
+    STATUS_INFO(320, "after postfixum '(' argumenta ',' assignatio - reduce P133 args"),
+    STATUS_INFO(321, "after postfixum '(' assignatio - reduce P132 first arg")
 };
 
 /* ==================================================
@@ -4553,6 +4878,8 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 #define INT_NT_VIRGA             30
 #define INT_NT_ASSIGNATIO        31
 #define INT_NT_TERNARIUS         32
+#define INT_NT_POSTFIXUM         33
+#define INT_NT_ARGUMENTA         34
 
 /* ==================================================
  * Per-State GOTO Arrays (Phase 4 refactor)
@@ -4566,6 +4893,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },  /* postfix expression for subscript/call/member */
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -4599,6 +4927,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_6_GOTO[] = {
     { INT_NT_EXPR,        11 },
     { INT_NT_TERM,        2 },
     { INT_NT_FACTOR,      3 },
+    { INT_NT_POSTFIXUM,   311 },  /* postfix for subscript */
     { INT_NT_COMPARATIO,  239 },
     { INT_NT_AEQUALITAS,  245 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -4614,18 +4943,21 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_6_GOTO[] = {
 
 /* State 7: after unary '*' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_7_GOTO[] = {
-    { INT_NT_FACTOR, 15 }
+    { INT_NT_FACTOR, 15 },
+    { INT_NT_POSTFIXUM, 311 }  /* postfix for subscript e.g. *arr[i] */
 };
 
 /* State 8: after unary '&' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_8_GOTO[] = {
-    { INT_NT_FACTOR, 16 }
+    { INT_NT_FACTOR, 16 },
+    { INT_NT_POSTFIXUM, 311 }  /* postfix for subscript e.g. &arr[i] */
 };
 
 /* State 9: after expr '+' or '-' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_9_GOTO[] = {
     { INT_NT_TERM,       13 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },  /* postfix for subscript */
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -5454,6 +5786,62 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_308_GOTO[] = {
     { INT_NT_TRANSLATIO,       264 }
 };
 
+/* State 312: after 'postfixum [' - expects subscript expression, needs EXPR -> 313 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_312_GOTO[] = {
+    { INT_NT_EXPR,             313 },
+    { INT_NT_TERM,             2 },
+    { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },  /* subscript expressions can themselves have subscripts */
+    { INT_NT_COMPARATIO,       239 },
+    { INT_NT_AEQUALITAS,       240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,    270 },
+    { INT_NT_PIPA_BITWISE,     272 },
+    { INT_NT_CONIUNCTIO,       253 },
+    { INT_NT_DISIUNCTIO,       255 },
+    { INT_NT_TRANSLATIO,       264 }
+};
+
+/* State 315: after 'postfixum (' - expects ')' or argument expression
+ * Arguments reduce to ASSIGNATIO (not VIRGA, since comma separates args)
+ * INT_NT_ASSIGNATIO -> 321 (reduce P132), then ARGUMENTA -> 316 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_315_GOTO[] = {
+    { INT_NT_EXPR,                1 },   /* expr -> state 1 to handle +/- or reduce P99 */
+    { INT_NT_TERM,                2 },
+    { INT_NT_FACTOR,              3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TRANSLATIO,        264 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        321 },  /* assignatio -> state 321 which reduces P132 */
+    { INT_NT_ARGUMENTA,         316 }   /* argumenta -> state 316 to check ')' or ',' */
+};
+
+/* State 317: after 'postfixum ( argumenta ,' - expects next argument
+ * INT_NT_ASSIGNATIO -> 320 (reduce P133), then ARGUMENTA -> 316 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_317_GOTO[] = {
+    { INT_NT_EXPR,                1 },   /* expr -> state 1 to handle +/- or reduce P99 */
+    { INT_NT_TERM,                2 },
+    { INT_NT_FACTOR,              3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TRANSLATIO,        264 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        320 }   /* assignatio -> state 320 which reduces P133 */
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -5781,7 +6169,20 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 307: after disiunctio ? ternarius - expects : */
     STATUS_GOTO(308),  /* 308: after : - expects false branch */
     STATUS_GOTO_NIL,   /* 309: after disiunctio ? ternarius : ternarius - reduce P123 */
-    STATUS_GOTO_NIL    /* 310: after TERNARIUS - assignment or reduce P121 */
+    STATUS_GOTO_NIL,   /* 310: after TERNARIUS - assignment or reduce P121 */
+    /* Postfix operator states */
+    STATUS_GOTO_NIL,   /* 311: after POSTFIXUM - check postfix ops or reduce P129 */
+    STATUS_GOTO(312),  /* 312: after postfixum '[' - subscript expression */
+    STATUS_GOTO_NIL,   /* 313: after postfixum '[' expr - expects ']' */
+    STATUS_GOTO_NIL,   /* 314: after postfixum '[' expr ']' - reduce P128 */
+    /* Function call states */
+    STATUS_GOTO(315),  /* 315: after postfixum '(' - expects args or ')' */
+    STATUS_GOTO_NIL,   /* 316: after postfixum '(' argumenta - expects ')' or ',' */
+    STATUS_GOTO(317),  /* 317: after postfixum '(' argumenta ',' - expects arg */
+    STATUS_GOTO_NIL,   /* 318: after postfixum '(' ')' - reduce P130 */
+    STATUS_GOTO_NIL,   /* 319: after postfixum '(' argumenta ')' - reduce P131 */
+    STATUS_GOTO_NIL,   /* 320: after postfixum '(' argumenta ',' assignatio - reduce P133 */
+    STATUS_GOTO_NIL    /* 321: after postfixum '(' assignatio - reduce P132 */
 };
 
 
@@ -5938,6 +6339,12 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_TERNARIUS:
             nt_int = INT_NT_TERNARIUS;
+            frange;
+        casus ARBOR2_NT_POSTFIXUM:
+            nt_int = INT_NT_POSTFIXUM;
+            frange;
+        casus ARBOR2_NT_ARGUMENTA:
+            nt_int = INT_NT_ARGUMENTA;
             frange;
         ordinarius:
             nt_int = -I;
@@ -6141,6 +6548,8 @@ arbor2_nt_nomen(Arbor2NonTerminalis nt)
         casus ARBOR2_NT_EXPRESSIO:      redde "EXPRESSIO";
         casus ARBOR2_NT_TERMINUS:       redde "TERMINUS";
         casus ARBOR2_NT_FACTOR:         redde "FACTOR";
+        casus ARBOR2_NT_POSTFIXUM:      redde "POSTFIXUM";
+        casus ARBOR2_NT_ARGUMENTA:      redde "ARGUMENTA";
         casus ARBOR2_NT_PRIMARIUM:      redde "PRIMARIUM";
         casus ARBOR2_NT_UNARIUM:        redde "UNARIUM";
         casus ARBOR2_NT_BINARIUM:       redde "BINARIUM";
@@ -6186,6 +6595,10 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_UNARIUM:       redde "UNARIUM";
         casus ARBOR2_NODUS_CONVERSIO:     redde "CONVERSIO";
         casus ARBOR2_NODUS_SIZEOF:        redde "SIZEOF";
+        casus ARBOR2_NODUS_VOCATIO:       redde "VOCATIO";
+        casus ARBOR2_NODUS_SUBSCRIPTIO:   redde "SUBSCRIPTIO";
+        casus ARBOR2_NODUS_MEMBRUM:       redde "MEMBRUM";
+        casus ARBOR2_NODUS_POST_UNARIUM:  redde "POST_UNARIUM";
         casus ARBOR2_NODUS_DECLARATIO:    redde "DECLARATIO";
         casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI: redde "DECLARATOR_FUNCTI";

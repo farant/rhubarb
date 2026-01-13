@@ -7205,6 +7205,224 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Array subscript expressions
+     * ======================================================== */
+
+    /* Simple subscript: arr[0] */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[0] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[0]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* Subscript with identifier index: arr[i] */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[i] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[i]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* Chained subscripts: arr[i][j] */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[i][j] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[i][j]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Outer subscript, inner should also be subscript */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+            si (res.radix->datum.subscriptio.basis != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.subscriptio.basis->genus,
+                                   (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+            }
+        }
+    }
+
+    /* Subscript in expression: a + b[0] */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans a + b[0] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a + b[0]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Should be BINARIUM with right child as SUBSCRIPTIO */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus,
+                                   (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+            }
+        }
+    }
+
+    /* Unary with subscript: *arr[i] - should be *(arr[i]) */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans *arr[i] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "*arr[i]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            /* Should be UNARIUM with operand as SUBSCRIPTIO */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (res.radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.unarium.operandum->genus,
+                                   (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+            }
+        }
+    }
+
+    /* Complex expression in subscript index */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[i + 1] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[i + 1]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Function call expressions
+     * ======================================================== */
+
+    /* Empty function call: foo() */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans foo() ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo()");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
+        }
+    }
+
+    /* Function call with one arg: foo(a) */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans foo(a) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo(a)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
+        }
+    }
+
+    /* Function call with multiple args: foo(a, b, c) */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans foo(a, b, c) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo(a, b, c)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
+        }
+    }
+
+    /* Chained: foo()[0] - function call then subscript */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans foo()[0] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo()[0]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* Chained: arr[0]() - subscript then function call */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[0]() ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[0]()");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
+        }
+    }
+
+    /* Function call with expression args: foo(a + b) */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans foo(a + b) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo(a + b)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

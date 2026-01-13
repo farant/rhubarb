@@ -61,6 +61,8 @@ nomen enumeratio {
     ARBOR2_NT_EXPRESSIO,
     ARBOR2_NT_TERMINUS,             /* term in expr grammar */
     ARBOR2_NT_FACTOR,               /* factor in expr grammar */
+    ARBOR2_NT_POSTFIXUM,            /* postfix expression (highest precedence) */
+    ARBOR2_NT_ARGUMENTA,            /* function call argument list */
     ARBOR2_NT_PRIMARIUM,
     ARBOR2_NT_UNARIUM,
     ARBOR2_NT_BINARIUM,
@@ -101,6 +103,10 @@ nomen enumeratio {
     ARBOR2_NODUS_CONVERSIO,         /* Cast expression */
     ARBOR2_NODUS_TERNARIUS,         /* Ternary conditional a ? b : c */
     ARBOR2_NODUS_SIZEOF,
+    ARBOR2_NODUS_VOCATIO,           /* Function call: base(args) */
+    ARBOR2_NODUS_SUBSCRIPTIO,       /* Array subscript: base[index] */
+    ARBOR2_NODUS_MEMBRUM,           /* Member access: base.member or base->member */
+    ARBOR2_NODUS_POST_UNARIUM,      /* Post-increment/decrement: x++ or x-- */
     ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
     ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
@@ -175,6 +181,31 @@ structura Arbor2Nodus {
             b32                 est_typus;      /* sizeof(type) vs sizeof expr */
             Arbor2Nodus*        operandum;
         } sizeof_expr;
+
+        /* VOCATIO (function call) */
+        structura {
+            Arbor2Nodus*        basis;          /* Function expression */
+            Xar*                argumenta;      /* Xar of Arbor2Nodus* (arguments), NIHIL if no args */
+        } vocatio;
+
+        /* SUBSCRIPTIO (array subscript) */
+        structura {
+            Arbor2Nodus*        basis;          /* Array expression */
+            Arbor2Nodus*        index;          /* Index expression */
+        } subscriptio;
+
+        /* MEMBRUM (member access . or ->) */
+        structura {
+            Arbor2Nodus*        basis;          /* Struct/union expression */
+            chorda              membrum;        /* Member name */
+            b32                 est_sagitta;    /* VERUM for ->, FALSUM for . */
+        } membrum;
+
+        /* POST_UNARIUM (post-increment/decrement) */
+        structura {
+            Arbor2Nodus*        operandum;
+            Arbor2LexemaGenus   operator;       /* DUPLUS or DUMINUS */
+        } post_unarium;
 
         /* DECLARATIO */
         structura {

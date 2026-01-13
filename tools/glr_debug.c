@@ -146,6 +146,27 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             imprimere_nodus(nodus->datum.ternarius.falsum, depth + I);
             frange;
 
+        casus ARBOR2_NODUS_SUBSCRIPTIO:
+            printf("\n");
+            imprimere_nodus(nodus->datum.subscriptio.basis, depth + I);
+            imprimere_nodus(nodus->datum.subscriptio.index, depth + I);
+            frange;
+
+        casus ARBOR2_NODUS_VOCATIO:
+            printf("\n");
+            imprimere_nodus(nodus->datum.vocatio.basis, depth + I);
+            si (nodus->datum.vocatio.argumenta != NIHIL)
+            {
+                i32 num_args = xar_numerus(nodus->datum.vocatio.argumenta);
+                i32 k;
+                per (k = ZEPHYRUM; k < num_args; k++)
+                {
+                    Arbor2Nodus** arg = xar_obtinere(nodus->datum.vocatio.argumenta, k);
+                    imprimere_nodus(*arg, depth + I);
+                }
+            }
+            frange;
+
         ordinarius:
             printf("\n");
             frange;
