@@ -107,7 +107,10 @@ nomen enumeratio {
     ARBOR2_NT_STRUCT_MEMBER_LIST,   /* struct_member_list */
     ARBOR2_NT_ENUM_SPECIFIER,       /* enum_specifier */
     ARBOR2_NT_ENUMERATOR_LIST,      /* enumerator_list */
-    ARBOR2_NT_ENUMERATOR            /* single enumerator */
+    ARBOR2_NT_ENUMERATOR,           /* single enumerator */
+    ARBOR2_NT_INITIALIZOR_LISTA,    /* initializer list {a, b, c} */
+    ARBOR2_NT_INIT_ITEMS,           /* list of initializers (internal) */
+    ARBOR2_NT_INITIALIZER           /* single initializer (expr or nested list) */
 } Arbor2NonTerminalis;
 
 /* ==================================================
@@ -152,6 +155,7 @@ nomen enumeratio {
     ARBOR2_NODUS_COMMUTATIO,        /* switch statement */
     ARBOR2_NODUS_CASUS,             /* case label */
     ARBOR2_NODUS_ORDINARIUS,        /* default label */
+    ARBOR2_NODUS_INITIALIZOR_LISTA, /* Brace-enclosed initializer list */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -351,6 +355,11 @@ structura Arbor2Nodus {
         structura {
             Arbor2Nodus*        sententia;      /* following statement */
         } defectus;  /* 'ordinarius' expands to 'default' keyword */
+
+        /* INITIALIZOR_LISTA (brace-enclosed initializer) */
+        structura {
+            Xar*                items;          /* Xar of Arbor2Nodus* (expressions or nested lists) */
+        } initializor_lista;
 
         /* AMBIGUUS */
         structura {

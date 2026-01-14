@@ -8848,6 +8848,250 @@ s32 principale(vacuum)
         }
     }
 
+    /* ========================================================
+     * PROBARE: Brace initializers (Phase 1.2b)
+     * ======================================================== */
+
+    /* Basic brace initializer with single value */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int a[] = {1} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int a[] = {1}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor->datum.initializor_lista.items);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 1);
+                }
+            }
+        }
+    }
+
+    /* Brace initializer with multiple values */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int b[] = {1, 2, 3} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int b[] = {1, 2, 3}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor->datum.initializor_lista.items);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 3);
+                }
+            }
+        }
+    }
+
+    /* Empty brace initializer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int c[] = {} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int c[] = {}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor->datum.initializor_lista.items);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 0);
+                }
+            }
+        }
+    }
+
+    /* Trailing comma */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int d[] = {1, 2,} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int d[] = {1, 2,}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 2);
+                }
+            }
+        }
+    }
+
+    /* Nested braces */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int m[2][2] = {{1, 2}, {3, 4}} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int m[2][2] = {{1, 2}, {3, 4}}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    /* Outer list has 2 items (nested lists) */
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 2);
+                    /* First nested list */
+                    {
+                        Arbor2Nodus** first_item = xar_obtinere(res.radix->datum.declaratio.initializor->datum.initializor_lista.items, 0);
+                        CREDO_NON_NIHIL(first_item);
+                        si (first_item != NIHIL)
+                        {
+                            Arbor2Nodus* nested = *first_item;
+                            CREDO_AEQUALIS_I32((i32)nested->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                            CREDO_AEQUALIS_I32((i32)xar_numerus(nested->datum.initializor_lista.items), 2);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Static with brace initializer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static int s[] = {10, 20} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "static int s[] = {10, 20}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            }
+        }
+    }
+
+    /* Const with brace initializer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const int c[] = {30, 40} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "const int c[] = {30, 40}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            }
+        }
+    }
+
+    /* Single value in braces (not array) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int x = {5} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {5}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 1);
+                }
+            }
+        }
+    }
+
+    /* Expression initializers still work */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int y = 42 (still works) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int y = 42");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                /* Expression initializer, not brace initializer */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INTEGER);
+            }
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Table validation

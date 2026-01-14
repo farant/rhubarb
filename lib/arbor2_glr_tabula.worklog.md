@@ -630,3 +630,141 @@ State 116 (direct declarator after type_spec name) needed ASSIGNATIO REDUCE P12 
 - Brace initializers: `int arr[] = {1, 2, 3};`
 - Designated initializers: `struct Point p = {.x = 1, .y = 2};`
 
+
+## 2026-01-14: Phase 1.2a Complete - Storage Class Initializers
+
+### What was completed:
+Added initializer support for all storage class and qualifier variants.
+
+#### New Productions (P193-P198):
+- P193: `decl -> 'static' type declarator '=' assignatio` (5 symbols)
+- P194: `decl -> 'extern' type declarator '=' assignatio`
+- P195: `decl -> 'register' type declarator '=' assignatio`
+- P196: `decl -> 'auto' type declarator '=' assignatio`
+- P197: `decl -> 'const' type declarator '=' assignatio`
+- P198: `decl -> 'volatile' type declarator '=' assignatio`
+
+#### New States (475-486):
+- 475/476: static initializer (expression-expects / reduce)
+- 477/478: extern initializer
+- 479/480: register initializer
+- 481/482: auto initializer
+- 483/484: const initializer
+- 485/486: volatile initializer
+
+#### State Modifications:
+- States 358-363 (after `storage/qual type declarator`): Added ASSIGNATIO SHIFT to 475, 477, 479, 481, 483, 485
+- State 18 (after ID in declarator): Added ASSIGNATIO REDUCE P12
+
+#### AST Handler:
+Combined handler for P193-P198 using range check:
+```c
+alioquin si (actio->valor >= 193 && actio->valor <= 198)
+{
+    /* Set storage_class or qualifiers based on production number */
+    si (actio->valor == 193) storage = ARBOR2_STORAGE_STATIC;
+    alioquin si (actio->valor == 194) storage = ARBOR2_STORAGE_EXTERN;
+    /* ... etc ... */
+}
+```
+
+### Key Insight:
+State 18 needed ASSIGNATIO reduce P12 (same fix as state 116) because the storage class paths go through state 18 after the identifier before reaching states 358-363.
+
+### Tests Added:
+- `static int s = 10`
+- `extern int e = 20`
+- `register int r = 30`
+- `auto int a = 40`
+- `const int c = 50`
+- `volatile int v = 60`
+- `static int sum = a + b` (expression with storage class)
+
+### Statistics:
+- Total states: 487 (was 475, added 12)
+- Total rules: 198 (was 192, added 6)
+- Total tests: 1246 (was 1217, added 29)
+
+### Phase 1.2a Summary:
+Parser now supports initialized declarations in all forms:
+- `int x = 5`
+- `int y = a + b`
+- `static int z = 10`
+- `const int c = 100`
+- etc.
+
+### Future (Phase 1.2b):
+- Brace initializers: `int arr[] = {1, 2, 3};`
+- Designated initializers: `struct Point p = {.x = 1, .y = 2};`
+
+## 2026-01-14: Phase 1.2b - Brace Initializers
+
+### What was implemented:
+Brace initializer support for declarations:
+- `int a[] = {1}`
+- `int b[] = {1, 2, 3}`
+- `int c[] = {}`  (empty list)
+- `int d[] = {1, 2,}` (trailing comma)
+- `int m[2][2] = {{1, 2}, {3, 4}}` (nested braces)
+- `int x = {5}` (single value in braces)
+- Storage class variants: `static int s[] = {10, 20}`
+- Qualifier variants: `const int c[] = {30, 40}`
+
+### New AST Types (arbor2_glr.h):
+1. `ARBOR2_NT_INITIALIZOR_LISTA` - Non-terminal for initializer list
+2. `ARBOR2_NT_INIT_ITEMS` - Non-terminal for list items (internal)
+3. `ARBOR2_NT_INITIALIZER` - Non-terminal for single initializer
+4. `ARBOR2_NODUS_INITIALIZOR_LISTA` - Node type with `items` field (Xar of nodes)
+
+### New Productions (P199-P212):
+- P199: `decl -> type declarator '=' init_lista`
+- P200: `init_lista -> '{' '}'` (empty)
+- P201: `init_lista -> '{' init_items '}'`
+- P202: `init_lista -> '{' init_items ',' '}'` (trailing comma)
+- P203: `init_items -> initializer` (single)
+- P204: `init_items -> init_items ',' initializer` (multiple)
+- P205: `initializer -> assignatio` (expression)
+- P206: `initializer -> init_lista` (nested braces)
+- P207-P212: Storage class/qualifier + brace initializer variants
+
+### New States (487-499):
+- State 487: After `{` in initializer - parse expressions or nested braces
+- States 488-492: Handle `}`, items, comma, trailing comma
+- States 493-496: Reduction states for initializer/items
+- State 497: After init_lista in basic decl context (P199)
+- State 498: After init_lista in static decl context (P207)
+- State 499: After init_lista in const decl context (P211)
+
+### Key State Modifications:
+1. State 218 (unsized array `[]`): Added ASSIGNATIO reduce for `int a[] = {...}`
+2. State 220 (sized array `[n]`): Added ASSIGNATIO reduce for `int m[2][2] = {...}`
+3. State 255 (after disiunctio): Added BRACE_CLAUSA reduce for expressions inside braces
+4. State 310 (after ternarius): Added BRACE_CLAUSA reduce
+5. States 358, 362 (static/const + type + name): Added BRACKET_APERTA for array support
+6. States 473, 475, 483 (after `=`): Added BRACE_APERTA shift to state 487
+7. States 475, 483: Added INITIALIZOR_LISTA GOTO entries
+
+### Pattern Used:
+Followed the existing ARGUMENTA pattern for comma-separated lists:
+- Left-recursive grammar: `items -> item | items ',' item`
+- NODUS_ERROR for pass-through rules (P203-P206)
+- Actual nodes only for outer structure (INITIALIZOR_LISTA)
+
+### Tests Added:
+- Basic brace initializer (1 element)
+- Multiple values
+- Empty braces
+- Trailing comma
+- Nested braces (2D array)
+- Static + brace
+- Const + brace
+- Single value in braces (not array)
+- Verify expression initializers still work
+
+### Statistics:
+- Total states: 500 (was 487, added 13)
+- Total rules: 213 (was 198, added 14)
+- Total tests: 1296 (was 1246, added 50)
+
+### Future (Phase 1.2c):
+- Designated initializers: `.field = value`, `[index] = value`

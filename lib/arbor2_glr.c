@@ -1648,6 +1648,65 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.storage_class = storage;
                             valor_novus->datum.declaratio.qualifiers = quals;
                         }
+                        /* P199: declaration with brace initializer */
+                        alioquin si (actio->valor == 199)
+                        {
+                            /* P199: decl -> type declarator '=' init_lista (4 symbols)
+                             * valori: [3]=type_spec?, [2]=declarator, [1]=nil, [0]=init_lista */
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* decl_node = valori[II];
+                            Arbor2Nodus* init_lista = valori[ZEPHYRUM];
+                            Arbor2Token* type_tok = lexemata[III];
+
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = type_tok;
+                            type_spec->datum.folium.valor = type_tok->lexema->valor;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                        }
+                        /* P207-P212: storage class/qualifier + brace initializer */
+                        alioquin si (actio->valor >= 207 && actio->valor <= 212)
+                        {
+                            /* 5 symbols: storage/qual, type, declarator, '=', init_lista
+                             * valori: [4]=nil, [3]=type?, [2]=declarator, [1]=nil, [0]=init_lista */
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* decl_node = valori[II];
+                            Arbor2Nodus* init_lista = valori[ZEPHYRUM];
+                            Arbor2Token* type_tok = lexemata[III];
+                            i32 storage = ARBOR2_STORAGE_NONE;
+                            i32 quals = ARBOR2_QUAL_NONE;
+
+                            si (actio->valor == 207) storage = ARBOR2_STORAGE_STATIC;
+                            alioquin si (actio->valor == 208) storage = ARBOR2_STORAGE_EXTERN;
+                            alioquin si (actio->valor == 209) storage = ARBOR2_STORAGE_REGISTER;
+                            alioquin si (actio->valor == 210) storage = ARBOR2_STORAGE_AUTO;
+                            alioquin si (actio->valor == 211) quals = ARBOR2_QUAL_CONST;
+                            alioquin si (actio->valor == 212) quals = ARBOR2_QUAL_VOLATILE;
+
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = type_tok;
+                            type_spec->datum.folium.valor = type_tok->lexema->valor;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = storage;
+                            valor_novus->datum.declaratio.qualifiers = quals;
+                        }
                         alioquin si (num_pop >= II)
                         {
                             /* P10: declaration -> type_specifier declarator */
@@ -2275,6 +2334,31 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_INITIALIZOR_LISTA:
+                        /* P200-P202: Initializer list { ... } */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_INITIALIZOR_LISTA;
+                        valor_novus->lexema = lexemata[num_pop - I];  /* '{' token */
+
+                        si (actio->valor == 200)
+                        {
+                            /* P200: init_lista -> '{' '}' (2 symbols) - empty list */
+                            valor_novus->datum.initializor_lista.items = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                        }
+                        alioquin si (actio->valor == 201)
+                        {
+                            /* P201: init_lista -> '{' init_items '}' (3 symbols)
+                             * valori: [2]='{', [1]=init_items (Xar*), [0]='}' */
+                            valor_novus->datum.initializor_lista.items = (Xar*)valori[I];
+                        }
+                        alioquin si (actio->valor == 202)
+                        {
+                            /* P202: init_lista -> '{' init_items ',' '}' (4 symbols)
+                             * valori: [3]='{', [2]=init_items (Xar*), [1]=',', [0]='}' */
+                            valor_novus->datum.initializor_lista.items = (Xar*)valori[II];
+                        }
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
@@ -2312,6 +2396,24 @@ _processare_unam_actionem(
                         {
                             /* P59: enumerator_list -> enumerator_list ',' enumerator */
                             /* valori[2]=existing list, valori[1]=',', valori[0]=new enumerator */
+                            Xar* lista = (Xar*)valori[II];
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 203)
+                        {
+                            /* P203: init_items -> initializer (1 symbol)
+                             * Create Xar with single initializer */
+                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 204)
+                        {
+                            /* P204: init_items -> init_items ',' initializer (3 symbols)
+                             * valori: [2]=existing list, [1]=',', [0]=new initializer */
                             Xar* lista = (Xar*)valori[II];
                             Arbor2Nodus** slot = xar_addere(lista);
                             *slot = valori[ZEPHYRUM];
