@@ -868,6 +868,27 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_MEMBRUM:
+                        /* P134: postfixum -> postfixum '.' ID (3 symbols)
+                         * P135: postfixum -> postfixum '->' ID (3 symbols)
+                         * valori[2]=base, [1]=operator, [0]=member ID token */
+                        si (num_pop >= III)
+                        {
+                            Arbor2Nodus* nodus_mem;
+                            nodus_mem = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_mem->genus = ARBOR2_NODUS_MEMBRUM;
+                            nodus_mem->lexema = lexemata[I];  /* '.' or '->' token */
+                            nodus_mem->datum.membrum.basis = valori[II];
+                            nodus_mem->datum.membrum.membrum = lexemata[ZEPHYRUM]->lexema->valor;
+                            nodus_mem->datum.membrum.est_sagitta = (actio->valor == 135);
+                            valor_novus = nodus_mem;
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     casus ARBOR2_NODUS_IDENTIFICATOR:
                     casus ARBOR2_NODUS_INTEGER:
                         valor_novus = (num_pop > ZEPHYRUM) ? valori[ZEPHYRUM] : NIHIL;

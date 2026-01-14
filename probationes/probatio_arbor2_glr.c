@@ -7423,6 +7423,147 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Member access expressions
+     * ======================================================== */
+
+    /* Simple member access: s.x */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans s.x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "s.x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.est_sagitta, FALSUM);
+        }
+    }
+
+    /* Pointer member access: p->x */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans p->x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "p->x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.est_sagitta, VERUM);
+        }
+    }
+
+    /* Chained member access: s.x.y */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans s.x.y ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "s.x.y");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+            /* y is the outer member, s.x is the basis */
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+        }
+    }
+
+    /* Chained pointer member: p->x->y */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans p->x->y ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "p->x->y");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+        }
+    }
+
+    /* Mixed: subscript then member: arr[0].x */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[0].x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[0].x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* Mixed: call then member: foo().x */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans foo().x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo().x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.membrum.basis->genus, (i32)ARBOR2_NODUS_VOCATIO);
+        }
+    }
+
+    /* Mixed: member then subscript: s.x[0] */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans s.x[0] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "s.x[0]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.subscriptio.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+        }
+    }
+
+    /* Mixed: member then call: s.x() */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans s.x() ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "s.x()");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_VOCATIO);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.vocatio.basis->genus, (i32)ARBOR2_NODUS_MEMBRUM);
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

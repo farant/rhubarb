@@ -167,6 +167,14 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             }
             frange;
 
+        casus ARBOR2_NODUS_MEMBRUM:
+            printf(" %s \"%.*s\"\n",
+                   nodus->datum.membrum.est_sagitta ? "->" : ".",
+                   nodus->datum.membrum.membrum.mensura,
+                   (constans character*)nodus->datum.membrum.membrum.datum);
+            imprimere_nodus(nodus->datum.membrum.basis, depth + I);
+            frange;
+
         ordinarius:
             printf("\n");
             frange;
