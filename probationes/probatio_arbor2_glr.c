@@ -8097,6 +8097,170 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Pointer casts (Phase 1.1)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (int*)x ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(int*)x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            /* typus should be DECLARATOR with num_stellae = 1 */
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (char**)argv ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(char**)argv");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            /* typus should be DECLARATOR with num_stellae = 2 */
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)II);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (void*)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(void*)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: sizeof(type) (Phase 1.1)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->datum.declarator.num_stellae, (i32)ZEPHYRUM);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int*) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int*)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(char**) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char**)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->genus,
+                                   (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->datum.declarator.num_stellae, (i32)II);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(void*) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void*)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Storage class specifiers
      * ======================================================== */
 

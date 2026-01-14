@@ -803,16 +803,46 @@ _processare_unam_actionem(
 
                     casus ARBOR2_NODUS_SIZEOF:
                         /* P143: factor -> 'sizeof' factor (2 symbols)
-                         * lexemata[1] = sizeof, valori[0] = operand */
-                        si (num_pop >= II)
+                         * P162-P165: factor -> 'sizeof' '(' type ')' (4 symbols)
+                         * P166-P169: factor -> 'sizeof' '(' type '*' ')' (5 symbols)
+                         * P170-P173: factor -> 'sizeof' '(' type '*' '*' ')' (6 symbols) */
+                        si (num_pop == II)
                         {
+                            /* P143: sizeof expr */
                             Arbor2Nodus* nodus_sizeof;
 
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[I];  /* sizeof token */
-                            nodus_sizeof->datum.sizeof_expr.est_typus = FALSUM;  /* sizeof expr, not type */
+                            nodus_sizeof->datum.sizeof_expr.est_typus = FALSUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = valori[ZEPHYRUM];
+
+                            valor_novus = nodus_sizeof;
+                        }
+                        alioquin si (num_pop >= IV && num_pop <= VI)
+                        {
+                            /* P162-P173: sizeof(type), sizeof(type*), sizeof(type**) */
+                            Arbor2Nodus* nodus_sizeof;
+                            Arbor2Nodus* nodus_typus;
+                            s32 num_stellae;
+
+                            /* Determinare numerum stellarum (pointers) */
+                            num_stellae = num_pop - IV;  /* 0 for base, 1 for *, 2 for ** */
+
+                            /* Creare nodus typus */
+                            nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
+                            nodus_typus->lexema = lexemata[num_pop - II];  /* type keyword */
+                            nodus_typus->datum.declarator.num_stellae = num_stellae;
+                            nodus_typus->datum.declarator.titulus.datum = NIHIL;
+                            nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
+
+                            /* Creare nodus sizeof */
+                            nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
+                            nodus_sizeof->lexema = lexemata[num_pop - I];  /* sizeof token */
+                            nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
+                            nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
 
                             valor_novus = nodus_sizeof;
                         }
@@ -824,21 +854,30 @@ _processare_unam_actionem(
 
                     casus ARBOR2_NODUS_CONVERSIO:
                         /* P144-P146: factor -> '(' type ')' factor (4 symbols)
-                         * lexemata[3]='(', lexemata[2]=type, lexemata[1]=')', valori[0]=operand */
-                        si (num_pop >= IV)
+                         * P154-P157: factor -> '(' type '*' ')' factor (5 symbols)
+                         * P158-P161: factor -> '(' type '*' '*' ')' factor (6 symbols)
+                         * lexemata[n-1]='(', lexemata[n-2]=type, ..., valori[0]=operand */
+                        si (num_pop >= IV && num_pop <= VI)
                         {
                             Arbor2Nodus* nodus_cast;
                             Arbor2Nodus* nodus_typus;
+                            s32 num_stellae;
 
-                            /* Creare nodus typus ex lexema (usus IDENTIFICATOR pro typo) */
+                            /* Determinare numerum stellarum (pointers) */
+                            num_stellae = num_pop - IV;  /* 0 for base, 1 for *, 2 for ** */
+
+                            /* Creare nodus typus */
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            nodus_typus->genus = ARBOR2_NODUS_IDENTIFICATOR;
-                            nodus_typus->lexema = lexemata[II];  /* type keyword */
+                            nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
+                            nodus_typus->lexema = lexemata[num_pop - II];  /* type keyword */
+                            nodus_typus->datum.declarator.num_stellae = num_stellae;
+                            nodus_typus->datum.declarator.titulus.datum = NIHIL;
+                            nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
 
                             /* Creare nodus conversio */
                             nodus_cast = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_cast->genus = ARBOR2_NODUS_CONVERSIO;
-                            nodus_cast->lexema = lexemata[II];  /* type token for display */
+                            nodus_cast->lexema = lexemata[num_pop - II];  /* type token for display */
                             nodus_cast->datum.conversio.typus = nodus_typus;
                             nodus_cast->datum.conversio.expressio = valori[ZEPHYRUM];
 
