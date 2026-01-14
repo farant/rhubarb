@@ -552,3 +552,81 @@ The handlers now check the production number to determine which formula to use:
 - Part 1b Part 2: Struct/union/enum casts `(struct foo*)` - COMPLETE
 - Future: Array types in sizeof `sizeof(int[10])` - deferred to Phase 1.1c
 
+## 2026-01-14: Phase 1.2a - Simple Expression Initializers
+
+### Goal:
+Add support for initialized declarations with expression initializers:
+```c
+int x = 5;          // constant initializer
+int y = a + b;      // expression initializer
+int z = x * 2 + 1;  // complex expression
+```
+
+Brace initializers (`{1,2,3}`) deferred to Phase 1.2b.
+
+### Changes Made:
+
+#### 1. AST Structure (arbor2_glr.h):
+Added `initializor` field to ARBOR2_NODUS_DECLARATIO:
+```c
+structura {
+    Arbor2Nodus*        specifier;
+    Arbor2Nodus*        declarator;
+    Arbor2Nodus*        initializor;    /* NEW: expression or NIHIL */
+    b32                 est_typedef;
+    i32                 storage_class;
+    i32                 qualifiers;
+} declaratio;
+```
+
+Updated all 17 DECLARATIO node creation sites to initialize `initializor = NIHIL`.
+
+#### 2. Grammar (arbor2_glr_tabula.c):
+
+**New Production:**
+- P192: `decl -> type declarator '=' assignatio` (4 symbols)
+
+**New States:**
+- State 473: after `type declarator =` - expects expression starters (SHIFT to states 4, 5, 6, 7, 8, etc.)
+- State 474: after `type declarator = assignatio` - REDUCE P192
+
+**State Modifications:**
+- State 20 (after `type declarator`): Added ASSIGNATIO SHIFT to 473
+- State 116 (after `type_spec name`): Added ASSIGNATIO REDUCE P12
+
+**GOTO Entries:**
+- STATUS_473_GOTO: Maps all expression NTs, with ASSIGNATIO -> 474
+
+#### 3. AST Handler (arbor2_glr.c):
+Added P192 handler before the default P10 case:
+```c
+alioquin si (actio->valor == 192)
+{
+    /* P192: decl -> type declarator '=' assignatio */
+    /* Create specifier from lexemata[III], get declarator from valori[II],
+       get initializer expression from valori[ZEPHYRUM] */
+    valor_novus->datum.declaratio.initializor = init_expr;
+}
+```
+
+### Key Insight:
+State 116 (direct declarator after type_spec name) needed ASSIGNATIO REDUCE P12 so the declarator reduces before the `=` is processed. Without this, the parser died at state 116 seeing `=`.
+
+### Tests Added:
+- `int x = 5` - constant initializer, verifies INTEGER node
+- `int y = a + b` - expression initializer, verifies BINARIUM node
+- `int z = x * 2 + 1` - complex expression
+
+### Statistics:
+- Total states: 475 (was 473, added 2)
+- Total rules: 192 (was 191, added 1)
+- Total tests: 1217 (was 1205, added 12)
+
+### Remaining for Phase 1.2a:
+- Storage class variants (static, extern, register, auto, const, volatile) with initializers
+- Productions P193-P198, states 475-486
+
+### Future (Phase 1.2b):
+- Brace initializers: `int arr[] = {1, 2, 3};`
+- Designated initializers: `struct Point p = {.x = 1, .y = 2};`
+

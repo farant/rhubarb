@@ -308,7 +308,9 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* sizeof(enum) */
     /* P189 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ENUM ID ')'" },
     /* P190 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ENUM ID '*' ')'" },
-    /* P191 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ENUM ID '*' '*' ')'" }
+    /* P191 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ENUM ID '*' '*' ')'" },
+    /* ========== INITIALIZER DECLARATIONS (Phase 1.2a) ========== */
+    /* P192 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> type declarator '=' assignatio" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -885,12 +887,13 @@ hic_manens constans Arbor2TabulaActio STATUS_19_ACTIONES[] = {
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 11, FALSUM }
 };
 
-/* State 20: after 'type declarator' - reduce P10 or continue fn/array */
+/* State 20: after 'type declarator' - reduce P10 or continue fn/array/init */
 hic_manens constans Arbor2TabulaActio STATUS_20_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 473, FALSUM },  /* initializer */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_ERROR,   0, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_ERROR,   0, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_ERROR,   0, FALSUM }
@@ -2371,7 +2374,8 @@ hic_manens constans Arbor2TabulaActio STATUS_116_ACTIONES[] = {
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 12, FALSUM },
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 12, FALSUM },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* for initializers */
 };
 
 /* State 117: after 'struct' - expect ID or '{' */
@@ -7869,6 +7873,32 @@ hic_manens constans Arbor2TabulaActio STATUS_472_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 191, FALSUM }
 };
 
+/* ========== INITIALIZER DECLARATION STATES (Phase 1.2a) ========== */
+
+/* State 473: after 'type declarator =' - expects expression for initializer */
+hic_manens constans Arbor2TabulaActio STATUS_473_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 474: after 'type declarator = assignatio' - reduce P192 */
+hic_manens constans Arbor2TabulaActio STATUS_474_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 192, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 192, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 192, FALSUM }
+};
+
 /* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
@@ -8403,7 +8433,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(469, "after 'sizeof ( enum ID *' - expects ')' or '*'"),
     STATUS_INFO(470, "after 'sizeof ( enum ID * )' - reduce P190"),
     STATUS_INFO(471, "after 'sizeof ( enum ID * *' - expects ')'"),
-    STATUS_INFO(472, "after 'sizeof ( enum ID * * )' - reduce P191")
+    STATUS_INFO(472, "after 'sizeof ( enum ID * * )' - reduce P191"),
+    /* Initializer declarations (Phase 1.2a) */
+    STATUS_INFO(473, "after 'type declarator =' - expects expression"),
+    STATUS_INFO(474, "after 'type declarator = assignatio' - reduce P192")
 };
 
 /* ==================================================
@@ -9621,6 +9654,24 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_450_GOTO[] = {
     { INT_NT_POSTFIXUM, 311 }
 };
 
+/* State 473: after 'type declarator =' - expects expression for initializer */
+hic_manens constans Arbor2StatusGotoEntry STATUS_473_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        474 },   /* ASSIGNATIO -> 474 for P192 reduce */
+    { INT_NT_TRANSLATIO,        264 }
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -10162,7 +10213,10 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 469: after 'sizeof ( enum ID *' - expects ')' or '*' */
     STATUS_GOTO_NIL,   /* 470: after 'sizeof ( enum ID * )' - reduce P190 */
     STATUS_GOTO_NIL,   /* 471: after 'sizeof ( enum ID * *' - expects ')' */
-    STATUS_GOTO_NIL    /* 472: after 'sizeof ( enum ID * * )' - reduce P191 */
+    STATUS_GOTO_NIL,   /* 472: after 'sizeof ( enum ID * * )' - reduce P191 */
+    /* Initializer declarations (Phase 1.2a) */
+    STATUS_GOTO(473),  /* 473: after 'type declarator =' - expects expression */
+    STATUS_GOTO_NIL    /* 474: after 'type declarator = assignatio' - reduce P192 */
 };
 
 

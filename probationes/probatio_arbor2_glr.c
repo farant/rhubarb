@@ -8651,6 +8651,71 @@ s32 principale(vacuum)
         }
     }
 
+    /* ========================================================
+     * PROBARE: Initializer declarations (Phase 1.2a)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int x = 5 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = 5");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INTEGER);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int y = a + b ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int y = a + b");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                /* Initializer should be binary + operation */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int z = x * 2 + 1 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int z = x * 2 + 1");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Table validation
