@@ -805,7 +805,10 @@ _processare_unam_actionem(
                         /* P143: factor -> 'sizeof' factor (2 symbols)
                          * P162-P165: factor -> 'sizeof' '(' type ')' (4 symbols)
                          * P166-P169: factor -> 'sizeof' '(' type '*' ')' (5 symbols)
-                         * P170-P173: factor -> 'sizeof' '(' type '*' '*' ')' (6 symbols) */
+                         * P170-P173: factor -> 'sizeof' '(' type '*' '*' ')' (6 symbols)
+                         * P183,P186,P189: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID ')' (5 symbols)
+                         * P184,P187,P190: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID '*' ')' (6 symbols)
+                         * P185,P188,P191: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID '*' '*' ')' (7 symbols) */
                         si (num_pop == II)
                         {
                             /* P143: sizeof expr */
@@ -819,20 +822,37 @@ _processare_unam_actionem(
 
                             valor_novus = nodus_sizeof;
                         }
-                        alioquin si (num_pop >= IV && num_pop <= VI)
+                        alioquin si (num_pop >= IV && num_pop <= VII)
                         {
-                            /* P162-P173: sizeof(type), sizeof(type*), sizeof(type**) */
+                            /* sizeof(type) with various forms */
                             Arbor2Nodus* nodus_sizeof;
                             Arbor2Nodus* nodus_typus;
                             s32 num_stellae;
+                            s32 prod_num;
+                            s32 type_token_idx;
 
-                            /* Determinare numerum stellarum (pointers) */
-                            num_stellae = num_pop - IV;  /* 0 for base, 1 for *, 2 for ** */
+                            prod_num = (s32)actio->valor;
+
+                            /* Determinare numerum stellarum (pointers)
+                             * P183-P191 (struct/union/enum): extra symbol, so subtract V
+                             * P162-P173 (basic types): subtract IV */
+                            si (prod_num >= 183 && prod_num <= 191)
+                            {
+                                /* sizeof(struct/union/enum): 5=base, 6=*, 7=** */
+                                num_stellae = num_pop - V;
+                                type_token_idx = num_pop - III;  /* ID token (struct ID) */
+                            }
+                            alioquin
+                            {
+                                /* sizeof(basic type): 4=base, 5=*, 6=** */
+                                num_stellae = num_pop - IV;
+                                type_token_idx = num_pop - II;  /* type keyword */
+                            }
 
                             /* Creare nodus typus */
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
-                            nodus_typus->lexema = lexemata[num_pop - II];  /* type keyword */
+                            nodus_typus->lexema = lexemata[type_token_idx];  /* type token */
                             nodus_typus->datum.declarator.num_stellae = num_stellae;
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
@@ -853,23 +873,43 @@ _processare_unam_actionem(
                         frange;
 
                     casus ARBOR2_NODUS_CONVERSIO:
-                        /* P144-P146: factor -> '(' type ')' factor (4 symbols)
+                        /* P144-P147: factor -> '(' type ')' factor (4 symbols)
                          * P154-P157: factor -> '(' type '*' ')' factor (5 symbols)
                          * P158-P161: factor -> '(' type '*' '*' ')' factor (6 symbols)
+                         * P174,P177,P180: factor -> '(' STRUCT/UNION/ENUM ID ')' factor (5 symbols)
+                         * P175,P178,P181: factor -> '(' STRUCT/UNION/ENUM ID '*' ')' factor (6 symbols)
+                         * P176,P179,P182: factor -> '(' STRUCT/UNION/ENUM ID '*' '*' ')' factor (7 symbols)
                          * lexemata[n-1]='(', lexemata[n-2]=type, ..., valori[0]=operand */
-                        si (num_pop >= IV && num_pop <= VI)
+                        si (num_pop >= IV && num_pop <= VII)
                         {
                             Arbor2Nodus* nodus_cast;
                             Arbor2Nodus* nodus_typus;
                             s32 num_stellae;
+                            s32 prod_num;
+                            s32 type_token_idx;
 
-                            /* Determinare numerum stellarum (pointers) */
-                            num_stellae = num_pop - IV;  /* 0 for base, 1 for *, 2 for ** */
+                            prod_num = (s32)actio->valor;
+
+                            /* Determinare numerum stellarum (pointers)
+                             * P174-P182 (struct/union/enum): extra symbol, so subtract V
+                             * P144-P161 (basic types): subtract IV */
+                            si (prod_num >= 174 && prod_num <= 182)
+                            {
+                                /* struct/union/enum casts: 5=base, 6=*, 7=** */
+                                num_stellae = num_pop - V;
+                                type_token_idx = num_pop - III;  /* ID token (struct ID) */
+                            }
+                            alioquin
+                            {
+                                /* basic type casts: 4=base, 5=*, 6=** */
+                                num_stellae = num_pop - IV;
+                                type_token_idx = num_pop - II;  /* type keyword */
+                            }
 
                             /* Creare nodus typus */
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
-                            nodus_typus->lexema = lexemata[num_pop - II];  /* type keyword */
+                            nodus_typus->lexema = lexemata[type_token_idx];  /* type token */
                             nodus_typus->datum.declarator.num_stellae = num_stellae;
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
@@ -877,7 +917,7 @@ _processare_unam_actionem(
                             /* Creare nodus conversio */
                             nodus_cast = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_cast->genus = ARBOR2_NODUS_CONVERSIO;
-                            nodus_cast->lexema = lexemata[num_pop - II];  /* type token for display */
+                            nodus_cast->lexema = lexemata[type_token_idx];  /* type token for display */
                             nodus_cast->datum.conversio.typus = nodus_typus;
                             nodus_cast->datum.conversio.expressio = valori[ZEPHYRUM];
 

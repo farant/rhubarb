@@ -8329,6 +8329,255 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: struct/union/enum casts (Phase 1.1b Part 2)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (struct foo)x - struct cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(struct foo)x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (struct foo*)ptr - struct pointer cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(struct foo*)ptr");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (struct foo**)pp - struct double pointer cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(struct foo**)pp");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)II);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (union bar)u - union cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(union bar)u");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (union bar*)ptr - union pointer cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(union bar*)ptr");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (enum color)c - enum cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(enum color)c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (enum color*)ptr - enum pointer cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(enum color*)ptr");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: sizeof(struct/union/enum) (Phase 1.1b Part 2)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(struct foo) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(struct foo)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(struct foo*) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(struct foo*)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(struct foo**) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(struct foo**)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(union bar) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(union bar)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(union bar*) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(union bar*)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(enum color) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(enum color)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(enum color*) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(enum color*)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Storage class specifiers
      * ======================================================== */
 

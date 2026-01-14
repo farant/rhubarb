@@ -462,3 +462,93 @@ When both parse paths survive, the GLR parser creates an AMBIGUUS node. However:
 - Add struct/union/enum casts starting at state 422
 - `(struct foo*)ptr`, `sizeof(struct foo)`, etc.
 
+## 2026-01-14: Phase 1.1b Part 2 - Struct/Union/Enum Casts
+
+### Overview:
+Added support for casting to struct/union/enum types: `(struct foo)x`, `(struct foo*)ptr`, `(union bar)u`, `(enum color*)ptr`, plus corresponding sizeof forms.
+
+### Key Insight - No GLR Fork Needed:
+Unlike ID casts (Part 1), struct/union/enum casts do NOT require GLR fork because:
+- Keywords `struct`, `union`, `enum` definitively indicate a type context
+- There's no ambiguity: `(struct foo)x` can only be a cast, not a parenthesized expression
+- All shifts use FALSUM flag (deterministic)
+
+### Productions Added (P174-P191):
+```c
+/* Struct casts */
+P174: factor -> '(' STRUCT ID ')' factor (5 symbols)
+P175: factor -> '(' STRUCT ID '*' ')' factor (6 symbols)
+P176: factor -> '(' STRUCT ID '*' '*' ')' factor (7 symbols)
+
+/* Union casts */
+P177-P179: same pattern for UNION
+
+/* Enum casts */
+P180-P182: same pattern for ENUM
+
+/* sizeof(struct/union/enum) */
+P183-P185: factor -> 'sizeof' '(' STRUCT ID [*]* ')' (5-7 symbols)
+P186-P188: factor -> 'sizeof' '(' UNION ID [*]* ')' (5-7 symbols)
+P189-P191: factor -> 'sizeof' '(' ENUM ID [*]* ')' (5-7 symbols)
+```
+
+### States Added (422-472):
+Total: 51 new states
+
+**Struct cast states (422-431):**
+- 422: after `( struct` - expects ID
+- 423: after `( struct ID` - expects `)` or `*`
+- 424: after `( struct ID )` - expects factor
+- 425-431: subsequent states for *, **, reduce
+
+**Union cast states (432-441):** Same pattern
+
+**Enum cast states (442-451):** Same pattern
+
+**sizeof(struct/union/enum) states (452-472):** Same pattern
+
+### State Modifications:
+- **State 6** (after `(`): Added deterministic shifts
+  - STRUCT -> 422, UNION -> 432, ENUM -> 442
+- **State 388** (after `sizeof (`): Added deterministic shifts
+  - STRUCT -> 452, UNION -> 459, ENUM -> 466
+
+### GOTO Tables Added:
+New GOTO arrays for factor-expects states:
+- STATUS_424_GOTO, STATUS_427_GOTO, STATUS_430_GOTO (struct)
+- STATUS_434_GOTO, STATUS_437_GOTO, STATUS_440_GOTO (union)
+- STATUS_444_GOTO, STATUS_447_GOTO, STATUS_450_GOTO (enum)
+
+### AST Handler Updates (arbor2_glr.c):
+
+The CONVERSIO and SIZEOF handlers needed updates to handle the different symbol counts for struct/union/enum:
+- Basic type casts: 4=base, 5=*, 6=** (formula: num_stellae = num_pop - 4)
+- Struct/union/enum: 5=base, 6=*, 7=** (formula: num_stellae = num_pop - 5)
+
+The handlers now check the production number to determine which formula to use:
+- P174-P182 (casts): num_stellae = num_pop - V
+- P183-P191 (sizeof): num_stellae = num_pop - V
+
+### Test Results:
+- All 1205 tests pass (was 1173, added 32 new tests)
+- New tests verify:
+  - `(struct foo)x` - CONVERSIO node
+  - `(struct foo*)ptr` - CONVERSIO with num_stellae=1
+  - `(struct foo**)pp` - CONVERSIO with num_stellae=2
+  - `(union bar)u`, `(union bar*)ptr`
+  - `(enum color)c`, `(enum color*)ptr`
+  - `sizeof(struct foo)`, `sizeof(struct foo*)`, `sizeof(struct foo**)`
+  - `sizeof(union bar)`, `sizeof(union bar*)`
+  - `sizeof(enum color)`, `sizeof(enum color*)`
+
+### Statistics:
+- Total states: 473 (was 422)
+- Total rules: 191 (was 173, added 18)
+- Total tests: 1205
+
+### Phase 1.1 Summary:
+- Part 1a: Basic type pointer casts `(int*)` - COMPLETE
+- Part 1b Part 1: ID/typedef casts `(TypeName*)` - COMPLETE
+- Part 1b Part 2: Struct/union/enum casts `(struct foo*)` - COMPLETE
+- Future: Array types in sizeof `sizeof(int[10])` - deferred to Phase 1.1c
+
