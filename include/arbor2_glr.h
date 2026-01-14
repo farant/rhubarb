@@ -98,6 +98,9 @@ nomen enumeratio {
 nomen enumeratio {
     ARBOR2_NODUS_IDENTIFICATOR,
     ARBOR2_NODUS_INTEGER,
+    ARBOR2_NODUS_FLOAT,             /* Float literal */
+    ARBOR2_NODUS_CHAR,              /* Character literal */
+    ARBOR2_NODUS_STRING,            /* String literal */
     ARBOR2_NODUS_BINARIUM,          /* Binary operation */
     ARBOR2_NODUS_UNARIUM,           /* Unary operation */
     ARBOR2_NODUS_CONVERSIO,         /* Cast expression */

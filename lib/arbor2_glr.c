@@ -600,6 +600,18 @@ _exequi_shift(
     {
         valor = arbor2_nodus_creare_folium(glr, ARBOR2_NODUS_INTEGER, lexema);
     }
+    alioquin si (lexema->lexema->genus == ARBOR2_LEXEMA_FLOAT_LIT)
+    {
+        valor = arbor2_nodus_creare_folium(glr, ARBOR2_NODUS_FLOAT, lexema);
+    }
+    alioquin si (lexema->lexema->genus == ARBOR2_LEXEMA_CHAR_LIT)
+    {
+        valor = arbor2_nodus_creare_folium(glr, ARBOR2_NODUS_CHAR, lexema);
+    }
+    alioquin si (lexema->lexema->genus == ARBOR2_LEXEMA_STRING_LIT)
+    {
+        valor = arbor2_nodus_creare_folium(glr, ARBOR2_NODUS_STRING, lexema);
+    }
     alioquin
     {
         valor = NIHIL;  /* Operators don't create leaf nodes directly */
@@ -911,6 +923,9 @@ _processare_unam_actionem(
 
                     casus ARBOR2_NODUS_IDENTIFICATOR:
                     casus ARBOR2_NODUS_INTEGER:
+                    casus ARBOR2_NODUS_FLOAT:
+                    casus ARBOR2_NODUS_CHAR:
+                    casus ARBOR2_NODUS_STRING:
                         valor_novus = (num_pop > ZEPHYRUM) ? valori[ZEPHYRUM] : NIHIL;
                         frange;
 

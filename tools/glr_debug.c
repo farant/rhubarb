@@ -109,6 +109,9 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
     {
         casus ARBOR2_NODUS_IDENTIFICATOR:
         casus ARBOR2_NODUS_INTEGER:
+        casus ARBOR2_NODUS_FLOAT:
+        casus ARBOR2_NODUS_CHAR:
+        casus ARBOR2_NODUS_STRING:
             si (nodus->lexema != NIHIL && nodus->lexema->lexema != NIHIL)
             {
                 chorda* val = &nodus->lexema->lexema->valor;

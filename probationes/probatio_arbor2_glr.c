@@ -7740,6 +7740,217 @@ s32 principale(vacuum)
         (vacuum)res;  /* Suppress unused warning */
     }
 
+
+    /* ========================================================
+     * PROBARE: Float literal
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans float literal: 3.14 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "3.14");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_FLOAT);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Char literal
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans char literal: 'a' ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "'a'");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CHAR);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: String literal
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans string literal: \"hello\" ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "\"hello\"");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRING);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Float in binary expression
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans float in expression: 3.14 + 2.0 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "3.14 + 2.0");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            /* sinister should be FLOAT */
+            si (res.radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->genus,
+                                   (i32)ARBOR2_NODUS_FLOAT);
+            }
+            /* dexter should be FLOAT */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus,
+                                   (i32)ARBOR2_NODUS_FLOAT);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Char in binary expression
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans char in expression: 'a' + 'b' ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "'a' + 'b'");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            /* sinister should be CHAR */
+            si (res.radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->genus,
+                                   (i32)ARBOR2_NODUS_CHAR);
+            }
+            /* dexter should be CHAR */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus,
+                                   (i32)ARBOR2_NODUS_CHAR);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: Mixed literals in expression
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans mixed literals: 42 + 3.14 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "42 + 3.14");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            /* sinister should be INTEGER */
+            si (res.radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->genus,
+                                   (i32)ARBOR2_NODUS_INTEGER);
+            }
+            /* dexter should be FLOAT */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus,
+                                   (i32)ARBOR2_NODUS_FLOAT);
+            }
+        }
+    }
+
+
     /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
