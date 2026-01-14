@@ -801,6 +801,27 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_SIZEOF:
+                        /* P143: factor -> 'sizeof' factor (2 symbols)
+                         * lexemata[1] = sizeof, valori[0] = operand */
+                        si (num_pop >= II)
+                        {
+                            Arbor2Nodus* nodus_sizeof;
+
+                            nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
+                            nodus_sizeof->lexema = lexemata[I];  /* sizeof token */
+                            nodus_sizeof->datum.sizeof_expr.est_typus = FALSUM;  /* sizeof expr, not type */
+                            nodus_sizeof->datum.sizeof_expr.operandum = valori[ZEPHYRUM];
+
+                            valor_novus = nodus_sizeof;
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     casus ARBOR2_NODUS_TERNARIUS:
                         /* P123: ternarius -> disiunctio '?' ternarius ':' ternarius
                          * 5 symbols: valori[4]=cond, [3]=?, [2]=verum, [1]=:, [0]=falsum */
