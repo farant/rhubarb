@@ -1611,6 +1611,43 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
                             valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
                         }
+                        /* P193-P198: storage class/qualifier + type declarator = assignatio */
+                        alioquin si (actio->valor >= 193 && actio->valor <= 198)
+                        {
+                            /* 5 symbols: storage/qual, type, declarator_name, '=', assignatio
+                             * lexemata: [4]=storage/qual, [3]=type, [2]=name, [1]='=', [0]=end
+                             * valori: [4]=nil, [3]=type?, [2]=declarator, [1]=nil, [0]=assignatio */
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* decl_node = valori[II];  /* Pre-built declarator */
+                            Arbor2Nodus* init_expr = valori[ZEPHYRUM];  /* Initializer expression */
+                            Arbor2Token* type_tok = lexemata[III];
+                            i32 storage = ARBOR2_STORAGE_NONE;
+                            i32 quals = ARBOR2_QUAL_NONE;
+
+                            /* Determine storage class or qualifier based on production */
+                            si (actio->valor == 193) storage = ARBOR2_STORAGE_STATIC;
+                            alioquin si (actio->valor == 194) storage = ARBOR2_STORAGE_EXTERN;
+                            alioquin si (actio->valor == 195) storage = ARBOR2_STORAGE_REGISTER;
+                            alioquin si (actio->valor == 196) storage = ARBOR2_STORAGE_AUTO;
+                            alioquin si (actio->valor == 197) quals = ARBOR2_QUAL_CONST;
+                            alioquin si (actio->valor == 198) quals = ARBOR2_QUAL_VOLATILE;
+
+                            /* Creare specifier nodus ex typo */
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = type_tok;
+                            type_spec->datum.folium.valor = type_tok->lexema->valor;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = storage;
+                            valor_novus->datum.declaratio.qualifiers = quals;
+                        }
                         alioquin si (num_pop >= II)
                         {
                             /* P10: declaration -> type_specifier declarator */
