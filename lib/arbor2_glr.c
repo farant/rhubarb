@@ -889,6 +889,26 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_POST_UNARIUM:
+                        /* P136: postfixum -> postfixum '++' (2 symbols)
+                         * P137: postfixum -> postfixum '--' (2 symbols)
+                         * valori[1]=operand, lexemata[0]=operator */
+                        si (num_pop >= II)
+                        {
+                            Arbor2Nodus* nodus_post;
+                            nodus_post = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_post->genus = ARBOR2_NODUS_POST_UNARIUM;
+                            nodus_post->lexema = lexemata[ZEPHYRUM];  /* '++' or '--' token */
+                            nodus_post->datum.post_unarium.operandum = valori[I];
+                            nodus_post->datum.post_unarium.operator = lexemata[ZEPHYRUM]->lexema->genus;
+                            valor_novus = nodus_post;
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     casus ARBOR2_NODUS_IDENTIFICATOR:
                     casus ARBOR2_NODUS_INTEGER:
                         valor_novus = (num_pop > ZEPHYRUM) ? valori[ZEPHYRUM] : NIHIL;

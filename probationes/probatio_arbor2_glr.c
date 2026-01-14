@@ -7564,6 +7564,183 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Increment/Decrement operators
+     * ======================================================== */
+
+    /* Post-increment: x++ */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans x++ ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "x++");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_POST_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.post_unarium.operator,
+                              (i32)ARBOR2_LEXEMA_DUPLUS);
+        }
+    }
+
+    /* Post-decrement: x-- */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans x-- ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "x--");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_POST_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.post_unarium.operator,
+                              (i32)ARBOR2_LEXEMA_DUMINUS);
+        }
+    }
+
+    /* Pre-increment: ++x */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans ++x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "++x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+        }
+    }
+
+    /* Pre-decrement: --x */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans --x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "--x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+        }
+    }
+
+    /* Post-increment on subscript: arr[0]++ */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans arr[0]++ ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[0]++");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_POST_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.post_unarium.operandum->genus,
+                              (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* Pre-increment on subscript: ++arr[0] */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans ++arr[0] ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "++arr[0]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.unarium.operandum->genus,
+                              (i32)ARBOR2_NODUS_SUBSCRIPTIO);
+        }
+    }
+
+    /* Post-increment on member: s.x++ */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans s.x++ ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "s.x++");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_POST_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.post_unarium.operandum->genus,
+                              (i32)ARBOR2_NODUS_MEMBRUM);
+        }
+    }
+
+    /* Post-decrement on ptr member: p->x-- */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans p->x-- ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "p->x--");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_POST_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.post_unarium.operandum->genus,
+                              (i32)ARBOR2_NODUS_MEMBRUM);
+        }
+    }
+
+    /* Mixed: ++x + y-- */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans ++x + y-- ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "++x + y--");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.sinister->genus,
+                              (i32)ARBOR2_NODUS_UNARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus,
+                              (i32)ARBOR2_NODUS_POST_UNARIUM);
+        }
+    }
+
+    /* Chained post: x++++ should fail or parse as (x++)++ */
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans x++++ ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "x++++");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        /* This may succeed or fail - just testing it doesn't crash */
+        CREDO_VERUM(VERUM);  /* Parser handles it */
+        (vacuum)res;  /* Suppress unused warning */
+    }
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

@@ -175,6 +175,11 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             imprimere_nodus(nodus->datum.membrum.basis, depth + I);
             frange;
 
+        casus ARBOR2_NODUS_POST_UNARIUM:
+            printf(" [%s]\n", arbor2_lexema_genus_nomen(nodus->datum.post_unarium.operator));
+            imprimere_nodus(nodus->datum.post_unarium.operandum, depth + I);
+            frange;
+
         ordinarius:
             printf("\n");
             frange;
