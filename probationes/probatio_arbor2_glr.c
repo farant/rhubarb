@@ -8261,6 +8261,74 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Identifier (typedef) casts - Phase 1.1b
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (TypeName)x - ID cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(TypeName)x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            /* GLR fork produces AMBIGUUS (both cast and paren-expr interpretations)
+             * OR CONVERSIO if cast path wins */
+            CREDO_VERUM((i32)res.radix->genus == (i32)ARBOR2_NODUS_CONVERSIO ||
+                        (i32)res.radix->genus == (i32)ARBOR2_NODUS_AMBIGUUS);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (TypeName*)ptr - ID pointer cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(TypeName*)ptr");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            /* Unambiguous - pointer type can only be a cast */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                /* Check pointer depth = 1 */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (TypeName**)pp - ID double pointer cast ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(TypeName**)pp");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            /* Unambiguous - double pointer type can only be a cast */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+            si (res.radix->datum.conversio.typus != NIHIL)
+            {
+                /* Check pointer depth = 2 */
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)II);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Storage class specifiers
      * ======================================================== */
 

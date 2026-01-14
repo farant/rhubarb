@@ -398,3 +398,67 @@ a = x ? 1 : 2       // assignment with ternary (ternary binds tighter)
 - Total states: 311 (was 306)
 - Total rules: 125 (was 123)
 - All 801 parser tests pass
+
+## 2026-01-14: Phase 1.1b - Identifier (typedef) Casts
+
+### Overview:
+Added support for casting to identifier/typedef types: `(TypeName)x`, `(TypeName*)ptr`, `(TypeName**)pp`.
+
+### Changes Made:
+
+1. **State 6 GLR Fork**: Added GLR fork for IDENTIFICATOR token
+   - On ID: Fork to state 4 (expression path) AND state 407 (cast path)
+   - Uses VERUM flag on both actions to enable parallel parsing
+   - The expression path `(x)` will die when followed by another identifier
+   - The cast path `(TypeName)x` will survive and produce CONVERSIO
+
+2. **New States 407-415** (ID cast states):
+   - 407: after `( ID` - expects `)` or `*`
+   - 408: after `( ID )` - expects factor
+   - 409: after `( ID * )` - expects factor
+   - 410: after `( ID *` - expects `)` or `*`
+   - 411: after `( ID * *` - expects `)`
+   - 412: after `( ID * * )` - expects factor
+   - 413-415: reduce states for P147, P157, P161
+
+3. **GOTO entries** added for states 408, 409, 412 (factor -> reduce state)
+
+4. **New States 416-421** (sizeof(ID) states - DISABLED):
+   - State machine exists but sizeof(ID) path in state 388 is disabled
+   - See "Known Limitation" below
+
+### Productions Used:
+- P147: `factor -> '(' ID ')' factor` - basic ID cast
+- P157: `factor -> '(' ID '*' ')' factor` - ID pointer cast
+- P161: `factor -> '(' ID '*' '*' ')' factor` - ID double pointer cast
+
+### Known Limitation - sizeof(ID) Ambiguity:
+
+The sizeof(ID) case (`sizeof(MyType)`) is inherently ambiguous in C:
+1. `sizeof(type)` - the identifier is a typedef
+2. `sizeof(expr)` - the identifier is a variable in parentheses
+
+When both parse paths survive, the GLR parser creates an AMBIGUUS node. However:
+- The test suite expects SIZEOF nodes for `sizeof(x)` (the old behavior)
+- There appears to be a bug when processing subsequent operations on AMBIGUUS nodes
+
+**Workaround**: sizeof(ID) path in state 388 is disabled. Use:
+- `sizeof(MyType*)` - unambiguous, works correctly (pointer type can only be a cast)
+- `sizeof x` - also works (no parentheses, so no ambiguity)
+
+### Test Results:
+- All 1173 tests pass (was 1165, added 8 new ID cast tests)
+- New tests:
+  - `(TypeName)x` - accepts CONVERSIO or AMBIGUUS
+  - `(TypeName*)ptr` - expects CONVERSIO with num_stellae=1
+  - `(TypeName**)pp` - expects CONVERSIO with num_stellae=2
+
+### Statistics:
+- Total states: 422 (was 407)
+- Total rules: 173 (unchanged - ID productions P147, P157, P161 already existed)
+- Total tests: 1173
+
+### Future Work (Part 2):
+- Add struct/union/enum casts starting at state 422
+- `(struct foo*)ptr`, `sizeof(struct foo)`, etc.
+
