@@ -43,6 +43,25 @@ nomen enumeratio {
 } Arbor2AmbigGenus;
 
 /* ==================================================
+ * Storage Class Flags (only one allowed in C89)
+ * ================================================== */
+
+#define ARBOR2_STORAGE_NONE         0
+#define ARBOR2_STORAGE_TYPEDEF      (1 << 0)
+#define ARBOR2_STORAGE_STATIC       (1 << 1)
+#define ARBOR2_STORAGE_EXTERN       (1 << 2)
+#define ARBOR2_STORAGE_REGISTER     (1 << 3)
+#define ARBOR2_STORAGE_AUTO         (1 << 4)
+
+/* ==================================================
+ * Type Qualifier Flags (can combine)
+ * ================================================== */
+
+#define ARBOR2_QUAL_NONE            0
+#define ARBOR2_QUAL_CONST           (1 << 0)
+#define ARBOR2_QUAL_VOLATILE        (1 << 1)
+
+/* ==================================================
  * Non-Terminal Symbols
  * ================================================== */
 
@@ -215,6 +234,8 @@ structura Arbor2Nodus {
             Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
             Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
             b32                 est_typedef;    /* VERUM if this is a typedef declaration */
+            i32                 storage_class;  /* ARBOR2_STORAGE_* flags (only one in C89) */
+            i32                 qualifiers;     /* ARBOR2_QUAL_* flags (can combine) */
         } declaratio;
 
         /* DECLARATOR */
@@ -223,6 +244,7 @@ structura Arbor2Nodus {
             chorda              titulus;        /* Variable name (empty for anonymous bit fields) */
             Arbor2Nodus*        latitudo_biti;  /* Bit field width expr, NIHIL if not bit field */
             Xar*                dimensiones;    /* Array dimensions (Xar of Arbor2Nodus*), NIHIL if not array */
+            i32                 pointer_quals;  /* Qualifiers on pointer (ARBOR2_QUAL_*) for int * const p */
         } declarator;
 
         /* DECLARATOR_FUNCTI (function declarator) */

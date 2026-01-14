@@ -147,6 +147,18 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             imprimere_nodus(nodus->datum.sizeof_expr.operandum, depth + I);
             frange;
 
+        casus ARBOR2_NODUS_CONVERSIO:
+            si (nodus->lexema != NIHIL && nodus->lexema->lexema != NIHIL)
+            {
+                printf(" [%s]\n", arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
+            }
+            alioquin
+            {
+                printf("\n");
+            }
+            imprimere_nodus(nodus->datum.conversio.expressio, depth + I);
+            frange;
+
         casus ARBOR2_NODUS_TERNARIUS:
             printf(" [?:]\n");
             imprimere_nodus(nodus->datum.ternarius.conditio, depth + I);

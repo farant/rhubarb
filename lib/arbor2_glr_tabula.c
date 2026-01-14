@@ -226,7 +226,23 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P142 */ { ARBOR2_NT_FACTOR, 1, ARBOR2_NODUS_STRING, "factor -> STRING_LIT" },
 
     /* sizeof operator */
-    /* P143 */ { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' factor" }
+    /* P143 */ { ARBOR2_NT_FACTOR, 2, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' factor" },
+
+    /* Type casts */
+    /* P144 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' INT ')' factor" },
+    /* P145 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' CHAR ')' factor" },
+    /* P146 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' VOID ')' factor" },
+    /* P147 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' ID ')' factor" },
+
+    /* Storage class specifiers - 3 symbols: storage_class type declarator */
+    /* P148 */ { ARBOR2_NT_DECLARATIO, 3, ARBOR2_NODUS_DECLARATIO, "decl -> 'static' type declarator" },
+    /* P149 */ { ARBOR2_NT_DECLARATIO, 3, ARBOR2_NODUS_DECLARATIO, "decl -> 'extern' type declarator" },
+    /* P150 */ { ARBOR2_NT_DECLARATIO, 3, ARBOR2_NODUS_DECLARATIO, "decl -> 'register' type declarator" },
+    /* P151 */ { ARBOR2_NT_DECLARATIO, 3, ARBOR2_NODUS_DECLARATIO, "decl -> 'auto' type declarator" },
+
+    /* Type qualifiers - 3 symbols: qualifier type declarator */
+    /* P152 */ { ARBOR2_NT_DECLARATIO, 3, ARBOR2_NODUS_DECLARATIO, "decl -> 'const' type declarator" },
+    /* P153 */ { ARBOR2_NT_DECLARATIO, 3, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' type declarator" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -271,7 +287,15 @@ hic_manens constans Arbor2TabulaActio STATUS_0_ACTIONES[] = {
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
     { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_SHIFT, 198, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,   4, FALSUM },
-    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,   4, FALSUM }
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    /* Storage class specifiers */
+    { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_SHIFT, 346, FALSUM },
+    { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_SHIFT, 347, FALSUM },
+    { ARBOR2_LEXEMA_REGISTER,       ARBOR2_ACTIO_SHIFT, 348, FALSUM },
+    { ARBOR2_LEXEMA_AUTO,           ARBOR2_ACTIO_SHIFT, 349, FALSUM },
+    /* Type qualifiers */
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 350, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 351, FALSUM }
 };
 
 /* State 1: after expression - expects operator or end */
@@ -496,7 +520,7 @@ hic_manens constans Arbor2TabulaActio STATUS_5_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,   6, VERUM }   /* regular factor path */
 };
 
-/* State 6: after '(' - expects expression */
+/* State 6: after '(' - expects expression or type (for cast) */
 hic_manens constans Arbor2TabulaActio STATUS_6_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
@@ -510,7 +534,11 @@ hic_manens constans Arbor2TabulaActio STATUS_6_ACTIONES[] = {
     { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
     { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
     { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
-    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    /* Type keywords for casts */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 337, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 338, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 339, FALSUM }
 };
 
 /* State 7: after '*' (unary) - expects factor */
@@ -5205,6 +5233,334 @@ hic_manens constans Arbor2TabulaActio STATUS_336_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Type Cast States (337-345)
+ * P144: factor -> '(' INT ')' factor
+ * P145: factor -> '(' CHAR ')' factor
+ * P146: factor -> '(' VOID ')' factor
+ * ================================================== */
+
+/* State 337: after '( int' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_337_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 340, FALSUM }
+};
+
+/* State 338: after '( char' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_338_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 341, FALSUM }
+};
+
+/* State 339: after '( void' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_339_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 342, FALSUM }
+};
+
+/* State 340: after '( int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_340_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 341: after '( char )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_341_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 342: after '( void )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_342_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 343: after '( int ) factor' - reduce P144 */
+hic_manens constans Arbor2TabulaActio STATUS_343_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 144, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 144, FALSUM }
+};
+
+/* State 344: after '( char ) factor' - reduce P145 */
+hic_manens constans Arbor2TabulaActio STATUS_344_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 145, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 145, FALSUM }
+};
+
+/* State 345: after '( void ) factor' - reduce P146 */
+hic_manens constans Arbor2TabulaActio STATUS_345_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 146, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 146, FALSUM }
+};
+
+/* ==================================================
+ * Storage Class / Qualifier States (346-357)
+ * P148-P153: decl -> specifier type declarator
+ * ================================================== */
+
+/* State 346: after 'static' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_346_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 352, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 352, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 352, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 352, FALSUM }
+};
+
+/* State 347: after 'extern' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_347_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 353, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 353, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 353, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 353, FALSUM }
+};
+
+/* State 348: after 'register' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_348_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 354, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 354, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 354, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 354, FALSUM }
+};
+
+/* State 349: after 'auto' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_349_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 355, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 355, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 355, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 355, FALSUM }
+};
+
+/* State 350: after 'const' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_350_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 356, FALSUM }
+};
+
+/* State 351: after 'volatile' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_351_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 357, FALSUM }
+};
+
+/* State 352: after 'static type' - expects declarator (* or ID) */
+hic_manens constans Arbor2TabulaActio STATUS_352_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+};
+
+/* State 353: after 'extern type' - expects declarator (* or ID) */
+hic_manens constans Arbor2TabulaActio STATUS_353_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+};
+
+/* State 354: after 'register type' - expects declarator (* or ID) */
+hic_manens constans Arbor2TabulaActio STATUS_354_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+};
+
+/* State 355: after 'auto type' - expects declarator (* or ID) */
+hic_manens constans Arbor2TabulaActio STATUS_355_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+};
+
+/* State 356: after 'const type' - expects declarator (* or ID) */
+hic_manens constans Arbor2TabulaActio STATUS_356_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+};
+
+/* State 357: after 'volatile type' - expects declarator (* or ID) */
+hic_manens constans Arbor2TabulaActio STATUS_357_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+};
+
+/* States 358-363: after 'specifier type declarator' - reduce */
+/* State 358: reduce P148 (static) */
+hic_manens constans Arbor2TabulaActio STATUS_358_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 148, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 148, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 148, FALSUM }
+};
+
+/* State 359: reduce P149 (extern) */
+hic_manens constans Arbor2TabulaActio STATUS_359_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 149, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 149, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 149, FALSUM }
+};
+
+/* State 360: reduce P150 (register) */
+hic_manens constans Arbor2TabulaActio STATUS_360_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 150, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 150, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 150, FALSUM }
+};
+
+/* State 361: reduce P151 (auto) */
+hic_manens constans Arbor2TabulaActio STATUS_361_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 151, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 151, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 151, FALSUM }
+};
+
+/* State 362: reduce P152 (const) */
+hic_manens constans Arbor2TabulaActio STATUS_362_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 152, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 152, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 152, FALSUM }
+};
+
+/* State 363: reduce P153 (volatile) */
+hic_manens constans Arbor2TabulaActio STATUS_363_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 153, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 153, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 153, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -5570,7 +5926,36 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 
     /* sizeof states */
     STATUS_INFO(335, "after 'sizeof' - expects factor"),
-    STATUS_INFO(336, "after 'sizeof' factor - reduce P143")
+    STATUS_INFO(336, "after 'sizeof' factor - reduce P143"),
+    STATUS_INFO(337, "after '( int' - expects ')'"),
+    STATUS_INFO(338, "after '( char' - expects ')'"),
+    STATUS_INFO(339, "after '( void' - expects ')'"),
+    STATUS_INFO(340, "after '( int )' - expects factor"),
+    STATUS_INFO(341, "after '( char )' - expects factor"),
+    STATUS_INFO(342, "after '( void )' - expects factor"),
+    STATUS_INFO(343, "after '( int ) factor' - reduce P144"),
+    STATUS_INFO(344, "after '( char ) factor' - reduce P145"),
+    STATUS_INFO(345, "after '( void ) factor' - reduce P146"),
+
+    /* Storage class / qualifier states */
+    STATUS_INFO(346, "after 'static' - expects type"),
+    STATUS_INFO(347, "after 'extern' - expects type"),
+    STATUS_INFO(348, "after 'register' - expects type"),
+    STATUS_INFO(349, "after 'auto' - expects type"),
+    STATUS_INFO(350, "after 'const' - expects type"),
+    STATUS_INFO(351, "after 'volatile' - expects type"),
+    STATUS_INFO(352, "after 'static type' - expects declarator"),
+    STATUS_INFO(353, "after 'extern type' - expects declarator"),
+    STATUS_INFO(354, "after 'register type' - expects declarator"),
+    STATUS_INFO(355, "after 'auto type' - expects declarator"),
+    STATUS_INFO(356, "after 'const type' - expects declarator"),
+    STATUS_INFO(357, "after 'volatile type' - expects declarator"),
+    STATUS_INFO(358, "after 'static type decl' - reduce P148"),
+    STATUS_INFO(359, "after 'extern type decl' - reduce P149"),
+    STATUS_INFO(360, "after 'register type decl' - reduce P150"),
+    STATUS_INFO(361, "after 'auto type decl' - reduce P151"),
+    STATUS_INFO(362, "after 'const type decl' - reduce P152"),
+    STATUS_INFO(363, "after 'volatile type decl' - reduce P153")
 };
 
 /* ==================================================
@@ -6620,6 +7005,54 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_335_GOTO[] = {
     { INT_NT_POSTFIXUM, 311 }  /* postfix for chaining e.g. sizeof arr[i] */
 };
 
+/* State 340: after '( int )' - expects factor -> 343 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_340_GOTO[] = {
+    { INT_NT_FACTOR, 343 },
+    { INT_NT_POSTFIXUM, 311 }  /* postfix for chaining e.g. (int)arr[i] */
+};
+
+/* State 341: after '( char )' - expects factor -> 344 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_341_GOTO[] = {
+    { INT_NT_FACTOR, 344 },
+    { INT_NT_POSTFIXUM, 311 }  /* postfix for chaining e.g. (char)arr[i] */
+};
+
+/* State 342: after '( void )' - expects factor -> 345 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_342_GOTO[] = {
+    { INT_NT_FACTOR, 345 },
+    { INT_NT_POSTFIXUM, 311 }  /* postfix for chaining e.g. (void)arr[i] */
+};
+
+/* State 352: after 'static type' - expects declarator -> 358 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_352_GOTO[] = {
+    { INT_NT_DECLARATOR, 358 }
+};
+
+/* State 353: after 'extern type' - expects declarator -> 359 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_353_GOTO[] = {
+    { INT_NT_DECLARATOR, 359 }
+};
+
+/* State 354: after 'register type' - expects declarator -> 360 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_354_GOTO[] = {
+    { INT_NT_DECLARATOR, 360 }
+};
+
+/* State 355: after 'auto type' - expects declarator -> 361 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_355_GOTO[] = {
+    { INT_NT_DECLARATOR, 361 }
+};
+
+/* State 356: after 'const type' - expects declarator -> 362 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_356_GOTO[] = {
+    { INT_NT_DECLARATOR, 362 }
+};
+
+/* State 357: after 'volatile type' - expects declarator -> 363 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_357_GOTO[] = {
+    { INT_NT_DECLARATOR, 363 }
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -6981,7 +7414,36 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
 
     /* sizeof states */
     STATUS_GOTO(335),  /* 335: after 'sizeof' - expects factor */
-    STATUS_GOTO_NIL    /* 336: after 'sizeof' factor - reduce P143 */
+    STATUS_GOTO_NIL,   /* 336: after 'sizeof' factor - reduce P143 */
+    STATUS_GOTO_NIL,   /* 337: after '( int' - expects ')' */
+    STATUS_GOTO_NIL,   /* 338: after '( char' - expects ')' */
+    STATUS_GOTO_NIL,   /* 339: after '( void' - expects ')' */
+    STATUS_GOTO(340),  /* 340: after '( int )' - expects factor */
+    STATUS_GOTO(341),  /* 341: after '( char )' - expects factor */
+    STATUS_GOTO(342),  /* 342: after '( void )' - expects factor */
+    STATUS_GOTO_NIL,   /* 343: after '( int ) factor' - reduce P144 */
+    STATUS_GOTO_NIL,   /* 344: after '( char ) factor' - reduce P145 */
+    STATUS_GOTO_NIL,   /* 345: after '( void ) factor' - reduce P146 */
+
+    /* Storage class / qualifier states */
+    STATUS_GOTO_NIL,   /* 346: after 'static' - expects type */
+    STATUS_GOTO_NIL,   /* 347: after 'extern' - expects type */
+    STATUS_GOTO_NIL,   /* 348: after 'register' - expects type */
+    STATUS_GOTO_NIL,   /* 349: after 'auto' - expects type */
+    STATUS_GOTO_NIL,   /* 350: after 'const' - expects type */
+    STATUS_GOTO_NIL,   /* 351: after 'volatile' - expects type */
+    STATUS_GOTO(352),  /* 352: after 'static type' - expects declarator */
+    STATUS_GOTO(353),  /* 353: after 'extern type' - expects declarator */
+    STATUS_GOTO(354),  /* 354: after 'register type' - expects declarator */
+    STATUS_GOTO(355),  /* 355: after 'auto type' - expects declarator */
+    STATUS_GOTO(356),  /* 356: after 'const type' - expects declarator */
+    STATUS_GOTO(357),  /* 357: after 'volatile type' - expects declarator */
+    STATUS_GOTO_NIL,   /* 358: reduce P148 (static) */
+    STATUS_GOTO_NIL,   /* 359: reduce P149 (extern) */
+    STATUS_GOTO_NIL,   /* 360: reduce P150 (register) */
+    STATUS_GOTO_NIL,   /* 361: reduce P151 (auto) */
+    STATUS_GOTO_NIL,   /* 362: reduce P152 (const) */
+    STATUS_GOTO_NIL    /* 363: reduce P153 (volatile) */
 };
 
 

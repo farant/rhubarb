@@ -822,6 +822,34 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_CONVERSIO:
+                        /* P144-P146: factor -> '(' type ')' factor (4 symbols)
+                         * lexemata[3]='(', lexemata[2]=type, lexemata[1]=')', valori[0]=operand */
+                        si (num_pop >= IV)
+                        {
+                            Arbor2Nodus* nodus_cast;
+                            Arbor2Nodus* nodus_typus;
+
+                            /* Creare nodus typus ex lexema (usus IDENTIFICATOR pro typo) */
+                            nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_typus->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            nodus_typus->lexema = lexemata[II];  /* type keyword */
+
+                            /* Creare nodus conversio */
+                            nodus_cast = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_cast->genus = ARBOR2_NODUS_CONVERSIO;
+                            nodus_cast->lexema = lexemata[II];  /* type token for display */
+                            nodus_cast->datum.conversio.typus = nodus_typus;
+                            nodus_cast->datum.conversio.expressio = valori[ZEPHYRUM];
+
+                            valor_novus = nodus_cast;
+                        }
+                        alioquin
+                        {
+                            valor_novus = NIHIL;
+                        }
+                        frange;
+
                     casus ARBOR2_NODUS_TERNARIUS:
                         /* P123: ternarius -> disiunctio '?' ternarius ':' ternarius
                          * 5 symbols: valori[4]=cond, [3]=?, [2]=verum, [1]=:, [0]=falsum */
@@ -1406,6 +1434,60 @@ _processare_unam_actionem(
                             (vacuum)valori;
                             (vacuum)lexemata;
                             valor_novus = NIHIL;
+                        }
+                        /* P148-P153: Storage class and qualifier declarations */
+                        alioquin si (actio->valor >= 148 && actio->valor <= 153)
+                        {
+                            /* 3 symbols: specifier type declarator
+                             * lexemata[2] = storage/qualifier, lexemata[1] = type
+                             * valori[0] = declarator */
+                            Arbor2Nodus* type_spec;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = lexemata[I];  /* type token */
+
+                            /* Creare specifier nodus ex typo */
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = lexemata[I];
+
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+
+                            /* Ponere storage_class vel qualifiers */
+                            commutatio (actio->valor)
+                            {
+                                casus 148:  /* static */
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_STATIC;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                                    frange;
+                                casus 149:  /* extern */
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_EXTERN;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                                    frange;
+                                casus 150:  /* register */
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_REGISTER;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                                    frange;
+                                casus 151:  /* auto */
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_AUTO;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                                    frange;
+                                casus 152:  /* const */
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_CONST;
+                                    frange;
+                                casus 153:  /* volatile */
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_VOLATILE;
+                                    frange;
+                                ordinarius:
+                                    valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                                    valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                                    frange;
+                            }
                         }
                         alioquin si (num_pop >= II)
                         {
