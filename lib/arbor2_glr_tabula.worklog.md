@@ -1041,3 +1041,71 @@ all subsequent states (530+) to be off by one. Fixed by adding placeholder entry
 - Total states: 560
 - Total rules: 239
 - Total tests: 1411
+
+## 2026-01-14: Declarations in Compound Statements (C99-style)
+
+### Goal
+Enable local variable declarations inside blocks:
+```c
+{
+    int x;
+    int y = 5;
+    x = y + 1;
+    return x;
+}
+```
+
+Previously failed because states 25/26 (compound statement) didn't accept type tokens.
+
+### Approach: C99-Style (Declarations Anywhere)
+Allow declarations as statements inside blocks. This is simpler than strict C89 (declarations only at start) and more permissive/practical.
+
+### Production Added
+- P239: `stmt -> declaratio ';'` (2 symbols) - declaration as statement
+
+Note: The semicolon is included in P239 (like P13 `stmt -> expr ';'`) because C declarations don't include the terminating semicolon in this parser's grammar.
+
+### States Added (560-561)
+- State 560: after declaratio in compound - expects ';' (SHIFT to 561)
+- State 561: after 'declaratio ;' - REDUCE P239 on follow tokens
+
+### States Modified
+
+**State 20** (after type declarator): Added SEMICOLON -> REDUCE P221
+- Needed so `int x;` in blocks reduces declarator before ';' is processed
+
+**State 22** (after expr ;): Added type token REDUCE P13 entries
+- So expression statements can be followed by declarations
+
+**State 23** (after lone ;): Added type token REDUCE P14 entries
+- So empty statements can be followed by declarations
+
+**State 25** (after {): Added type token REDUCE P18 entries
+- INT, CHAR, VOID, STATIC, EXTERN, REGISTER, AUTO, CONST, VOLATILE, STRUCT, UNION, ENUM, TYPEDEF
+
+**State 26** (inside compound): Added type token SHIFT entries
+- Routes to appropriate declaration-parsing states (4, 346-351, 117, 137, 145, 198)
+- Added GOTO: DECLARATIO -> 560
+
+**State 28** (after stmt in stmt_list): Added type token REDUCE P17 entries
+- So statements can be followed by declarations
+
+### AST Handler (lib/arbor2_glr.c)
+Simple pass-through: `valor_novus = valori[I]` (the declaration node, ignoring the ';')
+
+### Key Insight
+The semicolon handling was tricky. Initially P239 was 1 symbol (just declaratio), but then the `;` got parsed as a separate empty statement. Changed to 2 symbols (`declaratio ';'`) matching how expression statements work (P13 is `expr ';'`).
+
+### Tests Added
+- `{ int x; }` - simple declaration
+- `{ int x = 5; }` - with initializer
+- `{ int x; int y; }` - multiple declarations (2 statements)
+- `{ int x; x = 1; int y; return y; }` - mixed declarations/statements (4 statements)
+- `{ static int x = 0; }` - storage class
+- `{ const int x = 42; }` - qualifier
+- `{ static const int x = 1; }` - combined
+
+### Final Statistics
+- Total states: 562
+- Total rules: 240
+- Total tests: 1431
