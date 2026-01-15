@@ -7002,6 +7002,118 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
     }
 
+    /* ========================================================
+     * PROBARE: Declarations in compound statements (C99-style)
+     * ======================================================== */
+
+    /* Simple declaration in block */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans declaration in block: { int x; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ int x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            si (res.radix->datum.corpus.sententiae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), I);
+            }
+        }
+    }
+
+    /* Declaration with initializer in block */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans declaration with init: { int x = 5; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ int x = 5; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Multiple declarations in block */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans multiple declarations: { int x; int y; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ int x; int y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            si (res.radix->datum.corpus.sententiae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), II);
+            }
+        }
+    }
+
+    /* Mixed declarations and statements (C99-style anywhere) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans mixed decl/stmt: { int x; x = 1; int y; return y; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ int x; x = 1; int y; return y; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CORPUS);
+            si (res.radix->datum.corpus.sententiae != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.corpus.sententiae), IV);
+            }
+        }
+    }
+
+    /* Static declaration in block */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static in block: { static int x = 0; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ static int x = 0; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Const declaration in block */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const in block: { const int x = 42; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ const int x = 42; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Static const declaration in block */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static const in block: { static const int x = 1; } ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "{ static const int x = 1; }");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
     /* Return with expression */
     {
         Xar* tokens;

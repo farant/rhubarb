@@ -1849,6 +1849,13 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.storage_class = storage;
                             valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_CONST;
                         }
+                        /* P239: stmt -> declaratio ';' (2 symbols, pass-through declaration) */
+                        alioquin si (actio->valor == 239)
+                        {
+                            /* Declaration as statement - pass through the declaration node */
+                            /* valori[1] = declaratio, valori[0] = ';' token (ignored) */
+                            valor_novus = valori[I];
+                        }
                         alioquin si (actio->valor == 226)
                         {
                             /* P226: declaratio -> type init_decl_list (2 symbols)
