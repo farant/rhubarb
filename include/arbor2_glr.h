@@ -244,6 +244,7 @@ structura Arbor2Nodus {
             Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
             Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
             Arbor2Nodus*        initializor;    /* Initializer expression (NIHIL if none) */
+            Arbor2Nodus*        proxima;        /* Next declaration in comma-sep list */
             b32                 est_typedef;    /* VERUM if this is a typedef declaration */
             i32                 storage_class;  /* ARBOR2_STORAGE_* flags (only one in C89) */
             i32                 qualifiers;     /* ARBOR2_QUAL_* flags (can combine) */

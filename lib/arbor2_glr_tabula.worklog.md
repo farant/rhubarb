@@ -893,3 +893,63 @@ All 1331 existing tests pass. New parsing verified:
 - Total states: 529 (was 513, added 16)
 - Total rules: 227 (was 221, added 6)
 - Total tests: 1331 (unchanged - tests added separately)
+
+## 2026-01-14: Phase 1.3 Fix - Full Multi-Declarator Support
+
+### Problem
+The initial Phase 1.3 implementation only kept the last declarator in a multi-declarator
+statement. For `int x = 1, y = 2`, only `y = 2` was represented in the AST.
+
+### Solution
+Added a `proxima` (next) pointer to the DECLARATIO struct to chain declarations together.
+
+#### Changes to include/arbor2_glr.h
+Added `Arbor2Nodus* proxima;` field to declaratio struct.
+
+#### Changes to lib/arbor2_glr.c
+
+1. **P224 handler**: Now creates an Xar list containing the single pair (instead of passing through)
+   ```c
+   Xar* lista = xar_creare(glr->piscina, magnitudo(Xar*));
+   Xar** slot = xar_addere(lista);
+   *slot = (Xar*)valori[ZEPHYRUM];
+   ```
+
+2. **P225 handler**: Now appends the new pair to the existing list
+   ```c
+   Xar* lista = (Xar*)valori[II];
+   Xar** slot = xar_addere(lista);
+   *slot = (Xar*)valori[ZEPHYRUM];
+   ```
+
+3. **P226 handler**: Now iterates the list and creates chained DECLARATIO nodes
+   - Creates type_spec from lexemata if valori[I] is NIHIL (simple type keyword)
+   - Uses pre-built type_spec from valori[I] if present (struct/enum/union)
+   - Loops through all pairs, creates DECLARATIO for each
+   - Chains them via `proxima` pointer
+   - Returns first node in chain
+
+4. **All DECLARATIO creation sites**: Added `proxima = NIHIL` initialization (22 sites)
+
+#### Changes to tools/glr_debug.c
+Added DECLARATIO case to print specifier, declarator, initializor, and recursively print
+chained declarations via proxima.
+
+### Test Results
+- All 1331 tests pass
+- `int x, y` → two DECLARATIO nodes: x, y
+- `int x = 1, y = 2` → two DECLARATIO nodes with INTEGER initializers
+- `struct foo x, y` → two DECLARATIO nodes sharing STRUCT_SPECIFIER
+
+### AST Output Example
+For `int x = 1, y = 2`:
+```
+DECLARATIO
+  IDENTIFICATOR "int"
+  DECLARATOR
+  INTEGER "1"
+DECLARATIO
+  IDENTIFICATOR "int"
+  DECLARATOR
+  INTEGER "2"
+```

@@ -1082,6 +1082,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
                             slot = xar_addere(lista);
@@ -1112,6 +1113,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
                             *slot = member;
@@ -1147,6 +1149,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
                             slot = xar_addere(lista);
@@ -1183,6 +1186,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
                             *slot = member;
@@ -1223,6 +1227,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
                             slot = xar_addere(lista);
@@ -1259,6 +1264,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
                             *slot = member;
@@ -1297,6 +1303,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
                             slot = xar_addere(lista);
@@ -1333,6 +1340,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
                             *slot = member;
@@ -1359,6 +1367,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
                             slot = xar_addere(lista);
@@ -1386,6 +1395,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
                             *slot = member;
@@ -1413,6 +1423,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
                             slot = xar_addere(lista);
@@ -1440,6 +1451,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
                             *slot = member;
@@ -1472,6 +1484,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
                         alioquin si (actio->valor == 75)
@@ -1496,6 +1509,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
                         alioquin si (actio->valor == 77)
@@ -1520,6 +1534,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
                         alioquin si (actio->valor == 79)
@@ -1549,6 +1564,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
 
                             /* Ponere storage_class vel qualifiers */
@@ -1607,6 +1623,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
                             valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
@@ -1644,6 +1661,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
                             valor_novus->datum.declaratio.qualifiers = quals;
@@ -1669,6 +1687,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
                             valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
@@ -1703,6 +1722,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
                             valor_novus->datum.declaratio.qualifiers = quals;
@@ -1710,28 +1730,72 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 226)
                         {
                             /* P226: declaratio -> type init_decl_list (2 symbols)
-                             * valori: [1]=type_specifier, [0]=init_decl_list
-                             * init_decl_list is always a pair Xar [declarator, initializor] */
-                            Xar* pair = (Xar*)valori[ZEPHYRUM];
+                             * lexemata: [1]=type, [0]=last_token
+                             * valori: [1]=type_spec (if struct/enum/union) or nil (if keyword)
+                             * valori: [0]=init_decl_list
+                             * init_decl_list is Xar of pairs (each pair is [declarator, initializor]) */
+                            Xar* lista = (Xar*)valori[ZEPHYRUM];
+                            Arbor2Token* type_tok = lexemata[I];
                             Arbor2Nodus* type_spec = valori[I];
-                            Arbor2Nodus* decl_node = NIHIL;
-                            Arbor2Nodus* init_node = NIHIL;
+                            Arbor2Nodus* primus = NIHIL;
+                            Arbor2Nodus* ultimus = NIHIL;
+                            i32 num_items;
+                            i32 i;
 
-                            si (pair != NIHIL && xar_numerus(pair) >= II)
+                            /* If no pre-built type_spec (simple type keyword), create one */
+                            si (type_spec == NIHIL)
                             {
-                                decl_node = *(Arbor2Nodus**)xar_obtinere(pair, ZEPHYRUM);
-                                init_node = *(Arbor2Nodus**)xar_obtinere(pair, I);
+                                type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                                type_spec->lexema = type_tok;
+                                type_spec->datum.folium.valor = type_tok->lexema->valor;
                             }
 
-                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
-                            valor_novus->lexema = lexemata[I];  /* type_specifier token */
-                            valor_novus->datum.declaratio.specifier = type_spec;
-                            valor_novus->datum.declaratio.declarator = decl_node;
-                            valor_novus->datum.declaratio.initializor = init_node;
-                            valor_novus->datum.declaratio.est_typedef = FALSUM;
-                            valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
-                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                            si (lista == NIHIL)
+                            {
+                                valor_novus = NIHIL;
+                            }
+                            alioquin
+                            {
+                                num_items = xar_numerus(lista);
+                                per (i = ZEPHYRUM; i < num_items; i++)
+                                {
+                                    Xar** pair_ptr = xar_obtinere(lista, i);
+                                    Xar* pair = *pair_ptr;
+                                    Arbor2Nodus* decl_node = NIHIL;
+                                    Arbor2Nodus* init_node = NIHIL;
+                                    Arbor2Nodus* nodus;
+
+                                    si (pair != NIHIL && xar_numerus(pair) >= II)
+                                    {
+                                        decl_node = *(Arbor2Nodus**)xar_obtinere(pair, ZEPHYRUM);
+                                        init_node = *(Arbor2Nodus**)xar_obtinere(pair, I);
+                                    }
+
+                                    nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                    nodus->genus = ARBOR2_NODUS_DECLARATIO;
+                                    nodus->lexema = type_tok;
+                                    nodus->datum.declaratio.specifier = type_spec;
+                                    nodus->datum.declaratio.declarator = decl_node;
+                                    nodus->datum.declaratio.initializor = init_node;
+                                    nodus->datum.declaratio.proxima = NIHIL;
+                                    nodus->datum.declaratio.est_typedef = FALSUM;
+                                    nodus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                                    nodus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+
+                                    /* Chain nodes together */
+                                    si (primus == NIHIL)
+                                    {
+                                        primus = nodus;
+                                    }
+                                    alioquin
+                                    {
+                                        ultimus->datum.declaratio.proxima = nodus;
+                                    }
+                                    ultimus = nodus;
+                                }
+                                valor_novus = primus;
+                            }
                         }
                         alioquin si (num_pop >= II)
                         {
@@ -1742,6 +1806,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = valori[I];
                             valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
                         }
                         alioquin
                         {
@@ -2548,15 +2613,20 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 224)
                         {
                             /* P224: init_decl_list -> init_decl (1 symbol)
-                             * Pass through - could be declarator or pair */
-                            valor_novus = valori[ZEPHYRUM];
+                             * Wrap the pair in a list (Xar of pairs) */
+                            Xar* lista = xar_creare(glr->piscina, magnitudo(Xar*));
+                            Xar** slot = xar_addere(lista);
+                            *slot = (Xar*)valori[ZEPHYRUM];  /* The pair from P221/P222/P223 */
+                            valor_novus = (Arbor2Nodus*)lista;
                         }
                         alioquin si (actio->valor == 225)
                         {
                             /* P225: init_decl_list -> init_decl_list ',' init_decl (3 symbols)
-                             * For now, just pass through - full multi-decl later */
-                            /* TODO: Build proper list for multiple declarators */
-                            valor_novus = valori[ZEPHYRUM];
+                             * valori: [2]=init_decl_list (Xar of pairs), [1]=',', [0]=init_decl (pair) */
+                            Xar* lista = (Xar*)valori[II];
+                            Xar** slot = xar_addere(lista);
+                            *slot = (Xar*)valori[ZEPHYRUM];  /* The new pair */
+                            valor_novus = (Arbor2Nodus*)lista;
                         }
                         alioquin si (num_pop == III)
                         {

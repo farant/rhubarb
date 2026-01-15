@@ -200,6 +200,21 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             imprimere_nodus(nodus->datum.post_unarium.operandum, depth + I);
             frange;
 
+        casus ARBOR2_NODUS_DECLARATIO:
+            printf("\n");
+            imprimere_nodus(nodus->datum.declaratio.specifier, depth + I);
+            imprimere_nodus(nodus->datum.declaratio.declarator, depth + I);
+            si (nodus->datum.declaratio.initializor != NIHIL)
+            {
+                imprimere_nodus(nodus->datum.declaratio.initializor, depth + I);
+            }
+            /* Print chained declarations */
+            si (nodus->datum.declaratio.proxima != NIHIL)
+            {
+                imprimere_nodus(nodus->datum.declaratio.proxima, depth);
+            }
+            frange;
+
         ordinarius:
             printf("\n");
             frange;
