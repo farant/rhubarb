@@ -163,7 +163,8 @@ nomen enumeratio {
     ARBOR2_NODUS_INITIALIZOR_LISTA, /* Brace-enclosed initializer list */
     ARBOR2_NODUS_DESIGNATOR_ITEM,   /* Designated initializer: .x = 1 or [5] = 100 */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
-    ARBOR2_NODUS_ERROR
+    ARBOR2_NODUS_ERROR,
+    ARBOR2_NODUS_TRANSLATION_UNIT   /* Translation unit (list of external declarations) */
 } Arbor2NodusGenus;
 
 /* ==================================================
@@ -374,6 +375,11 @@ structura Arbor2Nodus {
             Arbor2Nodus*        valor;          /* The initialized value (expression or init_lista) */
         } designator_item;
 
+        /* TRANSLATION_UNIT (list of external declarations) */
+        structura {
+            Xar*                declarationes;      /* Xar of Arbor2Nodus* */
+        } translation_unit;
+
         /* AMBIGUUS */
         structura {
             Arbor2AmbigGenus    genus;
@@ -498,6 +504,7 @@ nomen structura {
     Arbor2Nodus*            radix;          /* Root AST node */
     Xar*                    ambigui;        /* Unresolved ambiguities */
     Xar*                    errores;        /* Parse errors */
+    i32                     tokens_consumed; /* Number of tokens consumed */
 } Arbor2GLRResultus;
 
 /* ==================================================
@@ -521,6 +528,11 @@ Arbor2GLRResultus arbor2_glr_parsere(
 
 /* Parse expression only (for testing) */
 Arbor2GLRResultus arbor2_glr_parsere_expressio(
+    Arbor2GLR*              glr,
+    Xar*                    lexemata);
+
+/* Parse translation unit (multiple declarations/functions) */
+Arbor2GLRResultus arbor2_glr_parsere_translation_unit(
     Arbor2GLR*              glr,
     Xar*                    lexemata);
 

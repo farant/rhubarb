@@ -1,11 +1,11 @@
 # Arbor v2 Implementation Plan
 
-Date: 2026-01-14
-Status: Updated after Phase 1.1, 1.2 completion
+Date: 2026-01-15
+Status: Updated after Phase 1.1e completion (sizeof array variants)
 
 ---
 
-## Current State (Updated 2026-01-14)
+## Current State (Updated 2026-01-15)
 
 ### arbor2_lexema.c - COMPLETE
 - 93 token types (all C89 keywords, operators, literals)
@@ -40,9 +40,9 @@ Status: Updated after Phase 1.1, 1.2 completion
 - GLR parser core with GSS
 - GSS path enumeration for multi-path reductions
 - Piscina checkpointing for rollback
-- **221 grammar productions** (P0-P220)
-- **513 LR states** (0-512)
-- **1331 tests passing**
+- **252 grammar productions** (P0-P251)
+- **611 LR states** (0-610)
+- **1491 tests passing**
 - Table validation
 
 **Grammar currently covered:**
@@ -56,7 +56,7 @@ Status: Updated after Phase 1.1, 1.2 completion
 | Assignment | COMPLETE | =, +=, -=, *=, /=, %=, &=, \|=, ^=, <<=, >>= |
 | Comma | COMPLETE | , (expression comma operator) |
 | Literals | COMPLETE | int, float, char, string |
-| sizeof | COMPLETE | sizeof expr AND sizeof(type), sizeof(type*), sizeof(struct X) |
+| sizeof | COMPLETE | sizeof expr, sizeof(type), sizeof(type*), sizeof(type[N]), sizeof(type[N][M]), sizeof(type*[N]), sizeof(struct X) |
 | Casts | COMPLETE | All types including (int*), (char**), (struct X*), (TypeName*) |
 | if/else | COMPLETE | |
 | while | COMPLETE | |
@@ -104,9 +104,10 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- 1331 tests passing
+- 1491 tests passing
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
+- sizeof variants (type, pointer, array, multi-dim, pointer array)
 - Table validation
 - Parser statistics
 
@@ -116,20 +117,29 @@ Current structure has:
 
 ### 1.1 Abstract Declarators - COMPLETE ✓
 
-Implemented 2026-01-14. Full support for:
+Implemented 2026-01-14 through 2026-01-15 in multiple sub-phases.
 
-**sizeof(type):**
+**1.1a - Basic sizeof(type) and Pointer Casts (2026-01-14):**
 - `sizeof(int)`, `sizeof(char)`, `sizeof(void)` - P162-P165
 - `sizeof(int*)`, `sizeof(char*)` - P166-P169
 - `sizeof(int**)`, `sizeof(char**)` - P170-P173
 - `sizeof(struct X)`, `sizeof(union Y)`, `sizeof(enum Z)` - P183-P191
+- Pointer casts: `(int*)x`, `(int**)x`, `(struct X*)p` - P154-P182
 
-**Pointer casts:**
-- `(int*)x`, `(char*)y` - P154-P157
-- `(int**)x`, `(char**)y` - P158-P161
-- `(struct X*)p`, `(union Y*)p`, `(enum Z*)p` - P174-P182
+**1.1b - sizeof(type[N]) Single Dimension Arrays:**
+- `sizeof(int[10])`, `sizeof(char[256])` - P240-P243
+- States 563-578 (16 new states)
 
-40+ tests covering all variants.
+**1.1c - sizeof(type[N][M]) Multi-Dimensional Arrays:**
+- `sizeof(int[10][20])`, `sizeof(char[256][4])` - P244-P247
+- States 579-594 (16 new states)
+
+**1.1d - sizeof(type*[N]) Pointer Arrays (2026-01-15):**
+- `sizeof(int*[10])`, `sizeof(char*[256])` - P248-P251
+- States 595-610 (16 new states)
+- Note: ID variant (`sizeof(MyType*[N])`) not supported (ID path disabled for ambiguity)
+
+160+ tests covering all sizeof variants.
 
 ### 1.2 Declaration Initializers - COMPLETE ✓
 
@@ -696,14 +706,14 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | lib/arbor2_lexema.c | ~500 | Complete |
 | lib/arbor2_token.c | 264 | Complete |
 | lib/arbor2_expandere.c | 1576 | Mostly complete |
-| lib/arbor2_glr.c | ~2600 | Functional |
-| lib/arbor2_glr_tabula.c | ~11200 | 221 productions, 513 states |
+| lib/arbor2_glr.c | ~2700 | Functional |
+| lib/arbor2_glr_tabula.c | ~13000 | 252 productions, 611 states |
 | include/arbor2_glr.h | ~650 | Good structure |
 | include/arbor2_lexema.h | 220 | Complete |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | 197 | Complete |
-| probationes/probatio_arbor2_glr.c | ~9400 | 1331 tests |
-| tools/glr_debug.c | 296 | Working |
+| probationes/probatio_arbor2_glr.c | ~9500 | 1491 tests |
+| tools/glr_debug.c | 311 | Working |
 
 ---
 
@@ -712,8 +722,12 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | Date | Phase | Productions | States | Tests | Notes |
 |------|-------|-------------|--------|-------|-------|
 | Pre-2026-01-14 | Baseline | 154 | 364 | ~1200 | Expressions, statements, basic decls |
-| 2026-01-14 | 1.1 Abstract Decl | +37 | +98 | +46 | sizeof(type), pointer casts |
+| 2026-01-14 | 1.1a Abstract Decl | +37 | +98 | +46 | sizeof(type), pointer casts |
 | 2026-01-14 | 1.2a Simple Init | +7 | +14 | +20 | int x = 5 |
 | 2026-01-14 | 1.2b Brace Init | +14 | +13 | +50 | {1, 2, 3} |
 | 2026-01-14 | 1.2c Designated | +8 | +13 | +35 | {.x = 1, [5] = 100} |
-| **Current** | | **221** | **513** | **1331** | |
+| 2026-01-15 | 1.1b Array sizeof | +4 | +16 | +30 | sizeof(int[10]) |
+| 2026-01-15 | 1.1c Multi-dim | +4 | +16 | +30 | sizeof(int[10][20]) |
+| 2026-01-15 | 1.1d Ptr array | +4 | +16 | +5 | sizeof(int*[10]) |
+| 2026-01-15 | Various fixes | +19 | +61 | +65 | Misc improvements |
+| **Current** | | **252** | **611** | **1491** | |

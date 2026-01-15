@@ -2088,3 +2088,81 @@ Added `-fbracket-depth=512` to compiler flags because the chained IDX_STATE_* ma
 ### State Summary
 - 264 states (was 253, added 11 new logical operator states)
 - All existing tests still pass
+
+---
+
+## 2026-01-15: Phase 1.5 - Translation Unit Support
+
+### Goal
+Enable parsing complete C files with multiple top-level declarations and functions:
+```c
+int x = 5;
+int y = 10;
+int foo(int a) { return a + x; }
+```
+
+### Design Decision: Wrapper vs Grammar Approach
+
+Considered two approaches:
+
+**Option A - Grammar-based:** Add productions P252-P255 for `external_declaration` and `translation_unit`, plus ~20 new states. Would require modifying accept states 21, 24, 114.
+
+**Option B - Wrapper-based:** Keep existing single-item parsing, wrap in loop that scans for item boundaries and parses each chunk.
+
+**Chose Option B** because:
+- No grammar/state table changes needed
+- Lower risk of breaking existing tests
+- Simpler to implement and debug
+
+### Key Implementation Detail: Semicolons
+
+Initial implementation failed because our declaration grammar does NOT include the semicolon:
+```
+declaration → type init_decl_list    (P226)
+```
+
+The semicolon is handled at statement level (`statement → declaration SEMICOLON`).
+
+This meant when parsing `int x;`:
+- Parser reduced `int x` to declaration
+- Reached state 21 expecting EOF
+- But saw SEMICOLON instead → failed
+
+**Fix:** The boundary finder returns two values:
+- `parse_finis`: tokens to include in parse (EXCLUDING semicolon for declarations)
+- `proximus`: where to continue (AFTER semicolon)
+
+For functions (end with `}`), both are the same since closing brace IS part of the grammar.
+
+### New Types Added
+
+```c
+/* Result struct */
+typedef struct {
+    b32             successus;
+    Arbor2Nodus*    radix;
+    Xar*            ambigui;
+    Xar*            errores;
+    i32             tokens_consumed;  /* NEW */
+} Arbor2GLRResultus;
+
+/* Node type */
+ARBOR2_NODUS_TRANSLATION_UNIT
+
+/* Node data */
+struct {
+    Xar*    declarationes;  /* Xar of Arbor2Nodus* */
+} translation_unit;
+```
+
+### API
+```c
+Arbor2GLRResultus arbor2_glr_parsere_translation_unit(
+    Arbor2GLR*  glr,
+    Xar*        lexemata);
+```
+
+### Stats
+- 1523 tests (up from 1491, +32 new)
+- 611 states unchanged
+- 252 productions unchanged

@@ -10167,6 +10167,149 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Translation unit - multiple declarations
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: two declarations ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int x; int y;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: three declarations ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int x; int y; int z;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), III);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: declaration with init ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = 5; int y = 10;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: function definition ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int foo() { return 1; }");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), I);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: declaration + function ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int x; int foo() { return x; }");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: multiple functions ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "int foo() { return 1; } int bar() { return 2; }");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: empty input ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), ZEPHYRUM);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: function with params ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "int add(int a, int b) { return a + b; }");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            CREDO_AEQUALIS_I32(
+                xar_numerus(res.radix->datum.translation_unit.declarationes), I);
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

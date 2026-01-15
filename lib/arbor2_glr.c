@@ -3176,6 +3176,7 @@ arbor2_glr_parsere_expressio(
     resultus.successus = acceptatum;
     resultus.errores = glr->errores;
     resultus.ambigui = glr->ambigui;
+    resultus.tokens_consumed = glr->positus;
 
     /* Use the accepting node's value */
     si (acceptatum && nodus_acceptatus != NIHIL)
@@ -3197,4 +3198,201 @@ arbor2_glr_parsere(
 {
     /* For now, just parse as expression */
     redde arbor2_glr_parsere_expressio(glr, lexemata);
+}
+
+/* ==================================================
+ * Translation Unit Parser
+ *
+ * Parses a complete translation unit (multiple
+ * external declarations). Uses wrapper approach -
+ * scans for item boundaries, then parses each item.
+ * ================================================== */
+
+/* Result from boundary finder */
+nomen structura {
+    i32 parse_finis;    /* Index up to (exclusive) for parsing */
+    i32 proximus;       /* Index to continue from after this item */
+} FinisInfo;
+
+/* Find end of external declaration
+ * Returns parse_finis (how many tokens to include in parse) and
+ * proximus (where to start next declaration).
+ * For functions (end with }): includes closing brace
+ * For declarations (end with ;): excludes semicolon from parse
+ */
+hic_manens FinisInfo
+_invenire_finem_declarationis(Xar* lexemata, i32 initium)
+{
+    FinisInfo info;
+    i32 i;
+    i32 num;
+    i32 profunditas_bracei;
+    i32 profunditas_paren;
+    b32 in_functione;
+
+    num = xar_numerus(lexemata);
+    profunditas_bracei = ZEPHYRUM;
+    profunditas_paren = ZEPHYRUM;
+    in_functione = FALSUM;
+
+    per (i = initium; i < num; i++)
+    {
+        Arbor2Token** tok_ptr;
+        Arbor2Token* tok;
+
+        tok_ptr = xar_obtinere(lexemata, i);
+        tok = *tok_ptr;
+
+        commutatio (tok->lexema->genus)
+        {
+            casus ARBOR2_LEXEMA_BRACE_APERTA:
+                profunditas_bracei++;
+                in_functione = VERUM;
+                frange;
+
+            casus ARBOR2_LEXEMA_BRACE_CLAUSA:
+                profunditas_bracei--;
+                /* Function body ended - include closing brace */
+                si (profunditas_bracei == ZEPHYRUM && in_functione)
+                {
+                    info.parse_finis = i + I;
+                    info.proximus = i + I;
+                    redde info;
+                }
+                frange;
+
+            casus ARBOR2_LEXEMA_PAREN_APERTA:
+                profunditas_paren++;
+                frange;
+
+            casus ARBOR2_LEXEMA_PAREN_CLAUSA:
+                profunditas_paren--;
+                frange;
+
+            casus ARBOR2_LEXEMA_SEMICOLON:
+                /* Declaration ends at semicolon - exclude it from parse */
+                si (profunditas_bracei == ZEPHYRUM && profunditas_paren == ZEPHYRUM)
+                {
+                    info.parse_finis = i;     /* Exclude semicolon */
+                    info.proximus = i + I;    /* Skip past semicolon */
+                    redde info;
+                }
+                frange;
+
+            casus ARBOR2_LEXEMA_EOF:
+                info.parse_finis = i;
+                info.proximus = i;
+                redde info;
+
+            ordinarius:
+                frange;
+        }
+    }
+
+    info.parse_finis = num;
+    info.proximus = num;
+    redde info;
+}
+
+Arbor2GLRResultus
+arbor2_glr_parsere_translation_unit(
+    Arbor2GLR*      glr,
+    Xar*            lexemata)
+{
+    Arbor2GLRResultus resultus;
+    Arbor2Nodus* tu_nodus;
+    i32 positus;
+    i32 num_tokens;
+
+    /* Create translation unit node */
+    tu_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+    tu_nodus->genus = ARBOR2_NODUS_TRANSLATION_UNIT;
+    tu_nodus->lexema = NIHIL;
+    tu_nodus->datum.translation_unit.declarationes =
+        xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+
+    positus = ZEPHYRUM;
+    num_tokens = xar_numerus(lexemata);
+
+    /* Clear errors for fresh parse */
+    xar_vacare(glr->errores);
+
+    /* Parse external declarations until EOF */
+    dum (positus < num_tokens)
+    {
+        Arbor2Token** tok_ptr;
+        Arbor2Token* tok;
+        Xar* sub_tokens;
+        Arbor2GLRResultus sub_res;
+        i32 i;
+        FinisInfo finis_info;
+        Arbor2Nodus** slot;
+        Arbor2Token* eof_tok;
+        Arbor2Token** eof_slot;
+
+        /* Check if only EOF remains */
+        tok_ptr = xar_obtinere(lexemata, positus);
+        tok = *tok_ptr;
+        si (tok->lexema->genus == ARBOR2_LEXEMA_EOF)
+        {
+            frange;
+        }
+
+        /* Find end of this external declaration */
+        finis_info = _invenire_finem_declarationis(lexemata, positus);
+
+        /* Create sub-token array from positus to parse_finis, with EOF */
+        sub_tokens = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+        per (i = positus; i < finis_info.parse_finis; i++)
+        {
+            Arbor2Token** src;
+            Arbor2Token** dst;
+            src = xar_obtinere(lexemata, i);
+            dst = xar_addere(sub_tokens);
+            *dst = *src;
+        }
+
+        /* Add EOF token at end */
+        eof_tok = piscina_allocare(glr->piscina, magnitudo(Arbor2Token));
+        eof_tok->lexema = piscina_allocare(glr->piscina, magnitudo(Arbor2Lexema));
+        eof_tok->lexema->genus = ARBOR2_LEXEMA_EOF;
+        eof_tok->lexema->valor.datum = NIHIL;
+        eof_tok->lexema->valor.mensura = ZEPHYRUM;
+        eof_tok->lexema->linea = I;
+        eof_tok->lexema->columna = I;
+        eof_tok->origo_token = NIHIL;
+        eof_tok->origo_meta = NIHIL;
+        eof_slot = xar_addere(sub_tokens);
+        *eof_slot = eof_tok;
+
+        /* Parse one external declaration */
+        sub_res = arbor2_glr_parsere_expressio(glr, sub_tokens);
+
+        si (!sub_res.successus)
+        {
+            /* Parse failed - return partial result with errors */
+            resultus.successus = FALSUM;
+            resultus.errores = sub_res.errores;
+            resultus.ambigui = sub_res.ambigui;
+            resultus.radix = tu_nodus;  /* Return partial result */
+            resultus.tokens_consumed = positus;
+            redde resultus;
+        }
+
+        /* Add to translation unit */
+        slot = xar_addere(tu_nodus->datum.translation_unit.declarationes);
+        *slot = sub_res.radix;
+
+        /* Advance position past this item (including semicolon if any) */
+        positus = finis_info.proximus;
+    }
+
+    /* Success - return complete translation unit */
+    resultus.successus = VERUM;
+    resultus.radix = tu_nodus;
+    resultus.errores = NIHIL;
+    resultus.ambigui = NIHIL;
+    resultus.tokens_consumed = positus;
+
+    redde resultus;
 }
