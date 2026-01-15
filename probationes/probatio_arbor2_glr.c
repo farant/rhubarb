@@ -8652,6 +8652,156 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Specifier combinations (Phase 1.4)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static const int x ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "static const int x");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans extern const int y ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "extern const int y");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_EXTERN);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const volatile int z ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "const volatile int z");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_NONE);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans volatile const int w ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "volatile const int w");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_NONE);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static volatile int sv ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "static volatile int sv");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_VOLATILE);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static const int x = 5 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "static const int x = 5");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans extern const int y = 10 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "extern const int y = 10");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_EXTERN);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static const int *ptr ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "static const int *ptr");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.qualifiers, ARBOR2_QUAL_CONST);
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Initializer declarations (Phase 1.2a)
      * ======================================================== */
 

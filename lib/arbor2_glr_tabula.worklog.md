@@ -973,3 +973,71 @@ Added comprehensive multi-declarator tests:
 - Total states: 529
 - Total rules: 227
 - Total tests: 1377 (was 1331, added 46 new tests)
+
+## 2026-01-14: Phase 1.4 - Specifier Combinations
+
+### Goal
+Support combined storage class + qualifier declarations:
+- `static const int x`
+- `extern const int y = 5`
+- `const volatile int z` (hardware registers)
+
+### Productions Added (P227-P238)
+
+| Prod | Pattern | Symbols |
+|------|---------|---------|
+| P227 | static const type decl | 4 |
+| P228 | extern const type decl | 4 |
+| P229 | register const type decl | 4 |
+| P230 | auto const type decl | 4 |
+| P231 | static volatile type decl | 4 |
+| P232 | extern volatile type decl | 4 |
+| P233 | const volatile type decl | 4 |
+| P234 | volatile const type decl | 4 |
+| P235 | static const type decl = assignatio | 6 |
+| P236 | extern const type decl = assignatio | 6 |
+| P237 | static const type decl = init_lista | 6 |
+| P238 | extern const type decl = init_lista | 6 |
+
+### New States (530-559)
+
+| States | After | Purpose |
+|--------|-------|---------|
+| 530-537 | spec+spec | Expect type (INT/ID/CHAR/VOID) |
+| 538-545 | spec+spec+type | Expect declarator (* or ID) |
+| 546-553 | spec+spec+type+decl | Reduce or '=' for init |
+| 554-555 | spec+spec+type+decl+= | Expect expression/init_lista |
+| 556-559 | After init | Reduce P235-P238 |
+
+### State Transitions Modified
+
+Modified states 346-351 to add CONST/VOLATILE transitions:
+- State 346 (after 'static'): CONST→530, VOLATILE→534
+- State 347 (after 'extern'): CONST→531, VOLATILE→535
+- State 348 (after 'register'): CONST→532
+- State 349 (after 'auto'): CONST→533
+- State 350 (after 'const'): VOLATILE→536
+- State 351 (after 'volatile'): CONST→537
+
+### AST Handler Changes (lib/arbor2_glr.c)
+
+Added three new handler blocks:
+1. **P227-P234**: 4-symbol combinations - sets both storage_class and qualifiers
+2. **P235-P236**: 6-symbol with assignatio initializer
+3. **P237-P238**: 6-symbol with brace initializer
+
+### Bug Found: Missing State 529
+
+STATUS_TABULA_PARTIAL is indexed by position, not state number. Skipping state 529 caused
+all subsequent states (530+) to be off by one. Fixed by adding placeholder entry for state 529.
+
+### Test Results
+- All 1411 tests pass (was 1377, added 34 new tests)
+- `static const int x` correctly sets STORAGE_STATIC + QUAL_CONST
+- `const volatile int z` correctly sets QUAL_CONST | QUAL_VOLATILE
+- `static const int x = 5` correctly creates declaration with initializer
+
+### Final Statistics
+- Total states: 560
+- Total rules: 239
+- Total tests: 1411

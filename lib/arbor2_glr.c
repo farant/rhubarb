@@ -1727,6 +1727,128 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.storage_class = storage;
                             valor_novus->datum.declaratio.qualifiers = quals;
                         }
+                        /* P227-P234: Specifier combinations (4 symbols) */
+                        alioquin si (actio->valor >= 227 && actio->valor <= 234)
+                        {
+                            /* 4 symbols: spec1, spec2, type, declarator
+                             * lexemata[3]=spec1, lexemata[2]=spec2, lexemata[1]=type
+                             * valori[0]=declarator */
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* decl_node = valori[ZEPHYRUM];
+                            Arbor2Token* type_tok = lexemata[I];
+                            i32 storage = ARBOR2_STORAGE_NONE;
+                            i32 quals = ARBOR2_QUAL_NONE;
+
+                            commutatio (actio->valor)
+                            {
+                                casus 227:  /* static const */
+                                    storage = ARBOR2_STORAGE_STATIC;
+                                    quals = ARBOR2_QUAL_CONST;
+                                    frange;
+                                casus 228:  /* extern const */
+                                    storage = ARBOR2_STORAGE_EXTERN;
+                                    quals = ARBOR2_QUAL_CONST;
+                                    frange;
+                                casus 229:  /* register const */
+                                    storage = ARBOR2_STORAGE_REGISTER;
+                                    quals = ARBOR2_QUAL_CONST;
+                                    frange;
+                                casus 230:  /* auto const */
+                                    storage = ARBOR2_STORAGE_AUTO;
+                                    quals = ARBOR2_QUAL_CONST;
+                                    frange;
+                                casus 231:  /* static volatile */
+                                    storage = ARBOR2_STORAGE_STATIC;
+                                    quals = ARBOR2_QUAL_VOLATILE;
+                                    frange;
+                                casus 232:  /* extern volatile */
+                                    storage = ARBOR2_STORAGE_EXTERN;
+                                    quals = ARBOR2_QUAL_VOLATILE;
+                                    frange;
+                                casus 233:  /* const volatile */
+                                    storage = ARBOR2_STORAGE_NONE;
+                                    quals = ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE;
+                                    frange;
+                                casus 234:  /* volatile const */
+                                    storage = ARBOR2_STORAGE_NONE;
+                                    quals = ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE;
+                                    frange;
+                                ordinarius:
+                                    frange;
+                            }
+
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = type_tok;
+                            type_spec->datum.folium.valor = type_tok->lexema->valor;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = storage;
+                            valor_novus->datum.declaratio.qualifiers = quals;
+                        }
+                        /* P235-P236: static/extern const with assignatio initializer (6 symbols) */
+                        alioquin si (actio->valor >= 235 && actio->valor <= 236)
+                        {
+                            /* 6 symbols: spec1, const, type, declarator, '=', assignatio
+                             * lexemata[5]=spec1, lexemata[4]=const, lexemata[3]=type
+                             * valori[2]=declarator, valori[0]=assignatio */
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* decl_node = valori[II];
+                            Arbor2Nodus* init_expr = valori[ZEPHYRUM];
+                            Arbor2Token* type_tok = lexemata[III];
+                            i32 storage = (actio->valor == 235) ? ARBOR2_STORAGE_STATIC : ARBOR2_STORAGE_EXTERN;
+
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = type_tok;
+                            type_spec->datum.folium.valor = type_tok->lexema->valor;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = storage;
+                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_CONST;
+                        }
+                        /* P237-P238: static/extern const with brace initializer (6 symbols) */
+                        alioquin si (actio->valor >= 237 && actio->valor <= 238)
+                        {
+                            /* 6 symbols: spec1, const, type, declarator, '=', init_lista
+                             * lexemata[5]=spec1, lexemata[4]=const, lexemata[3]=type
+                             * valori[2]=declarator, valori[0]=init_lista */
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* decl_node = valori[II];
+                            Arbor2Nodus* init_lista = valori[ZEPHYRUM];
+                            Arbor2Token* type_tok = lexemata[III];
+                            i32 storage = (actio->valor == 237) ? ARBOR2_STORAGE_STATIC : ARBOR2_STORAGE_EXTERN;
+
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = type_tok;
+                            type_spec->datum.folium.valor = type_tok->lexema->valor;
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = storage;
+                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_CONST;
+                        }
                         alioquin si (actio->valor == 226)
                         {
                             /* P226: declaratio -> type init_decl_list (2 symbols)
