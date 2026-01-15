@@ -9337,6 +9337,218 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Multi-declarator (comma-separated)
+     * ======================================================== */
+
+    /* Simple multi-declarator: int x, y */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* first;
+        Arbor2Nodus* second;
+
+        imprimere("\n--- Probans int x, y ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x, y");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            first = res.radix;
+            CREDO_AEQUALIS_I32((i32)first->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(first->datum.declaratio.declarator);
+            CREDO_NIHIL(first->datum.declaratio.initializor);
+
+            /* Check second declaration via proxima */
+            second = first->datum.declaratio.proxima;
+            CREDO_NON_NIHIL(second);
+            si (second != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)second->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+                CREDO_NON_NIHIL(second->datum.declaratio.declarator);
+                CREDO_NIHIL(second->datum.declaratio.initializor);
+                CREDO_NIHIL(second->datum.declaratio.proxima);  /* No third */
+            }
+        }
+    }
+
+    /* Multi-declarator with initializers: int x = 1, y = 2 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* first;
+        Arbor2Nodus* second;
+
+        imprimere("\n--- Probans int x = 1, y = 2 ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = 1, y = 2");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            first = res.radix;
+            CREDO_AEQUALIS_I32((i32)first->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(first->datum.declaratio.initializor);
+            si (first->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)first->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INTEGER);
+            }
+
+            second = first->datum.declaratio.proxima;
+            CREDO_NON_NIHIL(second);
+            si (second != NIHIL)
+            {
+                CREDO_NON_NIHIL(second->datum.declaratio.initializor);
+                si (second->datum.declaratio.initializor != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)second->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INTEGER);
+                }
+                CREDO_NIHIL(second->datum.declaratio.proxima);
+            }
+        }
+    }
+
+    /* Three declarators: int x, y, z */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* first;
+        Arbor2Nodus* second;
+        Arbor2Nodus* third;
+
+        imprimere("\n--- Probans int x, y, z ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x, y, z");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            first = res.radix;
+            CREDO_AEQUALIS_I32((i32)first->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+
+            second = first->datum.declaratio.proxima;
+            CREDO_NON_NIHIL(second);
+            si (second != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)second->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+
+                third = second->datum.declaratio.proxima;
+                CREDO_NON_NIHIL(third);
+                si (third != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)third->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+                    CREDO_NIHIL(third->datum.declaratio.proxima);  /* No fourth */
+                }
+            }
+        }
+    }
+
+    /* Mixed: int x = 1, y (some with init, some without) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* first;
+        Arbor2Nodus* second;
+
+        imprimere("\n--- Probans int x = 1, y ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = 1, y");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            first = res.radix;
+            CREDO_NON_NIHIL(first->datum.declaratio.initializor);  /* x has init */
+
+            second = first->datum.declaratio.proxima;
+            CREDO_NON_NIHIL(second);
+            si (second != NIHIL)
+            {
+                CREDO_NIHIL(second->datum.declaratio.initializor);  /* y has no init */
+            }
+        }
+    }
+
+    /* Struct type multi-declarator: struct foo x, y */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* first;
+        Arbor2Nodus* second;
+
+        imprimere("\n--- Probans struct foo x, y ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo x, y");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            first = res.radix;
+            CREDO_AEQUALIS_I32((i32)first->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(first->datum.declaratio.specifier);
+            si (first->datum.declaratio.specifier != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)first->datum.declaratio.specifier->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            }
+
+            second = first->datum.declaratio.proxima;
+            CREDO_NON_NIHIL(second);
+            si (second != NIHIL)
+            {
+                /* Both should share the same type specifier */
+                CREDO_AEQUALIS_PTR(second->datum.declaratio.specifier, first->datum.declaratio.specifier);
+            }
+        }
+    }
+
+    /* Multi-declarator with brace initializers */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* first;
+        Arbor2Nodus* second;
+
+        imprimere("\n--- Probans int a[] = {1}, b[] = {2} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int a[] = {1}, b[] = {2}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            first = res.radix;
+            CREDO_NON_NIHIL(first->datum.declaratio.initializor);
+            si (first->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)first->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            }
+
+            second = first->datum.declaratio.proxima;
+            CREDO_NON_NIHIL(second);
+            si (second != NIHIL)
+            {
+                CREDO_NON_NIHIL(second->datum.declaratio.initializor);
+                si (second->datum.declaratio.initializor != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)second->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                }
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

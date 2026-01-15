@@ -8511,22 +8511,22 @@ hic_manens constans Arbor2TabulaActio STATUS_525_ACTIONES[] = {
 
 /* State 526: after init_decl_list ',' declarator '[' expr ']' - reduce array dimension */
 hic_manens constans Arbor2TabulaActio STATUS_526_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 94, FALSUM },   /* declarator -> declarator '[' expr ']' */
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 94, FALSUM },
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 94, FALSUM },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 94, FALSUM },
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 94, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 94, FALSUM }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 80, FALSUM },   /* P80: declarator -> declarator '[' expr ']' */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 80, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 80, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 80, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 80, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 80, FALSUM }
 };
 
 /* State 527: after init_decl_list ',' declarator '[]' - reduce empty array */
 hic_manens constans Arbor2TabulaActio STATUS_527_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 95, FALSUM },   /* declarator -> declarator '[]' */
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 95, FALSUM },
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 95, FALSUM },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 95, FALSUM },
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 95, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 95, FALSUM }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 81, FALSUM },   /* P81: declarator -> declarator '[]' */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 81, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 81, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 81, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 81, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 81, FALSUM }
 };
 
 /* State 528: after init_decl_list ',' declarator '[' expr - expect ']' */

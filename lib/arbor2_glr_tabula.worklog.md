@@ -953,3 +953,23 @@ DECLARATIO
   DECLARATOR
   INTEGER "2"
 ```
+
+### Bug Fix: States 526/527 Wrong Production Numbers
+During unit test addition, discovered that states 526 and 527 (array declarators in comma context)
+had wrong production numbers:
+- State 526: Had P94 (disiunctio rule), fixed to P80 (sized array declarator)
+- State 527: Had P95 (coniunctio rule), fixed to P81 (unsized array declarator)
+
+### Unit Tests Added
+Added comprehensive multi-declarator tests:
+- `int x, y` - simple two declarators
+- `int x = 1, y = 2` - two with initializers
+- `int x, y, z` - three declarators
+- `int x = 1, y` - mixed (some with init)
+- `struct foo x, y` - with struct type (verifies shared specifier)
+- `int a[] = {1}, b[] = {2}` - arrays with brace initializers
+
+### Final Statistics
+- Total states: 529
+- Total rules: 227
+- Total tests: 1377 (was 1331, added 46 new tests)
