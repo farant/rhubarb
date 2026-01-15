@@ -113,7 +113,9 @@ nomen enumeratio {
     ARBOR2_NT_INITIALIZER,          /* single initializer (expr or nested list) */
     ARBOR2_NT_DESIGNATOR,           /* [expr] or .field designator */
     ARBOR2_NT_DESIGNATOR_LIST,      /* chain of designators: [0][1].x */
-    ARBOR2_NT_DESIGNATOR_ITEM       /* designator_list '=' initializer */
+    ARBOR2_NT_DESIGNATOR_ITEM,      /* designator_list '=' initializer */
+    ARBOR2_NT_INIT_DECLARATOR,      /* Single declarator with optional init */
+    ARBOR2_NT_INIT_DECLARATOR_LIST  /* Comma-separated declarators */
 } Arbor2NonTerminalis;
 
 /* ==================================================

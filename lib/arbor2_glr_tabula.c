@@ -367,7 +367,24 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P219 */ { ARBOR2_NT_INIT_ITEMS, 3, ARBOR2_NODUS_ERROR, "init_items -> init_items ',' designator_item" },
 
     /* P220: Designated item with nested brace value */
-    /* P220 */ { ARBOR2_NT_DESIGNATOR_ITEM, 3, ARBOR2_NODUS_DESIGNATOR_ITEM, "designator_item -> designator_list '=' init_lista" }
+    /* P220 */ { ARBOR2_NT_DESIGNATOR_ITEM, 3, ARBOR2_NODUS_DESIGNATOR_ITEM, "designator_item -> designator_list '=' init_lista" },
+
+    /* ==================================================
+     * Phase 1.3: Init-Declarator List (multiple declarators)
+     * Supports: int x, y; int x = 1, y = 2; etc.
+     * ================================================== */
+
+    /* P221-P223: Single init-declarator */
+    /* P221 */ { ARBOR2_NT_INIT_DECLARATOR, 1, ARBOR2_NODUS_ERROR, "init_decl -> declarator" },
+    /* P222 */ { ARBOR2_NT_INIT_DECLARATOR, 3, ARBOR2_NODUS_ERROR, "init_decl -> declarator '=' assignatio" },
+    /* P223 */ { ARBOR2_NT_INIT_DECLARATOR, 3, ARBOR2_NODUS_ERROR, "init_decl -> declarator '=' init_lista" },
+
+    /* P224-P225: Init-declarator list (comma-separated) */
+    /* P224 */ { ARBOR2_NT_INIT_DECLARATOR_LIST, 1, ARBOR2_NODUS_ERROR, "init_decl_list -> init_decl" },
+    /* P225 */ { ARBOR2_NT_INIT_DECLARATOR_LIST, 3, ARBOR2_NODUS_ERROR, "init_decl_list -> init_decl_list ',' init_decl" },
+
+    /* P226: Declaration from type + init_decl_list */
+    /* P226 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "declaratio -> type init_decl_list" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -945,9 +962,10 @@ hic_manens constans Arbor2TabulaActio STATUS_19_ACTIONES[] = {
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 11, FALSUM }
 };
 
-/* State 20: after 'type declarator' - reduce P10 or continue fn/array/init */
+/* State 20: after 'type declarator' - reduce P221 (init_decl) or continue fn/array/init */
 hic_manens constans Arbor2TabulaActio STATUS_20_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 10, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 221, FALSUM },  /* init_decl -> declarator */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 221, FALSUM },  /* init_decl -> declarator */
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },
@@ -2424,6 +2442,7 @@ hic_manens constans Arbor2TabulaActio STATUS_115_ACTIONES[] = {
 /* State 116: after 'type_spec name' (direct declarator) - reduce P12 */
 hic_manens constans Arbor2TabulaActio STATUS_116_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },  /* Phase 1.3: multiple declarators */
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12, FALSUM },
@@ -7963,11 +7982,12 @@ hic_manens constans Arbor2TabulaActio STATUS_473_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 487, FALSUM }  /* brace initializer */
 };
 
-/* State 474: after 'type declarator = assignatio' - reduce P192 */
+/* State 474: after 'type declarator = assignatio' - reduce P222 (init_decl -> decl '=' assignatio) */
 hic_manens constans Arbor2TabulaActio STATUS_474_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 192, FALSUM },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 192, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 192, FALSUM }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 222, FALSUM },  /* init_decl -> declarator '=' assignatio */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 222, FALSUM },  /* init_decl -> declarator '=' assignatio */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 222, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 222, FALSUM }
 };
 
 /* State 475: after 'static type declarator =' - expects expression or brace init (P193/P207) */
@@ -8218,11 +8238,12 @@ hic_manens constans Arbor2TabulaActio STATUS_496_ACTIONES[] = {
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 204, FALSUM }
 };
 
-/* State 497: after init_lista in state 473 context - reduce P199 */
+/* State 497: after init_lista in state 473 context - reduce P223 (init_decl -> decl '=' init_lista) */
 hic_manens constans Arbor2TabulaActio STATUS_497_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 199, FALSUM },
-    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 199, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 199, FALSUM }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 223, FALSUM },  /* init_decl -> declarator '=' init_lista */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 223, FALSUM },  /* init_decl -> declarator '=' init_lista */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 223, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 223, FALSUM }
 };
 
 /* State 498: after init_lista in state 475 (static) context - reduce P207 */
@@ -8363,6 +8384,159 @@ hic_manens constans Arbor2TabulaActio STATUS_511_ACTIONES[] = {
 hic_manens constans Arbor2TabulaActio STATUS_512_ACTIONES[] = {
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 219, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 219, FALSUM }
+};
+
+/* ==================================================
+ * Phase 1.3: Init-Declarator List States (513-521)
+ * Supports: int x, y; int x = 1, y = 2; etc.
+ * ================================================== */
+
+/* State 513: after type INIT_DECLARATOR - reduce P224 (init_decl_list -> init_decl) */
+hic_manens constans Arbor2TabulaActio STATUS_513_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 224, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 224, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 224, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 224, FALSUM }
+};
+
+/* State 514: after type INIT_DECLARATOR_LIST - reduce P226 or continue with comma */
+hic_manens constans Arbor2TabulaActio STATUS_514_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 226, FALSUM },  /* declaratio -> type init_decl_list */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT, 515, FALSUM },   /* continue with more declarators */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 226, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 226, FALSUM }
+};
+
+/* State 515: after type init_decl_list ',' - expect declarator */
+hic_manens constans Arbor2TabulaActio STATUS_515_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 517, FALSUM },   /* pointer declarator */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 516, FALSUM }    /* direct declarator */
+};
+
+/* State 516: after init_decl_list ',' ID - reduce to declarator */
+hic_manens constans Arbor2TabulaActio STATUS_516_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12, FALSUM },   /* declarator -> ID */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM },   /* array declarator */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+};
+
+/* State 517: after init_decl_list ',' '*' - pointer declarator building */
+hic_manens constans Arbor2TabulaActio STATUS_517_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 517, FALSUM },   /* more pointers */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 524, FALSUM }    /* name after pointers */
+};
+
+/* State 518: after init_decl_list ',' DECLARATOR - reduce P221 or '=' for init */
+hic_manens constans Arbor2TabulaActio STATUS_518_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 221, FALSUM },  /* init_decl -> declarator */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 221, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 519, FALSUM },   /* declarator '=' ... */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 221, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 525, FALSUM },   /* array dimension */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 221, FALSUM }
+};
+
+/* State 519: after init_decl_list ',' declarator '=' - expect expression or brace init */
+hic_manens constans Arbor2TabulaActio STATUS_519_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 487, FALSUM }    /* brace initializer */
+};
+
+/* State 520: after init_decl_list ',' declarator '=' assignatio - reduce P222 */
+hic_manens constans Arbor2TabulaActio STATUS_520_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 222, FALSUM },  /* init_decl -> decl '=' assignatio */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 222, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 222, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 222, FALSUM }
+};
+
+/* State 521: after init_decl_list ',' INIT_DECLARATOR - reduce P225 */
+hic_manens constans Arbor2TabulaActio STATUS_521_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 225, FALSUM },  /* init_decl_list -> list ',' init_decl */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 225, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 225, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 225, FALSUM }
+};
+
+/* State 522: after init_decl_list ',' declarator '=' init_lista - reduce P223 */
+hic_manens constans Arbor2TabulaActio STATUS_522_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 223, FALSUM },  /* init_decl -> decl '=' init_lista */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 223, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 223, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 223, FALSUM }
+};
+
+/* State 523: after init_decl_list ',' '*' ID - reduce P11 (declarator -> '*' declarator) */
+hic_manens constans Arbor2TabulaActio STATUS_523_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11, FALSUM }
+};
+
+/* State 524: after init_decl_list ',' '*'+ ID - reduce P12 (declarator -> ID) for inner */
+hic_manens constans Arbor2TabulaActio STATUS_524_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+};
+
+/* State 525: after init_decl_list ',' declarator '[' - expect array size */
+hic_manens constans Arbor2TabulaActio STATUS_525_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 527, FALSUM }    /* empty dimension */
+};
+
+/* State 526: after init_decl_list ',' declarator '[' expr ']' - reduce array dimension */
+hic_manens constans Arbor2TabulaActio STATUS_526_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 94, FALSUM },   /* declarator -> declarator '[' expr ']' */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 94, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 94, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 94, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 94, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 94, FALSUM }
+};
+
+/* State 527: after init_decl_list ',' declarator '[]' - reduce empty array */
+hic_manens constans Arbor2TabulaActio STATUS_527_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 95, FALSUM },   /* declarator -> declarator '[]' */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 95, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 95, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 95, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 95, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 95, FALSUM }
+};
+
+/* State 528: after init_decl_list ',' declarator '[' expr - expect ']' */
+hic_manens constans Arbor2TabulaActio STATUS_528_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 526, FALSUM },   /* ']' -> reduce P94 */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM }
 };
 
 /* ==================================================
@@ -8943,7 +9117,25 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(509, "after INITIALIZER in designator - reduce P217"),
     STATUS_INFO(510, "after INIT_LISTA in designator - reduce P220"),
     STATUS_INFO(511, "after DESIGNATOR_ITEM (first) - reduce P218"),
-    STATUS_INFO(512, "after init_items ',' DESIGNATOR_ITEM - reduce P219")
+    STATUS_INFO(512, "after init_items ',' DESIGNATOR_ITEM - reduce P219"),
+
+    /* Phase 1.3: Init-Declarator List states */
+    STATUS_INFO(513, "after type INIT_DECLARATOR - reduce P224"),
+    STATUS_INFO(514, "after type INIT_DECLARATOR_LIST - reduce P226 or comma"),
+    STATUS_INFO(515, "after type init_decl_list ',' - expect declarator"),
+    STATUS_INFO(516, "after init_decl_list ',' ID - reduce P12"),
+    STATUS_INFO(517, "after init_decl_list ',' '*' - pointer building"),
+    STATUS_INFO(518, "after init_decl_list ',' DECLARATOR - reduce P221 or '='"),
+    STATUS_INFO(519, "after init_decl_list ',' declarator '=' - expect expr"),
+    STATUS_INFO(520, "after init_decl_list ',' declarator '=' assignatio - reduce P222"),
+    STATUS_INFO(521, "after init_decl_list ',' INIT_DECLARATOR - reduce P225"),
+    STATUS_INFO(522, "after init_decl_list ',' declarator '=' init_lista - reduce P223"),
+    STATUS_INFO(523, "after init_decl_list ',' '*' DECLARATOR - reduce P11"),
+    STATUS_INFO(524, "after init_decl_list ',' '*'+ ID - reduce P12"),
+    STATUS_INFO(525, "after init_decl_list ',' declarator '[' - expect size"),
+    STATUS_INFO(526, "after init_decl_list ',' declarator '[' expr ']' - reduce P94"),
+    STATUS_INFO(527, "after init_decl_list ',' declarator '[]' - reduce P95"),
+    STATUS_INFO(528, "after init_decl_list ',' declarator '[' expr - expect ']'")
 };
 
 /* ==================================================
@@ -9020,6 +9212,9 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 #define INT_NT_DESIGNATOR        38
 #define INT_NT_DESIGNATOR_LIST   39
 #define INT_NT_DESIGNATOR_ITEM   40
+/* Phase 1.3: Init-declarator list NT mappings */
+#define INT_NT_INIT_DECLARATOR       41
+#define INT_NT_INIT_DECLARATOR_LIST  42
 
 /* ==================================================
  * Per-State GOTO Arrays (Phase 4 refactor)
@@ -9059,7 +9254,9 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
 
 /* State 4: after identifier as type_specifier */
 hic_manens constans Arbor2StatusGotoEntry STATUS_4_GOTO[] = {
-    { INT_NT_DECLARATOR, 20 }
+    { INT_NT_DECLARATOR,            20 },
+    { INT_NT_INIT_DECLARATOR,      513 },   /* Phase 1.3: init_decl after first declarator */
+    { INT_NT_INIT_DECLARATOR_LIST, 514 }    /* Phase 1.3: init_decl_list ready for comma or reduce */
 };
 
 /* State 6: after '(' - full expression chain inside parens */
@@ -10381,6 +10578,48 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_507_GOTO[] = {
 };
 
 /* ==================================================
+ * Phase 1.3: Init-Declarator List GOTO Arrays
+ * ================================================== */
+
+/* State 515: after type init_decl_list ',' - GOTO for declarator and init_decl */
+hic_manens constans Arbor2StatusGotoEntry STATUS_515_GOTO[] = {
+    { INT_NT_DECLARATOR,       518 },   /* DECLARATOR -> can '=' init or reduce P221 */
+    { INT_NT_INIT_DECLARATOR,  521 }    /* INIT_DECLARATOR -> reduce P225 */
+};
+
+/* State 517: after init_decl_list ',' '*' - GOTO for inner declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_517_GOTO[] = {
+    { INT_NT_DECLARATOR,       523 }    /* DECLARATOR -> reduce P11 (pointer declarator) */
+};
+
+/* State 519: after init_decl_list ',' declarator '=' - GOTO for expression/init_lista */
+hic_manens constans Arbor2StatusGotoEntry STATUS_519_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        520 },   /* ASSIGNATIO -> reduce P222 */
+    { INT_NT_TRANSLATIO,        264 },
+    { INT_NT_INITIALIZOR_LISTA, 522 }    /* init_lista -> reduce P223 */
+};
+
+/* State 525: after init_decl_list ',' declarator '[' - GOTO for array size expr */
+hic_manens constans Arbor2StatusGotoEntry STATUS_525_GOTO[] = {
+    { INT_NT_EXPR,              528 },   /* expression for array size -> expect ']' */
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 }
+};
+
+/* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
 
@@ -10965,7 +11204,25 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 509: after INITIALIZER in designator - reduce P217 */
     STATUS_GOTO_NIL,   /* 510: after INIT_LISTA in designator - reduce P220 */
     STATUS_GOTO_NIL,   /* 511: after DESIGNATOR_ITEM (first) - reduce P218 */
-    STATUS_GOTO_NIL    /* 512: after init_items ',' DESIGNATOR_ITEM - reduce P219 */
+    STATUS_GOTO_NIL,   /* 512: after init_items ',' DESIGNATOR_ITEM - reduce P219 */
+
+    /* Phase 1.3: Init-Declarator List states */
+    STATUS_GOTO_NIL,   /* 513: after type INIT_DECLARATOR - reduce P224 */
+    STATUS_GOTO_NIL,   /* 514: after type INIT_DECLARATOR_LIST - reduce P226 or comma */
+    STATUS_GOTO(515),  /* 515: after init_decl_list ',' - GOTO for DECLARATOR, INIT_DECL */
+    STATUS_GOTO_NIL,   /* 516: after init_decl_list ',' ID - reduce P12 */
+    STATUS_GOTO(517),  /* 517: after init_decl_list ',' '*' - GOTO for DECLARATOR */
+    STATUS_GOTO_NIL,   /* 518: after init_decl_list ',' DECLARATOR - reduce P221 or '=' */
+    STATUS_GOTO(519),  /* 519: after init_decl_list ',' declarator '=' - expr GOTO */
+    STATUS_GOTO_NIL,   /* 520: after init_decl_list ',' declarator '=' assignatio - reduce P222 */
+    STATUS_GOTO_NIL,   /* 521: after init_decl_list ',' INIT_DECLARATOR - reduce P225 */
+    STATUS_GOTO_NIL,   /* 522: after init_decl_list ',' declarator '=' init_lista - reduce P223 */
+    STATUS_GOTO_NIL,   /* 523: after init_decl_list ',' '*' DECLARATOR - reduce P11 */
+    STATUS_GOTO_NIL,   /* 524: after init_decl_list ',' '*'+ ID - reduce P12 */
+    STATUS_GOTO(525),  /* 525: after init_decl_list ',' declarator '[' - GOTO for array expr */
+    STATUS_GOTO_NIL,   /* 526: after init_decl_list ',' declarator '[' expr ']' - reduce P94 */
+    STATUS_GOTO_NIL,   /* 527: after init_decl_list ',' declarator '[]' - reduce P95 */
+    STATUS_GOTO_NIL    /* 528: after init_decl_list ',' declarator '[' expr - expect ']' */
 };
 
 
@@ -11147,6 +11404,13 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_DESIGNATOR_ITEM:
             nt_int = INT_NT_DESIGNATOR_ITEM;
+            frange;
+        /* Phase 1.3: Init-declarator list NTs */
+        casus ARBOR2_NT_INIT_DECLARATOR:
+            nt_int = INT_NT_INIT_DECLARATOR;
+            frange;
+        casus ARBOR2_NT_INIT_DECLARATOR_LIST:
+            nt_int = INT_NT_INIT_DECLARATOR_LIST;
             frange;
         ordinarius:
             nt_int = -I;

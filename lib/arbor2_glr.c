@@ -1707,9 +1707,35 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.storage_class = storage;
                             valor_novus->datum.declaratio.qualifiers = quals;
                         }
+                        alioquin si (actio->valor == 226)
+                        {
+                            /* P226: declaratio -> type init_decl_list (2 symbols)
+                             * valori: [1]=type_specifier, [0]=init_decl_list
+                             * init_decl_list is always a pair Xar [declarator, initializor] */
+                            Xar* pair = (Xar*)valori[ZEPHYRUM];
+                            Arbor2Nodus* type_spec = valori[I];
+                            Arbor2Nodus* decl_node = NIHIL;
+                            Arbor2Nodus* init_node = NIHIL;
+
+                            si (pair != NIHIL && xar_numerus(pair) >= II)
+                            {
+                                decl_node = *(Arbor2Nodus**)xar_obtinere(pair, ZEPHYRUM);
+                                init_node = *(Arbor2Nodus**)xar_obtinere(pair, I);
+                            }
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = lexemata[I];  /* type_specifier token */
+                            valor_novus->datum.declaratio.specifier = type_spec;
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.initializor = init_node;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+                        }
                         alioquin si (num_pop >= II)
                         {
-                            /* P10: declaration -> type_specifier declarator */
+                            /* Other declaration rules (P10 etc.) */
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = lexemata[I];  /* type_specifier token */
@@ -2479,6 +2505,58 @@ _processare_unam_actionem(
                             Arbor2Nodus** slot = xar_addere(lista);
                             *slot = valori[ZEPHYRUM];
                             valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        /* Phase 1.3: Init-declarator list productions */
+                        alioquin si (actio->valor == 221)
+                        {
+                            /* P221: init_decl -> declarator (1 symbol)
+                             * Create pair [declarator, NIHIL] for uniformity with P222/P223 */
+                            Xar* pair = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot;
+                            slot = xar_addere(pair);
+                            *slot = valori[ZEPHYRUM];  /* declarator */
+                            slot = xar_addere(pair);
+                            *slot = NIHIL;  /* no initializor */
+                            valor_novus = (Arbor2Nodus*)pair;
+                        }
+                        alioquin si (actio->valor == 222)
+                        {
+                            /* P222: init_decl -> declarator '=' assignatio (3 symbols)
+                             * valori: [2]=declarator, [1]='=', [0]=assignatio
+                             * Create a temporary pair structure using Xar */
+                            Xar* pair = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot;
+                            slot = xar_addere(pair);
+                            *slot = valori[II];  /* declarator */
+                            slot = xar_addere(pair);
+                            *slot = valori[ZEPHYRUM];  /* initializor */
+                            valor_novus = (Arbor2Nodus*)pair;
+                        }
+                        alioquin si (actio->valor == 223)
+                        {
+                            /* P223: init_decl -> declarator '=' init_lista (3 symbols)
+                             * valori: [2]=declarator, [1]='=', [0]=init_lista
+                             * Create a temporary pair structure using Xar */
+                            Xar* pair = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot;
+                            slot = xar_addere(pair);
+                            *slot = valori[II];  /* declarator */
+                            slot = xar_addere(pair);
+                            *slot = valori[ZEPHYRUM];  /* init_lista */
+                            valor_novus = (Arbor2Nodus*)pair;
+                        }
+                        alioquin si (actio->valor == 224)
+                        {
+                            /* P224: init_decl_list -> init_decl (1 symbol)
+                             * Pass through - could be declarator or pair */
+                            valor_novus = valori[ZEPHYRUM];
+                        }
+                        alioquin si (actio->valor == 225)
+                        {
+                            /* P225: init_decl_list -> init_decl_list ',' init_decl (3 symbols)
+                             * For now, just pass through - full multi-decl later */
+                            /* TODO: Build proper list for multiple declarators */
+                            valor_novus = valori[ZEPHYRUM];
                         }
                         alioquin si (num_pop == III)
                         {

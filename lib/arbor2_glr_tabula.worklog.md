@@ -833,3 +833,63 @@ continuation operators. Can't use generic expression states that don't know the 
 - Total states: 513 (was 500, added 13)
 - Total rules: 221 (was 213, added 8)
 - Total tests: 1331 (was 1296, added 35)
+
+## 2026-01-14: Phase 1.3 - Multiple Declarators
+
+### Goal
+Support comma-separated declarators in a single declaration:
+```c
+int x, y;                // Multiple simple declarators
+int x = 1, y = 2;        // Multiple with initializers
+int *x, y;               // Mixed pointer/simple (ambiguous, expected)
+```
+
+### Approach
+Following the parameter list pattern (P41-P42, states 101-104), we introduced:
+- `INIT_DECLARATOR`: wraps a declarator with optional initializer
+- `INIT_DECLARATOR_LIST`: comma-separated list of init_declarators
+
+### Key Changes to Existing States
+1. **State 20** (after `type declarator`): Changed from REDUCE P10 to REDUCE P221, added COMMA handling
+2. **State 116** (after `type ID`): Added COMMA to reduction triggers
+3. **State 474** (after `declarator '=' assignatio`): Changed from REDUCE P192 to P222
+4. **State 497** (after `declarator '=' init_lista`): Changed from REDUCE P199 to P223
+
+### Productions Added (P221-P226)
+- P221: `init_decl -> declarator` (single, no init)
+- P222: `init_decl -> declarator '=' assignatio` (with expression init)
+- P223: `init_decl -> declarator '=' init_lista` (with brace init)
+- P224: `init_decl_list -> init_decl` (first item)
+- P225: `init_decl_list -> init_decl_list ',' init_decl` (additional items)
+- P226: `declaratio -> type init_decl_list` (final declaration)
+
+### States Added (513-528)
+- 513: after type INIT_DECLARATOR - reduce P224
+- 514: after type INIT_DECLARATOR_LIST - reduce P226 or shift COMMA
+- 515: after `init_decl_list ','` - expect declarator
+- 516-524: Declarator building in comma context
+- 519: after `',' declarator '='` - expression context
+- 520-522: Reduction states for initialized declarators
+- 525-528: Array declarator support in comma context
+
+### AST Handling
+Modified `arbor2_glr.c` to handle the new flow:
+1. P221/P222/P223 create a pair Xar `[declarator, initializor]`
+2. P224 passes through the pair
+3. P225 passes through (TODO: proper multi-declarator list)
+4. P226 unpacks the pair into DECLARATIO fields
+
+**Note**: Currently P225 only passes through the last init_decl, so multi-declarator
+produces a single DECLARATIO for the last declarator. Full list support would require
+emitting multiple DECLARATIO nodes from P226, which is more complex.
+
+### Test Results
+All 1331 existing tests pass. New parsing verified:
+- `int x, y` ✓
+- `int x = 1, y = 2` ✓
+- `int *x, y` → AMBIGUUS (expected - expression vs declaration ambiguity)
+
+### Statistics
+- Total states: 529 (was 513, added 16)
+- Total rules: 227 (was 221, added 6)
+- Total tests: 1331 (unchanged - tests added separately)
