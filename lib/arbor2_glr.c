@@ -2120,6 +2120,79 @@ _processare_unam_actionem(
                                 *slot = NIHIL;
                             }
                         }
+                        /* ========== POINTER QUALIFIERS P252-P255 ========== */
+                        alioquin si (actio->valor == 252 || actio->valor == 253)
+                        {
+                            /* P252: declarator -> '*' 'const' declarator (3 symbols)
+                             * P253: declarator -> '*' 'volatile' declarator (3 symbols)
+                             * valori: [2]='*', [1]=qualifier, [0]=declarator */
+                            Arbor2Nodus* inner = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                            valor_novus->lexema = lexemata[II];  /* The '*' token */
+
+                            si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
+                            {
+                                valor_novus->datum.declarator.num_stellae =
+                                    inner->datum.declarator.num_stellae + I;
+                                valor_novus->datum.declarator.titulus =
+                                    inner->datum.declarator.titulus;
+                                valor_novus->datum.declarator.latitudo_biti =
+                                    inner->datum.declarator.latitudo_biti;
+                                valor_novus->datum.declarator.dimensiones =
+                                    inner->datum.declarator.dimensiones;
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.declarator.num_stellae = I;
+                                valor_novus->datum.declarator.titulus.datum = NIHIL;
+                                valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                                valor_novus->datum.declarator.latitudo_biti = NIHIL;
+                                valor_novus->datum.declarator.dimensiones = NIHIL;
+                            }
+
+                            /* Set pointer qualifier */
+                            si (actio->valor == 252)
+                                valor_novus->datum.declarator.pointer_quals = ARBOR2_QUAL_CONST;
+                            alioquin
+                                valor_novus->datum.declarator.pointer_quals = ARBOR2_QUAL_VOLATILE;
+                        }
+                        alioquin si (actio->valor == 254 || actio->valor == 255)
+                        {
+                            /* P254: declarator -> '*' 'const' 'volatile' declarator (4 symbols)
+                             * P255: declarator -> '*' 'volatile' 'const' declarator (4 symbols)
+                             * valori: [3]='*', [2]=qual1, [1]=qual2, [0]=declarator */
+                            Arbor2Nodus* inner = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                            valor_novus->lexema = lexemata[III];  /* The '*' token */
+
+                            si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
+                            {
+                                valor_novus->datum.declarator.num_stellae =
+                                    inner->datum.declarator.num_stellae + I;
+                                valor_novus->datum.declarator.titulus =
+                                    inner->datum.declarator.titulus;
+                                valor_novus->datum.declarator.latitudo_biti =
+                                    inner->datum.declarator.latitudo_biti;
+                                valor_novus->datum.declarator.dimensiones =
+                                    inner->datum.declarator.dimensiones;
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.declarator.num_stellae = I;
+                                valor_novus->datum.declarator.titulus.datum = NIHIL;
+                                valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                                valor_novus->datum.declarator.latitudo_biti = NIHIL;
+                                valor_novus->datum.declarator.dimensiones = NIHIL;
+                            }
+
+                            /* Both const and volatile */
+                            valor_novus->datum.declarator.pointer_quals =
+                                ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE;
+                        }
                         alioquin si (num_pop == II)
                         {
                             /* P11: declarator -> '*' declarator */

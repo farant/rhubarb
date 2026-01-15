@@ -1361,3 +1361,150 @@ Implicit int cases (`static unsigned x`, `static long y`) require additional wor
 - Total states: 657 (0-656)
 - Total rules: 252
 - Total tests: 1558
+
+## 2026-01-15: Phase 1.4c - Implicit Int for Storage Class + Modifiers
+
+### Goal
+
+Enable implicit int with storage class + type modifier combinations:
+`static unsigned x`, `extern long y`, `register short z`, etc.
+
+### Root Cause
+
+In Phase 1.4b, storage class modifier states (625-656) shifted ID to type destination
+states (352-355), which then expected another ID for the declarator. This broke
+implicit int semantics where the ID IS the declarator.
+
+Phase 1.4 (without storage class) solved this by shifting ID to state 116, which
+reduces P12 (declarator → ID) directly, and having GOTO(617, DECLARATOR) = 20.
+
+### Solution
+
+1. **Change ID shifts** from type destinations (352-355) to state 116 in all 32 modifier states (625-656)
+2. **Add DECLARATOR GOTO entries** for all 32 states pointing to appropriate reduction states:
+   - Static (625-632) → 358
+   - Extern (633-640) → 359
+   - Register (641-648) → 360
+   - Auto (649-656) → 361
+
+### Stack Trace for `static unsigned x`
+
+```
+[0] --STATIC--> [0, 346] --UNSIGNED--> [0, 346, 625] --ID--> [0, 346, 625, 116]
+Reduce P12: [0, 346, 625] + DECLARATOR
+GOTO(625, DECLARATOR) = 358: [0, 346, 625, 358]
+Reduce P148 (pop 3): [0] + DECLARATIO
+GOTO(0, DECLARATIO) = 21: [0, 21]
+EOF: ACCEPT
+```
+
+### Changes Made
+
+- 32 ID shift changes in ACTION tables (352/353/354/355 → 116)
+- 8 DECLARATOR additions to existing GOTO tables (625, 630, 633, 638, 641, 646, 649, 654)
+- 24 new GOTO tables created for remaining states (626-629, 631-632, 634-637, 639-640, 642-645, 647-648, 650-653, 655-656)
+- 24 GOTO_TABULA_NOVA entries updated from STATUS_GOTO_NIL to STATUS_GOTO(xxx)
+
+### Tests Added
+
+13 implicit int tests:
+- `static unsigned x`, `static long y`, `static short z`, `static signed a`
+- `static unsigned long b`, `extern short c`, `extern unsigned long d`
+- `register signed e`, `register long f`
+- `auto unsigned short g`, `auto signed long h`
+- `static unsigned i = 5` (with initializer)
+- `extern long j = 10` (with initializer)
+
+### Final Statistics
+- Total states: 657 (unchanged)
+- Total rules: 252 (unchanged)
+- Total tests: 1571 (+13)
+
+## 2026-01-15: Phase 1.4d - Pointer Qualifiers
+
+### Goal
+Enable parsing pointer qualifiers like `int * const p`, `int * volatile v`, `int * const volatile cv`.
+
+### What Was Implemented
+
+**4 new productions (P252-P255):**
+- P252: `declarator -> '*' 'const' declarator` (3 symbols)
+- P253: `declarator -> '*' 'volatile' declarator` (3 symbols)
+- P254: `declarator -> '*' 'const' 'volatile' declarator` (4 symbols)
+- P255: `declarator -> '*' 'volatile' 'const' declarator` (4 symbols)
+
+**8 new states (657-664):**
+- 657: after `* const` - accepts ID, *, VOLATILE
+- 658: after `* volatile` - accepts ID, *, CONST
+- 659: after `* const volatile` - accepts ID, *
+- 660: after `* volatile const` - accepts ID, *
+- 661-664: reduction states for P252-P255 (similar to state 19 for P11)
+
+**State 17 updated:**
+Added CONST → 657 and VOLATILE → 658 shifts to enable entering the pointer qualifier states.
+
+**GOTO tables for 657-660:**
+Each points DECLARATOR to the corresponding reduction state (661-664).
+
+**Semantic actions:**
+Added P252-P255 handling in arbor2_glr.c DECLARATOR case to set `pointer_quals` field:
+- P252: sets ARBOR2_QUAL_CONST
+- P253: sets ARBOR2_QUAL_VOLATILE  
+- P254/P255: sets ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE
+
+**Validation fix:**
+Fixed `arbor2_glr_validare_tabulas()` to check GOTO targets against `num_action_states` instead of `num_goto_states`. States 661-664 are valid action states that don't have GOTO tables (reduction-only states).
+
+### Parse Flow for `int * const p`
+
+```
+State 0 --INT--> State 4 --*--> State 17 --CONST--> State 657 --ID--> State 18
+State 18 reduces P12 (declarator -> ID)
+GOTO(657, DECLARATOR) = 661
+State 661 reduces P252 (declarator -> '*' 'const' declarator)
+GOTO(4, DECLARATOR) = 20
+State 20 reduces P221 (init_decl -> declarator)
+...eventual ACCEPT
+```
+
+### Tests Added
+
+7 pointer qualifier tests:
+- `int * const p`
+- `int * volatile v`
+- `int * const volatile cv`
+- `int * volatile const vc`
+- `char ** const pp`
+- `int * const * volatile pp` (multiple qualified pointers)
+- `const int * const cp` (type qualifier + pointer qualifier)
+
+Note: `void * const vp` test removed - void type declarations not fully implemented.
+
+### Final Statistics
+- Total states: 665 (+8)
+- Total productions: 256 (+4)
+- Total tests: 1578 (+7)
+
+## 2026-01-15: Void Type Declarations
+
+### What Was Implemented
+
+Added support for `void *p` pointer declarations:
+
+1. **State 0**: Added VOID → State 665 shift
+2. **State 665**: After 'void' - only accepts `*` (since `void x` is invalid, only `void *p` is valid)
+3. **GOTO table for 665**: DECLARATOR → 20, INIT_DECLARATOR → 513, INIT_DECLARATOR_LIST → 514
+
+**Bug fix**: Added STATUS_GOTO_NIL entries for states 661-664 in GOTO_TABULA_NOVA. Without these placeholders, state 665's GOTO was at the wrong index.
+
+### Tests Added
+
+3 void pointer tests:
+- `void *p`
+- `void **pp`
+- `void * const vp`
+
+### Final Statistics
+- Total states: 666 (+1)
+- Total productions: 256 (unchanged)
+- Total tests: 1581 (+3)
