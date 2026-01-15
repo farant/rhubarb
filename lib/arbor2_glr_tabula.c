@@ -458,7 +458,29 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P269 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' UNSIGNED LONG ')'" },
     /* P270 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' UNSIGNED SHORT ')'" },
     /* P271 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' SIGNED LONG ')'" },
-    /* P272 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' SIGNED SHORT ')'" }
+    /* P272 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' SIGNED SHORT ')'" },
+
+    /* ==================================================
+     * Cast with type modifiers - P273-P289
+     * ================================================== */
+    /* P273 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED INT ')' factor" },
+    /* P274 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED INT ')' factor" },
+    /* P275 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG INT ')' factor" },
+    /* P276 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SHORT INT ')' factor" },
+    /* P277 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED CHAR ')' factor" },
+    /* P278 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED CHAR ')' factor" },
+    /* P279 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG INT ')' factor" },
+    /* P280 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT INT ')' factor" },
+    /* P281 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG INT ')' factor" },
+    /* P282 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT INT ')' factor" },
+    /* Implicit int variants */
+    /* P283 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED ')' factor" },
+    /* P284 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG ')' factor" },
+    /* P285 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SHORT ')' factor" },
+    /* P286 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG ')' factor" },
+    /* P287 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT ')' factor" },
+    /* P288 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG ')' factor" },
+    /* P289 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT ')' factor" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -766,7 +788,12 @@ hic_manens constans Arbor2TabulaActio STATUS_6_ACTIONES[] = {
     /* Struct/union/enum for casts - deterministic (no GLR fork needed) */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 422, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 432, FALSUM },
-    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 442, FALSUM }
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 442, FALSUM },
+    /* Type modifiers for casts */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 701, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 702, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 703, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 704, FALSUM }
 };
 
 /* State 7: after '*' (unary) - expects factor */
@@ -10719,6 +10746,507 @@ hic_manens constans Arbor2TabulaActio STATUS_700_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Cast type modifier states (701-752)
+ * ================================================== */
+
+/* State 701: after '( unsigned' */
+hic_manens constans Arbor2TabulaActio STATUS_701_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 709, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 711, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 705, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 706, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 727, FALSUM }  /* implicit int */
+};
+
+/* State 702: after '( signed' */
+hic_manens constans Arbor2TabulaActio STATUS_702_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 710, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 712, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 707, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 708, FALSUM }
+};
+
+/* State 703: after '( long' */
+hic_manens constans Arbor2TabulaActio STATUS_703_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 713, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 728, FALSUM }  /* implicit int */
+};
+
+/* State 704: after '( short' */
+hic_manens constans Arbor2TabulaActio STATUS_704_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 714, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 729, FALSUM }  /* implicit int */
+};
+
+/* State 705: after '( unsigned long' */
+hic_manens constans Arbor2TabulaActio STATUS_705_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 715, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 730, FALSUM }  /* implicit int */
+};
+
+/* State 706: after '( unsigned short' */
+hic_manens constans Arbor2TabulaActio STATUS_706_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 716, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 731, FALSUM }  /* implicit int */
+};
+
+/* State 707: after '( signed long' */
+hic_manens constans Arbor2TabulaActio STATUS_707_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 717, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 732, FALSUM }  /* implicit int */
+};
+
+/* State 708: after '( signed short' */
+hic_manens constans Arbor2TabulaActio STATUS_708_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 718, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 733, FALSUM }  /* implicit int */
+};
+
+/* States 709-718: after complete type, expects ')' */
+
+/* State 709: after '( unsigned int' */
+hic_manens constans Arbor2TabulaActio STATUS_709_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 719, FALSUM }
+};
+
+/* State 710: after '( signed int' */
+hic_manens constans Arbor2TabulaActio STATUS_710_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 720, FALSUM }
+};
+
+/* State 711: after '( unsigned char' */
+hic_manens constans Arbor2TabulaActio STATUS_711_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 721, FALSUM }
+};
+
+/* State 712: after '( signed char' */
+hic_manens constans Arbor2TabulaActio STATUS_712_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 722, FALSUM }
+};
+
+/* State 713: after '( long int' */
+hic_manens constans Arbor2TabulaActio STATUS_713_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 723, FALSUM }
+};
+
+/* State 714: after '( short int' */
+hic_manens constans Arbor2TabulaActio STATUS_714_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 724, FALSUM }
+};
+
+/* State 715: after '( unsigned long int' */
+hic_manens constans Arbor2TabulaActio STATUS_715_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 725, FALSUM }
+};
+
+/* State 716: after '( unsigned short int' */
+hic_manens constans Arbor2TabulaActio STATUS_716_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 726, FALSUM }
+};
+
+/* State 717: after '( signed long int' */
+hic_manens constans Arbor2TabulaActio STATUS_717_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 734, FALSUM }
+};
+
+/* State 718: after '( signed short int' */
+hic_manens constans Arbor2TabulaActio STATUS_718_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 735, FALSUM }
+};
+
+/* States 719-735: after ')', expects factor (like State 340) */
+
+/* State 719: after '( unsigned int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_719_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 720: after '( signed int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_720_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 721: after '( unsigned char )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_721_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 722: after '( signed char )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_722_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 723: after '( long int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_723_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 724: after '( short int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_724_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 725: after '( unsigned long int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_725_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 726: after '( unsigned short int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_726_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 727: after '( unsigned )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_727_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 728: after '( long )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_728_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 729: after '( short )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_729_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 730: after '( unsigned long )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_730_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 731: after '( unsigned short )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_731_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 732: after '( signed long )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_732_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 733: after '( signed short )' - expects factor (implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_733_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 734: after '( signed long int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_734_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 735: after '( signed short int )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_735_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* States 736-752: after factor, reduce to cast productions */
+
+/* Reduce follow set (same as other cast reductions) */
+#define CAST_REDUCE_FOLLOWS(prod) \
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, prod, FALSUM }
+
+/* State 736: reduce P273 - (unsigned int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_736_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(273)
+};
+
+/* State 737: reduce P274 - (signed int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_737_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(274)
+};
+
+/* State 738: reduce P275 - (long int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_738_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(275)
+};
+
+/* State 739: reduce P276 - (short int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_739_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(276)
+};
+
+/* State 740: reduce P277 - (unsigned char) factor */
+hic_manens constans Arbor2TabulaActio STATUS_740_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(277)
+};
+
+/* State 741: reduce P278 - (signed char) factor */
+hic_manens constans Arbor2TabulaActio STATUS_741_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(278)
+};
+
+/* State 742: reduce P279 - (unsigned long int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_742_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(279)
+};
+
+/* State 743: reduce P280 - (unsigned short int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_743_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(280)
+};
+
+/* State 744: reduce P281 - (signed long int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_744_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(281)
+};
+
+/* State 745: reduce P282 - (signed short int) factor */
+hic_manens constans Arbor2TabulaActio STATUS_745_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(282)
+};
+
+/* State 746: reduce P283 - (unsigned) factor */
+hic_manens constans Arbor2TabulaActio STATUS_746_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(283)
+};
+
+/* State 747: reduce P284 - (long) factor */
+hic_manens constans Arbor2TabulaActio STATUS_747_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(284)
+};
+
+/* State 748: reduce P285 - (short) factor */
+hic_manens constans Arbor2TabulaActio STATUS_748_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(285)
+};
+
+/* State 749: reduce P286 - (unsigned long) factor */
+hic_manens constans Arbor2TabulaActio STATUS_749_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(286)
+};
+
+/* State 750: reduce P287 - (unsigned short) factor */
+hic_manens constans Arbor2TabulaActio STATUS_750_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(287)
+};
+
+/* State 751: reduce P288 - (signed long) factor */
+hic_manens constans Arbor2TabulaActio STATUS_751_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(288)
+};
+
+/* State 752: reduce P289 - (signed short) factor */
+hic_manens constans Arbor2TabulaActio STATUS_752_ACTIONES[] = {
+    CAST_REDUCE_FOLLOWS(289)
+};
+
+#undef CAST_REDUCE_FOLLOWS
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -11519,7 +12047,68 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(697, "reduce P269: sizeof(unsigned long)"),
     STATUS_INFO(698, "reduce P270: sizeof(unsigned short)"),
     STATUS_INFO(699, "reduce P271: sizeof(signed long)"),
-    STATUS_INFO(700, "reduce P272: sizeof(signed short)")
+    STATUS_INFO(700, "reduce P272: sizeof(signed short)"),
+
+    /* ==================================================
+     * Cast type modifier states (701-752)
+     * ================================================== */
+    /* First-level modifier states (701-704) */
+    STATUS_INFO(701, "after '( unsigned' - cast modifier"),
+    STATUS_INFO(702, "after '( signed' - cast modifier"),
+    STATUS_INFO(703, "after '( long' - cast modifier"),
+    STATUS_INFO(704, "after '( short' - cast modifier"),
+    /* Second-level modifier states (705-708) */
+    STATUS_INFO(705, "after '( unsigned long' - cast modifier"),
+    STATUS_INFO(706, "after '( unsigned short' - cast modifier"),
+    STATUS_INFO(707, "after '( signed long' - cast modifier"),
+    STATUS_INFO(708, "after '( signed short' - cast modifier"),
+    /* After complete type, expects ')' (709-718) */
+    STATUS_INFO(709, "after '( unsigned int' - expects ')'"),
+    STATUS_INFO(710, "after '( signed int' - expects ')'"),
+    STATUS_INFO(711, "after '( unsigned char' - expects ')'"),
+    STATUS_INFO(712, "after '( signed char' - expects ')'"),
+    STATUS_INFO(713, "after '( long int' - expects ')'"),
+    STATUS_INFO(714, "after '( short int' - expects ')'"),
+    STATUS_INFO(715, "after '( unsigned long int' - expects ')'"),
+    STATUS_INFO(716, "after '( unsigned short int' - expects ')'"),
+    STATUS_INFO(717, "after '( signed long int' - expects ')'"),
+    STATUS_INFO(718, "after '( signed short int' - expects ')'"),
+    /* After ')', expects factor (719-735) */
+    STATUS_INFO(719, "after '( unsigned int )' - expects factor"),
+    STATUS_INFO(720, "after '( signed int )' - expects factor"),
+    STATUS_INFO(721, "after '( unsigned char )' - expects factor"),
+    STATUS_INFO(722, "after '( signed char )' - expects factor"),
+    STATUS_INFO(723, "after '( long int )' - expects factor"),
+    STATUS_INFO(724, "after '( short int )' - expects factor"),
+    STATUS_INFO(725, "after '( unsigned long int )' - expects factor"),
+    STATUS_INFO(726, "after '( unsigned short int )' - expects factor"),
+    STATUS_INFO(727, "after '( unsigned )' - expects factor"),
+    STATUS_INFO(728, "after '( long )' - expects factor"),
+    STATUS_INFO(729, "after '( short )' - expects factor"),
+    STATUS_INFO(730, "after '( unsigned long )' - expects factor"),
+    STATUS_INFO(731, "after '( unsigned short )' - expects factor"),
+    STATUS_INFO(732, "after '( signed long )' - expects factor"),
+    STATUS_INFO(733, "after '( signed short )' - expects factor"),
+    STATUS_INFO(734, "after '( signed long int )' - expects factor"),
+    STATUS_INFO(735, "after '( signed short int )' - expects factor"),
+    /* Reduction states (736-752) */
+    STATUS_INFO(736, "reduce P273: (unsigned int) factor"),
+    STATUS_INFO(737, "reduce P274: (signed int) factor"),
+    STATUS_INFO(738, "reduce P275: (long int) factor"),
+    STATUS_INFO(739, "reduce P276: (short int) factor"),
+    STATUS_INFO(740, "reduce P277: (unsigned char) factor"),
+    STATUS_INFO(741, "reduce P278: (signed char) factor"),
+    STATUS_INFO(742, "reduce P279: (unsigned long int) factor"),
+    STATUS_INFO(743, "reduce P280: (unsigned short int) factor"),
+    STATUS_INFO(744, "reduce P281: (signed long int) factor"),
+    STATUS_INFO(745, "reduce P282: (signed short int) factor"),
+    STATUS_INFO(746, "reduce P283: (unsigned) factor"),
+    STATUS_INFO(747, "reduce P284: (long) factor"),
+    STATUS_INFO(748, "reduce P285: (short) factor"),
+    STATUS_INFO(749, "reduce P286: (unsigned long) factor"),
+    STATUS_INFO(750, "reduce P287: (unsigned short) factor"),
+    STATUS_INFO(751, "reduce P288: (signed long) factor"),
+    STATUS_INFO(752, "reduce P289: (signed short) factor")
 };
 
 /* ==================================================
@@ -13469,6 +14058,112 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_624_GOTO[] = {
 };
 
 /* ==================================================
+ * Cast type modifier GOTO entries (719-735)
+ * ================================================== */
+
+/* State 719: after '( unsigned int )' - expects factor -> 736 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_719_GOTO[] = {
+    { INT_NT_FACTOR, 736 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 720: after '( signed int )' - expects factor -> 737 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_720_GOTO[] = {
+    { INT_NT_FACTOR, 737 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 721: after '( unsigned char )' - expects factor -> 740 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_721_GOTO[] = {
+    { INT_NT_FACTOR, 740 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 722: after '( signed char )' - expects factor -> 741 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_722_GOTO[] = {
+    { INT_NT_FACTOR, 741 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 723: after '( long int )' - expects factor -> 738 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_723_GOTO[] = {
+    { INT_NT_FACTOR, 738 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 724: after '( short int )' - expects factor -> 739 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_724_GOTO[] = {
+    { INT_NT_FACTOR, 739 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 725: after '( unsigned long int )' - expects factor -> 742 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_725_GOTO[] = {
+    { INT_NT_FACTOR, 742 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 726: after '( unsigned short int )' - expects factor -> 743 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_726_GOTO[] = {
+    { INT_NT_FACTOR, 743 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 727: after '( unsigned )' - expects factor -> 746 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_727_GOTO[] = {
+    { INT_NT_FACTOR, 746 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 728: after '( long )' - expects factor -> 747 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_728_GOTO[] = {
+    { INT_NT_FACTOR, 747 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 729: after '( short )' - expects factor -> 748 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_729_GOTO[] = {
+    { INT_NT_FACTOR, 748 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 730: after '( unsigned long )' - expects factor -> 749 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_730_GOTO[] = {
+    { INT_NT_FACTOR, 749 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 731: after '( unsigned short )' - expects factor -> 750 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_731_GOTO[] = {
+    { INT_NT_FACTOR, 750 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 732: after '( signed long )' - expects factor -> 751 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_732_GOTO[] = {
+    { INT_NT_FACTOR, 751 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 733: after '( signed short )' - expects factor -> 752 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_733_GOTO[] = {
+    { INT_NT_FACTOR, 752 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 734: after '( signed long int )' - expects factor -> 744 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_734_GOTO[] = {
+    { INT_NT_FACTOR, 744 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 735: after '( signed short int )' - expects factor -> 745 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_735_GOTO[] = {
+    { INT_NT_FACTOR, 745 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
 
@@ -14273,7 +14968,68 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 697: reduce P269: sizeof(unsigned long) */
     STATUS_GOTO_NIL,   /* 698: reduce P270: sizeof(unsigned short) */
     STATUS_GOTO_NIL,   /* 699: reduce P271: sizeof(signed long) */
-    STATUS_GOTO_NIL    /* 700: reduce P272: sizeof(signed short) */
+    STATUS_GOTO_NIL,   /* 700: reduce P272: sizeof(signed short) */
+
+    /* ==================================================
+     * Cast type modifier GOTOs (701-752)
+     * ================================================== */
+    /* First-level modifier states (701-704) - no GOTO needed */
+    STATUS_GOTO_NIL,   /* 701: after '( unsigned' - cast modifier */
+    STATUS_GOTO_NIL,   /* 702: after '( signed' - cast modifier */
+    STATUS_GOTO_NIL,   /* 703: after '( long' - cast modifier */
+    STATUS_GOTO_NIL,   /* 704: after '( short' - cast modifier */
+    /* Second-level modifier states (705-708) - no GOTO needed */
+    STATUS_GOTO_NIL,   /* 705: after '( unsigned long' */
+    STATUS_GOTO_NIL,   /* 706: after '( unsigned short' */
+    STATUS_GOTO_NIL,   /* 707: after '( signed long' */
+    STATUS_GOTO_NIL,   /* 708: after '( signed short' */
+    /* After complete type, expects ')' (709-718) - no GOTO needed */
+    STATUS_GOTO_NIL,   /* 709: after '( unsigned int' */
+    STATUS_GOTO_NIL,   /* 710: after '( signed int' */
+    STATUS_GOTO_NIL,   /* 711: after '( unsigned char' */
+    STATUS_GOTO_NIL,   /* 712: after '( signed char' */
+    STATUS_GOTO_NIL,   /* 713: after '( long int' */
+    STATUS_GOTO_NIL,   /* 714: after '( short int' */
+    STATUS_GOTO_NIL,   /* 715: after '( unsigned long int' */
+    STATUS_GOTO_NIL,   /* 716: after '( unsigned short int' */
+    STATUS_GOTO_NIL,   /* 717: after '( signed long int' */
+    STATUS_GOTO_NIL,   /* 718: after '( signed short int' */
+    /* After ')', expects factor (719-735) - NEEDS GOTO for FACTOR */
+    STATUS_GOTO(719),  /* 719: after '( unsigned int )' */
+    STATUS_GOTO(720),  /* 720: after '( signed int )' */
+    STATUS_GOTO(721),  /* 721: after '( unsigned char )' */
+    STATUS_GOTO(722),  /* 722: after '( signed char )' */
+    STATUS_GOTO(723),  /* 723: after '( long int )' */
+    STATUS_GOTO(724),  /* 724: after '( short int )' */
+    STATUS_GOTO(725),  /* 725: after '( unsigned long int )' */
+    STATUS_GOTO(726),  /* 726: after '( unsigned short int )' */
+    STATUS_GOTO(727),  /* 727: after '( unsigned )' */
+    STATUS_GOTO(728),  /* 728: after '( long )' */
+    STATUS_GOTO(729),  /* 729: after '( short )' */
+    STATUS_GOTO(730),  /* 730: after '( unsigned long )' */
+    STATUS_GOTO(731),  /* 731: after '( unsigned short )' */
+    STATUS_GOTO(732),  /* 732: after '( signed long )' */
+    STATUS_GOTO(733),  /* 733: after '( signed short )' */
+    STATUS_GOTO(734),  /* 734: after '( signed long int )' */
+    STATUS_GOTO(735),  /* 735: after '( signed short int )' */
+    /* Reduction states (736-752) - no GOTO needed */
+    STATUS_GOTO_NIL,   /* 736: reduce P273: (unsigned int) factor */
+    STATUS_GOTO_NIL,   /* 737: reduce P274: (signed int) factor */
+    STATUS_GOTO_NIL,   /* 738: reduce P275: (long int) factor */
+    STATUS_GOTO_NIL,   /* 739: reduce P276: (short int) factor */
+    STATUS_GOTO_NIL,   /* 740: reduce P277: (unsigned char) factor */
+    STATUS_GOTO_NIL,   /* 741: reduce P278: (signed char) factor */
+    STATUS_GOTO_NIL,   /* 742: reduce P279: (unsigned long int) factor */
+    STATUS_GOTO_NIL,   /* 743: reduce P280: (unsigned short int) factor */
+    STATUS_GOTO_NIL,   /* 744: reduce P281: (signed long int) factor */
+    STATUS_GOTO_NIL,   /* 745: reduce P282: (signed short int) factor */
+    STATUS_GOTO_NIL,   /* 746: reduce P283: (unsigned) factor */
+    STATUS_GOTO_NIL,   /* 747: reduce P284: (long) factor */
+    STATUS_GOTO_NIL,   /* 748: reduce P285: (short) factor */
+    STATUS_GOTO_NIL,   /* 749: reduce P286: (unsigned long) factor */
+    STATUS_GOTO_NIL,   /* 750: reduce P287: (unsigned short) factor */
+    STATUS_GOTO_NIL,   /* 751: reduce P288: (signed long) factor */
+    STATUS_GOTO_NIL    /* 752: reduce P289: (signed short) factor */
 };
 
 
