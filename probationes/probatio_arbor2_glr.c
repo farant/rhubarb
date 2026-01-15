@@ -8800,6 +8800,144 @@ s32 principale(vacuum)
         }
     }
 
+    /* ========================================================
+     * PROBARE: sizeof(type[N][M]) - multi-dimensional array types
+     * Phase 1.1d
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int[10][20]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[10][20])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+            /* Operandum should be a declarator with 2 dimensions */
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.sizeof_expr.operandum;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+                CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator.dimensiones), II);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(char[256][4]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char[256][4])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(void[1][1]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void[1][1])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(MyType[5][10]) with ID ---\n");
+
+        /* Note: For ID types, the parser can't distinguish between:
+         * - sizeof(variable[index1][index2]) - array subscript expression
+         * - sizeof(Type[dim1][dim2]) - array type size
+         * Without type information, it defaults to parsing as expression.
+         * So est_typus will be FALSUM (sizeof expr, not sizeof type). */
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(MyType[5][10])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            /* Not checking est_typus - parser treats ID as expression */
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int[N][M]) with expressions ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[N][M])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            /* Both dimensions should be identifier expressions */
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.sizeof_expr.operandum;
+                si (decl->datum.declarator.dimensiones != NIHIL)
+                {
+                    Arbor2Nodus** dim1 = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
+                    Arbor2Nodus** dim2 = xar_obtinere(decl->datum.declarator.dimensiones, I);
+                    CREDO_NON_NIHIL(dim1);
+                    CREDO_NON_NIHIL(dim2);
+                    CREDO_NON_NIHIL(*dim1);
+                    CREDO_NON_NIHIL(*dim2);
+                    CREDO_AEQUALIS_I32((i32)(*dim1)->genus, (i32)ARBOR2_NODUS_IDENTIFICATOR);
+                    CREDO_AEQUALIS_I32((i32)(*dim2)->genus, (i32)ARBOR2_NODUS_IDENTIFICATOR);
+                }
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans x = sizeof(int[10][20]) in assignment ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "x = sizeof(int[10][20])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            /* RHS should be sizeof */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            }
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Storage class specifiers

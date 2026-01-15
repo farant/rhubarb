@@ -857,6 +857,47 @@ _processare_unam_actionem(
 
                             valor_novus = nodus_sizeof;
                         }
+                        alioquin si (num_pop == X && actio->valor >= 244 && actio->valor <= 247)
+                        {
+                            /* P244-P247: sizeof(type[N][M]) - 10 symbols
+                             * sizeof ( type [ expr ] [ expr ] )
+                             *    9    8   7   6   5  4  3   2  1  0
+                             * valori[5] = first dimension expression
+                             * valori[2] = second dimension expression */
+                            Arbor2Nodus* nodus_sizeof;
+                            Arbor2Nodus* nodus_typus;
+                            Arbor2Nodus** dim_slot;
+
+                            /* Creare nodus typus cum duobus dimensionibus */
+                            nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
+                            nodus_typus->lexema = lexemata[VII];  /* type token */
+                            nodus_typus->datum.declarator.num_stellae = ZEPHYRUM;
+                            nodus_typus->datum.declarator.titulus.datum = NIHIL;
+                            nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                            nodus_typus->datum.declarator.latitudo_biti = NIHIL;
+                            nodus_typus->datum.declarator.pointer_quals = ZEPHYRUM;
+
+                            /* Creare dimensiones array et addere duas dimensiones */
+                            nodus_typus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+
+                            /* Prima dimensio */
+                            dim_slot = xar_addere(nodus_typus->datum.declarator.dimensiones);
+                            *dim_slot = valori[V];  /* first dimension at valori[5] */
+
+                            /* Secunda dimensio */
+                            dim_slot = xar_addere(nodus_typus->datum.declarator.dimensiones);
+                            *dim_slot = valori[II];  /* second dimension at valori[2] */
+
+                            /* Creare nodus sizeof */
+                            nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
+                            nodus_sizeof->lexema = lexemata[IX];  /* sizeof token */
+                            nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
+                            nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
+
+                            valor_novus = nodus_sizeof;
+                        }
                         alioquin si (num_pop >= IV && num_pop <= VII)
                         {
                             /* sizeof(type) with various forms */

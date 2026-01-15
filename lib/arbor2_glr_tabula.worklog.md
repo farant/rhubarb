@@ -1166,6 +1166,74 @@ Extended ARBOR2_NODUS_SIZEOF case to handle P240-P243:
 - Total tests: 1450 (up from 1431)
 
 ### Notes
-- Multi-dimensional arrays (`sizeof(int[10][20])`) not yet implemented
+- Multi-dimensional arrays (`sizeof(int[10][20])`) implemented in Phase 1.1d
 - Array of pointers (`sizeof(int*[10])`) not yet implemented
-- These could be added as P244-P251 in a future phase
+- These could be added as P248+ in a future phase
+
+## 2026-01-14: sizeof(type[N][M]) - Multi-Dimensional Arrays (Phase 1.1d)
+
+### What was implemented:
+
+Added support for 2D array types in sizeof: `sizeof(int[10][20])`, `sizeof(char[256][4])`, etc.
+
+### Productions Added (P244-P247)
+```c
+P244: factor -> 'sizeof' '(' INT  '[' expr ']' '[' expr ']' ')'  (10 symbols)
+P245: factor -> 'sizeof' '(' CHAR '[' expr ']' '[' expr ']' ')'  (10 symbols)
+P246: factor -> 'sizeof' '(' VOID '[' expr ']' '[' expr ']' ')'  (10 symbols)
+P247: factor -> 'sizeof' '(' ID   '[' expr ']' '[' expr ']' ')'  (10 symbols)
+```
+
+### States Modified (565, 569, 573, 577)
+
+After the first dimension's `]`, these states now have two options:
+- `)` -> reduce single-dimension sizeof (P240-P243)
+- `[` -> shift to second dimension parsing (579, 583, 587, 591)
+
+### States Added (579-594)
+
+**sizeof(int[N][M]) chain (579-582):**
+- 579: after `sizeof ( int [ expr ] [` - expects second dimension expression
+- 580: after second expr - expects `]`
+- 581: after `sizeof ( int [ expr ] [ expr ]` - expects `)`
+- 582: reduce P244
+
+**sizeof(char[N][M]) chain (583-586):** Same pattern, reduce P245
+**sizeof(void[N][M]) chain (587-590):** Same pattern, reduce P246
+**sizeof(ID[N][M]) chain (591-594):** Same pattern, reduce P247
+
+### AST Handler Update
+
+Extended sizeof case for 10-symbol productions (P244-P247):
+```
+sizeof ( type [ expr ] [ expr ] )
+   9    8   7   6   5  4  3   2  1  0
+```
+- First dimension: `valori[5]`
+- Second dimension: `valori[2]`
+- Type token: `lexemata[7]`
+- sizeof token: `lexemata[9]`
+
+### Tests Added
+- `sizeof(int[10][20])` - basic 2D int array (checks 2 dimensions)
+- `sizeof(char[256][4])` - char 2D array
+- `sizeof(void[1][1])` - void 2D array
+- `sizeof(MyType[5][10])` - ID case (note: parses as expression, not type)
+- `sizeof(int[N][M])` - with identifier dimensions
+- `x = sizeof(int[10][20])` - in assignment expression
+
+### Important Note: ID Disambiguation
+
+For ID types like `MyType`, the parser cannot distinguish between:
+- `sizeof(variable[index1][index2])` - array subscript expression
+- `sizeof(Type[dim1][dim2])` - array type size
+
+Without type information, the parser defaults to parsing ID arrays as
+expressions (subscript operations). This is correct C behavior since
+the syntax is ambiguous at parse time. The `sizeof(int[N][M])` form
+works because `int` is unambiguously a type keyword.
+
+### Final Statistics
+- Total states: 595 (up from 579)
+- Total rules: 248 (up from 244)
+- Total tests: 1474 (up from 1450)
