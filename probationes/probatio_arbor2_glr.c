@@ -9094,6 +9094,249 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Designated initializers (Phase 1.2c)
+     * ======================================================== */
+
+    /* Field designator: .x = 1 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus** item;
+
+        imprimere("\n--- Probans int x = {.a = 5} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = 5}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 1);
+                    /* First item should be a DESIGNATOR_ITEM */
+                    item = xar_obtinere(res.radix->datum.declaratio.initializor->datum.initializor_lista.items, ZEPHYRUM);
+                    si (item != NIHIL && *item != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)(*item)->genus, (i32)ARBOR2_NODUS_DESIGNATOR_ITEM);
+                    }
+                }
+            }
+        }
+    }
+
+    /* Array designator: [5] = 100 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int x = {[5] = 100} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {[5] = 100}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor);
+            si (res.radix->datum.declaratio.initializor != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            }
+        }
+    }
+
+    /* Multiple field designators */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+
+        imprimere("\n--- Probans int x = {.a = 1, .b = 2} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = 1, .b = 2}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(init->datum.initializor_lista.items), 2);
+        }
+    }
+
+    /* Chained designators: [0].x = 5 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+        Arbor2Nodus** item;
+
+        imprimere("\n--- Probans int x = {[0].y = 5} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {[0].y = 5}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            /* Should have 1 item with 2 designators chained */
+            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            si (item != NIHIL && *item != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)(*item)->genus, (i32)ARBOR2_NODUS_DESIGNATOR_ITEM);
+                CREDO_AEQUALIS_I32((i32)xar_numerus((*item)->datum.designator_item.designatores), 2);
+            }
+        }
+    }
+
+    /* Mixed positional and designated */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+
+        imprimere("\n--- Probans int x = {1, .b = 2, 3} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {1, .b = 2, 3}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(init->datum.initializor_lista.items), 3);
+        }
+    }
+
+    /* Designator with nested brace value */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+        Arbor2Nodus** item;
+
+        imprimere("\n--- Probans int x = {.a = {1, 2}} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = {1, 2}}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            si (item != NIHIL && *item != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)(*item)->genus, (i32)ARBOR2_NODUS_DESIGNATOR_ITEM);
+                /* Value should be an INITIALIZOR_LISTA */
+                CREDO_NON_NIHIL((*item)->datum.designator_item.valor);
+                si ((*item)->datum.designator_item.valor != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)(*item)->datum.designator_item.valor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+                }
+            }
+        }
+    }
+
+    /* Multiple array designators */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+
+        imprimere("\n--- Probans int x = {[0] = 1, [5] = 6} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {[0] = 1, [5] = 6}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(init->datum.initializor_lista.items), 2);
+        }
+    }
+
+    /* Multi-dimensional array designator: [0][1] = 5 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+        Arbor2Nodus** item;
+
+        imprimere("\n--- Probans int x = {[0][1] = 5} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {[0][1] = 5}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            si (item != NIHIL && *item != NIHIL)
+            {
+                /* Should have 2 designators chained */
+                CREDO_AEQUALIS_I32((i32)xar_numerus((*item)->datum.designator_item.designatores), 2);
+            }
+        }
+    }
+
+    /* Field chain: .a.b = 5 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* init;
+        Arbor2Nodus** item;
+
+        imprimere("\n--- Probans int x = {.a.b = 5} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a.b = 5}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
+        {
+            init = res.radix->datum.declaratio.initializor;
+            CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            si (item != NIHIL && *item != NIHIL)
+            {
+                /* Should have 2 designators chained */
+                CREDO_AEQUALIS_I32((i32)xar_numerus((*item)->datum.designator_item.designatores), 2);
+            }
+        }
+    }
+
+    /* Designator with trailing comma */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int x = {.a = 1,} ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "int x = {.a = 1,}");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 

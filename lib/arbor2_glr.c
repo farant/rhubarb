@@ -2359,6 +2359,16 @@ _processare_unam_actionem(
                         }
                         frange;
 
+                    casus ARBOR2_NODUS_DESIGNATOR_ITEM:
+                        /* P217, P220: Designated initializer .x = 1 or [5] = 100 */
+                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                        valor_novus->genus = ARBOR2_NODUS_DESIGNATOR_ITEM;
+                        valor_novus->lexema = NIHIL;  /* No single token for this */
+                        /* valori: [2]=designator_list (Xar*), [1]='=', [0]=value */
+                        valor_novus->datum.designator_item.designatores = (Xar*)valori[II];
+                        valor_novus->datum.designator_item.valor = valori[ZEPHYRUM];
+                        frange;
+
                     ordinarius:
                         /* Pass-through rules: take the inner value */
                         /* For 1-symbol rules, valori[0] is the value */
@@ -2414,6 +2424,57 @@ _processare_unam_actionem(
                         {
                             /* P204: init_items -> init_items ',' initializer (3 symbols)
                              * valori: [2]=existing list, [1]=',', [0]=new initializer */
+                            Xar* lista = (Xar*)valori[II];
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        /* Phase 1.2c: Designated initializer productions */
+                        alioquin si (actio->valor == 213)
+                        {
+                            /* P213: designator -> '[' expr ']' (3 symbols)
+                             * valori: [2]='[', [1]=expr, [0]=']'
+                             * Store the index expression directly */
+                            valor_novus = valori[I];
+                        }
+                        alioquin si (actio->valor == 214)
+                        {
+                            /* P214: designator -> '.' IDENTIFIER (2 symbols)
+                             * valori: [1]='.', [0]=IDENTIFIER
+                             * Store the identifier token as a node */
+                            valor_novus = valori[ZEPHYRUM];
+                        }
+                        alioquin si (actio->valor == 215)
+                        {
+                            /* P215: designator_list -> designator (1 symbol)
+                             * Create Xar with single designator */
+                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 216)
+                        {
+                            /* P216: designator_list -> designator_list designator (2 symbols)
+                             * valori: [1]=existing list, [0]=new designator */
+                            Xar* lista = (Xar*)valori[I];
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 218)
+                        {
+                            /* P218: init_items -> designator_item (1 symbol)
+                             * Create Xar with single designator_item */
+                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            Arbor2Nodus** slot = xar_addere(lista);
+                            *slot = valori[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        alioquin si (actio->valor == 219)
+                        {
+                            /* P219: init_items -> init_items ',' designator_item (3 symbols)
+                             * valori: [2]=existing list, [1]=',', [0]=new designator_item */
                             Xar* lista = (Xar*)valori[II];
                             Arbor2Nodus** slot = xar_addere(lista);
                             *slot = valori[ZEPHYRUM];

@@ -768,3 +768,68 @@ Followed the existing ARGUMENTA pattern for comma-separated lists:
 
 ### Future (Phase 1.2c):
 - Designated initializers: `.field = value`, `[index] = value`
+
+## 2026-01-14: Phase 1.2c - Designated Initializers
+
+### Summary
+Added full support for C89/C99 designated initializers:
+- Field designators: `.field = value`
+- Array index designators: `[index] = value`
+- Chained designators: `[0].x`, `.a.b`, `[0][1]`
+- Mixed positional and designated: `{1, .b = 2, 3}`
+- Nested brace values: `{.a = {1, 2}}`
+
+### Key Fix: Expression Context for Array Designators
+The critical issue was that array designators like `[5]` need an expression inside brackets,
+followed by `]`. The standard expression states don't know about `]` as a valid follow token.
+
+**Problem**: State 500 (after `[`) was routing expressions through generic states:
+- `GOTO(500, EXPR) = 1` (generic)
+- Generic state 1 continues reducing to TRANSLATIO -> ... -> ASSIGNATIO
+- These states don't have `]` in their action sets
+
+**Solution**: Follow the pattern used by subscript expressions (state 312):
+1. Changed `GOTO(500, EXPR) = 501` (custom state)
+2. Expanded state 501 to handle both `]` and expression operators (like state 313)
+3. State 501 shifts `]` to 502, or continues expression with operators
+
+### Productions Added (P213-P220)
+- P213: `designator -> '[' expr ']'` (array index)
+- P214: `designator -> '.' IDENTIFIER` (field)
+- P215: `designator_list -> designator` (single)
+- P216: `designator_list -> designator_list designator` (chain)
+- P217: `designator_item -> designator_list '=' initializer` (with expression)
+- P218: `init_items -> designator_item` (first designated)
+- P219: `init_items -> init_items ',' designator_item` (additional)
+- P220: `designator_item -> designator_list '=' init_lista` (nested braces)
+
+### States Added (500-512)
+- 500: after `[` - expression starter shifts
+- 501: after `[ expr` - expects `]` or operators
+- 502: after `[ expr ]` - reduce P213
+- 503: after `.` - expects IDENTIFIER
+- 504: after `. ID` - reduce P214
+- 505: after DESIGNATOR - reduce P215
+- 506: after DESIGNATOR_LIST - chain or `=`
+- 507: after `=` - expression or nested brace
+- 508: after DESIGNATOR in chain - reduce P216
+- 509: after INITIALIZER in designator - reduce P217
+- 510: after INIT_LISTA in designator - reduce P220
+- 511: after DESIGNATOR_ITEM (first) - reduce P218
+- 512: after additional DESIGNATOR_ITEM - reduce P219
+
+### GOTO Entries
+- States 487, 491: Added `DESIGNATOR`, `DESIGNATOR_LIST`, `DESIGNATOR_ITEM`
+- State 500: Custom `EXPR -> 501` (not generic 1)
+- State 506: `DESIGNATOR -> 508` for chaining
+- State 507: Full expression chain + `INIT_LISTA -> 510`
+
+### Lesson Learned
+When adding expression contexts that end with non-standard tokens (like `]`), the GOTO for
+EXPRESSIO must route to a custom state that handles both the terminator AND expression
+continuation operators. Can't use generic expression states that don't know the context.
+
+### Statistics
+- Total states: 513 (was 500, added 13)
+- Total rules: 221 (was 213, added 8)
+- Total tests: 1331 (was 1296, added 35)

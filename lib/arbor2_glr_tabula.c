@@ -345,7 +345,29 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P209 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "decl -> 'register' type declarator '=' init_lista" },
     /* P210 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "decl -> 'auto' type declarator '=' init_lista" },
     /* P211 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "decl -> 'const' type declarator '=' init_lista" },
-    /* P212 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' type declarator '=' init_lista" }
+    /* P212 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' type declarator '=' init_lista" },
+
+    /* ==================================================
+     * Phase 1.2c: Designated Initializers
+     * ================================================== */
+
+    /* P213-P214: Single designator */
+    /* P213 */ { ARBOR2_NT_DESIGNATOR, 3, ARBOR2_NODUS_ERROR, "designator -> '[' expr ']'" },
+    /* P214 */ { ARBOR2_NT_DESIGNATOR, 2, ARBOR2_NODUS_ERROR, "designator -> '.' IDENTIFIER" },
+
+    /* P215-P216: Designator chaining (left-recursive) */
+    /* P215 */ { ARBOR2_NT_DESIGNATOR_LIST, 1, ARBOR2_NODUS_ERROR, "designator_list -> designator" },
+    /* P216 */ { ARBOR2_NT_DESIGNATOR_LIST, 2, ARBOR2_NODUS_ERROR, "designator_list -> designator_list designator" },
+
+    /* P217: Designated item with expression value */
+    /* P217 */ { ARBOR2_NT_DESIGNATOR_ITEM, 3, ARBOR2_NODUS_DESIGNATOR_ITEM, "designator_item -> designator_list '=' initializer" },
+
+    /* P218-P219: Integrate designated items into init_items */
+    /* P218 */ { ARBOR2_NT_INIT_ITEMS, 1, ARBOR2_NODUS_ERROR, "init_items -> designator_item" },
+    /* P219 */ { ARBOR2_NT_INIT_ITEMS, 3, ARBOR2_NODUS_ERROR, "init_items -> init_items ',' designator_item" },
+
+    /* P220: Designated item with nested brace value */
+    /* P220 */ { ARBOR2_NT_DESIGNATOR_ITEM, 3, ARBOR2_NODUS_DESIGNATOR_ITEM, "designator_item -> designator_list '=' init_lista" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -8114,7 +8136,10 @@ hic_manens constans Arbor2TabulaActio STATUS_487_ACTIONES[] = {
     { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
     { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 487, FALSUM },  /* nested braces */
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 488, FALSUM }   /* empty list { } */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 488, FALSUM },  /* empty list { } */
+    /* Phase 1.2c: Designator entry points */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 500, FALSUM },  /* [index] designator */
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_SHIFT, 503, FALSUM }   /* .field designator */
 };
 
 /* State 488: after '{ }' - reduce P200 (empty initializer list) */
@@ -8155,7 +8180,10 @@ hic_manens constans Arbor2TabulaActio STATUS_491_ACTIONES[] = {
     { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
     { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 487, FALSUM },  /* nested braces */
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 492, FALSUM }   /* trailing comma */
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT, 492, FALSUM },  /* trailing comma */
+    /* Phase 1.2c: Designator entry points after comma */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 500, FALSUM },  /* [index] designator */
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_SHIFT, 503, FALSUM }   /* .field designator */
 };
 
 /* State 492: after '{ init_items , }' - reduce P202 (trailing comma) */
@@ -8209,6 +8237,132 @@ hic_manens constans Arbor2TabulaActio STATUS_499_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 211, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 211, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 211, FALSUM }
+};
+
+/* ==================================================
+ * Phase 1.2c: Designated Initializer States (500-512)
+ * ================================================== */
+
+/* State 500: after '[' in designator - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_500_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 501: after '[ expr' - expects ']' or expression continuation (like state 313) */
+hic_manens constans Arbor2TabulaActio STATUS_501_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 502, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_SHIFT,  11, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_SHIFT, 256, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_SHIFT, 256, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_SHIFT,  12, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_SHIFT,  12, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 99, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT, 274, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_SHIFT, 276, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_SHIFT, 278, FALSUM }
+};
+
+/* State 502: after '[ expr ]' - reduce P213 (designator -> '[' expr ']') */
+hic_manens constans Arbor2TabulaActio STATUS_502_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 213, FALSUM },
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_REDUCE, 213, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 213, FALSUM }
+};
+
+/* State 503: after '.' in designator - expects IDENTIFIER */
+hic_manens constans Arbor2TabulaActio STATUS_503_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 504, FALSUM }
+};
+
+/* State 504: after '. IDENTIFIER' - reduce P214 (designator -> '.' IDENTIFIER) */
+hic_manens constans Arbor2TabulaActio STATUS_504_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 214, FALSUM },
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_REDUCE, 214, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 214, FALSUM }
+};
+
+/* State 505: after DESIGNATOR (first in chain) - reduce P215 */
+hic_manens constans Arbor2TabulaActio STATUS_505_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 215, FALSUM },
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_REDUCE, 215, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 215, FALSUM }
+};
+
+/* State 506: after DESIGNATOR_LIST - check for chain continuation or '=' */
+hic_manens constans Arbor2TabulaActio STATUS_506_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 500, FALSUM },
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_SHIFT, 503, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 507, FALSUM }
+};
+
+/* State 507: after '=' in designator - expects value (expression or nested brace) */
+hic_manens constans Arbor2TabulaActio STATUS_507_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT, 487, FALSUM }
+};
+
+/* State 508: after DESIGNATOR in chain context - reduce P216 */
+hic_manens constans Arbor2TabulaActio STATUS_508_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 216, FALSUM },
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_REDUCE, 216, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 216, FALSUM }
+};
+
+/* State 509: after INITIALIZER in designator context - reduce P217 */
+hic_manens constans Arbor2TabulaActio STATUS_509_ACTIONES[] = {
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 217, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 217, FALSUM }
+};
+
+/* State 510: after INIT_LISTA in designator context - reduce P220 */
+hic_manens constans Arbor2TabulaActio STATUS_510_ACTIONES[] = {
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 220, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 220, FALSUM }
+};
+
+/* State 511: after DESIGNATOR_ITEM (first) - reduce P218 */
+hic_manens constans Arbor2TabulaActio STATUS_511_ACTIONES[] = {
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 218, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 218, FALSUM }
+};
+
+/* State 512: after init_items ',' DESIGNATOR_ITEM - reduce P219 */
+hic_manens constans Arbor2TabulaActio STATUS_512_ACTIONES[] = {
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 219, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 219, FALSUM }
 };
 
 /* ==================================================
@@ -8775,7 +8929,21 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(496, "after additional initializer - reduce P204"),
     STATUS_INFO(497, "after init_lista in decl - reduce P199"),
     STATUS_INFO(498, "after init_lista in static decl - reduce P207"),
-    STATUS_INFO(499, "after init_lista in const decl - reduce P211")
+    STATUS_INFO(499, "after init_lista in const decl - reduce P211"),
+    /* Phase 1.2c: Designated Initializer States */
+    STATUS_INFO(500, "after '[' in designator - expects expression"),
+    STATUS_INFO(501, "after '[ expr' - expects ']'"),
+    STATUS_INFO(502, "after '[ expr ]' - reduce P213 (array designator)"),
+    STATUS_INFO(503, "after '.' in designator - expects IDENTIFIER"),
+    STATUS_INFO(504, "after '. IDENTIFIER' - reduce P214 (field designator)"),
+    STATUS_INFO(505, "after DESIGNATOR - reduce P215 (to designator_list)"),
+    STATUS_INFO(506, "after DESIGNATOR_LIST - expects '[', '.', or '='"),
+    STATUS_INFO(507, "after '=' in designator - expects value"),
+    STATUS_INFO(508, "after DESIGNATOR in chain - reduce P216"),
+    STATUS_INFO(509, "after INITIALIZER in designator - reduce P217"),
+    STATUS_INFO(510, "after INIT_LISTA in designator - reduce P220"),
+    STATUS_INFO(511, "after DESIGNATOR_ITEM (first) - reduce P218"),
+    STATUS_INFO(512, "after init_items ',' DESIGNATOR_ITEM - reduce P219")
 };
 
 /* ==================================================
@@ -8848,6 +9016,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 #define INT_NT_INITIALIZOR_LISTA 35
 #define INT_NT_INIT_ITEMS        36
 #define INT_NT_INITIALIZER       37
+/* Phase 1.2c: Designated initializer NT mappings */
+#define INT_NT_DESIGNATOR        38
+#define INT_NT_DESIGNATOR_LIST   39
+#define INT_NT_DESIGNATOR_ITEM   40
 
 /* ==================================================
  * Per-State GOTO Arrays (Phase 4 refactor)
@@ -10147,7 +10319,10 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_487_GOTO[] = {
     { INT_NT_TRANSLATIO,        264 },
     { INT_NT_INITIALIZOR_LISTA, 494 },   /* nested list -> P206 reduce */
     { INT_NT_INITIALIZER,       495 },   /* first initializer -> P203 reduce */
-    { INT_NT_INIT_ITEMS,        489 }    /* init_items -> handle ',' or '}' */
+    { INT_NT_INIT_ITEMS,        489 },   /* init_items -> handle ',' or '}' */
+    { INT_NT_DESIGNATOR,        505 },   /* first designator -> P215 reduce */
+    { INT_NT_DESIGNATOR_LIST,   506 },   /* designator_list -> expect '=' or chain */
+    { INT_NT_DESIGNATOR_ITEM,   511 }    /* first designator_item -> P218 reduce */
 };
 
 /* State 491: after '{ init_items ,' - full expression chain for additional items */
@@ -10167,7 +10342,42 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_491_GOTO[] = {
     { INT_NT_ASSIGNATIO,        493 },   /* expression -> P205 reduce */
     { INT_NT_TRANSLATIO,        264 },
     { INT_NT_INITIALIZOR_LISTA, 494 },   /* nested list -> P206 reduce */
-    { INT_NT_INITIALIZER,       496 }    /* additional initializer -> P204 reduce */
+    { INT_NT_INITIALIZER,       496 },   /* additional initializer -> P204 reduce */
+    { INT_NT_DESIGNATOR,        505 },   /* designator -> P215 reduce */
+    { INT_NT_DESIGNATOR_LIST,   506 },   /* designator_list -> expect '=' or chain */
+    { INT_NT_DESIGNATOR_ITEM,   512 }    /* additional designator_item -> P219 reduce */
+};
+
+/* State 500: after '[' in designator - expression chain for index */
+hic_manens constans Arbor2StatusGotoEntry STATUS_500_GOTO[] = {
+    { INT_NT_EXPR,              501 },   /* expression -> state with ']' shift */
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 }
+};
+
+/* State 506: after DESIGNATOR_LIST - GOTO for chained designator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_506_GOTO[] = {
+    { INT_NT_DESIGNATOR,        508 }    /* designator in chain -> P216 reduce */
+};
+
+/* State 507: after '=' in designator - expression chain for value */
+hic_manens constans Arbor2StatusGotoEntry STATUS_507_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        509 },   /* expression -> P217 reduce */
+    { INT_NT_TRANSLATIO,        264 },
+    { INT_NT_INITIALIZOR_LISTA, 510 }    /* nested brace -> P220 reduce */
 };
 
 /* ==================================================
@@ -10741,7 +10951,21 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 496: after additional initializer - reduce P204 */
     STATUS_GOTO_NIL,   /* 497: after init_lista in decl - reduce P199 */
     STATUS_GOTO_NIL,   /* 498: after init_lista in static decl - reduce P207 */
-    STATUS_GOTO_NIL    /* 499: after init_lista in const decl - reduce P211 */
+    STATUS_GOTO_NIL,   /* 499: after init_lista in const decl - reduce P211 */
+    /* Phase 1.2c: Designated initializer states */
+    STATUS_GOTO(500),  /* 500: after '[' in designator - expression chain */
+    STATUS_GOTO_NIL,   /* 501: after '[ expr' - expects ']' */
+    STATUS_GOTO_NIL,   /* 502: after '[ expr ]' - reduce P213 */
+    STATUS_GOTO_NIL,   /* 503: after '.' in designator - expects ID */
+    STATUS_GOTO_NIL,   /* 504: after '. ID' - reduce P214 */
+    STATUS_GOTO_NIL,   /* 505: after DESIGNATOR (first) - reduce P215 */
+    STATUS_GOTO(506),  /* 506: after DESIGNATOR_LIST - chain or '=' */
+    STATUS_GOTO(507),  /* 507: after '=' in designator - expects value */
+    STATUS_GOTO_NIL,   /* 508: after DESIGNATOR in chain - reduce P216 */
+    STATUS_GOTO_NIL,   /* 509: after INITIALIZER in designator - reduce P217 */
+    STATUS_GOTO_NIL,   /* 510: after INIT_LISTA in designator - reduce P220 */
+    STATUS_GOTO_NIL,   /* 511: after DESIGNATOR_ITEM (first) - reduce P218 */
+    STATUS_GOTO_NIL    /* 512: after init_items ',' DESIGNATOR_ITEM - reduce P219 */
 };
 
 
@@ -10913,6 +11137,16 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_INITIALIZER:
             nt_int = INT_NT_INITIALIZER;
+            frange;
+        /* Phase 1.2c: Designated initializer NT mappings */
+        casus ARBOR2_NT_DESIGNATOR:
+            nt_int = INT_NT_DESIGNATOR;
+            frange;
+        casus ARBOR2_NT_DESIGNATOR_LIST:
+            nt_int = INT_NT_DESIGNATOR_LIST;
+            frange;
+        casus ARBOR2_NT_DESIGNATOR_ITEM:
+            nt_int = INT_NT_DESIGNATOR_ITEM;
             frange;
         ordinarius:
             nt_int = -I;

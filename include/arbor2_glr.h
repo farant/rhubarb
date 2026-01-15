@@ -110,7 +110,10 @@ nomen enumeratio {
     ARBOR2_NT_ENUMERATOR,           /* single enumerator */
     ARBOR2_NT_INITIALIZOR_LISTA,    /* initializer list {a, b, c} */
     ARBOR2_NT_INIT_ITEMS,           /* list of initializers (internal) */
-    ARBOR2_NT_INITIALIZER           /* single initializer (expr or nested list) */
+    ARBOR2_NT_INITIALIZER,          /* single initializer (expr or nested list) */
+    ARBOR2_NT_DESIGNATOR,           /* [expr] or .field designator */
+    ARBOR2_NT_DESIGNATOR_LIST,      /* chain of designators: [0][1].x */
+    ARBOR2_NT_DESIGNATOR_ITEM       /* designator_list '=' initializer */
 } Arbor2NonTerminalis;
 
 /* ==================================================
@@ -156,6 +159,7 @@ nomen enumeratio {
     ARBOR2_NODUS_CASUS,             /* case label */
     ARBOR2_NODUS_ORDINARIUS,        /* default label */
     ARBOR2_NODUS_INITIALIZOR_LISTA, /* Brace-enclosed initializer list */
+    ARBOR2_NODUS_DESIGNATOR_ITEM,   /* Designated initializer: .x = 1 or [5] = 100 */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR
 } Arbor2NodusGenus;
@@ -360,6 +364,12 @@ structura Arbor2Nodus {
         structura {
             Xar*                items;          /* Xar of Arbor2Nodus* (expressions or nested lists) */
         } initializor_lista;
+
+        /* DESIGNATOR_ITEM (designated initializer: .x = 1 or [5] = 100) */
+        structura {
+            Xar*                designatores;   /* Xar of Arbor2Nodus* - chain of [i] or .field */
+            Arbor2Nodus*        valor;          /* The initialized value (expression or init_lista) */
+        } designator_item;
 
         /* AMBIGUUS */
         structura {
