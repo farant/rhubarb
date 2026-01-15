@@ -1237,3 +1237,127 @@ works because `int` is unambiguously a type keyword.
 - Total states: 595 (up from 579)
 - Total rules: 248 (up from 244)
 - Total tests: 1474 (up from 1450)
+
+---
+
+## 2026-01-15: Phase 1.4 - Type Modifiers
+
+Added support for C89 type modifiers: `unsigned`, `long`, `short`, `signed`.
+
+### New States
+
+Created states 617-624 for type modifier chains:
+
+| State | After | Accepts |
+|-------|-------|---------|
+| 617 | `unsigned` | INT, CHAR, LONG, SHORT, ID |
+| 618 | `unsigned long` | INT, ID |
+| 619 | `unsigned short` | INT, ID |
+| 620 | `long` | INT, ID |
+| 621 | `short` | INT, ID |
+| 622 | `signed` | INT, CHAR, LONG, SHORT, ID |
+| 623 | `signed long` | INT, ID |
+| 624 | `signed short` | INT, ID |
+
+### State 0 Additions
+
+Added type modifier shifts to State 0:
+```c
+{ ARBOR2_LEXEMA_UNSIGNED, ARBOR2_ACTIO_SHIFT, 617, FALSUM },
+{ ARBOR2_LEXEMA_LONG,     ARBOR2_ACTIO_SHIFT, 620, FALSUM },
+{ ARBOR2_LEXEMA_SHORT,    ARBOR2_ACTIO_SHIFT, 621, FALSUM },
+{ ARBOR2_LEXEMA_SIGNED,   ARBOR2_ACTIO_SHIFT, 622, FALSUM },
+```
+
+### GOTO Table Issue
+
+Initial implementation failed because after reducing a declaration like
+`unsigned int x`, the parser popped states leaving 617 on top, but state
+617 had no GOTO entry for DECLARATIO.
+
+**Fix:** Added full GOTO entries to all type modifier states:
+```c
+{ INT_NT_DECLARATIO,           21 },
+{ INT_NT_DECLARATOR,           20 },   /* for implicit int */
+{ INT_NT_INIT_DECLARATOR,     513 },
+{ INT_NT_INIT_DECLARATOR_LIST, 514 }
+```
+
+The DECLARATOR entry is essential for implicit int support (e.g., `unsigned x`
+without explicit `int`). When the parser sees an identifier directly after
+a type modifier, it shifts to state 116 (declarator path), and after
+reducing needs GOTO(state, DECLARATOR) to continue.
+
+### Reserved States 611-616
+
+States 611-616 were reserved but had NIHIL action tables, causing validation
+to fail. Created placeholder action tables with single ERROR entry for each.
+
+### Tests Added
+
+16 new type modifier tests:
+- `unsigned int x`, `long int y`, `unsigned long z`
+- `short s`, `signed char c`, `unsigned x` (implicit int)
+- `unsigned long int w`, `unsigned short int v`
+- `signed int a`, `signed long int b`, `signed short int c`
+- `long d`, `short e` (implicit int variants)
+- `unsigned char uc`, `signed long sl`, `signed short ss`
+
+### Final Statistics
+- Total states: 625 (0-624, with 611-616 reserved placeholders)
+- Total rules: 252
+- Total tests: 1539
+
+---
+
+## 2026-01-15: Phase 1.4b - Storage Class + Type Modifiers
+
+Added support for combining storage classes with type modifiers:
+`static unsigned int x`, `extern long int y`, `register unsigned long int z`, etc.
+
+### New States (625-656)
+
+Created 32 new states: 8 modifier states per storage class.
+
+| Storage Class | Base State | Modifier States | Type Destination |
+|---------------|------------|-----------------|------------------|
+| static | 346 | 625-632 | 352 |
+| extern | 347 | 633-640 | 353 |
+| register | 348 | 641-648 | 354 |
+| auto | 349 | 649-656 | 355 |
+
+**Pattern:** Storage class state → modifier state(s) → type destination state
+
+### Key Fix: GOTO on Storage Class States
+
+For `static unsigned int x`, the stack after parsing is [0, 346, 625, 352, 358].
+When P148 reduces (pop 3), the stack becomes [0, 346, 625].
+GOTO(625, DECLARATIO) was needed to continue.
+
+**Solution:** Added GOTO entries for DECLARATIO to:
+1. Storage class states (346-349) - for 1-modifier chains
+2. First-level modifier states (625, 630, 633, 638, 641, 646, 649, 654) - for 2-modifier chains
+
+### Scope Limitation
+
+Only explicit int/char cases work (`static unsigned int x`, `register unsigned char y`).
+Implicit int cases (`static unsigned x`, `static long y`) require additional work:
+- The ID after modifiers gets shifted to type destination states (352-355)
+- Those states expect another ID for the declarator
+- Would need different productions or restructured states
+
+### Tests Added
+
+19 new tests covering all storage classes with type modifiers:
+- `static unsigned int x`, `static long int y`, `static unsigned long int z`
+- `static short int s`, `static signed char c`, `static unsigned int u`
+- `extern unsigned int a`, `extern long int b`, `extern unsigned short int c`
+- `register short int d`, `register unsigned long int e`, `register signed int f`
+- `auto signed char g`, `auto long int h`, `auto unsigned short int i`
+- `static unsigned long int j`, `extern signed short int k`
+- `register unsigned char l`, `auto signed long int m`
+
+### Final Statistics
+- Total states: 657 (0-656)
+- Total rules: 252
+- Total tests: 1558

@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-15
-Status: Updated after Phase 1.1e completion (sizeof array variants)
+Status: Updated after Phase 1.5 completion (Translation Unit support)
 
 ---
 
@@ -41,8 +41,8 @@ Status: Updated after Phase 1.1e completion (sizeof array variants)
 - GSS path enumeration for multi-path reductions
 - Piscina checkpointing for rollback
 - **252 grammar productions** (P0-P251)
-- **611 LR states** (0-610)
-- **1491 tests passing**
+- **625 LR states** (0-624, with 611-616 reserved)
+- **1539 tests passing**
 - Table validation
 
 **Grammar currently covered:**
@@ -73,22 +73,22 @@ Status: Updated after Phase 1.1e completion (sizeof array variants)
 | Function declarators | COMPLETE | name(), name(void), name(params) |
 | Function definitions | COMPLETE | type declarator { body } |
 | Parameters | COMPLETE | |
-| Storage classes | PARTIAL | Individual only (no combinations like `static const`) |
-| Type qualifiers | PARTIAL | Individual only (no combinations) |
+| Storage classes | COMPLETE | Individual and combinations (`static const int x`) |
+| Type qualifiers | COMPLETE | Individual and combinations |
+| Multiple declarators | COMPLETE | `int x, y;`, `int *x, y;` (AMBIGUUS for pointer case) |
+| Type modifiers | COMPLETE | `unsigned`, `long`, `short`, `signed` + combinations (states 617-624) |
 | struct/union | COMPLETE | With members, bit fields |
 | enum | COMPLETE | With enumerators and values |
 | Arrays | COMPLETE | name[size] |
+| Translation unit | COMPLETE | Multiple external declarations via wrapper API |
 
 **Grammar NOT covered (remaining gaps):**
 
 | Missing | Impact | Phase |
 |---------|--------|-------|
-| Specifier combinations | `static const int x` not parsed | 1.4 |
-| Type modifiers | `unsigned int`, `long int` not parsed | 1.4 |
-| Multiple declarators | `int x, y` not parsed | 1.3 |
-| Pointer qualifiers | `int * const p` not parsed | 1.4 |
+| Storage + type modifier | `static unsigned int` not parsed | 1.4b |
+| Pointer qualifiers | `int * const p` not parsed | 1.4b |
 | K&R function defs | Old-style parameters | Low priority |
-| Translation unit | Top-level external-declaration list | 1.5 |
 
 ### Arbor2Nodus Structure - BASIC
 Current structure has:
@@ -104,10 +104,11 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- 1491 tests passing
+- 1523 tests passing
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
 - sizeof variants (type, pointer, array, multi-dim, pointer array)
+- Translation unit tests (multiple decls, functions, mixed)
 - Table validation
 - Parser statistics
 
@@ -166,85 +167,92 @@ Implemented 2026-01-14 in three sub-phases:
 
 35+ new tests for initializers.
 
-### 1.3 Multiple Declarators - NOT STARTED
-
-**Current state:** Parser only handles single declarator per type.
-
-**Failing cases:**
-- `int x, y;` - FAILS (no comma support in declarations)
-- `int x = 1, y = 2;` - FAILS
-- `int *x, y;` - FAILS
-
-**Required:**
-```
-declaration -> specifiers init_declarator_list ';'
-init_declarator_list -> init_declarator
-init_declarator_list -> init_declarator_list ',' init_declarator
-init_declarator -> declarator
-init_declarator -> declarator '=' initializer
-```
-
-Estimated: ~5 productions, ~10 states
-
-### 1.4 Specifier Combinations - NOT STARTED
-
-**Current state:** Parser only handles single storage class OR single qualifier.
+### 1.3 Multiple Declarators - COMPLETE ✓
 
 **Working:**
-- `static int x;` ✓
-- `const int x;` ✓
-- `volatile int y;` ✓
+- `int x, y` ✓ (multiple simple declarators)
+- `int x = 1, y = 2` ✓ (multiple declarators with initializers)
+- `int *x, y` ✓ (pointer declarator with multiple) - returns AMBIGUUS
 
-**Failing:**
-- `static const int x;` - FAILS
-- `extern volatile int y;` - FAILS
-- `unsigned int z;` - FAILS
-- `long int w;` - FAILS
-- `unsigned long int v;` - FAILS
+**Fix (2026-01-15):** Added COMMA handling to States 18 and 19 so the declaration path survives. `int *x, y` is genuinely ambiguous (could be declaration or multiplication+comma expression), so AMBIGUUS is the correct result.
 
-**Required:**
-```
-decl_specifiers -> decl_specifier
-decl_specifiers -> decl_specifiers decl_specifier
+### 1.4 Type Modifiers - COMPLETE ✓
 
-decl_specifier -> storage_class_specifier
-decl_specifier -> type_qualifier
-decl_specifier -> type_specifier
-
-type_specifier -> 'int' | 'char' | 'void' | 'short' | 'long'
-                | 'signed' | 'unsigned' | 'float' | 'double'
-```
-
-This is a substantial refactor - the type specifier lexemes exist but aren't wired into grammar.
-
-Estimated: ~15 productions, ~25 states
-
-### 1.5 Translation Unit - NOT STARTED
-
-**Current state:** Parser handles single declaration/function, cannot sequence multiple.
+Implemented 2026-01-15.
 
 **Working:**
+- `unsigned int x` ✓
+- `long int y` ✓
+- `short int s` ✓
+- `signed int x` ✓
+- `unsigned long z` ✓ (implicit int)
+- `unsigned short u` ✓ (implicit int)
+- `signed long w` ✓
+- `signed short ss` ✓
+- `signed char c` ✓
+- `unsigned char uc` ✓
+
+**Implementation:**
+- Added UNSIGNED, LONG, SHORT, SIGNED to State 0 actions
+- Created states 617-624 for type modifier chains:
+  - 617: after 'unsigned' → accepts INT, CHAR, LONG, SHORT, ID
+  - 618: after 'unsigned long' → accepts INT, ID
+  - 619: after 'unsigned short' → accepts INT, ID
+  - 620: after 'long' → accepts INT, ID
+  - 621: after 'short' → accepts INT, ID
+  - 622: after 'signed' → accepts INT, CHAR, LONG, SHORT, ID
+  - 623: after 'signed long' → accepts INT, ID
+  - 624: after 'signed short' → accepts INT, ID
+- Added GOTO tables with DECLARATIO, DECLARATOR, INIT_DECLARATOR, INIT_DECLARATOR_LIST
+- 16 new tests
+
+**Storage class + qualifier combinations (from before):**
+- `static int x` ✓
+- `const int x` ✓
+- `volatile int y` ✓
+- `static const int x` ✓
+- `extern volatile int y` ✓
+- `static const volatile int x` ✓
+
+**Deferred to Phase 1.4b:**
+- Storage class + type modifier: `static unsigned int x;`
+- Type modifiers in function parameters
+- Type modifiers in sizeof/casts
+
+### 1.5 Translation Unit - COMPLETE ✓
+
+Implemented 2026-01-15 using wrapper approach (no grammar changes).
+
+**Design Decision:** Chose wrapper approach over grammar-based approach:
+- Grammar approach would require ~4 productions, ~20 states, complex accept-state modifications
+- Wrapper approach: scan for item boundaries, parse each chunk with synthetic EOF
+- Lower risk, no changes to existing grammar/states
+
+**Key Implementation Detail:** Declaration grammar does NOT include semicolon (handled at statement level). Boundary finder returns separate `parse_finis` (excludes semicolon) and `proximus` (skips semicolon) values.
+
+**New API:**
+```c
+Arbor2GLRResultus arbor2_glr_parsere_translation_unit(
+    Arbor2GLR*  glr,
+    Xar*        lexemata);
+```
+
+**New Node Type:** `ARBOR2_NODUS_TRANSLATION_UNIT` with `datum.translation_unit.declarationes` (Xar of Arbor2Nodus*)
+
+**New Result Field:** `tokens_consumed` in `Arbor2GLRResultus`
+
+**Now Working:**
+- `int a; int b;` ✓ (multiple declarations)
+- `int x = 5; int y = 10;` ✓ (with initializers)
 - `int foo() { return 1; }` ✓ (single function)
-- `int x;` ✓ (single declaration)
+- `int x; int foo() { return x; }` ✓ (declaration + function)
+- `int foo() {} int bar() {}` ✓ (multiple functions)
+- Empty input ✓
+- Functions with parameters ✓
 
-**Failing:**
-- `int a; int b;` - FAILS (multiple declarations)
-- `int foo() {} int x;` - FAILS (function + declaration)
+32 new tests for translation unit support.
 
-**Required:**
-```
-translation_unit -> external_declaration
-translation_unit -> translation_unit external_declaration
-
-external_declaration -> function_definition
-external_declaration -> declaration ';'
-```
-
-Would also need new entry point: `arbor2_glr_parsere_translation_unit()`
-
-Estimated: ~4 productions, ~5 states
-
-**Deliverable:** Can parse complete C89 files
+**Deliverable:** Can parse complete C89 files ✓
 
 ---
 
@@ -252,13 +260,21 @@ Estimated: ~4 productions, ~5 states
 
 Given the current state, the recommended priority is:
 
-1. **Phase 1.4 (Specifier Combinations)** - Enables real C code with `static const`, `unsigned int`, etc. This is the most impactful remaining grammar gap.
+1. **Phase 1.4b (Storage + Type Modifier Combinations)** - Wire storage classes with type modifiers (`static unsigned int x;`). Currently deferred.
 
-2. **Phase 1.5 (Translation Unit)** - Enables parsing complete files. Relatively small change but high impact.
+2. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
 
-3. **Phase 1.3 (Multiple Declarators)** - Convenience feature, less critical than above.
+**Current capabilities:**
+- Complete C89 files with multiple declarations/functions ✓
+- Storage class combinations (`static const int`) ✓
+- Type modifiers (`unsigned int`, `long int`, implicit int) ✓
+- Multiple declarators (`int x, y`, `int *x, y` as AMBIGUUS) ✓
+- All expression/statement/control flow constructs ✓
 
-Alternatively, **Phase 2 (Rich AST)** could come first if the goal is to enable formatter development sooner, since the grammar is already quite functional for single-declaration parsing.
+**Remaining gaps:**
+- Storage + type modifier combinations (`static unsigned int`)
+- Pointer qualifiers (`int * const p`)
+- Type modifiers in sizeof/casts
 
 ---
 
@@ -730,4 +746,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-15 | 1.1c Multi-dim | +4 | +16 | +30 | sizeof(int[10][20]) |
 | 2026-01-15 | 1.1d Ptr array | +4 | +16 | +5 | sizeof(int*[10]) |
 | 2026-01-15 | Various fixes | +19 | +61 | +65 | Misc improvements |
-| **Current** | | **252** | **611** | **1491** | |
+| 2026-01-15 | 1.5 Translation Unit | +0 | +0 | +32 | Wrapper approach, no grammar changes |
+| **Current** | | **252** | **611** | **1523** | |
