@@ -426,7 +426,13 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P244 */ { ARBOR2_NT_FACTOR, 10, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' INT '[' expr ']' '[' expr ']' ')'" },
     /* P245 */ { ARBOR2_NT_FACTOR, 10, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' CHAR '[' expr ']' '[' expr ']' ')'" },
     /* P246 */ { ARBOR2_NT_FACTOR, 10, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' VOID '[' expr ']' '[' expr ']' ')'" },
-    /* P247 */ { ARBOR2_NT_FACTOR, 10, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ID '[' expr ']' '[' expr ']' ')'" }
+    /* P247 */ { ARBOR2_NT_FACTOR, 10, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ID '[' expr ']' '[' expr ']' ')'" },
+
+    /* sizeof(type*[N]) - 8 tokens (pointer array) */
+    /* P248 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' INT '*' '[' expr ']' ')'" },
+    /* P249 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' CHAR '*' '[' expr ']' ')'" },
+    /* P250 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' VOID '*' '[' expr ']' ')'" },
+    /* P251 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' ID '*' '[' expr ']' ')'" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -6447,22 +6453,25 @@ hic_manens constans Arbor2TabulaActio STATUS_394_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 164, FALSUM }
 };
 
-/* State 395: after 'sizeof ( int *' - expects ')' or '*' */
+/* State 395: after 'sizeof ( int *' - expects ')' or '*' or '[' */
 hic_manens constans Arbor2TabulaActio STATUS_395_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 398, FALSUM },  /* -> sizeof(int*) */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 401, FALSUM }   /* -> sizeof(int**) */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 401, FALSUM },  /* -> sizeof(int**) */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 595, FALSUM }   /* -> sizeof(int*[N]) */
 };
 
-/* State 396: after 'sizeof ( char *' - expects ')' or '*' */
+/* State 396: after 'sizeof ( char *' - expects ')' or '*' or '[' */
 hic_manens constans Arbor2TabulaActio STATUS_396_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 399, FALSUM },
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 402, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 402, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 599, FALSUM }   /* -> sizeof(char*[N]) */
 };
 
-/* State 397: after 'sizeof ( void *' - expects ')' or '*' */
+/* State 397: after 'sizeof ( void *' - expects ')' or '*' or '[' */
 hic_manens constans Arbor2TabulaActio STATUS_397_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 400, FALSUM },
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 403, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 403, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 603, FALSUM }   /* -> sizeof(void*[N]) */
 };
 
 /* State 398: after 'sizeof ( int * )' - reduce P166 */
@@ -6973,10 +6982,11 @@ hic_manens constans Arbor2TabulaActio STATUS_417_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 165, FALSUM }
 };
 
-/* State 418: after 'sizeof ( ID *' - expects ')' or '*' */
+/* State 418: after 'sizeof ( ID *' - expects ')' or '*' or '[' */
 hic_manens constans Arbor2TabulaActio STATUS_418_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 419, FALSUM },  /* -> sizeof(ID*) */
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 420, FALSUM }   /* -> sizeof(ID**) */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 420, FALSUM },  /* -> sizeof(ID**) */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 607, FALSUM }   /* -> sizeof(ID*[N]) */
 };
 
 /* State 419: after 'sizeof ( ID * )' - reduce P169 */
@@ -9580,6 +9590,286 @@ hic_manens constans Arbor2TabulaActio STATUS_594_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Phase 1.1e: sizeof(type*[N]) - pointer array sizeof
+ * ================================================== */
+
+/* State 595: after 'sizeof ( int * [' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_595_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 596: after 'sizeof ( int * [ expr' - expects ']' */
+hic_manens constans Arbor2TabulaActio STATUS_596_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 597, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM }
+};
+
+/* State 597: after 'sizeof ( int * [ expr ]' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_597_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 598, FALSUM }
+};
+
+/* State 598: after 'sizeof ( int * [ expr ] )' - reduce P248 */
+hic_manens constans Arbor2TabulaActio STATUS_598_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 248, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 248, FALSUM }
+};
+
+/* State 599: after 'sizeof ( char * [' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_599_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 600: after 'sizeof ( char * [ expr' - expects ']' */
+hic_manens constans Arbor2TabulaActio STATUS_600_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 601, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM }
+};
+
+/* State 601: after 'sizeof ( char * [ expr ]' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_601_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 602, FALSUM }
+};
+
+/* State 602: after 'sizeof ( char * [ expr ] )' - reduce P249 */
+hic_manens constans Arbor2TabulaActio STATUS_602_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 249, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 249, FALSUM }
+};
+
+/* State 603: after 'sizeof ( void * [' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_603_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 604: after 'sizeof ( void * [ expr' - expects ']' */
+hic_manens constans Arbor2TabulaActio STATUS_604_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 605, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM }
+};
+
+/* State 605: after 'sizeof ( void * [ expr ]' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_605_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 606, FALSUM }
+};
+
+/* State 606: after 'sizeof ( void * [ expr ] )' - reduce P250 */
+hic_manens constans Arbor2TabulaActio STATUS_606_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 250, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 250, FALSUM }
+};
+
+/* State 607: after 'sizeof ( ID * [' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_607_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+};
+
+/* State 608: after 'sizeof ( ID * [ expr' - expects ']' */
+hic_manens constans Arbor2TabulaActio STATUS_608_ACTIONES[] = {
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 609, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,   9, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_SHIFT,  10, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_SHIFT,  10, FALSUM }
+};
+
+/* State 609: after 'sizeof ( ID * [ expr ]' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_609_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 610, FALSUM }
+};
+
+/* State 610: after 'sizeof ( ID * [ expr ] )' - reduce P251 */
+hic_manens constans Arbor2TabulaActio STATUS_610_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 251, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE, 251, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -10250,7 +10540,28 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(591, "after 'sizeof ( ID [ expr ] [' - expects expression"),
     STATUS_INFO(592, "after 'sizeof ( ID [ expr ] [ expr' - expects ']'"),
     STATUS_INFO(593, "after 'sizeof ( ID [ expr ] [ expr ]' - expects ')'"),
-    STATUS_INFO(594, "reduce P247 (sizeof(ID[N][M]))")
+    STATUS_INFO(594, "reduce P247 (sizeof(ID[N][M]))"),
+    /* Phase 1.1e: sizeof(type*[N]) - pointer array sizeof */
+    /* sizeof(int*[N]) */
+    STATUS_INFO(595, "after 'sizeof ( int * [' - expects expression"),
+    STATUS_INFO(596, "after 'sizeof ( int * [ expr' - expects ']'"),
+    STATUS_INFO(597, "after 'sizeof ( int * [ expr ]' - expects ')'"),
+    STATUS_INFO(598, "reduce P248 (sizeof(int*[N]))"),
+    /* sizeof(char*[N]) */
+    STATUS_INFO(599, "after 'sizeof ( char * [' - expects expression"),
+    STATUS_INFO(600, "after 'sizeof ( char * [ expr' - expects ']'"),
+    STATUS_INFO(601, "after 'sizeof ( char * [ expr ]' - expects ')'"),
+    STATUS_INFO(602, "reduce P249 (sizeof(char*[N]))"),
+    /* sizeof(void*[N]) */
+    STATUS_INFO(603, "after 'sizeof ( void * [' - expects expression"),
+    STATUS_INFO(604, "after 'sizeof ( void * [ expr' - expects ']'"),
+    STATUS_INFO(605, "after 'sizeof ( void * [ expr ]' - expects ')'"),
+    STATUS_INFO(606, "reduce P250 (sizeof(void*[N]))"),
+    /* sizeof(ID*[N]) */
+    STATUS_INFO(607, "after 'sizeof ( ID * [' - expects expression"),
+    STATUS_INFO(608, "after 'sizeof ( ID * [ expr' - expects ']'"),
+    STATUS_INFO(609, "after 'sizeof ( ID * [ expr ]' - expects ')'"),
+    STATUS_INFO(610, "reduce P251 (sizeof(ID*[N]))")
 };
 
 /* ==================================================
@@ -11895,6 +12206,42 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_591_GOTO[] = {
 };
 
 /* ==================================================
+ * Phase 1.1e: sizeof(type*[N]) GOTO tables
+ * ================================================== */
+
+/* State 595: after 'sizeof ( int * [' - pointer array dimension expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_595_GOTO[] = {
+    { INT_NT_EXPR,       596 },  /* Expression completes to state 596 */
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 599: after 'sizeof ( char * [' - pointer array dimension expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_599_GOTO[] = {
+    { INT_NT_EXPR,       600 },  /* Expression completes to state 600 */
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 603: after 'sizeof ( void * [' - pointer array dimension expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_603_GOTO[] = {
+    { INT_NT_EXPR,       604 },  /* Expression completes to state 604 */
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* State 607: after 'sizeof ( ID * [' - pointer array dimension expression */
+hic_manens constans Arbor2StatusGotoEntry STATUS_607_GOTO[] = {
+    { INT_NT_EXPR,       608 },  /* Expression completes to state 608 */
+    { INT_NT_TERM,       2 },
+    { INT_NT_FACTOR,     3 },
+    { INT_NT_TRANSLATIO, 264 }
+};
+
+/* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
 
@@ -12568,7 +12915,24 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO(591),  /* 591: after 'sizeof ( ID [ expr ] [' - expression GOTOs */
     STATUS_GOTO_NIL,   /* 592: after 'sizeof ( ID [ expr ] [ expr' */
     STATUS_GOTO_NIL,   /* 593: after 'sizeof ( ID [ expr ] [ expr ]' */
-    STATUS_GOTO_NIL    /* 594: reduce P247 (sizeof(ID[N][M])) */
+    STATUS_GOTO_NIL,   /* 594: reduce P247 (sizeof(ID[N][M])) */
+    /* Phase 1.1e: sizeof(type*[N]) - pointer array sizeof */
+    STATUS_GOTO(595),  /* 595: after 'sizeof ( int * [' - expression GOTOs */
+    STATUS_GOTO_NIL,   /* 596: after 'sizeof ( int * [ expr' */
+    STATUS_GOTO_NIL,   /* 597: after 'sizeof ( int * [ expr ]' */
+    STATUS_GOTO_NIL,   /* 598: reduce P248 (sizeof(int*[N])) */
+    STATUS_GOTO(599),  /* 599: after 'sizeof ( char * [' - expression GOTOs */
+    STATUS_GOTO_NIL,   /* 600: after 'sizeof ( char * [ expr' */
+    STATUS_GOTO_NIL,   /* 601: after 'sizeof ( char * [ expr ]' */
+    STATUS_GOTO_NIL,   /* 602: reduce P249 (sizeof(char*[N])) */
+    STATUS_GOTO(603),  /* 603: after 'sizeof ( void * [' - expression GOTOs */
+    STATUS_GOTO_NIL,   /* 604: after 'sizeof ( void * [ expr' */
+    STATUS_GOTO_NIL,   /* 605: after 'sizeof ( void * [ expr ]' */
+    STATUS_GOTO_NIL,   /* 606: reduce P250 (sizeof(void*[N])) */
+    STATUS_GOTO(607),  /* 607: after 'sizeof ( ID * [' - expression GOTOs */
+    STATUS_GOTO_NIL,   /* 608: after 'sizeof ( ID * [ expr' */
+    STATUS_GOTO_NIL,   /* 609: after 'sizeof ( ID * [ expr ]' */
+    STATUS_GOTO_NIL    /* 610: reduce P251 (sizeof(ID*[N])) */
 };
 
 

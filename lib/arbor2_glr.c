@@ -898,6 +898,42 @@ _processare_unam_actionem(
 
                             valor_novus = nodus_sizeof;
                         }
+                        alioquin si (num_pop == VIII && actio->valor >= 248 && actio->valor <= 251)
+                        {
+                            /* P248-P251: sizeof(type*[N]) - 8 symbols (pointer array)
+                             * sizeof ( type * [ expr ] )
+                             *    7    6   5   4  3   2  1  0
+                             * valori[2] = dimension expression
+                             * lexemata[5] = type token
+                             * lexemata[7] = sizeof token */
+                            Arbor2Nodus* nodus_sizeof;
+                            Arbor2Nodus* nodus_typus;
+                            Arbor2Nodus** dim_slot;
+
+                            /* Creare nodus typus cum uno pointer et una dimensione */
+                            nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
+                            nodus_typus->lexema = lexemata[V];  /* type token */
+                            nodus_typus->datum.declarator.num_stellae = I;  /* one pointer */
+                            nodus_typus->datum.declarator.titulus.datum = NIHIL;
+                            nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                            nodus_typus->datum.declarator.latitudo_biti = NIHIL;
+                            nodus_typus->datum.declarator.pointer_quals = ZEPHYRUM;
+
+                            /* Creare dimensiones array et addere dimensionem */
+                            nodus_typus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            dim_slot = xar_addere(nodus_typus->datum.declarator.dimensiones);
+                            *dim_slot = valori[II];  /* dimension at valori[2] */
+
+                            /* Creare nodus sizeof */
+                            nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
+                            nodus_sizeof->lexema = lexemata[VII];  /* sizeof token */
+                            nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
+                            nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
+
+                            valor_novus = nodus_sizeof;
+                        }
                         alioquin si (num_pop >= IV && num_pop <= VII)
                         {
                             /* sizeof(type) with various forms */

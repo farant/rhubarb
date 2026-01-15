@@ -8940,6 +8940,112 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: sizeof(type*[N]) - pointer array types
+     * Phase 1.1e
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int*[10]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int*[10])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                Arbor2Nodus* typus = res.radix->datum.sizeof_expr.operandum;
+                CREDO_AEQUALIS_I32((i32)typus->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_AEQUALIS_I32((i32)typus->datum.declarator.num_stellae, (i32)I);  /* one pointer */
+                CREDO_NON_NIHIL(typus->datum.declarator.dimensiones);
+                si (typus->datum.declarator.dimensiones != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32(xar_numerus(typus->datum.declarator.dimensiones), I);  /* one dimension */
+                }
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(char*[256]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char*[256])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(void*[5]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void*[5])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(MyType*[20]) with ID ---\n");
+
+        /* Note: sizeof(ID*[N]) doesn't work because the ID path in state 388
+         * is disabled to avoid ambiguity. The parser can't distinguish between
+         * sizeof(type) and sizeof(expr) for identifier types without type info.
+         * This test verifies the parser fails gracefully (known limitation). */
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(MyType*[20])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        /* Expected to fail - ID path disabled */
+        CREDO_AEQUALIS_I32((i32)res.successus, FALSUM);
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans x = sizeof(int*[10]) in assignment ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "x = sizeof(int*[10])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            /* RHS should be sizeof */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Storage class specifiers
      * ======================================================== */
 
