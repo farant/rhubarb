@@ -1508,3 +1508,78 @@ Added support for `void *p` pointer declarations:
 - Total states: 666 (+1)
 - Total productions: 256 (unchanged)
 - Total tests: 1581 (+3)
+
+## 2026-01-15: Pointer Casts with Type Modifiers
+
+### Goal
+
+Enable parsing pointer casts with type modifier combinations:
+```c
+(unsigned int *)p
+(signed char *)p
+(long int *)p
+(unsigned *)p        /* implicit int */
+(unsigned int **)p   /* double pointers */
+(long **)p           /* etc. */
+```
+
+### Root Cause
+
+States 709-718 (after `( type_modifier type`) only accepted `)` for value casts like `(unsigned int)x`.
+For pointer casts, needed to also accept `*` to continue to pointer states.
+
+Similarly, states 701, 703-708 (after `( modifier`) needed `*` for implicit int pointer casts.
+
+### Implementation
+
+**34 new productions (P290-P323):**
+- P290-P299: Explicit type single pointer casts (`(unsigned int *)`, `(signed char *)`, etc.)
+- P300-P309: Explicit type double pointer casts (`(unsigned int **)`, etc.)
+- P310-P316: Implicit int single pointer casts (`(unsigned *)`, `(long *)`, etc.)
+- P317-P323: Implicit int double pointer casts (`(unsigned **)`, etc.)
+
+**102 new states (753-854):**
+- 753-762: after `( type *` - accepts `)` or `*`
+- 763-772: after `( type * )` - expects factor
+- 773-782: after `( type **` - accepts `)` only
+- 783-792: after `( type ** )` - expects factor
+- 793-802: reduce single pointer explicit (P290-P299)
+- 803-812: reduce double pointer explicit (P300-P309)
+- 813-819: after `( modifier *` - accepts `)` or `*`
+- 820-826: after `( modifier **` - accepts `)` only
+- 827-833: after `( modifier * )` - expects factor
+- 834-840: after `( modifier ** )` - expects factor
+- 841-847: reduce single pointer implicit (P310-P316)
+- 848-854: reduce double pointer implicit (P317-P323)
+
+**State modifications:**
+- States 709-718: Added `*` shift to states 753-762
+- States 701, 703-708: Added `*` shift to states 813-819
+
+**Used macros for cleaner code:**
+- `EXPECT_FACTOR_ACTIONS` - all tokens that can start a factor
+- `CAST_PTR_REDUCE_FOLLOWS(prod)` - reduction follow set for casts
+
+### Parse Flow for `(unsigned int *)p`
+
+```
+State 0 --(--> 6 --UNSIGNED--> 701 --INT--> 709 --*--> 753 --)--> 763 --ID--> 4
+Reduce P5 (factor -> ID)
+GOTO(763, FACTOR) = 793
+Reduce P290 (factor -> '(' UNSIGNED INT '*' ')' factor)
+GOTO(0, FACTOR) = 3
+... continues reducing up the precedence chain ...
+```
+
+### Tests Added
+
+23 new pointer cast tests covering:
+- All 10 explicit type single pointer casts
+- 3 explicit type double pointer casts
+- All 7 implicit int single pointer casts
+- 3 implicit int double pointer casts
+
+### Final Statistics
+- Total states: 855 (+102)
+- Total productions: 324 (+34)
+- Total tests: 1695 (+46)

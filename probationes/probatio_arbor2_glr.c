@@ -9600,6 +9600,386 @@ s32 principale(vacuum)
         }
     }
 
+    /* ========================================================
+     * PROBARE: Pointer casts with type modifiers
+     * ======================================================== */
+
+    /* Explicit type single pointer casts */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (signed int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(signed int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned char *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned char *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (signed char *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(signed char *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (long int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(long int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (short int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(short int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned long int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned short int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned short int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (signed long int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(signed long int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (signed short int *)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(signed short int *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    /* Explicit type double pointer casts */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned int **)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned int **)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (long int **)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(long int **)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned char **)p ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned char **)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    /* Implicit int single pointer casts */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (long *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(long *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (short *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(short *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned long *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned short *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned short *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (signed long *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(signed long *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (signed short *)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(signed short *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    /* Implicit int double pointer casts */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned **)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned **)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (long **)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(long **)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (unsigned long **)p implicit int ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "(unsigned long **)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Storage class specifiers

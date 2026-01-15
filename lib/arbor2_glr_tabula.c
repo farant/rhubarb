@@ -480,7 +480,49 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P286 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG ')' factor" },
     /* P287 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT ')' factor" },
     /* P288 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG ')' factor" },
-    /* P289 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT ')' factor" }
+    /* P289 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT ')' factor" },
+
+    /* Pointer casts with explicit type modifiers - P290-P299 (single pointer) */
+    /* P290 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED INT '*' ')' factor" },
+    /* P291 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED INT '*' ')' factor" },
+    /* P292 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED CHAR '*' ')' factor" },
+    /* P293 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED CHAR '*' ')' factor" },
+    /* P294 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG INT '*' ')' factor" },
+    /* P295 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SHORT INT '*' ')' factor" },
+    /* P296 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG INT '*' ')' factor" },
+    /* P297 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT INT '*' ')' factor" },
+    /* P298 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG INT '*' ')' factor" },
+    /* P299 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT INT '*' ')' factor" },
+
+    /* Pointer casts with explicit type modifiers - P300-P309 (double pointer) */
+    /* P300 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED INT '*' '*' ')' factor" },
+    /* P301 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED INT '*' '*' ')' factor" },
+    /* P302 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED CHAR '*' '*' ')' factor" },
+    /* P303 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED CHAR '*' '*' ')' factor" },
+    /* P304 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG INT '*' '*' ')' factor" },
+    /* P305 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SHORT INT '*' '*' ')' factor" },
+    /* P306 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG INT '*' '*' ')' factor" },
+    /* P307 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT INT '*' '*' ')' factor" },
+    /* P308 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG INT '*' '*' ')' factor" },
+    /* P309 */ { ARBOR2_NT_FACTOR, 8, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT INT '*' '*' ')' factor" },
+
+    /* Pointer casts with implicit int - P310-P316 (single pointer) */
+    /* P310 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED '*' ')' factor" },
+    /* P311 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG '*' ')' factor" },
+    /* P312 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SHORT '*' ')' factor" },
+    /* P313 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG '*' ')' factor" },
+    /* P314 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT '*' ')' factor" },
+    /* P315 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG '*' ')' factor" },
+    /* P316 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT '*' ')' factor" },
+
+    /* Pointer casts with implicit int - P317-P323 (double pointer) */
+    /* P317 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED '*' '*' ')' factor" },
+    /* P318 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG '*' '*' ')' factor" },
+    /* P319 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SHORT '*' '*' ')' factor" },
+    /* P320 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG '*' '*' ')' factor" },
+    /* P321 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT '*' '*' ')' factor" },
+    /* P322 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG '*' '*' ')' factor" },
+    /* P323 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT '*' '*' ')' factor" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -10755,7 +10797,8 @@ hic_manens constans Arbor2TabulaActio STATUS_701_ACTIONES[] = {
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 711, FALSUM },
     { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 705, FALSUM },
     { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 706, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 727, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 727, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 813, FALSUM }   /* (unsigned *) */
 };
 
 /* State 702: after '( signed' */
@@ -10769,89 +10812,105 @@ hic_manens constans Arbor2TabulaActio STATUS_702_ACTIONES[] = {
 /* State 703: after '( long' */
 hic_manens constans Arbor2TabulaActio STATUS_703_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 713, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 728, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 728, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 814, FALSUM }   /* (long *) */
 };
 
 /* State 704: after '( short' */
 hic_manens constans Arbor2TabulaActio STATUS_704_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 714, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 729, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 729, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 815, FALSUM }   /* (short *) */
 };
 
 /* State 705: after '( unsigned long' */
 hic_manens constans Arbor2TabulaActio STATUS_705_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 715, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 730, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 730, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 816, FALSUM }   /* (unsigned long *) */
 };
 
 /* State 706: after '( unsigned short' */
 hic_manens constans Arbor2TabulaActio STATUS_706_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 716, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 731, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 731, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 817, FALSUM }   /* (unsigned short *) */
 };
 
 /* State 707: after '( signed long' */
 hic_manens constans Arbor2TabulaActio STATUS_707_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 717, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 732, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 732, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 818, FALSUM }   /* (signed long *) */
 };
 
 /* State 708: after '( signed short' */
 hic_manens constans Arbor2TabulaActio STATUS_708_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 718, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 733, FALSUM }  /* implicit int */
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 733, FALSUM },  /* implicit int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 819, FALSUM }   /* (signed short *) */
 };
 
 /* States 709-718: after complete type, expects ')' */
 
 /* State 709: after '( unsigned int' */
 hic_manens constans Arbor2TabulaActio STATUS_709_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 719, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 719, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 753, FALSUM }
 };
 
 /* State 710: after '( signed int' */
 hic_manens constans Arbor2TabulaActio STATUS_710_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 720, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 720, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 754, FALSUM }
 };
 
 /* State 711: after '( unsigned char' */
 hic_manens constans Arbor2TabulaActio STATUS_711_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 721, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 721, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 755, FALSUM }
 };
 
 /* State 712: after '( signed char' */
 hic_manens constans Arbor2TabulaActio STATUS_712_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 722, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 722, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 756, FALSUM }
 };
 
 /* State 713: after '( long int' */
 hic_manens constans Arbor2TabulaActio STATUS_713_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 723, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 723, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 757, FALSUM }
 };
 
 /* State 714: after '( short int' */
 hic_manens constans Arbor2TabulaActio STATUS_714_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 724, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 724, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 758, FALSUM }
 };
 
 /* State 715: after '( unsigned long int' */
 hic_manens constans Arbor2TabulaActio STATUS_715_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 725, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 725, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 759, FALSUM }
 };
 
 /* State 716: after '( unsigned short int' */
 hic_manens constans Arbor2TabulaActio STATUS_716_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 726, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 726, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 760, FALSUM }
 };
 
 /* State 717: after '( signed long int' */
 hic_manens constans Arbor2TabulaActio STATUS_717_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 734, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 734, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 761, FALSUM }
 };
 
 /* State 718: after '( signed short int' */
 hic_manens constans Arbor2TabulaActio STATUS_718_ACTIONES[] = {
-    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 735, FALSUM }
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 735, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 762, FALSUM }
 };
 
 /* States 719-735: after ')', expects factor (like State 340) */
@@ -11245,6 +11304,462 @@ hic_manens constans Arbor2TabulaActio STATUS_752_ACTIONES[] = {
 };
 
 #undef CAST_REDUCE_FOLLOWS
+
+/* ==================================================
+ * Pointer cast type modifier states (753-854)
+ * ================================================== */
+
+/* --- Explicit type single pointer states (753-762) --- */
+/* After '( type *' - accepts ')' or '*' */
+
+/* State 753: after '( unsigned int *' */
+hic_manens constans Arbor2TabulaActio STATUS_753_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 763, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 773, FALSUM }
+};
+
+/* State 754: after '( signed int *' */
+hic_manens constans Arbor2TabulaActio STATUS_754_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 764, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 774, FALSUM }
+};
+
+/* State 755: after '( unsigned char *' */
+hic_manens constans Arbor2TabulaActio STATUS_755_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 765, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 775, FALSUM }
+};
+
+/* State 756: after '( signed char *' */
+hic_manens constans Arbor2TabulaActio STATUS_756_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 766, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 776, FALSUM }
+};
+
+/* State 757: after '( long int *' */
+hic_manens constans Arbor2TabulaActio STATUS_757_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 767, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 777, FALSUM }
+};
+
+/* State 758: after '( short int *' */
+hic_manens constans Arbor2TabulaActio STATUS_758_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 768, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 778, FALSUM }
+};
+
+/* State 759: after '( unsigned long int *' */
+hic_manens constans Arbor2TabulaActio STATUS_759_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 769, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 779, FALSUM }
+};
+
+/* State 760: after '( unsigned short int *' */
+hic_manens constans Arbor2TabulaActio STATUS_760_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 770, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 780, FALSUM }
+};
+
+/* State 761: after '( signed long int *' */
+hic_manens constans Arbor2TabulaActio STATUS_761_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 771, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 781, FALSUM }
+};
+
+/* State 762: after '( signed short int *' */
+hic_manens constans Arbor2TabulaActio STATUS_762_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 772, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 782, FALSUM }
+};
+
+/* --- Explicit type single pointer after ')' (763-772) --- */
+/* Expects factor - same pattern as STATE_340 */
+
+#define EXPECT_FACTOR_ACTIONS \
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM }, \
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM }, \
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM }, \
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM }, \
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM }, \
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM }, \
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM }, \
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM }, \
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM }, \
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM }, \
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM }, \
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM }, \
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
+
+/* State 763: after '( unsigned int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_763_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 764: after '( signed int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_764_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 765: after '( unsigned char * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_765_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 766: after '( signed char * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_766_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 767: after '( long int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_767_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 768: after '( short int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_768_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 769: after '( unsigned long int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_769_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 770: after '( unsigned short int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_770_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 771: after '( signed long int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_771_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 772: after '( signed short int * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_772_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* --- Explicit type double pointer states (773-782) --- */
+/* After '( type * *' - accepts ')' only */
+
+/* State 773: after '( unsigned int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_773_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 783, FALSUM }
+};
+
+/* State 774: after '( signed int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_774_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 784, FALSUM }
+};
+
+/* State 775: after '( unsigned char * *' */
+hic_manens constans Arbor2TabulaActio STATUS_775_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 785, FALSUM }
+};
+
+/* State 776: after '( signed char * *' */
+hic_manens constans Arbor2TabulaActio STATUS_776_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 786, FALSUM }
+};
+
+/* State 777: after '( long int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_777_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 787, FALSUM }
+};
+
+/* State 778: after '( short int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_778_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 788, FALSUM }
+};
+
+/* State 779: after '( unsigned long int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_779_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 789, FALSUM }
+};
+
+/* State 780: after '( unsigned short int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_780_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 790, FALSUM }
+};
+
+/* State 781: after '( signed long int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_781_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 791, FALSUM }
+};
+
+/* State 782: after '( signed short int * *' */
+hic_manens constans Arbor2TabulaActio STATUS_782_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 792, FALSUM }
+};
+
+/* --- Explicit type double pointer after ')' (783-792) --- */
+/* Expects factor */
+
+/* State 783: after '( unsigned int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_783_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 784: after '( signed int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_784_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 785: after '( unsigned char * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_785_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 786: after '( signed char * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_786_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 787: after '( long int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_787_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 788: after '( short int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_788_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 789: after '( unsigned long int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_789_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 790: after '( unsigned short int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_790_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 791: after '( signed long int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_791_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 792: after '( signed short int * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_792_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* --- Explicit type single pointer reduction states (793-802) --- */
+
+#define CAST_PTR_REDUCE_FOLLOWS(prod) \
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, prod, FALSUM }, \
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, prod, FALSUM }
+
+/* State 793: reduce P290 - (unsigned int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_793_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(290) };
+
+/* State 794: reduce P291 - (signed int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_794_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(291) };
+
+/* State 795: reduce P292 - (unsigned char *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_795_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(292) };
+
+/* State 796: reduce P293 - (signed char *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_796_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(293) };
+
+/* State 797: reduce P294 - (long int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_797_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(294) };
+
+/* State 798: reduce P295 - (short int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_798_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(295) };
+
+/* State 799: reduce P296 - (unsigned long int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_799_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(296) };
+
+/* State 800: reduce P297 - (unsigned short int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_800_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(297) };
+
+/* State 801: reduce P298 - (signed long int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_801_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(298) };
+
+/* State 802: reduce P299 - (signed short int *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_802_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(299) };
+
+/* --- Explicit type double pointer reduction states (803-812) --- */
+
+/* State 803: reduce P300 - (unsigned int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_803_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(300) };
+
+/* State 804: reduce P301 - (signed int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_804_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(301) };
+
+/* State 805: reduce P302 - (unsigned char **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_805_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(302) };
+
+/* State 806: reduce P303 - (signed char **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_806_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(303) };
+
+/* State 807: reduce P304 - (long int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_807_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(304) };
+
+/* State 808: reduce P305 - (short int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_808_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(305) };
+
+/* State 809: reduce P306 - (unsigned long int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_809_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(306) };
+
+/* State 810: reduce P307 - (unsigned short int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_810_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(307) };
+
+/* State 811: reduce P308 - (signed long int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_811_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(308) };
+
+/* State 812: reduce P309 - (signed short int **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_812_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(309) };
+
+/* --- Implicit int single pointer states (813-819) --- */
+/* After '( modifier *' - accepts ')' or '*' */
+
+/* State 813: after '( unsigned *' */
+hic_manens constans Arbor2TabulaActio STATUS_813_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 827, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 820, FALSUM }
+};
+
+/* State 814: after '( long *' */
+hic_manens constans Arbor2TabulaActio STATUS_814_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 828, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 821, FALSUM }
+};
+
+/* State 815: after '( short *' */
+hic_manens constans Arbor2TabulaActio STATUS_815_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 829, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 822, FALSUM }
+};
+
+/* State 816: after '( unsigned long *' */
+hic_manens constans Arbor2TabulaActio STATUS_816_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 830, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 823, FALSUM }
+};
+
+/* State 817: after '( unsigned short *' */
+hic_manens constans Arbor2TabulaActio STATUS_817_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 831, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 824, FALSUM }
+};
+
+/* State 818: after '( signed long *' */
+hic_manens constans Arbor2TabulaActio STATUS_818_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 832, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 825, FALSUM }
+};
+
+/* State 819: after '( signed short *' */
+hic_manens constans Arbor2TabulaActio STATUS_819_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 833, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 826, FALSUM }
+};
+
+/* --- Implicit int double pointer states (820-826) --- */
+/* After '( modifier * *' - accepts ')' only */
+
+/* State 820: after '( unsigned * *' */
+hic_manens constans Arbor2TabulaActio STATUS_820_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 834, FALSUM }
+};
+
+/* State 821: after '( long * *' */
+hic_manens constans Arbor2TabulaActio STATUS_821_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 835, FALSUM }
+};
+
+/* State 822: after '( short * *' */
+hic_manens constans Arbor2TabulaActio STATUS_822_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 836, FALSUM }
+};
+
+/* State 823: after '( unsigned long * *' */
+hic_manens constans Arbor2TabulaActio STATUS_823_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 837, FALSUM }
+};
+
+/* State 824: after '( unsigned short * *' */
+hic_manens constans Arbor2TabulaActio STATUS_824_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 838, FALSUM }
+};
+
+/* State 825: after '( signed long * *' */
+hic_manens constans Arbor2TabulaActio STATUS_825_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 839, FALSUM }
+};
+
+/* State 826: after '( signed short * *' */
+hic_manens constans Arbor2TabulaActio STATUS_826_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 840, FALSUM }
+};
+
+/* --- Implicit int single pointer after ')' (827-833) --- */
+/* Expects factor */
+
+/* State 827: after '( unsigned * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_827_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 828: after '( long * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_828_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 829: after '( short * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_829_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 830: after '( unsigned long * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_830_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 831: after '( unsigned short * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_831_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 832: after '( signed long * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_832_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 833: after '( signed short * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_833_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* --- Implicit int double pointer after ')' (834-840) --- */
+/* Expects factor */
+
+/* State 834: after '( unsigned * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_834_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 835: after '( long * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_835_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 836: after '( short * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_836_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 837: after '( unsigned long * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_837_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 838: after '( unsigned short * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_838_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 839: after '( signed long * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_839_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 840: after '( signed short * * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_840_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* --- Implicit int single pointer reduction states (841-847) --- */
+
+/* State 841: reduce P310 - (unsigned *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_841_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(310) };
+
+/* State 842: reduce P311 - (long *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_842_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(311) };
+
+/* State 843: reduce P312 - (short *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_843_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(312) };
+
+/* State 844: reduce P313 - (unsigned long *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_844_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(313) };
+
+/* State 845: reduce P314 - (unsigned short *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_845_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(314) };
+
+/* State 846: reduce P315 - (signed long *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_846_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(315) };
+
+/* State 847: reduce P316 - (signed short *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_847_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(316) };
+
+/* --- Implicit int double pointer reduction states (848-854) --- */
+
+/* State 848: reduce P317 - (unsigned **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_848_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(317) };
+
+/* State 849: reduce P318 - (long **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_849_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(318) };
+
+/* State 850: reduce P319 - (short **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_850_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(319) };
+
+/* State 851: reduce P320 - (unsigned long **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_851_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(320) };
+
+/* State 852: reduce P321 - (unsigned short **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_852_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(321) };
+
+/* State 853: reduce P322 - (signed long **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_853_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(322) };
+
+/* State 854: reduce P323 - (signed short **) factor */
+hic_manens constans Arbor2TabulaActio STATUS_854_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(323) };
+
+#undef EXPECT_FACTOR_ACTIONS
+#undef CAST_PTR_REDUCE_FOLLOWS
 
 /* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
@@ -12108,7 +12623,137 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(749, "reduce P286: (unsigned long) factor"),
     STATUS_INFO(750, "reduce P287: (unsigned short) factor"),
     STATUS_INFO(751, "reduce P288: (signed long) factor"),
-    STATUS_INFO(752, "reduce P289: (signed short) factor")
+    STATUS_INFO(752, "reduce P289: (signed short) factor"),
+
+    /* ==================================================
+     * Pointer casts with type modifiers - states 753-854
+     * ================================================== */
+
+    /* States 753-762: after '( type *' - expects ) or * */
+    STATUS_INFO(753, "after '( unsigned int *' - expects ) or *"),
+    STATUS_INFO(754, "after '( signed int *' - expects ) or *"),
+    STATUS_INFO(755, "after '( unsigned char *' - expects ) or *"),
+    STATUS_INFO(756, "after '( signed char *' - expects ) or *"),
+    STATUS_INFO(757, "after '( long int *' - expects ) or *"),
+    STATUS_INFO(758, "after '( short int *' - expects ) or *"),
+    STATUS_INFO(759, "after '( unsigned long int *' - expects ) or *"),
+    STATUS_INFO(760, "after '( unsigned short int *' - expects ) or *"),
+    STATUS_INFO(761, "after '( signed long int *' - expects ) or *"),
+    STATUS_INFO(762, "after '( signed short int *' - expects ) or *"),
+
+    /* States 763-772: after '( type * )' - expects factor */
+    STATUS_INFO(763, "after '( unsigned int * )' - expects factor"),
+    STATUS_INFO(764, "after '( signed int * )' - expects factor"),
+    STATUS_INFO(765, "after '( unsigned char * )' - expects factor"),
+    STATUS_INFO(766, "after '( signed char * )' - expects factor"),
+    STATUS_INFO(767, "after '( long int * )' - expects factor"),
+    STATUS_INFO(768, "after '( short int * )' - expects factor"),
+    STATUS_INFO(769, "after '( unsigned long int * )' - expects factor"),
+    STATUS_INFO(770, "after '( unsigned short int * )' - expects factor"),
+    STATUS_INFO(771, "after '( signed long int * )' - expects factor"),
+    STATUS_INFO(772, "after '( signed short int * )' - expects factor"),
+
+    /* States 773-782: after '( type **' - expects ) */
+    STATUS_INFO(773, "after '( unsigned int **' - expects )"),
+    STATUS_INFO(774, "after '( signed int **' - expects )"),
+    STATUS_INFO(775, "after '( unsigned char **' - expects )"),
+    STATUS_INFO(776, "after '( signed char **' - expects )"),
+    STATUS_INFO(777, "after '( long int **' - expects )"),
+    STATUS_INFO(778, "after '( short int **' - expects )"),
+    STATUS_INFO(779, "after '( unsigned long int **' - expects )"),
+    STATUS_INFO(780, "after '( unsigned short int **' - expects )"),
+    STATUS_INFO(781, "after '( signed long int **' - expects )"),
+    STATUS_INFO(782, "after '( signed short int **' - expects )"),
+
+    /* States 783-792: after '( type ** )' - expects factor */
+    STATUS_INFO(783, "after '( unsigned int ** )' - expects factor"),
+    STATUS_INFO(784, "after '( signed int ** )' - expects factor"),
+    STATUS_INFO(785, "after '( unsigned char ** )' - expects factor"),
+    STATUS_INFO(786, "after '( signed char ** )' - expects factor"),
+    STATUS_INFO(787, "after '( long int ** )' - expects factor"),
+    STATUS_INFO(788, "after '( short int ** )' - expects factor"),
+    STATUS_INFO(789, "after '( unsigned long int ** )' - expects factor"),
+    STATUS_INFO(790, "after '( unsigned short int ** )' - expects factor"),
+    STATUS_INFO(791, "after '( signed long int ** )' - expects factor"),
+    STATUS_INFO(792, "after '( signed short int ** )' - expects factor"),
+
+    /* States 793-802: reduce single ptr explicit (P290-P299) */
+    STATUS_INFO(793, "reduce P290: (unsigned int *) factor"),
+    STATUS_INFO(794, "reduce P291: (signed int *) factor"),
+    STATUS_INFO(795, "reduce P292: (unsigned char *) factor"),
+    STATUS_INFO(796, "reduce P293: (signed char *) factor"),
+    STATUS_INFO(797, "reduce P294: (long int *) factor"),
+    STATUS_INFO(798, "reduce P295: (short int *) factor"),
+    STATUS_INFO(799, "reduce P296: (unsigned long int *) factor"),
+    STATUS_INFO(800, "reduce P297: (unsigned short int *) factor"),
+    STATUS_INFO(801, "reduce P298: (signed long int *) factor"),
+    STATUS_INFO(802, "reduce P299: (signed short int *) factor"),
+
+    /* States 803-812: reduce double ptr explicit (P300-P309) */
+    STATUS_INFO(803, "reduce P300: (unsigned int **) factor"),
+    STATUS_INFO(804, "reduce P301: (signed int **) factor"),
+    STATUS_INFO(805, "reduce P302: (unsigned char **) factor"),
+    STATUS_INFO(806, "reduce P303: (signed char **) factor"),
+    STATUS_INFO(807, "reduce P304: (long int **) factor"),
+    STATUS_INFO(808, "reduce P305: (short int **) factor"),
+    STATUS_INFO(809, "reduce P306: (unsigned long int **) factor"),
+    STATUS_INFO(810, "reduce P307: (unsigned short int **) factor"),
+    STATUS_INFO(811, "reduce P308: (signed long int **) factor"),
+    STATUS_INFO(812, "reduce P309: (signed short int **) factor"),
+
+    /* States 813-819: after '( modifier *' - expects ) or * */
+    STATUS_INFO(813, "after '( unsigned *' - expects ) or *"),
+    STATUS_INFO(814, "after '( long *' - expects ) or *"),
+    STATUS_INFO(815, "after '( short *' - expects ) or *"),
+    STATUS_INFO(816, "after '( unsigned long *' - expects ) or *"),
+    STATUS_INFO(817, "after '( unsigned short *' - expects ) or *"),
+    STATUS_INFO(818, "after '( signed long *' - expects ) or *"),
+    STATUS_INFO(819, "after '( signed short *' - expects ) or *"),
+
+    /* States 820-826: after '( modifier **' - expects ) */
+    STATUS_INFO(820, "after '( unsigned **' - expects )"),
+    STATUS_INFO(821, "after '( long **' - expects )"),
+    STATUS_INFO(822, "after '( short **' - expects )"),
+    STATUS_INFO(823, "after '( unsigned long **' - expects )"),
+    STATUS_INFO(824, "after '( unsigned short **' - expects )"),
+    STATUS_INFO(825, "after '( signed long **' - expects )"),
+    STATUS_INFO(826, "after '( signed short **' - expects )"),
+
+    /* States 827-833: after '( modifier * )' - expects factor */
+    STATUS_INFO(827, "after '( unsigned * )' - expects factor"),
+    STATUS_INFO(828, "after '( long * )' - expects factor"),
+    STATUS_INFO(829, "after '( short * )' - expects factor"),
+    STATUS_INFO(830, "after '( unsigned long * )' - expects factor"),
+    STATUS_INFO(831, "after '( unsigned short * )' - expects factor"),
+    STATUS_INFO(832, "after '( signed long * )' - expects factor"),
+    STATUS_INFO(833, "after '( signed short * )' - expects factor"),
+
+    /* States 834-840: after '( modifier ** )' - expects factor */
+    STATUS_INFO(834, "after '( unsigned ** )' - expects factor"),
+    STATUS_INFO(835, "after '( long ** )' - expects factor"),
+    STATUS_INFO(836, "after '( short ** )' - expects factor"),
+    STATUS_INFO(837, "after '( unsigned long ** )' - expects factor"),
+    STATUS_INFO(838, "after '( unsigned short ** )' - expects factor"),
+    STATUS_INFO(839, "after '( signed long ** )' - expects factor"),
+    STATUS_INFO(840, "after '( signed short ** )' - expects factor"),
+
+    /* States 841-847: reduce single ptr implicit (P310-P316) */
+    STATUS_INFO(841, "reduce P310: (unsigned *) factor"),
+    STATUS_INFO(842, "reduce P311: (long *) factor"),
+    STATUS_INFO(843, "reduce P312: (short *) factor"),
+    STATUS_INFO(844, "reduce P313: (unsigned long *) factor"),
+    STATUS_INFO(845, "reduce P314: (unsigned short *) factor"),
+    STATUS_INFO(846, "reduce P315: (signed long *) factor"),
+    STATUS_INFO(847, "reduce P316: (signed short *) factor"),
+
+    /* States 848-854: reduce double ptr implicit (P317-P323) */
+    STATUS_INFO(848, "reduce P317: (unsigned **) factor"),
+    STATUS_INFO(849, "reduce P318: (long **) factor"),
+    STATUS_INFO(850, "reduce P319: (short **) factor"),
+    STATUS_INFO(851, "reduce P320: (unsigned long **) factor"),
+    STATUS_INFO(852, "reduce P321: (unsigned short **) factor"),
+    STATUS_INFO(853, "reduce P322: (signed long **) factor"),
+    STATUS_INFO(854, "reduce P323: (signed short **) factor")
 };
 
 /* ==================================================
@@ -14164,6 +14809,184 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_735_GOTO[] = {
 };
 
 /* ==================================================
+ * Pointer cast type modifier GOTO entries (763-840)
+ * ================================================== */
+
+/* States 763-772: after '( type * )' - expects factor -> reduce state */
+hic_manens constans Arbor2StatusGotoEntry STATUS_763_GOTO[] = {
+    { INT_NT_FACTOR, 793 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_764_GOTO[] = {
+    { INT_NT_FACTOR, 794 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_765_GOTO[] = {
+    { INT_NT_FACTOR, 795 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_766_GOTO[] = {
+    { INT_NT_FACTOR, 796 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_767_GOTO[] = {
+    { INT_NT_FACTOR, 797 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_768_GOTO[] = {
+    { INT_NT_FACTOR, 798 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_769_GOTO[] = {
+    { INT_NT_FACTOR, 799 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_770_GOTO[] = {
+    { INT_NT_FACTOR, 800 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_771_GOTO[] = {
+    { INT_NT_FACTOR, 801 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_772_GOTO[] = {
+    { INT_NT_FACTOR, 802 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* States 783-792: after '( type ** )' - expects factor -> reduce state */
+hic_manens constans Arbor2StatusGotoEntry STATUS_783_GOTO[] = {
+    { INT_NT_FACTOR, 803 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_784_GOTO[] = {
+    { INT_NT_FACTOR, 804 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_785_GOTO[] = {
+    { INT_NT_FACTOR, 805 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_786_GOTO[] = {
+    { INT_NT_FACTOR, 806 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_787_GOTO[] = {
+    { INT_NT_FACTOR, 807 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_788_GOTO[] = {
+    { INT_NT_FACTOR, 808 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_789_GOTO[] = {
+    { INT_NT_FACTOR, 809 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_790_GOTO[] = {
+    { INT_NT_FACTOR, 810 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_791_GOTO[] = {
+    { INT_NT_FACTOR, 811 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_792_GOTO[] = {
+    { INT_NT_FACTOR, 812 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* States 827-833: after '( modifier * )' - expects factor -> reduce state */
+hic_manens constans Arbor2StatusGotoEntry STATUS_827_GOTO[] = {
+    { INT_NT_FACTOR, 841 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_828_GOTO[] = {
+    { INT_NT_FACTOR, 842 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_829_GOTO[] = {
+    { INT_NT_FACTOR, 843 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_830_GOTO[] = {
+    { INT_NT_FACTOR, 844 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_831_GOTO[] = {
+    { INT_NT_FACTOR, 845 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_832_GOTO[] = {
+    { INT_NT_FACTOR, 846 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_833_GOTO[] = {
+    { INT_NT_FACTOR, 847 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* States 834-840: after '( modifier ** )' - expects factor -> reduce state */
+hic_manens constans Arbor2StatusGotoEntry STATUS_834_GOTO[] = {
+    { INT_NT_FACTOR, 848 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_835_GOTO[] = {
+    { INT_NT_FACTOR, 849 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_836_GOTO[] = {
+    { INT_NT_FACTOR, 850 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_837_GOTO[] = {
+    { INT_NT_FACTOR, 851 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_838_GOTO[] = {
+    { INT_NT_FACTOR, 852 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_839_GOTO[] = {
+    { INT_NT_FACTOR, 853 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_840_GOTO[] = {
+    { INT_NT_FACTOR, 854 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
 
@@ -15029,7 +15852,137 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 749: reduce P286: (unsigned long) factor */
     STATUS_GOTO_NIL,   /* 750: reduce P287: (unsigned short) factor */
     STATUS_GOTO_NIL,   /* 751: reduce P288: (signed long) factor */
-    STATUS_GOTO_NIL    /* 752: reduce P289: (signed short) factor */
+    STATUS_GOTO_NIL,   /* 752: reduce P289: (signed short) factor */
+
+    /* ==================================================
+     * Pointer cast type modifier GOTO entries (753-854)
+     * ================================================== */
+
+    /* States 753-762: after '( type *' - shift states */
+    STATUS_GOTO_NIL,   /* 753: after '( unsigned int *' */
+    STATUS_GOTO_NIL,   /* 754: after '( signed int *' */
+    STATUS_GOTO_NIL,   /* 755: after '( unsigned char *' */
+    STATUS_GOTO_NIL,   /* 756: after '( signed char *' */
+    STATUS_GOTO_NIL,   /* 757: after '( long int *' */
+    STATUS_GOTO_NIL,   /* 758: after '( short int *' */
+    STATUS_GOTO_NIL,   /* 759: after '( unsigned long int *' */
+    STATUS_GOTO_NIL,   /* 760: after '( unsigned short int *' */
+    STATUS_GOTO_NIL,   /* 761: after '( signed long int *' */
+    STATUS_GOTO_NIL,   /* 762: after '( signed short int *' */
+
+    /* States 763-772: after '( type * )' - expects factor */
+    STATUS_GOTO(763),  /* 763: expects factor -> 793 */
+    STATUS_GOTO(764),  /* 764: expects factor -> 794 */
+    STATUS_GOTO(765),  /* 765: expects factor -> 795 */
+    STATUS_GOTO(766),  /* 766: expects factor -> 796 */
+    STATUS_GOTO(767),  /* 767: expects factor -> 797 */
+    STATUS_GOTO(768),  /* 768: expects factor -> 798 */
+    STATUS_GOTO(769),  /* 769: expects factor -> 799 */
+    STATUS_GOTO(770),  /* 770: expects factor -> 800 */
+    STATUS_GOTO(771),  /* 771: expects factor -> 801 */
+    STATUS_GOTO(772),  /* 772: expects factor -> 802 */
+
+    /* States 773-782: after '( type **' - shift states */
+    STATUS_GOTO_NIL,   /* 773: after '( unsigned int **' */
+    STATUS_GOTO_NIL,   /* 774: after '( signed int **' */
+    STATUS_GOTO_NIL,   /* 775: after '( unsigned char **' */
+    STATUS_GOTO_NIL,   /* 776: after '( signed char **' */
+    STATUS_GOTO_NIL,   /* 777: after '( long int **' */
+    STATUS_GOTO_NIL,   /* 778: after '( short int **' */
+    STATUS_GOTO_NIL,   /* 779: after '( unsigned long int **' */
+    STATUS_GOTO_NIL,   /* 780: after '( unsigned short int **' */
+    STATUS_GOTO_NIL,   /* 781: after '( signed long int **' */
+    STATUS_GOTO_NIL,   /* 782: after '( signed short int **' */
+
+    /* States 783-792: after '( type ** )' - expects factor */
+    STATUS_GOTO(783),  /* 783: expects factor -> 803 */
+    STATUS_GOTO(784),  /* 784: expects factor -> 804 */
+    STATUS_GOTO(785),  /* 785: expects factor -> 805 */
+    STATUS_GOTO(786),  /* 786: expects factor -> 806 */
+    STATUS_GOTO(787),  /* 787: expects factor -> 807 */
+    STATUS_GOTO(788),  /* 788: expects factor -> 808 */
+    STATUS_GOTO(789),  /* 789: expects factor -> 809 */
+    STATUS_GOTO(790),  /* 790: expects factor -> 810 */
+    STATUS_GOTO(791),  /* 791: expects factor -> 811 */
+    STATUS_GOTO(792),  /* 792: expects factor -> 812 */
+
+    /* States 793-802: reduce single ptr explicit */
+    STATUS_GOTO_NIL,   /* 793: reduce P290 */
+    STATUS_GOTO_NIL,   /* 794: reduce P291 */
+    STATUS_GOTO_NIL,   /* 795: reduce P292 */
+    STATUS_GOTO_NIL,   /* 796: reduce P293 */
+    STATUS_GOTO_NIL,   /* 797: reduce P294 */
+    STATUS_GOTO_NIL,   /* 798: reduce P295 */
+    STATUS_GOTO_NIL,   /* 799: reduce P296 */
+    STATUS_GOTO_NIL,   /* 800: reduce P297 */
+    STATUS_GOTO_NIL,   /* 801: reduce P298 */
+    STATUS_GOTO_NIL,   /* 802: reduce P299 */
+
+    /* States 803-812: reduce double ptr explicit */
+    STATUS_GOTO_NIL,   /* 803: reduce P300 */
+    STATUS_GOTO_NIL,   /* 804: reduce P301 */
+    STATUS_GOTO_NIL,   /* 805: reduce P302 */
+    STATUS_GOTO_NIL,   /* 806: reduce P303 */
+    STATUS_GOTO_NIL,   /* 807: reduce P304 */
+    STATUS_GOTO_NIL,   /* 808: reduce P305 */
+    STATUS_GOTO_NIL,   /* 809: reduce P306 */
+    STATUS_GOTO_NIL,   /* 810: reduce P307 */
+    STATUS_GOTO_NIL,   /* 811: reduce P308 */
+    STATUS_GOTO_NIL,   /* 812: reduce P309 */
+
+    /* States 813-819: after '( modifier *' - shift states */
+    STATUS_GOTO_NIL,   /* 813: after '( unsigned *' */
+    STATUS_GOTO_NIL,   /* 814: after '( long *' */
+    STATUS_GOTO_NIL,   /* 815: after '( short *' */
+    STATUS_GOTO_NIL,   /* 816: after '( unsigned long *' */
+    STATUS_GOTO_NIL,   /* 817: after '( unsigned short *' */
+    STATUS_GOTO_NIL,   /* 818: after '( signed long *' */
+    STATUS_GOTO_NIL,   /* 819: after '( signed short *' */
+
+    /* States 820-826: after '( modifier **' - shift states */
+    STATUS_GOTO_NIL,   /* 820: after '( unsigned **' */
+    STATUS_GOTO_NIL,   /* 821: after '( long **' */
+    STATUS_GOTO_NIL,   /* 822: after '( short **' */
+    STATUS_GOTO_NIL,   /* 823: after '( unsigned long **' */
+    STATUS_GOTO_NIL,   /* 824: after '( unsigned short **' */
+    STATUS_GOTO_NIL,   /* 825: after '( signed long **' */
+    STATUS_GOTO_NIL,   /* 826: after '( signed short **' */
+
+    /* States 827-833: after '( modifier * )' - expects factor */
+    STATUS_GOTO(827),  /* 827: expects factor -> 841 */
+    STATUS_GOTO(828),  /* 828: expects factor -> 842 */
+    STATUS_GOTO(829),  /* 829: expects factor -> 843 */
+    STATUS_GOTO(830),  /* 830: expects factor -> 844 */
+    STATUS_GOTO(831),  /* 831: expects factor -> 845 */
+    STATUS_GOTO(832),  /* 832: expects factor -> 846 */
+    STATUS_GOTO(833),  /* 833: expects factor -> 847 */
+
+    /* States 834-840: after '( modifier ** )' - expects factor */
+    STATUS_GOTO(834),  /* 834: expects factor -> 848 */
+    STATUS_GOTO(835),  /* 835: expects factor -> 849 */
+    STATUS_GOTO(836),  /* 836: expects factor -> 850 */
+    STATUS_GOTO(837),  /* 837: expects factor -> 851 */
+    STATUS_GOTO(838),  /* 838: expects factor -> 852 */
+    STATUS_GOTO(839),  /* 839: expects factor -> 853 */
+    STATUS_GOTO(840),  /* 840: expects factor -> 854 */
+
+    /* States 841-847: reduce single ptr implicit */
+    STATUS_GOTO_NIL,   /* 841: reduce P310 */
+    STATUS_GOTO_NIL,   /* 842: reduce P311 */
+    STATUS_GOTO_NIL,   /* 843: reduce P312 */
+    STATUS_GOTO_NIL,   /* 844: reduce P313 */
+    STATUS_GOTO_NIL,   /* 845: reduce P314 */
+    STATUS_GOTO_NIL,   /* 846: reduce P315 */
+    STATUS_GOTO_NIL,   /* 847: reduce P316 */
+
+    /* States 848-854: reduce double ptr implicit */
+    STATUS_GOTO_NIL,   /* 848: reduce P317 */
+    STATUS_GOTO_NIL,   /* 849: reduce P318 */
+    STATUS_GOTO_NIL,   /* 850: reduce P319 */
+    STATUS_GOTO_NIL,   /* 851: reduce P320 */
+    STATUS_GOTO_NIL,   /* 852: reduce P321 */
+    STATUS_GOTO_NIL,   /* 853: reduce P322 */
+    STATUS_GOTO_NIL    /* 854: reduce P323 */
 };
 
 
