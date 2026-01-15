@@ -1,11 +1,11 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-14
-Status: Draft (Revised after deep dive)
+Status: Updated after Phase 1.1, 1.2 completion
 
 ---
 
-## Current State (Accurate Assessment)
+## Current State (Updated 2026-01-14)
 
 ### arbor2_lexema.c - COMPLETE
 - 93 token types (all C89 keywords, operators, literals)
@@ -36,12 +36,13 @@ Status: Draft (Revised after deep dive)
 - Conditional compilation (#ifdef, #if, #else, #endif)
 - #error, #line, #pragma handling
 
-### arbor2_glr.c (~2488 lines) + arbor2_glr_tabula.c (~8276 lines) - SUBSTANTIAL
+### arbor2_glr.c + arbor2_glr_tabula.c - SUBSTANTIAL
 - GLR parser core with GSS
 - GSS path enumeration for multi-path reductions
 - Piscina checkpointing for rollback
-- 154 grammar productions (P0-P153)
-- ~364 LR states
+- **221 grammar productions** (P0-P220)
+- **513 LR states** (0-512)
+- **1331 tests passing**
 - Table validation
 
 **Grammar currently covered:**
@@ -53,10 +54,10 @@ Status: Draft (Revised after deep dive)
 | Postfix | COMPLETE | [], (), ., ->, ++, -- |
 | Ternary | COMPLETE | ? : |
 | Assignment | COMPLETE | =, +=, -=, *=, /=, %=, &=, \|=, ^=, <<=, >>= |
-| Comma | COMPLETE | , |
+| Comma | COMPLETE | , (expression comma operator) |
 | Literals | COMPLETE | int, float, char, string |
-| sizeof | PARTIAL | sizeof expr only (not sizeof(type)) |
-| Casts | PARTIAL | (int), (char), (void), (ID) - not pointer casts |
+| sizeof | COMPLETE | sizeof expr AND sizeof(type), sizeof(type*), sizeof(struct X) |
+| Casts | COMPLETE | All types including (int*), (char**), (struct X*), (TypeName*) |
 | if/else | COMPLETE | |
 | while | COMPLETE | |
 | do-while | COMPLETE | |
@@ -66,35 +67,34 @@ Status: Draft (Revised after deep dive)
 | goto/labels | COMPLETE | |
 | switch/case/default | COMPLETE | |
 | Compound stmt | COMPLETE | { stmts } |
-| Declarations | PARTIAL | type declarator - no initializers |
+| Declarations | COMPLETE | type declarator, with initializers |
+| Initializers | COMPLETE | Simple (=expr), brace ({1,2,3}), designated ({.x=1, [5]=100}) |
 | Pointer declarators | COMPLETE | * name |
 | Function declarators | COMPLETE | name(), name(void), name(params) |
 | Function definitions | COMPLETE | type declarator { body } |
 | Parameters | COMPLETE | |
-| Storage classes | PARTIAL | Individual only (no combinations) |
+| Storage classes | PARTIAL | Individual only (no combinations like `static const`) |
 | Type qualifiers | PARTIAL | Individual only (no combinations) |
 | struct/union | COMPLETE | With members, bit fields |
 | enum | COMPLETE | With enumerators and values |
 | Arrays | COMPLETE | name[size] |
 
-**Grammar NOT covered:**
+**Grammar NOT covered (remaining gaps):**
 
-| Missing | Impact |
-|---------|--------|
-| sizeof(type) | Need abstract declarators |
-| Pointer casts (int*) | Need abstract declarators |
-| Specifier combinations | "static const int x" not parsed |
-| Pointer qualifiers | "int * const p" not parsed |
-| Initializers | "int x = 5" not parsed |
-| Multiple declarators | "int x, y" not parsed |
-| K&R function defs | Old-style parameters |
-| Translation unit | Top-level external-declaration list |
+| Missing | Impact | Phase |
+|---------|--------|-------|
+| Specifier combinations | `static const int x` not parsed | 1.4 |
+| Type modifiers | `unsigned int`, `long int` not parsed | 1.4 |
+| Multiple declarators | `int x, y` not parsed | 1.3 |
+| Pointer qualifiers | `int * const p` not parsed | 1.4 |
+| K&R function defs | Old-style parameters | Low priority |
+| Translation unit | Top-level external-declaration list | 1.5 |
 
 ### Arbor2Nodus Structure - BASIC
 Current structure has:
 - genus (node type)
 - lexema (associated token)
-- datum union (37 node type variants)
+- datum union (38 node type variants including DESIGNATOR_ITEM)
 
 **Missing for tooling:**
 - Location spans (byte_initium/finis, linea/columna)
@@ -103,61 +103,96 @@ Current structure has:
 - Layer index
 - Type resolution field
 
-### Tests - GOOD
-- ~8216 lines of tests
+### Tests - COMPREHENSIVE
+- 1331 tests passing
 - Covers expressions, statements, declarations
+- Full initializer coverage (simple, brace, designated)
 - Table validation
 - Parser statistics
 
 ---
 
-## Revised Implementation Phases
+## Phase 1: Complete Grammar - Status
 
-### Phase 1: Complete Grammar (Remaining Gaps)
+### 1.1 Abstract Declarators - COMPLETE ✓
 
-The grammar is more complete than originally thought. Focus on remaining gaps:
+Implemented 2026-01-14. Full support for:
 
-#### 1.1 Abstract Declarators (for sizeof(type) and pointer casts)
-```
-abstract_declarator -> pointer
-abstract_declarator -> pointer? direct_abstract_declarator
+**sizeof(type):**
+- `sizeof(int)`, `sizeof(char)`, `sizeof(void)` - P162-P165
+- `sizeof(int*)`, `sizeof(char*)` - P166-P169
+- `sizeof(int**)`, `sizeof(char**)` - P170-P173
+- `sizeof(struct X)`, `sizeof(union Y)`, `sizeof(enum Z)` - P183-P191
 
-direct_abstract_declarator -> '(' abstract_declarator ')'
-direct_abstract_declarator -> '[' expr? ']'
-direct_abstract_declarator -> '(' param_list? ')'
-```
+**Pointer casts:**
+- `(int*)x`, `(char*)y` - P154-P157
+- `(int**)x`, `(char**)y` - P158-P161
+- `(struct X*)p`, `(union Y*)p`, `(enum Z*)p` - P174-P182
 
-Productions needed:
-- `sizeof -> 'sizeof' '(' type_name ')'`
-- `cast -> '(' type_name ')' factor`
-- `type_name -> specifiers abstract_declarator?`
+40+ tests covering all variants.
 
-New states: ~15-20 additional states
+### 1.2 Declaration Initializers - COMPLETE ✓
 
-#### 1.2 Declaration Initializers
-```
-init_declarator -> declarator '=' initializer
-initializer -> assignment_expr
-initializer -> '{' initializer_list '}'
-initializer_list -> initializer
-initializer_list -> initializer_list ',' initializer
-```
+Implemented 2026-01-14 in three sub-phases:
 
-Productions: ~5
-States: ~10
+**1.2a - Simple Initializers:**
+- `int x = 5` - P192
+- `static int x = 5` - P193
+- All storage class variants - P193-P198
 
-#### 1.3 Multiple Declarators
+**1.2b - Brace Initializers:**
+- `int a[] = {1, 2, 3}` - P199-P206
+- Empty braces `{}` - P200
+- Trailing comma `{1, 2,}` - P202
+- Nested braces `{{1,2}, {3,4}}` - P206
+- Storage class variants - P207-P212
+
+**1.2c - Designated Initializers:**
+- Field designators `.x = 1` - P214
+- Array designators `[5] = 100` - P213
+- Chained designators `[0].x`, `.a.b`, `[0][1]` - P215-P216
+- Mixed positional + designated `{1, .b = 2, 3}` - P217-P219
+- Nested brace values `{.a = {1, 2}}` - P220
+
+35+ new tests for initializers.
+
+### 1.3 Multiple Declarators - NOT STARTED
+
+**Current state:** Parser only handles single declarator per type.
+
+**Failing cases:**
+- `int x, y;` - FAILS (no comma support in declarations)
+- `int x = 1, y = 2;` - FAILS
+- `int *x, y;` - FAILS
+
+**Required:**
 ```
 declaration -> specifiers init_declarator_list ';'
 init_declarator_list -> init_declarator
 init_declarator_list -> init_declarator_list ',' init_declarator
+init_declarator -> declarator
+init_declarator -> declarator '=' initializer
 ```
 
-Productions: ~3
-States: ~5
+Estimated: ~5 productions, ~10 states
 
-#### 1.4 Specifier Combinations
-Need to handle "static const int x" properly:
+### 1.4 Specifier Combinations - NOT STARTED
+
+**Current state:** Parser only handles single storage class OR single qualifier.
+
+**Working:**
+- `static int x;` ✓
+- `const int x;` ✓
+- `volatile int y;` ✓
+
+**Failing:**
+- `static const int x;` - FAILS
+- `extern volatile int y;` - FAILS
+- `unsigned int z;` - FAILS
+- `long int w;` - FAILS
+- `unsigned long int v;` - FAILS
+
+**Required:**
 ```
 decl_specifiers -> decl_specifier
 decl_specifiers -> decl_specifiers decl_specifier
@@ -165,30 +200,59 @@ decl_specifiers -> decl_specifiers decl_specifier
 decl_specifier -> storage_class_specifier
 decl_specifier -> type_qualifier
 decl_specifier -> type_specifier
+
+type_specifier -> 'int' | 'char' | 'void' | 'short' | 'long'
+                | 'signed' | 'unsigned' | 'float' | 'double'
 ```
 
-This is a substantial refactor of declaration parsing.
+This is a substantial refactor - the type specifier lexemes exist but aren't wired into grammar.
 
-Productions: ~10
-States: ~20
+Estimated: ~15 productions, ~25 states
 
-#### 1.5 Translation Unit
+### 1.5 Translation Unit - NOT STARTED
+
+**Current state:** Parser handles single declaration/function, cannot sequence multiple.
+
+**Working:**
+- `int foo() { return 1; }` ✓ (single function)
+- `int x;` ✓ (single declaration)
+
+**Failing:**
+- `int a; int b;` - FAILS (multiple declarations)
+- `int foo() {} int x;` - FAILS (function + declaration)
+
+**Required:**
 ```
 translation_unit -> external_declaration
 translation_unit -> translation_unit external_declaration
 
 external_declaration -> function_definition
-external_declaration -> declaration
+external_declaration -> declaration ';'
 ```
 
-Productions: ~4
-States: ~5
+Would also need new entry point: `arbor2_glr_parsere_translation_unit()`
+
+Estimated: ~4 productions, ~5 states
 
 **Deliverable:** Can parse complete C89 files
 
 ---
 
-### Phase 2: Rich AST Structure
+## Recommended Next Steps
+
+Given the current state, the recommended priority is:
+
+1. **Phase 1.4 (Specifier Combinations)** - Enables real C code with `static const`, `unsigned int`, etc. This is the most impactful remaining grammar gap.
+
+2. **Phase 1.5 (Translation Unit)** - Enables parsing complete files. Relatively small change but high impact.
+
+3. **Phase 1.3 (Multiple Declarators)** - Convenience feature, less critical than above.
+
+Alternatively, **Phase 2 (Rich AST)** could come first if the goal is to enable formatter development sooner, since the grammar is already quite functional for single-declaration parsing.
+
+---
+
+## Phase 2: Rich AST Structure
 
 Extend Arbor2Nodus for tooling support:
 
@@ -253,7 +317,7 @@ nomen structura {
 
 ---
 
-### Phase 3: GLR-Expansion Integration
+## Phase 3: GLR-Expansion Integration
 
 The infrastructure exists but isn't connected:
 
@@ -296,7 +360,7 @@ Need: Actually create these during parsing
 
 ---
 
-### Phase 4: Error Recovery
+## Phase 4: Error Recovery
 
 Current: Parser stops on first error
 Need: Continue and produce partial AST
@@ -347,7 +411,7 @@ stmt -> error '}'  /* recover at brace */
 
 ---
 
-### Phase 5: Conditional Compilation
+## Phase 5: Conditional Compilation
 
 Current: Not implemented at all
 Need: Parse ALL branches
@@ -387,7 +451,7 @@ CONDITIONAL_NODE
 
 ---
 
-### Phase 6: #include Processing
+## Phase 6: #include Processing
 
 Current: Not implemented
 Need: Actually read and process included files
@@ -418,7 +482,7 @@ TabulaDispersa* included_viae;  /* Already exists in Arbor2Expansion */
 
 ---
 
-### Phase 7: Built-in Definitions
+## Phase 7: Built-in Definitions
 
 #### 7.1 Compiled-in Latina.h
 ```c
@@ -495,7 +559,7 @@ hic_manens constans character* STDLIB_TYPEDEFS[] = {
 
 ---
 
-### Phase 8: Query Engine
+## Phase 8: Query Engine
 
 Like arbor_quaestio - CSS-style AST queries.
 
@@ -525,7 +589,7 @@ Xar* arbor2_quaestio_exsequi(
 
 ---
 
-### Phase 9: Type Resolution
+## Phase 9: Type Resolution
 
 Like arbor_typus.
 
@@ -556,7 +620,7 @@ Walk AST, resolve types, fill typus_resolutum field.
 
 ---
 
-### Phase 10: Symbol Index
+## Phase 10: Symbol Index
 
 Like arbor_index - cross-file symbols.
 
@@ -564,7 +628,7 @@ Like arbor_index - cross-file symbols.
 
 ---
 
-### Phase 11: Formatter
+## Phase 11: Formatter
 
 Like arbor_formator.
 
@@ -578,72 +642,78 @@ Apply formatting rules.
 
 ---
 
-### Phase 12: Public API
+## Phase 12: Public API
 
 Clean builder-pattern interface.
 
 ---
 
-## Revised Dependency Graph
+## Dependency Graph
 
 ```
-Phase 1 (Grammar Gaps) ────────────────────────────┐
-                                                   │
-Phase 2 (Rich AST) ────────────────────────────────┤
-                                                   │
-Phase 3 (GLR-Expansion) ───────────────────────────┤
-                                                   │
-Phase 4 (Error Recovery) ──────────────────────────┤
-                                                   │
-Phase 5 (Conditionals) ────────────────────────────┤
-                                                   │
-Phase 6 (#include) ────────────────────────────────┤
-                                                   │
-Phase 7 (Built-ins) ───────────────────────────────┤
-                                                   ▼
-                                          [Core Complete]
-                                                   │
-                    ┌──────────────────────────────┼──────────────────────────────┐
-                    │                              │                              │
-                    ▼                              ▼                              ▼
-           Phase 8 (Queries)            Phase 9 (Types)             Phase 10 (Index)
-                    │                              │                              │
-                    └──────────────────────────────┼──────────────────────────────┘
-                                                   │
-                                                   ▼
-                                         Phase 11 (Formatter)
-                                                   │
-                                                   ▼
-                                          Phase 12 (API)
+Phase 1.3 (Multiple Decls) ─────┐
+                                │
+Phase 1.4 (Specifier Combos) ───┤
+                                │
+Phase 1.5 (Translation Unit) ───┤
+                                ▼
+                     [Grammar Complete]
+                                │
+Phase 2 (Rich AST) ─────────────┤
+                                │
+Phase 3 (GLR-Expansion) ────────┤
+                                │
+Phase 4 (Error Recovery) ───────┤
+                                │
+Phase 5 (Conditionals) ─────────┤
+                                │
+Phase 6 (#include) ─────────────┤
+                                │
+Phase 7 (Built-ins) ────────────┤
+                                ▼
+                       [Core Complete]
+                                │
+         ┌──────────────────────┼──────────────────────┐
+         │                      │                      │
+         ▼                      ▼                      ▼
+Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
+         │                      │                      │
+         └──────────────────────┼──────────────────────┘
+                                │
+                                ▼
+                      Phase 11 (Formatter)
+                                │
+                                ▼
+                       Phase 12 (API)
 ```
 
 ---
 
-## Recommended Starting Point
-
-Given current state, the most impactful next step is **Phase 1.1 (Abstract Declarators)** because it unblocks:
-- sizeof(type)
-- Pointer casts like (int*)
-- Full type names in declarations
-
-This is ~15-20 new states and ~5-8 new productions.
-
-Alternatively, **Phase 2 (Rich AST)** could come first if the goal is to enable formatter development sooner, since the grammar is already quite functional.
-
----
-
-## Files Reference
+## Files Reference (Updated)
 
 | File | Lines | Status |
 |------|-------|--------|
 | lib/arbor2_lexema.c | ~500 | Complete |
 | lib/arbor2_token.c | 264 | Complete |
 | lib/arbor2_expandere.c | 1576 | Mostly complete |
-| lib/arbor2_glr.c | 2488 | Functional |
-| lib/arbor2_glr_tabula.c | 8276 | 154 productions, ~364 states |
-| include/arbor2_glr.h | 601 | Good structure |
+| lib/arbor2_glr.c | ~2600 | Functional |
+| lib/arbor2_glr_tabula.c | ~11200 | 221 productions, 513 states |
+| include/arbor2_glr.h | ~650 | Good structure |
 | include/arbor2_lexema.h | 220 | Complete |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | 197 | Complete |
-| probationes/probatio_arbor2_glr.c | 8216 | Comprehensive |
+| probationes/probatio_arbor2_glr.c | ~9400 | 1331 tests |
 | tools/glr_debug.c | 296 | Working |
+
+---
+
+## Implementation History
+
+| Date | Phase | Productions | States | Tests | Notes |
+|------|-------|-------------|--------|-------|-------|
+| Pre-2026-01-14 | Baseline | 154 | 364 | ~1200 | Expressions, statements, basic decls |
+| 2026-01-14 | 1.1 Abstract Decl | +37 | +98 | +46 | sizeof(type), pointer casts |
+| 2026-01-14 | 1.2a Simple Init | +7 | +14 | +20 | int x = 5 |
+| 2026-01-14 | 1.2b Brace Init | +14 | +13 | +50 | {1, 2, 3} |
+| 2026-01-14 | 1.2c Designated | +8 | +13 | +35 | {.x = 1, [5] = 100} |
+| **Current** | | **221** | **513** | **1331** | |
