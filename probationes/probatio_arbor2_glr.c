@@ -8688,6 +8688,118 @@ s32 principale(vacuum)
         }
     }
 
+    /* ========================================================
+     * PROBARE: sizeof(type[N]) - array types in sizeof
+     * Phase 1.1c
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int[10]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[10])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+            /* Operandum should be a declarator with dimensions */
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.sizeof_expr.operandum;
+                CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
+                CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
+                CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator.dimensiones), I);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(char[256]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(char[256])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.est_typus, VERUM);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(void[1]) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(void[1])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(int[10+5]) with expression ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(int[10+5])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            si (res.radix->datum.sizeof_expr.operandum != NIHIL)
+            {
+                Arbor2Nodus* decl = res.radix->datum.sizeof_expr.operandum;
+                /* The dimension should be a BINARIUM expression */
+                si (decl->datum.declarator.dimensiones != NIHIL)
+                {
+                    Arbor2Nodus** dim = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
+                    CREDO_NON_NIHIL(dim);
+                    CREDO_NON_NIHIL(*dim);
+                    CREDO_AEQUALIS_I32((i32)(*dim)->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                }
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans x = sizeof(int[10]) in assignment ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "x = sizeof(int[10])");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            /* RHS should be sizeof */
+            si (res.radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_SIZEOF);
+            }
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Storage class specifiers

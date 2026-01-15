@@ -808,7 +808,8 @@ _processare_unam_actionem(
                          * P170-P173: factor -> 'sizeof' '(' type '*' '*' ')' (6 symbols)
                          * P183,P186,P189: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID ')' (5 symbols)
                          * P184,P187,P190: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID '*' ')' (6 symbols)
-                         * P185,P188,P191: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID '*' '*' ')' (7 symbols) */
+                         * P185,P188,P191: factor -> 'sizeof' '(' STRUCT/UNION/ENUM ID '*' '*' ')' (7 symbols)
+                         * P240-P243: factor -> 'sizeof' '(' type '[' expr ']' ')' (7 symbols) */
                         si (num_pop == II)
                         {
                             /* P143: sizeof expr */
@@ -819,6 +820,40 @@ _processare_unam_actionem(
                             nodus_sizeof->lexema = lexemata[I];  /* sizeof token */
                             nodus_sizeof->datum.sizeof_expr.est_typus = FALSUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = valori[ZEPHYRUM];
+
+                            valor_novus = nodus_sizeof;
+                        }
+                        alioquin si (num_pop == VII && actio->valor >= 240 && actio->valor <= 243)
+                        {
+                            /* P240-P243: sizeof(type[N]) - 7 symbols
+                             * sizeof ( type [ expr ] )
+                             *    6    5   4   3   2  1  0
+                             * valori[2] = dimension expression */
+                            Arbor2Nodus* nodus_sizeof;
+                            Arbor2Nodus* nodus_typus;
+                            Arbor2Nodus** dim_slot;
+
+                            /* Creare nodus typus cum dimensione */
+                            nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
+                            nodus_typus->lexema = lexemata[IV];  /* type token */
+                            nodus_typus->datum.declarator.num_stellae = ZEPHYRUM;
+                            nodus_typus->datum.declarator.titulus.datum = NIHIL;
+                            nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                            nodus_typus->datum.declarator.latitudo_biti = NIHIL;
+                            nodus_typus->datum.declarator.pointer_quals = ZEPHYRUM;
+
+                            /* Creare dimensiones array et addere dimensionem */
+                            nodus_typus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            dim_slot = xar_addere(nodus_typus->datum.declarator.dimensiones);
+                            *dim_slot = valori[II];  /* dimension expression at valori[2] */
+
+                            /* Creare nodus sizeof */
+                            nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
+                            nodus_sizeof->lexema = lexemata[VI];  /* sizeof token */
+                            nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
+                            nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
 
                             valor_novus = nodus_sizeof;
                         }

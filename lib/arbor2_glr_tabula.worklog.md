@@ -1109,3 +1109,63 @@ The semicolon handling was tricky. Initially P239 was 1 symbol (just declaratio)
 - Total states: 562
 - Total rules: 240
 - Total tests: 1431
+
+## 2026-01-14: sizeof(type[N]) - Array Types in sizeof (Phase 1.1c)
+
+### What was implemented:
+
+Added support for array types in sizeof expressions: `sizeof(int[10])`, `sizeof(char[256])`, etc.
+
+### Productions Added (P240-P243)
+```c
+P240: factor -> 'sizeof' '(' INT  '[' expr ']' ')'  (7 symbols)
+P241: factor -> 'sizeof' '(' CHAR '[' expr ']' ')'  (7 symbols)
+P242: factor -> 'sizeof' '(' VOID '[' expr ']' ')'  (7 symbols)
+P243: factor -> 'sizeof' '(' ID   '[' expr ']' ')'  (7 symbols)
+```
+
+### States Added (562-578)
+
+**sizeof(int[N]) chain (563-566):**
+- 563: after `sizeof ( int [` - expects expression (shift to expr-start states)
+- 564: after expr in dimension - expects `]`
+- 565: after `sizeof ( int [ expr ]` - expects `)`
+- 566: reduce P240
+
+**sizeof(char[N]) chain (567-570):** Same pattern for CHAR
+
+**sizeof(void[N]) chain (571-574):** Same pattern for VOID
+
+**sizeof(ID[N]) chain (575-578):** Same pattern for ID (typedef names)
+
+### State Modifications
+
+**States 389, 390, 391** (after sizeof ( int/char/void):
+- Added BRACKET_APERTA shift to start array dimension parsing
+
+**State 416** (after sizeof ( ID):
+- Added BRACKET_APERTA shift for typedef array types
+
+### AST Handler (lib/arbor2_glr.c)
+
+Extended ARBOR2_NODUS_SIZEOF case to handle P240-P243:
+- Creates declarator node with `dimensiones` array
+- Dimension expression stored in `valori[2]` (the expr between brackets)
+- Type token at `lexemata[4]`
+
+### Tests Added
+- `sizeof(int[10])` - basic integer array
+- `sizeof(char[256])` - char array
+- `sizeof(void[1])` - void array
+- `sizeof(int[10+5])` - expression in dimension
+- `x = sizeof(int[10])` - in larger expression
+
+### Final Statistics
+- Total states: 579 (up from 562)
+- Total rules: 244 (up from 240)
+- Total tests: 1450 (up from 1431)
+
+### Notes
+- Multi-dimensional arrays (`sizeof(int[10][20])`) not yet implemented
+- Array of pointers (`sizeof(int*[10])`) not yet implemented
+- These could be added as P244-P251 in a future phase
