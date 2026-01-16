@@ -177,12 +177,17 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             imprimere_nodus(nodus->datum.vocatio.basis, depth + I);
             si (nodus->datum.vocatio.argumenta != NIHIL)
             {
-                i32 num_args = xar_numerus(nodus->datum.vocatio.argumenta);
-                i32 k;
-                per (k = ZEPHYRUM; k < num_args; k++)
+                /* argumenta is now a LISTA_SEPARATA node */
+                Arbor2Nodus* lista = nodus->datum.vocatio.argumenta;
+                si (lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
                 {
-                    Arbor2Nodus** arg = xar_obtinere(nodus->datum.vocatio.argumenta, k);
-                    imprimere_nodus(*arg, depth + I);
+                    i32 num_args = xar_numerus(lista->datum.lista_separata.elementa);
+                    i32 k;
+                    per (k = ZEPHYRUM; k < num_args; k++)
+                    {
+                        Arbor2Nodus** arg = xar_obtinere(lista->datum.lista_separata.elementa, k);
+                        imprimere_nodus(*arg, depth + I);
+                    }
                 }
             }
             frange;
@@ -212,6 +217,20 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             si (nodus->datum.declaratio.proxima != NIHIL)
             {
                 imprimere_nodus(nodus->datum.declaratio.proxima, depth);
+            }
+            frange;
+
+        casus ARBOR2_NODUS_LISTA_SEPARATA:
+            printf(" (%d items, %d separators)\n",
+                   xar_numerus(nodus->datum.lista_separata.elementa),
+                   xar_numerus(nodus->datum.lista_separata.separatores));
+            {
+                i32 k;
+                per (k = ZEPHYRUM; k < xar_numerus(nodus->datum.lista_separata.elementa); k++)
+                {
+                    Arbor2Nodus** elem = xar_obtinere(nodus->datum.lista_separata.elementa, k);
+                    imprimere_nodus(*elem, depth + I);
+                }
             }
             frange;
 

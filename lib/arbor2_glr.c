@@ -308,6 +308,7 @@ arbor2_nodus_creare_binarium(
     nodus->genus = ARBOR2_NODUS_BINARIUM;
     nodus->lexema = NIHIL;
     nodus->datum.binarium.sinister = sinister;
+    nodus->datum.binarium.tok_operator = NIHIL;
     nodus->datum.binarium.operator = operator;
     nodus->datum.binarium.dexter = dexter;
 
@@ -330,6 +331,7 @@ arbor2_nodus_creare_unarium(
 
     nodus->genus = ARBOR2_NODUS_UNARIUM;
     nodus->lexema = NIHIL;
+    nodus->datum.unarium.tok_operator = NIHIL;
     nodus->datum.unarium.operator = operator;
     nodus->datum.unarium.operandum = operandum;
 
@@ -349,6 +351,7 @@ _construere_nodum_binarium(
     si (nodus != NIHIL)
     {
         nodus->lexema = operator;
+        nodus->datum.binarium.tok_operator = operator;
     }
 
     redde nodus;
@@ -366,6 +369,7 @@ _construere_nodum_unarium(
     si (nodus != NIHIL)
     {
         nodus->lexema = operator;
+        nodus->datum.unarium.tok_operator = operator;
     }
 
     redde nodus;
@@ -818,8 +822,11 @@ _processare_unam_actionem(
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[I];  /* sizeof token */
+                            nodus_sizeof->datum.sizeof_expr.tok_sizeof = lexemata[I];
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_ap = NIHIL;
                             nodus_sizeof->datum.sizeof_expr.est_typus = FALSUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = valori[ZEPHYRUM];
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_cl = NIHIL;
 
                             valor_novus = nodus_sizeof;
                         }
@@ -837,11 +844,10 @@ _processare_unam_actionem(
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
                             nodus_typus->lexema = lexemata[IV];  /* type token */
-                            nodus_typus->datum.declarator.num_stellae = ZEPHYRUM;
+                            nodus_typus->datum.declarator.pointer_levels = NIHIL;
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
                             nodus_typus->datum.declarator.latitudo_biti = NIHIL;
-                            nodus_typus->datum.declarator.pointer_quals = ZEPHYRUM;
 
                             /* Creare dimensiones array et addere dimensionem */
                             nodus_typus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -872,11 +878,10 @@ _processare_unam_actionem(
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
                             nodus_typus->lexema = lexemata[VII];  /* type token */
-                            nodus_typus->datum.declarator.num_stellae = ZEPHYRUM;
+                            nodus_typus->datum.declarator.pointer_levels = NIHIL;
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
                             nodus_typus->datum.declarator.latitudo_biti = NIHIL;
-                            nodus_typus->datum.declarator.pointer_quals = ZEPHYRUM;
 
                             /* Creare dimensiones array et addere duas dimensiones */
                             nodus_typus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -914,11 +919,20 @@ _processare_unam_actionem(
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
                             nodus_typus->lexema = lexemata[V];  /* type token */
-                            nodus_typus->datum.declarator.num_stellae = I;  /* one pointer */
+                            /* One pointer level */
+                            {
+                                Arbor2PointerLevel* lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                Arbor2PointerLevel** lvl_slot;
+                                lvl->tok_stella = lexemata[IV];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                nodus_typus->datum.declarator.pointer_levels = xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                lvl_slot = xar_addere(nodus_typus->datum.declarator.pointer_levels);
+                                *lvl_slot = lvl;
+                            }
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
                             nodus_typus->datum.declarator.latitudo_biti = NIHIL;
-                            nodus_typus->datum.declarator.pointer_quals = ZEPHYRUM;
 
                             /* Creare dimensiones array et addere dimensionem */
                             nodus_typus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -939,7 +953,7 @@ _processare_unam_actionem(
                             /* sizeof(type) with various forms */
                             Arbor2Nodus* nodus_sizeof;
                             Arbor2Nodus* nodus_typus;
-                            s32 num_stellae;
+                            s32 ptr_count;
                             s32 prod_num;
                             s32 type_token_idx;
 
@@ -951,13 +965,13 @@ _processare_unam_actionem(
                             si (prod_num >= 183 && prod_num <= 191)
                             {
                                 /* sizeof(struct/union/enum): 5=base, 6=*, 7=** */
-                                num_stellae = num_pop - V;
+                                ptr_count = num_pop - V;
                                 type_token_idx = num_pop - III;  /* ID token (struct ID) */
                             }
                             alioquin
                             {
                                 /* sizeof(basic type): 4=base, 5=*, 6=** */
-                                num_stellae = num_pop - IV;
+                                ptr_count = num_pop - IV;
                                 type_token_idx = num_pop - II;  /* type keyword */
                             }
 
@@ -965,7 +979,27 @@ _processare_unam_actionem(
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
                             nodus_typus->lexema = lexemata[type_token_idx];  /* type token */
-                            nodus_typus->datum.declarator.num_stellae = num_stellae;
+                            /* Create pointer levels */
+                            si (ptr_count > ZEPHYRUM)
+                            {
+                                s32 i;
+                                nodus_typus->datum.declarator.pointer_levels = xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                per (i = ZEPHYRUM; i < ptr_count; i++)
+                                {
+                                    Arbor2PointerLevel* lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                    Arbor2PointerLevel** lvl_slot;
+                                    /* Pointer tokens are between type and ')' */
+                                    lvl->tok_stella = lexemata[type_token_idx - I - i];
+                                    lvl->tok_const = NIHIL;
+                                    lvl->tok_volatile = NIHIL;
+                                    lvl_slot = xar_addere(nodus_typus->datum.declarator.pointer_levels);
+                                    *lvl_slot = lvl;
+                                }
+                            }
+                            alioquin
+                            {
+                                nodus_typus->datum.declarator.pointer_levels = NIHIL;
+                            }
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
 
@@ -1022,15 +1056,40 @@ _processare_unam_actionem(
                             nodus_typus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_typus->genus = ARBOR2_NODUS_DECLARATOR;
                             nodus_typus->lexema = lexemata[type_token_idx];  /* type token */
-                            nodus_typus->datum.declarator.num_stellae = num_stellae;
                             nodus_typus->datum.declarator.titulus.datum = NIHIL;
                             nodus_typus->datum.declarator.titulus.mensura = ZEPHYRUM;
+
+                            /* Creare pointer_levels */
+                            si (num_stellae > ZEPHYRUM)
+                            {
+                                s32 i;
+                                nodus_typus->datum.declarator.pointer_levels = xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                per (i = ZEPHYRUM; i < num_stellae; i++)
+                                {
+                                    Arbor2PointerLevel* lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                    Arbor2PointerLevel** lvl_slot;
+                                    /* Pointer tokens are before the ')' which is at index 0
+                                     * For struct: (STRUCT ID * * ) expr - stars at indices 1, 2
+                                     * For basic:  (TYPE * * ) expr - stars at indices 1, 2 */
+                                    lvl->tok_stella = lexemata[I + i];
+                                    lvl->tok_const = NIHIL;
+                                    lvl->tok_volatile = NIHIL;
+                                    lvl_slot = xar_addere(nodus_typus->datum.declarator.pointer_levels);
+                                    *lvl_slot = lvl;
+                                }
+                            }
+                            alioquin
+                            {
+                                nodus_typus->datum.declarator.pointer_levels = NIHIL;
+                            }
 
                             /* Creare nodus conversio */
                             nodus_cast = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_cast->genus = ARBOR2_NODUS_CONVERSIO;
                             nodus_cast->lexema = lexemata[type_token_idx];  /* type token for display */
+                            nodus_cast->datum.conversio.tok_paren_ap = lexemata[num_pop - I];
                             nodus_cast->datum.conversio.typus = nodus_typus;
+                            nodus_cast->datum.conversio.tok_paren_cl = lexemata[I];  /* ) before operand */
                             nodus_cast->datum.conversio.expressio = valori[ZEPHYRUM];
 
                             valor_novus = nodus_cast;
@@ -1051,7 +1110,9 @@ _processare_unam_actionem(
                             nodus_tern->genus = ARBOR2_NODUS_TERNARIUS;
                             nodus_tern->lexema = lexemata[III];  /* ? token */
                             nodus_tern->datum.ternarius.conditio = valori[IV];
+                            nodus_tern->datum.ternarius.tok_interrogatio = lexemata[III];
                             nodus_tern->datum.ternarius.verum = valori[II];
+                            nodus_tern->datum.ternarius.tok_colon = lexemata[I];
                             nodus_tern->datum.ternarius.falsum = valori[ZEPHYRUM];
                             valor_novus = nodus_tern;
                         }
@@ -1071,7 +1132,9 @@ _processare_unam_actionem(
                             nodus_sub->genus = ARBOR2_NODUS_SUBSCRIPTIO;
                             nodus_sub->lexema = lexemata[II];  /* '[' token */
                             nodus_sub->datum.subscriptio.basis = valori[III];
+                            nodus_sub->datum.subscriptio.tok_bracket_ap = lexemata[II];
                             nodus_sub->datum.subscriptio.index = valori[I];
+                            nodus_sub->datum.subscriptio.tok_bracket_cl = lexemata[ZEPHYRUM];
                             valor_novus = nodus_sub;
                         }
                         alioquin
@@ -1093,25 +1156,25 @@ _processare_unam_actionem(
                             nodus_call->genus = ARBOR2_NODUS_VOCATIO;
                             nodus_call->lexema = lexemata[I];  /* '(' token */
                             nodus_call->datum.vocatio.basis = valori[II];
+                            nodus_call->datum.vocatio.tok_paren_ap = lexemata[I];
                             nodus_call->datum.vocatio.argumenta = NIHIL;
+                            nodus_call->datum.vocatio.tok_paren_cl = lexemata[ZEPHYRUM];
                             valor_novus = nodus_call;
                         }
                         alioquin si (actio->valor == 131 && num_pop >= IV)
                         {
                             /* Call with args: foo(a, b, c)
-                             * valori[1] is an argument list node we need to extract */
+                             * valori: [3]=base, [2]='(', [1]=argumenta (LISTA_SEPARATA), [0]=')'
+                             * argumenta is now a LISTA_SEPARATA node from P132/P133 */
                             Arbor2Nodus* nodus_call;
                             nodus_call = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_call->genus = ARBOR2_NODUS_VOCATIO;
                             nodus_call->lexema = lexemata[II];  /* '(' token */
                             nodus_call->datum.vocatio.basis = valori[III];
-                            /* valori[I] is the argumenta - we need to collect the args */
-                            nodus_call->datum.vocatio.argumenta = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            /* For now, just store the single arg expression (TODO: handle multiple args properly) */
-                            {
-                                Arbor2Nodus** slot = xar_addere(nodus_call->datum.vocatio.argumenta);
-                                *slot = valori[I];  /* argumenta node contains the args */
-                            }
+                            nodus_call->datum.vocatio.tok_paren_ap = lexemata[II];
+                            /* valori[I] is the LISTA_SEPARATA node with arguments and comma tokens */
+                            nodus_call->datum.vocatio.argumenta = valori[I];
+                            nodus_call->datum.vocatio.tok_paren_cl = lexemata[ZEPHYRUM];
                             valor_novus = nodus_call;
                         }
                         alioquin
@@ -1131,6 +1194,8 @@ _processare_unam_actionem(
                             nodus_mem->genus = ARBOR2_NODUS_MEMBRUM;
                             nodus_mem->lexema = lexemata[I];  /* '.' or '->' token */
                             nodus_mem->datum.membrum.basis = valori[II];
+                            nodus_mem->datum.membrum.tok_accessor = lexemata[I];
+                            nodus_mem->datum.membrum.tok_membrum = lexemata[ZEPHYRUM];
                             nodus_mem->datum.membrum.membrum = lexemata[ZEPHYRUM]->lexema->valor;
                             nodus_mem->datum.membrum.est_sagitta = (actio->valor == 135);
                             valor_novus = nodus_mem;
@@ -1152,6 +1217,7 @@ _processare_unam_actionem(
                             nodus_post->genus = ARBOR2_NODUS_POST_UNARIUM;
                             nodus_post->lexema = lexemata[ZEPHYRUM];  /* '++' or '--' token */
                             nodus_post->datum.post_unarium.operandum = valori[I];
+                            nodus_post->datum.post_unarium.tok_operator = lexemata[ZEPHYRUM];
                             nodus_post->datum.post_unarium.operator = lexemata[ZEPHYRUM]->lexema->genus;
                             valor_novus = nodus_post;
                         }
@@ -1188,12 +1254,17 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -1219,12 +1290,17 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -1247,20 +1323,35 @@ _processare_unam_actionem(
                             decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             decl_node->genus = ARBOR2_NODUS_DECLARATOR;
                             decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
                             decl_node->datum.declarator.dimensiones = NIHIL;
+                            /* One pointer level with * at lexemata[II] */
+                            {
+                                Arbor2PointerLevel* lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                Arbor2PointerLevel** lvl_slot;
+                                lvl->tok_stella = lexemata[II];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                decl_node->datum.declarator.pointer_levels = xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                lvl_slot = xar_addere(decl_node->datum.declarator.pointer_levels);
+                                *lvl_slot = lvl;
+                            }
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -1284,20 +1375,35 @@ _processare_unam_actionem(
                             decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             decl_node->genus = ARBOR2_NODUS_DECLARATOR;
                             decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.num_stellae = I;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = NIHIL;
                             decl_node->datum.declarator.dimensiones = NIHIL;
+                            /* One pointer level with * at lexemata[II] */
+                            {
+                                Arbor2PointerLevel* lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                Arbor2PointerLevel** lvl_slot;
+                                lvl->tok_stella = lexemata[II];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                decl_node->datum.declarator.pointer_levels = xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                lvl_slot = xar_addere(decl_node->datum.declarator.pointer_levels);
+                                *lvl_slot = lvl;
+                            }
 
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -1325,7 +1431,7 @@ _processare_unam_actionem(
                             decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             decl_node->genus = ARBOR2_NODUS_DECLARATOR;
                             decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.pointer_levels = NIHIL;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = expr_node;
                             decl_node->datum.declarator.dimensiones = NIHIL;
@@ -1333,12 +1439,17 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -1350,7 +1461,7 @@ _processare_unam_actionem(
                         {
                             /* P63: member_list type_spec ID ':' expr ';' (6 symbols, append named bit field) */
                             /* valori: [5]=list, [1]=expr_node */
-                            /* lexemata: [4]=type, [3]=name */
+                            /* lexemata: [4]=type, [3]=name, [0]=; */
                             Arbor2Nodus* member;
                             Arbor2Nodus* decl_node;
                             Xar* lista = (Xar*)valori[V];
@@ -1362,7 +1473,7 @@ _processare_unam_actionem(
                             decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             decl_node->genus = ARBOR2_NODUS_DECLARATOR;
                             decl_node->lexema = name_tok;
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.pointer_levels = NIHIL;
                             decl_node->datum.declarator.titulus = name_tok->lexema->valor;
                             decl_node->datum.declarator.latitudo_biti = expr_node;
                             decl_node->datum.declarator.dimensiones = NIHIL;
@@ -1370,12 +1481,17 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -1400,7 +1516,7 @@ _processare_unam_actionem(
                             decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             decl_node->genus = ARBOR2_NODUS_DECLARATOR;
                             decl_node->lexema = type_tok;  /* use type token since no name */
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.pointer_levels = NIHIL;
                             decl_node->datum.declarator.titulus.datum = NIHIL;
                             decl_node->datum.declarator.titulus.mensura = ZEPHYRUM;  /* anonymous */
                             decl_node->datum.declarator.latitudo_biti = expr_node;
@@ -1409,12 +1525,17 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -1426,7 +1547,7 @@ _processare_unam_actionem(
                         {
                             /* P65: member_list type_spec ':' expr ';' (5 symbols, append anonymous bit field) */
                             /* valori: [4]=list, [1]=expr_node */
-                            /* lexemata: [3]=type */
+                            /* lexemata: [3]=type, [0]=; */
                             Arbor2Nodus* member;
                             Arbor2Nodus* decl_node;
                             Xar* lista = (Xar*)valori[IV];
@@ -1437,7 +1558,7 @@ _processare_unam_actionem(
                             decl_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             decl_node->genus = ARBOR2_NODUS_DECLARATOR;
                             decl_node->lexema = type_tok;  /* use type token since no name */
-                            decl_node->datum.declarator.num_stellae = ZEPHYRUM;
+                            decl_node->datum.declarator.pointer_levels = NIHIL;
                             decl_node->datum.declarator.titulus.datum = NIHIL;
                             decl_node->datum.declarator.titulus.mensura = ZEPHYRUM;  /* anonymous */
                             decl_node->datum.declarator.latitudo_biti = expr_node;
@@ -1446,12 +1567,17 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = type_tok;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
                             member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -1476,9 +1602,14 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = spec_node->lexema;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -1504,9 +1635,14 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = spec_node->lexema;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -1532,9 +1668,14 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = spec_node->lexema;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -1560,9 +1701,14 @@ _processare_unam_actionem(
                             member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->genus = ARBOR2_NODUS_DECLARATIO;
                             member->lexema = spec_node->lexema;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -1593,9 +1739,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = lexemata[III];  /* typedef token */
+                            valor_novus->datum.declaratio.tok_storage = lexemata[III];  /* typedef */
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
@@ -1618,9 +1769,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = lexemata[III];  /* typedef token */
+                            valor_novus->datum.declaratio.tok_storage = lexemata[III];  /* typedef */
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
@@ -1643,9 +1799,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = lexemata[III];  /* typedef token */
+                            valor_novus->datum.declaratio.tok_storage = lexemata[III];  /* typedef */
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
@@ -1673,9 +1834,15 @@ _processare_unam_actionem(
                             type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             type_spec->lexema = lexemata[I];
 
+                            /* Initialize token slots based on production */
+                            valor_novus->datum.declaratio.tok_storage = NIHIL;
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate form */
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
 
@@ -1683,26 +1850,32 @@ _processare_unam_actionem(
                             commutatio (actio->valor)
                             {
                                 casus 148:  /* static */
+                                    valor_novus->datum.declaratio.tok_storage = lexemata[II];
                                     valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_STATIC;
                                     valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
                                     frange;
                                 casus 149:  /* extern */
+                                    valor_novus->datum.declaratio.tok_storage = lexemata[II];
                                     valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_EXTERN;
                                     valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
                                     frange;
                                 casus 150:  /* register */
+                                    valor_novus->datum.declaratio.tok_storage = lexemata[II];
                                     valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_REGISTER;
                                     valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
                                     frange;
                                 casus 151:  /* auto */
+                                    valor_novus->datum.declaratio.tok_storage = lexemata[II];
                                     valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_AUTO;
                                     valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
                                     frange;
                                 casus 152:  /* const */
+                                    valor_novus->datum.declaratio.tok_const = lexemata[II];
                                     valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
                                     valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_CONST;
                                     frange;
                                 casus 153:  /* volatile */
+                                    valor_novus->datum.declaratio.tok_volatile = lexemata[II];
                                     valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
                                     valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_VOLATILE;
                                     frange;
@@ -1732,9 +1905,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = NIHIL;
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -1770,9 +1948,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = (storage != ARBOR2_STORAGE_NONE) ? lexemata[IV] : NIHIL;
+                            valor_novus->datum.declaratio.tok_const = (quals == ARBOR2_QUAL_CONST) ? lexemata[IV] : NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = (quals == ARBOR2_QUAL_VOLATILE) ? lexemata[IV] : NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -1796,9 +1979,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = NIHIL;
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -1831,9 +2019,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = (storage != ARBOR2_STORAGE_NONE) ? lexemata[IV] : NIHIL;
+                            valor_novus->datum.declaratio.tok_const = (quals == ARBOR2_QUAL_CONST) ? lexemata[IV] : NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = (quals == ARBOR2_QUAL_VOLATILE) ? lexemata[IV] : NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -1897,9 +2090,14 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = (storage != ARBOR2_STORAGE_NONE) ? lexemata[III] : NIHIL;
+                            valor_novus->datum.declaratio.tok_const = (quals & ARBOR2_QUAL_CONST) ? lexemata[II] : NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = (quals & ARBOR2_QUAL_VOLATILE) ? lexemata[II] : NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -1965,8 +2163,13 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 239)
                         {
                             /* Declaration as statement - pass through the declaration node */
-                            /* valori[1] = declaratio, valori[0] = ';' token (ignored) */
+                            /* valori[1] = declaratio, lexemata[0] = ';' token */
                             valor_novus = valori[I];
+                            /* Set the semicolon token on the declaration */
+                            si (valor_novus != NIHIL && valor_novus->genus == ARBOR2_NODUS_DECLARATIO)
+                            {
+                                valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            }
                         }
                         alioquin si (actio->valor == 226)
                         {
@@ -2016,9 +2219,14 @@ _processare_unam_actionem(
                                     nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                     nodus->genus = ARBOR2_NODUS_DECLARATIO;
                                     nodus->lexema = type_tok;
+                                    nodus->datum.declaratio.tok_storage = NIHIL;
+                                    nodus->datum.declaratio.tok_const = NIHIL;
+                                    nodus->datum.declaratio.tok_volatile = NIHIL;
                                     nodus->datum.declaratio.specifier = type_spec;
                                     nodus->datum.declaratio.declarator = decl_node;
+                                    nodus->datum.declaratio.tok_assignatio = NIHIL;  /* TODO: pass from P222 */
                                     nodus->datum.declaratio.initializor = init_node;
+                                    nodus->datum.declaratio.tok_semicolon = NIHIL;  /* Set by P239 */
                                     nodus->datum.declaratio.proxima = NIHIL;
                                     nodus->datum.declaratio.est_typedef = FALSUM;
                                     nodus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -2069,7 +2277,7 @@ _processare_unam_actionem(
                             valor_novus->lexema = inner->lexema;
 
                             /* Copy base declarator fields */
-                            valor_novus->datum.declarator.num_stellae = inner->datum.declarator.num_stellae;
+                            valor_novus->datum.declarator.pointer_levels = inner->datum.declarator.pointer_levels;
                             valor_novus->datum.declarator.titulus = inner->datum.declarator.titulus;
                             valor_novus->datum.declarator.latitudo_biti = inner->datum.declarator.latitudo_biti;
 
@@ -2100,7 +2308,7 @@ _processare_unam_actionem(
                             valor_novus->lexema = inner->lexema;
 
                             /* Copy base declarator fields */
-                            valor_novus->datum.declarator.num_stellae = inner->datum.declarator.num_stellae;
+                            valor_novus->datum.declarator.pointer_levels = inner->datum.declarator.pointer_levels;
                             valor_novus->datum.declarator.titulus = inner->datum.declarator.titulus;
                             valor_novus->datum.declarator.latitudo_biti = inner->datum.declarator.latitudo_biti;
 
@@ -2131,31 +2339,64 @@ _processare_unam_actionem(
 
                             si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
                             {
+                                Arbor2PointerLevel* lvl;
+                                Arbor2PointerLevel** lvl_slot;
+
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
                                 valor_novus->lexema = lexemata[II];  /* The '*' token */
-                                valor_novus->datum.declarator.num_stellae =
-                                    inner->datum.declarator.num_stellae + I;
                                 valor_novus->datum.declarator.titulus =
                                     inner->datum.declarator.titulus;
                                 valor_novus->datum.declarator.latitudo_biti =
                                     inner->datum.declarator.latitudo_biti;
                                 valor_novus->datum.declarator.dimensiones =
                                     inner->datum.declarator.dimensiones;
-                                valor_novus->datum.declarator.pointer_quals = ZEPHYRUM;
+
+                                /* Copy existing pointer_levels and add new level */
+                                valor_novus->datum.declarator.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                si (inner->datum.declarator.pointer_levels != NIHIL)
+                                {
+                                    i32 i;
+                                    i32 n = xar_numerus(inner->datum.declarator.pointer_levels);
+                                    per (i = ZEPHYRUM; i < n; i++)
+                                    {
+                                        Arbor2PointerLevel** src = xar_obtinere(inner->datum.declarator.pointer_levels, i);
+                                        Arbor2PointerLevel** dst = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                        *dst = *src;
+                                    }
+                                }
+                                /* Add new pointer level */
+                                lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                lvl->tok_stella = lexemata[II];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                lvl_slot = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                *lvl_slot = lvl;
                             }
                             alioquin
                             {
                                 /* Fallback: create basic declarator with one star */
+                                Arbor2PointerLevel* lvl;
+                                Arbor2PointerLevel** lvl_slot;
+
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
                                 valor_novus->lexema = lexemata[II];
-                                valor_novus->datum.declarator.num_stellae = I;
                                 valor_novus->datum.declarator.titulus.datum = NIHIL;
                                 valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
                                 valor_novus->datum.declarator.latitudo_biti = NIHIL;
                                 valor_novus->datum.declarator.dimensiones = NIHIL;
-                                valor_novus->datum.declarator.pointer_quals = ZEPHYRUM;
+
+                                /* Create pointer_levels with one level */
+                                valor_novus->datum.declarator.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                lvl->tok_stella = lexemata[II];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                lvl_slot = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                *lvl_slot = lvl;
                             }
                         }
                         /* ========== ABSTRACT PARAMETER P340 ========== */
@@ -2219,6 +2460,8 @@ _processare_unam_actionem(
                              * P253: declarator -> '*' 'volatile' declarator (3 symbols)
                              * valori: [2]='*', [1]=qualifier, [0]=declarator */
                             Arbor2Nodus* inner = valori[ZEPHYRUM];
+                            Arbor2PointerLevel* lvl;
+                            Arbor2PointerLevel** lvl_slot;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
@@ -2226,29 +2469,45 @@ _processare_unam_actionem(
 
                             si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
                             {
-                                valor_novus->datum.declarator.num_stellae =
-                                    inner->datum.declarator.num_stellae + I;
                                 valor_novus->datum.declarator.titulus =
                                     inner->datum.declarator.titulus;
                                 valor_novus->datum.declarator.latitudo_biti =
                                     inner->datum.declarator.latitudo_biti;
                                 valor_novus->datum.declarator.dimensiones =
                                     inner->datum.declarator.dimensiones;
+
+                                /* Copy inner pointer levels and add new level */
+                                valor_novus->datum.declarator.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                si (inner->datum.declarator.pointer_levels != NIHIL)
+                                {
+                                    i32 i;
+                                    i32 n = xar_numerus(inner->datum.declarator.pointer_levels);
+                                    per (i = ZEPHYRUM; i < n; i++)
+                                    {
+                                        Arbor2PointerLevel** src = xar_obtinere(inner->datum.declarator.pointer_levels, i);
+                                        Arbor2PointerLevel** dst = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                        *dst = *src;
+                                    }
+                                }
                             }
                             alioquin
                             {
-                                valor_novus->datum.declarator.num_stellae = I;
                                 valor_novus->datum.declarator.titulus.datum = NIHIL;
                                 valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
                                 valor_novus->datum.declarator.latitudo_biti = NIHIL;
                                 valor_novus->datum.declarator.dimensiones = NIHIL;
+                                valor_novus->datum.declarator.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
                             }
 
-                            /* Set pointer qualifier */
-                            si (actio->valor == 252)
-                                valor_novus->datum.declarator.pointer_quals = ARBOR2_QUAL_CONST;
-                            alioquin
-                                valor_novus->datum.declarator.pointer_quals = ARBOR2_QUAL_VOLATILE;
+                            /* Add new pointer level with qualifier */
+                            lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                            lvl->tok_stella = lexemata[II];
+                            lvl->tok_const = (actio->valor == 252) ? lexemata[I] : NIHIL;
+                            lvl->tok_volatile = (actio->valor == 253) ? lexemata[I] : NIHIL;
+                            lvl_slot = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                            *lvl_slot = lvl;
                         }
                         alioquin si (actio->valor == 254 || actio->valor == 255)
                         {
@@ -2256,6 +2515,8 @@ _processare_unam_actionem(
                              * P255: declarator -> '*' 'volatile' 'const' declarator (4 symbols)
                              * valori: [3]='*', [2]=qual1, [1]=qual2, [0]=declarator */
                             Arbor2Nodus* inner = valori[ZEPHYRUM];
+                            Arbor2PointerLevel* lvl;
+                            Arbor2PointerLevel** lvl_slot;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
@@ -2263,27 +2524,55 @@ _processare_unam_actionem(
 
                             si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
                             {
-                                valor_novus->datum.declarator.num_stellae =
-                                    inner->datum.declarator.num_stellae + I;
                                 valor_novus->datum.declarator.titulus =
                                     inner->datum.declarator.titulus;
                                 valor_novus->datum.declarator.latitudo_biti =
                                     inner->datum.declarator.latitudo_biti;
                                 valor_novus->datum.declarator.dimensiones =
                                     inner->datum.declarator.dimensiones;
+
+                                /* Copy inner pointer levels and add new level */
+                                valor_novus->datum.declarator.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                si (inner->datum.declarator.pointer_levels != NIHIL)
+                                {
+                                    i32 i;
+                                    i32 n = xar_numerus(inner->datum.declarator.pointer_levels);
+                                    per (i = ZEPHYRUM; i < n; i++)
+                                    {
+                                        Arbor2PointerLevel** src = xar_obtinere(inner->datum.declarator.pointer_levels, i);
+                                        Arbor2PointerLevel** dst = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                        *dst = *src;
+                                    }
+                                }
                             }
                             alioquin
                             {
-                                valor_novus->datum.declarator.num_stellae = I;
                                 valor_novus->datum.declarator.titulus.datum = NIHIL;
                                 valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
                                 valor_novus->datum.declarator.latitudo_biti = NIHIL;
                                 valor_novus->datum.declarator.dimensiones = NIHIL;
+                                valor_novus->datum.declarator.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
                             }
 
-                            /* Both const and volatile */
-                            valor_novus->datum.declarator.pointer_quals =
-                                ARBOR2_QUAL_CONST | ARBOR2_QUAL_VOLATILE;
+                            /* Add new pointer level with both qualifiers
+                             * P254: const volatile -> const at [2], volatile at [1]
+                             * P255: volatile const -> volatile at [2], const at [1] */
+                            lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                            lvl->tok_stella = lexemata[III];
+                            si (actio->valor == 254)
+                            {
+                                lvl->tok_const = lexemata[II];
+                                lvl->tok_volatile = lexemata[I];
+                            }
+                            alioquin
+                            {
+                                lvl->tok_volatile = lexemata[II];
+                                lvl->tok_const = lexemata[I];
+                            }
+                            lvl_slot = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                            *lvl_slot = lvl;
                         }
                         alioquin si (num_pop == II)
                         {
@@ -2293,20 +2582,52 @@ _processare_unam_actionem(
                                 valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
                             {
                                 /* Wrap function declarator with pointer - preservare FUNCTI */
+                                Arbor2PointerLevel* lvl;
+                                Arbor2PointerLevel** lvl_slot;
+                                Arbor2Nodus* inner_functi = valori[ZEPHYRUM];
+
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
                                 valor_novus->lexema = lexemata[I];  /* The '*' token */
                                 valor_novus->datum.declarator_functi.declarator_interior =
-                                    valori[ZEPHYRUM]->datum.declarator_functi.declarator_interior;
+                                    inner_functi->datum.declarator_functi.declarator_interior;
+                                valor_novus->datum.declarator_functi.tok_paren_ap =
+                                    inner_functi->datum.declarator_functi.tok_paren_ap;
                                 valor_novus->datum.declarator_functi.parametri =
-                                    valori[ZEPHYRUM]->datum.declarator_functi.parametri;
+                                    inner_functi->datum.declarator_functi.parametri;
+                                valor_novus->datum.declarator_functi.tok_paren_cl =
+                                    inner_functi->datum.declarator_functi.tok_paren_cl;
                                 valor_novus->datum.declarator_functi.habet_void =
-                                    valori[ZEPHYRUM]->datum.declarator_functi.habet_void;
-                                valor_novus->datum.declarator_functi.num_stellae =
-                                    valori[ZEPHYRUM]->datum.declarator_functi.num_stellae + I;
+                                    inner_functi->datum.declarator_functi.habet_void;
+                                valor_novus->datum.declarator_functi.est_variadicus =
+                                    inner_functi->datum.declarator_functi.est_variadicus;
+
+                                /* Copy and extend pointer_levels */
+                                valor_novus->datum.declarator_functi.pointer_levels =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                si (inner_functi->datum.declarator_functi.pointer_levels != NIHIL)
+                                {
+                                    i32 i;
+                                    i32 n = xar_numerus(inner_functi->datum.declarator_functi.pointer_levels);
+                                    per (i = ZEPHYRUM; i < n; i++)
+                                    {
+                                        Arbor2PointerLevel** src = xar_obtinere(inner_functi->datum.declarator_functi.pointer_levels, i);
+                                        Arbor2PointerLevel** dst = xar_addere(valor_novus->datum.declarator_functi.pointer_levels);
+                                        *dst = *src;
+                                    }
+                                }
+                                lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                lvl->tok_stella = lexemata[I];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                lvl_slot = xar_addere(valor_novus->datum.declarator_functi.pointer_levels);
+                                *lvl_slot = lvl;
                             }
                             alioquin
                             {
+                                Arbor2PointerLevel* lvl;
+                                Arbor2PointerLevel** lvl_slot;
+
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
                                 valor_novus->lexema = lexemata[I];  /* The '*' token */
@@ -2314,23 +2635,46 @@ _processare_unam_actionem(
                                 si (valori[ZEPHYRUM] != NIHIL &&
                                     valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR)
                                 {
-                                    valor_novus->datum.declarator.num_stellae =
-                                        valori[ZEPHYRUM]->datum.declarator.num_stellae + I;
+                                    Arbor2Nodus* inner = valori[ZEPHYRUM];
                                     valor_novus->datum.declarator.titulus =
-                                        valori[ZEPHYRUM]->datum.declarator.titulus;
+                                        inner->datum.declarator.titulus;
                                     valor_novus->datum.declarator.latitudo_biti =
-                                        valori[ZEPHYRUM]->datum.declarator.latitudo_biti;
+                                        inner->datum.declarator.latitudo_biti;
                                     valor_novus->datum.declarator.dimensiones =
-                                        valori[ZEPHYRUM]->datum.declarator.dimensiones;
+                                        inner->datum.declarator.dimensiones;
+
+                                    /* Copy and extend pointer_levels */
+                                    valor_novus->datum.declarator.pointer_levels =
+                                        xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                                    si (inner->datum.declarator.pointer_levels != NIHIL)
+                                    {
+                                        i32 i;
+                                        i32 n = xar_numerus(inner->datum.declarator.pointer_levels);
+                                        per (i = ZEPHYRUM; i < n; i++)
+                                        {
+                                            Arbor2PointerLevel** src = xar_obtinere(inner->datum.declarator.pointer_levels, i);
+                                            Arbor2PointerLevel** dst = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                            *dst = *src;
+                                        }
+                                    }
                                 }
                                 alioquin
                                 {
-                                    valor_novus->datum.declarator.num_stellae = I;
                                     valor_novus->datum.declarator.titulus.datum = NIHIL;
                                     valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
                                     valor_novus->datum.declarator.latitudo_biti = NIHIL;
                                     valor_novus->datum.declarator.dimensiones = NIHIL;
+                                    valor_novus->datum.declarator.pointer_levels =
+                                        xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
                                 }
+
+                                /* Add new pointer level */
+                                lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                                lvl->tok_stella = lexemata[I];
+                                lvl->tok_const = NIHIL;
+                                lvl->tok_volatile = NIHIL;
+                                lvl_slot = xar_addere(valor_novus->datum.declarator.pointer_levels);
+                                *lvl_slot = lvl;
                             }
                         }
                         alioquin si (num_pop == I)
@@ -2339,7 +2683,7 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
                             valor_novus->lexema = lexemata[ZEPHYRUM];
-                            valor_novus->datum.declarator.num_stellae = ZEPHYRUM;
+                            valor_novus->datum.declarator.pointer_levels = NIHIL;
                             valor_novus->datum.declarator.latitudo_biti = NIHIL;
                             valor_novus->datum.declarator.dimensiones = NIHIL;
                             si (valori[ZEPHYRUM] != NIHIL)
@@ -2371,9 +2715,12 @@ _processare_unam_actionem(
                             /* valori[2]=declarator, [1]='(', [0]=')' */
                             valor_novus->lexema = lexemata[II];
                             valor_novus->datum.declarator_functi.declarator_interior = valori[II];
+                            valor_novus->datum.declarator_functi.tok_paren_ap = lexemata[I];
                             valor_novus->datum.declarator_functi.parametri = NIHIL;
+                            valor_novus->datum.declarator_functi.tok_paren_cl = lexemata[ZEPHYRUM];
                             valor_novus->datum.declarator_functi.habet_void = FALSUM;
-                            valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
+                            valor_novus->datum.declarator_functi.est_variadicus = FALSUM;
+                            valor_novus->datum.declarator_functi.pointer_levels = NIHIL;
                         }
                         alioquin si (num_pop == IV)
                         {
@@ -2381,7 +2728,10 @@ _processare_unam_actionem(
                             /* valori[3]=declarator, [2]='(', [1]=void/param_list, [0]=')' */
                             valor_novus->lexema = lexemata[III];
                             valor_novus->datum.declarator_functi.declarator_interior = valori[III];
-                            valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
+                            valor_novus->datum.declarator_functi.tok_paren_ap = lexemata[II];
+                            valor_novus->datum.declarator_functi.tok_paren_cl = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declarator_functi.pointer_levels = NIHIL;
+                            valor_novus->datum.declarator_functi.est_variadicus = FALSUM;
                             si (valori[I] == NIHIL)
                             {
                                 /* P39: (void) - valori[1] is NULL from VOID token */
@@ -2390,8 +2740,8 @@ _processare_unam_actionem(
                             }
                             alioquin
                             {
-                                /* P40: (param_list) - valori[1] is the Xar* */
-                                valor_novus->datum.declarator_functi.parametri = (Xar*)valori[I];
+                                /* P40: (param_list) - valori[1] is LISTA_SEPARATA node */
+                                valor_novus->datum.declarator_functi.parametri = valori[I];
                                 valor_novus->datum.declarator_functi.habet_void = FALSUM;
                             }
                         }
@@ -2399,9 +2749,12 @@ _processare_unam_actionem(
                         {
                             valor_novus->lexema = NIHIL;
                             valor_novus->datum.declarator_functi.declarator_interior = NIHIL;
+                            valor_novus->datum.declarator_functi.tok_paren_ap = NIHIL;
                             valor_novus->datum.declarator_functi.parametri = NIHIL;
+                            valor_novus->datum.declarator_functi.tok_paren_cl = NIHIL;
                             valor_novus->datum.declarator_functi.habet_void = FALSUM;
-                            valor_novus->datum.declarator_functi.num_stellae = ZEPHYRUM;
+                            valor_novus->datum.declarator_functi.est_variadicus = FALSUM;
+                            valor_novus->datum.declarator_functi.pointer_levels = NIHIL;
                         }
                         frange;
 
@@ -2410,6 +2763,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_SENTENTIA;
                         valor_novus->lexema = lexemata[ZEPHYRUM];  /* semicolon */
+                        valor_novus->datum.sententia.tok_semicolon = lexemata[ZEPHYRUM];
                         /* Expression is at index 1 (before semicolon) */
                         si (num_pop >= II && valori[I] != NIHIL)
                         {
@@ -2427,6 +2781,7 @@ _processare_unam_actionem(
                         valor_novus->genus = ARBOR2_NODUS_SENTENTIA_VACUA;
                         valor_novus->lexema = lexemata[ZEPHYRUM];  /* semicolon */
                         valor_novus->datum.sententia.expressio = NIHIL;
+                        valor_novus->datum.sententia.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
 
                     casus ARBOR2_NODUS_CORPUS:
@@ -2436,8 +2791,10 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_CORPUS;
                             valor_novus->lexema = NIHIL;
+                            valor_novus->datum.corpus.tok_brace_ap = NIHIL;
                             valor_novus->datum.corpus.sententiae =
                                 xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            valor_novus->datum.corpus.tok_brace_cl = NIHIL;
                         }
                         alioquin si (num_pop == II)
                         {
@@ -2460,8 +2817,10 @@ _processare_unam_actionem(
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_CORPUS;
                                 valor_novus->lexema = NIHIL;
+                                valor_novus->datum.corpus.tok_brace_ap = NIHIL;
                                 valor_novus->datum.corpus.sententiae =
                                     xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                                valor_novus->datum.corpus.tok_brace_cl = NIHIL;
                                 slot_stmt = xar_addere(valor_novus->datum.corpus.sententiae);
                                 *slot_stmt = stmt;
                             }
@@ -2477,6 +2836,8 @@ _processare_unam_actionem(
                                 /* Already have CORPUS node from stmt_list, just use it */
                                 valor_novus = lista;
                                 valor_novus->lexema = lexemata[II];  /* '{' token */
+                                valor_novus->datum.corpus.tok_brace_ap = lexemata[II];
+                                valor_novus->datum.corpus.tok_brace_cl = lexemata[ZEPHYRUM];
                             }
                             alioquin
                             {
@@ -2484,8 +2845,10 @@ _processare_unam_actionem(
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_CORPUS;
                                 valor_novus->lexema = lexemata[II];
+                                valor_novus->datum.corpus.tok_brace_ap = lexemata[II];
                                 valor_novus->datum.corpus.sententiae =
                                     xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                                valor_novus->datum.corpus.tok_brace_cl = lexemata[ZEPHYRUM];
                             }
                         }
                         alioquin
@@ -2502,170 +2865,223 @@ _processare_unam_actionem(
                         si (num_pop == V)
                         {
                             /* P20: if_statement -> 'if' '(' expression ')' statement */
-                            /* valori[4] = if, valori[3] = (, valori[2] = expr,
-                               valori[1] = ), valori[0] = stmt */
+                            /* lexemata[4] = if, [3] = (, [1] = ), [0] = stmt */
+                            valor_novus->datum.conditionale.tok_si = lexemata[IV];
+                            valor_novus->datum.conditionale.tok_paren_ap = lexemata[III];
                             valor_novus->datum.conditionale.conditio = valori[II];
+                            valor_novus->datum.conditionale.tok_paren_cl = lexemata[I];
                             valor_novus->datum.conditionale.consequens = valori[ZEPHYRUM];
+                            valor_novus->datum.conditionale.tok_alioquin = NIHIL;
                             valor_novus->datum.conditionale.alternans = NIHIL;
                         }
                         alioquin si (num_pop == VII)
                         {
                             /* P21: if_statement -> 'if' '(' expression ')' statement 'else' statement */
-                            /* valori[6] = if, valori[5] = (, valori[4] = expr,
-                               valori[3] = ), valori[2] = stmt, valori[1] = else,
-                               valori[0] = stmt */
+                            /* lexemata[6] = if, [5] = (, [3] = ), [1] = else */
+                            valor_novus->datum.conditionale.tok_si = lexemata[VI];
+                            valor_novus->datum.conditionale.tok_paren_ap = lexemata[V];
                             valor_novus->datum.conditionale.conditio = valori[IV];
+                            valor_novus->datum.conditionale.tok_paren_cl = lexemata[III];
                             valor_novus->datum.conditionale.consequens = valori[II];
+                            valor_novus->datum.conditionale.tok_alioquin = lexemata[I];
                             valor_novus->datum.conditionale.alternans = valori[ZEPHYRUM];
                         }
                         alioquin
                         {
+                            valor_novus->datum.conditionale.tok_si = NIHIL;
+                            valor_novus->datum.conditionale.tok_paren_ap = NIHIL;
                             valor_novus->datum.conditionale.conditio = NIHIL;
+                            valor_novus->datum.conditionale.tok_paren_cl = NIHIL;
                             valor_novus->datum.conditionale.consequens = NIHIL;
+                            valor_novus->datum.conditionale.tok_alioquin = NIHIL;
                             valor_novus->datum.conditionale.alternans = NIHIL;
                         }
                         frange;
 
                     casus ARBOR2_NODUS_DUM:
                         /* P23: while_statement -> 'while' '(' expression ')' statement */
-                        /* valori[4] = while, valori[3] = (, valori[2] = expr,
-                           valori[1] = ), valori[0] = stmt */
+                        /* lexemata[4] = while, [3] = (, [1] = ) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DUM;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'while' token */
                         si (num_pop == V)
                         {
+                            valor_novus->datum.iteratio.tok_fac = NIHIL;
+                            valor_novus->datum.iteratio.tok_dum = lexemata[IV];
+                            valor_novus->datum.iteratio.tok_paren_ap = lexemata[III];
                             valor_novus->datum.iteratio.conditio = valori[II];
+                            valor_novus->datum.iteratio.tok_paren_cl = lexemata[I];
                             valor_novus->datum.iteratio.corpus = valori[ZEPHYRUM];
+                            valor_novus->datum.iteratio.tok_semicolon = NIHIL;
                         }
                         alioquin
                         {
+                            valor_novus->datum.iteratio.tok_fac = NIHIL;
+                            valor_novus->datum.iteratio.tok_dum = NIHIL;
+                            valor_novus->datum.iteratio.tok_paren_ap = NIHIL;
                             valor_novus->datum.iteratio.conditio = NIHIL;
+                            valor_novus->datum.iteratio.tok_paren_cl = NIHIL;
                             valor_novus->datum.iteratio.corpus = NIHIL;
+                            valor_novus->datum.iteratio.tok_semicolon = NIHIL;
                         }
                         frange;
 
                     casus ARBOR2_NODUS_FAC:
                         /* P25: do_statement -> 'do' statement 'while' '(' expression ')' ';' */
-                        /* valori[6] = do, valori[5] = stmt, valori[4] = while,
-                           valori[3] = (, valori[2] = expr, valori[1] = ),
-                           valori[0] = ; */
+                        /* lexemata[6] = do, [4] = while, [3] = (, [1] = ), [0] = ; */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_FAC;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'do' token */
                         si (num_pop == VII)
                         {
+                            valor_novus->datum.iteratio.tok_fac = lexemata[VI];
                             valor_novus->datum.iteratio.corpus = valori[V];
+                            valor_novus->datum.iteratio.tok_dum = lexemata[IV];
+                            valor_novus->datum.iteratio.tok_paren_ap = lexemata[III];
                             valor_novus->datum.iteratio.conditio = valori[II];
+                            valor_novus->datum.iteratio.tok_paren_cl = lexemata[I];
+                            valor_novus->datum.iteratio.tok_semicolon = lexemata[ZEPHYRUM];
                         }
                         alioquin
                         {
+                            valor_novus->datum.iteratio.tok_fac = NIHIL;
+                            valor_novus->datum.iteratio.tok_dum = NIHIL;
+                            valor_novus->datum.iteratio.tok_paren_ap = NIHIL;
                             valor_novus->datum.iteratio.conditio = NIHIL;
+                            valor_novus->datum.iteratio.tok_paren_cl = NIHIL;
                             valor_novus->datum.iteratio.corpus = NIHIL;
+                            valor_novus->datum.iteratio.tok_semicolon = NIHIL;
                         }
                         frange;
 
                     casus ARBOR2_NODUS_PER:
                         /* P27: for_statement -> 'for' '(' expr_opt ';' expr_opt ';' expr_opt ')' stmt */
-                        /* valori[8] = for, valori[7] = (, valori[6] = init,
-                           valori[5] = ;, valori[4] = cond, valori[3] = ;,
-                           valori[2] = incr, valori[1] = ), valori[0] = stmt */
+                        /* lexemata[8] = for, [7] = (, [5] = first ;, [3] = second ;, [1] = ) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_PER;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'for' token */
-                        si (num_pop == 9)
+                        si (num_pop == IX)
                         {
+                            valor_novus->datum.circuitus.tok_per = lexemata[VIII];
+                            valor_novus->datum.circuitus.tok_paren_ap = lexemata[VII];
                             valor_novus->datum.circuitus.initium = valori[VI];
+                            valor_novus->datum.circuitus.tok_semicolon1 = lexemata[V];
                             valor_novus->datum.circuitus.conditio = valori[IV];
+                            valor_novus->datum.circuitus.tok_semicolon2 = lexemata[III];
                             valor_novus->datum.circuitus.incrementum = valori[II];
+                            valor_novus->datum.circuitus.tok_paren_cl = lexemata[I];
                             valor_novus->datum.circuitus.corpus = valori[ZEPHYRUM];
                         }
                         alioquin
                         {
+                            valor_novus->datum.circuitus.tok_per = NIHIL;
+                            valor_novus->datum.circuitus.tok_paren_ap = NIHIL;
                             valor_novus->datum.circuitus.initium = NIHIL;
+                            valor_novus->datum.circuitus.tok_semicolon1 = NIHIL;
                             valor_novus->datum.circuitus.conditio = NIHIL;
+                            valor_novus->datum.circuitus.tok_semicolon2 = NIHIL;
                             valor_novus->datum.circuitus.incrementum = NIHIL;
+                            valor_novus->datum.circuitus.tok_paren_cl = NIHIL;
                             valor_novus->datum.circuitus.corpus = NIHIL;
                         }
                         frange;
 
                     casus ARBOR2_NODUS_FRANGE:
                         /* P30: statement -> 'break' ';' */
+                        /* lexemata[1] = break, [0] = ; */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_FRANGE;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'break' token */
+                        valor_novus->datum.frangendum.tok_frange = lexemata[I];
+                        valor_novus->datum.frangendum.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
 
                     casus ARBOR2_NODUS_PERGE:
                         /* P31: statement -> 'continue' ';' */
+                        /* lexemata[1] = continue, [0] = ; */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_PERGE;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'continue' token */
+                        valor_novus->datum.pergendum.tok_perge = lexemata[I];
+                        valor_novus->datum.pergendum.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
 
                     casus ARBOR2_NODUS_REDDE:
                         /* P32: statement -> 'return' expr_opt ';' */
+                        /* lexemata[2] = return, [0] = ; */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_REDDE;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'return' token */
-                        /* valori[2] = return, valori[1] = expr_opt, valori[0] = ; */
+                        valor_novus->datum.reditio.tok_redde = lexemata[II];
                         valor_novus->datum.reditio.valor = valori[I];  /* expr_opt (may be NULL) */
+                        valor_novus->datum.reditio.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
 
                     casus ARBOR2_NODUS_SALTA:
                         /* P33: statement -> 'goto' IDENTIFIER ';' */
+                        /* lexemata[2] = goto, [1] = ID, [0] = ; */
                         {
                             Arbor2Token* id_tok;
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_SALTA;
                             valor_novus->lexema = lexemata[num_pop - I];  /* 'goto' token */
-                            /* valori[2] = goto, valori[1] = ID (as token), valori[0] = ; */
-                            /* Get label from identifier token - lexemata[1] is the ID token */
                             id_tok = lexemata[I];
+                            valor_novus->datum.saltus.tok_salta = lexemata[II];
+                            valor_novus->datum.saltus.tok_destinatio = id_tok;
                             valor_novus->datum.saltus.destinatio = id_tok->lexema->valor;
+                            valor_novus->datum.saltus.tok_semicolon = lexemata[ZEPHYRUM];
                         }
                         frange;
 
                     casus ARBOR2_NODUS_TITULATUM:
                         /* P34: statement -> IDENTIFIER ':' statement */
-                        /* valori[2] = ID node, valori[1] = ':', valori[0] = statement */
+                        /* lexemata[2] = ID, [1] = : */
                         {
                             Arbor2Token* id_tok;
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_TITULATUM;
                             valor_novus->lexema = lexemata[II];  /* IDENTIFIER token */
                             id_tok = lexemata[II];
+                            valor_novus->datum.titulatum.tok_titulus = id_tok;
                             valor_novus->datum.titulatum.titulus = id_tok->lexema->valor;
+                            valor_novus->datum.titulatum.tok_colon = lexemata[I];
                             valor_novus->datum.titulatum.sententia = valori[ZEPHYRUM];
                         }
                         frange;
 
                     casus ARBOR2_NODUS_COMMUTATIO:
                         /* P35: statement -> 'switch' '(' expression ')' statement */
-                        /* valori[4]=switch, [3]='(', [2]=expr, [1]=')', [0]=stmt */
+                        /* lexemata[4] = switch, [3] = (, [1] = ) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_COMMUTATIO;
                         valor_novus->lexema = lexemata[IV];
+                        valor_novus->datum.selectivum.tok_commutatio = lexemata[IV];
+                        valor_novus->datum.selectivum.tok_paren_ap = lexemata[III];
                         valor_novus->datum.selectivum.expressio = valori[II];
+                        valor_novus->datum.selectivum.tok_paren_cl = lexemata[I];
                         valor_novus->datum.selectivum.corpus = valori[ZEPHYRUM];
                         frange;
 
                     casus ARBOR2_NODUS_CASUS:
                         /* P36: statement -> 'case' expression ':' statement */
-                        /* valori[3]=case, [2]=expr, [1]=':', [0]=stmt */
+                        /* lexemata[3] = case, [1] = : */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_CASUS;
                         valor_novus->lexema = lexemata[III];
+                        valor_novus->datum.electio.tok_casus = lexemata[III];
                         valor_novus->datum.electio.valor = valori[II];
+                        valor_novus->datum.electio.tok_colon = lexemata[I];
                         valor_novus->datum.electio.sententia = valori[ZEPHYRUM];
                         frange;
 
                     casus ARBOR2_NODUS_ORDINARIUS:
                         /* P37: statement -> 'default' ':' statement */
-                        /* valori[2]=default, [1]=':', [0]=stmt */
+                        /* lexemata[2] = default, [1] = : */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_ORDINARIUS;
                         valor_novus->lexema = lexemata[II];
+                        valor_novus->datum.defectus.tok_ordinarius = lexemata[II];
+                        valor_novus->datum.defectus.tok_colon = lexemata[I];
                         valor_novus->datum.defectus.sententia = valori[ZEPHYRUM];
                         frange;
 
@@ -2722,8 +3138,11 @@ _processare_unam_actionem(
                             tag_nodus->datum.folium.valor = id_tok->lexema->valor;
 
                             valor_novus->lexema = lexemata[IV];  /* struct/union token */
+                            valor_novus->datum.struct_specifier.tok_struct_or_union = lexemata[IV];
                             valor_novus->datum.struct_specifier.tag = tag_nodus;
+                            valor_novus->datum.struct_specifier.tok_brace_ap = lexemata[II];
                             valor_novus->datum.struct_specifier.membra = (Xar*)valori[I];
+                            valor_novus->datum.struct_specifier.tok_brace_cl = lexemata[ZEPHYRUM];
                             valor_novus->datum.struct_specifier.est_unio = (actio->valor == 52);
                         }
                         alioquin si (num_pop == IV)
@@ -2732,8 +3151,11 @@ _processare_unam_actionem(
                             /* valori: [3]=keyword, [2]={, [1]=member_list, [0]=} */
                             /* lexemata: [3]=keyword, [2]={, [1]=?, [0]=} */
                             valor_novus->lexema = lexemata[III];  /* struct/union token */
+                            valor_novus->datum.struct_specifier.tok_struct_or_union = lexemata[III];
                             valor_novus->datum.struct_specifier.tag = NIHIL;
+                            valor_novus->datum.struct_specifier.tok_brace_ap = lexemata[II];
                             valor_novus->datum.struct_specifier.membra = (Xar*)valori[I];
+                            valor_novus->datum.struct_specifier.tok_brace_cl = lexemata[ZEPHYRUM];
                             valor_novus->datum.struct_specifier.est_unio = (actio->valor == 53);
                         }
                         alioquin si (num_pop == II)
@@ -2750,8 +3172,11 @@ _processare_unam_actionem(
                             tag_nodus->datum.folium.valor = id_tok->lexema->valor;
 
                             valor_novus->lexema = lexemata[I];  /* struct/union token */
+                            valor_novus->datum.struct_specifier.tok_struct_or_union = lexemata[I];
                             valor_novus->datum.struct_specifier.tag = tag_nodus;
+                            valor_novus->datum.struct_specifier.tok_brace_ap = NIHIL;
                             valor_novus->datum.struct_specifier.membra = NIHIL;
+                            valor_novus->datum.struct_specifier.tok_brace_cl = NIHIL;
                             valor_novus->datum.struct_specifier.est_unio = (actio->valor == 54);
                         }
                         frange;
@@ -2776,16 +3201,24 @@ _processare_unam_actionem(
                             tag_nodus->datum.folium.valor = id_tok->lexema->valor;
 
                             valor_novus->lexema = lexemata[IV];  /* enum token */
+                            valor_novus->datum.enum_specifier.tok_enum = lexemata[IV];
                             valor_novus->datum.enum_specifier.tag = tag_nodus;
-                            valor_novus->datum.enum_specifier.enumeratores = (Xar*)valori[I];
+                            valor_novus->datum.enum_specifier.tok_brace_ap = lexemata[II];
+                            /* valori[I] is now a LISTA_SEPARATA node */
+                            valor_novus->datum.enum_specifier.enumeratores = valori[I];
+                            valor_novus->datum.enum_specifier.tok_brace_cl = lexemata[ZEPHYRUM];
                         }
                         alioquin si (num_pop == IV)
                         {
                             /* P56: enum { enumerator_list } (anonymous) */
                             /* valori: [3]=enum, [2]={, [1]=enumerator_list, [0]=} */
                             valor_novus->lexema = lexemata[III];  /* enum token */
+                            valor_novus->datum.enum_specifier.tok_enum = lexemata[III];
                             valor_novus->datum.enum_specifier.tag = NIHIL;
-                            valor_novus->datum.enum_specifier.enumeratores = (Xar*)valori[I];
+                            valor_novus->datum.enum_specifier.tok_brace_ap = lexemata[II];
+                            /* valori[I] is now a LISTA_SEPARATA node */
+                            valor_novus->datum.enum_specifier.enumeratores = valori[I];
+                            valor_novus->datum.enum_specifier.tok_brace_cl = lexemata[ZEPHYRUM];
                         }
                         alioquin si (num_pop == II)
                         {
@@ -2800,8 +3233,11 @@ _processare_unam_actionem(
                             tag_nodus->datum.folium.valor = id_tok->lexema->valor;
 
                             valor_novus->lexema = lexemata[I];  /* enum token */
+                            valor_novus->datum.enum_specifier.tok_enum = lexemata[I];
                             valor_novus->datum.enum_specifier.tag = tag_nodus;
+                            valor_novus->datum.enum_specifier.tok_brace_ap = NIHIL;
                             valor_novus->datum.enum_specifier.enumeratores = NIHIL;
+                            valor_novus->datum.enum_specifier.tok_brace_cl = NIHIL;
                         }
                         frange;
 
@@ -2839,20 +3275,35 @@ _processare_unam_actionem(
 
                         si (actio->valor == 200)
                         {
-                            /* P200: init_lista -> '{' '}' (2 symbols) - empty list */
-                            valor_novus->datum.initializor_lista.items = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            /* P200: init_lista -> '{' '}' (2 symbols) - empty list
+                             * Create empty LISTA_SEPARATA */
+                            Arbor2Nodus* empty_lista;
+                            empty_lista = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            empty_lista->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+                            empty_lista->lexema = NIHIL;
+                            empty_lista->datum.lista_separata.elementa =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            empty_lista->datum.lista_separata.separatores =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            valor_novus->datum.initializor_lista.tok_brace_ap = lexemata[I];
+                            valor_novus->datum.initializor_lista.items = empty_lista;
+                            valor_novus->datum.initializor_lista.tok_brace_cl = lexemata[ZEPHYRUM];
                         }
                         alioquin si (actio->valor == 201)
                         {
                             /* P201: init_lista -> '{' init_items '}' (3 symbols)
-                             * valori: [2]='{', [1]=init_items (Xar*), [0]='}' */
-                            valor_novus->datum.initializor_lista.items = (Xar*)valori[I];
+                             * valori: [2]=NIHIL, [1]=init_items (LISTA_SEPARATA), [0]=NIHIL */
+                            valor_novus->datum.initializor_lista.tok_brace_ap = lexemata[II];
+                            valor_novus->datum.initializor_lista.items = valori[I];
+                            valor_novus->datum.initializor_lista.tok_brace_cl = lexemata[ZEPHYRUM];
                         }
                         alioquin si (actio->valor == 202)
                         {
                             /* P202: init_lista -> '{' init_items ',' '}' (4 symbols)
-                             * valori: [3]='{', [2]=init_items (Xar*), [1]=',', [0]='}' */
-                            valor_novus->datum.initializor_lista.items = (Xar*)valori[II];
+                             * valori: [3]=NIHIL, [2]=init_items (LISTA_SEPARATA), [1]=NIHIL, [0]=NIHIL */
+                            valor_novus->datum.initializor_lista.tok_brace_ap = lexemata[III];
+                            valor_novus->datum.initializor_lista.items = valori[II];
+                            valor_novus->datum.initializor_lista.tok_brace_cl = lexemata[ZEPHYRUM];
                         }
                         frange;
 
@@ -2874,57 +3325,114 @@ _processare_unam_actionem(
                         /* Special handling for parameter list rules */
                         si (actio->valor == 41)
                         {
-                            /* P41: parameter_list -> parameter_declaration */
-                            /* Create Xar with single param */
-                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;  /* Return as "Arbor2Nodus*" */
+                            /* P41: parameter_list -> parameter_declaration (1 symbol)
+                             * Create LISTA_SEPARATA with first parameter */
+                            Arbor2Nodus* lista_nodus;
+                            lista_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            lista_nodus->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+                            lista_nodus->lexema = NIHIL;
+                            lista_nodus->datum.lista_separata.elementa =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            lista_nodus->datum.lista_separata.separatores =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            /* Add first parameter */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (actio->valor == 42)
                         {
-                            /* P42: parameter_list -> parameter_list ',' parameter_declaration */
-                            /* valori[2]=existing list, valori[1]=',', valori[0]=new param */
-                            Xar* lista = (Xar*)valori[II];
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                            /* P42: parameter_list -> parameter_list ',' parameter_declaration (3 symbols)
+                             * valori: [2]=parameter_list (LISTA_SEPARATA), [1]=NIHIL, [0]=parameter
+                             * lexemata: [2]=?, [1]=',', [0]=last_token_of_param */
+                            Arbor2Nodus* lista_nodus = valori[II];
+                            /* Add comma token to separatores */
+                            {
+                                Arbor2Token** sep_slot = xar_addere(lista_nodus->datum.lista_separata.separatores);
+                                *sep_slot = lexemata[I];  /* The comma token */
+                            }
+                            /* Add new parameter */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (actio->valor == 58)
                         {
-                            /* P58: enumerator_list -> enumerator */
-                            /* Create Xar with single enumerator */
-                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                            /* P58: enumerator_list -> enumerator (1 symbol)
+                             * Create LISTA_SEPARATA with first enumerator */
+                            Arbor2Nodus* lista_nodus;
+                            lista_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            lista_nodus->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+                            lista_nodus->lexema = NIHIL;
+                            lista_nodus->datum.lista_separata.elementa =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            lista_nodus->datum.lista_separata.separatores =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            /* Add first enumerator */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (actio->valor == 59)
                         {
-                            /* P59: enumerator_list -> enumerator_list ',' enumerator */
-                            /* valori[2]=existing list, valori[1]=',', valori[0]=new enumerator */
-                            Xar* lista = (Xar*)valori[II];
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                            /* P59: enumerator_list -> enumerator_list ',' enumerator (3 symbols)
+                             * valori: [2]=enumerator_list (LISTA_SEPARATA), [1]=NIHIL, [0]=enumerator
+                             * lexemata: [2]=?, [1]=',', [0]=last_token_of_enumerator */
+                            Arbor2Nodus* lista_nodus = valori[II];
+                            /* Add comma token to separatores */
+                            {
+                                Arbor2Token** sep_slot = xar_addere(lista_nodus->datum.lista_separata.separatores);
+                                *sep_slot = lexemata[I];  /* The comma token */
+                            }
+                            /* Add new enumerator */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (actio->valor == 203)
                         {
                             /* P203: init_items -> initializer (1 symbol)
-                             * Create Xar with single initializer */
-                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                             * Create LISTA_SEPARATA with first initializer */
+                            Arbor2Nodus* lista_nodus;
+                            lista_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            lista_nodus->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+                            lista_nodus->lexema = NIHIL;
+                            lista_nodus->datum.lista_separata.elementa =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            lista_nodus->datum.lista_separata.separatores =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            /* Add first initializer */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (actio->valor == 204)
                         {
                             /* P204: init_items -> init_items ',' initializer (3 symbols)
-                             * valori: [2]=existing list, [1]=',', [0]=new initializer */
-                            Xar* lista = (Xar*)valori[II];
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                             * valori: [2]=LISTA_SEPARATA, [1]=NIHIL, [0]=new initializer
+                             * lexemata: [1]=',' */
+                            Arbor2Nodus* lista_nodus = valori[II];
+                            /* Add comma token to separatores */
+                            {
+                                Arbor2Token** sep_slot = xar_addere(lista_nodus->datum.lista_separata.separatores);
+                                *sep_slot = lexemata[I];
+                            }
+                            /* Add initializer to elementa */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         /* Phase 1.2c: Designated initializer productions */
                         alioquin si (actio->valor == 213)
@@ -2962,20 +3470,39 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 218)
                         {
                             /* P218: init_items -> designator_item (1 symbol)
-                             * Create Xar with single designator_item */
-                            Xar* lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                             * Create LISTA_SEPARATA with first designator_item */
+                            Arbor2Nodus* lista_nodus;
+                            lista_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            lista_nodus->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+                            lista_nodus->lexema = NIHIL;
+                            lista_nodus->datum.lista_separata.elementa =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            lista_nodus->datum.lista_separata.separatores =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            /* Add first designator_item */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (actio->valor == 219)
                         {
                             /* P219: init_items -> init_items ',' designator_item (3 symbols)
-                             * valori: [2]=existing list, [1]=',', [0]=new designator_item */
-                            Xar* lista = (Xar*)valori[II];
-                            Arbor2Nodus** slot = xar_addere(lista);
-                            *slot = valori[ZEPHYRUM];
-                            valor_novus = (Arbor2Nodus*)lista;
+                             * valori: [2]=LISTA_SEPARATA, [1]=NIHIL, [0]=new designator_item
+                             * lexemata: [1]=',' */
+                            Arbor2Nodus* lista_nodus = valori[II];
+                            /* Add comma token to separatores */
+                            {
+                                Arbor2Token** sep_slot = xar_addere(lista_nodus->datum.lista_separata.separatores);
+                                *sep_slot = lexemata[I];
+                            }
+                            /* Add designator_item to elementa */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         /* Phase 1.3: Init-declarator list productions */
                         alioquin si (actio->valor == 221)
@@ -3033,6 +3560,44 @@ _processare_unam_actionem(
                             Xar** slot = xar_addere(lista);
                             *slot = (Xar*)valori[ZEPHYRUM];  /* The new pair */
                             valor_novus = (Arbor2Nodus*)lista;
+                        }
+                        /* Phase 2: Argument lists as LISTA_SEPARATA for roundtrip */
+                        alioquin si (actio->valor == 132)
+                        {
+                            /* P132: argumenta -> assignatio (1 symbol)
+                             * Create LISTA_SEPARATA with first argument */
+                            Arbor2Nodus* lista_nodus;
+                            lista_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            lista_nodus->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+                            lista_nodus->lexema = NIHIL;
+                            lista_nodus->datum.lista_separata.elementa =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            lista_nodus->datum.lista_separata.separatores =
+                                xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            /* Add first argument */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
+                        }
+                        alioquin si (actio->valor == 133)
+                        {
+                            /* P133: argumenta -> argumenta ',' assignatio (3 symbols)
+                             * valori: [2]=argumenta (LISTA_SEPARATA), [1]=NIHIL, [0]=assignatio
+                             * lexemata: [2]=?, [1]=',', [0]=last_token_of_assignatio */
+                            Arbor2Nodus* lista_nodus = valori[II];
+                            /* Add comma token to separatores */
+                            {
+                                Arbor2Token** sep_slot = xar_addere(lista_nodus->datum.lista_separata.separatores);
+                                *sep_slot = lexemata[I];  /* The comma token */
+                            }
+                            /* Add new argument */
+                            {
+                                Arbor2Nodus** slot = xar_addere(lista_nodus->datum.lista_separata.elementa);
+                                *slot = valori[ZEPHYRUM];
+                            }
+                            valor_novus = lista_nodus;
                         }
                         alioquin si (num_pop == III)
                         {

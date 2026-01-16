@@ -17361,6 +17361,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_ENUMERATOR:    redde "ENUMERATOR";
         casus ARBOR2_NODUS_INITIALIZOR_LISTA: redde "INITIALIZOR_LISTA";
         casus ARBOR2_NODUS_DESIGNATOR_ITEM: redde "DESIGNATOR_ITEM";
+        casus ARBOR2_NODUS_LISTA_SEPARATA: redde "LISTA_SEPARATA";
         casus ARBOR2_NODUS_TRANSLATION_UNIT: redde "TRANSLATION_UNIT";
         casus ARBOR2_NODUS_AMBIGUUS:      redde "AMBIGUUS";
         casus ARBOR2_NODUS_STRUCT_SPECIFIER: redde "STRUCT_SPECIFIER";

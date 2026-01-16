@@ -313,9 +313,10 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI:
             {
                 i32 num_params = ZEPHYRUM;
-                si (nodus->datum.declarator_functi.parametri != NIHIL)
+                Arbor2Nodus* param_lista = nodus->datum.declarator_functi.parametri;
+                si (param_lista != NIHIL && param_lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
                 {
-                    num_params = xar_numerus(nodus->datum.declarator_functi.parametri);
+                    num_params = xar_numerus(param_lista->datum.lista_separata.elementa);
                 }
                 imprimere("DECLARATOR_FUNCTI: habet_void=%s, params=%d\n",
                          nodus->datum.declarator_functi.habet_void ? "VERUM" : "FALSUM",
@@ -325,13 +326,13 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
                     _imprimere_arborem(nodus->datum.declarator_functi.declarator_interior, profunditas + I);
                 }
                 /* Print parameters if present */
-                si (nodus->datum.declarator_functi.parametri != NIHIL)
+                si (param_lista != NIHIL && param_lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
                 {
                     i32 j;
                     per (j = ZEPHYRUM; j < num_params; j++)
                     {
                         Arbor2Nodus* param;
-                        param = *(Arbor2Nodus**)xar_obtinere(nodus->datum.declarator_functi.parametri, j);
+                        param = *(Arbor2Nodus**)xar_obtinere(param_lista->datum.lista_separata.elementa, j);
                         per (i = ZEPHYRUM; i < profunditas + I; i++) imprimere("  ");
                         imprimere("param[%d]:\n", j);
                         _imprimere_arborem(param, profunditas + II);
@@ -417,7 +418,7 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
         casus ARBOR2_NODUS_ENUM_SPECIFIER:
         {
             Arbor2Nodus* tag = nodus->datum.enum_specifier.tag;
-            Xar* enumeratores = nodus->datum.enum_specifier.enumeratores;
+            Arbor2Nodus* enumeratores = nodus->datum.enum_specifier.enumeratores;
 
             si (tag != NIHIL)
             {
@@ -430,13 +431,13 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
                 imprimere("ENUM_SPECIFIER: (anonymous)\n");
             }
 
-            si (enumeratores != NIHIL)
+            si (enumeratores != NIHIL && enumeratores->genus == ARBOR2_NODUS_LISTA_SEPARATA)
             {
-                i32 num = xar_numerus(enumeratores);
+                i32 num = xar_numerus(enumeratores->datum.lista_separata.elementa);
                 i32 j;
                 per (j = ZEPHYRUM; j < num; j++)
                 {
-                    Arbor2Nodus** slot = xar_obtinere(enumeratores, j);
+                    Arbor2Nodus** slot = xar_obtinere(enumeratores->datum.lista_separata.elementa, j);
                     si (slot != NIHIL && *slot != NIHIL)
                     {
                         _imprimere_arborem(*slot, profunditas + I);
@@ -491,9 +492,9 @@ _imprimere_arborem(Arbor2Nodus* nodus, i32 profunditas)
                 imprimere("DECLARATOR: (anonymous)");
             }
 
-            si (nodus->datum.declarator.num_stellae > ZEPHYRUM)
+            si (nodus->datum.declarator.pointer_levels != NIHIL)
             {
-                imprimere(" (ptr=%d)", nodus->datum.declarator.num_stellae);
+                imprimere(" (ptr=%d)", xar_numerus(nodus->datum.declarator.pointer_levels));
             }
 
             si (latitudo != NIHIL)
@@ -2185,7 +2186,9 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
                 si (decl->datum.declarator_functi.parametri != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), I);
+                    Arbor2Nodus* pl = decl->datum.declarator_functi.parametri;
+                    CREDO_AEQUALIS_I32((i32)pl->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32(xar_numerus(pl->datum.lista_separata.elementa), I);
                 }
             }
         }
@@ -2230,7 +2233,9 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
                 si (decl->datum.declarator_functi.parametri != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), II);
+                    Arbor2Nodus* pl = decl->datum.declarator_functi.parametri;
+                    CREDO_AEQUALIS_I32((i32)pl->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32(xar_numerus(pl->datum.lista_separata.elementa), II);
                 }
             }
         }
@@ -2275,14 +2280,17 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
                 si (decl->datum.declarator_functi.parametri != NIHIL)
                 {
+                    Arbor2Nodus* pl = decl->datum.declarator_functi.parametri;
                     Arbor2Nodus* param;
-                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), I);
-                    param = *(Arbor2Nodus**)xar_obtinere(decl->datum.declarator_functi.parametri, ZEPHYRUM);
+                    CREDO_AEQUALIS_I32((i32)pl->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32(xar_numerus(pl->datum.lista_separata.elementa), I);
+                    param = *(Arbor2Nodus**)xar_obtinere(pl->datum.lista_separata.elementa, ZEPHYRUM);
                     CREDO_AEQUALIS_I32((i32)param->genus, (i32)ARBOR2_NODUS_PARAMETER_DECL);
                     /* Check param declarator has pointer */
                     si (param->datum.parameter_decl.declarator != NIHIL)
                     {
-                        CREDO_AEQUALIS_I32((i32)param->datum.parameter_decl.declarator->datum.declarator.num_stellae, I);
+                        CREDO_VERUM(param->datum.parameter_decl.declarator->datum.declarator.pointer_levels != NIHIL);
+                        CREDO_AEQUALIS_I32((i32)xar_numerus(param->datum.parameter_decl.declarator->datum.declarator.pointer_levels), I);
                     }
                 }
             }
@@ -2705,11 +2713,11 @@ s32 principale(vacuum)
         {
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DUM);
             /* Condition should be an assignment */
-            si (res.radix->datum.conditionale.conditio != NIHIL)
+            si (res.radix->datum.iteratio.conditio != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.conditio->genus,
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.iteratio.conditio->genus,
                                    (i32)ARBOR2_NODUS_BINARIUM);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conditionale.conditio->datum.binarium.operator,
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.iteratio.conditio->datum.binarium.operator,
                                    (i32)ARBOR2_LEXEMA_ASSIGNATIO);
             }
         }
@@ -3887,7 +3895,9 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(decl->datum.declarator_functi.parametri);
                 si (decl->datum.declarator_functi.parametri != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32(xar_numerus(decl->datum.declarator_functi.parametri), II);
+                    Arbor2Nodus* pl = decl->datum.declarator_functi.parametri;
+                    CREDO_AEQUALIS_I32((i32)pl->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32(xar_numerus(pl->datum.lista_separata.elementa), II);
                 }
             }
         }
@@ -3928,7 +3938,8 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR_FUNCTI);
                 /* Check there's a pointer in the declarator chain */
-                CREDO_AEQUALIS_I32((i32)decl->datum.declarator_functi.num_stellae, I);
+                CREDO_VERUM(decl->datum.declarator_functi.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator_functi.pointer_levels), I);
             }
         }
 
@@ -4485,7 +4496,9 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.enum_specifier.enumeratores); /* Has body */
             si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
             {
-                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.enum_specifier.enumeratores), III);  /* 3 enumerators */
+                Arbor2Nodus* el = res.radix->datum.enum_specifier.enumeratores;
+                CREDO_AEQUALIS_I32((i32)el->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                CREDO_AEQUALIS_I32(xar_numerus(el->datum.lista_separata.elementa), III);  /* 3 enumerators */
             }
         }
 
@@ -4513,7 +4526,9 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.enum_specifier.enumeratores); /* Has body */
             si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
             {
-                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.enum_specifier.enumeratores), III);  /* 3 enumerators */
+                Arbor2Nodus* el = res.radix->datum.enum_specifier.enumeratores;
+                CREDO_AEQUALIS_I32((i32)el->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                CREDO_AEQUALIS_I32(xar_numerus(el->datum.lista_separata.elementa), III);  /* 3 enumerators */
             }
         }
 
@@ -4541,29 +4556,30 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.enum_specifier.enumeratores); /* Has body */
             si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
             {
-                Xar* enums = res.radix->datum.enum_specifier.enumeratores;
+                Arbor2Nodus* enums_lista = res.radix->datum.enum_specifier.enumeratores;
                 Arbor2Nodus** e0;
                 Arbor2Nodus** e1;
                 Arbor2Nodus** e2;
 
-                CREDO_AEQUALIS_I32(xar_numerus(enums), III);  /* 3 enumerators */
+                CREDO_AEQUALIS_I32((i32)enums_lista->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                CREDO_AEQUALIS_I32(xar_numerus(enums_lista->datum.lista_separata.elementa), III);  /* 3 enumerators */
 
                 /* Check first enumerator has value */
-                e0 = xar_obtinere(enums, ZEPHYRUM);
+                e0 = xar_obtinere(enums_lista->datum.lista_separata.elementa, ZEPHYRUM);
                 si (e0 != NIHIL && *e0 != NIHIL)
                 {
                     CREDO_NON_NIHIL((*e0)->datum.enumerator.valor);  /* A = 1 */
                 }
 
                 /* Check second enumerator has no value */
-                e1 = xar_obtinere(enums, I);
+                e1 = xar_obtinere(enums_lista->datum.lista_separata.elementa, I);
                 si (e1 != NIHIL && *e1 != NIHIL)
                 {
                     CREDO_NIHIL((*e1)->datum.enumerator.valor);  /* B (no value) */
                 }
 
                 /* Check third enumerator has value */
-                e2 = xar_obtinere(enums, II);
+                e2 = xar_obtinere(enums_lista->datum.lista_separata.elementa, II);
                 si (e2 != NIHIL && *e2 != NIHIL)
                 {
                     CREDO_NON_NIHIL((*e2)->datum.enumerator.valor);  /* C = 10 */
@@ -4623,9 +4639,12 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
             si (res.radix->datum.enum_specifier.enumeratores != NIHIL)
             {
-                Xar* enums = res.radix->datum.enum_specifier.enumeratores;
+                Arbor2Nodus* enums_lista = res.radix->datum.enum_specifier.enumeratores;
+                Xar* enums;
                 Arbor2Nodus** e0;
 
+                CREDO_AEQUALIS_I32((i32)enums_lista->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                enums = enums_lista->datum.lista_separata.elementa;
                 CREDO_AEQUALIS_I32(xar_numerus(enums), I);  /* 1 enumerator */
 
                 e0 = xar_obtinere(enums, ZEPHYRUM);
@@ -4815,11 +4834,12 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(member);
                 si (member != NIHIL)
                 {
-                    /* Declarator should have num_stellae = 1 */
+                    /* Declarator should have one pointer level */
                     CREDO_NON_NIHIL(member->datum.declaratio.declarator);
                     si (member->datum.declaratio.declarator != NIHIL)
                     {
-                        CREDO_AEQUALIS_I32((i32)member->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+                        CREDO_VERUM(member->datum.declaratio.declarator->datum.declarator.pointer_levels != NIHIL);
+                        CREDO_AEQUALIS_I32((i32)xar_numerus(member->datum.declaratio.declarator->datum.declarator.pointer_levels), I);
                     }
                 }
             }
@@ -4898,7 +4918,7 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
             si (res.radix->datum.declaratio.declarator != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, ZEPHYRUM);
+                CREDO_VERUM(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels == NIHIL);
             }
         }
 
@@ -4931,7 +4951,8 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
             si (res.radix->datum.declaratio.declarator != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+                CREDO_VERUM(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels), I);
             }
         }
 
@@ -4999,7 +5020,8 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
             si (res.radix->datum.declaratio.declarator != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+                CREDO_VERUM(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels), I);
             }
             CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
             si (res.radix->datum.declaratio.specifier != NIHIL)
@@ -5072,7 +5094,8 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(res.radix->datum.declaratio.declarator);
             si (res.radix->datum.declaratio.declarator != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.declarator->datum.declarator.num_stellae, I);
+                CREDO_VERUM(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.declarator->datum.declarator.pointer_levels), I);
             }
             CREDO_NON_NIHIL(res.radix->datum.declaratio.specifier);
             si (res.radix->datum.declaratio.specifier != NIHIL)
@@ -5304,7 +5327,8 @@ s32 principale(vacuum)
             {
                 Arbor2Nodus* decl = res.radix->datum.declaratio.declarator;
                 CREDO_AEQUALIS_I32((i32)decl->genus, (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)decl->datum.declarator.num_stellae, 1);
+                CREDO_VERUM(decl->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator.pointer_levels), I);
                 CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
             }
         }
@@ -5668,7 +5692,8 @@ s32 principale(vacuum)
                 {
                     Arbor2Nodus* decl = member->datum.declaratio.declarator;
                     /* Should be pointer */
-                    CREDO_AEQUALIS_I32((i32)decl->datum.declarator.num_stellae, (i32)I);
+                    CREDO_VERUM(decl->datum.declarator.pointer_levels != NIHIL);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator.pointer_levels), (i32)I);
                     /* Should have array dimension */
                     CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
                 }
@@ -8225,12 +8250,13 @@ s32 principale(vacuum)
         si (res.radix != NIHIL)
         {
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
-            /* typus should be DECLARATOR with num_stellae = 1 */
+            /* typus should be DECLARATOR with 1 pointer */
             si (res.radix->datum.conversio.typus != NIHIL)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->genus,
                                    (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8248,12 +8274,13 @@ s32 principale(vacuum)
         si (res.radix != NIHIL)
         {
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
-            /* typus should be DECLARATOR with num_stellae = 2 */
+            /* typus should be DECLARATOR with 2 pointers */
             si (res.radix->datum.conversio.typus != NIHIL)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->genus,
                                    (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)II);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)II);
             }
         }
     }
@@ -8275,7 +8302,8 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->genus,
                                    (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8303,7 +8331,7 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->genus,
                                    (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->datum.declarator.num_stellae, (i32)ZEPHYRUM);
+                CREDO_VERUM(res.radix->datum.sizeof_expr.operandum->datum.declarator.pointer_levels == NIHIL);
             }
         }
     }
@@ -8326,7 +8354,8 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->genus,
                                    (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.sizeof_expr.operandum->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.sizeof_expr.operandum->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8349,7 +8378,8 @@ s32 principale(vacuum)
             {
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->genus,
                                    (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.sizeof_expr.operandum->datum.declarator.num_stellae, (i32)II);
+                CREDO_VERUM(res.radix->datum.sizeof_expr.operandum->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.sizeof_expr.operandum->datum.declarator.pointer_levels), (i32)II);
             }
         }
     }
@@ -8412,7 +8442,8 @@ s32 principale(vacuum)
             si (res.radix->datum.conversio.typus != NIHIL)
             {
                 /* Check pointer depth = 1 */
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8434,7 +8465,8 @@ s32 principale(vacuum)
             si (res.radix->datum.conversio.typus != NIHIL)
             {
                 /* Check pointer depth = 2 */
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)II);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)II);
             }
         }
     }
@@ -8475,7 +8507,8 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
             si (res.radix->datum.conversio.typus != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8495,7 +8528,8 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
             si (res.radix->datum.conversio.typus != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)II);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)II);
             }
         }
     }
@@ -8531,7 +8565,8 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
             si (res.radix->datum.conversio.typus != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8567,7 +8602,8 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_CONVERSIO);
             si (res.radix->datum.conversio.typus != NIHIL)
             {
-                CREDO_AEQUALIS_I32((i32)res.radix->datum.conversio.typus->datum.declarator.num_stellae, (i32)I);
+                CREDO_VERUM(res.radix->datum.conversio.typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.conversio.typus->datum.declarator.pointer_levels), (i32)I);
             }
         }
     }
@@ -8962,7 +8998,8 @@ s32 principale(vacuum)
             {
                 Arbor2Nodus* typus = res.radix->datum.sizeof_expr.operandum;
                 CREDO_AEQUALIS_I32((i32)typus->genus, (i32)ARBOR2_NODUS_DECLARATOR);
-                CREDO_AEQUALIS_I32((i32)typus->datum.declarator.num_stellae, (i32)I);  /* one pointer */
+                CREDO_VERUM(typus->datum.declarator.pointer_levels != NIHIL);
+                CREDO_AEQUALIS_I32((i32)xar_numerus(typus->datum.declarator.pointer_levels), (i32)I);  /* one pointer */
                 CREDO_NON_NIHIL(typus->datum.declarator.dimensiones);
                 si (typus->datum.declarator.dimensiones != NIHIL)
                 {
@@ -10427,7 +10464,9 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor->datum.initializor_lista.items);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 1);
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 1);
                 }
             }
         }
@@ -10454,7 +10493,9 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor->datum.initializor_lista.items);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 3);
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 3);
                 }
             }
         }
@@ -10481,7 +10522,9 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(res.radix->datum.declaratio.initializor->datum.initializor_lista.items);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 0);
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 0);
                 }
             }
         }
@@ -10507,7 +10550,9 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 2);
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 2);
                 }
             }
         }
@@ -10533,17 +10578,22 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
                     /* Outer list has 2 items (nested lists) */
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 2);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 2);
                     /* First nested list */
                     {
-                        Arbor2Nodus** first_item = xar_obtinere(res.radix->datum.declaratio.initializor->datum.initializor_lista.items, 0);
+                        Arbor2Nodus** first_item = xar_obtinere(items->datum.lista_separata.elementa, 0);
                         CREDO_NON_NIHIL(first_item);
                         si (first_item != NIHIL)
                         {
                             Arbor2Nodus* nested = *first_item;
+                            Arbor2Nodus* nested_items;
                             CREDO_AEQUALIS_I32((i32)nested->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-                            CREDO_AEQUALIS_I32((i32)xar_numerus(nested->datum.initializor_lista.items), 2);
+                            nested_items = nested->datum.initializor_lista.items;
+                            CREDO_AEQUALIS_I32((i32)nested_items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                            CREDO_AEQUALIS_I32((i32)xar_numerus(nested_items->datum.lista_separata.elementa), 2);
                         }
                     }
                 }
@@ -10617,7 +10667,9 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 1);
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 1);
                 }
             }
         }
@@ -10672,9 +10724,11 @@ s32 principale(vacuum)
                 CREDO_AEQUALIS_I32((i32)res.radix->datum.declaratio.initializor->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
                 si (res.radix->datum.declaratio.initializor->datum.initializor_lista.items != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)xar_numerus(res.radix->datum.declaratio.initializor->datum.initializor_lista.items), 1);
+                    Arbor2Nodus* items = res.radix->datum.declaratio.initializor->datum.initializor_lista.items;
+                    CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+                    CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 1);
                     /* First item should be a DESIGNATOR_ITEM */
-                    item = xar_obtinere(res.radix->datum.declaratio.initializor->datum.initializor_lista.items, ZEPHYRUM);
+                    item = xar_obtinere(items->datum.lista_separata.elementa, ZEPHYRUM);
                     si (item != NIHIL && *item != NIHIL)
                     {
                         CREDO_AEQUALIS_I32((i32)(*item)->genus, (i32)ARBOR2_NODUS_DESIGNATOR_ITEM);
@@ -10720,9 +10774,12 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-            CREDO_AEQUALIS_I32((i32)xar_numerus(init->datum.initializor_lista.items), 2);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 2);
         }
     }
 
@@ -10741,10 +10798,13 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
             /* Should have 1 item with 2 designators chained */
-            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            item = xar_obtinere(items->datum.lista_separata.elementa, ZEPHYRUM);
             si (item != NIHIL && *item != NIHIL)
             {
                 CREDO_AEQUALIS_I32((i32)(*item)->genus, (i32)ARBOR2_NODUS_DESIGNATOR_ITEM);
@@ -10767,9 +10827,12 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-            CREDO_AEQUALIS_I32((i32)xar_numerus(init->datum.initializor_lista.items), 3);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 3);
         }
     }
 
@@ -10788,9 +10851,12 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+            item = xar_obtinere(items->datum.lista_separata.elementa, ZEPHYRUM);
             si (item != NIHIL && *item != NIHIL)
             {
                 CREDO_AEQUALIS_I32((i32)(*item)->genus, (i32)ARBOR2_NODUS_DESIGNATOR_ITEM);
@@ -10818,9 +10884,12 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-            CREDO_AEQUALIS_I32((i32)xar_numerus(init->datum.initializor_lista.items), 2);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+            CREDO_AEQUALIS_I32((i32)xar_numerus(items->datum.lista_separata.elementa), 2);
         }
     }
 
@@ -10839,9 +10908,12 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+            item = xar_obtinere(items->datum.lista_separata.elementa, ZEPHYRUM);
             si (item != NIHIL && *item != NIHIL)
             {
                 /* Should have 2 designators chained */
@@ -10865,9 +10937,12 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         si (res.radix != NIHIL && res.radix->datum.declaratio.initializor != NIHIL)
         {
+            Arbor2Nodus* items;
             init = res.radix->datum.declaratio.initializor;
             CREDO_AEQUALIS_I32((i32)init->genus, (i32)ARBOR2_NODUS_INITIALIZOR_LISTA);
-            item = xar_obtinere(init->datum.initializor_lista.items, ZEPHYRUM);
+            items = init->datum.initializor_lista.items;
+            CREDO_AEQUALIS_I32((i32)items->genus, (i32)ARBOR2_NODUS_LISTA_SEPARATA);
+            item = xar_obtinere(items->datum.lista_separata.elementa, ZEPHYRUM);
             si (item != NIHIL && *item != NIHIL)
             {
                 /* Should have 2 designators chained */

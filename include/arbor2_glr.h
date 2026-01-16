@@ -62,6 +62,18 @@ nomen enumeratio {
 #define ARBOR2_QUAL_VOLATILE        (1 << 1)
 
 /* ==================================================
+ * Pointer Level (for roundtrip token preservation)
+ * Each pointer level can have its own qualifiers:
+ * e.g., int * const * volatile * p
+ * ================================================== */
+
+nomen structura {
+    Arbor2Token*    tok_stella;      /* The * token */
+    Arbor2Token*    tok_const;       /* NIHIL if no const */
+    Arbor2Token*    tok_volatile;    /* NIHIL if no volatile */
+} Arbor2PointerLevel;
+
+/* ==================================================
  * Non-Terminal Symbols
  * ================================================== */
 
@@ -163,6 +175,7 @@ nomen enumeratio {
     ARBOR2_NODUS_ORDINARIUS,        /* default label */
     ARBOR2_NODUS_INITIALIZOR_LISTA, /* Brace-enclosed initializer list */
     ARBOR2_NODUS_DESIGNATOR_ITEM,   /* Designated initializer: .x = 1 or [5] = 100 */
+    ARBOR2_NODUS_LISTA_SEPARATA,    /* Comma-separated list with separator tokens */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR,
     ARBOR2_NODUS_TRANSLATION_UNIT   /* Translation unit (list of external declarations) */
@@ -187,50 +200,65 @@ structura Arbor2Nodus {
         /* BINARIUM */
         structura {
             Arbor2Nodus*        sinister;
-            Arbor2LexemaGenus   operator;
+            Arbor2Token*        tok_operator;   /* Operator token for roundtrip */
+            Arbor2LexemaGenus   operator;       /* Operator type (kept for compatibility) */
             Arbor2Nodus*        dexter;
         } binarium;
 
         /* UNARIUM */
         structura {
-            Arbor2LexemaGenus   operator;
+            Arbor2Token*        tok_operator;   /* Operator token for roundtrip */
+            Arbor2LexemaGenus   operator;       /* Operator type (kept for compatibility) */
             Arbor2Nodus*        operandum;
         } unarium;
 
         /* CONVERSIO (cast) */
         structura {
+            Arbor2Token*        tok_paren_ap;   /* ( */
             Arbor2Nodus*        typus;
+            Arbor2Token*        tok_paren_cl;   /* ) */
             Arbor2Nodus*        expressio;
         } conversio;
 
         /* TERNARIUS (ternary conditional) */
         structura {
             Arbor2Nodus*        conditio;       /* condition */
+            Arbor2Token*        tok_interrogatio; /* ? */
             Arbor2Nodus*        verum;          /* true-branch */
+            Arbor2Token*        tok_colon;      /* : */
             Arbor2Nodus*        falsum;         /* false-branch */
         } ternarius;
 
         /* SIZEOF */
         structura {
+            Arbor2Token*        tok_sizeof;     /* 'sizeof' keyword */
+            Arbor2Token*        tok_paren_ap;   /* ( - NIHIL for sizeof expr */
             b32                 est_typus;      /* sizeof(type) vs sizeof expr */
             Arbor2Nodus*        operandum;
+            Arbor2Token*        tok_paren_cl;   /* ) - NIHIL for sizeof expr */
         } sizeof_expr;
 
         /* VOCATIO (function call) */
         structura {
             Arbor2Nodus*        basis;          /* Function expression */
-            Xar*                argumenta;      /* Xar of Arbor2Nodus* (arguments), NIHIL if no args */
+            Arbor2Token*        tok_paren_ap;   /* ( */
+            Arbor2Nodus*        argumenta;      /* LISTA_SEPARATA node, NIHIL if no args */
+            Arbor2Token*        tok_paren_cl;   /* ) */
         } vocatio;
 
         /* SUBSCRIPTIO (array subscript) */
         structura {
             Arbor2Nodus*        basis;          /* Array expression */
+            Arbor2Token*        tok_bracket_ap; /* [ */
             Arbor2Nodus*        index;          /* Index expression */
+            Arbor2Token*        tok_bracket_cl; /* ] */
         } subscriptio;
 
         /* MEMBRUM (member access . or ->) */
         structura {
             Arbor2Nodus*        basis;          /* Struct/union expression */
+            Arbor2Token*        tok_accessor;   /* . or -> token */
+            Arbor2Token*        tok_membrum;    /* Member identifier token */
             chorda              membrum;        /* Member name */
             b32                 est_sagitta;    /* VERUM for ->, FALSUM for . */
         } membrum;
@@ -238,14 +266,20 @@ structura Arbor2Nodus {
         /* POST_UNARIUM (post-increment/decrement) */
         structura {
             Arbor2Nodus*        operandum;
-            Arbor2LexemaGenus   operator;       /* DUPLUS or DUMINUS */
+            Arbor2Token*        tok_operator;   /* Operator token for roundtrip */
+            Arbor2LexemaGenus   operator;       /* DUPLUS or DUMINUS (kept for compatibility) */
         } post_unarium;
 
         /* DECLARATIO */
         structura {
+            Arbor2Token*        tok_storage;    /* static/extern/auto/register keyword (NIHIL if none) */
+            Arbor2Token*        tok_const;      /* const keyword (NIHIL if none) */
+            Arbor2Token*        tok_volatile;   /* volatile keyword (NIHIL if none) */
             Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
             Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
+            Arbor2Token*        tok_assignatio; /* = token (NIHIL if no initializer) */
             Arbor2Nodus*        initializor;    /* Initializer expression (NIHIL if none) */
+            Arbor2Token*        tok_semicolon;  /* ; */
             Arbor2Nodus*        proxima;        /* Next declaration in comma-sep list */
             b32                 est_typedef;    /* VERUM if this is a typedef declaration */
             i32                 storage_class;  /* ARBOR2_STORAGE_* flags (only one in C89) */
@@ -254,20 +288,21 @@ structura Arbor2Nodus {
 
         /* DECLARATOR */
         structura {
-            s32                 num_stellae;    /* Number of * pointers */
+            Xar*                pointer_levels; /* Xar of Arbor2PointerLevel*, NIHIL if no pointers */
             chorda              titulus;        /* Variable name (empty for anonymous bit fields) */
             Arbor2Nodus*        latitudo_biti;  /* Bit field width expr, NIHIL if not bit field */
             Xar*                dimensiones;    /* Array dimensions (Xar of Arbor2Nodus*), NIHIL if not array */
-            i32                 pointer_quals;  /* Qualifiers on pointer (ARBOR2_QUAL_*) for int * const p */
         } declarator;
 
         /* DECLARATOR_FUNCTI (function declarator) */
         structura {
             Arbor2Nodus*        declarator_interior;  /* Inner declarator (name + pointers) */
-            Xar*                parametri;            /* NULL for (), params for D2 */
+            Arbor2Token*        tok_paren_ap;         /* ( */
+            Arbor2Nodus*        parametri;            /* LISTA_SEPARATA node, NIHIL for () or (void) */
+            Arbor2Token*        tok_paren_cl;         /* ) */
             b32                 habet_void;           /* true if explicitly (void) */
             b32                 est_variadicus;       /* true if ends with ... */
-            s32                 num_stellae;          /* Pointer depth (for * fn()) */
+            Xar*                pointer_levels;       /* Xar of Arbor2PointerLevel*, NIHIL if no pointers */
         } declarator_functi;
 
         /* PARAMETER_DECL (parameter declaration) */
@@ -291,15 +326,21 @@ structura Arbor2Nodus {
 
         /* STRUCT_SPECIFIER (also used for union) */
         structura {
+            Arbor2Token*        tok_struct_or_union;  /* 'struct' or 'union' keyword */
             Arbor2Nodus*        tag;                  /* Tag name (IDENTIFICATOR) or NIHIL for anonymous */
+            Arbor2Token*        tok_brace_ap;         /* { (NIHIL if forward decl) */
             Xar*                membra;               /* List of member declarations (DECLARATIO nodes) */
+            Arbor2Token*        tok_brace_cl;         /* } (NIHIL if forward decl) */
             b32                 est_unio;             /* VERUM for union, FALSUM for struct */
         } struct_specifier;
 
         /* ENUM_SPECIFIER */
         structura {
+            Arbor2Token*        tok_enum;             /* 'enum' keyword */
             Arbor2Nodus*        tag;                  /* Tag name (IDENTIFICATOR) or NIHIL for anonymous */
-            Xar*                enumeratores;         /* List of ENUMERATOR nodes */
+            Arbor2Token*        tok_brace_ap;         /* { (NIHIL if forward decl) */
+            Arbor2Nodus*        enumeratores;         /* LISTA_SEPARATA node with ENUMERATOR nodes */
+            Arbor2Token*        tok_brace_cl;         /* } (NIHIL if forward decl) */
         } enum_specifier;
 
         /* ENUMERATOR */
@@ -310,71 +351,116 @@ structura Arbor2Nodus {
 
         /* SENTENTIA (expression statement) */
         structura {
-            Arbor2Nodus*        expressio;      /* The expression (NULL for empty stmt) */
+            Arbor2Nodus*        expressio;      /* The expression (NIHIL for empty stmt) */
+            Arbor2Token*        tok_semicolon;  /* ; */
         } sententia;
 
         /* CORPUS (compound statement) */
         structura {
+            Arbor2Token*        tok_brace_ap;   /* { */
             Xar*                sententiae;     /* Xar of Arbor2Nodus* - list of statements */
+            Arbor2Token*        tok_brace_cl;   /* } */
         } corpus;
 
         /* SI (if statement) */
         structura {
+            Arbor2Token*        tok_si;         /* 'if' keyword */
+            Arbor2Token*        tok_paren_ap;   /* ( */
             Arbor2Nodus*        conditio;       /* condition expression */
+            Arbor2Token*        tok_paren_cl;   /* ) */
             Arbor2Nodus*        consequens;     /* then-branch */
-            Arbor2Nodus*        alternans;      /* else-branch (NULL if no else) */
+            Arbor2Token*        tok_alioquin;   /* 'else' keyword (NIHIL if no else) */
+            Arbor2Nodus*        alternans;      /* else-branch (NIHIL if no else) */
         } conditionale;
 
         /* DUM/FAC (while/do-while statement) */
         structura {
+            Arbor2Token*        tok_fac;        /* 'do' keyword (NIHIL for while) */
+            Arbor2Token*        tok_dum;        /* 'while' keyword */
+            Arbor2Token*        tok_paren_ap;   /* ( */
             Arbor2Nodus*        conditio;       /* loop condition */
+            Arbor2Token*        tok_paren_cl;   /* ) */
             Arbor2Nodus*        corpus;         /* loop body */
+            Arbor2Token*        tok_semicolon;  /* ; (for do-while only, NIHIL for while) */
         } iteratio;
 
         /* PER (for statement) */
         structura {
-            Arbor2Nodus*        initium;        /* init expression (NULL if omitted) */
-            Arbor2Nodus*        conditio;       /* condition (NULL if omitted) */
-            Arbor2Nodus*        incrementum;    /* increment (NULL if omitted) */
+            Arbor2Token*        tok_per;        /* 'for' keyword */
+            Arbor2Token*        tok_paren_ap;   /* ( */
+            Arbor2Nodus*        initium;        /* init expression (NIHIL if omitted) */
+            Arbor2Token*        tok_semicolon1; /* first ; */
+            Arbor2Nodus*        conditio;       /* condition (NIHIL if omitted) */
+            Arbor2Token*        tok_semicolon2; /* second ; */
+            Arbor2Nodus*        incrementum;    /* increment (NIHIL if omitted) */
+            Arbor2Token*        tok_paren_cl;   /* ) */
             Arbor2Nodus*        corpus;         /* loop body */
         } circuitus;
 
         /* REDDE (return statement) */
         structura {
-            Arbor2Nodus*        valor;          /* return value (NULL if omitted) */
+            Arbor2Token*        tok_redde;      /* 'return' keyword */
+            Arbor2Nodus*        valor;          /* return value (NIHIL if omitted) */
+            Arbor2Token*        tok_semicolon;  /* ; */
         } reditio;
 
         /* SALTA (goto statement) */
         structura {
+            Arbor2Token*        tok_salta;      /* 'goto' keyword */
+            Arbor2Token*        tok_destinatio; /* label identifier token */
             chorda              destinatio;     /* label name */
+            Arbor2Token*        tok_semicolon;  /* ; */
         } saltus;
 
         /* TITULATUM (labeled statement) */
         structura {
+            Arbor2Token*        tok_titulus;    /* label identifier token */
             chorda              titulus;        /* label name */
+            Arbor2Token*        tok_colon;      /* : */
             Arbor2Nodus*        sententia;      /* the labeled statement */
         } titulatum;
 
         /* COMMUTATIO (switch statement) */
         structura {
+            Arbor2Token*        tok_commutatio; /* 'switch' keyword */
+            Arbor2Token*        tok_paren_ap;   /* ( */
             Arbor2Nodus*        expressio;      /* switch expression */
+            Arbor2Token*        tok_paren_cl;   /* ) */
             Arbor2Nodus*        corpus;         /* body (usually compound) */
         } selectivum;  /* 'commutatio' expands to 'switch' keyword */
 
         /* CASUS (case label) */
         structura {
+            Arbor2Token*        tok_casus;      /* 'case' keyword */
             Arbor2Nodus*        valor;          /* constant expression */
+            Arbor2Token*        tok_colon;      /* : */
             Arbor2Nodus*        sententia;      /* following statement */
         } electio;  /* 'casus' expands to 'case' keyword */
 
         /* ORDINARIUS (default label) */
         structura {
+            Arbor2Token*        tok_ordinarius; /* 'default' keyword */
+            Arbor2Token*        tok_colon;      /* : */
             Arbor2Nodus*        sententia;      /* following statement */
         } defectus;  /* 'ordinarius' expands to 'default' keyword */
 
+        /* FRANGE (break statement) */
+        structura {
+            Arbor2Token*        tok_frange;     /* 'break' keyword */
+            Arbor2Token*        tok_semicolon;  /* ; */
+        } frangendum;
+
+        /* PERGE (continue statement) */
+        structura {
+            Arbor2Token*        tok_perge;      /* 'continue' keyword */
+            Arbor2Token*        tok_semicolon;  /* ; */
+        } pergendum;
+
         /* INITIALIZOR_LISTA (brace-enclosed initializer) */
         structura {
-            Xar*                items;          /* Xar of Arbor2Nodus* (expressions or nested lists) */
+            Arbor2Token*        tok_brace_ap;   /* { */
+            Arbor2Nodus*        items;          /* LISTA_SEPARATA of initializers */
+            Arbor2Token*        tok_brace_cl;   /* } */
         } initializor_lista;
 
         /* DESIGNATOR_ITEM (designated initializer: .x = 1 or [5] = 100) */
@@ -382,6 +468,12 @@ structura Arbor2Nodus {
             Xar*                designatores;   /* Xar of Arbor2Nodus* - chain of [i] or .field */
             Arbor2Nodus*        valor;          /* The initialized value (expression or init_lista) */
         } designator_item;
+
+        /* LISTA_SEPARATA (comma-separated list with separator tokens for roundtrip) */
+        structura {
+            Xar*                elementa;       /* Xar of Arbor2Nodus* - the list items */
+            Xar*                separatores;    /* Xar of Arbor2Token* - comma tokens between items */
+        } lista_separata;
 
         /* TRANSLATION_UNIT (list of external declarations) */
         structura {
