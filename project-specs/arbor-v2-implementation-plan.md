@@ -331,6 +331,10 @@ Implemented 2026-01-15.
 Given the current state, the recommended priority is:
 
 1. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
+   - 2.1 Location Propagation: NOT STARTED
+   - 2.2 Trivia Attachment: ~90% COMPLETE (roundtrip works via tokens)
+   - 2.3 Parent Pointer: NOT STARTED
+   - 2.4 Comment Nodes: NOT STARTED
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
@@ -385,21 +389,26 @@ structura Arbor2Nodus {
 };
 ```
 
-#### 2.1 Location Propagation
+#### 2.1 Location Propagation — **NOT STARTED**
 - Modify AST construction in arbor2_glr.c
 - Compute spans from first/last tokens in production
 - ~50 locations in _exequi_reduce need updating
+- Status: Arbor2Nodus has no byte_initium/finis, linea_initium/finis, columna_initium/finis fields yet
 
-#### 2.2 Trivia Attachment
-- Tokens already have trivia_ante/post from lexer
-- Copy to AST nodes during construction
-- Decision: Leading trivia attaches to following node
+#### 2.2 Trivia Attachment — **~90% COMPLETE**
+- Tokens already have trivia_ante/post from lexer ✓
+- Copy to AST nodes during construction — **PARTIAL**
+- Decision: Leading trivia attaches to following node ✓
+- Status: Roundtrip serialization works via token trivia (arbor2_scribere.c reads trivia from tokens).
+  Arbor2Nodus does NOT have its own trivia_ante/trivia_post fields — trivia flows through tokens.
+  For most use cases this is sufficient; node-level trivia only needed for synthetic nodes.
 
-#### 2.3 Parent Pointer
+#### 2.3 Parent Pointer — **NOT STARTED**
 - Set during AST construction
 - ~50 locations to update
+- Status: Arbor2Nodus has no `pater` field yet
 
-#### 2.4 Comment Nodes
+#### 2.4 Comment Nodes — **NOT STARTED**
 Add explicit comment handling:
 ```c
 nomen structura {
@@ -410,8 +419,11 @@ nomen structura {
     b32                 ante;
 } Arbor2Commentum;
 ```
+- Status: Comments are stored as trivia on tokens (est_commentum flag). No separate Arbor2Commentum struct exists.
+  Current approach works for roundtrip; explicit comment nodes needed for comment manipulation tools.
 
 **Deliverable:** AST supports roundtrip formatting
+**Current Status:** Roundtrip formatting WORKS via token trivia. Full Phase 2 completion would add location spans, parent pointers, and explicit comment nodes for advanced tooling.
 
 ---
 

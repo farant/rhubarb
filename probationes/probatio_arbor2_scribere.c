@@ -171,6 +171,17 @@ s32 principale(vacuum)
     credo_aperire(piscina);
 
     /* ========================================================
+     * PROBARE: Trivia preservation test
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans trivia preservation ---\n");
+
+        /* Test whitespace between tokens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a + b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a  +  b", NIHIL));
+    }
+
+    /* ========================================================
      * PROBARE: Simple expressions
      * ======================================================== */
     {
