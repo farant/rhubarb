@@ -232,13 +232,19 @@ principale(integer argc, constans character* constans* argv)
     Arbor2GLRResultus result;
     constans character* input;
     i32 i;
+    i32 arg_index;
+    b32 expr_mode;
 
     si (argc < II)
     {
-        fprintf(stderr, "Usage: glr_debug <expression>\n");
+        fprintf(stderr, "Usage: glr_debug [options] <input>\n");
         fprintf(stderr, "       glr_debug --validate\n");
         fprintf(stderr, "       glr_debug --validate-tags\n");
-        fprintf(stderr, "Example: glr_debug \"a + b * c\"\n");
+        fprintf(stderr, "\nOptions:\n");
+        fprintf(stderr, "  -e, --expr    Parse as expression only (default: full parser)\n");
+        fprintf(stderr, "\nExamples:\n");
+        fprintf(stderr, "  glr_debug \"int x;\"           # declaration\n");
+        fprintf(stderr, "  glr_debug -e \"a + b * c\"     # expression\n");
         redde I;
     }
 
@@ -256,7 +262,22 @@ principale(integer argc, constans character* constans* argv)
         redde valida ? ZEPHYRUM : I;
     }
 
-    input = argv[I];
+    /* Parse options */
+    arg_index = I;
+    expr_mode = FALSUM;
+
+    si (strcmp(argv[arg_index], "-e") == ZEPHYRUM || strcmp(argv[arg_index], "--expr") == ZEPHYRUM)
+    {
+        expr_mode = VERUM;
+        arg_index++;
+        si (arg_index >= (i32)argc)
+        {
+            fprintf(stderr, "Error: missing input after %s\n", argv[arg_index - I]);
+            redde I;
+        }
+    }
+
+    input = argv[arg_index];
 
     /* Initialize */
     p = piscina_generare_dynamicum("glr_debug", 262144);
@@ -272,8 +293,15 @@ principale(integer argc, constans character* constans* argv)
     printf("\n");
 
     /* Parse */
-    printf("Parsing...\n");
-    result = arbor2_glr_parsere_expressio(glr, tokens);
+    printf("Parsing%s...\n", expr_mode ? " (expression mode)" : "");
+    si (expr_mode)
+    {
+        result = arbor2_glr_parsere_expressio(glr, tokens);
+    }
+    alioquin
+    {
+        result = arbor2_glr_parsere(glr, tokens);
+    }
 
     printf("Result: %s\n\n", result.successus ? "SUCCESS" : "FAILED");
 

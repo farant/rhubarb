@@ -522,7 +522,35 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P320 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED LONG '*' '*' ')' factor" },
     /* P321 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' UNSIGNED SHORT '*' '*' ')' factor" },
     /* P322 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED LONG '*' '*' ')' factor" },
-    /* P323 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT '*' '*' ')' factor" }
+    /* P323 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' SIGNED SHORT '*' '*' ')' factor" },
+
+    /* ========== Float/Double casts ========== */
+    /* P324 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' FLOAT ')' factor" },
+    /* P325 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_CONVERSIO, "factor -> '(' DOUBLE ')' factor" },
+    /* P326 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG DOUBLE ')' factor" },
+
+    /* Float/Double pointer casts */
+    /* P327 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' FLOAT '*' ')' factor" },
+    /* P328 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_CONVERSIO, "factor -> '(' DOUBLE '*' ')' factor" },
+    /* P329 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG DOUBLE '*' ')' factor" },
+
+    /* Float/Double double pointer casts */
+    /* P330 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' FLOAT '*' '*' ')' factor" },
+    /* P331 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_CONVERSIO, "factor -> '(' DOUBLE '*' '*' ')' factor" },
+    /* P332 */ { ARBOR2_NT_FACTOR, 7, ARBOR2_NODUS_CONVERSIO, "factor -> '(' LONG DOUBLE '*' '*' ')' factor" },
+
+    /* ========== Float/Double sizeof ========== */
+    /* P333 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' FLOAT ')'" },
+    /* P334 */ { ARBOR2_NT_FACTOR, 4, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' DOUBLE ')'" },
+    /* P335 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' LONG DOUBLE ')'" },
+
+    /* Float/Double pointer sizeof */
+    /* P336 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' FLOAT '*' ')'" },
+    /* P337 */ { ARBOR2_NT_FACTOR, 5, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' DOUBLE '*' ')'" },
+    /* P338 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' LONG DOUBLE '*' ')'" },
+
+    /* Grouped pointer declarator for function pointers */
+    /* P339 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR, "declarator -> '(' '*' declarator ')'" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -568,6 +596,8 @@ hic_manens constans Arbor2TabulaActio STATUS_0_ACTIONES[] = {
     { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_SHIFT, 198, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,   4, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT,   4, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 665, FALSUM },  /* void *p only */
     /* Type modifiers */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 617, FALSUM },
@@ -749,7 +779,8 @@ hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     /* Function call: fork between postfixum and declarator paths */
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 125, VERUM },  /* intentional fork for call: ID -> postfixum */
-    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  20, VERUM },   /* declarator path */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  20, VERUM },   /* declarator path: int foo( */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, VERUM },   /* grouped declarator: int (* */
     /* Postfix subscript: reduce to postfixum first, then handle '[' */
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 125, VERUM },  /* intentional fork for subscript */
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* regular factor path */
@@ -827,6 +858,8 @@ hic_manens constans Arbor2TabulaActio STATUS_6_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 337, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 338, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 339, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 856, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 857, FALSUM },
     /* Struct/union/enum for casts - deterministic (no GLR fork needed) */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 422, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 432, FALSUM },
@@ -6427,6 +6460,8 @@ hic_manens constans Arbor2TabulaActio STATUS_388_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 389, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 390, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 391, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 880, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 881, FALSUM },
     /* { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 416, FALSUM } -- disabled */
     /* Struct/union/enum for sizeof - deterministic */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 452, FALSUM },
@@ -10051,6 +10086,7 @@ hic_manens constans Arbor2TabulaActio STATUS_619_ACTIONES[] = {
 /* State 620: after 'long' - expects int or ID */
 hic_manens constans Arbor2TabulaActio STATUS_620_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT,   4, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }
 };
 
@@ -10450,9 +10486,10 @@ hic_manens constans Arbor2TabulaActio STATUS_664_ACTIONES[] = {
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 255, FALSUM }
 };
 
-/* State 665: after 'void' - only accepts * (void *p valid, void x invalid) */
+/* State 665: after 'void' - accepts * or ( for grouped declarator (void (*fp)(void)) */
 hic_manens constans Arbor2TabulaActio STATUS_665_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }  /* void (*fp)... */
 };
 
 /* ==================================================
@@ -10479,6 +10516,7 @@ hic_manens constans Arbor2TabulaActio STATUS_667_ACTIONES[] = {
 /* State 668: after 'sizeof ( long' */
 hic_manens constans Arbor2TabulaActio STATUS_668_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 678, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 883, FALSUM },  /* long double */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 695, FALSUM }  /* implicit int */
 };
 
@@ -10812,6 +10850,7 @@ hic_manens constans Arbor2TabulaActio STATUS_702_ACTIONES[] = {
 /* State 703: after '( long' */
 hic_manens constans Arbor2TabulaActio STATUS_703_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 713, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 858, FALSUM },  /* (long double) */
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 728, FALSUM },  /* implicit int */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 814, FALSUM }   /* (long *) */
 };
@@ -11758,8 +11797,206 @@ hic_manens constans Arbor2TabulaActio STATUS_853_ACTIONES[] = { CAST_PTR_REDUCE_
 /* State 854: reduce P323 - (signed short **) factor */
 hic_manens constans Arbor2TabulaActio STATUS_854_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(323) };
 
+/* ==================================================
+ * FLOAT/DOUBLE CAST STATES (856-879)
+ * ================================================== */
+
+/* State 856: after '( float' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_856_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 859, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 862, FALSUM }
+};
+
+/* State 857: after '( double' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_857_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 860, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 865, FALSUM }
+};
+
+/* State 858: after '( long double' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_858_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 861, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 868, FALSUM }
+};
+
+/* State 859: after '( float )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_859_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 860: after '( double )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_860_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 861: after '( long double )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_861_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 862: after '( float *' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_862_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 874, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 863, FALSUM }
+};
+
+/* State 863: after '( float **' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_863_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 869, FALSUM }
+};
+
+/* State 864: reserved */
+
+/* State 865: after '( double *' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_865_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 875, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 866, FALSUM }
+};
+
+/* State 866: after '( double **' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_866_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 870, FALSUM }
+};
+
+/* State 867: reserved */
+
+/* State 868: after '( long double *' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_868_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 876, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 867, FALSUM }
+};
+
+/* State 867: after '( long double **' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_867_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 871, FALSUM }
+};
+
+/* State 869: after '( float ** )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_869_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 870: after '( double ** )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_870_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 871: after '( long double ** )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_871_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 872: reduce P324 - (float) factor */
+hic_manens constans Arbor2TabulaActio STATUS_872_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(324) };
+
+/* State 873: reduce P325 - (double) factor */
+hic_manens constans Arbor2TabulaActio STATUS_873_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(325) };
+
+/* State 874: after '( float * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_874_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 875: after '( double * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_875_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 876: after '( long double * )' - expects factor */
+hic_manens constans Arbor2TabulaActio STATUS_876_ACTIONES[] = { EXPECT_FACTOR_ACTIONS };
+
+/* State 877: reduce P326 - (long double) factor */
+hic_manens constans Arbor2TabulaActio STATUS_877_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(326) };
+
+/* State 878: reduce P327 - (float *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_878_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(327) };
+
+/* State 879: reduce P328 - (double *) factor */
+hic_manens constans Arbor2TabulaActio STATUS_879_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(328) };
+
+/* ==================================================
+ * FLOAT/DOUBLE SIZEOF STATES (880-900)
+ * ================================================== */
+
+/* State 880: after 'sizeof ( float' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_880_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 886, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 889, FALSUM }
+};
+
+/* State 881: after 'sizeof ( double' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_881_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 887, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 892, FALSUM }
+};
+
+/* State 882: reserved */
+
+/* State 883: after 'sizeof ( long double' - expects ')' or '*' */
+hic_manens constans Arbor2TabulaActio STATUS_883_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 888, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 895, FALSUM }
+};
+
+/* State 884-885: reserved */
+
+/* State 886: reduce P333 - sizeof(float) */
+hic_manens constans Arbor2TabulaActio STATUS_886_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(333) };
+
+/* State 887: reduce P334 - sizeof(double) */
+hic_manens constans Arbor2TabulaActio STATUS_887_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(334) };
+
+/* State 888: reduce P335 - sizeof(long double) */
+hic_manens constans Arbor2TabulaActio STATUS_888_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(335) };
+
+/* State 889: after 'sizeof ( float *' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_889_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 898, FALSUM }
+};
+
+/* State 890-891: reserved */
+
+/* State 892: after 'sizeof ( double *' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_892_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 899, FALSUM }
+};
+
+/* State 893-894: reserved */
+
+/* State 895: after 'sizeof ( long double *' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_895_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 900, FALSUM }
+};
+
+/* State 896-897: reserved */
+
+/* State 898: reduce P336 - sizeof(float *) */
+hic_manens constans Arbor2TabulaActio STATUS_898_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(336) };
+
+/* State 899: reduce P337 - sizeof(double *) */
+hic_manens constans Arbor2TabulaActio STATUS_899_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(337) };
+
+/* State 900: reduce P338 - sizeof(long double *) */
+hic_manens constans Arbor2TabulaActio STATUS_900_ACTIONES[] = { CAST_PTR_REDUCE_FOLLOWS(338) };
+
 #undef EXPECT_FACTOR_ACTIONS
 #undef CAST_PTR_REDUCE_FOLLOWS
+
+/* ==================================================
+ * FUNCTION POINTER STATES (901-904)
+ * Grouped pointer declarator: int (*fp)(void)
+ * ================================================== */
+
+/* State 901: after 'type (' - expects '*' for grouped declarator */
+hic_manens constans Arbor2TabulaActio STATUS_901_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS, ARBOR2_ACTIO_SHIFT, 902, FALSUM }
+};
+
+/* State 902: after 'type ( *' - expects another '*' or ID */
+hic_manens constans Arbor2TabulaActio STATUS_902_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,    ARBOR2_ACTIO_SHIFT, 902, FALSUM },  /* recursive ** */
+    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT,  18, FALSUM }   /* reuse existing */
+};
+
+/* State 903: after 'type ( * declarator' - expects ')' */
+hic_manens constans Arbor2TabulaActio STATUS_903_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA, ARBOR2_ACTIO_SHIFT, 904, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA, ARBOR2_ACTIO_REDUCE, 11, VERUM }  /* nested * via P11 */
+};
+
+/* State 904: reduce P339 - grouped declarator complete
+ * Reduce on all tokens that can follow a declarator */
+hic_manens constans Arbor2TabulaActio STATUS_904_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 339, FALSUM },  /* int (*fp)( */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 339, FALSUM },  /* int (*fp); */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 339, FALSUM },  /* int (*fp), */
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE, 339, FALSUM },  /* int (*fp) = */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 339, FALSUM }
+};
 
 /* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
@@ -12753,7 +12990,61 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(851, "reduce P320: (unsigned long **) factor"),
     STATUS_INFO(852, "reduce P321: (unsigned short **) factor"),
     STATUS_INFO(853, "reduce P322: (signed long **) factor"),
-    STATUS_INFO(854, "reduce P323: (signed short **) factor")
+    STATUS_INFO(854, "reduce P323: (signed short **) factor"),
+    /* State 855: placeholder */
+    { NIHIL, 0, "reserved" },
+    /* Float/Double cast states (856-879) */
+    STATUS_INFO(856, "( float - expects ) or *"),
+    STATUS_INFO(857, "( double - expects ) or *"),
+    STATUS_INFO(858, "( long double - expects ) or *"),
+    STATUS_INFO(859, "( float ) - expects factor"),
+    STATUS_INFO(860, "( double ) - expects factor"),
+    STATUS_INFO(861, "( long double ) - expects factor"),
+    STATUS_INFO(862, "( float * - expects ) or *"),
+    STATUS_INFO(863, "( float ** - expects )"),
+    { NIHIL, 0, "reserved 864" },  /* placeholder 864 */
+    STATUS_INFO(865, "( double * - expects ) or *"),
+    STATUS_INFO(866, "( double ** - expects )"),
+    STATUS_INFO(867, "( long double ** - expects )"),
+    STATUS_INFO(868, "( long double * - expects ) or *"),
+    STATUS_INFO(869, "( float ** ) - expects factor"),
+    STATUS_INFO(870, "( double ** ) - expects factor"),
+    STATUS_INFO(871, "( long double ** ) - expects factor"),
+    STATUS_INFO(872, "reduce P324: (float) factor"),
+    STATUS_INFO(873, "reduce P325: (double) factor"),
+    STATUS_INFO(874, "( float * ) - expects factor"),
+    STATUS_INFO(875, "( double * ) - expects factor"),
+    STATUS_INFO(876, "( long double * ) - expects factor"),
+    STATUS_INFO(877, "reduce P326: (long double) factor"),
+    STATUS_INFO(878, "reduce P327: (float *) factor"),
+    STATUS_INFO(879, "reduce P328: (double *) factor"),
+    /* Float/Double sizeof states (880-900) */
+    STATUS_INFO(880, "sizeof ( float - expects ) or *"),
+    STATUS_INFO(881, "sizeof ( double - expects ) or *"),
+    { NIHIL, 0, "reserved 882" },  /* placeholder 882 */
+    STATUS_INFO(883, "sizeof ( long double - expects ) or *"),
+    { NIHIL, 0, "reserved 884" },  /* placeholder 884 */
+    { NIHIL, 0, "reserved 885" },  /* placeholder 885 */
+    STATUS_INFO(886, "reduce P333: sizeof(float)"),
+    STATUS_INFO(887, "reduce P334: sizeof(double)"),
+    STATUS_INFO(888, "reduce P335: sizeof(long double)"),
+    STATUS_INFO(889, "sizeof ( float * - expects )"),
+    { NIHIL, 0, "reserved 890" },  /* placeholder 890 */
+    { NIHIL, 0, "reserved 891" },  /* placeholder 891 */
+    STATUS_INFO(892, "sizeof ( double * - expects )"),
+    { NIHIL, 0, "reserved 893" },  /* placeholder 893 */
+    { NIHIL, 0, "reserved 894" },  /* placeholder 894 */
+    STATUS_INFO(895, "sizeof ( long double * - expects )"),
+    { NIHIL, 0, "reserved 896" },  /* placeholder 896 */
+    { NIHIL, 0, "reserved 897" },  /* placeholder 897 */
+    STATUS_INFO(898, "reduce P336: sizeof(float *)"),
+    STATUS_INFO(899, "reduce P337: sizeof(double *)"),
+    STATUS_INFO(900, "reduce P338: sizeof(long double *)"),
+    /* Function pointer states (901-904) */
+    STATUS_INFO(901, "type ( - expects * for grouped decl"),
+    STATUS_INFO(902, "type ( * - expects * or ID"),
+    STATUS_INFO(903, "type ( * declarator - expects )"),
+    STATUS_INFO(904, "reduce P339: grouped declarator")
 };
 
 /* ==================================================
@@ -14987,6 +15278,49 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_840_GOTO[] = {
 };
 
 /* ==================================================
+ * FLOAT/DOUBLE CAST GOTO ENTRIES
+ * ================================================== */
+
+/* State 859: after '( float )' - expects factor -> 872 (reduce P324) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_859_GOTO[] = {
+    { INT_NT_FACTOR, 872 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 860: after '( double )' - expects factor -> 873 (reduce P325) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_860_GOTO[] = {
+    { INT_NT_FACTOR, 873 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 861: after '( long double )' - expects factor -> 877 (reduce P326) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_861_GOTO[] = {
+    { INT_NT_FACTOR, 877 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 874: after '( float * )' - expects factor -> 878 (reduce P327) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_874_GOTO[] = {
+    { INT_NT_FACTOR, 878 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* State 875: after '( double * )' - expects factor -> 879 (reduce P328) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_875_GOTO[] = {
+    { INT_NT_FACTOR, 879 },
+    { INT_NT_POSTFIXUM, 311 }
+};
+
+/* ==================================================
+ * FUNCTION POINTER GOTO ENTRIES
+ * ================================================== */
+
+/* State 902: after 'type ( *' - declarator goes to 903 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_902_GOTO[] = {
+    { INT_NT_DECLARATOR, 903 }
+};
+
+/* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
 
@@ -15982,7 +16316,65 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 851: reduce P320 */
     STATUS_GOTO_NIL,   /* 852: reduce P321 */
     STATUS_GOTO_NIL,   /* 853: reduce P322 */
-    STATUS_GOTO_NIL    /* 854: reduce P323 */
+    STATUS_GOTO_NIL,   /* 854: reduce P323 */
+
+    /* State 855: reserved */
+    STATUS_GOTO_NIL,   /* 855: reserved */
+
+    /* Float/Double cast states (856-879) */
+    STATUS_GOTO_NIL,   /* 856: ( float - expects ) or * */
+    STATUS_GOTO_NIL,   /* 857: ( double - expects ) or * */
+    STATUS_GOTO_NIL,   /* 858: ( long double - expects ) or * */
+    STATUS_GOTO(859),  /* 859: ( float ) - expects factor -> 872 */
+    STATUS_GOTO(860),  /* 860: ( double ) - expects factor -> 873 */
+    STATUS_GOTO(861),  /* 861: ( long double ) - expects factor -> 877 */
+    STATUS_GOTO_NIL,   /* 862: ( float * - expects ) or * */
+    STATUS_GOTO_NIL,   /* 863: ( float ** - expects ) */
+    STATUS_GOTO_NIL,   /* 864: reserved */
+    STATUS_GOTO_NIL,   /* 865: ( double * - expects ) or * */
+    STATUS_GOTO_NIL,   /* 866: ( double ** - expects ) */
+    STATUS_GOTO_NIL,   /* 867: ( long double ** - expects ) */
+    STATUS_GOTO_NIL,   /* 868: ( long double * - expects ) or * */
+    STATUS_GOTO_NIL,   /* 869: ( float ** ) - expects factor (no test) */
+    STATUS_GOTO_NIL,   /* 870: ( double ** ) - expects factor (no test) */
+    STATUS_GOTO_NIL,   /* 871: ( long double ** ) - expects factor (no test) */
+    STATUS_GOTO_NIL,   /* 872: reduce P324 (float) */
+    STATUS_GOTO_NIL,   /* 873: reduce P325 (double) */
+    STATUS_GOTO(874),  /* 874: ( float * ) - expects factor -> 878 */
+    STATUS_GOTO(875),  /* 875: ( double * ) - expects factor -> 879 */
+    STATUS_GOTO_NIL,   /* 876: ( long double * ) - expects factor (no reduce) */
+    STATUS_GOTO_NIL,   /* 877: reduce P326 (long double) */
+    STATUS_GOTO_NIL,   /* 878: reduce P327 (float *) */
+    STATUS_GOTO_NIL,   /* 879: reduce P328 (double *) */
+
+    /* Float/Double sizeof states (880-900) */
+    STATUS_GOTO_NIL,   /* 880: sizeof ( float - expects ) or * */
+    STATUS_GOTO_NIL,   /* 881: sizeof ( double - expects ) or * */
+    STATUS_GOTO_NIL,   /* 882: reserved */
+    STATUS_GOTO_NIL,   /* 883: sizeof ( long double - expects ) or * */
+    STATUS_GOTO_NIL,   /* 884: reserved */
+    STATUS_GOTO_NIL,   /* 885: reserved */
+    STATUS_GOTO_NIL,   /* 886: reduce P333 sizeof(float) */
+    STATUS_GOTO_NIL,   /* 887: reduce P334 sizeof(double) */
+    STATUS_GOTO_NIL,   /* 888: reduce P335 sizeof(long double) */
+    STATUS_GOTO_NIL,   /* 889: sizeof ( float * - expects ) */
+    STATUS_GOTO_NIL,   /* 890: reserved */
+    STATUS_GOTO_NIL,   /* 891: reserved */
+    STATUS_GOTO_NIL,   /* 892: sizeof ( double * - expects ) */
+    STATUS_GOTO_NIL,   /* 893: reserved */
+    STATUS_GOTO_NIL,   /* 894: reserved */
+    STATUS_GOTO_NIL,   /* 895: sizeof ( long double * - expects ) */
+    STATUS_GOTO_NIL,   /* 896: reserved */
+    STATUS_GOTO_NIL,   /* 897: reserved */
+    STATUS_GOTO_NIL,   /* 898: reduce P336 sizeof(float *) */
+    STATUS_GOTO_NIL,   /* 899: reduce P337 sizeof(double *) */
+    STATUS_GOTO_NIL,   /* 900: reduce P338 sizeof(long double *) */
+
+    /* Function pointer states (901-904) */
+    STATUS_GOTO_NIL,   /* 901: type ( - expects * */
+    STATUS_GOTO(902),  /* 902: type ( * - GOTO declarator → 903 */
+    STATUS_GOTO_NIL,   /* 903: type ( * declarator - expects ) */
+    STATUS_GOTO_NIL    /* 904: reduce P339 grouped declarator */
 };
 
 
@@ -16254,6 +16646,13 @@ arbor2_glr_validare_tabulas(vacuum)
 
         si (info->actiones == NIHIL)
         {
+            /* Skip reserved/placeholder states (description starts with "reserved") */
+            si (info->descriptio != NIHIL &&
+                (info->descriptio[0] == 'r' && info->descriptio[1] == 'e' &&
+                 info->descriptio[2] == 's' && info->descriptio[3] == 'e'))
+            {
+                perge;  /* reserved state - ok to have NIHIL */
+            }
             /* State has no actions - this is a bug */
             imprimere("VALIDATIO: status %d habet actiones NIHIL\n", status);
             valida = FALSUM;

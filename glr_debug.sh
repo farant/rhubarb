@@ -5,17 +5,20 @@
 # Recompiles and runs the debug tool.
 #
 # Usage:
-#   ./glr_debug.sh "a + b * c"
-#   ./glr_debug.sh "a < b << c"
+#   ./glr_debug.sh "int x;"           # declaration (default)
+#   ./glr_debug.sh -e "a + b * c"     # expression mode
 #
 
 if [ $# -lt 1 ]; then
-    echo "Usage: ./glr_debug.sh <expression>"
-    echo "Example: ./glr_debug.sh \"a + b * c\""
+    echo "Usage: ./glr_debug.sh [options] <input>"
+    echo "Options:"
+    echo "  -e, --expr    Parse as expression only"
+    echo ""
+    echo "Examples:"
+    echo "  ./glr_debug.sh \"int x;\"         # declaration"
+    echo "  ./glr_debug.sh -e \"a + b * c\"   # expression"
     exit 1
 fi
-
-INPUT="$1"
 
 # Compiler flags
 CFLAGS="-std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -fbracket-depth=512"
@@ -46,4 +49,4 @@ if ! clang $CFLAGS -Iinclude -o bin/glr_debug "${SOURCES[@]}" 2>&1; then
 fi
 
 echo ""
-./bin/glr_debug "$INPUT"
+./bin/glr_debug "$@"

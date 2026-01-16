@@ -2120,6 +2120,44 @@ _processare_unam_actionem(
                                 *slot = NIHIL;
                             }
                         }
+                        /* ========== GROUPED POINTER DECLARATOR P339 ========== */
+                        alioquin si (actio->valor == 339)
+                        {
+                            /* P339: declarator -> '(' '*' declarator ')' (4 symbols)
+                             * For function pointers: int (*fp)(void)
+                             * valori: [3]='(', [2]='*', [1]=declarator, [0]=')'
+                             * Increment pointer count and return the inner declarator */
+                            Arbor2Nodus* inner = valori[I];  /* The inner declarator */
+
+                            si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
+                            {
+                                valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                                valor_novus->lexema = lexemata[II];  /* The '*' token */
+                                valor_novus->datum.declarator.num_stellae =
+                                    inner->datum.declarator.num_stellae + I;
+                                valor_novus->datum.declarator.titulus =
+                                    inner->datum.declarator.titulus;
+                                valor_novus->datum.declarator.latitudo_biti =
+                                    inner->datum.declarator.latitudo_biti;
+                                valor_novus->datum.declarator.dimensiones =
+                                    inner->datum.declarator.dimensiones;
+                                valor_novus->datum.declarator.pointer_quals = ZEPHYRUM;
+                            }
+                            alioquin
+                            {
+                                /* Fallback: create basic declarator with one star */
+                                valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
+                                valor_novus->lexema = lexemata[II];
+                                valor_novus->datum.declarator.num_stellae = I;
+                                valor_novus->datum.declarator.titulus.datum = NIHIL;
+                                valor_novus->datum.declarator.titulus.mensura = ZEPHYRUM;
+                                valor_novus->datum.declarator.latitudo_biti = NIHIL;
+                                valor_novus->datum.declarator.dimensiones = NIHIL;
+                                valor_novus->datum.declarator.pointer_quals = ZEPHYRUM;
+                            }
+                        }
                         /* ========== POINTER QUALIFIERS P252-P255 ========== */
                         alioquin si (actio->valor == 252 || actio->valor == 253)
                         {

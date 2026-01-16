@@ -11821,6 +11821,306 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Floating point types (FAILING - not yet implemented)
+     * ======================================================== */
+
+    /* float f - basic float declaration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans float f (float declaration) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "float f");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* double d - basic double declaration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans double d (double declaration) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "double d");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* long double ld - long double declaration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans long double ld (long double declaration) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "long double ld");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* float *fp - pointer to float */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans float *fp (float pointer) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "float *fp");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* double *dp - pointer to double */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans double *dp (double pointer) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "double *dp");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* float arr[10] - float array */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans float arr[10] (float array) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "float arr[10]");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* double arr[10] - double array */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans double arr[10] (double array) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "double arr[10]");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Float/Double casts (FAILING - not yet implemented)
+     * ======================================================== */
+
+    /* (float)x - cast to float */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (float)x (cast to float) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(float)x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* (double)x - cast to double */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (double)x (cast to double) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(double)x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* (long double)x - cast to long double */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (long double)x (cast to long double) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(long double)x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* (float *)p - pointer cast to float */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (float *)p (pointer cast to float) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(float *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* (double *)p - pointer cast to double */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans (double *)p (pointer cast to double) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "(double *)p");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Float/Double sizeof (FAILING - not yet implemented)
+     * ======================================================== */
+
+    /* sizeof(float) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(float) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(float)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* sizeof(double) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(double) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(double)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* sizeof(long double) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(long double) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(long double)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* sizeof(float *) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(float *) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(float *)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* sizeof(double *) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans sizeof(double *) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "sizeof(double *)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Function pointers (FAILING - not yet implemented)
+     * ======================================================== */
+
+    /* int (*fp)(void) - function pointer returning int, no params */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int (*fp)(void) (function pointer) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int (*fp)(void)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int (*fp)(int) - function pointer returning int, int param */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int (*fp)(int) (function pointer with param) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int (*fp)(int)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int (*fp)(int, int) - function pointer with multiple params */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int (*fp)(int, int) (function pointer multi params) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int (*fp)(int, int)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* void (*fp)(void) - void function pointer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans void (*fp)(void) (void function pointer) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "void (*fp)(void)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int (**fpp)(int) - pointer to function pointer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int (**fpp)(int) (pointer to function pointer) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int (**fpp)(int)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Array parameters (FAILING - not yet implemented)
+     * ======================================================== */
+
+    /* int fn(int arr[]) - function with array parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int fn(int arr[]) (array parameter) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int fn(int arr[])");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int fn(int arr[10]) - function with sized array parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int fn(int arr[10]) (sized array parameter) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int fn(int arr[10])");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* void fn(char *argv[]) - function with pointer array parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans void fn(char *argv[]) (pointer array parameter) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "void fn(char *argv[])");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+
+    /* ========================================================
      * PROBARE: Table validation
      * ======================================================== */
 
