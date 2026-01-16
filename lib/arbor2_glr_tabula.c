@@ -552,7 +552,16 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* Grouped pointer declarator for function pointers */
     /* P339 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR, "declarator -> '(' '*' declarator ')'" },
 
-    /* P340 */ { ARBOR2_NT_PARAMETER_DECL, 1, ARBOR2_NODUS_PARAMETER_DECL, "param -> type" }
+    /* P340 */ { ARBOR2_NT_PARAMETER_DECL, 1, ARBOR2_NODUS_PARAMETER_DECL, "param -> type" },
+
+    /* P341: variadic function parameters (...) */
+    /* P341 */ { ARBOR2_NT_PARAMETER_LIST, 3, ARBOR2_NODUS_PARAMETER_LIST, "params -> params , ..." },
+
+    /* P342-P345: qualified parameter declarations */
+    /* P342 */ { ARBOR2_NT_PARAMETER_DECL, 3, ARBOR2_NODUS_PARAMETER_DECL, "param -> 'const' type declarator" },
+    /* P343 */ { ARBOR2_NT_PARAMETER_DECL, 3, ARBOR2_NODUS_PARAMETER_DECL, "param -> 'volatile' type declarator" },
+    /* P344 */ { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL, "param -> 'const' type" },
+    /* P345 */ { ARBOR2_NT_PARAMETER_DECL, 2, ARBOR2_NODUS_PARAMETER_DECL, "param -> 'volatile' type" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -2554,7 +2563,9 @@ hic_manens constans Arbor2TabulaActio STATUS_91_ACTIONES[] = {
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT,  93, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,  95, FALSUM },
-    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,  95, FALSUM }
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 907, FALSUM },  /* const int x */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 908, FALSUM }   /* volatile int x */
 };
 
 /* State 92: after 'declarator ( )' - reduce P38 */
@@ -2596,10 +2607,12 @@ hic_manens constans Arbor2TabulaActio STATUS_95_ACTIONES[] = {
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM }   /* abstract param */
 };
 
-/* State 96: after '( type_spec *' - expect '*' or param name */
+/* State 96: after '( type_spec *' - expect '*' or param name or pointer qualifier */
 hic_manens constans Arbor2TabulaActio STATUS_96_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  96, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  98, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  98, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 657, FALSUM },  /* int * const p */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 658, FALSUM }   /* int * volatile p */
 };
 
 /* State 97: after '( type_spec name' - reduce P12 */
@@ -2655,11 +2668,14 @@ hic_manens constans Arbor2TabulaActio STATUS_103_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 40, FALSUM }
 };
 
-/* State 104: after 'param_list ,' - expect next type_specifier */
+/* State 104: after 'param_list ,' - expect next type_specifier or ... or qualifier */
 hic_manens constans Arbor2TabulaActio STATUS_104_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 105, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 105, FALSUM },
-    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 105, FALSUM }
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_ELLIPSIS,       ARBOR2_ACTIO_SHIFT, 906, FALSUM },  /* variadic ... */
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 910, FALSUM },  /* const int x */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 911, FALSUM }   /* volatile int x */
 };
 
 /* State 105: after 'param_list , type_spec' - expect '*' or param name */
@@ -2670,10 +2686,12 @@ hic_manens constans Arbor2TabulaActio STATUS_105_ACTIONES[] = {
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM }   /* abstract param */
 };
 
-/* State 106: after 'param_list , type_spec *' - expect '*' or name */
+/* State 106: after 'param_list , type_spec *' - expect '*' or name or pointer qualifier */
 hic_manens constans Arbor2TabulaActio STATUS_106_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 108, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 108, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 657, FALSUM },  /* int * const p */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 658, FALSUM }   /* int * volatile p */
 };
 
 /* State 107: after 'param_list , type_spec name' - reduce P12 */
@@ -12013,6 +12031,103 @@ hic_manens constans Arbor2TabulaActio STATUS_904_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 339, FALSUM }
 };
 
+/* State 906: after 'params , ...' - reduce P341 (variadic) */
+hic_manens constans Arbor2TabulaActio STATUS_906_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA, ARBOR2_ACTIO_REDUCE, 341, FALSUM }
+};
+
+/* State 907: after '( const' - expect volatile or type */
+hic_manens constans Arbor2TabulaActio STATUS_907_ACTIONES[] = {
+    { ARBOR2_LEXEMA_VOLATILE,      ARBOR2_ACTIO_SHIFT, 908, FALSUM },  /* const volatile */
+    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT, 912, FALSUM },  /* const type -> P342 */
+    { ARBOR2_LEXEMA_INT,           ARBOR2_ACTIO_SHIFT, 912, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,          ARBOR2_ACTIO_SHIFT, 912, FALSUM }
+};
+
+/* State 908: after '( volatile' - expect const or type */
+hic_manens constans Arbor2TabulaActio STATUS_908_ACTIONES[] = {
+    { ARBOR2_LEXEMA_CONST,         ARBOR2_ACTIO_SHIFT, 907, FALSUM },  /* volatile const */
+    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT, 914, FALSUM },  /* volatile type -> P343 */
+    { ARBOR2_LEXEMA_INT,           ARBOR2_ACTIO_SHIFT, 914, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,          ARBOR2_ACTIO_SHIFT, 914, FALSUM }
+};
+
+/* State 910: after 'params , const' - expect volatile or type */
+hic_manens constans Arbor2TabulaActio STATUS_910_ACTIONES[] = {
+    { ARBOR2_LEXEMA_VOLATILE,      ARBOR2_ACTIO_SHIFT, 911, FALSUM },  /* const volatile */
+    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT, 916, FALSUM },  /* const type -> P342 */
+    { ARBOR2_LEXEMA_INT,           ARBOR2_ACTIO_SHIFT, 916, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,          ARBOR2_ACTIO_SHIFT, 916, FALSUM }
+};
+
+/* State 911: after 'params , volatile' - expect const or type */
+hic_manens constans Arbor2TabulaActio STATUS_911_ACTIONES[] = {
+    { ARBOR2_LEXEMA_CONST,         ARBOR2_ACTIO_SHIFT, 910, FALSUM },  /* volatile const */
+    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT, 918, FALSUM },  /* volatile type -> P343 */
+    { ARBOR2_LEXEMA_INT,           ARBOR2_ACTIO_SHIFT, 918, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,          ARBOR2_ACTIO_SHIFT, 918, FALSUM }
+};
+
+/* State 912: after '( const type' - like 95 but for const context */
+hic_manens constans Arbor2TabulaActio STATUS_912_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  96, FALSUM },  /* const int * */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  97, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 344, FALSUM },  /* abstract: const int) */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 344, FALSUM }   /* abstract: const int, */
+};
+
+/* State 913: after '( const type declarator' - reduce P342 */
+hic_manens constans Arbor2TabulaActio STATUS_913_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 342, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 342, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }   /* const int arr[] */
+};
+
+/* State 914: after '( volatile type' - like 95 but for volatile context */
+hic_manens constans Arbor2TabulaActio STATUS_914_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  96, FALSUM },  /* volatile int * */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  97, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 345, FALSUM },  /* abstract: volatile int) */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 345, FALSUM }   /* abstract: volatile int, */
+};
+
+/* State 915: after '( volatile type declarator' - reduce P343 */
+hic_manens constans Arbor2TabulaActio STATUS_915_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 343, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 343, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }   /* volatile int arr[] */
+};
+
+/* State 916: after 'params , const type' - like 105 but for const context */
+hic_manens constans Arbor2TabulaActio STATUS_916_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106, FALSUM },  /* const int * */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 107, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 344, FALSUM },  /* abstract: const int) */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 344, FALSUM }   /* abstract: const int, */
+};
+
+/* State 917: after 'params , const type declarator' - reduce P342 */
+hic_manens constans Arbor2TabulaActio STATUS_917_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 342, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 342, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }   /* const int arr[] */
+};
+
+/* State 918: after 'params , volatile type' - like 105 but for volatile context */
+hic_manens constans Arbor2TabulaActio STATUS_918_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106, FALSUM },  /* volatile int * */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 107, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 345, FALSUM },  /* abstract: volatile int) */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 345, FALSUM }   /* abstract: volatile int, */
+};
+
+/* State 919: after 'params , volatile type declarator' - reduce P343 */
+hic_manens constans Arbor2TabulaActio STATUS_919_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 343, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 343, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }   /* volatile int arr[] */
+};
+
 /* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
@@ -13059,7 +13174,24 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(901, "type ( - expects * for grouped decl"),
     STATUS_INFO(902, "type ( * - expects * or ID"),
     STATUS_INFO(903, "type ( * declarator - expects )"),
-    STATUS_INFO(904, "reduce P339: grouped declarator")
+    STATUS_INFO(904, "reduce P339: grouped declarator"),
+    { NIHIL, 0, "reserved 905" },  /* placeholder 905 */
+    /* Variadic parameter state (906) */
+    STATUS_INFO(906, "reduce P341: variadic params (...)"),
+    /* Qualified parameter states (907-919) */
+    STATUS_INFO(907, "( const - expects volatile or type"),
+    STATUS_INFO(908, "( volatile - expects const or type"),
+    { NIHIL, 0, "reserved 909" },  /* placeholder 909 */
+    STATUS_INFO(910, "params , const - expects volatile or type"),
+    STATUS_INFO(911, "params , volatile - expects const or type"),
+    STATUS_INFO(912, "( const type - expects * or ID or )"),
+    STATUS_INFO(913, "( const type declarator - reduce P342"),
+    STATUS_INFO(914, "( volatile type - expects * or ID or )"),
+    STATUS_INFO(915, "( volatile type declarator - reduce P343"),
+    STATUS_INFO(916, "params , const type - expects * or ID or )"),
+    STATUS_INFO(917, "params , const type declarator - reduce P342"),
+    STATUS_INFO(918, "params , volatile type - expects * or ID or )"),
+    STATUS_INFO(919, "params , volatile type declarator - reduce P343")
 };
 
 /* ==================================================
@@ -13659,6 +13791,48 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_105_GOTO[] = {
 /* State 106: after ', type_spec *' in parameter list */
 hic_manens constans Arbor2StatusGotoEntry STATUS_106_GOTO[] = {
     { INT_NT_DECLARATOR, 110 }
+};
+
+/* State 907: after '( const' - same GOTO as State 91 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_907_GOTO[] = {
+    { INT_NT_PARAM_DECL, 101 },
+    { INT_NT_PARAM_LIST, 102 }
+};
+
+/* State 908: after '( volatile' - same GOTO as State 91 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_908_GOTO[] = {
+    { INT_NT_PARAM_DECL, 101 },
+    { INT_NT_PARAM_LIST, 102 }
+};
+
+/* State 910: after 'params , const' - same GOTO as State 104 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_910_GOTO[] = {
+    { INT_NT_PARAM_DECL, 111 }
+};
+
+/* State 911: after 'params , volatile' - same GOTO as State 104 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_911_GOTO[] = {
+    { INT_NT_PARAM_DECL, 111 }
+};
+
+/* State 912: after '( const type' - DECLARATOR goes to 913 for P342 reduce */
+hic_manens constans Arbor2StatusGotoEntry STATUS_912_GOTO[] = {
+    { INT_NT_DECLARATOR, 913 }
+};
+
+/* State 914: after '( volatile type' - DECLARATOR goes to 915 for P343 reduce */
+hic_manens constans Arbor2StatusGotoEntry STATUS_914_GOTO[] = {
+    { INT_NT_DECLARATOR, 915 }
+};
+
+/* State 916: after 'params , const type' - DECLARATOR goes to 917 for P342 reduce */
+hic_manens constans Arbor2StatusGotoEntry STATUS_916_GOTO[] = {
+    { INT_NT_DECLARATOR, 917 }
+};
+
+/* State 918: after 'params , volatile type' - DECLARATOR goes to 919 for P343 reduce */
+hic_manens constans Arbor2StatusGotoEntry STATUS_918_GOTO[] = {
+    { INT_NT_DECLARATOR, 919 }
 };
 
 /* State 119: anonymous struct - expects member list */
@@ -16389,7 +16563,25 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 901: type ( - expects * */
     STATUS_GOTO(902),  /* 902: type ( * - GOTO declarator → 903 */
     STATUS_GOTO_NIL,   /* 903: type ( * declarator - expects ) */
-    STATUS_GOTO_NIL    /* 904: reduce P339 grouped declarator */
+    STATUS_GOTO_NIL,   /* 904: reduce P339 grouped declarator */
+
+    STATUS_GOTO_NIL,   /* 905: reserved */
+    STATUS_GOTO_NIL,   /* 906: variadic params (...) */
+
+    /* Qualified parameter states (907-919) */
+    STATUS_GOTO(907),  /* 907: ( const - GOTO param_decl/list */
+    STATUS_GOTO(908),  /* 908: ( volatile - GOTO param_decl/list */
+    STATUS_GOTO_NIL,   /* 909: reserved */
+    STATUS_GOTO(910),  /* 910: params , const - GOTO param_decl */
+    STATUS_GOTO(911),  /* 911: params , volatile - GOTO param_decl */
+    STATUS_GOTO(912),  /* 912: ( const type - GOTO declarator -> 913 */
+    STATUS_GOTO_NIL,   /* 913: ( const type declarator - reduce P342 */
+    STATUS_GOTO(914),  /* 914: ( volatile type - GOTO declarator -> 915 */
+    STATUS_GOTO_NIL,   /* 915: ( volatile type declarator - reduce P343 */
+    STATUS_GOTO(916),  /* 916: params , const type - GOTO declarator -> 917 */
+    STATUS_GOTO_NIL,   /* 917: params , const type declarator - reduce P342 */
+    STATUS_GOTO(918),  /* 918: params , volatile type - GOTO declarator -> 919 */
+    STATUS_GOTO_NIL    /* 919: params , volatile type declarator - reduce P343 */
 };
 
 
@@ -16846,6 +17038,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI: redde "DECLARATOR_FUNCTI";
         casus ARBOR2_NODUS_PARAMETER_DECL:    redde "PARAMETER_DECL";
+        casus ARBOR2_NODUS_PARAMETER_LIST:    redde "PARAMETER_LIST";
         casus ARBOR2_NODUS_SENTENTIA:     redde "SENTENTIA";
         casus ARBOR2_NODUS_SENTENTIA_VACUA: redde "SENTENTIA_VACUA";
         casus ARBOR2_NODUS_CORPUS:        redde "CORPUS";

@@ -2172,6 +2172,46 @@ _processare_unam_actionem(
                             valor_novus->datum.parameter_decl.type_specifier = type_spec;
                             valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - no declarator */
                         }
+                        /* ========== VARIADIC PARAMS P341 ========== */
+                        alioquin si (actio->valor == 341)
+                        {
+                            /* P341: params -> params , ... (3 symbols)
+                             * Variadic parameter list
+                             * valori: [0]=param_list, [1]=comma, [2]=ellipsis */
+                            Arbor2Nodus* params = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_LIST;
+                            valor_novus->lexema = NIHIL;
+
+                            /* Copy parameters from existing list and mark variadic */
+                            si (params->genus == ARBOR2_NODUS_PARAMETER_LIST)
+                            {
+                                valor_novus->datum.parameter_list.parametra = params->datum.parameter_list.parametra;
+                            }
+                            alioquin
+                            {
+                                /* Should be a PARAMETER_LIST at this point, but handle gracefully */
+                                valor_novus->datum.parameter_list.parametra = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                                *(Arbor2Nodus**)xar_addere(valor_novus->datum.parameter_list.parametra) = params;
+                            }
+                            valor_novus->datum.parameter_list.est_variadicus = VERUM;
+                        }
+                        /* ========== ABSTRACT QUALIFIED PARAMS P344-P345 ========== */
+                        alioquin si (actio->valor == 344 || actio->valor == 345)
+                        {
+                            /* P344: param -> 'const' type (2 symbols, abstract const param)
+                             * P345: param -> 'volatile' type (2 symbols, abstract volatile param)
+                             * valori: [1]=qualifier, [0]=type specifier */
+                            Arbor2Nodus* type_spec = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                            valor_novus->lexema = NIHIL;
+                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
+                            valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - no declarator */
+                            /* TODO: Track qualifier in type_specifier if needed */
+                        }
                         /* ========== POINTER QUALIFIERS P252-P255 ========== */
                         alioquin si (actio->valor == 252 || actio->valor == 253)
                         {

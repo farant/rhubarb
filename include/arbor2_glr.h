@@ -141,6 +141,7 @@ nomen enumeratio {
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
     ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
     ARBOR2_NODUS_PARAMETER_DECL,    /* Parameter declaration: type name */
+    ARBOR2_NODUS_PARAMETER_LIST,    /* Parameter list (intermediate during parsing) */
     ARBOR2_NODUS_DEFINITIO_FUNCTI,  /* Function definition: type name() { body } */
     ARBOR2_NODUS_STRUCT_SPECIFIER,  /* Struct specifier: struct name { members } */
     ARBOR2_NODUS_ENUM_SPECIFIER,    /* Enum specifier: enum name { enumerators } */
@@ -265,6 +266,7 @@ structura Arbor2Nodus {
             Arbor2Nodus*        declarator_interior;  /* Inner declarator (name + pointers) */
             Xar*                parametri;            /* NULL for (), params for D2 */
             b32                 habet_void;           /* true if explicitly (void) */
+            b32                 est_variadicus;       /* true if ends with ... */
             s32                 num_stellae;          /* Pointer depth (for * fn()) */
         } declarator_functi;
 
@@ -273,6 +275,12 @@ structura Arbor2Nodus {
             Arbor2Nodus*        type_specifier;       /* Type (identifier node) */
             Arbor2Nodus*        declarator;           /* Name + pointers */
         } parameter_decl;
+
+        /* PARAMETER_LIST (intermediate representation during parsing) */
+        structura {
+            Xar*                parametra;            /* Xar of Arbor2Nodus* */
+            b32                 est_variadicus;       /* true if ends with ... */
+        } parameter_list;
 
         /* DEFINITIO_FUNCTI (function definition) */
         structura {

@@ -12119,6 +12119,80 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
     }
 
+    /* ========================================================
+     * PROBARE: Variadic functions (ellipsis)
+     * ======================================================== */
+
+    /* int printf(char *fmt, ...) - variadic function */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int printf(char *fmt, ...) (variadic function) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int printf(char *fmt, ...)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int foo(int x, ...) - variadic with int param */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int foo(int x, ...) (variadic with int) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int foo(int x, ...)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* ========================================================
+     * PROBARE: Const qualifier in parameters
+     * ======================================================== */
+
+    /* int foo(const int x) - const value parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int foo(const int x) (const value param) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int foo(const int x)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int foo(const char *s) - const pointer parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int foo(const char *s) (const pointer param) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int foo(const char *s)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* void bar(int x, const int y) - mixed params with const */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans void bar(int x, const int y) (mixed const param) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "void bar(int x, const int y)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
+    /* int fn(volatile int v) - volatile parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans int fn(volatile int v) (volatile param) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "int fn(volatile int v)");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);
+    }
+
 
     /* ========================================================
      * PROBARE: Table validation
