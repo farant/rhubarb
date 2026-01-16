@@ -2158,6 +2158,20 @@ _processare_unam_actionem(
                                 valor_novus->datum.declarator.pointer_quals = ZEPHYRUM;
                             }
                         }
+                        /* ========== ABSTRACT PARAMETER P340 ========== */
+                        alioquin si (actio->valor == 340)
+                        {
+                            /* P340: param -> type (1 symbol)
+                             * Abstract parameter - just the type, no declarator
+                             * valori: [0]=type specifier */
+                            Arbor2Nodus* type_spec = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                            valor_novus->lexema = NIHIL;
+                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
+                            valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - no declarator */
+                        }
                         /* ========== POINTER QUALIFIERS P252-P255 ========== */
                         alioquin si (actio->valor == 252 || actio->valor == 253)
                         {

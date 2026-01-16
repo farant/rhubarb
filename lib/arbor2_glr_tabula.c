@@ -550,7 +550,9 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P338 */ { ARBOR2_NT_FACTOR, 6, ARBOR2_NODUS_SIZEOF, "factor -> 'sizeof' '(' LONG DOUBLE '*' ')'" },
 
     /* Grouped pointer declarator for function pointers */
-    /* P339 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR, "declarator -> '(' '*' declarator ')'" }
+    /* P339 */ { ARBOR2_NT_DECLARATOR, 4, ARBOR2_NODUS_DECLARATOR, "declarator -> '(' '*' declarator ')'" },
+
+    /* P340 */ { ARBOR2_NT_PARAMETER_DECL, 1, ARBOR2_NODUS_PARAMETER_DECL, "param -> type" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -2589,7 +2591,9 @@ hic_manens constans Arbor2TabulaActio STATUS_94_ACTIONES[] = {
 /* State 95: after '( type_specifier' - expect '*' or param name */
 hic_manens constans Arbor2TabulaActio STATUS_95_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  96, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  97, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  97, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 340, FALSUM },  /* abstract param */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM }   /* abstract param */
 };
 
 /* State 96: after '( type_spec *' - expect '*' or param name */
@@ -2657,7 +2661,9 @@ hic_manens constans Arbor2TabulaActio STATUS_104_ACTIONES[] = {
 /* State 105: after 'param_list , type_spec' - expect '*' or param name */
 hic_manens constans Arbor2TabulaActio STATUS_105_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 107, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 107, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 340, FALSUM },  /* abstract param */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM }   /* abstract param */
 };
 
 /* State 106: after 'param_list , type_spec *' - expect '*' or name */
