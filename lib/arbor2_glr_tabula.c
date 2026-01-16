@@ -2605,25 +2605,29 @@ hic_manens constans Arbor2TabulaActio STATUS_96_ACTIONES[] = {
 /* State 97: after '( type_spec name' - reduce P12 */
 hic_manens constans Arbor2TabulaActio STATUS_97_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* array param: arr[] */
 };
 
 /* State 98: after '( type_spec *...* name' - reduce P12 */
 hic_manens constans Arbor2TabulaActio STATUS_98_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* pointer array: *arr[] */
 };
 
 /* State 99: after '( type_spec declarator' - reduce P43 */
 hic_manens constans Arbor2TabulaActio STATUS_99_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 43, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }  /* array param: arr[] */
 };
 
 /* State 100: after '( type_spec * declarator' - reduce P11 */
 hic_manens constans Arbor2TabulaActio STATUS_100_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }  /* pointer array: *arr[] */
 };
 
 /* State 101: after '( param_decl' - reduce P41 */
@@ -2675,25 +2679,29 @@ hic_manens constans Arbor2TabulaActio STATUS_106_ACTIONES[] = {
 /* State 107: after 'param_list , type_spec name' - reduce P12 */
 hic_manens constans Arbor2TabulaActio STATUS_107_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* array param: arr[] */
 };
 
 /* State 108: after 'param_list , type_spec *...* name' - reduce P12 */
 hic_manens constans Arbor2TabulaActio STATUS_108_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 12, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* pointer array: *arr[] */
 };
 
 /* State 109: after 'param_list , type_spec declarator' - reduce P43 */
 hic_manens constans Arbor2TabulaActio STATUS_109_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 43, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }  /* array param: arr[] */
 };
 
 /* State 110: after 'param_list , type_spec * declarator' - reduce P11 */
 hic_manens constans Arbor2TabulaActio STATUS_110_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 11, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM }
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }  /* pointer array: *arr[] */
 };
 
 /* State 111: after 'param_list , param_decl' - reduce P42 */
@@ -10495,7 +10503,8 @@ hic_manens constans Arbor2TabulaActio STATUS_664_ACTIONES[] = {
 /* State 665: after 'void' - accepts * or ( for grouped declarator (void (*fp)(void)) */
 hic_manens constans Arbor2TabulaActio STATUS_665_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }  /* void (*fp)... */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM },  /* void (*fp)... */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }   /* void fn() */
 };
 
 /* ==================================================
