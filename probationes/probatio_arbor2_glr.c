@@ -6564,6 +6564,185 @@ s32 principale(vacuum)
         }
     }
 
+    /* ========================================================
+     * PROBARE: Unary minus and plus operators
+     * ======================================================== */
+
+    /* Unary minus: -x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans unary minus: -x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "-x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_MINUS);
+            }
+        }
+    }
+
+    /* Unary plus: +x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans unary plus: +x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "+x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_PLUS);
+            }
+        }
+    }
+
+    /* Unary minus with integer literal: -5 */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans unary minus integer: -5 ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "-5");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_INTEGER);
+            }
+        }
+    }
+
+    /* Double negation: - -x (space between) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans double negation: - -x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "- -x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Unary minus with binary plus: -a + b */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans unary with binary: -a + b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "-a + b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: (-a) + b */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.sinister->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Unary minus after binary: a + -b */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans binary then unary: a + -b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a + -b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a + (-b) */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Mixed unary: -!x */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans mixed: -!x ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "-!x");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            si (radix->lexema != NIHIL && radix->lexema->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_MINUS);
+            }
+            si (radix->datum.unarium.operandum != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.unarium.operandum->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
+    /* Unary minus with multiply: a * -b */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans multiply unary: a * -b ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "a * -b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL)
+        {
+            /* Should be: a * (-b) */
+            CREDO_AEQUALIS_I32((i32)radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)radix->datum.binarium.dexter->genus, (i32)ARBOR2_NODUS_UNARIUM);
+            }
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Bitwise binary operators

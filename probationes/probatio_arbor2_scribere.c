@@ -206,7 +206,6 @@ s32 principale(vacuum)
 
     /* ========================================================
      * PROBARE: Unary expressions
-     * Note: unary - and + not supported in parser at start
      * ======================================================== */
     {
         imprimere("\n--- Probans unary expressions ---\n");
@@ -215,6 +214,16 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "~x", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "++x", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "--x", NIHIL));
+
+        /* Unary minus and plus */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "+x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-5", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "- -x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-a+b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a+-b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "-!x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a*-b", NIHIL));
     }
 
     /* ========================================================
