@@ -11783,6 +11783,100 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Phase 1.4b - Qualifier + type modifier combinations
+     * (FAILING - states 350/351 need UNSIGNED/LONG/SHORT/SIGNED)
+     * ======================================================== */
+
+    /* const unsigned int x - FAILING */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const unsigned int x (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "const unsigned int x");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* const long int y - FAILING */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const long int y (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "const long int y");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* const short int z - FAILING */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const short int z (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "const short int z");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* volatile unsigned int a - FAILING */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans volatile unsigned int a (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "volatile unsigned int a");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* volatile long int b - FAILING */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans volatile long int b (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "volatile long int b");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* const signed char c - FAILING */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans const signed char c (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "const signed char c");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* static const unsigned int d - FAILING (storage + qualifier + type modifier) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans static const unsigned int d (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "static const unsigned int d");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+    /* extern volatile long int e - FAILING (storage + qualifier + type modifier) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans extern volatile long int e (EXPECTED FAIL) ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "extern volatile long int e");
+        res = arbor2_glr_parsere(glr, tokens);
+        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+    }
+
+
+    /* ========================================================
      * PROBARE: void pointer declarations
      * ======================================================== */
 

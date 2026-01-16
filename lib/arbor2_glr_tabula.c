@@ -5961,22 +5961,32 @@ hic_manens constans Arbor2TabulaActio STATUS_349_ACTIONES[] = {
     { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 654, FALSUM }   /* auto signed */
 };
 
-/* State 350: after 'const' - expects type or volatile */
+/* State 350: after 'const' - expects type or volatile or type modifier */
 hic_manens constans Arbor2TabulaActio STATUS_350_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 356, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
-    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 536, FALSUM }   /* const volatile */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 536, FALSUM },  /* const volatile */
+    /* Type modifiers - Phase 1.4b */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 920, FALSUM },  /* const unsigned */
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 923, FALSUM },  /* const long */
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 924, FALSUM },  /* const short */
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 925, FALSUM }   /* const signed */
 };
 
-/* State 351: after 'volatile' - expects type or const */
+/* State 351: after 'volatile' - expects type or const or type modifier */
 hic_manens constans Arbor2TabulaActio STATUS_351_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 357, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
-    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 537, FALSUM }   /* volatile const */
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 537, FALSUM },  /* volatile const */
+    /* Type modifiers - Phase 1.4b */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 928, FALSUM },  /* volatile unsigned */
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 931, FALSUM },  /* volatile long */
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 932, FALSUM },  /* volatile short */
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 933, FALSUM }   /* volatile signed */
 };
 
 /* State 352: after 'static type' - expects declarator (* or ID) */
@@ -8910,7 +8920,12 @@ hic_manens constans Arbor2TabulaActio STATUS_530_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 538, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 538, FALSUM },
-    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 538, FALSUM }
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    /* Type modifiers - Phase 1.4b */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 936, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 939, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 940, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 941, FALSUM }
 };
 
 /* State 531: after 'extern const' - expects type */
@@ -8950,7 +8965,12 @@ hic_manens constans Arbor2TabulaActio STATUS_535_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 543, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 543, FALSUM },
-    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 543, FALSUM }
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    /* Type modifiers - Phase 1.4b */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 944, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 947, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 948, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 949, FALSUM }
 };
 
 /* State 536: after 'const volatile' - expects type */
@@ -12129,6 +12149,243 @@ hic_manens constans Arbor2TabulaActio STATUS_919_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Phase 1.4b: Qualifier + Type Modifier States (920-935)
+ *
+ * Pattern: qualifier + modifier(s) → State 356 (const) or 357 (volatile)
+ * Each qualifier gets 8 modifier states.
+ * ================================================== */
+
+/* -------------------- CONST (→356) -------------------- */
+
+/* State 920: after 'const unsigned' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_920_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 921, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 922, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 921: after 'const unsigned long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_921_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 922: after 'const unsigned short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_922_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 923: after 'const long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_923_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 924: after 'const short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_924_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 925: after 'const signed' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_925_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 926, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 927, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 926: after 'const signed long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_926_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 927: after 'const signed short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_927_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* -------------------- VOLATILE (→357) -------------------- */
+
+/* State 928: after 'volatile unsigned' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_928_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 929, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 930, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 929: after 'volatile unsigned long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_929_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 930: after 'volatile unsigned short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_930_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 931: after 'volatile long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_931_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 932: after 'volatile short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_932_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 933: after 'volatile signed' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_933_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 934, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 935, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 934: after 'volatile signed long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_934_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 935: after 'volatile signed short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_935_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* ==================================================
+ * Phase 1.4b: Compound (Storage+Qualifier) + Type Modifier States (936-951)
+ *
+ * Pattern: storage_class + qualifier + modifier(s) → State 538/543/etc
+ * ================================================== */
+
+/* -------------------- STATIC CONST (→538) -------------------- */
+
+/* State 936: after 'static const unsigned' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_936_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 937, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 938, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 937: after 'static const unsigned long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_937_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 938: after 'static const unsigned short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_938_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 939: after 'static const long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_939_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 940: after 'static const short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_940_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 941: after 'static const signed' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_941_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 942, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 943, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 942: after 'static const signed long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_942_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 943: after 'static const signed short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_943_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 538, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* -------------------- EXTERN VOLATILE (→543) -------------------- */
+
+/* State 944: after 'extern volatile unsigned' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_944_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 945, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 946, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 945: after 'extern volatile unsigned long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_945_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 946: after 'extern volatile unsigned short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_946_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 947: after 'extern volatile long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_947_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 948: after 'extern volatile short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_948_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 949: after 'extern volatile signed' - expects int, char, long, short, or ID */
+hic_manens constans Arbor2TabulaActio STATUS_949_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 950, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 951, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 950: after 'extern volatile signed long' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_950_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* State 951: after 'extern volatile signed short' - expects int or ID */
+hic_manens constans Arbor2TabulaActio STATUS_951_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 543, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }  /* implicit int */
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -13191,7 +13448,41 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(916, "params , const type - expects * or ID or )"),
     STATUS_INFO(917, "params , const type declarator - reduce P342"),
     STATUS_INFO(918, "params , volatile type - expects * or ID or )"),
-    STATUS_INFO(919, "params , volatile type declarator - reduce P343")
+    STATUS_INFO(919, "params , volatile type declarator - reduce P343"),
+    /* Phase 1.4b: Qualifier + Type Modifier States (920-935) */
+    STATUS_INFO(920, "const unsigned - expects int/char/long/short/ID"),
+    STATUS_INFO(921, "const unsigned long - expects int/ID"),
+    STATUS_INFO(922, "const unsigned short - expects int/ID"),
+    STATUS_INFO(923, "const long - expects int/ID"),
+    STATUS_INFO(924, "const short - expects int/ID"),
+    STATUS_INFO(925, "const signed - expects int/char/long/short/ID"),
+    STATUS_INFO(926, "const signed long - expects int/ID"),
+    STATUS_INFO(927, "const signed short - expects int/ID"),
+    STATUS_INFO(928, "volatile unsigned - expects int/char/long/short/ID"),
+    STATUS_INFO(929, "volatile unsigned long - expects int/ID"),
+    STATUS_INFO(930, "volatile unsigned short - expects int/ID"),
+    STATUS_INFO(931, "volatile long - expects int/ID"),
+    STATUS_INFO(932, "volatile short - expects int/ID"),
+    STATUS_INFO(933, "volatile signed - expects int/char/long/short/ID"),
+    STATUS_INFO(934, "volatile signed long - expects int/ID"),
+    STATUS_INFO(935, "volatile signed short - expects int/ID"),
+    /* Phase 1.4b: Compound (Storage+Qualifier) + Type Modifier States (936-951) */
+    STATUS_INFO(936, "static const unsigned - expects int/char/long/short/ID"),
+    STATUS_INFO(937, "static const unsigned long - expects int/ID"),
+    STATUS_INFO(938, "static const unsigned short - expects int/ID"),
+    STATUS_INFO(939, "static const long - expects int/ID"),
+    STATUS_INFO(940, "static const short - expects int/ID"),
+    STATUS_INFO(941, "static const signed - expects int/char/long/short/ID"),
+    STATUS_INFO(942, "static const signed long - expects int/ID"),
+    STATUS_INFO(943, "static const signed short - expects int/ID"),
+    STATUS_INFO(944, "extern volatile unsigned - expects int/char/long/short/ID"),
+    STATUS_INFO(945, "extern volatile unsigned long - expects int/ID"),
+    STATUS_INFO(946, "extern volatile unsigned short - expects int/ID"),
+    STATUS_INFO(947, "extern volatile long - expects int/ID"),
+    STATUS_INFO(948, "extern volatile short - expects int/ID"),
+    STATUS_INFO(949, "extern volatile signed - expects int/char/long/short/ID"),
+    STATUS_INFO(950, "extern volatile signed long - expects int/ID"),
+    STATUS_INFO(951, "extern volatile signed short - expects int/ID")
 };
 
 /* ==================================================
@@ -14941,6 +15232,16 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_349_GOTO[] = {
     { INT_NT_DECLARATIO, 21 }
 };
 
+/* State 350: after 'const' - needs DECLARATIO for qualifier + modifier chains */
+hic_manens constans Arbor2StatusGotoEntry STATUS_350_GOTO[] = {
+    { INT_NT_DECLARATIO, 21 }
+};
+
+/* State 351: after 'volatile' - needs DECLARATIO for qualifier + modifier chains */
+hic_manens constans Arbor2StatusGotoEntry STATUS_351_GOTO[] = {
+    { INT_NT_DECLARATIO, 21 }
+};
+
 /* ==================================================
  * Phase 1.4b: First-Level Storage Class + Modifier GOTOs
  *
@@ -15886,8 +16187,8 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO(347),  /* 347: after 'extern' - expects type */
     STATUS_GOTO(348),  /* 348: after 'register' - expects type */
     STATUS_GOTO(349),  /* 349: after 'auto' - expects type */
-    STATUS_GOTO_NIL,   /* 350: after 'const' - expects type */
-    STATUS_GOTO_NIL,   /* 351: after 'volatile' - expects type */
+    STATUS_GOTO(350),  /* 350: after 'const' - expects type (Phase 1.4b) */
+    STATUS_GOTO(351),  /* 351: after 'volatile' - expects type (Phase 1.4b) */
     STATUS_GOTO(352),  /* 352: after 'static type' - expects declarator */
     STATUS_GOTO(353),  /* 353: after 'extern type' - expects declarator */
     STATUS_GOTO(354),  /* 354: after 'register type' - expects declarator */

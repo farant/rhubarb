@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-15
-Status: Updated after Phase 1.5 completion (Translation Unit support)
+Status: Updated after Phase 1.4b completion (Qualifier + Type Modifier combinations)
 
 ---
 
@@ -40,9 +40,9 @@ Status: Updated after Phase 1.5 completion (Translation Unit support)
 - GLR parser core with GSS
 - GSS path enumeration for multi-path reductions
 - Piscina checkpointing for rollback
-- **252 grammar productions** (P0-P251)
-- **625 LR states** (0-624, with 611-616 reserved)
-- **1539 tests passing**
+- **346 grammar productions** (P0-P345)
+- **952 LR states** (0-951)
+- **1734 tests total** (all passing)
 - Table validation
 
 **Grammar currently covered:**
@@ -56,7 +56,7 @@ Status: Updated after Phase 1.5 completion (Translation Unit support)
 | Assignment | COMPLETE | =, +=, -=, *=, /=, %=, &=, \|=, ^=, <<=, >>= |
 | Comma | COMPLETE | , (expression comma operator) |
 | Literals | COMPLETE | int, float, char, string |
-| sizeof | COMPLETE | sizeof expr, sizeof(type), sizeof(type*), sizeof(type[N]), sizeof(type[N][M]), sizeof(type*[N]), sizeof(struct X) |
+| sizeof | COMPLETE | sizeof expr, sizeof(type), sizeof(type*), sizeof(type[N]), sizeof(type[N][M]), sizeof(type*[N]), sizeof(struct X), sizeof(unsigned int), sizeof(long int) |
 | Casts | COMPLETE | All types including (int*), (char**), (struct X*), (TypeName*) |
 | if/else | COMPLETE | |
 | while | COMPLETE | |
@@ -72,23 +72,32 @@ Status: Updated after Phase 1.5 completion (Translation Unit support)
 | Pointer declarators | COMPLETE | * name |
 | Function declarators | COMPLETE | name(), name(void), name(params) |
 | Function definitions | COMPLETE | type declarator { body } |
-| Parameters | COMPLETE | |
+| Parameters | COMPLETE | With const/volatile qualifiers |
+| Variadic functions | COMPLETE | `int printf(char *fmt, ...)` (P341, state 906) |
+| Pointer qualifiers | COMPLETE | `int * const p`, `int * volatile p` (P252-P255, states 657-661) |
 | Storage classes | COMPLETE | Individual and combinations (`static const int x`) |
 | Type qualifiers | COMPLETE | Individual and combinations |
 | Multiple declarators | COMPLETE | `int x, y;`, `int *x, y;` (AMBIGUUS for pointer case) |
 | Type modifiers | COMPLETE | `unsigned`, `long`, `short`, `signed` + combinations (states 617-624) |
+| Qualifier + type modifier | COMPLETE | `const unsigned int`, `volatile long int`, compound combos (states 920-951) |
 | struct/union | COMPLETE | With members, bit fields |
 | enum | COMPLETE | With enumerators and values |
 | Arrays | COMPLETE | name[size] |
+| Function pointers | COMPLETE | `int (*fp)(void)` (P339, states 901-904) |
 | Translation unit | COMPLETE | Multiple external declarations via wrapper API |
 
 **Grammar NOT covered (remaining gaps):**
 
 | Missing | Impact | Phase |
 |---------|--------|-------|
-| Storage + type modifier | `static unsigned int` not parsed | 1.4b |
-| Pointer qualifiers | `int * const p` not parsed | 1.4b |
 | K&R function defs | Old-style parameters | Low priority |
+
+**Note:** All specifier combinations now work:
+- `static unsigned int x` ✓
+- `const unsigned int x` ✓
+- `volatile long int y` ✓
+- `static const unsigned int z` ✓
+- `extern volatile long int e` ✓
 
 ### Arbor2Nodus Structure - BASIC
 Current structure has:
@@ -104,11 +113,15 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- 1523 tests passing
+- 1734 tests total (all passing)
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
 - sizeof variants (type, pointer, array, multi-dim, pointer array)
 - Translation unit tests (multiple decls, functions, mixed)
+- Variadic function tests
+- Qualified parameter tests (const/volatile in function params)
+- Function pointer tests
+- Qualifier + type modifier tests (Phase 1.4b)
 - Table validation
 - Parser statistics
 
@@ -214,10 +227,33 @@ Implemented 2026-01-15.
 - `extern volatile int y` ✓
 - `static const volatile int x` ✓
 
-**Deferred to Phase 1.4b:**
-- Storage class + type modifier: `static unsigned int x;`
-- Type modifiers in function parameters
-- Type modifiers in sizeof/casts
+**Note:** Storage class + type modifier completed in earlier work.
+
+### 1.4b Qualifier + Type Modifier Combinations - COMPLETE ✓
+
+Implemented 2026-01-15.
+
+**Problem:** States 350 (after `const`) and 351 (after `volatile`) did not accept type modifiers (UNSIGNED, LONG, SHORT, SIGNED). `const unsigned int x` failed.
+
+**Solution:**
+- Added type modifier actions to State 350 (const): UNSIGNED→920, LONG→923, SHORT→924, SIGNED→925
+- Added type modifier actions to State 351 (volatile): UNSIGNED→928, LONG→931, SHORT→932, SIGNED→933
+- Created States 920-935 for qualifier + type modifier chains (16 states)
+- Added GOTO entries for States 350/351 (needed for DECLARATIO after reduction)
+- Added type modifier actions to compound states 530 (static const) and 535 (extern volatile)
+- Created States 936-951 for compound + type modifier chains (16 states)
+
+**Working:**
+- `const unsigned int x` ✓
+- `const long int y` ✓
+- `const short int z` ✓
+- `volatile unsigned int a` ✓
+- `volatile long int b` ✓
+- `const signed char c` ✓
+- `static const unsigned int d` ✓
+- `extern volatile long int e` ✓
+
+**Stats:** +33 states (919→952), 8 tests now passing
 
 ### 1.5 Translation Unit - COMPLETE ✓
 
@@ -254,27 +290,63 @@ Arbor2GLRResultus arbor2_glr_parsere_translation_unit(
 
 **Deliverable:** Can parse complete C89 files ✓
 
+### 1.6 Function Pointers, Variadic Functions, Qualified Parameters - COMPLETE ✓
+
+Implemented 2026-01-15.
+
+**1.6a - Function Pointer Declarators:**
+- `int (*fp)(void)` - grouped pointer declarator
+- P339: grouped_declarator -> '(' '*' declarator ')'
+- States 901-904 (4 new states)
+- 16 new tests
+
+**1.6b - Variadic Function Parameters:**
+- `int printf(char *fmt, ...)` - variadic parameter lists
+- P341: param_list -> param_list ',' '...'
+- State 906 (1 new state)
+- Added `est_variadicus` field to ARBOR2_NODUS_PARAMETER_LIST
+- 2 new tests
+
+**1.6c - Qualified Parameters (const/volatile in function params):**
+- `int fn(const int x)` - const value parameter
+- `int fn(const char *p)` - const type with pointer
+- `int fn(volatile int v)` - volatile value parameter
+- `int fn(int * const p)` - const pointer parameter
+- P342-P345: qualified parameter declarations
+- States 907-919 (13 new states)
+- 4 new tests
+
+**Implementation Details:**
+- States 907/908 handle `( const` / `( volatile` after function name
+- States 910/911 handle `, const` / `, volatile` for subsequent params
+- States 912-919 route qualified types through DECLARATOR GOTO to reduce states
+- P342/P343 pop 3 symbols (qualifier + type + declarator)
+- P344/P345 pop 2 symbols (qualifier + type, abstract params)
+- Reuse existing pointer qualifier states 657-661 for `int * const p`
+
 ---
 
 ## Recommended Next Steps
 
 Given the current state, the recommended priority is:
 
-1. **Phase 1.4b (Storage + Type Modifier Combinations)** - Wire storage classes with type modifiers (`static unsigned int x;`). Currently deferred.
-
-2. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
+1. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
 - Storage class combinations (`static const int`) ✓
 - Type modifiers (`unsigned int`, `long int`, implicit int) ✓
+- Qualifier + type modifier (`const unsigned int`, `volatile long int`) ✓
+- Compound combinations (`static const unsigned int`, `extern volatile long int`) ✓
 - Multiple declarators (`int x, y`, `int *x, y` as AMBIGUUS) ✓
 - All expression/statement/control flow constructs ✓
+- Variadic functions (`int printf(char *fmt, ...)`) ✓
+- Pointer qualifiers (`int * const p`, `int * volatile p`) ✓
+- Qualified parameters (`int fn(const int x)`, `int fn(volatile int v)`) ✓
+- Function pointers (`int (*fp)(void)`) ✓
 
-**Remaining gaps:**
-- Storage + type modifier combinations (`static unsigned int`)
-- Pointer qualifiers (`int * const p`)
-- Type modifiers in sizeof/casts
+**Remaining gaps (low priority):**
+- K&R function definitions (old-style parameters)
 
 ---
 
@@ -722,14 +794,14 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | lib/arbor2_lexema.c | ~500 | Complete |
 | lib/arbor2_token.c | 264 | Complete |
 | lib/arbor2_expandere.c | 1576 | Mostly complete |
-| lib/arbor2_glr.c | ~2700 | Functional |
-| lib/arbor2_glr_tabula.c | ~13000 | 252 productions, 611 states |
-| include/arbor2_glr.h | ~650 | Good structure |
+| lib/arbor2_glr.c | ~2800 | Functional |
+| lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
+| include/arbor2_glr.h | ~700 | Good structure |
 | include/arbor2_lexema.h | 220 | Complete |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | 197 | Complete |
-| probationes/probatio_arbor2_glr.c | ~9500 | 1491 tests |
-| tools/glr_debug.c | 311 | Working |
+| probationes/probatio_arbor2_glr.c | ~12000 | 1734 tests |
+| tools/glr_debug.c | ~340 | Working |
 
 ---
 
@@ -747,4 +819,8 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-15 | 1.1d Ptr array | +4 | +16 | +5 | sizeof(int*[10]) |
 | 2026-01-15 | Various fixes | +19 | +61 | +65 | Misc improvements |
 | 2026-01-15 | 1.5 Translation Unit | +0 | +0 | +32 | Wrapper approach, no grammar changes |
-| **Current** | | **252** | **611** | **1523** | |
+| 2026-01-15 | 1.6a Function Pointers | +1 | +4 | +16 | int (*fp)(void) - P339, states 901-904 |
+| 2026-01-15 | 1.6b Variadic Params | +1 | +1 | +2 | printf(fmt, ...) - P341, state 906 |
+| 2026-01-15 | 1.6c Qualified Params | +4 | +13 | +4 | const/volatile in params - P342-P345, states 907-919 |
+| 2026-01-15 | 1.4b Qual+TypeMod | +0 | +33 | +0 | const unsigned int, volatile long int, compound combos - states 920-951 |
+| **Current** | | **346** | **952** | **1734** | |
