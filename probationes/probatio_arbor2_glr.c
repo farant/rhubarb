@@ -12556,6 +12556,111 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Location propagation (Phase 2.1)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans location on identifier ---\n");
+
+        /* "foo" at column 1 */
+        tokens = _lexare_ad_tokens(piscina, intern, "foo");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(res.radix->linea_initium, I);
+            CREDO_AEQUALIS_I32(res.radix->columna_initium, I);
+            CREDO_AEQUALIS_I32(res.radix->linea_finis, I);
+            /* foo = 3 characters, columna_finis = 1 + 3 = 4 */
+            CREDO_AEQUALIS_I32(res.radix->columna_finis, IV);
+            CREDO_AEQUALIS_I32(res.radix->layer_index, ZEPHYRUM);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans location on binary expression ---\n");
+
+        /* "a + b" - should span columns 1-5 */
+        tokens = _lexare_ad_tokens(piscina, intern, "a + b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_BINARIUM)
+        {
+            CREDO_AEQUALIS_I32(radix->linea_initium, I);
+            CREDO_AEQUALIS_I32(radix->columna_initium, I);  /* start at 'a' */
+            CREDO_AEQUALIS_I32(radix->linea_finis, I);
+            CREDO_AEQUALIS_I32(radix->columna_finis, VI);   /* end at 'b' = 5 + 1 = 6 */
+            CREDO_AEQUALIS_I32(radix->layer_index, ZEPHYRUM);
+
+            /* Check left operand (a) location */
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(radix->datum.binarium.sinister->columna_initium, I);
+                CREDO_AEQUALIS_I32(radix->datum.binarium.sinister->columna_finis, II);
+            }
+            /* Check right operand (b) location */
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(radix->datum.binarium.dexter->columna_initium, V);
+                CREDO_AEQUALIS_I32(radix->datum.binarium.dexter->columna_finis, VI);
+            }
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans location on integer literal ---\n");
+
+        /* "12345" at column 1, 5 digits */
+        tokens = _lexare_ad_tokens(piscina, intern, "12345");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(res.radix->genus, ARBOR2_NODUS_INTEGER);
+            CREDO_AEQUALIS_I32(res.radix->linea_initium, I);
+            CREDO_AEQUALIS_I32(res.radix->columna_initium, I);
+            CREDO_AEQUALIS_I32(res.radix->columna_finis, VI);  /* 1 + 5 = 6 */
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* radix;
+
+        imprimere("\n--- Probans location on function call ---\n");
+
+        /* "foo()" - should span columns 1-5 */
+        tokens = _lexare_ad_tokens(piscina, intern, "foo()");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_VOCATIO)
+        {
+            CREDO_AEQUALIS_I32(radix->linea_initium, I);
+            CREDO_AEQUALIS_I32(radix->columna_initium, I);  /* start at 'f' */
+            CREDO_AEQUALIS_I32(radix->linea_finis, I);
+            CREDO_AEQUALIS_I32(radix->columna_finis, VI);   /* end at ')' = 5 + 1 = 6 */
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

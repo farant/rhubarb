@@ -10,6 +10,29 @@
 #define GLR_DEBUG 1
 
 /* ==================================================
+ * Location Propagation Helper
+ *
+ * Sets node location from token range. Uses arbor2_token_radix()
+ * to trace back to original source (invocation site).
+ * lexemata[primus_idx] = first token (start of span)
+ * lexemata[ultimus_idx] = last token (end of span)
+ * ================================================== */
+
+#define LOCUS_EX_LEXEMATIS(nodus, primus_idx, ultimus_idx) \
+    fac { \
+        Arbor2Token* _primus = arbor2_token_radix(lexemata[primus_idx]); \
+        Arbor2Token* _ultimus = arbor2_token_radix(lexemata[ultimus_idx]); \
+        (nodus)->linea_initium = _primus->origo_meta->linea; \
+        (nodus)->columna_initium = _primus->origo_meta->columna; \
+        (nodus)->linea_finis = _ultimus->origo_meta->linea; \
+        (nodus)->columna_finis = _ultimus->origo_meta->columna + (i32)_ultimus->lexema->longitudo; \
+        (nodus)->layer_index = lexemata[primus_idx]->origo_meta->layer_index; \
+    } dum (FALSUM)
+
+/* Single-token location helper (start and end are same token) */
+#define LOCUS_EX_LEXEMA(nodus, idx) LOCUS_EX_LEXEMATIS(nodus, idx, idx)
+
+/* ==================================================
  * Internal Forward Declarations
  * ================================================== */
 
@@ -276,6 +299,7 @@ arbor2_nodus_creare_folium(
     Arbor2Token*        lexema)
 {
     Arbor2Nodus* nodus;
+    Arbor2Token* radix;
 
     nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
     si (nodus == NIHIL)
@@ -285,6 +309,15 @@ arbor2_nodus_creare_folium(
 
     nodus->genus = genus;
     nodus->lexema = lexema;
+
+    /* Locus ex unico lexema */
+    radix = arbor2_token_radix(lexema);
+    nodus->linea_initium = radix->origo_meta->linea;
+    nodus->columna_initium = radix->origo_meta->columna;
+    nodus->linea_finis = radix->origo_meta->linea;
+    nodus->columna_finis = radix->origo_meta->columna + (i32)radix->lexema->longitudo;
+    nodus->layer_index = lexema->origo_meta->layer_index;
+
     nodus->datum.folium.valor = lexema->lexema->valor;
 
     redde nodus;
@@ -786,6 +819,10 @@ _processare_unam_actionem(
                         {
                             valor_novus = _construere_nodum_binarium(glr,
                                 valori[II], lexemata[I], valori[ZEPHYRUM]);
+                            si (valor_novus != NIHIL)
+                            {
+                                LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+                            }
                         }
                         alioquin
                         {
@@ -798,6 +835,10 @@ _processare_unam_actionem(
                         {
                             valor_novus = _construere_nodum_unarium(glr,
                                 lexemata[I], valori[ZEPHYRUM]);
+                            si (valor_novus != NIHIL)
+                            {
+                                LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+                            }
                         }
                         alioquin
                         {
@@ -822,6 +863,7 @@ _processare_unam_actionem(
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[I];  /* sizeof token */
+                            LOCUS_EX_LEXEMATIS(nodus_sizeof, I, ZEPHYRUM);
                             nodus_sizeof->datum.sizeof_expr.tok_sizeof = lexemata[I];
                             nodus_sizeof->datum.sizeof_expr.tok_paren_ap = NIHIL;
                             nodus_sizeof->datum.sizeof_expr.est_typus = FALSUM;
@@ -858,6 +900,7 @@ _processare_unam_actionem(
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[VI];  /* sizeof token */
+                            LOCUS_EX_LEXEMATIS(nodus_sizeof, VI, ZEPHYRUM);
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
 
@@ -898,6 +941,7 @@ _processare_unam_actionem(
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[IX];  /* sizeof token */
+                            LOCUS_EX_LEXEMATIS(nodus_sizeof, IX, ZEPHYRUM);
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
 
@@ -943,6 +987,7 @@ _processare_unam_actionem(
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[VII];  /* sizeof token */
+                            LOCUS_EX_LEXEMATIS(nodus_sizeof, VII, ZEPHYRUM);
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
 
@@ -1007,6 +1052,7 @@ _processare_unam_actionem(
                             nodus_sizeof = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sizeof->genus = ARBOR2_NODUS_SIZEOF;
                             nodus_sizeof->lexema = lexemata[num_pop - I];  /* sizeof token */
+                            LOCUS_EX_LEXEMATIS(nodus_sizeof, num_pop - I, ZEPHYRUM);
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
 
@@ -1087,6 +1133,7 @@ _processare_unam_actionem(
                             nodus_cast = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_cast->genus = ARBOR2_NODUS_CONVERSIO;
                             nodus_cast->lexema = lexemata[type_token_idx];  /* type token for display */
+                            LOCUS_EX_LEXEMATIS(nodus_cast, num_pop - I, ZEPHYRUM);
                             nodus_cast->datum.conversio.tok_paren_ap = lexemata[num_pop - I];
                             nodus_cast->datum.conversio.typus = nodus_typus;
                             nodus_cast->datum.conversio.tok_paren_cl = lexemata[I];  /* ) before operand */
@@ -1109,6 +1156,7 @@ _processare_unam_actionem(
                             nodus_tern = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_tern->genus = ARBOR2_NODUS_TERNARIUS;
                             nodus_tern->lexema = lexemata[III];  /* ? token */
+                            LOCUS_EX_LEXEMATIS(nodus_tern, IV, ZEPHYRUM);
                             nodus_tern->datum.ternarius.conditio = valori[IV];
                             nodus_tern->datum.ternarius.tok_interrogatio = lexemata[III];
                             nodus_tern->datum.ternarius.verum = valori[II];
@@ -1131,6 +1179,7 @@ _processare_unam_actionem(
                             nodus_sub = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_sub->genus = ARBOR2_NODUS_SUBSCRIPTIO;
                             nodus_sub->lexema = lexemata[II];  /* '[' token */
+                            LOCUS_EX_LEXEMATIS(nodus_sub, III, ZEPHYRUM);
                             nodus_sub->datum.subscriptio.basis = valori[III];
                             nodus_sub->datum.subscriptio.tok_bracket_ap = lexemata[II];
                             nodus_sub->datum.subscriptio.index = valori[I];
@@ -1155,6 +1204,7 @@ _processare_unam_actionem(
                             nodus_call = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_call->genus = ARBOR2_NODUS_VOCATIO;
                             nodus_call->lexema = lexemata[I];  /* '(' token */
+                            LOCUS_EX_LEXEMATIS(nodus_call, II, ZEPHYRUM);
                             nodus_call->datum.vocatio.basis = valori[II];
                             nodus_call->datum.vocatio.tok_paren_ap = lexemata[I];
                             nodus_call->datum.vocatio.argumenta = NIHIL;
@@ -1170,6 +1220,7 @@ _processare_unam_actionem(
                             nodus_call = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_call->genus = ARBOR2_NODUS_VOCATIO;
                             nodus_call->lexema = lexemata[II];  /* '(' token */
+                            LOCUS_EX_LEXEMATIS(nodus_call, III, ZEPHYRUM);
                             nodus_call->datum.vocatio.basis = valori[III];
                             nodus_call->datum.vocatio.tok_paren_ap = lexemata[II];
                             /* valori[I] is the LISTA_SEPARATA node with arguments and comma tokens */
@@ -1193,6 +1244,7 @@ _processare_unam_actionem(
                             nodus_mem = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_mem->genus = ARBOR2_NODUS_MEMBRUM;
                             nodus_mem->lexema = lexemata[I];  /* '.' or '->' token */
+                            LOCUS_EX_LEXEMATIS(nodus_mem, II, ZEPHYRUM);
                             nodus_mem->datum.membrum.basis = valori[II];
                             nodus_mem->datum.membrum.tok_accessor = lexemata[I];
                             nodus_mem->datum.membrum.tok_membrum = lexemata[ZEPHYRUM];
@@ -1216,6 +1268,7 @@ _processare_unam_actionem(
                             nodus_post = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             nodus_post->genus = ARBOR2_NODUS_POST_UNARIUM;
                             nodus_post->lexema = lexemata[ZEPHYRUM];  /* '++' or '--' token */
+                            LOCUS_EX_LEXEMATIS(nodus_post, I, ZEPHYRUM);
                             nodus_post->datum.post_unarium.operandum = valori[I];
                             nodus_post->datum.post_unarium.tok_operator = lexemata[ZEPHYRUM];
                             nodus_post->datum.post_unarium.operator = lexemata[ZEPHYRUM]->lexema->genus;
@@ -2709,6 +2762,7 @@ _processare_unam_actionem(
                          * P40: declarator -> declarator '(' param_list ')' (4 symbols) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         si (num_pop == III)
                         {
                             /* P38: declarator () */
@@ -2763,6 +2817,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_SENTENTIA;
                         valor_novus->lexema = lexemata[ZEPHYRUM];  /* semicolon */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         valor_novus->datum.sententia.tok_semicolon = lexemata[ZEPHYRUM];
                         /* Expression is at index 1 (before semicolon) */
                         si (num_pop >= II && valori[I] != NIHIL)
@@ -2780,6 +2835,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_SENTENTIA_VACUA;
                         valor_novus->lexema = lexemata[ZEPHYRUM];  /* semicolon */
+                        LOCUS_EX_LEXEMA(valor_novus, ZEPHYRUM);
                         valor_novus->datum.sententia.expressio = NIHIL;
                         valor_novus->datum.sententia.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
@@ -2861,6 +2917,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_SI;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'if' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
 
                         si (num_pop == V)
                         {
@@ -2904,6 +2961,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DUM;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'while' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         si (num_pop == V)
                         {
                             valor_novus->datum.iteratio.tok_fac = NIHIL;
@@ -2932,6 +2990,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_FAC;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'do' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         si (num_pop == VII)
                         {
                             valor_novus->datum.iteratio.tok_fac = lexemata[VI];
@@ -2960,6 +3019,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_PER;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'for' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         si (num_pop == IX)
                         {
                             valor_novus->datum.circuitus.tok_per = lexemata[VIII];
@@ -2992,6 +3052,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_FRANGE;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'break' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, I, ZEPHYRUM);
                         valor_novus->datum.frangendum.tok_frange = lexemata[I];
                         valor_novus->datum.frangendum.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
@@ -3002,6 +3063,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_PERGE;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'continue' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, I, ZEPHYRUM);
                         valor_novus->datum.pergendum.tok_perge = lexemata[I];
                         valor_novus->datum.pergendum.tok_semicolon = lexemata[ZEPHYRUM];
                         frange;
@@ -3012,6 +3074,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_REDDE;
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'return' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         valor_novus->datum.reditio.tok_redde = lexemata[II];
                         valor_novus->datum.reditio.valor = valori[I];  /* expr_opt (may be NULL) */
                         valor_novus->datum.reditio.tok_semicolon = lexemata[ZEPHYRUM];
@@ -3025,6 +3088,7 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_SALTA;
                             valor_novus->lexema = lexemata[num_pop - I];  /* 'goto' token */
+                            LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
                             id_tok = lexemata[I];
                             valor_novus->datum.saltus.tok_salta = lexemata[II];
                             valor_novus->datum.saltus.tok_destinatio = id_tok;
@@ -3041,6 +3105,7 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_TITULATUM;
                             valor_novus->lexema = lexemata[II];  /* IDENTIFIER token */
+                            LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
                             id_tok = lexemata[II];
                             valor_novus->datum.titulatum.tok_titulus = id_tok;
                             valor_novus->datum.titulatum.titulus = id_tok->lexema->valor;
@@ -3055,6 +3120,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_COMMUTATIO;
                         valor_novus->lexema = lexemata[IV];
+                        LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
                         valor_novus->datum.selectivum.tok_commutatio = lexemata[IV];
                         valor_novus->datum.selectivum.tok_paren_ap = lexemata[III];
                         valor_novus->datum.selectivum.expressio = valori[II];
@@ -3068,6 +3134,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_CASUS;
                         valor_novus->lexema = lexemata[III];
+                        LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
                         valor_novus->datum.electio.tok_casus = lexemata[III];
                         valor_novus->datum.electio.valor = valori[II];
                         valor_novus->datum.electio.tok_colon = lexemata[I];
@@ -3080,6 +3147,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_ORDINARIUS;
                         valor_novus->lexema = lexemata[II];
+                        LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
                         valor_novus->datum.defectus.tok_ordinarius = lexemata[II];
                         valor_novus->datum.defectus.tok_colon = lexemata[I];
                         valor_novus->datum.defectus.sententia = valori[ZEPHYRUM];
@@ -3091,6 +3159,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
                         valor_novus->lexema = lexemata[I];  /* type_specifier token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, I, ZEPHYRUM);
                         valor_novus->datum.parameter_decl.type_specifier = valori[I];
                         valor_novus->datum.parameter_decl.declarator = valori[ZEPHYRUM];
                         frange;
@@ -3101,6 +3170,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DEFINITIO_FUNCTI;
                         valor_novus->lexema = lexemata[II];  /* type_specifier token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
                         valor_novus->datum.definitio_functi.specifier = valori[II];
                         valor_novus->datum.definitio_functi.declarator = valori[I];
                         valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
@@ -3115,6 +3185,7 @@ _processare_unam_actionem(
                         /* P54: union ID (2 symbols, forward ref) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_STRUCT_SPECIFIER;
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
 
                         si (num_pop == V)
                         {
@@ -3187,6 +3258,7 @@ _processare_unam_actionem(
                         /* P57: enum ID (2 symbols) - forward reference */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_ENUM_SPECIFIER;
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
 
                         si (num_pop == V)
                         {
@@ -3246,6 +3318,7 @@ _processare_unam_actionem(
                         /* P61: enumerator -> IDENTIFIER '=' expression (3 symbols) - with value */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_ENUMERATOR;
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
 
                         si (num_pop == I)
                         {
@@ -3272,6 +3345,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_INITIALIZOR_LISTA;
                         valor_novus->lexema = lexemata[num_pop - I];  /* '{' token */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
 
                         si (actio->valor == 200)
                         {
@@ -3312,6 +3386,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DESIGNATOR_ITEM;
                         valor_novus->lexema = NIHIL;  /* No single token for this */
+                        LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
                         /* valori: [2]=designator_list (Xar*), [1]='=', [0]=value */
                         valor_novus->datum.designator_item.designatores = (Xar*)valori[II];
                         valor_novus->datum.designator_item.valor = valori[ZEPHYRUM];

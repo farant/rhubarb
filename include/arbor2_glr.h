@@ -191,6 +191,13 @@ structura Arbor2Nodus {
     Arbor2NodusGenus            genus;
     Arbor2Token*                lexema;         /* Associated token */
 
+    /* Location span (invocation site, tight bounds) */
+    i32                         linea_initium;
+    i32                         columna_initium;
+    i32                         linea_finis;
+    i32                         columna_finis;
+    i32                         layer_index;    /* 0 = source, >0 = macro-expanded */
+
     unio {
         /* IDENTIFICATOR, INTEGER */
         structura {
