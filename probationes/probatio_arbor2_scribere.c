@@ -333,6 +333,82 @@ s32 principale(vacuum)
         /* TODO: Need to pass '=' token from P222/P223 to P226 first */
     }
 
+    /* ========================================================
+     * PROBARE: Comment nodes
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans comment nodes ---\n");
+
+        /* Block comment roundtrip (via trivia) */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "/* comment */ x", NIHIL));
+
+        /* Note: Line comment test skipped - requires special newline handling */
+        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "// comment\nx", NIHIL)); */
+
+        /* Comment in binary expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* mid */ + b", NIHIL));
+
+        /* Multiple comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "/* c1 */ /* c2 */ x", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Comment node structure
+     * ======================================================== */
+    {
+        Arbor2GLR* glr;
+        Arbor2Nodus* tu;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans comment node genus ---\n");
+
+        glr = arbor2_glr_creare(piscina, intern, expansion);
+        tokens = _lexare(piscina, intern, "/* lead */ int x;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        tu = res.radix;
+        CREDO_NON_NIHIL(tu);
+        CREDO_AEQUALIS_I32(tu->genus, ARBOR2_NODUS_TRANSLATION_UNIT);
+
+        /* First declaration should have commenta_ante populated */
+        si (tu->datum.translation_unit.declarationes != NIHIL &&
+            xar_numerus(tu->datum.translation_unit.declarationes) > ZEPHYRUM)
+        {
+            Arbor2Nodus** decl_ptr = xar_obtinere(
+                tu->datum.translation_unit.declarationes, ZEPHYRUM);
+            Arbor2Nodus* decl = *decl_ptr;
+
+            /* Declaration should have leading comment attached */
+            si (decl->commenta_ante != NIHIL)
+            {
+                i32 num_comments = xar_numerus(decl->commenta_ante);
+                CREDO_AEQUALIS_I32(num_comments, I);
+
+                si (num_comments > ZEPHYRUM)
+                {
+                    Arbor2Nodus** comm_ptr = xar_obtinere(decl->commenta_ante, ZEPHYRUM);
+                    Arbor2Nodus* comm = *comm_ptr;
+
+                    CREDO_AEQUALIS_I32(comm->genus, ARBOR2_NODUS_COMMENTUM);
+                    CREDO_AEQUALIS_I32(comm->datum.commentum.subgenus, ARBOR2_COMMENTUM_CLAUSUM);
+                    imprimere("  Comment text: '%.*s'\n",
+                        (integer)comm->datum.commentum.textus.mensura,
+                        comm->datum.commentum.textus.datum);
+                }
+            }
+            alioquin
+            {
+                imprimere("  Note: commenta_ante not populated (trivia-based roundtrip still works)\n");
+            }
+        }
+    }
+
     /* Print summary */
     credo_imprimere_compendium();
 

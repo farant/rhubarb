@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-16
-Status: Updated after Phase 2.1 completion (Location Propagation)
+Status: Updated after Phase 2.4 completion (Comment Nodes) - Phase 2 COMPLETE
 
 ---
 
@@ -100,23 +100,23 @@ Status: Updated after Phase 2.1 completion (Location Propagation)
 - `static const unsigned int z` ✓
 - `extern volatile long int e` ✓
 
-### Arbor2Nodus Structure - ENHANCED (Phase 2.1)
+### Arbor2Nodus Structure - ENHANCED (Phase 2.1, 2.3)
 Current structure has:
 - genus (node type)
 - lexema (associated token)
 - **linea_initium, columna_initium** (start position) - NEW in Phase 2.1
 - **linea_finis, columna_finis** (end position) - NEW in Phase 2.1
 - **layer_index** (0 = source, >0 = macro-expanded) - NEW in Phase 2.1
+- **pater** (parent pointer, NIHIL for root) - NEW in Phase 2.3
 - datum union (38 node type variants including DESIGNATOR_ITEM)
 
 **Missing for tooling:**
 - Byte offsets (byte_initium/finis) - line/column added, bytes not yet
 - Trivia (trivia_ante/post) - flows through tokens currently
-- Parent pointer (pater)
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- **1828 tests total** (all passing) - updated after Phase 2.1
+- **1847 tests total** (all passing) - updated after Phase 2.3
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
 - sizeof variants (type, pointer, array, multi-dim, pointer array)
@@ -126,6 +126,7 @@ Current structure has:
 - Function pointer tests
 - Qualifier + type modifier tests (Phase 1.4b)
 - **Location propagation tests** (identifier, binary expr, literals, function call) - Phase 2.1
+- **Parent pointer tests** (binary expr, nested expr, ternary, function call, subscript) - Phase 2.3
 - Table validation
 - Parser statistics
 
@@ -337,8 +338,8 @@ Given the current state, the recommended priority is:
 1. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
    - 2.1 Location Propagation: **COMPLETE** ✓
    - 2.2 Trivia Attachment: ~90% COMPLETE (roundtrip works via tokens)
-   - 2.3 Parent Pointer: NOT STARTED
-   - 2.4 Comment Nodes: NOT STARTED
+   - 2.3 Parent Pointer: **COMPLETE** ✓
+   - 2.4 Comment Nodes: COMPLETE (promoted from trivia to first-class AST nodes)
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
@@ -426,27 +427,76 @@ Implemented 2026-01-16.
   Arbor2Nodus does NOT have its own trivia_ante/trivia_post fields — trivia flows through tokens.
   For most use cases this is sufficient; node-level trivia only needed for synthetic nodes.
 
-#### 2.3 Parent Pointer — **NOT STARTED**
-- Set during AST construction
-- ~50 locations to update
-- Status: Arbor2Nodus has no `pater` field yet
+#### 2.3 Parent Pointer — **COMPLETE** ✓
 
-#### 2.4 Comment Nodes — **NOT STARTED**
-Add explicit comment handling:
+Implemented 2026-01-16.
+
+**Added to Arbor2Nodus:**
+- `pater` - Parent node pointer, NIHIL for root nodes
+
+**Implementation:**
+- Added `pater` field to Arbor2Nodus struct after `layer_index`
+- Updated node creation helpers to initialize `pater = NIHIL`
+- Updated ~40 allocation sites in reduce cases to set `pater = NIHIL`
+- Added ~55 child->pater assignments after child assignments
+
+**Coverage:**
+- Expression nodes: BINARIUM, UNARIUM, SIZEOF, CONVERSIO, TERNARIUS, SUBSCRIPTIO, VOCATIO, MEMBRUM, POST_UNARIUM
+- Statement nodes: SENTENTIA, CORPUS, SI, DUM, FAC, PER, FRANGE, PERGE, REDDE, SALTA, TITULATUM, COMMUTATIO, CASUS, ORDINARIUS
+- Declaration nodes: DECLARATIO variants, PARAMETER_DECL, DEFINITIO_FUNCTI
+
+**Tests:** 19 new parent pointer tests covering:
+- Binary expression parent pointers
+- Nested expression parent chains
+- Ternary operator children
+- Function call (basis + argumenta)
+- Subscript (basis + index)
+
+**Enables:** Navigation up the tree - "what function am I in?", "what's the enclosing statement?"
+
+#### 2.4 Comment Nodes — **COMPLETE**
+Comments promoted from trivia to first-class AST nodes:
 ```c
-nomen structura {
-    chorda              textus;
-    Arbor2CommentLocus  locus;      /* OWN_LINE, END_OF_LINE, INLINE */
-    b32                 est_multiline;
-    Arbor2Nodus*        attached_to;
-    b32                 ante;
-} Arbor2Commentum;
+/* COMMENTUM genus added to Arbor2NodusGenus enum */
+ARBOR2_NODUS_COMMENTUM
+
+/* Comment subtype enum */
+nomen enumeratio {
+    ARBOR2_COMMENTUM_CLAUSUM,   /* Block comment */
+    ARBOR2_COMMENTUM_LINEA,     /* Line comment (C99) */
+    ARBOR2_COMMENTUM_DOC        /* Doc comment (future) */
+} Arbor2CommentumGenus;
+
+/* Comment datum entry */
+structura {
+    Arbor2CommentumGenus    subgenus;
+    chorda                  textus;         /* Without delimiters */
+    chorda                  textus_crudus;  /* With delimiters */
+    b32                     est_fluitans;   /* Floating comment */
+    Xar*                    fragmenta;      /* Future: parsed structure */
+} commentum;
+
+/* Attached comments on all AST nodes */
+Xar*    commenta_ante;  /* Leading comments */
+Xar*    commenta_post;  /* Trailing comments */
 ```
-- Status: Comments are stored as trivia on tokens (est_commentum flag). No separate Arbor2Commentum struct exists.
-  Current approach works for roundtrip; explicit comment nodes needed for comment manipulation tools.
+
+**Implemented:**
+- ARBOR2_NODUS_COMMENTUM genus and Arbor2CommentumGenus subtype enum
+- Comment datum entry with text extraction (raw and stripped)
+- commenta_ante/commenta_post attachment fields on all nodes
+- Helper functions for comment creation and attachment detection
+- Comment promotion in TRANSLATION_UNIT parsing
+- Serialization of COMMENTUM nodes and attached comments
+- Blank line detection for floating comment identification
+- End-of-line detection for trailing comment attachment
+- 64 tests passing (including comment roundtrip and structure tests)
+- Design spec: project-specs/arbor2-comment-spec.md
+
+**Enables:** Querying comments like any other node type, future parsing of comment content
 
 **Deliverable:** AST supports roundtrip formatting
-**Current Status:** Roundtrip formatting WORKS via token trivia. Full Phase 2 completion would add location spans, parent pointers, and explicit comment nodes for advanced tooling.
+**Current Status:** Roundtrip formatting WORKS via token trivia AND promoted comment nodes. Phase 2 COMPLETE with location spans, parent pointers, and comment nodes for advanced tooling.
 
 ---
 
@@ -829,13 +879,13 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | lib/arbor2_lexema.c | ~500 | Complete |
 | lib/arbor2_token.c | 264 | Complete |
 | lib/arbor2_expandere.c | 1576 | Mostly complete |
-| lib/arbor2_glr.c | ~3700 | Functional + location propagation |
+| lib/arbor2_glr.c | ~3800 | Functional + location + parent pointers |
 | lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
-| include/arbor2_glr.h | ~720 | Good structure + location fields |
+| include/arbor2_glr.h | ~720 | Good structure + location + pater fields |
 | include/arbor2_lexema.h | 220 | Complete |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | 197 | Complete |
-| probationes/probatio_arbor2_glr.c | ~12700 | 1828 tests |
+| probationes/probatio_arbor2_glr.c | ~12900 | 1847 tests |
 | tools/glr_debug.c | ~340 | Working |
 
 ---
@@ -859,4 +909,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-15 | 1.6c Qualified Params | +4 | +13 | +4 | const/volatile in params - P342-P345, states 907-919 |
 | 2026-01-15 | 1.4b Qual+TypeMod | +0 | +33 | +0 | const unsigned int, volatile long int, compound combos - states 920-951 |
 | 2026-01-16 | 2.1 Location Prop | +0 | +0 | +26 | linea/columna_initium/finis, layer_index on AST nodes |
-| **Current** | | **346** | **952** | **1828** | |
+| 2026-01-16 | 2.3 Parent Pointer | +0 | +0 | +19 | pater field, ~40 alloc sites, ~55 child->pater assignments |
+| **Current** | | **346** | **952** | **1847** | |

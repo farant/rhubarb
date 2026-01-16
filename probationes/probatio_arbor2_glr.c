@@ -12661,6 +12661,189 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Parent pointer (pater) on binary expression
+     * ======================================================== */
+
+    {
+        Arbor2Nodus* radix;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans pater on binary expression: a + b ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a + b");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_BINARIUM)
+        {
+            /* Radix has no parent */
+            CREDO_AEQUALIS_PTR(radix->pater, NIHIL);
+
+            /* Left and right children point back to parent */
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.binarium.sinister->pater, radix);
+            }
+            si (radix->datum.binarium.dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.binarium.dexter->pater, radix);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Parent pointer (pater) on nested expression
+     * ======================================================== */
+
+    {
+        Arbor2Nodus* radix;
+        Arbor2Nodus* dexter;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans pater on nested: a + b * c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a + b * c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_BINARIUM)
+        {
+            /* Root is +, right child is * due to precedence */
+            CREDO_AEQUALIS_PTR(radix->pater, NIHIL);
+
+            /* 'a' points to root (+) */
+            si (radix->datum.binarium.sinister != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.binarium.sinister->pater, radix);
+            }
+
+            /* The * node points to root (+) */
+            dexter = radix->datum.binarium.dexter;
+            si (dexter != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(dexter->pater, radix);
+
+                /* b and c point to * node */
+                si (dexter->genus == ARBOR2_NODUS_BINARIUM)
+                {
+                    si (dexter->datum.binarium.sinister != NIHIL)
+                    {
+                        CREDO_AEQUALIS_PTR(dexter->datum.binarium.sinister->pater, dexter);
+                    }
+                    si (dexter->datum.binarium.dexter != NIHIL)
+                    {
+                        CREDO_AEQUALIS_PTR(dexter->datum.binarium.dexter->pater, dexter);
+                    }
+                }
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Parent pointer (pater) on ternary
+     * ======================================================== */
+
+    {
+        Arbor2Nodus* radix;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans pater on ternary: a ? b : c ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "a ? b : c");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_TERNARIUS)
+        {
+            CREDO_AEQUALIS_PTR(radix->pater, NIHIL);
+
+            si (radix->datum.ternarius.conditio != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.ternarius.conditio->pater, radix);
+            }
+            si (radix->datum.ternarius.verum != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.ternarius.verum->pater, radix);
+            }
+            si (radix->datum.ternarius.falsum != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.ternarius.falsum->pater, radix);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Parent pointer (pater) on function call
+     * ======================================================== */
+
+    {
+        Arbor2Nodus* radix;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans pater on function call: foo(a) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "foo(a)");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_VOCATIO)
+        {
+            CREDO_AEQUALIS_PTR(radix->pater, NIHIL);
+
+            /* basis (foo) points back to call node */
+            si (radix->datum.vocatio.basis != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.vocatio.basis->pater, radix);
+            }
+
+            /* argumenta (LISTA_SEPARATA containing 'a') points back to call node */
+            si (radix->datum.vocatio.argumenta != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.vocatio.argumenta->pater, radix);
+            }
+        }
+    }
+
+    /* ========================================================
+     * PROBARE: Parent pointer (pater) on subscript
+     * ======================================================== */
+
+    {
+        Arbor2Nodus* radix;
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans pater on subscript: arr[i] ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "arr[i]");
+        res = arbor2_glr_parsere_expressio(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        radix = res.radix;
+        si (radix != NIHIL && radix->genus == ARBOR2_NODUS_SUBSCRIPTIO)
+        {
+            CREDO_AEQUALIS_PTR(radix->pater, NIHIL);
+
+            si (radix->datum.subscriptio.basis != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.subscriptio.basis->pater, radix);
+            }
+            si (radix->datum.subscriptio.index != NIHIL)
+            {
+                CREDO_AEQUALIS_PTR(radix->datum.subscriptio.index->pater, radix);
+            }
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

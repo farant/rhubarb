@@ -178,8 +178,19 @@ nomen enumeratio {
     ARBOR2_NODUS_LISTA_SEPARATA,    /* Comma-separated list with separator tokens */
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR,
-    ARBOR2_NODUS_TRANSLATION_UNIT   /* Translation unit (list of external declarations) */
+    ARBOR2_NODUS_TRANSLATION_UNIT,  /* Translation unit (list of external declarations) */
+    ARBOR2_NODUS_COMMENTUM          /* Comment node (promoted from trivia) */
 } Arbor2NodusGenus;
+
+/* ==================================================
+ * Comment Subtype
+ * ================================================== */
+
+nomen enumeratio {
+    ARBOR2_COMMENTUM_CLAUSUM,       /* Block comment (slash-star) */
+    ARBOR2_COMMENTUM_LINEA,         /* Line comment (C99 slash-slash) */
+    ARBOR2_COMMENTUM_DOC            /* Doc comment (future) */
+} Arbor2CommentumGenus;
 
 /* ==================================================
  * AST Node
@@ -197,6 +208,13 @@ structura Arbor2Nodus {
     i32                         linea_finis;
     i32                         columna_finis;
     i32                         layer_index;    /* 0 = source, >0 = macro-expanded */
+
+    /* Parens nodus - NIHIL pro radice */
+    structura Arbor2Nodus*      pater;
+
+    /* Attached comments (promoted from trivia) */
+    Xar*                        commenta_ante;  /* Xar of Arbor2Nodus* (COMMENTUM) */
+    Xar*                        commenta_post;  /* Xar of Arbor2Nodus* (COMMENTUM) */
 
     unio {
         /* IDENTIFICATOR, INTEGER */
@@ -499,6 +517,15 @@ structura Arbor2Nodus {
             chorda*             nuntius;
             Xar*                lexemata_saltata;   /* Skipped tokens */
         } error;
+
+        /* COMMENTUM (promoted from trivia) */
+        structura {
+            Arbor2CommentumGenus    subgenus;       /* Block, line, or doc */
+            chorda                  textus;         /* Comment text (without delimiters) */
+            chorda                  textus_crudus;  /* Full original text */
+            b32                     est_fluitans;   /* True if floating (blank lines around) */
+            Xar*                    fragmenta;      /* Parsed sub-structure (NIHIL initially) */
+        } commentum;
     } datum;
 };
 

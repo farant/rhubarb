@@ -150,6 +150,36 @@ _scribere_pointer_levels(Xar* output, Xar* pointer_levels)
     }
 }
 
+/* Forward declaration for mutual recursion */
+hic_manens vacuum _scribere_nodum(Xar* output, Arbor2Nodus* nodus);
+
+/* Emit attached comments (commenta_ante or commenta_post) */
+hic_manens vacuum
+_emittere_commenta(Xar* output, Xar* commenta)
+{
+    i32 i;
+    i32 num;
+
+    si (commenta == NIHIL)
+    {
+        redde;
+    }
+
+    num = xar_numerus(commenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        Arbor2Nodus** c_ptr = xar_obtinere(commenta, i);
+        si (c_ptr != NIHIL && *c_ptr != NIHIL)
+        {
+            Arbor2Nodus* commentum = *c_ptr;
+            si (commentum->genus == ARBOR2_NODUS_COMMENTUM)
+            {
+                _appendere_chordam(output, &commentum->datum.commentum.textus_crudus);
+            }
+        }
+    }
+}
+
 /* Main node serializer */
 hic_manens vacuum
 _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
@@ -158,6 +188,9 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
     {
         redde;
     }
+
+    /* Emit attached leading comments */
+    _emittere_commenta(output, nodus->commenta_ante);
 
     commutatio (nodus->genus)
     {
@@ -600,10 +633,18 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             }
             frange;
 
+        /* COMMENTUM: emit raw comment text */
+        casus ARBOR2_NODUS_COMMENTUM:
+            _appendere_chordam(output, &nodus->datum.commentum.textus_crudus);
+            frange;
+
         ordinarius:
             /* Unknown node type - skip */
             frange;
     }
+
+    /* Emit attached trailing comments */
+    _emittere_commenta(output, nodus->commenta_post);
 }
 
 /* ==================================================
