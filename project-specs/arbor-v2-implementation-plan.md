@@ -1,11 +1,11 @@
 # Arbor v2 Implementation Plan
 
-Date: 2026-01-15
-Status: Updated after Phase 1.4b completion (Qualifier + Type Modifier combinations)
+Date: 2026-01-16
+Status: Updated after Phase 2.1 completion (Location Propagation)
 
 ---
 
-## Current State (Updated 2026-01-15)
+## Current State (Updated 2026-01-16)
 
 ### arbor2_lexema.c - COMPLETE
 - 93 token types (all C89 keywords, operators, literals)
@@ -42,8 +42,9 @@ Status: Updated after Phase 1.4b completion (Qualifier + Type Modifier combinati
 - Piscina checkpointing for rollback
 - **346 grammar productions** (P0-P345)
 - **952 LR states** (0-951)
-- **1734 tests total** (all passing)
+- **1828 tests total** (all passing)
 - Table validation
+- **Location propagation** via LOCUS_EX_LEXEMATIS macro (Phase 2.1)
 
 **Grammar currently covered:**
 
@@ -99,21 +100,23 @@ Status: Updated after Phase 1.4b completion (Qualifier + Type Modifier combinati
 - `static const unsigned int z` ✓
 - `extern volatile long int e` ✓
 
-### Arbor2Nodus Structure - BASIC
+### Arbor2Nodus Structure - ENHANCED (Phase 2.1)
 Current structure has:
 - genus (node type)
 - lexema (associated token)
+- **linea_initium, columna_initium** (start position) - NEW in Phase 2.1
+- **linea_finis, columna_finis** (end position) - NEW in Phase 2.1
+- **layer_index** (0 = source, >0 = macro-expanded) - NEW in Phase 2.1
 - datum union (38 node type variants including DESIGNATOR_ITEM)
 
 **Missing for tooling:**
-- Location spans (byte_initium/finis, linea/columna)
-- Trivia (trivia_ante/post)
+- Byte offsets (byte_initium/finis) - line/column added, bytes not yet
+- Trivia (trivia_ante/post) - flows through tokens currently
 - Parent pointer (pater)
-- Layer index
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- 1734 tests total (all passing)
+- **1828 tests total** (all passing) - updated after Phase 2.1
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
 - sizeof variants (type, pointer, array, multi-dim, pointer array)
@@ -122,6 +125,7 @@ Current structure has:
 - Qualified parameter tests (const/volatile in function params)
 - Function pointer tests
 - Qualifier + type modifier tests (Phase 1.4b)
+- **Location propagation tests** (identifier, binary expr, literals, function call) - Phase 2.1
 - Table validation
 - Parser statistics
 
@@ -331,7 +335,7 @@ Implemented 2026-01-15.
 Given the current state, the recommended priority is:
 
 1. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
-   - 2.1 Location Propagation: NOT STARTED
+   - 2.1 Location Propagation: **COMPLETE** ✓
    - 2.2 Trivia Attachment: ~90% COMPLETE (roundtrip works via tokens)
    - 2.3 Parent Pointer: NOT STARTED
    - 2.4 Comment Nodes: NOT STARTED
@@ -389,11 +393,30 @@ structura Arbor2Nodus {
 };
 ```
 
-#### 2.1 Location Propagation — **NOT STARTED**
-- Modify AST construction in arbor2_glr.c
-- Compute spans from first/last tokens in production
-- ~50 locations in _exequi_reduce need updating
-- Status: Arbor2Nodus has no byte_initium/finis, linea_initium/finis, columna_initium/finis fields yet
+#### 2.1 Location Propagation — **COMPLETE** ✓
+
+Implemented 2026-01-16.
+
+**Added to Arbor2Nodus:**
+- `linea_initium`, `columna_initium` - Start position (line/column)
+- `linea_finis`, `columna_finis` - End position (column is after last char)
+- `layer_index` - Macro expansion layer (0 = source, >0 = expanded)
+
+**Implementation:**
+- Added `LOCUS_EX_LEXEMATIS(nodus, primus_idx, ultimus_idx)` helper macro in arbor2_glr.c
+- Added `LOCUS_EX_LEXEMA(nodus, idx)` single-token helper
+- Updated `arbor2_nodus_creare_folium()` for leaf nodes
+- Updated ~35 node type cases in reduce logic
+- Uses `arbor2_token_radix()` to trace back to invocation site through macro expansions
+
+**Design decisions:**
+- **Tight spans** - excludes trivia, just meaningful tokens
+- **Invocation site** - macro `X` expanding to `42` reports location of `X`, not definition
+- **No byte offsets** - line/column sufficient for current needs
+
+**Coverage:** Expression nodes, statement nodes, declaration nodes, leaf nodes (identifiers, literals). Internal structural nodes (LISTA_SEPARATA) left without location.
+
+**Tests:** 26 new location verification tests (identifier, binary expr, integer literal, function call)
 
 #### 2.2 Trivia Attachment — **~90% COMPLETE**
 - Tokens already have trivia_ante/post from lexer ✓
@@ -799,20 +822,20 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 
 ---
 
-## Files Reference (Updated)
+## Files Reference (Updated 2026-01-16)
 
 | File | Lines | Status |
 |------|-------|--------|
 | lib/arbor2_lexema.c | ~500 | Complete |
 | lib/arbor2_token.c | 264 | Complete |
 | lib/arbor2_expandere.c | 1576 | Mostly complete |
-| lib/arbor2_glr.c | ~2800 | Functional |
+| lib/arbor2_glr.c | ~3700 | Functional + location propagation |
 | lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
-| include/arbor2_glr.h | ~700 | Good structure |
+| include/arbor2_glr.h | ~720 | Good structure + location fields |
 | include/arbor2_lexema.h | 220 | Complete |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | 197 | Complete |
-| probationes/probatio_arbor2_glr.c | ~12000 | 1734 tests |
+| probationes/probatio_arbor2_glr.c | ~12700 | 1828 tests |
 | tools/glr_debug.c | ~340 | Working |
 
 ---
@@ -835,4 +858,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-15 | 1.6b Variadic Params | +1 | +1 | +2 | printf(fmt, ...) - P341, state 906 |
 | 2026-01-15 | 1.6c Qualified Params | +4 | +13 | +4 | const/volatile in params - P342-P345, states 907-919 |
 | 2026-01-15 | 1.4b Qual+TypeMod | +0 | +33 | +0 | const unsigned int, volatile long int, compound combos - states 920-951 |
-| **Current** | | **346** | **952** | **1734** | |
+| 2026-01-16 | 2.1 Location Prop | +0 | +0 | +26 | linea/columna_initium/finis, layer_index on AST nodes |
+| **Current** | | **346** | **952** | **1828** | |
